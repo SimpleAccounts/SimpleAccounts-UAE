@@ -63,16 +63,6 @@ SimpleAccounts can be installed using the following methods:
 8. Google Cloud: Deploy SimpleAccounts on Google Cloud. (Coming Soon...)
 9. DigitalOcean Cloud: Deploy SimpleAccounts on DigitalOcean Cloud. (Coming Soon...)
 
-To install SimpleAccounts, follow these general steps:
-
-1. Clone the repository from GitHub.
-2. Navigate to the installation directory.
-3. Run the installation script to set up the software.
-4. Configure the necessary settings and parameters.
-5. Launch SimpleAccounts and start managing your finances with ease.
-
-For detailed installation instructions and platform-specific guides, please refer to the [Installation Guide](link-to-installation-guide).
-
 ## Support
 
 If you have any questions or need assistance with SimpleAccounts, please reach out to our support team at [support@simpleaccounts.com](mailto:support@simpleaccounts.com).
