@@ -4,19 +4,19 @@ SimpleAccounts is an innovative accounting software that provides a comprehensiv
 
 ## Key Features
 
-- Customer Invoices
+- Customer Invoices __*Free__
   - Income Receipts
   - Quotation
-- Expense
+- Expense __*Free__
   - Expenses
   - Supplier Invoices
   - Purchase Receipts
-- Banking
+- Banking __*Free__
   - Bank Account
-- Accountant
+- Accountant __*Free__
   - Opening Balance
   - Journals
-- Reports
+- Reports __*Free__
   - Financial Reports
     - Profit & Loss
     - Balance Sheet
@@ -31,7 +31,7 @@ SimpleAccounts is an innovative accounting software that provides a comprehensiv
     - Expense By Category
   - Payrolls
     - Payrolls Summary
-- Master
+- Master __*Free__
   - Chart Of Accounts
   - Contact
   - Product
@@ -39,9 +39,15 @@ SimpleAccounts is an innovative accounting software that provides a comprehensiv
   - VAT Category
   - Currency Rate
   - Employee
-- Payroll
+- Payroll __*Free__
   - Payroll Run
   - Payroll Config
+- Dedicated Support __*Paid__
+  - Online +Email +Chat +Phone Support
+  - Response within 30 Minutes 5x7
+  - Unlimited Training Sessions
+  - Timely Upgrade to Latest Features
+  - Account Manager
 
 ## Installation
 
