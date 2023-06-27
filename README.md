@@ -45,7 +45,19 @@ SimpleAccounts is an innovative accounting software that provides a comprehensiv
 
 ## Installation
 
-To install SimpleAccounts, follow these steps:
+SimpleAccounts can be installed using the following methods:
+
+1. Docker: Install SimpleAccounts as a Docker container.
+2. Kubernetes: Deploy SimpleAccounts on a Kubernetes cluster.
+3. Linux OS: Install SimpleAccounts on a Linux operating system.
+4. Mac OS: Install SimpleAccounts on a macOS.
+5. Windows OS: Install SimpleAccounts on a Windows operating system.
+6. Microsoft Azure Cloud: Deploy SimpleAccounts on Microsoft Azure Cloud.
+7. AWS Cloud: Deploy SimpleAccounts on Amazon Web Services (AWS) Cloud.
+8. Google Cloud: Deploy SimpleAccounts on Google Cloud.
+9. DigitalOcean Cloud: Deploy SimpleAccounts on DigitalOcean Cloud.
+
+To install SimpleAccounts, follow these general steps:
 
 1. Clone the repository from GitHub.
 2. Navigate to the installation directory.
@@ -53,11 +65,7 @@ To install SimpleAccounts, follow these steps:
 4. Configure the necessary settings and parameters.
 5. Launch SimpleAccounts and start managing your finances with ease.
 
-For detailed installation instructions, refer to the [Installation Guide](link-to-installation-guide).
-
-## Contributing
-
-We welcome contributions from the open-source community. If you would like to contribute to SimpleAccounts, please follow our [Contributing Guidelines](link-to-contributing-guidelines).
+For detailed installation instructions and platform-specific guides, please refer to the [Installation Guide](link-to-installation-guide).
 
 ## Support
 
@@ -65,4 +73,4 @@ If you have any questions or need assistance with SimpleAccounts, please reach o
 
 ---
 
-*Note: SimpleAccounts is a product of DataInn. For more information, visit our [website](https://www.datainn.com/simpleaccounts).*
+*Note: SimpleAccounts is a product of DataInn. For more information, visit our [website](https://www.datainn.io).*
