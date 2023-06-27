@@ -1,18 +1,50 @@
-# SimpleAccounts-UAE
-Step-by-step installation guide for SimpleAccounts UAE software.
+Certainly! Here's an updated version of the Markdown file with the additional features of SimpleAccounts:
 
+```markdown
 # SimpleAccounts
 
-SimpleAccounts is an innovative accounting software that provides a comprehensive solution for businesses of all sizes. With its user-friendly interface and powerful features, it streamlines financial management and enables businesses to make informed decisions. 
+SimpleAccounts is an innovative accounting software that provides a comprehensive solution for businesses of all sizes. With its user-friendly interface and powerful features, it streamlines financial management and enables businesses to make informed decisions.
 
 ## Key Features
 
-- **Automated Bookkeeping**: SimpleAccounts uses advanced algorithms to automate bookkeeping processes, saving time and reducing errors.
-- **Customizable Dashboard**: Users can personalize their dashboard to track and analyze the financial metrics that matter most to their business.
-- **Bank-Level Security**: SimpleAccounts ensures the highest level of security for sensitive financial data, utilizing robust encryption and authentication measures.
-- **Integration with Third-Party Apps**: Seamlessly connect SimpleAccounts with various third-party applications, including payment gateways, CRM systems, and project management tools.
-- **Mobile Accessibility**: Access your financial data anytime, anywhere, with the SimpleAccounts mobile app.
-- **Scalability**: SimpleAccounts grows with your business, accommodating large transaction volumes and adapting to evolving needs.
+- Customer Invoices
+  - Income Receipts
+  - Quotation
+- Expense
+  - Expenses
+  - Supplier Invoices
+  - Purchase Receipts
+- Banking
+  - Bank Account
+- Accountant
+  - Opening Balance
+  - Journals
+- Reports
+  - Financial Reports
+    - Profit & Loss
+    - Balance Sheet
+    - Horizontal Balance Sheet
+    - Trial Balances
+  - VAT Reports
+    - VAT Reports
+  - Detailed
+    - Detailed General Ledger
+  - Expense
+    - Expense Details
+    - Expense By Category
+  - Payrolls
+    - Payrolls Summary
+- Master
+  - Chart Of Accounts
+  - Contact
+  - Product
+  - Product Category
+  - VAT Category
+  - Currency Rate
+  - Employee
+- Payroll
+  - Payroll Run
+  - Payroll Config
 
 ## Installation
 
@@ -37,3 +69,6 @@ If you have any questions or need assistance with SimpleAccounts, please reach o
 ---
 
 *Note: SimpleAccounts is a product of DataInn. For more information, visit our [website](https://www.datainn.com/simpleaccounts).*
+```
+
+Please adjust the links and additional information as needed.
