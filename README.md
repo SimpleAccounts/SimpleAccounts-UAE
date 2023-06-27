@@ -47,7 +47,7 @@ SimpleAccounts is an innovative accounting software that provides a comprehensiv
 
 SimpleAccounts can be installed using the following methods:
 
-1. Docker: Install SimpleAccounts as a Docker container.
+1. [Docker](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/main/docker/README.md): Install SimpleAccounts as a Docker container.
 2. Kubernetes: Deploy SimpleAccounts on a Kubernetes cluster.
 3. Linux OS: Install SimpleAccounts on a Linux operating system.
 4. Mac OS: Install SimpleAccounts on a macOS.
