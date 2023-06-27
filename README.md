@@ -1,6 +1,3 @@
-Certainly! Here's an updated version of the Markdown file with the additional features of SimpleAccounts:
-
-```markdown
 # SimpleAccounts
 
 SimpleAccounts is an innovative accounting software that provides a comprehensive solution for businesses of all sizes. With its user-friendly interface and powerful features, it streamlines financial management and enables businesses to make informed decisions.
@@ -69,6 +66,3 @@ If you have any questions or need assistance with SimpleAccounts, please reach o
 ---
 
 *Note: SimpleAccounts is a product of DataInn. For more information, visit our [website](https://www.datainn.com/simpleaccounts).*
-```
-
-Please adjust the links and additional information as needed.
