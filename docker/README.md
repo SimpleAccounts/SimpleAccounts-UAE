@@ -58,4 +58,4 @@ The following environment variables can be configured in the `docker/docker-comp
 
 It is recommended to review and update these variables according to your specific configuration.
 
-Note: Please ensure that sensitive information, such as passwords, are stored securely and not committed to version control.
+> Note: Please ensure that sensitive information, such as passwords, are stored securely and not committed to version control.
