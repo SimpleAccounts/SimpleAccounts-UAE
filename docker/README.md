@@ -1,6 +1,3 @@
-The provided README.md file appears to have a few formatting issues. Below is the corrected version:
-
-```markdown
 # SimpleAccounts-UAE
 
 SimpleAccounts-UAE is a web application for managing accounts. This README provides instructions for installing and running SimpleAccounts-UAE using Docker and Docker Compose.
@@ -62,4 +59,3 @@ The following environment variables can be configured in the `docker/docker-comp
 It is recommended to review and update these variables according to your specific configuration.
 
 Note: Please ensure that sensitive information, such as passwords, are stored securely and not committed to version control.
-```
