@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  frontend:
+    image: simpleaccounts/simpleaccounts-frontend-uae:blue.berry.12
+    ports:
+      - 80:80
+    environment:
+      SIMPLEVAT_RELEASE: blue.berry.12
+      SIMPLEVAT_HOST: http://localhost:8080
+
+  backend:
+    image: simpleaccounts/simpleaccounts-backend-uae:blue.berry.1
+    ports:
+      - 8080:8080
+    environment:
+      SIMPLEVAT_SMTP_USER: ""
+      SIMPLEVAT_SMTP_PASS: ""
+      SIMPLEVAT_SMTP_HOST: ""
+      SIMPLEVAT_SMTP_PORT: ""
+      SIMPLEVAT_SMTP_AUTH: ""
+      SIMPLEVAT_SMTP_STARTTLS_ENABLE: ""
+      SIMPLEVAT_RELEASE: blue.berry.1
+      SIMPLEVAT_HOST: http://backend:8080
+      SIMPLEVAT_DB_HOST: db
+      SIMPLEVAT_DB: simpleaccounts_db
+      SIMPLEVAT_DB_USER: simpleaccounts_user
+      SIMPLEVAT_DB_PASSWORD: SimpleAccounts@2023
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14.8
+    restart: always
+    environment:
+      POSTGRES_USER: simpleaccounts_user
+      POSTGRES_PASSWORD: SimpleAccounts@2023
+      POSTGRES_DB: simpleaccounts_db
+    volumes:
+      - ./data:/var/lib/postgresql/data
