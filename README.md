@@ -42,12 +42,21 @@ SimpleAccounts is an innovative accounting software that provides a comprehensiv
 - Payroll __*Free__
   - Payroll Run
   - Payroll Config
-- Dedicated Support __*Paid__
-  - Online +Email +Chat +Phone Support
-  - Response within 30 Minutes 5x7
-  - Unlimited Training Sessions
-  - Timely Upgrade to Latest Features
-  - Account Manager
+
+### Support
+
+|                     | Community Support     | Basic Support                      | Premium Support                    |
+|---------------------|-----------------------|------------------------------------|------------------------------------|
+| Price               | FREE                  | AED 490 (Paid Yearly)              | AED 990 (Paid Yearly)              |
+| Upgrades            | No Commitment         | Quarterly                          | Monthly                            |
+| Response Time       | N/A                   | 24 hours                           | 4 hours                            |
+| Channel             | Community             | Email + Chat                       | Email + Chat + Calls               |
+| Accountants         | N/A                   | N/A                                | Pool                               |
+| Training            | Community             | Online Material                    | Dedicated                          |
+| Integration         | N/A                   | Documentation Support              | Technical Support                  |
+| Addons              | N/A                   | Standard Addons                    | Customized Addons                  |
+| Customization       | N/A                   | Scheduled                          | Prioritized                        |
+
 
 ## Installation
 
