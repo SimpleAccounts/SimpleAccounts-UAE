@@ -55,9 +55,9 @@ SimpleAccounts can be installed using the following methods:
 
 1. [Docker](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/main/docker/README.md): Install SimpleAccounts as a Docker container.
 2. Kubernetes: Deploy SimpleAccounts on a Kubernetes cluster. (Coming Soon...)
-3. Linux OS: Install SimpleAccounts on a Linux operating system. (Coming Soon...)
-4. Mac OS: Install SimpleAccounts on a macOS. (Coming Soon...)
-5. Windows OS: Install SimpleAccounts on a Windows operating system. (Coming Soon...)
+3. [Linux OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/main/linux-os/README.md): Install SimpleAccounts on a Linux operating system.
+4. [Mac OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/main/mac-os/README.md): Install SimpleAccounts on a macOS.
+5. [Windows OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/tree/main/windows-os/README.md): Install SimpleAccounts on a Windows operating system.
 6. Microsoft Azure Cloud: Deploy SimpleAccounts on Microsoft Azure Cloud. (Coming Soon...)
 7. AWS Cloud: Deploy SimpleAccounts on Amazon Web Services (AWS) Cloud. (Coming Soon...)
 8. Google Cloud: Deploy SimpleAccounts on Google Cloud. (Coming Soon...)
