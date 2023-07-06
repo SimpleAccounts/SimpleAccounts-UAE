@@ -39,6 +39,31 @@ This command will download the required Docker images and start the containers i
 
 Access the SimpleAccounts-UAE application by opening your web browser and navigating to http://localhost:80.
 
+## SMTP Settings 
+
+Following are the SMTP settings for every type of Gmail Account there is:
+To use the SMTP server of your Gmail address, you will need a combination of details. The SMTP Gmail settings you need are listed below.
+
+## Gmail SMTP Settings
+
+The default Gmail SMTP server name is smtp.gmail.com and if you use it, you can configure any external email application to send out messages.
+The secure SMTP Gmail ports are 465 and 587.
+•	Outgoing Mail (SMTP) Server Address: smtp.gmail.com
+•	Username: Your Gmail Address (e.g. user@gmail.com)
+•	Authentication: Yes
+•	Password: Your Gmail Password
+•	Gmail SMTP Port: 465 (SSL required) or 587 (TLS required)
+
+{Example: The following details of SMTP User}
+```shell
+•	SMTP_USER: (e.g. user@gmail.com)
+•	SMTP_PASS: (e.g. 12345)
+•	SMTP_HOST: smtp.mailgun.org
+•	SMTP_PORT: 587
+•	SMTP_AUTH: true
+```
+
+
 ## Environment Variables
 
 The following environment variables can be configured in the `docker/docker-compose.yml` file under the backend service section:
