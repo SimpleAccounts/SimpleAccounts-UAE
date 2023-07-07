@@ -84,3 +84,28 @@ The following environment variables can be configured in the `docker/docker-comp
 It is recommended to review and update these variables according to your specific configuration.
 
 > Note: Please ensure that sensitive information, such as passwords, are stored securely and not committed to version control.
+
+
+## Steps on creating a free SMTP account
+
+## Mailgun SMTP 
+
+Mailgun is a third-party email service that is used to send outgoing emails through SMTP on the server. Those outgoing emails are maybe part of the email marketing campaigns or transactional emails such as password reset emails, order confirmation emails, user registration emails, etc.
+
+Setup Mailgun as SMTP
+
+`Important`
+
+Please be advised that you need to have an account with Mailgun to integrate SMTP.
+Follow the guide below to configure a custom SMTP server in your account:
+`SMTP Configuration for Mailgun`
+    •	Log in to your Mailgun account with your login credentials. First, enter your email address and hit Next.
+    •	Proceed to Mailgun Sending > Domains, and add your custom domain. Only verified domains allowed.
+    •	Next proceed to Mailgun Settings > API Keys. Your API key was created when you signed up for your account; copy it from Private API Key.
+    •	Enter smtp.mailgun.org as your host and username as your mailgun email address.
+    •	The port number can be saved as 587.The password is the API key saved from the previous step.
+
+`Test SMTP`
+    •	Once the SMTP is set, you can enter a test email and click on Test Configuration to be able to verify if the SMTP flow is working or not.
+
+Above details can be used to setup the `Environment Variables` from the above section.
