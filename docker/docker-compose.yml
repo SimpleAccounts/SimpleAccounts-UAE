@@ -1,16 +1,33 @@
 version: '3'
 
 services:
+  db:
+    container_name: db
+    image: postgres:14.8
+    restart: always
+    environment:
+      POSTGRES_USER: simpleaccounts_user
+      POSTGRES_PASSWORD: SimpleAccounts@2023 
+      POSTGRES_DB: simpleaccounts_db
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -U simpleaccounts_user -d simpleaccounts_db -p 5432 -t 5"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
   frontend:
-    image: simpleaccounts/simpleaccounts-frontend-uae:blue.berry.12
+    image: simpleaccounts/simpleaccounts-frontend-uae:blue.berry.21
     ports:
       - 80:80
     environment:
-      SIMPLEVAT_RELEASE: blue.berry.12
+      SIMPLEVAT_RELEASE: blue.berry.21
       SIMPLEVAT_HOST: http://localhost:8080
 
   backend:
-    image: simpleaccounts/simpleaccounts-backend-uae:blue.berry.1
+    image: simpleaccounts/simpleaccounts-backend-uae:blue.berry.8
     ports:
       - 8080:8080
     environment:
@@ -20,21 +37,15 @@ services:
       SIMPLEVAT_SMTP_PORT: ""
       SIMPLEVAT_SMTP_AUTH: ""
       SIMPLEVAT_SMTP_STARTTLS_ENABLE: ""
-      SIMPLEVAT_RELEASE: blue.berry.1
+      SIMPLEVAT_RELEASE: blue.berry.8
       SIMPLEVAT_HOST: http://backend:8080
       SIMPLEVAT_DB_HOST: db
       SIMPLEVAT_DB: simpleaccounts_db
       SIMPLEVAT_DB_USER: simpleaccounts_user
       SIMPLEVAT_DB_PASSWORD: SimpleAccounts@2023
+      SIMPLEVAT_DB_PORT: 5432
     depends_on:
+      db:
+        condition: service_healthy
+    links:
       - db
-
-  db:
-    image: postgres:14.8
-    restart: always
-    environment:
-      POSTGRES_USER: simpleaccounts_user
-      POSTGRES_PASSWORD: SimpleAccounts@2023
-      POSTGRES_DB: simpleaccounts_db
-    volumes:
-      - ./data:/var/lib/postgresql/data
