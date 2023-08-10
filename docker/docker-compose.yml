@@ -23,7 +23,7 @@ services:
     ports:
       - 80:80
     environment:
-      SIMPLEVAT_RELEASE: blue.berry.21
+      SIMPLEVAT_RELEASE: blue.berry.12
       SIMPLEVAT_HOST: http://localhost:8080
 
   backend:

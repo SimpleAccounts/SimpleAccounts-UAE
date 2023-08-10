@@ -39,6 +39,31 @@ This command will download the required Docker images and start the containers i
 
 Access the SimpleAccounts-UAE application by opening your web browser and navigating to http://localhost:80.
 
+## SMTP Settings 
+
+Following are the SMTP settings for every type of Gmail Account there is:
+To use the SMTP server of your Gmail address, you will need a combination of details. The SMTP Gmail settings you need are listed below.
+
+## Gmail SMTP Settings
+
+The default Gmail SMTP server name is smtp.gmail.com and if you use it, you can configure any external email application to send out messages.
+The secure SMTP Gmail ports are 465 and 587.
+•	Outgoing Mail (SMTP) Server Address: smtp.gmail.com
+•	Username: Your Gmail Address (e.g. user@gmail.com)
+•	Authentication: Yes
+•	Password: Your Gmail Password
+•	Gmail SMTP Port: 465 (SSL required) or 587 (TLS required)
+
+{Example: The following details of SMTP User}
+```shell
+•	SMTP_USER: (e.g. user@gmail.com)
+•	SMTP_PASS: (e.g. 12345)
+•	SMTP_HOST: smtp.mailgun.org
+•	SMTP_PORT: 587
+•	SMTP_AUTH: true
+```
+
+
 ## Environment Variables
 
 The following environment variables can be configured in the `docker/docker-compose.yml` file under the backend service section:
@@ -59,3 +84,28 @@ The following environment variables can be configured in the `docker/docker-comp
 It is recommended to review and update these variables according to your specific configuration.
 
 > Note: Please ensure that sensitive information, such as passwords, are stored securely and not committed to version control.
+
+
+## Steps on creating a free SMTP account
+
+## Mailgun SMTP 
+
+Mailgun is a third-party email service that is used to send outgoing emails through SMTP on the server. Those outgoing emails are maybe part of the email marketing campaigns or transactional emails such as password reset emails, order confirmation emails, user registration emails, etc.
+
+Setup Mailgun as SMTP
+
+`Important`
+
+Please be advised that you need to have an account with Mailgun to integrate SMTP.
+Follow the guide below to configure a custom SMTP server in your account:
+`SMTP Configuration for Mailgun`
+    •	Log in to your Mailgun account with your login credentials. First, enter your email address and hit Next.
+    •	Proceed to Mailgun Sending > Domains, and add your custom domain. Only verified domains allowed.
+    •	Next proceed to Mailgun Settings > API Keys. Your API key was created when you signed up for your account; copy it from Private API Key.
+    •	Enter smtp.mailgun.org as your host and username as your mailgun email address.
+    •	The port number can be saved as 587.The password is the API key saved from the previous step.
+
+`Test SMTP`
+    •	Once the SMTP is set, you can enter a test email and click on Test Configuration to be able to verify if the SMTP flow is working or not.
+
+Above details can be used to setup the `Environment Variables` from the above section.
