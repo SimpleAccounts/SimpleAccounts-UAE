@@ -15,7 +15,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -U simpleaccounts_user -d simpleaccounts_db -h localhost"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   frontend:
     image: simpleaccounts/simpleaccounts-frontend-uae:blue.berry.21
