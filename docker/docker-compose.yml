@@ -18,7 +18,7 @@ services:
       retries: 10
 
   frontend:
-    image: simpleaccounts/simpleaccounts-frontend-uae:blue.berry.21
+    image: simpleaccounts/simpleaccounts-frontend-uae:blue.berry.102
     ports:
       - 80:80
     environment:
@@ -26,7 +26,7 @@ services:
       SIMPLEVAT_HOST: http://localhost:8080
 
   backend:
-    image: simpleaccounts/simpleaccounts-backend-uae:blue.berry.8
+    image: simpleaccounts/simpleaccounts-backend-uae:blue.berry.74
     ports:
       - 8080:8080
     environment:
