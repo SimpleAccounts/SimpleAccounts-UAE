@@ -24,7 +24,7 @@ Make sure you see the version numbers for both commands.
 
 ```shell
 git clone https://github.com/SimpleAccounts/SimpleAccounts-UAE.git
-cd SimpleAccounts-UAE
+cd SimpleAccounts-UAE/docker
 ```
 
 2. Open the `docker/docker-compose.yml` file and review the environment variables defined under the backend service section. These variables control various aspects of the application, including SMTP configuration and database settings. It is recommended to change the default values, especially for sensitive information such as passwords.
