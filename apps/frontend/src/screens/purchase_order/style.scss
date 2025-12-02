@@ -1,0 +1,55 @@
+.supplier-invoice-screen {
+  .card-header {
+    color: #2064d8;
+  }
+  .status-panel {
+    border: 1px solid #e4e7ea;
+    .status-title {
+      color: #1b5083;
+    }
+  }
+  .btn-group {
+    .btn {
+      color: #ffffff !important;
+    }
+  }
+  .badge {
+    padding: 0.4em 0.6em;
+    font-size: 90%;
+  }
+
+  .supplier-invoice-table {
+    .my-link {
+      font-weight: bold;
+      color: #2064d8;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  }
+  .invalid {
+    background: rgb(219, 142, 142);
+  }
+  .rounded-loader {
+    position: absolute;
+    top: 50%;
+    z-index: 9999;
+  }
+  // .react-bs-table table{
+  //   width: 1400px;
+  // }
+}
+.custom-expand-body-0 {
+  max-height: 3000px;
+  transition: max-height 4s;
+}
+.current-is-hidden {
+  transition: 0.2s;
+}
+
+.table-header-bg{
+  background-color: #dfe9f7;
+}
+.VerifyTRN
+{
+  text-align: right;
+}

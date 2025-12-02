@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm-frontend.fullname" . }}
+
+  labels:
+    {{- include "helm-frontend.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "helm-frontend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "helm-frontend.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "helm-frontend.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-frontend
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository.frontend.imageName }}:{{ .Values.image.repository.frontend.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.ports.containerPort.frontendPort }}
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.ports.containerPort.frontendPort }}
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 60
+            timeoutSeconds: 30
+            successThreshold: 1
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.ports.containerPort.frontendPort }}
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 30
+            successThreshold: 1
+            failureThreshold: 10
+          env:
+            - name: SIMPLEVAT_RELEASE
+              value: {{ .Values.simpleVatFrontendRelease }}
+            - name: SIMPLEVAT_HOST
+              value: {{ .Values.simpleVatHost }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,6 +1,41 @@
-# SimpleAccounts
+# SimpleAccounts UAE
 
 SimpleAccounts is an innovative accounting software that provides a comprehensive solution for businesses of all sizes. With its user-friendly interface and powerful features, it streamlines financial management and enables businesses to make informed decisions.
+
+## Monorepo Structure
+
+```
+SimpleAccounts-UAE/
+├── apps/
+│   ├── frontend/          # Frontend application (JS/TS)
+│   ├── backend/           # Backend application (Java/Spring Boot)
+│   └── agents/            # Agent applications
+├── packages/              # Shared packages
+├── deploy/                # Deployment configurations
+│   ├── docker/
+│   ├── linux-os/
+│   ├── mac-os/
+│   └── windows-os/
+├── package.json           # Root package.json (npm workspaces)
+└── README.md
+```
+
+## Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Run frontend
+npm run frontend
+
+# Run backend
+npm run backend:run
+
+# Build all
+npm run frontend:build
+npm run backend:build
+```
 
 ## Key Features
 
@@ -62,11 +97,11 @@ SimpleAccounts is an innovative accounting software that provides a comprehensiv
 
 SimpleAccounts can be installed using the following methods:
 
-1. [Docker](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/main/docker/README.md): Install SimpleAccounts as a Docker container.
+1. [Docker](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/main/deploy/docker/README.md): Install SimpleAccounts as a Docker container.
 2. Kubernetes: Deploy SimpleAccounts on a Kubernetes cluster. (Coming Soon...)
-3. [Linux OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/main/linux-os/README.md): Install SimpleAccounts on a Linux operating system.
-4. [Mac OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/main/mac-os/README.md): Install SimpleAccounts on a macOS.
-5. [Windows OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/tree/main/windows-os/README.md): Install SimpleAccounts on a Windows operating system.
+3. [Linux OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/main/deploy/linux-os/README.md): Install SimpleAccounts on a Linux operating system.
+4. [Mac OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/main/deploy/mac-os/README.md): Install SimpleAccounts on a macOS.
+5. [Windows OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/tree/main/deploy/windows-os/README.md): Install SimpleAccounts on a Windows operating system.
 6. Microsoft Azure Cloud: Deploy SimpleAccounts on Microsoft Azure Cloud. (Coming Soon...)
 7. AWS Cloud: Deploy SimpleAccounts on Amazon Web Services (AWS) Cloud. (Coming Soon...)
 8. Google Cloud: Deploy SimpleAccounts on Google Cloud. (Coming Soon...)

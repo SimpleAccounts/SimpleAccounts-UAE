@@ -1,0 +1,105 @@
+.dashboard-screen {
+	// Common CSS
+	.nav-link {
+		padding: 0.4rem 0.6rem;
+	}
+	.animated {
+		position: relative;
+	}
+	.date-select {
+		button {
+			margin: 0 !important;
+			margin-right: 5px !important;
+			background: transparent !important;
+			border: none !important;
+			box-shadow: none !important;
+		}
+	}
+	.h1 {
+		font-size: 25px;
+		margin-right: 50px;
+		color: #2064d8;
+		font-weight:bold
+	}
+
+	.card-footer,
+	.card-header {
+		padding: 5px 20px;
+		line-height: 1.7em;
+		font-weight: 700;
+		height: 40px;
+		color: #646464;
+
+		button {
+			margin: 0 !important;
+		}
+	}
+
+	.card-header-actions {
+		select {
+			background: transparent;
+			border: none;
+			box-shadow: none;
+		}
+	}
+
+	.card-body.tab-card {
+		padding: 5px;
+		background: #eee;
+	}
+
+	.card-columns .cash-card, .card-columns .bank-card .invoice-card {
+		box-shadow: none !important;
+	}
+
+	.flex-wrapper {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+	}
+
+	button,
+	.form-control {
+		padding: 0 10px;
+		height: 28px;
+		font-size: 12px;
+	}
+
+	.data-info {
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+
+		.data-item:not(:last-child) {
+			border-right: 1px solid #eee;
+			padding: 0px 1%;
+			margin-bottom: 20px;
+		}
+
+		.data-item {
+			padding: 0 1%;
+			display: flex;
+			margin-bottom: 20px;
+			width: max-content;
+			text-align: center;
+
+			img {
+				margin-right: 20px;
+				height: 40px;
+			}
+
+			h3 {
+				margin: 0;
+				font-size: 20px;
+				color: #5f5d5d;
+			}
+
+			p {
+				font-size: 14px;
+				color: #a7a7a7;
+				margin: 0;
+				font-weight: 700;
+			}
+		}
+	}
+}

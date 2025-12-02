@@ -1,0 +1,53 @@
+ //Invoice Card
+.invoice-card {
+  h1 {
+		font-size: 21px;
+		margin-right: 50px;
+		color: #2064d8;
+		font-weight:bold
+	}
+  .data-item:not(:last-child),
+  .data-item {
+    padding: 0 20px !important;
+
+    p {
+      font-size: 12px !important;
+    }
+
+    h3 {
+      font-size: 18px !important;
+    }
+  }
+  canvas {
+    height: 250px !important;
+  }
+
+  button {
+    margin-top: 5px;
+  }
+}
+.card-shadow {
+	box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 8px 0px;
+}
+.flex-color{
+	background-color: #dfe9f7;
+}
+.card-h1{
+	margin-top: 2%;
+    margin-left: 2%;
+}
+.card-margin{
+	margin-bottom: 0px !important;
+}
+.card-select-alignment{
+	margin-top: 0.7%;
+    margin-right: 1% !important;
+}
+.card-select{
+	background: white !important; 
+	border: 2px solid !important;
+  }
+ 
+.title-bottom-border{
+	border-bottom: 1px solid #c8ced3  !important;
+	} 

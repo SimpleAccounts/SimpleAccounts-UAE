@@ -1,0 +1,12 @@
+@media print {
+	body * {
+		visibility: hidden;
+	}
+}
+.table .table-custom-head th {
+	background-color: #2064d8 !important;
+	border-color: #614bc4 !important;
+}
+.mainLable {
+	background-color: rgba(0, 0, 0, 0.05) !important;
+}

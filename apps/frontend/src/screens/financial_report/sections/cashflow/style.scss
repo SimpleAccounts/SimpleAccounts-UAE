@@ -1,0 +1,31 @@
+.cashflow-table-bordered{
+  td{
+    border: 1px solid black !important;
+    color: #000000 !important;
+  } 
+  th{
+    border: 1px solid black !important;
+  }
+  .wh {
+    color: #fff !important;
+  }
+  .bld {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+  }
+  .th {
+    // width: 65%;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    color: black;
+    background-color: #9CC2E5;
+    width: 70%;
+  }
+}
+
+.wid{
+  width: 60%;
+  margin: auto;
+}

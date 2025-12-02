@@ -1,0 +1,46 @@
+
+
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="Product">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="TableList">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Table" maxOccurs="unbounded" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="ColumnList">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Column" maxOccurs="unbounded" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:simpleContent>
+                                                                <xs:extension base="xs:byte">
+                                                                    <xs:attribute type="xs:string" name="inputColumn" use="optional"/>
+                                                                    <xs:attribute type="xs:string" name="dataType" use="optional"/>
+                                                                    <xs:attribute type="xs:string" name="setterMethod" use="optional"/>
+                                                                </xs:extension>
+                                                            </xs:simpleContent>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute type="xs:string" name="name" use="optional"/>
+                                    <xs:attribute type="xs:string" name="srcFileName" use="optional"/>
+                                    <xs:attribute type="xs:string" name="entityName" use="optional"/>
+                                    <xs:attribute type="xs:string" name="serviceName" use="optional"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name"/>
+            <xs:attribute type="xs:float" name="version"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+

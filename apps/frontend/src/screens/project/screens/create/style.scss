@@ -1,0 +1,28 @@
+.contact-modal {
+    max-width: 70% !important;
+}
+.salary-model{
+    max-width: 25% !important;
+}
+.designation-model{
+    max-width: 50% !important;
+}
+.chartofaccounts-modal{
+    max-width: 40% !important;
+}
+.payroll-modal{
+    position: fixed;
+    margin: auto;
+    max-width: 30% !important;
+    height: auto !important;
+    right: -30%;
+  
+	.Table, td, th {
+        // border:4px solid #0ba1de;
+        }
+        Table {
+          width: 100%;
+         
+        }
+      
+}

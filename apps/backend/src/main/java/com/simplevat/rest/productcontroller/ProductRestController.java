@@ -1,0 +1,290 @@
+package com.simplevat.rest.productcontroller;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.simplevat.entity.*;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.SingleLevelDropDownModel;
+import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
+import com.simplevat.service.*;
+import com.simplevat.utils.MessageUtil;
+import com.simplevat.utils.SimpleVatMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.simplevat.aop.LogRequest;
+import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.ProductPriceType;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
+import com.simplevat.constant.dbfilter.ProductFilterEnum;
+import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.security.JwtTokenUtil;
+
+import io.swagger.annotations.ApiOperation;
+
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
+/**
+ *
+ * @author Sonu
+ */
+@RestController
+@RequestMapping(value = "/rest/product")
+public class ProductRestController {
+	private final Logger logger = LoggerFactory.getLogger(ProductRestController.class);
+	@Autowired
+	private ProductService productService;
+
+	@Autowired
+	private VatCategoryService vatCategoryService;
+
+	@Autowired
+	private ProductRestHelper productRestHelper;
+
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
+
+	@Autowired
+	private InvoiceLineItemService invoiceLineItemService;
+
+	@Autowired
+	private TransactionCategoryService transactionCategoryService;
+
+	@Autowired
+	TranscationCategoryHelper transcationCategoryHelper;
+
+	@Autowired
+	private UserService userService;
+
+	@LogRequest
+	@ApiOperation(value = "Get Product List")
+	@GetMapping(value = "/getList")
+	public ResponseEntity<PaginationResponseModel> getProductList(ProductRequestFilterModel filterModel, HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			User user = userService.findByPK(userId);
+			Map<ProductFilterEnum, Object> filterDataMap = new EnumMap<>(ProductFilterEnum.class);
+			if(user.getRole().getRoleCode()!=1) {
+				filterDataMap.put(ProductFilterEnum.USER_ID, userId);
+			}
+			filterDataMap.put(ProductFilterEnum.PRODUCT_NAME, filterModel.getName());
+			filterDataMap.put(ProductFilterEnum.PRODUCT_CODE, filterModel.getProductCode());
+			filterDataMap.put(ProductFilterEnum.DELETE_FLAG, false);
+			if (filterModel.getVatPercentage() != null) {
+				filterDataMap.put(ProductFilterEnum.PRODUCT_VAT_PERCENTAGE,
+						vatCategoryService.findByPK(filterModel.getVatPercentage()));
+			}
+			if(filterModel.getOrder()!=null && filterModel.getOrder().equalsIgnoreCase("desc")) {
+				filterDataMap.put(ProductFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
+			}
+			else
+				filterDataMap.put(ProductFilterEnum.ORDER_BY, ORDERBYENUM.ASC);
+
+			if (filterModel.getProductPriceType() != null) {
+				filterDataMap.put(ProductFilterEnum.PRODUCT_PRICE_TYPE,
+						Arrays.asList(filterModel.getProductPriceType(), ProductPriceType.BOTH));
+			}
+			PaginationResponseModel response = productService.getProductList(filterDataMap, filterModel);
+			List<ProductListModel> productListModels = new ArrayList<>();
+			if (response == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			} else {
+				if (response.getData() != null) {
+					for (Product product : (List<Product>) response.getData()) {
+						ProductListModel model = productRestHelper.getListModel(product);
+						productListModels.add(model);
+					}
+					response.setData(productListModels);
+				}
+			}
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	
+	@LogRequest
+	@Transactional(rollbackFor = Exception.class)
+	@ApiOperation(value = "Delete Product By ID")
+	@DeleteMapping(value = "/delete")
+	public ResponseEntity<?> deleteProduct(@RequestParam(value = "id") Integer id) {
+		try {
+			SimpleVatMessage message = null;
+			Product product = productService.findByPK(id);
+			if (product != null) {
+				productService.deleteByIds(Arrays.asList(id));
+			}
+			message = new SimpleVatMessage("0035",
+					MessageUtil.getMessage("product.deleted.successful.msg.0035"), false);
+			return new ResponseEntity<>(message,HttpStatus.OK);
+		} catch (Exception e) {SimpleVatMessage message= null;
+			message = new SimpleVatMessage("",
+					MessageUtil.getMessage("delete.unsuccessful.msg"), true);
+			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@LogRequest
+	@Transactional(rollbackFor = Exception.class)
+	@ApiOperation(value = "Delete Product in Bulk")
+	@DeleteMapping(value = "/deletes")
+	public ResponseEntity<?> deleteProducts(@RequestBody DeleteModel ids) {
+		try {
+			SimpleVatMessage message = null;
+			productService.deleteByIds(ids.getIds());
+			message = new SimpleVatMessage("0035",
+					MessageUtil.getMessage("product.deleted.successful.msg.0035"), false);
+			return new ResponseEntity<>(message,HttpStatus.OK);
+		} catch (Exception e) {
+			SimpleVatMessage message= null;
+			message = new SimpleVatMessage("",
+					MessageUtil.getMessage("delete.unsuccessful.msg"), true);
+			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
+	@LogRequest
+	@ApiOperation(value = "Get Product By ID")
+	@GetMapping(value = "/getProductById")
+	public ResponseEntity<ProductRequestModel> getProductById(@RequestParam(value = "id") Integer id) {
+		try {
+			Product product = productService.findByPK(id);
+			return new ResponseEntity<>(productRestHelper.getRequestModel(product), HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@LogRequest
+	@Transactional(rollbackFor = Exception.class)
+	@ApiOperation(value = "Add New Product")
+	@PostMapping(value = "/save")
+	public ResponseEntity<?> save(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("productCode", productRequestModel.getProductCode());
+			List<Product> existingProductCode = productService.findByAttributes(map);
+			if (existingProductCode!=null && !existingProductCode.isEmpty()){
+				return new ResponseEntity<>("Product Code Already Exist", HttpStatus.OK);
+			}
+			SimpleVatMessage message= null;
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			productRequestModel.setCreatedBy(userId);
+			Product product = productRestHelper.getEntity(productRequestModel);
+			product.setCreatedDate(LocalDateTime.now());
+			product.setDeleteFlag(Boolean.FALSE);
+			product.setIsInventoryEnabled(productRequestModel.getIsInventoryEnabled());
+			productService.persist(product);
+			if(Boolean.TRUE.equals(product.getIsInventoryEnabled()))
+			{
+			productRestHelper.saveInventoryEntity(product,productRequestModel,userId);
+			}
+			message = new SimpleVatMessage("0036",
+					MessageUtil.getMessage("product.created.successful.msg.0036"), false);
+					return new ResponseEntity<>(message,HttpStatus.OK);
+		} catch (Exception e) {
+			SimpleVatMessage message= null;
+			message = new SimpleVatMessage("",
+					MessageUtil.getMessage("create.unsuccessful.msg"), true);
+			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@LogRequest
+	@Transactional(rollbackFor = Exception.class)
+	@ApiOperation(value = "Update Product")
+	@PostMapping(value = "/update")
+	public ResponseEntity<?> update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
+		try {
+			SimpleVatMessage message= null;
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			productRequestModel.setCreatedBy(userId);
+			Product product = productRestHelper.getEntity(productRequestModel);
+			product.setLastUpdateDate(LocalDateTime.now());
+			if(productRequestModel.getIsInventoryEnabled()!=null){
+				product.setIsInventoryEnabled(productRequestModel.getIsInventoryEnabled());
+			}
+			product.setLastUpdatedBy(userId);
+			productService.update(product);
+			if(product.getIsInventoryEnabled()!=null &&  Boolean.TRUE.equals(product.getIsInventoryEnabled()))
+			{
+			 productRestHelper.updateInventoryEntity(productRequestModel,userId);
+			}
+			message = new SimpleVatMessage("0037",
+					MessageUtil.getMessage("product.updated.successful.msg.0037"), false);
+			return new ResponseEntity<>(message,HttpStatus.OK);
+		} catch (Exception e) {
+			SimpleVatMessage message= null;
+			message = new SimpleVatMessage("",
+					MessageUtil.getMessage("update.unsuccessful.msg"), true);
+			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@LogRequest
+	@ApiOperation(value = "Get Invoices Count For Product")
+	@GetMapping(value = "/getInvoicesCountForProduct")
+	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int productId){
+		Integer response = invoiceLineItemService.getTotalInvoiceCountByProductId(productId);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@LogRequest
+	@ApiOperation(value = "Get Transaction category For Product")
+	@GetMapping(value = "/getTransactionCategoryListForSalesProduct")
+	public ResponseEntity<?> getTransactionCategoryListForProduct(){
+		List<SingleLevelDropDownModel> response  = new ArrayList<>();
+		List<TransactionCategory> transactionCategoryList = transactionCategoryService.getTransactionCategoryListForSalesProduct();
+        if (transactionCategoryList!=null){
+			response = transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCategoryList);
+		}
+
+
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@LogRequest
+	@ApiOperation(value = "Get Transaction category For Product")
+	@GetMapping(value = "/getTransactionCategoryListForPurchaseProduct")
+	public ResponseEntity<?> getTransactionCategoryListForPurchaseProduct(){
+		List<SingleLevelDropDownModel> response  = new ArrayList<>();
+		List<TransactionCategory> transactionCategoryList = transactionCategoryService.getTransactionCategoryListForPurchaseProduct();
+		if (transactionCategoryList!=null){
+			response = transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCategoryList);
+		}
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@LogRequest
+	@ApiOperation(value = "Get Transaction category For Inventory")
+	@GetMapping(value = "/getTransactionCategoryListForInventory")
+	public ResponseEntity<?> getTransactionCategoryListForInventory(){
+		List<DropdownModel> response  = new ArrayList<>();
+		List<TransactionCategory> transactionCategoryList = transactionCategoryService.getTransactionCategoryListForInventory();
+		if (transactionCategoryList!=null){
+			DropdownModel dropdownModel = new DropdownModel(transactionCategoryList.get(0).getTransactionCategoryId(),
+					transactionCategoryList.get(0).getTransactionCategoryName());
+			response.add(dropdownModel);
+		}
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+}

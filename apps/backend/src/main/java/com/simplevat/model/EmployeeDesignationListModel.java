@@ -1,0 +1,17 @@
+package com.simplevat.model;
+
+
+import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
+
+import javax.persistence.*;
+
+@Data
+public class EmployeeDesignationListModel {
+    private Integer id;
+    private String designationName;
+    private Integer designationId;
+    private Integer parentId;
+    public void getDesignationId(Integer designationId) {
+    }
+}

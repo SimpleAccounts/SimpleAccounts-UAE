@@ -1,0 +1,15 @@
+.create-bank-transaction-screen {
+  .card-header {
+    color: #2064d8;
+  }
+  .invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.71rem;
+    color:#f86c6b;
+  }
+}
+.hideAttachment {
+	display: none;
+}

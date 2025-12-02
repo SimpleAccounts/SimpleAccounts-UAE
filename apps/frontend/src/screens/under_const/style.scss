@@ -1,0 +1,59 @@
+.log-in-screen {
+	.card-header {
+		border-bottom: 0px;
+	}
+	.logo-container {
+		text-align: center;
+		margin-bottom: 20px;
+		img {
+			width: 67%;
+		}
+	}
+	background-color: #ffffffc7;
+}
+.forgot-password-modal {
+	max-width: 40%;
+	transform: translate(0, -50%) !important;
+	top: 50%;
+	transition: transform 10s;
+}
+.r-btn {
+	margin-top: 10px;
+	cursor: pointer;
+}
+.r-btn span {
+	font-size: 16px;
+	color: #54e0c4;
+	font-weight: 700;
+	margin-top: 10px;
+}
+.main-banner_container{
+	position: relative;
+    left: 0;
+    top: 0;
+}
+.login_banckground{
+	position: relative;
+    top: 0px;
+    left: 0;
+	float: left;
+	width: auto;
+  max-width: 1000px;
+  height: auto;
+  max-height: 100%;
+}
+.login_banner{
+	position: absolute;
+    top: 60px;
+    left: 0;
+	float: left;
+	margin-left: 4%;
+}
+.password-icon {
+	position: absolute;
+	top: 41px;
+	right: 41px;
+	cursor: pointer;
+	color: grey;
+  }
+  

@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm-backend.fullname" . }}
+
+  labels:
+    {{- include "helm-backend.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "helm-backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "helm-backend.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "helm-backend.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository.backend.imageName }}:{{ .Values.image.repository.backend.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.ports.containerPort.backendPort }}
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /rest/company/getHealthCheck
+              port: {{ .Values.ports.containerPort.backendPort }}
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 60
+            timeoutSeconds: 30
+            successThreshold: 1
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /rest/company/getHealthCheck
+              port: {{ .Values.ports.containerPort.backendPort }}
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 30
+            successThreshold: 1
+            failureThreshold: 10
+          env:
+            - name: SIMPLEVAT_SMTP_USER
+              value: "{{ .Values.email.simplevatSmtpUser }}"
+            - name: SIMPLEVAT_SMTP_PASS
+              value: "{{ .Values.email.simplevatSmtpPass }}"
+            - name: SIMPLEVAT_SMTP_HOST
+              value: "{{ .Values.email.simplevatSmtpHost }}"
+            - name: SIMPLEVAT_SMTP_PORT
+              value: "{{ .Values.email.simplevatSmtpPort }}"
+            - name: SIMPLEVAT_SMTP_AUTH
+              value: "{{ .Values.email.simplevatSmtpAuth }}"
+            - name: SIMPLEVAT_SMTP_STARTTLS_ENABLE
+              value: "{{ .Values.email.simplevatSmtpStarttlsEnable }}"
+            - name: SIMPLEVAT_RELEASE
+              value: {{ .Values.simpleVatBackendRelease }}
+            - name: SIMPLEVAT_HOST
+              value: {{ .Values.simpleVatHost }}
+            - name: SIMPLEVAT_DB_PORT
+              value: {{ .Values.database.simpleVatDBPort | quote }}
+            - name: SIMPLEVAT_DB_SSL
+              value: {{ .Values.database.simpleVatDBSsl | quote }}
+            - name: SIMPLEVAT_DB_SSLMODE
+              value: {{ .Values.database.simpleVatDBSslmode }}
+            - name: SIMPLEVAT_DB_SSLROOTCERT
+              value: {{ .Values.database.simpleVatDBSslrootcert }}
+            - name: SIMPLEVAT_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials-{{ include "helm-backend.fullname" . }}
+                  key: db-host
+            - name: SIMPLEVAT_DB
+              value: {{ .Values.database.simpleVatDB }}
+            - name: SIMPLEVAT_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials-{{ include "helm-backend.fullname" . }}
+                  key: username
+            - name: SIMPLEVAT_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials-{{ include "helm-backend.fullname" . }}
+                  key: password
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
