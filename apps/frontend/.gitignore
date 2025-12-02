@@ -1,6 +1,10 @@
 # Dependencies
 node_modules/
 
+# Generated config (run ./env.sh to regenerate from .env)
+public/env-config.js
+env-config.js
+
 # Build
 build/
 dist/

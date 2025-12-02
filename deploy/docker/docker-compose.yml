@@ -1,6 +1,6 @@
 services:
-  # External Neon PostgreSQL database is used - no local db service needed
-  # Database: postgresql://<DB_USER>:<DB_PASSWORD>@<DB_HOST>/<DB_NAME>?sslmode=require&channel_binding=require
+  # Using local PostgreSQL database
+  # Connection: postgresql://simpleaccounts_db_user:SimpleAccounts@2023@host.docker.internal:5432/simpleaccounts_db
 
   backend:
     container_name: simpleaccounts-backend
@@ -17,13 +17,13 @@ services:
       SIMPLEVAT_SMTP_STARTTLS_ENABLE: ""
       SIMPLEVAT_RELEASE: blue.berry.81
       SIMPLEVAT_HOST: http://backend:8080
-      SIMPLEVAT_DB_HOST: <DB_HOST>
-      SIMPLEVAT_DB: <DB_NAME>
-      SIMPLEVAT_DB_USER: <DB_USER>
-      SIMPLEVAT_DB_PASSWORD: <DB_PASSWORD>
+      SIMPLEVAT_DB_HOST: host.docker.internal
+      SIMPLEVAT_DB: simpleaccounts_db
+      SIMPLEVAT_DB_USER: simpleaccounts_db_user
+      SIMPLEVAT_DB_PASSWORD: SimpleAccounts@2023
       SIMPLEVAT_DB_PORT: 5432
-      # SSL configuration for Neon database
-      SIMPLEVAT_DB_SSL_MODE: require
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - simpleaccounts-network
 
