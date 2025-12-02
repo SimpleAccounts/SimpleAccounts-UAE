@@ -1,0 +1,89 @@
+.select-register {
+	position: relative;
+	flex: 1 1 auto;
+	width: 1%;
+	margin-bottom: 0;
+}
+.select-register div:nth-child(2) {
+	position: relative;
+	flex: 1 1 auto;
+	width: 1%;
+	margin-bottom: 0;
+}
+.registerScreen h2 {
+	color: #2064d8;
+	font-weight: 600;
+}
+.registerScreen {
+	margin-bottom: 40px;
+}
+.inputRShow {
+    position: absolute;
+    top: 45%;
+    right: 10%;
+  }
+  .inputRShow:hover {
+    color: #2064d8;
+    cursor: pointer;
+  }
+
+  .password-icon {
+	position: absolute;
+	top: 41px;
+	right: 41px;
+	cursor: pointer;
+	color: grey;
+  }
+  .react-datepicker-wrapper{
+    width: 100%;
+  }
+  .phoneNumber{
+	.react-tel-input .form-control{
+		width: 260px !important;
+	}
+	.invalid-feedback {
+		display: block;
+		width: 100%;
+		margin-top: 0.25rem;
+		font-size: 0.71rem;
+		color:#f86c6b;
+	  }
+  }
+
+  .tooltip-icon {
+	position: relative;
+	display: inline-block;
+  }
+  .tooltip-icon .tooltiptext {
+	visibility: hidden;
+	width: 350px;
+	background-color: #555;
+	color: white;
+	border: 2px solid #555;
+	text-align: center;
+	border-radius: 10px;
+	padding: 5px 0;
+	position: absolute;
+	z-index: 1;
+	bottom: 150%;
+	left: -15px;
+	font-weight: normal;
+	opacity: 0;
+	transition: opacity 0.3s;
+  }
+  
+  .tooltip-icon .tooltiptext::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 10%;
+	margin-left: -20px;
+	border-width: 9px;
+	border-style: solid;
+	border-color: #555 transparent transparent transparent;
+  }
+  
+  .tooltip-icon:hover .tooltiptext {
+	visibility: visible;
+	opacity: 1;
+  }

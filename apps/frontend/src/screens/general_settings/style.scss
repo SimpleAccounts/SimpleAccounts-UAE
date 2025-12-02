@@ -1,0 +1,69 @@
+.general-settings-screen {
+    .card-header {
+      font-size: 20px;
+      color: #2064d8;
+    }
+    .card {
+      .table-action {
+        button {
+          width: 30px;
+          height: 30px;
+          padding: 0;
+        }
+      }
+    }
+    
+    h4:not(:first-child) {
+      margin-top: 20px !important;
+      margin-bottom: 10px;
+    }
+
+    .badge-info {
+      background-color: #63c2de;
+      color: white;
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+
+    .editor-toolbar * {
+        .rdw-colorpicker-modal,
+        .rdw-link-modal,
+        .rdw-embedded-modal,
+        .rdw-emoji-modal,
+        .rdw-image-modal {
+            width: 300px;
+            // left: -270px;
+            // height: max-content;
+        }
+        .rdw-link-modal {
+            height: max-content;
+
+            .rdw-link-modal-input {
+                margin-top: 0;
+                height: 30px;
+            }
+        }
+    }
+
+    .massage-editor {
+        border: 1px solid #e4e7ea;
+        height: 100%;
+        min-height: 330px;
+        padding: 0 10px;
+    }
+
+    table {
+      td {
+        padding: 8px 10px;
+      }
+    }
+
+    // .form-group {
+    //   button {
+    //     margin-left: 10px;
+    //     // height: 30px;
+    //     padding: 0 20px;
+    //     margin-top: 15px;
+    //   }
+    // }
+  }

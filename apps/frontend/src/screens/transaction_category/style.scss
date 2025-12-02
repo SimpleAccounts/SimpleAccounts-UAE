@@ -1,0 +1,27 @@
+.transaction-category-screen {
+  .card-header {
+    font-size: 20px;
+    color: #2064d8;
+  }
+
+  .toolbar {
+    button {
+      color: white !important;
+    } 
+  }
+
+  .my-link {
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .card {
+    .table-action {
+      button {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+      }
+    }
+  }
+}

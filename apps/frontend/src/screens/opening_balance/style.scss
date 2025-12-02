@@ -1,0 +1,48 @@
+.opening-balance-screen {
+  .card-header {
+    color: #2064d8;
+  }
+  .btn-group {
+    .btn {
+      color: #ffffff !important;
+    }
+  }
+  .badge {
+    padding: 0.4em 0.6em;
+    font-size: 90%;
+  }
+  .form-control:disabled {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    color: hsl(207, 11%, 16%);
+  }
+  select.form-control:disabled {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: "";
+  }
+  option:disabled {
+    background-color: lightgray !important;
+    color: black;
+  }
+  .selectField{
+    .css-1fhf3k1-control{
+      border-color: transparent;
+      background-color: transparent;
+      .css-107lb6w-singleValue{
+        color: hsl(207, 11%, 16%);
+      }
+      .css-1hb7zxy-IndicatorsContainer{
+        display: none;
+      }
+    }
+  }
+  .is-invalid{
+    border-color: #f86c6b;
+  }
+}
+.table-header-bg{
+  background-color: #dfe9f7;
+}

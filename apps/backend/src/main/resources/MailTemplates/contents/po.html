@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Embedded Style Sheet</title>
+  <style>
+        .outer {
+            width: 600px;
+            height: auto;
+            margin: 50px auto;
+            padding-top: 50px;
+            background-color:#f8f8ff;
+          border-radius:30px;
+		   padding:10px;
+        }
+
+.center {
+
+font-size:40px;
+text-align: center;
+ color:#1f65d7;
+}
+
+
+          .upper{
+             text-align:center;
+          }
+
+
+
+        </style>
+</head>
+<body>
+
+
+<div class="outer">
+  <div class="upper">
+    <img src='{companylogo}'style="width:120px;height:80px">
+  </div>
+  <div class="center">
+    <p><b>Purchase Order {poNumber}</b></p>
+  </div>
+  <div style="max-width:560px; margin:auto; padding:0 5%">
+    <div style="padding:30px 0; color:#000000; line-height:1.7; font-size:18px; font-family: Arial, Helvetica, sans-serif; border-top:1px solid #1f65d7">
+      Dear {supplierName},
+      </br></br>
+      I would like to place an order for the supply of the products listed in the attached document.
+      </br>
+      If you have any trouble servicing this order, inform us at the earliest.
+      </br>
+      Please feel free to contact us, if you have any doubts or need further classifications.
+      </br></br>
+      We are Looking forward to a long-term business relationship with you.
+      </br>
+    </div>
+
+    <div style="padding:7%; border-radius:20px; background: #3678e2; border:1px solid #fff; color:#ffffff">
+      <div style="padding:0 3% 3%; border-bottom:1px solid #ffffff; text-align:center">
+        <h3 style="margin-bottom:0;font-family: Helvetica, sans-serif; font-size:23px;">PO AMOUNT
+        </h3>
+        <h2 style="color:#ffffff; margin-top:10px">{currency} {total}</h2>
+      </div>
+      <div style="margin:auto; max-width:350px; padding:3%">
+        <p><span style="width:40%; padding-left:10%;font-family: Helvetica, sans-serif;float:left; font-size:17px">PO No</span>
+          <span style="width:40%; padding-left:10%;font-family: Helvetica, sans-serif;float:left;font-size:17px"><b>{poNumber}</b>
+</span></p>
+        </br>
+        <p><span style="width:40%; padding-left:10%;font-family: Helvetica, sans-serif; float:left;font-size:17px">Approve Date</span>
+          <span style="width:40%;font-family: Helvetica, sans-serif;font-size:17px;float:left; padding-left:10%"><b>{poApproveDate}</b>
+</span>
+        </p>
+        </br>
+        <p>
+          <span style="width:40%; padding-left:10%;font-family: Helvetica, sans-serif;float:left; font-size:17px">Receive Date</span>
+          <span style="width:40%; padding-left:10%;font-family: Helvetica, sans-serif;float:left;font-size:17px"><b>{poReceiveDate}</b>
+</span
+></p>
+
+      </div>
+    </div>
+  </div>
+  <div class="center"  style="width:auto;font-size:16px;background-color:#113964; border-radius:10px;margin:10px">
+
+    <br>
+    <a style="color:#ffffff" href= "https://www.simpleaccounts.io/about-us/">About Us</a>
+    &nbsp; &nbsp;
+    <a style="color:#ffffff" href= "https://www.simpleaccounts.io/contacts/">Contact Us</a>
+    &nbsp; &nbsp;
+    <a style="color:#ffffff" href= "https://www.simpleaccounts.io/privacy-policy/">Privacy Policy</a>
+    <br><br>
+    <div id="softlab_soc_icon_wrap_60fc08a430bad" class="softlab_module_social aleft with_bg add_box_shadow" style="margin-left:-6px; margin-right:-6px;">
+      <a id="soc_icon_60fc08a430be81" href="https://twitter.com/SimpleAccounts_ " title="Twitter"><img src= "https://www.simpleaccounts.io/wp-content/uploads/2021/07/Twitter-original.png " style= "font-size:12px; width:30px; height:30px; line-height:30px; margin-left:6px; margin-right:6px; margin-bottom:6px ";>
+      </a>
+      <a href= "https://www.facebook.com/simpleAccounts/"  title= "Facebook "><img src= "https://www.simpleaccounts.io/wp-content/uploads/2021/07/Facebook-original.png " style= "font-size:12px; width:30px; height:30px; line-height:30px; margin-left:6px; margin-right:6px; margin-bottom:6px ";></a>
+      <a  href= "https://www.linkedin.com/company/simpleaccounts"  title= "linkedin "><img src= "https://www.simpleaccounts.io/wp-content/uploads/2021/07/LinkedIn-Original.png " style= "font-size:12px; width:30px; height:30px; line-height:30px; margin-left:6px; margin-right:6px; margin-bottom:6px ";></a>
+
+      <a  href= "https://www.youtube.com/channel/UC_0Riyw8jQ--UW-A7oXtlKw"  title= "Youtube "><img src= "https://www.simpleaccounts.io/wp-content/uploads/2021/07/Youtube-original.png " style= "font-size:12px; width:30px; height:30px; line-height:30px; margin-left:6px; margin-right:6px; margin-bottom:6px ";></a>
+
+      <a href= "https://www.instagram.com/simpleaccounts_/"  title= "Instagram "><img src= "https://www.simpleaccounts.io/wp-content/uploads/2021/07/Instagram-original.png " style= "font-size:12px; width:30px; height:30px; line-height:30px; margin-left:6px; margin-right:6px; margin-bottom:6px ";></a>
+
+
+
+    </div>
+    <br>
+    <p style="color:#ffffff" >
+      Copyright © 2024  <a style= "font-weight:bold;color:#ffffff"  href= "https://www.simpleaccounts.io/">SimpleAccounts</a> All Rights Reserved. </p>
+    <br>
+
+  </div>
+</div>
+
+
+
+
+</body>
+</html>

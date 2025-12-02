@@ -1,0 +1,46 @@
+services:
+  # External Neon PostgreSQL database is used - no local db service needed
+  # Database: postgresql://<DB_USER>:<DB_PASSWORD>@<DB_HOST>/<DB_NAME>?sslmode=require&channel_binding=require
+
+  backend:
+    container_name: simpleaccounts-backend
+    image: ghcr.io/datainn/simpleaccounts-backend-ae:blue.berry.81
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SIMPLEVAT_SMTP_USER: ""
+      SIMPLEVAT_SMTP_PASS: ""
+      SIMPLEVAT_SMTP_HOST: ""
+      SIMPLEVAT_SMTP_PORT: ""
+      SIMPLEVAT_SMTP_AUTH: ""
+      SIMPLEVAT_SMTP_STARTTLS_ENABLE: ""
+      SIMPLEVAT_RELEASE: blue.berry.81
+      SIMPLEVAT_HOST: http://backend:8080
+      SIMPLEVAT_DB_HOST: <DB_HOST>
+      SIMPLEVAT_DB: <DB_NAME>
+      SIMPLEVAT_DB_USER: <DB_USER>
+      SIMPLEVAT_DB_PASSWORD: <DB_PASSWORD>
+      SIMPLEVAT_DB_PORT: 5432
+      # SSL configuration for Neon database
+      SIMPLEVAT_DB_SSL_MODE: require
+    networks:
+      - simpleaccounts-network
+
+  frontend:
+    container_name: simpleaccounts-frontend
+    image: ghcr.io/datainn/simpleaccounts-frontend-ae:blue.berry.112
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      SIMPLEVAT_RELEASE: blue.berry.112
+      SIMPLEVAT_HOST: http://localhost:8080
+    depends_on:
+      - backend
+    networks:
+      - simpleaccounts-network
+
+networks:
+  simpleaccounts-network:
+    driver: bridge

@@ -1,0 +1,48 @@
+.chart-account-screen {
+	.card-header {
+		color: #2064d8;
+	}
+	.btn-group {
+		.btn {
+			color: #ffffff !important;
+		}
+	}
+	.badge {
+		padding: 0.4em 0.6em;
+		font-size: 90%;
+	}
+	.bank-account-table {
+		.my-link {
+			font-weight: bold;
+			color: #2064d8;
+			text-decoration: none;
+			cursor: pointer;
+		}
+	}
+}
+
+input[type='checkbox'][disabled] {
+	display: none;
+}
+.table-header-bg{
+	background-color: #dfe9f7;
+  }
+  .Ag-gridActionButtons{ 
+	// .dropdown-item {
+	//   padding: 0px !important;
+	// }
+	 .card-body .btn-square{
+	   border-radius: 0px !important;
+	  padding-left: 10px !important;
+	  padding-right: 10px !important;
+	}
+	.btn-sm, .btn-group-sm > .btn{
+	  padding: 0.05rem 0.5rem !important;
+	}
+	.deleteButton{
+	  .btn-secondary:hover{
+		background-color: red !important;
+		border: white !important;
+	  }
+	}
+  }

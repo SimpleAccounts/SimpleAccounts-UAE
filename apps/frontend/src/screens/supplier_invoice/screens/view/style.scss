@@ -1,0 +1,152 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:700);
+.view-invoice-screen {
+	padding: 10px 30px;
+	.box {
+		position: relative;
+		// max-width: 600px;
+		width: 100%;
+		// height: 400px;
+		background: #fff;
+		box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+	}
+
+	/* common */
+	.ribbon {
+		width: 150px;
+		height: 150px;
+		overflow: hidden;
+		position: absolute;
+	}
+	.ribbon::before,
+	.ribbon::after {
+		position: absolute;
+		z-index: -1;
+		content: '';
+		display: block;
+	}
+	.ribbon span {
+		position: absolute;
+		display: block;
+		width: 225px;
+		padding: 15px 0;
+		// background-color: #3498db;
+		box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+		color: #fff;
+		font: 700 18px/1 'Lato', sans-serif;
+		text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+		text-transform: uppercase;
+		text-align: center;
+	}
+	.pending-color {
+		span {
+			background-color: #ffc107 !important;
+		}
+	}
+	.pending-color::before,
+	.pending-color::after {
+		border: 5px solid #ffc107 !important;
+	}
+
+	.post-color {
+		span {
+			background-color: #4dbd74 !important;
+		}
+	}
+
+	.post-color::before,
+	.post-color::after {
+		border: 5px solid #4dbd74 !important;
+	}
+
+	.saved-color {
+		span {
+			background-color: #54e0c4 !important;
+		}
+	}
+
+	.saved-color::before,
+	.saved-color::after {
+		border: 5px solid #54e0c4 !important;
+	}
+
+	/* top left*/
+	.ribbon-top-left {
+		top: -10px;
+		left: -10px;
+	}
+	.ribbon-top-left::before,
+	.ribbon-top-left::after {
+		border-top-color: transparent;
+		border-left-color: transparent;
+	}
+	.ribbon-top-left::before {
+		top: 0;
+		right: 0;
+	}
+	.ribbon-top-left::after {
+		bottom: 0;
+		left: 0;
+	}
+	.ribbon-top-left span {
+		right: -25px;
+		top: 30px;
+		transform: rotate(-45deg);
+	}
+
+	.action-btn-container {
+		display: flex;
+		justify-content: flex-end;
+		margin-bottom: 2rem;
+		.edit-btn {
+			border-radius: 0.25rem 0 0 0.25rem;
+		}
+		.pdf-btn {
+			border-radius: 0;
+		}
+		.print-btn {
+			border-radius: 0 0.25rem 0.25rem 0;
+		}
+		.close {
+			margin-bottom: 0 !important;
+			font-size: 1.3rem !important;
+			font-weight: 600 !important;
+			margin-left: 15px !important;
+			cursor: pointer;
+		}
+		.fa {
+			font-size: 1rem;
+			color: #423d3d;
+		}
+		.btn {
+			background: transparent !important;
+		}
+	}
+	#singlePage {
+		.header-row {
+			color: white;
+		}
+	}
+	@media print {
+		body * {
+			visibility: hidden;
+		}
+
+		#singlePage,
+		#singlePage * {
+			visibility: visible !important;
+		}
+
+		#singlePage * {
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+		#singlePage .header-row {
+			color: black !important;
+			background-color: black !important;
+		}
+		// #singlePage .cal-table tbody tr {
+		// 	margin-right: !important;
+		// }
+	}
+}

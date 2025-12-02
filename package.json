@@ -1,0 +1,26 @@
+{
+  "name": "simpleaccounts-uae",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SimpleAccounts UAE Monorepo",
+  "workspaces": [
+    "apps/frontend",
+    "apps/agents/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "frontend": "npm run start --workspace=simplevat-frontend",
+    "frontend:build": "npm run build --workspace=simplevat-frontend",
+    "backend:build": "cd apps/backend && ./mvnw clean package",
+    "backend:run": "cd apps/backend && ./mvnw spring-boot:run",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "keywords": [
+    "simpleaccounts",
+    "uae",
+    "accounting"
+  ],
+  "author": "",
+  "license": "UNLICENSED"
+}

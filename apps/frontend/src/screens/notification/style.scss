@@ -1,0 +1,14 @@
+.notification-screen {
+	.card-header {
+      font-size: 20px;
+      color: #2064d8;
+    }
+
+	.switch-label {
+		width: 65px !important;
+	}
+
+	.switch-label.switch-lg .switch-input:checked ~ .switch-slider::before {
+		transform: translateX(40px)
+	}
+}

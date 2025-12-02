@@ -1,0 +1,26 @@
+.create-journal-screen {
+  .card-header {
+    color: #2064d8;
+  }
+  .badge {
+    padding: 0.4em 0.6em;
+    font-size: 90%;
+  }
+  .journal-create-table {
+    td {
+      vertical-align: middle;
+    }
+  }
+  .total-item {
+    border-bottom: 1px solid #ccc;
+  }
+}
+.is-invalid {
+  .invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 1rem;
+    color:#f86c6b;
+  }
+}

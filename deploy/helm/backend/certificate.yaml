@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: wildcard-app-simpleaccounts-io-tls
+  namespace: simpleaccounts-app
+spec:
+  secretName: wildcard-app-simpleaccounts-io-tls
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  issuerRef:
+    # The issuer created previously
+    name: simpleaccounts-io-letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: '*.app.simpleaccounts.io'
+  dnsNames:
+    - '*.app.simpleaccounts.io'
+

@@ -1,0 +1,213 @@
+<!doctype html>
+<html>
+<head>
+    <style>
+    .logo {
+      float: left;
+      width: 25%;
+      height: 280px;
+    }
+    .name {
+      float: right;
+      width: 25%;
+      height: 280px;
+    }
+    td {
+      padding: 0 7px;
+    }
+    .table {
+      width: 100%;
+      border: 1px solid rgb(200, 206, 211);
+    }
+    .text-center {
+      text-align: center !important;
+    }
+  </style>
+</head>
+<body>
+<tr style="margin: auto;
+        padding: 30px;
+        border: 1px solid gray;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+        font-size: 13px;
+        line-height: 24px;
+        font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+        /*max-width: 1000px;*/
+        color: #555;">
+
+
+
+    <div style="overflow-x:auto; text-align:center; padding: 10px; border: 1px solid rgb(200, 206, 211);">
+
+        <div style="float:left"><img src='{companylogo}' width="120px" height="80px">
+        </div>
+        <div style="float:right;  text-align: right;">
+            <h1>PaySlip ({salaryMonth})</h1>
+            <h3>{companyName}</h3>
+            <div>{companyAddress1}</div>
+            <div> {poBoxNumber} , {state} , {country}</div>
+        </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+
+        <div>
+
+            <table style="width: 100%; border-collapse: collapse;">
+
+                <tbody style="vertical-align: baseline;">
+
+                <tr>
+
+                    <td style="padding: 15px 15px 15px;
+                    border: 1px solid rgb(200, 206, 211);">
+
+                        <b style="width: 50%;
+                        display: block;
+                        float: left;">Employee ID</b><b>:</b> {employeeCode}<br /><br />
+
+                        <b style="width: 50%;
+                        display: block;
+                        float: left;">Name</b><b>:</b> {empName}<br /><br />
+
+                        <b style="width: 50%;
+                        display: block;
+                        float: left;">Designation</b><b>:</b> {designation}<br /><br />
+
+                        <b style="width: 50%;
+                        display: block;
+                        float: left;">Date Of Joining</b><b>:</b> {dateOfJoining}<br /><br />
+
+                        <b style="width: 50%;
+                        display: block;
+                        float: left;">Pay Period</b><b>:</b> {startDate} <b> To </b> {endDate}<br /><br />
+
+                        <b style="width: 50%;
+                        display: block;
+                        float: left;">Pay Date</b><b>:</b> {payDate}<br /><br />
+
+                        <b style="width: 50%;
+                        display: block;
+                        float: left;">LOP Days</b><b>:</b> {lostOfPaidDays}<br />
+                    </td>
+                    {sifEnabled}
+
+                </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+        <br />
+    </div>
+    <br />
+    <div>
+        <table style="width: 100%; display: table;">
+            <tbody style="vertical-align: baseline;">
+            <tr>
+
+                <td style="padding: 0px;">
+
+                    <table class="table">
+                        <thead style="background-color: #dfe9f7">
+                        <tr>
+                            <th style="padding: 0.5rem;background-color: #dfe9f7;">Earnings </th>
+                            <th style="padding: 0.5rem;background-color: #dfe9f7;">Amount</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr><td>{earning}</td><td>{amount}</td></tr>
+                        </tbody>
+                        <tfoot style="background-color:#dfe9f7">
+                        <tr>
+                            <td style="background-color: #dfe9f7;"><b>Gross Earnings</b></td>
+                            <td style="text-align: right;background-color: #dfe9f7;">{currency} {grossTotal}</td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </td>
+
+
+
+                <td style="padding: 0px;">
+
+                    <table class="table">
+                        <thead style="background-color: #dfe9f7;">
+                        <tr>
+                            <th style="padding: 0.5rem;background-color: #dfe9f7;">Deductions</th>
+                            <th style="padding: 0.5rem;background-color: #dfe9f7;">Amount</th>
+                        </tr>
+                        </thead>
+
+                        <tbody class=" table-bordered table-hover">
+                        <tr><td>{deduction}</td><td>{amount}</td></tr>
+
+                        </tbody>
+                        <tfoot style="background-color: #dfe9f7">
+                        <tr>
+                            <td style="background-color: #dfe9f7;"><b>Total Deductions</b></td>
+                            <td style="text-align: right;background-color: #dfe9f7;">{currency} {totalDeductions}</td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--            <tr><td>{product}</td><td>{description}</td><td style="text-align:center">{quantity}</td><td style="text-align:center">{unitType}</td><td style="text-align:right">{unitPrice}</td><td style="text-align:right">{discount}</td><td style="text-align:center">{invoiceLineItemExciseTax}</td><td style="text-align:right">{exciseAmount}</td><td style="text-align:right">{vatType}</td><td style="text-align:right">{subTotal}</td></tr>-->
+
+    <br>
+
+    <div class="text-center"
+
+         style="width: 100%; border: 1px solid rgb(200, 206, 211); font-size: 12px; background-color: rgb(228, 248, 255);">
+
+        <h3> Salary Payable (A) <b>{currency}&nbsp;{totalNet}</b></h3>
+
+    </div>
+    <br>
+    <td>
+        <table class="table">
+            <thead style="background-color: #dfe9f7">
+            <tr>
+                <th style="padding: 0.5rem;background-color: #dfe9f7;"># </th>
+                <th style="padding: 0.5rem;background-color: #dfe9f7;">Transaction Date</th>
+                <th style="padding: 0.5rem;background-color: #dfe9f7;">Transaction Type </th>
+                <th style="padding: 0.5rem;background-color: #dfe9f7;">Category</th>
+                <th style="padding: 0.5rem;background-color: #dfe9f7;">Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr><td>{count}</td><td>{transactionDate}</td><td>{transactionType}</td><td>{category}</td><td>{transactionAmount}</td></tr>
+
+            </tbody>
+            <tfoot style="background-color:#dfe9f7">
+            <tr>
+                <td style="background-color: #dfe9f7;"><b></b></td>
+                <td style="background-color: #dfe9f7;"><b></b></td>
+                <td style="background-color: #dfe9f7;"><b></b></td>
+                <td style="background-color: #dfe9f7;"><b>Total (B)</b></td>
+                <td style="text-align: right;background-color: #dfe9f7;">{currency} {totalB}</td>
+            </tr>
+            </tfoot>
+        </table>
+    </td>
+    <br>
+
+    <div class="text-center" style="width: 100%; border: 1px solid rgb(200, 206, 211); font-size: 12px; background-color: rgb(228, 248, 255);">
+
+        <h3> Total Net Payable (A+B) <b>{currency}&nbsp;{totalAandB}</b></h3>
+
+    </div>
+
+
+    <div class="text-center" style="color: rgb(151, 155, 159); margin: 20px;">This is System generated Payslip And does not require a signature</div>
+
+    </div>
+</tr>
+</body>
+</html>

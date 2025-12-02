@@ -1,0 +1,32 @@
+.expense-screen {
+  .card-header {
+    color: #2064d8;
+  }
+  .btn-group {
+    .btn {
+      color: #ffffff !important;
+    }
+  }
+  .badge {
+    padding: 0.4em 0.6em;
+    font-size: 90%;
+  }
+  .expense-table {
+    .my-link {
+      text-decoration: none;
+      cursor: pointer;
+    }
+  }
+  .rounded-loader {
+    position: absolute;
+    top: 50%;
+    z-index: 9999;
+  }
+  // .react-bs-table table{
+  //   width: 1400px;
+  // }
+
+}
+.table-header-bg{
+  background-color: #dfe9f7;
+}

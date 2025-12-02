@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+<style>
+.column {
+ float: left;
+  width: 90%;
+  padding: 10px;
+  height:auto
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+td {
+    padding: 0 5px;
+}
+</style>
+</head>
+<body>
+<div class="row" style="
+        margin: auto;
+        border: 1px solid gray;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+        font-size: 13px;
+        line-height: 24px;
+        font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+        color: #555;">
+
+    <div>
+
+
+        <div class="column"style="max-width: 90%;padding-left:20px;height: auto">
+            <div style="overflow-x:auto; text-align:center;border-bottom: 1px solid #99090b">
+                <div style="float:left"><img src='{companylogo}' width="120px" height="80px">
+                </div>
+                <div>
+                    <h1 style="float:right ;color:#99090b;">Request For Quotation</h1>
+                </div>
+            </div>
+            <div style="overflow-x:auto;">
+                <table style="width: 100%;">
+            <tr>
+                <td>
+
+                </td>
+
+            </tr>
+            <tr >
+                <td>
+                    <br>
+                </td>
+                <td>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+            <td>
+                <br/><br/><b>Company Name :</b> {companyName}<br/>
+                <b>Address1 : </b>{companyAddressLine1}<br/>
+                <b>Address2 : </b>{companyAddressLine2}<br/>
+                <b>Country : </b>{companyCountryCode}<br/>
+                <b>State : </b>{companyStateRegion}<br/>
+                <b>TRN : </b>{vatNumber}<br/>
+                <b>Mobile Number : </b>{phoneNumber}<br/><br/><br/>
+            </td>
+            <td style="float:right">
+                <b>{rfqNumber}<br><br/></b>
+                <b>Quote From,</b>
+                <br/><b>Contact Name : </b>{supplierName}<br/>
+                <b>Address1 : </b>{contactAddressLine1}<br/>
+                <b>Address2 : </b>{contactAddressLine2}<br/>
+                <b>Postal / Zip Code : </b>{postZipCode}<br/>
+                <b>State : </b>{contactState}<br/>
+                <b>Country : </b>{contactCountry}<br/>
+                <b>TRN : </b>{vatRegistrationNumber}<br/>
+                <b>Mobile No : </b>{mobileNumber}<br/>
+                <b>Status : </b>{status}<br/><br/><br/></p>
+
+            </td>
+            <td style="float:right">
+
+            </td>
+            </tr>
+                </table>
+            <br>
+            <div style="overflow-x:auto;">
+                <table style="width: 100%;padding: 20px">
+                    <tr>
+                        <td style="text-align:center;border:1px solid">
+                            <b>RFQ Date :</b> {rfqReceiveDate}
+                        </td>
+                        <td style="text-align:center;border:1px solid">
+                            <b>Expiry Date :</b> {rfqExpiryDate}<br>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div style="overflow-x:auto;">
+                <table style="width: 100%;border:1px solid;">
+                    <tr style="display: table-row;vertical-align: inherit;border-color: inherit;background: #e8e7e7;color: black";>
+                        <td>Product Name</td>
+                        <td style="width: 20%;">Description</td>
+                        <td style="text-align:center">Quantity</td>
+                        <td style="text-align:center">Units</td>
+                        <td style="text-align:center">Unit Cost</td>
+                        <td style="text-align:center">Excise</td>
+                        <td style="text-align:center">Excise Amount</td>
+                        <td style="text-align:center">Vat Percent</td>
+                        <td style="text-align:center">Vat Amount</td>
+                        <td style="text-align:center">Sub Total</td>
+                    </tr>
+                    <tr><td>{product}</td><td>{description}</td><td style="text-align:center">{quantity}</td><td style="text-align:center">{unitType}</td><td style="text-align:right">{unitPrice}</td><td style="text-align:left">{exciseCategory}</td><td style="text-align:right">{exciseAmount}</td><td style="text-align:right">{vatType}</td><td style="text-align:right">{vatAmount}</td><td style="text-align:right">{subTotal}</td></tr>
+                </table>
+            </div>
+            <tr >
+                <td>
+                    <br>
+                </td>
+                <td>
+                    <br>
+                </td>
+            </tr>
+            <div style="overflow-x:auto;">
+                <table style="float:right;border:1px solid; ">
+                    <tr>
+                        <td>Total excise<td>
+                        <td style="float:right">{currency} {totalExciseAmount}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Net<td>
+                        <td style="float:right">{currency} {totalNet}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Total Vat<td>
+                        <td style="float:right">{currency} {rfqVatAmount}</td>
+                    </tr>
+                    <tr>
+                        <td>Total<td>
+                        <td style="float:right">{currency} {rfqAmount}</td>
+                    </tr>
+                </table>
+                <td style="float:left">
+
+                    <b>Amount In Words :</b> {amountInWords}<br>
+                    <b>Vat In Words :</b> {vatInWords}<br>
+                    <b>Notes / Delivery Notes :</b> {notes}
+
+                </td>
+                <td style="float:right">
+
+                </td>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>

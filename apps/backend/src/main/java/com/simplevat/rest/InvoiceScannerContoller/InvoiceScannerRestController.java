@@ -1,0 +1,207 @@
+package com.simplevat.rest.InvoiceScannerContoller;
+
+import com.simplevat.aop.LogRequest;
+import com.simplevat.constant.CommonStatusEnum;
+import com.simplevat.constant.ContactTypeEnum;
+import com.simplevat.constant.FileTypeEnum;
+import com.simplevat.entity.*;
+import com.simplevat.helper.ExpenseRestHelper;
+import com.simplevat.repository.JournalLineItemRepository;
+import com.simplevat.repository.QuotationInvoiceRepository;
+import com.simplevat.rest.expensescontroller.ExpenseModel;
+import com.simplevat.rest.invoicecontroller.InvoiceLineItemModel;
+import com.simplevat.rest.invoicecontroller.InvoiceRequestModel;
+import com.simplevat.rest.invoicecontroller.InvoiceRestHelper;
+import com.simplevat.rfq_po.PoQuatation;
+import com.simplevat.rfq_po.PoQuatationService;
+import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.*;
+import com.simplevat.utils.FileHelper;
+import com.simplevat.utils.MessageUtil;
+import com.simplevat.utils.SimpleVatMessage;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Slf4j
+@RestController
+@RequestMapping(value = "/rest/invoiceScanner")
+public class InvoiceScannerRestController {
+    private final Logger logger = LoggerFactory.getLogger(InvoiceScannerRestController.class);
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private JSONExpenseParser jsonExpenseParser;
+    @Autowired
+    private InvoiceRestHelper invoiceRestHelper;
+
+    @Autowired
+    private FileAttachmentService fileAttachmentService;
+    @Autowired
+    private InvoiceService invoiceService;
+
+    @Autowired
+    private BankAccountService bankAccountService;
+
+
+    @Autowired
+    private ContactService contactService;
+
+
+    @Autowired
+    private ExpenseRestHelper expenseRestHelper;
+
+    @Autowired
+    private ExpenseService expenseService;
+
+    @Autowired
+    private CurrencyService currencyService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private InvoiceLineItemService invoiceLineItemService;
+
+    @Autowired
+    private PlaceOfSupplyService placeOfSupplyService;
+
+    @Autowired
+    private CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
+
+    @Autowired
+    private PoQuatationService poQuatationService;
+
+    @Autowired
+    private QuotationInvoiceRepository quotationInvoiceRepository;
+
+    @Autowired
+    private JournalLineItemRepository journalLineItemRepository;
+
+    @Autowired
+    private InvoiceScannerService invoiceScannerService;
+
+
+    @LogRequest
+    @Transactional(rollbackFor = Exception.class)
+    @ApiOperation(value = "Add New Invoice")
+    @PostMapping(value = "/invoiceScan/save")
+    public ResponseEntity<?> save(@RequestBody String jsonString , HttpServletRequest request, HttpServletResponse response) {
+        try {
+            InvoiceRequestModel requestModel = new InvoiceRequestModel();
+            List<InvoiceLineItemModel> invoiceLineItemModelList = new ArrayList<>();
+
+            jsonExpenseParser.parseInvoice(jsonString,requestModel,invoiceLineItemModelList);
+
+
+            String rootPath = request.getServletContext().getRealPath("/");
+            log.info("filePath {}",rootPath);
+            FileHelper.setRootPath(rootPath);
+            log.info("In Controller :{}",requestModel.getInvoiceDueDate());
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            Boolean checkInvoiceNumber = invoiceRestHelper.doesInvoiceNumberExist(requestModel.getReferenceNumber());
+            if (checkInvoiceNumber){
+                SimpleVatMessage errorMessage = new SimpleVatMessage("0023",
+                        MessageUtil.getMessage("invoicenumber.alreadyexists.0023"), true);
+                logger.info(errorMessage.getMessage());
+                return new  ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+
+            }
+            Invoice invoice = invoiceScannerService.getEntity(requestModel, userId,invoiceLineItemModelList);
+            invoice.setCreatedBy(userId);
+            invoice.setCreatedDate(LocalDateTime.now());
+            invoice.setDeleteFlag(Boolean.FALSE);
+            //To save the uploaded file in
+            if (requestModel.getAttachmentFile()!=null) {
+                MultipartFile file = requestModel.getAttachmentFile();
+                if (file != null) {
+                    FileAttachment fileAttachment = fileAttachmentService.storeFile(file, requestModel.getType().equals(ContactTypeEnum.SUPPLIER.getValue().toString())
+                            ? FileTypeEnum.SUPPLIER_INVOICE
+                            : FileTypeEnum.CUSTOMER_INVOICE, requestModel);
+                    invoice.setAttachmentFileName(fileAttachment);
+                }
+            }
+            invoiceService.persist(invoice);
+            if(requestModel.getQuotationId()!= null) {
+                QuotationInvoiceRelation quotationInvoiceRelation = new QuotationInvoiceRelation();
+                quotationInvoiceRelation.setInvoice(invoice);
+                PoQuatation quatation = poQuatationService.findByPK(requestModel.getQuotationId());
+                quotationInvoiceRelation.setPoQuatation(quatation);
+                quotationInvoiceRelation.setDeleteFlag(Boolean.FALSE);
+                quotationInvoiceRepository.save(quotationInvoiceRelation);
+                quatation.setStatus(CommonStatusEnum.INVOICED.getValue());
+                poQuatationService.update(quatation);
+
+            }
+            Company company = new Company();
+            SimpleVatMessage message = null;
+            message = new SimpleVatMessage("0045",
+                    MessageUtil.getMessage("invoice.created.successful.msg.0045"), false);
+            return new ResponseEntity<>(message,HttpStatus.OK);
+        } catch (Exception e) {
+            SimpleVatMessage message= null;
+            message = new SimpleVatMessage("",
+                    MessageUtil.getMessage("create.unsuccessful.msg"), true);
+            return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @LogRequest
+    @Transactional(rollbackFor = Exception.class)
+    @ApiOperation(value = "Add New Expense")
+    @PostMapping(value = "/expenseScan/save")
+    public ResponseEntity<?> save(@RequestBody String jsonString, HttpServletRequest request) {
+
+        try {
+            ExpenseModel expenseModel = new ExpenseModel();
+            SimpleVatMessage message = null;
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            String rootPath = request.getServletContext().getRealPath("/");
+            log.info("filePath {}",rootPath);
+            FileHelper.setRootPath(rootPath);
+            Boolean checkInvoiceNumber = expenseRestHelper.doesInvoiceNumberExist(expenseModel.getExpenseNumber());
+            if (checkInvoiceNumber){
+                SimpleVatMessage errorMessage = new SimpleVatMessage("0023",
+                        MessageUtil.getMessage("invoicenumber.alreadyexists.0023"), true);
+                logger.info(errorMessage.getMessage());
+                return new  ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+
+            }
+            Expense expense = invoiceScannerService.getExpenseEntity(expenseModel);
+            expense.setExclusiveVat(expenseModel.getExclusiveVat());
+            expense.setCreatedBy(userId);
+            expense.setCreatedDate(LocalDateTime.now());
+            //To save the uploaded file in db.
+            if (expenseModel.getAttachmentFile()!=null) {
+                MultipartFile file = expenseModel.getAttachmentFile();
+                if (file != null) {
+                    FileAttachment fileAttachment = fileAttachmentService.storeExpenseFile(file, expenseModel);
+                    expense.setFileAttachment(fileAttachment);
+                }
+            }
+            expenseService.persist(expense);
+            message = new SimpleVatMessage("0065",
+                    MessageUtil.getMessage("expense.created.successful.msg.0065"), false);
+            return new ResponseEntity<>(message,HttpStatus.OK);
+        } catch (Exception e) {
+            SimpleVatMessage message = null;
+            message = new SimpleVatMessage("",
+                    MessageUtil.getMessage("create.unsuccessful.msg"), true);
+            return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+}

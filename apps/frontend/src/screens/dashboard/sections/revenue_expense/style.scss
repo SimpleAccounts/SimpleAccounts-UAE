@@ -1,0 +1,86 @@
+//Expenses Card
+.expenses-card {
+  .expense-date {
+    width: 40px;
+    height: 35px;
+    padding: 4px;
+    text-align: center;
+    background: #63c2de!important;
+    margin-right: 10px !important;
+    
+    p {
+      color: white !important;
+      margin: 0;
+    }
+  }
+
+  .data-info{
+    justify-content: space-between !important;
+    border-bottom: 1px solid #eee;
+    padding: 0 !important;
+
+    .data-item {
+      padding: 0 20px !important;
+      border: none !important;
+      margin: 0 !important;
+
+      h3 {
+        font-size: 18px !important;
+      }
+
+      p {
+        font-size: 12px !important;
+      }
+    }
+  }
+
+  .data-info.bills{
+    padding: 10px !important;
+
+    .data-item {
+      padding: 0 !important;
+
+      h3 {
+        font-size: 15px !important;
+      }
+    }
+  }
+
+  .data-info:first-child {
+    padding-top: 0 !important;
+  }
+
+  .data-info:last-child {
+    padding-bottom: 0;
+    border: none;
+  }
+
+  .data-info.total {
+    border: none;
+    padding: 0;
+  }
+
+  p.date {
+    font-size: 17px !important;
+    line-height: 1em;
+  }
+
+  p.month {
+    font-size: 10px !important;
+    font-weight: 500;
+  }
+
+  .price {
+    color: #529f52;
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  canvas {
+    // height: 250px !important;
+  }
+
+  button {
+    margin-top: 5px;
+  }
+}

@@ -1,0 +1,119 @@
+# Default values for helm-simplevat
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository:
+    backend:
+      imageName: datainn.azurecr.io/simpleaccounts-backend
+      tag: "Unknown"
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+
+azureACRServicePrinciple:
+  enabled: false
+
+clusterIssuer: simpleaccounts-io-letsencrypt-staging
+maindomain: app.simpleaccounts.io
+
+simpleVatBackendRelease: "Unknown"
+simpleVatHost: https://demo-api.app.simpleaccounts.io
+
+database:
+  enabled: true
+  simpleVatDB: simplevat_demo_db
+  simpleVatDBPort: 5432
+  simpleVatDBSsl: false
+  simpleVatDBSslmode: disable
+  simpleVatDBSslrootcert: "/path/to/ca-certificate.crt"
+
+email:
+  simplevatSmtpUser: <SMTP_USER>
+  simplevatSmtpPass: <SMTP_PASSWORD>
+  simplevatSmtpHost: <SMTP_HOST>
+  simplevatSmtpPort: 587
+  simplevatSmtpAuth: true
+  simplevatSmtpStarttlsEnable: true
+
+ports:
+  containerPort:
+    backendPort: 8080
+imagePullSecrets:
+  - name: datainnregistry-backend
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "deploy-robot-backend"
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: NodePort
+  port: 80
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/clusterissuer: simpleaccounts-letsencrypt-prod
+#    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  hosts:
+    - host: demo-api.app.simpleaccounts.io
+      paths: [/*]
+  tls:
+    - secretName: wildcard-app-simpleaccounts-io-tls
+      hosts:
+        - demo-api.app.simpleaccounts.io
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 400m
+    memory: 1024Mi
+  requests:
+    cpu: 200m
+    memory: 512Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector:
+  doks.digitalocean.com/node-pool: simpleaccounts-node-pool-1
+
+tolerations: []
+
+affinity: {}
+
+data:
+  username: <BASE64_DB_USERNAME>
+  password: <BASE64_DB_PASSWORD>
+  dbhost: <BASE64_DB_HOST>
+

@@ -1,0 +1,120 @@
+package com.simplevat.rest.transactioncategorybalancecontroller;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.simplevat.constant.ChartOfAccountCategoryCodeEnum;
+import com.simplevat.constant.TransactionCategoryCodeEnum;
+import com.simplevat.rest.reconsilationcontroller.ReconsilationController;
+import com.simplevat.utils.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.simplevat.entity.TransactionCategoryBalance;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.exceptions.ServiceException;
+import com.simplevat.service.TransactionCategoryBalanceService;
+import com.simplevat.service.TransactionCategoryService;
+import com.simplevat.service.exceptions.ServiceErrorCode;
+import com.simplevat.utils.DateFormatUtil;
+
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
+@Component
+public class TransactionCategoryBalanceRestHelper {
+	private final Logger logger = LoggerFactory.getLogger(TransactionCategoryBalanceRestHelper.class);
+	@Autowired
+	private TransactionCategoryService transactionCategoryService;
+
+	@Autowired
+	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+
+	@Autowired
+	private DateUtils dateUtil;
+
+	public TransactionCategoryBalance getEntity(TransactioncategoryBalancePersistModel persistModel) {
+
+		if (persistModel == null) {
+			throw new ServiceException("NO DATA AVAILABLE", ServiceErrorCode.BadRequest);
+		}
+
+		TransactionCategory category = transactionCategoryService.findByPK(persistModel.getTransactionCategoryId());
+		if (category == null) {
+			throw new ServiceException("NO DATA AVAILABLE", ServiceErrorCode.RecordDoesntExists);
+		}
+
+		TransactionCategoryBalance transactionCategoryBalance = new TransactionCategoryBalance();
+
+		if (persistModel.getTransactionCategoryBalanceId() != null) {
+			transactionCategoryBalance = transactionCategoryBalanceService
+					.findByPK(persistModel.getTransactionCategoryBalanceId());
+		}
+
+		transactionCategoryBalance.setTransactionCategory(category);
+		transactionCategoryBalance.setOpeningBalance(persistModel.getOpeningBalance());
+		transactionCategoryBalance.setRunningBalance(
+				transactionCategoryBalance.getRunningBalance() != null ? transactionCategoryBalance.getRunningBalance()
+						: persistModel.getOpeningBalance());
+		Instant instant = Instant.ofEpochMilli(persistModel.getEffectiveDate().getTime());
+		LocalDateTime date = LocalDateTime.ofInstant(instant,
+				ZoneId.systemDefault());
+		transactionCategoryBalance
+				.setEffectiveDate(dateUtil.get(date));
+
+		return transactionCategoryBalance;
+	}
+
+	public List<TransactionCategoryBalanceListModel> getList(List<TransactionCategoryBalance> balaneList) {
+
+		if (balaneList != null && !balaneList.isEmpty()) {
+
+			List<TransactionCategoryBalanceListModel> modelList = new ArrayList<>();
+
+			for (TransactionCategoryBalance balance : balaneList) {
+				if(balance!=null && balance.getTransactionCategory()!=null) {
+//					if (balance.getTransactionCategory().getTransactionCategoryCode()
+//							.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode())
+//							|| balance.getTransactionCategory().getTransactionCategoryCode()
+//							.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())
+//							|| balance.getTransactionCategory().getChartOfAccount().getChartOfAccountCode()
+//							.equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode()) || balance
+//							.getTransactionCategory()
+//							.getTransactionCategoryCode().equalsIgnoreCase(TransactionCategoryCodeEnum.EMPLOYEE_REIMBURSEMENT
+//									.getCode()))
+//						continue;
+					TransactionCategoryBalanceListModel model = new TransactionCategoryBalanceListModel();
+					model.setTransactionCategoryId(balance.getTransactionCategory().getTransactionCategoryId());
+					model.setTransactionCategoryBalanceId(balance.getId());
+					model.setEffectiveDate(dateUtil.getLocalDateToString(balance.getEffectiveDate(), "dd/MM/yyyy"));
+					model.setOpeningBalance(balance.getOpeningBalance());
+					model.setRunningBalance(balance.getRunningBalance());
+					model.setTransactionCategoryName(balance.getTransactionCategory().getTransactionCategoryName());
+					model.setChartOfAccount(balance.getTransactionCategory().getChartOfAccount().getChartOfAccountName());
+					//model.setCurrencySymbol(balance.get);
+					modelList.add(model);
+				}
+				else
+				{
+					logger.error("Transaction category is null for following Opening balance ",balance );
+				}
+			}
+			Collections.reverse(modelList);
+			return modelList;
+		}
+		return new ArrayList<>();
+	}
+	public TransactioncategoryBalancePersistModel getRequestModel(TransactionCategoryBalance transactionCategoryBalance) {
+		TransactioncategoryBalancePersistModel transactioncategoryBalancePersistModel = new TransactioncategoryBalancePersistModel();
+		transactioncategoryBalancePersistModel.setTransactionCategoryBalanceId(transactionCategoryBalance.getId());
+		transactioncategoryBalancePersistModel.setOpeningBalance(transactionCategoryBalance.getOpeningBalance());
+		transactioncategoryBalancePersistModel.setEffectiveDate(transactionCategoryBalance.getEffectiveDate());
+		transactioncategoryBalancePersistModel.setTransactionCategoryId(transactionCategoryBalance.getTransactionCategory().getTransactionCategoryId());
+		return transactioncategoryBalancePersistModel;
+	}
+}

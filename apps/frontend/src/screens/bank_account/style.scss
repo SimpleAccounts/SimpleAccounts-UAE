@@ -1,0 +1,31 @@
+.bank-account-screen {
+	.card-header {
+		color: #2064d8;
+	}
+	.btn-group {
+		.btn {
+			color: #ffffff !important;
+		}
+	}
+	.badge {
+		padding: 0.4em 0.6em;
+		font-size: 90%;
+	}
+	.bank-account-table {
+		.my-link {
+			font-weight: bold;
+			color: #2064d8;
+			text-decoration: none;
+			cursor: pointer;
+		}
+	}
+	// .react-bs-table table{
+	//   width: 1400px;
+	// }
+}
+.bank-transaction-screen .nav-tabs .nav-link {
+	border: 1px solid transparent;
+}
+.table-header-bg{
+	background-color: #dfe9f7;
+  }
