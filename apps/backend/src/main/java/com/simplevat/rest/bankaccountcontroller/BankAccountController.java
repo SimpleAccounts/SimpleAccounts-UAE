@@ -637,10 +637,12 @@ public class BankAccountController{
 
 	@LogRequest
 	@GetMapping(value = "/getBankChart")
-	public ResponseEntity<DashBoardBankDataModel> getCurrency(@RequestParam Integer bankId, Integer monthCount) {
+	public ResponseEntity<DashBoardBankDataModel> getCurrency(@RequestParam(required = false) Integer bankId, Integer monthCount) {
 		try {
 			if (bankId == null) {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+				// Return empty chart data when no bank account is selected
+				DashBoardBankDataModel emptyData = new DashBoardBankDataModel();
+				return new ResponseEntity<>(emptyData, HttpStatus.OK);
 			}
             return new ResponseEntity<>(bankAccountRestHelper.getBankBalanceList(bankId, monthCount), HttpStatus.OK);
 		} catch (Exception e) {

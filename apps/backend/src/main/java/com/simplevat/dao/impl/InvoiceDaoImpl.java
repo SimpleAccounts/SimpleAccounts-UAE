@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -131,7 +132,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter("startDate", dateUtil.get(startDate).toLocalDate());
 		query.setParameter("endDate", dateUtil.get(endDate).toLocalDate());
 		List<Invoice> invoiceList = query.getResultList();
-		return invoiceList != null && !invoiceList.isEmpty() ? invoiceList : null;
+		return invoiceList != null ? invoiceList : Collections.emptyList();
 	}
 	@Override
 	public EarningDetailsModel getTotalEarnings(){
