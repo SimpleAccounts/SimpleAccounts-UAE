@@ -242,7 +242,77 @@ curl -s http://localhost:3000 | grep -q "html" && echo "Frontend OK" || echo "Fr
 
 ---
 
-## 12. PR CREATION CHECKLIST
+## 12. MANDATORY SCREENSHOTS FOR PR
+
+**ALL PRs MUST include the following screenshots. PRs without these will be REJECTED.**
+
+### Required Screenshots:
+
+| # | Screenshot | Description | Required |
+|---|------------|-------------|----------|
+| 1 | **Backend Test Results** | Terminal showing all 51 tests pass | **YES** |
+| 2 | **Frontend Test Results** | Terminal showing all 151 tests pass | **YES** |
+| 3 | **Login Page** | Application login screen loaded | **YES** |
+| 4 | **Dashboard (After Login)** | Main dashboard after successful login | **YES** |
+| 5 | **Feature Before** | Screen before changes (for UI changes) | For UI PRs |
+| 6 | **Feature After** | Screen after changes (for UI changes) | For UI PRs |
+| 7 | **Browser Console** | DevTools console showing no errors | For UI PRs |
+
+### How to Capture Screenshots:
+
+**1. Backend Tests:**
+```bash
+cd apps/backend
+./mvnw test
+# Take screenshot showing:
+# - "BUILD SUCCESS"
+# - "Tests run: 51, Failures: 0, Errors: 0"
+```
+
+**2. Frontend Tests:**
+```bash
+cd apps/frontend
+npm test -- --watchAll=false
+# Take screenshot showing:
+# - "Test Suites: X passed"
+# - "Tests: 151 passed"
+```
+
+**3. Login Page Screenshot:**
+- Open http://localhost:3000
+- Take full-page screenshot of login form
+- Ensure no console errors visible
+
+**4. Dashboard Screenshot:**
+- Login with test credentials
+- Navigate to main dashboard
+- Take full-page screenshot showing:
+  - User logged in (username visible)
+  - Dashboard widgets loaded
+  - No loading spinners
+  - No error messages
+
+### Screenshot Checklist:
+- [ ] Backend test screenshot attached (showing 51 tests pass)
+- [ ] Frontend test screenshot attached (showing 151 tests pass)
+- [ ] Login page screenshot attached
+- [ ] Dashboard screenshot attached (after successful login)
+- [ ] Feature-specific screenshots attached (if UI changes)
+- [ ] Console showing no errors (if UI changes)
+
+### Screenshot Naming Convention:
+```
+pr-[number]-backend-tests.png
+pr-[number]-frontend-tests.png
+pr-[number]-login-page.png
+pr-[number]-dashboard.png
+pr-[number]-feature-before.png
+pr-[number]-feature-after.png
+```
+
+---
+
+## 13. PR CREATION CHECKLIST
 
 ### PR Title Format:
 ```
