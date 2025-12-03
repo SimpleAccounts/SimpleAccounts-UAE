@@ -30,15 +30,19 @@ jobs:
         path: |
           node_modules
           apps/frontend/node_modules
-        key: ${{ runner.os }}-frontend-${{ hashFiles('package-lock.json') }}
+        key: ${{ runner.os }}-frontend-${{ hashFiles('package-lock.json', 'apps/frontend/package-lock.json') }}
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Install dependencies
+    - name: Install root dependencies
       run: npm ci --legacy-peer-deps
+
+    - name: Install frontend dependencies
+      working-directory: apps/frontend
+      run: npm install --legacy-peer-deps
 
     - name: Build frontend
       working-directory: apps/frontend
