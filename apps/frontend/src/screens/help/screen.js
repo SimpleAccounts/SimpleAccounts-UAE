@@ -120,7 +120,7 @@ class Help extends React.Component {
 											<p>
 											{strings.Refer}
 											</p>
-											{/* <h4>Simple Accounts Version Numbers</h4>
+											{/* <h4>SimpleAccounts Version Numbers</h4>
 											<p>
 												FrontEnd Verison:  <label className="mb-0 text-primary">{configData.FRONTEND_RELEASE}</label><br></br>
 												BackEnd Version: {
