@@ -25,7 +25,6 @@ import {data}  from '../../screens/Language/index'
 import LocalizedStrings from 'react-localization';
 // import avatar from 'assets/images/avatars/6.jpg'
 import config from '../../constants/config'
-import { Config } from 'svgo';
 const propTypes = {
 	children: PropTypes.node,
 };
