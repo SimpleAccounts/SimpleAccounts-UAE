@@ -1,15 +1,18 @@
-import { configure } from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
+import '@testing-library/jest-dom';
 
-configure({ adapter: new Adapter() })
+// Mock window._env_ for config.js
+window._env_ = {
+  SIMPLEACCOUNTS_HOST: 'http://localhost:8080',
+};
 
+// Mock createRange for some UI libraries if needed
 if (global.document) {
-  document.createRange = () => ( {
+  document.createRange = () => ({
     setStart: () => {},
     setEnd: () => {},
     commonAncestorContainer: {
       nodeName: 'BODY',
       ownerDocument: document,
-    }
-  })
+    },
+  });
 }
