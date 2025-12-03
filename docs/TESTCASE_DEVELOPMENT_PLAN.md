@@ -12,13 +12,13 @@ Provide a repeatable blueprint for designing, authoring, and maintaining automat
 ## 2. Scope & Assumptions
 - Covers all apps under `apps/` (backend Spring Boot, frontend React SPA, agents/services) plus deployment artifacts in `deploy/`.
 - Addresses **functional, integration, contract, E2E, performance, security, and data validation** testing.
-- Assumes Java 17+ & Node 18+ build images for running full suites; Testcontainers is available for database-dependent tests.
+- Assumes Java 8 (current) & Node 20 (LTS) build images for running full suites; Testcontainers is available for database-dependent tests. **Note:** Java 17+ upgrade is planned per `DEPENDENCY_UPGRADE_ANALYSIS.md`.
 - Manual exploratory/UAT remains complementary but not a substitute for the automated plan below.
 
 ### 2.1 Environment & Tooling Requirements
 - **Operating System**: macOS 14 / Ubuntu 22.04 LTS / Windows 11 (WSL2) with at least 8 CPUs & 16 GB RAM to keep Testcontainers + Playwright stable.
-- **Java & Maven**: Temurin/OpenJDK 17 (set `JAVA_HOME`) plus Maven 3.9.x (or repo-provided `./mvnw`). Java 21 is acceptable if toolchains are configured, but CI standardizes on 17.
-- **Node & npm**: Node 18.x (LTS) with npm 10.x. Install via `nvm`/Homebrew and run `npm config set legacy-peer-deps true` before installing the legacy frontend tree.
+- **Java & Maven**: Zulu/OpenJDK 8 (set `JAVA_HOME`) plus Maven 3.6.x (or repo-provided `./mvnw`). Use SDKMAN for version management: `sdk install java 8.0.422-zulu`. **Future:** Java 17+ planned per upgrade roadmap.
+- **Node & npm**: Node 20.x (LTS) with npm 10.x. Install via `nvm` (`nvm install 20 && nvm use 20`) and run `npm config set legacy-peer-deps true` before installing the legacy frontend tree.
 - **Docker / Container Runtime**: Docker Desktop ≥ 4.30 (or Colima/podman) with 6 GB RAM allocated; required for Testcontainers, database integration tests, and Playwright’s browser dependencies.
 - **Browsers & Playwright**: `npx playwright install --with-deps` to provision Chromium/Firefox/WebKit plus Linux dependencies for CI.
 - **Database**: Local PostgreSQL 13+ if you prefer direct DB tests; otherwise rely on Testcontainers’ managed instance.
@@ -313,6 +313,323 @@ Every module must satisfy the following suites before merging. Each bullet impli
 - **Nightly pipeline order**: lint → backend unit → frontend unit → backend integration → contract → frontend E2E → performance → security scans.
 - **Artifacts**: Maven Surefire/Failsafe reports under `apps/backend/target/`, Jest coverage in `apps/frontend/coverage/`, Playwright traces in `apps/frontend/test-results/`.
 
+## 14. Existing Test Coverage (Reference Implementation)
+
+The following tests already exist and serve as reference implementations for future test development:
+
+### 14.1 Backend Tests (51 tests)
+Located in `apps/backend/src/test/java/com/simpleaccounts/`:
+
+| Package | Test Class | Purpose |
+|---------|-----------|---------|
+| `security/` | `JwtAuthenticationControllerTest` | Auth token generation, login failures, disabled users |
+| `security/` | `JwtTokenUtilTest` | Token generation, validation, expiry, claims extraction |
+| `security/` | `JwtRequestFilterTest` | Filter chain, token parsing, expired/malformed tokens |
+| `utils/` | `ExcelUtilTest` | Excel import/export using Apache POI |
+| `utils/` | `ExcelParserTest` | Comprehensive POI workbook, sheet, cell operations |
+| `utils/` | `PdfGenerationTest` | iText HTML-to-PDF conversion, Arabic text, CSS styling |
+| `utils/` | `CommonsLibraryTest` | Apache Commons utilities (StringUtils, CollectionUtils) |
+| `model/` | `LombokModelTest` | Lombok-generated getters/setters, constructors |
+
+### 14.2 Frontend Tests (151 tests)
+Located in `apps/frontend/src/`:
+
+| Directory | Test File | Purpose |
+|-----------|-----------|---------|
+| `utils/` | `moment.test.js` | Date formatting, parsing, arithmetic, timezone handling |
+| `utils/` | `lodash.test.js` | Utility functions, security (prototype pollution prevention) |
+| `utils/` | `axios.test.js` | HTTP client patterns, interceptors, error handling |
+| `utils/` | `redux.test.js` | Store creation, reducers, middleware, state management |
+| `routes/` | `routing.test.js` | React Router v5 patterns, navigation, route matching |
+| `components/` | `charts.test.js` | Chart.js v2 configuration, data updates, options |
+| `services/` | `auth_api.test.js` | Authentication API calls, token refresh |
+| `services/` | `api.test.js` | Generic API service patterns |
+| `services/` | `auth_fileupload_api.test.js` | File upload with auth headers |
+| Root | `app.test.js` | React 18 createRoot API, app rendering |
+
+### 14.3 Running Existing Tests
+```bash
+# Backend (requires Java 8)
+cd apps/backend && ./mvnw test
+
+# Frontend (requires Node 20)
+cd apps/frontend && npm test -- --watchAll=false
+
+# All tests
+npm run test --workspaces --if-present
+```
+
+## 15. Additional Test Categories (Gaps to Fill)
+
+### 15.1 Multi-Tenancy Data Isolation Tests
+Critical for SaaS security - ensure complete tenant separation:
+
+**Backend Tests:**
+- `TenantIsolationTest.java` - Verify tenant-scoped queries never leak data
+- `CrossTenantAccessTest.java` - Attempts to access other tenant's data must fail (403)
+- `TenantContextPropagationTest.java` - Ensure tenant ID propagates through async operations
+
+**Test Scenarios:**
+```java
+@Test
+void shouldNotAccessOtherTenantInvoices() {
+    // Login as Tenant A
+    // Attempt to fetch Tenant B's invoice by ID
+    // Assert 403 Forbidden or empty result
+}
+
+@Test
+void shouldIsolateTenantDataInReports() {
+    // Generate P&L report for Tenant A
+    // Verify no Tenant B transactions included
+}
+```
+
+**Frontend Tests:**
+- Verify tenant context in API headers
+- Test tenant switching clears cached data
+- Ensure tenant-specific routes are protected
+
+### 15.2 UAE Regulatory Compliance Tests
+Essential for accounting software operating in UAE:
+
+**VAT Calculation Tests:**
+| Scenario | Expected | Test File |
+|----------|----------|-----------|
+| Standard rate (5%) | Amount × 1.05 | `VatCalculationTest.java` |
+| Zero-rated goods | Amount × 1.00 | `VatCalculationTest.java` |
+| Exempt services | No VAT line | `VatCalculationTest.java` |
+| Reverse charge | Buyer accounts for VAT | `ReverseChargeTest.java` |
+| Mixed basket | Per-line calculation | `MixedVatTest.java` |
+
+**WPS (Wage Protection System) Tests:**
+```java
+@Test
+void shouldGenerateValidWpsFile() {
+    // Generate WPS file for payroll run
+    // Validate file format matches UAE bank requirements
+    // Verify employee IDs, amounts, bank codes
+}
+```
+
+**Locale & Format Tests:**
+- Date format: `dd/MM/yyyy` (UAE standard)
+- Currency: AED with 2 decimal places
+- Arabic RTL text rendering in PDFs
+- Number formatting: `1,234.56` (not `1.234,56`)
+
+### 15.3 Concurrency & Race Condition Tests
+Prevent data corruption under load:
+
+**Invoice Numbering:**
+```java
+@Test
+void shouldNotDuplicateInvoiceNumbers() {
+    // Spawn 10 concurrent threads
+    // Each creates an invoice simultaneously
+    // Assert all invoice numbers are unique
+}
+```
+
+**Bank Reconciliation:**
+```java
+@Test
+void shouldHandleConcurrentReconciliation() {
+    // Two users reconcile same statement
+    // First completes, second gets conflict error
+}
+```
+
+**Payroll Run Locking:**
+```java
+@Test
+void shouldPreventSimultaneousPayrollRuns() {
+    // Start payroll run
+    // Attempt second run before first completes
+    // Assert second is blocked with clear message
+}
+```
+
+### 15.4 Visual Regression & Browser Matrix
+
+**Browser Support Matrix:**
+| Browser | Version | Desktop | Mobile | Priority |
+|---------|---------|---------|--------|----------|
+| Chrome | Latest 2 | Yes | Yes | P0 |
+| Safari | Latest 2 | Yes | Yes | P0 |
+| Firefox | Latest 2 | Yes | No | P1 |
+| Edge | Latest 2 | Yes | No | P1 |
+
+**Visual Regression Setup:**
+```javascript
+// playwright.config.ts
+export default {
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    { name: 'Mobile Chrome', use: { ...devices['Pixel 5'] } },
+    { name: 'Mobile Safari', use: { ...devices['iPhone 12'] } },
+  ],
+  expect: {
+    toHaveScreenshot: { maxDiffPixels: 100 },
+  },
+};
+```
+
+**PDF Visual Tests:**
+```javascript
+test('invoice PDF matches baseline', async ({ page }) => {
+  await page.goto('/invoice/preview/123');
+  await expect(page.locator('.pdf-preview')).toHaveScreenshot('invoice-baseline.png');
+});
+```
+
+### 15.5 Audit Trail Verification
+Every financial transaction must be logged immutably:
+
+**Test Scenarios:**
+- Invoice creation logs: user, timestamp, action, before/after values
+- Audit logs cannot be modified (immutability test)
+- Audit log queries for compliance reports
+- User action attribution (who did what, when)
+
+```java
+@Test
+void shouldLogInvoiceCreationWithFullContext() {
+    Invoice invoice = createInvoice();
+
+    AuditLog log = auditLogRepository.findByEntityIdAndAction(invoice.getId(), "CREATE");
+
+    assertThat(log.getUserId()).isEqualTo(currentUser.getId());
+    assertThat(log.getTimestamp()).isCloseTo(now(), within(1, SECONDS));
+    assertThat(log.getNewValue()).contains(invoice.getAmount().toString());
+}
+```
+
+## 16. Test Naming Conventions & Priority Levels
+
+### 16.1 Naming Conventions
+
+**Backend (Java/JUnit):**
+```java
+// Pattern: test<Method>_<Scenario>_<ExpectedResult>()
+void testCalculateVat_WithExemptItem_ReturnsZero()
+void testCreateInvoice_WithInvalidDate_ThrowsValidationException()
+void testAuthenticate_WithExpiredToken_Returns401()
+```
+
+**Frontend (Jest):**
+```javascript
+// Pattern: describe('<Component/Function>') > it('should <behavior> when <condition>')
+describe('InvoiceForm') {
+  it('should display validation error when amount is negative')
+  it('should submit successfully when all fields are valid')
+  it('should disable submit button while saving')
+}
+```
+
+**E2E (Playwright):**
+```javascript
+// Pattern: test('<User Story> - <Scenario>')
+test('Invoice Creation - Happy path with single line item')
+test('Invoice Creation - Validation prevents negative amounts')
+test('Invoice Creation - PDF download after save')
+```
+
+### 16.2 Priority Levels
+
+| Priority | Description | When to Run | Examples |
+|----------|-------------|-------------|----------|
+| **P0** | Critical path, security, data integrity | Every PR | Auth, invoice creation, payment posting |
+| **P1** | Core features, happy paths | Every merge to main | Reports, master data CRUD, exports |
+| **P2** | Edge cases, non-critical flows | Nightly | Bulk imports, rare error paths |
+| **P3** | Performance, visual regression | Weekly | Load tests, screenshot comparisons |
+
+**Tagging in Code:**
+```java
+@Tag("P0") @Tag("security")
+@Test void testAuthenticationRequired() { }
+
+@Tag("P1") @Tag("invoicing")
+@Test void testInvoiceApprovalWorkflow() { }
+```
+
+```javascript
+test('critical auth flow @P0 @security', async () => { });
+test('bulk import edge case @P2', async () => { });
+```
+
+## 17. Quality Gate Ramp-Up Strategy
+
+Instead of enforcing 90% coverage immediately, use a phased approach:
+
+| Phase | Timeline | Backend Coverage | Frontend Coverage | Mutation Score |
+|-------|----------|------------------|-------------------|----------------|
+| **Phase 0** | Sprint 1 | 60% line | 50% statements | N/A |
+| **Phase 1** | Sprint 2-3 | 70% line, 60% branch | 65% statements | 40% finance |
+| **Phase 2** | Sprint 4-5 | 80% line, 70% branch | 80% statements | 55% finance |
+| **Phase 3** | Sprint 6+ | 90% line, 90% branch | 90% statements | 70% finance |
+
+**Enforcement:**
+```xml
+<!-- pom.xml JaCoCo config -->
+<rules>
+  <rule>
+    <element>BUNDLE</element>
+    <limits>
+      <limit>
+        <counter>LINE</counter>
+        <value>COVEREDRATIO</value>
+        <minimum>0.70</minimum> <!-- Adjust per phase -->
+      </limit>
+    </limits>
+  </rule>
+</rules>
+```
+
+```json
+// package.json Jest config
+"coverageThreshold": {
+  "global": {
+    "statements": 70,
+    "branches": 60,
+    "functions": 70,
+    "lines": 70
+  }
+}
+```
+
+## 18. Troubleshooting Guide
+
+### 18.1 Common Backend Test Failures
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `java.lang.NoClassDefFoundError: javax/...` | Running with Java 11+ but code uses Java 8 | Use SDKMAN: `sdk use java 8.0.422-zulu` |
+| `org.postgresql.util.PSQLException: Connection refused` | Testcontainers not running | Ensure Docker is running: `docker info` |
+| `org.mockito.exceptions.misusing.InvalidUseOfMatchersException` | Mixing matchers with raw values | Use `eq()` for raw values: `verify(mock).method(eq("value"), any())` |
+| `ExpiredJwtException` in tests | Test token has short expiry | Use test-specific JWT with long expiry |
+| `NullPointerException` in entity | Missing required relationships | Set all required fields in test fixtures |
+
+### 18.2 Common Frontend Test Failures
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `Warning: ReactDOM.render is no longer supported` | React 18 API change | Use `createRoot` instead of `ReactDOM.render` |
+| `TypeError: Cannot read property 'getState' of undefined` | Redux store not provided | Wrap component in `<Provider store={store}>` |
+| `Error: connect ECONNREFUSED` | API mock not configured | Set up MSW handlers or mock axios |
+| `act() warning` | State update after unmount | Use `await waitFor()` or cleanup properly |
+| Moment.js deprecation warning | Invalid date parsing | Use `moment(date, format, true)` for strict parsing |
+
+### 18.3 CI Pipeline Issues
+
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| Tests pass locally, fail in CI | Environment differences | Check Node/Java versions, ensure `--ci` flag |
+| Flaky E2E tests | Timing issues | Add explicit waits, increase timeouts |
+| Out of memory | Large test suite | Run tests in batches, increase heap |
+| Permission denied | Docker socket access | Add user to docker group or use rootless mode |
+
 ---
-**Next Steps:** socialize this plan with module owners, prioritize Phase 0 work, then use the matrix to drive concrete Jira tickets for each suite. Future modules must append themselves to Section 3 and follow Sections 4–13 before release.  
+**Next Steps:** socialize this plan with module owners, prioritize Phase 0 work, then use the matrix to drive concrete Jira tickets for each suite. Future modules must append themselves to Section 3 and follow Sections 4–18 before release.  
 
