@@ -15,6 +15,29 @@ Provide a repeatable blueprint for designing, authoring, and maintaining automat
 - Assumes Java 17+ & Node 18+ build images for running full suites; Testcontainers is available for database-dependent tests.
 - Manual exploratory/UAT remains complementary but not a substitute for the automated plan below.
 
+### 2.1 Environment & Tooling Requirements
+- **Operating System**: macOS 14 / Ubuntu 22.04 LTS / Windows 11 (WSL2) with at least 8 CPUs & 16 GB RAM to keep Testcontainers + Playwright stable.
+- **Java & Maven**: Temurin/OpenJDK 17 (set `JAVA_HOME`) plus Maven 3.9.x (or repo-provided `./mvnw`). Java 21 is acceptable if toolchains are configured, but CI standardizes on 17.
+- **Node & npm**: Node 18.x (LTS) with npm 10.x. Install via `nvm`/Homebrew and run `npm config set legacy-peer-deps true` before installing the legacy frontend tree.
+- **Docker / Container Runtime**: Docker Desktop ≥ 4.30 (or Colima/podman) with 6 GB RAM allocated; required for Testcontainers, database integration tests, and Playwright’s browser dependencies.
+- **Browsers & Playwright**: `npx playwright install --with-deps` to provision Chromium/Firefox/WebKit plus Linux dependencies for CI.
+- **Database**: Local PostgreSQL 13+ if you prefer direct DB tests; otherwise rely on Testcontainers’ managed instance.
+- **Other Utilities**: `make`, `jq`, and `openssl` for scripting; `pnpm` optional if we add workspaces later.
+
+### 2.2 Required Environment Variables & Services
+Store secrets in `.env.test` or CI vault and export before running suites:
+
+| Variable | Purpose | Notes |
+|----------|---------|-------|
+| `SIMPLEACCOUNTS_DB_HOST` / `PORT` / `DB` / `USER` / `PASSWORD` | Backend datasource connection | Point to local Postgres or Testcontainer overrides. |
+| `SIMPLEACCOUNTS_DB_SSL`, `SIMPLEACCOUNTS_DB_SSLMODE`, `SIMPLEACCOUNTS_DB_SSLROOTCERT` | SSL config for DB | Optional for local dev; keep defaults for Testcontainers. |
+| `SIMPLEACCOUNTS_HOST` | Base URL exposed to emails/links | Use `http://localhost:8080` for tests. |
+| `JWT_SECRET` | Symmetric signing key for auth tests | Keep deterministic secret for repeatable assertions. |
+| `SPRING_PROFILES_ACTIVE=test` | Ensures test-specific beans/settings | Export before running Maven commands. |
+| `PLAYWRIGHT_BROWSERS_PATH=0` (CI) | Forces local browser download | Prevents shared cache issues in sandboxes. |
+
+Services that must be reachable: Docker daemon, outbound network for dependency downloads, and optional SMTP/3rd-party stubs (provided via WireMock/GreenMail during tests).
+
 ## 3. Module Inventory & Critical Flows
 
 | Module Group | Representative Features | Backend Surface (examples) | Frontend Surface (examples) |
@@ -31,15 +54,15 @@ Provide a repeatable blueprint for designing, authoring, and maintaining automat
 
 Each new module must map itself to **at least one row** (or add a new row) and inherit the test expectations below.
 
-## 4. Test Layers & Deliverables Matrix
+## 4. Test Layers & Deliverables Matrix (≥90% Coverage Target)
 
 | Layer | Goal | Primary Tools | Deliverables per Module |
 |-------|------|---------------|-------------------------|
-| Unit (Backend) | Validate pure logic: services, helpers, validators | JUnit 5, Mockito, AssertJ | `src/test/java/...` classes with ≥80% line coverage for critical packages |
-| Repository/Data | Ensure ORM queries & Liquibase migrations behave | Spring Data Test, Testcontainers (PostgreSQL) | Tests for every custom query + migration smoke suite |
+| Unit (Backend) | Validate pure logic: services, helpers, validators | JUnit 5, Mockito, AssertJ | `src/test/java/...` classes with ≥90% line + branch coverage for critical packages |
+| Repository/Data | Ensure ORM queries & Liquibase migrations behave | Spring Data Test, Testcontainers (PostgreSQL) | Tests for every custom query + migration smoke suite; ≥90% branch coverage on repositories |
 | Slice/Component | Validate controllers, security filters, schedulers in isolation | `@WebMvcTest`, `@DataJpaTest`, `@SpringBootTest` (slice) | Controller tests covering success+failure paths, auth checks |
 | Contract/API | Keep REST/GraphQL payloads stable for consumers | Spring Cloud Contract, Pact, OpenAPI schema tests | Consumer/provider contracts per public endpoint |
-| Frontend Unit/Integration | Guard UI logic, reducers, hooks, API wrappers | Jest, React Testing Library, MSW | Component tests for forms, tables, charts + redux/sagas |
+| Frontend Unit/Integration | Guard UI logic, reducers, hooks, API wrappers | Jest, React Testing Library, MSW | Component tests for forms, tables, charts + redux/sagas with ≥90% statements/branches |
 | E2E/System | Validate user journeys across backend+frontend | Playwright (preferred) / Cypress | Scripts per high-value flow (invoice creation, payroll run, VAT submit, etc.) |
 | Data/Import | Validate file ingestion/exports | JUnit + fixture files, Playwright download assertions | Test sets for CSV/XLS parsing, bad data cases |
 | Performance & Reliability | Catch regressions in latency, throughput | Gatling/JMeter, k6, Playwright traces | Smoke perf scenarios + threshold gating in CI nightly |
@@ -132,7 +155,7 @@ Each script must log step names & attach artifacts (screenshots, HAR files).
   2. **Component & Contract** – required for merge to `main`.
   3. **E2E & Perf Smoke** – nightly, results posted to Slack.
   4. **Security Scan** – weekly or before release.
-- Enforce coverage thresholds (start 60% backend unit, 50% frontend, grow quarterly).
+- Enforce coverage thresholds: 90% line + 90% branch coverage per module (backend & frontend) with mutation score ≥70% on finance-critical packages.
 
 ## 9. Implementation Roadmap
 
@@ -155,6 +178,141 @@ Each script must log step names & attach artifacts (screenshots, HAR files).
   - Contract changes reviewed?
   - Test data impact assessed?
 
+## 11. Module-Specific Test Catalog (All Layers + Edge Cases)
+
+Every module must satisfy the following suites before merging. Each bullet implies automated coverage where feasible plus documented manual exploratory notes. Edge cases must be codified as tests (unit, integration, or E2E) rather than tribal knowledge.
+
+### 11.1 Customer Invoices & Sales
+- **Backend Unit**: VAT rounding, multi-rate discount stacking, currency conversions (FX gain/loss), credit-note reversing logic, negative quantity guardrails.
+- **Repository/Data**: Pagination/sorting queries, status filters, tenant scoping, soft-delete visibility.
+- **Service/Slice**: Workflow transitions (draft→approved→sent→paid→archived), concurrency on invoice numbering, email + PDF generation fallbacks.
+- **Contracts**: `/invoice`, `/credit-note`, `/quotation`, `/income-receipt` with optional custom fields & attachments.
+- **Frontend Unit/Integration**: Form validation, dynamic tax rows, offline draft autosave, Redux invoice reducers, PDF preview rendering.
+- **E2E/System**: End-to-end lifecycle, bulk CSV upload with mixed currencies, resend invoice email after token refresh.
+- **Edge Cases**: Zero-value invoices, back-dated fiscal crossing, maximum line items, mixed tax schemas, revoked customer access.
+
+### 11.2 Expenses & Payables
+- **Backend Unit**: Expense policy checks, receipt parsing, multi-level approvals, per-diem calculations.
+- **Repository/Data**: Supplier/category filters, aging buckets, search by memo, multi-entity segregation.
+- **Service/Slice**: Approval/rejection flows, attachment retention policy, reimbursement ledger postings.
+- **Contracts**: `/expense`, `/purchase-receipt`, `/supplier-invoice`.
+- **Frontend Tests**: Upload widget (drag/drop, mobile camera), form wizard, reimbursement calculator, redux store.
+- **E2E**: Create→approve→reimburse, duplicate detection, bulk import with malformed rows, policy violation warnings.
+- **Edge Cases**: Negative adjustments, VAT-exclusive entries, multi-currency reimbursements, max attachment size, missing receipts.
+
+### 11.3 Banking & Reconciliation
+- **Backend Unit**: Bank statement parser (CSV/XLS), auto-match rules, tolerance thresholds, exchange-rate application.
+- **Repository/Data**: Statement aggregation queries, reconciliation statuses, lock contention.
+- **Service/Slice**: Manual match/unmatch, partial matches, reclassifying entries, ledger posting idempotency.
+- **Contracts**: `/bank-account`, `/bank-statement`, `/reconciliation`.
+- **Frontend**: Reconciliation UI, filter chips, manual matching drag-and-drop, dashboard widgets.
+- **E2E**: Import large statements (>10k rows), auto-match, manual adjustments, final posting.
+- **Edge Cases**: Duplicate lines, timezone shifts, missing reference numbers, currency mismatch, network interruption mid-import.
+
+### 11.4 Accountant / General Ledger
+- **Backend Unit**: Journal balancing, recurring schedule generator, closing entries, double-entry validation.
+- **Repository/Data**: Ledger queries across periods, audit logs, locked-period enforcement.
+- **Service**: Reversals, bulk postings, inter-company eliminations, multi-tenant filters.
+- **Contracts**: `/journal`, `/ledger`, `/opening-balance`, `/recurring`.
+- **Frontend**: Journal editor, ledger drill-down, recurring entry UI, period lock controls.
+- **E2E**: Import opening balance, create journal with attachments, run trial balance, lock/unlock period.
+- **Edge Cases**: Imbalanced journal rejection, cross-year adjustments, decimal precision extremes, multi-currency GL entries.
+
+### 11.5 Reporting & Analytics
+- **Backend Unit**: KPI aggregations, VAT computations, payroll summaries, cashflow projections.
+- **Repository/Data**: Parameterized report queries (date, branch, project, currency), caching layers.
+- **Service**: Report generation pipeline, export streaming, snapshot versioning.
+- **Contracts**: `/report/*` endpoints (P&L, Balance Sheet, VAT, Payroll, Expense).
+- **Frontend**: Chart components, complex filter panels, drill-down interactions, export buttons.
+- **E2E**: Generate each report, apply filters, export PDF/XLS/CSV, verify totals vs sample dataset.
+- **Edge Cases**: Empty data sets, huge data ranges, mixed currencies, rounding discrepancies, timezone offsets.
+
+### 11.6 Master Data
+- **Backend Unit**: COA hierarchy validation, VAT category rules, product SKU uniqueness, contact deduplication.
+- **Repository/Data**: Search/pagination, soft-delete exposure, tree traversal for COA.
+- **Service**: Bulk import/export pipelines, cascading updates, audit logging.
+- **Contracts**: `/chart-of-accounts`, `/contacts`, `/products`, `/vat-category`, `/employee`.
+- **Frontend**: CRUD forms, inline validation, table filtering/sorting, bulk action modals.
+- **E2E**: Create/edit/delete master entries, CSV import with rollback on failure, permission enforcement.
+- **Edge Cases**: Duplicate names, cyclic hierarchies, localization characters, mass updates, conflicting tax codes.
+
+### 11.7 Payroll
+- **Backend Unit**: Payslip calculations (allowances/deductions), gratuity, retro adjustments, statutory limits.
+- **Repository/Data**: Payroll run summaries, contribution tables, employee eligibility queries.
+- **Service/Slice**: Run locking/unlocking, approval workflow, payslip generation, bank file creation.
+- **Contracts**: `/payroll/config`, `/payroll/run`, `/payroll/payslip`, `/payroll/export`.
+- **Frontend**: Payroll config wizard, run dashboard, payslip preview/download.
+- **E2E**: Configure payroll, run period, approve, export bank file, rollback.
+- **Edge Cases**: Partial-month hires, unpaid leave, multi-currency salaries, max employee loads, negative adjustments.
+
+### 11.8 Platform & Security
+- **Backend Unit**: JWT utilities, permission checks, configuration caching, file upload validation, rate limiter.
+- **Slice**: `WebSecurityConfig`, `JwtAuthenticationController`, `JwtRequestFilter`, CORS & CSRF policies.
+- **Contracts**: `/authenticate`, `/config`, `/file`, `/health`.
+- **Frontend**: Auth service (refresh/logout), route guards, configuration loader, file uploader.
+- **E2E**: Login/2FA, token refresh, session timeout, role switching, secure file download.
+- **Edge Cases**: Expired/revoked tokens, invalid signatures, oversized uploads, malicious file types, config drift.
+
+### 11.9 Integrations & Agents
+- **Backend Unit**: `MailIntegration`, parser engines (`CsvParser`, `ExcelParser`, `TransactionFileParser`), migration utilities.
+- **Integration Tests**: GreenMail for SMTP, WireMock for REST/SOAP, Testcontainers for SFTP/Message queues.
+- **Agents**: CLI option parsing, retry/backoff, credential rotation, error logging.
+- **Frontend**: Upload status indicators, integration management UIs.
+- **E2E**: File drop → parser → DB → confirmation email; migration wizard end-to-end; agent-triggered sync with retries.
+- **Edge Cases**: Invalid encodings, partial imports, network timeouts, schema mismatches, version downgrade attempts.
+
+## 12. Coverage, Quality Gates & Edge-Case Enforcement
+- **Coverage Gate**: 90% line + 90% branch coverage per module (frontend & backend) enforced via CI; builds fail if below threshold.
+- **Mutation Baseline**: ≥70% mutation score on finance-critical packages (`invoice`, `ledger`, `tax`, `payroll`, `bank`).
+- **Edge-Case Register**: Living checklist (Notion/Jira) mapping each identified boundary condition to an automated test ID; gaps block release.
+- **Flake Budget**: No suite may exceed 1% flaky rate over rolling 7 days; offending tests quarantined and fixed before next release.
+- **Observability Assertions**: Tests verify logs/metrics/traces for key flows (e.g., invoice created emits audit + metric).
+- **Security Scans**: OWASP ZAP/Burp automated in CI, plus dependency and container scanning per build.
+
+## 13. Executing Test Suites
+
+### 13.1 Pre-Flight Setup
+1. Clone and install dependencies:
+   ```bash
+   git clone git@github.com:SimpleAccounts/SimpleAccounts-UAE.git
+   cd SimpleAccounts-UAE
+   npm install          # installs root + workspaces
+   cd apps/frontend && npm install --legacy-peer-deps && cd ../../
+   ```
+2. Ensure Docker Desktop (or Colima) is running and `docker info` succeeds.
+3. Export required env vars (`SIMPLEACCOUNTS_DB_*`, `SPRING_PROFILES_ACTIVE=test`, `JWT_SECRET`, etc.).
+4. Install Playwright browsers once per machine: `cd apps/frontend && npx playwright install --with-deps`.
+
+### 13.2 Backend Suites (Maven)
+| Suite | Command | Notes |
+|-------|---------|-------|
+| Unit + Slice (services, controllers) | `cd apps/backend && ./mvnw clean test -Dspring.profiles.active=test` | Uses Surefire; mocks external systems. |
+| Repository & Integration (Testcontainers) | `./mvnw verify -DskipITs=false -Dspring.profiles.active=test` | Requires Docker; exercises Postgres + Liquibase. |
+| Contract/API | `./mvnw verify -Pcontract` | Runs Spring Cloud Contract + Pact verifications. |
+| Performance Smoke | `./mvnw verify -Pperf -Dgatling.skip=false` | Executes Gatling/JMeter scenarios defined under `src/perf`. |
+| Security Scans | `./mvnw verify -Psecurity` | Triggers dependency scanning + OWASP ZAP dockerized scans. |
+| Mutation Testing | `./mvnw org.pitest:pitest-maven:mutationCoverage` | Enforces ≥70% score on finance-critical packages. |
+
+### 13.3 Frontend Suites (Jest & Playwright)
+| Suite | Command | Notes |
+|-------|---------|-------|
+| Unit/Integration (Jest + RTL) | `cd apps/frontend && npm test -- --watchAll=false` | Executes `react-scripts test` once; fails on coverage gaps. |
+| Coverage Report | `npm run test:cov` | Generates HTML/LCOV output under `coverage/`. |
+| Store/Redux regression | `npm test -- utils/reducer.test.js` | Filtered run for fast debugging. |
+| Playwright E2E Smoke | `npx playwright test --project=chromium --config=playwright.config.ts` | Talks to locally running backend or mocked services via MSW. |
+| Playwright Full Matrix | `npx playwright test --headed --trace on` | Captures traces/screenshots for triage. |
+| Accessibility subset | `npx playwright test --grep "@a11y"` | Runs axe-core integrations on critical pages. |
+
+### 13.4 Cross-Repo Commands
+- **Run everything (CI parity)**:
+  ```bash
+  npm run test --workspaces --if-present
+  ./apps/backend/mvnw verify -Dspring.profiles.active=test
+  cd apps/frontend && npm run test:cov && npx playwright test
+  ```
+- **Nightly pipeline order**: lint → backend unit → frontend unit → backend integration → contract → frontend E2E → performance → security scans.
+- **Artifacts**: Maven Surefire/Failsafe reports under `apps/backend/target/`, Jest coverage in `apps/frontend/coverage/`, Playwright traces in `apps/frontend/test-results/`.
+
 ---
-**Next Steps:** socialize this plan with module owners, prioritize Phase 0 work, then use the matrix to drive concrete Jira tickets for each suite. Future modules must append themselves to Section 3 and follow Sections 4–8 before release.  
+**Next Steps:** socialize this plan with module owners, prioritize Phase 0 work, then use the matrix to drive concrete Jira tickets for each suite. Future modules must append themselves to Section 3 and follow Sections 4–13 before release.  
 
