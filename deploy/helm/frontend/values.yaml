@@ -16,9 +16,9 @@ azureACRServicePrinciple:
 clusterIssuer: simpleaccounts-io-letsencrypt-staging
 maindomain: demo.app.simpleaccounts.io
 
-simpleVatFrontendRelease: "Unknown"
-simpleVatHost: https://demo-api.app.simpleaccounts.io
-simpleVatDB:
+simpleAccountsFrontendRelease: "Unknown"
+simpleAccountsHost: https://demo-api.app.simpleaccounts.io
+simpleAccountsDB:
 
 ports:
   containerPort:

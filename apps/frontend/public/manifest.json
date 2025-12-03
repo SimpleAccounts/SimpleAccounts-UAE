@@ -1,6 +1,6 @@
 {
-  "short_name": "simplevat",
-  "name": "simplevat-frontend",
+  "short_name": "simpleaccounts",
+  "name": "simpleaccounts-frontend",
   "icons": [
     {
       "src": "./SimpleAccounts-icon.png",

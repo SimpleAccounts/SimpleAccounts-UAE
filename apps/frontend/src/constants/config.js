@@ -1,7 +1,7 @@
 export default {
   // API_ROOT_URL:'https://devbox-api.app.simpleaccounts.io',
   //API_ROOT_URL: "https://dev-api.app.simpleaccounts.io",
-  // API_ROOT_URL: 'https://k8s-api.dev.simplevat.com',
+  // API_ROOT_URL: 'https://k8s-api.dev.simpleaccounts.io',
    
   
   
@@ -11,14 +11,14 @@ export default {
 
   // API_ROOT_URL: 'http://192.168.2.105:8080',
   // API_ROOT_URL: 'https://datainn-api.ae.simpleaccounts.io',
-  API_ROOT_URL: window._env_.SIMPLEVAT_HOST,
+  API_ROOT_URL: window._env_.SIMPLEACCOUNTS_HOST,
 
  // API_ROOT_URL: 'https://sit2-api.app.simpleaccounts.io',
 
 
   
   // FRONTEND_RELEASE: 'latest',
-  FRONTEND_RELEASE: window._env_.SIMPLEVAT_RELEASE,
+  FRONTEND_RELEASE: window._env_.SIMPLEACCOUNTS_RELEASE,
  // STRAPI_BASE_URL : 'https://strapi-api-test-ae.app.simpleaccounts.io',
  SIMPLE_SERVICES_HOST: window._env_.SIMPLE_SERVICES_HOST,
  SIMPLE_SERVICES_GET_SUBSCRIPTION_KEY: window._env_.SIMPLE_SERVICES_GET_SUBSCRIPTION_KEY,

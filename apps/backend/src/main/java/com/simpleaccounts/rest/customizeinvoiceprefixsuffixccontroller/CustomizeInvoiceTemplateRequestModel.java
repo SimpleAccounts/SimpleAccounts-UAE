@@ -1,0 +1,12 @@
+package com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller;
+
+
+import lombok.Data;
+
+@Data
+public class CustomizeInvoiceTemplateRequestModel {
+    private Integer id;
+    private Integer type;
+    private String prefix;
+    private Integer suffix;
+}
