@@ -178,18 +178,18 @@ Access the SimpleAccounts-UAE application by opening your web browser and naviga
 
 The following environment variables can be configured in the `docker/docker-compose.yml` file under the backend service section:
 
-- `SIMPLEVAT_SMTP_USER`: SMTP username for sending emails.
-- `SIMPLEVAT_SMTP_PASS`: SMTP password for authentication.
-- `SIMPLEVAT_SMTP_HOST`: SMTP server hostname.
-- `SIMPLEVAT_SMTP_PORT`: SMTP server port.
-- `SIMPLEVAT_SMTP_AUTH`: SMTP authentication method.
-- `SIMPLEVAT_SMTP_STARTTLS_ENABLE`: Enable STARTTLS for SMTP connection.
-- `SIMPLEVAT_RELEASE`: Application release version.
-- `SIMPLEVAT_HOST`: Application host URL.
-- `SIMPLEVAT_DB_HOST`: Hostname of the PostgreSQL database.
-- `SIMPLEVAT_DB`: Name of the PostgreSQL database.
-- `SIMPLEVAT_DB_USER`: PostgreSQL database username.
-- `SIMPLEVAT_DB_PASSWORD`: PostgreSQL database password.
+- `SIMPLEACCOUNTS_SMTP_USER`: SMTP username for sending emails.
+- `SIMPLEACCOUNTS_SMTP_PASS`: SMTP password for authentication.
+- `SIMPLEACCOUNTS_SMTP_HOST`: SMTP server hostname.
+- `SIMPLEACCOUNTS_SMTP_PORT`: SMTP server port.
+- `SIMPLEACCOUNTS_SMTP_AUTH`: SMTP authentication method.
+- `SIMPLEACCOUNTS_SMTP_STARTTLS_ENABLE`: Enable STARTTLS for SMTP connection.
+- `SIMPLEACCOUNTS_RELEASE`: Application release version.
+- `SIMPLEACCOUNTS_HOST`: Application host URL.
+- `SIMPLEACCOUNTS_DB_HOST`: Hostname of the PostgreSQL database.
+- `SIMPLEACCOUNTS_DB`: Name of the PostgreSQL database.
+- `SIMPLEACCOUNTS_DB_USER`: PostgreSQL database username.
+- `SIMPLEACCOUNTS_DB_PASSWORD`: PostgreSQL database password.
 
 It is recommended to review and update these variables according to your specific configuration.
 

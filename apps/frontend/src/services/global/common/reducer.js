@@ -68,7 +68,7 @@ const CommonReducer = (state = initState, action) => {
 			};
 		// break;
 
-		case COMMON.VAT_VERSION:
+		case COMMON.GET_SIMPLE_ACCOUNTS_RELEASE:
 			return {
 				...state,
 				version: payload.data,

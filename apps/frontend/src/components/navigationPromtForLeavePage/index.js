@@ -60,7 +60,11 @@ class LeavePage extends React.Component {
 					// Children will be rendered even if props.when is falsey and isActive is false:
 					// renderIfNotActive={true}
 					// Confirm navigation if going to a path that does not start with current path:
-					when={(crntLocation, nextLocation, _action) =>!nextLocation || !nextLocation.pathname.startsWith(crntLocation.pathname)}		
+					when={(crntLocation, nextLocation, _action) => {
+						if (!nextLocation || !nextLocation.pathname) return true;
+						if (!crntLocation || !crntLocation.pathname) return true;
+						return !nextLocation.pathname.startsWith(crntLocation.pathname);
+					}}		
 				>
 				{({ isActive, onCancel, onConfirm }) => {
 					return this.leavePage(isActive,onCancel,onConfirm)

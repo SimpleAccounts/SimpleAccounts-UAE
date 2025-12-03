@@ -9,10 +9,10 @@
     <if condition='isDefined("LogDir")'> <then>
 	<appender name="FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LogDir}/simplevat-api.log</file>
-		<prudent>true</prudent>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LogDir}/simplevat-api.%d{yyyy-MM-dd}.log
+	<file>${LogDir}/simpleaccounts-api.log</file>
+	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+		<!-- daily rollover -->
+		<fileNamePattern>${LogDir}/simpleaccounts-api.%d{yyyy-MM-dd}.log
 			</fileNamePattern>
 			<maxHistory>60</maxHistory>
 		</rollingPolicy>

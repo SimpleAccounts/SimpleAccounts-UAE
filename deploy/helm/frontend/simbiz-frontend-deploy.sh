@@ -30,12 +30,12 @@ createDatabase="false"
 
 echo "Test deployment script"
 
-helm upgrade --install $subdomain-frontend simplevat-frontend-reactjs/$helmDir --values simplevat-frontend-reactjs/$helmDir/values.yaml \
---set simpleVatFrontendRelease=$SVrelease \
+helm upgrade --install $subdomain-frontend simpleaccounts-frontend-reactjs/$helmDir --values simpleaccounts-frontend-reactjs/$helmDir/values.yaml \
+--set simpleAccountsFrontendRelease=$SVrelease \
 --set image.repository.frontend.tag=$SVrelease \
 --set image.repository.frontend.imageName=simpleaccounts.azurecr.io/simpleaccounts-frontend \
 --set maindomain=$subdomain.$maindomain \
---set simpleVatHost=https://$subdomain-api.$maindomain \
+--set simpleAccountsHost=https://$subdomain-api.$maindomain \
 --set fullnameOverride=$subdomain-frontend \
 --set serviceAccount.name=$subdomain-deploy-robot-frontend \
 --set ingress.hosts[0].host=$subdomain.$maindomain \
@@ -48,12 +48,12 @@ helm upgrade --install $subdomain-frontend simplevat-frontend-reactjs/$helmDir -
 
 echo "Deploying the scripts"
 
-helm upgrade --install $subdomain-frontend simplevat-frontend-reactjs/$helmDir --values simplevat-frontend-reactjs/$helmDir/values.yaml \
---set simpleVatFrontendRelease=$SVrelease \
+helm upgrade --install $subdomain-frontend simpleaccounts-frontend-reactjs/$helmDir --values simpleaccounts-frontend-reactjs/$helmDir/values.yaml \
+--set simpleAccountsFrontendRelease=$SVrelease \
 --set image.repository.frontend.tag=$SVrelease \
 --set image.repository.frontend.imageName=simpleaccounts.azurecr.io/simpleaccounts-frontend \
 --set maindomain=$subdomain.$maindomain \
---set simpleVatHost=https://$subdomain-api.$maindomain \
+--set simpleAccountsHost=https://$subdomain-api.$maindomain \
 --set fullnameOverride=$subdomain-frontend \
 --set serviceAccount.name=$subdomain-deploy-robot-frontend \
 --set ingress.hosts[0].host=$subdomain.$maindomain \

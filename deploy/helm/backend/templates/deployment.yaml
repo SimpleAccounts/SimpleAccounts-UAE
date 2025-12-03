@@ -59,43 +59,43 @@ spec:
             successThreshold: 1
             failureThreshold: 10
           env:
-            - name: SIMPLEVAT_SMTP_USER
-              value: "{{ .Values.email.simplevatSmtpUser }}"
-            - name: SIMPLEVAT_SMTP_PASS
-              value: "{{ .Values.email.simplevatSmtpPass }}"
-            - name: SIMPLEVAT_SMTP_HOST
-              value: "{{ .Values.email.simplevatSmtpHost }}"
-            - name: SIMPLEVAT_SMTP_PORT
-              value: "{{ .Values.email.simplevatSmtpPort }}"
-            - name: SIMPLEVAT_SMTP_AUTH
-              value: "{{ .Values.email.simplevatSmtpAuth }}"
-            - name: SIMPLEVAT_SMTP_STARTTLS_ENABLE
-              value: "{{ .Values.email.simplevatSmtpStarttlsEnable }}"
-            - name: SIMPLEVAT_RELEASE
-              value: {{ .Values.simpleVatBackendRelease }}
-            - name: SIMPLEVAT_HOST
-              value: {{ .Values.simpleVatHost }}
-            - name: SIMPLEVAT_DB_PORT
-              value: {{ .Values.database.simpleVatDBPort | quote }}
-            - name: SIMPLEVAT_DB_SSL
-              value: {{ .Values.database.simpleVatDBSsl | quote }}
-            - name: SIMPLEVAT_DB_SSLMODE
-              value: {{ .Values.database.simpleVatDBSslmode }}
-            - name: SIMPLEVAT_DB_SSLROOTCERT
-              value: {{ .Values.database.simpleVatDBSslrootcert }}
-            - name: SIMPLEVAT_DB_HOST
+            - name: SIMPLEACCOUNTS_SMTP_USER
+              value: "{{ .Values.email.simpleAccountsSmtpUser }}"
+            - name: SIMPLEACCOUNTS_SMTP_PASS
+              value: "{{ .Values.email.simpleAccountsSmtpPass }}"
+            - name: SIMPLEACCOUNTS_SMTP_HOST
+              value: "{{ .Values.email.simpleAccountsSmtpHost }}"
+            - name: SIMPLEACCOUNTS_SMTP_PORT
+              value: "{{ .Values.email.simpleAccountsSmtpPort }}"
+            - name: SIMPLEACCOUNTS_SMTP_AUTH
+              value: "{{ .Values.email.simpleAccountsSmtpAuth }}"
+            - name: SIMPLEACCOUNTS_SMTP_STARTTLS_ENABLE
+              value: "{{ .Values.email.simpleAccountsSmtpStarttlsEnable }}"
+            - name: SIMPLEACCOUNTS_RELEASE
+              value: {{ .Values.simpleAccountsBackendRelease }}
+            - name: SIMPLEACCOUNTS_HOST
+              value: {{ .Values.simpleAccountsHost }}
+            - name: SIMPLEACCOUNTS_DB_PORT
+              value: {{ .Values.database.simpleAccountsDBPort | quote }}
+            - name: SIMPLEACCOUNTS_DB_SSL
+              value: {{ .Values.database.simpleAccountsDBSsl | quote }}
+            - name: SIMPLEACCOUNTS_DB_SSLMODE
+              value: {{ .Values.database.simpleAccountsDBSslmode }}
+            - name: SIMPLEACCOUNTS_DB_SSLROOTCERT
+              value: {{ .Values.database.simpleAccountsDBSslrootcert }}
+            - name: SIMPLEACCOUNTS_DB_HOST
               valueFrom:
                 secretKeyRef:
                   name: db-credentials-{{ include "helm-backend.fullname" . }}
                   key: db-host
-            - name: SIMPLEVAT_DB
-              value: {{ .Values.database.simpleVatDB }}
-            - name: SIMPLEVAT_DB_USER
+            - name: SIMPLEACCOUNTS_DB
+              value: {{ .Values.database.simpleAccountsDB }}
+            - name: SIMPLEACCOUNTS_DB_USER
               valueFrom:
                 secretKeyRef:
                   name: db-credentials-{{ include "helm-backend.fullname" . }}
                   key: username
-            - name: SIMPLEVAT_DB_PASSWORD
+            - name: SIMPLEACCOUNTS_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: db-credentials-{{ include "helm-backend.fullname" . }}

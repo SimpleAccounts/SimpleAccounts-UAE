@@ -129,7 +129,6 @@ class LogIn extends React.Component {
 				});
 
 				this.props.history.push(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
-				this.setState({ loading: false });
 			})
 			.catch((err) => {
 				this.setState({ loading: false });
