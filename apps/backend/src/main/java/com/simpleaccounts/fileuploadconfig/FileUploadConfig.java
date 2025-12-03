@@ -31,7 +31,7 @@ public class FileUploadConfig {
 
 		String fileLocation = fileLocationLinux;
 		if (OSValidator.isWindows()) {
-			fileLocation = fileLocationWindows;
+			fileLocation = this.fileLocation;
 			LOGGER.info("WINDOW SYSTEM");
 		} else {
 			LOGGER.info("LINUX SYSTEM");
