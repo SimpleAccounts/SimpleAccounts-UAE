@@ -1,0 +1,35 @@
+.salary{
+Table, td, th {
+  border:3px solid #0ba1de;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+}
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.71rem;
+  color:#f86c6b;
+  }
+.nav-pills .nav-link.active {
+  color: #fff !important;
+  background-color: #2064d8  !important;
+  margin-bottom: 1px;
+}
+
+  .card-header {
+    color: #2064d8;
+  }
+  .password-msg {
+    font-size: 0.7rem;
+  }
+
+.showButton , .showLabel{
+  display: block;
+}
+.hideButton , .hideLabel{
+  display: none;
+}

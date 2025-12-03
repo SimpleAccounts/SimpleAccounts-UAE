@@ -1,0 +1,24 @@
+
+.vat-transactions-screen {
+    .card-header {
+      color: #2064d8 ;
+    }
+    .date-select {
+      button {
+        background: white;
+      }
+    }
+    .badge {
+      padding: 0.4em 0.6em;
+      font-size: 90%;
+    }
+    .expense-table {  
+      .my-link {
+        text-decoration: none;
+        cursor: pointer;
+      }
+    }
+}
+.table-header-bg{
+  background-color: #dfe9f7;
+}

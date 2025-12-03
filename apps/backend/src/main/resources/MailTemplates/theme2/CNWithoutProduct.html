@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        td {
+            padding: 0 1px;
+        }
+    </style>
+</head>
+<body>
+<div class="row" style="margin: auto;
+        padding: 30px;
+        border: 1px solid gray;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+        font-size: 13px;
+        line-height: 24px;
+        font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+        color: #555;">
+    <div>
+        <div class="column" style="max-width: 100%; padding: 30px;">
+            <div style="overflow-x: auto; text-align: center; border-bottom: 1px solid #99090b;">
+                <div style="float: left;"><img src='{companylogo}' width="120px" height="80px"></div>
+                <div><h1 style="float: right; color: #99090b;">Credit Notes</h1></div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td>
+                            <br/><br/><b>Company Name:</b> {companyName}<br/>
+                            <b>Company Address Line 1:</b> {companyAddressLine1}<br/>
+                            <b>Company Address Line 2:</b> {companyAddressLine2}<br/>
+                            <b>P.O.Box:</b> {companyPostZipCode}<br/>
+                            {companyCity}<br/>
+                            {companyStateRegion},{companyCountryCode}<br/>
+                            <b>Mobile No:</b> {phoneNumber}<br/>
+                            <b>VAT Registration No:</b> {vatNumber}<br/>
+                            <b>Company Registration No:</b> {companyRegistrationNo}<br/>
+                        </td>
+                        <td style="float: right;">
+                            <br/><b>Contact Name:</b>{contactName}<br/>
+                            <b>Billing Address: </b>{contactAddressLine1}<br/>
+                            <b>P.O.Box: </b> {contractPoNumber}<br/>
+                            {contactCity}<br/>
+                            {contactState},{contactCountry}<br/>
+                            <b>Mobile No:</b> {mobileNumber}<br/>
+                            <b>Email:</b> {contactEmail}<br/>
+                            <b>VAT Registration No:</b> {vatRegistrationNumber}<br/>
+                        </td>
+                        <td style="float: right;"></td>
+                    </tr>
+                </table>
+                <table style="float: right; border: 1px solid;">
+                    <tr>
+                        <td></td>
+                        <td>Credit Note No:</td>
+                        <td style="float: right;">{invoicingReferencePattern}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Credit Note Date:</td>
+                        <td style="float: right;">{invoiceDate}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Reference No:</td>
+                        <td style="float: right;">{referenceNo}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Credit Amount:</td>
+                        <td style="float: right;">{total}</td>
+                    </tr>
+                </table>
+                <b>Exchange Rate:</b>{exchangeRate}<br>
+                <td style="float: left;">
+                    <b>Amount In Words: </b>{amountInWords} <br>
+                    <b>Vat In Words: </b>{vatInWords}<br>
+                    <b>Notes: </b>{notes}
+                </td>
+                <br/><br/><br/><br/>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

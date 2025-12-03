@@ -1,0 +1,140 @@
+
+.required::after{
+  content: " *";
+  color: red;
+}
+
+.filter-label{
+  display: block !important;
+}
+
+.table thead th{
+  vertical-align: top !important;
+}
+
+.vat-actions {
+  width: 2.3rem !important;
+  margin: 0 0.5rem !important;
+}
+
+.loader {
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+}
+
+.react-autosuggest__input {
+  display: block;
+  width: 100%;
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #5c6873;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #e4e7ea;
+  border-radius: 0.25rem;
+  -webkit-transition: border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.create-bank-wrapper{
+    padding: 1.5rem;
+}
+
+.row-wrapper{
+    margin-bottom: 1rem !important;
+}
+
+.bank-btn-wrapper{
+    padding: 1rem;
+}
+.invoice{
+    margin-right: 10px;
+}
+.add-btn{
+    margin: 31px 0px 0px 0px;
+}
+
+.address{
+    margin-top: 30px;
+}
+.modal-header{
+  border: none !important;
+}
+.modal-footer{
+  border: none !important;
+}
+.submit-invoice{
+  margin-right: 10px;
+}
+.vat-includeInput{
+  margin: 33px 0px 0px 0px;
+}
+.vat-includeLable{
+  margin-top: 31px;
+  margin-left: 25px;
+}
+
+.react-autosuggest__suggestions-list{
+  min-height: auto;
+  max-height: 10rem;
+  overflow-y: scroll;
+  position: absolute;
+  z-index: 1000;
+  background: white;
+  width: 95%;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.expense-items-table{
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.expense-items-table th{
+  padding: 0.5rem;
+}
+
+.expense-table-footer{
+  border-bottom: none !important;
+  border-left: none !important;
+}
+
+.expense-table-border{
+  border: 1px solid rgba(0,0,0,0.1) !important;
+  padding: 0.3rem;
+}
+
+.expense-labels{
+  padding: 0 0.5rem;
+}
+
+.expense-headers{
+  font-weight: bold;
+}
+
+.expense-items-table thead,
+.expense-items-table tbody,
+ .expense-items-table thead td ,
+ .expense-items-table tbody td ,
+ .expense-items-table thead th,
+ .expense-items-table tbody th{
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.form-check-input{
+  margin-top: 31px !important;
+  margin-left: 0 !important;
+}
+
+.product-cotact-input select{
+  width: 89% !important;
+}
+
+.product-cotact-input button{
+  margin: 0 !important;
+}

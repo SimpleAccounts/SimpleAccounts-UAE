@@ -1,0 +1,42 @@
+.financial-report-screen {
+	.card-header {
+		color: #2064d8;
+	}
+	.date-select {
+		button {
+			background: white;
+		}
+	}
+	.badge {
+		padding: 0.4em 0.6em;
+		font-size: 90%;
+	}
+	.expense-table {
+		.my-link {
+			text-decoration: none;
+			cursor: pointer;
+		}
+	}
+}
+.mainLable {
+	font-weight: 600;
+	background-color: #e4e7ea;
+}
+
+.nav-tabs {
+	margin-bottom: 10px !important;
+}
+.nav-tabs.active {
+	border-bottom: 1px solid !important;
+}
+
+#section-to-print {
+	.table {
+		.thead-light {
+			th {
+				background-color: #dcdcdc;
+				color: #000;
+			}
+		}
+	}
+}

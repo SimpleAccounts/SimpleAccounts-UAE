@@ -1,0 +1,39 @@
+.import-bank-statement-screen {
+  .card-header {
+    color: #2064d8;
+  }
+  .btn-group {
+    .btn {
+      color: #ffffff !important;
+    }
+  }
+  .badge {
+    padding: 0.4em 0.6em;
+    font-size: 90%;
+  }
+  .align-template {
+    flex-direction: row;
+    align-items: center;
+    label{
+      margin-bottom: 0 !important;
+    }
+  }
+  .invalid{
+    background: #f86c6b;
+  }
+  .table-responsive {
+    max-height:300px;
+}
+.myClickableThingy {
+  cursor: pointer;
+}
+.import-table {
+  .my-link {
+    text-decoration: none;
+    cursor: pointer;
+  }
+}
+}
+.table-header-bg{
+  background-color: #dfe9f7;
+}

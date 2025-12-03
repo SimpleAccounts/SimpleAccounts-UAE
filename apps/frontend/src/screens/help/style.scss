@@ -1,0 +1,42 @@
+.help-screen {
+	.card-body {
+		padding: 13% !important;
+	}
+
+	h4 {
+		color: #2064d8;
+		font-weight: bold;
+		margin-top: 30px;
+		
+	}
+
+	p {
+		font-size: 16px;
+	}
+
+	a {
+		display: block;
+		// margin-top: 30px;
+		text-align: center;
+		font-size: 17px;
+		color: #54e0c4;
+	}
+
+	button {
+		width: 40px;
+		height: 40px;
+		padding: 0;
+		margin-right: 10px;
+
+		i {
+			font-size: 18px !important;
+		}
+	}
+
+	.search-box {
+		input {
+			height: 48px;
+			font-size: 20px;
+		}
+	}
+}

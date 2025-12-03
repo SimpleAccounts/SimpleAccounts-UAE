@@ -1,0 +1,50 @@
+.profile-screen {
+    .card-header {
+      color: #2064d8;
+    }
+    .password-msg {
+      font-size: 0.7rem;
+    }
+  }
+.showButton , .showLabel{
+  display: block;
+}
+.hideButton , .hideLabel{
+  display: none;
+}
+.tooltip-icon {
+  position: relative;
+}
+.tooltip-icon .tooltiptext {
+  visibility: hidden;
+  width: 350px;
+  background-color: #555;
+  color: white;
+  border: 2px solid #555;
+  text-align: center;
+  border-radius: 10px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: -15px;
+  font-weight: normal;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip-icon .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 10%;
+  margin-left: -20px;
+  border-width: 9px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip-icon:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+    <if condition='isDefined("LogDir")'> <then>
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+	<file>${LogDir}/simpleaccounts-api.log</file>
+	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+		<!-- daily rollover -->
+		<fileNamePattern>${LogDir}/simpleaccounts-api.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>60</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender> 
+	</then> </if>
+	<logger name="org.hibernate.SQL"       		  level="info" />
+	<logger name="org.springframework.web" 		  level="info" />
+	<logger name="org.springframework.web.client" level="error" />
+	<logger name="com.virtustream.fusion"  		  level="debug" />
+
+	<!-- Setting the root level of logging to INFO -->
+	<root level="info">
+		<if condition='isDefined("LogDir")'>
+			<then>
+				<appender-ref ref="FILE" />
+			</then>
+			<else>
+				<appender-ref ref="STDOUT" />
+			</else>
+		</if>
+	</root>  
+  
+</configuration>

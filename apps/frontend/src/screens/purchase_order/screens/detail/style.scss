@@ -1,0 +1,24 @@
+.detail-supplier-invoice-screen {
+  .invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.71rem;
+    color:#f86c6b;
+  }
+  .card-header {
+    color: #2064d8;
+  }
+  .total-item {
+    border-bottom: 1px solid #ccc;
+  }
+  .file-upload-cont {
+    display: flex;
+    button {
+      margin-right: 10px !important;
+    }
+  }
+  .disabled-cursor {
+    cursor: not-allowed;
+  }
+}

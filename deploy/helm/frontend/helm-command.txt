@@ -1,0 +1,21 @@
+helm uninstall $subdomain-frontend -n $namespace
+
+helm rollback $subdomain-frontend 0  -n $namespace
+
+helm install dev-backend ./simpleaccounts-frontend --values ./simpleaccounts-frontend/values.yaml \
+--set simpleAccountsFrontendRelease=$(Release.Artifacts._simpleaccounts-frontend.BuildNumber), \
+--set image.repository.frontend.tag=$(Release.Artifacts._simpleaccounts-frontend.BuildNumber), \
+--set image.repository.frontend.imageName=datainn.azurecr.io/simpleaccounts-frontend, \
+--set maindomain=app.simpleaccounts.io,simpleAccountsHost=https://dev-api.app.simpleaccounts.io, \
+--set fullnameOverride=dev-frontend, \
+--set serviceAccount.name=dev-deploy-robot-frontend, \
+--set ingress.hosts[0].host=dev.app.simpleaccounts.io, \
+--set ingress.hosts[0].paths[0]="/*", \
+--set clusterIssuer=simpleaccounts-io-letsencrypt-prod, \
+--set ingress.annotations."cert-manager\.io/clusterissuer"=simpleaccounts-io-letsencrypt-prod, \
+--set ingress.tls[0].secretName=dev-app-simpleaccounts-io-tls, \
+--set ingress.tls[0].hosts[0]=app.simpleaccounts.io, \
+--set ingress.tls[0].hosts[1]=dev-api.app.simpleaccounts.io, \
+--set ingress.tls[0].hosts[2]=dev.app.simpleaccounts.io \
+--namespace $namespace
+./

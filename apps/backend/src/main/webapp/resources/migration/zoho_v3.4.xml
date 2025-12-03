@@ -1,0 +1,238 @@
+<Product name="zoho" version="3.4">
+    <TableList>
+        <Table name="Contacts"  srcFileName="Contacts.csv" entityName="com.simpleaccounts.entity.Contact" serviceName="com.simpleaccounts.service.ContactService">
+            <ColumnList>
+                <!--Column inputColumn="Created Time" dataType="LocalDateTime" setterMethod="setCreatedDate">-1</Column -->
+                <Column inputColumn="Last Modified Time" dataType="LocalDateTime" setterMethod="setLastUpdateDate" >-1</Column>
+                <Column inputColumn="First Name" dataType="String" setterMethod="setFirstName">-1</Column>
+                <Column inputColumn="Company Name" dataType="String"  setterMethod="setOrganization">-1</Column>
+                <Column inputColumn="Last Name" dataType="String"  setterMethod="setLastName">-1</Column>
+                <Column inputColumn="EmailID" dataType="String"  setterMethod="setEmail">-1</Column>
+                <Column inputColumn="EmailID" dataType="String"  setterMethod="setBillingEmail">-1</Column>
+                <Column inputColumn="MobilePhone" dataType="String"  setterMethod="setMobileNumber">-1</Column>
+                <Column inputColumn="Phone" dataType="String"  setterMethod="setTelephone">-1</Column>
+                <Column inputColumn="Billing Address" dataType="String"  setterMethod="setAddressLine1">-1</Column>
+                <Column inputColumn="Billing Street2" dataType="String"  setterMethod="setAddressLine2">-1</Column>
+                <Column inputColumn="Billing City" dataType="String" setterMethod="setCity">-1</Column>
+                <Column inputColumn="Billing State" dataType="State" setterMethod="setState">-1</Column>
+                <Column inputColumn="Billing Country" dataType="Country" setterMethod="">-1</Column>>
+                <Column inputColumn="Contact Type" dataType="Integer" setterMethod="setContactType">-1</Column>
+                <Column inputColumn="Currency Code"  dataType="Integer"  setterMethod="setCurrency">-1</Column>
+                <Column inputColumn="Place Of Supply"  dataType="String"  setterMethod="setPlaceOfSupplyId">-1</Column>
+                <Column inputColumn="VAT Treatment"  dataType="String"  setterMethod="setTaxTreatment">-1</Column>
+                <Column inputColumn="Tax Registration Number"  dataType="String"  setterMethod="setVatRegistrationNumber">-1</Column>
+
+            </ColumnList>
+        </Table>
+        <Table name="Vendors"  srcFileName="Vendors.csv" entityName="com.simpleaccounts.entity.Contact" serviceName="com.simpleaccounts.service.ContactService">
+            <ColumnList>
+                <!--Column inputColumn="Created Time" dataType="LocalDateTime" setterMethod="setCreatedDate">-1</Column -->
+                <Column inputColumn="Last Modified Time" dataType="LocalDateTime" setterMethod="setLastUpdateDate" >-1</Column>
+                <Column inputColumn="Display Name" dataType="String" setterMethod="setFirstName">-1</Column>
+                <Column inputColumn="Company Name" dataType="String"  setterMethod="setOrganization">-1</Column>
+                <Column inputColumn="Last Name" dataType="String"  setterMethod="setLastName">-1</Column>
+                <Column inputColumn="EmailID" dataType="String"  setterMethod="setEmail">-1</Column>
+                <Column inputColumn="EmailID" dataType="String"  setterMethod="setBillingEmail">-1</Column>
+                <Column inputColumn="MobilePhone" dataType="String"  setterMethod="setMobileNumber">-1</Column>
+                <Column inputColumn="Phone" dataType="String"  setterMethod="setTelephone">-1</Column>
+                <Column inputColumn="Billing Address" dataType="String"  setterMethod="setAddressLine1">-1</Column>
+                <Column inputColumn="Billing Street2" dataType="String"  setterMethod="setAddressLine2">-1</Column>
+                <Column inputColumn="Billing City" dataType="String" setterMethod="setCity">-1</Column>
+                <Column inputColumn="Billing State" dataType="State" setterMethod="setState">-1</Column>
+                <Column inputColumn="Billing Country" dataType="Country" setterMethod="setCountry">-1</Column>>
+                <Column inputColumn="Contact Type" dataType="Integer" setterMethod="setContactType">-1</Column>
+                <Column inputColumn="Currency Code"  dataType="Integer"  setterMethod="setCurrency">-1</Column>
+                <Column inputColumn="Source of Supply"  dataType="String"  setterMethod="setPlaceOfSupplyId">-1</Column>
+                <Column inputColumn="VAT Treatment"  dataType="String"  setterMethod="setTaxTreatment">-1</Column>
+                <Column inputColumn="Tax Registration Number"  dataType="String"  setterMethod="setVatRegistrationNumber">-1</Column>
+                   
+            </ColumnList>
+        </Table>
+        <Table name="Item" srcFileName="Item.csv" entityName="com.simpleaccounts.entity.Product" serviceName="com.simpleaccounts.service.ProductService">
+            <ColumnList>
+                <Column inputColumn="Item ID" dataType="String" setterMethod="setProductCode">-1</Column>
+                <Column inputColumn="Item Name" dataType="String" setterMethod="setProductName">-1</Column>
+                <Column inputColumn="Description" dataType="String" setterMethod="setProductDescription">-1</Column>
+                <Column inputColumn="Rate" dataType="BigDecimal" setterMethod="setUnitPrice">-1</Column>
+                <Column inputColumn="Product Type" dataType="String" setterMethod="setProductType">-1</Column>
+                <Column inputColumn="Account" dataType="String" setterMethod="setPriceType">-1</Column> 
+                <Column inputColumn="Tax Percentage" dataType="String" setterMethod="setVatCategory" >-1</Column>
+                <Column inputColumn="Rate" dataType="BigDecimal" setterMethod="setAvgPurchaseCost">-1</Column>
+
+            </ColumnList>
+        </Table>
+        <Table name="Item" srcFileName="Item.csv" entityName="com.simpleaccounts.entity.ProductLineItem" serviceName="com.simpleaccounts.service.ProductLineItemService">
+            <ColumnList>
+                <Column inputColumn="Rate" dataType="BigDecimal" setterMethod="setUnitPrice">-1</Column>
+                <Column inputColumn="Purchase Rate" dataType="BigDecimal" setterMethod="setUnitPrice">-1</Column>
+                <Column inputColumn="Item Type" dataType="Integer" setterMethod="setPriceType">-1</Column>
+                <Column inputColumn="Purchase Account" dataType="Integer" setterMethod="setPriceType">-1</Column>
+                <Column inputColumn="Account" dataType="String" setterMethod="setTransactioncategory">-1</Column>
+
+            </ColumnList>
+        </Table>
+        <Table name="Item" srcFileName="Item.csv" entityName="com.simpleaccounts.entity.Inventory" serviceName="com.simpleaccounts.service.InventoryService">
+            <ColumnList>
+                <Column inputColumn="Stock On Hand" dataType="Integer" setterMethod="setStockOnHand">-1</Column>
+                <Column inputColumn="Purchase Rate" dataType="Float" setterMethod="setUnitCost">-1</Column>
+               <!--   <Column inputColumn="Initial Stock Rate" dataType="Float" setterMethod="setUnitSellingPrice">-1</Column> -->
+                <Column inputColumn="Vendor" dataType="Integer" setterMethod="setSupplierId">-1</Column>
+                <Column inputColumn="Inventory Account Code" dataType="Integer" setterMethod="">-1</Column>
+                <Column inputColumn="Initial Stock " dataType="Integer" setterMethod="setPurchaseQuantity">-1</Column>
+                <Column inputColumn="Reorder Point" dataType="Integer" setterMethod="setReorderLevel">-1</Column>
+
+            </ColumnList>
+        </Table>
+
+        <Table name="Invoice" srcFileName="Invoice.csv" entityName="com.simpleaccounts.entity.Invoice" serviceName="com.simpleaccounts.service.InvoiceService">
+            <ColumnList>
+                <Column inputColumn="Invoice Date" dataType="LocalDateTime" setterMethod="setInvoiceDate" >-1</Column>
+                <Column inputColumn="Invoice ID" dataType="Integer" setterMethod="setId" >-1</Column>
+                <Column inputColumn="Invoice Number" dataType="String" setterMethod="setReferenceNumber" >-1</Column>
+                <Column inputColumn="Due Date" dataType="LocalDateTime" setterMethod="setInvoiceDueDate" >-1</Column>
+                <Column inputColumn="Discount Amount" dataType="Integer" setterMethod="setDiscount" >-1</Column>
+                <Column inputColumn="Total" dataType="BigDecimal" setterMethod="setTotalAmount" >-1</Column>
+                <Column inputColumn="Notes" dataType="String" setterMethod="setNotes" >-1</Column>
+                <Column inputColumn="Customer Name" dataType="String" setterMethod="setContact" >-1</Column>
+                <Column inputColumn="Item Tax Amount" dataType="BigDecimal" setterMethod="setTotalVatAmount" >-1</Column>
+                <Column inputColumn="Total" dataType="BigDecimal" setterMethod="setDueAmount" >-1</Column>
+                <Column inputColumn="Payment Terms Label" dataType="String" setterMethod="setInvoiceDuePeriod" >-1</Column>
+                <Column inputColumn="Invoice Status" dataType="String" setterMethod="setStatus" >-1</Column>
+                <Column inputColumn="Exchange Rate" dataType="BigDecimal" setterMethod="setExchangeRate" >-1</Column>
+                <Column inputColumn="Currency Code"  dataType="Integer"  setterMethod="setCurrency" >-1</Column>
+                <Column inputColumn="Place Of Supply"  dataType="String"  setterMethod="setPlaceOfSupplyId">-1</Column>
+            </ColumnList>
+        </Table>
+
+        <Table name="Invoice" srcFileName="Invoice.csv" entityName="com.simpleaccounts.entity.InvoiceLineItem" serviceName="com.simpleaccounts.service.InvoiceLineItemService">
+            <ColumnList>
+                <Column inputColumn="Item Desc" dataType="String" setterMethod="setDescription" >-1</Column>
+                <Column inputColumn="Quantity" dataType="Integer" setterMethod="setQuantity" >-1</Column>
+                <Column inputColumn="SubTotal" dataType="BigDecimal" setterMethod="setSubTotal" >-1</Column>
+                <Column inputColumn="Item Price" dataType="BigDecimal" setterMethod="setUnitPrice" >-1</Column>
+                <Column inputColumn="Item Tax %" dataType="Integer" setterMethod="setVatCategory" >-1</Column>
+                <Column inputColumn="Account" dataType="Integer" setterMethod="setTrnsactioncCategory">-1</Column>
+                <Column inputColumn="Item Tax Amount" dataType="BigDecimal" setterMethod="setVatAmount" >-1</Column>
+            </ColumnList>
+        </Table>
+
+        <Table name="Bill" srcFileName="Bill.csv" entityName="com.simpleaccounts.entity.Invoice" serviceName="com.simpleaccounts.service.InvoiceService">
+            <ColumnList>
+                <Column inputColumn="Bill Date" dataType="LocalDateTime" setterMethod="setInvoiceDate" >-1</Column>
+                <Column inputColumn="Bill ID" dataType="Integer" setterMethod="setId" >-1</Column>
+                <Column inputColumn="Bill Number" dataType="String" setterMethod="setReferenceNumber" >-1</Column>
+                <Column inputColumn="Discount" dataType="double" setterMethod="setDiscountPercentage" >-1</Column>
+                <Column inputColumn="Total" dataType="BigDecimal" setterMethod="setTotalAmount" >-1</Column>
+                <Column inputColumn="Tax Amount" dataType="BigDecimal" setterMethod="setTotalVatAmount" >-1</Column>
+                <Column inputColumn="Total" dataType="BigDecimal" setterMethod="setDueAmount" >-1</Column>
+                <Column inputColumn="Vendor Notes" dataType="String" setterMethod="setNotes" >-1</Column>
+                <Column inputColumn="Due Date" dataType="LocalDateTime" setterMethod="setInvoiceDueDate" >-1</Column>
+                <Column inputColumn="Currency Code" dataType="Integer" setterMethod="setCurrency" >-1</Column>
+                <Column inputColumn="Exchange Rate" dataType="BigDecimal" setterMethod="setExchangeRate" >-1</Column>
+                <Column inputColumn="Discount Type" dataType="String" setterMethod="setDiscountType" >-1</Column>
+                <Column inputColumn="Payment Terms Label" dataType="String" setterMethod="setInvoiceDuePeriod" >-1</Column>
+                <Column inputColumn="Vendor Name" dataType="String" setterMethod="setContact" >-1</Column>
+                <Column inputColumn="Place Of Supply"  dataType="String"  setterMethod="setPlaceOfSupplyId">-1</Column>
+           </ColumnList>
+       </Table>
+
+       <Table name="Bill" srcFileName="Bill.csv" entityName="com.simpleaccounts.entity.InvoiceLineItem" serviceName="com.simpleaccounts.service.InvoiceLineItemService">
+           <ColumnList>
+               <Column inputColumn="Description" dataType="String" setterMethod="setDescription">-1</Column>
+               <Column inputColumn="Quantity" dataType="Integer" setterMethod="setQuantity">-1</Column>
+               <Column inputColumn="Rate" dataType="BigDecimal" setterMethod="setUnitPrice">-1</Column>
+               <Column inputColumn="SubTotal" dataType="BigDecimal" setterMethod="setSubTotal">-1</Column>
+               <Column inputColumn="Tax Percentage" dataType="Integer" setterMethod="setVatCategory" >-1</Column>
+               <Column inputColumn="Account" dataType="Integer" setterMethod="setTrnsactioncCategory">-1</Column>
+               <Column inputColumn="Tax Amount" dataType="BigDecimal" setterMethod="setVatAmount" >-1</Column>
+           </ColumnList>
+       </Table>
+
+       <Table name="Credit_Note" srcFileName="Credit_Note.csv" entityName="com.simpleaccounts.entity.Invoice" serviceName="com.simpleaccounts.service.InvoiceService">
+           <ColumnList>
+               <Column inputColumn="CreditNotes ID" dataType="Integer" setterMethod="setId">-1</Column>
+               <Column inputColumn="Credit Note Date" dataType="LocalDateTime" setterMethod="setInvoiceDate">-1</Column>
+               <Column inputColumn="Tax1 ID" dataType="String" setterMethod="setTaxIdentificationNumber">-1</Column>
+              <!-- <Column inputColumn="Credit Note Status" dataType="Integer" setterMethod="setStatus">-1</Column> -->
+                <Column inputColumn="Applied Invoice Number" dataType="String" setterMethod="setReceiptNumber">-1</Column>
+                <Column inputColumn="Discount" dataType="BigDecimal" setterMethod="setDiscount">-1</Column>
+                <Column inputColumn="Total" dataType="BigDecimal" setterMethod="setTotalAmount">-1</Column>
+                <Column inputColumn="Exchange Rate" dataType="BigDecimal" setterMethod="setExchangeRate">-1</Column>
+                <Column inputColumn="NOTES" dataType="String" setterMethod="setNotes">-1</Column>
+                <Column inputColumn="Discount Amount" dataType="BigDecimal" setterMethod="setDiscount">-1</Column>
+                <Column inputColumn="Entity Discount Percent" dataType="double" setterMethod="setDiscountPercentage">-1</Column>
+                <Column inputColumn="Credit Note Number" dataType="String" setterMethod="setReferenceNumber">-1</Column>
+                <Column inputColumn="Currency Code" dataType="Integer" setterMethod="setCurrency">-1</Column>
+               <!-- <Column inputColumn="Discount Type" dataType="String" setterMethod="setDiscountType">-1</Column> --> 
+                <Column inputColumn="Balance" dataType="BigDecimal" setterMethod="setDueAmount">-1</Column>
+                <Column inputColumn="Customer Name" dataType="String" setterMethod="setContact" >-1</Column>
+            </ColumnList>
+        </Table>
+
+        <Table name="Credit_Note" srcFileName="Credit_Note.csv" entityName="com.simpleaccounts.entity.InvoiceLineItem" serviceName="com.simpleaccounts.service.InvoiceLineItemService">
+            <ColumnList>
+
+                <Column inputColumn="Item Desc" dataType="String" setterMethod="setDescription">-1</Column>
+                <Column inputColumn="Quantity" dataType="Integer" setterMethod="setQuantity">-1</Column>
+                <Column inputColumn="Item Price" dataType="BigDecimal" setterMethod="setUnitPrice">-1</Column>
+                <Column inputColumn="SubTotal" dataType="BigDecimal" setterMethod="setSubTotal">-1</Column>
+                <Column inputColumn="Invoice Number" dataType="Integer" setterMethod="setInvoiceId">-1</Column>
+                <!-- <Column inputColumn="Product ID" dataType="BigDecimal" setterMethod="setProduct">-1</Column> -->
+            </ColumnList>
+        </Table>
+
+        <Table name="Expense" srcFileName="Expense.csv" entityName="com.simpleaccounts.entity.Expense" serviceName="com.simpleaccounts.service.ExpenseService">
+            <ColumnList>
+                <Column inputColumn="Expense Date" dataType="LocalDateTime" setterMethod="setExpenseDate">-1</Column>
+                <Column inputColumn="Expense Description" dataType="String " setterMethod="setExpenseDescription">-1</Column>
+                <Column inputColumn="Currency Code" dataType="Integer" setterMethod="setCurrency">-1</Column>
+                <Column inputColumn="Tax Amount" dataType="BigDecimal" setterMethod="setExpenseVatAmount">-1</Column>
+                <Column inputColumn="Expense Reference ID" dataType="Integer" setterMethod="setExpenseId">-1</Column>
+                <Column inputColumn="Exchange Rate" dataType="BigDecimal" setterMethod="setExchangeRate">-1</Column>
+                <Column inputColumn="Paid Through" dataType="String" setterMethod="setPayMode">-1</Column>
+                <Column inputColumn="Total" dataType="BigDecimal" setterMethod="setExpenseAmount">-1</Column>
+                <Column inputColumn="" dataType="String" setterMethod="setPayee">-1</Column>
+                <Column inputColumn="Paid Through" dataType="String" setterMethod="setTransactionCategory">-1</Column>
+            </ColumnList>
+        </Table>
+
+        <Table name="Purchase_Order" srcFileName="Purchase_Order.csv" entityName="com.simpleaccounts.entity.PoQuotation" serviceName="com.simpleaccounts.service.PoQuotationService">
+            <ColumnList>
+                <Column inputColumn="Reference No" dataType="String" setterMethod="setReferenceNumber">-1</Column>
+                <Column inputColumn="Item Tax Amount" dataType="BigDecimal" setterMethod="setTotalVatAmount">-1</Column>
+                <Column inputColumn="Total" dataType="BigDecimal" setterMethod="setTotalAmount">-1</Column>
+                <Column inputColumn="Purchase Order Number" dataType="String" setterMethod="setPoNumber">-1</Column>
+                <Column inputColumn="Purchase Order Status" dataType="Integer" setterMethod="setStatus">-1</Column>
+                <Column inputColumn="Item Tax Amount" dataType="BigDecimal" setterMethod="setTotalVatAmount">-1</Column>
+                <Column inputColumn="Vendor Name" dataType="Integer" setterMethod="setSupplierId">-1</Column>
+                <Column inputColumn="Currency Code" dataType="Integer" setterMethod="setCurrency">-1</Column>
+            </ColumnList>
+        </Table>
+
+        <Table name="Purchase_Order" srcFileName="Purchase_Order.csv" entityName="com.simpleaccounts.entity.PoQuotationLineItem" serviceName="com.simpleaccounts.service.PoQuotationLineItemService">
+            <ColumnList>
+                <Column inputColumn="Product ID" dataType="Integer" setterMethod="setProductId">-1</Column>
+                <Column inputColumn="Item Desc" dataType="String" setterMethod="setDescription">-1</Column>
+                <Column inputColumn="QuantityOrdered" dataType="Integer" setterMethod="setQuantity">-1</Column>
+            </ColumnList>
+        </Table>
+
+        <Table name="Chart_of_Accounts" srcFileName="Chart_of_Accounts.csv" entityName="com.simpleaccounts.entity.ChartOfAccountCategory" serviceName="com.simpleaccounts.service.ChartOfAccountCategoryService">
+            <ColumnList>
+                <Column inputColumn="Account Name" dataType="String" setterMethod="setChartOfAccountCategoryName">-1</Column>
+                <Column inputColumn="Account Code" dataType="String" setterMethod="setChartOfAccountCategoryCode">-1</Column>
+                <Column inputColumn="Description" dataType="String" setterMethod="setChartOfAccountCategoryDescription">-1</Column>
+                <Column inputColumn="Account #" dataType="Integer" setterMethod="setChartOfAccountCategoryId">-1</Column>
+            </ColumnList>
+        </Table>
+
+        <Table name="Exchange_Rate" srcFileName="Exchange_Rate.csv" entityName="com.simpleaccounts.entity.CurrencyConversion" serviceName="com.simpleaccounts.service.CurrencyExchangeService">
+            <ColumnList>
+                <Column inputColumn="Currency Code" dataType="Integer" setterMethod="setCurrencyCode">-1</Column>
+                <Column inputColumn="Exchange Rate" dataType="BigDecimal" setterMethod="setExchangeRate">-1</Column>
+                 <Column inputColumn="Date" dataType="LocalDateTime" setterMethod="setCreatedDate">-1</Column>
+            </ColumnList>
+        </Table>
+
+    </TableList>
+</Product>

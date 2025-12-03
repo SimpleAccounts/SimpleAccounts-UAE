@@ -1,0 +1,27 @@
+.user-screen {
+    .card-header {
+      color: #2064d8;
+    }
+    .btn-group {
+      .btn {
+        color: #ffffff !important;
+      }
+    }
+    .badge {
+      padding: 0.4em 0.6em;
+      font-size: 90%;
+    }
+    .product-table {
+      .my-link {
+        text-decoration: none;
+        cursor: pointer;
+      }
+    }
+  }
+  .password-icon {
+    position: absolute;
+    top: 41px;
+    right: 41px;
+    cursor: pointer;
+    color: grey;
+    }

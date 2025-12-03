@@ -1,0 +1,134 @@
+.ar_aging_report-report-section {
+  .card-header {
+    background: white;
+  }
+
+  .card-title {
+    color: #2064d8;
+  }
+
+  .filter-box {
+    border-radius: 0px;
+    border: 1px solid #dad8d8;
+    width: fit-content;
+
+    .form-group {
+      margin: 0px 10px;
+
+      label {
+        padding: 2px;
+        margin-right: 10px;
+      }
+      div.date-range,
+      div.account-type {
+        display: block !important;
+      }
+    }
+
+    .date-range {
+      button {
+        min-width: 200px;
+        background: white;
+        text-align: left;
+      }
+
+      button:after {
+        float: right;
+        margin-top: 8px;
+      }
+    }
+
+    .account-type {
+      min-width: 200px;
+    }
+  }
+
+  .info-block {
+    margin: 10px 0;
+
+    h4 {
+      color: #73818f;
+    }
+    p {
+      margin-bottom: 0;
+    }
+
+    .export {
+      height: 30px;
+      padding: 0 10px;
+    }
+  }
+
+  .table-wrapper {
+    .react-bs-table-tool-bar {
+      margin-bottom: 10px;
+    }
+
+    table {
+      th {
+        input {
+          margin-top: 10px;
+          border: 1px solid #c8c8c8;
+        }
+      }
+
+      td {
+        color: #444444;
+        font-family: Montserrat, serif;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      tr.total {
+        background: #eee;
+        margin-bottom: 20px !important;
+
+        td {
+          color: #873736 !important;
+          font-weight: bold !important;
+        }
+      }
+
+      tr.type {
+        border-bottom: 2px solid blue !important;
+        td {
+          font-size: 13px !important;
+          padding: 10px;
+          padding-top: 20px;
+          font-weight: 600 !important;
+        }
+      }
+
+      tr.item {
+        td:first-child {
+          padding-left: 30px;
+        }
+
+        td {
+          font-size: 12px !important;
+        }
+      }
+
+      td.bold {
+        color: #873736 !important;
+      }
+    }
+  }
+}
+
+.logo-container {
+  text-align: center;
+ 
+  img {
+    width: 15%;
+  }
+}
+.table-header-color{
+  background-color: #2064d8 !important;
+border-color: #2064d8 !important;
+}
+
+.table-internal-header{
+  background-color: #d1f7ed !important;
+  border-color: #d1f7ed !important; 
+}

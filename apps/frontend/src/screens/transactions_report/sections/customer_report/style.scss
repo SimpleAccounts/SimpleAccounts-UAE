@@ -1,0 +1,82 @@
+.invoice-report-section {
+  .card-header {
+    background: white;
+  }
+
+  .card-title {
+    color: #2064d8;
+  }
+
+  .info-block {
+
+    h4 {
+      color: #73818f;
+    }
+    p{
+      margin-bottom: 0;
+    }
+
+    .export {
+      height: 30px;
+      padding: 0 10px;
+    }
+  }
+
+  .filter-box {
+    border-radius: 0px;
+    border: 1px solid #dad8d8;
+    width: fit-content;
+
+    .form-group {
+      margin: 0px 10px;
+
+      label {
+        
+        padding: 2px;
+        margin-right: 10px;
+      }
+      div.date-range,
+      div.account-type {
+        display: block !important;
+      }
+    }
+    
+    .date-range {
+      button {
+        min-width: 200px;
+        background: white;
+        text-align: left;
+      }
+
+      button:after {
+        float: right;
+        margin-top: 8px;
+      }
+    }
+
+    .account-type {
+      min-width: 200px;
+    }
+  }
+  .table-wrapper {
+    .react-bs-table-tool-bar {
+      margin-bottom: 10px;
+    }
+    
+    table {
+      th {
+        input {
+          margin-top: 10px;
+          border: 1px solid #c8c8c8;
+        }
+      }
+
+      td {
+        color: #444444;
+        font-family: Montserrat, serif;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+  }
+}

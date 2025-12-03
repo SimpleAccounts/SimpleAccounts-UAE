@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Embedded Style Sheet</title>
+    <style>
+        .outer {
+            width: 600px;
+            height: auto;
+            margin: 50px auto;
+            padding-top: 50px;
+            background-color:#f8f8ff;
+         border-radius:30px;
+		 padding:10px;
+        }
+         
+.center {
+ 
+font-size:40px;
+text-align: center;
+ color:#1f65d7;
+}
+          
+          .upper{
+             text-align:center;
+          }
+          
+         
+       
+        </style>
+</head>
+<body>
+
+<div class="outer">
+    <div class="upper">
+        <img src='{companylogo}'style="width:100px;height:80px">
+    </div>
+    <div class="center">
+        <p><b>Goods Received Note {grnNumber}</b></p>
+    </div>
+    <div style="max-width:560px; margin:auto; padding:0 5%">
+        <div style="padding:30px 0; color:#000000; line-height:1.7; font-size:18px; font-family: Arial, Helvetica, sans-serif; border-top:1px solid #1f65d7">
+            Dear {supplierName},
+        </br></br>
+            This is to acknowledge the receipt of goods ordered by us {companyName}.
+            </br>
+            Kindly, check the attached document it contains the list of items received.
+            </br>
+            We are looking forward to having more business with you.
+            </br>
+            We will definitely maintain a good relationship with your company and hope to get it prolonged.
+            </br>
+            For any queries feel free to contact us.
+            </br>
+            Thank you very much.
+            </br>
+        </div>
+        <div style=" border-radius:20px; background: #3678e2; border:1px solid #fff; color:#ffffff; height:125px;padding:10px">
+
+
+
+            <p>
+                <span style="width:40%; padding-left:10%;font-family: Helvetica, sans-serif;float:left; font-size:17px">GRN No</span>
+                <span style="width:40%; padding-left:10%;font-family: Helvetica, sans-serif;float:left;font-size:17px">
+<b>{grnNumber}</b></span>
+            </p></br>
+            <p>
+            <p>
+                <span style="width:40%; padding-left:10%;font-family: Helvetica, sans-serif;float:left; font-size:17px">Date</span>
+                <span style="width:40%; padding-left:10%;font-family: Helvetica, sans-serif;float:left;font-size:17px">
+<b>{grnReceiveDate}</b></span>
+            </p></br>
+
+            <p>
+                <span style="width:40%; padding-left:10%;font-family: Helvetica, sans-serif;float:left; font-size:17px">Remarks</span>
+                <span style="width:40%; padding-left:10%;font-family: Helvetica, sans-serif;float:left;font-size:17px"><b> {grnRemarks}</b></span>
+            </p>
+
+
+        </div>
+    </div>
+    <div class="center"  style="width:auto;font-size:16px;background-color:#113964; border-radius:10px;margin:10px">
+        <br>
+        <a style="color:#ffffff" href= "https://www.simpleaccounts.io/about-us/">About Us</a>
+        &nbsp; &nbsp;
+        <a style="color:#ffffff" href= "https://www.simpleaccounts.io/contacts/">Contact Us</a>
+        &nbsp; &nbsp;
+        <a style="color:#ffffff" href= "https://www.simpleaccounts.io/privacy-policy/">Privacy Policy</a>
+        <br><br>
+        <div id="softlab_soc_icon_wrap_60fc08a430bad" class="softlab_module_social aleft with_bg add_box_shadow" style="margin-left:-6px; margin-right:-6px;">
+            <a id="soc_icon_60fc08a430be81" href="https://twitter.com/SimpleAccounts_" title="Twitter"><img src= "https://www.simpleaccounts.io/wp-content/uploads/2021/07/Twitter-original.png " style= "font-size:12px; width:30px; height:30px; line-height:30px; margin-left:6px; margin-right:6px; margin-bottom:6px ";>
+            </a>
+            <a href= "https://www.facebook.com/simpleAccounts/"  title= "Facebook "><img src= "https://www.simpleaccounts.io/wp-content/uploads/2021/07/Facebook-original.png " style= "font-size:12px; width:30px; height:30px; line-height:30px; margin-left:6px; margin-right:6px; margin-bottom:6px ";></a>
+            <a  href= "https://www.linkedin.com/company/simpleaccounts"  title= "linkedin "><img src= "https://www.simpleaccounts.io/wp-content/uploads/2021/07/LinkedIn-Original.png " style= "font-size:12px; width:30px; height:30px; line-height:30px; margin-left:6px; margin-right:6px; margin-bottom:6px ";></a>
+            <a  href= "https://www.youtube.com/channel/UC_0Riyw8jQ--UW-A7oXtlKw"  title= "Youtube "><img src= "https://www.simpleaccounts.io/wp-content/uploads/2021/07/Youtube-original.png " style= "font-size:12px; width:30px; height:30px; line-height:30px; margin-left:6px; margin-right:6px; margin-bottom:6px ";></a>
+            <a href= "https://www.instagram.com/simpleaccounts_/"  title= "Instagram "><img src= "https://www.simpleaccounts.io/wp-content/uploads/2021/07/Instagram-original.png " style= "font-size:12px; width:30px; height:30px; line-height:30px; margin-left:6px; margin-right:6px; margin-bottom:6px ";></a>
+
+        </div>
+        <br>
+        <p style="color:#ffffff" >
+            Copyright © 2024  <a style= "font-weight:bold;color:#ffffff"  href= "https://www.simpleaccounts.io/">SimpleAccounts</a> All Rights Reserved. </p>
+        <br>
+    </div>
+</div>
+</body>
+</html>

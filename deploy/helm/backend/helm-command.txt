@@ -1,0 +1,74 @@
+nameserver="simpleaccounts-app"
+maindomain="app.simpleaccounts.io"
+subdomain="sit-reports"
+helmDir="simpleaccounts-backend"
+SVrelease="0.0.3-alpha-406"
+
+helm install $subdomain-backend ./$helmDir --values ./$helmDir/values.yaml \
+--set simpleAccountsBackendRelease=$SVrelease \
+--set image.repository.backend.tag=$SVrelease \
+--set simpleAccountsHost=https://$subdomain-api.$maindomain \
+--set simpleAccountsDB=sa_load_me_db \
+--set fullnameOverride=$subdomain-backend \
+--set serviceAccount.name=$subdomain-deploy-robot-backend \
+--set ports.containerPort.backendPort=8080 \
+--set service.port=80 \
+--set ingress.hosts[0].host=$subdomain-api.$maindomain \
+--set ingress.hosts[0].paths[0]="/*" \
+--set ingress.tls[0].hosts={$subdomain-api.$maindomain} \
+--set ingress.tls[0].secretName=wildcard-app-simpleaccounts-io-tls \
+--set data.username=<Database User> \
+--set data.password=<Database Password> \
+--set data.dbhost=<Database Host> \
+-n $nameserver \
+--dry-run --debug
+
+helm list -n $nameserver
+
+helm upgrade $subdomain-backend ./$helmDir --values ./$helmDir/values.yaml \
+--set simpleAccountsBackendRelease=$SVrelease \
+--set image.repository.backend.tag=$SVrelease \
+--set simpleAccountsHost=https://$subdomain-api.$maindomain \
+--set simpleAccountsDB=sa_load_me_db \
+--set fullnameOverride=$subdomain-backend \
+--set serviceAccount.name=$subdomain-deploy-robot-backend \
+--set ports.containerPort.backendPort=8080 \
+--set service.port=80 \
+--set ingress.hosts[0].host=$subdomain-api.$maindomain \
+--set ingress.hosts[0].paths[0]="/*" \
+--set ingress.tls[0].hosts={$subdomain-api.$maindomain} \
+--set ingress.tls[0].secretName=wildcard-app-simpleaccounts-io-tls \
+--set data.username=<Database User> \
+--set data.password=<Database Password> \
+--set data.dbhost=<Database Host> \
+-n $nameserver \
+--dry-run --debug
+
+
+helm uninstall $subdomain-backend -n $nameserver
+
+helm rollback $subdomain-backend 0  -n $nameserver
+
+
+**************************
+
+drop database sa_demo_db;
+drop user 'sa_demo_db_user'@'%';
+create database simpleaccounts_demo_db;
+create user 'simpleaccounts_demo_db_user'@'10.240%' identified by '<Password>';
+grant all privileges on simpleaccounts_demo_db.* to 'simpleaccounts_demo_db_user'@'10.240%' with grant option;
+flush privileges;
+
+**************************
+--no-database
+simpleaccounts-backend-java/simpleaccounts-backend/simpleaccounts-backend.sh install sit1 0.0.3-alpha-1178 NAEQNkA3o*X76uN2snQR2Z2u --no-database
+
+simpleaccounts-backend-java/simpleaccounts-backend/simpleaccounts-backend.sh install healingwithtrust 0.0.3-alpha-654 4Qa_HXCJDoMRebiGLLVfRbR3 >> ~/simpleaccounts-backend-deployment.log
+
+simpleaccounts-backend-java/simpleaccounts-backend/update-simpleaccount-backend-release.bash 0.0.3-alpha-1282
+
+**************
+
+simpleAccountsBackendRelease=$(Release.Artifacts._simpleaccounts-backend.BuildNumber),image.repository.backend.tag=$(Release.Artifacts._simpleaccounts-backend.BuildNumber),simpleAccountsHost=https://ca-ayaz-api.app.simpleaccounts.io,database.simpleAccountsDB=sa_ca-ayaz_db,fullnameOverride=ca-ayaz-backend,serviceAccount.name=ca-ayaz-deploy-robot-backend,ingress.hosts[0].host=ca-ayaz-api.app.simpleaccounts.io,ingress.hosts[0].paths[0]="/*",ingress.tls[0].hosts[0]=ca-ayaz-api.app.simpleaccounts.io
+
+

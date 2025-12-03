@@ -1,0 +1,121 @@
+.bank-transaction-screen {
+	.card-header {
+		color: #2064d8;
+	}
+	.btn-group {
+		.btn {
+			color: #ffffff !important;
+		}
+	}
+	.status-panel {
+		border: 1px solid #e4e7ea;
+	}
+	.badge {
+		padding: 0.4em 0.6em;
+		font-size: 90%;
+	}
+
+	.bank-transaction-table {
+		.my-link {
+			font-weight: bold;
+			color: #2064d8;
+			text-decoration: none;
+			cursor: pointer;
+		}
+	}
+	.main-table-panel {
+		// width: calc(100% - 400px) !important;
+		width: 59%;
+		// transition: width 9s ease-in-out;
+		.card-body {
+			// height: calc(100% - 400px) !important;
+			overflow-x: hidden !important;
+			// overflow-y: auto !important;
+		}
+	}
+}
+.editTransactions {
+	position: fixed;
+	right: 0;
+	top: 0;
+	z-index: 9;
+	height: 100%;
+	width: 0px;
+	transition: 0.4s;
+	background: #fff;
+}
+.editTransactions .card {
+	box-shadow: none !important;
+}
+.editTransactions.active {
+	width: 450px;
+}
+.overlay {
+	background-color: #fff;
+	height: 1px;
+	position: fixed;
+	top: 0;
+	width: 1px;
+	z-index: -1;
+}
+.overlay.open {
+	background-color: rgba(0, 0, 0, 0.4);
+	height: 100%;
+	width: 100%;
+	z-index: 1;
+}
+.main.open {
+	z-index: 9999;
+	position: relative;
+}
+.main.open .breadcrumb-container nav {
+	z-index: 0 !important;
+}
+.label {
+	font-weight: 700;
+	font-size: 13px;
+	margin-bottom: 0px;
+}
+.moreDetails {
+	color: #2064d8;
+	margin-bottom: 0px;
+	cursor: pointer;
+}
+.editTransactions .header.text {
+	text-align: center;
+	border: 1px solid #333;
+}
+.editTransactions .react-datepicker__input-container::after {
+	content: '\f073';
+	font-family: FontAwesome;
+	left: 52%;
+	position: absolute;
+	top: 50%;
+	font-size: 20px;
+	transform: translateY(-50%);
+}
+.react-bootstrap-table th[data-row-selection] {
+	width: 50px;
+}
+.react-bootstrap-table .row-expand-slide-appear-active {
+	max-height: 3000px;
+	transition: max-height 4s;
+}
+.expense-option label {
+	margin-right: 10px;
+}
+
+.transaction .dropdown-item a {
+	display: block;
+	padding: 10px 2px;	
+}
+.react-bootstrap-table .table tbody tr td:nth-child(4) {
+	text-align:right !important;
+}
+.react-bootstrap-table .table tbody tr td:nth-child(5) {
+	text-align:right !important;
+}
+.react-bootstrap-table .table tbody tr td:nth-child(6) {
+	text-align:right !important;
+}
+

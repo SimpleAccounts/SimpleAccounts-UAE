@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<include file="databaseChangeLogs/basescript-simpleaccounts-sequence-changeset-1.sql" relativeToChangelogFile="true"/>
+	<include file="databaseChangeLogs/basescript-simpleaccounts-ddl-changeset-2.sql" relativeToChangelogFile="true"/>
+	<include file="databaseChangeLogs/basescript-simpleaccounts-dml-changeset-3.sql" relativeToChangelogFile="true"/>
+	<include file="databaseChangeLogs/changescript-simpleaccounts-changeset-4.sql" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

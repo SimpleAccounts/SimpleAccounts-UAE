@@ -1,0 +1,37 @@
+.vat-code-screen {
+  .card-header {
+    font-size: 20px;
+    color: #2064d8;
+  }
+  .card {
+    .table-action {
+      button {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+      }
+    }
+  }
+
+  .badge-info {
+    background-color: #63c2de;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .toolbar {
+    button {
+      color: white !important;
+    } 
+  }
+
+  .my-link {
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+}
+.table-header-bg{
+  background-color: #dfe9f7;
+}

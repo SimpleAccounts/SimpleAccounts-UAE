@@ -1,0 +1,67 @@
+.financial-report-screen {
+	.card-header {
+		color: #2064d8;
+	}
+	.date-select {
+		button {
+			background: white;
+		}
+	}
+	.badge {
+		padding: 0.4em 0.6em;
+		font-size: 90%;
+	}
+	.expense-table {
+		.my-link {
+			text-decoration: none;
+			cursor: pointer;
+		}
+	}
+	.report-card {
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3) !important;
+		.card-header{
+			font-size: 1rem;
+			line-height: 1.5rem;
+			color: black !important;
+			font-weight: 600;
+		}
+	}
+	
+}
+.mainLable {
+	font-weight: 600;
+	background-color: #e4e7ea;
+}
+
+.nav-tabs {
+	margin-bottom: 10px !important;
+}
+.nav-tabs.active {
+	border-bottom: 1px solid !important;
+}
+
+#section-to-print {
+	.table {
+		.thead-light {
+			th {
+				background-color: #dcdcdc;
+				color: #000;
+			}
+		}
+	}
+}
+.report-section {
+	a {
+
+		color: #2064d8  !important;
+		text-decoration: none !important;
+		font-size: 1rem;
+		line-height: 1.5rem;
+		font-weight: bold;
+	}
+	p{
+		font-size: 0.875rem;
+		line-height: 1.25rem;
+		max-width: 50em;
+	}
+}
