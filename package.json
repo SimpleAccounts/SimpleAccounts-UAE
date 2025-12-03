@@ -7,13 +7,12 @@
     "sass": "1.32.0"
   },
   "workspaces": [
-    "apps/frontend",
     "apps/agents/*",
     "packages/*"
   ],
   "scripts": {
-    "frontend": "npm run start --workspace=simplevat-frontend",
-    "frontend:build": "npm run build --workspace=simplevat-frontend",
+    "frontend": "cd apps/frontend && npm run start",
+    "frontend:build": "cd apps/frontend && rm -rf node_modules && npm install --legacy-peer-deps && CI=false npm run build",
     "backend:build": "cd apps/backend && ./mvnw clean package",
     "backend:run": "cd apps/backend && ./run.sh",
     "test": "npm run test --workspaces --if-present",
