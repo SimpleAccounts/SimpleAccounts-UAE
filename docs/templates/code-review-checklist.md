@@ -56,7 +56,7 @@ Use this checklist when reviewing Pull Requests.
 - [ ] Sensitive data not logged
 - [ ] PII handled according to regulations
 - [ ] File uploads validated (type, size, content)
-- [ ] Tenant isolation maintained (multi-tenancy)
+- [ ] Role-based access control enforced (single-tenant with RBAC)
 
 ---
 

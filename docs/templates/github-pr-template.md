@@ -147,7 +147,7 @@ Tests: XXX passed, XXX total
 - [ ] Input validation implemented
 - [ ] SQL queries use parameterized statements
 - [ ] User permissions verified for data access
-- [ ] Tenant isolation maintained (multi-tenancy)
+- [ ] Role-based access control enforced (single-tenant with RBAC)
 - [ ] Sensitive data not logged
 
 ---

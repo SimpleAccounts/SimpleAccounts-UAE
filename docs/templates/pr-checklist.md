@@ -131,20 +131,26 @@ If REST API modified:
 
 ---
 
-## 7. MULTI-TENANCY & DATA ISOLATION
+## 7. USER AUTHORIZATION & DATA ACCESS
+
+**Note:** SimpleAccounts-UAE is a single-tenant application with role-based access control.
 
 For any data access code:
-- [ ] Tenant ID (Company ID) included in all queries
-- [ ] No cross-tenant data leakage possible
-- [ ] User permissions checked before data access (RoleCode validation)
-- [ ] Audit logging for sensitive operations
+- [ ] User authentication required for protected endpoints
+- [ ] Role-based permissions checked (ADMIN vs EMPLOYEE access)
+- [ ] User can only access/modify data they have permission for
+- [ ] Audit logging for sensitive operations (user actions tracked)
 
-### Verify Tenant Isolation:
+### Verify Role-Based Access:
 ```java
-// All repository queries MUST filter by company
-findByCompanyIdAndId(companyId, entityId)
-// NOT just
-findById(entityId)
+// Check user has required role before operation
+@PreAuthorize("hasRole('ADMIN')")
+public void adminOnlyOperation() { }
+
+// Verify user owns the resource or has admin access
+if (!currentUser.isAdmin() && !resource.getCreatedBy().equals(currentUser.getId())) {
+    throw new AccessDeniedException("Not authorized");
+}
 ```
 
 ---
