@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://www.ehcache.org/ehcache.xsd"
+         updateCheck="true"
+         monitoring="autodetect"
+         dynamicConfig="true">
+         
+	<cache name="chartOfAccountCategoryCache"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToLiveSeconds="900"
+           timeToIdleSeconds="0"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off" />
+	<cache name="chartOfAccountCategoryListCache"
+		   maxElementsInMemory="20"
+		   eternal="false"
+		   overflowToDisk="false"
+		   timeToLiveSeconds="900"
+		   timeToIdleSeconds="0"
+		   memoryStoreEvictionPolicy="LFU"
+		   transactionalMode="off" />
+	<cache name="userCache"
+		   maxElementsInMemory="20"
+		   eternal="false"
+		   overflowToDisk="false"
+		   timeToLiveSeconds="900"
+		   timeToIdleSeconds="0"
+		   memoryStoreEvictionPolicy="LFU"
+		   transactionalMode="off" />
+
+	<cache name="productCache"
+		   maxElementsInMemory="200"
+		   eternal="false"
+		   overflowToDisk="false"
+		   timeToLiveSeconds="900"
+		   timeToIdleSeconds="0"
+		   memoryStoreEvictionPolicy="LFU"
+		   transactionalMode="off" />
+
+	<cache name="vatCategoryCache"
+		   maxElementsInMemory="100"
+		   eternal="false"
+		   overflowToDisk="false"
+		   timeToLiveSeconds="900"
+		   timeToIdleSeconds="0"
+		   memoryStoreEvictionPolicy="LFU"
+		   transactionalMode="off" />
+
+	<cache name="productCategoryCache"
+		   maxElementsInMemory="100"
+		   eternal="false"
+		   overflowToDisk="false"
+		   timeToLiveSeconds="900"
+		   timeToIdleSeconds="0"
+		   memoryStoreEvictionPolicy="LFU"
+		   transactionalMode="off" />
+
+	<cache name="transactionCategoryCache"
+		   maxElementsInMemory="200"
+		   eternal="false"
+		   overflowToDisk="false"
+		   timeToLiveSeconds="900"
+		   timeToIdleSeconds="0"
+		   memoryStoreEvictionPolicy="LFU"
+		   transactionalMode="off" />
+</ehcache>

@@ -1,0 +1,9 @@
+Transaction Date,Description,Debit Amount,Credit Amount
+01-02-2024,Dummy Debit Transcation,200,0
+02-02-2024,Dummy Credit Transcation,0,400
+03-02-2024,Dummy Debit Transcation,600,0
+04-02-2024,Dummy Credit Transcation,0,300
+07-02-2024,Dummy Debit Transcation,800,0
+09-02-2024,Dummy Credit Transcation,0,500
+10-02-2024,Dummy Debit Transcation,700,0
+12-02-2024,Dummy Credit Transcation,0,300

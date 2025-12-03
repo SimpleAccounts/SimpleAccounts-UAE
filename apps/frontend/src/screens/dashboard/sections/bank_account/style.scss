@@ -1,0 +1,84 @@
+//Bank Card
+.bank-card {
+	.bank-type {
+		color: #2064d8 !important;
+		font-size: 18px;
+	}
+	h1 {
+		font-size: 25px;
+		margin-right: 50px;
+		color: #2064d8;
+		font-weight:bold
+	}
+
+
+	.data-item:not(:last-child),
+	.data-item {
+		padding: 0 20px !important;
+
+		p {
+			font-size: 12px !important;
+		}
+
+		h3 {
+			font-size: 18px !important;
+		}
+	}
+
+	canvas {
+		height: 250px !important;
+	}
+
+	.bank-type-select {
+		border: none;
+		padding: 0 !important;
+		font-size: 16px !important;
+		color:#7d7d7d !important;
+		font-weight: 600;
+		box-shadow: none !important;
+		height: 30px !important;
+	}
+	
+	@media screen and (max-width: 480px) {
+		.data-item {
+			width: 100%;
+		}
+	}
+	.data-info {
+		margin-top: 10px;
+	}
+}
+.card-body .form-control1:focus {
+	border: 1px solid #7d7d7d !important;
+	box-shadow: none !important;
+}
+.card-shadow {
+	background: #ffffff !important;
+	box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 8px 0px;
+}
+.flex-color{
+	background-color: #dfe9f7;
+}
+.card-h1{
+	margin-top: 2%;
+    margin-left: 2%;
+}
+.card-margin{
+	margin-bottom: 0px !important;
+}
+.card-select-alignment{
+	margin-top: 0.7% !important;
+    margin-right: 1% !important;
+}
+.card-select{
+	background: white !important; 
+	border: 1px solid !important;
+	}
+
+.card-visibility{
+	overflow: inherit !important;
+	visibility: visible !important;
+}
+.title-bottom-border{
+	border-bottom: 1px solid #c8ced3;
+}

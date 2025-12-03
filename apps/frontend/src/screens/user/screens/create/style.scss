@@ -1,0 +1,22 @@
+.create-user-screen {
+    .card-header {
+      color: #2064d8;
+    }
+    .password-msg {
+      font-size: 0.7rem;
+    }
+  }
+  .showButton , .showLabel{
+    display: block;
+  }
+  .hideButton , .hideLabel{
+    display: none;
+  }
+.inputShow {
+    position: absolute;
+    top: 35%;
+    right: 7%;
+  }
+.admin-container .breadcrumb {
+    z-index: 0;
+  }

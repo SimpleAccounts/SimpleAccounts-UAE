@@ -1,0 +1,53 @@
+
+  .ag-theme-alpine 
+.ag-header {
+   
+	background-color: #dfe9f7 !important;
+  }
+  .ag-row {
+
+	z-index:0;
+  
+	&.ag-row-focus {
+	  z-index:1;   
+	}
+  
+  }
+  
+  
+  
+  // .btn {
+  
+	// line-height: 0.5
+  
+  // }
+  
+  .ag-cell-value, .ag-group-value{
+  
+	overflow: visible !important;
+  
+  }
+  
+  .translate{
+    transform: translate3d(0px, 26px, 0px) !important;
+  }
+
+ .Ag-gridActionButtons{ 
+  // .dropdown-item {
+  //   padding: 0px !important;
+  // }
+   .card-body .btn-square{
+     border-radius: 0px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+  .btn-sm, .btn-group-sm > .btn{
+    padding: 0.05rem 0.5rem !important;
+  }
+  .deleteButton{
+    .btn-secondary:hover{
+      background-color: red !important;
+      border: white !important;
+    }
+  }
+}

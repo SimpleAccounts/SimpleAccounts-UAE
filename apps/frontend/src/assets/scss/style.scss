@@ -1,0 +1,305 @@
+// If you want to override variables do it here
+@import 'variables';
+
+// Import styles with default layout.
+// If you are going to use dark layout please comment next line
+@import '~@coreui/coreui-pro/scss/coreui.scss';
+
+// Import styles with dark layout
+// If you want to use dark layout uncomment next line
+//@import "~@coreui/coreui-pro/scss/themes/dark/coreui-dark.scss";
+
+// Temp fix for reactstrap
+@import '~@coreui/coreui-pro/scss/_dropdown-menu-right.scss';
+
+// If you want to add something do it here
+@import 'custom';
+
+// ie fixes
+@import 'ie-fix';
+
+// temp fixes
+@import 'fixes';
+
+// Spinkit
+$spinkit-spinner-color: $body-color;
+@import '~spinkit/scss/spinkit.scss';
+
+.card-header {
+	color: #2064d8 !important;
+}
+.btn-primary,
+.page-item,
+.page-item.active .page-link ,
+.btn-square {
+	background-color: #2064d8;
+	border-color: #2064d8;
+	border-radius: 7px;
+	margin: 0 4px;
+}
+.btn-square1 {
+	background-color: #2064d8;
+	border-color: #2064d8;
+	border-radius: 40px;;
+	margin-top: 27px;
+}
+.btn-primary:disabled {
+	background-color: #21d8aa;
+	border-color: #21d8aa;
+}
+.btn-primary:hover,
+.btn-square:hover {
+	background-color: #21d8aa;
+	border-color: #21d8aa;
+}
+.btn-square1:hover {
+	background-color: #21d8aa;
+	border-color: #21d8aa;
+}
+.badge-primary {
+	background-color: #2064d8;
+}
+.bank-account-screen .bank-account-table .my-link {
+	color: #2064d8;
+	text-decoration: underline;
+}
+.btn-secondary {
+	color: #000;
+	background-color: #c8ced3;
+	border-color: #c8ced3;
+}
+.btn-secondary:hover {
+	color: #fff;
+	background-color: #2064d8;
+	border-color: #2064d8;
+}
+.breadcrumb-item {
+	a {
+		color: #2064d8 !important;
+	}
+}
+.btn-brand {
+	i {
+		background-color: inherit;
+	}
+}
+// .table {
+// 	.icon {
+// 		background-color: #2064d8;
+// 	}
+// }
+.card-columns .card {
+	margin-bottom: 1.5rem;
+}
+.btn-link {
+	color: #2064d8;
+}
+.tab-content {
+	border: none;
+}
+.nav-tabs .nav-link {
+	border: none;
+}
+.card .nav-link {
+	font-weight: 600;
+}
+// a {
+// 	color: #2064d8 !important;
+// }
+.app-footer .text-primary {
+	color: #2064d8 !important;
+}
+.btn-primary:focus,
+.btn-primary.focus {
+	background-color: #54e0c4 !important;
+	border-color: #54e0c4 !important;
+}
+.transactions-report-screen .card-header {
+	padding: 0.75rem 1.25rem !important;
+}
+.badge-info,
+.badge-success {
+	background-color: #2064d8;
+}
+.card-body th {
+	font-weight: 600 !important;
+}
+.card-body .btn-square {
+	border-radius: 40px !important;
+	box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03),
+		0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03),
+		0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05),
+		0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03) !important;
+	padding-left: 20px !important;
+	padding-right: 20px !important;
+}
+.card-body .form-control:focus {
+	border: 1px solid #2064d8 !important;
+	box-shadow: none !important;
+}
+.textarea:focus{
+	border-color: #2064d8 !important;
+	outline: 1px solid #2064d8 !important;
+}
+.card-body .textarea:focus {
+	border-color: #2064d8 !important;
+	outline: 1px solid #2064d8 !important;
+    box-shadow: none !important;
+}
+.invoice-detail {
+	font-weight: 600;
+}
+.label-draft {
+	background-color: #e8e8e8 !important;
+	color: #989898 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-paid {
+	background-color: #e6f9e5 !important;
+	color: #0cbf00 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-posted {
+	background-color: #e5f7ff !important;
+	color: #00b0ff !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-sent {
+	background-color: #e8fbf6 !important;
+	color: #28d9ac !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-approved {
+	background-color: #e8effb !important;
+	color: #2064d8 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-closed {
+	background-color: #f5f2fd !important;
+	color: #d1d1d1 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-success {
+	background-color: #e7faed !important;
+	color: #1bc852 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-primary {
+	background-color: #e8ebfc !important;
+	color: #18038d !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-info {
+	background-color: #e8fbfd !important;
+	color: #11c5db !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-danger {
+	background-color: #fff5f6 !important;
+	color: #f83245 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-bank {
+	background-color: #e8effb !important;
+	color: #2165d8 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-overdue {
+	background-color: #fce5e7 !important;
+	color: #e1021a !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-due {
+	background-color: #fee5e5 !important;
+	color: #f10101 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-PartiallyPaid {
+	background-color: #fff2e7 !important;
+	color: #fe7c18 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-currency {
+	background-color: #f1f1f1 !important;
+	color: #727272 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.Toastify__toast--error {
+	color: #f83245;
+	border: 1px solid #f83245;
+	background-color: #fff;
+	position: relative;
+}
+.Toastify__toast--success {
+	color: #2064d8;
+	border: 1px solid #2064d8;
+	background-color: #fff;
+	position: relative;
+}
+.Toastify__toast--error .Toastify__close-button {
+	color: #f83245;
+}
+.Toastify__toast--success .Toastify__close-button {
+	color: #2064d8;
+}
+.Toastify__toast--success .Toastify__progress-bar {
+	background-color: #2064d8;
+}
+.Toastify__toast--error .Toastify__progress-bar {
+	background-color: #f83245;
+}
+.Toastify__toast--error::before {
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 900;
+	position: absolute;
+	content: '\f06a';
+	left: 8px;
+	width: 20px;
+	height: 20px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+.Toastify__toast--success::before {
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 900;
+	position: absolute;
+	content: '\f058';
+	left: 8px;
+	width: 20px;
+	height: 20px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+.Toastify__toast-body {
+	padding-left: 20px;
+}

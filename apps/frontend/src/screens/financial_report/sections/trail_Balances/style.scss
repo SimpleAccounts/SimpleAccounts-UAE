@@ -1,0 +1,179 @@
+.cashflow-report-section {
+  .card-header {
+    background: white;
+  }
+
+  .card-title {
+    color: #2064d8;
+  }
+
+  hr {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    border: 0;
+    border-top: 2px dashed #5c6873;
+  }
+
+  .filter-box {
+    border-radius: 0px;
+    border: 1px solid #dad8d8;
+    width: fit-content;
+
+    .form-group {
+      margin: 5px 10px;
+
+      label {
+        
+        padding: 2px;
+        margin-right: 10px;
+      }
+      div.date-range,
+      div.account-type {
+        display: block !important;
+      }
+    }
+    
+    .date-range {
+      button {
+        min-width: 200px;
+        background: white;
+        text-align: left;
+      }
+
+      button:after {
+        float: right;
+        margin-top: 8px;
+      }
+    }
+
+    .account-type {
+      min-width: 200px;
+    }
+  }
+
+  .info-block {
+    margin: 10px 0;
+
+    h4 {
+      color: #73818f;
+    }
+    p{
+      margin-bottom: 0;
+    }
+
+    .export {
+      height: 30px;
+      padding: 0 10px;
+    }
+  }
+
+  .table-wrapper {
+    .react-bs-table-tool-bar {
+      margin-bottom: 10px;
+    }
+
+    table {
+      th {
+        input {
+          margin-top: 10px;
+          border: 1px solid #c8c8c8;
+        }
+      }
+
+      td {
+        color: #444444;
+        font-family: Montserrat, serif;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      tr.total {
+        background:#eee;
+        margin-bottom: 20px !important;
+      
+        td {
+          color: #873736  !important;
+          font-weight: bold !important;
+          
+        }
+      }
+      
+      tr.type {
+        border-bottom: 2px solid blue !important;
+        td {
+          font-size: 13px !important;
+          padding: 10px;
+          padding-top: 20px;
+          font-weight: 600 !important;
+        }
+        
+      }
+      
+      tr.item {
+        td:first-child {
+          padding-left: 30px;
+        }
+      
+        td {
+          font-size: 12px !important;
+        }
+      }
+      
+      td.bold {
+        color: #873736 !important;
+      }
+    }
+  }
+}
+
+
+.logo-container {
+  text-align: center;
+ 
+  img {
+    width: 15%;
+  }
+}
+.table-header-color{
+  background-color: #2064d8 !important;
+border-color: #2064d8 !important;
+}
+
+.table-internal-header{
+  background-color: #d1f7ed !important;
+  border-color: #d1f7ed !important; 
+}
+.tb-table-bordered{
+  td{
+    border: 1px solid black !important;
+    color: #000000 !important;
+  } 
+  th{
+    border: 1px solid black !important;
+  }
+  .wh {
+    color: #fff !important;
+  }
+  .bld {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+  }
+  .th {
+    // width: 65%;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    color: black !important;
+    background-color: #9CC2E5 !important;
+  }
+}
+
+.wid{
+  width: 60%;
+  margin: auto;
+}
+
+.acc{
+  width: 40%;
+}

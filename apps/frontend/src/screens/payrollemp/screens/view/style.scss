@@ -1,0 +1,18 @@
+@media print {
+    
+    html, body { height: initial !important; overflow: initial !important; visibility: hidden;position: relative;}
+  
+    #section-to-print, #section-to-print * {
+      visibility: visible;
+    }
+
+    .transactions-report-screen {
+      position: absolute!important;
+      left: 0!important;
+      top: 0!important;
+    }
+  
+    #section-to-print {
+      margin: 0!important;
+    }
+  }

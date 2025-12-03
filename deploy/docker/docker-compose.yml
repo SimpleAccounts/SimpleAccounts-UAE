@@ -1,0 +1,46 @@
+services:
+  # Using local PostgreSQL database
+  # Connection: postgresql://simpleaccounts_db_user:SimpleAccounts@2023@host.docker.internal:5432/simpleaccounts_db
+
+  backend:
+    container_name: simpleaccounts-backend
+    image: ghcr.io/datainn/simpleaccounts-backend-ae:blue.berry.81
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SIMPLEACCOUNTS_SMTP_USER: ""
+      SIMPLEACCOUNTS_SMTP_PASS: ""
+      SIMPLEACCOUNTS_SMTP_HOST: ""
+      SIMPLEACCOUNTS_SMTP_PORT: ""
+      SIMPLEACCOUNTS_SMTP_AUTH: ""
+      SIMPLEACCOUNTS_SMTP_STARTTLS_ENABLE: ""
+      SIMPLEACCOUNTS_RELEASE: blue.berry.81
+      SIMPLEACCOUNTS_HOST: http://backend:8080
+      SIMPLEACCOUNTS_DB_HOST: host.docker.internal
+      SIMPLEACCOUNTS_DB: simpleaccounts_db
+      SIMPLEACCOUNTS_DB_USER: simpleaccounts_db_user
+      SIMPLEACCOUNTS_DB_PASSWORD: SimpleAccounts@2023
+      SIMPLEACCOUNTS_DB_PORT: 5432
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - simpleaccounts-network
+
+  frontend:
+    container_name: simpleaccounts-frontend
+    image: ghcr.io/datainn/simpleaccounts-frontend-ae:blue.berry.112
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      SIMPLEACCOUNTS_RELEASE: blue.berry.112
+      SIMPLEACCOUNTS_HOST: http://localhost:8080
+    depends_on:
+      - backend
+    networks:
+      - simpleaccounts-network
+
+networks:
+  simpleaccounts-network:
+    driver: bridge

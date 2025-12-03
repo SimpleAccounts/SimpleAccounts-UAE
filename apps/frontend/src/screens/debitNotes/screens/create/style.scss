@@ -1,0 +1,32 @@
+.create-customer-invoice-screen {
+	.card-header {
+		color: #2064d8;
+	}
+	.total-item {
+		border-bottom: 1px solid #ccc;
+	}
+	.invalid-file {
+		width: 100%;
+		margin-top: 0.25rem;
+		font-size: 14px;
+		color: #f86c6b;
+	}
+	.disabled-cursor {
+		cursor: not-allowed;
+	}
+	.addProduct {
+		color: #00aced;
+		padding: 0.3rem 0.75rem;
+		cursor: pointer;
+	}
+	.is-invalid {
+		color: #f86c6b;
+	}
+	.percentSymbol{
+		padding-left: 8px;
+	}
+	.discountPercent{
+		display:flex;
+		align-items: center;
+	}
+}

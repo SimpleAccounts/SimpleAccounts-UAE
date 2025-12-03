@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+<head>
+    <style>
+/*!*.column {*!*/
+/*!* float: left;*!*/
+/*!*  width: 85%;*!*/
+/*!*  padding: 10px;*!*/
+/*!*  height:300px*!*/
+/*}*/
+td {
+    padding: 0 1px;
+}
+ textarea {
+    border: none;
+    outline: none;
+    font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+    color: #555;
+    }
+</style>
+</head>
+<body>
+<div class="row" style="margin: auto;
+        padding: 30px;
+        border: 1px solid gray;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+        font-size: 13px;
+        line-height: 24px;
+        font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+        color: #555;">
+    <!--         height: 800px;-->
+
+    <div>
+
+        <div class="column"style="max-width:100%; padding:30px">
+
+            <div style="overflow-x:auto; text-align:center;border-bottom: 1px solid #99090b">
+                <div style="float:left"><img src='{companylogo}' width="120px" height="80px">
+                </div>
+                <div>
+                    <h1 style="float:right;color:#99090b;">Credit Notes</h1>
+                </div>
+            </div>
+            <div style="overflow-x:auto;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td>
+                            <br/><br/><b>Company Name:</b> {companyName}<br/>
+                            <b>Company Address Line 1:</b> {companyAddressLine1}<br/>
+                            <b>Company Address Line 2:</b> {companyAddressLine2}<br/>
+                            <b>P.O.Box:</b> {companyPostZipCode}<br/>
+                             {companyCity}<br/>
+                             {companyStateRegion},{companyCountryCode}<br/>
+                            <b>Mobile No:</b> {phoneNumber}<br/>
+                            <b>VAT Registration No:</b> {vatNumber}<br/>
+                            <b>Company Registration No:</b> {companyRegistrationNo}<br/>
+                        </td>
+
+                        <td style="float:right">
+                            <br/><b>Contact Name:</b>{contactName}<br/>
+                            <b>Billing Address: </b>{contactAddressLine1}<br/>
+                            <b>P.O.Box: </b> {contractPoNumber}<br/>
+                            {contactCity}<br/>
+                             {contactState},{contactCountry}<br/>
+                            <b>Mobile No:</b> {mobileNumber}<br/>
+                            <b>Email:</b> {contactEmail}<br/>
+                            <b>VAT Registration No:</b> {vatRegistrationNumber}<br/>
+                        </td>
+                        <td style="float:right">
+
+                        </td>
+                    </tr>
+                </table>
+                <table style="float:left;border:1px solid;">
+
+                    <tr><td></td>
+                        <td>Credit Note No:<td>
+                        <td style="float:right">{creditNoteNumber}</td>
+                    </tr>
+                    <tr><td></td>
+                        <td>Credit Note Date:<td>
+                        <td style="float:right">{invoiceDate}</td>
+                    </tr>
+                    <tr><td></td>
+                        <td>Reference No:<td>
+                        <td style="float:right">{invoicingReferencePattern}</td>
+                    </tr>
+                </table>
+                <br>
+            </div>
+            <b>Exchange Rate:</b>{exchangeRate}
+            <br>
+            <br>
+            <div style="overflow-x:auto;">
+                <table style="width: 100%;border:1px solid;">
+                    <tr style="display: table-row;vertical-align: inherit;border-color: inherit;background: #e8e7e7;color: black";>
+                        <td style="width: 25%;max-width:20px;word-wrap: break-word;">Product Name & Description</td>
+                        <td style="text-align:center">Quantity</td>
+                        <td style="text-align:center">Units</td>
+                        <td style="text-align:center">Unit Cost</td>
+                        <td style="text-align:center">Discount</td>
+                        <td style="text-align:center">Excise</td>
+                        <td style="text-align:center">Excise Amount</td>
+                        <td style="text-align:center">Vat Percent</td>
+                        <td style="text-align:center">Vat Amount</td>
+                        <td style="text-align:center">Sub Total</td>
+                    </tr>
+                    <tr><td style="word-wrap: break-word; width: 25%;max-width:20px;"><b>{Cn_product} </b><br> {cnDescription}</td><td style="text-align:center">{Cnquantity}</td><td style="text-align:center">{CnunitType}</td><td style="text-align:right">{cnUnitPrice}</td><td style="text-align:right">{Cndiscount}</td><td style="text-align:center">{CnLineItemExciseTax}</td><td style="text-align:right">{CnexciseAmount}</td><td style="text-align:center">{CnvatType}</td><td style="text-align:right">{CnVatAmount}</td><td style="text-align:right">{CnsubTotal}</td></tr>
+                </table>
+            </div>
+            <tr >
+                <td>
+                    <br>
+                </td>
+                <td>
+                    <br>
+                </td>
+            </tr>
+            <div style="overflow-x:auto;">
+                <table style="float:right;border:1px solid; ">
+                    <tr>
+                        <td>Total Excise<td>
+                        <td style="float:right">{currency} {CntotalExciseAmount}</td>
+                    </tr>
+                    <tr>
+                        <td>Discount<td>
+                        <td style="float:right">{currency} {CreditNoteDiscount}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Net<td>
+                        <td style="float:right">{currency} {Cntotal}</td>
+                    </tr>
+                    <tr>
+                        <td>Total VAT<td>
+                        <td style="float:right">{currency} {CreditNoteVatAmount}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Total<td>
+                        <td style="float:right">{currency} {CNAmount}</td>
+                    </tr>
+                    <tr>
+                        <td>Credit Amount<td>
+                        <td style="float:right">{currency} {dueAmount}</td>
+                    </tr>
+                </table>
+                <td style="float:left">
+
+                    <b>Amount In Words: </b>{amountInWords} <br>
+                    <b>Vat In Words: </b>{vatInWords}<br>
+                    <b>Notes: </b>
+                    <textarea rows="4" cols="50">
+                    {notes}
+                        </textarea>
+
+                </td>
+                <td style="float:right">
+
+                </td>
+                <br/><br/> <br/><br/>
+                <div>
+                    <h3>Tax Summary Information:</h3>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table style="width: 100%;border:1px solid;">
+                        <tr style="display: table-row;vertical-align: inherit;border-color: inherit;background: #e8e7e7;color: black";>
+                            <td>Tax Details</td>
+                            <td style="text-align:center">Taxable Amount (AED)</td>
+                            <td style="text-align:center">Tax Amount (AED)</td>
+                        </tr>
+                        <tr><td style="text-align:left">STANDARD RATED TAX (5%) </td><td style="text-align:right">{currency} {taxableAmount_5}</td><td style="text-align:right">{currency} {taxAmount_5}</td></tr>
+                        <tr><td style="text-align:left">ZERO RATED TAX (0%) </td><td style="text-align:right">{currency} {taxableAmount_0}</td><td style="text-align:right">{currency} {taxAmount_0}</td></tr>
+                        <tr><td style="text-align:left">EXEMPT </td><td style="text-align:right">{currency} {taxableAmount_E}</td><td style="text-align:right">{currency} {taxAmount_E}</td></tr>
+                        <tr><td><b>Total</b></td><td style="text-align:right"><b>{currency} {total}</b></td><td style="text-align:right"><b>{currency} {invoiceVatAmount}</b></td></tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

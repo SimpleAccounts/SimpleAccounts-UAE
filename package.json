@@ -1,0 +1,28 @@
+{
+  "name": "simpleaccounts-uae",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SimpleAccounts UAE Monorepo",
+  "dependencies": {
+    "sass": "1.32.0"
+  },
+  "workspaces": [
+    "apps/agents/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "frontend": "cd apps/frontend && npm run start",
+    "frontend:build": "cd apps/frontend && rm -rf node_modules && npm install --legacy-peer-deps && CI=false npm run build",
+    "backend:build": "cd apps/backend && ./mvnw clean package",
+    "backend:run": "cd apps/backend && ./run.sh",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "keywords": [
+    "simpleaccounts",
+    "uae",
+    "accounting"
+  ],
+  "author": "",
+  "license": "UNLICENSED"
+}

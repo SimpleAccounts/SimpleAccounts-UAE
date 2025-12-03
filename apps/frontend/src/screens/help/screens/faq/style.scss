@@ -1,0 +1,31 @@
+.faq-screen {
+    input {
+        // font-size: 20px;
+        height: 30px;
+    }
+    
+    .search-content .card-body {
+        padding: 30px 40px;
+
+        h3 {
+            color: #f86c6b;
+        }
+        p {
+            font-size: 16px;
+        }
+    }
+
+    .question-list {
+        margin-top: 20px;
+        list-style: none;
+        padding: 0;
+
+        li {
+            padding: 5px;
+        }
+
+        li:hover {
+            background: #eee;
+        }
+    }
+}

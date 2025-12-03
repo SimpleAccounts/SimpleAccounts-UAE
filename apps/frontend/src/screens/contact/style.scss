@@ -1,0 +1,67 @@
+.contact-screen {
+    .card-header {
+      color: #2064d8;
+    }
+    .btn-group {
+      .btn {
+        color: #ffffff !important;
+      }
+    }
+    .badge {
+      padding: 0.4em 0.6em;
+      font-size: 90%;
+    }
+    .product-table {
+      .my-link {
+        text-decoration: none;
+        cursor: pointer;
+      }
+    }
+
+    .contact-info {
+        border: 1px solid #c3c1c1;
+        border-left: 2px solid #4dbd74;
+
+        .contact-name {
+            text-align: center;
+            line-height: 78px;
+            width: 80px;
+            height: 80px;
+            color: white;
+            font-size: 32px;
+            background: #73818f;
+        }
+
+        .info {
+            p {
+                margin-bottom: 5px !important;
+            }
+        }
+    }
+  }
+  .table-header-bg{
+    background-color: #dfe9f7;
+  }
+  .VerifyTRN
+  {
+    text-align: right;
+  }
+  .Ag-gridActionButtons{ 
+    // .dropdown-item {
+    //   padding: 0px !important;
+    // }
+     .card-body .btn-square{
+       border-radius: 0px !important;
+      padding-left: 10px !important;
+      padding-right: 10px !important;
+    }
+    .btn-sm, .btn-group-sm > .btn{
+      padding: 0.05rem 0.5rem !important;
+    }
+    .deleteButton{
+      .btn-secondary:hover{
+        background-color: red !important;
+        border: white !important;
+      }
+    }
+  }
