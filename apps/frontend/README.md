@@ -1,4 +1,4 @@
-# SimpleVat Frontend Admin Website
+# SimpleAccounts Frontend Admin Website
 
 ## Project Folder Structure
 

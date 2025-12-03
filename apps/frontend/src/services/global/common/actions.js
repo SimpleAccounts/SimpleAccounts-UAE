@@ -1,6 +1,8 @@
 import { COMMON, USERS_ROLES } from 'constants/types';
 import { toast } from 'react-toastify';
 import { api, authApi } from 'utils';
+import axios from 'axios';
+import config from 'constants/config';
 
 export const startRequest = () => {
 	return (dispatch) => {
@@ -72,25 +74,21 @@ export const fillManDatoryDetails = (status, message) => {
 			})
 	};
 };
-export const getSimpleVATVersion = () => {
-	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url: '/rest/config/getreleasenumber',
-		};
-		return authApi(data)
-			.then((res) => {
-				dispatch({
-					type: COMMON.VAT_VERSION,
-					payload: {
-						data: res.data.simpleVatRelease,
-					},
-				});
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
+export const getSimpleAccountsVersion = () => {
+  return (dispatch) => {
+    return axios.get(`${config.API_ROOT_URL}/rest/config/getReleaseNumber`)
+      .then((res) => {
+        dispatch({
+          type: COMMON.GET_SIMPLE_ACCOUNTS_RELEASE,
+          payload: {
+            data: res.data.simpleAccountsRelease,
+          },
+        });
+      })
+      .catch((err) => {
+        
+      });
+  };
 };
 
 export const getRoleList = (id) => {

@@ -1,6 +1,6 @@
 <Product name="zoho" version="3.4">
     <TableList>
-        <Table name="Contacts"  srcFileName="Contacts.csv" entityName="com.simplevat.entity.Contact" serviceName="com.simplevat.service.ContactService">
+        <Table name="Contacts"  srcFileName="Contacts.csv" entityName="com.simpleaccounts.entity.Contact" serviceName="com.simpleaccounts.service.ContactService">
             <ColumnList>
                 <!--Column inputColumn="Created Time" dataType="LocalDateTime" setterMethod="setCreatedDate">-1</Column -->
                 <Column inputColumn="Last Modified Time" dataType="LocalDateTime" setterMethod="setLastUpdateDate" >-1</Column>
@@ -24,7 +24,7 @@
 
             </ColumnList>
         </Table>
-        <Table name="Vendors"  srcFileName="Vendors.csv" entityName="com.simplevat.entity.Contact" serviceName="com.simplevat.service.ContactService">
+        <Table name="Vendors"  srcFileName="Vendors.csv" entityName="com.simpleaccounts.entity.Contact" serviceName="com.simpleaccounts.service.ContactService">
             <ColumnList>
                 <!--Column inputColumn="Created Time" dataType="LocalDateTime" setterMethod="setCreatedDate">-1</Column -->
                 <Column inputColumn="Last Modified Time" dataType="LocalDateTime" setterMethod="setLastUpdateDate" >-1</Column>
@@ -48,7 +48,7 @@
                    
             </ColumnList>
         </Table>
-        <Table name="Item" srcFileName="Item.csv" entityName="com.simplevat.entity.Product" serviceName="com.simplevat.service.ProductService">
+        <Table name="Item" srcFileName="Item.csv" entityName="com.simpleaccounts.entity.Product" serviceName="com.simpleaccounts.service.ProductService">
             <ColumnList>
                 <Column inputColumn="Item ID" dataType="String" setterMethod="setProductCode">-1</Column>
                 <Column inputColumn="Item Name" dataType="String" setterMethod="setProductName">-1</Column>
@@ -61,7 +61,7 @@
 
             </ColumnList>
         </Table>
-        <Table name="Item" srcFileName="Item.csv" entityName="com.simplevat.entity.ProductLineItem" serviceName="com.simplevat.service.ProductLineItemService">
+        <Table name="Item" srcFileName="Item.csv" entityName="com.simpleaccounts.entity.ProductLineItem" serviceName="com.simpleaccounts.service.ProductLineItemService">
             <ColumnList>
                 <Column inputColumn="Rate" dataType="BigDecimal" setterMethod="setUnitPrice">-1</Column>
                 <Column inputColumn="Purchase Rate" dataType="BigDecimal" setterMethod="setUnitPrice">-1</Column>
@@ -71,7 +71,7 @@
 
             </ColumnList>
         </Table>
-        <Table name="Item" srcFileName="Item.csv" entityName="com.simplevat.entity.Inventory" serviceName="com.simplevat.service.InventoryService">
+        <Table name="Item" srcFileName="Item.csv" entityName="com.simpleaccounts.entity.Inventory" serviceName="com.simpleaccounts.service.InventoryService">
             <ColumnList>
                 <Column inputColumn="Stock On Hand" dataType="Integer" setterMethod="setStockOnHand">-1</Column>
                 <Column inputColumn="Purchase Rate" dataType="Float" setterMethod="setUnitCost">-1</Column>
@@ -84,7 +84,7 @@
             </ColumnList>
         </Table>
 
-        <Table name="Invoice" srcFileName="Invoice.csv" entityName="com.simplevat.entity.Invoice" serviceName="com.simplevat.service.InvoiceService">
+        <Table name="Invoice" srcFileName="Invoice.csv" entityName="com.simpleaccounts.entity.Invoice" serviceName="com.simpleaccounts.service.InvoiceService">
             <ColumnList>
                 <Column inputColumn="Invoice Date" dataType="LocalDateTime" setterMethod="setInvoiceDate" >-1</Column>
                 <Column inputColumn="Invoice ID" dataType="Integer" setterMethod="setId" >-1</Column>
@@ -104,7 +104,7 @@
             </ColumnList>
         </Table>
 
-        <Table name="Invoice" srcFileName="Invoice.csv" entityName="com.simplevat.entity.InvoiceLineItem" serviceName="com.simplevat.service.InvoiceLineItemService">
+        <Table name="Invoice" srcFileName="Invoice.csv" entityName="com.simpleaccounts.entity.InvoiceLineItem" serviceName="com.simpleaccounts.service.InvoiceLineItemService">
             <ColumnList>
                 <Column inputColumn="Item Desc" dataType="String" setterMethod="setDescription" >-1</Column>
                 <Column inputColumn="Quantity" dataType="Integer" setterMethod="setQuantity" >-1</Column>
@@ -116,7 +116,7 @@
             </ColumnList>
         </Table>
 
-        <Table name="Bill" srcFileName="Bill.csv" entityName="com.simplevat.entity.Invoice" serviceName="com.simplevat.service.InvoiceService">
+        <Table name="Bill" srcFileName="Bill.csv" entityName="com.simpleaccounts.entity.Invoice" serviceName="com.simpleaccounts.service.InvoiceService">
             <ColumnList>
                 <Column inputColumn="Bill Date" dataType="LocalDateTime" setterMethod="setInvoiceDate" >-1</Column>
                 <Column inputColumn="Bill ID" dataType="Integer" setterMethod="setId" >-1</Column>
@@ -136,7 +136,7 @@
            </ColumnList>
        </Table>
 
-       <Table name="Bill" srcFileName="Bill.csv" entityName="com.simplevat.entity.InvoiceLineItem" serviceName="com.simplevat.service.InvoiceLineItemService">
+       <Table name="Bill" srcFileName="Bill.csv" entityName="com.simpleaccounts.entity.InvoiceLineItem" serviceName="com.simpleaccounts.service.InvoiceLineItemService">
            <ColumnList>
                <Column inputColumn="Description" dataType="String" setterMethod="setDescription">-1</Column>
                <Column inputColumn="Quantity" dataType="Integer" setterMethod="setQuantity">-1</Column>
@@ -148,7 +148,7 @@
            </ColumnList>
        </Table>
 
-       <Table name="Credit_Note" srcFileName="Credit_Note.csv" entityName="com.simplevat.entity.Invoice" serviceName="com.simplevat.service.InvoiceService">
+       <Table name="Credit_Note" srcFileName="Credit_Note.csv" entityName="com.simpleaccounts.entity.Invoice" serviceName="com.simpleaccounts.service.InvoiceService">
            <ColumnList>
                <Column inputColumn="CreditNotes ID" dataType="Integer" setterMethod="setId">-1</Column>
                <Column inputColumn="Credit Note Date" dataType="LocalDateTime" setterMethod="setInvoiceDate">-1</Column>
@@ -169,7 +169,7 @@
             </ColumnList>
         </Table>
 
-        <Table name="Credit_Note" srcFileName="Credit_Note.csv" entityName="com.simplevat.entity.InvoiceLineItem" serviceName="com.simplevat.service.InvoiceLineItemService">
+        <Table name="Credit_Note" srcFileName="Credit_Note.csv" entityName="com.simpleaccounts.entity.InvoiceLineItem" serviceName="com.simpleaccounts.service.InvoiceLineItemService">
             <ColumnList>
 
                 <Column inputColumn="Item Desc" dataType="String" setterMethod="setDescription">-1</Column>
@@ -181,7 +181,7 @@
             </ColumnList>
         </Table>
 
-        <Table name="Expense" srcFileName="Expense.csv" entityName="com.simplevat.entity.Expense" serviceName="com.simplevat.service.ExpenseService">
+        <Table name="Expense" srcFileName="Expense.csv" entityName="com.simpleaccounts.entity.Expense" serviceName="com.simpleaccounts.service.ExpenseService">
             <ColumnList>
                 <Column inputColumn="Expense Date" dataType="LocalDateTime" setterMethod="setExpenseDate">-1</Column>
                 <Column inputColumn="Expense Description" dataType="String " setterMethod="setExpenseDescription">-1</Column>
@@ -196,7 +196,7 @@
             </ColumnList>
         </Table>
 
-        <Table name="Purchase_Order" srcFileName="Purchase_Order.csv" entityName="com.simplevat.entity.PoQuotation" serviceName="com.simplevat.service.PoQuotationService">
+        <Table name="Purchase_Order" srcFileName="Purchase_Order.csv" entityName="com.simpleaccounts.entity.PoQuotation" serviceName="com.simpleaccounts.service.PoQuotationService">
             <ColumnList>
                 <Column inputColumn="Reference No" dataType="String" setterMethod="setReferenceNumber">-1</Column>
                 <Column inputColumn="Item Tax Amount" dataType="BigDecimal" setterMethod="setTotalVatAmount">-1</Column>
@@ -209,7 +209,7 @@
             </ColumnList>
         </Table>
 
-        <Table name="Purchase_Order" srcFileName="Purchase_Order.csv" entityName="com.simplevat.entity.PoQuotationLineItem" serviceName="com.simplevat.service.PoQuotationLineItemService">
+        <Table name="Purchase_Order" srcFileName="Purchase_Order.csv" entityName="com.simpleaccounts.entity.PoQuotationLineItem" serviceName="com.simpleaccounts.service.PoQuotationLineItemService">
             <ColumnList>
                 <Column inputColumn="Product ID" dataType="Integer" setterMethod="setProductId">-1</Column>
                 <Column inputColumn="Item Desc" dataType="String" setterMethod="setDescription">-1</Column>
@@ -217,7 +217,7 @@
             </ColumnList>
         </Table>
 
-        <Table name="Chart_of_Accounts" srcFileName="Chart_of_Accounts.csv" entityName="com.simplevat.entity.ChartOfAccountCategory" serviceName="com.simplevat.service.ChartOfAccountCategoryService">
+        <Table name="Chart_of_Accounts" srcFileName="Chart_of_Accounts.csv" entityName="com.simpleaccounts.entity.ChartOfAccountCategory" serviceName="com.simpleaccounts.service.ChartOfAccountCategoryService">
             <ColumnList>
                 <Column inputColumn="Account Name" dataType="String" setterMethod="setChartOfAccountCategoryName">-1</Column>
                 <Column inputColumn="Account Code" dataType="String" setterMethod="setChartOfAccountCategoryCode">-1</Column>
@@ -226,7 +226,7 @@
             </ColumnList>
         </Table>
 
-        <Table name="Exchange_Rate" srcFileName="Exchange_Rate.csv" entityName="com.simplevat.entity.CurrencyConversion" serviceName="com.simplevat.service.CurrencyExchangeService">
+        <Table name="Exchange_Rate" srcFileName="Exchange_Rate.csv" entityName="com.simpleaccounts.entity.CurrencyConversion" serviceName="com.simpleaccounts.service.CurrencyExchangeService">
             <ColumnList>
                 <Column inputColumn="Currency Code" dataType="Integer" setterMethod="setCurrencyCode">-1</Column>
                 <Column inputColumn="Exchange Rate" dataType="BigDecimal" setterMethod="setExchangeRate">-1</Column>

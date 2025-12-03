@@ -1,6 +1,6 @@
 <Product name="simpleAccounts" version="1">
     <TableList>
-        <Table name="Contacts"  srcFileName="Contacts.csv" entityName="com.simplevat.entity.Contact" serviceName="com.simplevat.service.ContactService">
+        <Table name="Contacts"  srcFileName="Contacts.csv" entityName="com.simpleaccounts.entity.Contact" serviceName="com.simpleaccounts.service.ContactService">
             <ColumnList>
                 <Column inputColumn="First Name" dataType="String" setterMethod="setFirstName">-1</Column>
                 <Column inputColumn="Middle Name" dataType="String" setterMethod="setMiddleName">-1</Column>
@@ -23,7 +23,7 @@
                 <Column inputColumn="Currency"  dataType="String"  setterMethod="setCurrency">-1</Column>
             </ColumnList>
         </Table>
-        <Table name="Product" srcFileName="Product.csv" entityName="com.simplevat.entity.Product" serviceName="com.simplevat.service.ProductService">
+        <Table name="Product" srcFileName="Product.csv" entityName="com.simpleaccounts.entity.Product" serviceName="com.simpleaccounts.service.ProductService">
             <ColumnList>
 			    <Column inputColumn="Name" dataType="String" setterMethod="setProductName">-1</Column>
                 <Column inputColumn="Product Code" dataType="String" setterMethod="setProductCode">-1</Column>
@@ -35,14 +35,14 @@
                 <Column inputColumn="Enable Inventory" dataType="String" setterMethod="setIsInventoryEnabled">-1</Column>
             </ColumnList>
         </Table>
-        <Table name="Product" srcFileName="Product.csv" entityName="com.simplevat.entity.ProductLineItem" serviceName="com.simplevat.service.ProductLineItemService">
+        <Table name="Product" srcFileName="Product.csv" entityName="com.simpleaccounts.entity.ProductLineItem" serviceName="com.simpleaccounts.service.ProductLineItemService">
             <ColumnList>
                 <Column inputColumn="Selling Price" dataType="BigDecimal" setterMethod="setUnitPrice">-1</Column>
                 <Column inputColumn="Purchase Price" dataType="BigDecimal" setterMethod="setUnitPrice">-1</Column>
                 <Column inputColumn="Account" dataType="String" setterMethod="setTransactioncategory">-1</Column>
             </ColumnList>
         </Table>
-        <Table name="Product" srcFileName="Product.csv" entityName="com.simplevat.entity.Inventory" serviceName="com.simplevat.service.InventoryService">
+        <Table name="Product" srcFileName="Product.csv" entityName="com.simpleaccounts.entity.Inventory" serviceName="com.simpleaccounts.service.InventoryService">
             <ColumnList>
 			     <Column inputColumn="Inventory Account" dataType="Integer" setterMethod="">-1</Column>
 				 <Column inputColumn="Opening Balance Quantity" dataType="Integer" setterMethod="setPurchaseQuantity">-1</Column>
@@ -52,7 +52,7 @@
             </ColumnList>
         </Table>
 
-         <Table name="Invoice" srcFileName="Invoice.csv" entityName="com.simplevat.entity.Invoice" serviceName="com.simplevat.service.InvoiceService">
+         <Table name="Invoice" srcFileName="Invoice.csv" entityName="com.simpleaccounts.entity.Invoice" serviceName="com.simpleaccounts.service.InvoiceService">
             <ColumnList>
 			    <Column inputColumn="Customer Name" dataType="String" setterMethod="setContact" >-1</Column>
 				<Column inputColumn="Place of Supply" dataType="String" setterMethod="setPlaceOfSupplyId" >-1</Column>
@@ -74,7 +74,7 @@
             </ColumnList>
         </Table>
 
-        <Table name="Invoice" srcFileName="Invoice.csv" entityName="com.simplevat.entity.InvoiceLineItem" serviceName="com.simplevat.service.InvoiceLineItemService">
+        <Table name="Invoice" srcFileName="Invoice.csv" entityName="com.simpleaccounts.entity.InvoiceLineItem" serviceName="com.simpleaccounts.service.InvoiceLineItemService">
             <ColumnList>
                 <Column inputColumn="Item Desc" dataType="String" setterMethod="setDescription" >-1</Column>
                 <Column inputColumn="Quantity" dataType="Integer" setterMethod="setQuantity" >-1</Column>
@@ -84,7 +84,7 @@
                 <Column inputColumn="Item Name" dataType="String" setterMethod="setInvoiceLineItemUnitPrice" >-1</Column>
             </ColumnList>
         </Table>
-        <Table name="Credit Note" srcFileName="Credit Note.csv" entityName="com.simplevat.entity.Invoice" serviceName="com.simplevat.service.InvoiceService">
+        <Table name="Credit Note" srcFileName="Credit Note.csv" entityName="com.simpleaccounts.entity.Invoice" serviceName="com.simpleaccounts.service.InvoiceService">
              <ColumnList>
                 <Column inputColumn="Credit Note Number" dataType="String" setterMethod="setReferenceNumber">-1</Column>
                 <Column inputColumn="Customer Name" dataType="String" setterMethod="setContact" >-1</Column>
@@ -106,7 +106,7 @@
             </ColumnList>
         </Table>
 
-        <Table name="Credit Note" srcFileName="Credit Note.csv" entityName="com.simplevat.entity.InvoiceLineItem" serviceName="com.simplevat.service.InvoiceLineItemService">
+        <Table name="Credit Note" srcFileName="Credit Note.csv" entityName="com.simpleaccounts.entity.InvoiceLineItem" serviceName="com.simpleaccounts.service.InvoiceLineItemService">
             <ColumnList>
                 <Column inputColumn="Quantity" dataType="Integer" setterMethod="setQuantity">-1</Column>
                 <Column inputColumn="Unit Price" dataType="BigDecimal" setterMethod="setUnitPrice">-1</Column>
@@ -121,7 +121,7 @@
         </Table>
 
         
-         <Table name="Expense" srcFileName="Expense.csv" entityName="com.simplevat.entity.Expense" serviceName="com.simplevat.service.ExpenseService">
+         <Table name="Expense" srcFileName="Expense.csv" entityName="com.simpleaccounts.entity.Expense" serviceName="com.simpleaccounts.service.ExpenseService">
             <ColumnList>
                 <Column inputColumn="Expense Date" dataType="LocalDateTime" setterMethod="setExpenseDate">-1</Column>
                 <Column inputColumn="Paid Through" dataType="String" setterMethod="setPayMode">-1</Column>
@@ -139,8 +139,8 @@
             </ColumnList>
         </Table>
 
-        <!-- <Table name="Opening Balances" srcFileName="Opening Balances.csv" entityName="com.simplevat.entity.journalService" serviceName="com.simplevat.service.journalService"> --> 
-        <Table name="Opening Balances" srcFileName="Opening Balances.csv" entityName="com.simplevat.entity.TransactionCategoryBalance" serviceName="com.simplevat.service.journalService">
+        <!-- <Table name="Opening Balances" srcFileName="Opening Balances.csv" entityName="com.simpleaccounts.entity.journalService" serviceName="com.simpleaccounts.service.journalService"> --> 
+        <Table name="Opening Balances" srcFileName="Opening Balances.csv" entityName="com.simpleaccounts.entity.TransactionCategoryBalance" serviceName="com.simpleaccounts.service.journalService">
             <ColumnList>
                 <Column inputColumn="Transaction Category Name" dataType="String" setterMethod="setTransactionCategory" >-1</Column>
                 <Column inputColumn="Opening Date" dataType="Integer" setterMethod="setEffectiveDate" >-1</Column>
@@ -148,9 +148,9 @@
             </ColumnList>
         </Table>
 
-        <!-- <Table name="Chart Of Accounts" srcFileName="Chart Of Accounts.csv" entityName="com.simplevat.entity.journalService" serviceName="com.simplevat.service.journalService"> -->
-        <!-- <Table name="Chart Of Accounts" srcFileName="Chart Of Accounts.csv" entityName="com.simplevat.entity.ChartOfAccountCategory" serviceName="com.simplevat.service.ChartOfAccountCategoryService"> -->
-         <Table name="Chart Of Accounts" srcFileName="Chart Of Accounts.csv" entityName="com.simplevat.entity.TransactionCategory" serviceName="com.simplevat.service.journalService">
+        <!-- <Table name="Chart Of Accounts" srcFileName="Chart Of Accounts.csv" entityName="com.simpleaccounts.entity.journalService" serviceName="com.simpleaccounts.service.journalService"> -->
+        <!-- <Table name="Chart Of Accounts" srcFileName="Chart Of Accounts.csv" entityName="com.simpleaccounts.entity.ChartOfAccountCategory" serviceName="com.simpleaccounts.service.ChartOfAccountCategoryService"> -->
+         <Table name="Chart Of Accounts" srcFileName="Chart Of Accounts.csv" entityName="com.simpleaccounts.entity.TransactionCategory" serviceName="com.simpleaccounts.service.journalService">
             <ColumnList>
             <!-- 
                 <Column inputColumn="Chart Of Account Name" dataType="String" setterMethod="setTransactionCategory" >-1</Column>
@@ -163,9 +163,9 @@
         </Table>
 
         <!-- 
-        <Table name="Currency Exchange Rate" srcFileName="Currency Exchange Rate.csv" entityName="com.simplevat.entity.currencyExchangeService" serviceName="com.simplevat.service.currencyExchangeService">
+        <Table name="Currency Exchange Rate" srcFileName="Currency Exchange Rate.csv" entityName="com.simpleaccounts.entity.currencyExchangeService" serviceName="com.simpleaccounts.service.currencyExchangeService">
          -->
-        <Table name="Currency Exchange Rate" srcFileName="Currency Exchange Rate.csv" entityName="com.simplevat.entity.CurrencyConversion" serviceName="com.simplevat.service.CurrencyExchangeService">
+        <Table name="Currency Exchange Rate" srcFileName="Currency Exchange Rate.csv" entityName="com.simpleaccounts.entity.CurrencyConversion" serviceName="com.simpleaccounts.service.CurrencyExchangeService">
             <ColumnList>
                 <Column inputColumn="Currency Name" dataType="String" setterMethod="setCurrencyCode" >-1</Column>
                 <Column inputColumn="Exchange Rate" dataType="Integer" setterMethod="setExchangeRate" >-1</Column>

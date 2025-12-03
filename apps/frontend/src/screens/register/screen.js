@@ -136,7 +136,7 @@ class Register extends React.Component {
 			this.props.authActions
 				.getSimpleAccountsreleasenumber()
 				.then((backendVersion) => {
-					const backendRelease = backendVersion.simpleVatRelease;
+					const backendRelease = backendVersion.simpleAccountsRelease;
 					this.setState({ sabackend: backendRelease }); // Set the value in the component state
 					resolve(backendRelease);
 				})

@@ -12,7 +12,7 @@ do
 	domain="$(sed 's/\(-backend$\)//' <<< "$rc")"
 	echo "Upgrading Helm Release $domain with version $new_release"
 
-	simplevat-backend-java/simpleaccounts-backend/simpleaccounts-backend.sh upgrade $domain $new_release
+	simpleaccounts-backend-java/simpleaccounts-backend/simpleaccounts-backend.sh upgrade $domain $new_release
 	echo "Helm Release $domain upgraded"
 
   i=$((i+1))
