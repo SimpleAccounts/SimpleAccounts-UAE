@@ -43,6 +43,8 @@ jobs:
     - name: Build frontend
       working-directory: apps/frontend
       run: CI=false npm run build
+      env:
+        NODE_OPTIONS: --openssl-legacy-provider
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
