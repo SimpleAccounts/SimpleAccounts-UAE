@@ -59,10 +59,10 @@ spec:
             successThreshold: 1
             failureThreshold: 10
           env:
-            - name: SIMPLEVAT_RELEASE
-              value: {{ .Values.simpleVatFrontendRelease }}
-            - name: SIMPLEVAT_HOST
-              value: {{ .Values.simpleVatHost }}
+            - name: SIMPLEACCOUNTS_RELEASE
+              value: {{ .Values.simpleAccountsFrontendRelease }}
+            - name: SIMPLEACCOUNTS_HOST
+              value: {{ .Values.simpleAccountsHost }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

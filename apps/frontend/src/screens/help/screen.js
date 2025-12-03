@@ -56,7 +56,7 @@ class Help extends React.Component {
 											<p>
 											{strings.Guide}
 											</p>
-											{/* <Link to="https://www.simplevat.com/faqs/">Go to FAQ</Link> */}
+											{/* <Link to="https://www.simpleaccounts.io/faqs/">Go to FAQ</Link> */}
 										
 										</div>
 										</CardBody>
@@ -104,8 +104,8 @@ class Help extends React.Component {
             																    ''
           																				  }
 											</p>
-											{/* <Link to="https://www.simplevat.com/faqs/">Go to FAQ</Link> */}
-							{/* <b>	<a target="_blank" href="https://www.simplevat.com/faqs/" style={{ color: '#2266d8' }}>Go to FAQ</a></b> */}
+											{/* <Link to="https://www.simpleaccounts.io/faqs/">Go to FAQ</Link> */}
+							{/* <b>	<a target="_blank" href="https://www.simpleaccounts.io/faqs/" style={{ color: '#2266d8' }}>Go to FAQ</a></b> */}
 							</div>
 										</CardBody>
 									</Card>
@@ -120,7 +120,7 @@ class Help extends React.Component {
 											<p>
 											{strings.Refer}
 											</p>
-											{/* <h4>Simple Accounts Version Numbers</h4>
+											{/* <h4>SimpleAccounts Version Numbers</h4>
 											<p>
 												FrontEnd Verison:  <label className="mb-0 text-primary">{configData.FRONTEND_RELEASE}</label><br></br>
 												BackEnd Version: {
@@ -130,8 +130,8 @@ class Help extends React.Component {
             																    ''
           																				  }
 											</p> */}
-											{/* <Link to="https://www.simplevat.com/faqs/">Go to FAQ</Link> */}
-							{/* <b>	<a target="_blank" href="https://www.simplevat.com/faqs/" style={{ color: '#2266d8' }}>Go to FAQ</a></b> */}
+											{/* <Link to="https://www.simpleaccounts.io/faqs/">Go to FAQ</Link> */}
+							{/* <b>	<a target="_blank" href="https://www.simpleaccounts.io/faqs/" style={{ color: '#2266d8' }}>Go to FAQ</a></b> */}
 							<div className="mb-0">
 												{/* <button className="btn-pill btn btn-primary btn-lg">
 													<i className="icon-phone icons font-2xl d-block"></i>

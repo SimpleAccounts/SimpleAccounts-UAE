@@ -1,0 +1,39 @@
+package com.simpleaccounts.dao.impl;
+
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.TemporalType;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.simpleaccounts.dao.AbstractDao;
+import com.simpleaccounts.dao.ActivityDao;
+import com.simpleaccounts.entity.Activity;
+import com.simpleaccounts.utils.ChartUtil;
+
+@Repository(value = "activityDao")
+public class ActivityDaoImpl extends AbstractDao<Integer, Activity> implements ActivityDao {
+	@Autowired
+	ChartUtil util;
+	
+	@Override
+	public List<Activity> getLatestActivites(int maxActiviyCount) {
+		Date startDate = util.modifyDate(new Date(), Calendar.MONTH, -1);
+		List<Activity> result = getEntityManager().createNamedQuery("allActivity",
+				Activity.class)
+				.setParameter("startDate", startDate, TemporalType.DATE)
+				.setMaxResults(maxActiviyCount)
+				.getResultList();
+		if(result == null) {
+			return new ArrayList<>();
+		}
+		return result;
+	}
+
+
+}

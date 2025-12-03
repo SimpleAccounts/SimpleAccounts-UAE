@@ -86,7 +86,7 @@ class AdminLayout extends React.Component {
 					this.props.authActions.logOut();
 					this.props.history.push('/login');
 				});
-			this.props.commonActions.getSimpleVATVersion();
+			this.props.commonActions.getSimpleAccountsVersion();
 			const toastifyAlert = (status, message) => {
 				if (!message) {
 					message = 'Unexpected Error';

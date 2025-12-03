@@ -1,4 +1,4 @@
-# Default values for helm-simplevat
+# Default values for helm-simpleaccounts
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -18,24 +18,24 @@ azureACRServicePrinciple:
 clusterIssuer: simpleaccounts-io-letsencrypt-staging
 maindomain: app.simpleaccounts.io
 
-simpleVatBackendRelease: "Unknown"
-simpleVatHost: https://demo-api.app.simpleaccounts.io
+simpleAccountsBackendRelease: "Unknown"
+simpleAccountsHost: https://demo-api.app.simpleaccounts.io
 
 database:
   enabled: true
-  simpleVatDB: simplevat_demo_db
-  simpleVatDBPort: 5432
-  simpleVatDBSsl: false
-  simpleVatDBSslmode: disable
-  simpleVatDBSslrootcert: "/path/to/ca-certificate.crt"
+  simpleAccountsDB: simpleaccounts_demo_db
+  simpleAccountsDBPort: 5432
+  simpleAccountsDBSsl: false
+  simpleAccountsDBSslmode: disable
+  simpleAccountsDBSslrootcert: "/path/to/ca-certificate.crt"
 
 email:
-  simplevatSmtpUser: <SMTP_USER>
-  simplevatSmtpPass: <SMTP_PASSWORD>
-  simplevatSmtpHost: <SMTP_HOST>
-  simplevatSmtpPort: 587
-  simplevatSmtpAuth: true
-  simplevatSmtpStarttlsEnable: true
+  simpleAccountsSmtpUser: <SMTP_USER>
+  simpleAccountsSmtpPass: <SMTP_PASSWORD>
+  simpleAccountsSmtpHost: <SMTP_HOST>
+  simpleAccountsSmtpPort: 587
+  simpleAccountsSmtpAuth: true
+  simpleAccountsSmtpStarttlsEnable: true
 
 ports:
   containerPort:

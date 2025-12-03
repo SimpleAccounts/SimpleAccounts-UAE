@@ -73,13 +73,13 @@ fi
 echo "Test deployment script"
 createDatabase="false"
 
-helm upgrade  --install $subdomain-backend simplevat-backend-java/$helmDir --values simplevat-backend-java/$helmDir/values.yaml \
---set simpleVatBackendRelease=$SVrelease \
+helm upgrade  --install $subdomain-backend simpleaccounts-backend-java/$helmDir --values simpleaccounts-backend-java/$helmDir/values.yaml \
+--set simpleAccountsBackendRelease=$SVrelease \
 --set image.repository.backend.tag=$SVrelease \
 --set image.repository.backend.imageName=simpleaccounts.azurecr.io/simpleaccounts-backend \
 --set maindomain=$subdomain-api.$maindomain \
---set simpleVatHost=https://$subdomain-api.$maindomain \
---set database.simpleVatDB=$database \
+--set simpleAccountsHost=https://$subdomain-api.$maindomain \
+--set database.simpleAccountsDB=$database \
 --set fullnameOverride=$subdomain-backend \
 --set serviceAccount.name=$subdomain-deploy-robot-backend \
 --set ingress.hosts[0].host=$subdomain-api.$maindomain \
@@ -95,13 +95,13 @@ helm upgrade  --install $subdomain-backend simplevat-backend-java/$helmDir --val
 
 echo "Deploying the scripts"
 
-helm upgrade  --install $subdomain-backend simplevat-backend-java/$helmDir --values simplevat-backend-java/$helmDir/values.yaml \
---set simpleVatBackendRelease=$SVrelease \
+helm upgrade  --install $subdomain-backend simpleaccounts-backend-java/$helmDir --values simpleaccounts-backend-java/$helmDir/values.yaml \
+--set simpleAccountsBackendRelease=$SVrelease \
 --set image.repository.backend.tag=$SVrelease \
 --set image.repository.backend.imageName=simpleaccounts.azurecr.io/simpleaccounts-backend \
 --set maindomain=$subdomain-api.$maindomain \
---set simpleVatHost=https://$subdomain-api.$maindomain \
---set database.simpleVatDB=$database \
+--set simpleAccountsHost=https://$subdomain-api.$maindomain \
+--set database.simpleAccountsDB=$database \
 --set fullnameOverride=$subdomain-backend \
 --set serviceAccount.name=$subdomain-deploy-robot-backend \
 --set ingress.hosts[0].host=$subdomain-api.$maindomain \
