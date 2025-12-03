@@ -27,7 +27,6 @@ import * as ProductActions from '../../actions';
 import * as ImportActions from '../../actions';
 import { CommonActions } from 'services/global';
 
-import { WareHouseModal } from '../../sections';
 import { selectOptionsFactory } from 'utils';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
