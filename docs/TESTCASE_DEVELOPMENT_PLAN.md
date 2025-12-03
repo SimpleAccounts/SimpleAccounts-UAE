@@ -56,9 +56,11 @@ Each new module must map itself to **at least one row** (or add a new row) and i
 
 ## 4. Test Layers & Deliverables Matrix (≥90% Coverage Target)
 
+**Transition Note:** Current backend tests use JUnit 4. New tests should use JUnit 5 (`org.junit.jupiter`). The `pom.xml` must be updated to support the JUnit Vintage engine to run both during the migration.
+
 | Layer | Goal | Primary Tools | Deliverables per Module |
 |-------|------|---------------|-------------------------|
-| Unit (Backend) | Validate pure logic: services, helpers, validators | JUnit 5, Mockito, AssertJ | `src/test/java/...` classes with ≥90% line + branch coverage for critical packages |
+| Unit (Backend) | Validate pure logic: services, helpers, validators | JUnit 5 (target), JUnit 4 (legacy), Mockito | `src/test/java/...` classes with ≥90% line + branch coverage for critical packages |
 | Repository/Data | Ensure ORM queries & Liquibase migrations behave | Spring Data Test, Testcontainers (PostgreSQL) | Tests for every custom query + migration smoke suite; ≥90% branch coverage on repositories |
 | Slice/Component | Validate controllers, security filters, schedulers in isolation | `@WebMvcTest`, `@DataJpaTest`, `@SpringBootTest` (slice) | Controller tests covering success+failure paths, auth checks |
 | Contract/API | Keep REST/GraphQL payloads stable for consumers | Spring Cloud Contract, Pact, OpenAPI schema tests | Consumer/provider contracts per public endpoint |
@@ -112,6 +114,11 @@ Each new module must map itself to **at least one row** (or add a new row) and i
 - Agents (in `apps/agents`): add CLI/unit tests verifying command execution and authentication flows.
 
 ### 5.7 Frontend Unit & Integration Tests
+- **Legacy (CRA)**: Continue using `npm test` (Jest + RTL) for `src/` components.
+- **Next.js (Migration Target)**:
+  - Configure Jest for Next.js (handled via `next.config.js` and updated `jest.config.js`).
+  - Use React Testing Library for Client Components.
+  - Use Server-Side helpers (or E2E tests) for Server Components / API Routes.
 - Expand `src/components`, `screens/*`, and `services/global` suites:
   - Test navigation guards (role-based routes).
   - Form validation & API error surfaces.
