@@ -115,7 +115,7 @@ export default {
   REPORTS_VAT_REPORTS: true,
   REPORTS_FTA_AUDIT: true,
   REPORTS_EXCISE_TAX: true,
-  VALIDATE_SUBSCRIPTION: true,
+  VALIDATE_SUBSCRIPTION: false,
 
   BASE_ROUTE: "/admin",
   SECONDARY_BASE_ROUTE: "/admin/income",
