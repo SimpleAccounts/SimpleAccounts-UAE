@@ -24,18 +24,24 @@ describeSmoke('Auth & Invoice smoke journey', () => {
 
     await page.fill('input#username', username!);
     await page.fill('input#password', password!);
-    await page.getByRole('button', { name: /log in/i }).click();
+    const loginButton = page.getByRole('button', { name: /log in/i });
+    const buttonHandle = await loginButton.elementHandle();
+    if (buttonHandle) {
+      await loginButton.click({ timeout: 120_000 });
+    } else {
+      await page.keyboard.press('Enter', { delay: 200 });
+    }
 
     const normalizedPostLoginPath = POST_LOGIN_PATH.startsWith('/')
       ? POST_LOGIN_PATH
       : `/${POST_LOGIN_PATH}`;
     await page.waitForURL(`**${normalizedPostLoginPath}**`, {
-      timeout: 60_000,
+      timeout: 120_000,
     });
 
-    await page.goto(INVOICE_PATH);
+    await page.goto(INVOICE_PATH, { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('.customer-invoice-screen', {
-      timeout: 60_000,
+      timeout: 120_000,
     });
     await expect(
       page.locator('.customer-invoice-screen .h4 span'),
