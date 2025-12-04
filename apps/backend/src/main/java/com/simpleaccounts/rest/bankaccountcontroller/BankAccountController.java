@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -636,15 +637,19 @@ public class BankAccountController{
 	}
 
 	@LogRequest
+	@Cacheable(cacheNames = "dashboardBankChart", key = "#bankId + '-' + #monthCount")
 	@GetMapping(value = "/getBankChart")
 	public ResponseEntity<DashBoardBankDataModel> getCurrency(@RequestParam(required = false) Integer bankId, Integer monthCount) {
 		try {
+			long start = System.currentTimeMillis();
 			if (bankId == null) {
 				// Return empty chart data when no bank account is selected
 				DashBoardBankDataModel emptyData = new DashBoardBankDataModel();
 				return new ResponseEntity<>(emptyData, HttpStatus.OK);
 			}
-            return new ResponseEntity<>(bankAccountRestHelper.getBankBalanceList(bankId, monthCount), HttpStatus.OK);
+			DashBoardBankDataModel result = bankAccountRestHelper.getBankBalanceList(bankId, monthCount);
+			logger.info("[PERF] getBankChart for bankId={} months={} took {} ms", bankId, monthCount, System.currentTimeMillis() - start);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
@@ -652,10 +657,13 @@ public class BankAccountController{
 	}
 
 	@LogRequest
+	@Cacheable(cacheNames = "dashboardBankTotalBalance")
 	@GetMapping(value = "/getTotalBalance")
 	public ResponseEntity<BigDecimal> getTotalBalance() {
 		try {
+			long start = System.currentTimeMillis();
 			BigDecimal totalBalance = bankAccountService.getAllBankAccountsTotalBalance();
+			logger.info("[PERF] getTotalBalance took {} ms", System.currentTimeMillis() - start);
 			return new ResponseEntity<>(totalBalance != null ? totalBalance : BigDecimal.valueOf(0), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);

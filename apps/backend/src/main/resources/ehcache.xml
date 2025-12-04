@@ -75,4 +75,40 @@
 		   timeToIdleSeconds="0"
 		   memoryStoreEvictionPolicy="LFU"
 		   transactionalMode="off" />
+
+	<cache name="dashboardCashFlow"
+		   maxElementsInMemory="50"
+		   eternal="false"
+		   overflowToDisk="false"
+		   timeToLiveSeconds="300"
+		   timeToIdleSeconds="0"
+		   memoryStoreEvictionPolicy="LFU"
+		   transactionalMode="off" />
+
+	<cache name="dashboardInvoiceChart"
+		   maxElementsInMemory="50"
+		   eternal="false"
+		   overflowToDisk="false"
+		   timeToLiveSeconds="300"
+		   timeToIdleSeconds="0"
+		   memoryStoreEvictionPolicy="LFU"
+		   transactionalMode="off" />
+
+	<cache name="dashboardBankChart"
+		   maxElementsInMemory="100"
+		   eternal="false"
+		   overflowToDisk="false"
+		   timeToLiveSeconds="300"
+		   timeToIdleSeconds="0"
+		   memoryStoreEvictionPolicy="LFU"
+		   transactionalMode="off" />
+
+	<cache name="dashboardBankTotalBalance"
+		   maxElementsInMemory="10"
+		   eternal="false"
+		   overflowToDisk="false"
+		   timeToLiveSeconds="300"
+		   timeToIdleSeconds="0"
+		   memoryStoreEvictionPolicy="LFU"
+		   transactionalMode="off" />
 </ehcache>

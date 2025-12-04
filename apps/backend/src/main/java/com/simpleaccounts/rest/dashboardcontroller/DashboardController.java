@@ -28,7 +28,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
@@ -205,15 +209,34 @@ public ResponseEntity<Object> getDashboardProfitAndLoss(@RequestParam(required =
 	try {
 		long methodStart = System.currentTimeMillis();
 
+		// Get date ranges for all months
 		long dateRangeStart = System.currentTimeMillis();
 		List<DateRequestModel> dateRequestModelList = dashboardRestHelper.getStartDateEndDateForEveryMonth(monthNo);
 		logger.info("[PERF] getStartDateEndDateForEveryMonth took {} ms for {} months",
 			System.currentTimeMillis() - dateRangeStart, dateRequestModelList.size());
 
+		// Get chart of account codes
 		long coaStart = System.currentTimeMillis();
 		String chartOfAccountCodes = financialReportRestHelper.getChartOfAccountCategoryCodes("ProfitLoss");
 		logger.info("[PERF] getChartOfAccountCategoryCodes took {} ms", System.currentTimeMillis() - coaStart);
 
+		// OPTIMIZATION: Single query for full date range instead of N queries
+		String fullStartDate = dateRequestModelList.get(0).getStartDate();
+		String fullEndDate = dateRequestModelList.get(dateRequestModelList.size() - 1).getEndDate();
+
+		ReportRequestModel fullRangeRequest = new ReportRequestModel();
+		fullRangeRequest.setStartDate(fullStartDate);
+		fullRangeRequest.setEndDate(fullEndDate);
+		fullRangeRequest.setChartOfAccountCodes(chartOfAccountCodes);
+
+		long dbStart = System.currentTimeMillis();
+		List<TransactionCategoryClosingBalance> allClosingBalances =
+			transactionCategoryClosingBalanceService.getListByChartOfAccountIds(fullRangeRequest);
+		logger.info("[PERF] Single DB query for full range ({} to {}): {} ms, returned {} records",
+			fullStartDate, fullEndDate, System.currentTimeMillis() - dbStart,
+			allClosingBalances != null ? allClosingBalances.size() : 0);
+
+		// Initialize response structure
 		Map<String,Object> resultMap = initializeProfitLossResponse();
 		List<BigDecimal> incomeData = extractIncomeSeries(resultMap);
 		List<BigDecimal> expenseData = extractExpenseSeries(resultMap);
@@ -222,45 +245,112 @@ public ResponseEntity<Object> getDashboardProfitAndLoss(@RequestParam(required =
 		BigDecimal aggregateIncome = BigDecimal.ZERO;
 		BigDecimal aggregateExpense = BigDecimal.ZERO;
 
-		long loopStart = System.currentTimeMillis();
-		int iteration = 0;
-		long totalDbTime = 0;
-		for(DateRequestModel dateRequestModel : dateRequestModelList) {
-			long iterStart = System.currentTimeMillis();
-			ReportRequestModel requestModel = new ReportRequestModel();
-			requestModel.setStartDate(dateRequestModel.getStartDate());
-			requestModel.setEndDate(dateRequestModel.getEndDate());
-			requestModel.setChartOfAccountCodes(chartOfAccountCodes);
+		// Group data by month and calculate totals
+		long groupingStart = System.currentTimeMillis();
+		Map<YearMonth, List<TransactionCategoryClosingBalance>> groupedByMonth =
+			groupClosingBalancesByMonth(allClosingBalances);
+		logger.info("[PERF] Grouping by month took {} ms, created {} groups",
+			System.currentTimeMillis() - groupingStart, groupedByMonth.size());
 
-			long dbStart = System.currentTimeMillis();
-			ProfitLossTotal totals = calculateProfitAndLossTotals(requestModel);
-			long dbTime = System.currentTimeMillis() - dbStart;
-			totalDbTime += dbTime;
+		// Process each month's data
+		long processingStart = System.currentTimeMillis();
+		DateTimeFormatter labelFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		for (DateRequestModel dateRequestModel : dateRequestModelList) {
+			YearMonth yearMonth = parseYearMonth(dateRequestModel.getStartDate());
+			List<TransactionCategoryClosingBalance> monthData = groupedByMonth.getOrDefault(yearMonth, Collections.emptyList());
 
+			ProfitLossTotal totals = calculateProfitAndLossTotalsFromList(monthData);
 			incomeData.add(totals.getIncome());
 			expenseData.add(totals.getExpense());
 			labels.add(dateRequestModel.getStartDate());
 
 			aggregateIncome = aggregateIncome.add(totals.getIncome());
 			aggregateExpense = aggregateExpense.add(totals.getExpense());
-
-			logger.info("[PERF] Iteration {} ({} to {}): DB query {} ms, total iter {} ms",
-				++iteration, dateRequestModel.getStartDate(), dateRequestModel.getEndDate(),
-				dbTime, System.currentTimeMillis() - iterStart);
 		}
-		logger.info("[PERF] Loop completed: {} iterations, total loop time {} ms, total DB time {} ms, avg DB time {} ms",
-			iteration, System.currentTimeMillis() - loopStart, totalDbTime, totalDbTime / Math.max(1, iteration));
+		logger.info("[PERF] Processing {} months took {} ms",
+			dateRequestModelList.size(), System.currentTimeMillis() - processingStart);
 
 		resultMap.put("Income", aggregateIncome);
 		resultMap.put("Expense", aggregateExpense);
 		resultMap.put("NetProfit", aggregateIncome.subtract(aggregateExpense));
 
-		logger.info("[PERF] Total method execution: {} ms", System.currentTimeMillis() - methodStart);
+		logger.info("[PERF] Total method execution: {} ms (OPTIMIZED - single query)",
+			System.currentTimeMillis() - methodStart);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	} catch (Exception e) {
 		logger.error(ERROR, e);
 	}
 	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+}
+
+private Map<YearMonth, List<TransactionCategoryClosingBalance>> groupClosingBalancesByMonth(
+		List<TransactionCategoryClosingBalance> balances) {
+	if (balances == null || balances.isEmpty()) {
+		return Collections.emptyMap();
+	}
+	return balances.stream()
+		.filter(b -> b.getClosingBalanceDate() != null)
+		.collect(Collectors.groupingBy(b -> YearMonth.from(b.getClosingBalanceDate())));
+}
+
+private YearMonth parseYearMonth(String dateStr) {
+	// Parse "dd/MM/yyyy" format to YearMonth
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	java.time.LocalDate date = java.time.LocalDate.parse(dateStr, formatter);
+	return YearMonth.from(date);
+}
+
+private ProfitLossTotal calculateProfitAndLossTotalsFromList(List<TransactionCategoryClosingBalance> closingBalanceList) {
+	if (closingBalanceList == null || closingBalanceList.isEmpty()) {
+		return ProfitLossTotal.empty();
+	}
+
+	Map<Integer, TransactionCategoryClosingBalance> transactionCategoryClosingBalanceMap =
+			financialReportRestHelper.processTransactionCategoryClosingBalance(closingBalanceList);
+
+	BigDecimal totalOperatingIncome = BigDecimal.ZERO;
+	BigDecimal totalCostOfGoodsSold = BigDecimal.ZERO;
+	BigDecimal totalOperatingExpense = BigDecimal.ZERO;
+	BigDecimal totalNonOperatingIncome = BigDecimal.ZERO;
+	BigDecimal totalNonOperatingExpense = BigDecimal.ZERO;
+
+	for (Map.Entry<Integer, TransactionCategoryClosingBalance> entry : transactionCategoryClosingBalanceMap.entrySet()) {
+		TransactionCategoryClosingBalance transactionCategoryClosingBalance = entry.getValue();
+		String transactionCategoryCode = transactionCategoryClosingBalance.getTransactionCategory().getChartOfAccount().getChartOfAccountCode();
+		String transactionCategoryName = transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryName();
+		BigDecimal closingBalance = transactionCategoryClosingBalance.getClosingBalance();
+		ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
+		if (chartOfAccountCategoryCodeEnum == null) {
+			continue;
+		}
+		if (closingBalance.longValue() < 0) {
+			closingBalance = closingBalance.negate();
+		}
+		switch (chartOfAccountCategoryCodeEnum) {
+			case INCOME:
+				if (transactionCategoryName.equalsIgnoreCase("Sales") ||
+						transactionCategoryName.equalsIgnoreCase("Other Charges")) {
+					totalOperatingIncome = totalOperatingIncome.add(closingBalance);
+				} else {
+					totalNonOperatingIncome = totalNonOperatingIncome.add(closingBalance);
+				}
+				break;
+			case ADMIN_EXPENSE:
+				totalOperatingExpense = totalOperatingExpense.add(closingBalance);
+				break;
+			case OTHER_EXPENSE:
+				totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
+				break;
+			case COST_OF_GOODS_SOLD:
+				totalCostOfGoodsSold = totalCostOfGoodsSold.add(closingBalance);
+				break;
+			default:
+				break;
+		}
+	}
+	BigDecimal totalIncome = totalOperatingIncome.add(totalNonOperatingIncome);
+	BigDecimal totalExpense = totalCostOfGoodsSold.add(totalOperatingExpense).add(totalNonOperatingExpense);
+	return new ProfitLossTotal(totalIncome, totalExpense);
 }
 
 private Map<String, Object> initializeProfitLossResponse() {
