@@ -123,6 +123,7 @@
     "test:frontend:unit": "react-scripts test --watchAll=false",
     "test:frontend:e2e": "playwright test",
     "test:frontend:e2e:headed": "playwright test --headed",
+    "test:frontend:e2e:smoke": "bash -lc 'set -a; source .env.e2e; set +a; npm run -s test:frontend:e2e'",
     "test:debug": "react-scripts --inspect-brk test --runInBand",
     "eject": "react-scripts eject"
   },
