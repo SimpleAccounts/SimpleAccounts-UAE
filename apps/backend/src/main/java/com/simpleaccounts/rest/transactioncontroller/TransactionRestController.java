@@ -45,6 +45,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -2219,11 +2220,14 @@ public class TransactionRestController {
 	}
 
 	@LogRequest
+	@Cacheable(cacheNames = "dashboardCashFlow", key = "#monthNo")
 	@GetMapping(value = "/getCashFlow")
 	public ResponseEntity<Object> getCashFlow(@RequestParam int monthNo) {
 		try {
+			long start = System.currentTimeMillis();
 			Object obj = chartUtil.getCashFlow(transactionService.getCashInData(monthNo, null),
 					transactionService.getCashOutData(monthNo, null));
+			logger.info("[PERF] getCashFlow for {} months took {} ms", monthNo, System.currentTimeMillis() - start);
 			return new ResponseEntity<>(obj, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);

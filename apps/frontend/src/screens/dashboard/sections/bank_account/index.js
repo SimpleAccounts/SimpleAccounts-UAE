@@ -86,6 +86,13 @@ class BankAccount extends Component {
 	// };
 
 	componentDidMount = () => {
+		// Run getTotalBalance in parallel - it doesn't depend on getBankAccountTypes
+		this.props.DashboardActions.getTotalBalance().then((res) => {
+			if (res.status === 200) {
+				this.setState({ totalBalance: res.data });
+			}
+		});
+
 		this.props.DashboardActions.getBankAccountTypes().then((res) => {
 			if (res.status === 200) {
 				let val =
@@ -93,11 +100,6 @@ class BankAccount extends Component {
 						? res.data.data[0].bankAccountId
 						: '';
 				this.getBankAccountGraphData(val, 12);
-				this.props.DashboardActions.getTotalBalance().then((res) => {
-					if (res.status === 200) {
-						this.setState({ totalBalance: res.data }, () => {});
-					}
-				});
 			}
 		});
 	};

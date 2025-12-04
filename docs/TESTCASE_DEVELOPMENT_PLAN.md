@@ -311,6 +311,10 @@ Every module must satisfy the following suites before merging. Each bullet impli
 | Playwright Full Matrix | `npx playwright test --headed --trace on` | Captures traces/screenshots for triage. |
 | Accessibility subset | `npx playwright test --grep "@a11y"` | Runs axe-core integrations on critical pages. |
 
+> **Playwright smoke toggles:** `apps/frontend/e2e/auth-invoice.smoke.spec.ts` (login ➜ customer invoices) is skipped by default. Export `RUN_E2E_SMOKE=true` plus `E2E_BASE_URL`, `E2E_USERNAME`, `E2E_PASSWORD` (and optionally `E2E_LOGIN_PATH`, `E2E_INVOICE_PATH`, `E2E_POST_LOGIN_PATH`) to enable the journey when a real backend/frontend instance is available. The lightweight `environment.smoke.spec.ts` keeps CI green when the UI is not running locally.
+
+- **Shortcut:** `apps/frontend/.env.e2e` contains the local smoke credentials. Run `npm run test:frontend:e2e:smoke` to load that file automatically (`set -a; source .env.e2e; npm run test:frontend:e2e`). Update the file if your base URL or credentials differ.
+
 ### 13.4 Cross-Repo Commands
 - **Run everything (CI parity)**:
   ```bash
@@ -325,7 +329,7 @@ Every module must satisfy the following suites before merging. Each bullet impli
 
 The following tests already exist and serve as reference implementations for future test development:
 
-### 14.1 Backend Tests (51 tests)
+### 14.1 Backend Tests (60 tests)
 Located in `apps/backend/src/test/java/com/simpleaccounts/`:
 
 | Package | Test Class | Purpose |
@@ -333,6 +337,13 @@ Located in `apps/backend/src/test/java/com/simpleaccounts/`:
 | `security/` | `JwtAuthenticationControllerTest` | Auth token generation, login failures, disabled users |
 | `security/` | `JwtTokenUtilTest` | Token generation, validation, expiry, claims extraction |
 | `security/` | `JwtRequestFilterTest` | Filter chain, token parsing, expired/malformed tokens |
+| `security/` | `CustomUserDetailsTest` | Maps role names (ADMIN vs EMPLOYEE) to Spring Security authorities |
+| `security/` | `UserAuthorizationTest` | Ensures invoice listings respect admin vs employee scope filters |
+| `security/` | `RolePermissionTest` | Verifies expense listings are locked down to the creator unless admin |
+| `security/` | `AuthenticationRequiredTest` | Asserts protected endpoints remain unauthenticated without a JWT |
+| `uae/` | `VatCalculationTest` | Exercises VAT scenarios (standard, zero, exempt, reverse charge, mixed basket) |
+| `uae/` | `WpsFileGenerationTest` | Guarantees Wage Protection System exports follow UAE banking rules |
+| `uae/` | `LocaleFormatTest` | Verifies UAE date (dd/MM/yyyy), currency (AED), and number formats |
 | `utils/` | `ExcelUtilTest` | Excel import/export using Apache POI |
 | `utils/` | `ExcelParserTest` | Comprehensive POI workbook, sheet, cell operations |
 | `utils/` | `PdfGenerationTest` | iText HTML-to-PDF conversion, Arabic text, CSS styling |
