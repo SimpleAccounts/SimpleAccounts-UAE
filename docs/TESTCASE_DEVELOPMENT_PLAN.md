@@ -10,6 +10,7 @@
 Provide a repeatable blueprint for designing, authoring, and maintaining automated (and critical manual) test cases across every SimpleAccounts module. The plan ensures that as we add new features or micro-modules, we know **which layers need coverage, what artifacts to produce, and which tools/environments to use**.
 
 ## 2. Scope & Assumptions
+- **Architecture:** SimpleAccounts-UAE is a **single-tenant application** designed for individual company deployments. Each installation serves ONE company with role-based user access (ADMIN, ACCOUNTANT, EMPLOYEE).
 - Covers all apps under `apps/` (backend Spring Boot, frontend React SPA, agents/services) plus deployment artifacts in `deploy/`.
 - Addresses **functional, integration, contract, E2E, performance, security, and data validation** testing.
 - Assumes Java 8 (current) & Node 20 (LTS) build images for running full suites; Testcontainers is available for database-dependent tests. **Note:** Java 17+ upgrade is planned per `DEPENDENCY_UPGRADE_ANALYSIS.md`.
@@ -191,7 +192,7 @@ Every module must satisfy the following suites before merging. Each bullet impli
 
 ### 11.1 Customer Invoices & Sales
 - **Backend Unit**: VAT rounding, multi-rate discount stacking, currency conversions (FX gain/loss), credit-note reversing logic, negative quantity guardrails.
-- **Repository/Data**: Pagination/sorting queries, status filters, tenant scoping, soft-delete visibility.
+- **Repository/Data**: Pagination/sorting queries, status filters, user permissions, soft-delete visibility.
 - **Service/Slice**: Workflow transitions (draft→approved→sent→paid→archived), concurrency on invoice numbering, email + PDF generation fallbacks.
 - **Contracts**: `/invoice`, `/credit-note`, `/quotation`, `/income-receipt` with optional custom fields & attachments.
 - **Frontend Unit/Integration**: Form validation, dynamic tax rows, offline draft autosave, Redux invoice reducers, PDF preview rendering.
@@ -219,7 +220,7 @@ Every module must satisfy the following suites before merging. Each bullet impli
 ### 11.4 Accountant / General Ledger
 - **Backend Unit**: Journal balancing, recurring schedule generator, closing entries, double-entry validation.
 - **Repository/Data**: Ledger queries across periods, audit logs, locked-period enforcement.
-- **Service**: Reversals, bulk postings, inter-company eliminations, multi-tenant filters.
+- **Service**: Reversals, bulk postings, period locking, role-based access controls.
 - **Contracts**: `/journal`, `/ledger`, `/opening-balance`, `/recurring`.
 - **Frontend**: Journal editor, ledger drill-down, recurring entry UI, period lock controls.
 - **E2E**: Import opening balance, create journal with attachments, run trial balance, lock/unlock period.
@@ -310,6 +311,10 @@ Every module must satisfy the following suites before merging. Each bullet impli
 | Playwright Full Matrix | `npx playwright test --headed --trace on` | Captures traces/screenshots for triage. |
 | Accessibility subset | `npx playwright test --grep "@a11y"` | Runs axe-core integrations on critical pages. |
 
+> **Playwright smoke toggles:** `apps/frontend/e2e/auth-invoice.smoke.spec.ts` (login ➜ customer invoices) is skipped by default. Export `RUN_E2E_SMOKE=true` plus `E2E_BASE_URL`, `E2E_USERNAME`, `E2E_PASSWORD` (and optionally `E2E_LOGIN_PATH`, `E2E_INVOICE_PATH`, `E2E_POST_LOGIN_PATH`) to enable the journey when a real backend/frontend instance is available. The lightweight `environment.smoke.spec.ts` keeps CI green when the UI is not running locally.
+
+- **Shortcut:** `apps/frontend/.env.e2e` contains the local smoke credentials. Run `npm run test:frontend:e2e:smoke` to load that file automatically (`set -a; source .env.e2e; npm run test:frontend:e2e`). Update the file if your base URL or credentials differ.
+
 ### 13.4 Cross-Repo Commands
 - **Run everything (CI parity)**:
   ```bash
@@ -324,7 +329,7 @@ Every module must satisfy the following suites before merging. Each bullet impli
 
 The following tests already exist and serve as reference implementations for future test development:
 
-### 14.1 Backend Tests (51 tests)
+### 14.1 Backend Tests (60 tests)
 Located in `apps/backend/src/test/java/com/simpleaccounts/`:
 
 | Package | Test Class | Purpose |
@@ -332,6 +337,13 @@ Located in `apps/backend/src/test/java/com/simpleaccounts/`:
 | `security/` | `JwtAuthenticationControllerTest` | Auth token generation, login failures, disabled users |
 | `security/` | `JwtTokenUtilTest` | Token generation, validation, expiry, claims extraction |
 | `security/` | `JwtRequestFilterTest` | Filter chain, token parsing, expired/malformed tokens |
+| `security/` | `CustomUserDetailsTest` | Maps role names (ADMIN vs EMPLOYEE) to Spring Security authorities |
+| `security/` | `UserAuthorizationTest` | Ensures invoice listings respect admin vs employee scope filters |
+| `security/` | `RolePermissionTest` | Verifies expense listings are locked down to the creator unless admin |
+| `security/` | `AuthenticationRequiredTest` | Asserts protected endpoints remain unauthenticated without a JWT |
+| `uae/` | `VatCalculationTest` | Exercises VAT scenarios (standard, zero, exempt, reverse charge, mixed basket) |
+| `uae/` | `WpsFileGenerationTest` | Guarantees Wage Protection System exports follow UAE banking rules |
+| `uae/` | `LocaleFormatTest` | Verifies UAE date (dd/MM/yyyy), currency (AED), and number formats |
 | `utils/` | `ExcelUtilTest` | Excel import/export using Apache POI |
 | `utils/` | `ExcelParserTest` | Comprehensive POI workbook, sheet, cell operations |
 | `utils/` | `PdfGenerationTest` | iText HTML-to-PDF conversion, Arabic text, CSS styling |
@@ -368,34 +380,41 @@ npm run test --workspaces --if-present
 
 ## 15. Additional Test Categories (Gaps to Fill)
 
-### 15.1 Multi-Tenancy Data Isolation Tests
-Critical for SaaS security - ensure complete tenant separation:
+### 15.1 User Authorization & Data Access Tests
+**Note:** SimpleAccounts-UAE is a **single-tenant application** with company-based data organization. Each deployment serves ONE company. User access is controlled via role-based permissions (ADMIN, ACCOUNTANT, EMPLOYEE).
 
 **Backend Tests:**
-- `TenantIsolationTest.java` - Verify tenant-scoped queries never leak data
-- `CrossTenantAccessTest.java` - Attempts to access other tenant's data must fail (403)
-- `TenantContextPropagationTest.java` - Ensure tenant ID propagates through async operations
+- `UserAuthorizationTest.java` - Verify role-based access control works correctly
+- `RolePermissionTest.java` - Test ADMIN vs EMPLOYEE access to sensitive operations
+- `DataOwnershipTest.java` - Ensure users can only modify data they created (where applicable)
 
 **Test Scenarios:**
 ```java
 @Test
-void shouldNotAccessOtherTenantInvoices() {
-    // Login as Tenant A
-    // Attempt to fetch Tenant B's invoice by ID
-    // Assert 403 Forbidden or empty result
+void shouldRestrictEmployeeFromAdminOperations() {
+    // Login as EMPLOYEE role
+    // Attempt to access admin-only endpoints (user management, company settings)
+    // Assert 403 Forbidden
 }
 
 @Test
-void shouldIsolateTenantDataInReports() {
-    // Generate P&L report for Tenant A
-    // Verify no Tenant B transactions included
+void shouldAllowAdminFullAccess() {
+    // Login as ADMIN role
+    // Access all endpoints
+    // Assert 200 OK for all operations
+}
+
+@Test
+void shouldRequireAuthenticationForProtectedEndpoints() {
+    // Call protected endpoint without JWT token
+    // Assert 401 Unauthorized
 }
 ```
 
 **Frontend Tests:**
-- Verify tenant context in API headers
-- Test tenant switching clears cached data
-- Ensure tenant-specific routes are protected
+- Verify role-based menu visibility (admin sees all, employee sees limited)
+- Test route guards prevent unauthorized navigation
+- Ensure proper logout clears all cached data
 
 ### 15.2 UAE Regulatory Compliance Tests
 Essential for accounting software operating in UAE:

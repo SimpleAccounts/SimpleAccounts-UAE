@@ -10,23 +10,8 @@ import {
 	TabPane,
 	Card,
 	CardBody,
-	Progress,
 } from 'reactstrap';
-import { DateRangePicker2 } from 'components';
-import moment from 'moment';
 import './style.scss';
-
-const ranges = {
-	// 'Today': [moment(), moment()],
-	// 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-	'This Month': [moment().startOf('month'), moment().endOf('month')],
-	'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-	'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-	'Last Month': [
-		moment().subtract(1, 'month').startOf('month'),
-		moment().subtract(1, 'month').endOf('month'),
-	],
-};
 
 const minusIcon = require('assets/images/dashboard/minus.png');
 const equalIcon = require('assets/images/dashboard/equal.png');
@@ -36,6 +21,7 @@ class ProfitAndLoss extends Component {
 		super(props);
 		this.state = {
 			activeTab: new Array(4).fill('1'),
+			selectedMonths: '6',
 		};
 	}
 
@@ -48,13 +34,24 @@ class ProfitAndLoss extends Component {
 	};
 
 	componentDidMount = () => {
-		this.props.DashboardActions.getProfitAndLossData('12');
-		this.props.DashboardActions.getTaxes('12');
+		this.loadRangeData(this.state.selectedMonths);
 	};
 
-	handleChange = (e) => {
-		e.preventDefault();
-		this.props.DashboardActions.getTaxes(e.currentTarget.value);
+	loadRangeData = (range) => {
+		const requests = [
+			this.props.DashboardActions.getProfitAndLossData(range),
+			this.props.DashboardActions.getTaxes(range),
+		];
+		return Promise.all(requests).catch((err) => {
+			// eslint-disable-next-line no-console
+			console.error('Failed to load profit & loss summary', err);
+		});
+	};
+
+	handleRangeChange = (e) => {
+		const { value } = e.currentTarget;
+		this.setState({ selectedMonths: value });
+		this.loadRangeData(value);
 	};
 
 	render() {
@@ -86,17 +83,17 @@ class ProfitAndLoss extends Component {
 									</NavLink>
 								</NavItem>
 							</Nav>
-							{/* <div className="card-header-actions">
+							<div className="card-header-actions">
 								<select
 									className="form-control"
-									ref={this.dateRangeSelect}
-									onChange={(e) => this.handleChange(e)}
+									value={this.state.selectedMonths}
+									onChange={this.handleRangeChange}
 								>
-									<option value="12">Last 12 Months</option>
-									<option value="6">Last 6 Months</option>
 									<option value="3">Last 3 Months</option>
+									<option value="6">Last 6 Months</option>
+									<option value="12">Last 12 Months</option>
 								</select>
-							</div> */}
+							</div>
 						</div>
 						<TabContent activeTab={this.state.activeTab[0]}>
 							<TabPane tabId="1">
