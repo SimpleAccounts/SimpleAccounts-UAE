@@ -2,6 +2,7 @@ package com.simpleaccounts.service.impl;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -70,10 +71,15 @@ public class ExpenseServiceImpl extends ExpenseService {
 
 		List<Object[]> rows = expenseDao.getExpenses(startDate, endDate);
 		List<BankAccountTransactionReportModel> list = util.convertToTransactionReportModel(rows);
-		for (BankAccountTransactionReportModel model : list) {
-			model.setCredit(false);
+		if (list == null) {
+			return Collections.emptyList();
 		}
-		return util.convertToTransactionReportModel(rows);
+		for (BankAccountTransactionReportModel model : list) {
+			if (model != null) {
+				model.setCredit(false);
+			}
+		}
+		return list;
 
 	}
 
