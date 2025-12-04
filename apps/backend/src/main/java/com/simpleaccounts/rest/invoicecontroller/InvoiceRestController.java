@@ -23,6 +23,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -390,15 +391,19 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	}
 
 	@LogRequest
+	@Cacheable(cacheNames = "dashboardInvoiceChart", key = "#monthCount")
 	@ApiOperation(value = "Get chart data")
 	@GetMapping(value = "/getChartData")
 	public ResponseEntity<Object> getChartData(@RequestParam int monthCount) {
 		try {
+			long start = System.currentTimeMillis();
 			List<Invoice> invList = invoiceService.getInvoiceList(monthCount);
 			if (invList == null) {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
-			return new ResponseEntity<>(chartUtil.getinvoiceData(invList, monthCount), HttpStatus.OK);
+			Object result = chartUtil.getinvoiceData(invList, monthCount);
+			logger.info("[PERF] getChartData for {} months took {} ms", monthCount, System.currentTimeMillis() - start);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
