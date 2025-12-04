@@ -108,15 +108,22 @@
     "yup": "^0.27.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^14.0.0",
-    "mutationobserver-shim": "^0.3.3"
+    "mutationobserver-shim": "^0.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:cov": "npm test -- --coverage --watchAll=false",
+    "test:frontend:unit": "react-scripts test --watchAll=false",
+    "test:frontend:e2e": "playwright test",
+    "test:frontend:e2e:headed": "playwright test --headed",
+    "test:frontend:e2e:smoke": "bash -lc 'set -a; source .env.e2e; set +a; npm run -s test:frontend:e2e'",
     "test:debug": "react-scripts --inspect-brk test --runInBand",
     "eject": "react-scripts eject"
   },

@@ -18,7 +18,7 @@ class ProfitAndLossReport extends Component {
 			profit_loss_report_data: [],
 			profit_loss_report_data_options: {},
 			language: window['localStorage'].getItem('language'),
-
+			selectedMonths: '6',
 		};
 		this.bankAccountSelect = React.createRef();
 		this.dateRangeSelect = React.createRef();
@@ -33,15 +33,31 @@ class ProfitAndLossReport extends Component {
 	};
 
 	componentDidMount = () => {
-		this.props.DashboardActions.getProfitLossReport(12).then((res) => {
-			if (res.status === 200) {
-				this.getProfitLossGraph(res.data);
-			}
-		});
+		this.loadProfitLossReport(this.state.selectedMonths);
 	};
 
 	getBankAccountGraphData = (account, dateRange) => {
 		this.props.DashboardActions.getBankAccountGraphData(account, dateRange);
+	};
+
+	loadProfitLossReport = (range) => {
+		this.props.DashboardActions.getProfitLossReport(range)
+			.then((res) => {
+				if (res.status === 200) {
+					this.getProfitLossGraph(res.data);
+				}
+			})
+			.catch((err) => {
+				// Surface error for debugging but avoid crashing the dashboard.
+				// eslint-disable-next-line no-console
+				console.error('Failed to load profit/loss chart', err);
+			});
+	};
+
+	handleRangeChange = (event) => {
+		const { value } = event.currentTarget;
+		this.setState({ selectedMonths: value });
+		this.loadProfitLossReport(value);
 	};
 
 	getProfitLossGraph = (data) => {
@@ -104,6 +120,17 @@ class ProfitAndLossReport extends Component {
 					<h1 className="mb-2 card-h1">
 									{strings.ProfitLoss}
 								</h1>
+								<div className="card-header-actions ml-auto">
+									<select
+										className="form-control"
+										value={this.state.selectedMonths}
+										onChange={this.handleRangeChange}
+									>
+										<option value="3">Last 3 Months</option>
+										<option value="6">Last 6 Months</option>
+										<option value="12">Last 12 Months</option>
+									</select>
+								</div>
 				</div>
 								<div className="d-block">
 									<Chart
