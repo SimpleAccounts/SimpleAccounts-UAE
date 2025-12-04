@@ -66,4 +66,13 @@
 		   timeToIdleSeconds="0"
 		   memoryStoreEvictionPolicy="LFU"
 		   transactionalMode="off" />
+
+	<cache name="dashboardProfitLoss"
+		   maxElementsInMemory="50"
+		   eternal="false"
+		   overflowToDisk="false"
+		   timeToLiveSeconds="300"
+		   timeToIdleSeconds="0"
+		   memoryStoreEvictionPolicy="LFU"
+		   transactionalMode="off" />
 </ehcache>
