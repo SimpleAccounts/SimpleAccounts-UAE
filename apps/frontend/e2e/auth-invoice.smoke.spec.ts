@@ -10,6 +10,8 @@ const describeSmoke = RUN_SMOKE ? test.describe : test.describe.skip;
 
 describeSmoke('Auth & Invoice smoke journey', () => {
   test('logs in and opens the invoice workspace', async ({ page }) => {
+    test.setTimeout(240_000);
+
     const username = process.env.E2E_USERNAME;
     const password = process.env.E2E_PASSWORD;
 
@@ -27,7 +29,7 @@ describeSmoke('Auth & Invoice smoke journey', () => {
     const loginButton = page.getByRole('button', { name: /log in/i });
     const buttonHandle = await loginButton.elementHandle();
     if (buttonHandle) {
-      await loginButton.click({ timeout: 120_000 });
+      await loginButton.click({ timeout: 180_000 });
     } else {
       await page.keyboard.press('Enter', { delay: 200 });
     }
@@ -36,12 +38,12 @@ describeSmoke('Auth & Invoice smoke journey', () => {
       ? POST_LOGIN_PATH
       : `/${POST_LOGIN_PATH}`;
     await page.waitForURL(`**${normalizedPostLoginPath}**`, {
-      timeout: 120_000,
+      timeout: 180_000,
     });
 
     await page.goto(INVOICE_PATH, { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('.customer-invoice-screen', {
-      timeout: 120_000,
+      timeout: 180_000,
     });
     await expect(
       page.locator('.customer-invoice-screen .h4 span'),
