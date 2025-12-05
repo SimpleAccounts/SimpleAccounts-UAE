@@ -111,9 +111,11 @@
     "@playwright/test": "^1.57.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^14.0.0",
+    "msw": "^2.12.4",
     "mutationobserver-shim": "^0.3.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "web-streams-polyfill": "^4.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -143,7 +145,7 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/__mocks__/fileMock.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!react-password-checklist|lodash-es)"
+      "node_modules/(?!react-password-checklist|lodash-es|until-async)"
     ]
   },
   "browserslist": {
