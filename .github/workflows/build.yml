@@ -43,7 +43,7 @@ jobs:
       if: always()
 
     - name: Upload Backend Test Results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: backend-test-results
@@ -94,7 +94,7 @@ jobs:
         NODE_OPTIONS: --openssl-legacy-provider
 
     - name: Upload Frontend Coverage
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: frontend-coverage
@@ -144,7 +144,7 @@ jobs:
         NODE_OPTIONS: --openssl-legacy-provider
 
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: frontend-build
         path: apps/frontend/build
@@ -173,7 +173,7 @@ jobs:
       run: mvn clean package -DskipTests
 
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: backend-build
         path: apps/backend/target/*.war
@@ -213,7 +213,7 @@ jobs:
         PLAYWRIGHT_BROWSERS_PATH: 0
 
     - name: Upload E2E Results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: e2e-results
