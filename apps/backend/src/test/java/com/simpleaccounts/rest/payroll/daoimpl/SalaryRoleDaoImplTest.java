@@ -6,35 +6,21 @@ import com.simpleaccounts.entity.SalaryRole;
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
+import com.simpleaccounts.rest.payroll.PayrollJpaTest;
 import com.simpleaccounts.rest.payroll.SalaryRoleDao;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestPropertySource;
 
-@DataJpaTest
+@PayrollJpaTest
 @Import(SalaryRoleDaoImpl.class)
-@TestPropertySource(properties = {
-        "spring.datasource.url=jdbc:h2:mem:salaryroletest;MODE=PostgreSQL;DB_CLOSE_DELAY=-1",
-        "spring.datasource.driverClassName=org.h2.Driver",
-        "spring.datasource.username=sa",
-        "spring.datasource.password=",
-        "spring.jpa.hibernate.ddl-auto=create-drop",
-        "spring.liquibase.enabled=false"
-})
 class SalaryRoleDaoImplTest {
 
     @Autowired
     private SalaryRoleDao salaryRoleDao;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Test
     void getSalaryRolesForDropdownShouldReturnOrderedLabels() {
@@ -83,10 +69,7 @@ class SalaryRoleDaoImplTest {
         role.setCreatedBy(99);
         role.setCreatedDate(LocalDateTime.now());
         role.setLastUpdateDate(LocalDateTime.now());
-        entityManager.persist(role);
-        entityManager.flush();
-        entityManager.refresh(role);
-        return role;
+        return salaryRoleDao.persist(role);
     }
 }
 
