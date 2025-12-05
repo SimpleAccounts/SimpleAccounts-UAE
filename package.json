@@ -1,10 +1,32 @@
 {
   "name": "simpleaccounts-uae",
   "version": "1.0.0",
-  "private": true,
-  "description": "SimpleAccounts UAE Monorepo",
-  "dependencies": {
-    "sass": "1.32.0"
+  "description": "Open-source accounting software for UAE businesses with VAT compliance, invoicing, payroll, and financial reporting",
+  "homepage": "https://github.com/SimpleAccounts/SimpleAccounts-UAE#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SimpleAccounts/SimpleAccounts-UAE.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SimpleAccounts/SimpleAccounts-UAE/issues"
+  },
+  "license": "MIT",
+  "author": "SimpleAccounts <support@simpleaccounts.com>",
+  "keywords": [
+    "accounting",
+    "invoicing",
+    "vat",
+    "uae",
+    "finance",
+    "business",
+    "payroll",
+    "erp",
+    "spring-boot",
+    "react"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   },
   "workspaces": [
     "apps/agents/*",
@@ -18,11 +40,7 @@
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present"
   },
-  "keywords": [
-    "simpleaccounts",
-    "uae",
-    "accounting"
-  ],
-  "author": "",
-  "license": "UNLICENSED"
+  "dependencies": {
+    "sass": "1.32.0"
+  }
 }

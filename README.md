@@ -26,6 +26,14 @@ SimpleAccounts-UAE/
 └── README.md
 ```
 
+## Prerequisites
+
+- **Node.js** >= 18.x
+- **npm** >= 9.x
+- **Java** 11 (OpenJDK or Oracle JDK)
+- **Maven** 3.6+ (or use included mvnw wrapper)
+- **MySQL** 8.0+ or **MariaDB** 10.5+
+
 ## Quick Start
 
 ```bash
@@ -45,44 +53,15 @@ npm run backend:build
 
 ## Key Features
 
-- Customer Invoices __*Free__
-  - Income Receipts
-  - Quotation
-- Expense __*Free__
-  - Expenses
-  - Supplier Invoices
-  - Purchase Receipts
-- Banking __*Free__
-  - Bank Account
-- Accountant __*Free__
-  - Opening Balance
-  - Journals
-- Reports __*Free__
-  - Financial Reports
-    - Profit & Loss
-    - Balance Sheet
-    - Horizontal Balance Sheet
-    - Trial Balances
-  - VAT Reports
-    - VAT Reports
-  - Detailed
-    - Detailed General Ledger
-  - Expense
-    - Expense Details
-    - Expense By Category
-  - Payrolls
-    - Payrolls Summary
-- Master __*Free__
-  - Chart Of Accounts
-  - Contact
-  - Product
-  - Product Category
-  - VAT Category
-  - Currency Rate
-  - Employee
-- Payroll __*Free__
-  - Payroll Run
-  - Payroll Config
+| Module | Features |
+|--------|----------|
+| **Customer Invoices** | Income Receipts, Quotations |
+| **Expenses** | Expenses, Supplier Invoices, Purchase Receipts |
+| **Banking** | Bank Accounts, Reconciliation |
+| **Accountant** | Opening Balance, Journals |
+| **Reports** | Profit & Loss, Balance Sheet, Trial Balance, VAT Reports, General Ledger |
+| **Master Data** | Chart of Accounts, Contacts, Products, VAT Categories, Currency Rates |
+| **Payroll** | Payroll Run, Payroll Configuration, Employee Management |
 
 ### Support
 
@@ -103,11 +82,11 @@ npm run backend:build
 
 SimpleAccounts can be installed using the following methods:
 
-1. [Docker](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/main/deploy/docker/README.md): Install SimpleAccounts as a Docker container.
+1. [Docker](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/develop/deploy/docker/README.md): Install SimpleAccounts as a Docker container.
 2. Kubernetes: Deploy SimpleAccounts on a Kubernetes cluster. (Coming Soon...)
-3. [Linux OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/main/deploy/linux-os/README.md): Install SimpleAccounts on a Linux operating system.
-4. [Mac OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/main/deploy/mac-os/README.md): Install SimpleAccounts on a macOS.
-5. [Windows OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/tree/main/deploy/windows-os/README.md): Install SimpleAccounts on a Windows operating system.
+3. [Linux OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/develop/deploy/linux-os/README.md): Install SimpleAccounts on a Linux operating system.
+4. [Mac OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/develop/deploy/mac-os/README.md): Install SimpleAccounts on a macOS.
+5. [Windows OS](https://github.com/SimpleAccounts/SimpleAccounts-UAE/blob/develop/deploy/windows-os/README.md): Install SimpleAccounts on a Windows operating system.
 6. Microsoft Azure Cloud: Deploy SimpleAccounts on Microsoft Azure Cloud. (Coming Soon...)
 7. AWS Cloud: Deploy SimpleAccounts on Amazon Web Services (AWS) Cloud. (Coming Soon...)
 8. Google Cloud: Deploy SimpleAccounts on Google Cloud. (Coming Soon...)
@@ -117,6 +96,20 @@ SimpleAccounts can be installed using the following methods:
 
 If you have any questions or need assistance with SimpleAccounts, please reach out to our support team at [support@simpleaccounts.com](mailto:support@simpleaccounts.com).
 
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on how to get started.
+
+Before contributing, please read our [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Security
+
+If you discover a security vulnerability, please review our [Security Policy](SECURITY.md) for responsible disclosure guidelines.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 ---
 
-*Note: SimpleAccounts is a product of DataInn. For more information, visit our [website](https://www.datainn.io).*
+*SimpleAccounts is a product of DataInn. For more information, visit our [website](https://www.datainn.io).*
