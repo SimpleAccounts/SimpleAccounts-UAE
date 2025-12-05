@@ -412,7 +412,71 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- Pitest Mutation Testing Plugin -->
+			<plugin>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>1.15.3</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-junit5-plugin</artifactId>
+						<version>1.2.1</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<targetClasses>
+						<param>com.simpleaccounts.service.*</param>
+						<param>com.simpleaccounts.rest.*</param>
+					</targetClasses>
+					<targetTests>
+						<param>com.simpleaccounts.*Test</param>
+						<param>com.simpleaccounts.*Tests</param>
+					</targetTests>
+					<mutators>
+						<mutator>CONDITIONALS_BOUNDARY</mutator>
+						<mutator>INCREMENTS</mutator>
+						<mutator>MATH</mutator>
+						<mutator>NEGATE_CONDITIONALS</mutator>
+						<mutator>RETURN_VALS</mutator>
+						<mutator>VOID_METHOD_CALLS</mutator>
+					</mutators>
+					<outputFormats>
+						<param>XML</param>
+						<param>HTML</param>
+					</outputFormats>
+					<timestampedReports>false</timestampedReports>
+					<mutationThreshold>50</mutationThreshold>
+					<coverageThreshold>60</coverageThreshold>
+					<threads>4</threads>
+					<timeoutConstant>5000</timeoutConstant>
+					<failWhenNoMutations>false</failWhenNoMutations>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>mutation-testing</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-maven</artifactId>
+						<executions>
+							<execution>
+								<id>pitest</id>
+								<phase>test</phase>
+								<goals>
+									<goal>mutationCoverage</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
