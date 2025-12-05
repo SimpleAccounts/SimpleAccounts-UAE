@@ -1,5 +1,11 @@
 # SimpleAccounts UAE
 
+[![CI](https://github.com/SimpleAccounts/SimpleAccounts-UAE/actions/workflows/build.yml/badge.svg)](https://github.com/SimpleAccounts/SimpleAccounts-UAE/actions/workflows/build.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub issues](https://img.shields.io/github/issues/SimpleAccounts/SimpleAccounts-UAE)](https://github.com/SimpleAccounts/SimpleAccounts-UAE/issues)
+[![GitHub stars](https://img.shields.io/github/stars/SimpleAccounts/SimpleAccounts-UAE)](https://github.com/SimpleAccounts/SimpleAccounts-UAE/stargazers)
+[![GitHub Discussions](https://img.shields.io/github/discussions/SimpleAccounts/SimpleAccounts-UAE)](https://github.com/SimpleAccounts/SimpleAccounts-UAE/discussions)
+
 SimpleAccounts is an innovative accounting software that provides a comprehensive solution for businesses of all sizes. With its user-friendly interface and powerful features, it streamlines financial management and enables businesses to make informed decisions.
 
 ## Monorepo Structure
