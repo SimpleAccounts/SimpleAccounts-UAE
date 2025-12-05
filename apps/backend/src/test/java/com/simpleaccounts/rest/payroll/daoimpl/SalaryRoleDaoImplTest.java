@@ -10,18 +10,15 @@ import com.simpleaccounts.rest.payroll.SalaryRoleDao;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@EntityScan(basePackageClasses = SalaryRole.class)
 @DataJpaTest
 @Import(SalaryRoleDaoImpl.class)
 @TestPropertySource(properties = {
@@ -29,16 +26,16 @@ import org.springframework.test.context.TestPropertySource;
         "spring.datasource.driverClassName=org.h2.Driver",
         "spring.datasource.username=sa",
         "spring.datasource.password=",
-        "spring.jpa.hibernate.ddl-auto=create-drop",
-        "spring.liquibase.enabled=false"
+        "spring.jpa.hibernate.ddl-auto=none",
+        "spring.jpa.properties.hibernate.hbm2ddl.auto=none",
+        "spring.liquibase.enabled=false",
+        "spring.datasource.initialization-mode=always",
+        "spring.datasource.schema=classpath:/schema-payroll.sql"
 })
 class SalaryRoleDaoImplTest {
 
     @Autowired
     private SalaryRoleDao salaryRoleDao;
-
-    @Autowired
-    private EntityManager entityManager;
 
     @Test
     void getSalaryRolesForDropdownShouldReturnOrderedLabels() {
@@ -87,10 +84,7 @@ class SalaryRoleDaoImplTest {
         role.setCreatedBy(99);
         role.setCreatedDate(LocalDateTime.now());
         role.setLastUpdateDate(LocalDateTime.now());
-        entityManager.persist(role);
-        entityManager.flush();
-        entityManager.refresh(role);
-        return role;
+        return salaryRoleDao.persist(role);
     }
 }
 
