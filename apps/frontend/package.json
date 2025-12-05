@@ -137,8 +137,18 @@
       "src/**/*.{js,jsx}",
       "!**/*index.js",
       "!src/serviceWorker.js",
-      "!src/polyfill.js"
+      "!src/polyfill.js",
+      "!src/__mocks__/**",
+      "!src/test/**"
     ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 50,
+        "branches": 40,
+        "functions": 50,
+        "lines": 50
+      }
+    },
     "moduleNameMapper": {
       "^lodash-es$": "lodash",
       "\\.(css|less|scss|sass)$": "<rootDir>/src/__mocks__/styleMock.js",
