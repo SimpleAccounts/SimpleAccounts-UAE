@@ -11,13 +11,17 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.TestPropertySource;
 
+@ExtendWith(SpringExtension.class)
+@EntityScan(basePackageClasses = SalaryRole.class)
 @DataJpaTest
 @Import(SalaryRoleDaoImpl.class)
 @TestPropertySource(properties = {
@@ -33,7 +37,7 @@ class SalaryRoleDaoImplTest {
     @Autowired
     private SalaryRoleDao salaryRoleDao;
 
-    @PersistenceContext
+    @Autowired
     private EntityManager entityManager;
 
     @Test
