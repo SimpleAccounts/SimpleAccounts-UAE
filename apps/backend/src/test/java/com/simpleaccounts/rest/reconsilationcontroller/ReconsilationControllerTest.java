@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -147,6 +148,121 @@ class ReconsilationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(2))
                 .andExpect(jsonPath("$.message", Matchers.containsString("Closing Balance")));
+    }
+
+    @Test
+    void reconcileNowShouldReturnUnexplainedTransactionsMessage() throws Exception {
+        LocalDateTime reconcileDate = LocalDateTime.of(2024, 12, 1, 0, 0);
+        LocalDateTime startDate = reconcileDate.minusDays(5);
+
+        when(reconsilationRestHelper.getDateFromRequest(any())).thenReturn(reconcileDate);
+        when(reconsilationRestHelper.getReconcileStatus(any())).thenReturn(null);
+        when(transactionService.getTransactionStartDateToReconcile(any(), any())).thenReturn(startDate);
+        when(transactionService.isTransactionsReadyForReconcile(any(), any(), any())).thenReturn(5);
+
+        mockMvc.perform(post("/rest/reconsile/reconcilenow")
+                        .param("bankId", "9")
+                        .param("closingBalance", "150.00")
+                        .param("date", "2024-12-01"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(4))
+                .andExpect(jsonPath("$.message", Matchers.containsString("unexplained transactions")));
+    }
+
+    @Test
+    void reconcileNowShouldReturnAlreadyReconciledMessage() throws Exception {
+        LocalDateTime reconcileDate = LocalDateTime.of(2024, 12, 1, 0, 0);
+        ReconcileStatus existingStatus = new ReconcileStatus();
+        existingStatus.setReconciledDate(reconcileDate);
+
+        when(reconsilationRestHelper.getDateFromRequest(any())).thenReturn(reconcileDate);
+        when(reconsilationRestHelper.getReconcileStatus(any())).thenReturn(existingStatus);
+        when(transactionService.isTransactionsReadyForReconcile(any(), any(), any())).thenReturn(-1);
+
+        mockMvc.perform(post("/rest/reconsile/reconcilenow")
+                        .param("bankId", "9")
+                        .param("closingBalance", "150.00")
+                        .param("date", "2024-12-01"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(3))
+                .andExpect(jsonPath("$.message", Matchers.containsString("already reconciled")));
+    }
+
+    @Test
+    void reconcileNowShouldReturnSuccessWhenBalancesMatch() throws Exception {
+        LocalDateTime reconcileDate = LocalDateTime.of(2024, 12, 1, 0, 0);
+        LocalDateTime startDate = reconcileDate.minusDays(5);
+        TransactionCategory category = new TransactionCategory();
+        BankAccount bankAccount = new BankAccount();
+        bankAccount.setTransactionCategory(category);
+
+        when(reconsilationRestHelper.getDateFromRequest(any())).thenReturn(reconcileDate);
+        when(reconsilationRestHelper.getReconcileStatus(any())).thenReturn(null);
+        when(transactionService.getTransactionStartDateToReconcile(any(), any())).thenReturn(startDate);
+        when(transactionService.isTransactionsReadyForReconcile(any(), any(), any())).thenReturn(0);
+        when(bankAccountService.getBankAccountById(9)).thenReturn(bankAccount);
+        when(bankAccountService.findByPK(9)).thenReturn(bankAccount);
+        when(transactionCategoryClosingBalanceService.matchClosingBalanceForReconcile(reconcileDate, category))
+                .thenReturn(new BigDecimal("150.00"));
+
+        mockMvc.perform(post("/rest/reconsile/reconcilenow")
+                        .param("bankId", "9")
+                        .param("closingBalance", "150.00")
+                        .param("date", "2024-12-01"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(1))
+                .andExpect(jsonPath("$.message", Matchers.containsString("Successfully")));
+
+        verify(reconcileStatusService).persist(any(ReconcileStatus.class));
+    }
+
+    @Test
+    void reconcileNowShouldReturnNullStartDateMessage() throws Exception {
+        LocalDateTime reconcileDate = LocalDateTime.of(2024, 12, 1, 0, 0);
+
+        when(reconsilationRestHelper.getDateFromRequest(any())).thenReturn(reconcileDate);
+        when(reconsilationRestHelper.getReconcileStatus(any())).thenReturn(null);
+        when(transactionService.getTransactionStartDateToReconcile(any(), any())).thenReturn(null);
+
+        mockMvc.perform(post("/rest/reconsile/reconcilenow")
+                        .param("bankId", "9")
+                        .param("closingBalance", "150.00")
+                        .param("date", "2024-12-01"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(3))
+                .andExpect(jsonPath("$.message", Matchers.containsString("transaction date")));
+    }
+
+    @Test
+    void deletesShouldDeleteReconcileStatusRows() throws Exception {
+        mockMvc.perform(delete("/rest/reconsile/deletes")
+                        .contentType("application/json")
+                        .content("{\"ids\":[1,2,3]}"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(Matchers.containsString("Deleted")));
+
+        verify(reconcileStatusService).deleteByIds(any());
+    }
+
+    @Test
+    void listShouldReturnNotFoundWhenServiceReturnsNull() throws Exception {
+        BankAccount account = new BankAccount();
+        when(bankAccountService.findByPK(5)).thenReturn(account);
+        when(reconcileStatusService.getAllReconcileStatusList(any(), any())).thenReturn(null);
+
+        mockMvc.perform(get("/rest/reconsile/list").param("bankId", "5"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void listShouldHandleNoFilters() throws Exception {
+        PaginationResponseModel responseModel = new PaginationResponseModel(0, new HashMap<>());
+        when(reconcileStatusService.getAllReconcileStatusList(any(), any())).thenReturn(responseModel);
+        when(reconsilationRestHelper.getModelList(any())).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/rest/reconsile/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.count").value(0));
     }
 }
 
