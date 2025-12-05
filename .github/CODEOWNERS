@@ -1,0 +1,15 @@
+# Default owners for everything in the repo
+* @SimpleAccounts/maintainers
+
+# Frontend
+/apps/frontend/ @SimpleAccounts/frontend-team
+
+# Backend
+/apps/backend/ @SimpleAccounts/backend-team
+
+# DevOps / Deployment
+/deploy/ @SimpleAccounts/devops-team
+/.github/ @SimpleAccounts/devops-team
+
+# Documentation
+*.md @SimpleAccounts/maintainers
