@@ -6,32 +6,17 @@ import com.simpleaccounts.entity.SalaryRole;
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
+import com.simpleaccounts.rest.payroll.PayrollJpaTest;
 import com.simpleaccounts.rest.payroll.SalaryRoleDao;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
+@PayrollJpaTest
 @Import(SalaryRoleDaoImpl.class)
-@TestPropertySource(properties = {
-        "spring.datasource.url=jdbc:h2:mem:salaryroletest;MODE=PostgreSQL;DB_CLOSE_DELAY=-1",
-        "spring.datasource.driverClassName=org.h2.Driver",
-        "spring.datasource.username=sa",
-        "spring.datasource.password=",
-        "spring.jpa.hibernate.ddl-auto=none",
-        "spring.jpa.properties.hibernate.hbm2ddl.auto=none",
-        "spring.liquibase.enabled=false",
-        "spring.datasource.initialization-mode=always",
-        "spring.datasource.schema=classpath:/schema-payroll.sql"
-})
 class SalaryRoleDaoImplTest {
 
     @Autowired
