@@ -1,0 +1,221 @@
+# Flaky Test Tracker
+# Analyzes test results over time to detect and track flaky tests
+# Runs after nightly tests complete
+
+name: Flaky Test Tracker
+
+on:
+  workflow_run:
+    workflows: ["Nightly Tests"]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  analyze-flakiness:
+    name: Analyze Test Flakiness
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      actions: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Download Test Results
+      uses: dawidd6/action-download-artifact@v3
+      with:
+        workflow: nightly.yml
+        name: unit-test-results
+        path: test-results/
+      continue-on-error: true
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+
+    - name: Analyze Backend Test Results
+      id: analyze-backend
+      run: |
+        # Parse JUnit XML reports and detect potential flaky tests
+        if [ -d "test-results/apps/backend/target/surefire-reports" ]; then
+          echo "Analyzing backend test results..."
+
+          # Count failures per test
+          failed_tests=$(grep -l '<failure' test-results/apps/backend/target/surefire-reports/*.xml 2>/dev/null | wc -l || echo "0")
+          error_tests=$(grep -l '<error' test-results/apps/backend/target/surefire-reports/*.xml 2>/dev/null | wc -l || echo "0")
+
+          echo "failed_tests=$failed_tests" >> $GITHUB_OUTPUT
+          echo "error_tests=$error_tests" >> $GITHUB_OUTPUT
+
+          # Extract test names that failed
+          if [ "$failed_tests" -gt 0 ] || [ "$error_tests" -gt 0 ]; then
+            echo "## Failed Tests" >> flaky-report.md
+            grep -h '<testcase' test-results/apps/backend/target/surefire-reports/*.xml 2>/dev/null | \
+              grep -B1 '<failure\|<error' | \
+              grep 'testcase' | \
+              sed 's/.*name="\([^"]*\)".*/- \1/' >> flaky-report.md || true
+          fi
+        else
+          echo "No backend test results found"
+          echo "failed_tests=0" >> $GITHUB_OUTPUT
+          echo "error_tests=0" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Load Historical Flaky Data
+      id: load-history
+      run: |
+        # Load existing flaky test registry
+        if [ -f "apps/backend/src/test/resources/flaky-tests.json" ]; then
+          cp apps/backend/src/test/resources/flaky-tests.json flaky-registry.json
+        else
+          echo '{"quarantined":[],"observation":[],"resolved":[]}' > flaky-registry.json
+        fi
+
+    - name: Update Flaky Test Registry
+      run: |
+        cat > update-registry.js << 'EOF'
+        const fs = require('fs');
+
+        // Load current registry
+        let registry = JSON.parse(fs.readFileSync('flaky-registry.json', 'utf8'));
+
+        // Get current date
+        const today = new Date().toISOString().split('T')[0];
+
+        // Update last run date
+        registry.lastUpdated = today;
+
+        // Initialize history if not exists
+        if (!registry.history) {
+          registry.history = [];
+        }
+
+        // Add today's run to history
+        const failedCount = parseInt(process.env.FAILED_TESTS || '0');
+        const errorCount = parseInt(process.env.ERROR_TESTS || '0');
+
+        registry.history.push({
+          date: today,
+          failedTests: failedCount,
+          errorTests: errorCount,
+          totalIssues: failedCount + errorCount
+        });
+
+        // Keep only last 30 days of history
+        if (registry.history.length > 30) {
+          registry.history = registry.history.slice(-30);
+        }
+
+        // Calculate flaky rate
+        const recentRuns = registry.history.slice(-7);
+        const runsWithIssues = recentRuns.filter(r => r.totalIssues > 0).length;
+        const flakyRate = recentRuns.length > 0 ? runsWithIssues / recentRuns.length : 0;
+
+        registry.metrics = {
+          lastWeekFlakyRate: (flakyRate * 100).toFixed(2) + '%',
+          totalRunsTracked: registry.history.length,
+          runsWithFailures: registry.history.filter(r => r.totalIssues > 0).length
+        };
+
+        // Save updated registry
+        fs.writeFileSync('flaky-registry-updated.json', JSON.stringify(registry, null, 2));
+
+        // Generate summary
+        console.log('=== Flaky Test Analysis ===');
+        console.log('Last 7 days flaky rate:', registry.metrics.lastWeekFlakyRate);
+        console.log('Total runs tracked:', registry.metrics.totalRunsTracked);
+        console.log('Runs with failures:', registry.metrics.runsWithFailures);
+
+        // Check if flaky rate exceeds threshold
+        if (flakyRate > 0.01) {
+          console.log('WARNING: Flaky rate exceeds 1% threshold!');
+          process.exit(1);
+        }
+        EOF
+
+        node update-registry.js
+      env:
+        FAILED_TESTS: ${{ steps.analyze-backend.outputs.failed_tests }}
+        ERROR_TESTS: ${{ steps.analyze-backend.outputs.error_tests }}
+      continue-on-error: true
+
+    - name: Generate Flaky Test Report
+      run: |
+        echo "# Flaky Test Report - $(date +'%Y-%m-%d')" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        if [ -f "flaky-registry-updated.json" ]; then
+          echo "## Metrics" >> $GITHUB_STEP_SUMMARY
+          cat flaky-registry-updated.json | jq -r '.metrics | to_entries | .[] | "- **\(.key)**: \(.value)"' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          quarantined=$(cat flaky-registry-updated.json | jq '.quarantined | length')
+          observation=$(cat flaky-registry-updated.json | jq '.observation | length')
+
+          echo "## Test Status" >> $GITHUB_STEP_SUMMARY
+          echo "- Quarantined tests: $quarantined" >> $GITHUB_STEP_SUMMARY
+          echo "- Tests under observation: $observation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        if [ -f "flaky-report.md" ]; then
+          echo "## Recent Failures" >> $GITHUB_STEP_SUMMARY
+          cat flaky-report.md >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - name: Create Issue for High Flaky Rate
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const title = `[Flaky Tests] High flakiness detected - ${new Date().toISOString().split('T')[0]}`;
+          const body = `
+          ## Flaky Test Alert
+
+          The flaky test rate has exceeded the 1% threshold over the last 7 days.
+
+          ### Action Required
+          1. Review the test results in the workflow artifacts
+          2. Identify the flaky tests
+          3. Either fix the tests or add them to quarantine
+          4. Update \`apps/backend/src/test/resources/flaky-tests.json\`
+
+          ### Links
+          - [Workflow Run](${context.payload.workflow_run?.html_url || 'N/A'})
+          - [Nightly Test Results](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/workflows/nightly.yml)
+
+          ### Policy Reminder
+          - Max allowed flaky rate: 1%
+          - Quarantined tests must be fixed within 2 sprints
+          - Tests removed from quarantine after 10 consecutive successful runs
+          `;
+
+          // Check if similar issue exists
+          const issues = await github.rest.issues.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: 'flaky-tests',
+            state: 'open'
+          });
+
+          if (issues.data.length === 0) {
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['flaky-tests', 'testing', 'priority:high']
+            });
+          }
+      continue-on-error: true
+
+    - name: Upload Flaky Test Registry
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: flaky-test-registry
+        path: flaky-registry-updated.json
+        retention-days: 90

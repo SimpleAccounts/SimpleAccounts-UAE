@@ -1,0 +1,404 @@
+# SimpleAccounts UAE - Nightly Pipeline
+# Comprehensive testing: E2E, Performance, Security, Contract, Mutation
+# Runs every night at 2 AM UTC and can be triggered manually
+
+name: Nightly Tests
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Every day at 2 AM UTC
+  workflow_dispatch:
+    inputs:
+      skip_perf:
+        description: 'Skip performance tests'
+        type: boolean
+        default: false
+      skip_security:
+        description: 'Skip security scans'
+        type: boolean
+        default: false
+
+env:
+  NODE_OPTIONS: --openssl-legacy-provider
+  SPRING_PROFILES_ACTIVE: test
+  JAVA_VERSION: '11'
+  NODE_VERSION: '18.x'
+
+jobs:
+  # Stage 1: Unit Tests (quick validation)
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      backend_passed: ${{ steps.backend.outcome == 'success' }}
+      frontend_passed: ${{ steps.frontend.outcome == 'success' }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.m2/repository
+          node_modules
+          apps/frontend/node_modules
+        key: ${{ runner.os }}-deps-${{ hashFiles('**/pom.xml', '**/package-lock.json') }}
+
+    - name: Install dependencies
+      run: |
+        npm ci --legacy-peer-deps
+        cd apps/frontend && npm install --legacy-peer-deps
+
+    - name: Run Backend Tests
+      id: backend
+      working-directory: apps/backend
+      run: mvn clean test -Dspring.profiles.active=test
+      continue-on-error: true
+
+    - name: Run Frontend Tests
+      id: frontend
+      working-directory: apps/frontend
+      run: npm run test:cov
+      env:
+        CI: true
+      continue-on-error: true
+
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: unit-test-results
+        path: |
+          apps/backend/target/surefire-reports/
+          apps/backend/target/site/jacoco/
+          apps/frontend/coverage/
+        retention-days: 30
+
+  # Stage 2: E2E Tests (Full Suite)
+  e2e-tests:
+    name: E2E Tests (Full Suite)
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        npm ci --legacy-peer-deps
+        cd apps/frontend && npm install --legacy-peer-deps
+
+    - name: Install Playwright Browsers
+      working-directory: apps/frontend
+      run: npx playwright install --with-deps ${{ matrix.browser }}
+
+    - name: Run E2E Tests - ${{ matrix.browser }}
+      working-directory: apps/frontend
+      run: npx playwright test --project=${{ matrix.browser }}
+      env:
+        PLAYWRIGHT_BROWSERS_PATH: 0
+
+    - name: Upload E2E Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: e2e-results-${{ matrix.browser }}
+        path: |
+          apps/frontend/test-results/
+          apps/frontend/playwright-report/
+        retention-days: 30
+
+  # Stage 3: Visual Regression Tests
+  visual-regression:
+    name: Visual Regression
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        npm ci --legacy-peer-deps
+        cd apps/frontend && npm install --legacy-peer-deps
+
+    - name: Install Playwright
+      working-directory: apps/frontend
+      run: npx playwright install --with-deps chromium
+
+    - name: Run Visual Regression Tests
+      working-directory: apps/frontend
+      run: npx playwright test visual-regression.spec.ts --project=chromium
+      continue-on-error: true
+      env:
+        PLAYWRIGHT_BROWSERS_PATH: 0
+
+    - name: Upload Visual Diff Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: visual-regression-results
+        path: |
+          apps/frontend/test-results/
+          apps/frontend/playwright-report/
+        retention-days: 30
+
+  # Stage 4: Contract Tests
+  contract-tests:
+    name: Contract Tests
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Run Contract Tests
+      working-directory: apps/backend
+      run: mvn test -Pcontract -Dspring.profiles.active=test
+
+    - name: Upload Contract Test Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: contract-test-results
+        path: apps/backend/target/surefire-reports/
+        retention-days: 30
+
+  # Stage 5: Mutation Testing
+  mutation-testing:
+    name: Mutation Testing
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 60
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Run Mutation Tests (Pitest)
+      working-directory: apps/backend
+      run: mvn test org.pitest:pitest-maven:mutationCoverage -Dspring.profiles.active=test
+      continue-on-error: true
+
+    - name: Upload Mutation Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: mutation-report
+        path: apps/backend/target/pit-reports/
+        retention-days: 30
+
+  # Stage 6: Performance Tests
+  performance-tests:
+    name: Performance Tests (k6)
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    if: ${{ !inputs.skip_perf }}
+    permissions:
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install k6
+      run: |
+        sudo gpg -k
+        sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+        echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+        sudo apt-get update
+        sudo apt-get install k6
+
+    - name: Run k6 Performance Tests (Dry Run)
+      working-directory: apps/backend/src/perf/k6
+      run: |
+        # Dry run with minimal load for CI validation
+        k6 run --vus 1 --duration 10s --no-connection-reuse load-test.js || true
+      env:
+        BASE_URL: http://localhost:8080
+
+    - name: Upload Performance Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: performance-results
+        path: apps/backend/src/perf/k6/summary.json
+        retention-days: 30
+
+  # Stage 7: Security Scans
+  security-scan:
+    name: Security Scan (OWASP)
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    if: ${{ !inputs.skip_security }}
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Run OWASP Dependency Check
+      working-directory: apps/backend
+      run: mvn verify -Psecurity -DskipTests
+      continue-on-error: true
+
+    - name: Upload Security Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: security-reports
+        path: apps/backend/target/security-reports/
+        retention-days: 30
+
+    - name: Upload SARIF to GitHub Security
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: apps/backend/target/security-reports/dependency-check-report.sarif
+      continue-on-error: true
+
+  # Stage 8: Accessibility Tests
+  accessibility-tests:
+    name: Accessibility Tests
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        npm ci --legacy-peer-deps
+        cd apps/frontend && npm install --legacy-peer-deps
+
+    - name: Install Playwright
+      working-directory: apps/frontend
+      run: npx playwright install --with-deps chromium
+
+    - name: Run Accessibility Tests
+      working-directory: apps/frontend
+      run: npx playwright test accessibility.spec.ts --project=chromium
+      continue-on-error: true
+      env:
+        PLAYWRIGHT_BROWSERS_PATH: 0
+
+    - name: Upload Accessibility Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: accessibility-results
+        path: apps/frontend/test-results/
+        retention-days: 30
+
+  # Final Stage: Summary Report
+  summary:
+    name: Nightly Summary
+    needs: [unit-tests, e2e-tests, visual-regression, contract-tests, mutation-testing, performance-tests, security-scan, accessibility-tests]
+    runs-on: ubuntu-latest
+    if: always()
+    permissions:
+      contents: read
+
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts/
+
+    - name: Generate Summary
+      run: |
+        echo "# Nightly Test Summary - $(date +'%Y-%m-%d')" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Stage | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Unit Tests | ${{ needs.unit-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| E2E Tests | ${{ needs.e2e-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Visual Regression | ${{ needs.visual-regression.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Contract Tests | ${{ needs.contract-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Mutation Testing | ${{ needs.mutation-testing.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Performance Tests | ${{ needs.performance-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Security Scan | ${{ needs.security-scan.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Accessibility | ${{ needs.accessibility-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## Artifacts" >> $GITHUB_STEP_SUMMARY
+        echo "All test reports are available in the workflow artifacts." >> $GITHUB_STEP_SUMMARY
+
+    - name: Notify on Failure
+      if: failure()
+      run: |
+        echo "::warning::Nightly tests had failures. Check the summary above for details."

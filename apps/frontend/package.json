@@ -144,12 +144,13 @@
     ],
     "coverageThreshold": {
       "global": {
-        "statements": 50,
-        "branches": 40,
-        "functions": 50,
-        "lines": 50
+        "statements": 70,
+        "branches": 60,
+        "functions": 70,
+        "lines": 70
       }
     },
+    "coverageReporters": ["text", "lcov", "html", "json-summary"],
     "moduleNameMapper": {
       "^lodash-es$": "lodash",
       "\\.(css|less|scss|sass)$": "<rootDir>/src/__mocks__/styleMock.js",

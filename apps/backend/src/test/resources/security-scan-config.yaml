@@ -1,0 +1,195 @@
+# Security Scan Configuration for SimpleAccounts-UAE
+# 
+# This configuration file defines security scanning parameters for:
+# - OWASP Dependency Check
+# - OWASP ZAP API scanning
+# - Static Analysis Security Testing (SAST)
+
+---
+# Dependency Vulnerability Scanning
+dependency-check:
+  enabled: true
+  fail-build-on-cvss: 7  # Fail if CVSS score >= 7 (high severity)
+  suppress-file: security-suppressions.xml
+  formats:
+    - HTML
+    - JSON
+    - SARIF
+  scan-paths:
+    - pom.xml
+    - apps/frontend/package.json
+    - apps/frontend/package-lock.json
+  excluded-paths:
+    - "**/test/**"
+    - "**/node_modules/**"
+
+# OWASP ZAP Dynamic Application Security Testing
+zap-scan:
+  enabled: true
+  target-url: "${ZAP_TARGET_URL:-http://localhost:8080}"
+  api-spec: "docs/openapi.yaml"
+  
+  # Spider configuration
+  spider:
+    max-depth: 10
+    max-duration: 60  # minutes
+    
+  # Active scan configuration  
+  active-scan:
+    policy: "Default Policy"
+    max-duration: 120  # minutes
+    
+  # Scan rules
+  rules:
+    enabled:
+      - SQL_INJECTION
+      - XSS_REFLECTED
+      - XSS_PERSISTENT
+      - PATH_TRAVERSAL
+      - REMOTE_FILE_INCLUSION
+      - COMMAND_INJECTION
+      - LDAP_INJECTION
+      - XML_EXTERNAL_ENTITY
+      - CSRF
+      - IDOR  # Insecure Direct Object Reference
+      
+    # Rules to ignore (with justification)
+    disabled:
+      - 10015  # Incomplete or No Cache-control (acceptable for API)
+      
+  # Authentication for protected endpoints
+  authentication:
+    method: bearer-token
+    login-url: "/api/authenticate"
+    credentials:
+      username: "${ZAP_USERNAME:-testuser}"
+      password: "${ZAP_PASSWORD:-testpass}"
+      
+  # Alert thresholds
+  thresholds:
+    high: 0      # Fail build if any high severity
+    medium: 5    # Warn if more than 5 medium severity
+    low: 20      # Warn if more than 20 low severity
+    informational: -1  # No limit
+
+# Static Analysis Security Testing
+sast:
+  enabled: true
+  tools:
+    # SpotBugs with FindSecBugs
+    spotbugs:
+      enabled: true
+      include-filter: spotbugs-security-include.xml
+      effort: max
+      threshold: medium
+      plugins:
+        - com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0
+        
+    # PMD Security Rules
+    pmd:
+      enabled: true
+      rule-sets:
+        - category/java/security.xml
+        - category/java/errorprone.xml
+        
+    # ESLint Security Plugin (Frontend)
+    eslint-security:
+      enabled: true
+      plugins:
+        - eslint-plugin-security
+        - eslint-plugin-no-unsanitized
+
+# Secret Detection
+secret-detection:
+  enabled: true
+  patterns:
+    - name: AWS Access Key
+      regex: "AKIA[0-9A-Z]{16}"
+      severity: critical
+      
+    - name: Private Key
+      regex: "-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----"
+      severity: critical
+      
+    - name: JWT Token
+      regex: "eyJ[A-Za-z0-9-_=]+\\.eyJ[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_.+/=]*"
+      severity: high
+      
+    - name: Generic Password
+      regex: "(password|passwd|pwd|secret)\\s*[=:]\\s*['\"][^'\"]{8,}['\"]"
+      severity: high
+      case-insensitive: true
+      
+    - name: API Key
+      regex: "(api[_-]?key|apikey)\\s*[=:]\\s*['\"][A-Za-z0-9]{16,}['\"]"
+      severity: high
+      case-insensitive: true
+      
+  # Paths to exclude from secret scanning
+  exclude-paths:
+    - "**/test/**"
+    - "**/*.md"
+    - "**/package-lock.json"
+    - "**/yarn.lock"
+
+# Security Headers Check
+security-headers:
+  required:
+    - name: X-Content-Type-Options
+      value: nosniff
+      
+    - name: X-Frame-Options
+      value: DENY
+      
+    - name: X-XSS-Protection
+      value: "1; mode=block"
+      
+    - name: Strict-Transport-Security
+      min-max-age: 31536000  # 1 year
+      include-subdomains: true
+      
+    - name: Content-Security-Policy
+      required-directives:
+        - default-src
+        - script-src
+        - style-src
+        
+    - name: Referrer-Policy
+      allowed-values:
+        - no-referrer
+        - strict-origin-when-cross-origin
+
+# Report Configuration
+reporting:
+  output-directory: target/security-reports
+  formats:
+    - html
+    - json
+    - sarif  # For GitHub Security tab integration
+    
+  # Jira integration (optional)
+  jira:
+    enabled: false
+    project-key: SA
+    issue-type: Security Bug
+    
+  # Slack notification (optional)
+  slack:
+    enabled: false
+    webhook-url: "${SLACK_SECURITY_WEBHOOK}"
+    
+# CI/CD Integration
+ci:
+  # Fail the build on these conditions
+  fail-on:
+    high-severity: true
+    medium-severity-count: 10
+    unpatched-critical-cve: true
+    
+  # Allow these to pass with warnings
+  warn-on:
+    medium-severity: true
+    outdated-dependencies: true
+    
+  # Baseline file for suppressing known issues
+  baseline-file: security-baseline.json

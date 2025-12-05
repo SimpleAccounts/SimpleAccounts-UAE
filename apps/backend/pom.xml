@@ -391,6 +391,11 @@
 							<goal>check</goal>
 						</goals>
 						<configuration>
+							<!-- Phase 1 thresholds (Sprint 2-3) - see TESTCASE_DEVELOPMENT_PLAN.md Section 17 -->
+							<!-- Phase 0: 60% line, 50% branch -->
+							<!-- Phase 1: 70% line, 60% branch (current) -->
+							<!-- Phase 2: 80% line, 70% branch -->
+							<!-- Phase 3: 90% line, 90% branch (target) -->
 							<rules>
 								<rule>
 									<element>BUNDLE</element>
@@ -398,12 +403,12 @@
 										<limit>
 											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.60</minimum>
+											<minimum>0.70</minimum>
 										</limit>
 										<limit>
 											<counter>BRANCH</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.50</minimum>
+											<minimum>0.60</minimum>
 										</limit>
 									</limits>
 								</rule>
@@ -473,6 +478,96 @@
 								</goals>
 							</execution>
 						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Performance Testing Profile (Gatling) -->
+		<profile>
+			<id>perf</id>
+			<dependencies>
+				<dependency>
+					<groupId>io.gatling.highcharts</groupId>
+					<artifactId>gatling-charts-highcharts</artifactId>
+					<version>3.9.5</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>io.gatling</groupId>
+					<artifactId>gatling-app</artifactId>
+					<version>3.9.5</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.gatling</groupId>
+						<artifactId>gatling-maven-plugin</artifactId>
+						<version>4.3.7</version>
+						<configuration>
+							<simulationsFolder>src/perf/scala/simulations</simulationsFolder>
+							<resultsFolder>target/gatling</resultsFolder>
+							<runMultipleSimulations>false</runMultipleSimulations>
+						</configuration>
+						<executions>
+							<execution>
+								<id>gatling-test</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>test</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Security Scanning Profile -->
+		<profile>
+			<id>security</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.owasp</groupId>
+						<artifactId>dependency-check-maven</artifactId>
+						<version>8.4.3</version>
+						<configuration>
+							<failBuildOnCVSS>7</failBuildOnCVSS>
+							<formats>
+								<format>HTML</format>
+								<format>JSON</format>
+								<format>SARIF</format>
+							</formats>
+							<outputDirectory>target/security-reports</outputDirectory>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>check</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Contract Testing Profile -->
+		<profile>
+			<id>contract</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<includes>
+								<include>**/*ContractTest.java</include>
+							</includes>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>

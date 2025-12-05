@@ -1,0 +1,20 @@
+{
+  "$schema": "./flaky-tests-schema.json",
+  "description": "Flaky Test Registry for SimpleAccounts-UAE. Tests listed here are under observation or quarantine.",
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-05",
+  "policy": {
+    "maxFlakyRate": 0.01,
+    "observationPeriodDays": 7,
+    "autoQuarantineThreshold": 3,
+    "autoRemoveAfterSuccessfulRuns": 10
+  },
+  "quarantined": [],
+  "observation": [],
+  "resolved": [],
+  "notes": {
+    "quarantined": "Tests in quarantine are skipped in CI but must be fixed within 2 sprints",
+    "observation": "Tests under observation are tracked for flakiness patterns",
+    "resolved": "Previously flaky tests that have been fixed and stabilized"
+  }
+}

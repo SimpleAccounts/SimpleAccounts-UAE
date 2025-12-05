@@ -1,320 +1,310 @@
 package com.simpleaccounts.audit;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.within;
+
 /**
- * Tests for audit trail functionality.
- * Every financial transaction must be logged immutably.
+ * Tests for Audit Trail functionality.
+ * 
+ * Every financial transaction must be logged immutably with:
+ * - User attribution
+ * - Timestamp
+ * - Action type
+ * - Before/after values
  */
+@DisplayName("Audit Trail Tests")
 class AuditTrailTest {
 
-    private AuditLogService auditLogService;
+    private AuditService auditService;
+    private InMemoryAuditRepository auditRepository;
 
     @BeforeEach
     void setUp() {
-        auditLogService = new AuditLogService();
+        auditRepository = new InMemoryAuditRepository();
+        auditService = new AuditService(auditRepository);
     }
 
     @Nested
-    @DisplayName("Invoice Audit Log Tests")
-    class InvoiceAuditLogTests {
+    @DisplayName("Invoice Audit Tests")
+    class InvoiceAuditTests {
 
         @Test
         @DisplayName("Should log invoice creation with full context")
         void shouldLogInvoiceCreationWithFullContext() {
-            String invoiceId = "INV-2024-001";
-            String userId = "user123";
-            BigDecimal amount = new BigDecimal("5000.00");
+            String userId = "user-123";
+            String invoiceId = "INV-001";
+            Map<String, Object> newValues = new HashMap<>();
+            newValues.put("amount", new BigDecimal("1000.00"));
+            newValues.put("customer", "ABC Corp");
+            newValues.put("status", "DRAFT");
 
-            AuditLog log = auditLogService.logInvoiceCreation(invoiceId, userId, amount);
+            auditService.logCreate("INVOICE", invoiceId, userId, newValues);
 
-            assertThat(log).isNotNull();
-            assertThat(log.getEntityType()).isEqualTo("INVOICE");
-            assertThat(log.getEntityId()).isEqualTo(invoiceId);
-            assertThat(log.getAction()).isEqualTo("CREATE");
-            assertThat(log.getUserId()).isEqualTo(userId);
-            assertThat(log.getTimestamp()).isNotNull();
-            assertThat(log.getNewValue()).contains("5000.00");
-            assertThat(log.getOldValue()).isNull();
+            Optional<AuditLog> log = auditRepository.findByEntityIdAndAction(invoiceId, "CREATE");
+            assertThat(log).isPresent();
+            assertThat(log.get().getUserId()).isEqualTo(userId);
+            assertThat(log.get().getEntityType()).isEqualTo("INVOICE");
+            assertThat(log.get().getNewValues()).containsEntry("amount", new BigDecimal("1000.00"));
+            assertThat(log.get().getTimestamp()).isCloseTo(LocalDateTime.now(), within(1, java.time.temporal.ChronoUnit.SECONDS));
         }
 
         @Test
-        @DisplayName("Should log invoice update with before/after values")
-        void shouldLogInvoiceUpdateWithBeforeAfterValues() {
-            String invoiceId = "INV-2024-002";
-            String userId = "user456";
-            BigDecimal oldAmount = new BigDecimal("1000.00");
-            BigDecimal newAmount = new BigDecimal("1500.00");
+        @DisplayName("Should log invoice update with before and after values")
+        void shouldLogInvoiceUpdateWithBeforeAfter() {
+            String invoiceId = "INV-001";
+            Map<String, Object> oldValues = new HashMap<>();
+            oldValues.put("amount", new BigDecimal("1000.00"));
+            oldValues.put("status", "DRAFT");
 
-            AuditLog log = auditLogService.logInvoiceUpdate(invoiceId, userId,
-                "amount", oldAmount.toString(), newAmount.toString());
+            Map<String, Object> newValues = new HashMap<>();
+            newValues.put("amount", new BigDecimal("1200.00"));
+            newValues.put("status", "APPROVED");
 
-            assertThat(log.getAction()).isEqualTo("UPDATE");
-            assertThat(log.getFieldName()).isEqualTo("amount");
-            assertThat(log.getOldValue()).isEqualTo("1000.00");
-            assertThat(log.getNewValue()).isEqualTo("1500.00");
-        }
+            auditService.logUpdate("INVOICE", invoiceId, "user-123", oldValues, newValues);
 
-        @Test
-        @DisplayName("Should log invoice status change")
-        void shouldLogInvoiceStatusChange() {
-            String invoiceId = "INV-2024-003";
-            String userId = "approver1";
-
-            AuditLog log = auditLogService.logStatusChange(invoiceId, "INVOICE",
-                userId, "DRAFT", "APPROVED");
-
-            assertThat(log.getAction()).isEqualTo("STATUS_CHANGE");
-            assertThat(log.getOldValue()).isEqualTo("DRAFT");
-            assertThat(log.getNewValue()).isEqualTo("APPROVED");
+            Optional<AuditLog> log = auditRepository.findByEntityIdAndAction(invoiceId, "UPDATE");
+            assertThat(log).isPresent();
+            assertThat(log.get().getOldValues()).containsEntry("amount", new BigDecimal("1000.00"));
+            assertThat(log.get().getNewValues()).containsEntry("amount", new BigDecimal("1200.00"));
         }
 
         @Test
         @DisplayName("Should log invoice deletion")
         void shouldLogInvoiceDeletion() {
-            String invoiceId = "INV-2024-004";
-            String userId = "admin1";
-            String reason = "Duplicate entry";
+            String invoiceId = "INV-001";
+            Map<String, Object> deletedValues = new HashMap<>();
+            deletedValues.put("amount", new BigDecimal("1000.00"));
 
-            AuditLog log = auditLogService.logDeletion(invoiceId, "INVOICE", userId, reason);
+            auditService.logDelete("INVOICE", invoiceId, "user-123", deletedValues);
 
-            assertThat(log.getAction()).isEqualTo("DELETE");
-            assertThat(log.getMetadata()).contains("Duplicate entry");
+            Optional<AuditLog> log = auditRepository.findByEntityIdAndAction(invoiceId, "DELETE");
+            assertThat(log).isPresent();
+            assertThat(log.get().getOldValues()).containsEntry("amount", new BigDecimal("1000.00"));
+            assertThat(log.get().getNewValues()).isEmpty();
         }
     }
 
     @Nested
-    @DisplayName("Payment Audit Log Tests")
-    class PaymentAuditLogTests {
-
-        @Test
-        @DisplayName("Should log payment recording")
-        void shouldLogPaymentRecording() {
-            String paymentId = "PAY-2024-001";
-            String invoiceId = "INV-2024-001";
-            String userId = "accountant1";
-            BigDecimal amount = new BigDecimal("2500.00");
-
-            AuditLog log = auditLogService.logPayment(paymentId, invoiceId, userId, amount);
-
-            assertThat(log.getEntityType()).isEqualTo("PAYMENT");
-            assertThat(log.getAction()).isEqualTo("CREATE");
-            assertThat(log.getMetadata()).contains(invoiceId);
-            assertThat(log.getNewValue()).contains("2500.00");
-        }
-
-        @Test
-        @DisplayName("Should log payment reversal")
-        void shouldLogPaymentReversal() {
-            String paymentId = "PAY-2024-002";
-            String userId = "finance_manager";
-            String reason = "Bank returned payment";
-
-            AuditLog log = auditLogService.logPaymentReversal(paymentId, userId, reason);
-
-            assertThat(log.getAction()).isEqualTo("REVERSAL");
-            assertThat(log.getMetadata()).contains(reason);
-        }
-    }
-
-    @Nested
-    @DisplayName("Journal Entry Audit Log Tests")
-    class JournalEntryAuditLogTests {
-
-        @Test
-        @DisplayName("Should log journal entry creation")
-        void shouldLogJournalEntryCreation() {
-            String journalId = "JE-2024-001";
-            String userId = "accountant1";
-            BigDecimal debitTotal = new BigDecimal("10000.00");
-            BigDecimal creditTotal = new BigDecimal("10000.00");
-
-            AuditLog log = auditLogService.logJournalEntry(journalId, userId,
-                debitTotal, creditTotal);
-
-            assertThat(log.getEntityType()).isEqualTo("JOURNAL_ENTRY");
-            assertThat(log.getAction()).isEqualTo("CREATE");
-            assertThat(log.getMetadata()).contains("debit=10000.00");
-            assertThat(log.getMetadata()).contains("credit=10000.00");
-        }
-
-        @Test
-        @DisplayName("Should log journal entry posting")
-        void shouldLogJournalEntryPosting() {
-            String journalId = "JE-2024-002";
-            String userId = "accountant1";
-
-            AuditLog log = auditLogService.logStatusChange(journalId, "JOURNAL_ENTRY",
-                userId, "DRAFT", "POSTED");
-
-            assertThat(log.getAction()).isEqualTo("STATUS_CHANGE");
-            assertThat(log.getNewValue()).isEqualTo("POSTED");
-        }
-    }
-
-    @Nested
-    @DisplayName("Audit Log Immutability Tests")
+    @DisplayName("Immutability Tests")
     class ImmutabilityTests {
 
         @Test
-        @DisplayName("Audit log should be immutable after creation")
-        void auditLogShouldBeImmutableAfterCreation() {
-            AuditLog log = auditLogService.logInvoiceCreation("INV-001", "user1",
-                new BigDecimal("1000.00"));
+        @DisplayName("Should prevent modification of audit logs")
+        void shouldPreventAuditLogModification() {
+            auditService.logCreate("INVOICE", "INV-001", "user-123", new HashMap<>());
 
-            assertThatThrownBy(() -> log.setAction("MODIFIED"))
+            assertThatThrownBy(() -> auditRepository.updateLog("INV-001", "CREATE"))
                 .isInstanceOf(UnsupportedOperationException.class)
                 .hasMessageContaining("immutable");
-
-            assertThatThrownBy(() -> log.setNewValue("tampered"))
-                .isInstanceOf(UnsupportedOperationException.class);
         }
 
         @Test
-        @DisplayName("Audit logs cannot be deleted")
-        void auditLogsCannotBeDeleted() {
-            AuditLog log = auditLogService.logInvoiceCreation("INV-002", "user1",
-                new BigDecimal("500.00"));
+        @DisplayName("Should prevent deletion of audit logs")
+        void shouldPreventAuditLogDeletion() {
+            auditService.logCreate("INVOICE", "INV-001", "user-123", new HashMap<>());
 
-            assertThatThrownBy(() -> auditLogService.deleteLog(log.getId()))
+            assertThatThrownBy(() -> auditRepository.deleteLog("INV-001", "CREATE"))
                 .isInstanceOf(UnsupportedOperationException.class)
-                .hasMessageContaining("cannot be deleted");
+                .hasMessageContaining("immutable");
         }
-
-        @Test
-        @DisplayName("Audit logs cannot be modified")
-        void auditLogsCannotBeModified() {
-            AuditLog log = auditLogService.logInvoiceCreation("INV-003", "user1",
-                new BigDecimal("750.00"));
-
-            assertThatThrownBy(() -> auditLogService.updateLog(log.getId(), "newValue"))
-                .isInstanceOf(UnsupportedOperationException.class)
-                .hasMessageContaining("cannot be modified");
-        }
-    }
-
-    @Nested
-    @DisplayName("Audit Log Query Tests")
-    class QueryTests {
-
-        @BeforeEach
-        void createSampleLogs() {
-            auditLogService.logInvoiceCreation("INV-001", "user1", new BigDecimal("1000.00"));
-            auditLogService.logInvoiceCreation("INV-002", "user1", new BigDecimal("2000.00"));
-            auditLogService.logInvoiceCreation("INV-003", "user2", new BigDecimal("3000.00"));
-            auditLogService.logStatusChange("INV-001", "INVOICE", "approver1", "DRAFT", "APPROVED");
-        }
-
-        @Test
-        @DisplayName("Should find logs by entity ID")
-        void shouldFindLogsByEntityId() {
-            List<AuditLog> logs = auditLogService.findByEntityId("INV-001");
-
-            assertThat(logs).hasSize(2); // CREATE and STATUS_CHANGE
-        }
-
-        @Test
-        @DisplayName("Should find logs by user ID")
-        void shouldFindLogsByUserId() {
-            List<AuditLog> logs = auditLogService.findByUserId("user1");
-
-            assertThat(logs).hasSize(2); // Two invoices created by user1
-        }
-
-        @Test
-        @DisplayName("Should find logs by action type")
-        void shouldFindLogsByActionType() {
-            List<AuditLog> logs = auditLogService.findByAction("CREATE");
-
-            assertThat(logs).hasSize(3);
-        }
-
-        @Test
-        @DisplayName("Should find logs by entity type")
-        void shouldFindLogsByEntityType() {
-            List<AuditLog> logs = auditLogService.findByEntityType("INVOICE");
-
-            assertThat(logs).hasSize(4);
-        }
-
-        @Test
-        @DisplayName("Should find logs in date range")
-        void shouldFindLogsInDateRange() {
-            LocalDateTime start = LocalDateTime.now().minusHours(1);
-            LocalDateTime end = LocalDateTime.now().plusHours(1);
-
-            List<AuditLog> logs = auditLogService.findByDateRange(start, end);
-
-            assertThat(logs).isNotEmpty();
-        }
-    }
-
-    @Nested
-    @DisplayName("Audit Log Compliance Tests")
-    class ComplianceTests {
 
         @Test
         @DisplayName("Should generate unique audit log ID")
         void shouldGenerateUniqueAuditLogId() {
-            AuditLog log1 = auditLogService.logInvoiceCreation("INV-001", "user1",
-                new BigDecimal("100.00"));
-            AuditLog log2 = auditLogService.logInvoiceCreation("INV-002", "user1",
-                new BigDecimal("200.00"));
+            auditService.logCreate("INVOICE", "INV-001", "user-1", new HashMap<>());
+            auditService.logCreate("INVOICE", "INV-001", "user-2", new HashMap<>());
 
-            assertThat(log1.getId()).isNotEqualTo(log2.getId());
-        }
-
-        @Test
-        @DisplayName("Should record accurate timestamp")
-        void shouldRecordAccurateTimestamp() {
-            LocalDateTime before = LocalDateTime.now();
-
-            AuditLog log = auditLogService.logInvoiceCreation("INV-001", "user1",
-                new BigDecimal("500.00"));
-
-            LocalDateTime after = LocalDateTime.now();
-
-            assertThat(log.getTimestamp()).isAfterOrEqualTo(before);
-            assertThat(log.getTimestamp()).isBeforeOrEqualTo(after);
-        }
-
-        @Test
-        @DisplayName("Should capture IP address when available")
-        void shouldCaptureIpAddressWhenAvailable() {
-            auditLogService.setCurrentIpAddress("192.168.1.100");
-
-            AuditLog log = auditLogService.logInvoiceCreation("INV-001", "user1",
-                new BigDecimal("100.00"));
-
-            assertThat(log.getIpAddress()).isEqualTo("192.168.1.100");
-        }
-
-        @Test
-        @DisplayName("Should capture user agent when available")
-        void shouldCaptureUserAgentWhenAvailable() {
-            auditLogService.setCurrentUserAgent("Mozilla/5.0 Chrome/120.0");
-
-            AuditLog log = auditLogService.logInvoiceCreation("INV-001", "user1",
-                new BigDecimal("100.00"));
-
-            assertThat(log.getUserAgent()).contains("Chrome");
+            List<AuditLog> logs = auditRepository.findByEntityId("INV-001");
+            assertThat(logs).hasSize(2);
+            assertThat(logs.get(0).getId()).isNotEqualTo(logs.get(1).getId());
         }
     }
 
-    // Helper classes for testing
+    @Nested
+    @DisplayName("Query Tests")
+    class QueryTests {
 
+        @Test
+        @DisplayName("Should query audit logs by entity")
+        void shouldQueryByEntity() {
+            auditService.logCreate("INVOICE", "INV-001", "user-1", new HashMap<>());
+            auditService.logUpdate("INVOICE", "INV-001", "user-2", new HashMap<>(), new HashMap<>());
+            auditService.logCreate("INVOICE", "INV-002", "user-1", new HashMap<>());
+
+            List<AuditLog> logs = auditRepository.findByEntityId("INV-001");
+            assertThat(logs).hasSize(2);
+        }
+
+        @Test
+        @DisplayName("Should query audit logs by user")
+        void shouldQueryByUser() {
+            auditService.logCreate("INVOICE", "INV-001", "user-1", new HashMap<>());
+            auditService.logCreate("INVOICE", "INV-002", "user-2", new HashMap<>());
+            auditService.logCreate("EXPENSE", "EXP-001", "user-1", new HashMap<>());
+
+            List<AuditLog> logs = auditRepository.findByUserId("user-1");
+            assertThat(logs).hasSize(2);
+        }
+
+        @Test
+        @DisplayName("Should query audit logs by date range")
+        void shouldQueryByDateRange() {
+            auditService.logCreate("INVOICE", "INV-001", "user-1", new HashMap<>());
+
+            LocalDateTime start = LocalDateTime.now().minusHours(1);
+            LocalDateTime end = LocalDateTime.now().plusHours(1);
+
+            List<AuditLog> logs = auditRepository.findByDateRange(start, end);
+            assertThat(logs).hasSize(1);
+        }
+
+        @Test
+        @DisplayName("Should query audit logs by entity type")
+        void shouldQueryByEntityType() {
+            auditService.logCreate("INVOICE", "INV-001", "user-1", new HashMap<>());
+            auditService.logCreate("EXPENSE", "EXP-001", "user-1", new HashMap<>());
+            auditService.logCreate("INVOICE", "INV-002", "user-1", new HashMap<>());
+
+            List<AuditLog> logs = auditRepository.findByEntityType("INVOICE");
+            assertThat(logs).hasSize(2);
+        }
+    }
+
+    @Nested
+    @DisplayName("User Attribution Tests")
+    class UserAttributionTests {
+
+        @Test
+        @DisplayName("Should capture user ID for every action")
+        void shouldCaptureUserId() {
+            auditService.logCreate("INVOICE", "INV-001", "admin-user", new HashMap<>());
+
+            Optional<AuditLog> log = auditRepository.findByEntityIdAndAction("INV-001", "CREATE");
+            assertThat(log.get().getUserId()).isEqualTo("admin-user");
+        }
+
+        @Test
+        @DisplayName("Should reject null user ID")
+        void shouldRejectNullUserId() {
+            assertThatThrownBy(() ->
+                auditService.logCreate("INVOICE", "INV-001", null, new HashMap<>())
+            ).isInstanceOf(IllegalArgumentException.class)
+             .hasMessageContaining("user");
+        }
+
+        @Test
+        @DisplayName("Should capture IP address when provided")
+        void shouldCaptureIpAddress() {
+            auditService.logCreateWithContext("INVOICE", "INV-001", "user-1",
+                new HashMap<>(), "192.168.1.1", "Chrome/120");
+
+            Optional<AuditLog> log = auditRepository.findByEntityIdAndAction("INV-001", "CREATE");
+            assertThat(log.get().getIpAddress()).isEqualTo("192.168.1.1");
+            assertThat(log.get().getUserAgent()).isEqualTo("Chrome/120");
+        }
+    }
+
+    @Nested
+    @DisplayName("Financial Action Audit Tests")
+    class FinancialActionTests {
+
+        @Test
+        @DisplayName("Should log payment posting")
+        void shouldLogPaymentPosting() {
+            Map<String, Object> values = new HashMap<>();
+            values.put("amount", new BigDecimal("5000.00"));
+            values.put("paymentMethod", "BANK_TRANSFER");
+            values.put("reference", "PAY-001");
+
+            auditService.logFinancialAction("PAYMENT_POSTING", "PAY-001", "user-1", values);
+
+            Optional<AuditLog> log = auditRepository.findByEntityIdAndAction("PAY-001", "PAYMENT_POSTING");
+            assertThat(log).isPresent();
+            assertThat(log.get().isFinancialAction()).isTrue();
+        }
+
+        @Test
+        @DisplayName("Should log journal entry posting")
+        void shouldLogJournalPosting() {
+            Map<String, Object> values = new HashMap<>();
+            values.put("debitAccount", "1000");
+            values.put("creditAccount", "2000");
+            values.put("amount", new BigDecimal("10000.00"));
+
+            auditService.logFinancialAction("JOURNAL_POSTING", "JE-001", "user-1", values);
+
+            Optional<AuditLog> log = auditRepository.findByEntityIdAndAction("JE-001", "JOURNAL_POSTING");
+            assertThat(log.get().getNewValues()).containsKey("amount");
+        }
+
+        @Test
+        @DisplayName("Should log period closing")
+        void shouldLogPeriodClosing() {
+            Map<String, Object> values = new HashMap<>();
+            values.put("period", "2024-12");
+            values.put("closingBalance", new BigDecimal("50000.00"));
+
+            auditService.logFinancialAction("PERIOD_CLOSE", "PERIOD-2024-12", "user-1", values);
+
+            List<AuditLog> logs = auditRepository.findByAction("PERIOD_CLOSE");
+            assertThat(logs).hasSize(1);
+        }
+    }
+
+    @Nested
+    @DisplayName("Compliance Report Tests")
+    class ComplianceReportTests {
+
+        @Test
+        @DisplayName("Should generate user activity report")
+        void shouldGenerateUserActivityReport() {
+            auditService.logCreate("INVOICE", "INV-001", "user-1", new HashMap<>());
+            auditService.logCreate("INVOICE", "INV-002", "user-1", new HashMap<>());
+            auditService.logCreate("EXPENSE", "EXP-001", "user-1", new HashMap<>());
+
+            UserActivityReport report = auditService.generateUserActivityReport(
+                "user-1", LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(1));
+
+            assertThat(report.getTotalActions()).isEqualTo(3);
+            assertThat(report.getActionsByType()).containsEntry("CREATE", 3L);
+        }
+
+        @Test
+        @DisplayName("Should generate entity history report")
+        void shouldGenerateEntityHistoryReport() {
+            Map<String, Object> v1 = new HashMap<>();
+            v1.put("status", "DRAFT");
+            auditService.logCreate("INVOICE", "INV-001", "user-1", v1);
+
+            Map<String, Object> v2old = new HashMap<>();
+            v2old.put("status", "DRAFT");
+            Map<String, Object> v2new = new HashMap<>();
+            v2new.put("status", "APPROVED");
+            auditService.logUpdate("INVOICE", "INV-001", "user-2", v2old, v2new);
+
+            EntityHistoryReport report = auditService.generateEntityHistoryReport("INV-001");
+
+            assertThat(report.getChangeCount()).isEqualTo(2);
+            assertThat(report.getContributors()).containsExactlyInAnyOrder("user-1", "user-2");
+        }
+    }
+
+    // Test implementation classes
     static class AuditLog {
         private final String id;
         private final String entityType;
@@ -322,27 +312,26 @@ class AuditTrailTest {
         private final String action;
         private final String userId;
         private final LocalDateTime timestamp;
-        private final String fieldName;
-        private final String oldValue;
-        private final String newValue;
-        private final String metadata;
+        private final Map<String, Object> oldValues;
+        private final Map<String, Object> newValues;
         private final String ipAddress;
         private final String userAgent;
-        private boolean frozen = false;
+        private final boolean financialAction;
 
-        AuditLog(Builder builder) {
-            this.id = builder.id;
-            this.entityType = builder.entityType;
-            this.entityId = builder.entityId;
-            this.action = builder.action;
-            this.userId = builder.userId;
-            this.timestamp = builder.timestamp;
-            this.fieldName = builder.fieldName;
-            this.oldValue = builder.oldValue;
-            this.newValue = builder.newValue;
-            this.metadata = builder.metadata;
-            this.ipAddress = builder.ipAddress;
-            this.userAgent = builder.userAgent;
+        AuditLog(String entityType, String entityId, String action, String userId,
+                Map<String, Object> oldValues, Map<String, Object> newValues,
+                String ipAddress, String userAgent, boolean financialAction) {
+            this.id = UUID.randomUUID().toString();
+            this.entityType = entityType;
+            this.entityId = entityId;
+            this.action = action;
+            this.userId = userId;
+            this.timestamp = LocalDateTime.now();
+            this.oldValues = oldValues != null ? new HashMap<>(oldValues) : new HashMap<>();
+            this.newValues = newValues != null ? new HashMap<>(newValues) : new HashMap<>();
+            this.ipAddress = ipAddress;
+            this.userAgent = userAgent;
+            this.financialAction = financialAction;
         }
 
         String getId() { return id; }
@@ -351,163 +340,24 @@ class AuditTrailTest {
         String getAction() { return action; }
         String getUserId() { return userId; }
         LocalDateTime getTimestamp() { return timestamp; }
-        String getFieldName() { return fieldName; }
-        String getOldValue() { return oldValue; }
-        String getNewValue() { return newValue; }
-        String getMetadata() { return metadata; }
+        Map<String, Object> getOldValues() { return new HashMap<>(oldValues); }
+        Map<String, Object> getNewValues() { return new HashMap<>(newValues); }
         String getIpAddress() { return ipAddress; }
         String getUserAgent() { return userAgent; }
-
-        void freeze() { this.frozen = true; }
-
-        void setAction(String action) {
-            if (frozen) throw new UnsupportedOperationException("Audit log is immutable");
-        }
-
-        void setNewValue(String value) {
-            if (frozen) throw new UnsupportedOperationException("Audit log is immutable");
-        }
-
-        static class Builder {
-            private String id = UUID.randomUUID().toString();
-            private String entityType;
-            private String entityId;
-            private String action;
-            private String userId;
-            private LocalDateTime timestamp = LocalDateTime.now();
-            private String fieldName;
-            private String oldValue;
-            private String newValue;
-            private String metadata;
-            private String ipAddress;
-            private String userAgent;
-
-            Builder entityType(String entityType) { this.entityType = entityType; return this; }
-            Builder entityId(String entityId) { this.entityId = entityId; return this; }
-            Builder action(String action) { this.action = action; return this; }
-            Builder userId(String userId) { this.userId = userId; return this; }
-            Builder fieldName(String fieldName) { this.fieldName = fieldName; return this; }
-            Builder oldValue(String oldValue) { this.oldValue = oldValue; return this; }
-            Builder newValue(String newValue) { this.newValue = newValue; return this; }
-            Builder metadata(String metadata) { this.metadata = metadata; return this; }
-            Builder ipAddress(String ipAddress) { this.ipAddress = ipAddress; return this; }
-            Builder userAgent(String userAgent) { this.userAgent = userAgent; return this; }
-
-            AuditLog build() {
-                AuditLog log = new AuditLog(this);
-                log.freeze();
-                return log;
-            }
-        }
+        boolean isFinancialAction() { return financialAction; }
     }
 
-    static class AuditLogService {
+    static class InMemoryAuditRepository {
         private final List<AuditLog> logs = new ArrayList<>();
-        private String currentIpAddress;
-        private String currentUserAgent;
 
-        void setCurrentIpAddress(String ip) { this.currentIpAddress = ip; }
-        void setCurrentUserAgent(String ua) { this.currentUserAgent = ua; }
-
-        AuditLog logInvoiceCreation(String invoiceId, String userId, BigDecimal amount) {
-            AuditLog log = new AuditLog.Builder()
-                .entityType("INVOICE")
-                .entityId(invoiceId)
-                .action("CREATE")
-                .userId(userId)
-                .newValue("amount=" + amount.toString())
-                .ipAddress(currentIpAddress)
-                .userAgent(currentUserAgent)
-                .build();
+        void save(AuditLog log) {
             logs.add(log);
-            return log;
         }
 
-        AuditLog logInvoiceUpdate(String invoiceId, String userId, String field,
-                                   String oldValue, String newValue) {
-            AuditLog log = new AuditLog.Builder()
-                .entityType("INVOICE")
-                .entityId(invoiceId)
-                .action("UPDATE")
-                .userId(userId)
-                .fieldName(field)
-                .oldValue(oldValue)
-                .newValue(newValue)
-                .build();
-            logs.add(log);
-            return log;
-        }
-
-        AuditLog logStatusChange(String entityId, String entityType, String userId,
-                                  String oldStatus, String newStatus) {
-            AuditLog log = new AuditLog.Builder()
-                .entityType(entityType)
-                .entityId(entityId)
-                .action("STATUS_CHANGE")
-                .userId(userId)
-                .oldValue(oldStatus)
-                .newValue(newStatus)
-                .build();
-            logs.add(log);
-            return log;
-        }
-
-        AuditLog logDeletion(String entityId, String entityType, String userId, String reason) {
-            AuditLog log = new AuditLog.Builder()
-                .entityType(entityType)
-                .entityId(entityId)
-                .action("DELETE")
-                .userId(userId)
-                .metadata(reason)
-                .build();
-            logs.add(log);
-            return log;
-        }
-
-        AuditLog logPayment(String paymentId, String invoiceId, String userId, BigDecimal amount) {
-            AuditLog log = new AuditLog.Builder()
-                .entityType("PAYMENT")
-                .entityId(paymentId)
-                .action("CREATE")
-                .userId(userId)
-                .newValue("amount=" + amount.toString())
-                .metadata("invoiceId=" + invoiceId)
-                .build();
-            logs.add(log);
-            return log;
-        }
-
-        AuditLog logPaymentReversal(String paymentId, String userId, String reason) {
-            AuditLog log = new AuditLog.Builder()
-                .entityType("PAYMENT")
-                .entityId(paymentId)
-                .action("REVERSAL")
-                .userId(userId)
-                .metadata(reason)
-                .build();
-            logs.add(log);
-            return log;
-        }
-
-        AuditLog logJournalEntry(String journalId, String userId,
-                                  BigDecimal debitTotal, BigDecimal creditTotal) {
-            AuditLog log = new AuditLog.Builder()
-                .entityType("JOURNAL_ENTRY")
-                .entityId(journalId)
-                .action("CREATE")
-                .userId(userId)
-                .metadata("debit=" + debitTotal + ", credit=" + creditTotal)
-                .build();
-            logs.add(log);
-            return log;
-        }
-
-        void deleteLog(String logId) {
-            throw new UnsupportedOperationException("Audit logs cannot be deleted");
-        }
-
-        void updateLog(String logId, String newValue) {
-            throw new UnsupportedOperationException("Audit logs cannot be modified");
+        Optional<AuditLog> findByEntityIdAndAction(String entityId, String action) {
+            return logs.stream()
+                .filter(l -> l.getEntityId().equals(entityId) && l.getAction().equals(action))
+                .findFirst();
         }
 
         List<AuditLog> findByEntityId(String entityId) {
@@ -530,10 +380,10 @@ class AuditTrailTest {
             return result;
         }
 
-        List<AuditLog> findByAction(String action) {
+        List<AuditLog> findByDateRange(LocalDateTime start, LocalDateTime end) {
             List<AuditLog> result = new ArrayList<>();
             for (AuditLog log : logs) {
-                if (log.getAction().equals(action)) {
+                if (!log.getTimestamp().isBefore(start) && !log.getTimestamp().isAfter(end)) {
                     result.add(log);
                 }
             }
@@ -550,14 +400,114 @@ class AuditTrailTest {
             return result;
         }
 
-        List<AuditLog> findByDateRange(LocalDateTime start, LocalDateTime end) {
+        List<AuditLog> findByAction(String action) {
             List<AuditLog> result = new ArrayList<>();
             for (AuditLog log : logs) {
-                if (!log.getTimestamp().isBefore(start) && !log.getTimestamp().isAfter(end)) {
+                if (log.getAction().equals(action)) {
                     result.add(log);
                 }
             }
             return result;
         }
+
+        void updateLog(String entityId, String action) {
+            throw new UnsupportedOperationException("Audit logs are immutable");
+        }
+
+        void deleteLog(String entityId, String action) {
+            throw new UnsupportedOperationException("Audit logs are immutable");
+        }
+    }
+
+    static class AuditService {
+        private final InMemoryAuditRepository repository;
+
+        AuditService(InMemoryAuditRepository repository) {
+            this.repository = repository;
+        }
+
+        void logCreate(String entityType, String entityId, String userId, Map<String, Object> newValues) {
+            validateUserId(userId);
+            repository.save(new AuditLog(entityType, entityId, "CREATE", userId,
+                null, newValues, null, null, false));
+        }
+
+        void logUpdate(String entityType, String entityId, String userId,
+                      Map<String, Object> oldValues, Map<String, Object> newValues) {
+            validateUserId(userId);
+            repository.save(new AuditLog(entityType, entityId, "UPDATE", userId,
+                oldValues, newValues, null, null, false));
+        }
+
+        void logDelete(String entityType, String entityId, String userId, Map<String, Object> oldValues) {
+            validateUserId(userId);
+            repository.save(new AuditLog(entityType, entityId, "DELETE", userId,
+                oldValues, null, null, null, false));
+        }
+
+        void logCreateWithContext(String entityType, String entityId, String userId,
+                                 Map<String, Object> newValues, String ipAddress, String userAgent) {
+            validateUserId(userId);
+            repository.save(new AuditLog(entityType, entityId, "CREATE", userId,
+                null, newValues, ipAddress, userAgent, false));
+        }
+
+        void logFinancialAction(String action, String entityId, String userId, Map<String, Object> values) {
+            validateUserId(userId);
+            repository.save(new AuditLog("FINANCIAL", entityId, action, userId,
+                null, values, null, null, true));
+        }
+
+        private void validateUserId(String userId) {
+            if (userId == null || userId.isEmpty()) {
+                throw new IllegalArgumentException("user ID is required");
+            }
+        }
+
+        UserActivityReport generateUserActivityReport(String userId, LocalDateTime start, LocalDateTime end) {
+            List<AuditLog> logs = repository.findByUserId(userId);
+            Map<String, Long> actionCounts = new HashMap<>();
+            for (AuditLog log : logs) {
+                actionCounts.merge(log.getAction(), 1L, Long::sum);
+            }
+            return new UserActivityReport(logs.size(), actionCounts);
+        }
+
+        EntityHistoryReport generateEntityHistoryReport(String entityId) {
+            List<AuditLog> logs = repository.findByEntityId(entityId);
+            List<String> contributors = new ArrayList<>();
+            for (AuditLog log : logs) {
+                if (!contributors.contains(log.getUserId())) {
+                    contributors.add(log.getUserId());
+                }
+            }
+            return new EntityHistoryReport(logs.size(), contributors);
+        }
+    }
+
+    static class UserActivityReport {
+        private final int totalActions;
+        private final Map<String, Long> actionsByType;
+
+        UserActivityReport(int total, Map<String, Long> byType) {
+            this.totalActions = total;
+            this.actionsByType = byType;
+        }
+
+        int getTotalActions() { return totalActions; }
+        Map<String, Long> getActionsByType() { return actionsByType; }
+    }
+
+    static class EntityHistoryReport {
+        private final int changeCount;
+        private final List<String> contributors;
+
+        EntityHistoryReport(int count, List<String> contributors) {
+            this.changeCount = count;
+            this.contributors = contributors;
+        }
+
+        int getChangeCount() { return changeCount; }
+        List<String> getContributors() { return contributors; }
     }
 }
