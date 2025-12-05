@@ -29,7 +29,7 @@
 		<junit.platform.version>1.10.2</junit.platform.version>
 		<mockito.version>4.11.0</mockito.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
-		<bytebuddy.version>1.12.23</bytebuddy.version>
+		<bytebuddy.version>1.18.2</bytebuddy.version>
 
 		<!--	<sonar.projectKey>gulftranstech_simpleaccounts</sonar.projectKey>
             <sonar.organization>gulftranstech</sonar.organization>
