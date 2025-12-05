@@ -28,7 +28,7 @@
 		<junit.jupiter.version>5.10.2</junit.jupiter.version>
 		<junit.platform.version>1.10.2</junit.platform.version>
 		<mockito.version>4.11.0</mockito.version>
-		<testcontainers.version>1.17.6</testcontainers.version>
+		<testcontainers.version>1.21.3</testcontainers.version>
 		<bytebuddy.version>1.12.23</bytebuddy.version>
 
 		<!--	<sonar.projectKey>gulftranstech_simpleaccounts</sonar.projectKey>
