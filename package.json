@@ -41,6 +41,6 @@
     "lint": "npm run lint --workspaces --if-present"
   },
   "dependencies": {
-    "sass": "1.32.0"
+    "sass": "1.94.2"
   }
 }
