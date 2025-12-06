@@ -31,10 +31,8 @@
 		<testcontainers.version>1.17.6</testcontainers.version>
 		<bytebuddy.version>1.12.23</bytebuddy.version>
 
-		<!--	<sonar.projectKey>gulftranstech_simpleaccounts</sonar.projectKey>
-            <sonar.organization>gulftranstech</sonar.organization>
-            <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-            <sonar.login>ec4b54cd00ee246b9ef1daa3d722954224df999a</sonar.login> -->
+		<!-- SonarQube Configuration (Self-hosted) -->
+		<sonar.host.url>https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io</sonar.host.url>
 	</properties>
 
 	<dependencies>
