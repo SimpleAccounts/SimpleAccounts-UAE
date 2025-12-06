@@ -4,8 +4,8 @@ const initState = {
 }
 
 const SettingsReducer = (state = initState, action) => {
-  const { type} = action
-  
+  const { type } = action || {}
+
   switch(type) {
 
     default:

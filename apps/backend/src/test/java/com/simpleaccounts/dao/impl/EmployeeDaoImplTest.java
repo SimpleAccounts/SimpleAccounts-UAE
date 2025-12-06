@@ -266,10 +266,10 @@ class EmployeeDaoImplTest {
         employee.setEmail(email);
 
         when(entityManager.createNamedQuery("employeeByEmail", Employee.class))
-            .thenReturn(query);
-        when(query.setParameter("email", email))
-            .thenReturn(query);
-        when(query.getResultList())
+            .thenReturn(employeeTypedQuery);
+        when(employeeTypedQuery.setParameter("email", email))
+            .thenReturn(employeeTypedQuery);
+        when(employeeTypedQuery.getResultList())
             .thenReturn(Collections.singletonList(employee));
 
         // Act
@@ -287,10 +287,10 @@ class EmployeeDaoImplTest {
         String email = "notfound@example.com";
 
         when(entityManager.createNamedQuery("employeeByEmail", Employee.class))
-            .thenReturn(query);
-        when(query.setParameter("email", email))
-            .thenReturn(query);
-        when(query.getResultList())
+            .thenReturn(employeeTypedQuery);
+        when(employeeTypedQuery.setParameter("email", email))
+            .thenReturn(employeeTypedQuery);
+        when(employeeTypedQuery.getResultList())
             .thenReturn(new ArrayList<>());
 
         // Act
@@ -308,10 +308,10 @@ class EmployeeDaoImplTest {
         List<Employee> employees = createEmployeeList(2);
 
         when(entityManager.createNamedQuery("employeeByEmail", Employee.class))
-            .thenReturn(query);
-        when(query.setParameter("email", email))
-            .thenReturn(query);
-        when(query.getResultList())
+            .thenReturn(employeeTypedQuery);
+        when(employeeTypedQuery.setParameter("email", email))
+            .thenReturn(employeeTypedQuery);
+        when(employeeTypedQuery.getResultList())
             .thenReturn(employees);
 
         // Act
@@ -549,10 +549,10 @@ class EmployeeDaoImplTest {
         String email = "test@example.com";
 
         when(entityManager.createNamedQuery("employeeByEmail", Employee.class))
-            .thenReturn(query);
-        when(query.setParameter("email", email))
-            .thenReturn(query);
-        when(query.getResultList())
+            .thenReturn(employeeTypedQuery);
+        when(employeeTypedQuery.setParameter("email", email))
+            .thenReturn(employeeTypedQuery);
+        when(employeeTypedQuery.getResultList())
             .thenReturn(null);
 
         // Act

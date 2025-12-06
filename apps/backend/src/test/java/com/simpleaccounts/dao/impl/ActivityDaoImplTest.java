@@ -569,7 +569,7 @@ class ActivityDaoImplTest {
         for (int i = 0; i < count; i++) {
             Activity activity = new Activity();
             activity.setActivityId(i + 1);
-            activity.setActivityName("Activity " + (i + 1));
+            activity.setActivityCode("ACT" + (i + 1));
             activities.add(activity);
         }
         return activities;

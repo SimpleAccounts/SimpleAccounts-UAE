@@ -185,8 +185,8 @@ class CompanyTypeDaoImplTest {
 
         // Assert
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getCompanyTypeId()).isEqualTo(1);
-        assertThat(result.get(1).getCompanyTypeId()).isEqualTo(2);
+        assertThat(result.get(0).getId()).isEqualTo(1);
+        assertThat(result.get(1).getId()).isEqualTo(2);
     }
 
     @Test
@@ -398,7 +398,7 @@ class CompanyTypeDaoImplTest {
 
     private CompanyType createCompanyType(int id, String name) {
         CompanyType type = new CompanyType();
-        type.setCompanyTypeId(id);
+        type.setId(id);
         type.setCompanyTypeName(name);
         return type;
     }

@@ -56,15 +56,15 @@ describe('Project Screen Component', () => {
 
     store = mockStore(initialState);
 
-    ProjectActions.getProjectList = jest.fn(() =>
+    ProjectActions.getProjectList = jest.fn(() => () =>
       Promise.resolve({ status: 200, data: { data: initialState.project.project_list.data } })
     );
-    ProjectActions.removeBulk = jest.fn(() =>
+    ProjectActions.removeBulk = jest.fn(() => () =>
       Promise.resolve({ status: 200, data: { message: 'Success' } })
     );
-    ProjectActions.getCurrencyList = jest.fn(() => Promise.resolve());
-    ProjectActions.getCountryList = jest.fn(() => Promise.resolve());
-    ProjectActions.getTitleList = jest.fn(() => Promise.resolve());
+    ProjectActions.getCurrencyList = jest.fn(() => () => Promise.resolve());
+    ProjectActions.getCountryList = jest.fn(() => () => Promise.resolve());
+    ProjectActions.getTitleList = jest.fn(() => () => Promise.resolve());
   });
 
   afterEach(() => {

@@ -20,7 +20,7 @@ const VatReducer = (state = initState, action) => {
     case VAT.VAT_ROW:
       return {
         ...state,
-        vat_row: Object.assign([], payload)
+        vat_row: Object.assign({}, payload)
       }
 
     default:

@@ -9,9 +9,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.simpleaccounts.entity.CustomerInvoice;
+import com.simpleaccounts.entity.Invoice;
 import com.simpleaccounts.entity.CustomerInvoiceReceipt;
-import com.simpleaccounts.entity.CustomerReceipt;
+import com.simpleaccounts.entity.Receipt;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -403,9 +403,9 @@ class CustomerInvoiceReceiptDaoImplTest {
 
         // Assert
         assertThat(result).hasSize(3);
-        assertThat(result.get(0).getReceiptAmount()).isEqualByComparingTo(BigDecimal.valueOf(100));
-        assertThat(result.get(1).getReceiptAmount()).isEqualByComparingTo(BigDecimal.valueOf(200));
-        assertThat(result.get(2).getReceiptAmount()).isEqualByComparingTo(BigDecimal.valueOf(300));
+        assertThat(result.get(0).getPaidAmount()).isEqualByComparingTo(BigDecimal.valueOf(100));
+        assertThat(result.get(1).getPaidAmount()).isEqualByComparingTo(BigDecimal.valueOf(200));
+        assertThat(result.get(2).getPaidAmount()).isEqualByComparingTo(BigDecimal.valueOf(300));
     }
 
     @Test
@@ -430,8 +430,8 @@ class CustomerInvoiceReceiptDaoImplTest {
 
         // Assert
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getReceiptAmount()).isEqualByComparingTo(BigDecimal.valueOf(50));
-        assertThat(result.get(1).getReceiptAmount()).isEqualByComparingTo(BigDecimal.valueOf(150));
+        assertThat(result.get(0).getPaidAmount()).isEqualByComparingTo(BigDecimal.valueOf(50));
+        assertThat(result.get(1).getPaidAmount()).isEqualByComparingTo(BigDecimal.valueOf(150));
     }
 
     @Test
@@ -452,7 +452,7 @@ class CustomerInvoiceReceiptDaoImplTest {
         List<CustomerInvoiceReceipt> result = customerInvoiceReceiptDao.findAllForInvoice(invoiceId);
 
         // Assert
-        assertThat(result.get(0).getCustomerInvoice().getCustomerInvoiceId()).isEqualTo(invoiceId);
+        assertThat(result.get(0).getCustomerInvoice().getId()).isEqualTo(invoiceId);
     }
 
     @Test
@@ -473,7 +473,7 @@ class CustomerInvoiceReceiptDaoImplTest {
         List<CustomerInvoiceReceipt> result = customerInvoiceReceiptDao.findForReceipt(receiptId);
 
         // Assert
-        assertThat(result.get(0).getCustomerReceipt().getCustomerReceiptId()).isEqualTo(receiptId);
+        assertThat(result.get(0).getReceipt().getId()).isEqualTo(receiptId);
     }
 
     @Test
@@ -494,7 +494,7 @@ class CustomerInvoiceReceiptDaoImplTest {
         List<CustomerInvoiceReceipt> result = customerInvoiceReceiptDao.findAllForInvoice(invoiceId);
 
         // Assert
-        assertThat(result.get(0).getReceiptAmount()).isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(result.get(0).getPaidAmount()).isEqualByComparingTo(BigDecimal.ZERO);
     }
 
     private CustomerInvoiceReceipt createCustomerInvoiceReceipt(int id, int invoiceId, int receiptId) {
@@ -503,20 +503,20 @@ class CustomerInvoiceReceiptDaoImplTest {
 
     private CustomerInvoiceReceipt createCustomerInvoiceReceiptWithAmount(int id, int invoiceId,
                                                                           int receiptId, BigDecimal amount) {
-        CustomerInvoiceReceipt receipt = new CustomerInvoiceReceipt();
-        receipt.setCustomerInvoiceReceiptId(id);
-        receipt.setReceiptAmount(amount);
-        receipt.setCreatedDate(LocalDateTime.now());
+        CustomerInvoiceReceipt customerInvoiceReceipt = new CustomerInvoiceReceipt();
+        customerInvoiceReceipt.setId(id);
+        customerInvoiceReceipt.setPaidAmount(amount);
+        customerInvoiceReceipt.setCreatedDate(LocalDateTime.now());
 
-        CustomerInvoice invoice = new CustomerInvoice();
-        invoice.setCustomerInvoiceId(invoiceId);
-        receipt.setCustomerInvoice(invoice);
+        Invoice invoice = new Invoice();
+        invoice.setId(invoiceId);
+        customerInvoiceReceipt.setCustomerInvoice(invoice);
 
-        CustomerReceipt customerReceipt = new CustomerReceipt();
-        customerReceipt.setCustomerReceiptId(receiptId);
-        receipt.setCustomerReceipt(customerReceipt);
+        Receipt receipt = new Receipt();
+        receipt.setId(receiptId);
+        customerInvoiceReceipt.setReceipt(receipt);
 
-        return receipt;
+        return customerInvoiceReceipt;
     }
 
     private List<CustomerInvoiceReceipt> createCustomerInvoiceReceiptList(int count) {

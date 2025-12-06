@@ -380,4 +380,4 @@ class SalaryComponent extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Designation)
+export default connect(mapStateToProps, mapDispatchToProps)(SalaryComponent)

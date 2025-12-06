@@ -4,8 +4,8 @@ const initState = {
 }
 
 const TemplateReducer = (state = initState, action) => {
-  const { type} = action
-  
+  const { type } = action || {}
+
   switch(type) {
 
     default:

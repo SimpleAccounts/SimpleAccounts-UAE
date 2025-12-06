@@ -45,7 +45,7 @@ describe('SalaryTemplate Screen Component', () => {
 
     store = mockStore(initialState);
 
-    SalaryTemplateActions.getSalaryTemplateList = jest.fn(() =>
+    SalaryTemplateActions.getSalaryTemplateList = jest.fn(() => () =>
       Promise.resolve({
         status: 200,
         data: {

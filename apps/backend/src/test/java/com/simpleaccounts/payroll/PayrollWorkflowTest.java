@@ -481,8 +481,8 @@ class PayrollWorkflowTest {
         private BigDecimal netPay = BigDecimal.ZERO;
         private int workingDays = 22;
 
-        String getEmployeeId() { return employeeId; }
-        void setEmployeeId(String id) { this.employeeId = id; }
+        String getId() { return employeeId; }
+        void setId(String id) { this.employeeId = id; }
         BigDecimal getBasicSalary() { return basicSalary; }
         void setBasicSalary(BigDecimal amt) { this.basicSalary = amt; }
         BigDecimal getHousingAllowance() { return housingAllowance; }
@@ -543,7 +543,7 @@ class PayrollWorkflowTest {
 
         Payslip calculatePayslip(Employee emp, YearMonth period) {
             Payslip payslip = new Payslip();
-            payslip.setEmployeeId(emp.getId());
+            payslip.setId(emp.getId());
 
             int standardDays = 22;
             int workingDays = standardDays;
@@ -727,8 +727,8 @@ class PayrollWorkflowTest {
                 WpsRecord salary = new WpsRecord();
                 salary.setRecordType("SDR");
                 Employee emp = run.getEmployees().stream()
-                    .filter(e -> e.getId().equals(payslip.getEmployeeId()))
-                    .findFirst().orElseThrow(() -> new java.util.NoSuchElementException("Employee not found: " + payslip.getEmployeeId()));
+                    .filter(e -> e.getId().equals(payslip.getId()))
+                    .findFirst().orElseThrow(() -> new java.util.NoSuchElementException("Employee not found: " + payslip.getId()));
                 salary.setEmployeeLabourId(emp.getLabourCardId());
                 salary.setSalaryAmount(payslip.getNetPay());
                 file.getSalaryRecords().add(salary);

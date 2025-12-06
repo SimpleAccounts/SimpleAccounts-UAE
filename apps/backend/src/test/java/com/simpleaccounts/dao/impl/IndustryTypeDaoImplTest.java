@@ -178,7 +178,7 @@ class IndustryTypeDaoImplTest {
         List<IndustryType> result = dao.getIndustryTypes();
 
         // Assert
-        assertThat(result.get(0).getIndustryTypeId()).isEqualTo(1);
+        assertThat(result.get(0).getId()).isEqualTo(1);
         assertThat(result.get(0).getIndustryTypeName()).isEqualTo("Manufacturing");
     }
 
@@ -217,7 +217,7 @@ class IndustryTypeDaoImplTest {
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.getIndustryTypeId()).isEqualTo(id);
+        assertThat(result.getId()).isEqualTo(id);
     }
 
     @Test
@@ -359,7 +359,7 @@ class IndustryTypeDaoImplTest {
 
     private IndustryType createIndustryType(Integer id, String name) {
         IndustryType type = new IndustryType();
-        type.setIndustryTypeId(id);
+        type.setId(id);
         type.setIndustryTypeName(name);
         return type;
     }

@@ -167,7 +167,7 @@ class ConfigurationDaoImplTest {
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.getConfigurationId()).isEqualTo(1);
+        assertThat(result.getId()).isEqualTo(1);
         assertThat(result.getValue()).isEqualTo("value1");
     }
 
@@ -507,7 +507,7 @@ class ConfigurationDaoImplTest {
 
     private Configuration createConfiguration(int id, String name, String value) {
         Configuration config = new Configuration();
-        config.setConfigurationId(id);
+        config.setId(id);
         config.setName(name);
         config.setValue(value);
         return config;

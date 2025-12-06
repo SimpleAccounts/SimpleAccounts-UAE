@@ -110,8 +110,8 @@ class BankAccountTypeDaoImplTest {
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.getBankAccountTypeId()).isEqualTo(id);
-        assertThat(result.getBankAccountTypeName()).isEqualTo("Savings");
+        assertThat(result.getId()).isEqualTo(id);
+        assertThat(result.getName()).isEqualTo("Savings");
     }
 
     @Test
@@ -247,7 +247,7 @@ class BankAccountTypeDaoImplTest {
         bankAccountTypeDao.getDefaultBankAccountType();
 
         // Assert
-        verify(entityManager, times(2)).createNamedQuery("allBankAccountType", BankAccountType.class);
+        verify(entityManager, times(3)).createNamedQuery("allBankAccountType", BankAccountType.class);
     }
 
     @Test
@@ -303,8 +303,8 @@ class BankAccountTypeDaoImplTest {
 
         // Assert
         assertThat(result1).isNotEqualTo(result2);
-        assertThat(result1.getBankAccountTypeName()).isEqualTo("Savings");
-        assertThat(result2.getBankAccountTypeName()).isEqualTo("Current");
+        assertThat(result1.getName()).isEqualTo("Savings");
+        assertThat(result2.getName()).isEqualTo("Current");
     }
 
     @Test
@@ -324,7 +324,7 @@ class BankAccountTypeDaoImplTest {
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.getBankAccountTypeName()).isEqualTo("Only Type");
+        assertThat(result.getName()).isEqualTo("Only Type");
     }
 
     @Test
@@ -421,7 +421,7 @@ class BankAccountTypeDaoImplTest {
         BankAccountType result = bankAccountTypeDao.getBankAccountType(id);
 
         // Assert
-        assertThat(result.getBankAccountTypeName()).isEqualTo("Investment");
+        assertThat(result.getName()).isEqualTo("Investment");
     }
 
     @Test
@@ -442,9 +442,9 @@ class BankAccountTypeDaoImplTest {
         List<BankAccountType> result = bankAccountTypeDao.getBankAccountTypeList();
 
         // Assert
-        assertThat(result.get(0).getBankAccountTypeName()).isEqualTo("First");
-        assertThat(result.get(1).getBankAccountTypeName()).isEqualTo("Second");
-        assertThat(result.get(2).getBankAccountTypeName()).isEqualTo("Third");
+        assertThat(result.get(0).getName()).isEqualTo("First");
+        assertThat(result.get(1).getName()).isEqualTo("Second");
+        assertThat(result.get(2).getName()).isEqualTo("Third");
     }
 
     private List<BankAccountType> createBankAccountTypeList(int count) {
@@ -457,8 +457,8 @@ class BankAccountTypeDaoImplTest {
 
     private BankAccountType createBankAccountType(int id, String name) {
         BankAccountType type = new BankAccountType();
-        type.setBankAccountTypeId(id);
-        type.setBankAccountTypeName(name);
+        type.setId(id);
+        type.setName(name);
         return type;
     }
 }

@@ -20,7 +20,7 @@ const TransactionReducer = (state = initState, action) => {
     case TRANSACTION.TRANSACTION_ROW:
       return {
         ...state,
-        transaction_row: Object.assign([], payload)
+        transaction_row: Object.assign({}, payload)
       }
 
     default:
