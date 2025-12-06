@@ -112,8 +112,10 @@
     "@playwright/test": "^1.57.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^14.0.0",
+    "@types/redux-mock-store": "^1.5.0",
     "msw": "^2.12.4",
     "mutationobserver-shim": "^0.3.3",
+    "redux-mock-store": "^1.5.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "web-streams-polyfill": "^4.2.0"
@@ -150,7 +152,12 @@
         "lines": 70
       }
     },
-    "coverageReporters": ["text", "lcov", "html", "json-summary"],
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html",
+      "json-summary"
+    ],
     "moduleNameMapper": {
       "^lodash-es$": "lodash",
       "\\.(css|less|scss|sass)$": "<rootDir>/src/__mocks__/styleMock.js",
