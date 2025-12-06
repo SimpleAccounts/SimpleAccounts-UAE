@@ -145,15 +145,21 @@ describe('Autosave Tests', () => {
 
       render(<AutosaveForm storageKey="invoice-draft" autosaveDelay={500} />);
 
-      fireEvent.change(screen.getByTestId('title-input'), {
-        target: { value: 'Test Invoice' },
+      // Clear any calls from initial render
+      localStorageMock.setItem.mockClear();
+
+      // Change input within act to ensure state updates
+      await act(async () => {
+        fireEvent.change(screen.getByTestId('title-input'), {
+          target: { value: 'Test Invoice' },
+        });
       });
 
-      // Before delay, should not have saved
+      // Before delay, should not have saved (after clearing initial calls)
       expect(localStorageMock.setItem).not.toHaveBeenCalled();
 
-      // After delay
-      act(() => {
+      // After delay - advance timers within act
+      await act(async () => {
         jest.advanceTimersByTime(600);
       });
 
@@ -170,37 +176,48 @@ describe('Autosave Tests', () => {
 
       render(<AutosaveForm storageKey="invoice-draft" autosaveDelay={500} />);
 
+      // Clear any calls from initial render
+      localStorageMock.setItem.mockClear();
+
       // Make multiple rapid changes
-      fireEvent.change(screen.getByTestId('title-input'), {
-        target: { value: 'T' },
+      await act(async () => {
+        fireEvent.change(screen.getByTestId('title-input'), {
+          target: { value: 'T' },
+        });
       });
-      act(() => {
+      await act(async () => {
         jest.advanceTimersByTime(100);
       });
 
-      fireEvent.change(screen.getByTestId('title-input'), {
-        target: { value: 'Te' },
+      await act(async () => {
+        fireEvent.change(screen.getByTestId('title-input'), {
+          target: { value: 'Te' },
+        });
       });
-      act(() => {
+      await act(async () => {
         jest.advanceTimersByTime(100);
       });
 
-      fireEvent.change(screen.getByTestId('title-input'), {
-        target: { value: 'Tes' },
+      await act(async () => {
+        fireEvent.change(screen.getByTestId('title-input'), {
+          target: { value: 'Tes' },
+        });
       });
-      act(() => {
+      await act(async () => {
         jest.advanceTimersByTime(100);
       });
 
-      fireEvent.change(screen.getByTestId('title-input'), {
-        target: { value: 'Test' },
+      await act(async () => {
+        fireEvent.change(screen.getByTestId('title-input'), {
+          target: { value: 'Test' },
+        });
       });
 
       // Should not have saved yet (debouncing)
       expect(localStorageMock.setItem).not.toHaveBeenCalled();
 
       // Wait for debounce to complete
-      act(() => {
+      await act(async () => {
         jest.advanceTimersByTime(600);
       });
 
@@ -236,20 +253,27 @@ describe('Autosave Tests', () => {
 
       render(<AutosaveForm storageKey="invoice-draft" autosaveDelay={500} />);
 
+      // Clear any calls from initial render
+      localStorageMock.setItem.mockClear();
+
       // Make changes
-      fireEvent.change(screen.getByTestId('title-input'), {
-        target: { value: 'Test' },
+      await act(async () => {
+        fireEvent.change(screen.getByTestId('title-input'), {
+          target: { value: 'Test' },
+        });
       });
 
       // Wait for autosave
-      act(() => {
+      await act(async () => {
         jest.advanceTimersByTime(600);
       });
 
       expect(localStorageMock.setItem).toHaveBeenCalled();
 
       // Submit form
-      fireEvent.click(screen.getByText('Submit'));
+      await act(async () => {
+        fireEvent.click(screen.getByText('Submit'));
+      });
 
       expect(localStorageMock.removeItem).toHaveBeenCalledWith('invoice-draft');
 
@@ -259,12 +283,19 @@ describe('Autosave Tests', () => {
     test('should allow manual save', async () => {
       render(<AutosaveForm storageKey="invoice-draft" autosaveDelay={5000} />);
 
-      fireEvent.change(screen.getByTestId('title-input'), {
-        target: { value: 'Manual Save Test' },
+      // Clear any calls from initial render
+      localStorageMock.setItem.mockClear();
+
+      await act(async () => {
+        fireEvent.change(screen.getByTestId('title-input'), {
+          target: { value: 'Manual Save Test' },
+        });
       });
 
       // Click save now button
-      fireEvent.click(screen.getByText('Save Now'));
+      await act(async () => {
+        fireEvent.click(screen.getByText('Save Now'));
+      });
 
       expect(localStorageMock.setItem).toHaveBeenCalledWith(
         'invoice-draft',
