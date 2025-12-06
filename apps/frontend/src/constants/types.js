@@ -24,7 +24,8 @@ export const COMMON = {
 };
 
 export const EMPLOYEE = {
-
+	EMPLOYEE_LIST: 'EMPLOYEE_LIST',
+	CURRENCY_LIST: 'CURRENCY_LIST',
 };
 
 export const AUTH = {
