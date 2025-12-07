@@ -105,7 +105,10 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ env.SONAR_HOST_URL }}
+        MAVEN_OPTS: "-Djavax.net.ssl.trustAll=true"
+        SONAR_SCANNER_OPTS: "-Djavax.net.ssl.trustAll=true -Dsonar.scanner.force-deprecated-java-version=true"
       run: |
+        # Use sonar-scanner CLI for better SSL handling
         mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
           -Dsonar.projectKey=SimpleAccounts-UAE \
           -Dsonar.projectName="SimpleAccounts UAE" \
@@ -116,7 +119,7 @@ jobs:
           -Dsonar.scanner.skipJreProvisioning=true \
           -Dsonar.scanner.os=linux \
           -Dsonar.scanner.arch=x64 \
-          -Dsonar.scanner.skipServerCertificateVerification=true \
+          -Dsonar.scanner.truststorePath= \
           -DskipTests=true \
           || true
 
