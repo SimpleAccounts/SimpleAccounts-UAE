@@ -64,9 +64,7 @@ class ActivityDaoImplTest {
     List<Activity> result = activityDao.getLatestActivites(maxCount);
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).hasSize(5);
-    assertThat(result).isEqualTo(expectedActivities);
+    assertThat(result).isNotNull().hasSize(5).isEqualTo(expectedActivities);
     verify(chartUtil).modifyDate(any(Date.class), eq(Calendar.MONTH), eq(-1));
     verify(typedQuery).setMaxResults(maxCount);
   }
@@ -87,8 +85,7 @@ class ActivityDaoImplTest {
     List<Activity> result = activityDao.getLatestActivites(maxCount);
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).isEmpty();
+    assertThat(result).isNotNull().isEmpty();
   }
 
   @Test
@@ -107,8 +104,7 @@ class ActivityDaoImplTest {
     List<Activity> result = activityDao.getLatestActivites(maxCount);
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).isEmpty();
+    assertThat(result).isNotNull().isEmpty();
   }
 
   @Test
@@ -268,8 +264,7 @@ class ActivityDaoImplTest {
     List<Activity> result = activityDao.getLatestActivites(maxCount);
 
     // Assert
-    assertThat(result).isNotEmpty();
-    assertThat(result).hasSize(3);
+    assertThat(result).isNotEmpty().hasSize(3);
   }
 
   @Test
@@ -393,8 +388,7 @@ class ActivityDaoImplTest {
     List<Activity> result = activityDao.getLatestActivites(maxCount);
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).isSameAs(expectedActivities);
+    assertThat(result).isNotNull().isSameAs(expectedActivities);
   }
 
   @Test

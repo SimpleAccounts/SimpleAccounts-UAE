@@ -80,7 +80,7 @@ public class EmailSender {
 		} catch (MessagingException e) {
 			logger.error(ErrorConstant.ERROR, e);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error("Error sending email", e);
 		}
 	}
 

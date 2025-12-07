@@ -2051,7 +2051,7 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
             byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+REFUND_CD_TEMPLATE).getURI()));
             htmlContent= new String(contentData, StandardCharsets.UTF_8).replace("{currency}",contact.getCurrency().getCurrencyIsoCode());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error processing credit note", e);
         }
         String temp1=htmlContent.replace("{name}", contactName)
                 .replace("{date}", date )

@@ -297,7 +297,7 @@ public class MigrationUtil {
 //                    method.invoke(entity, val);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Error during migration", e);
         }
     }
     
@@ -397,7 +397,7 @@ public class MigrationUtil {
             method = entity.getClass().getMethod("setCreatedDate", dateParamTypes);
             method.invoke(entity, LocalDateTime.now());
         } catch (Exception e) {
-            //e.printStackTrace();
+            //LOG.error("Error during migration", e);
             LOG.error("Error =", e);
         }
 
@@ -570,7 +570,7 @@ public class MigrationUtil {
            Class aClass = Class.forName(entityName);
            return aClass.newInstance();
        } catch (Exception e) {
-           e.printStackTrace();
+           LOG.error("Error during migration", e);
        }
        return null;
    }

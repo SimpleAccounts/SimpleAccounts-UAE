@@ -69,8 +69,7 @@ class ContactDaoImplTest {
         List<DropdownModel> result = contactDao.getContactForDropdown(contactType);
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotNull().hasSize(2);
     }
 
     @Test
@@ -90,8 +89,7 @@ class ContactDaoImplTest {
         List<DropdownModel> result = contactDao.getContactForDropdown(contactType);
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -190,8 +188,7 @@ class ContactDaoImplTest {
         List<Contact> result = contactDao.getAllContacts();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotNull().hasSize(2);
         assertThat(result.get(0).getFirstName()).isEqualTo("John");
         assertThat(result.get(1).getFirstName()).isEqualTo("Jane");
     }
@@ -209,8 +206,7 @@ class ContactDaoImplTest {
         List<Contact> result = contactDao.getAllContacts();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test

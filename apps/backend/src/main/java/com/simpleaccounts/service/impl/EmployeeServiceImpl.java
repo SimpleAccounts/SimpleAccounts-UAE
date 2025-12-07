@@ -195,7 +195,7 @@ public class EmployeeServiceImpl extends EmployeeService {
             byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+THANK_YOU_TEMPLATE).getURI()));
             htmlContent= new String(contentData, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error processing employee service", e);
         }
 
         try {

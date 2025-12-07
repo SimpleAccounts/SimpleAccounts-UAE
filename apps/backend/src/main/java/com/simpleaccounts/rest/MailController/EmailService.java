@@ -114,7 +114,7 @@ public class EmailService {
                     bytes = file.getBytes();
                     fileMetaData.put(file.getOriginalFilename(),bytes);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("Error processing email", e);
                 }
             });
 
@@ -184,7 +184,7 @@ public class EmailService {
             htmlContent= new String(contentData, StandardCharsets.UTF_8)
                     .replace("{currency}",invoice.getCurrency().getCurrencyIsoCode());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error processing email", e);
         }
         if (htmlContent !="" && htmlContent !=null ){
             content = mailUtility.create(map, htmlContent);
@@ -276,7 +276,7 @@ public class EmailService {
             htmlContent= new String(contentData, StandardCharsets.UTF_8)
                     .replace("{currency}",invoice.getCurrency().getCurrencyIsoCode());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error processing email", e);
         }
         if (htmlContent !="" && htmlContent !=null ){
             content = mailUtility.create(map, htmlContent);
@@ -371,7 +371,7 @@ public class EmailService {
             htmlContent = new String(contentData, StandardCharsets.UTF_8)
                     .replace("{currency}", quotationCurrencyRelation.getCurrencyIsoCode());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error processing email", e);
         }
         if (htmlContent != "" && htmlContent != null) {
             content = mailUtility.create(map, htmlContent);
@@ -466,7 +466,7 @@ public class EmailService {
             htmlContent = new String(contentData, StandardCharsets.UTF_8)
                     .replace("{currency}", quotationCurrencyRelation.getCurrencyIsoCode());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error processing email", e);
         }
         if (htmlContent != "" && htmlContent != null) {
             content = mailUtility.create(map, htmlContent);
@@ -596,7 +596,7 @@ public class EmailService {
             byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + invoiceEmailBody.getPath()).getURI()));
             htmlText = new String(bodyData, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error processing email", e);
         }
 
         StringBuilder emailBodyBuilder = new StringBuilder();
@@ -633,7 +633,7 @@ public class EmailService {
             byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + invoiceEmailBody.getPath()).getURI()));
             htmlText = new String(bodyData, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error processing email", e);
         }
 
         StringBuilder emailBodyBuilder = new StringBuilder();
@@ -720,7 +720,7 @@ public class EmailService {
             byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + invoiceEmailBody.getPath()).getURI()));
             htmlText = new String(bodyData, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error processing email", e);
         }
 
         StringBuilder emailBodyBuilder = new StringBuilder();

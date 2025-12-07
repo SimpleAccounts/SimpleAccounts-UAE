@@ -899,7 +899,7 @@ public class InvoiceRestHelper {
 					.replace("{amountInWords}", amountInWords)
 					.replace("{vatInWords}", vatInWords);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error processing invoice", e);
 		}
 
 		if (htmlContent != "" && htmlContent != null) {
@@ -1085,7 +1085,7 @@ public class InvoiceRestHelper {
 			}
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error processing invoice", e);
 		}
 
 		if (htmlContent !="" && htmlContent !=null ){
@@ -1192,7 +1192,7 @@ public class InvoiceRestHelper {
 			htmlText = new String(bodyData, StandardCharsets.UTF_8);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error processing invoice", e);
 		}
 
 		//Adding product details html content
@@ -1236,7 +1236,7 @@ public class InvoiceRestHelper {
 			htmlText = new String(bodyData, StandardCharsets.UTF_8);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error processing invoice", e);
 		}
 		//Adding product details html content
 		StringBuilder emailBodyBuilder = new StringBuilder();

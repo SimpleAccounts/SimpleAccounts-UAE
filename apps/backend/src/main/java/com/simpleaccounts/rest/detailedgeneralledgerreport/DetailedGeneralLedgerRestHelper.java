@@ -21,9 +21,13 @@ import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.DateFormatUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 public class DetailedGeneralLedgerRestHelper {
+
+	private static final Logger logger = LoggerFactory.getLogger(DetailedGeneralLedgerRestHelper.class);
 
 	@Autowired
 	private JournalLineItemService journalLineItemService;
@@ -74,7 +78,7 @@ public class DetailedGeneralLedgerRestHelper {
 			expenseMap.put(expense.getExpenseId(), expense);
 			}
 			catch (Exception e){
-				e.printStackTrace();
+				logger.error("Error processing general ledger report", e);
 			}
 		}
 		return expenseMap;
@@ -126,7 +130,7 @@ public class DetailedGeneralLedgerRestHelper {
 				Payment payment = paymentService.findByPK(id);
 				paymentMap.put(payment.getPaymentId(), payment);
 			}catch (Exception e){
-					e.printStackTrace();
+					logger.error("Error processing general ledger report", e);
 				}
 		}
 		return paymentMap;

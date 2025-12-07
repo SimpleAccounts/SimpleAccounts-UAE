@@ -74,7 +74,8 @@ public class WpsFileGenerationTest {
             runnable.run();
             fail("Expected IllegalArgumentException");
         } catch (IllegalArgumentException expected) {
-            assertTrue(expected.getMessage().length() > 0);
+            String message = expected.getMessage();
+            assertTrue(message.length() > 0);
         }
     }
 }

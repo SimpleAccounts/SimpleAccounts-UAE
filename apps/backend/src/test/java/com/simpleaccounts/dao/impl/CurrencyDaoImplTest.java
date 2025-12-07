@@ -54,8 +54,7 @@ class CurrencyDaoImplTest {
     List<Currency> result = currencyDao.getCurrencies();
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).hasSize(3);
+    assertThat(result).isNotNull().hasSize(3);
     assertThat(result.get(0).getCurrencyName()).isEqualTo("UAE Dirham");
   }
 
@@ -71,8 +70,7 @@ class CurrencyDaoImplTest {
     List<Currency> result = currencyDao.getCurrencies();
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).isEmpty();
+    assertThat(result).isNotNull().isEmpty();
   }
 
   @Test
@@ -92,8 +90,7 @@ class CurrencyDaoImplTest {
     List<Currency> result = currencyDao.getCurrenciesProfile();
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).hasSize(2);
+    assertThat(result).isNotNull().hasSize(2);
   }
 
   @Test
@@ -111,8 +108,7 @@ class CurrencyDaoImplTest {
     List<Currency> result = currencyDao.getCompanyCurrencies();
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).hasSize(1);
+    assertThat(result).isNotNull().hasSize(1);
   }
 
   @Test
@@ -132,8 +128,7 @@ class CurrencyDaoImplTest {
     List<Currency> result = currencyDao.getActiveCurrencies();
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).hasSize(2);
+    assertThat(result).isNotNull().hasSize(2);
   }
 
   @Test

@@ -131,7 +131,7 @@ public class ContactServiceImpl extends ContactService {
         byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+THANK_YOU_TEMPLATE).getURI()));
             htmlContent= new String(contentData, StandardCharsets.UTF_8).replace("{currency}",contact.getCurrency().getCurrencyIsoCode());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error processing contact", e);
         }
         String temp1 = htmlContent.replace("{name}", contact.getOrganization() != null && !contact.getOrganization().isEmpty() ?
                 contact.getOrganization() :

@@ -2243,7 +2243,7 @@ public class ZohoMigrationService {
 					dataMigrationRespModel.setRecordCount((Files.lines(Paths.get(fileLocation.toString() + "/" + remFileData.toString())).count()) - 1);
 					dataMigrationRespModel.setFileName(remFileData);
 				} catch (IOException e) {	
-					e.printStackTrace();
+					LOG.error("Error during Zoho migration", e);
 				}
 				
 				resultList.add(dataMigrationRespModel);
