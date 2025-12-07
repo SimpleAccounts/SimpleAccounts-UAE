@@ -993,7 +993,7 @@ public class PayrollController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error processing payroll", e);
             logger.error("PayrollController:: Exception in removeEmployee: ", e);
             return (new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
         }

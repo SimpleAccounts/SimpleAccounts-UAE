@@ -420,7 +420,7 @@ public class SalaryRestHelper {
             htmlContent= new String(contentData, StandardCharsets.UTF_8);
             pdfContent= new String(pdfData, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error processing salary", e);
         }
         ResponseEntity<EmployeeListModel> employeeListModel=employeeController.getEmployeeById(employeeId);
 

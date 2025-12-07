@@ -105,7 +105,7 @@ public class MailIntegration {
 			}
 			javaMailSender.send(mimeMessage);
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error("Error sending mail", e);
 		}
 		//javaMailSender.send(preparator);
 		logger.info("Email send to =" +mail );

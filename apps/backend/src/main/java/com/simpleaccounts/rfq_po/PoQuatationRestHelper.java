@@ -43,6 +43,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 public class PoQuatationRestHelper {
     private static final String dateFormat = "dd-MM-yyyy";
     final Logger logger = LoggerFactory.getLogger(PoQuatationRestHelper.class);
+    private static final String ERROR_PROCESSING_QUOTATION = "Error processing quotation";
     @PersistenceContext
     private EntityManager entityManager;
     @Autowired
@@ -423,7 +424,7 @@ public class PoQuatationRestHelper {
                                                                         .replace("{amountInWords}",amountInWords)
                                                                         .replace("{vatInWords}",vatInWords);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(ERROR_PROCESSING_QUOTATION, e);
         }
 
         if (htmlContent != null && !htmlContent.isEmpty()) {
@@ -1519,7 +1520,7 @@ public class PoQuatationRestHelper {
                                                                         .replace("{amountInWords}",amountInWords)
                                                                         .replace("{vatInWords}",vatInWords);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(ERROR_PROCESSING_QUOTATION, e);
         }
 
         if (htmlContent !="" && htmlContent !=null ){
@@ -1801,7 +1802,7 @@ public class PoQuatationRestHelper {
             htmlContent= new String(contentData, StandardCharsets.UTF_8);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(ERROR_PROCESSING_QUOTATION, e);
         }
 
         if (htmlContent !="" && htmlContent !=null ){
@@ -2425,7 +2426,7 @@ public class PoQuatationRestHelper {
                     .replace("{vatInWords}",vatInWords);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(ERROR_PROCESSING_QUOTATION, e);
         }
         if (htmlContent != null && !htmlContent.isEmpty()) {
             content = mailUtility.create(map, htmlContent);
@@ -2761,7 +2762,7 @@ public class PoQuatationRestHelper {
             htmlText = new String(bodyData, StandardCharsets.UTF_8).replace("{amountInWords}",amountInWords.concat("ONLY")).replace("{vatInWords}",vatInWords.concat("ONLY"));
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(ERROR_PROCESSING_QUOTATION, e);
         }
         StringBuilder emailBodyBuilder = new StringBuilder();
         emailBodyBuilder.append(htmlText.substring(0,htmlText.indexOf(productRow)));
@@ -2792,7 +2793,7 @@ public class PoQuatationRestHelper {
             htmlText = new String(bodyData, StandardCharsets.UTF_8);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(ERROR_PROCESSING_QUOTATION, e);
         }
         StringBuilder emailBodyBuilder = new StringBuilder();
         emailBodyBuilder.append(htmlText.substring(0,htmlText.indexOf(productRow)));

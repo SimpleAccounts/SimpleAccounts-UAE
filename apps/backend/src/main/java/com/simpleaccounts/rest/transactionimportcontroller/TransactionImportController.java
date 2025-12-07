@@ -122,7 +122,7 @@ public class TransactionImportController{
 			content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
 		} catch (IOException e ) {
-			e.printStackTrace();
+			logger.error("Error importing transactions", e);
 		}
 		return ResponseEntity.ok()
 				.contentType(MediaType.parseMediaType("application/octet-stream"))

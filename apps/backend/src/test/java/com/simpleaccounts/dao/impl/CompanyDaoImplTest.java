@@ -103,8 +103,7 @@ class CompanyDaoImplTest {
         List<DropdownModel> result = companyDao.getCompaniesForDropdown();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotNull().hasSize(2);
     }
 
     @Test
@@ -120,8 +119,7 @@ class CompanyDaoImplTest {
         List<DropdownModel> result = companyDao.getCompaniesForDropdown();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test

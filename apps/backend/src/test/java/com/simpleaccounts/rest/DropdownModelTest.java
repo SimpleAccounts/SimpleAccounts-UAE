@@ -8,42 +8,42 @@ import org.junit.jupiter.api.Test;
 @DisplayName("DropdownModel Tests")
 class DropdownModelTest {
 
-    @Test
-    @DisplayName("Should create dropdown model with constructor")
-    void testDropdownModelConstructor() {
-        DropdownModel model = new DropdownModel(1, "Test Label");
+  @Test
+  @DisplayName("Should create dropdown model with constructor")
+  void testDropdownModelConstructor() {
+    DropdownModel model = new DropdownModel(1, "Test Label");
 
-        assertThat(model.getValue()).isEqualTo(1);
-        assertThat(model.getLabel()).isEqualTo("Test Label");
-    }
+    assertThat(model.getValue()).isEqualTo(1);
+    assertThat(model.getLabel()).isEqualTo("Test Label");
+  }
 
-    @Test
-    @DisplayName("Should create dropdown model with no-args constructor")
-    void testDropdownModelNoArgsConstructor() {
-        DropdownModel model = new DropdownModel();
-        model.setValue(2);
-        model.setLabel("Another Label");
+  @Test
+  @DisplayName("Should create dropdown model with no-args constructor")
+  void testDropdownModelNoArgsConstructor() {
+    DropdownModel model = new DropdownModel();
+    model.setValue(2);
+    model.setLabel("Another Label");
 
-        assertThat(model.getValue()).isEqualTo(2);
-        assertThat(model.getLabel()).isEqualTo("Another Label");
-    }
+    assertThat(model.getValue()).isEqualTo(2);
+    assertThat(model.getLabel()).isEqualTo("Another Label");
+  }
 
-    @Test
-    @DisplayName("Should test equals and hashCode")
-    void testEqualsAndHashCode() {
-        DropdownModel model1 = new DropdownModel(1, "Test");
-        DropdownModel model2 = new DropdownModel(1, "Test");
+  @Test
+  @DisplayName("Should test equals and hashCode")
+  void testEqualsAndHashCode() {
+    DropdownModel model1 = new DropdownModel(1, "Test");
+    DropdownModel model2 = new DropdownModel(1, "Test");
 
-        assertThat(model1).isEqualTo(model2);
-        assertThat(model1.hashCode()).isEqualTo(model2.hashCode());
-    }
+    assertThat(model1).isEqualTo(model2);
+    assertThat(model1).hasSameHashCodeAs(model2);
+  }
 
-    @Test
-    @DisplayName("Should test toString")
-    void testToString() {
-        DropdownModel model = new DropdownModel(1, "Test");
+  @Test
+  @DisplayName("Should test toString")
+  void testToString() {
+    DropdownModel model = new DropdownModel(1, "Test");
 
-        assertThat(model.toString()).contains("1");
-        assertThat(model.toString()).contains("Test");
-    }
+    assertThat(model.toString()).contains("1");
+    assertThat(model.toString()).contains("Test");
+  }
 }

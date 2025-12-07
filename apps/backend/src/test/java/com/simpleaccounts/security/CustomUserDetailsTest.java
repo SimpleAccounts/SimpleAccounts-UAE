@@ -38,7 +38,8 @@ public class CustomUserDetailsTest {
         Collection<? extends GrantedAuthority> authorities = details.getAuthorities();
 
         assertEquals(1, authorities.size());
-        assertTrue(authorities.iterator().next().getAuthority().contains("ROLE_EMPLOYEE"));
+        String authority = authorities.iterator().next().getAuthority();
+        assertTrue(authority.contains("ROLE_EMPLOYEE"));
     }
 }
 

@@ -228,7 +228,7 @@ public class FileHelper {
 				list.add(dataMigrationRespModel);
 
 			} catch (IllegalStateException | IOException e) {
-				e.printStackTrace();
+				log.error("Error processing file", e);
 			}
 		}
 		return list;

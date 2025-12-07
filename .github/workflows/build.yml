@@ -58,10 +58,6 @@ jobs:
     permissions:
       contents: read
 
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -74,10 +70,10 @@ jobs:
           apps/frontend/node_modules
         key: ${{ runner.os }}-frontend-${{ hashFiles('package-lock.json', 'apps/frontend/package-lock.json') }}
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 18.x
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 18.x
 
     - name: Install root dependencies
       run: npm ci --legacy-peer-deps
@@ -109,10 +105,6 @@ jobs:
     permissions:
       contents: read
 
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -125,10 +117,10 @@ jobs:
           apps/frontend/node_modules
         key: ${{ runner.os }}-frontend-${{ hashFiles('package-lock.json', 'apps/frontend/package-lock.json') }}
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 18.x
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 18.x
 
     - name: Install root dependencies
       run: npm ci --legacy-peer-deps

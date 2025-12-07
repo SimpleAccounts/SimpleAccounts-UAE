@@ -57,8 +57,7 @@ class CountryDaoImplTest {
         List<Country> result = countryDao.getCountries();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(3);
+        assertThat(result).isNotNull().hasSize(3);
         assertThat(result.get(0).getCountryName()).isEqualTo("United Arab Emirates");
     }
 
@@ -75,8 +74,7 @@ class CountryDaoImplTest {
         List<Country> result = countryDao.getCountries();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
