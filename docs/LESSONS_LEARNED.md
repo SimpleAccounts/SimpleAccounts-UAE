@@ -7,6 +7,8 @@ This document captures important lessons learned during development to prevent r
 ## Table of Contents
 
 1. [History Package Version Mismatch](#1-history-package-version-mismatch)
+2. [Apache POI / Java 17 Compatibility](#2-apache-poi--java-17-compatibility)
+3. [SonarQube SSL Configuration in Coolify](#3-sonarqube-ssl-configuration-in-coolify)
 
 ---
 
@@ -58,6 +60,79 @@ Downgrade the history package from v5.x to v4.x:
 **References:**
 - [React Router v5 to v6 Migration Guide](https://reactrouter.com/en/main/upgrading/v5)
 - [History Package Changelog](https://github.com/remix-run/history/blob/main/CHANGES.md)
+
+---
+
+## 2. Apache POI / Java 17 Compatibility
+
+**Date:** December 2025
+
+**Issue:** Excel-related tests fail in CI with `ClassCastException` when writing and reading back Excel files.
+
+**Root Cause:**
+Apache POI's `ZipSecureFile` class has compatibility issues with Java 17's module system. When writing an Excel file to a temp file and then reading it back using `WorkbookFactory.create()`, a ClassCastException occurs.
+
+**Error Message:**
+```
+org.apache.poi.openxml4j.exceptions.OpenXML4JRuntimeException: Fail to save:
+class org.apache.poi.openxml4j.util.ZipSecureFile$ThresholdInputStream cannot be cast to
+class java.util.zip.ZipFile$ZipFileInputStream
+```
+
+**Affected Tests:**
+- `ExcelUtilTest.testGetDataFromExcel`
+- `ExcelParserTest.testReadExcelWithWorkbookFactory`
+
+**Temporary Solution:**
+Tests that write-then-read Excel files are skipped with `@Ignore` annotation in CI.
+
+**Permanent Solution (TODO):**
+1. Upgrade Apache POI to version 5.2.3+ which has better Java 17 support
+2. Or use `try-with-resources` properly and ensure workbook is closed before reading
+3. Consider using `SXSSFWorkbook` for streaming operations
+
+**Prevention:**
+- Test Excel operations with the same Java version used in CI
+- Keep Apache POI updated to latest stable version
+- Review POI release notes when upgrading Java versions
+
+---
+
+## 3. SonarQube SSL Configuration in Coolify
+
+**Date:** December 2025
+
+**Issue:** SonarQube analysis fails in GitHub Actions with SSL certificate hostname verification errors.
+
+**Root Cause:**
+When SonarQube is deployed via Coolify, Traefik (the reverse proxy) may serve its default self-signed certificate instead of a valid Let's Encrypt certificate. This happens when:
+- The domain is not properly configured for SSL in Coolify
+- Let's Encrypt challenge fails silently
+- The service is accessed before SSL provisioning completes
+
+**Error Message:**
+```
+Failed to query server version: Hostname sonar-xxx.sslip.io not verified:
+    certificate: sha256/...
+    DN: CN=TRAEFIK DEFAULT CERT
+    subjectAltNames: [xxx.traefik.default]
+```
+
+**Current Workaround:**
+The workflow continues despite SSL errors (`|| true`), but analysis doesn't upload.
+
+**Permanent Solution (TODO):**
+1. In Coolify, configure the SonarQube service:
+   - Enable "Generate SSL" or "Let's Encrypt"
+   - Ensure the domain resolves correctly
+   - Wait for SSL certificate provisioning before using
+2. Alternatively, use HTTP instead of HTTPS for internal CI communication
+3. Or configure a custom SSL certificate
+
+**Prevention:**
+- Verify SSL certificate is valid before configuring CI/CD tools
+- Use `curl -v https://your-domain` to check SSL configuration
+- Monitor Coolify/Traefik logs for Let's Encrypt errors
 
 ---
 
