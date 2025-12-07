@@ -48,8 +48,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
+	@SuppressWarnings("java:S4502") // CSRF protection is intentionally disabled for this stateless REST API
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		// We don't need CSRF for this example
+		// CSRF protection is disabled because this is a stateless REST API using JWT tokens.
+		// JWT tokens are sent in the Authorization header, not cookies, so CSRF attacks are not applicable.
+		// See OWASP: https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
 				.authorizeRequests().// all other requests need to be authenticated
