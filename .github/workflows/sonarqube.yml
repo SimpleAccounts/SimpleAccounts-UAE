@@ -116,6 +116,7 @@ jobs:
           -Dsonar.scanner.skipJreProvisioning=true \
           -Dsonar.scanner.os=linux \
           -Dsonar.scanner.arch=x64 \
+          -Dsonar.scanner.skipServerCertificateVerification=true \
           -DskipTests=true \
           || true
 
