@@ -141,44 +141,40 @@ describe('Autosave Tests', () => {
     };
 
     test('should autosave form data after delay', async () => {
-      jest.useFakeTimers();
+      // Use real timers with short delay for more reliable test
+      render(<AutosaveForm storageKey="invoice-draft" autosaveDelay={50} />);
 
-      render(<AutosaveForm storageKey="invoice-draft" autosaveDelay={500} />);
-
-      // Let initial effect run and clear
+      // Wait for initial effect
       await act(async () => {
-        jest.runAllTimers();
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
       localStorageMock.setItem.mockClear();
 
-      // Change input within act to ensure state updates
+      // Change input
       await act(async () => {
         fireEvent.change(screen.getByTestId('title-input'), {
           target: { value: 'Test Invoice' },
         });
       });
 
-      // Run all pending timers to trigger the autosave
+      // Wait for autosave to trigger
       await act(async () => {
-        jest.runAllTimers();
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(localStorageMock.setItem).toHaveBeenCalledWith(
         'invoice-draft',
         expect.stringContaining('Test Invoice')
       );
-
-      jest.useRealTimers();
     });
 
     test('should debounce multiple rapid changes', async () => {
-      jest.useFakeTimers();
+      // Use short delay for fast test
+      render(<AutosaveForm storageKey="invoice-draft" autosaveDelay={50} />);
 
-      render(<AutosaveForm storageKey="invoice-draft" autosaveDelay={500} />);
-
-      // Let initial effect run and clear
+      // Wait for initial effect
       await act(async () => {
-        jest.runAllTimers();
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
       localStorageMock.setItem.mockClear();
 
@@ -187,29 +183,20 @@ describe('Autosave Tests', () => {
         fireEvent.change(screen.getByTestId('title-input'), {
           target: { value: 'T' },
         });
-      });
-
-      await act(async () => {
         fireEvent.change(screen.getByTestId('title-input'), {
           target: { value: 'Te' },
         });
-      });
-
-      await act(async () => {
         fireEvent.change(screen.getByTestId('title-input'), {
           target: { value: 'Tes' },
         });
-      });
-
-      await act(async () => {
         fireEvent.change(screen.getByTestId('title-input'), {
           target: { value: 'Test' },
         });
       });
 
-      // Run all timers to trigger the final autosave
+      // Wait for autosave to trigger after final change
       await act(async () => {
-        jest.runAllTimers();
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       // Should save with final value (debouncing means only final value saved)
@@ -217,8 +204,6 @@ describe('Autosave Tests', () => {
         'invoice-draft',
         expect.stringContaining('Test')
       );
-
-      jest.useRealTimers();
     });
 
     test('should restore saved data on load', () => {
@@ -239,13 +224,11 @@ describe('Autosave Tests', () => {
     });
 
     test('should clear draft on form submission', async () => {
-      jest.useFakeTimers();
+      render(<AutosaveForm storageKey="invoice-draft" autosaveDelay={50} />);
 
-      render(<AutosaveForm storageKey="invoice-draft" autosaveDelay={500} />);
-
-      // Let initial effect run and clear
+      // Wait for initial effect
       await act(async () => {
-        jest.runAllTimers();
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
       localStorageMock.setItem.mockClear();
 
@@ -258,7 +241,7 @@ describe('Autosave Tests', () => {
 
       // Wait for autosave
       await act(async () => {
-        jest.runAllTimers();
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(localStorageMock.setItem).toHaveBeenCalled();
@@ -269,8 +252,6 @@ describe('Autosave Tests', () => {
       });
 
       expect(localStorageMock.removeItem).toHaveBeenCalledWith('invoice-draft');
-
-      jest.useRealTimers();
     });
 
     test('should allow manual save', async () => {
