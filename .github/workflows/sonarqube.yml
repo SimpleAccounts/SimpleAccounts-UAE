@@ -90,6 +90,16 @@ jobs:
       run: mvn jacoco:report || true
       continue-on-error: true
 
+    # Import SSL certificate and run SonarQube Analysis
+    - name: Import SonarQube SSL Certificate
+      run: |
+        # Fetch and import the SSL certificate
+        echo | openssl s_client -servername sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io \
+          -connect sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io:443 2>/dev/null | \
+          openssl x509 -out /tmp/sonar.crt
+        sudo keytool -import -trustcacerts -keystore $JAVA_HOME/lib/security/cacerts \
+          -storepass changeit -noprompt -alias sonarqube -file /tmp/sonar.crt || true
+
     - name: Run SonarQube Analysis
       working-directory: apps/backend
       env:
@@ -106,8 +116,6 @@ jobs:
           -Dsonar.scanner.skipJreProvisioning=true \
           -Dsonar.scanner.os=linux \
           -Dsonar.scanner.arch=x64 \
-          -Dsonar.scanner.truststorePath=${JAVA_HOME}/lib/security/cacerts \
-          -Dsonar.scanner.truststorePassword=changeit \
           -DskipTests=true \
           || true
 
