@@ -107,8 +107,8 @@ jobs:
         SONAR_HOST_URL: ${{ env.SONAR_HOST_URL }}
       run: |
         mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-          -Dsonar.projectKey=SimpleAccounts-UAE \
-          -Dsonar.projectName="SimpleAccounts UAE" \
+          -Dsonar.projectKey=SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9 \
+          -Dsonar.projectName="SimpleAccounts-UAE" \
           -Dsonar.host.url=${{ env.SONAR_HOST_URL }} \
           -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
@@ -145,4 +145,4 @@ jobs:
     - name: Quality Gate Status
       run: |
         echo "Quality Gate status available in SonarQube dashboard"
-        echo "Visit: https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io/dashboard?id=SimpleAccounts-UAE"
+        echo "Visit: https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io/dashboard?id=SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9"
