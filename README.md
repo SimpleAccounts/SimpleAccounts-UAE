@@ -1,6 +1,7 @@
 # SimpleAccounts UAE
 
 [![CI](https://github.com/SimpleAccounts/SimpleAccounts-UAE/actions/workflows/build.yml/badge.svg)](https://github.com/SimpleAccounts/SimpleAccounts-UAE/actions/workflows/build.yml)
+[![Quality Gate Status](https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io/api/project_badges/measure?project=SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9&metric=alert_status)](https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io/dashboard?id=SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub issues](https://img.shields.io/github/issues/SimpleAccounts/SimpleAccounts-UAE)](https://github.com/SimpleAccounts/SimpleAccounts-UAE/issues)
 [![GitHub stars](https://img.shields.io/github/stars/SimpleAccounts/SimpleAccounts-UAE)](https://github.com/SimpleAccounts/SimpleAccounts-UAE/stargazers)
