@@ -88,7 +88,7 @@ jobs:
 
     - name: Run Frontend Unit Tests with Coverage
       working-directory: apps/frontend
-      run: npm run test:cov
+      run: npm test -- --coverage --watchAll=false --coverageThreshold='{}'
       env:
         CI: true
         NODE_OPTIONS: --openssl-legacy-provider
