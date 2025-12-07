@@ -1,7 +1,7 @@
 package com.simpleaccounts.uae;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -75,7 +75,7 @@ public class WpsFileGenerationTest {
             fail("Expected IllegalArgumentException");
         } catch (IllegalArgumentException expected) {
             String message = expected.getMessage();
-            assertTrue(message.length() > 0);
+            assertFalse(message.isEmpty());
         }
     }
 }
