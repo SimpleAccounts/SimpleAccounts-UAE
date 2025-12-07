@@ -61,6 +61,7 @@ public class InvoiceRestHelper {
 	private CreditNoteRepository creditNoteRepository;
 	private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
 	private static final String dateFormat = "dd-MM-yyyy";
+	private static final String ERROR_PROCESSING_INVOICE = "Error processing invoice";
 	@Autowired
 	VatCategoryService vatCategoryService;
 
@@ -899,7 +900,7 @@ public class InvoiceRestHelper {
 					.replace("{amountInWords}", amountInWords)
 					.replace("{vatInWords}", vatInWords);
 		} catch (IOException e) {
-			logger.error("Error processing invoice", e);
+			logger.error(ERROR_PROCESSING_INVOICE, e);
 		}
 
 		if (htmlContent != "" && htmlContent != null) {
@@ -1085,7 +1086,7 @@ public class InvoiceRestHelper {
 			}
 
 		} catch (IOException e) {
-			logger.error("Error processing invoice", e);
+			logger.error(ERROR_PROCESSING_INVOICE, e);
 		}
 
 		if (htmlContent !="" && htmlContent !=null ){
@@ -1192,7 +1193,7 @@ public class InvoiceRestHelper {
 			htmlText = new String(bodyData, StandardCharsets.UTF_8);
 
 		} catch (IOException e) {
-			logger.error("Error processing invoice", e);
+			logger.error(ERROR_PROCESSING_INVOICE, e);
 		}
 
 		//Adding product details html content
@@ -1236,7 +1237,7 @@ public class InvoiceRestHelper {
 			htmlText = new String(bodyData, StandardCharsets.UTF_8);
 
 		} catch (IOException e) {
-			logger.error("Error processing invoice", e);
+			logger.error(ERROR_PROCESSING_INVOICE, e);
 		}
 		//Adding product details html content
 		StringBuilder emailBodyBuilder = new StringBuilder();

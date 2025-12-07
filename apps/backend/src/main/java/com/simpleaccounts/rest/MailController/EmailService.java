@@ -46,6 +46,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 @Service
 public class EmailService {
     private final Logger logger = LoggerFactory.getLogger(EmailService.class);
+    private static final String ERROR_PROCESSING_EMAIL = "Error processing email";
 
     @Autowired
     ResourceLoader resourceLoader;
@@ -114,7 +115,7 @@ public class EmailService {
                     bytes = file.getBytes();
                     fileMetaData.put(file.getOriginalFilename(),bytes);
                 } catch (IOException e) {
-                    logger.error("Error processing email", e);
+                    logger.error(ERROR_PROCESSING_EMAIL, e);
                 }
             });
 
@@ -184,7 +185,7 @@ public class EmailService {
             htmlContent= new String(contentData, StandardCharsets.UTF_8)
                     .replace("{currency}",invoice.getCurrency().getCurrencyIsoCode());
         } catch (IOException e) {
-            logger.error("Error processing email", e);
+            logger.error(ERROR_PROCESSING_EMAIL, e);
         }
         if (htmlContent !="" && htmlContent !=null ){
             content = mailUtility.create(map, htmlContent);
@@ -276,7 +277,7 @@ public class EmailService {
             htmlContent= new String(contentData, StandardCharsets.UTF_8)
                     .replace("{currency}",invoice.getCurrency().getCurrencyIsoCode());
         } catch (IOException e) {
-            logger.error("Error processing email", e);
+            logger.error(ERROR_PROCESSING_EMAIL, e);
         }
         if (htmlContent !="" && htmlContent !=null ){
             content = mailUtility.create(map, htmlContent);
@@ -371,7 +372,7 @@ public class EmailService {
             htmlContent = new String(contentData, StandardCharsets.UTF_8)
                     .replace("{currency}", quotationCurrencyRelation.getCurrencyIsoCode());
         } catch (IOException e) {
-            logger.error("Error processing email", e);
+            logger.error(ERROR_PROCESSING_EMAIL, e);
         }
         if (htmlContent != "" && htmlContent != null) {
             content = mailUtility.create(map, htmlContent);
@@ -466,7 +467,7 @@ public class EmailService {
             htmlContent = new String(contentData, StandardCharsets.UTF_8)
                     .replace("{currency}", quotationCurrencyRelation.getCurrencyIsoCode());
         } catch (IOException e) {
-            logger.error("Error processing email", e);
+            logger.error(ERROR_PROCESSING_EMAIL, e);
         }
         if (htmlContent != "" && htmlContent != null) {
             content = mailUtility.create(map, htmlContent);
@@ -596,7 +597,7 @@ public class EmailService {
             byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + invoiceEmailBody.getPath()).getURI()));
             htmlText = new String(bodyData, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            logger.error("Error processing email", e);
+            logger.error(ERROR_PROCESSING_EMAIL, e);
         }
 
         StringBuilder emailBodyBuilder = new StringBuilder();
@@ -633,7 +634,7 @@ public class EmailService {
             byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + invoiceEmailBody.getPath()).getURI()));
             htmlText = new String(bodyData, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            logger.error("Error processing email", e);
+            logger.error(ERROR_PROCESSING_EMAIL, e);
         }
 
         StringBuilder emailBodyBuilder = new StringBuilder();
@@ -720,7 +721,7 @@ public class EmailService {
             byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + invoiceEmailBody.getPath()).getURI()));
             htmlText = new String(bodyData, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            logger.error("Error processing email", e);
+            logger.error(ERROR_PROCESSING_EMAIL, e);
         }
 
         StringBuilder emailBodyBuilder = new StringBuilder();

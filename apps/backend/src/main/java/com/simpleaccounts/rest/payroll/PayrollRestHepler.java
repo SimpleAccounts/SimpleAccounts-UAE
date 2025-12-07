@@ -56,6 +56,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 @Component
 public class PayrollRestHepler {
     private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
+    private static final String ERROR_PROCESSING_PAYROLL = "Error processing payroll";
     @Autowired
     private EmployeeBankDetailsService employeeBankDetailsService;
     @Autowired
@@ -1455,7 +1456,7 @@ public class PayrollRestHepler {
             byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+PAYROLL_APPROVAL_MAIL).getURI()));
             htmlContent= new String(contentData, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            logger.error("Error processing payroll", e);
+            logger.error(ERROR_PROCESSING_PAYROLL, e);
         }
         User generatedByUser = userService.findByPK(Integer.parseInt(payroll.getGeneratedBy()));
         String generatedByName =  generatedByUser.getFirstName().toString() +" " +generatedByUser.getLastName().toString();
@@ -1646,7 +1647,7 @@ public class PayrollRestHepler {
             byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+REJECT_MAIL_TEMPLATE).getURI()));
             htmlContent= new String(contentData, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            logger.error("Error processing payroll", e);
+            logger.error(ERROR_PROCESSING_PAYROLL, e);
         }
         String temp1=htmlContent
                 .replace("{generaterName}", user.getFirstName()+" "+user.getLastName())
@@ -2034,7 +2035,7 @@ public class PayrollRestHepler {
             byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + VOID_MAIL_TEMPLATE).getURI()));
             htmlContent = new String(contentData, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            logger.error("Error processing payroll", e);
+            logger.error(ERROR_PROCESSING_PAYROLL, e);
         }
         Integer size = receiverList.size();
         for(Integer i = 0; i < size; i++) {
