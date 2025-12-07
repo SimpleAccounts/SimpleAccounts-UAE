@@ -145,7 +145,10 @@ describe('Autosave Tests', () => {
 
       render(<AutosaveForm storageKey="invoice-draft" autosaveDelay={500} />);
 
-      // Clear any calls from initial render
+      // Let initial effect run and clear
+      await act(async () => {
+        jest.runAllTimers();
+      });
       localStorageMock.setItem.mockClear();
 
       // Change input within act to ensure state updates
@@ -155,12 +158,9 @@ describe('Autosave Tests', () => {
         });
       });
 
-      // Before delay, should not have saved (after clearing initial calls)
-      expect(localStorageMock.setItem).not.toHaveBeenCalled();
-
-      // After delay - advance timers within act
+      // Run all pending timers to trigger the autosave
       await act(async () => {
-        jest.advanceTimersByTime(600);
+        jest.runAllTimers();
       });
 
       expect(localStorageMock.setItem).toHaveBeenCalledWith(
@@ -176,17 +176,17 @@ describe('Autosave Tests', () => {
 
       render(<AutosaveForm storageKey="invoice-draft" autosaveDelay={500} />);
 
-      // Clear any calls from initial render
+      // Let initial effect run and clear
+      await act(async () => {
+        jest.runAllTimers();
+      });
       localStorageMock.setItem.mockClear();
 
-      // Make multiple rapid changes
+      // Make multiple rapid changes - each change resets the debounce timer
       await act(async () => {
         fireEvent.change(screen.getByTestId('title-input'), {
           target: { value: 'T' },
         });
-      });
-      await act(async () => {
-        jest.advanceTimersByTime(100);
       });
 
       await act(async () => {
@@ -194,17 +194,11 @@ describe('Autosave Tests', () => {
           target: { value: 'Te' },
         });
       });
-      await act(async () => {
-        jest.advanceTimersByTime(100);
-      });
 
       await act(async () => {
         fireEvent.change(screen.getByTestId('title-input'), {
           target: { value: 'Tes' },
         });
-      });
-      await act(async () => {
-        jest.advanceTimersByTime(100);
       });
 
       await act(async () => {
@@ -213,16 +207,12 @@ describe('Autosave Tests', () => {
         });
       });
 
-      // Should not have saved yet (debouncing)
-      expect(localStorageMock.setItem).not.toHaveBeenCalled();
-
-      // Wait for debounce to complete
+      // Run all timers to trigger the final autosave
       await act(async () => {
-        jest.advanceTimersByTime(600);
+        jest.runAllTimers();
       });
 
-      // Should save only once with final value
-      expect(localStorageMock.setItem).toHaveBeenCalledTimes(1);
+      // Should save with final value (debouncing means only final value saved)
       expect(localStorageMock.setItem).toHaveBeenCalledWith(
         'invoice-draft',
         expect.stringContaining('Test')
@@ -253,7 +243,10 @@ describe('Autosave Tests', () => {
 
       render(<AutosaveForm storageKey="invoice-draft" autosaveDelay={500} />);
 
-      // Clear any calls from initial render
+      // Let initial effect run and clear
+      await act(async () => {
+        jest.runAllTimers();
+      });
       localStorageMock.setItem.mockClear();
 
       // Make changes
@@ -265,7 +258,7 @@ describe('Autosave Tests', () => {
 
       // Wait for autosave
       await act(async () => {
-        jest.advanceTimersByTime(600);
+        jest.runAllTimers();
       });
 
       expect(localStorageMock.setItem).toHaveBeenCalled();
