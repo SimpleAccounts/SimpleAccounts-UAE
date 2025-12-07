@@ -46,7 +46,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should return all invoice receipts for given invoice ID")
   void findAllForInvoiceReturnsListWhenInvoiceExists() {
     // Arrange
-    Integer invoiceId = 1;
+    int invoiceId = 1;
     List<CustomerInvoiceReceipt> receipts = createCustomerInvoiceReceiptList(3);
 
     when(entityManager.createNamedQuery("findForInvoice")).thenReturn(query);
@@ -66,7 +66,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should return empty list when no receipts for invoice")
   void findAllForInvoiceReturnsEmptyListWhenNoReceipts() {
     // Arrange
-    Integer invoiceId = 999;
+    int invoiceId = 999;
 
     when(entityManager.createNamedQuery("findForInvoice")).thenReturn(query);
     when(query.setParameter("id", invoiceId)).thenReturn(query);
@@ -84,7 +84,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should use findForInvoice named query")
   void findAllForInvoiceUsesNamedQuery() {
     // Arrange
-    Integer invoiceId = 1;
+    int invoiceId = 1;
 
     when(entityManager.createNamedQuery("findForInvoice")).thenReturn(query);
     when(query.setParameter("id", invoiceId)).thenReturn(query);
@@ -101,7 +101,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should set correct invoice ID parameter")
   void findAllForInvoiceSetsCorrectParameter() {
     // Arrange
-    Integer invoiceId = 5;
+    int invoiceId = 5;
 
     when(entityManager.createNamedQuery("findForInvoice")).thenReturn(query);
     when(query.setParameter("id", invoiceId)).thenReturn(query);
@@ -134,7 +134,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should return single receipt for invoice")
   void findAllForInvoiceReturnsSingleReceipt() {
     // Arrange
-    Integer invoiceId = 1;
+    int invoiceId = 1;
     CustomerInvoiceReceipt receipt = createCustomerInvoiceReceipt(1, 1, 1);
 
     when(entityManager.createNamedQuery("findForInvoice")).thenReturn(query);
@@ -153,7 +153,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should return all receipts for given receipt ID")
   void findForReceiptReturnsListWhenReceiptExists() {
     // Arrange
-    Integer receiptId = 1;
+    int receiptId = 1;
     List<CustomerInvoiceReceipt> receipts = createCustomerInvoiceReceiptList(2);
 
     when(entityManager.createNamedQuery("findForReceipt")).thenReturn(query);
@@ -173,7 +173,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should return empty list when no receipts for receipt ID")
   void findForReceiptReturnsEmptyListWhenNoReceipts() {
     // Arrange
-    Integer receiptId = 999;
+    int receiptId = 999;
 
     when(entityManager.createNamedQuery("findForReceipt")).thenReturn(query);
     when(query.setParameter("id", receiptId)).thenReturn(query);
@@ -191,7 +191,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should use findForReceipt named query")
   void findForReceiptUsesNamedQuery() {
     // Arrange
-    Integer receiptId = 1;
+    int receiptId = 1;
 
     when(entityManager.createNamedQuery("findForReceipt")).thenReturn(query);
     when(query.setParameter("id", receiptId)).thenReturn(query);
@@ -208,7 +208,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should set correct receipt ID parameter")
   void findForReceiptSetsCorrectParameter() {
     // Arrange
-    Integer receiptId = 7;
+    int receiptId = 7;
 
     when(entityManager.createNamedQuery("findForReceipt")).thenReturn(query);
     when(query.setParameter("id", receiptId)).thenReturn(query);
@@ -241,7 +241,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should return single receipt for receipt ID")
   void findForReceiptReturnsSingleReceipt() {
     // Arrange
-    Integer receiptId = 1;
+    int receiptId = 1;
     CustomerInvoiceReceipt receipt = createCustomerInvoiceReceipt(1, 1, 1);
 
     when(entityManager.createNamedQuery("findForReceipt")).thenReturn(query);
@@ -260,7 +260,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should handle large number of receipts for invoice")
   void findAllForInvoiceHandlesLargeList() {
     // Arrange
-    Integer invoiceId = 1;
+    int invoiceId = 1;
     List<CustomerInvoiceReceipt> receipts = createCustomerInvoiceReceiptList(100);
 
     when(entityManager.createNamedQuery("findForInvoice")).thenReturn(query);
@@ -278,7 +278,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should handle large number of receipts for receipt ID")
   void findForReceiptHandlesLargeList() {
     // Arrange
-    Integer receiptId = 1;
+    int receiptId = 1;
     List<CustomerInvoiceReceipt> receipts = createCustomerInvoiceReceiptList(50);
 
     when(entityManager.createNamedQuery("findForReceipt")).thenReturn(query);
@@ -296,7 +296,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should call getResultList exactly once for findAllForInvoice")
   void findAllForInvoiceCallsGetResultListOnce() {
     // Arrange
-    Integer invoiceId = 1;
+    int invoiceId = 1;
 
     when(entityManager.createNamedQuery("findForInvoice")).thenReturn(query);
     when(query.setParameter("id", invoiceId)).thenReturn(query);
@@ -313,7 +313,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should call getResultList exactly once for findForReceipt")
   void findForReceiptCallsGetResultListOnce() {
     // Arrange
-    Integer receiptId = 1;
+    int receiptId = 1;
 
     when(entityManager.createNamedQuery("findForReceipt")).thenReturn(query);
     when(query.setParameter("id", receiptId)).thenReturn(query);
@@ -330,7 +330,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should handle multiple receipts with different amounts for invoice")
   void findAllForInvoiceHandlesMultipleAmounts() {
     // Arrange
-    Integer invoiceId = 1;
+    int invoiceId = 1;
     List<CustomerInvoiceReceipt> receipts =
         Arrays.asList(
             createCustomerInvoiceReceiptWithAmount(1, 1, 1, BigDecimal.valueOf(100)),
@@ -355,7 +355,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should handle multiple receipts with different amounts for receipt")
   void findForReceiptHandlesMultipleAmounts() {
     // Arrange
-    Integer receiptId = 1;
+    int receiptId = 1;
     List<CustomerInvoiceReceipt> receipts =
         Arrays.asList(
             createCustomerInvoiceReceiptWithAmount(1, 1, 1, BigDecimal.valueOf(50)),
@@ -378,7 +378,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should return receipts with correct invoice ID")
   void findAllForInvoiceReturnsReceiptsWithCorrectInvoiceId() {
     // Arrange
-    Integer invoiceId = 5;
+    int invoiceId = 5;
     CustomerInvoiceReceipt receipt = createCustomerInvoiceReceipt(1, invoiceId, 1);
 
     when(entityManager.createNamedQuery("findForInvoice")).thenReturn(query);
@@ -396,7 +396,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should return receipts with correct receipt ID")
   void findForReceiptReturnsReceiptsWithCorrectReceiptId() {
     // Arrange
-    Integer receiptId = 7;
+    int receiptId = 7;
     CustomerInvoiceReceipt receipt = createCustomerInvoiceReceipt(1, 1, receiptId);
 
     when(entityManager.createNamedQuery("findForReceipt")).thenReturn(query);
@@ -414,7 +414,7 @@ class CustomerInvoiceReceiptDaoImplTest {
   @DisplayName("Should handle zero amount receipts")
   void findAllForInvoiceHandlesZeroAmountReceipts() {
     // Arrange
-    Integer invoiceId = 1;
+    int invoiceId = 1;
     CustomerInvoiceReceipt receipt =
         createCustomerInvoiceReceiptWithAmount(1, 1, 1, BigDecimal.ZERO);
 
