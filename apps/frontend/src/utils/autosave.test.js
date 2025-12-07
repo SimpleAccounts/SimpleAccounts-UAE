@@ -209,17 +209,20 @@ describe('Autosave Tests', () => {
       );
     });
 
-    test('should restore saved data on load', () => {
+    test('should restore saved data on load', async () => {
       const savedData = {
         title: 'Saved Title',
         description: 'Saved Description',
         amount: '1000',
       };
-      localStorageMock.getItem.mockReturnValueOnce(JSON.stringify(savedData));
+      localStorageMock.getItem.mockReturnValue(JSON.stringify(savedData));
 
       render(<AutosaveForm storageKey="invoice-draft" />);
 
-      expect(screen.getByTestId('title-input')).toHaveValue('Saved Title');
+      // Wait for useEffect to load data and update state
+      await waitFor(() => {
+        expect(screen.getByTestId('title-input')).toHaveValue('Saved Title');
+      });
       expect(screen.getByTestId('description-input')).toHaveValue(
         'Saved Description'
       );
