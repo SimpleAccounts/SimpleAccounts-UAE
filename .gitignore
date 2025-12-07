@@ -58,3 +58,5 @@ coverage/
 *.bak
 *.swp
 *.swo
+# MCP environment variables
+.mcp.env
