@@ -21,7 +21,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<aspectj.version>1.9.21</aspectj.version>
+		<aspectj.version>1.9.25</aspectj.version>
 		<frontend-maven-plugin.version>1.9.1</frontend-maven-plugin.version>
 		<node.version>v12.16.3</node.version>
 		<yarn.version>v1.22.4</yarn.version>
