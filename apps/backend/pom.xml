@@ -488,7 +488,7 @@
 				<dependency>
 					<groupId>io.gatling</groupId>
 					<artifactId>gatling-app</artifactId>
-					<version>3.9.5</version>
+					<version>3.14.9</version>
 					<scope>test</scope>
 				</dependency>
 			</dependencies>
