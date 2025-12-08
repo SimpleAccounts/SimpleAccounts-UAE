@@ -14,6 +14,7 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ import org.apache.commons.collections4.CollectionUtils;
  * Created by Uday on 26/12/2019.
  */
 @Repository(value = "employeeDao")
+@Transactional
 public class EmployeeDaoImpl extends AbstractDao<Integer, Employee> implements EmployeeDao {
 	@Autowired
 	private DatatableSortingFilterConstant dataTableUtil;

@@ -11,6 +11,7 @@ import javax.persistence.TemporalType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.entity.Activity;
@@ -26,7 +27,7 @@ public class ActivityDaoImpl extends AbstractDao<Integer, Activity> implements A
 		Date startDate = util.modifyDate(new Date(), Calendar.MONTH, -1);
 		List<Activity> result = getEntityManager().createNamedQuery("allActivity",
 				Activity.class)
-				.setParameter("startDate", startDate, TemporalType.DATE)
+				.setParameter(CommonColumnConstants.START_DATE, startDate, TemporalType.DATE)
 				.setMaxResults(maxActiviyCount)
 				.getResultList();
 		if(result == null) {

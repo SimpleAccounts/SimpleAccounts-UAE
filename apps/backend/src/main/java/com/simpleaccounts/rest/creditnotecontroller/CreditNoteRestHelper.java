@@ -2096,6 +2096,7 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public CreditNote createOrUpdateCreditNote (CreditNoteRequestModel creditNoteRequestModel, Integer userId) {
         CreditNote creditNote = new CreditNote();
         if (Boolean.TRUE.equals(creditNoteRequestModel.getIsCreatedWithoutInvoice())) {

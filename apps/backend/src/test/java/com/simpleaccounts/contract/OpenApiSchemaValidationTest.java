@@ -718,6 +718,8 @@ class OpenApiSchemaValidationTest {
                 case "enum":
                     validateEnum(data, path, errors);
                     break;
+                default:
+                    break;
             }
 
             return errors.isEmpty() ? ValidationResult.valid() : ValidationResult.invalid(errors);
