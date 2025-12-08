@@ -525,7 +525,7 @@
 					<plugin>
 						<groupId>org.owasp</groupId>
 						<artifactId>dependency-check-maven</artifactId>
-						<version>8.4.3</version>
+						<version>7.4.4</version>
 						<configuration>
 							<failBuildOnCVSS>7</failBuildOnCVSS>
 							<formats>
