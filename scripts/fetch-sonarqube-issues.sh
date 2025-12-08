@@ -6,7 +6,7 @@ SONARQUBE_TOKEN="squ_a9dfb5e603c5ced7c6bb3133cce0b3cfdaf3c514"
 PROJECT_KEY="SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9"
 
 # Output file
-OUTPUT_FILE="/Users/moshinhashmi/.gemini/tmp/e3133635b89e3cded2fa8ba105d46a8443722545df588e96ebe3c0461931f909/sonarqube_all_issues.json"
+OUTPUT_FILE="/tmp/sonarqube_all_issues.json"
 
 echo "Fetching all open issues from SonarQube..."
 echo "Project: $PROJECT_KEY"
@@ -20,7 +20,7 @@ PAGE_SIZE=500
 TOTAL_PAGES=$(( (TOTAL + PAGE_SIZE - 1) / PAGE_SIZE ))
 
 # Combine all pages and save to a temporary file, one JSON array per line
-TEMP_ISSUES_FILE="/Users/moshinhashmi/.gemini/tmp/e3133635b89e3cded2fa8ba105d46a8443722545df588e96ebe3c0461931f909/sonarqube_temp_issues.json"
+TEMP_ISSUES_FILE="/tmp/sonarqube_temp_issues.json"
 > "$TEMP_ISSUES_FILE" # Clear the temp file
 
 for ((i=1; i<=TOTAL_PAGES; i++)); do

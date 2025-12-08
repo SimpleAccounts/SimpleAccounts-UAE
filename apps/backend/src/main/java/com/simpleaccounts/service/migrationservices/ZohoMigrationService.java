@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -2245,7 +2246,8 @@ public class ZohoMigrationService {
 				
 				try {
 					long recordCount;
-					try (java.util.stream.Stream<String> lines = Files.lines(Paths.get(fileLocation.toString() + "/" + remFileData.toString()))) {
+					Path path = Paths.get(fileLocation, remFileData);
+					try (java.util.stream.Stream<String> lines = Files.lines(path)) {
 						recordCount = lines.count() - 1;
 					}
 					dataMigrationRespModel.setRecordCount(recordCount);

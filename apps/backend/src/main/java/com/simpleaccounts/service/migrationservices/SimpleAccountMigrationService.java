@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -220,7 +221,8 @@ public class SimpleAccountMigrationService {
 				dataMigrationRespModel.setExecutionDate(LocalDateTime.now().toString());
 				dataMigrationRespModel.setFileName((String) file);
 				long recordCount;
-				try (Stream<String> lines = Files.lines(Paths.get(fileLocation.toString() + "/" + file.toString()))) {
+				Path path = Paths.get(fileLocation, file.toString());
+				try (Stream<String> lines = Files.lines(path)) {
 					recordCount = lines.count() - 1;
 				}
 				dataMigrationRespModel.setRecordCount(recordCount);

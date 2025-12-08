@@ -222,14 +222,14 @@ class DateFormatUtilTest {
         assertThat(calendar.get(Calendar.SECOND)).isLessThanOrEqualTo(0);
     }
 
-    @ParameterizedTest(name = "Should handle {0} date: {1}")
+    @ParameterizedTest(name = "Should handle date: {0}")
     @CsvSource({
-        "leap year, 29/02/2024, 29, 2, 2024",
-        "end of year, 31/12/2024, 31, 12, 2024",
-        "beginning of year, 01/01/2024, 1, 1, 2024"
+        "29/02/2024, 29, 2, 2024",
+        "31/12/2024, 31, 12, 2024",
+        "01/01/2024, 1, 1, 2024"
     })
     @DisplayName("Should handle special dates correctly")
-    void shouldHandleSpecialDatesCorrectly(String description, String dateStr, int expectedDay, int expectedMonth, int expectedYear) {
+    void shouldHandleSpecialDatesCorrectly(String dateStr, int expectedDay, int expectedMonth, int expectedYear) {
         // given
         String format = "dd/MM/yyyy";
 

@@ -78,7 +78,7 @@ def analyze_issues(issues):
         try:
             effort_minutes = int(effort_str.replace('min', ''))
             effort_by_severity[severity] += effort_minutes
-        except:
+        except (ValueError, TypeError):
             pass
     
     return {

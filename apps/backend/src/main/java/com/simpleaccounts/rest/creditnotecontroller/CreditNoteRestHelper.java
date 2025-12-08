@@ -1413,7 +1413,6 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
     if (requestModel.getPayMode() == PayMode.CASH) {
         Map<String, Object> param = new HashMap<>();
         TransactionCategory transactionCategory = transactionCategoryService.findByPK(requestModel.getDepositTo());
-        LocalDateTime paymentDate = dateFormatUtil.getDateStrAsLocalDateTime(requestModel.getPaymentDate(), DATE_FORMAT_DD_MM_YYYY);
         if (transactionCategory != null)
             param.put("transactionCategory", transactionCategory);
         param.put("deleteFlag", false);
@@ -1643,7 +1642,6 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         if (requestModel.getPayMode() == PayMode.CASH) {
             Map<String, Object> param = new HashMap<>();
             TransactionCategory transactionCategory = transactionCategoryService.findByPK(requestModel.getDepositeTo());
-            LocalDateTime paymentDate = dateFormtUtil.getDateStrAsLocalDateTime(requestModel.getPaymentDate(), DATE_FORMAT_DD_MM_YYYY);
             if (transactionCategory != null)
                 param.put("transactionCategory", transactionCategory);
             param.put("deleteFlag", false);
