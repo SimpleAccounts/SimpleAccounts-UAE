@@ -322,14 +322,14 @@ public class PoQuatationRestHelper {
             poQuatationLineItem.setDeleteFlag(false);
             switch(poQuatation.getType()){
                 case 3:
-                    poQuatationLineItem.setDiscount(BigDecimal.ZERO);
                 case 4:
                     poQuatationLineItem.setDiscount(BigDecimal.ZERO);
+                    // fall through to case 6 for quantity setting
                 case 6:
                     if (model.getQuantity() != null) {
-                    poQuatationLineItem.setQuantity(model.getQuantity());
+                        poQuatationLineItem.setQuantity(model.getQuantity());
+                    }
                     break;
-                }
                 case 5:
                      poQuatationLineItem.setQuantity(model.getGrnReceivedQuantity());
                     poQuatationLineItem.setRemainingQuantity(model.getQuantity());

@@ -361,12 +361,15 @@ public class TransactionHelper {
 					TransactionExpenses transactionExpenses = expenseList.get(0);
 					Expense expense = expenseService.findByPK(Integer.valueOf(transactionExpenses.getExpense().getExpenseId()));
 					model.setExpenseType(expense.getExpenseType());
-					if(expense.getVatCategory()!=null)
-					model.setVatId(expense.getVatCategory().getId());
-					if (expense.getExclusiveVat()!=null)
-					model.setExclusiveVat(expense.getExclusiveVat());
-					if (expense.getIsReverseChargeEnabled()!=null)
-					model.setIsReverseChargeEnabled(expense.getIsReverseChargeEnabled());
+					if(expense.getVatCategory()!=null) {
+						model.setVatId(expense.getVatCategory().getId());
+					}
+					if (expense.getExclusiveVat()!=null) {
+						model.setExclusiveVat(expense.getExclusiveVat());
+					}
+					if (expense.getIsReverseChargeEnabled()!=null) {
+						model.setIsReverseChargeEnabled(expense.getIsReverseChargeEnabled());
+					}
 				}
 
 				//fetch Payroll List

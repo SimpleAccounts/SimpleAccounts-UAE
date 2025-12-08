@@ -308,6 +308,7 @@ class BankStatementParserTest {
                 case "amount": columnMapping[2] = columnIndex; break;
                 case "credit": columnMapping[3] = columnIndex; break;
                 case "debit": columnMapping[4] = columnIndex; break;
+                default: break;
             }
         }
 

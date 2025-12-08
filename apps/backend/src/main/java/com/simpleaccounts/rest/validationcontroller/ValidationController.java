@@ -333,6 +333,7 @@ public class ValidationController {
                         else
                             return new ResponseEntity<>("Designation ID does not exists", HttpStatus.OK);
                     }
+                    break;
                 case 26: //Designation name validation
                     param = new HashMap<>();
                     if(validationModel.getName()!=null && !validationModel.getName().isEmpty()) {
@@ -344,6 +345,7 @@ public class ValidationController {
                         else
                             return new ResponseEntity<>("Designation name does not exists", HttpStatus.OK);
                     }
+                    break;
                 case 27: //Payroll subject
                     List<Payroll> payrolls = payrollRepository.findAll();
                     if (payrolls!=null && payrolls.size()>0)

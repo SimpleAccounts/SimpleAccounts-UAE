@@ -53,9 +53,7 @@ class BankAccountTypeDaoImplTest {
     List<BankAccountType> result = bankAccountTypeDao.getBankAccountTypeList();
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).hasSize(3);
-    assertThat(result).isEqualTo(expectedTypes);
+    assertThat(result).isNotNull().hasSize(3).isEqualTo(expectedTypes);
   }
 
   @Test
@@ -70,8 +68,7 @@ class BankAccountTypeDaoImplTest {
     List<BankAccountType> result = bankAccountTypeDao.getBankAccountTypeList();
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).isEmpty();
+    assertThat(result).isNotNull().isEmpty();
   }
 
   @Test
@@ -163,8 +160,7 @@ class BankAccountTypeDaoImplTest {
     BankAccountType result = bankAccountTypeDao.getDefaultBankAccountType();
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).isEqualTo(types.get(0));
+    assertThat(result).isNotNull().isEqualTo(types.get(0));
   }
 
   @Test
@@ -213,9 +209,7 @@ class BankAccountTypeDaoImplTest {
     BankAccountType result = bankAccountTypeDao.getDefaultBankAccountType();
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).isEqualTo(firstType);
-    assertThat(result).isNotEqualTo(secondType);
+    assertThat(result).isNotNull().isEqualTo(firstType).isNotEqualTo(secondType);
   }
 
   @Test

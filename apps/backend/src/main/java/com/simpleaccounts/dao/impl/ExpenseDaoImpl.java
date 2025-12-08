@@ -159,7 +159,6 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 	}
 
 	@Override
-	@Transactional
 	public void deleteByIds(List<Integer> ids) {
 		if (ids != null && !ids.isEmpty()) {
 			for (Integer id : ids) {

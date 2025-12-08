@@ -1,5 +1,6 @@
 package com.simpleaccounts.dao.impl;
 
+import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.InventoryHistoryDao;
@@ -53,8 +54,8 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
 
     private BigDecimal getTotalRevenue(Date startDate, Date endDate) {
         TypedQuery<Double> query = getEntityManager().createNamedQuery("getTotalRevenue", Double.class);
-        query.setParameter("startDate", dateUtil.get(startDate));
-        query.setParameter("endDate", dateUtil.get(endDate));
+        query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate));
+        query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
         query.setMaxResults(1);
         Double result = query.getSingleResult();
         if (result != null)
@@ -65,8 +66,8 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
 
     private BigDecimal getTotalQtySold(Date startDate, Date endDate) {
         TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("getTotalQtySold", BigDecimal.class);
-        query.setParameter("startDate", dateUtil.get(startDate));
-        query.setParameter("endDate", dateUtil.get(endDate));
+        query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate));
+        query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
         query.setMaxResults(1);
         return query.getSingleResult();
     }
@@ -116,8 +117,8 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
     }
     private Map<String,BigDecimal> getTopSellingProducts(Date startDate, Date endDate,Map<String,BigDecimal> resultMap) {
         Query query = getEntityManager().createQuery("SELECT SUM(inh.quantity) as qty, inh.productId.productName as prodcutname FROM InventoryHistory inh where inh.invoice.type=2 AND inh.createdDate BETWEEN :startDate and :endDate GROUP BY inh.productId, inh.productId.productName order by qty desc ");
-        query.setParameter("startDate", dateUtil.get(startDate));
-        query.setParameter("endDate", dateUtil.get(endDate));
+        query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate));
+        query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
         query.setMaxResults(5);
         List resultList =  query.getResultList();
         if (resultList!=null  && resultList.size()>0){
@@ -156,8 +157,8 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
     }
     private Map<String,BigDecimal> getProfit(Date startDate, Date endDate,Map<String,BigDecimal> resultMap) {
         Query query = getEntityManager().createQuery("SELECT SUM(inh.quantity)*AVG(inh.unitSellingPrice)  - SUM(inh.quantity)*AVG(inh.unitCost) AS profit , inh.productId.productName as prodcutname FROM InventoryHistory inh where inh.invoice.type=2 AND inh.createdDate BETWEEN :startDate and :endDate GROUP BY inh.productId, inh.productId.productName order by profit desc ");
-        query.setParameter("startDate", dateUtil.get(startDate));
-        query.setParameter("endDate", dateUtil.get(endDate));
+        query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate));
+        query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
         query.setMaxResults(10);
         List resultList = query.getResultList();
         if (resultList != null && resultList.size() > 0) {
@@ -196,8 +197,8 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
     }
     private Map<String,BigDecimal> getLowSellingProducts(Date startDate, Date endDate,Map<String,BigDecimal> resultMap) {
        Query query = getEntityManager().createQuery("SELECT SUM(inh.quantity) as qty, inh.productId.productName as prodcutname FROM InventoryHistory inh where inh.invoice.type=2 AND inh.createdDate BETWEEN :startDate and :endDate GROUP BY inh.productId, inh.productId.productName order by qty asc ");
-        query.setParameter("startDate", dateUtil.get(startDate));
-        query.setParameter("endDate", dateUtil.get(endDate));
+        query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate));
+        query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
         query.setMaxResults(5);
         List resultList =  query.getResultList();
         if (resultList!=null  && resultList.size()>0){

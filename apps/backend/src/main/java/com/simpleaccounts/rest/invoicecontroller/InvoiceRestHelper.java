@@ -1604,7 +1604,7 @@ public class InvoiceRestHelper {
 					getCNContactCurrencyExchange(contact, invoiceDataMap, value);
 					break;
 				case MailUtility.TOTAL:
-					getCNTotal(creditNote, invoiceDataMap, value);
+					getCreditNoteTotalAmount(creditNote, invoiceDataMap, value);
 					break;
 					case MailUtility.SENDER_NAME:
 					invoiceDataMap.put(value, user.getUserEmail());
@@ -2572,7 +2572,7 @@ public class InvoiceRestHelper {
 			invoiceDataMap.put(value, "---");
 		}
 	}
-	private void getCNTotal(CreditNote creditNote, Map<String, String> invoiceDataMap, String value) {
+	private void getCreditNoteTotalAmount(CreditNote creditNote, Map<String, String> invoiceDataMap, String value) {
 		if (creditNote.getTotalAmount() != null) {
 			invoiceDataMap.put(value, creditNote.getTotalAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
 		}

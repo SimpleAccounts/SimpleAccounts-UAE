@@ -47,8 +47,7 @@ class ContactServiceImplTest {
         List<DropdownModel> result = contactService.getContactForDropdown(contactType);
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotNull().hasSize(2);
         verify(contactDao).getContactForDropdown(contactType);
     }
 
@@ -68,8 +67,7 @@ class ContactServiceImplTest {
         List<Contact> result = contactService.getAllContacts();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotNull().hasSize(2);
         verify(contactDao).getAllContacts();
     }
 
@@ -151,8 +149,7 @@ class ContactServiceImplTest {
         List<Contact> result = contactService.getAllContacts();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     private Contact createContact(Integer id, String firstName, String lastName, String email) {

@@ -202,7 +202,9 @@ public class TransactionCategoryCreationHelper {
                contactTransactionCategoryService.persist(contactTransactionCategoryRelation);
            //    contact.setTransactionCategory(transactionCategory);
                contactService.persist(contact);
+               break;
            default:
+               break;
 
        }
     }
