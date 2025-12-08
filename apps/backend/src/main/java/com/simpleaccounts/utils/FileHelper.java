@@ -216,15 +216,34 @@ public class FileHelper {
 		}
 		createFolderIfNotExist(folderPath);
 		for (MultipartFile file : files) {
-			String filePath = folderPath + "/" + file.getOriginalFilename();
+			// Sanitize filename to prevent path traversal attacks
+			String originalFilename = file.getOriginalFilename();
+			if (originalFilename == null || originalFilename.isEmpty()) {
+				continue;
+			}
+			String sanitizedFilename = new File(originalFilename).getName();
+			if (sanitizedFilename.isEmpty() || sanitizedFilename.startsWith(".")) {
+				continue;
+			}
+			String filePath = folderPath + "/" + sanitizedFilename;
 
 			File dest = new File(filePath);
+			// Validate that the resolved path is within the expected folder
+			try {
+				if (!dest.getCanonicalPath().startsWith(new File(folderPath).getCanonicalPath())) {
+					log.error("Invalid file path detected: {}", filePath);
+					continue;
+				}
+			} catch (IOException e) {
+				log.error("Error validating file path", e);
+				continue;
+			}
 			try {
 				file.transferTo(dest);
 				DataMigrationRespModel dataMigrationRespModel = new DataMigrationRespModel();
-				dataMigrationRespModel.setFileName(file.getOriginalFilename());
+				dataMigrationRespModel.setFileName(sanitizedFilename);
 				long count;
-				try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
+				try (Stream<String> lines = Files.lines(dest.toPath())) {
 					count = lines.count();
 				}
 				dataMigrationRespModel.setRecordCount(count-1);
