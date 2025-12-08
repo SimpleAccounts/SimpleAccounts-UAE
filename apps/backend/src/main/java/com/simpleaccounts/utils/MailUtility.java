@@ -46,7 +46,7 @@ public class MailUtility {
 	private ConfigurationService configurationService;
 
 	@Autowired
-	private static Environment env;
+	private Environment env;
 
 	public static final String INVOICE_REFEREBCE_NO = "Invoice_Reference_Number";
 	public static final String CN_REFERENCE_NO = "cn_referene_no";

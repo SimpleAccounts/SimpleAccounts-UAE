@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simpleaccounts.entity.Currency;
+import com.simpleaccounts.rest.currencycontroller.dto.CurrencyDTO;
 import com.simpleaccounts.security.JwtTokenUtil;
 
 import io.swagger.annotations.ApiOperation;
@@ -149,21 +150,27 @@ public class CurrencyController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Save Currency Code", response = Currency.class)
 	@PostMapping(value = "/save")
-	public ResponseEntity<?> createCurrency(@RequestBody Currency currency, HttpServletRequest request) {
+	public ResponseEntity<?> createCurrency(@RequestBody CurrencyDTO currencyDTO, HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message = null;
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			Currency currency = new Currency();
+			currency.setCurrencyName(currencyDTO.getCurrencyName());
+			currency.setCurrencyDescription(currencyDTO.getCurrencyDescription());
+			currency.setCurrencyIsoCode(currencyDTO.getCurrencyIsoCode());
+			currency.setCurrencySymbol(currencyDTO.getCurrencySymbol());
+			currency.setDefaultFlag(currencyDTO.getDefaultFlag());
+			currency.setOrderSequence(currencyDTO.getOrderSequence());
 			currency.setCreatedBy(userId);
 			currency.setCreatedDate(LocalDateTime.now());
 			currencyService.persist(currency);
 			message = new SimpleAccountsMessage("30",
 					MessageUtil.getMessage("currency.created.successful.msg.0030"), false);
 			return new ResponseEntity<>(message,HttpStatus.OK);
-//			return new ResponseEntity<>("Saved Successfully",HttpStatus.CREATED);
-		} catch (Exception e) {SimpleAccountsMessage message= null;
-			message = new SimpleAccountsMessage("",
+		} catch (Exception e) {
+			SimpleAccountsMessage message = new SimpleAccountsMessage("",
 					MessageUtil.getMessage("create.unsuccessful.msg"), true);
-			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -171,29 +178,30 @@ public class CurrencyController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Update Currency by Currency Code", response = Currency.class)
 	@PutMapping(value = "/{currencyCode}")
-	public ResponseEntity<?> editCurrency(@RequestBody Currency currency,
+	public ResponseEntity<?> editCurrency(@RequestBody CurrencyDTO currencyDTO,
 			@RequestParam("currencyCode") Integer currencyCode, HttpServletRequest request) {
 		try {
-
 			Currency existingCurrency = currencyService.findByPK(currencyCode);
 
 			if (existingCurrency != null) {
 				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-				currency.setCurrencyCode(existingCurrency.getCurrencyCode());
-				currency.setLastUpdateDate(LocalDateTime.now());
-				currency.setLastUpdateBy(userId);
-				currency.setCreatedBy(existingCurrency.getCreatedBy());
-				currency.setCreatedDate(existingCurrency.getCreatedDate());
-				currencyService.update(currency);
-				return new ResponseEntity<>(currency, HttpStatus.OK);
+				existingCurrency.setCurrencyName(currencyDTO.getCurrencyName());
+				existingCurrency.setCurrencyDescription(currencyDTO.getCurrencyDescription());
+				existingCurrency.setCurrencyIsoCode(currencyDTO.getCurrencyIsoCode());
+				existingCurrency.setCurrencySymbol(currencyDTO.getCurrencySymbol());
+				existingCurrency.setDefaultFlag(currencyDTO.getDefaultFlag());
+				existingCurrency.setOrderSequence(currencyDTO.getOrderSequence());
+				existingCurrency.setLastUpdateDate(LocalDateTime.now());
+				existingCurrency.setLastUpdateBy(userId);
+				currencyService.update(existingCurrency);
+				return new ResponseEntity<>(existingCurrency, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			SimpleAccountsMessage message= null;
-			message = new SimpleAccountsMessage("",
+			SimpleAccountsMessage message = new SimpleAccountsMessage("",
 					MessageUtil.getMessage("update.unsuccessful.msg"), true);
-			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
