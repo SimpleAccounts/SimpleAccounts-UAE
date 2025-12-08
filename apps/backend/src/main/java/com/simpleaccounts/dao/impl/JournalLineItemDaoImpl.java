@@ -387,10 +387,9 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			if (!vatReportFilingRequestModel.getStartDate().equals("") && !vatReportFilingRequestModel.getStartDate().equals(null)) {
 				startDate = LocalDate.parse(vatReportFilingRequestModel.getStartDate(), formatter);
 			}
-		}
-        else {
-        	startDate = vatReportFiling.getStartDate();
-        	endDate = vatReportFiling.getEndDate().atStartOfDay();
+		} else {
+			startDate = vatReportFiling.getStartDate();
+			endDate = vatReportFiling.getEndDate().atStartOfDay();
 		}
 		Query query = getEntityManager().createNamedQuery("totalInputVatAmountValue");
 		query.setParameter("startDate",startDate);
@@ -436,8 +435,7 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			if (!vatReportFilingRequestModel.getEndDate().equals("") && !vatReportFilingRequestModel.getEndDate().equals(null)) {
 				endDate = dateUtil.getDateStrAsLocalDateTime(vatReportFilingRequestModel.getEndDate(),CommonColumnConstants.DD_MM_YYYY);
 			}
-		}
-		else {
+		} else {
 			startDate = vatReportFiling.getStartDate();
 			endDate = vatReportFiling.getEndDate().atStartOfDay();
 		}
@@ -461,8 +459,7 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			if (!vatReportFilingRequestModel.getEndDate().equals("") && !vatReportFilingRequestModel.getEndDate().equals(null)) {
 				endDate = dateUtil.getDateStrAsLocalDateTime(vatReportFilingRequestModel.getEndDate(),CommonColumnConstants.DD_MM_YYYY);
 			}
-		}
-		else {
+		} else {
 			startDate = vatReportFiling.getStartDate();
 			endDate = vatReportFiling.getEndDate().atStartOfDay();
 		}
@@ -493,8 +490,7 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			if (!vatReportFilingRequestModel.getEndDate().equals("") && !vatReportFilingRequestModel.getEndDate().equals(null)) {
 				endDate = dateUtil.getDateStrAsLocalDateTime(vatReportFilingRequestModel.getEndDate(),CommonColumnConstants.DD_MM_YYYY);
 			}
-		}
-		else {
+		} else {
 			startDate = vatReportFiling.getStartDate();
 			endDate = vatReportFiling.getEndDate().atStartOfDay();
 		}

@@ -9,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -19,7 +20,8 @@ import java.time.LocalDateTime;
 @Table(name = "CREDIT_NOTE_LINE_ITEM")
 @Getter
 @Setter
-public class CreditNoteLineItem {
+public class CreditNoteLineItem implements Serializable {
+    private static final long serialVersionUID = 1L;
     	@Id
 	@SequenceGenerator(name="CREDIT_NOTE_LINE_ITEM_SEQ", sequenceName="CREDIT_NOTE_LINE_ITEM_SEQ", allocationSize=1, initialValue = 10000)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="CREDIT_NOTE_LINE_ITEM_SEQ")

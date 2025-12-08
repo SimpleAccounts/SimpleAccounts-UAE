@@ -150,7 +150,7 @@ public class CurrencyController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Save Currency Code", response = Currency.class)
 	@PostMapping(value = "/save")
-	public ResponseEntity<?> createCurrency(@RequestBody CurrencyDTO currencyDTO, HttpServletRequest request) {
+	public ResponseEntity<SimpleAccountsMessage> createCurrency(@RequestBody CurrencyDTO currencyDTO, HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message = null;
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);

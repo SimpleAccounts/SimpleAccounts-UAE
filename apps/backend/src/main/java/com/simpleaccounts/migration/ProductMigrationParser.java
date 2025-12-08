@@ -4,8 +4,6 @@ import com.simpleaccounts.migration.xml.bindings.applicationmigration.Applicatio
 import com.simpleaccounts.migration.xml.bindings.product.Product;
 import com.simpleaccounts.utils.FileHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -28,8 +26,6 @@ public class ProductMigrationParser {
     private static String applicationMigrationPackage = "com.simpleaccounts.migration.xml.bindings.applicationmigration";
     private static String ProductPackage = "com.simpleaccounts.migration.xml.bindings.product";
 
-    private  final Logger logger = LoggerFactory.getLogger(ProductMigrationParser.class);
-
     private static Map<String, Product> appVersionsToProductMap;
 
     public static Map<String, Product> getAppVersionsToProductMap() {
@@ -51,7 +47,7 @@ public class ProductMigrationParser {
 //        }
     }
 
-    private boolean init() {
+    private static boolean init() {
         try{
             applicationMigration = (ApplicationMigration) loadXML(applicationMigrationPackage, applicationMigrationXML);
 
@@ -74,11 +70,11 @@ public class ProductMigrationParser {
                 }
             }
             catch (Exception ie){
-                logger.error(ERROR, ie);
+                log.error(ERROR, ie);
             }
         }
         catch (Exception e) {
-            logger.error(ERROR, e);
+            log.error(ERROR, e);
             return false;
         }
         return true;
@@ -90,7 +86,7 @@ public class ProductMigrationParser {
      * @param xmlName
      * @return
      */
-    private Object loadXML(String packageString, String xmlName)
+    private static Object loadXML(String packageString, String xmlName)
     {
         Object retVal = null;
         try{
@@ -102,7 +98,7 @@ public class ProductMigrationParser {
             retVal = unmarshaller.unmarshal(new File(filename));
         }
         catch (Exception e){
-            logger.error(ERROR, e);
+            log.error(ERROR, e);
         }
         return retVal;
     }

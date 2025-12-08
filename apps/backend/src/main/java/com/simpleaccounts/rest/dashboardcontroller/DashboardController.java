@@ -39,6 +39,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @RestController
 @RequestMapping("/rest/dashboardReport")
 public class DashboardController {
+	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy";
 	private final Logger logger = LoggerFactory.getLogger(FinancialReportController.class);
 
 	@Autowired
@@ -73,8 +74,8 @@ public class DashboardController {
 				startDate = chartUtil.getStartDate(Calendar.YEAR, -1).getTime();
 			}
 			ReportRequestModel requestModel = new ReportRequestModel();
-			requestModel.setStartDate(dateFormatUtil.getDateAsString(startDate, "dd/MM/yyyy"));
-			requestModel.setEndDate(dateFormatUtil.getDateAsString(endDate, "dd/MM/yyyy"));
+			requestModel.setStartDate(dateFormatUtil.getDateAsString(startDate, "DATE_FORMAT_DD_MM_YYYY"));
+			requestModel.setEndDate(dateFormatUtil.getDateAsString(endDate, "DATE_FORMAT_DD_MM_YYYY"));
 			String chartOfAccountCodes = financialReportRestHelper.getChartOfAccountCategoryCodes("VatReport");
 			requestModel.setChartOfAccountCodes(chartOfAccountCodes);
 			List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getListByChartOfAccountIds(requestModel);
@@ -138,8 +139,8 @@ public class DashboardController {
 //				startDate = chartUtil.getStartDate(Calendar.YEAR, -1).getTime();
 //			}
 //			ReportRequestModel requestModel = new ReportRequestModel();
-//			requestModel.setStartDate(dateFormatUtil.getDateAsString(startDate, "dd/MM/yyyy"));
-//			requestModel.setEndDate(dateFormatUtil.getDateAsString(endDate, "dd/MM/yyyy"));
+//			requestModel.setStartDate(dateFormatUtil.getDateAsString(startDate, "DATE_FORMAT_DD_MM_YYYY"));
+//			requestModel.setEndDate(dateFormatUtil.getDateAsString(endDate, "DATE_FORMAT_DD_MM_YYYY"));
 //			String chartOfAccountCodes = financialReportRestHelper.getChartOfAccountCategoryCodes("ProfitLoss");
 //			requestModel.setChartOfAccountCodes(chartOfAccountCodes);
 //			List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getListByChartOfAccountIds(requestModel);
@@ -254,7 +255,7 @@ public ResponseEntity<Object> getDashboardProfitAndLoss(@RequestParam(required =
 
 		// Process each month's data
 		long processingStart = System.currentTimeMillis();
-		DateTimeFormatter labelFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		DateTimeFormatter labelFormatter = DateTimeFormatter.ofPattern("DATE_FORMAT_DD_MM_YYYY");
 		for (DateRequestModel dateRequestModel : dateRequestModelList) {
 			YearMonth yearMonth = parseYearMonth(dateRequestModel.getStartDate());
 			List<TransactionCategoryClosingBalance> monthData = groupedByMonth.getOrDefault(yearMonth, Collections.emptyList());
@@ -294,8 +295,8 @@ private Map<YearMonth, List<TransactionCategoryClosingBalance>> groupClosingBala
 }
 
 private YearMonth parseYearMonth(String dateStr) {
-	// Parse "dd/MM/yyyy" format to YearMonth
-	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	// Parse "DATE_FORMAT_DD_MM_YYYY" format to YearMonth
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("DATE_FORMAT_DD_MM_YYYY");
 	java.time.LocalDate date = java.time.LocalDate.parse(dateStr, formatter);
 	return YearMonth.from(date);
 }
