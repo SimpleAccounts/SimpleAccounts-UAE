@@ -178,7 +178,7 @@ public class CurrencyController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Update Currency by Currency Code", response = Currency.class)
 	@PutMapping(value = "/{currencyCode}")
-	public ResponseEntity<?> editCurrency(@RequestBody CurrencyDTO currencyDTO,
+	public ResponseEntity<Object> editCurrency(@RequestBody CurrencyDTO currencyDTO,
 			@RequestParam("currencyCode") Integer currencyCode, HttpServletRequest request) {
 		try {
 			Currency existingCurrency = currencyService.findByPK(currencyCode);
@@ -209,7 +209,7 @@ public class CurrencyController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Currency by Currency Code", response = Currency.class)
 	@DeleteMapping(value = "/{currencyCode}")
-	public ResponseEntity<?> deleteCurrency(@RequestParam("currencyCode") Integer currencyCode,
+	public ResponseEntity<Object> deleteCurrency(@RequestParam("currencyCode") Integer currencyCode,
 			HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message = null;

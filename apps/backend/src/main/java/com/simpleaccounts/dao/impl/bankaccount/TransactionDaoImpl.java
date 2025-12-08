@@ -99,7 +99,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		TypedQuery<Transaction> query = getEntityManager().createQuery(
 				"SELECT t FROM Transaction t WHERE t.transactionDate <= :transactionDate and t.transactionId < :transactionId and t.deleteFlag = false and t.bankAccount.bankAccountId = :bankAccountId ORDER BY t.transactionDate DESC",
 				Transaction.class);
-		query.setParameter("transactionDate", transaction.getTransactionDate());
+		query.setParameter(CommonColumnConstants.TRANSACTION_DATE, transaction.getTransactionDate());
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, transaction.getBankAccount().getBankAccountId());
 		query.setParameter("transactionId", transaction.getTransactionId());
 		List<Transaction> transactionList = query.getResultList();
@@ -114,7 +114,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		TypedQuery<Transaction> query = getEntityManager().createQuery(
 				"SELECT t FROM Transaction t WHERE t.transactionDate > :transactionDate and t.deleteFlag = false and t.bankAccount.bankAccountId = :bankAccountId ORDER BY t.transactionDate ASC",
 				Transaction.class);
-		query.setParameter("transactionDate", transaction.getTransactionDate());
+		query.setParameter(CommonColumnConstants.TRANSACTION_DATE, transaction.getTransactionDate());
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, transaction.getBankAccount().getBankAccountId());
 		List<Transaction> transactionList = query.getResultList();
 		if (transactionList != null && !transactionList.isEmpty()) {
@@ -561,7 +561,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		TypedQuery<Long> query = getEntityManager().createQuery(queryBuilder.toString(),
 				Long.class);
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankId);
-		query.setParameter("endDate", endDate);
+		query.setParameter(CommonColumnConstants.END_DATE, endDate);
 		if(startDate != null)
 			query.setParameter("startDate", startDate);
 		long result = query.getSingleResult();
@@ -575,7 +575,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 				"WHERE t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate <=:endDate order by t.transactionDate ASC");
 		TypedQuery<Transaction> query = getEntityManager().createQuery(queryBuilder.toString(),	Transaction.class);
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankId);
-		query.setParameter("endDate", reconcileDate);
+		query.setParameter(CommonColumnConstants.END_DATE, reconcileDate);
 		List<Transaction> transactionList = query.getResultList();
 		return (transactionList!=null && transactionList.size()>0)?transactionList.get(0).getTransactionDate():null;
 	}
@@ -587,7 +587,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 				.append("' WHERE t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate <= :endDate");
 		Query query = getEntityManager().createQuery(queryBuilder.toString());
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankId);
-		query.setParameter("endDate", reconcileDate.plusHours(23).plusMinutes(59));
+		query.setParameter(CommonColumnConstants.END_DATE, reconcileDate.plusHours(23).plusMinutes(59));
 		query.executeUpdate();
 		return "update query successful";
 	}
@@ -596,7 +596,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 				"WHERE t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate <=:endDate order by t.transactionDate DESC,t.transactionId DESC");
 		TypedQuery<Transaction> query = getEntityManager().createQuery(queryBuilder.toString(),	Transaction.class);
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankId);
-		query.setParameter("endDate", reconcileDate);
+		query.setParameter(CommonColumnConstants.END_DATE, reconcileDate);
 		query.setMaxResults(1);
 		List<Transaction> transactionList = query.getResultList();
 		return closingBalance.floatValue() == transactionList.get(0).getCurrentBalance().floatValue();
@@ -608,7 +608,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 				"WHERE t.bankAccount = :bankAccount and t.transactionDate =:transactionDate and t.transactionAmount=:transactionAmount and t.transactionDescription=:transactionDescription and t.deleteFlag=false");
 		TypedQuery<Transaction> query = getEntityManager().createQuery(queryBuilder.toString(),	Transaction.class);
 		query.setParameter("bankAccount",bankAccount);
-		query.setParameter("transactionDate", transactionDate);
+		query.setParameter(CommonColumnConstants.TRANSACTION_DATE, transactionDate);
 		query.setParameter("transactionAmount", transactionAmount);
 		query.setParameter("transactionDescription",transactionDescription);
 		List<Transaction> transactionList = query.getResultList();

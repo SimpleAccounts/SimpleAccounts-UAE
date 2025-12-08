@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
+import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -49,10 +50,10 @@ public class TransactionCategoryBalanceDaoImpl extends AbstractDao<Integer, Tran
 		Map<String,Object> transactionCategorymap3 = new HashMap<>();
 		Map<String,Object> transactionCategorymap4 = new HashMap<>();
 		Map<String,Object> transactionCategorymap5 = new HashMap<>();
-		transactionCategorymap1.put("transactionCategoryCode", TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
-		transactionCategorymap2.put("transactionCategoryCode", TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode());
-		transactionCategorymap3.put("transactionCategoryCode", TransactionCategoryCodeEnum.PETTY_CASH.getCode());
-		transactionCategorymap4.put("transactionCategoryCode", TransactionCategoryCodeEnum.EMPLOYEE_REIMBURSEMENT.getCode());
+		transactionCategorymap1.put(CommonColumnConstants.TRANSACTION_CATEGORY_CODE, TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
+		transactionCategorymap2.put(CommonColumnConstants.TRANSACTION_CATEGORY_CODE, TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode());
+		transactionCategorymap3.put(CommonColumnConstants.TRANSACTION_CATEGORY_CODE, TransactionCategoryCodeEnum.PETTY_CASH.getCode());
+		transactionCategorymap4.put(CommonColumnConstants.TRANSACTION_CATEGORY_CODE, TransactionCategoryCodeEnum.EMPLOYEE_REIMBURSEMENT.getCode());
 		ChartOfAccount chartOfAccount=chartOfAccountService.findByPK(7);
 		transactionCategorymap5.put("chartOfAccount", chartOfAccount);
 		List<TransactionCategory> transactionCategories1=transactionCategoryService.findByAttributes(transactionCategorymap1);
