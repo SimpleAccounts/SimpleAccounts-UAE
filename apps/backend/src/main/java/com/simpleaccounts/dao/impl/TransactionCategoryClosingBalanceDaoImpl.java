@@ -36,7 +36,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @Transactional
 public class TransactionCategoryClosingBalanceDaoImpl extends AbstractDao<Integer, TransactionCategoryClosingBalance>
         implements TransactionCategoryClosingBalanceDao {
-    private static final String dateFormat = "dd/MM/yyyy";
+    private static final String DATE_FORMAT = "dd/MM/yyyy";
 @Autowired
 private DateFormatUtil dateUtil;
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionCategoryClosingBalanceDaoImpl.class);
@@ -216,8 +216,8 @@ private DateFormatUtil dateUtil;
     @Override
     public List<VatReportModel> getListByplaceOfSupply(FinancialReportRequestModel reportRequestModel){
         List<VatReportModel> vatReportModelList = new ArrayList<>();
-        LocalDateTime startDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(),dateFormat);
-        LocalDateTime endDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(),dateFormat);
+        LocalDateTime startDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(),DATE_FORMAT);
+        LocalDateTime endDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(),DATE_FORMAT);
         Query query = getEntityManager().createQuery("SELECT SUM(il.subTotal*i.exchangeRate) AS TOTAL_AMOUNT,SUM(il.vatAmount*i.exchangeRate) AS TOTAL_VAT_AMOUNT, i.placeOfSupplyId.id AS PLACE_OF_SUPPLY_ID,i.placeOfSupplyId.placeOfSupply AS PLACE_OF_SUPPLY_NAME FROM Invoice i, PlaceOfSupply p,InvoiceLineItem il " +
                 "WHERE i.id = il.invoice.id AND i.type= 2 AND i.placeOfSupplyId.id = p.id and il.vatCategory.id in (1) and il.vatCategory.id not in (3)  and i.totalVatAmount > 0 " +
                 "AND i.status not in (2) AND i.deleteFlag=false AND i.invoiceDate between :startDate AND :endDate GROUP By i.placeOfSupplyId.id,i.placeOfSupplyId.placeOfSupply");
@@ -232,8 +232,8 @@ private DateFormatUtil dateUtil;
 
     @Override
     public  void sumOfTotalAmountExce(FinancialReportRequestModel reportRequestModel, VatReportResponseModel vatReportResponseModel){
-        LocalDateTime startDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(),dateFormat);
-        LocalDateTime endDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(),dateFormat);
+        LocalDateTime startDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(),DATE_FORMAT);
+        LocalDateTime endDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(),DATE_FORMAT);
         TypedQuery<BigDecimal> query =getEntityManager().createQuery( "SELECT SUM(il.subTotal*i.exchangeRate) AS TOTAL_AMOUNT " +
                 " FROM Invoice i,InvoiceLineItem  il WHERE i.status not in (2) and i.id = il.invoice.id and il.vatCategory.id in (3) and i.type=2 and i.invoiceDate between :startDate AND :endDate ",BigDecimal.class);
         query.setParameter("startDate",startDate.toLocalDate());
@@ -276,8 +276,8 @@ private DateFormatUtil dateUtil;
 
     @Override
     public BigDecimal sumOfTotalAmountClosingBalance(FinancialReportRequestModel reportRequestModel, String lastMonth){
-        LocalDateTime startDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(),dateFormat);
-        LocalDateTime endDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(),dateFormat);
+        LocalDateTime startDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(),DATE_FORMAT);
+        LocalDateTime endDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(),DATE_FORMAT);
         TypedQuery<BigDecimal> query =getEntityManager().createQuery( "SELECT SUM(tcb.closingBalance)  " +
                 " FROM TransactionCategoryClosingBalance tcb WHERE  FUNCTION('TO_CHAR', tcb.effectiveDate, 'YYYY-MM') = :lastMonth  ",BigDecimal.class);
         query.setParameter("lastMonth",lastMonth);

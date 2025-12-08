@@ -381,10 +381,12 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		LocalDateTime endDate=null;
 		if (vatReportFiling.getStartDate()==null && vatReportFiling.getEndDate()==null){
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonColumnConstants.DD_MM_YYYY);
-			if (!vatReportFilingRequestModel.getEndDate().equals("") && !vatReportFilingRequestModel.getEndDate().equals(null))
-			endDate = dateUtil.getDateStrAsLocalDateTime(vatReportFilingRequestModel.getEndDate(),CommonColumnConstants.DD_MM_YYYY);
-			if (!vatReportFilingRequestModel.getStartDate().equals("") && !vatReportFilingRequestModel.getStartDate().equals(null))
-			 startDate = LocalDate.parse(vatReportFilingRequestModel.getStartDate(), formatter);
+			if (!vatReportFilingRequestModel.getEndDate().equals("") && !vatReportFilingRequestModel.getEndDate().equals(null)) {
+				endDate = dateUtil.getDateStrAsLocalDateTime(vatReportFilingRequestModel.getEndDate(),CommonColumnConstants.DD_MM_YYYY);
+			}
+			if (!vatReportFilingRequestModel.getStartDate().equals("") && !vatReportFilingRequestModel.getStartDate().equals(null)) {
+				startDate = LocalDate.parse(vatReportFilingRequestModel.getStartDate(), formatter);
+			}
 		}
         else {
         	startDate = vatReportFiling.getStartDate();
@@ -428,10 +430,12 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		LocalDateTime endDate=null;
 		if (vatReportFiling.getStartDate()==null && vatReportFiling.getEndDate()==null){
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonColumnConstants.DD_MM_YYYY);
-			if (!vatReportFilingRequestModel.getStartDate().equals("") && !vatReportFilingRequestModel.getStartDate().equals(null))
-			startDate = LocalDate.parse(vatReportFilingRequestModel.getStartDate(), formatter);
-			if (!vatReportFilingRequestModel.getEndDate().equals("") && !vatReportFilingRequestModel.getEndDate().equals(null))
-			endDate = dateUtil.getDateStrAsLocalDateTime(vatReportFilingRequestModel.getEndDate(),CommonColumnConstants.DD_MM_YYYY);
+			if (!vatReportFilingRequestModel.getStartDate().equals("") && !vatReportFilingRequestModel.getStartDate().equals(null)) {
+				startDate = LocalDate.parse(vatReportFilingRequestModel.getStartDate(), formatter);
+			}
+			if (!vatReportFilingRequestModel.getEndDate().equals("") && !vatReportFilingRequestModel.getEndDate().equals(null)) {
+				endDate = dateUtil.getDateStrAsLocalDateTime(vatReportFilingRequestModel.getEndDate(),CommonColumnConstants.DD_MM_YYYY);
+			}
 		}
 		else {
 			startDate = vatReportFiling.getStartDate();
@@ -451,10 +455,12 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		LocalDateTime endDate=null;
 		if (vatReportFiling.getStartDate()==null && vatReportFiling.getEndDate()==null){
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonColumnConstants.DD_MM_YYYY);
-			if (!vatReportFilingRequestModel.getStartDate().equals("") && !vatReportFilingRequestModel.getStartDate().equals(null))
-			startDate = LocalDate.parse(vatReportFilingRequestModel.getStartDate(), formatter);
-			if (!vatReportFilingRequestModel.getEndDate().equals("") && !vatReportFilingRequestModel.getEndDate().equals(null))
-			endDate = dateUtil.getDateStrAsLocalDateTime(vatReportFilingRequestModel.getEndDate(),CommonColumnConstants.DD_MM_YYYY);
+			if (!vatReportFilingRequestModel.getStartDate().equals("") && !vatReportFilingRequestModel.getStartDate().equals(null)) {
+				startDate = LocalDate.parse(vatReportFilingRequestModel.getStartDate(), formatter);
+			}
+			if (!vatReportFilingRequestModel.getEndDate().equals("") && !vatReportFilingRequestModel.getEndDate().equals(null)) {
+				endDate = dateUtil.getDateStrAsLocalDateTime(vatReportFilingRequestModel.getEndDate(),CommonColumnConstants.DD_MM_YYYY);
+			}
 		}
 		else {
 			startDate = vatReportFiling.getStartDate();
@@ -481,10 +487,12 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		LocalDateTime endDate=null;
 		if (vatReportFiling.getStartDate()==null && vatReportFiling.getEndDate()==null){
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonColumnConstants.DD_MM_YYYY);
-			if (!vatReportFilingRequestModel.getStartDate().equals("") && !vatReportFilingRequestModel.getStartDate().equals(null))
-			startDate = LocalDate.parse(vatReportFilingRequestModel.getStartDate(), formatter);
-			if (!vatReportFilingRequestModel.getEndDate().equals("") && !vatReportFilingRequestModel.getEndDate().equals(null))
-			endDate = dateUtil.getDateStrAsLocalDateTime(vatReportFilingRequestModel.getEndDate(),CommonColumnConstants.DD_MM_YYYY);
+			if (!vatReportFilingRequestModel.getStartDate().equals("") && !vatReportFilingRequestModel.getStartDate().equals(null)) {
+				startDate = LocalDate.parse(vatReportFilingRequestModel.getStartDate(), formatter);
+			}
+			if (!vatReportFilingRequestModel.getEndDate().equals("") && !vatReportFilingRequestModel.getEndDate().equals(null)) {
+				endDate = dateUtil.getDateStrAsLocalDateTime(vatReportFilingRequestModel.getEndDate(),CommonColumnConstants.DD_MM_YYYY);
+			}
 		}
 		else {
 			startDate = vatReportFiling.getStartDate();
