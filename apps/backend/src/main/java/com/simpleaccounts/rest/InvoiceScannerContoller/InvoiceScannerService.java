@@ -37,6 +37,12 @@ import java.util.*;
 @Service
 public class InvoiceScannerService {
 
+    private static final String JSON_KEY_AMOUNT_DUE = "AmountDue";
+    private static final String JSON_KEY_CURRENCY_CODE = "currency_code";
+    private static final String JSON_KEY_AMOUNT = "amount";
+    private static final String JSON_KEY_CURRENCY_ISO_CODE = "currencyIsoCode";
+    private static final String JSON_KEY_BILLING_ADDRESS = "BillingAddress";
+
     @Autowired
     private PaymentRepository paymentRepository;
 
@@ -449,21 +455,21 @@ public class InvoiceScannerService {
     public InvoiceRequestModel getModel(InvoiceRequestModel model, JsonNode json){
 
         if(json.get(0) != null) {
-            if (json.get(0).get("AmountDue") != null) {
-                if(json.get(0).get("AmountDue").get("amount") != null) {
-                    model.setDueAmount(json.get(0).get("AmountDue").get("amount").decimalValue());
+            if (json.get(0).get(JSON_KEY_AMOUNT_DUE) != null) {
+                if(json.get(0).get(JSON_KEY_AMOUNT_DUE).get(JSON_KEY_AMOUNT) != null) {
+                    model.setDueAmount(json.get(0).get(JSON_KEY_AMOUNT_DUE).get(JSON_KEY_AMOUNT).decimalValue());
                 }
-                if(json.get(0).get("AmountDue").get("currency_code") != null) {
-                    model.setCurrencyIsoCode(json.get(0).get("AmountDue").get("currency_code").textValue());
+                if(json.get(0).get(JSON_KEY_AMOUNT_DUE).get(JSON_KEY_CURRENCY_CODE) != null) {
+                    model.setCurrencyIsoCode(json.get(0).get(JSON_KEY_AMOUNT_DUE).get(JSON_KEY_CURRENCY_CODE).textValue());
                 }
                 Map<String, Object> param = new HashMap<>();
-                param.put("currencyIsoCode",json.get(0).get("AmountDue").get("currency_code").textValue());
+                param.put(JSON_KEY_CURRENCY_ISO_CODE,json.get(0).get(JSON_KEY_AMOUNT_DUE).get(JSON_KEY_CURRENCY_CODE).textValue());
                 List<Currency> currencyList = currencyDao.findByAttributes(param);
                 if( currencyList != null && !currencyList.isEmpty()){
                     model.setCurrencyCode(currencyList.get(0).getCurrencyCode());
                 }
             }
-            if (json.get(0).get("BillingAddress") != null) {
+            if (json.get(0).get(JSON_KEY_BILLING_ADDRESS) != null) {
 
             }
         }

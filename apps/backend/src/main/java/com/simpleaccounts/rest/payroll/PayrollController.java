@@ -63,6 +63,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @RestController
 @RequestMapping("/rest/payroll")
 public class PayrollController {
+	private static final String MSG_UPDATED = "Updated";
 
     private final Logger logger = LoggerFactory.getLogger(PayrollController.class);
 
@@ -520,7 +521,7 @@ public class PayrollController {
 
             List<SalaryTemplatePersistModel> salaryTemplatePersistModels = new ArrayList<>();
             payrollRestHepler.getUpdatedSalaryAllTemplate(salaryTemplatePersistModel, salaryTemplatePersistModels);
-            return new ResponseEntity("Updated", HttpStatus.OK);
+            return new ResponseEntity(MSG_UPDATED, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -568,7 +569,7 @@ public class PayrollController {
             List<SalaryComponentPersistModel> salaryComponentPersistModels = new ArrayList<>();
             payrollRestHepler.updateAllSalaryComponent(salaryComponentPersistModel, salaryComponentPersistModels);
 
-            return new ResponseEntity("Updated", HttpStatus.OK);
+            return new ResponseEntity(MSG_UPDATED, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -583,7 +584,7 @@ public class PayrollController {
         try {
 
             payrollRestHepler.updateSalaryComponentAsNoOfDays(id, noOfDays);
-            return new ResponseEntity("Updated", HttpStatus.OK);
+            return new ResponseEntity(MSG_UPDATED, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

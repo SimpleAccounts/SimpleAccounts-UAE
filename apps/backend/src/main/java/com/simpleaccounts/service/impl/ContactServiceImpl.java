@@ -49,6 +49,9 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
 @Service("contactService")
 @Transactional
 public class ContactServiceImpl extends ContactService {
+    private static final String TEMPLATE_VAR_PAYMODE = "{paymode}";
+    private static final String TEMPLATE_VAR_NUMBER = "{number}";
+    
     private final Logger logger = LoggerFactory.getLogger(ContactService.class);
     @Autowired
     ResourceLoader resourceLoader;
@@ -143,16 +146,20 @@ public class ContactServiceImpl extends ContactService {
         String temp2="";
         switch (invoiceType){
             case 1:
-                temp2=temp1.replace("{paymode}","Received")
-                        .replace("{number}",number);
+                temp2=temp1.replace(TEMPLATE_VAR_PAYMODE,"Received")
+                        .replace(TEMPLATE_VAR_NUMBER,number);
                 break;
             case 2:
-                temp2=temp1.replace("{paymode}","Done")
-                        .replace("{number}",number);
+                temp2=temp1.replace(TEMPLATE_VAR_PAYMODE,"Done")
+                        .replace(TEMPLATE_VAR_NUMBER,number);
                 break;
             case 7:
-                temp2=temp1.replace("{paymode}","Refunded")
-                        .replace("{number}",number);
+                temp2=temp1.replace(TEMPLATE_VAR_PAYMODE,"Refunded")
+                        .replace(TEMPLATE_VAR_NUMBER,number);
+                break;
+            default:
+                // Unknown invoice type - use original template
+                temp2 = temp1;
                 break;
         }
 

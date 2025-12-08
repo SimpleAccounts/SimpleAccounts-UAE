@@ -24,6 +24,7 @@ import java.util.*;
 
 @Service
 public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCategoryClosingBalanceService {
+	private static final String JSON_KEY_TRANSACTION_CATEGORY = "transactionCategory";
 
     @Autowired
     private TransactionCategoryClosingBalanceDao transactionCategoryClosingBalanceDao;
@@ -98,7 +99,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
         if ((category.getChartOfAccount().getChartOfAccountId()==7 || category.getChartOfAccount().getChartOfAccountId()==8 )
                 && category.getTransactionCategoryId()!=46){
             Map<String,Object> filterMap = new HashMap<>();
-            filterMap.put("transactionCategory",category);
+            filterMap.put(JSON_KEY_TRANSACTION_CATEGORY,category);
             BankAccount bankAccount = bankAccountService.findByAttributes(filterMap).get(0);
             CurrencyConversion getBaseCurrency =  currencyExchangeService.getExchangeRate(bankAccount.getBankAccountCurrency().getCurrencyCode());
 
@@ -119,7 +120,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             BigDecimal transactionAmount = transaction.getTransactionAmount()!=null?transaction.getTransactionAmount():BigDecimal.ZERO;
 
             Map<String, Object> param = new HashMap<>();
-            param.put("transactionCategory", category);
+            param.put(JSON_KEY_TRANSACTION_CATEGORY, category);
             param.put("closingBalanceDate", transaction.getTransactionDate());
 
             TransactionCategoryClosingBalance balance = getFirstElement(findByAttributes(param));
@@ -128,7 +129,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             BigDecimal bankOpeningBalance = BigDecimal.ZERO;
             if (balance == null) {
                 param = new HashMap<>();
-                param.put("transactionCategory", category);
+                param.put(JSON_KEY_TRANSACTION_CATEGORY, category);
                 TransactionCategoryClosingBalance lastBalance = transactionCategoryClosingBalanceDao.getClosingBalanceLessThanCurrentDate(transaction.getTransactionDate()
                         ,category);//getLastElement(findByAttributes(param));
                 if(lastBalance == null && balance != null) {
@@ -179,7 +180,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             else
             {
                 param = new HashMap<>();
-                param.put("transactionCategory", category);
+                param.put(JSON_KEY_TRANSACTION_CATEGORY, category);
                 closingBalance = balance.getClosingBalance();
                 TransactionCategoryClosingBalance lastBalance = transactionCategoryClosingBalanceDao.getLastClosingBalanceByDate(category); //getLastElement(findByAttributes(param));
                 if(lastBalance!=null && lastBalance.getClosingBalance() != balance.getClosingBalance() &&

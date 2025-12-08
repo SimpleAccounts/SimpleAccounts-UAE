@@ -68,7 +68,7 @@ public class ReportsConfigurationRestController {
                 ObjectMapper objectMapper = new ObjectMapper();
                 String jsonString = objectMapper.writeValueAsString(model.getColumnNames());
                 if(jsonString!=null){
-                    reportsConfiguration.setColumnNames(jsonString = model.getColumnNames().replaceAll("\\\\", ""));
+                    reportsConfiguration.setColumnNames(jsonString = model.getColumnNames().replace("\\", ""));
                 }
             }
             reportsConfiguration.setLastUpdatedBy(userId);

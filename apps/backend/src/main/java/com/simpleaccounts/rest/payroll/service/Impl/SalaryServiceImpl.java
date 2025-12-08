@@ -86,6 +86,9 @@ public class SalaryServiceImpl extends SalaryService {
                             // salarySlipModel.setGrossSalary(salarySlipModel.getGrossSalary().add(salary.getTotalAmount()));
                             salarySlipModel.setDeductions(salarySlipModel.getDeductions().add(salary.getTotalAmount()));
                             break;
+                        default:
+                            // Unknown payroll enum constant - no action needed
+                            break;
 
                     }
                     salarySlipModel.setNetPay(salarySlipModel.getEarnings());

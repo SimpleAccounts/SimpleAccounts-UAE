@@ -195,7 +195,7 @@ public class DetailedGeneralLedgerRestHelper {
 					LocalDateTime date = journal.getJournalDate().atStartOfDay();
 					if (lineItem == null)
 						date = LocalDateTime.now();
-					model.setDate(dateUtil.getLocalDateTimeAsString(date, "dd-MM-yyyy"));
+					model.setDate(dateUtil.getLocalDateTimeAsString(date, CommonColumnConstants.DD_MM_YYYY));
 					model.setTransactionTypeName(lineItem.getTransactionCategory().getTransactionCategoryName());
 
 					PostingReferenceTypeEnum postingType = lineItem.getReferenceType();
@@ -223,7 +223,7 @@ public class DetailedGeneralLedgerRestHelper {
 							model.setAmount(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
 
 							model.setDebitAmount(lineItem.getDebitAmount());
-							DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+							DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonColumnConstants.DD_MM_YYYY);
 							if (tr.getTransactionDate()!=null){
 								String d = tr.getTransactionDate().format(formatter);
 								model.setDate(d);
@@ -276,7 +276,7 @@ public class DetailedGeneralLedgerRestHelper {
 										model.setName(payeeName.toString());
 									}
 								}
-								DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+								DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(CommonColumnConstants.DD_MM_YYYY);
 								if (expense.getExpenseDate()!=null){
 									String d = expense.getExpenseDate().format(dateFormatter);
 									model.setDate(d);
@@ -327,7 +327,7 @@ public class DetailedGeneralLedgerRestHelper {
 							}
 							model.setTransactonRefNo(invoice.getReferenceNumber());
 							model.setInvoiceType(invoice.getType());
-							DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+							DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(CommonColumnConstants.DDMMYYYY);
 							if (invoice.getInvoiceDate()!=null){
 								String d = invoice.getInvoiceDate().format(dateFormatter);
 								model.setDate(d);
@@ -498,8 +498,14 @@ public class DetailedGeneralLedgerRestHelper {
 								if (contact.getOrganization() != null && !contact.getOrganization().isEmpty()){
 									model.setName(contact.getOrganization());
 								}else{
-									model.setName(contact.getFirstName() + " " + contact.getLastName());
-								}}
+							model.setName(contact.getFirstName() + " " + contact.getLastName());
+						}}
+					break;
+					default:
+						// Unknown posting type - no action needed
+						break;
+						default:
+							// Unknown posting type - no action needed
 							break;
 
 					}
@@ -569,8 +575,9 @@ public class DetailedGeneralLedgerRestHelper {
 		Map<Integer, TransactionCategoryClosingBalance> transactionCategoryClosingBalanceMap = new HashMap<>();
 		for(TransactionCategoryClosingBalance transactionCategoryClosingBalance :closingBalanceList)
 		{
-			if(transactionCategoryClosingBalance.getTransactionCategory()== null )
-			continue;
+			if(transactionCategoryClosingBalance.getTransactionCategory()== null ) {
+				continue;
+			}
 			TransactionCategoryClosingBalance tempTransactionCategoryClosingBalance = transactionCategoryClosingBalanceMap.get(transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryId());
 
 			if(tempTransactionCategoryClosingBalance==null)

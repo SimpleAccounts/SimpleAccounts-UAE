@@ -62,7 +62,7 @@ public class MailRestController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "New Request For Invoice")
     @PostMapping(value = "/emailContent/getById")
-    public ResponseEntity<?> getEmailContentById(
+    public ResponseEntity<Object> getEmailContentById(
             @RequestBody EmailContentRequestModel emailContentRequestModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -78,7 +78,7 @@ public class MailRestController {
     @LogRequest
     @ApiOperation("Send mail for otc modules")
         @PostMapping(value = "/send/mail")
-    public ResponseEntity<?> sendMail(@ModelAttribute EmailContentModel emailContentModel, HttpServletRequest request) {
+    public ResponseEntity<Object> sendMail(@ModelAttribute EmailContentModel emailContentModel, HttpServletRequest request) {
         try {
             //auth
             SimpleAccountsMessage message = null;

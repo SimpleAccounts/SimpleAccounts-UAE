@@ -22,11 +22,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DateFormatUtil {
+	private static final String DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY = "dd/MM/yyyy";
+	
 	private final Logger LOGGER = LoggerFactory.getLogger(DateFormatUtil.class);
 
 	public static List<String> dateFormatList() {
 		List<String> dateFormats = new ArrayList<>();
-		dateFormats.add("dd/MM/yyyy");
+		dateFormats.add(DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY);
 		dateFormats.add("yyyy/MM/dd");
 		dateFormats.add("dd-MM-yyyy");
 		dateFormats.add("dd-M-yyyy");
@@ -95,7 +97,7 @@ public class DateFormatUtil {
 	}
 	public String getDateAsString(){
 		Date date = Calendar.getInstance().getTime();
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY);
 		return dateFormat.format(date);
 
 	}
@@ -106,7 +108,7 @@ public class DateFormatUtil {
 		calendar.set(Calendar.HOUR,0);
 		calendar.set(Calendar.SECOND,0);
 		Date date = calendar.getTime();
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY);
 		try {
 			return dateFormat.parse(dateFormat.format(date));
 		} catch (ParseException e) {

@@ -221,8 +221,9 @@ public class EmployeeController {
 			param2.put("childID", employee);
 			List<EmployeeParentRelation> employeeParentRelationList = employeeParentRelationService.findByAttributes(param2);
 			EmployeeParentRelation employeeParentRelation =null;
-			if(employeeParentRelationList!=null && !employeeParentRelationList.isEmpty())
-			employeeParentRelation = employeeParentRelationList.get(0);
+			if(employeeParentRelationList!=null && !employeeParentRelationList.isEmpty()) {
+				employeeParentRelation = employeeParentRelationList.get(0);
+			}
 
 			if (employee == null) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);

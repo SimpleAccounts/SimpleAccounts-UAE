@@ -329,7 +329,7 @@ public class ReceiptController {
 				customerInvoiceReceipt.setReceipt(receipt);
 				customerInvoiceReceipt.setCreatedBy(userId);
 				Contact contact=contactService.findByPK(receiptRequestModel.getContactId());
-				contactService.sendInvoiceThankYouMail(contact,1,customerInvoiceReceipt.getCustomerInvoice().getReferenceNumber(),receiptRequestModel.getAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString(),dateFormtUtil.getLocalDateTimeAsString(receipt.getReceiptDate(),"dd/MM/yyyy").replaceAll("/","-"),customerInvoiceReceipt.getDueAmount(),request);
+				contactService.sendInvoiceThankYouMail(contact,1,customerInvoiceReceipt.getCustomerInvoice().getReferenceNumber(),receiptRequestModel.getAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString(),dateFormtUtil.getLocalDateTimeAsString(receipt.getReceiptDate(),"dd/MM/yyyy").replace("/","-"),customerInvoiceReceipt.getDueAmount(),request);
 				customerInvoiceReceiptService.persist(customerInvoiceReceipt);
 			}
 

@@ -51,6 +51,8 @@ import static com.simpleaccounts.constant.PostingReferenceTypeEnum.*;
 @RestController
 @RequestMapping(value = "/rest/journal")
 public class JournalRestController {
+	private static final String MSG_DELETE_UNSUCCESSFUL = "delete.unsuccessful.msg";
+	
 	private final Logger logger = LoggerFactory.getLogger(JournalRestController.class);
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -130,26 +132,30 @@ public class JournalRestController {
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<?> deleteJournal(@RequestParam(value = "id") Integer id) {
 		try {
+			deleteJournalInternal(id);
+			SimpleAccountsMessage message = null;
+			message = new SimpleAccountsMessage("0080",
+					MessageUtil.getMessage("journal.deleted.successful.msg.0080"), false);
+			return new ResponseEntity<>(message,HttpStatus.OK);
+
+		} catch (Exception e) {
+			SimpleAccountsMessage message = null;
+			message = new SimpleAccountsMessage("",
+					MessageUtil.getMessage(MSG_DELETE_UNSUCCESSFUL), true);
+			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+//		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+	}
+
+	private void deleteJournalInternal(Integer id) {
 		Journal journal = journalService.findByPK(id);
 		if (journal != null) {
 			List<Integer> list = new ArrayList<>();
 			list.add(journal.getId());
 			journalService.deleteByIds(list);
 		}
-		SimpleAccountsMessage message = null;
-		message = new SimpleAccountsMessage("0080",
-				MessageUtil.getMessage("journal.deleted.successful.msg.0080"), false);
-		return new ResponseEntity<>(message,HttpStatus.OK);
-
-		} catch (Exception e) {
-			SimpleAccountsMessage message = null;
-			message = new SimpleAccountsMessage("",
-					MessageUtil.getMessage("delete.unsuccessful.msg"), true);
-			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-//		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-}
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
@@ -158,7 +164,7 @@ public class JournalRestController {
 	public ResponseEntity<?> deleteJournals(@RequestBody DeleteModel ids) {
 		try {
 			for (Integer id : ids.getIds()) {
-				deleteJournal(id);
+				deleteJournalInternal(id);
 			}
 			SimpleAccountsMessage message = null;
 			message = new SimpleAccountsMessage("0080",
@@ -167,7 +173,7 @@ public class JournalRestController {
 		} catch (Exception e) {
 			SimpleAccountsMessage message = null;
 			message = new SimpleAccountsMessage("",
-					MessageUtil.getMessage("delete.unsuccessful.msg"), true);
+					MessageUtil.getMessage(MSG_DELETE_UNSUCCESSFUL), true);
 			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 //		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -216,7 +222,7 @@ public class JournalRestController {
 		} catch (Exception e) {
 			SimpleAccountsMessage message = null;
 			message = new SimpleAccountsMessage("",
-					MessageUtil.getMessage("delete.unsuccessful.msg"), true);
+					MessageUtil.getMessage(MSG_DELETE_UNSUCCESSFUL), true);
 			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -348,6 +354,9 @@ public class JournalRestController {
 							}
 						}
 					}
+					break;
+				default:
+					// Unknown type - return empty list
 					break;
 			}
 			return new ResponseEntity<>( journalRestHelper.getEntriesListModel(journalList), HttpStatus.OK);

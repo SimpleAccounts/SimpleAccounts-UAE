@@ -1,5 +1,6 @@
 package com.simpleaccounts.rest;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
@@ -11,7 +12,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReconsileRequestLineItemModel {
+public class ReconsileRequestLineItemModel implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private Integer id;
 	private BigDecimal remainingInvoiceAmount;

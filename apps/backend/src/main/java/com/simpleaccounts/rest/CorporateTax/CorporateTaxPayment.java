@@ -7,6 +7,7 @@ import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,7 +15,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "CORPORATE_TAX_PAYMENT")
 @Data
-public class CorporateTaxPayment {
+public class CorporateTaxPayment implements Serializable {
+	private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "CORPORATE_TAX_PAYMENT_ID", updatable = false, nullable = false)
     @SequenceGenerator(name="CORPORATE_TAX_PAYMENT_SEQ", sequenceName="CORPORATE_TAX_PAYMENT_SEQ", allocationSize=1, initialValue = 10000)

@@ -30,6 +30,10 @@ import com.simpleaccounts.utils.FileHelper;
 
 @Component
 public class ReceiptRestHelper {
+	private static final String JSON_KEY_DELETE_FLAG = "deleteFlag";
+	private static final String JSON_KEY_CONTACT = "contact";
+	private static final String JSON_KEY_CONTACT_TYPE = "contactType";
+	
 	private final Logger logger = LoggerFactory.getLogger(ReceiptRestHelper.class);
 
 	@Autowired
@@ -278,7 +282,7 @@ public class ReceiptRestHelper {
 		Map<String, Object> param = new HashMap<>();
 		param.put("referenceType", PostingReferenceTypeEnum.RECEIPT);
 		param.put("referenceId", postingRequestModel.getPostingRefId());
-		param.put("deleteFlag", false);
+		param.put(JSON_KEY_DELETE_FLAG, false);
 		journalLineItemList = journalLineItemService.findByAttributes(param);
 
 		Journal journal = journalLineItemList != null && journalLineItemList.size() > 0
@@ -296,8 +300,8 @@ public class ReceiptRestHelper {
 //		TransactionCategory transactionCategory = receipt.getInvoice().getContact().getTransactionCategory();
 //		journalLineItem1.setTransactionCategory(transactionCategory);
 		Map<String, Object> map = new HashMap<>();
-		map.put("contact",receipt.getInvoice().getContact());
-		map.put("contactType", receipt.getInvoice().getType());
+		map.put(JSON_KEY_CONTACT,receipt.getInvoice().getContact());
+		map.put(JSON_KEY_CONTACT_TYPE, receipt.getInvoice().getType());
 		ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryService.findByAttributes(map).get(0);
 		journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
 		//For multiCurrency Conversion Of diff currency Invoice to Base Currency
@@ -387,7 +391,7 @@ public class ReceiptRestHelper {
 		Map<String, Object> param = new HashMap<>();
 		param.put("referenceType", PostingReferenceTypeEnum.PAYMENT);
 		param.put("referenceId", postingRequestModel.getPostingRefId());
-		param.put("deleteFlag", false);
+		param.put(JSON_KEY_DELETE_FLAG, false);
 		journalLineItemList = journalLineItemService.findByAttributes(param);
 
 		Journal journal = journalLineItemList != null && journalLineItemList.size() > 0
@@ -400,9 +404,9 @@ public class ReceiptRestHelper {
 //						TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
 		Payment payment = paymentService.findByPK(postingRequestModel.getPostingRefId());
 		Map<String, Object> supplierMap = new HashMap<>();
-		supplierMap.put("contact", payment.getInvoice().getContact().getContactId());
-		supplierMap.put("contactType", 1);
-		supplierMap.put("deleteFlag",Boolean.FALSE);
+		supplierMap.put(JSON_KEY_CONTACT, payment.getInvoice().getContact().getContactId());
+		supplierMap.put(JSON_KEY_CONTACT_TYPE, 1);
+		supplierMap.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
 		List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
 				.findByAttributes(supplierMap);
 		TransactionCategory transactionCategory;
@@ -464,9 +468,9 @@ public class ReceiptRestHelper {
 				: new Journal();
 
 		Map<String, Object> supplierMap = new HashMap<>();
-		supplierMap.put("contact", postingRequestModel.getPostingRefId());
-		supplierMap.put("contactType", 1);
-		supplierMap.put("deleteFlag",Boolean.FALSE);
+		supplierMap.put(JSON_KEY_CONTACT, postingRequestModel.getPostingRefId());
+		supplierMap.put(JSON_KEY_CONTACT_TYPE, 1);
+		supplierMap.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
 		List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
 				.findByAttributes(supplierMap);
 		TransactionCategory transactionCategory;
@@ -535,9 +539,9 @@ public class ReceiptRestHelper {
 				: new Journal();
 
 		Map<String, Object> supplierMap = new HashMap<>();
-		supplierMap.put("contact", postingRequestModel.getPostingRefId());
-		supplierMap.put("contactType", 2);
-		supplierMap.put("deleteFlag", Boolean.FALSE);
+		supplierMap.put(JSON_KEY_CONTACT, postingRequestModel.getPostingRefId());
+		supplierMap.put(JSON_KEY_CONTACT_TYPE, 2);
+		supplierMap.put(JSON_KEY_DELETE_FLAG, Boolean.FALSE);
 		List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
 				.findByAttributes(supplierMap);
 		TransactionCategory transactionCategory;
@@ -545,8 +549,8 @@ public class ReceiptRestHelper {
 			exchangeGainOrLoss = exchangeGainOrLoss.negate();
 		}
 		Map<String, Object> map = new HashMap<>();
-		map.put("contact",receipt.getInvoice().getContact());
-		map.put("contactType", receipt.getInvoice().getType());
+		map.put(JSON_KEY_CONTACT,receipt.getInvoice().getContact());
+		map.put(JSON_KEY_CONTACT_TYPE, receipt.getInvoice().getType());
 		ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryService.findByAttributes(map).get(0);
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 		if (contactTransactionCategoryRelations != null && contactTransactionCategoryRelations.size() > 0) {

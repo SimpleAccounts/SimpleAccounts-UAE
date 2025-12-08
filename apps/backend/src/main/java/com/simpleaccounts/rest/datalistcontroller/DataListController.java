@@ -207,6 +207,17 @@ public class DataListController {
 						case POST_GRN:
 							dropdownModels.add(new DropdownModel(statusEnum.getValue(), statusEnum.getDesc()));
 							break;
+						case SAVED:
+						case REJECTED:
+						case INVOICED:
+						case UN_FILED:
+						case FILED:
+						case CLAIMED:
+							// These statuses are not included in the dropdown list
+							break;
+						default:
+							// Unknown status enum - no action needed
+							break;
 					}
 				}
 				return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
@@ -348,7 +359,13 @@ public class DataListController {
 						case CASH:
 							modelList.add(new  EnumDropdownModel(payMode.toString(), payMode.toString()));
 							break;
-				}
+						case BANK:
+							// BANK mode is commented out - not included in dropdown
+							break;
+						default:
+							// Unknown pay mode - no action needed
+							break;
+					}
 
 
 				return new ResponseEntity<>(modelList, HttpStatus.OK);

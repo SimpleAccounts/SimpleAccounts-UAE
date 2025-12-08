@@ -263,6 +263,9 @@ public class InvoiceServiceImpl extends InvoiceService {
 			invoiceQueryResultList = contList(InvoiceQueryResultList);
 			expenseQueryResultList = contList(ExpenseQueryResultList);
 	    	break;
+		default:
+			// Unknown place of supply - no action needed
+			break;
 		}
 		logger.info("The InvoiceList Size {} ", invoiceQueryResultList.size());
 		for (InvoiceAmoutResultSet invoiceResultSet : invoiceQueryResultList) {

@@ -75,6 +75,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MigrationUtil {
 	
+	private static final String LOG_ERROR_PREFIX = "Error =";
+	private static final String JSON_KEY_TRANSACTION_CATEGORY_NAME = "transactionCategoryName";
+	
 	 private final Logger LOG = LoggerFactory.getLogger(MigrationUtil.class);
 	 
 	  private static SimpleDateFormat inSDF = new SimpleDateFormat("mm/dd/yyyy");
@@ -180,7 +183,7 @@ public class MigrationUtil {
 
 		} catch (ParseException e) {
 
-			LOG.error("Error =", e);
+			LOG.error(LOG_ERROR_PREFIX, e);
 		}
 		return result;
     }
@@ -400,7 +403,7 @@ public class MigrationUtil {
             method.invoke(entity, LocalDateTime.now());
         } catch (Exception e) {
             //LOG.error("Error during migration", e);
-            LOG.error("Error =", e);
+            LOG.error(LOG_ERROR_PREFIX, e);
         }
 
     }
@@ -430,12 +433,9 @@ public class MigrationUtil {
         String cvsSplitBy = ",";
         Map<Integer, String> indexHeaderMap = new HashMap<>();
         List<Map<String, String>> list = new ArrayList<>();
-        BufferedReader br = null;
 
-        try {
-
-            FileInputStream inputStream = new FileInputStream(fileName);
-            br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+        try (FileInputStream inputStream = new FileInputStream(fileName);
+             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             int rowCount = 0;
             while ((line = br.readLine()) != null) {
 
@@ -466,15 +466,7 @@ public class MigrationUtil {
             }
             return list;
         } catch (IOException e) {
-            LOG.error("Error =", e);
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    LOG.error("Error =", e);
-                }
-            }
+            LOG.error(LOG_ERROR_PREFIX, e);
         }
         return null;
     }
@@ -488,7 +480,7 @@ public class MigrationUtil {
     public TransactionCategory getTransactionCategoryByName(String val,Map<String, String> record) {
         String transactionCategoryName = record.get("Paid Through");
         Map<String, Object> param = new HashMap<>();
-        param.put("transactionCategoryName", transactionCategoryName);
+        param.put(JSON_KEY_TRANSACTION_CATEGORY_NAME, transactionCategoryName);
         List<TransactionCategory> transactionCategoryList = transactionCategoryService.findByAttributes(param);
         for (TransactionCategory transactionCategory:transactionCategoryList){
             return transactionCategory;
@@ -509,9 +501,9 @@ public class MigrationUtil {
                 return transactionCategoryService.findByPK(49);
             case INVENTORY_ASSET:
                 return transactionCategoryService.findByPK(150);
-
+            default:
+                return null;
         }
-          return null;
   }
     
     
@@ -673,8 +665,9 @@ public class MigrationUtil {
 	        switch (val){
 	            case DUE_ON_RECEIPT:
 	               return InvoiceDuePeriodEnum.DUE_ON_RECEIPT;
+	            default:
+	                return null;
 	        }
-	        return null;
 	    }
 
 	 
@@ -726,7 +719,7 @@ public class MigrationUtil {
 					if (file.equals("Invoice.csv") || file.equals("Bill.csv") || file.equals("Item.csv")) {
 						if (mapRecord.containsKey(ACCOUNT)) {
 							Map<String, Object> map = new HashMap<>();
-							map.put("transactionCategoryName", mapRecord.get(ACCOUNT));
+							map.put(JSON_KEY_TRANSACTION_CATEGORY_NAME, mapRecord.get(ACCOUNT));
 							List<TransactionCategory> transactionCategorylist = transactionCategoryService
 									.findByAttributes(map);
 							TransactionCategoryModelForMigration transactionCategoryModelForMigration = new TransactionCategoryModelForMigration();
@@ -768,7 +761,7 @@ public class MigrationUtil {
 					if (file.equals("Expense.csv")) {
 						if (mapRecord.containsKey(EXPENSE_ACCOUNT)) {
 							Map<String, Object> map = new HashMap<>();
-							map.put("transactionCategoryName", mapRecord.get(EXPENSE_ACCOUNT));
+							map.put(JSON_KEY_TRANSACTION_CATEGORY_NAME, mapRecord.get(EXPENSE_ACCOUNT));
 							List<TransactionCategory> transactionCategories = transactionCategoryService
 									.findByAttributes(map);
 							TransactionCategoryModelForMigration transactionCategoryModelForMigration = new TransactionCategoryModelForMigration();

@@ -76,7 +76,7 @@ public class CorporateTaxController {
     @LogRequest
     @ApiOperation(value = "Add Corporate Tax settings")
     @PostMapping(value = "/save")
-    public ResponseEntity<?> save(@RequestBody CorporateTaxDateModel model, HttpServletRequest request) {
+    public ResponseEntity<Object> save(@RequestBody CorporateTaxDateModel model, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             Company company = new Company();
@@ -84,8 +84,9 @@ public class CorporateTaxController {
                 User user = userService.findByPK(userId);
                 company = user.getCompany();
             }
-            if(model.getIsEligibleForCP()!=null)
-            company.setIsEligibleForCp(model.getIsEligibleForCP());
+            if(model.getIsEligibleForCP()!=null) {
+                company.setIsEligibleForCp(model.getIsEligibleForCP());
+            }
             companyService.persist(company);
             CorporateTaxSettings corporateTaxSettings = new CorporateTaxSettings();
             if (model.getCorporateTaxSettingId()!=null){
@@ -106,7 +107,7 @@ public class CorporateTaxController {
     @LogRequest
     @ApiOperation(value = "Get Corporate Tax settings")
     @GetMapping(value = "/get/setting")
-    public ResponseEntity<?> getsetting(HttpServletRequest request) {
+    public ResponseEntity<Object> getsetting(HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             Company company = null;
@@ -200,7 +201,7 @@ public class CorporateTaxController {
     @LogExecutionTime
     @ApiOperation(value = "View Corporate Tax settings")
     @GetMapping(value = "/viewct")
-    public ResponseEntity<?> viewct(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
+    public ResponseEntity<Object> viewct(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             CorporateTaxFiling corporateTaxFiling = corporateTaxFilingRepository.findById(id).get();
@@ -283,7 +284,7 @@ public class CorporateTaxController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Record CT Payment")
     @PostMapping(value = "/recordctpayment")
-    public ResponseEntity<?> recordctpayment(@RequestBody CorporateTaxPaymentModel corporateTaxPaymentModel, HttpServletRequest
+    public ResponseEntity<Object> recordctpayment(@RequestBody CorporateTaxPaymentModel corporateTaxPaymentModel, HttpServletRequest
             request){
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -296,7 +297,7 @@ public class CorporateTaxController {
     @LogRequest
     @ApiOperation(value = "Corporate tax list")
     @GetMapping(value = "/Corporate/list")
-    public ResponseEntity<?> getList(HttpServletRequest request,
+    public ResponseEntity<Object> getList(HttpServletRequest request,
                                      @RequestParam(defaultValue = "0") int pageNo,
                                      @RequestParam(defaultValue = "10") int pageSize,
                                      @RequestParam(required = false, defaultValue = "true") boolean paginationDisable,
@@ -314,7 +315,7 @@ public class CorporateTaxController {
     @LogRequest
     @ApiOperation(value = "Corporate tax payment history")
     @GetMapping(value = "/payment/history")
-    public ResponseEntity<?> getPaymentHistoryList(HttpServletRequest request,
+    public ResponseEntity<Object> getPaymentHistoryList(HttpServletRequest request,
                                      @RequestParam(defaultValue = "0") int pageNo,
                                      @RequestParam(defaultValue = "10") int pageSize,
                                      @RequestParam(required = false, defaultValue = "true") boolean paginationDisable,
@@ -334,7 +335,7 @@ public class CorporateTaxController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Delete Corporate Tax Report By ID")
     @DeleteMapping(value = "/delete")
-    public ResponseEntity<?> delete(@RequestParam(value = "id") Integer id) {
+    public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id) {
         try {
             SimpleAccountsMessage message= null;
             CorporateTaxFiling corporateTaxFiling = corporateTaxFilingRepository.findById(id).get();

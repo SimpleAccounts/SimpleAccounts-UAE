@@ -59,6 +59,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @Component
 @RequestMapping("/rest/company")
 public class CompanyController {
+	private static final String MSG_UPDATED_SUCCESSFULLY = "Updated Successfully";
 
 	@Autowired
 	private CountryService countryService;
@@ -477,9 +478,23 @@ public class CompanyController {
 		case CASH:
 			return transactionCategoryService.findTransactionCategoryByTransactionCategoryCode(
 					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
+		case ACCOUNTS_RECEIVABLE:
+		case CURRENT_ASSET:
+		case FIXED_ASSET:
+		case OTHER_CURRENT_ASSET:
+		case STOCK:
+		case ACCOUNTS_PAYABLE:
+		case OTHER_CURRENT_LIABILITIES:
+		case OTHER_LIABILITY:
+		case INCOME:
+		case ADMIN_EXPENSE:
+		case COST_OF_GOODS_SOLD:
+		case OTHER_EXPENSE:
+		case EQUITY:
+		default:
+			return transactionCategoryService.findTransactionCategoryByTransactionCategoryCode(
+					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 		}
-		return transactionCategoryService.findTransactionCategoryByTransactionCategoryCode(
-				TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 	}
 
 	@LogRequest
@@ -529,7 +544,7 @@ public class CompanyController {
 				bankAccount.setLastUpdatedBy(user.getUserId());
 				bankAccountService.update(bankAccount);
 			}
-			return new ResponseEntity<>("Updated Successfully", HttpStatus.OK);
+			return new ResponseEntity<>(MSG_UPDATED_SUCCESSFULLY, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -558,7 +573,7 @@ public class CompanyController {
 	@LogExecutionTime
 	@ApiOperation(value = "Get Database Connection", response = List.class)
 	@GetMapping(value = "/getHealthCheck")
-	public ResponseEntity<?> getDbConnection(HttpServletRequest request) {
+	public ResponseEntity<Object> getDbConnection(HttpServletRequest request) {
 		try {
 			Integer company = companyService.getDbConncection();
 			if (company == null) {
@@ -585,7 +600,7 @@ public class CompanyController {
 	@LogExecutionTime
 	@ApiOperation(value = "Get Company Currency")
 	@GetMapping(value = "/getCompanyCurrency")
-	public ResponseEntity<?> getCurrencyConversionById() {
+	public ResponseEntity<Object> getCurrencyConversionById() {
 		Currency companyCurrency = companyService.getCompanyCurrency();
 		if (companyCurrency != null) {
 
@@ -668,7 +683,7 @@ public class CompanyController {
 				company.setCompanyNumber(companyModel.getCompanyNumber());
 			}
 			companyService.update(company);
-			return new ResponseEntity<>("Updated Successfully", HttpStatus.OK);
+			return new ResponseEntity<>(MSG_UPDATED_SUCCESSFULLY, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -701,7 +716,7 @@ public class CompanyController {
 	@LogRequest
 	@ApiOperation(value = "Update Generate Sif file settings")
 	@PostMapping(value = "/updateSifSettings")
-	public ResponseEntity<?> update( @RequestParam(required = true, defaultValue = "true") boolean generateSif, HttpServletRequest request) {
+	public ResponseEntity<Object> update( @RequestParam(required = true, defaultValue = "true") boolean generateSif, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Company company = new Company();
@@ -711,7 +726,7 @@ public class CompanyController {
 					company.setGenerateSif(generateSif);
 			}
 			companyService.update(company);
-			return new ResponseEntity<>("Updated Successfully", HttpStatus.OK);
+			return new ResponseEntity<>(MSG_UPDATED_SUCCESSFULLY, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

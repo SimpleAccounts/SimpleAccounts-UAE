@@ -86,12 +86,12 @@ public class EmailSender {
 
 	public static void main(String[] args) throws MessagingException {
 		EmailSender emailSender = new EmailSender();
-		emailSender.send("", "Subject", resetPassword,
+		emailSender.send("", "Subject", RESET_PASSWORD,
 				EmailConstant.ADMIN_SUPPORT_EMAIL,
 				EmailConstant.ADMIN_EMAIL_SENDER_NAME, true);
 	}
 
-	public final static String resetPassword = "<!DOCTYPE html>\n" +
+	public final static String RESET_PASSWORD = "<!DOCTYPE html>\n" +
 			"<html>\n" +
 			"   <head>\n" +
 			"      <title>Embedded Style Sheet</title>\n" +
@@ -132,14 +132,14 @@ public class EmailSender {
 			"               <p style= \"margin: 0; \"> Hi {UserName} ! " +
 			"										<br/> We have received a request to reset the password of your account. Let us guide you to reset your password in few clicks.</p> \n" +
 			"            </div>\n" +
-			"\t\t\t <div align= \"center \"  style= \"border-radius: 6px;background-color:#1a82e2;margin-left:20%;margin-right:20%;width:60%\">\n" +
+			"            <div align= \"center \"  style= \"border-radius: 6px;background-color:#1a82e2;margin-left:20%;margin-right:20%;width:60%\">\n" +
 			"           <a href= \"LINK\" target= \"_blank \" style= \"display: inline-block; padding: 16px 36px; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px; \">Click here to reset your password !</a> \n" +
 			"          </div>\n" +
-			"\t\t  <div align= \"center \"  style= \"border-radius: 6px;margin-top:10px\">\n" +
-			"\t\t    <p style= \"margin: 0; \">If that doesn't work, copy and paste the following link in your browser:</p> \n" +
-			"\t\t  </div>\n" +
-			"\t\t  <div  align= \"center \"  style= \"border-radius: 6px;margin-top:25px;margin-bottom:25px;\">\n" +
-			"\t\t   <p style= \"margin: 0; \"><a href= \"LINK\" target= \"_blank \">LINK</a></p> \n" +
+			"          <div align= \"center \"  style= \"border-radius: 6px;margin-top:10px\">\n" +
+			"            <p style= \"margin: 0; \">If that doesn't work, copy and paste the following link in your browser:</p> \n" +
+			"          </div>\n" +
+			"          <div  align= \"center \"  style= \"border-radius: 6px;margin-top:25px;margin-bottom:25px;\">\n" +
+			"           <p style= \"margin: 0; \"><a href= \"LINK\" target= \"_blank \">LINK</a></p> \n" +
 			"\t\t  </div>\n" +
 			"            <div class=\"center\"  style=\"width:auto;font-size:16px;background-color:#113964; border-radius:10px;\">\n" +
 			"               <br>\n" +
@@ -168,7 +168,7 @@ public class EmailSender {
 			"   </body>\n" +
 			"</html>";
 
-	public final static String newPassword = "<!DOCTYPE html>\n" +
+	public final static String NEW_PASSWORD = "<!DOCTYPE html>\n" +
 			"<html>\n" +
 			"<head>\n" +
 			"  <title>Embedded Style Sheet</title>\n" +
@@ -308,7 +308,7 @@ public class EmailSender {
 			"</body>\n" +
 			"</html>";
 
-	public final static String newuser =
+	public final static String NEW_USER =
 			"<!DOCTYPE html>\n" +
 					"<html ><head>\n" +
 					"    <title>SimpleAccounts Welcome Email</title><style type=\"text/css\">\n" +
@@ -488,7 +488,7 @@ public class EmailSender {
 					"</tr>\n" +
 					"</tbody></table>\n" +
 					"</body></html>";
-	public final static String thankyoumailBody ="<!DOCTYPE html>\n" +
+	public final static String THANK_YOU_MAIL_BODY ="<!DOCTYPE html>\n" +
 			"<html>\n" +
 			"    <head>\n" +
 			"        <title>Embedded Style Sheet</title>\n" +
@@ -593,7 +593,7 @@ public class EmailSender {
 			"            padding-top: 50px;\n" +
 			"            background-color: #f8f8ff;\n" +
 			"            border-radius:30px;\n" +
-			"			 padding-bottom: 120px;\n"+
+			"            padding-bottom: 120px;\n"+
 			"        }\n" +
 			"\n" +
 			"        .center {\n" +

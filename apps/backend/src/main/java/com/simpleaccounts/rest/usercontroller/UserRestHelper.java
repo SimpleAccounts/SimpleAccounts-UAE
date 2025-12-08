@@ -27,6 +27,8 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Component
 public class UserRestHelper {
+	private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
+	
 	private final Logger logger = LoggerFactory.getLogger(UserRestHelper.class);
 	@Autowired
 	private RoleService roleService;
@@ -55,7 +57,7 @@ public class UserRestHelper {
 				userModel.setLastName(user.getLastName());
 				userModel.setActive(user.getIsActive());
 				if (user.getDateOfBirth() != null) {
-					userModel.setDob(dateUtil.getLocalDateTimeAsString(user.getDateOfBirth(), "dd-MM-yyyy"));
+					userModel.setDob(dateUtil.getLocalDateTimeAsString(user.getDateOfBirth(), DATE_FORMAT_DD_MM_YYYY));
 				}
 				if (user.getRole() != null) {
 					userModel.setRoleId(user.getRole().getRoleCode());
@@ -84,7 +86,7 @@ public class UserRestHelper {
 			user.setLastName(userModel.getLastName());
 			user.setUserEmail(userModel.getEmail());
 			if (userModel.getDob() != null&& !userModel.getDob().isEmpty()) {
-				user.setDateOfBirth(dateUtil.getDateStrAsLocalDateTime(userModel.getDob(), "dd-MM-yyyy"));
+				user.setDateOfBirth(dateUtil.getDateStrAsLocalDateTime(userModel.getDob(), DATE_FORMAT_DD_MM_YYYY));
 			}
 			if (userModel.getRoleId() != null) {
 				user.setRole(roleService.findByPK(userModel.getRoleId()));

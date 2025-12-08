@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Stream;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -132,9 +133,9 @@ public class FileHelper {
 	public InputStream writeFile(String data,String fileName) throws IOException {
 
 		File file = new File(fileName);
-		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-		writer.write(data);
-		writer.close();
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+			writer.write(data);
+		}
 		return new FileInputStream(file);
 
 
@@ -195,7 +196,7 @@ public class FileHelper {
 		String url = filePath;
 
 		if (filePath.contains(File.separator)) {
-			url = url.replaceAll("\\\\", "/");
+			url = url.replace("\\", "/");
 		}
 
 		return url;
@@ -222,7 +223,10 @@ public class FileHelper {
 				file.transferTo(dest);
 				DataMigrationRespModel dataMigrationRespModel = new DataMigrationRespModel();
 				dataMigrationRespModel.setFileName(file.getOriginalFilename());
-				Long count = Files.lines(Paths.get(filePath)).count();
+				long count;
+				try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
+					count = lines.count();
+				}
 				dataMigrationRespModel.setRecordCount(count-1);
 				dataMigrationRespModel.setRecordsMigrated(0L);
 				list.add(dataMigrationRespModel);

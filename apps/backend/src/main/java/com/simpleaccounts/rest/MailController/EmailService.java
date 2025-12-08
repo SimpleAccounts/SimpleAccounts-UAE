@@ -47,6 +47,23 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 public class EmailService {
     private final Logger logger = LoggerFactory.getLogger(EmailService.class);
     private static final String ERROR_PROCESSING_EMAIL = "Error processing email";
+    private static final String MODEL_KEY_EMAIL_CONTENT_REQUEST = "emailContentRequestModel";
+    private static final String MODEL_KEY_LINE_ITEM_LIST = "lineItemList";
+    private static final String DATA_IMAGE_JPG_BASE64 = " data:image/jpg;base64,";
+    private static final String PRODUCT_ROW_TEMPLATE = "<tr><td>{product}</td><td>{description}</td><td style=\"text-align:center\">{quantity}</td><td style=\"text-align:center\">{unitType}</td><td style=\"text-align:right\">{unitPrice}</td><td style=\"text-align:right\">{discount}</td><td style=\"text-align:center\">{invoiceLineItemExciseTax}</td><td style=\"text-align:right\">{exciseAmount}</td><td style=\"text-align:center\">{vatType}</td><td style=\"text-align:right\">{invoiceLineItemVatAmount}</td><td style=\"text-align:right\">{subTotal}</td></tr>";
+    private static final String MODEL_KEY_USER = "user";
+    private static final String MODEL_KEY_INVOICE = "invoice";
+    private static final String MODEL_KEY_INVOICE_LABEL = "invoiceLabel";
+    private static final String MODEL_KEY_COMPANY_LOGO = "companylogo";
+    private static final String MODEL_KEY_CONTACT_NAME = "contactName";
+    private static final String MODEL_KEY_TOTAL_NET = "totalNet";
+    private static final String MODEL_KEY_TOTAL_TAX = "totalTax";
+    private static final String MODEL_KEY_COMPANY_NAME = "companyName";
+    private static final String MODEL_KEY_QUOTATION = "quotation";
+    private static final String CLASSPATH_PREFIX = "classpath:";
+    private static final String TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS = "{amountInWords}";
+    private static final String TEMPLATE_PLACEHOLDER_VAT_IN_WORDS = "{vatInWords}";
+    private static final String TEMPLATE_PLACEHOLDER_CURRENCY = "{currency}";
 
     @Autowired
     ResourceLoader resourceLoader;
@@ -149,22 +166,22 @@ public class EmailService {
 
         String fileName = invoiceEmailBody.getPath();
         Map<String, Object> model = new HashMap<>();
-        model.put("user", user);
-        model.put("invoice", invoice);
-        model.put("invoiceLabel", getInvoiceLabel(user));
-        model.put("emailContentRequestModel", emailContentRequestModel);
-        model.put("lineItemList", invoice.getInvoiceLineItems());
+        model.put(MODEL_KEY_USER, user);
+        model.put(MODEL_KEY_INVOICE, invoice);
+        model.put(MODEL_KEY_INVOICE_LABEL, getInvoiceLabel(user));
+        model.put(MODEL_KEY_EMAIL_CONTENT_REQUEST, emailContentRequestModel);
+        model.put(MODEL_KEY_LINE_ITEM_LIST, invoice.getInvoiceLineItems());
         if (user.getCompany() != null && user.getCompany().getCompanyLogo() != null) {
-            String image = " data:image/jpg;base64," + DatatypeConverter.printBase64Binary(
+            String image = DATA_IMAGE_JPG_BASE64 + DatatypeConverter.printBase64Binary(
                     user.getCompany().getCompanyLogo());
-            model.put("companylogo", image);
+            model.put(MODEL_KEY_COMPANY_LOGO, image);
         }
-        model.put("contactName",getContactName(invoice));
-        model.put("totalNet",invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+        model.put(MODEL_KEY_CONTACT_NAME,getContactName(invoice));
+        model.put(MODEL_KEY_TOTAL_NET,invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
         model.put("notes",getnotes(invoice));
         model.put("invoiceDiscount",getInvoiceDiscount(invoice));
-        model.put("totalTax", getTotalTax(invoice));
-        model.put("companyName",user.getCompany().getCompanyName());
+        model.put(MODEL_KEY_TOTAL_TAX, getTotalTax(invoice));
+        model.put(MODEL_KEY_COMPANY_NAME,user.getCompany().getCompanyName());
         freeMakerHtmlContent = getTemplateToHtmlString(model, fileName);
         logger.info(freeMakerHtmlContent);
 //        //End of FreeMakerx
@@ -173,17 +190,17 @@ public class EmailService {
           try {
             String emailBody=invoiceEmailBody.getPath();
 //
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+emailBody).getURI()));
-            byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource("classpath:"+ INVOICE_TEMPLATE).getURI()));
+            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX+emailBody).getURI()));
+            byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource(CLASSPATH_PREFIX+ INVOICE_TEMPLATE).getURI()));
 //
             String amountInWords= emailContentRequestModel.getAmountInWords();
             String vatInWords= emailContentRequestModel.getTaxInWords();
 
             htmlText = new String(bodyData, StandardCharsets.UTF_8);
-            htmlText =htmlText.replace("{amountInWords}",amountInWords).replace("{vatInWords}",vatInWords);
+            htmlText =htmlText.replace(TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS,amountInWords).replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS,vatInWords);
 
             htmlContent= new String(contentData, StandardCharsets.UTF_8)
-                    .replace("{currency}",invoice.getCurrency().getCurrencyIsoCode());
+                    .replace(TEMPLATE_PLACEHOLDER_CURRENCY,invoice.getCurrency().getCurrencyIsoCode());
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_EMAIL, e);
         }
@@ -240,23 +257,23 @@ public class EmailService {
 
         String fileName = creditNoteEmailBody.getPath();
         Map<String, Object> model = new HashMap<>();
-        model.put("user", user);
-        model.put("invoice", invoice);
-        model.put("creditNote", creditNote);
-        model.put("invoiceLabel", getInvoiceLabel(user));
-        model.put("emailContentRequestModel", emailContentRequestModel);
-        model.put("lineItemList", creditNote.getCreditNoteLineItems());
+        model.put(MODEL_KEY_USER, user);
+        model.put(MODEL_KEY_INVOICE, invoice);
+        model.put(MODEL_KEY_CREDIT_NOTE, creditNote);
+        model.put(MODEL_KEY_INVOICE_LABEL, getInvoiceLabel(user));
+        model.put(MODEL_KEY_EMAIL_CONTENT_REQUEST, emailContentRequestModel);
+        model.put(MODEL_KEY_LINE_ITEM_LIST, creditNote.getCreditNoteLineItems());
         if (user.getCompany() != null && user.getCompany().getCompanyLogo() != null) {
-            String image = " data:image/jpg;base64," + DatatypeConverter.printBase64Binary(
+            String image = DATA_IMAGE_JPG_BASE64 + DatatypeConverter.printBase64Binary(
                     user.getCompany().getCompanyLogo());
-            model.put("companylogo", image);
+            model.put(MODEL_KEY_COMPANY_LOGO, image);
         }
-        model.put("contactName",getContactName(invoice));
-        model.put("totalNet",invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+        model.put(MODEL_KEY_CONTACT_NAME,getContactName(invoice));
+        model.put(MODEL_KEY_TOTAL_NET,invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
         model.put("notes",getnotes(invoice));
         model.put("invoiceDiscount",getInvoiceDiscount(invoice));
-        model.put("totalTax", getTotalTax(invoice));
-        model.put("companyName",user.getCompany().getCompanyName());
+        model.put(MODEL_KEY_TOTAL_TAX, getTotalTax(invoice));
+        model.put(MODEL_KEY_COMPANY_NAME,user.getCompany().getCompanyName());
         freeMakerHtmlContent = getTemplateToHtmlString(model, fileName);
         logger.info(freeMakerHtmlContent);
 //        //End of FreeMakerx
@@ -265,17 +282,17 @@ public class EmailService {
         try {
             String emailBody=creditNoteEmailBody.getPath();
 //
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+emailBody).getURI()));
-            byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource("classpath:"+ CN_TEMPLATE).getURI()));
+            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX+emailBody).getURI()));
+            byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource(CLASSPATH_PREFIX+ CN_TEMPLATE).getURI()));
 //
             String amountInWords= emailContentRequestModel.getAmountInWords();
             String vatInWords= emailContentRequestModel.getTaxInWords();
 
             htmlText = new String(bodyData, StandardCharsets.UTF_8);
-            htmlText =htmlText.replace("{amountInWords}",amountInWords).replace("{vatInWords}",vatInWords);
+            htmlText =htmlText.replace(TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS,amountInWords).replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS,vatInWords);
 
             htmlContent= new String(contentData, StandardCharsets.UTF_8)
-                    .replace("{currency}",invoice.getCurrency().getCurrencyIsoCode());
+                    .replace(TEMPLATE_PLACEHOLDER_CURRENCY,invoice.getCurrency().getCurrencyIsoCode());
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_EMAIL, e);
         }
@@ -330,16 +347,16 @@ public class EmailService {
 
         String fileName = quotationEmailBody.getPath();
         Map<String, Object> model = new HashMap<>();
-        model.put("user", user);
-        model.put("quotation", quotation);
-        model.put("emailContentRequestModel", emailContentRequestModel);
-        model.put("lineItemList", quotation.getPoQuatationLineItems());
+        model.put(MODEL_KEY_USER, user);
+        model.put(MODEL_KEY_QUOTATION, quotation);
+        model.put(MODEL_KEY_EMAIL_CONTENT_REQUEST, emailContentRequestModel);
+        model.put(MODEL_KEY_LINE_ITEM_LIST, quotation.getPoQuatationLineItems());
         if (user.getCompany() != null && user.getCompany().getCompanyLogo() != null) {
-            String image = " data:image/jpg;base64," + DatatypeConverter.printBase64Binary(
+            String image = DATA_IMAGE_JPG_BASE64 + DatatypeConverter.printBase64Binary(
                     user.getCompany().getCompanyLogo());
-            model.put("companylogo", image);
+            model.put(MODEL_KEY_COMPANY_LOGO, image);
         }
-        model.put("contactName", getQuotationContactName(quotation));
+        model.put(MODEL_KEY_CONTACT_NAME, getQuotationContactName(quotation));
         model.put("contactAddressLine1", quotation.getCustomer().getAddressLine1());
         model.put("contactCity", quotation.getCustomer().getCity());
         model.put("contactState", quotation.getCustomer().getState().getStateName());
@@ -348,9 +365,9 @@ public class EmailService {
         model.put("currency", quotation.getCustomer().getCurrency().getCurrencyIsoCode());
         model.put("currencySymbol", quotation.getCustomer().getCurrency().getCurrencySymbol());
         model.put("referenceNumber", quotation.getReferenceNumber());
-        model.put("totalTax", getTotalTax(quotation));
-        model.put("companyName", user.getCompany().getCompanyName());
-        model.put("totalNet",quotation.getTotalAmount().subtract(quotation.getTotalVatAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+        model.put(MODEL_KEY_TOTAL_TAX, getTotalTax(quotation));
+        model.put(MODEL_KEY_COMPANY_NAME, user.getCompany().getCompanyName());
+        model.put(MODEL_KEY_TOTAL_NET,quotation.getTotalAmount().subtract(quotation.getTotalVatAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
         freeMakerHtmlContent = getTemplateToHtmlString(model, fileName);
         logger.info(freeMakerHtmlContent);
         //End of FreeMaker
@@ -359,8 +376,8 @@ public class EmailService {
         try {
             String emailBody = quotationEmailBody.getPath();
 
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + emailBody).getURI()));
-            byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + QUOTATION_TEMPLATE).getURI()));
+            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + emailBody).getURI()));
+            byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + QUOTATION_TEMPLATE).getURI()));
 
             String amountInWords = emailContentRequestModel.getAmountInWords();
             String vatInWords = emailContentRequestModel.getTaxInWords();
@@ -370,7 +387,7 @@ public class EmailService {
             htmlText = htmlText.replace("{amountInWords}", amountInWords).replace("{vatInWords}", vatInWords);
 
             htmlContent = new String(contentData, StandardCharsets.UTF_8)
-                    .replace("{currency}", quotationCurrencyRelation.getCurrencyIsoCode());
+                    .replace(TEMPLATE_PLACEHOLDER_CURRENCY, quotationCurrencyRelation.getCurrencyIsoCode());
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_EMAIL, e);
         }
@@ -426,16 +443,16 @@ public class EmailService {
 
         String fileName = quotationEmailBody.getPath();
         Map<String, Object> model = new HashMap<>();
-        model.put("user", user);
-        model.put("quotation", quotation);
-        model.put("emailContentRequestModel", emailContentRequestModel);
-        model.put("lineItemList", quotation.getPoQuatationLineItems());
+        model.put(MODEL_KEY_USER, user);
+        model.put(MODEL_KEY_QUOTATION, quotation);
+        model.put(MODEL_KEY_EMAIL_CONTENT_REQUEST, emailContentRequestModel);
+        model.put(MODEL_KEY_LINE_ITEM_LIST, quotation.getPoQuatationLineItems());
         if (user.getCompany() != null && user.getCompany().getCompanyLogo() != null) {
-            String image = " data:image/jpg;base64," + DatatypeConverter.printBase64Binary(
+            String image = DATA_IMAGE_JPG_BASE64 + DatatypeConverter.printBase64Binary(
                     user.getCompany().getCompanyLogo());
-            model.put("companylogo", image);
+            model.put(MODEL_KEY_COMPANY_LOGO, image);
         }
-        model.put("contactName", getPoQuotationContactName(quotation));
+        model.put(MODEL_KEY_CONTACT_NAME, getPoQuotationContactName(quotation));
         model.put("contactAddressLine1", quotation.getSupplierId().getAddressLine1());
         model.put("contactCity", quotation.getSupplierId().getCity());
         model.put("contactState", quotation.getSupplierId().getState().getStateName());
@@ -444,8 +461,8 @@ public class EmailService {
         model.put("currency", quotation.getSupplierId().getCurrency().getCurrencyIsoCode());
         model.put("currencySymbol", quotation.getSupplierId().getCurrency().getCurrencySymbol());
         model.put("referenceNumber", quotation.getReferenceNumber());
-        model.put("totalTax", getTotalTax(quotation));
-        model.put("companyName", user.getCompany().getCompanyName());
+        model.put(MODEL_KEY_TOTAL_TAX, getTotalTax(quotation));
+        model.put(MODEL_KEY_COMPANY_NAME, user.getCompany().getCompanyName());
         freeMakerHtmlContent = getTemplateToHtmlString(model, fileName);
         logger.info(freeMakerHtmlContent);
         //End of FreeMaker
@@ -454,8 +471,8 @@ public class EmailService {
         try {
             String emailBody = quotationEmailBody.getPath();
 
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + emailBody).getURI()));
-            byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + PURCHASE_ORDER_TEMPLATE).getURI()));
+            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + emailBody).getURI()));
+            byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + PURCHASE_ORDER_TEMPLATE).getURI()));
 
             String amountInWords = emailContentRequestModel.getAmountInWords();
             String vatInWords = emailContentRequestModel.getTaxInWords();
@@ -465,7 +482,7 @@ public class EmailService {
             htmlText = htmlText.replace("{amountInWords}", amountInWords).replace("{vatInWords}", vatInWords);
 
             htmlContent = new String(contentData, StandardCharsets.UTF_8)
-                    .replace("{currency}", quotationCurrencyRelation.getCurrencyIsoCode());
+                    .replace(TEMPLATE_PLACEHOLDER_CURRENCY, quotationCurrencyRelation.getCurrencyIsoCode());
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_EMAIL, e);
         }
@@ -512,7 +529,7 @@ public class EmailService {
         StringWriter stringWriter = new StringWriter();
 //        String path="MailTemplates/";
             configuration.setDirectoryForTemplateLoading(
-                new File(Paths.get(resourceLoader.getResource("classpath:")
+                new File(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX)
                         .getURI()).toUri()));
         Template template = configuration.getTemplate(fileName);
         template.process(model, stringWriter);
@@ -574,7 +591,7 @@ public class EmailService {
     }
     public String updateInvoiceLineItem(int size, MailThemeTemplates invoiceEmailBody, EmailContentRequestModel postingRequestModel)  {
         StringBuilder productRowBuilder = new StringBuilder();
-        String productRowTemplate = "<tr><td>{product}</td><td>{description}</td><td style=\"text-align:center\">{quantity}</td><td style=\"text-align:center\">{unitType}</td><td style=\"text-align:right\">{unitPrice}</td><td style=\"text-align:right\">{discount}</td><td style=\"text-align:center\">{invoiceLineItemExciseTax}</td><td style=\"text-align:right\">{exciseAmount}</td><td style=\"text-align:center\">{vatType}</td><td style=\"text-align:right\">{invoiceLineItemVatAmount}</td><td style=\"text-align:right\">{subTotal}</td></tr>";
+        String productRowTemplate = PRODUCT_ROW_TEMPLATE;
 
         for (int row = 0; row < size; row++) {
             String updatedProductRow = productRowTemplate
@@ -594,7 +611,7 @@ public class EmailService {
 
         String htmlText = "";
         try {
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + invoiceEmailBody.getPath()).getURI()));
+            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + invoiceEmailBody.getPath()).getURI()));
             htmlText = new String(bodyData, StandardCharsets.UTF_8);
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_EMAIL, e);
@@ -611,7 +628,7 @@ public class EmailService {
     }
     public String updateCreditNoteLineItem(int size, MailThemeTemplates invoiceEmailBody, EmailContentRequestModel postingRequestModel)  {
         StringBuilder productRowBuilder = new StringBuilder();
-        String productRowTemplate = "<tr><td>{product}</td><td>{description}</td><td style=\"text-align:center\">{quantity}</td><td style=\"text-align:center\">{unitType}</td><td style=\"text-align:right\">{unitPrice}</td><td style=\"text-align:right\">{discount}</td><td style=\"text-align:center\">{invoiceLineItemExciseTax}</td><td style=\"text-align:right\">{exciseAmount}</td><td style=\"text-align:center\">{vatType}</td><td style=\"text-align:right\">{invoiceLineItemVatAmount}</td><td style=\"text-align:right\">{subTotal}</td></tr>";
+        String productRowTemplate = PRODUCT_ROW_TEMPLATE;
 
         for (int row = 0; row < size; row++) {
             String updatedProductRow = productRowTemplate
@@ -631,7 +648,7 @@ public class EmailService {
 
         String htmlText = "";
         try {
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + invoiceEmailBody.getPath()).getURI()));
+            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + invoiceEmailBody.getPath()).getURI()));
             htmlText = new String(bodyData, StandardCharsets.UTF_8);
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_EMAIL, e);
@@ -698,7 +715,7 @@ public class EmailService {
     }
     public String updatePoQuotationLineItem(int size, MailThemeTemplates invoiceEmailBody, EmailContentRequestModel postingRequestModel)  {
         StringBuilder productRowBuilder = new StringBuilder();
-        String productRowTemplate = "<tr><td>{product}</td><td>{description}</td><td style=\"text-align:center\">{quantity}</td><td style=\"text-align:center\">{unitType}</td><td style=\"text-align:right\">{unitPrice}</td><td style=\"text-align:right\">{discount}</td><td style=\"text-align:center\">{invoiceLineItemExciseTax}</td><td style=\"text-align:right\">{exciseAmount}</td><td style=\"text-align:center\">{vatType}</td><td style=\"text-align:right\">{invoiceLineItemVatAmount}</td><td style=\"text-align:right\">{subTotal}</td></tr>";
+        String productRowTemplate = PRODUCT_ROW_TEMPLATE;
 
         for (int row = 0; row < size; row++) {
             String updatedProductRow = productRowTemplate
@@ -718,7 +735,7 @@ public class EmailService {
 
         String htmlText = "";
         try {
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + invoiceEmailBody.getPath()).getURI()));
+            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + invoiceEmailBody.getPath()).getURI()));
             htmlText = new String(bodyData, StandardCharsets.UTF_8);
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_EMAIL, e);

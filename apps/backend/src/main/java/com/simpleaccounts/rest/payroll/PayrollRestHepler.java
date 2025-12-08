@@ -57,6 +57,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 public class PayrollRestHepler {
     private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
     private static final String ERROR_PROCESSING_PAYROLL = "Error processing payroll";
+    private static final String DATE_FORMAT_DD_MM_YYYY = "DATE_FORMAT_DD_MM_YYYY";
     @Autowired
     private EmployeeBankDetailsService employeeBankDetailsService;
     @Autowired
@@ -249,7 +250,7 @@ public class PayrollRestHepler {
             employment.setContractType(employmentPersistModel.getContractType());
         }
         if (employmentPersistModel.getDateOfJoining() != null) {
-            employment.setDateOfJoining(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getDateOfJoining(), "dd-MM-yyyy"));
+            employment.setDateOfJoining(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
         }else
             employment.setDateOfJoining(LocalDateTime.now());
 
@@ -263,13 +264,13 @@ public class PayrollRestHepler {
             employment.setPassportNumber(employmentPersistModel.getPassportNumber());
         }
         if (employmentPersistModel.getPassportExpiryDate() != null && !employmentPersistModel.getPassportExpiryDate().isEmpty()) {
-            employment.setPassportExpiryDate(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getPassportExpiryDate(), "dd-MM-yyyy"));
+            employment.setPassportExpiryDate(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getPassportExpiryDate(), "DATE_FORMAT_DD_MM_YYYY"));
         }
 //        else
 //            employment.setPassportExpiryDate(LocalDateTime.now());
 
         if (employmentPersistModel.getVisaExpiryDate() != null) {
-            employment.setVisaExpiryDate(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getVisaExpiryDate(), "dd-MM-yyyy"));
+            employment.setVisaExpiryDate(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getVisaExpiryDate(), "DATE_FORMAT_DD_MM_YYYY"));
         }  else
             employment.setVisaExpiryDate(LocalDateTime.now());
 
@@ -399,7 +400,6 @@ public class PayrollRestHepler {
 //        }
 //
 //    }
-    @Transactional(rollbackFor = Exception.class)
     public void getUpdatedSalaryAllTemplate(EmployeePersistModel employeePersistModel, Employee employee,
                                             List<SalaryTemplatePersistModel> salaryTemplatePersistModels) {
         if (employeePersistModel.getSalaryTemplatesString() != null && !employeePersistModel.getSalaryTemplatesString().isEmpty()) {
@@ -420,7 +420,6 @@ public class PayrollRestHepler {
 
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public List<SalaryTemplate> getSalaryTemplates(List<SalaryTemplatePersistModel> salaryTemplatePersistModels, Employee employee) {
         List<SalaryTemplate> salaryTemplateModels = new ArrayList<>();
         for (SalaryTemplatePersistModel model : salaryTemplatePersistModels) {
@@ -449,7 +448,6 @@ public class PayrollRestHepler {
         return salaryTemplateModels;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public List<SalaryTemplate> getUpdatedSalaryTemplates(List<SalaryTemplatePersistModel> salaryTemplatePersistModels, Employee employee) {
 
         Map<String, Object> param = new HashMap<>();
@@ -501,13 +499,13 @@ public class PayrollRestHepler {
         employmentPersistModel.setEmployee(employment.getEmployee().getId());
         employmentPersistModel.setAvailedLeaves(employment.getAvailedLeaves());
         employmentPersistModel.setDepartment(employment.getDepartment());
-        employmentPersistModel.setDateOfJoining(dateUtil.getLocalDateTimeAsString(employment.getDateOfJoining(), "dd-MM-yyyy"));
+        employmentPersistModel.setDateOfJoining(dateUtil.getLocalDateTimeAsString(employment.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
         employmentPersistModel.setContractType(employment.getContractType());
         employmentPersistModel.setLabourCard(employment.getLabourCard());
         employmentPersistModel.setVisaNumber(employment.getVisaNumber());
-        employmentPersistModel.setVisaExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getVisaExpiryDate(), "dd-MM-yyyy"));
+        employmentPersistModel.setVisaExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getVisaExpiryDate(), "DATE_FORMAT_DD_MM_YYYY"));
         employmentPersistModel.setPassportNumber(employment.getPassportNumber());
-        employmentPersistModel.setPassportExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getPassportExpiryDate(), "dd-MM-yyyy"));
+        employmentPersistModel.setPassportExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getPassportExpiryDate(), "DATE_FORMAT_DD_MM_YYYY"));
         employmentPersistModel.setLeavesAvailed(employment.getLeavesAvailed());
         employmentPersistModel.setGrossSalary(employment.getGrossSalary());
         return employmentPersistModel;
@@ -661,7 +659,7 @@ public class PayrollRestHepler {
             employment.setContractType(employeePersistModel.getContractType());
         }
         if (employeePersistModel.getDateOfJoining() != null) {
-            employment.setDateOfJoining(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), "dd-MM-yyyy"));
+            employment.setDateOfJoining(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
         }
 
         if (employeePersistModel.getLabourCard() != null) {
@@ -674,10 +672,10 @@ public class PayrollRestHepler {
             employment.setPassportNumber(employeePersistModel.getPassportNumber());
         }
         if (employeePersistModel.getPassportExpiryDate() != null) {
-            employment.setPassportExpiryDate(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), "dd-MM-yyyy"));
+            employment.setPassportExpiryDate(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
         }
         if (employeePersistModel.getVisaExpiryDate() != null) {
-            employment.setVisaExpiryDate(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), "dd-MM-yyyy"));
+            employment.setVisaExpiryDate(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
         }
         if (employeePersistModel.getVisaNumber() != null) {
             employment.setVisaNumber(employeePersistModel.getVisaNumber());
@@ -690,7 +688,6 @@ public class PayrollRestHepler {
         return employment;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public void getSalaryAllTemplate(SalaryTemplatePersistModel salaryTemplatePersistModel, List<SalaryTemplatePersistModel> salaryTemplatePersistModels) {
 
         if (salaryTemplatePersistModel.getSalaryTemplatesString() != null && !salaryTemplatePersistModel.getSalaryTemplatesString().isEmpty()) {
@@ -711,7 +708,6 @@ public class PayrollRestHepler {
 
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public List<SalaryTemplate> getSalaryTemplates(List<SalaryTemplatePersistModel> salaryTemplatePersistModels) {
         List<SalaryTemplate> salaryTemplateModels = new ArrayList<>();
         for (SalaryTemplatePersistModel model : salaryTemplatePersistModels) {
@@ -748,7 +744,6 @@ public class PayrollRestHepler {
 
     }
 
-    @Transactional(rollbackFor = Exception.class)
     List<SalaryTemplate> getUpdatedSalaryTemplates(List<SalaryTemplatePersistModel> salaryTemplatePersistModels) {
 
         List<SalaryTemplate> salaryTemplates = new ArrayList<>();
@@ -805,7 +800,6 @@ public class PayrollRestHepler {
 
     }
 
-    @Transactional(rollbackFor = Exception.class)
     void getSalaryComponents(List<SalaryComponentPersistModel> salaryComponentPersistModels, SalaryComponentPersistModel salaryComponentPersistModel) {
         List<SalaryComponent> salaryComponentList = new ArrayList<>();
         if (salaryComponentPersistModels != null && !salaryComponentPersistModels.isEmpty()) {
@@ -996,7 +990,6 @@ public class PayrollRestHepler {
 
     }
 
-    @Transactional(rollbackFor = Exception.class)
     void getUpdatedSalaryComponents(List<SalaryComponentPersistModel> salaryComponentPersistModels, SalaryComponentPersistModel salaryComponentPersistModel) {
 
         if (salaryComponentPersistModel.getEmployeeId() != null) {
@@ -1229,6 +1222,10 @@ public class PayrollRestHepler {
                         netPay = netPay.add(salaryForThisComponentAsPerNoOfWorkingDays);
                         modelList.add(salaryComponentRelationModel);
                         break;
+                    case DEFAULT:
+                    default:
+                        // No action needed for default case
+                        break;
                 }
 
             }
@@ -1348,7 +1345,6 @@ public class PayrollRestHepler {
     }
 
 
-    @Transactional(rollbackFor = Exception.class)
     void genereateSalary(List<GeneratePayrollPersistModel> generatePayrollPersistModels, PayrolRequestModel payrolRequestModel, User user,Payroll payroll) {
 
 
@@ -1613,7 +1609,7 @@ public class PayrollRestHepler {
               }
             }
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("DATE_FORMAT_DD_MM_YYYY");
         for(Integer employeeId :payrollEmployeesIdsListToSendMail) {
             salaryController.getSalariesByEmployeeId(employeeId, payroll.getPayrollDate().format(formatter).replace("-", "/"), startDate, endDate, true, request);
         }
@@ -1803,7 +1799,8 @@ public class PayrollRestHepler {
             List<Employment> employmentList = employmentService.findByAttributes(param1);
             Employment employment = null;
             if (employmentList!=null&&!employmentList.isEmpty()){
-                employment = employmentList.get(0);}
+                employment = employmentList.get(0);
+            }
 
             String[] payPeriod =payroll.getPayPeriod().split("-");
             String startDate=dateFormat(payPeriod[0]!=null?payPeriod[0]:"-");
@@ -1879,7 +1876,7 @@ public class PayrollRestHepler {
         ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(new Date().getTime()),TimeZone.getDefault().toZoneId());
         fileName =fileName.concat(
                 company.getCompanyNumber() +
-                      zonedDateTime.format(DateTimeFormatter.ofPattern("yy-MM-dd")).replaceAll("-","")) + currentTime.replaceAll(":","");
+                      zonedDateTime.format(DateTimeFormatter.ofPattern("yy-MM-dd")).replace("-","")) + currentTime.replace(":","");
         filenameAndContent.add(fileName);
         filenameAndContent.add(fileString);
 

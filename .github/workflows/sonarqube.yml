@@ -111,6 +111,7 @@ jobs:
           -Dsonar.projectName="SimpleAccounts-UAE" \
           -Dsonar.host.url=${{ env.SONAR_HOST_URL }} \
           -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.branch.name=${{ github.ref_name }} \
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
           -Dsonar.javascript.lcov.reportPaths=../../apps/frontend/coverage/lcov.info \
           -Dsonar.scanner.skipJreProvisioning=true \

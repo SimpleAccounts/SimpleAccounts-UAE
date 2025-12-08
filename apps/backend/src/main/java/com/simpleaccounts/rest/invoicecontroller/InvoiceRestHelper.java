@@ -60,8 +60,9 @@ public class InvoiceRestHelper {
 	@Autowired
 	private CreditNoteRepository creditNoteRepository;
 	private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
-	private static final String dateFormat = "dd-MM-yyyy";
+	private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
 	private static final String ERROR_PROCESSING_INVOICE = "Error processing invoice";
+	private static final String CLASSPATH_PREFIX = "classpath:";
 	@Autowired
 	VatCategoryService vatCategoryService;
 
@@ -154,7 +155,6 @@ public class InvoiceRestHelper {
 	@Autowired
 	private DateFormatHelper dateFormatHelper;
 
-	@Transactional(rollbackFor = Exception.class)
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();
 
@@ -426,7 +426,6 @@ public class InvoiceRestHelper {
 				break;
 		}
 	}
-	@Transactional(rollbackFor = Exception.class)
 	void handleSupplierInvoiceInventory(InvoiceLineItem model,Product product,Contact supplier,Integer userId){
 		Map<String, Object> attribute = new HashMap<String, Object>();
 		attribute.put("productId", product);
@@ -503,7 +502,11 @@ public class InvoiceRestHelper {
 			totalStockOnHand = totalStockOnHand + (inventoryProduct.getStockOnHand());
 			totalInventoryAsset = totalInventoryAsset + (inventoryProduct.getUnitCost()*inventoryProduct.getStockOnHand());
 		}
-		product.setAvgPurchaseCost(BigDecimal.valueOf(totalInventoryAsset/totalStockOnHand));
+		if (totalStockOnHand > 0) {
+			product.setAvgPurchaseCost(BigDecimal.valueOf(totalInventoryAsset/totalStockOnHand));
+		} else {
+			product.setAvgPurchaseCost(BigDecimal.ZERO);
+		}
 		productService.update(product);
 	}
 
@@ -511,7 +514,8 @@ public class InvoiceRestHelper {
 	public InvoiceRequestModel getRequestModel(Invoice invoice) {
 		InvoiceRequestModel requestModel = new InvoiceRequestModel();
 		Map<String,Object> map = new HashMap<>();
-		map.put("invoice",invoice);BigDecimal
+		map.put(JSON_KEY_INVOICE,invoice);
+		BigDecimal
 				totalCreditNoteAmount = BigDecimal.ZERO;
 		List<CreditNoteInvoiceRelation> creditNoteInvoiceRelationList = creditNoteInvoiceRelationService.findByAttributes(map);
 		if (!creditNoteInvoiceRelationList.isEmpty()) {
@@ -711,7 +715,8 @@ public class InvoiceRestHelper {
 		if (lineItem.getProduct() != null) {
 			lineItemModel.setProductId(lineItem.getProduct().getProductID());
 			lineItemModel.setProductName(lineItem.getProduct().getProductName());
-		}if (lineItem.getTrnsactioncCategory() != null) {
+		}
+		if (lineItem.getTrnsactioncCategory() != null) {
 			lineItemModel.setTransactionCategoryId(lineItem.getTrnsactioncCategory().getTransactionCategoryId());
 			lineItemModel.setTransactionCategoryLabel(
 					lineItem.getTrnsactioncCategory().getChartOfAccount().getChartOfAccountName());
@@ -755,7 +760,7 @@ public class InvoiceRestHelper {
 				model.setDueAmount(invoice.getDueAmount() == null ? invoice.getTotalAmount() : invoice.getDueAmount());
 
 				Map<String,Object> map = new HashMap<>();
-				map.put("invoice",invoice);
+				map.put(JSON_KEY_INVOICE,invoice);
 				BigDecimal totalCreditNoteAmount = BigDecimal.ZERO;
 				List<CreditNoteInvoiceRelation> creditNoteInvoiceRelationList = creditNoteInvoiceRelationService.
 						findByAttributes(map);
@@ -783,7 +788,7 @@ public class InvoiceRestHelper {
 		if (invoice.getInvoiceDueDate() != null) {
 			ZoneId timeZone = ZoneId.systemDefault();
 			Date date = Date.from(invoice.getInvoiceDueDate().atStartOfDay(timeZone).toInstant());
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
 			String d = simpleDateFormat.format(date);
 			model.setInvoiceDueDate(d);
 		}
@@ -793,7 +798,7 @@ public class InvoiceRestHelper {
 		if (invoice.getInvoiceDate() != null) {
 			ZoneId timeZone = ZoneId.systemDefault();
 			Date date = Date.from(invoice.getInvoiceDate().atStartOfDay(timeZone).toInstant());
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
 			String d = simpleDateFormat.format(date);
 			model.setInvoiceDate(d);
 		}
@@ -892,13 +897,13 @@ public class InvoiceRestHelper {
 		try {
 			String emailBody = invoiceEmailBody.getPath();
 
-			byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + emailBody).getURI()));
-			byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + INVOICE_TEMPLATE).getURI()));
+			byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + emailBody).getURI()));
+			byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + INVOICE_TEMPLATE).getURI()));
 
-			htmlText = new String(bodyData, StandardCharsets.UTF_8).replace("{amountInWords}", amountInWords).replace("{vatInWords}", vatInWords);
-			htmlContent = new String(contentData, StandardCharsets.UTF_8).replace("{currency}", invoice.getCurrency().getCurrencyIsoCode())
-					.replace("{amountInWords}", amountInWords)
-					.replace("{vatInWords}", vatInWords);
+			htmlText = new String(bodyData, StandardCharsets.UTF_8).replace(TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS, amountInWords).replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS, vatInWords);
+			htmlContent = new String(contentData, StandardCharsets.UTF_8).replace(TEMPLATE_PLACEHOLDER_CURRENCY, invoice.getCurrency().getCurrencyIsoCode())
+					.replace(TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS, amountInWords)
+					.replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS, vatInWords);
 		} catch (IOException e) {
 			logger.error(ERROR_PROCESSING_INVOICE, e);
 		}
@@ -923,8 +928,8 @@ public class InvoiceRestHelper {
 			}
 		}
 		body=getTaxableSummaryString(invoice,body)
-				.replace("{amountInWords}", amountInWords)
-				.replace("{vatInWords}", vatInWords);
+				.replace(TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS, amountInWords)
+				.replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS, vatInWords);
 
 		if (invoice.getContact() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
 			mailUtility.triggerEmailOnBackground2(subject, content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
@@ -988,7 +993,7 @@ public class InvoiceRestHelper {
 
 		}
 
-		body=body.replace("{currency}", invoice.getCurrency().getCurrencyIsoCode())
+		body=body.replace(TEMPLATE_PLACEHOLDER_CURRENCY, invoice.getCurrency().getCurrencyIsoCode())
 				.replace("{taxableAmount_5}",taxableAmount_5.toString())
 				.replace("{taxAmount_5}",taxAmount_5.toString())
 				.replace("{taxableAmount_0}",taxableAmount_0.toString())
@@ -1061,28 +1066,28 @@ public class InvoiceRestHelper {
 			String emailBody=creditNoteEmailBody.getPath();
 			byte[] bodyData = null;
 			if(creditNote.getInvoiceId()!=null && creditNote.getIsCNWithoutProduct()==Boolean.FALSE) {
-			 bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" + emailBody).getURI()));
+			 bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + emailBody).getURI()));
 			}
 			else{
-				bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:" +CN_WITHOUT_PRODUCT).getURI()));
+				bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX +CN_WITHOUT_PRODUCT).getURI()));
 			}
-			byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource("classpath:"+CN_TEMPLATE).getURI()));
+			byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource(CLASSPATH_PREFIX+CN_TEMPLATE).getURI()));
 
-			htmlText = new String(bodyData, StandardCharsets.UTF_8).replace("{amountInWords}",amountInWords).replace("{vatInWords}",vatInWords);;
+			htmlText = new String(bodyData, StandardCharsets.UTF_8).replace(TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS,amountInWords).replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS,vatInWords);;
 
 			if(creditNote.getInvoiceId()!=null && creditNote.getIsCNWithoutProduct()==Boolean.FALSE) {
-				htmlContent = new String(contentData, StandardCharsets.UTF_8).replace("{currency}", currency.getCurrencyIsoCode())
-						.replace("{amountInWords}", amountInWords)
+				htmlContent = new String(contentData, StandardCharsets.UTF_8).replace(TEMPLATE_PLACEHOLDER_CURRENCY, currency.getCurrencyIsoCode())
+						.replace(TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS, amountInWords)
 						.replace("{message}", message)
-						.replace("{vatInWords}", vatInWords);
+						.replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS, vatInWords);
 			}
 			else {
-				htmlContent = new String(contentData, StandardCharsets.UTF_8).replace("{currency}", currency.getCurrencyIsoCode())
-						.replace("{amountInWords}", amountInWords)
+				htmlContent = new String(contentData, StandardCharsets.UTF_8).replace(TEMPLATE_PLACEHOLDER_CURRENCY, currency.getCurrencyIsoCode())
+						.replace(TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS, amountInWords)
 						.replace("{message}", message)
 						.replace("{creditNoteNumber}",creditNote.getCreditNoteNumber())
 						.replace("{invoiceAmount}",creditNote.getTotalAmount().toString())
-						.replace("{vatInWords}", vatInWords);
+						.replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS, vatInWords);
 			}
 
 		} catch (IOException e) {
@@ -1112,8 +1117,8 @@ public class InvoiceRestHelper {
 		}
 		if(invoice!=null) {
 			body = getTaxableSummaryString(invoice, body)
-					.replace("{amountInWords}", amountInWords)
-					.replace("{vatInWords}", vatInWords);
+					.replace(TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS, amountInWords)
+					.replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS, vatInWords);
 		}
 
 		if (contact!= null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
@@ -1188,7 +1193,7 @@ public class InvoiceRestHelper {
 		String htmlText="";
 
 		try {
-			byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+invoiceEmailBody.getPath()).getURI()));
+			byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX+invoiceEmailBody.getPath()).getURI()));
 
 			htmlText = new String(bodyData, StandardCharsets.UTF_8);
 
@@ -1232,7 +1237,7 @@ public class InvoiceRestHelper {
 		String htmlText="";
 
 		try {
-			byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+invoiceEmailBody.getPath()).getURI()));
+			byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX+invoiceEmailBody.getPath()).getURI()));
 
 			htmlText = new String(bodyData, StandardCharsets.UTF_8);
 
@@ -2719,7 +2724,7 @@ public class InvoiceRestHelper {
 	private void getInvoiceDueDate(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		if (invoice.getInvoiceDueDate() != null) {
 			LocalDateTime localDateTime = invoice.getInvoiceDueDate().atStartOfDay();
-			invoiceDataMap.put(value,  dateFormtUtil.getLocalDateTimeAsString(localDateTime, dateFormat));
+			invoiceDataMap.put(value,  dateFormtUtil.getLocalDateTimeAsString(localDateTime, DATE_FORMAT_DD_MM_YYYY));
 		}
 		else{
 			invoiceDataMap.put(value, "---");
@@ -2729,7 +2734,7 @@ public class InvoiceRestHelper {
 	private void getInvoiceDate(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		if (invoice.getInvoiceDate() != null) {
 			LocalDateTime localDateTime = invoice.getInvoiceDate().atStartOfDay();
-			invoiceDataMap.put(value, dateFormtUtil.getLocalDateTimeAsString(localDateTime, dateFormat));
+			invoiceDataMap.put(value, dateFormtUtil.getLocalDateTimeAsString(localDateTime, DATE_FORMAT_DD_MM_YYYY));
 		}
 		else{
 			invoiceDataMap.put(value, "---");
@@ -2861,7 +2866,7 @@ public class InvoiceRestHelper {
 		journalLineItemList.add(journalLineItem1);
 
 		Map<String, Object> param = new HashMap<>();
-		param.put("invoice", invoice);
+		param.put(JSON_KEY_INVOICE, invoice);
 		param.put("deleteFlag", false);
 
 		List<InvoiceLineItem> invoiceLineItemList = invoiceLineItemService.findByAttributes(param);
@@ -3439,7 +3444,7 @@ public class InvoiceRestHelper {
 		journalLineItemList.add(journalLineItem1);
 
 		Map<String, Object> param = new HashMap<>();
-		param.put("invoice", invoice);
+		param.put(JSON_KEY_INVOICE, invoice);
 		param.put("deleteFlag", false);
 
 		List<InvoiceLineItem> invoiceLineItemList = invoiceLineItemService.findByAttributes(param);

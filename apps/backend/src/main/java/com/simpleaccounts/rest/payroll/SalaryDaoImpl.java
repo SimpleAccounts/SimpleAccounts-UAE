@@ -34,6 +34,9 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Repository(value = "salaryDao")
 public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements SalaryDao{
+    private static final String JSON_KEY_EMPLOYEE_ID = "employeeId";
+    private static final String JSON_KEY_EMPLOYEE = "employee";
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionCategoryClosingBalanceDaoImpl.class);
     @Autowired
     EmployeeService employeeService;
@@ -122,13 +125,13 @@ public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements Salar
         for(EmployeeSalaryComponentRelation salary : esclist)
         {
             Map<String, Object> paramEmployee = new HashMap<>();
-            paramEmployee.put("employee", salary.getEmployeeId().getId());
+            paramEmployee.put(JSON_KEY_EMPLOYEE, salary.getEmployeeId().getId());
             List<Employment> employmentList = employmentService.findByAttributes(paramEmployee);
             if (employmentList!=null && !employmentList.isEmpty()){
                 employment = employmentList.get(0);
             }
             Map<String, Object> paramBankDetails = new HashMap<>();
-            paramBankDetails.put("employee", salary.getEmployeeId().getId());
+            paramBankDetails.put(JSON_KEY_EMPLOYEE, salary.getEmployeeId().getId());
             List<EmployeeBankDetails> employeeBankDetailsList = employeeBankDetailsService.findByAttributes(paramBankDetails);
             if (employeeBankDetailsList!=null && !employeeBankDetailsList.isEmpty()) {
                 employeeBankDetails = employeeBankDetailsList.get(0);
@@ -164,6 +167,10 @@ public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements Salar
                         salaryPerMonthModel.setGrossSalary(salaryPerMonthModel.getGrossSalary().add(salary.getMonthlyAmount()));
                         salaryPerMonthModel.setDeductions(salaryPerMonthModel.getDeductions().add(salary.getMonthlyAmount()));
                         break;
+                    case DEFAULT:
+                    default:
+                        // No action needed for default case
+                        break;
                 }
 
             }
@@ -182,19 +189,19 @@ public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements Salar
         EmployeeBankDetails employeeBankDetail=null;
         for (Employee employee : employeeList){
             Map<String, Object> paramEmployee = new HashMap<>();
-            paramEmployee.put("employee", employee.getId());
+            paramEmployee.put(JSON_KEY_EMPLOYEE, employee.getId());
             List<Employment> employmentList = employmentService.findByAttributes(paramEmployee);
             if (employmentList!=null&&!employmentList.isEmpty()) {
                 employment = employmentList.get(0);
             }
             Map<String, Object> paramBankDetails = new HashMap<>();
-            paramBankDetails.put("employee", employee.getId());
+            paramBankDetails.put(JSON_KEY_EMPLOYEE, employee.getId());
             List<EmployeeBankDetails> employeeBankDetailsList = employeeBankDetailsService.findByAttributes(paramBankDetails);
             if (employeeBankDetailsList!=null&&!employeeBankDetailsList.isEmpty()){
                 employeeBankDetail = employeeBankDetailsList.get(0);
             }
             Map<String, Object> employeeSalaryComponentDetail = new HashMap<>();
-            employeeSalaryComponentDetail.put("employeeId", employee.getId());
+            employeeSalaryComponentDetail.put(JSON_KEY_EMPLOYEE_ID, employee.getId());
             List<EmployeeSalaryComponentRelation> employeeSalaryComponentDetailList = employeeSalaryComponentRelationService.findByAttributes(employeeSalaryComponentDetail);
             EmployeeSalaryComponentRelation employeeSalaryComponentRelation = employeeSalaryComponentDetailList.get(0);
             if (employment==null||employeeBankDetail==null||((employeeSalaryComponentRelation.getMonthlyAmount()).compareTo(BigDecimal.ZERO)<1)||((employeeSalaryComponentRelation.getYearlyAmount()).compareTo(BigDecimal.ZERO)<1)){

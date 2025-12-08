@@ -30,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class BankAccountRestHelper {
 
+	private static final String DATE_FORMAT_MMM_YYYY = "MMM yyyy";
+
 	@Autowired
 	BankAccountService bankAccountService;
 
@@ -378,6 +380,15 @@ public class BankAccountRestHelper {
 				return transactionCategoryService
 						.findTransactionCategoryByTransactionCategoryCode(
 								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode());
+			case ACCOUNTS_PAYABLE:
+			case INCOME:
+			case ADMIN_EXPENSE:
+			case COST_OF_GOODS_SOLD:
+			case OTHER_EXPENSE:
+			default:
+				return transactionCategoryService
+						.findTransactionCategoryByTransactionCategoryCode(
+								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 		}
 		return transactionCategoryService
 				.findTransactionCategoryByTransactionCategoryCode(
@@ -449,13 +460,13 @@ public class BankAccountRestHelper {
 		for (int i = 0; i < monthCount; i++) {
 			Calendar calendar = util.getStartDate(Calendar.MONTH, -monthCount);
 			calendar.add(Calendar.MONTH, i);
-			monthList.add(new SimpleDateFormat("MMM yyyy").format(calendar.getTime()));
+			monthList.add(new SimpleDateFormat(DATE_FORMAT_MMM_YYYY).format(calendar.getTime()));
 		}
 
 		BigDecimal totalAmt = openingBalance;
 		Map<String, BigDecimal> map = new HashMap<>();
 		for (Transaction transaction : transactionList) {
-			String month = dateFormatUtil.getLocalDateTimeAsString(transaction.getTransactionDate(), "MMM yyyy");
+			String month = dateFormatUtil.getLocalDateTimeAsString(transaction.getTransactionDate(), DATE_FORMAT_MMM_YYYY);
 			if(transaction.getDebitCreditFlag() == 'C') {
 				totalAmt = totalAmt.add(transaction.getTransactionAmount());
 			} else {
@@ -466,7 +477,7 @@ public class BankAccountRestHelper {
 
 		List<Number> bankBalanceList = new LinkedList<>();
 		BigDecimal previousAmount = openingBalance;
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_MMM_YYYY);
 		for (String month : monthList) {
 			YearMonth yearMonth = YearMonth.parse(month, formatter);
 			LocalDate monthDate = yearMonth.atEndOfMonth();

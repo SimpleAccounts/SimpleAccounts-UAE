@@ -40,7 +40,7 @@ import java.util.Map;
 
 @Service
 public class CorporateTaxService {
-    private static final String dateFormat = "dd/MM/yyyy";
+    private static final String DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY = "dd/MM/yyyy";
     @Autowired
     private DateFormatUtil dateUtils;
     @Autowired
@@ -79,7 +79,7 @@ public class CorporateTaxService {
     @Autowired
     private FinancialReportRestHelper financialReportRestHelper;
 
-    DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY);
 
     public List<CorporateTaxModel> getCorporateTaxList(PaginationResponseModel responseModel,
                                                        int pageNo, int pageSize, boolean paginationDisable,
@@ -232,8 +232,9 @@ public class CorporateTaxService {
         journal.setCreatedBy(userId);
         journal.setPostingReferenceType(PostingReferenceTypeEnum.CORPORATE_TAX_REPORT_FILED);
         journal.setJournalDate(corporateTaxFiling.getTaxFiledOn());
-        if (corporateTaxFiling.getTaxFiledOn()!=null)
-        journal.setTransactionDate(corporateTaxFiling.getTaxFiledOn());
+        if (corporateTaxFiling.getTaxFiledOn()!=null) {
+            journal.setTransactionDate(corporateTaxFiling.getTaxFiledOn());
+        }
         journalService.persist(journal);
     }
 

@@ -44,11 +44,8 @@ public class CsvParser implements TransactionFileParser {
 		String cvsSplitBy = ",";
 		Map<Integer, String> indexHeaderMap = new HashMap<>();
 		List<Map<String, String>> list = new ArrayList<>();
-		BufferedReader br = null;
 
-		try {
-
-			br = new BufferedReader(new InputStreamReader(model.getFile().getInputStream(), StandardCharsets.UTF_8));
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(model.getFile().getInputStream(), StandardCharsets.UTF_8))) {
 			int rowCount = 0;
 			while ((line = br.readLine()) != null) {
 
@@ -80,14 +77,6 @@ public class CsvParser implements TransactionFileParser {
 			return list;
 		} catch (IOException e) {
 			logger.error("Error =", e);
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					logger.error("Error =", e);
-				}
-			}
 		}
 		return null;
 	}
@@ -105,9 +94,7 @@ public class CsvParser implements TransactionFileParser {
 		List<Map<String, String>> list = new LinkedList<>();
 		List<String> errorList = new ArrayList<>();
 
-		BufferedReader br = null;
-
-		try {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
 			Map<Integer, TransactionEnum> headerIndexMap = new LinkedHashMap<>();
 
@@ -115,7 +102,6 @@ public class CsvParser implements TransactionFileParser {
 				headerIndexMap.put(model.getIndexMap().get(transactionEnum), transactionEnum);
 			}
 
-			br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 			int rowCount = 0;
 			while ((line = br.readLine()) != null) {
 
@@ -223,14 +209,6 @@ public class CsvParser implements TransactionFileParser {
 			return responseMap;
 		} catch (IOException e) {
 			logger.error("Error = ", e);
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					logger.error("Error = ", e);
-				}
-			}
 		}
 		return null;
 	}

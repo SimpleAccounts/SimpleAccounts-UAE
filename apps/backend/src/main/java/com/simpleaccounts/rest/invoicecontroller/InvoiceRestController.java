@@ -524,7 +524,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
 	@GetMapping(value = "/getSuggestionExplainedForVend")
 	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionExplainedForVend(
-			@RequestParam("amount") BigDecimal amount, 	@RequestParam("currency") Integer currency, @RequestParam("id") Integer contactId,@RequestParam("bankId") Integer bankId,
+			@RequestParam("amount") BigDecimal amount, @RequestParam("currency") Integer currency, @RequestParam("id") Integer contactId,@RequestParam("bankId") Integer bankId,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -549,7 +549,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
 	@GetMapping(value = "/getSuggestionExplainedForCust")
 	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionExplainedForCust(
-			@RequestParam("amount") BigDecimal amount, 	@RequestParam("currency") Integer currency,@RequestParam("id") Integer contactId,@RequestParam("bankId") Integer bankId,
+			@RequestParam("amount") BigDecimal amount, @RequestParam("currency") Integer currency,@RequestParam("id") Integer contactId,@RequestParam("bankId") Integer bankId,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -573,7 +573,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
 	@GetMapping(value = "/getSuggestionInvoicesFotCust")
 	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionUnpaidInvoicesForCustomer(
-			@RequestParam("amount") BigDecimal amount,	@RequestParam("currency") Integer currency, @RequestParam("id") Integer contactId,@RequestParam("bankId") Integer bankId,
+			@RequestParam("amount") BigDecimal amount, @RequestParam("currency") Integer currency, @RequestParam("id") Integer contactId,@RequestParam("bankId") Integer bankId,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);

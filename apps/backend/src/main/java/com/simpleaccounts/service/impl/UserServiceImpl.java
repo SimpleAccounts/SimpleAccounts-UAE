@@ -42,6 +42,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
 
 @Service("userService")
 public class UserServiceImpl extends UserService{
+	private static final String LOG_ERROR = "Error";
 
 	private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -115,12 +116,12 @@ public class UserServiceImpl extends UserService{
 		String token = randomString.getAlphaNumericString(30);
 		try {
 			emailSender.send(user.getUserEmail(), "Reset Password",
- 					emailSender.resetPassword.replace("LINK",jwtRequest.getUrl()+ "/reset-password?token=" + token)
+ 					emailSender.RESET_PASSWORD.replace("LINK",jwtRequest.getUrl()+ "/reset-password?token=" + token)
 							       			 .replace("{UserName}", user.getFirstName()+" "+user.getLastName()),
 					EmailConstant.ADMIN_SUPPORT_EMAIL,
 					EmailConstant.ADMIN_EMAIL_SENDER_NAME, true);
 		} catch (MessagingException e) {
-			logger.error("Error", e);
+			logger.error(LOG_ERROR, e);
 			return false;
 		}
 
@@ -136,7 +137,7 @@ public class UserServiceImpl extends UserService{
 		String token = randomString.getAlphaNumericString(30);
 		try {
 			emailSender.send(selectedUser.getEmail(), "Create Password",
-					emailSender.newPassword.replace("LINK",selectedUser.getUrl()+ "/new-password?token=" + token)
+					emailSender.NEW_PASSWORD.replace("LINK",selectedUser.getUrl()+ "/new-password?token=" + token)
 							.replace("{UserName}", user.getFirstName()+" "+user.getLastName())
 							.replace("{SenderName}", sender!=null?
 										(sender.getFirstName()+" "+sender.getLastName()+"  of  "+sender.getCompany().getCompanyName())
@@ -145,7 +146,7 @@ public class UserServiceImpl extends UserService{
 					EmailConstant.ADMIN_SUPPORT_EMAIL,
 					EmailConstant.ADMIN_EMAIL_SENDER_NAME, true);
 		} catch (MessagingException e) {
-			logger.error("Error", e);
+			logger.error(LOG_ERROR, e);
 			return false;
 		}
 		user.setForgotPasswordToken(token);
@@ -160,14 +161,14 @@ public class UserServiceImpl extends UserService{
 
 		try {
 			emailSender.send(user.getUserEmail(), "Welcome To SimpleAccounts",
-					emailSender.newuser.replace("{userName}", user.getFirstName()+" "+user.getLastName())
+					emailSender.NEW_USER.replace("{userName}", user.getFirstName()+" "+user.getLastName())
 										.replace("{loginUrl}",loginUrl)
 							            .replace("{userEmail}", user.getUserEmail())
 										.replace("{password}", password),
 					EmailConstant.ADMIN_SUPPORT_EMAIL,
 					EmailConstant.ADMIN_EMAIL_SENDER_NAME, true);
 		} catch (MessagingException e) {
-			logger.error("Error", e);
+			logger.error(LOG_ERROR, e);
 			return false;
 		}
 
@@ -185,7 +186,7 @@ public class UserServiceImpl extends UserService{
 					EmailConstant.ADMIN_EMAIL_SENDER_NAME, true);
 			System.out.println("################# ########################## Mail Sent =  "+testContent);
 		} catch (MessagingException e) {
-			logger.error("Error", e);
+			logger.error(LOG_ERROR, e);
 			return false;
 		}
 

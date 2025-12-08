@@ -31,6 +31,8 @@ import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSe
 @Component
 public class ExcelParser implements TransactionFileParser {
 
+	private static final String LOG_ERROR_PREFIX = "ERROR = ";
+
 	private final Logger logger = LoggerFactory.getLogger(ExcelParser.class);
 
 	@Autowired
@@ -73,7 +75,7 @@ public class ExcelParser implements TransactionFileParser {
 
 				return list;
 			} catch (EncryptedDocumentException | IOException | InvalidFormatException e) {
-				logger.error("ERROR = ", e);
+				logger.error(LOG_ERROR_PREFIX, e);
 			}
 
 		}
@@ -178,7 +180,7 @@ public class ExcelParser implements TransactionFileParser {
 
 				return responseMap;
 			} catch (EncryptedDocumentException | IOException | InvalidFormatException e) {
-				logger.error("ERROR = ", e);
+				logger.error(LOG_ERROR_PREFIX, e);
 			}
 
 		}
@@ -224,7 +226,7 @@ public class ExcelParser implements TransactionFileParser {
 				});
 				return list;
 			} catch (EncryptedDocumentException | IOException | InvalidFormatException e) {
-				logger.error("ERROR = ", e);
+				logger.error(LOG_ERROR_PREFIX, e);
 			}
 
 		}

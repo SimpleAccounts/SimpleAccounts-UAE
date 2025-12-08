@@ -298,7 +298,7 @@ public abstract class AbstractDoubleEntryRestController {
 
 	@LogRequest
 	@PostMapping(value = "/stockInHandTestForProduct")
-	public ResponseEntity<?> stockInHandTestForProduct(@RequestParam int invoiceId)
+	public ResponseEntity<Object> stockInHandTestForProduct(@RequestParam int invoiceId)
 	{
 		Invoice invoice = invoiceService.findByPK(invoiceId);
 		int stockOnHand = 0;

@@ -18,6 +18,7 @@ import java.util.Map;
 
 @Component
 public class TransactionCategoryCreationHelper {
+	private static final String JSON_KEY_DESIGNATION = "designation";
 
     @Autowired
     private  TransactionCategoryService transactionCategoryService;
@@ -47,10 +48,10 @@ public class TransactionCategoryCreationHelper {
             Map<String, Object> param = new HashMap<>();
             if (employee.getEmployeeDesignationId().getParentId()!=null){
                 EmployeeDesignation employeeDesignation = employeeDesignationService.findByPK(employee.getEmployeeDesignationId().getParentId());
-                param.put("designation", employeeDesignation);
+                param.put(JSON_KEY_DESIGNATION, employeeDesignation);
             }
             else {
-                param.put("designation", employee.getEmployeeDesignationId());
+                param.put(JSON_KEY_DESIGNATION, employee.getEmployeeDesignationId());
             }
             List<DesignationTransactionCategory> designationTransactionCategoryList=
                     designationTransactionCategoryService.findByAttributes(param);
@@ -89,10 +90,10 @@ public class TransactionCategoryCreationHelper {
             Map<String, Object> map = new HashMap<>();
             if (employee.getEmployeeDesignationId().getParentId()!=null){
                 EmployeeDesignation employeeDesignation = employeeDesignationService.findByPK(employee.getEmployeeDesignationId().getParentId());
-                map.put("designation", employeeDesignation);
+                map.put(JSON_KEY_DESIGNATION, employeeDesignation);
             }
             else {
-                map.put("designation", employee.getEmployeeDesignationId());
+                map.put(JSON_KEY_DESIGNATION, employee.getEmployeeDesignationId());
             }
             List<DesignationTransactionCategory> designationTransactionCategoryList=
                     designationTransactionCategoryService.findByAttributes(map);
@@ -209,7 +210,6 @@ public class TransactionCategoryCreationHelper {
        }
     }
 
-    @Transactional(rollbackFor = Exception.class)
     TransactionCategory getTransactionCategory(String transactionCategoryName,String transactionCategoryDescription,
                                                               Integer userId, TransactionCategory parentTransactionCategory) {
         TransactionCategory category = new TransactionCategory();

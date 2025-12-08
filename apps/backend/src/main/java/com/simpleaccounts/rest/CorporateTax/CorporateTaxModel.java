@@ -2,12 +2,14 @@ package com.simpleaccounts.rest.CorporateTax;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 
 @Data
-public class CorporateTaxModel {
+public class CorporateTaxModel implements Serializable {
+	private static final long serialVersionUID = 1L;
     private Integer id;
     private String startDate;
     private String endDate;
