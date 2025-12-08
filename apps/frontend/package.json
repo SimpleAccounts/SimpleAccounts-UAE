@@ -105,7 +105,7 @@
     "styled-components": "^5.3.11",
     "to-words": "^3.0.0",
     "xlsx": "^0.15.5",
-    "yup": "^0.27.0"
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
