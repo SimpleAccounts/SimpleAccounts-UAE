@@ -74,8 +74,8 @@ public class DashboardController {
 				startDate = chartUtil.getStartDate(Calendar.YEAR, -1).getTime();
 			}
 			ReportRequestModel requestModel = new ReportRequestModel();
-			requestModel.setStartDate(dateFormatUtil.getDateAsString(startDate, "DATE_FORMAT_DD_MM_YYYY"));
-			requestModel.setEndDate(dateFormatUtil.getDateAsString(endDate, "DATE_FORMAT_DD_MM_YYYY"));
+			requestModel.setStartDate(dateFormatUtil.getDateAsString(startDate, DATE_FORMAT_DD_MM_YYYY));
+			requestModel.setEndDate(dateFormatUtil.getDateAsString(endDate, DATE_FORMAT_DD_MM_YYYY));
 			String chartOfAccountCodes = financialReportRestHelper.getChartOfAccountCategoryCodes("VatReport");
 			requestModel.setChartOfAccountCodes(chartOfAccountCodes);
 			List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getListByChartOfAccountIds(requestModel);
@@ -127,80 +127,6 @@ public class DashboardController {
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	//	@ApiOperation(value = "Get Profit and Loss Report")
-//	@GetMapping(value = "/profitandloss")
-//	public ResponseEntity<Object> getDashboardProfitAndLoss(@RequestParam Integer monthNo) {
-//		try {
-//			Date startDate = null;
-//			Date endDate = chartUtil.getEndDate().getTime();
-//			if (monthNo != null) {
-//				startDate = chartUtil.getStartDate(Calendar.MONTH, -monthNo).getTime();
-//			} else {
-//				startDate = chartUtil.getStartDate(Calendar.YEAR, -1).getTime();
-//			}
-//			ReportRequestModel requestModel = new ReportRequestModel();
-//			requestModel.setStartDate(dateFormatUtil.getDateAsString(startDate, "DATE_FORMAT_DD_MM_YYYY"));
-//			requestModel.setEndDate(dateFormatUtil.getDateAsString(endDate, "DATE_FORMAT_DD_MM_YYYY"));
-//			String chartOfAccountCodes = financialReportRestHelper.getChartOfAccountCategoryCodes("ProfitLoss");
-//			requestModel.setChartOfAccountCodes(chartOfAccountCodes);
-//			List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getListByChartOfAccountIds(requestModel);
-//			Map<String, BigDecimal> profitMap = new HashMap<>();
-//			if (closingBalanceList != null && !closingBalanceList.isEmpty()) {
-//				Map<Integer, TransactionCategoryClosingBalance> transactionCategoryClosingBalanceMap = financialReportRestHelper.processTransactionCategoryClosingBalance(closingBalanceList);
-//				BigDecimal totalOperatingIncome = BigDecimal.ZERO;
-//				BigDecimal totalCostOfGoodsSold = BigDecimal.ZERO;
-//				BigDecimal totalOperatingExpense = BigDecimal.ZERO;
-//
-//				BigDecimal totalNonOperatingIncome = BigDecimal.ZERO;
-//				BigDecimal totalNonOperatingExpense = BigDecimal.ZERO;
-//
-//				for (Map.Entry<Integer, TransactionCategoryClosingBalance> entry : transactionCategoryClosingBalanceMap.entrySet()) {
-//					TransactionCategoryClosingBalance transactionCategoryClosingBalance = entry.getValue();
-//					String transactionCategoryCode = transactionCategoryClosingBalance.getTransactionCategory().getChartOfAccount().getChartOfAccountCode();
-//					String transactionCategoryName = transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryName();
-//					BigDecimal closingBalance = transactionCategoryClosingBalance.getClosingBalance();
-//					ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
-//					if (chartOfAccountCategoryCodeEnum == null)
-//						continue;
-//					if (closingBalance.longValue() < 0) {
-//						closingBalance = closingBalance.negate();
-//					}
-//					switch (chartOfAccountCategoryCodeEnum) {
-//						case INCOME:
-//							if (transactionCategoryName.equalsIgnoreCase("Sales") ||
-//									transactionCategoryName.equalsIgnoreCase("Other Charges")) {
-//								totalOperatingIncome = totalOperatingIncome.add(closingBalance);
-//							} else {
-//								totalNonOperatingIncome = totalNonOperatingIncome.add(closingBalance);
-//							}
-//							break;
-//						case ADMIN_EXPENSE:
-//							totalOperatingExpense = totalOperatingExpense.add(closingBalance);
-//							break;
-//						case OTHER_EXPENSE:
-//							totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
-//							break;
-//						case COST_OF_GOODS_SOLD:
-//							totalCostOfGoodsSold = totalCostOfGoodsSold.add(closingBalance);
-//							break;
-//						default:
-//							break;
-//					}
-//				}
-//				BigDecimal totalIncome = totalOperatingIncome.add(totalNonOperatingIncome);
-//				BigDecimal totalExpense = totalCostOfGoodsSold.add(totalOperatingExpense).add(totalNonOperatingExpense);
-//				BigDecimal netProfitLoss = totalIncome.subtract(totalExpense);
-//				profitMap.put("Income", totalIncome);
-//				profitMap.put("Expense", totalExpense);
-//				profitMap.put("NetProfit", netProfitLoss);
-//			}
-//			return new ResponseEntity<>(profitMap, HttpStatus.OK);
-//		} catch (Exception e) {
-//			logger.error(ERROR, e);
-//		}
-//		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//	}
-	
 @LogExecutionTime
 @LogRequest
 @ApiOperation(value = "Get Profit and Loss Report")
@@ -255,7 +181,6 @@ public ResponseEntity<Object> getDashboardProfitAndLoss(@RequestParam(required =
 
 		// Process each month's data
 		long processingStart = System.currentTimeMillis();
-		DateTimeFormatter labelFormatter = DateTimeFormatter.ofPattern("DATE_FORMAT_DD_MM_YYYY");
 		for (DateRequestModel dateRequestModel : dateRequestModelList) {
 			YearMonth yearMonth = parseYearMonth(dateRequestModel.getStartDate());
 			List<TransactionCategoryClosingBalance> monthData = groupedByMonth.getOrDefault(yearMonth, Collections.emptyList());
@@ -295,8 +220,8 @@ private Map<YearMonth, List<TransactionCategoryClosingBalance>> groupClosingBala
 }
 
 private YearMonth parseYearMonth(String dateStr) {
-	// Parse "DATE_FORMAT_DD_MM_YYYY" format to YearMonth
-	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("DATE_FORMAT_DD_MM_YYYY");
+	// Parse "dd/MM/yyyy" format to YearMonth
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
 	java.time.LocalDate date = java.time.LocalDate.parse(dateStr, formatter);
 	return YearMonth.from(date);
 }

@@ -36,9 +36,8 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @Transactional
 public class TransactionCategoryClosingBalanceDaoImpl extends AbstractDao<Integer, TransactionCategoryClosingBalance>
         implements TransactionCategoryClosingBalanceDao {
-    private static final String DATE_FORMAT = "dd/MM/yyyy";
-@Autowired
-private DateFormatUtil dateUtil;
+    @Autowired
+    private DateFormatUtil dateUtil;
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionCategoryClosingBalanceDaoImpl.class);
 
     public List<TransactionCategoryClosingBalance> getList(ReportRequestModel reportRequestModel)
@@ -72,15 +71,6 @@ private DateFormatUtil dateUtil;
         if (toDate != null) {
             query.setParameter(CommonColumnConstants.END_DATE, toDate);
         }
-//        if (reportRequestModel.getChartOfAccountId() != null) {
-//            query.setParameter("transactionCategoryId", reportRequestModel.getChartOfAccountId());
-//        }
-//        if (reportRequestModel.getReportBasis() != null && !reportRequestModel.getReportBasis().isEmpty()
-//                && reportRequestModel.getReportBasis().equals("CASH")) {
-//            query.setParameter("transactionCategoryIdList",
-//                    Arrays.asList(TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode(),
-//                            TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode()));
-//        }
         List<TransactionCategoryClosingBalance> list = query.getResultList();
         return list != null && !list.isEmpty() ? list : null;
     }
@@ -178,63 +168,28 @@ private DateFormatUtil dateUtil;
         return transactionCategoryClosingBalanceList != null && !transactionCategoryClosingBalanceList.isEmpty() ?
                 transactionCategoryClosingBalanceList.get(transactionCategoryClosingBalanceList.size()-1) :null;
     }
-//    @Override
-//    public List<Object> getListByplaceOfSupply(ReportRequestModel reportRequestModel)
-//    {
-//        LocalDateTime fromDate = null;
-//        LocalDateTime toDate = null;
-//        String dateClause = " <= :endDate ";
-//        String placeOfSupply = reportRequestModel.getPlaceOfSupply();
-//        try {
-//            if(reportRequestModel.getStartDate()!=null) {
-//                fromDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), CommonColumnConstants.DD_MM_YYYY);
-//                dateClause = " BETWEEN :startDate and :endDate ";
-//            }
-//        } catch (Exception e) {
-//            LOGGER.error("Exception is ", e);
-//        }
-//        try {
-//            toDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(), CommonColumnConstants.DD_MM_YYYY);
-//        } catch (Exception e) {
-//            LOGGER.error(ERROR, e);
-//        }
-//
-//        String queryStr = "SELECT SUM(i.totalAmount) AS TOTAL_AMOUNT,SUM(i.totalVatAmount) AS TOTAL_VAT_AMOUNT, " +
-//                "i.placeOfSupplyId AS PLACE_OF_SUPPLY_ID FROM Invoice i, PlaceOfSupply p WHERE i.placeOfSupplyId = p.id " +
-//                " GROUP By i.placeOfSupplyId ";
-//
-//        List<Object> list = getEntityManager().createQuery(queryStr).getResultList();
-////        if (fromDate != null) {
-////            query.setParameter(CommonColumnConstants.START_DATE, fromDate);
-////        }
-////        if (toDate != null) {
-////            query.setParameter(CommonColumnConstants.END_DATE, toDate);
-////        }
-//      //  List<Object> list = query.getResultList();
-//        return  null;
-//    }
+
     @Override
     public List<VatReportModel> getListByplaceOfSupply(FinancialReportRequestModel reportRequestModel){
-        List<VatReportModel> vatReportModelList = new ArrayList<>();
-        LocalDateTime startDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(),DATE_FORMAT);
-        LocalDateTime endDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(),DATE_FORMAT);
+        LocalDateTime startDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), CommonColumnConstants.DD_MM_YYYY);
+        LocalDateTime endDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(), CommonColumnConstants.DD_MM_YYYY);
         Query query = getEntityManager().createQuery("SELECT SUM(il.subTotal*i.exchangeRate) AS TOTAL_AMOUNT,SUM(il.vatAmount*i.exchangeRate) AS TOTAL_VAT_AMOUNT, i.placeOfSupplyId.id AS PLACE_OF_SUPPLY_ID,i.placeOfSupplyId.placeOfSupply AS PLACE_OF_SUPPLY_NAME FROM Invoice i, PlaceOfSupply p,InvoiceLineItem il " +
                 "WHERE i.id = il.invoice.id AND i.type= 2 AND i.placeOfSupplyId.id = p.id and il.vatCategory.id in (1) and il.vatCategory.id not in (3)  and i.totalVatAmount > 0 " +
                 "AND i.status not in (2) AND i.deleteFlag=false AND i.invoiceDate between :startDate AND :endDate GROUP By i.placeOfSupplyId.id,i.placeOfSupplyId.placeOfSupply");
                 query.setParameter("startDate",startDate.toLocalDate());
         query.setParameter("endDate",endDate.toLocalDate());
         List<Object> list = query.getResultList();
-        if(list!=null&& list.size()>0) {
+        if(list!=null&& !list.isEmpty()) {
             return getVatModalFromDB(list);
         } else {
-            return vatReportModelList;
+            return new ArrayList<>();
         }
     }
 
     @Override
     public  void sumOfTotalAmountExce(FinancialReportRequestModel reportRequestModel, VatReportResponseModel vatReportResponseModel){
-        LocalDateTime startDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(),DATE_FORMAT);
-        LocalDateTime endDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(),DATE_FORMAT);
+        LocalDateTime startDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), CommonColumnConstants.DD_MM_YYYY);
+        LocalDateTime endDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(), CommonColumnConstants.DD_MM_YYYY);
         TypedQuery<BigDecimal> query =getEntityManager().createQuery( "SELECT SUM(il.subTotal*i.exchangeRate) AS TOTAL_AMOUNT " +
                 " FROM Invoice i,InvoiceLineItem  il WHERE i.status not in (2) and i.id = il.invoice.id and il.vatCategory.id in (3) and i.type=2 and i.invoiceDate between :startDate AND :endDate ",BigDecimal.class);
         query.setParameter("startDate",startDate.toLocalDate());
@@ -245,12 +200,11 @@ private DateFormatUtil dateUtil;
     }
     @Override
     public BigDecimal getTotalZeroVatAmount(){
-        List<VatReportModel> vatReportModelList = new ArrayList<>();
         String queryStr = "SELECT SUM(i.totalAmount) AS TOTAL_AMOUNT FROM Invoice i, PlaceOfSupply p WHERE i.type=2 and " +
                 "i.totalVatAmount = 0";
         List<Object> list = getEntityManager().createQuery(queryStr).getResultList();
 
-        if(list!=null&& list.size()>0) {
+        if(list!=null&& !list.isEmpty()) {
             Object[] row = (Object[]) list.get(0);
             return (BigDecimal) row[0];
         }
@@ -277,14 +231,9 @@ private DateFormatUtil dateUtil;
 
     @Override
     public BigDecimal sumOfTotalAmountClosingBalance(FinancialReportRequestModel reportRequestModel, String lastMonth){
-        LocalDateTime startDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(),DATE_FORMAT);
-        LocalDateTime endDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(),DATE_FORMAT);
         TypedQuery<BigDecimal> query =getEntityManager().createQuery( "SELECT SUM(tcb.closingBalance)  " +
                 " FROM TransactionCategoryClosingBalance tcb WHERE  FUNCTION('TO_CHAR', tcb.effectiveDate, 'YYYY-MM') = :lastMonth  ",BigDecimal.class);
         query.setParameter("lastMonth",lastMonth);
-        //query.setParameter("endDate",endDate.toLocalDate());
-        BigDecimal totalclosingAmount = query.getSingleResult();
-        //vatReportResponseModel.setExemptSupplies(totalExemptAmount);
-        return totalclosingAmount;
+        return query.getSingleResult();
     }
 }
