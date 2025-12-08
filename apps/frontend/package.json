@@ -94,7 +94,7 @@
     "react-test-renderer": "^18.2.0",
     "react-text-mask-hoc": "^0.11.0",
     "react-to-print": "^2.12.4",
-    "react-toastify": "^5.2.1",
+    "react-toastify": "^11.0.5",
     "react-transition-group": "^4.3.0",
     "reactstrap": "^8.9.0",
     "redux": "^4.0.4",
