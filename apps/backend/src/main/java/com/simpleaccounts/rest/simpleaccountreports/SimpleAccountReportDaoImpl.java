@@ -718,13 +718,10 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
 
     public ReceivableInvoiceDetailResponseModel getReceivableInvoiceDetail(ReportRequestModel requestModel, ReceivableInvoiceDetailResponseModel receivableInvoiceDetailResponseModel){
 
-
         Map<String ,List<ReceivableInvoiceDetailModel>> receivableInvoiceDetailModelMap = new HashMap<>();
         List<List<ReceivableInvoiceDetailModel>> resultObject = new ArrayList<>();
-        List<ReceivableInvoiceDetailModel> receivableInvoiceDetailModelList =null;
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        BigDecimal totalBalance = BigDecimal.ZERO;
-        BigDecimal totalVat = BigDecimal.ZERO;
+        BigDecimal[] totals = {BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO}; // totalAmount, totalBalance, totalVat
+
         String quertStr = "SELECT i.invoiceDate as InvoiceDate,i.referenceNumber as InvoiceNumber,i.status as STATUS,p.productCode as PRODUCTCODE , p.productDescription as DESCRIPTION , il.quantity as QUANTITY ,il.unitPrice * i.exchangeRate as UNITPRICE,i.discount as DISCOUNT ,i.invoiceDueDate as InvoiceDueDate,(i.totalVatAmount * i.exchangeRate) as TOTALVATAMOUNT,(i.totalAmount * i.exchangeRate) as TotalAmount,(i.dueAmount*i.exchangeRate) as DUEAMOUNT ,p.productName as PRODUCTNAME,i.id as invoiceId ,i.currency.currencyIsoCode as currencyName FROM Invoice i ,Product p,InvoiceLineItem il WHERE" +
                 " i.id=il.invoice.id and il.product.productID=p.productID and i.type in (2,7) and i.status in (3,5,6)  and i.invoiceDate BETWEEN :startDate and :endDate order by i.id desc ";
 
@@ -732,97 +729,83 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
         query.setParameter("startDate", requestModel.getStartDate().toLocalDate());
         query.setParameter("endDate", requestModel.getEndDate().toLocalDate());
         List<Object> list = query.getResultList();
+
         for(Object object : list){
-
             Object[] objectArray = (Object[]) object;
-            ReceivableInvoiceDetailModel receivableInvoiceDetailModel = new ReceivableInvoiceDetailModel();
-            receivableInvoiceDetailModel.setInvoiceDate((LocalDate) objectArray[0]);
-            receivableInvoiceDetailModel.setInvoiceNumber((String) objectArray[1]);
-            receivableInvoiceDetailModel.setCurrencyName((String) objectArray[14]);
-            String invoiceNumber = (String) objectArray[1];
-            receivableInvoiceDetailModelList = receivableInvoiceDetailModelMap.get(invoiceNumber);
-            if(receivableInvoiceDetailModelList==null) {
-                receivableInvoiceDetailModelList = new ArrayList<>();
-                receivableInvoiceDetailModelMap.put(invoiceNumber,receivableInvoiceDetailModelList);
-
-            }
-            receivableInvoiceDetailModel.setInvoiceId((Integer) objectArray[13]);
-            receivableInvoiceDetailModel.setDueDate((LocalDate) objectArray[8]);
-            int status = (int) objectArray[2];
-            ZoneId timeZone = ZoneId.systemDefault();
-            Date date = Date.from(receivableInvoiceDetailModel.getDueDate().atStartOfDay(timeZone).toInstant());
-            if(status>2 && status<5)
-                receivableInvoiceDetailModel.setStatus(invoiceRestHelper.getInvoiceStatus(status,date));
-            else
-                receivableInvoiceDetailModel.setStatus(CommonStatusEnum.getInvoiceTypeByValue(status));
-            receivableInvoiceDetailModel.setProductCode((String) objectArray[3]);
-            receivableInvoiceDetailModel.setProductName((String) objectArray[12]);
-            String description = (String) objectArray[4];
-            if (description==null ){
-                receivableInvoiceDetailModel.setDescription(" -");
-            }
-            else { receivableInvoiceDetailModel.setDescription(description);
-            }
-            receivableInvoiceDetailModel.setQuantity((Integer) objectArray[5]);
-            receivableInvoiceDetailModel.setUnitPrice((BigDecimal) objectArray[6]);
-            receivableInvoiceDetailModel.setDiscount((BigDecimal) objectArray[7]);
-            receivableInvoiceDetailModel.setDueDate((LocalDate) objectArray[8]);
-            receivableInvoiceDetailModel.setVatAmount((BigDecimal) objectArray[9]);
-            receivableInvoiceDetailModel.setTotalAmount(((BigDecimal) objectArray[6]).multiply(new BigDecimal(objectArray[5].toString()+".00")));
-            receivableInvoiceDetailModel.setBalance((BigDecimal) objectArray[11]);
-            totalAmount = totalAmount.add((BigDecimal) objectArray[10]);
-            totalVat = totalVat.add((BigDecimal) objectArray[9]);
-            totalBalance = totalBalance.add((BigDecimal) objectArray[11]);
-            receivableInvoiceDetailModelList.add(receivableInvoiceDetailModel);
+            processReceivableInvoiceDetailRow(objectArray, receivableInvoiceDetailModelMap, totals);
         }
+
         receivableInvoiceDetailResponseModel.setResultObject(resultObject);
+        processReceivableInvoiceDetailTotals(receivableInvoiceDetailModelMap, resultObject);
 
-        for(Map.Entry<String,List<ReceivableInvoiceDetailModel>> entry : receivableInvoiceDetailModelMap.entrySet())
-        {
-            BigDecimal totalForNullRow=BigDecimal.ZERO;
-                ReceivableInvoiceDetailModel receivableInvoiceDetailModelResult = new ReceivableInvoiceDetailModel();
-                List<ReceivableInvoiceDetailModel> receivableInvoiceDetailModels = entry.getValue();
-                resultObject.add(receivableInvoiceDetailModels);
-                int totalQty = 0;
+        receivableInvoiceDetailResponseModel.setTotalVatAmount(totals[2]);
+        receivableInvoiceDetailResponseModel.setTotalAmount(totals[0]);
+        receivableInvoiceDetailResponseModel.setTotalBalance(totals[1]);
 
-                int index = 0;
-                for (ReceivableInvoiceDetailModel receivableInvoiceDetailModel : receivableInvoiceDetailModels) {
-                    if (index == 0) {
-//                        for(Object object : list) {
-//                                Object[] objectArray = (Object[]) object;
-//                                receivableInvoiceDetailModelResult.setVatAmount((BigDecimal) objectArray[9]);
-//                        }
-                       receivableInvoiceDetailModelResult.setVatAmount(receivableInvoiceDetailModel.getVatAmount());
-//
-                        index++;
-                    }
-                    totalForNullRow=totalForNullRow.add(receivableInvoiceDetailModel.getTotalAmount());
-                    totalQty += receivableInvoiceDetailModel.getQuantity();
+        return receivableInvoiceDetailResponseModel;
+    }
+
+    private void processReceivableInvoiceDetailRow(Object[] objectArray, Map<String, List<ReceivableInvoiceDetailModel>> modelMap, BigDecimal[] totals) {
+        ReceivableInvoiceDetailModel model = new ReceivableInvoiceDetailModel();
+        model.setInvoiceDate((LocalDate) objectArray[0]);
+        model.setInvoiceNumber((String) objectArray[1]);
+        model.setCurrencyName((String) objectArray[14]);
+        String invoiceNumber = (String) objectArray[1];
+
+        List<ReceivableInvoiceDetailModel> modelList = modelMap.computeIfAbsent(invoiceNumber, k -> new ArrayList<>());
+
+        model.setInvoiceId((Integer) objectArray[13]);
+        model.setDueDate((LocalDate) objectArray[8]);
+        int status = (int) objectArray[2];
+        model.setStatus(calculateInvoiceStatus(status, model.getDueDate()));
+        model.setProductCode((String) objectArray[3]);
+        model.setProductName((String) objectArray[12]);
+        String description = (String) objectArray[4];
+        model.setDescription(description == null ? " -" : description);
+        model.setQuantity((Integer) objectArray[5]);
+        model.setUnitPrice((BigDecimal) objectArray[6]);
+        model.setDiscount((BigDecimal) objectArray[7]);
+        model.setVatAmount((BigDecimal) objectArray[9]);
+        model.setTotalAmount(((BigDecimal) objectArray[6]).multiply(new BigDecimal(objectArray[5].toString()+".00")));
+        model.setBalance((BigDecimal) objectArray[11]);
+
+        totals[0] = totals[0].add((BigDecimal) objectArray[10]);
+        totals[2] = totals[2].add((BigDecimal) objectArray[9]);
+        totals[1] = totals[1].add((BigDecimal) objectArray[11]);
+        modelList.add(model);
+    }
+
+    private void processReceivableInvoiceDetailTotals(Map<String, List<ReceivableInvoiceDetailModel>> modelMap, List<List<ReceivableInvoiceDetailModel>> resultObject) {
+        for(Map.Entry<String, List<ReceivableInvoiceDetailModel>> entry : modelMap.entrySet()) {
+            List<ReceivableInvoiceDetailModel> models = entry.getValue();
+            resultObject.add(models);
+
+            BigDecimal totalForNullRow = BigDecimal.ZERO;
+            int totalQty = 0;
+            ReceivableInvoiceDetailModel resultModel = new ReceivableInvoiceDetailModel();
+
+            for (int i = 0; i < models.size(); i++) {
+                ReceivableInvoiceDetailModel model = models.get(i);
+                if (i == 0) {
+                    resultModel.setVatAmount(model.getVatAmount());
                 }
-            receivableInvoiceDetailModelResult.setTotalAmount(totalForNullRow);
-            receivableInvoiceDetailModelResult.setDescription("Total");
-            receivableInvoiceDetailModelResult.setQuantity(totalQty);
-            receivableInvoiceDetailModels.add(receivableInvoiceDetailModelResult);
+                totalForNullRow = totalForNullRow.add(model.getTotalAmount());
+                totalQty += model.getQuantity();
+            }
+
+            resultModel.setTotalAmount(totalForNullRow);
+            resultModel.setDescription("Total");
+            resultModel.setQuantity(totalQty);
+            models.add(resultModel);
         }
-
-
-     //   receivableInvoiceDetailResponseModel.setReceivableInvoiceDetailModelMap(receivableInvoiceDetailModelMap);
-        receivableInvoiceDetailResponseModel.setTotalVatAmount(totalVat);
-        receivableInvoiceDetailResponseModel.setTotalAmount(totalAmount);
-        receivableInvoiceDetailResponseModel.setTotalBalance(totalBalance);
-
-          return receivableInvoiceDetailResponseModel;
     }
 
     public PayableInvoiceDetailResponseModel getPayableInvoiceDetail(ReportRequestModel requestModel, PayableInvoiceDetailResponseModel payableInvoiceDetailResponseModel){
 
         Map<String ,List<PayableInvoiceDetailModel>> payableInvoiceDetailModelMap = new HashMap<>();
         List<List<PayableInvoiceDetailModel>> resultObject = new ArrayList<>();
+        BigDecimal[] totals = {BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO}; // totalAmount, totalBalance, totalVat
 
-        List<PayableInvoiceDetailModel> payableInvoiceDetailModelList =null;
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        BigDecimal totalBalance = BigDecimal.ZERO;
-        BigDecimal totalVat = BigDecimal.ZERO;
         String quertStr = "SELECT i.invoiceDate as InvoiceDate,i.referenceNumber as InvoiceNumber,i.status as STATUS,p.productCode as PRODUCTCODE , p.productDescription as DESCRIPTION , il.quantity as QUANTITY ,(il.unitPrice * i.exchangeRate) as UNITPRICE,(i.discount * i.exchangeRate) as DISCOUNT ,i.invoiceDueDate as InvoiceDueDate,(i.totalVatAmount * i.exchangeRate) as TOTALVATAMOUNT,(i.totalAmount * i.exchangeRate) as TotalAmount,(i.dueAmount * i.exchangeRate) as DUEAMOUNT ,p.productName as PRODUCTNAME ,i.id as invoiceId FROM Invoice i ,Product p,InvoiceLineItem il WHERE" +
                 " i.id=il.invoice.id and il.product.productID=p.productID and i.type=1 and i.status in (3,5,6) and i.invoiceDate BETWEEN :startDate and :endDate order by i.id desc ";
 
@@ -830,86 +813,87 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
         query.setParameter("startDate", requestModel.getStartDate().toLocalDate());
         query.setParameter("endDate", requestModel.getEndDate().toLocalDate());
         List<Object> list = query.getResultList();
+
         for(Object object : list){
-
             Object[] objectArray = (Object[]) object;
-            PayableInvoiceDetailModel payableInvoiceDetailModel = new PayableInvoiceDetailModel();
-            payableInvoiceDetailModel.setInvoiceDate((LocalDate) objectArray[0]);
-            payableInvoiceDetailModel.setInvoiceNumber((String) objectArray[1]);
-            payableInvoiceDetailModel.setInvoiceId((Integer) objectArray[13]);
-            String invoiceNumber = (String) objectArray[1];
-            payableInvoiceDetailModelList = payableInvoiceDetailModelMap.get(invoiceNumber);
-            if(payableInvoiceDetailModelList==null) {
-                payableInvoiceDetailModelList = new ArrayList<>();
-                payableInvoiceDetailModelMap.put(invoiceNumber,payableInvoiceDetailModelList);
-
-            }
-
-            payableInvoiceDetailModel.setDueDate((LocalDate) objectArray[8]);
-            int status = (int) objectArray[2];
-            ZoneId timeZone = ZoneId.systemDefault();
-            Date date = Date.from(payableInvoiceDetailModel.getDueDate().atStartOfDay(timeZone).toInstant());
-            if(status>2 && status<5)
-                payableInvoiceDetailModel.setStatus(invoiceRestHelper.getInvoiceStatus(status,date));
-            else
-                payableInvoiceDetailModel.setStatus(CommonStatusEnum.getInvoiceTypeByValue(status));
-            payableInvoiceDetailModel.setProductCode((String) objectArray[3]);
-            payableInvoiceDetailModel.setProductName((String) objectArray[12]);
-            String description = (String) objectArray[4];
-            if (description==null) {
-                payableInvoiceDetailModel.setDescription("-");
-            }else {
-                payableInvoiceDetailModel.setDescription((String) objectArray[4]);
-            }
-            payableInvoiceDetailModel.setQuantity((Integer) objectArray[5]);
-            payableInvoiceDetailModel.setUnitPrice((BigDecimal) objectArray[6]);
-            payableInvoiceDetailModel.setDiscount((BigDecimal) objectArray[7]);
-            payableInvoiceDetailModel.setDueDate((LocalDate) objectArray[8]);
-            payableInvoiceDetailModel.setVatAmount((BigDecimal) objectArray[9]);
-            payableInvoiceDetailModel.setTotalAmount(((BigDecimal) objectArray[6]).multiply(new BigDecimal(objectArray[5].toString()+".00")));
-            payableInvoiceDetailModel.setBalance((BigDecimal) objectArray[11]);
-            totalAmount = totalAmount.add((BigDecimal) objectArray[10]);
-            totalVat = totalVat.add((BigDecimal) objectArray[9]);
-            totalBalance = totalBalance.add((BigDecimal) objectArray[11]);
-            payableInvoiceDetailModelList.add(payableInvoiceDetailModel);
+            processPayableInvoiceDetailRow(objectArray, payableInvoiceDetailModelMap, totals);
         }
+
         payableInvoiceDetailResponseModel.setResultObject(resultObject);
-        for(Map.Entry<String,List<PayableInvoiceDetailModel>> entry : payableInvoiceDetailModelMap.entrySet())
-        {
-            BigDecimal totalForNullRow=BigDecimal.ZERO;
-            PayableInvoiceDetailModel payableInvoiceDetailModelResult = new PayableInvoiceDetailModel();
-            List<PayableInvoiceDetailModel> payableInvoiceDetailModels = entry.getValue();
-            resultObject.add(payableInvoiceDetailModels);
-            int totalQty =0;
-            int index=0;
-            for(PayableInvoiceDetailModel payableInvoiceDetailModel : payableInvoiceDetailModels)
-            {
+        processPayableInvoiceDetailTotals(payableInvoiceDetailModelMap, resultObject);
 
-                if(index==0) {
-//                    for(Object object : list) {
-//                        Object[] objectArray = (Object[]) object;
-//                        payableInvoiceDetailModelResult.setVatAmount((BigDecimal) objectArray[9]);
-//                    }
-                    payableInvoiceDetailModelResult.setVatAmount(payableInvoiceDetailModel.getVatAmount());
-                   // payableInvoiceDetailModelResult.setTotalAmount(payableInvoiceDetailModel.getTotalAmount());
-                    index++;
-                }
-                totalForNullRow=totalForNullRow.add(payableInvoiceDetailModel.getTotalAmount());
-                totalQty+=payableInvoiceDetailModel.getQuantity();
-
-            }
-            payableInvoiceDetailModelResult.setTotalAmount(totalForNullRow);
-            payableInvoiceDetailModelResult.setDescription("Total");
-            payableInvoiceDetailModelResult.setQuantity(totalQty);
-            payableInvoiceDetailModels.add(payableInvoiceDetailModelResult);
-
-        }
-        //  payableInvoiceDetailResponseModel.setPayableInvoiceDetailModelMap(payableInvoiceDetailModelMap);
-        payableInvoiceDetailResponseModel.setTotalVatAmount(totalVat);
-        payableInvoiceDetailResponseModel.setTotalAmount(totalAmount);
-        payableInvoiceDetailResponseModel.setTotalBalance(totalBalance);
+        payableInvoiceDetailResponseModel.setTotalVatAmount(totals[2]);
+        payableInvoiceDetailResponseModel.setTotalAmount(totals[0]);
+        payableInvoiceDetailResponseModel.setTotalBalance(totals[1]);
 
         return payableInvoiceDetailResponseModel;
+    }
+
+    private void processPayableInvoiceDetailRow(Object[] objectArray, Map<String, List<PayableInvoiceDetailModel>> modelMap, BigDecimal[] totals) {
+        PayableInvoiceDetailModel model = new PayableInvoiceDetailModel();
+        model.setInvoiceDate((LocalDate) objectArray[0]);
+        model.setInvoiceNumber((String) objectArray[1]);
+        model.setInvoiceId((Integer) objectArray[13]);
+        String invoiceNumber = (String) objectArray[1];
+
+        List<PayableInvoiceDetailModel> modelList = modelMap.computeIfAbsent(invoiceNumber, k -> new ArrayList<>());
+
+        model.setDueDate((LocalDate) objectArray[8]);
+        int status = (int) objectArray[2];
+        model.setStatus(calculateInvoiceStatus(status, model.getDueDate()));
+        model.setProductCode((String) objectArray[3]);
+        model.setProductName((String) objectArray[12]);
+        String description = (String) objectArray[4];
+        model.setDescription(description == null ? "-" : description);
+        model.setQuantity((Integer) objectArray[5]);
+        model.setUnitPrice((BigDecimal) objectArray[6]);
+        model.setDiscount((BigDecimal) objectArray[7]);
+        model.setVatAmount((BigDecimal) objectArray[9]);
+        model.setTotalAmount(((BigDecimal) objectArray[6]).multiply(new BigDecimal(objectArray[5].toString()+".00")));
+        model.setBalance((BigDecimal) objectArray[11]);
+
+        totals[0] = totals[0].add((BigDecimal) objectArray[10]);
+        totals[2] = totals[2].add((BigDecimal) objectArray[9]);
+        totals[1] = totals[1].add((BigDecimal) objectArray[11]);
+        modelList.add(model);
+    }
+
+    private void processPayableInvoiceDetailTotals(Map<String, List<PayableInvoiceDetailModel>> modelMap, List<List<PayableInvoiceDetailModel>> resultObject) {
+        for(Map.Entry<String, List<PayableInvoiceDetailModel>> entry : modelMap.entrySet()) {
+            List<PayableInvoiceDetailModel> models = entry.getValue();
+            resultObject.add(models);
+
+            BigDecimal totalForNullRow = BigDecimal.ZERO;
+            int totalQty = 0;
+            PayableInvoiceDetailModel resultModel = new PayableInvoiceDetailModel();
+
+            for (int i = 0; i < models.size(); i++) {
+                PayableInvoiceDetailModel model = models.get(i);
+                if (i == 0) {
+                    resultModel.setVatAmount(model.getVatAmount());
+                }
+                totalForNullRow = totalForNullRow.add(model.getTotalAmount());
+                totalQty += model.getQuantity();
+            }
+
+            resultModel.setTotalAmount(totalForNullRow);
+            resultModel.setDescription("Total");
+            resultModel.setQuantity(totalQty);
+            models.add(resultModel);
+        }
+    }
+
+    /**
+     * Helper method to calculate invoice status based on status code and due date.
+     * Reduces cognitive complexity by extracting status calculation logic.
+     */
+    private String calculateInvoiceStatus(int status, LocalDate dueDate) {
+        if (status > 2 && status < 5) {
+            ZoneId timeZone = ZoneId.systemDefault();
+            Date date = Date.from(dueDate.atStartOfDay(timeZone).toInstant());
+            return invoiceRestHelper.getInvoiceStatus(status, date);
+        }
+        return CommonStatusEnum.getInvoiceTypeByValue(status);
     }
 
 //getcreditNoteDetails

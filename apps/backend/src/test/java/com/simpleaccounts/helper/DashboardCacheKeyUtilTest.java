@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,19 +36,30 @@ class DashboardCacheKeyUtilTest {
         SecurityContextHolder.clearContext();
     }
 
-    @Test
-    @DisplayName("Should generate cache key with username and normalized months")
-    void shouldGenerateCacheKeyWithUsernameAndNormalizedMonths() {
+    @ParameterizedTest(name = "monthNo={0}, expectedMonth={1}")
+    @DisplayName("Should normalize month values to valid range [1-12]")
+    @CsvSource({
+        "6, 6",       // valid middle range
+        "0, 1",       // below minimum normalized to 1
+        "24, 12",     // above maximum normalized to 12
+        "-5, 1",      // negative normalized to 1
+        "1, 1",       // minimum boundary
+        "12, 12",     // maximum boundary
+        "-1, 1",      // edge case just below valid range
+        "13, 12",     // edge case just above valid range
+        "2147483647, 12",  // Integer.MAX_VALUE
+        "-2147483648, 1"   // Integer.MIN_VALUE
+    })
+    void shouldNormalizeMonthValues(Integer inputMonth, int expectedMonth) {
         // given
         authentication = new UsernamePasswordAuthenticationToken("testuser", "password", new ArrayList<>());
         when(securityContext.getAuthentication()).thenReturn(authentication);
-        Integer monthNo = 6;
 
         // when
-        String cacheKey = DashboardCacheKeyUtil.profitLossKey(monthNo);
+        String cacheKey = DashboardCacheKeyUtil.profitLossKey(inputMonth);
 
         // then
-        assertThat(cacheKey).isEqualTo("testuser:6");
+        assertThat(cacheKey).isEqualTo("testuser:" + expectedMonth);
     }
 
     @Test
@@ -61,96 +74,6 @@ class DashboardCacheKeyUtilTest {
 
         // then
         assertThat(cacheKey).isEqualTo("john.doe:12");
-    }
-
-    @Test
-    @DisplayName("Should normalize months to minimum 1")
-    void shouldNormalizeMonthsToMinimum1() {
-        // given
-        authentication = new UsernamePasswordAuthenticationToken("user123", "password", new ArrayList<>());
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        Integer monthNo = 0;
-
-        // when
-        String cacheKey = DashboardCacheKeyUtil.profitLossKey(monthNo);
-
-        // then
-        assertThat(cacheKey).isEqualTo("user123:1");
-    }
-
-    @Test
-    @DisplayName("Should normalize months to maximum 12")
-    void shouldNormalizeMonthsToMaximum12() {
-        // given
-        authentication = new UsernamePasswordAuthenticationToken("admin", "password", new ArrayList<>());
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        Integer monthNo = 24;
-
-        // when
-        String cacheKey = DashboardCacheKeyUtil.profitLossKey(monthNo);
-
-        // then
-        assertThat(cacheKey).isEqualTo("admin:12");
-    }
-
-    @Test
-    @DisplayName("Should normalize negative months to 1")
-    void shouldNormalizeNegativeMonthsTo1() {
-        // given
-        authentication = new UsernamePasswordAuthenticationToken("testuser", "password", new ArrayList<>());
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        Integer monthNo = -5;
-
-        // when
-        String cacheKey = DashboardCacheKeyUtil.profitLossKey(monthNo);
-
-        // then
-        assertThat(cacheKey).isEqualTo("testuser:1");
-    }
-
-    @Test
-    @DisplayName("Should accept valid month number 1")
-    void shouldAcceptValidMonthNumber1() {
-        // given
-        authentication = new UsernamePasswordAuthenticationToken("user1", "password", new ArrayList<>());
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        Integer monthNo = 1;
-
-        // when
-        String cacheKey = DashboardCacheKeyUtil.profitLossKey(monthNo);
-
-        // then
-        assertThat(cacheKey).isEqualTo("user1:1");
-    }
-
-    @Test
-    @DisplayName("Should accept valid month number 12")
-    void shouldAcceptValidMonthNumber12() {
-        // given
-        authentication = new UsernamePasswordAuthenticationToken("user12", "password", new ArrayList<>());
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        Integer monthNo = 12;
-
-        // when
-        String cacheKey = DashboardCacheKeyUtil.profitLossKey(monthNo);
-
-        // then
-        assertThat(cacheKey).isEqualTo("user12:12");
-    }
-
-    @Test
-    @DisplayName("Should accept valid month number in middle range")
-    void shouldAcceptValidMonthNumberInMiddleRange() {
-        // given
-        authentication = new UsernamePasswordAuthenticationToken("testuser", "password", new ArrayList<>());
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        Integer monthNo = 6;
-
-        // when
-        String cacheKey = DashboardCacheKeyUtil.profitLossKey(monthNo);
-
-        // then
-        assertThat(cacheKey).isEqualTo("testuser:6");
     }
 
     @Test
@@ -270,75 +193,4 @@ class DashboardCacheKeyUtilTest {
         assertThat(parts[1]).isEqualTo("4");
     }
 
-    @Test
-    @DisplayName("Should handle very large month number")
-    void shouldHandleVeryLargeMonthNumber() {
-        // given
-        authentication = new UsernamePasswordAuthenticationToken("testuser", "password", new ArrayList<>());
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        Integer monthNo = Integer.MAX_VALUE;
-
-        // when
-        String cacheKey = DashboardCacheKeyUtil.profitLossKey(monthNo);
-
-        // then
-        assertThat(cacheKey).isEqualTo("testuser:12");
-    }
-
-    @Test
-    @DisplayName("Should handle very small month number")
-    void shouldHandleVerySmallMonthNumber() {
-        // given
-        authentication = new UsernamePasswordAuthenticationToken("testuser", "password", new ArrayList<>());
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        Integer monthNo = Integer.MIN_VALUE;
-
-        // when
-        String cacheKey = DashboardCacheKeyUtil.profitLossKey(monthNo);
-
-        // then
-        assertThat(cacheKey).isEqualTo("testuser:1");
-    }
-
-    @Test
-    @DisplayName("Should handle all valid month values from 1 to 12")
-    void shouldHandleAllValidMonthValuesFrom1To12() {
-        // given
-        authentication = new UsernamePasswordAuthenticationToken("rangeuser", "password", new ArrayList<>());
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        // when & then
-        for (int month = 1; month <= 12; month++) {
-            String cacheKey = DashboardCacheKeyUtil.profitLossKey(month);
-            assertThat(cacheKey).isEqualTo("rangeuser:" + month);
-        }
-    }
-
-    @Test
-    @DisplayName("Should handle edge case just below valid range")
-    void shouldHandleEdgeCaseJustBelowValidRange() {
-        // given
-        authentication = new UsernamePasswordAuthenticationToken("edgeuser", "password", new ArrayList<>());
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        // when
-        String cacheKey = DashboardCacheKeyUtil.profitLossKey(-1);
-
-        // then
-        assertThat(cacheKey).isEqualTo("edgeuser:1");
-    }
-
-    @Test
-    @DisplayName("Should handle edge case just above valid range")
-    void shouldHandleEdgeCaseJustAboveValidRange() {
-        // given
-        authentication = new UsernamePasswordAuthenticationToken("edgeuser", "password", new ArrayList<>());
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        // when
-        String cacheKey = DashboardCacheKeyUtil.profitLossKey(13);
-
-        // then
-        assertThat(cacheKey).isEqualTo("edgeuser:12");
-    }
 }

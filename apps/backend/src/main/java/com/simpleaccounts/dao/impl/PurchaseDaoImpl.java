@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 import javax.persistence.TypedQuery;
 
 @Repository
-@Transactional
 public class PurchaseDaoImpl extends AbstractDao<Integer, Purchase> implements PurchaseDao {
 
 	@Override

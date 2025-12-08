@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
@@ -38,7 +37,6 @@ import java.time.ZoneId;
 import javax.persistence.TypedQuery;
 
 @Repository
-@Transactional
 public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements ExpenseDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseDaoImpl.class);
@@ -189,37 +187,33 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate startDate = LocalDate.parse(reportRequestModel.getStartDate(),formatter);
 		LocalDate endDate = LocalDate.parse(reportRequestModel.getEndDate(),formatter);
-		Boolean editFlag = Boolean.TRUE;
-		VatReportFiling vatReportFiling = vatReportFilingRepository.getVatReportFilingByStartDateAndEndDate(startDate,endDate);
-		if (vatReportFiling!=null){
-			if (vatReportFiling.getStatus().equals(CommonStatusEnum.UN_FILED.getValue())){
-				editFlag = Boolean.TRUE;
-			}
-			else {
-				editFlag = Boolean.FALSE;
-			}
-		}
+		Boolean editFlag = determineEditFlag(startDate, endDate);
 		String queryStr = "SELECT SUM(e.expenseAmount*e.exchangeRate) AS TOTAL_AMOUNT, SUM(e.expenseVatAmount*e.exchangeRate) AS TOTAL_VAT_AMOUNT FROM Expense e " +
 				"WHERE e.vatCategory.id in (1) and e.deleteFlag=false AND e.isReverseChargeEnabled=false AND e.editFlag=:editFlag AND e.status not in(1) AND e.vatClaimable=true AND e.expenseDate between :startDate AND :endDate";
 		List<Object> list = getEntityManager().createQuery(queryStr).setParameter("startDate",startDate).setParameter("endDate",endDate).setParameter("editFlag",editFlag).getResultList();
-		if(list!=null&& list.size()>0) {
-		List<VatReportModel> vatReportModelList = getVatModalFromDB(list);
-
-		for(VatReportModel vatReportModel:vatReportModelList){
-			if (vatReportModel.getTotalAmountForExpense()!=null){
-				vatReportResponseModel.setTotalAmountForExpense(vatReportModel.getTotalAmountForExpense());
-			}
-			else {
-				vatReportResponseModel.setTotalAmountForExpense(BigDecimal.ZERO);
-			}
-			if (vatReportModel.getTotalVatAmountForExpense()!=null){
-				vatReportResponseModel.setTotalVatAmountForExpense(vatReportModel.getTotalVatAmountForExpense());
-			}
-			else {
-				vatReportResponseModel.setTotalVatAmountForExpense(BigDecimal.ZERO);
+		if(list!=null&& !list.isEmpty()) {
+			List<VatReportModel> vatReportModelList = getVatModalFromDB(list);
+			for(VatReportModel vatReportModel:vatReportModelList){
+				populateVatReportResponse(vatReportModel, vatReportResponseModel);
 			}
 		}
 	}
+
+	private Boolean determineEditFlag(LocalDate startDate, LocalDate endDate) {
+		VatReportFiling vatReportFiling = vatReportFilingRepository.getVatReportFilingByStartDateAndEndDate(startDate, endDate);
+		if (vatReportFiling == null) {
+			return Boolean.TRUE;
+		}
+		return vatReportFiling.getStatus().equals(CommonStatusEnum.UN_FILED.getValue());
+	}
+
+	private void populateVatReportResponse(VatReportModel vatReportModel, VatReportResponseModel vatReportResponseModel) {
+		BigDecimal totalAmount = vatReportModel.getTotalAmountForExpense() != null
+				? vatReportModel.getTotalAmountForExpense() : BigDecimal.ZERO;
+		BigDecimal totalVatAmount = vatReportModel.getTotalVatAmountForExpense() != null
+				? vatReportModel.getTotalVatAmountForExpense() : BigDecimal.ZERO;
+		vatReportResponseModel.setTotalAmountForExpense(totalAmount);
+		vatReportResponseModel.setTotalVatAmountForExpense(totalVatAmount);
 	}
 	private List<VatReportModel> getVatModalFromDB(List<Object> list) {
 		List<VatReportModel> vatReportModelList = new ArrayList<>();

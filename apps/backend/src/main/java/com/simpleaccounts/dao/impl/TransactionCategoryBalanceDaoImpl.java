@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
 import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
@@ -27,7 +25,6 @@ import com.simpleaccounts.entity.TransactionCategoryBalance;
 import com.simpleaccounts.rest.PaginationResponseModel;
 
 @Repository
-@Transactional
 public class TransactionCategoryBalanceDaoImpl extends AbstractDao<Integer, TransactionCategoryBalance>
 		implements TransactionCategoryBalanceDao {
 	@Autowired

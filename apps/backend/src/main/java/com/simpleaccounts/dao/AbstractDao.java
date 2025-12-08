@@ -24,7 +24,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
@@ -41,7 +40,7 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 	private EntityManagerFactory emf;
 
 	@SuppressWarnings("unchecked")
-	public AbstractDao() {
+	protected AbstractDao() {
 		ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();
 		this.entityClass = (Class<ENTITY>) genericSuperclass.getActualTypeArguments()[1];
 	}
@@ -86,7 +85,6 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 	public List<ENTITY> executeQuery(List<DbFilter> dbFilters, PaginationModel paginationModel) {
 		StringBuilder queryBuilder = new StringBuilder("FROM ").append(entityClass.getName());
 		int i = 0;
-		DbFilter orderByFilter = null;
 		for (DbFilter dbFilter : dbFilters) {
 			boolean orderBy = isOrderBy(dbFilter);
 			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !orderBy) {
@@ -97,8 +95,6 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 				}
 				queryBuilder.append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
 				i++;
-			} else if (orderBy) {
-				orderByFilter = dbFilter;
 			}
 		}
 		sortingCol(paginationModel, queryBuilder);
@@ -130,7 +126,6 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 
 		StringBuilder queryBuilder = new StringBuilder("FROM ").append(entityClass.getName());
 		int i = 0;
-		DbFilter orderByFilter = null;
 		for (DbFilter dbFilter : dbFilters) {
 			boolean orderBy = isOrderBy(dbFilter);
 			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !orderBy) {
@@ -139,12 +134,8 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 				} else {
 					queryBuilder.append(WHERE_CLAUSE);
 				}
-				queryBuilder.
-				// append("o.").
-						append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
+				queryBuilder.append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
 				i++;
-			} else if (orderBy) {
-				orderByFilter = dbFilter;
 			}
 		}
 
@@ -159,7 +150,6 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 	}
 
 	@Override
-	@Transactional (rollbackFor = Exception.class)
 	public ENTITY persist(ENTITY entity) {
 		entityManager.persist(entity);
 		entityManager.flush();
@@ -168,13 +158,11 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 	}
 
 	@Override
-	@Transactional (rollbackFor = Exception.class)
 	public ENTITY update(ENTITY entity) {
 		return entityManager.merge(entity);
 	}
 
 	@Override
-	@Transactional (rollbackFor = Exception.class)
 	public void delete(ENTITY entity) {
 		entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
 	}

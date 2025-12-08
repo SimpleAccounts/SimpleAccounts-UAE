@@ -2,6 +2,8 @@ package com.simpleaccounts.utils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.*;
@@ -219,105 +221,28 @@ class OSValidatorTest {
         }
     }
 
-    @Test
-    @DisplayName("Should return 'win' for Windows OS")
-    void testGetOS_WithWindowsOS() {
+    @ParameterizedTest(name = "osName={0}, expectedCode={1}")
+    @DisplayName("Should return correct OS code for different operating systems")
+    @CsvSource({
+        "Windows 11, win",
+        "Mac OS X, osx",
+        "Linux, uni",
+        "SunOS, sol",
+        "UnknownOS, err"
+    })
+    void testGetOS_WithVariousOperatingSystems(String osName, String expectedCode) {
         // Given
         String originalOS = System.getProperty("os.name");
 
         try {
-            System.setProperty("os.name", "Windows 11");
+            System.setProperty("os.name", osName);
             ReflectionTestUtils.setField(OSValidator.class, "OS", System.getProperty("os.name").toLowerCase());
 
             // When
             String result = OSValidator.getOS();
 
             // Then
-            assertThat(result).isEqualTo("win");
-        } finally {
-            System.setProperty("os.name", originalOS);
-            ReflectionTestUtils.setField(OSValidator.class, "OS", originalOS.toLowerCase());
-        }
-    }
-
-    @Test
-    @DisplayName("Should return 'osx' for Mac OS")
-    void testGetOS_WithMacOS() {
-        // Given
-        String originalOS = System.getProperty("os.name");
-
-        try {
-            System.setProperty("os.name", "Mac OS X");
-            ReflectionTestUtils.setField(OSValidator.class, "OS", System.getProperty("os.name").toLowerCase());
-
-            // When
-            String result = OSValidator.getOS();
-
-            // Then
-            assertThat(result).isEqualTo("osx");
-        } finally {
-            System.setProperty("os.name", originalOS);
-            ReflectionTestUtils.setField(OSValidator.class, "OS", originalOS.toLowerCase());
-        }
-    }
-
-    @Test
-    @DisplayName("Should return 'uni' for Unix/Linux OS")
-    void testGetOS_WithLinuxOS() {
-        // Given
-        String originalOS = System.getProperty("os.name");
-
-        try {
-            System.setProperty("os.name", "Linux");
-            ReflectionTestUtils.setField(OSValidator.class, "OS", System.getProperty("os.name").toLowerCase());
-
-            // When
-            String result = OSValidator.getOS();
-
-            // Then
-            assertThat(result).isEqualTo("uni");
-        } finally {
-            System.setProperty("os.name", originalOS);
-            ReflectionTestUtils.setField(OSValidator.class, "OS", originalOS.toLowerCase());
-        }
-    }
-
-    @Test
-    @DisplayName("Should return 'sol' for Solaris OS")
-    void testGetOS_WithSolarisOS() {
-        // Given
-        String originalOS = System.getProperty("os.name");
-
-        try {
-            System.setProperty("os.name", "SunOS");
-            ReflectionTestUtils.setField(OSValidator.class, "OS", System.getProperty("os.name").toLowerCase());
-
-            // When
-            String result = OSValidator.getOS();
-
-            // Then
-            assertThat(result).isEqualTo("sol");
-        } finally {
-            System.setProperty("os.name", originalOS);
-            ReflectionTestUtils.setField(OSValidator.class, "OS", originalOS.toLowerCase());
-        }
-    }
-
-    @Test
-    @DisplayName("Should return 'err' for unknown OS")
-    void testGetOS_WithUnknownOS() {
-        // Given
-        String originalOS = System.getProperty("os.name");
-
-        try {
-            System.setProperty("os.name", "UnknownOS");
-            ReflectionTestUtils.setField(OSValidator.class, "OS", System.getProperty("os.name").toLowerCase());
-
-            // When
-            String result = OSValidator.getOS();
-
-            // Then
-            assertThat(result).isEqualTo("err");
+            assertThat(result).isEqualTo(expectedCode);
         } finally {
             System.setProperty("os.name", originalOS);
             ReflectionTestUtils.setField(OSValidator.class, "OS", originalOS.toLowerCase());

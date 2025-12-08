@@ -1,7 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
-import com.simpleaccounts.dao.*;
-import com.simpleaccounts.entity.TransactionExpenses;
+import com.simpleaccounts.dao.AbstractDao;
+import com.simpleaccounts.dao.TransactionExpensesPayrollDao;
 import com.simpleaccounts.entity.TransactionExpensesPayroll;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -9,30 +9,9 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
-
-
-        import java.util.List;
-
-        import javax.transaction.Transactional;
-
-        import org.hibernate.Criteria;
-        import org.hibernate.Session;
-        import org.hibernate.criterion.DetachedCriteria;
-        import org.hibernate.criterion.Projection;
-        import org.hibernate.criterion.Projections;
-        import org.hibernate.criterion.Restrictions;
-        import org.springframework.stereotype.Repository;
-
-        import com.simpleaccounts.dao.AbstractDao;
-        import com.simpleaccounts.dao.TransactionExpensesDao;
-        import com.simpleaccounts.entity.Expense;
-        import com.simpleaccounts.entity.TransactionExpenses;
-
 @Repository
-@Transactional
 public class TransactionExpensesPayrollDaoImpl extends AbstractDao<Integer, TransactionExpensesPayroll>
         implements TransactionExpensesPayrollDao {
 

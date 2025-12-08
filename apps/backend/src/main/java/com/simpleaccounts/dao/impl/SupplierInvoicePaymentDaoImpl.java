@@ -2,15 +2,12 @@ package com.simpleaccounts.dao.impl;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Repository;
 
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.SupplierInvoicePaymentDao;
 import com.simpleaccounts.entity.SupplierInvoicePayment;
 
-@Transactional
 @Repository
 public class SupplierInvoicePaymentDaoImpl extends AbstractDao<Integer, SupplierInvoicePayment>
 		implements SupplierInvoicePaymentDao {

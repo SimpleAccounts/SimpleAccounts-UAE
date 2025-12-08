@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -60,80 +62,40 @@ class DateFormatUtilTest {
         );
     }
 
-    @Test
-    @DisplayName("Should convert LocalDateTime to string with dd/MM/yyyy format")
-    void shouldConvertLocalDateTimeToStringWithSlashFormat() {
+    @ParameterizedTest(name = "format={0}, expected={1}")
+    @DisplayName("Should convert LocalDateTime to string with various formats")
+    @CsvSource({
+        "dd/MM/yyyy, 15/03/2024",
+        "yyyy-MM-dd, 2024-03-15",
+        "MM-dd-yyyy, 03-15-2024"
+    })
+    void shouldConvertLocalDateTimeToStringWithVariousFormats(String format, String expected) {
         // given
         LocalDateTime dateTime = LocalDateTime.of(2024, 3, 15, 10, 30);
-        String format = "dd/MM/yyyy";
 
         // when
         String result = dateFormatUtil.getLocalDateTimeAsString(dateTime, format);
 
         // then
-        assertThat(result).isEqualTo("15/03/2024");
+        assertThat(result).isEqualTo(expected);
     }
 
-    @Test
-    @DisplayName("Should convert LocalDateTime to string with yyyy-MM-dd format")
-    void shouldConvertLocalDateTimeToStringWithDashFormat() {
-        // given
-        LocalDateTime dateTime = LocalDateTime.of(2024, 12, 25, 14, 45);
-        String format = "yyyy-MM-dd";
-
-        // when
-        String result = dateFormatUtil.getLocalDateTimeAsString(dateTime, format);
-
-        // then
-        assertThat(result).isEqualTo("2024-12-25");
-    }
-
-    @Test
-    @DisplayName("Should convert LocalDateTime to string with time components")
-    void shouldConvertLocalDateTimeToStringWithTimeComponents() {
-        // given
-        LocalDateTime dateTime = LocalDateTime.of(2024, 6, 10, 9, 15, 30);
-        String format = "dd/MM/yyyy HH:mm:ss";
-
-        // when
-        String result = dateFormatUtil.getLocalDateTimeAsString(dateTime, format);
-
-        // then
-        assertThat(result).contains("10/06/2024");
-    }
-
-    @Test
-    @DisplayName("Should parse date string to LocalDateTime")
-    void shouldParseDateStringToLocalDateTime() {
-        // given
-        String dateStr = "15/03/2024";
-        String format = "dd/MM/yyyy";
-
+    @ParameterizedTest(name = "dateStr={0}, format={1}, day={2}, month={3}, year={4}")
+    @DisplayName("Should parse date strings to LocalDateTime with various formats")
+    @CsvSource({
+        "15/03/2024, dd/MM/yyyy, 15, 3, 2024",
+        "2024-12-25, yyyy-MM-dd, 25, 12, 2024",
+        "06-10-2024, MM-dd-yyyy, 10, 6, 2024"
+    })
+    void shouldParseDateStringToLocalDateTimeWithVariousFormats(String dateStr, String format, int day, int month, int year) {
         // when
         LocalDateTime result = dateFormatUtil.getDateStrAsLocalDateTime(dateStr, format);
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getDayOfMonth()).isEqualTo(15);
-        assertThat(result.getMonthValue()).isEqualTo(3);
-        assertThat(result.getYear()).isEqualTo(2024);
-    }
-
-    @Test
-    @DisplayName("Should parse date string with different format")
-    void shouldParseDateStringWithDifferentFormat() {
-        // given
-        String dateStr = "2024-12-25";
-        String format = "yyyy-MM-dd";
-
-        // when
-        LocalDateTime result = dateFormatUtil.getDateStrAsLocalDateTime(dateStr, format);
-
-        // then
-        assertThat(result).isNotNull();
-        assertThat(result.getYear()).isEqualTo(2024);
-        assertThat(result.getMonthValue()).isEqualTo(12);
-        assertThat(result.getDayOfMonth()).isEqualTo(25);
+        assertThat(result.getDayOfMonth()).isEqualTo(day);
+        assertThat(result.getMonthValue()).isEqualTo(month);
+        assertThat(result.getYear()).isEqualTo(year);
     }
 
     @Test

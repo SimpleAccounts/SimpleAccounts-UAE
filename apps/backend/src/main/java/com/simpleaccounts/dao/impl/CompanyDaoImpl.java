@@ -39,9 +39,6 @@ public class CompanyDaoImpl extends AbstractDao<Integer, Company> implements Com
 		return null;
 	}
 
-//	public List<Integer> getDbConnection(){
-//		return this.executeNamedQuery("getDbConnection");
-//	}
 public Integer getDbConncection(){
 	Query query = getEntityManager().createQuery(
 			"SELECT 1 FROM Company cc" );
