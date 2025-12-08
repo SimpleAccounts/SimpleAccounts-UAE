@@ -98,7 +98,7 @@ class RateLimiterTest {
             assertThat(rateLimiter.tryAcquire("api", "user-1")).isFalse();
 
             // Wait for window to expire
-            try { Thread.sleep(150); } catch (InterruptedException e) { }
+            try { Thread.sleep(150); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
 
             assertThat(rateLimiter.tryAcquire("api", "user-1")).isTrue();
         }
@@ -113,7 +113,7 @@ class RateLimiterTest {
                 rateLimiter.tryAcquire("api", "user-1");
             }
 
-            try { Thread.sleep(600); } catch (InterruptedException e) { }
+            try { Thread.sleep(600); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
 
             // After 600ms, old requests should start expiring
             // Should be able to make more requests
@@ -365,7 +365,6 @@ class RateLimiterTest {
         }
 
         RateLimitInfo getRateLimitInfo(String endpoint, String userId) {
-            String key = endpoint + ":" + userId;
             EndpointConfig config = configs.get(endpoint);
             if (config == null) return new RateLimitInfo(0, 0, Instant.now());
 

@@ -721,7 +721,9 @@ public class ExpenseRestHelper {
 
 		Transaction transaction = createCashTransaction(expense, bankAccount, postingRequestModel);
 		transactionService.persist(transaction);
-		updateBankAccountBalance(bankAccount, transaction.getTransactionAmount());
+		if (bankAccount != null) {
+			updateBankAccountBalance(bankAccount, transaction.getTransactionAmount());
+		}
 		createTransactionExpenses(transaction, expense, userId);
 		createTransactionExplanation(transaction, userId);
 	}
@@ -756,7 +758,12 @@ public class ExpenseRestHelper {
 
 	private void updateBankAccountBalance(BankAccount bankAccount, BigDecimal amount) {
 		BigDecimal currentBalance = bankAccount.getCurrentBalance();
-		currentBalance = currentBalance.subtract(amount);
+		if (currentBalance == null) {
+			currentBalance = BigDecimal.ZERO;
+		}
+		if (amount != null) {
+			currentBalance = currentBalance.subtract(amount);
+		}
 		bankAccount.setCurrentBalance(currentBalance);
 		bankAccountService.update(bankAccount);
 	}

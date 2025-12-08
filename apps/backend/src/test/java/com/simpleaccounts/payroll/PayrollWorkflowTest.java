@@ -301,10 +301,10 @@ class PayrollWorkflowTest {
             List<WpsRecord> salaryRecords = wpsFile.getSalaryRecords();
 
             assertThat(salaryRecords).isNotEmpty();
-            for (WpsRecord record : salaryRecords) {
-                assertThat(record.getRecordType()).isEqualTo("SDR");
-                assertThat(record.getEmployeeLabourId()).isNotNull();
-                assertThat(record.getSalaryAmount()).isGreaterThan(BigDecimal.ZERO);
+            for (WpsRecord wpsRecord : salaryRecords) {
+                assertThat(wpsRecord.getRecordType()).isEqualTo("SDR");
+                assertThat(wpsRecord.getEmployeeLabourId()).isNotNull();
+                assertThat(wpsRecord.getSalaryAmount()).isGreaterThan(BigDecimal.ZERO);
             }
         }
 
@@ -408,6 +408,8 @@ class PayrollWorkflowTest {
         private YearMonth period;
         private PayrollStatus status;
         private String createdBy;
+        private String lastModifiedBy;
+        private String rollbackReason;
         private String employerMolId;
         private String routingCode;
         private List<Employee> employees = new ArrayList<>();
@@ -421,6 +423,10 @@ class PayrollWorkflowTest {
         void setStatus(PayrollStatus status) { this.status = status; }
         String getCreatedBy() { return createdBy; }
         void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
+        String getLastModifiedBy() { return lastModifiedBy; }
+        void setLastModifiedBy(String lastModifiedBy) { this.lastModifiedBy = lastModifiedBy; }
+        String getRollbackReason() { return rollbackReason; }
+        void setRollbackReason(String rollbackReason) { this.rollbackReason = rollbackReason; }
         String getEmployerMolId() { return employerMolId; }
         void setEmployerMolId(String id) { this.employerMolId = id; }
         String getRoutingCode() { return routingCode; }
@@ -633,16 +639,21 @@ class PayrollWorkflowTest {
         }
 
         void submitForApproval(String runId, String userId) {
-            runs.get(runId).setStatus(PayrollStatus.PENDING_APPROVAL);
+            PayrollRun run = runs.get(runId);
+            run.setStatus(PayrollStatus.PENDING_APPROVAL);
+            run.setLastModifiedBy(userId);
         }
 
         void approve(String runId, String userId) {
-            runs.get(runId).setStatus(PayrollStatus.APPROVED);
+            PayrollRun run = runs.get(runId);
+            run.setStatus(PayrollStatus.APPROVED);
+            run.setLastModifiedBy(userId);
         }
 
         void postToLedger(String runId, String userId) {
             PayrollRun run = runs.get(runId);
             run.setStatus(PayrollStatus.POSTED);
+            run.setLastModifiedBy(userId);
             lockedPeriods.put(run.getPeriod(), true);
         }
 
@@ -656,6 +667,8 @@ class PayrollWorkflowTest {
                 throw new IllegalStateException("Cannot rollback posted payroll run");
             }
             run.setStatus(PayrollStatus.DRAFT);
+            run.setLastModifiedBy(userId);
+            run.setRollbackReason(reason);
             run.getPayslips().clear();
         }
     }
@@ -669,10 +682,10 @@ class PayrollWorkflowTest {
         String getFileName() { return fileName; }
         void setFileName(String name) { this.fileName = name; }
         WpsRecord getHeaderRecord() { return headerRecord; }
-        void setHeaderRecord(WpsRecord record) { this.headerRecord = record; }
+        void setHeaderRecord(WpsRecord wpsRecord) { this.headerRecord = wpsRecord; }
         List<WpsRecord> getSalaryRecords() { return salaryRecords; }
         WpsRecord getFooterRecord() { return footerRecord; }
-        void setFooterRecord(WpsRecord record) { this.footerRecord = record; }
+        void setFooterRecord(WpsRecord wpsRecord) { this.footerRecord = wpsRecord; }
         int getRecordCount() { return salaryRecords.size(); }
     }
 

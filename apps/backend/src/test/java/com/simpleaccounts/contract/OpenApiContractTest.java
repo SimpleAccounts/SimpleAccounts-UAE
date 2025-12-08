@@ -66,15 +66,6 @@ class OpenApiContractTest {
             ));
     }
 
-    // Helper method for Java 8 compatibility
-    private static Map<String, Object> mapOf(Object... pairs) {
-        Map<String, Object> map = new HashMap<>();
-        for (int i = 0; i < pairs.length; i += 2) {
-            map.put((String) pairs[i], pairs[i + 1]);
-        }
-        return map;
-    }
-
     @Nested
     @DisplayName("Invoice API Contract Tests")
     class InvoiceApiContractTests {
