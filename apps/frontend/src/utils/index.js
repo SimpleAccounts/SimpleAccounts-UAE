@@ -15,6 +15,7 @@ import * as DropdownLists from './dropdown_lists';
 import * as Lists from './lists';
 import * as renderList from './render_lists';
 import * as StatusActionList from './status_action_list';
+import ExcelExport from './excelExport';
 //import * as InvoiceList from './invoice_list';
 
 export {
@@ -35,4 +36,5 @@ export {
   Lists,
   renderList,
   StatusActionList,
+  ExcelExport,
 };

@@ -39,8 +39,6 @@ const mapStateToProps = (state) => {
 };
 
 
-const reader = require('xlsx')
-
 const mapDispatchToProps = (dispatch) => {
 	return {
 		importTransactionActions: bindActionCreators(

@@ -6,7 +6,7 @@ import {  Row, Card, CardBody, CardGroup } from 'reactstrap';
 
 import moment from 'moment';
 import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx';
+import { ExcelExport as XLSX } from 'utils';
 import { Currency } from 'components';
 import * as InventoryActions from '../../actions';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';

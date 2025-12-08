@@ -1,15 +1,6 @@
 {
-  "apps/frontend/**/*.{js,jsx,ts,tsx}": [
-    "eslint --fix",
-    "prettier --write"
-  ],
-  "apps/frontend/**/*.{css,scss}": [
-    "prettier --write"
-  ],
-  "apps/backend/**/*.java": [
-    "google-java-format --replace"
-  ],
-  "*.{json,md,yml,yaml}": [
-    "prettier --write"
-  ]
+  "apps/frontend/**/*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"],
+  "apps/frontend/**/*.{css,scss}": ["prettier --write"],
+  "apps/backend/**/*.java": ["./scripts/run-java-formatter.sh"],
+  "*.{json,md,yml,yaml}": ["prettier --write"]
 }

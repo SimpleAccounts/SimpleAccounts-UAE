@@ -97,7 +97,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.4.0</version>
+			<version>42.7.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -117,7 +117,7 @@
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20180130</version>
+			<version>20231013</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -167,14 +167,8 @@
 
 		<dependency>
 			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.7.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.7.0</version>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version>
 		</dependency>
 
 		<dependency>
@@ -279,7 +273,7 @@
 		<dependency>
 			<groupId>org.liquibase</groupId>
 			<artifactId>liquibase-core</artifactId>
-			<version>4.5.0</version>
+			<version>4.24.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.itextpdf</groupId>
@@ -294,7 +288,7 @@
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
-			<version>5.5.13.2</version>
+			<version>5.5.13.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.janino</groupId>
@@ -304,7 +298,7 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.6</version>
+			<version>2.14.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.sonarsource.scanner.maven/sonar-maven-plugin -->
 		<dependency>
@@ -531,7 +525,7 @@
 					<plugin>
 						<groupId>org.owasp</groupId>
 						<artifactId>dependency-check-maven</artifactId>
-						<version>8.4.3</version>
+						<version>7.4.4</version>
 						<configuration>
 							<failBuildOnCVSS>7</failBuildOnCVSS>
 							<formats>

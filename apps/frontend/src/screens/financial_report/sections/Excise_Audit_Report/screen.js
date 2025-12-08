@@ -15,7 +15,7 @@ import {
 } from 'reactstrap';
 import moment from 'moment';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as XLSX from 'xlsx';
+import { ExcelExport as XLSX } from 'utils';
 import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';

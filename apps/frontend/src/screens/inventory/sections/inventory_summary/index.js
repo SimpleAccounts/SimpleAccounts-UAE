@@ -17,7 +17,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx';
+import { ExcelExport as XLSX } from 'utils';
 import { Loader  } from 'components';
 import * as InventoryActions from '../../actions';
 import logo from 'assets/images/brand/logo.png';

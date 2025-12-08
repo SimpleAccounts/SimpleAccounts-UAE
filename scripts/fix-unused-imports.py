@@ -7,7 +7,6 @@ This helps fix java:S6813 SonarQube issues.
 import re
 import os
 import sys
-from pathlib import Path
 
 def find_java_files(root_dir):
     """Find all Java files in the directory."""
