@@ -10,18 +10,5 @@
                 <Version>3.4</Version>
             </VersionList>
         </Application>
-        
-
-    <!--    <Application name="quickBooks">
-            <VersionList>
-                <Version>3.4</Version>
-            </VersionList>
-        </Application>
-
-        <Application name="freshBooks">
-            <VersionList>
-                <Version>3.4</Version>
-            </VersionList>
-        </Application> -->
     </ApplicationList>
 </ApplicationMigration>
