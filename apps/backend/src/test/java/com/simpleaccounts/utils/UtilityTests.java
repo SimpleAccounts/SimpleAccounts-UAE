@@ -259,13 +259,13 @@ class UtilityTests {
 
         private final InvoiceNumberUtil invoiceNumberUtil = new InvoiceNumberUtil();
 
-        @ParameterizedTest(name = "fetchSuffixFromString(\"{0}\") should return \"{1}\"")
+        @ParameterizedTest(name = "fetchSuffixFromString: \"{0}\" -> \"{1}\"")
         @CsvSource({
             "INV-2024-001, 001",
             "INV-ABC, ''",
             "12345, 12345"
         })
-        @DisplayName("Should fetch suffix from string correctly")
+        @DisplayName("Should correctly extract suffix from various string patterns")
         void testFetchSuffixFromString(String input, String expected) {
             String result = invoiceNumberUtil.fetchSuffixFromString(input);
             assertThat(result).isEqualTo(expected);
