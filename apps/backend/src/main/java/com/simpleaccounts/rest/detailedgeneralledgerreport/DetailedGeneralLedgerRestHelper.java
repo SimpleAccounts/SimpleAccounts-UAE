@@ -504,10 +504,6 @@ public class DetailedGeneralLedgerRestHelper {
 					default:
 						// Unknown posting type - no action needed
 						break;
-						default:
-							// Unknown posting type - no action needed
-							break;
-
 					}
 					model.setAmount(model.getAmount());
 

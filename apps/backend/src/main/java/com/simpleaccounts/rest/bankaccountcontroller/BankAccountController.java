@@ -272,9 +272,6 @@ public class BankAccountController{
 						.findTransactionCategoryByTransactionCategoryCode(
 								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 		}
-		return transactionCategoryService
-				.findTransactionCategoryByTransactionCategoryCode(
-						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 	}
 
 	@LogRequest
