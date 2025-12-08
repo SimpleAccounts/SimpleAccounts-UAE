@@ -15,7 +15,7 @@ import {
 import { ReportTables } from 'screens/financial_report/sections'
 import moment from 'moment';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as XLSX from 'xlsx';
+import { ExcelExport as XLSX } from 'utils';
 import FilterComponent from './sections/filterComponent';
 import { Loader } from 'components';
 import { data } from '../../../Language/index'

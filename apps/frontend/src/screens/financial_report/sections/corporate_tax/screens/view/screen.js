@@ -17,7 +17,7 @@ import {
 import moment from 'moment';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx';
+import { ExcelExport as XLSX } from 'utils';
 import { CSVLink } from 'react-csv';
 import { Loader, Currency } from 'components';
 import * as CTActions from './actions';

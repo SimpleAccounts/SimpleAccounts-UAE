@@ -21,7 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import { CommonActions } from 'services/global';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as XLSX from 'xlsx';
+import { ExcelExport as XLSX } from 'utils';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent2 from '../filterComponet2';
