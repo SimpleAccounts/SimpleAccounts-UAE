@@ -316,8 +316,8 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
     }
 
     public void postFiledVat(VatReportFiling vatReportFiling,Integer userId,Date filedDate){
-        String startDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getStartDate().atStartOfDay(),dateFormat);
-        String endDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getEndDate().atStartOfDay(),dateFormat);
+        String startDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getStartDate().atStartOfDay(),DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY);
+        String endDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getEndDate().atStartOfDay(),DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY);
 
         VatReportFilingRequestModel vatReportFilingRequestModel=new VatReportFilingRequestModel();
         vatReportFilingRequestModel.setEndDate(endDate);
@@ -469,7 +469,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
             vatPayment.setReceiptAttachmentPath(fileName);
         }
         if (recordVatPaymentRequestModel.getVatPaymentDate()!=null){
-            vatPayment.setVatPaymentDate(dateUtils.getDateStrAsLocalDateTime(recordVatPaymentRequestModel.getVatPaymentDate(),dateFormat));
+            vatPayment.setVatPaymentDate(dateUtils.getDateStrAsLocalDateTime(recordVatPaymentRequestModel.getVatPaymentDate(),DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY));
         }
         if (recordVatPaymentRequestModel.getAmount()!=null){
             vatPayment.setAmount(recordVatPaymentRequestModel.getAmount());
@@ -664,8 +664,8 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
                vatTaxAgencyRepository.deleteById(vatTaxAgencyList.get(0).getId());
            }
            //enable edit For Invoices
-           String startDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getStartDate().atStartOfDay(),dateFormat);
-           String endDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getEndDate().atStartOfDay(),dateFormat);
+           String startDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getStartDate().atStartOfDay(),DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY);
+           String endDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getEndDate().atStartOfDay(),DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY);
 
            VatReportFilingRequestModel vatReportFilingRequestModel=new VatReportFilingRequestModel();
            vatReportFilingRequestModel.setEndDate(endDate);

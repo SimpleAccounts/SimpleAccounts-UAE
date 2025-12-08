@@ -60,6 +60,7 @@ public class EmailService {
     private static final String MODEL_KEY_TOTAL_TAX = "totalTax";
     private static final String MODEL_KEY_COMPANY_NAME = "companyName";
     private static final String MODEL_KEY_QUOTATION = "quotation";
+    private static final String MODEL_KEY_CREDIT_NOTE = "creditNote";
     private static final String CLASSPATH_PREFIX = "classpath:";
     private static final String TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS = "{amountInWords}";
     private static final String TEMPLATE_PLACEHOLDER_VAT_IN_WORDS = "{vatInWords}";

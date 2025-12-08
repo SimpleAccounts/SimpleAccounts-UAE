@@ -392,7 +392,7 @@ public class JournalRestHelper {
 	public List<JournalModel> getEntriesListModel(List<Journal> journalList) {
 		List<JournalModel> journalModelList = new ArrayList<>();
 		for (Journal journal : journalList) {
-			journalModelList.add(getModel(journal, isList));
+			journalModelList.add(getModel(journal, IS_LIST));
 		}
 		return journalModelList;
 	}

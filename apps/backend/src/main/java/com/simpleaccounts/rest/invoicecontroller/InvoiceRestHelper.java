@@ -64,6 +64,9 @@ public class InvoiceRestHelper {
 	private static final String ERROR_PROCESSING_INVOICE = "Error processing invoice";
 	private static final String CLASSPATH_PREFIX = "classpath:";
 	private static final String JSON_KEY_INVOICE = "invoice";
+	private static final String TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS = "{amountInWords}";
+	private static final String TEMPLATE_PLACEHOLDER_VAT_IN_WORDS = "{vatInWords}";
+	private static final String TEMPLATE_PLACEHOLDER_CURRENCY = "{currency}";
 	@Autowired
 	VatCategoryService vatCategoryService;
 
