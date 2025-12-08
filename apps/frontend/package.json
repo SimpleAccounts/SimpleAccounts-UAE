@@ -96,7 +96,7 @@
     "react-to-print": "^2.12.4",
     "react-toastify": "^5.2.1",
     "react-transition-group": "^4.3.0",
-    "reactstrap": "^8.9.0",
+    "reactstrap": "^9.2.3",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "sass": "^1.69.0",
