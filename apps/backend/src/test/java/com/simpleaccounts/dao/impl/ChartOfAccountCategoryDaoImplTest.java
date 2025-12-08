@@ -241,22 +241,6 @@ class ChartOfAccountCategoryDaoImplTest {
     }
 
     @Test
-    @DisplayName("Should verify entity manager is called")
-    void getChartOfAccountCategoryListVerifiesEntityManagerCalled() {
-        // Arrange
-        when(entityManager.createNamedQuery("allChartOfAccountCategory", ChartOfAccountCategory.class))
-            .thenReturn(typedQuery);
-        when(typedQuery.getResultList())
-            .thenReturn(new ArrayList<>());
-
-        // Act
-        chartOfAccountCategoryDao.getChartOfAccountCategoryList();
-
-        // Assert
-        verify(entityManager).createNamedQuery("allChartOfAccountCategory", ChartOfAccountCategory.class);
-    }
-
-    @Test
     @DisplayName("Should return categories with all properties set")
     void getChartOfAccountCategoryListReturnsCategoriesWithAllProperties() {
         // Arrange
@@ -328,22 +312,6 @@ class ChartOfAccountCategoryDaoImplTest {
 
         // Assert
         verify(typedQuery, never()).setParameter(any(String.class), any());
-    }
-
-    @Test
-    @DisplayName("Should use correct entity class")
-    void getChartOfAccountCategoryListUsesCorrectEntityClass() {
-        // Arrange
-        when(entityManager.createNamedQuery("allChartOfAccountCategory", ChartOfAccountCategory.class))
-            .thenReturn(typedQuery);
-        when(typedQuery.getResultList())
-            .thenReturn(new ArrayList<>());
-
-        // Act
-        chartOfAccountCategoryDao.getChartOfAccountCategoryList();
-
-        // Assert
-        verify(entityManager).createNamedQuery("allChartOfAccountCategory", ChartOfAccountCategory.class);
     }
 
     @Test
