@@ -107,6 +107,7 @@ public class MailRestController {
                         invoice.setStatus(CommonStatusEnum.POST.getValue());
                         invoiceRepository.save(invoice);
                     }
+                    break;
 
                 case 7://Credit Note
                     if(emailContentModel.getSendAgain().equals(Boolean.FALSE)) {
@@ -124,6 +125,7 @@ public class MailRestController {
                             journalService.persist(journal);
                         }
                     }
+                    break;
 
                 case 6://Quotation
                     if(emailContentModel.getSendAgain().equals(Boolean.FALSE)) {
@@ -131,6 +133,7 @@ public class MailRestController {
                         quatation.setStatus(CommonStatusEnum.POST.getValue());
                         poQuatationRepository.save(quatation);
                     }
+                    break;
 
                 case 4:// Purchase Order
                     if(emailContentModel.getSendAgain().equals(Boolean.FALSE)) {
@@ -138,6 +141,7 @@ public class MailRestController {
                         Poquatation.setStatus(CommonStatusEnum.POST.getValue());
                         poQuatationRepository.save(Poquatation);
                     }
+                    break;
                 default:
                     break;
             }

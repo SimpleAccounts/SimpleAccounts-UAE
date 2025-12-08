@@ -184,6 +184,7 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 
 				case "TrialBalance":
 					resultList = getTrialBanaceReport(fromDate, toDate);
+					break;
 
 				default:
 					break;

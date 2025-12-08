@@ -652,7 +652,7 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
             int status = (int) objectArray[3];
             ZoneId timeZone = ZoneId.systemDefault();
             Date date = Date.from(receivableInvoiceSummaryModel.getInvoiceDueDate().atStartOfDay(timeZone).toInstant());
-            if(status>2&status<5)
+            if(status>2 && status<5)
                 receivableInvoiceSummaryModel.setStatus(invoiceRestHelper.getInvoiceStatus(status,date));
             else
                 receivableInvoiceSummaryModel.setStatus(CommonStatusEnum.getInvoiceTypeByValue(status));
@@ -700,7 +700,7 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
             int status = (int) objectArray[3];
             ZoneId timeZone = ZoneId.systemDefault();
             Date date = Date.from(payableInvoiceSummaryModel.getInvoiceDueDate().atStartOfDay(timeZone).toInstant());
-            if(status>2&status<5)
+            if(status>2 && status<5)
                 payableInvoiceSummaryModel.setStatus(invoiceRestHelper.getInvoiceStatus(status,date));
             else
                 payableInvoiceSummaryModel.setStatus(CommonStatusEnum.getInvoiceTypeByValue(status));
@@ -751,7 +751,7 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
             int status = (int) objectArray[2];
             ZoneId timeZone = ZoneId.systemDefault();
             Date date = Date.from(receivableInvoiceDetailModel.getDueDate().atStartOfDay(timeZone).toInstant());
-            if(status>2&status<5)
+            if(status>2 && status<5)
                 receivableInvoiceDetailModel.setStatus(invoiceRestHelper.getInvoiceStatus(status,date));
             else
                 receivableInvoiceDetailModel.setStatus(CommonStatusEnum.getInvoiceTypeByValue(status));
@@ -849,7 +849,7 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
             int status = (int) objectArray[2];
             ZoneId timeZone = ZoneId.systemDefault();
             Date date = Date.from(payableInvoiceDetailModel.getDueDate().atStartOfDay(timeZone).toInstant());
-            if(status>2&status<5)
+            if(status>2 && status<5)
                 payableInvoiceDetailModel.setStatus(invoiceRestHelper.getInvoiceStatus(status,date));
             else
                 payableInvoiceDetailModel.setStatus(CommonStatusEnum.getInvoiceTypeByValue(status));
@@ -947,7 +947,7 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
                 creditNoteSummaryModel.setCreditNoteDate(((OffsetDateTime) objectArray[2]).toLocalDate());
 
                 int status = (int) objectArray[3];
-//                if(status>2&status<5)
+//                if(status>2 && status<5)
 //                    creditNoteSummaryModel.setStatus(invoiceRestHelper.getInvoiceStatus(status,creditNoteSummaryModel.getInvoiceDueDate()));
 //                else
                     creditNoteSummaryModel.setStatus(CommonStatusEnum.getInvoiceTypeByValue(status));
@@ -1021,7 +1021,7 @@ public ExpenseDetailsResponseModel getExpenseDetails(ReportRequestModel requestM
         expenseSummaryModel.setPaidBy((String) objectArray[3]);
         expenseSummaryModel.setPayMode((PayMode) objectArray[4]);
         int status = (int) objectArray[1];
-//                if(status>2&status<5)
+//                if(status>2 && status<5)
 //                    creditNoteSummaryModel.setStatus(invoiceRestHelper.getInvoiceStatus(status,creditNoteSummaryModel.getInvoiceDueDate()));
 //                else
         expenseSummaryModel.setTransactionCategoryName((String) objectArray[5]);
@@ -1151,7 +1151,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
         int status = (int) objectArray[3];
         ZoneId timeZone = ZoneId.systemDefault();
         Date date = Date.from(invoiceDetailsModel.getInvoiceDueDate().atStartOfDay(timeZone).toInstant());
-        if(status>2&status<5)
+        if(status>2 && status<5)
             invoiceDetailsModel.setStatus(invoiceRestHelper.getInvoiceStatus(status,date));
         else
             invoiceDetailsModel.setStatus(CommonStatusEnum.getInvoiceTypeByValue(status));
@@ -1194,7 +1194,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
             invoiceDetailsModel.setInvoiceDate((Date) objectArray[2]);
             invoiceDetailsModel.setInvoiceDueDate((Date) objectArray[4]);
             int status = (int) objectArray[3];
-            if(status>2&status<5)
+            if(status>2 && status<5)
                 invoiceDetailsModel.setStatus(invoiceRestHelper.getInvoiceStatus(status,invoiceDetailsModel.getInvoiceDueDate()));
             else
                 invoiceDetailsModel.setStatus(CommonStatusEnum.getInvoiceTypeByValue(status));

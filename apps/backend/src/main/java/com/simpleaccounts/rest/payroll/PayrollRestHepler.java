@@ -399,6 +399,7 @@ public class PayrollRestHepler {
 //        }
 //
 //    }
+    @Transactional(rollbackFor = Exception.class)
     public void getUpdatedSalaryAllTemplate(EmployeePersistModel employeePersistModel, Employee employee,
                                             List<SalaryTemplatePersistModel> salaryTemplatePersistModels) {
         if (employeePersistModel.getSalaryTemplatesString() != null && !employeePersistModel.getSalaryTemplatesString().isEmpty()) {
@@ -689,6 +690,7 @@ public class PayrollRestHepler {
         return employment;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void getSalaryAllTemplate(SalaryTemplatePersistModel salaryTemplatePersistModel, List<SalaryTemplatePersistModel> salaryTemplatePersistModels) {
 
         if (salaryTemplatePersistModel.getSalaryTemplatesString() != null && !salaryTemplatePersistModel.getSalaryTemplatesString().isEmpty()) {
