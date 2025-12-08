@@ -95,7 +95,6 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		return query.getResultList();
 	}
 	@Override
-	@Transactional
 	public void deleteByIds(List<Integer> ids) {
 		if (ids != null && !ids.isEmpty()) {
 			for (Integer id : ids) {
@@ -129,15 +128,15 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	@Override
 	public List<Invoice> getInvoiceList(Date startDate, Date endDate) {
 		TypedQuery<Invoice> query = getEntityManager().createNamedQuery("activeInvoicesByDateRange", Invoice.class);
-		query.setParameter("startDate", dateUtil.get(startDate).toLocalDate());
-		query.setParameter("endDate", dateUtil.get(endDate).toLocalDate());
+		query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate).toLocalDate());
+		query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate).toLocalDate());
 		List<Invoice> invoiceList = query.getResultList();
 		return invoiceList != null ? invoiceList : Collections.emptyList();
 	}
 	@Override
 	public EarningDetailsModel getTotalEarnings(){
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("getTotalPaidCustomerInvoice", BigDecimal.class);
-		query.setParameter("currentDate",dateUtil.get(new Date()));
+		query.setParameter(CommonColumnConstants.CURRENT_DATE,dateUtil.get(new Date()));
 		query.setMaxResults(1);
 		BigDecimal paidCustomerInvoice = query.getSingleResult();
 		Float paidCustomerInvoiceFloat = (float) 0;
@@ -185,8 +184,8 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	private Float getOverDueSupplierAmount(Integer type) {
 		TypedQuery<InvoiceOverDueModel> queryOverDue = getEntityManager().createNamedQuery("totalSupplierInvoiceAmount", InvoiceOverDueModel.class);
 		queryOverDue.setParameter("type", type);
-		queryOverDue.setParameter("currentDate", LocalDateTime.now().truncatedTo(ChronoUnit.DAYS));
-		queryOverDue.setParameter("referenceType", PostingReferenceTypeEnum.INVOICE);
+		queryOverDue.setParameter(CommonColumnConstants.CURRENT_DATE, LocalDateTime.now().truncatedTo(ChronoUnit.DAYS));
+		queryOverDue.setParameter(CommonColumnConstants.REFERENCE_TYPE, PostingReferenceTypeEnum.INVOICE);
 		//queryOverDue.setParameter("transactionCategory", transactionCategoryService.findByPK(84));
 		queryOverDue.setMaxResults(1);
 		Float overDueAmountFloat = (float)0;
@@ -194,9 +193,9 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		BigDecimal totalInvoiceAmount = invoiceOverDueModel.getDebitAmount();
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("totalInvoicePaymentAmount", BigDecimal.class);
 		query.setParameter("type", type);
-		query.setParameter("currentDate", LocalDateTime.now().truncatedTo(ChronoUnit.DAYS));
-		query.setParameter("referenceType", PostingReferenceTypeEnum.PAYMENT);
-		query.setParameter("transactionCategory", transactionCategoryService.findByPK(1));
+		query.setParameter(CommonColumnConstants.CURRENT_DATE, LocalDateTime.now().truncatedTo(ChronoUnit.DAYS));
+		query.setParameter(CommonColumnConstants.REFERENCE_TYPE, PostingReferenceTypeEnum.PAYMENT);
+		query.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY, transactionCategoryService.findByPK(1));
 		query.setMaxResults(1);
 		BigDecimal totalInvoiceReceiptAmount = query.getSingleResult();
 		if (totalInvoiceReceiptAmount != null && totalInvoiceAmount != null )
@@ -208,8 +207,8 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	private Float getOverDueCustomerAmount(Integer type) {
 		TypedQuery<InvoiceOverDueModel> queryOverDue = getEntityManager().createNamedQuery("totalCustomerInvoiceAmount", InvoiceOverDueModel.class);
 		queryOverDue.setParameter("type", type);
-		queryOverDue.setParameter("currentDate", LocalDateTime.now().truncatedTo(ChronoUnit.DAYS));
-		queryOverDue.setParameter("referenceType", PostingReferenceTypeEnum.INVOICE);
+		queryOverDue.setParameter(CommonColumnConstants.CURRENT_DATE, LocalDateTime.now().truncatedTo(ChronoUnit.DAYS));
+		queryOverDue.setParameter(CommonColumnConstants.REFERENCE_TYPE, PostingReferenceTypeEnum.INVOICE);
 		//queryOverDue.setParameter("transactionCategory", transactionCategoryService.findByPK(84));
 		queryOverDue.setMaxResults(1);
 		Float overDueAmountFloat = (float)0;
@@ -217,9 +216,9 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		BigDecimal totalInvoiceAmount = invoiceOverDueModel.getCreditAmount();
 		TypedQuery<BigDecimal> query  = getEntityManager().createNamedQuery("totalInvoiceReceiptAmount", BigDecimal.class);
 		query.setParameter("type", type);
-		query.setParameter("currentDate",LocalDateTime.now().truncatedTo(ChronoUnit.DAYS));
-		query.setParameter("referenceType", PostingReferenceTypeEnum.RECEIPT);
-		query.setParameter("transactionCategory", transactionCategoryService.findByPK(2));
+		query.setParameter(CommonColumnConstants.CURRENT_DATE,LocalDateTime.now().truncatedTo(ChronoUnit.DAYS));
+		query.setParameter(CommonColumnConstants.REFERENCE_TYPE, PostingReferenceTypeEnum.RECEIPT);
+		query.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY, transactionCategoryService.findByPK(2));
 		query.setMaxResults(1);
 		BigDecimal totalInvoiceReceiptAmount = query.getSingleResult();
 		if (totalInvoiceReceiptAmount != null && totalInvoiceAmount != null ) {
@@ -232,8 +231,8 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	private Float getTotalEarningsWeeklyMonthly(Date startDate, Date endDate){
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("getPaidCustomerInvoiceEarningsWeeklyMonthly",
 				BigDecimal.class);
-		query.setParameter("startDate", dateUtil.get(startDate));
-		query.setParameter("endDate", dateUtil.get(endDate));
+		query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate));
+		query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
 		query.setMaxResults(1);
     	BigDecimal PaidCustomerInvoiceAmountMonthly = query.getSingleResult();
 		Float paidCustomerInvoiceAmountFloat = (float) 0;
@@ -249,10 +248,10 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		transactionCategory = transactionCategoryService.findByPK(2);
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("totalInvoiceReceiptAmountWeeklyMonthly", BigDecimal.class);
 		query.setParameter("type", type);
-		query.setParameter("startDate", dateUtil.get(startDate) );
-		query.setParameter("endDate", dateUtil.get(endDate));
-		query.setParameter("referenceType", PostingReferenceTypeEnum.RECEIPT);
-		query.setParameter("transactionCategory", transactionCategoryService.findByPK(2));
+		query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate) );
+		query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
+		query.setParameter(CommonColumnConstants.REFERENCE_TYPE, PostingReferenceTypeEnum.RECEIPT);
+		query.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY, transactionCategoryService.findByPK(2));
 		query.setMaxResults(1);
 		BigDecimal totalInvoiceReceiptAmountMonthly = query.getSingleResult();
 		if (totalInvoiceReceiptAmountMonthly != null && overDueAmountMonthly != null )
@@ -267,9 +266,9 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		TypedQuery<InvoiceOverDueModel> query = getEntityManager().createNamedQuery("totalCustomerInvoiceAmountWeeklyMonthly",
 				InvoiceOverDueModel.class);
 		query.setParameter("type", type);
-		query.setParameter("startDate", dateUtil.get(startDate));
-		query.setParameter("endDate", dateUtil.get(endDate));
-		query.setParameter("referenceType", referenceTypeEnum);
+		query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate));
+		query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
+		query.setParameter(CommonColumnConstants.REFERENCE_TYPE, referenceTypeEnum);
 		//query.setParameter("transactionCategory", transactionCategory);
 		query.setMaxResults(1);
 		InvoiceOverDueModel invoiceOverDueModel= query.getSingleResult();
@@ -280,9 +279,9 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		TypedQuery<InvoiceOverDueModel> query = getEntityManager().createNamedQuery("totalSupplierInvoiceAmountWeeklyMonthly",
 				InvoiceOverDueModel.class);
 		query.setParameter("type", type);
-		query.setParameter("startDate", dateUtil.get(startDate));
-		query.setParameter("endDate", dateUtil.get(endDate));
-		query.setParameter("referenceType", referenceTypeEnum);
+		query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate));
+		query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
+		query.setParameter(CommonColumnConstants.REFERENCE_TYPE, referenceTypeEnum);
 		//query.setParameter("transactionCategory", transactionCategory);
 		query.setMaxResults(1);
 		InvoiceOverDueModel invoiceOverDueModel= query.getSingleResult();
@@ -296,10 +295,10 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		transactionCategory = transactionCategoryService.findByPK(1);
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("totalInvoicePaymentAmountWeeklyMonthly", BigDecimal.class);
 		query.setParameter("type", type);
-		query.setParameter("startDate", dateUtil.get(startDate));
-		query.setParameter("endDate", dateUtil.get(endDate));
-		query.setParameter("referenceType", PostingReferenceTypeEnum.PAYMENT);
-		query.setParameter("transactionCategory", transactionCategory);
+		query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate));
+		query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
+		query.setParameter(CommonColumnConstants.REFERENCE_TYPE, PostingReferenceTypeEnum.PAYMENT);
+		query.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY, transactionCategory);
 		query.setMaxResults(1);
 		BigDecimal totalInvoiceReceiptAmountMonthly = query.getSingleResult();
 		if (totalInvoiceReceiptAmountMonthly != null && overDueAmountMonthly != null )
@@ -419,8 +418,8 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		}
 		TypedQuery<BigDecimal> query =getEntityManager().createQuery( "SELECT SUM(il.subTotal*i.exchangeRate) AS TOTAL_AMOUNT " +
 				" FROM Invoice i,InvoiceLineItem  il WHERE i.status not in(2) AND i.type=2 and i.id = il.invoice.id and il.vatCategory.id in (2) AND i.editFlag=:editFlag AND i.invoiceDate between :startDate and :endDate",BigDecimal.class);
-		query.setParameter("startDate",startDate);
-		query.setParameter("endDate",endDate);
+		query.setParameter(CommonColumnConstants.START_DATE,startDate);
+		query.setParameter(CommonColumnConstants.END_DATE,endDate);
 		query.setParameter("editFlag",editFlag);
 		BigDecimal amountWithoutVat = query.getSingleResult();
 		vatReportResponseModel.setZeroRatedSupplies(amountWithoutVat);
@@ -467,8 +466,8 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		}
 		TypedQuery<BigDecimal> query =getEntityManager().createQuery( "SELECT SUM(il.subTotal*i.exchangeRate) AS TOTAL_AMOUNT " +
 				" FROM Invoice i,InvoiceLineItem  il WHERE i.id = il.invoice.id and il.vatCategory.id in (2) and i.status not in(2) AND i.type=1 and i.isReverseChargeEnabled=true AND i.editFlag=:editFlag AND i.invoiceDate between :startDate and :endDate AND i.totalVatAmount="+BigDecimal.ZERO,BigDecimal.class);
-		query.setParameter("startDate",startDate);
-		query.setParameter("endDate",endDate);
+		query.setParameter(CommonColumnConstants.START_DATE,startDate);
+		query.setParameter(CommonColumnConstants.END_DATE,endDate);
 		query.setParameter("editFlag",editFlag);
 		BigDecimal amountWithoutVat = query.getSingleResult();
 //		vatReportResponseModel.setZeroRatedSupplies(amountWithoutVat);
@@ -546,8 +545,8 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 				CommonColumnConstants.DD_MM_YYYY);
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("totalInputVatAmount",
 				BigDecimal.class);
-		query.setParameter("startDate",startDate);
-		query.setParameter("endDate",endDate);
+		query.setParameter(CommonColumnConstants.START_DATE,startDate);
+		query.setParameter(CommonColumnConstants.END_DATE,endDate);
 		BigDecimal bigDecimal=query.getSingleResult();
 		return bigDecimal;
 	}
@@ -558,8 +557,8 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 				CommonColumnConstants.DD_MM_YYYY);
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("totalOutputVatAmount",
 				BigDecimal.class);
-		query.setParameter("startDate",startDate);
-		query.setParameter("endDate",endDate);
+		query.setParameter(CommonColumnConstants.START_DATE,startDate);
+		query.setParameter(CommonColumnConstants.END_DATE,endDate);
 		BigDecimal bigDecimal=query.getSingleResult();
 		return bigDecimal;
 	}

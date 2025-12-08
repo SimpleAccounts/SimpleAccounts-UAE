@@ -134,9 +134,9 @@ private DateFormatUtil dateUtil;
                                                                                  TransactionCategory transactionCategory)
     {
         TypedQuery<TransactionCategoryClosingBalance> query = getEntityManager().createNamedQuery("getListByFrmToDate", TransactionCategoryClosingBalance.class);
-        query.setParameter("startDate", closingBalanceStartDate);
-        query.setParameter("endDate", closingBalanceEndDate);
-        query.setParameter("transactionCategory", transactionCategory);
+        query.setParameter(CommonColumnConstants.START_DATE, closingBalanceStartDate);
+        query.setParameter(CommonColumnConstants.END_DATE, closingBalanceEndDate);
+        query.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY, transactionCategory);
         List<TransactionCategoryClosingBalance> transactionCategoryClosingBalanceList = query.getResultList();
         return transactionCategoryClosingBalanceList != null && !transactionCategoryClosingBalanceList.isEmpty() ? transactionCategoryClosingBalanceList : null;
     }
@@ -145,8 +145,8 @@ private DateFormatUtil dateUtil;
                                                                                  TransactionCategory transactionCategory)
     {
         TypedQuery<TransactionCategoryClosingBalance> query = getEntityManager().createNamedQuery("getListByFrmDate", TransactionCategoryClosingBalance.class);
-        query.setParameter("endDate", closingBalanceEndDate);
-        query.setParameter("transactionCategory", transactionCategory);
+        query.setParameter(CommonColumnConstants.END_DATE, closingBalanceEndDate);
+        query.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY, transactionCategory);
         List<TransactionCategoryClosingBalance> transactionCategoryClosingBalanceList = query.getResultList();
         return transactionCategoryClosingBalanceList != null && !transactionCategoryClosingBalanceList.isEmpty() ?
                 transactionCategoryClosingBalanceList : new ArrayList<TransactionCategoryClosingBalance>();
@@ -156,8 +156,8 @@ private DateFormatUtil dateUtil;
                                                                                          TransactionCategory transactionCategory)
     {
         TypedQuery<TransactionCategoryClosingBalance> query = getEntityManager().createNamedQuery("getListByForDate", TransactionCategoryClosingBalance.class);
-        query.setParameter("endDate", closingBalanceEndDate);
-        query.setParameter("transactionCategory", transactionCategory);
+        query.setParameter(CommonColumnConstants.END_DATE, closingBalanceEndDate);
+        query.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY, transactionCategory);
         List<TransactionCategoryClosingBalance> transactionCategoryClosingBalanceList = query.getResultList();
         return transactionCategoryClosingBalanceList != null && !transactionCategoryClosingBalanceList.isEmpty() ?
                 transactionCategoryClosingBalanceList.get(0) : null;
@@ -165,7 +165,7 @@ private DateFormatUtil dateUtil;
     public TransactionCategoryClosingBalance getLastClosingBalanceByDate(TransactionCategory category)
     {
         TypedQuery<TransactionCategoryClosingBalance> query = getEntityManager().createNamedQuery("getLastClosingBalanceByDate", TransactionCategoryClosingBalance.class);
-        query.setParameter("transactionCategory", category);
+        query.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY, category);
         List<TransactionCategoryClosingBalance> transactionCategoryClosingBalanceList = query.getResultList();
         return transactionCategoryClosingBalanceList != null && !transactionCategoryClosingBalanceList.isEmpty() ?
                 transactionCategoryClosingBalanceList.get(0) :null;
@@ -173,7 +173,7 @@ private DateFormatUtil dateUtil;
     public TransactionCategoryClosingBalance getFirstClosingBalanceByDate(TransactionCategory category)
     {
         TypedQuery<TransactionCategoryClosingBalance> query = getEntityManager().createNamedQuery("getLastClosingBalanceByDate", TransactionCategoryClosingBalance.class);
-        query.setParameter("transactionCategory", category);
+        query.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY, category);
         List<TransactionCategoryClosingBalance> transactionCategoryClosingBalanceList = query.getResultList();
         return transactionCategoryClosingBalanceList != null && !transactionCategoryClosingBalanceList.isEmpty() ?
                 transactionCategoryClosingBalanceList.get(transactionCategoryClosingBalanceList.size()-1) :null;

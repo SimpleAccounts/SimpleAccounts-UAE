@@ -1,5 +1,6 @@
 package com.simpleaccounts.dao.impl;
 
+import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.InventoryFilterEnum;
@@ -53,7 +54,7 @@ public class InventoryDaoImpl extends AbstractDao<Integer, Inventory> implements
     public List<Inventory> getProductByProductId(Integer productId) {
         TypedQuery<Inventory> query = getEntityManager().createNamedQuery(
                 "getInventoryProductById", Inventory.class);
-        query.setParameter("productId", productId);
+        query.setParameter(CommonColumnConstants.PRODUCT_ID, productId);
         List<Inventory> product = query.getResultList();
         return product;
     }
@@ -65,7 +66,7 @@ public class InventoryDaoImpl extends AbstractDao<Integer, Inventory> implements
     public List<Inventory> getInventoryByProductId(Integer productId) {
         TypedQuery<Inventory> query = getEntityManager().createNamedQuery(
                 "getInventoryProductById", Inventory.class);
-        query.setParameter("productId", productId);
+        query.setParameter(CommonColumnConstants.PRODUCT_ID, productId);
         List<Inventory> result= query.getResultList();
         return result;
     }
@@ -126,7 +127,7 @@ public class InventoryDaoImpl extends AbstractDao<Integer, Inventory> implements
     public Inventory getInventoryByProductIdAndSupplierId(Integer productId, Integer supplierId){
         TypedQuery<Inventory> query = getEntityManager().createNamedQuery(
                 "getInventoryByProductIdAndSupplierId", Inventory.class);
-        query.setParameter("productId", productId);
+        query.setParameter(CommonColumnConstants.PRODUCT_ID, productId);
         query.setParameter("supplierId",supplierId);
         return query.getSingleResult();
     }

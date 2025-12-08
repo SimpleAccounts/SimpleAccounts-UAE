@@ -33,7 +33,6 @@ import java.util.Optional;
 import javax.persistence.NamedQuery;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,7 +166,6 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
 		return Optional.empty();
 	}
 	@Override
-	@Transactional
 	public void deleteByIds(List<Integer> ids) {
 		if (ids != null && !ids.isEmpty()) {
 			for (Integer id : ids) {

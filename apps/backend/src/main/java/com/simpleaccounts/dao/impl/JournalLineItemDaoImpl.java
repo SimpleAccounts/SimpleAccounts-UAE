@@ -105,7 +105,7 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			query.setParameter(CommonColumnConstants.END_DATE, toDate);
 		}
 		if (reportRequestModel.getChartOfAccountId() != null) {
-			query.setParameter("transactionCategoryId", reportRequestModel.getChartOfAccountId());
+			query.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY_ID, reportRequestModel.getChartOfAccountId());
 		}
 		if (reportRequestModel.getReportBasis() != null && !reportRequestModel.getReportBasis().isEmpty()
 				&& reportRequestModel.getReportBasis().equals("CASH")) {
@@ -368,8 +368,8 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 				CommonColumnConstants.DD_MM_YYYY);
 
 		Query query = getEntityManager().createNamedQuery("totalInputVatAmountAndOutputVatAmount");
-		query.setParameter("startDate",startDate);
-		query.setParameter("endDate",endDate);
+		query.setParameter(CommonColumnConstants.START_DATE, startDate);
+		query.setParameter(CommonColumnConstants.END_DATE,endDate);
 
 		return query.getResultList();
 
@@ -392,21 +392,21 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			endDate = vatReportFiling.getEndDate().atStartOfDay();
 		}
 		Query query = getEntityManager().createNamedQuery("totalInputVatAmountValue");
-		query.setParameter("startDate",startDate);
-		query.setParameter("endDate",endDate.toLocalDate());
-		query.setParameter("transactionCategoryId",transactionCategoryId);
+		query.setParameter(CommonColumnConstants.START_DATE, startDate);
+		query.setParameter(CommonColumnConstants.END_DATE,endDate.toLocalDate());
+		query.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY_ID,transactionCategoryId);
 		BigDecimal invoiceAmount= (BigDecimal) query.getSingleResult();
 
 		Query expenseQuery = getEntityManager().createNamedQuery("totalInputVatAmountValueOfExpense");
-		expenseQuery.setParameter("startDate",startDate);
-		expenseQuery.setParameter("endDate",endDate.toLocalDate());
-		expenseQuery.setParameter("transactionCategoryId",transactionCategoryId);
+		expenseQuery.setParameter(CommonColumnConstants.START_DATE, startDate);
+		expenseQuery.setParameter(CommonColumnConstants.END_DATE,endDate.toLocalDate());
+		expenseQuery.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY_ID,transactionCategoryId);
         BigDecimal expenseAmount= (BigDecimal) expenseQuery.getSingleResult();
 
 		Query debitNoteQuery = getEntityManager().createNamedQuery("totalInputVatAmountValueDebitNote");
-		debitNoteQuery.setParameter("startDate",startDate);
-		debitNoteQuery.setParameter("endDate",endDate.toLocalDate());
-		debitNoteQuery.setParameter("transactionCategoryId",transactionCategoryId);
+		debitNoteQuery.setParameter(CommonColumnConstants.START_DATE, startDate);
+		debitNoteQuery.setParameter(CommonColumnConstants.END_DATE,endDate.toLocalDate());
+		debitNoteQuery.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY_ID,transactionCategoryId);
 		BigDecimal debitNoteAmount= (BigDecimal) debitNoteQuery.getSingleResult();
 
 
@@ -440,9 +440,9 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			endDate = vatReportFiling.getEndDate().atStartOfDay();
 		}
 		Query query = getEntityManager().createNamedQuery("totalOutputVatAmountValue");
-		query.setParameter("startDate",startDate);
-		query.setParameter("endDate",endDate.toLocalDate());
-		query.setParameter("transactionCategoryId",transactionCategoryId);
+		query.setParameter(CommonColumnConstants.START_DATE, startDate);
+		query.setParameter(CommonColumnConstants.END_DATE,endDate.toLocalDate());
+		query.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY_ID,transactionCategoryId);
 
 		return (BigDecimal) query.getSingleResult();
 
@@ -464,14 +464,14 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			endDate = vatReportFiling.getEndDate().atStartOfDay();
 		}
 		Query queryInvoice = getEntityManager().createNamedQuery("IdsAndTypeInTotalInputVat");
-		queryInvoice.setParameter("startDate",startDate);
-		queryInvoice.setParameter("endDate",endDate.toLocalDate());
-		queryInvoice.setParameter("transactionCategoryId",transactionCategoryId);
+		queryInvoice.setParameter(CommonColumnConstants.START_DATE, startDate);
+		queryInvoice.setParameter(CommonColumnConstants.END_DATE,endDate.toLocalDate());
+		queryInvoice.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY_ID,transactionCategoryId);
 
 		Query queryExpense = getEntityManager().createNamedQuery("IdsForTotalInputVatExpense");
-		queryExpense.setParameter("startDate",startDate);
-		queryExpense.setParameter("endDate",endDate.toLocalDate());
-		queryExpense.setParameter("transactionCategoryId",transactionCategoryId);
+		queryExpense.setParameter(CommonColumnConstants.START_DATE, startDate);
+		queryExpense.setParameter(CommonColumnConstants.END_DATE,endDate.toLocalDate());
+		queryExpense.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY_ID,transactionCategoryId);
 
 		List<Object> unionList= (List<Object>) Stream.concat(queryInvoice.getResultList().stream(),queryExpense.getResultList().stream()).collect(Collectors.toList());
 
@@ -495,9 +495,9 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			endDate = vatReportFiling.getEndDate().atStartOfDay();
 		}
 		Query query1 = getEntityManager().createNamedQuery("IdsAndTypeInTotalOutputVat");
-		query1.setParameter("startDate",startDate);
-		query1.setParameter("endDate",endDate.toLocalDate());
-		query1.setParameter("transactionCategoryId",transactionCategoryId);
+		query1.setParameter(CommonColumnConstants.START_DATE, startDate);
+		query1.setParameter(CommonColumnConstants.END_DATE,endDate.toLocalDate());
+		query1.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY_ID,transactionCategoryId);
 
 		return query1.getResultList();
 

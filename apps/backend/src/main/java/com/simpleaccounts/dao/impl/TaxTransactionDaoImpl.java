@@ -5,6 +5,7 @@
  */
 package com.simpleaccounts.dao.impl;
 
+import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.TaxTransactionStatusConstant;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.TaxTransactionDao;
@@ -23,7 +24,7 @@ public class TaxTransactionDaoImpl extends AbstractDao<Integer, TaxTransaction> 
     @Override
     public List<TaxTransaction> getClosedTaxTransactionList() {
         TypedQuery<TaxTransaction> query = getEntityManager().createQuery("Select t from TaxTransaction t WHERE t.status =:status", TaxTransaction.class);
-        List<TaxTransaction> taxTransactionList = query.setParameter("status", TaxTransactionStatusConstant.CLOSE).getResultList();
+        List<TaxTransaction> taxTransactionList = query.setParameter(CommonColumnConstants.STATUS, TaxTransactionStatusConstant.CLOSE).getResultList();
         if (taxTransactionList != null && !taxTransactionList.isEmpty()) {
             return taxTransactionList;
         }
@@ -33,7 +34,7 @@ public class TaxTransactionDaoImpl extends AbstractDao<Integer, TaxTransaction> 
     @Override
     public List<TaxTransaction> getOpenTaxTransactionList() {
         TypedQuery<TaxTransaction> query = getEntityManager().createQuery("Select t from TaxTransaction t WHERE t.status =:status", TaxTransaction.class);
-        List<TaxTransaction> taxTransactionList = query.setParameter("status", TaxTransactionStatusConstant.OPEN).getResultList();
+        List<TaxTransaction> taxTransactionList = query.setParameter(CommonColumnConstants.STATUS, TaxTransactionStatusConstant.OPEN).getResultList();
         if (taxTransactionList != null && !taxTransactionList.isEmpty()) {
             return taxTransactionList;
         }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.simpleaccounts.constant.dbfilter.DateFormatFilterEnum;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
@@ -13,6 +14,7 @@ import com.simpleaccounts.dao.DateFormatDao;
 import com.simpleaccounts.entity.DateFormat;
 
 @Repository
+@Transactional
 public class DateFormatDaoImpl extends AbstractDao<Integer, DateFormat> implements DateFormatDao {
 
 	@Override
