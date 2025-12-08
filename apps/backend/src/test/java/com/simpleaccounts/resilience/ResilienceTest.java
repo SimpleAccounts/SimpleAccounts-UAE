@@ -474,7 +474,7 @@ class ResilienceTest {
     // Fault injection implementation for testing
     static class FaultInjector {
         private Duration latency = Duration.ZERO;
-        private Duration timeout = Duration.ofSeconds(30);
+        private Duration operationTimeout = Duration.ofSeconds(30);
         private double intermittentLatencyChance = 0;
         private Duration intermittentLatency = Duration.ZERO;
         private int connectionFailuresRemaining = 0;
@@ -484,7 +484,11 @@ class ResilienceTest {
         }
 
         void setTimeout(Duration timeout) {
-            this.timeout = timeout;
+            this.operationTimeout = timeout;
+        }
+
+        Duration getTimeout() {
+            return operationTimeout;
         }
 
         void addIntermittentLatency(Duration latency, double chance) {

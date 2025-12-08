@@ -441,7 +441,6 @@ class GeneralLedgerTest {
         private String description;
         private List<JournalLine> lines = new ArrayList<>();
         private boolean adjusting = false;
-        private boolean posted = false;
 
         static Builder builder() { return new Builder(); }
 
@@ -566,6 +565,7 @@ class GeneralLedgerTest {
         private java.util.Map<String, BigDecimal> openingBalances = new java.util.HashMap<>();
         private java.util.Set<String> lockedPeriods = new java.util.HashSet<>();
         private java.util.Map<String, List<String>> periodAuditLogs = new java.util.HashMap<>();
+        private List<String> auditLogs = new ArrayList<>();
         private java.util.Map<String, RecurringEntry> recurringEntries = new java.util.HashMap<>();
         private java.util.Set<String> processedRecurring = new java.util.HashSet<>();
         private boolean validateAccounts = false;
@@ -632,12 +632,21 @@ class GeneralLedgerTest {
             periodAuditLogs.computeIfAbsent(period, k -> new ArrayList<>()).add(entry);
         }
 
+        private void addAuditLog(String entry) {
+            auditLogs.add(entry);
+        }
+
+        List<String> getAuditLogs() {
+            return new ArrayList<>(auditLogs);
+        }
+
         List<String> getPeriodAuditLog(int year, int month) {
             return periodAuditLogs.getOrDefault(year + "-" + month, new ArrayList<>());
         }
 
         void setOpeningBalance(String accountCode, BigDecimal balance, LocalDate date) {
             openingBalances.put(accountCode, balance);
+            addAuditLog("Opening balance set for " + accountCode + ": " + balance + " as of " + date);
         }
 
         TrialBalance generateTrialBalance(LocalDate asOfDate) {

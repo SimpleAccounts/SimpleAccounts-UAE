@@ -335,8 +335,8 @@ public class TransactionHelper {
 		processExpenseData(model, transaction);
 		processPayrollData(model, explinationLineItemList);
 		setVendorAndEmployeeFromExplanation(model, transactionExplanation);
-		processInvoiceData(model, transaction, transactionExplanation, explinationLineItemList);
-		processCreditNoteData(model, transaction, transactionExplanation, explinationLineItemList);
+		processInvoiceData(model, transactionExplanation, explinationLineItemList);
+		processCreditNoteData(model, transactionExplanation, explinationLineItemList);
 		processCorporateTaxPayment(model, transaction);
 		processVatPayment(model, transaction);
 		model.setExplinationStatusEnum(transaction.getTransactionExplinationStatusEnum());
@@ -384,7 +384,7 @@ public class TransactionHelper {
 		}
 	}
 
-	private void processInvoiceData(TransactionPresistModel model, Transaction transaction,
+	private void processInvoiceData(TransactionPresistModel model,
 			TransactionExplanation transactionExplanation, List<TransactionExplinationLineItem> explinationLineItemList) {
 		List<TransactionExplinationLineItem> invoiceList = explinationLineItemList.stream()
 				.filter(item -> item.getReferenceType().equals(PostingReferenceTypeEnum.INVOICE)
@@ -462,7 +462,7 @@ public class TransactionHelper {
 		model.setIsCTNCreated(creditNote != null && Boolean.FALSE.equals(creditNote.getDeleteFlag()));
 	}
 
-	private void processCreditNoteData(TransactionPresistModel model, Transaction transaction,
+	private void processCreditNoteData(TransactionPresistModel model,
 			TransactionExplanation transactionExplanation, List<TransactionExplinationLineItem> explinationLineItemList) {
 		List<TransactionExplinationLineItem> creditNoteList = explinationLineItemList.stream()
 				.filter(item -> item.getReferenceType().equals(PostingReferenceTypeEnum.CREDIT_NOTE)

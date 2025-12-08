@@ -222,11 +222,15 @@ class DateFormatUtilTest {
         assertThat(calendar.get(Calendar.SECOND)).isLessThanOrEqualTo(0);
     }
 
-    @Test
-    @DisplayName("Should handle leap year date correctly")
-    void shouldHandleLeapYearDateCorrectly() {
+    @ParameterizedTest(name = "Should handle {0} date: {1}")
+    @CsvSource({
+        "leap year, 29/02/2024, 29, 2, 2024",
+        "end of year, 31/12/2024, 31, 12, 2024",
+        "beginning of year, 01/01/2024, 1, 1, 2024"
+    })
+    @DisplayName("Should handle special dates correctly")
+    void shouldHandleSpecialDatesCorrectly(String description, String dateStr, int expectedDay, int expectedMonth, int expectedYear) {
         // given
-        String dateStr = "29/02/2024";
         String format = "dd/MM/yyyy";
 
         // when
@@ -234,43 +238,9 @@ class DateFormatUtilTest {
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getDayOfMonth()).isEqualTo(29);
-        assertThat(result.getMonthValue()).isEqualTo(2);
-        assertThat(result.getYear()).isEqualTo(2024);
-    }
-
-    @Test
-    @DisplayName("Should handle end of year date")
-    void shouldHandleEndOfYearDate() {
-        // given
-        String dateStr = "31/12/2024";
-        String format = "dd/MM/yyyy";
-
-        // when
-        LocalDateTime result = dateFormatUtil.getDateStrAsLocalDateTime(dateStr, format);
-
-        // then
-        assertThat(result).isNotNull();
-        assertThat(result.getDayOfMonth()).isEqualTo(31);
-        assertThat(result.getMonthValue()).isEqualTo(12);
-        assertThat(result.getYear()).isEqualTo(2024);
-    }
-
-    @Test
-    @DisplayName("Should handle beginning of year date")
-    void shouldHandleBeginningOfYearDate() {
-        // given
-        String dateStr = "01/01/2024";
-        String format = "dd/MM/yyyy";
-
-        // when
-        LocalDateTime result = dateFormatUtil.getDateStrAsLocalDateTime(dateStr, format);
-
-        // then
-        assertThat(result).isNotNull();
-        assertThat(result.getDayOfMonth()).isEqualTo(1);
-        assertThat(result.getMonthValue()).isEqualTo(1);
-        assertThat(result.getYear()).isEqualTo(2024);
+        assertThat(result.getDayOfMonth()).isEqualTo(expectedDay);
+        assertThat(result.getMonthValue()).isEqualTo(expectedMonth);
+        assertThat(result.getYear()).isEqualTo(expectedYear);
     }
 
     @Test

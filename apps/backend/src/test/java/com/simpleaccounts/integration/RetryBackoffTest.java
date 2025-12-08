@@ -141,8 +141,8 @@ class RetryBackoffTest {
                 .jitterFactor(0.2)
                 .build();
 
-            List<Long> delays1 = new ArrayList<>();
-            List<Long> delays2 = new ArrayList<>();
+            List<Long> run1Timestamps = new ArrayList<>();
+            List<Long> run2Timestamps = new ArrayList<>();
 
             // Run twice and compare delays
             AtomicInteger attempts = new AtomicInteger(0);
@@ -150,27 +150,32 @@ class RetryBackoffTest {
             try {
                 retryExecutor.execute(() -> {
                     if (attempts.get() > 0) {
-                        delays1.add(System.currentTimeMillis());
+                        run1Timestamps.add(System.currentTimeMillis());
                     }
                     attempts.incrementAndGet();
                     throw new RuntimeException("Fail");
                 }, config);
-            } catch (RetryExhaustedException e) { }
+            } catch (RetryExhaustedException e) {
+                // Expected exception after retries exhausted - used to test delay timing
+            }
 
             attempts.set(0);
 
             try {
                 retryExecutor.execute(() -> {
                     if (attempts.get() > 0) {
-                        delays2.add(System.currentTimeMillis());
+                        run2Timestamps.add(System.currentTimeMillis());
                     }
                     attempts.incrementAndGet();
                     throw new RuntimeException("Fail");
                 }, config);
-            } catch (RetryExhaustedException e) { }
+            } catch (RetryExhaustedException e) {
+                // Expected exception after retries exhausted - used to test delay timing
+            }
 
-            // With jitter, delays should vary slightly
-            // Note: This is a probabilistic test, might occasionally match
+            // With jitter, delays should vary slightly - verify timestamps were captured
+            assertThat(run1Timestamps).isNotEmpty();
+            assertThat(run2Timestamps).isNotEmpty();
         }
     }
 
@@ -280,7 +285,9 @@ class RetryBackoffTest {
                     attempts.incrementAndGet();
                     throw new RuntimeException("Failure #" + attempts.get());
                 }, config);
-            } catch (RetryExhaustedException e) { }
+            } catch (RetryExhaustedException e) {
+                // Expected - verifying retry events were captured
+            }
 
             assertThat(events).hasSize(2); // 2 retries after initial attempt
             assertThat(events.get(0).attempt).isEqualTo(2);
@@ -322,7 +329,9 @@ class RetryBackoffTest {
                 retryExecutor.execute(() -> {
                     throw new RuntimeException("Always fails");
                 }, config);
-            } catch (RetryExhaustedException e) { }
+            } catch (RetryExhaustedException e) {
+                // Expected - verifying onExhausted callback was invoked
+            }
 
             assertThat(exhaustedAttempts.get()).isEqualTo(3);
         }
@@ -369,7 +378,7 @@ class RetryBackoffTest {
             assertThat(breaker.isOpen()).isTrue();
 
             // Wait for reset timeout
-            try { Thread.sleep(150); } catch (InterruptedException e) { }
+            try { Thread.sleep(150); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
 
             // Should be half-open, allow one request
             assertThat(breaker.allowRequest()).isTrue();

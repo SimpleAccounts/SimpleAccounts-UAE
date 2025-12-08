@@ -113,7 +113,7 @@ class BankStatementParserTest {
         void shouldHandleLargeFilesWithStreaming() {
             StringBuilder csv = new StringBuilder("Date,Description,Amount\n");
             for (int i = 0; i < 10000; i++) {
-                csv.append(String.format("01/12/2024,Transaction %d,%.2f\n", i, 100.00 + i));
+                csv.append(String.format("01/12/2024,Transaction %d,%.2f%n", i, 100.00 + i));
             }
 
             List<BankTransaction> transactions = parser.parseCsv(toStream(csv.toString()));
