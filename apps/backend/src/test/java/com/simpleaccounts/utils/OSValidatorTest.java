@@ -1,23 +1,13 @@
 package com.simpleaccounts.utils;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("OSValidator Tests")
 class OSValidatorTest {
-
-    private OSValidator osValidator;
-
-    @BeforeEach
-    void setUp() {
-        osValidator = new OSValidator();
-    }
 
     @Test
     @DisplayName("Should detect Windows OS when os.name contains 'win'")

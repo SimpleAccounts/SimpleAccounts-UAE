@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import org.springframework.stereotype.Repository;
+import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.entity.InvoiceLineItem;
 import com.simpleaccounts.dao.InvoiceLineItemDao;
@@ -25,7 +26,7 @@ public class InvoiceLineItemDaoImpl extends AbstractDao<Integer, InvoiceLineItem
     public Integer getTotalInvoiceCountByProductId(Integer productId){
         Query query = getEntityManager().createQuery(
                 "SELECT COUNT(i) FROM InvoiceLineItem i WHERE i.product.productID =:productId AND i.invoice.deleteFlag=false" );
-        query.setParameter("productId",productId);
+        query.setParameter(CommonColumnConstants.PRODUCT_ID,productId);
         List<Object> countList = query.getResultList();
         if (countList != null && !countList.isEmpty()) {
             return ((Long) countList.get(0)).intValue();

@@ -40,7 +40,6 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 	private JournalLineItemDao journalLineItemDao;
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public void deleteByIds(List<Integer> ids) {
 		if (ids != null && !ids.isEmpty()) {
 			for (Integer id : ids) {
@@ -59,7 +58,6 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 		}
 	}
 	@Override
-	@Transactional
 	public void deleteAndUpdateByIds(List<Integer> ids,Boolean updateOpeningBalance) {
 		if (ids != null && !ids.isEmpty()) {
 			for (Integer id : ids) {

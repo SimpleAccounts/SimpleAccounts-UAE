@@ -9,6 +9,8 @@ import java.util.TimeZone;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 @DisplayName("Utility Class Tests")
 class UtilityTests {
@@ -141,8 +143,7 @@ class UtilityTests {
             TimeZone timezone = TimeZone.getDefault();
             Date currentTime = new Date();
             Date result = DateUtils.getStartDate(DateUtils.Duration.THIS_WEEK, timezone, currentTime);
-            assertThat(result).isNotNull();
-            assertThat(result).isBeforeOrEqualTo(currentTime);
+            assertThat(result).isNotNull().isBeforeOrEqualTo(currentTime);
         }
 
         @Test
@@ -163,8 +164,7 @@ class UtilityTests {
             TimeZone timezone = TimeZone.getDefault();
             Date currentTime = new Date();
             Date result = DateUtils.getStartDate(DateUtils.Duration.LAST_3_MONTHS, timezone, currentTime);
-            assertThat(result).isNotNull();
-            assertThat(result).isBefore(currentTime);
+            assertThat(result).isNotNull().isBefore(currentTime);
         }
 
         @Test
@@ -259,25 +259,16 @@ class UtilityTests {
 
         private final InvoiceNumberUtil invoiceNumberUtil = new InvoiceNumberUtil();
 
-        @Test
-        @DisplayName("Should fetch suffix from string with trailing numbers")
-        void testFetchSuffixFromStringWithNumbers() {
-            String result = invoiceNumberUtil.fetchSuffixFromString("INV-2024-001");
-            assertThat(result).isEqualTo("001");
-        }
-
-        @Test
-        @DisplayName("Should return empty string when no trailing numbers")
-        void testFetchSuffixFromStringWithoutNumbers() {
-            String result = invoiceNumberUtil.fetchSuffixFromString("INV-ABC");
-            assertThat(result).isEmpty();
-        }
-
-        @Test
-        @DisplayName("Should fetch all numbers if string is only numbers")
-        void testFetchSuffixFromStringOnlyNumbers() {
-            String result = invoiceNumberUtil.fetchSuffixFromString("12345");
-            assertThat(result).isEqualTo("12345");
+        @ParameterizedTest(name = "fetchSuffixFromString: \"{0}\" -> \"{1}\"")
+        @CsvSource({
+            "INV-2024-001, 001",
+            "INV-ABC, ''",
+            "12345, 12345"
+        })
+        @DisplayName("Should correctly extract suffix from various string patterns")
+        void testFetchSuffixFromString(String input, String expected) {
+            String result = invoiceNumberUtil.fetchSuffixFromString(input);
+            assertThat(result).isEqualTo(expected);
         }
 
         @Test

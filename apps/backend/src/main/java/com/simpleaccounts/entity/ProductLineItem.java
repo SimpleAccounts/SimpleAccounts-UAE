@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -20,7 +21,8 @@ import java.time.LocalDateTime;
 @Table(name = "PRODUCT_LINE_ITEM")
 @Getter
 @Setter
-public class ProductLineItem {
+public class ProductLineItem implements Serializable {
+    private static final long serialVersionUID = 1L;
 
 	@Id
 	@SequenceGenerator(name="PRODUCT_LINE_ITEM_SEQ", sequenceName="PRODUCT_LINE_ITEM_SEQ", allocationSize=1, initialValue = 10000)

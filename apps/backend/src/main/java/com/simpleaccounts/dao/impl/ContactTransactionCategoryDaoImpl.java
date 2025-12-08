@@ -9,6 +9,7 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
  * Created By Zain Khan
  */
 @Repository("contactTransactionCategoryRelationDao")
+@Transactional
 public class ContactTransactionCategoryDaoImpl extends AbstractDao<Integer, ContactTransactionCategoryRelation> implements ContactTransactionCategoryRelationDao {
   @Autowired
   private ContactService contactService;

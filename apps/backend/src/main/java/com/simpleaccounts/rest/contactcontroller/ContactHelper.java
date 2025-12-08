@@ -197,6 +197,7 @@ public class ContactHelper {
 		return builder.build();
 	}
 
+	@Transactional(rollbackFor = Exception.class)
 	public List<ContactListModel> getModelList(Object conctactList) {
 
 		List<ContactListModel> modelList = new ArrayList<>();

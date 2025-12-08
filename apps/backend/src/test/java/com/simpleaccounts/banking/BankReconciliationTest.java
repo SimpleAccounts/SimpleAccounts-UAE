@@ -166,11 +166,7 @@ class BankReconciliationTest {
         @Test
         @DisplayName("Should allow manual matching of entries")
         void shouldAllowManualMatching() {
-            BankEntry bankEntry = new BankEntry("B1", LocalDate.of(2024, 12, 1),
-                                                "Unknown payment", new BigDecimal("500.00"));
-            SystemEntry systemEntry = new SystemEntry("S1", LocalDate.of(2024, 11, 28),
-                                                     "Old invoice", new BigDecimal("500.00"));
-
+            // Test matching bank entry B1 (500.00, 2024-12-01) with system entry S1 (500.00, 2024-11-28)
             boolean result = engine.manualMatch("B1", "S1");
 
             assertThat(result).isTrue();
@@ -202,9 +198,7 @@ class BankReconciliationTest {
         @Test
         @DisplayName("Should allow splitting bank entry")
         void shouldAllowSplittingBankEntry() {
-            BankEntry bankEntry = new BankEntry("B1", LocalDate.of(2024, 12, 1),
-                                                "Combined payment", new BigDecimal("1500.00"));
-
+            // Split bank entry B1 (1500.00) to match S1 (1000.00) and S2 (500.00)
             engine.splitMatch("B1", Arrays.asList(
                 new SplitAllocation("S1", new BigDecimal("1000.00")),
                 new SplitAllocation("S2", new BigDecimal("500.00"))
@@ -217,9 +211,7 @@ class BankReconciliationTest {
         @Test
         @DisplayName("Should validate split amounts sum to bank entry")
         void shouldValidateSplitAmountsSum() {
-            BankEntry bankEntry = new BankEntry("B1", LocalDate.of(2024, 12, 1),
-                                                "Payment", new BigDecimal("1000.00"));
-            // Register the bank entry so validation can check the sum
+            // Register bank entry B1 with amount 1000.00 for validation
             engine.registerBankEntry("B1", new BigDecimal("1000.00"));
 
             assertThatThrownBy(() -> engine.splitMatch("B1", Arrays.asList(
@@ -237,9 +229,7 @@ class BankReconciliationTest {
         @Test
         @DisplayName("Should track reconciliation status per entry")
         void shouldTrackReconciliationStatus() {
-            BankEntry bankEntry = new BankEntry("B1", LocalDate.of(2024, 12, 1),
-                                                "Payment", new BigDecimal("1000.00"));
-
+            // Track status transitions for bank entry B1 (1000.00 payment)
             assertThat(engine.getReconciliationStatus("B1")).isEqualTo(ReconciliationStatus.UNRECONCILED);
 
             engine.manualMatch("B1", "S1");
@@ -290,7 +280,7 @@ class BankReconciliationTest {
         @DisplayName("Should release lock on completion")
         void shouldReleaseLockOnCompletion() {
             engine.startReconciliation("STMT-001", "user1");
-            engine.completeReconciliation("STMT-001", "user1");
+            engine.completeReconciliation("STMT-001");
 
             assertThat(engine.isStatementLocked("STMT-001")).isFalse();
         }
@@ -302,7 +292,7 @@ class BankReconciliationTest {
 
             // Bank shows 1000, system shows 995 - create 5.00 adjustment
             AdjustmentEntry adjustment = engine.createAdjustment(
-                "B1", new BigDecimal("5.00"), "Bank fee", "BANK_FEE"
+                new BigDecimal("5.00"), "Bank fee", "BANK_FEE"
             );
 
             assertThat(adjustment).isNotNull();
@@ -631,7 +621,7 @@ class BankReconciliationTest {
             statementLocks.put(statementId, userId);
         }
 
-        void completeReconciliation(String statementId, String userId) {
+        void completeReconciliation(String statementId) {
             statementLocks.remove(statementId);
         }
 
@@ -643,7 +633,7 @@ class BankReconciliationTest {
             return statementLocks.get(statementId);
         }
 
-        AdjustmentEntry createAdjustment(String bankEntryId, BigDecimal amount, String description, String category) {
+        AdjustmentEntry createAdjustment(BigDecimal amount, String description, String category) {
             return new AdjustmentEntry(amount, description, category);
         }
 

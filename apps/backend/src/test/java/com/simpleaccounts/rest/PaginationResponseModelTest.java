@@ -39,8 +39,7 @@ class PaginationResponseModelTest {
     PaginationResponseModel model1 = new PaginationResponseModel(1, data);
     PaginationResponseModel model2 = new PaginationResponseModel(1, data);
 
-    assertThat(model1).isEqualTo(model2);
-    assertThat(model1).hasSameHashCodeAs(model2);
+    assertThat(model1).isEqualTo(model2).hasSameHashCodeAs(model2);
   }
 
   @Test

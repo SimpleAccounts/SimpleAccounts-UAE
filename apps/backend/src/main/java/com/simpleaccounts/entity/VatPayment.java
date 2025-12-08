@@ -9,6 +9,7 @@ import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -16,7 +17,8 @@ import java.time.LocalDateTime;
 @Table(name = "VAT_PAYMENT")
 @Data
 //@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
-public class VatPayment {
+public class VatPayment implements Serializable {
+    private static final long serialVersionUID = 1L;
     	@Id
     @Column(name = "VAT_PAYMENT_ID", updatable = false, nullable = false)
 	@SequenceGenerator(name="VAT_PAYMENT_SEQ", sequenceName="VAT_PAYMENT_SEQ", allocationSize=1, initialValue = 10000)

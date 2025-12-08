@@ -335,7 +335,9 @@ public class MigrationUtil {
                 break;
             case ZohoMigrationConstants.FU:
                 val = "Fujairah";
+                break;
             default:
+                break;
         }
         Map<String, Object> param = new HashMap<>();
         param.put("placeOfSupply", val);
@@ -875,7 +877,9 @@ public class MigrationUtil {
 			break;
 		case ZohoMigrationConstants.FU:
 			val = "Fujairah";
+			break;
 		default:
+			break;
 		}
 		PlaceOfSupply result = new PlaceOfSupply();
 		PlaceOfSupply placeOfSupply = placeOfSupplyRepository.findByPlaceOfSupply(val);

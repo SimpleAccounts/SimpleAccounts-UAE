@@ -58,9 +58,7 @@ class CompanyTypeDaoImplTest {
         List<CompanyType> result = companyTypeDao.getCompanyTypes();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(3);
-        assertThat(result).isEqualTo(expectedTypes);
+        assertThat(result).isNotNull().hasSize(3).isEqualTo(expectedTypes);
     }
 
     @Test
@@ -76,8 +74,7 @@ class CompanyTypeDaoImplTest {
         List<CompanyType> result = companyTypeDao.getCompanyTypes();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -93,8 +90,7 @@ class CompanyTypeDaoImplTest {
         List<CompanyType> result = companyTypeDao.getCompanyTypes();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -145,8 +141,7 @@ class CompanyTypeDaoImplTest {
         List<CompanyType> result = companyTypeDao.getCompanyTypes();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(1);
+        assertThat(result).isNotNull().hasSize(1);
         assertThat(result.get(0).getCompanyTypeName()).isEqualTo("LLC");
     }
 
@@ -273,8 +268,7 @@ class CompanyTypeDaoImplTest {
         List<CompanyType> result = companyTypeDao.getCompanyTypes();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -291,8 +285,7 @@ class CompanyTypeDaoImplTest {
         List<CompanyType> result = companyTypeDao.getCompanyTypes();
 
         // Assert
-        assertThat(result).hasSize(10);
-        assertThat(result).containsExactlyElementsOf(expectedTypes);
+        assertThat(result).hasSize(10).containsExactlyElementsOf(expectedTypes);
     }
 
     @Test
@@ -384,8 +377,7 @@ class CompanyTypeDaoImplTest {
         List<CompanyType> result = companyTypeDao.getCompanyTypes();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isInstanceOf(ArrayList.class);
+        assertThat(result).isNotNull().isInstanceOf(ArrayList.class);
     }
 
     private List<CompanyType> createCompanyTypeList(int count) {

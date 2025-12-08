@@ -320,7 +320,7 @@ class SearchViewDaoImplTest {
     void getSearchedItemReturnsSingleItemWhenOneMatch() {
         // Arrange
         String searchToken = "unique";
-        SearchView item = createSearchView(1, "Unique Item", "Unique description");
+        SearchView item = createSearchView("Unique Item", "Unique description");
         List<SearchView> expectedItems = Collections.singletonList(item);
 
         when(entityManager.createQuery(anyString(), eq(SearchView.class)))
@@ -430,9 +430,9 @@ class SearchViewDaoImplTest {
     void getSearchedItemReturnsItemsInResultOrder() {
         // Arrange
         String searchToken = "item";
-        SearchView item1 = createSearchView(1, "Item A", "First item");
-        SearchView item2 = createSearchView(2, "Item B", "Second item");
-        SearchView item3 = createSearchView(3, "Item C", "Third item");
+        SearchView item1 = createSearchView("Item A", "First item");
+        SearchView item2 = createSearchView("Item B", "Second item");
+        SearchView item3 = createSearchView("Item C", "Third item");
         List<SearchView> expectedItems = Arrays.asList(item1, item2, item3);
 
         when(entityManager.createQuery(anyString(), eq(SearchView.class)))
@@ -484,7 +484,7 @@ class SearchViewDaoImplTest {
     @DisplayName("Should verify SearchView entity has required fields")
     void searchViewEntityHasRequiredFields() {
         // Arrange
-        SearchView searchView = createSearchView(1, "Test Name", "Test Description");
+        SearchView searchView = createSearchView("Test Name", "Test Description");
 
         // Assert
         assertThat(searchView.getName()).isNotNull();
@@ -517,12 +517,12 @@ class SearchViewDaoImplTest {
     private List<SearchView> createSearchViewList(int count, String namePrefix) {
         List<SearchView> items = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            items.add(createSearchView(i + 1, namePrefix + " " + (i + 1), "Description for " + namePrefix + " " + (i + 1)));
+            items.add(createSearchView(namePrefix + " " + (i + 1), "Description for " + namePrefix + " " + (i + 1)));
         }
         return items;
     }
 
-    private SearchView createSearchView(Integer id, String name, String description) {
+    private SearchView createSearchView(String name, String description) {
         SearchView searchView = new SearchView();
         searchView.setName(name);
         searchView.setDescription(description);

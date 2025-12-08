@@ -29,8 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 
-	private static final String andClause = " and ";
-	private static final String whereClause = " where ";
+	private static final String AND_CLAUSE = " and ";
+	private static final String WHERE_CLAUSE = " where ";
 
 	protected Class<ENTITY> entityClass;
 
@@ -63,9 +63,9 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 		for (DbFilter dbFilter : dbFilters) {
 			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
 				if (i > 0) {
-					queryBuilder.append(andClause);
+					queryBuilder.append(AND_CLAUSE);
 				} else {
-					queryBuilder.append(whereClause);
+					queryBuilder.append(WHERE_CLAUSE);
 				}
 				queryBuilder.append("o.").append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
 				i++;
@@ -91,9 +91,9 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 			boolean orderBy = isOrderBy(dbFilter);
 			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !orderBy) {
 				if (i > 0) {
-					queryBuilder.append(andClause);
+					queryBuilder.append(AND_CLAUSE);
 				} else {
-					queryBuilder.append(whereClause);
+					queryBuilder.append(WHERE_CLAUSE);
 				}
 				queryBuilder.append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
 				i++;
@@ -135,9 +135,9 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 			boolean orderBy = isOrderBy(dbFilter);
 			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !orderBy) {
 				if (i > 0) {
-					queryBuilder.append(andClause);
+					queryBuilder.append(AND_CLAUSE);
 				} else {
-					queryBuilder.append(whereClause);
+					queryBuilder.append(WHERE_CLAUSE);
 				}
 				queryBuilder.
 				// append("o.").
