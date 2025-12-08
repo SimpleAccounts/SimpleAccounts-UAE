@@ -34,6 +34,7 @@ public class ObjectFactory {
      * 
      */
     public ObjectFactory() {
+        // Intentionally empty - JAXB requires a public no-args constructor
     }
 
     /**

@@ -1,5 +1,10 @@
 package com.simpleaccounts.constant;
 
-public class ErrorConstant {
+public final class ErrorConstant {
+
+    private ErrorConstant() {
+        // Private constructor to prevent instantiation of utility class
+    }
+
     public static final String ERROR ="ERROR =";
 }

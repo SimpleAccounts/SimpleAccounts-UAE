@@ -31,9 +31,10 @@ public class ObjectFactory {
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.simpleaccounts.migration.xml.bindings.productmigration
-     * 
+     *
      */
     public ObjectFactory() {
+        // Intentionally empty - JAXB requires a public no-args constructor
     }
 
     /**

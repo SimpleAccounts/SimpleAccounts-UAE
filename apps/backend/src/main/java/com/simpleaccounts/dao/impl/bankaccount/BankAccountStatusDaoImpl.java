@@ -6,13 +6,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.simpleaccounts.dao.bankaccount.BankAccountStatusDao;
 import com.simpleaccounts.entity.bankaccount.BankAccountStatus;
 
 @Repository
-@Transactional
 public class BankAccountStatusDaoImpl implements BankAccountStatusDao {
 
 	@PersistenceContext

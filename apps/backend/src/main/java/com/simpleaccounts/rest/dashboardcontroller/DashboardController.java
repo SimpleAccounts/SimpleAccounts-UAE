@@ -321,68 +321,6 @@ private List<Object> extractLabels(Map<String, Object> response) {
 	return (List<Object>) label.get("labels");
 }
 
-private ProfitLossTotal calculateProfitAndLossTotals(ReportRequestModel requestModel) {
-	long queryStart = System.currentTimeMillis();
-	List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getListByChartOfAccountIds(requestModel);
-	logger.info("[PERF] DB getListByChartOfAccountIds: {} ms, returned {} records",
-		System.currentTimeMillis() - queryStart,
-		closingBalanceList != null ? closingBalanceList.size() : 0);
-
-	if (closingBalanceList == null || closingBalanceList.isEmpty()) {
-		return ProfitLossTotal.empty();
-	}
-
-	long processStart = System.currentTimeMillis();
-	Map<Integer, TransactionCategoryClosingBalance> transactionCategoryClosingBalanceMap =
-			financialReportRestHelper.processTransactionCategoryClosingBalance(closingBalanceList);
-	logger.info("[PERF] processTransactionCategoryClosingBalance: {} ms, processed into {} entries",
-		System.currentTimeMillis() - processStart, transactionCategoryClosingBalanceMap.size());
-	BigDecimal totalOperatingIncome = BigDecimal.ZERO;
-	BigDecimal totalCostOfGoodsSold = BigDecimal.ZERO;
-	BigDecimal totalOperatingExpense = BigDecimal.ZERO;
-
-	BigDecimal totalNonOperatingIncome = BigDecimal.ZERO;
-	BigDecimal totalNonOperatingExpense = BigDecimal.ZERO;
-
-	for (Map.Entry<Integer, TransactionCategoryClosingBalance> entry : transactionCategoryClosingBalanceMap.entrySet()) {
-		TransactionCategoryClosingBalance transactionCategoryClosingBalance = entry.getValue();
-		String transactionCategoryCode = transactionCategoryClosingBalance.getTransactionCategory().getChartOfAccount().getChartOfAccountCode();
-		String transactionCategoryName = transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryName();
-		BigDecimal closingBalance = transactionCategoryClosingBalance.getClosingBalance();
-		ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
-		if (chartOfAccountCategoryCodeEnum == null) {
-			continue;
-		}
-		if (closingBalance.longValue() < 0) {
-			closingBalance = closingBalance.negate();
-		}
-		switch (chartOfAccountCategoryCodeEnum) {
-			case INCOME:
-				if (transactionCategoryName.equalsIgnoreCase("Sales") ||
-						transactionCategoryName.equalsIgnoreCase("Other Charges")) {
-					totalOperatingIncome = totalOperatingIncome.add(closingBalance);
-				} else {
-					totalNonOperatingIncome = totalNonOperatingIncome.add(closingBalance);
-				}
-				break;
-			case ADMIN_EXPENSE:
-				totalOperatingExpense = totalOperatingExpense.add(closingBalance);
-				break;
-			case OTHER_EXPENSE:
-				totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
-				break;
-			case COST_OF_GOODS_SOLD:
-				totalCostOfGoodsSold = totalCostOfGoodsSold.add(closingBalance);
-				break;
-			default:
-				break;
-		}
-	}
-	BigDecimal totalIncome = totalOperatingIncome.add(totalNonOperatingIncome);
-	BigDecimal totalExpense = totalCostOfGoodsSold.add(totalOperatingExpense).add(totalNonOperatingExpense);
-	return new ProfitLossTotal(totalIncome, totalExpense);
-}
-
 private static final class ProfitLossTotal {
 	private final BigDecimal income;
 	private final BigDecimal expense;

@@ -11,6 +11,8 @@ public class CommonColumnConstants {
     public static final String DDMMYYYY="dd-MM-yyyy";
     public static final String START_DATE= "startDate";
     public static final String END_DATE="endDate";
+    public static final String PARAM_START_DATE = ":" + START_DATE;
+    public static final String PARAM_END_DATE = ":" + END_DATE;
     public static final String CURRENT_DATE = "currentDate";
     public static final String REFERENCE_TYPE = "referenceType";
     public static final String TRANSACTION_CATEGORY = "transactionCategory";

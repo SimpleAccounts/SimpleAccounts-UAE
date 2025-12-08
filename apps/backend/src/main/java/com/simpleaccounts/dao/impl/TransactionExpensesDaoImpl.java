@@ -2,8 +2,6 @@ package com.simpleaccounts.dao.impl;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
@@ -18,7 +16,6 @@ import com.simpleaccounts.entity.Expense;
 import com.simpleaccounts.entity.TransactionExpenses;
 
 @Repository
-@Transactional
 public class TransactionExpensesDaoImpl extends AbstractDao<Integer, TransactionExpenses>
 		implements TransactionExpensesDao {
 

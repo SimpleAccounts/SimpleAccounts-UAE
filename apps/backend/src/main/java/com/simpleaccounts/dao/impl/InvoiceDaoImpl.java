@@ -417,7 +417,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 			}
 		}
 		TypedQuery<BigDecimal> query =getEntityManager().createQuery( "SELECT SUM(il.subTotal*i.exchangeRate) AS TOTAL_AMOUNT " +
-				" FROM Invoice i,InvoiceLineItem  il WHERE i.status not in(2) AND i.type=2 and i.id = il.invoice.id and il.vatCategory.id in (2) AND i.editFlag=:editFlag AND i.invoiceDate between :startDate and :endDate",BigDecimal.class);
+				" FROM Invoice i,InvoiceLineItem  il WHERE i.status not in(2) AND i.type=2 and i.id = il.invoice.id and il.vatCategory.id in (2) AND i.editFlag=:editFlag AND i.invoiceDate between " + CommonColumnConstants.PARAM_START_DATE + " and " + CommonColumnConstants.PARAM_END_DATE,BigDecimal.class);
 		query.setParameter(CommonColumnConstants.START_DATE,startDate);
 		query.setParameter(CommonColumnConstants.END_DATE,endDate);
 		query.setParameter(CommonColumnConstants.EDIT_FLAG,editFlag);
@@ -439,8 +439,8 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 				editFlag = Boolean.FALSE;
 			}
 		}
-		String queryStr = "SELECT SUM(il.subTotal*i.exchangeRate) AS TOTAL_AMOUNT, SUM(il.vatAmount*i.exchangeRate) AS TOTAL_VAT_AMOUNT FROM Invoice i ,InvoiceLineItem il WHERE i.id = il.invoice.id AND i.status not in(2) AND i.type=1 AND i.isReverseChargeEnabled=false AND i.deleteFlag=false AND i.editFlag=:editFlag AND il.vatCategory.id in (1) AND i.invoiceDate between :startDate And :endDate AND i.totalVatAmount>"+BigDecimal.ZERO;
-		List<Object> list = getEntityManager().createQuery(queryStr).setParameter("startDate",startDate).setParameter("endDate",endDate).setParameter(CommonColumnConstants.EDIT_FLAG,editFlag).getResultList();
+		String queryStr = "SELECT SUM(il.subTotal*i.exchangeRate) AS TOTAL_AMOUNT, SUM(il.vatAmount*i.exchangeRate) AS TOTAL_VAT_AMOUNT FROM Invoice i ,InvoiceLineItem il WHERE i.id = il.invoice.id AND i.status not in(2) AND i.type=1 AND i.isReverseChargeEnabled=false AND i.deleteFlag=false AND i.editFlag=:editFlag AND il.vatCategory.id in (1) AND i.invoiceDate between " + CommonColumnConstants.PARAM_START_DATE + " And " + CommonColumnConstants.PARAM_END_DATE + " AND i.totalVatAmount>" + BigDecimal.ZERO;
+		List<Object> list = getEntityManager().createQuery(queryStr).setParameter(CommonColumnConstants.START_DATE,startDate).setParameter(CommonColumnConstants.END_DATE,endDate).setParameter(CommonColumnConstants.EDIT_FLAG,editFlag).getResultList();
 		if(list!=null&& list.size()>0) {
 		List<VatReportModel> vatReportModelList = getVatModalFromDB(list);
 		for(VatReportModel vatReportModel:vatReportModelList){
@@ -465,7 +465,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 			}
 		}
 		TypedQuery<BigDecimal> query =getEntityManager().createQuery( "SELECT SUM(il.subTotal*i.exchangeRate) AS TOTAL_AMOUNT " +
-				" FROM Invoice i,InvoiceLineItem  il WHERE i.id = il.invoice.id and il.vatCategory.id in (2) and i.status not in(2) AND i.type=1 and i.isReverseChargeEnabled=true AND i.editFlag=:editFlag AND i.invoiceDate between :startDate and :endDate AND i.totalVatAmount="+BigDecimal.ZERO,BigDecimal.class);
+				" FROM Invoice i,InvoiceLineItem  il WHERE i.id = il.invoice.id and il.vatCategory.id in (2) and i.status not in(2) AND i.type=1 and i.isReverseChargeEnabled=true AND i.editFlag=:editFlag AND i.invoiceDate between " + CommonColumnConstants.PARAM_START_DATE + " and " + CommonColumnConstants.PARAM_END_DATE + " AND i.totalVatAmount=" + BigDecimal.ZERO,BigDecimal.class);
 		query.setParameter(CommonColumnConstants.START_DATE,startDate);
 		query.setParameter(CommonColumnConstants.END_DATE,endDate);
 		query.setParameter(CommonColumnConstants.EDIT_FLAG,editFlag);
@@ -473,47 +473,75 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 //		vatReportResponseModel.setZeroRatedSupplies(amountWithoutVat);
 	}
 	@Override
-	public void getSumOfTotalAmountWithVatForRCM(ReportRequestModel reportRequestModel, VatReportResponseModel vatReportResponseModel){
+	public void getSumOfTotalAmountWithVatForRCM(ReportRequestModel reportRequestModel, VatReportResponseModel vatReportResponseModel) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonColumnConstants.DD_MM_YYYY);
-		LocalDate startDate = LocalDate.parse(reportRequestModel.getStartDate(),formatter);
-		LocalDate endDate = LocalDate.parse(reportRequestModel.getEndDate(),formatter);
-		Boolean editFlag = Boolean.TRUE;
-		VatReportFiling vatReportFiling = vatReportFilingRepository.getVatReportFilingByStartDateAndEndDate(startDate,endDate);
-		if (vatReportFiling!=null){
-			if (vatReportFiling.getStatus().equals(CommonStatusEnum.UN_FILED.getValue())){
-				editFlag = Boolean.TRUE;
-			}
-			else {
-				editFlag = Boolean.FALSE;
-			}
-		}
-		String queryStr = "SELECT SUM(i.totalAmount*i.exchangeRate) AS TOTAL_AMOUNT, SUM(i.totalVatAmount*i.exchangeRate) AS TOTAL_VAT_AMOUNT FROM Invoice i WHERE i.status not in(2) AND i.type=1 AND i.isReverseChargeEnabled=True AND i.deleteFlag=false AND i.editFlag=:editFlag AND i.invoiceDate BETWEEN :startDate AND :endDate AND i.totalVatAmount>"+BigDecimal.ZERO;
-		List<Object> list = getEntityManager().createQuery(queryStr).setParameter("startDate",startDate).setParameter("endDate",endDate).setParameter(CommonColumnConstants.EDIT_FLAG,editFlag).getResultList();
-		if(list!=null&& list.size()>0) {
+		LocalDate startDate = LocalDate.parse(reportRequestModel.getStartDate(), formatter);
+		LocalDate endDate = LocalDate.parse(reportRequestModel.getEndDate(), formatter);
+		Boolean editFlag = determineEditFlag(startDate, endDate);
+
+		processInvoiceRCMData(vatReportResponseModel, startDate, endDate, editFlag);
+		processExpenseRCMData(vatReportResponseModel, startDate, endDate, editFlag);
+	}
+
+	private void processInvoiceRCMData(VatReportResponseModel vatReportResponseModel, LocalDate startDate, LocalDate endDate, Boolean editFlag) {
+		String queryStr = "SELECT SUM(i.totalAmount*i.exchangeRate) AS TOTAL_AMOUNT, SUM(i.totalVatAmount*i.exchangeRate) AS TOTAL_VAT_AMOUNT FROM Invoice i WHERE i.status not in(2) AND i.type=1 AND i.isReverseChargeEnabled=True AND i.deleteFlag=false AND i.editFlag=:editFlag AND i.invoiceDate BETWEEN " + CommonColumnConstants.PARAM_START_DATE + " AND " + CommonColumnConstants.PARAM_END_DATE + " AND i.totalVatAmount>" + BigDecimal.ZERO;
+		List<Object> list = getEntityManager().createQuery(queryStr)
+				.setParameter(CommonColumnConstants.START_DATE, startDate)
+				.setParameter(CommonColumnConstants.END_DATE, endDate)
+				.setParameter(CommonColumnConstants.EDIT_FLAG, editFlag)
+				.getResultList();
+
+		if (list != null && !list.isEmpty()) {
 			List<VatReportModel> vatReportModelList = getVatModalRCMFromDB(list);
-			for(VatReportModel vatReportModel:vatReportModelList){
+			for (VatReportModel vatReportModel : vatReportModelList) {
 				vatReportResponseModel.setReverseChargeProvisionsTotalAmount(vatReportModel.getReverseChargeProvisionsTotalAmount());
 				vatReportResponseModel.setReverseChargeProvisionsVatAmount(vatReportModel.getReverseChargeProvisionsVatAmount());
 			}
 		}
-		String expenseQuery = "SELECT SUM(e.expenseAmount*e.exchangeRate) AS TOTAL_AMOUNT, SUM(e.expenseVatAmount*e.exchangeRate) AS TOTAL_VAT_AMOUNT FROM Expense e WHERE e.status not in(1) AND e.isReverseChargeEnabled=True AND e.deleteFlag=false AND e.editFlag=:editFlag AND e.expenseDate BETWEEN :startDate AND :endDate AND e.vatCategory.id in (1,2)";
-		List<Object> expenseList = getEntityManager().createQuery(expenseQuery).setParameter("startDate",startDate).setParameter("endDate",endDate).setParameter(CommonColumnConstants.EDIT_FLAG,editFlag).getResultList();
-		if(expenseList!=null&& expenseList.size()>0) {
-			List<VatReportModel> vatReportModelList = getVatModalRCMFromDB(expenseList);
-			for(VatReportModel vatReportModel:vatReportModelList){
-				if (vatReportResponseModel.getReverseChargeProvisionsTotalAmount()!=null && vatReportResponseModel.getReverseChargeProvisionsVatAmount()!=null
-				&& vatReportModel.getReverseChargeProvisionsTotalAmount()!=null && vatReportModel.getReverseChargeProvisionsVatAmount()!=null){
-					vatReportResponseModel.setReverseChargeProvisionsTotalAmount(vatReportResponseModel.getReverseChargeProvisionsTotalAmount().add(vatReportModel.getReverseChargeProvisionsTotalAmount()));
-					vatReportResponseModel.setReverseChargeProvisionsVatAmount(vatReportResponseModel.getReverseChargeProvisionsVatAmount().add(vatReportModel.getReverseChargeProvisionsVatAmount()));
-				}
-				else {
-					vatReportResponseModel.setReverseChargeProvisionsTotalAmount(vatReportModel.getReverseChargeProvisionsTotalAmount());
-					vatReportResponseModel.setReverseChargeProvisionsVatAmount(vatReportModel.getReverseChargeProvisionsVatAmount());
+	}
 
-				}
-				}
+	private void processExpenseRCMData(VatReportResponseModel vatReportResponseModel, LocalDate startDate, LocalDate endDate, Boolean editFlag) {
+		String expenseQuery = "SELECT SUM(e.expenseAmount*e.exchangeRate) AS TOTAL_AMOUNT, SUM(e.expenseVatAmount*e.exchangeRate) AS TOTAL_VAT_AMOUNT FROM Expense e WHERE e.status not in(1) AND e.isReverseChargeEnabled=True AND e.deleteFlag=false AND e.editFlag=:editFlag AND e.expenseDate BETWEEN " + CommonColumnConstants.PARAM_START_DATE + " AND " + CommonColumnConstants.PARAM_END_DATE + " AND e.vatCategory.id in (1,2)";
+		List<Object> expenseList = getEntityManager().createQuery(expenseQuery)
+				.setParameter(CommonColumnConstants.START_DATE, startDate)
+				.setParameter(CommonColumnConstants.END_DATE, endDate)
+				.setParameter(CommonColumnConstants.EDIT_FLAG, editFlag)
+				.getResultList();
+
+		if (expenseList != null && !expenseList.isEmpty()) {
+			List<VatReportModel> vatReportModelList = getVatModalRCMFromDB(expenseList);
+			for (VatReportModel vatReportModel : vatReportModelList) {
+				addExpenseRCMToResponse(vatReportResponseModel, vatReportModel);
+			}
 		}
 	}
+
+	private void addExpenseRCMToResponse(VatReportResponseModel vatReportResponseModel, VatReportModel vatReportModel) {
+		boolean hasExistingValues = vatReportResponseModel.getReverseChargeProvisionsTotalAmount() != null
+				&& vatReportResponseModel.getReverseChargeProvisionsVatAmount() != null;
+		boolean hasNewValues = vatReportModel.getReverseChargeProvisionsTotalAmount() != null
+				&& vatReportModel.getReverseChargeProvisionsVatAmount() != null;
+
+		if (hasExistingValues && hasNewValues) {
+			vatReportResponseModel.setReverseChargeProvisionsTotalAmount(
+					vatReportResponseModel.getReverseChargeProvisionsTotalAmount().add(vatReportModel.getReverseChargeProvisionsTotalAmount()));
+			vatReportResponseModel.setReverseChargeProvisionsVatAmount(
+					vatReportResponseModel.getReverseChargeProvisionsVatAmount().add(vatReportModel.getReverseChargeProvisionsVatAmount()));
+		} else {
+			vatReportResponseModel.setReverseChargeProvisionsTotalAmount(vatReportModel.getReverseChargeProvisionsTotalAmount());
+			vatReportResponseModel.setReverseChargeProvisionsVatAmount(vatReportModel.getReverseChargeProvisionsVatAmount());
+		}
+	}
+
+	private Boolean determineEditFlag(LocalDate startDate, LocalDate endDate) {
+		Boolean editFlag = Boolean.TRUE;
+		VatReportFiling vatReportFiling = vatReportFilingRepository.getVatReportFilingByStartDateAndEndDate(startDate, endDate);
+		if (vatReportFiling != null) {
+			editFlag = vatReportFiling.getStatus().equals(CommonStatusEnum.UN_FILED.getValue());
+		}
+		return editFlag;
+	}
+
 	private List<VatReportModel> getVatModalFromDB(List<Object> list) {
 		List<VatReportModel> vatReportModelList = new ArrayList<>();
 		for (Object object : list)

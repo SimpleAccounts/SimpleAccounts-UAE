@@ -21,7 +21,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,7 +32,6 @@ import java.util.Map;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Repository
-@Transactional
 public class TransactionCategoryClosingBalanceDaoImpl extends AbstractDao<Integer, TransactionCategoryClosingBalance>
         implements TransactionCategoryClosingBalanceDao {
     @Autowired

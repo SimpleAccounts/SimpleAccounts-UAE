@@ -10,13 +10,11 @@ import com.simpleaccounts.service.ChartOfAccountCategoryService;
 import com.simpleaccounts.service.TransactionCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
-@Transactional
 public class CoacTransactionCategoryDaoImpl extends AbstractDao<Integer, CoacTransactionCategory>  implements CoacTransactionCategoryDao  {
 
     @Autowired
@@ -48,7 +46,6 @@ public class CoacTransactionCategoryDaoImpl extends AbstractDao<Integer, CoacTra
                 CoacTransactionCategory coacTransactionCategory = new CoacTransactionCategory();
                 coacTransactionCategory.setChartOfAccountCategory(chartOfAccountCategoryService.findByPK(coaCategoryId));
                 coacTransactionCategory.setTransactionCategory(transactionCategory);
-               // coacTransactionCategory.setId(id);
                 persist(coacTransactionCategory);
 
             }

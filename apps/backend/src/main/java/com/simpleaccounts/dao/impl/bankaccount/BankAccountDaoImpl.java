@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.BankAccounrFilterEnum;
@@ -25,7 +24,6 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import javax.persistence.TypedQuery;
 
 @Repository
-@Transactional
 public class BankAccountDaoImpl extends AbstractDao<Integer, BankAccount> implements BankAccountDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BankAccountDaoImpl.class);
