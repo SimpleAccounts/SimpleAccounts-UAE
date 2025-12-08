@@ -390,9 +390,6 @@ public class BankAccountRestHelper {
 						.findTransactionCategoryByTransactionCategoryCode(
 								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 		}
-		return transactionCategoryService
-				.findTransactionCategoryByTransactionCategoryCode(
-						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 	}
 	public TransactionCategoryClosingBalance getClosingBalanceEntity(BankAccount bankAccount, TransactionCategory transactionCategory) {
 		TransactionCategoryClosingBalance closingBalance = new TransactionCategoryClosingBalance();
