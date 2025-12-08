@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download Test Results
-        uses: dawidd6/action-download-artifact@v6
+        uses: dawidd6/action-download-artifact@v11
         with:
           workflow: nightly.yml
           name: unit-test-results
