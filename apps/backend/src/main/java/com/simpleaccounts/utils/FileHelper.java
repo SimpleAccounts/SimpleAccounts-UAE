@@ -215,23 +215,37 @@ public class FileHelper {
 			folderPath = folderPath.substring(0, folderPath.length() - 1);
 		}
 		createFolderIfNotExist(folderPath);
+
+		File baseDir;
+		String baseDirCanonical;
+		try {
+			baseDir = new File(folderPath);
+			baseDirCanonical = baseDir.getCanonicalPath() + File.separator;
+		} catch (IOException e) {
+			log.error("Error resolving base folder path", e);
+			return list;
+		}
+
 		for (MultipartFile file : files) {
 			// Sanitize filename to prevent path traversal attacks
 			String originalFilename = file.getOriginalFilename();
 			if (originalFilename == null || originalFilename.isEmpty()) {
 				continue;
 			}
+			// Extract only the filename, removing any path components
 			String sanitizedFilename = new File(originalFilename).getName();
-			if (sanitizedFilename.isEmpty() || sanitizedFilename.startsWith(".")) {
+			// Reject empty, hidden files, or files with suspicious characters
+			if (sanitizedFilename.isEmpty() || sanitizedFilename.startsWith(".")
+					|| sanitizedFilename.contains("..")) {
 				continue;
 			}
-			String filePath = folderPath + "/" + sanitizedFilename;
 
-			File dest = new File(filePath);
+			File dest = new File(baseDir, sanitizedFilename);
 			// Validate that the resolved path is within the expected folder
 			try {
-				if (!dest.getCanonicalPath().startsWith(new File(folderPath).getCanonicalPath())) {
-					log.error("Invalid file path detected: {}", filePath);
+				String destCanonical = dest.getCanonicalPath();
+				if (!destCanonical.startsWith(baseDirCanonical)) {
+					log.error("Path traversal attempt detected");
 					continue;
 				}
 			} catch (IOException e) {
