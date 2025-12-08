@@ -364,6 +364,9 @@ public class TransactionImportRestHelper {
 							LOGGER.error(ERROR, e);
 						}
 						break;
+					default:
+						// Unknown transaction enum - no action needed
+						break;
 					}
 
 				}
@@ -478,7 +481,10 @@ public class TransactionImportRestHelper {
 								LOGGER.error(ERROR, e);
 							}
 							break;
-					}
+						default:
+							// Unknown transaction enum - no action needed
+							break;
+						}
 				}
 				trnx.setCreatedBy(transactionImportModel.getCreatedBy());
 				trnx.setCreatedDate(LocalDateTime.now());

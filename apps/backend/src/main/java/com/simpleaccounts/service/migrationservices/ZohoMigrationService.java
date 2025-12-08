@@ -121,6 +121,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ZohoMigrationService {
 	
+	private static final String SETTER_METHOD_SET_CURRENCY = "setCurrency";
+	private static final String SETTER_METHOD_SET_CURRENCY_CODE = "setCurrencyCode";
+	private static final String TYPE_OBJECT = "Object";
+	
     private final Logger LOG = LoggerFactory.getLogger(ZohoMigrationService.class);
 	
     @Autowired
@@ -273,9 +277,9 @@ public class ZohoMigrationService {
 								if (StringUtils.isEmpty(val))
 									continue;
 								String setterMethod = column.getSetterMethod();
-								if (setterMethod.equalsIgnoreCase("setCurrency")) {
+								if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_CURRENCY)) {
 									Currency currency = migrationUtil.getCurrencyIdByValue(val);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, currency, "Object");
+									migrationUtil.setRecordIntoEntity(entity, setterMethod, currency, TYPE_OBJECT);
 								} else if (setterMethod.equalsIgnoreCase("setCountry")) {
 									Integer value = migrationUtil.getCountryIdByValue(val);
 									Country country = countryService.findByPK(value);
@@ -1236,9 +1240,9 @@ public class ZohoMigrationService {
 				if (StringUtils.isEmpty(val))
 					continue;
 				String setterMethod = column.getSetterMethod();
-				if (setterMethod.equalsIgnoreCase("setCurrency")) {
+				if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_CURRENCY)) {
 					Currency currency = migrationUtil.getCurrencyIdByValue(val);
-					migrationUtil.setRecordIntoEntity(contact, setterMethod, currency, "Object");
+					migrationUtil.setRecordIntoEntity(contact, setterMethod, currency, TYPE_OBJECT);
 				} else if (setterMethod.equalsIgnoreCase("setCountry")) {
 					Integer value = migrationUtil.getCountryIdByValue(val);
 					Country country = countryService.findByPK(value);
@@ -1549,7 +1553,7 @@ public class ZohoMigrationService {
                 if (StringUtils.isEmpty(val))
                     continue;
                 migrationUtil.setRecordIntoEntity(productEntity, setterMethod, val,"BigDecimal");
-            }else if (setterMethod.equalsIgnoreCase("setCurrency") || setterMethod.equalsIgnoreCase("setCurrencyCode")) {
+            }else if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_CURRENCY) || setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_CURRENCY_CODE)) {
                 if (StringUtils.isEmpty(val))
                     continue;
                 Currency currency = migrationUtil.getCurrencyIdByValue(val);
@@ -2240,7 +2244,11 @@ public class ZohoMigrationService {
 				DataMigrationRespModel dataMigrationRespModel = new DataMigrationRespModel();
 				
 				try {
-					dataMigrationRespModel.setRecordCount((Files.lines(Paths.get(fileLocation.toString() + "/" + remFileData.toString())).count()) - 1);
+					long recordCount;
+					try (java.util.stream.Stream<String> lines = Files.lines(Paths.get(fileLocation.toString() + "/" + remFileData.toString()))) {
+						recordCount = lines.count() - 1;
+					}
+					dataMigrationRespModel.setRecordCount(recordCount);
 					dataMigrationRespModel.setFileName(remFileData);
 				} catch (IOException e) {	
 					LOG.error("Error during Zoho migration", e);
@@ -2374,7 +2382,7 @@ public class ZohoMigrationService {
 	                    continue;
 	                migrationUtil.setRecordIntoEntity(invoice,"setUnitPrice",val,"BigDecimal");
 	            }
-	            else if (setterMethod.equalsIgnoreCase("setCurrency") || setterMethod.equalsIgnoreCase("setCurrencyCode")) {
+	            else if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_CURRENCY) || setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_CURRENCY_CODE)) {
 	                if (StringUtils.isEmpty(val))
 	                    continue;
 	                Currency currency = migrationUtil.getCurrencyIdByValue(val);

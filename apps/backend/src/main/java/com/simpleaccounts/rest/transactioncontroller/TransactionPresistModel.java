@@ -30,7 +30,7 @@ import java.util.List;
 @Data
 public class TransactionPresistModel implements Serializable {
 	@JsonIgnore
-	private String DATE_FORMAT = "dd/MM/yyyy";
+	private static final String DATE_FORMAT = "dd/MM/yyyy";
 
 	private Integer bankId;
 	private Integer transactionId;
@@ -86,8 +86,8 @@ public class TransactionPresistModel implements Serializable {
 
 	private BigDecimal exchangeRate;
 
-	private JSONArray payrollListIds;
-	private List<DropdownModel>  payrollDropdownList= new ArrayList<>();
+	private transient JSONArray payrollListIds;
+	private transient List<DropdownModel>  payrollDropdownList= new ArrayList<>();
 	private LocalDateTime date1;
 
 	private Integer explanationLineItemId;

@@ -59,6 +59,8 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @RequestMapping(value = "/rest/bank")
 public class BankAccountController{
 
+	private static final String MSG_DELETE_UNSUCCESSFUL = "delete.unsuccessful.msg";
+
 	private  final Logger logger = LoggerFactory.getLogger(BankAccountController.class);
 
 	@Autowired
@@ -160,7 +162,7 @@ public class BankAccountController{
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Add New Bank Account", response = BankAccount.class)
 	@PostMapping("/save")
-	public ResponseEntity<?> saveBankAccount(@RequestBody BankModel bankModel, HttpServletRequest request) {
+	public ResponseEntity<Object> saveBankAccount(@RequestBody BankModel bankModel, HttpServletRequest request) {
 		SimpleAccountsMessage message = null;
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -260,17 +262,23 @@ public class BankAccountController{
 				return transactionCategoryService
 						.findTransactionCategoryByTransactionCategoryCode(
 								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode());
+			case ACCOUNTS_PAYABLE:
+			case INCOME:
+			case ADMIN_EXPENSE:
+			case COST_OF_GOODS_SOLD:
+			case OTHER_EXPENSE:
+			default:
+				return transactionCategoryService
+						.findTransactionCategoryByTransactionCategoryCode(
+								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 		}
-		return transactionCategoryService
-				.findTransactionCategoryByTransactionCategoryCode(
-						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 	}
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Update Bank Account", response = BankAccount.class)
 	@PutMapping("/{bankAccountId}")
-	public ResponseEntity<?> updateBankAccount(@PathVariable("bankAccountId") Integer bankAccountId, BankModel bankModel,HttpServletRequest request) {
+	public ResponseEntity<Object> updateBankAccount(@PathVariable("bankAccountId") Integer bankAccountId, BankModel bankModel,HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message = null;
 																										Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -437,7 +445,7 @@ public class BankAccountController{
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete the Bank Account", response = BankAccount.class)
 	@DeleteMapping(value = "/{bankAccountId}")
-	public ResponseEntity<?> deleteBankAccount(@PathVariable("bankAccountId") Integer bankAccountId,
+	public ResponseEntity<Object> deleteBankAccount(@PathVariable("bankAccountId") Integer bankAccountId,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -562,13 +570,13 @@ public class BankAccountController{
 			} else {
 				SimpleAccountsMessage message = null;
 				message = new SimpleAccountsMessage("",
-						MessageUtil.getMessage("delete.unsuccessful.msg"), true);
+						MessageUtil.getMessage(MSG_DELETE_UNSUCCESSFUL), true);
 				return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		} catch (Exception e) {
 			SimpleAccountsMessage message = null;
 			message = new SimpleAccountsMessage("",
-					MessageUtil.getMessage("delete.unsuccessful.msg"), true);
+					MessageUtil.getMessage(MSG_DELETE_UNSUCCESSFUL), true);
 			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 //		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -603,7 +611,7 @@ public class BankAccountController{
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Bank Accounts")
 	@DeleteMapping(value = "/multiple")
-	public ResponseEntity<?> deleteBankAccounts(@RequestBody DeleteModel ids, HttpServletRequest httpServletRequest) {
+	public ResponseEntity<Object> deleteBankAccounts(@RequestBody DeleteModel ids) {
 		try {
 			bankAccountService.deleteByIds(ids.getIds());
 			SimpleAccountsMessage message = null;
@@ -614,7 +622,7 @@ public class BankAccountController{
 		} catch (Exception e) {
 			SimpleAccountsMessage message = null;
 			message = new SimpleAccountsMessage("",
-					MessageUtil.getMessage("delete.unsuccessful.msg"), true);
+					MessageUtil.getMessage(MSG_DELETE_UNSUCCESSFUL), true);
 			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
@@ -676,7 +684,7 @@ public class BankAccountController{
 	@LogRequest
 	@ApiOperation(value = "Get All Bank List", response = List.class)
 	@GetMapping(value = "/getBankNameList")
-	public ResponseEntity<?> getBankNameList(HttpServletRequest request) {
+	public ResponseEntity<Object> getBankNameList(HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		User user = userService.findByPK(userId);
 		 try {

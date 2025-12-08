@@ -86,6 +86,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimpleAccountMigrationService {
 	
+	private static final String TYPE_OBJECT = "Object";
+	
 	private final Logger LOG = LoggerFactory.getLogger(SimpleAccountMigrationService.class);
 	
 	@Autowired
@@ -217,8 +219,11 @@ public class SimpleAccountMigrationService {
 				dataMigrationRespModel.setMigrationBeginningDate(company.getAccountStartDate().toString());
 				dataMigrationRespModel.setExecutionDate(LocalDateTime.now().toString());
 				dataMigrationRespModel.setFileName((String) file);
-				dataMigrationRespModel.setRecordCount(
-						(Files.lines(Paths.get(fileLocation.toString() + "/" + file.toString())).count()) - 1);
+				long recordCount;
+				try (Stream<String> lines = Files.lines(Paths.get(fileLocation.toString() + "/" + file.toString()))) {
+					recordCount = lines.count() - 1;
+				}
+				dataMigrationRespModel.setRecordCount(recordCount);
 				dataMigrationRespModel.setRecordsMigrated((long) mapList.size());
 				dataMigrationRespModel.setRecordsRemoved((long) itemsToRemove.size());
 				list.add(dataMigrationRespModel);
@@ -246,23 +251,23 @@ public class SimpleAccountMigrationService {
 								String setterMethod = column.getSetterMethod();
 								if (setterMethod.equalsIgnoreCase("setCurrency")) {
 									Currency currency = migrationUtil.getCurrencyIdByValue(val);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, currency, "Object");
+									migrationUtil.setRecordIntoEntity(entity, setterMethod, currency, TYPE_OBJECT);
 								} else if (setterMethod.equalsIgnoreCase("setCountry")) {
 									Integer value = migrationUtil.getCountryIdByValue(val);
 									Country country = countryService.findByPK(value);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, country, "Object");
+									migrationUtil.setRecordIntoEntity(entity, setterMethod, country, TYPE_OBJECT);
 								} else if (setterMethod.equalsIgnoreCase("setState")) {
 									Integer value = migrationUtil.getStateIdByInputColumnValue(val);
 									State state = stateService.findByPK(value);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, state, "Object");
+									migrationUtil.setRecordIntoEntity(entity, setterMethod, state, TYPE_OBJECT);
 								} else if (setterMethod.equalsIgnoreCase("setContactType")) {
 									Integer value = migrationUtil.getContactType(val);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, value, "Object");
+									migrationUtil.setRecordIntoEntity(entity, setterMethod, value, TYPE_OBJECT);
 								} else if (setterMethod.equalsIgnoreCase("setPlaceOfSupplyId")) {
 									if (StringUtils.isEmpty(val))
 										continue;
 									PlaceOfSupply placeOfSupply = migrationUtil.getPlaceOfSupplyByValue(val);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, placeOfSupply, "Object");
+									migrationUtil.setRecordIntoEntity(entity, setterMethod, placeOfSupply, TYPE_OBJECT);
 								} else {
 									// set into entity
 									migrationUtil.setRecordIntoEntity(entity, setterMethod, val, column.getDataType());
@@ -807,7 +812,7 @@ public class SimpleAccountMigrationService {
 					if (StringUtils.isEmpty(val))
 						continue;
 					ProductType value = migrationUtil.getProductType(val);
-					migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, "Object");
+					migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, TYPE_OBJECT);
 				}
 				else if (setterMethod.equalsIgnoreCase("setVatCategory")){
 					VatCategory vatCategory = migrationUtil.getVatCategoryByValue(val);
@@ -818,12 +823,12 @@ public class SimpleAccountMigrationService {
 					if (StringUtils.isEmpty(val))
 						continue;
 					ProductPriceType value = migrationUtil.getProductPriceType(val,record);
-					migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, "Object");
+					migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, TYPE_OBJECT);
 					if (productEntity instanceof ProductLineItem){
 						if (StringUtils.isEmpty(val))
 							continue;
 						TransactionCategory transactionCategory = migrationUtil.getTransactionCategory(val);
-						migrationUtil.setRecordIntoEntity(productEntity, "setTransactioncategory", transactionCategory, "Object");
+						migrationUtil.setRecordIntoEntity(productEntity, "setTransactioncategory", transactionCategory, TYPE_OBJECT);
 					}
 				}
 				else if (setterMethod.equalsIgnoreCase("setUnitPrice")){
@@ -842,12 +847,12 @@ public class SimpleAccountMigrationService {
 					if (StringUtils.isEmpty(val))
 						continue;
 					Contact value = migrationUtil.getContactByValue(val);
-					migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, "Object");
+					migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, TYPE_OBJECT);
 				}else if (setterMethod.equalsIgnoreCase("setSupplierId")) {
 					if (StringUtils.isEmpty(val))
 						continue;
 					Contact value = migrationUtil.getContactByValue(val);
-					migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, "Object");
+					migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, TYPE_OBJECT);
 				}
 				else if (setterMethod.equalsIgnoreCase("setInvoiceDuePeriod")){
 					if (StringUtils.isEmpty(val))
@@ -859,7 +864,7 @@ public class SimpleAccountMigrationService {
 						continue;
 					if (productEntity instanceof InvoiceLineItem){
 						TransactionCategory transactionCategory = migrationUtil.getTransactionCategory(val);
-						migrationUtil.setRecordIntoEntity(productEntity, "setTrnsactioncCategory", transactionCategory, "Object");
+						migrationUtil.setRecordIntoEntity(productEntity, "setTrnsactioncCategory", transactionCategory, TYPE_OBJECT);
 					}
 				}
 				else if (StringUtils.equalsIgnoreCase(setterMethod,"setInvoiceLineItemUnitPrice")){
@@ -871,7 +876,7 @@ public class SimpleAccountMigrationService {
 						continue;
 					Currency currency = migrationUtil.getCurrencyIdByValue(val);
 //                        Currency currency = currencyService.findByPK(value);
-					migrationUtil.setRecordIntoEntity(productEntity, setterMethod, currency, "Object");
+					migrationUtil.setRecordIntoEntity(productEntity, setterMethod, currency, TYPE_OBJECT);
 				}
 				else {
 					if (StringUtils.isEmpty(val))
@@ -947,10 +952,10 @@ public class SimpleAccountMigrationService {
 				String setterMethod = column.getSetterMethod();
 				if (setterMethod.equalsIgnoreCase("setPriceType")) {
 					ProductPriceType productPriceType = ProductPriceType.PURCHASE;
-					migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, productPriceType, "Object");
+					migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, productPriceType, TYPE_OBJECT);
 				} else if (setterMethod.equalsIgnoreCase("setTransactioncategory")) {
 					TransactionCategory transactionCategory = transactionCategoryService.findByPK(49);
-					migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, transactionCategory, "Object");
+					migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, transactionCategory, TYPE_OBJECT);
 				} else if (setterMethod.equalsIgnoreCase("setUnitPrice")) {
 					
 					if(val.trim().contains(" "))
@@ -988,10 +993,10 @@ public class SimpleAccountMigrationService {
 			String setterMethod = column.getSetterMethod();
 			if (setterMethod.equalsIgnoreCase("setPriceType")) {
 				ProductPriceType productPriceType = ProductPriceType.SALES;
-				migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, productPriceType, "Object");
+				migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, productPriceType, TYPE_OBJECT);
 			} else if (setterMethod.equalsIgnoreCase("setTransactioncategory")) {
 				TransactionCategory transactionCategory = migrationUtil.getTransactionCategory(val);
-				migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, transactionCategory, "Object");
+				migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, transactionCategory, TYPE_OBJECT);
 			} else if (setterMethod.equalsIgnoreCase("setUnitPrice")) {
 				
 				if(val.trim().contains(" "))
@@ -1103,7 +1108,10 @@ public class SimpleAccountMigrationService {
 			case OTHER_EXPENSE:
 			case COST_OF_GOODS_SOLD:
 				return false;
+			case ACCOUNTS_PAYABLE:
+			case INCOME:
+			default:
+				return true;
 		}
-		return true;
 	}
 }

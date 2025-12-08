@@ -47,6 +47,7 @@ public class SimpleCorsFilter implements Filter {
 
     private Set<String> allowedOrigins;
 
+    // Empty constructor required for Spring filter initialization
     public SimpleCorsFilter() {
     }
 
@@ -95,6 +96,7 @@ public class SimpleCorsFilter implements Filter {
         return allowedOrigins.isEmpty() ? "*" : "";
     }
 
+    // Empty method required by Filter interface - no cleanup needed
     @Override
     public void destroy() {
     }

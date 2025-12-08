@@ -51,6 +51,13 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PA
 @Component
 public class SalaryRestHelper {
     private final Logger logger = LoggerFactory.getLogger(SalaryRestHelper.class);
+    private static final String PAYROLL_LIABILITY = "PAYROLL_LIABILITY";
+    private static final String DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY = "DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY";
+    private static final String HTML_TR_TD_OPEN = "HTML_TR_TD_OPEN";
+    private static final String HTML_TD_TR_CLOSE = "HTML_TD_TR_CLOSE";
+    private static final String SALARY_TYPE_FIXED = "Fixed";
+    private static final String SALARY_TYPE_FIXED_ALLOWANCE = "Fixed Allowance";
+    private static final String SALARY_TYPE_DEDUCTION = "Deduction";
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
@@ -109,7 +116,7 @@ public class SalaryRestHelper {
         User user = userService.findByPK(userId);
 
         Map<String, Object> CategoryParam = new HashMap<>();
-        CategoryParam.put("transactionCategoryName","Payroll Liability");
+        CategoryParam.put("transactionCategoryName","PAYROLL_LIABILITY");
         List<TransactionCategory> payrollTransactionCategoryList = transactionCategoryService.findByAttributes(CategoryParam);
 
         if (payrollTransactionCategoryList != null && !payrollTransactionCategoryList.isEmpty()) {
@@ -166,7 +173,7 @@ public class SalaryRestHelper {
                     salary.setSalaryComponent(salaryComponent.getSalaryComponentId());
                     salary.setType(0);
                     salary.setNoOfDays(salaryComponent.getNoOfDays());
-                    salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), "dd/MM/yyyy"));
+                    salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), "DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY"));
                     salary.setTotalAmount(salaryAsPerNoOfWorkingDays);
                     salaryService.persist(salary);
                     if (salaryComponent.getSalaryStructure().getId()==PayrollEnumConstants.Deduction
@@ -191,7 +198,7 @@ public class SalaryRestHelper {
                 salary.setEmployeeId(employee);
                 salary.setNoOfDays(noOfDays);
                 salary.setType(1);
-                salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), "dd/MM/yyyy"));
+                salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), "DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY"));
                 salary.setTotalAmount(salaryForjournalEntry);
                 salaryService.persist(salary);
 
@@ -237,7 +244,7 @@ public class SalaryRestHelper {
             finalPayrolltransactionCategory.setChartOfAccount(chartOfAccountService.findByPK(13));
             finalPayrolltransactionCategory.setSelectableFlag(Boolean.FALSE);
             finalPayrolltransactionCategory.setTransactionCategoryCode("02-02-016");
-            finalPayrolltransactionCategory.setTransactionCategoryName("Payroll Liability");
+            finalPayrolltransactionCategory.setTransactionCategoryName("PAYROLL_LIABILITY");
             finalPayrolltransactionCategory.setTransactionCategoryDescription("Other Liability");
             //ParentTransactionCategory null
             finalPayrolltransactionCategory.setCreatedDate(LocalDateTime.now());
@@ -254,7 +261,7 @@ public class SalaryRestHelper {
 
 
             Map<String, Object> payrollCategoryParam = new HashMap<>();
-            payrollCategoryParam.put("transactionCategoryName","Payroll Liability");
+            payrollCategoryParam.put("transactionCategoryName","PAYROLL_LIABILITY");
             List<TransactionCategory> payrollList = transactionCategoryService.findByAttributes(payrollCategoryParam);
 
 
@@ -309,7 +316,7 @@ public class SalaryRestHelper {
                     salary.setEmployeeId(employee);
                     salary.setType(0);
                     salary.setNoOfDays(salaryComponent.getNoOfDays());
-                    salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), "dd/MM/yyyy"));
+                    salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), "DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY"));
                     salary.setTotalAmount(salaryAsPerNoOfWorkingDays);
                     salaryService.persist(salary);
                     if (salaryComponent.getSalaryStructure().getId()==PayrollEnumConstants.Deduction.getId()){
@@ -330,7 +337,7 @@ public class SalaryRestHelper {
                 salary.setEmployeeId(employee);
                 salary.setNoOfDays(noOfDays);
                 salary.setType(1);
-                salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), "dd/MM/yyyy"));
+                salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), "DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY"));
                 salary.setTotalAmount(salaryForjournalEntry);
                 salaryService.persist(salary);
 
@@ -466,35 +473,35 @@ public class SalaryRestHelper {
                  String result = model.getCategory();
                  result = result.substring(0, result.indexOf("-"));
                  count++;
-                 transactionRows= transactionRows.concat("<tr><td>" +count.toString() + "</td>"+
+                 transactionRows= transactionRows.concat("HTML_TR_TD_OPEN" +count.toString() + "</td>"+
                          "<td style=\"text-align: right;\">" + model.getTransactionDate() + " </td>" +
                          "<td style=\"text-align: right;\">" + model.getTransactionType() + " </td>"+
                          "<td style=\"text-align: right;\">" + result + " </td>"+
-                         "<td style=\"text-align: right;\"> AED " + model.getAmount() + " </td></tr>");
+                         "<td style=\"text-align: right;\"> AED " + model.getAmount() + "HTML_TD_TR_CLOSE");
 
              }
              }
-         if(salarySlipModel.getSalarySlipResult().get("Fixed")!=null)
-            for (int i = 0; i < salarySlipModel.getSalarySlipResult().get("Fixed").size(); i++) {
-                SalaryComponent salaryComponent= salarySlipModel.getSalarySlipResult().get("Fixed").get(i);
-                earningRows= earningRows.concat("<tr><td>" + salaryComponent.getComponentName() + "</td>"+
-                        "<td style=\"text-align: right;\">  AED  " + salaryComponent.getComponentValue() + " </td></tr>");
+         if(salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_FIXED)!=null)
+            for (int i = 0; i < salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_FIXED).size(); i++) {
+                SalaryComponent salaryComponent= salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_FIXED).get(i);
+                earningRows= earningRows.concat("HTML_TR_TD_OPEN" + salaryComponent.getComponentName() + "</td>"+
+                        "<td style=\"text-align: right;\">  AED  " + salaryComponent.getComponentValue() + "HTML_TD_TR_CLOSE");
 
             }
-        if(salarySlipModel.getSalarySlipResult().get("Fixed Allowance")!=null)
-            for (int i = 0; i < salarySlipModel.getSalarySlipResult().get("Fixed Allowance").size(); i++)
+        if(salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_FIXED_ALLOWANCE)!=null)
+            for (int i = 0; i < salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_FIXED_ALLOWANCE).size(); i++)
             {
-                SalaryComponent salaryComponent= salarySlipModel.getSalarySlipResult().get("Fixed Allowance").get(i);
-                earningRows=  earningRows.concat("<tr><td>" + salaryComponent.getComponentName() + " </td>"+
-                        "<td style=\"text-align: right;\">   AED  " + salaryComponent.getComponentValue() + " </td></tr>");
+                SalaryComponent salaryComponent= salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_FIXED_ALLOWANCE).get(i);
+                earningRows=  earningRows.concat("HTML_TR_TD_OPEN" + salaryComponent.getComponentName() + " </td>"+
+                        "<td style=\"text-align: right;\">   AED  " + salaryComponent.getComponentValue() + "HTML_TD_TR_CLOSE");
 
             }
-        if(salarySlipModel.getSalarySlipResult().get("Deduction")!=null)
-            for (int i = 0; i < salarySlipModel.getSalarySlipResult().get("Deduction").size(); i++)
+        if(salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_DEDUCTION)!=null)
+            for (int i = 0; i < salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_DEDUCTION).size(); i++)
             {
-                SalaryComponent salaryComponent= salarySlipModel.getSalarySlipResult().get("Deduction").get(i);
-                deductionRows=  deductionRows.concat("<tr><td>" + salaryComponent.getComponentName() + " </td>"+
-                        "<td style=\"text-align: right;\">   AED  " + salaryComponent.getComponentValue() + " </td></tr>");
+                SalaryComponent salaryComponent= salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_DEDUCTION).get(i);
+                deductionRows=  deductionRows.concat("HTML_TR_TD_OPEN" + salaryComponent.getComponentName() + " </td>"+
+                        "<td style=\"text-align: right;\">   AED  " + salaryComponent.getComponentValue() + "HTML_TD_TR_CLOSE");
             }
         BigDecimal totalAandB = totalB.add(salarySlipModel.getNetPay().subtract(salarySlipModel.getDeductions()));
 
@@ -526,9 +533,9 @@ public class SalaryRestHelper {
                 .replace("{totalDeductions}",salarySlipModel.getDeductions().toString())
                 .replace("{poBoxNumber}",user.getCompany().getCompanyPoBoxNumber()!=null?user.getCompany().getCompanyPoBoxNumber():"")
                 .replace("{grossTotal}",salarySlipModel.getEarnings().toString())
-                .replace("<tr><td>{earning}</td><td>{amount}</td></tr>",earningRows)
-                .replace("<tr><td>{count}</td><td>{transactionDate}</td><td>{transactionType}</td><td>{category}</td><td>{transactionAmount}</td></tr>",transactionRows)
-                .replace("<tr><td>{deduction}</td><td>{amount}</td></tr>",deductionRows);
+                .replace("HTML_TR_TD_OPEN{earning}</td><td>{amount}</td></tr>",earningRows)
+                .replace("HTML_TR_TD_OPEN{count}</td><td>{transactionDate}</td><td>{transactionType}</td><td>{category}</td><td>{transactionAmount}</td></tr>",transactionRows)
+                .replace("HTML_TR_TD_OPEN{deduction}</td><td>{amount}</td></tr>",deductionRows);
 
          String mail=   htmlContent  .replace("{companylogo}",image)
                  .replace("{name}",salarySlipModel.getEmployeename())

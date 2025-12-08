@@ -210,8 +210,11 @@ public class TransactionCategoryBalanceController {
 			case OTHER_EXPENSE:
 			case COST_OF_GOODS_SOLD:
 				return false;
+			case ACCOUNTS_PAYABLE:
+			case INCOME:
+			default:
+				return true;
 		}
-		return true;
 	}
 
 	@LogRequest

@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 @Service
 public class TaxesRestHelper {
-    private static final String dateFormat = "dd/MM/yyyy";
+    private static final String DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY = "dd/MM/yyyy";
 
     @Autowired
     private InvoiceService invoiceService;
@@ -53,7 +53,7 @@ public class TaxesRestHelper {
                 model.setId(journalLineItem.getId());
                 model.setVatType(journalLineItem.getTransactionCategory().getTransactionCategoryName());
                 model.setReferenceType(journalLineItem.getReferenceType().getDisplayName());
-                model.setDate(dateFormtUtil.getLocalDateTimeAsString(journalLineItem.getCreatedDate(),"dd/MM/yyyy"));
+                model.setDate(dateFormtUtil.getLocalDateTimeAsString(journalLineItem.getCreatedDate(), DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY));
                 switch (journalLineItem.getReferenceType()) {
                     case INVOICE:
                         Invoice invoice = invoiceService.findByPK(journalLineItem.getReferenceId());
@@ -62,7 +62,7 @@ public class TaxesRestHelper {
                             model.setVatAmount(invoice.getTotalVatAmount());
                             model.setCustomerName(invoice.getContact().getFirstName());
                             if (invoice.getInvoiceDate() != null) {
-                                model.setInvoiceDate(dateFormtUtil.getLocalDateTimeAsString(invoice.getInvoiceDate().atStartOfDay(), dateFormat));
+                                model.setInvoiceDate(dateFormtUtil.getLocalDateTimeAsString(invoice.getInvoiceDate().atStartOfDay(), DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY));
                             }
                             if(invoice.getContact().getCountry()!=null) {
                                 model.setCountryName(invoice.getContact().getCountry().getCountryName());

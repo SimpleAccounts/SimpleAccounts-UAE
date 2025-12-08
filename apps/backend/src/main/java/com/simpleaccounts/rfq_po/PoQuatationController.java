@@ -41,6 +41,10 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @RequestMapping(value = "/rest/poquatation")
 public class
 PoQuatationController {
+    private static final String LOG_FILE_PATH = "filePath {}";
+    private static final String MSG_CREATE_UNSUCCESSFUL = "create.unsuccessful.msg";
+    private static final String MSG_SENT_UNSUCCESSFUL = "sent.unsuccessful.msg";
+    
     private final Logger logger = LoggerFactory.getLogger(PoQuatationController.class);
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -136,7 +140,7 @@ PoQuatationController {
         } catch (Exception e) {
             SimpleAccountsMessage message= null;
             message = new SimpleAccountsMessage("",
-                    MessageUtil.getMessage("create.unsuccessful.msg"), true);
+                    MessageUtil.getMessage(MSG_CREATE_UNSUCCESSFUL), true);
             return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -158,7 +162,7 @@ PoQuatationController {
         } catch (Exception e) {
             SimpleAccountsMessage message= null;
             message = new SimpleAccountsMessage("",
-                    MessageUtil.getMessage("create.unsuccessful.msg"), true);
+                    MessageUtil.getMessage(MSG_CREATE_UNSUCCESSFUL), true);
             return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -192,7 +196,7 @@ PoQuatationController {
         } catch (Exception e) {
             SimpleAccountsMessage message= null;
             message = new SimpleAccountsMessage("",
-                    MessageUtil.getMessage("sent.unsuccessful.msg"), true);
+                    MessageUtil.getMessage(MSG_SENT_UNSUCCESSFUL), true);
             return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -268,7 +272,7 @@ PoQuatationController {
             } catch (Exception e) {
             SimpleAccountsMessage message= null;
             message = new SimpleAccountsMessage("",
-                    MessageUtil.getMessage("create.unsuccessful.msg"), true);
+                    MessageUtil.getMessage(MSG_CREATE_UNSUCCESSFUL), true);
             return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -330,7 +334,7 @@ PoQuatationController {
         } catch (Exception e) {
             SimpleAccountsMessage message= null;
             message = new SimpleAccountsMessage("",
-                    MessageUtil.getMessage("sent.unsuccessful.msg"), true);
+                    MessageUtil.getMessage(MSG_SENT_UNSUCCESSFUL), true);
             return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -407,7 +411,7 @@ PoQuatationController {
         } catch (Exception e) {
             SimpleAccountsMessage message= null;
             message = new SimpleAccountsMessage("",
-                    MessageUtil.getMessage("create.unsuccessful.msg"), true);
+                    MessageUtil.getMessage(MSG_CREATE_UNSUCCESSFUL), true);
             return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -467,7 +471,7 @@ PoQuatationController {
         } catch (Exception e) {
             SimpleAccountsMessage message= null;
             message = new SimpleAccountsMessage("",
-                    MessageUtil.getMessage("sent.unsuccessful.msg"), true);
+                    MessageUtil.getMessage(MSG_SENT_UNSUCCESSFUL), true);
             return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -577,7 +581,7 @@ PoQuatationController {
         } catch (Exception e) {
             SimpleAccountsMessage message= null;
             message = new SimpleAccountsMessage("",
-                    MessageUtil.getMessage("create.unsuccessful.msg"), true);
+                    MessageUtil.getMessage(MSG_CREATE_UNSUCCESSFUL), true);
             return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -672,7 +676,7 @@ PoQuatationController {
         } catch (Exception e) {
             SimpleAccountsMessage message= null;
             message = new SimpleAccountsMessage("",
-                    MessageUtil.getMessage("sent.unsuccessful.msg"), true);
+                    MessageUtil.getMessage(MSG_SENT_UNSUCCESSFUL), true);
             return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

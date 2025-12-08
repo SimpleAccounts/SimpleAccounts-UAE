@@ -74,6 +74,10 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @RestController
 @RequestMapping(value = "/rest/transaction")
 public class TransactionRestController {
+	private static final String TRANSACTION_ID_SEPARATOR = "TRANSACTION_ID_SEPARATOR";
+	private static final String ERROR_CHART_OF_CATEGORY_ID = "ERROR_CHART_OF_CATEGORY_ID";
+	private static final String JSON_KEY_TRANSACTION = "transaction";
+	
 	private final Logger logger = LoggerFactory.getLogger(TransactionRestController.class);
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
@@ -369,7 +373,7 @@ public class TransactionRestController {
 									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
 					trnx.setExplainedTransactionCategory(transactionCategory);
 					trnx.setExplainedTransactionDescription("Transferred to " + explainedTransactionCategory.getTransactionCategoryName()
-							+" : TransactionId=" + explainedTransactionCategory.getTransactionCategoryId());
+							+"TRANSACTION_ID_SEPARATOR" + explainedTransactionCategory.getTransactionCategoryId());
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank,transactionPresistModel.getExchangeRate());
@@ -453,7 +457,7 @@ public class TransactionRestController {
 									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
 					trnx.setExplainedTransactionCategory(transactionCategory);
 					trnx.setExplainedTransactionDescription("Transferred from " + explainedTransactionCategory.getTransactionCategoryName()
-							+ " : TransactionId=" + explainedTransactionCategory.getTransactionCategoryId());
+							+ "TRANSACTION_ID_SEPARATOR" + explainedTransactionCategory.getTransactionCategoryId());
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank,transactionPresistModel.getExchangeRate());
 				journal.setJournalDate(trnx.getTransactionDate().toLocalDate());
@@ -495,7 +499,7 @@ public class TransactionRestController {
 				journalService.persist(journal);
 				break;
 			default:
-				return new ResponseEntity<>("Chart of Category Id not sent correctly", HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<>("ERROR_CHART_OF_CATEGORY_ID", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		updateBankCurrentBalance(trnx);
 		return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
@@ -1083,7 +1087,7 @@ public class TransactionRestController {
 									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
 					trnx.setExplainedTransactionCategory(transactionCategory);
 					trnx.setExplainedTransactionDescription("Transferred to " + explainedTransactionCategory.getTransactionCategoryName()
-							+ " : TransactionId=" + explainedTransactionCategory.getTransactionCategoryId());
+							+ "TRANSACTION_ID_SEPARATOR" + explainedTransactionCategory.getTransactionCategoryId());
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getDueAmount(), userId, trnx, isdebitFromBank,transactionPresistModel.getExchangeRate());
@@ -1171,7 +1175,7 @@ public class TransactionRestController {
 									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
 					trnx.setExplainedTransactionCategory(transactionCategory);
 					trnx.setExplainedTransactionDescription("Transferred from " + explainedTransactionCategory.getTransactionCategoryName()
-							+ " : TransactionId=" + explainedTransactionCategory.getTransactionCategoryId());
+							+ "TRANSACTION_ID_SEPARATOR" + explainedTransactionCategory.getTransactionCategoryId());
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getDueAmount(), userId, trnx, isdebitFromBank,transactionPresistModel.getExchangeRate());
@@ -1215,7 +1219,7 @@ public class TransactionRestController {
 				journalService.persist(journal);
 				break;
 			default:
-				return new ResponseEntity<>("Chart of Category Id not sent correctly", HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<>("ERROR_CHART_OF_CATEGORY_ID", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		if (transactionPresistModel.getIsValidForCurrentBalance()!=null && transactionPresistModel.getIsValidForCurrentBalance()){
 
@@ -1404,7 +1408,7 @@ public class TransactionRestController {
 				clearAndUpdateTransaction(trnx,transactionExplanation);
 				break;
 			default:
-				return "Chart of Category Id not sent correctly";
+				return "ERROR_CHART_OF_CATEGORY_ID";
 		}
 		return "Transaction Un Explained Successfully";
 	}
@@ -2825,7 +2829,7 @@ public class TransactionRestController {
                 clearAndUpdateTransaction(trnx,transactionExplanation);
 				break;
 			default:
-				return new ResponseEntity<>("Chart of Category Id not sent correctly", HttpStatus.OK);
+				return new ResponseEntity<>("ERROR_CHART_OF_CATEGORY_ID", HttpStatus.OK);
 		}
 		return new ResponseEntity<>("Transaction Un Explained Successfully", HttpStatus.OK);
 	}

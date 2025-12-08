@@ -21,6 +21,7 @@ public class EmployeeTransactionCategoryServiceImpl extends EmployeeTransactionc
     protected Dao<Integer, EmployeeTransactionCategoryRelation> getDao() {
         return employeeTransactionCategoryDao;
     }
+    // Empty method - implementation not required for this service
     public  void addEmployeeTransactionCategory(Employee employee, TransactionCategory transactionCategory){
 
     }

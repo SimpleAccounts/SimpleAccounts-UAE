@@ -48,6 +48,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @RestController
 @RequestMapping("/rest/contact")
 public class ContactController {
+	private static final String JSON_KEY_DELETE_FLAG = "deleteFlag";
 
 	private final Logger logger = LoggerFactory.getLogger(ContactController.class);
 
@@ -130,7 +131,7 @@ public class ContactController {
 	 */
 	@LogRequest
 	@GetMapping(value = "/getContactsForDropdownForVendor")
-	public ResponseEntity<?> getContactsForDropdownForVendor(
+	public ResponseEntity<Object> getContactsForDropdownForVendor(
 			@RequestParam(name = "bankId", required = false) Integer BankId) {
 		BankAccount bankAccount = bankAccountService.findByPK(BankId);
 		List<DropdownObjectModel> dropdownModelList = new ArrayList<>();
@@ -170,7 +171,7 @@ public class ContactController {
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
 	@PostMapping(value = "/save")
-	public ResponseEntity<?> save(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
+	public ResponseEntity<Object> save(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
 		try {
@@ -178,7 +179,7 @@ public class ContactController {
 			Map<String, Object> vatRegistrationNumberParam = new HashMap<>();
 			if(contactPersistModel.getVatRegistrationNumber() != "") {
 				vatRegistrationNumberParam.put("vatRegistrationNumber", contactPersistModel.getVatRegistrationNumber());
-				vatRegistrationNumberParam.put("deleteFlag", Boolean.FALSE);
+				vatRegistrationNumberParam.put(JSON_KEY_DELETE_FLAG, Boolean.FALSE);
 				List<Contact> existingContactvatRegistrationNumber = contactService.findByAttributes(vatRegistrationNumberParam);
 				if (existingContactvatRegistrationNumber != null && !existingContactvatRegistrationNumber.isEmpty()) {
 					message = new SimpleAccountsMessage("0087",
@@ -270,7 +271,7 @@ public class ContactController {
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
 	@PostMapping(value = "/update")
-	public ResponseEntity<?> update(@RequestBody ContactPersistModel contactPersistModel,
+	public ResponseEntity<Object> update(@RequestBody ContactPersistModel contactPersistModel,
 			HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
@@ -295,7 +296,7 @@ public class ContactController {
 			}}
 			Map<String, Object> supplierMap = new HashMap<>();
 			supplierMap.put("contact", contactPersistModel.getContactId());
-			supplierMap.put("deleteFlag",Boolean.FALSE);
+			supplierMap.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
 			List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
 					.findByAttributes(supplierMap);
 			for (ContactTransactionCategoryRelation categoryRelation : contactTransactionCategoryRelations) {
@@ -335,7 +336,7 @@ public class ContactController {
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<?> delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
+	public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
 		try {
 		SimpleAccountsMessage message= null;
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -394,7 +395,7 @@ public class ContactController {
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity<?> deletes(@RequestBody DeleteModel ids, HttpServletRequest request) {
+	public ResponseEntity<Object> deletes(@RequestBody DeleteModel ids) {
 
 		try {
 			SimpleAccountsMessage message= null;

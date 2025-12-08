@@ -56,7 +56,7 @@ public class ReconsilationRestHelper {
 	@Autowired
 	private CurrencyExchangeService currencyExchangeService;
 
-	private static final String dateFormat = "dd-MM-yyyy";
+	private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
 
 	public List<ReconsilationListModel> getList(ReconsileCategoriesEnumConstant constant) {
 		Map<String, Object> attribute = new HashMap<String, Object>();
@@ -96,10 +96,6 @@ public class ReconsilationRestHelper {
 
 		Journal journal = null;
 		switch (chartOfAccountCategoryIdEnumConstant) {
-		default:
-			journal = getByTransactionType(transactionCategoryCode, amount, userId, transaction, false,transaction.getExchangeRate());
-			break;
-
 		case SALES:
 			journal = invoiceReconsile(chartOfAccountCategoryIdEnumConstant, userId, transaction,
 					transaction.getBankAccount().getTransactionCategory());
@@ -107,6 +103,26 @@ public class ReconsilationRestHelper {
 		case EXPENSE:
 			journal = invoiceReconsile(chartOfAccountCategoryIdEnumConstant, userId, transaction,
 					transaction.getBankAccount().getTransactionCategory());
+			break;
+		case MONEY_RECEIVED:
+		case TRANSFER_FROM:
+		case REFUND_RECEIVED:
+		case INTEREST_RECEVIED:
+		case MONEY_RECEIVED_FROM_USER:
+		case DISPOSAL_OF_CAPITAL_ASSET:
+		case MONEY_RECEIVED_OTHERS:
+		case MONEY_SPENT:
+		case TRANSFERD_TO:
+		case MONEY_PAID_TO_USER:
+		case PURCHASE_OF_CAPITAL_ASSET:
+		case MONEY_SPENT_OTHERS:
+		case INVOICE:
+		case VAT_PAYMENT:
+		case VAT_CLAIM:
+		case CORPORATE_TAX_PAYMENT:
+		case DEFAULT:
+		default:
+			journal = getByTransactionType(transactionCategoryCode, amount, userId, transaction, false,transaction.getExchangeRate());
 			break;
 		}
 		return journal;
@@ -443,7 +459,7 @@ public class ReconsilationRestHelper {
 //			reconcileStatusListModel.setReconciledDate(reconcileStatus.getReconciledDate() != null
 //					? dateUtil.getLocalDateTimeAsString(reconcileStatus.getReconciledDate(), "dd-MM-yyyy")
 //					: "-");
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
 			ZoneId timeZone = ZoneId.systemDefault();
 			Date date = Date.from(reconcileStatus.getReconciledDate().toLocalDate().atStartOfDay(timeZone).toInstant());
 			String reconcileDate = simpleDateFormat.format(date);
@@ -462,7 +478,7 @@ public class ReconsilationRestHelper {
 }
 
 	public LocalDateTime getDateFromRequest(ReconcilationPersistModel reconcilationPersistModel) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
 		LocalDateTime dateTime = null;
 		try {
 			dateTime = Instant.ofEpochMilli(dateFormat.parse(reconcilationPersistModel.getDate()).getTime())
@@ -478,7 +494,7 @@ public class ReconsilationRestHelper {
 		ReconcileStatus status = null;
 		if (reconcilationPersistModel.getDate() != null && reconcilationPersistModel.getBankId()!=null) {
 
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
 			LocalDateTime dateTime = null;
 			try {
 				dateTime = Instant.ofEpochMilli(dateFormat.parse(reconcilationPersistModel.getDate()).getTime())

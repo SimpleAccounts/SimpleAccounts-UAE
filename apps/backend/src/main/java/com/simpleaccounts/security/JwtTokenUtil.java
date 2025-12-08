@@ -30,10 +30,10 @@ public class JwtTokenUtil implements Serializable {
 	public static final long JWT_TOKEN_VALIDITY = 5L * 60 * 60;// 5hr 45; // 1/4 min
 
 	@Value("${jwt.secret}")
-	private String secret;
+	private transient String secret;
 
 	@Autowired
-	UserService userServiceNew;
+	private transient UserService userServiceNew;
 
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);

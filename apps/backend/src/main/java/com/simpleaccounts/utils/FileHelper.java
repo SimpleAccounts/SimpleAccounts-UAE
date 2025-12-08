@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Stream;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -132,9 +133,9 @@ public class FileHelper {
 	public InputStream writeFile(String data,String fileName) throws IOException {
 
 		File file = new File(fileName);
-		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-		writer.write(data);
-		writer.close();
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+			writer.write(data);
+		}
 		return new FileInputStream(file);
 
 
@@ -195,7 +196,7 @@ public class FileHelper {
 		String url = filePath;
 
 		if (filePath.contains(File.separator)) {
-			url = url.replaceAll("\\\\", "/");
+			url = url.replace("\\", "/");
 		}
 
 		return url;
@@ -214,15 +215,51 @@ public class FileHelper {
 			folderPath = folderPath.substring(0, folderPath.length() - 1);
 		}
 		createFolderIfNotExist(folderPath);
-		for (MultipartFile file : files) {
-			String filePath = folderPath + "/" + file.getOriginalFilename();
 
-			File dest = new File(filePath);
+		File baseDir;
+		String baseDirCanonical;
+		try {
+			baseDir = new File(folderPath);
+			baseDirCanonical = baseDir.getCanonicalPath() + File.separator;
+		} catch (IOException e) {
+			log.error("Error resolving base folder path", e);
+			return list;
+		}
+
+		for (MultipartFile file : files) {
+			// Sanitize filename to prevent path traversal attacks
+			String originalFilename = file.getOriginalFilename();
+			if (originalFilename == null || originalFilename.isEmpty()) {
+				continue;
+			}
+			// Extract only the filename, removing any path components
+			String sanitizedFilename = new File(originalFilename).getName();
+			// Reject empty, hidden files, or files with suspicious characters
+			if (sanitizedFilename.isEmpty() || sanitizedFilename.startsWith(".")
+					|| sanitizedFilename.contains("..")) {
+				continue;
+			}
+
+			File dest = new File(baseDir, sanitizedFilename);
+			// Validate that the resolved path is within the expected folder
+			try {
+				String destCanonical = dest.getCanonicalPath();
+				if (!destCanonical.startsWith(baseDirCanonical)) {
+					log.error("Path traversal attempt detected");
+					continue;
+				}
+			} catch (IOException e) {
+				log.error("Error validating file path", e);
+				continue;
+			}
 			try {
 				file.transferTo(dest);
 				DataMigrationRespModel dataMigrationRespModel = new DataMigrationRespModel();
-				dataMigrationRespModel.setFileName(file.getOriginalFilename());
-				Long count = Files.lines(Paths.get(filePath)).count();
+				dataMigrationRespModel.setFileName(sanitizedFilename);
+				long count;
+				try (Stream<String> lines = Files.lines(dest.toPath())) {
+					count = lines.count();
+				}
 				dataMigrationRespModel.setRecordCount(count-1);
 				dataMigrationRespModel.setRecordsMigrated(0L);
 				list.add(dataMigrationRespModel);

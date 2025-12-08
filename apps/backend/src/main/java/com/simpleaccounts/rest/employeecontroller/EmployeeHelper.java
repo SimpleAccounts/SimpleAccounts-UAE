@@ -1,5 +1,6 @@
 package com.simpleaccounts.rest.employeecontroller;
 
+import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.repository.PayrolEmployeeRepository;
 import com.simpleaccounts.rest.payroll.service.EmployeeSalaryComponentRelationService;
@@ -231,7 +232,7 @@ public class EmployeeHelper {
 		}
 
 		if (employeePersistModel.getDob() != null) {
-			employee.setDob(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDob(), "dd-MM-yyyy"));
+			employee.setDob(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDob(), CommonColumnConstants.DD_MM_YYYY));
 		}
 		return employee;
 	}
@@ -380,7 +381,7 @@ public class EmployeeHelper {
 				empModel.setContractType(employment.getContractType());
 			}
 			if (employment.getDateOfJoining() != null) {
-				empModel.setDateOfJoining(dateUtil.getLocalDateTimeAsString(employment.getDateOfJoining(), "dd-MM-yyyy"));
+				empModel.setDateOfJoining(dateUtil.getLocalDateTimeAsString(employment.getDateOfJoining(), CommonColumnConstants.DD_MM_YYYY));
 			}
 
 			if (employment.getLabourCard() != null) {
@@ -393,10 +394,10 @@ public class EmployeeHelper {
 				empModel.setPassportNumber(employment.getPassportNumber());
 			}
 			if (employment.getPassportExpiryDate() != null) {
-				empModel.setPassportExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getPassportExpiryDate(), "dd-MM-yyyy"));
+				empModel.setPassportExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getPassportExpiryDate(), CommonColumnConstants.DD_MM_YYYY));
 			}
 			if (employment.getVisaExpiryDate() != null) {
-				empModel.setVisaExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getVisaExpiryDate(), "dd-MM-yyyy"));
+				empModel.setVisaExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getVisaExpiryDate(), CommonColumnConstants.DD_MM_YYYY));
 			}
 			if (employment.getVisaNumber() != null) {
 				empModel.setVisaNumber(employment.getVisaNumber());
@@ -439,7 +440,7 @@ public class EmployeeHelper {
 			empModel.setChildType(employeeParentRelation.getChildType());
 			empModel.setCreatedBy(employeeParentRelation.getCreatedBy());
 			empModel.setLastUpdatedBy(employeeParentRelation.getLastUpdatedBy());
-			empModel.setLastUpdateDate(dateUtil.getLocalDateTimeAsString(employeeParentRelation.getCreatedDate(), "dd-MM-yyyy"));
+			empModel.setLastUpdateDate(dateUtil.getLocalDateTimeAsString(employeeParentRelation.getCreatedDate(), CommonColumnConstants.DD_MM_YYYY));
 		}
 		if(employee!=null){
 			List<PayrollEmployee> payrollEmployeeList = payrolEmployeeRepository.findByEmployeeID(employee);

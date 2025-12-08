@@ -98,6 +98,8 @@ public class MailUtility {
 	public static final String VAT_TYPE="Vat_Type";
 	public static final String CN_VAT_TYPE="Cn_Vat_Type";
 	public static final String DESCRIPTION="description";
+	public static final String APPLICATION_PDF = "application/pdf";
+	public static final String TEXT_HTML = "text/html";
 	public static final String CN_DESCRIPTION="Cn_description";
 	public static final String  COMPANYLOGO = "companylogo";
 	public static final String CURRENCY = "currency";
@@ -141,24 +143,22 @@ public class MailUtility {
 					mail.setSubject(subject);
 					mail.setBody(body);
 
-					ByteArrayOutputStream outputStream = null;
 					MimeMultipart mimeMultipart1=new MimeMultipart();
-					try {
+					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 						//construct the text body part
 						//now write the PDF content to the output stream
-						outputStream = new ByteArrayOutputStream();
 						byte[] bytes = writePdf(outputStream,body);
 						//byte[] bytes = outputStream.toByteArray();
 
 						//construct the pdf body part
-						DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
+						DataSource dataSource = new ByteArrayDataSource(bytes, "APPLICATION_PDF");
 						DataSource dataSource1 = new ByteArrayDataSource(body.getBytes(),"application");
 
 						MimeBodyPart pdfBodyPart = new MimeBodyPart();
 						MimeBodyPart contentBodyPart = new MimeBodyPart();
 
 						pdfBodyPart.setDataHandler(new DataHandler(dataSource));
-						contentBodyPart.setContent(body,"text/html");
+						contentBodyPart.setContent(body,"TEXT_HTML");
 
 						pdfBodyPart.setFileName(INVOICE_REPORT);
 
@@ -167,12 +167,6 @@ public class MailUtility {
 
 					} catch(Exception ex) {
 						ex.printStackTrace();
-					} finally {
-						//clean off
-						if(null != outputStream) {
-							try { outputStream.close(); outputStream = null; }
-							catch(Exception ex) { }
-						}
 					}
 
 					MailIntegration.sendHtmlEmail(mimeMultipart1, mail,
@@ -209,23 +203,21 @@ public class MailUtility {
 					mail.setSubject(subject);
 					mail.setBody(pdfBody);
 
-					ByteArrayOutputStream outputStream = null;
 					MimeMultipart mimeMultipart1=new MimeMultipart();
-					try {
+					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 						//construct the text body part
 						//now write the PDF content to the output stream
-						outputStream = new ByteArrayOutputStream();
 						byte[] bytes = writePdf(outputStream,pdfBody);
 						//byte[] bytes = outputStream.toByteArray();
 
 						//construct the pdf body part
-						DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
+						DataSource dataSource = new ByteArrayDataSource(bytes, "APPLICATION_PDF");
 
 						MimeBodyPart pdfBodyPart = new MimeBodyPart();
 						MimeBodyPart contentBodyPart = new MimeBodyPart();
 
 						pdfBodyPart.setDataHandler(new DataHandler(dataSource));
-						contentBodyPart.setContent(mailcontent,"text/html");
+						contentBodyPart.setContent(mailcontent,"TEXT_HTML");
 
 						if(subject.contains("CREDIT NOTE")) {
 							pdfBodyPart.setFileName(CREDIT_NOTE_REPORT);
@@ -245,12 +237,6 @@ public class MailUtility {
 
 					} catch(Exception ex) {
 						ex.printStackTrace();
-					} finally {
-						//clean off
-						if(null != outputStream) {
-							try { outputStream.close(); outputStream = null; }
-							catch(Exception ex) { }
-						}
 					}
 
 					MailIntegration.sendHtmlEmail(mimeMultipart1, mail,
@@ -263,12 +249,11 @@ public class MailUtility {
 		t.start();
 	}
 	public static byte[] writePdf(OutputStream outputStream,String body) throws Exception {
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		HtmlConverter.convertToPdf(body, buffer);
-
-	//	byte[] pdfAsBytes = buffer.toByteArray();
-		return buffer.toByteArray();
-
+		try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+			HtmlConverter.convertToPdf(body, buffer);
+			//	byte[] pdfAsBytes = buffer.toByteArray();
+			return buffer.toByteArray();
+		}
 	}
 
 	public static JavaMailSender getJavaMailSender(List<Configuration> configurationList) {
@@ -726,18 +711,16 @@ public class MailUtility {
 						mail.setBcc(emailContentModel.getBcc_emails());
 					mail.setSubject(subject);
 					mail.setBody(mailcontent);
-					ByteArrayOutputStream outputStream = null;
 					MimeMultipart mimeMultipart1=new MimeMultipart();
-					try {
+					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 						//construct the text body part
 						//now write the PDF content to the output stream
-						outputStream = new ByteArrayOutputStream();
 						MimeBodyPart contentBodyPart = new MimeBodyPart();
-						contentBodyPart.setContent(mailcontent,"text/html");
+						contentBodyPart.setContent(mailcontent,"TEXT_HTML");
 						mimeMultipart1.addBodyPart(contentBodyPart);
 						for(Map.Entry<String,byte[]> fileMeta :fileMetaData.entrySet()){
 							String fileName = fileMeta.getKey();
-							DataSource dataSource = new ByteArrayDataSource(fileMeta.getValue(), "application/pdf");
+							DataSource dataSource = new ByteArrayDataSource(fileMeta.getValue(), "APPLICATION_PDF");
 							MimeBodyPart pdfBodyPart = new MimeBodyPart();
 							pdfBodyPart.setDataHandler(new DataHandler(dataSource));
 							pdfBodyPart.setFileName(fileName);
@@ -746,7 +729,7 @@ public class MailUtility {
 						//primary email
 						if(emailContentModel.getAttachPrimaryPdf().booleanValue()==Boolean.TRUE){
 							byte[] bytes = writePdf(outputStream,pdfBody);
-							DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
+							DataSource dataSource = new ByteArrayDataSource(bytes, "APPLICATION_PDF");
 							MimeBodyPart pdfBodyPart = new MimeBodyPart();
 							pdfBodyPart.setDataHandler(new DataHandler(dataSource));
 							if(subject.contains("Payslip"))
@@ -758,12 +741,6 @@ public class MailUtility {
 						mimeMultiparts.add(mimeMultipart1);
 					} catch(Exception ex) {
 						ex.printStackTrace();
-					} finally {
-						//clean off
-						if(null != outputStream) {
-							try { outputStream.close(); outputStream = null; }
-							catch(Exception ex) { }
-						}
 					}
 					MailIntegration.sendHtmlEmails(mimeMultiparts, mail,
 							getJavaMailSender(configurationService.getConfigurationList()), isHtml,files);

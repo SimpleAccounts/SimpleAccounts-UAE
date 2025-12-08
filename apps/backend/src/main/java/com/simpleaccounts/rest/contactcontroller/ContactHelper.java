@@ -43,7 +43,6 @@ public class ContactHelper {
 	@Autowired
 	private ContactTransactionCategoryService contactTransactionCategoryService;
 
-	@Transactional(rollbackFor = Exception.class)
 	public ContactListModel getModel(Contact contact) {
 		return ContactListModel.builder().id(contact.getContactId()).contactType(contact.getContactType())
 				.currencySymbol(contact.getCurrency() != null ? contact.getCurrency().getCurrencySymbol() : null)
@@ -197,7 +196,6 @@ public class ContactHelper {
 		return builder.build();
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	public List<ContactListModel> getModelList(Object conctactList) {
 
 		List<ContactListModel> modelList = new ArrayList<>();

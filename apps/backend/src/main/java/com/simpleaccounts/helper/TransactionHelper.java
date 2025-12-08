@@ -43,6 +43,13 @@ import java.util.stream.Collectors;
 @Service
 public class TransactionHelper {
 
+	private static final String INVOICE_AMOUNT_LABEL = " ,Invoice Amount: ";
+	private static final String DUE_AMOUNT_LABEL = ",Due Amount: ";
+	private static final String INVOICE_DETAILS_PREFIX = " (";
+	private static final String INVOICE_DETAILS_SUFFIX = ")";
+	private static final String CONTACT_NAME_SEPARATOR = " (";
+	private static final String CONTACT_NAME_SUFFIX = ")";
+
 	@Autowired
 	private DateFormatUtil dateUtil;
 
@@ -410,8 +417,8 @@ public class TransactionHelper {
 
 		ReconsileRequestLineItemModel lineItemModel = new ReconsileRequestLineItemModel(
 				invoice.getId(), invoice.getDueAmount(), PostingReferenceTypeEnum.INVOICE,
-				" (" + invoice.getReferenceNumber() + " ,Invoice Amount: " + invoice.getTotalAmount()
-						+ ",Due Amount: " + invoice.getDueAmount() + " " + invoice.getCurrency().getCurrencyName() + ")",
+				INVOICE_DETAILS_PREFIX + invoice.getReferenceNumber() + INVOICE_AMOUNT_LABEL + invoice.getTotalAmount()
+						+ DUE_AMOUNT_LABEL + invoice.getDueAmount() + " " + invoice.getCurrency().getCurrencyName() + INVOICE_DETAILS_SUFFIX,
 				explinationLineItem.getExchangeRate(), invoice.getDueAmount(), invoice.getReferenceNumber());
 		explainParamList.add(lineItemModel);
 
@@ -506,8 +513,8 @@ public class TransactionHelper {
 	private void addCreditNoteToExplainList(List<ReconsileRequestLineItemModel> explainParamList, CreditNote creditNote) {
 		explainParamList.add(new ReconsileRequestLineItemModel(
 				creditNote.getCreditNoteId(), creditNote.getDueAmount(), PostingReferenceTypeEnum.CREDIT_NOTE,
-				" (" + creditNote.getReferenceNo() + " ,Invoice Amount: " + creditNote.getTotalAmount()
-						+ ",Due Amount: " + creditNote.getDueAmount() + " " + creditNote.getCurrency().getCurrencyName() + ")",
+				INVOICE_DETAILS_PREFIX + creditNote.getReferenceNo() + INVOICE_AMOUNT_LABEL + creditNote.getTotalAmount()
+						+ DUE_AMOUNT_LABEL + creditNote.getDueAmount() + " " + creditNote.getCurrency().getCurrencyName() + INVOICE_DETAILS_SUFFIX,
 				creditNote.getExchangeRate(), creditNote.getDueAmount(), creditNote.getReferenceNo()));
 	}
 
@@ -515,7 +522,7 @@ public class TransactionHelper {
 		model.setCustomerId(creditNote.getContact().getContactId());
 		if (creditNote.getContact().getOrganization() != null && !creditNote.getContact().getOrganization().isEmpty()) {
 			model.setContactName(creditNote.getContact().getFirstName() + " " + creditNote.getContact().getLastName()
-					+ " (" + creditNote.getContact().getOrganization() + ")");
+					+ CONTACT_NAME_SEPARATOR + creditNote.getContact().getOrganization() + CONTACT_NAME_SUFFIX);
 		} else {
 			model.setContactName(creditNote.getContact().getFirstName() + " " + creditNote.getContact().getLastName());
 		}
@@ -534,8 +541,8 @@ public class TransactionHelper {
 		for (Invoice status : customerInvoices) {
 			explainParamList.add(new ReconsileRequestLineItemModel(
 					status.getId(), status.getDueAmount(), PostingReferenceTypeEnum.CREDIT_NOTE,
-					" (" + status.getReferenceNumber() + " ,Invoice Amount: " + status.getTotalAmount()
-							+ ",Due Amount: " + status.getDueAmount() + " " + status.getCurrency().getCurrencyName() + ")",
+					INVOICE_DETAILS_PREFIX + status.getReferenceNumber() + INVOICE_AMOUNT_LABEL + status.getTotalAmount()
+							+ DUE_AMOUNT_LABEL + status.getDueAmount() + " " + status.getCurrency().getCurrencyName() + INVOICE_DETAILS_SUFFIX,
 					status.getExchangeRate(), status.getDueAmount(), status.getReferenceNumber()));
 			model.setCustomerId(status.getContact().getContactId());
 			model.setCurrencyCode(status.getCurrency().getCurrencyCode());

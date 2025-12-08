@@ -41,9 +41,15 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 @Component
 public class PoQuatationRestHelper {
-    private static final String dateFormat = "dd-MM-yyyy";
+    private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
     final Logger logger = LoggerFactory.getLogger(PoQuatationRestHelper.class);
     private static final String ERROR_PROCESSING_QUOTATION = "Error processing quotation";
+    private static final String CLASSPATH_PREFIX = "CLASSPATH_PREFIX";
+    private static final String TEMPLATE_VAR_AMOUNT_IN_WORDS = "{amountInWords}";
+    private static final String TEMPLATE_VAR_VAT_IN_WORDS = "{vatInWords}";
+    private static final String TEMPLATE_VAR_CURRENCY = "{currency}";
+    private static final String DATA_IMAGE_JPG_BASE64 = " data:image/jpg;base64,";
+    private static final String ERROR_BILLING_ADDRESS_NOT_PRESENT = "BILLING ADDRESS NOT PRESENT";
     @PersistenceContext
     private EntityManager entityManager;
     @Autowired
@@ -409,8 +415,8 @@ public class PoQuatationRestHelper {
         String htmlContent="";
         try {
             String emailBody=rfqEmailBody.getPath();
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+emailBody).getURI()));
-            byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource("classpath:"+RFQ_TEMPLATE).getURI()));
+            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("CLASSPATH_PREFIX"+emailBody).getURI()));
+            byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource("CLASSPATH_PREFIX"+RFQ_TEMPLATE).getURI()));
             String amountInWords="-";
             String vatInWords="-";
 
@@ -419,10 +425,10 @@ public class PoQuatationRestHelper {
             if(postingRequestModel !=null && postingRequestModel.getVatInWords() !=null)
                 vatInWords= postingRequestModel.getVatInWords();
 
-            htmlText = new String(bodyData, StandardCharsets.UTF_8).replace("{amountInWords}",amountInWords).replace("{vatInWords}",vatInWords);
-            htmlContent= new String(contentData, StandardCharsets.UTF_8).replace("{currency}",poQuatation.getCurrency().getCurrencyIsoCode())
-                                                                        .replace("{amountInWords}",amountInWords)
-                                                                        .replace("{vatInWords}",vatInWords);
+            htmlText = new String(bodyData, StandardCharsets.UTF_8).replace(TEMPLATE_VAR_AMOUNT_IN_WORDS,amountInWords).replace(TEMPLATE_VAR_VAT_IN_WORDS,vatInWords);
+            htmlContent= new String(contentData, StandardCharsets.UTF_8).replace(TEMPLATE_VAR_CURRENCY,poQuatation.getCurrency().getCurrencyIsoCode())
+                                                                        .replace(TEMPLATE_VAR_AMOUNT_IN_WORDS,amountInWords)
+                                                                        .replace(TEMPLATE_VAR_VAT_IN_WORDS,vatInWords);
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_QUOTATION, e);
         }
@@ -509,13 +515,13 @@ public class PoQuatationRestHelper {
                     rfqDataMap.put(value, user.getUserEmail());
                     break;
                 case MailUtility.COMPANY_NAME:
-                    if (user.getCompany() != null)
+                    if (user.getCompany() != null) {
                         rfqDataMap.put(value, user.getCompany().getCompanyName());
+                    }
                     break;
                 case MailUtility.VAT_TYPE:
-                    if (MailUtility.VAT_TYPE != null)
-                        getVat(poQuatation,rfqDataMap,value);
-                        break;
+                    getVat(poQuatation,rfqDataMap,value);
+                    break;
                 case MailUtility.TOTAL:
                     if (poQuatation.getTotalAmount()!=null) {
                         rfqDataMap.put(value, poQuatation.getTotalAmount().toString());
@@ -541,7 +547,7 @@ public class PoQuatationRestHelper {
                     break;
                 case MailUtility.COMPANYLOGO:
                     if (user.getCompany() != null  && user.getCompany().getCompanyLogo() != null) {
-                        String image = " data:image/jpg;base64," + DatatypeConverter.printBase64Binary(
+                        String image = DATA_IMAGE_JPG_BASE64 + DatatypeConverter.printBase64Binary(
                                 user.getCompany().getCompanyLogo()) ;
                         rfqDataMap.put(value, image);
                     } else {
@@ -850,7 +856,7 @@ public class PoQuatationRestHelper {
     }
     private void getRfqReceiveDate(PoQuatation poQuatation, Map<String, String> rfqDataMap, String value) {
         if (poQuatation.getRfqReceiveDate() != null) {
-            rfqDataMap.put(value, dateFormtUtil.getLocalDateTimeAsString(poQuatation.getRfqReceiveDate(), dateFormat));
+            rfqDataMap.put(value, dateFormtUtil.getLocalDateTimeAsString(poQuatation.getRfqReceiveDate(), DATE_FORMAT_DD_MM_YYYY));
         }
         else{
             rfqDataMap.put(value, "---");
@@ -858,7 +864,7 @@ public class PoQuatationRestHelper {
     }
     private void getRfqExpiryDate(PoQuatation poQuatation, Map<String, String> rfqDataMap, String value) {
         if (poQuatation.getRfqExpiryDate() != null) {
-            rfqDataMap.put(value, dateFormtUtil.getLocalDateTimeAsString(poQuatation.getRfqExpiryDate(), dateFormat));
+            rfqDataMap.put(value, dateFormtUtil.getLocalDateTimeAsString(poQuatation.getRfqExpiryDate(), DATE_FORMAT_DD_MM_YYYY));
         }
         else{
             rfqDataMap.put(value, "---");
@@ -1096,10 +1102,10 @@ public class PoQuatationRestHelper {
                     model.setSupplierName(poQuatation.getSupplierId().getFirstName()+" "+poQuatation.getSupplierId().getLastName());
                 }
                 if (poQuatation.getRfqReceiveDate() != null) {
-                    model.setRfqReceiveDate(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getRfqReceiveDate(), dateFormat));
+                    model.setRfqReceiveDate(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getRfqReceiveDate(), DATE_FORMAT_DD_MM_YYYY));
                 }
                 if (poQuatation.getRfqExpiryDate() != null) {
-                    model.setRfqExpiryDate(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getRfqExpiryDate(), dateFormat));
+                    model.setRfqExpiryDate(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getRfqExpiryDate(), DATE_FORMAT_DD_MM_YYYY));
                 }
                 if (poQuatation.getCurrency()!=null){
                     model.setCurrencyCode(poQuatation.getCurrency().getCurrencyIsoCode());
@@ -1131,16 +1137,16 @@ public class PoQuatationRestHelper {
                 model.setId(poQuatation.getId());
                 model.setPoNumber(poQuatation.getPoNumber());
                 if (poQuatation.getPoApproveDate() != null) {
-                    model.setPoApproveDate(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getPoApproveDate(), dateFormat));
+                    model.setPoApproveDate(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getPoApproveDate(), DATE_FORMAT_DD_MM_YYYY));
                 }
                 if (poQuatation.getPoReceiveDate() != null) {
-                    model.setPoReceiveDate(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getPoReceiveDate(), dateFormat));
+                    model.setPoReceiveDate(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getPoReceiveDate(), DATE_FORMAT_DD_MM_YYYY));
                 }
                 if (poQuatation.getGrnNumber()!=null){
                     model.setGrnNumber(poQuatation.getGrnNumber());
                 }
                 if(poQuatation.getGrnReceiveDate()!=null){
-                    model.setGrnReceiveDate(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getGrnReceiveDate(), dateFormat));
+                    model.setGrnReceiveDate(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getGrnReceiveDate(), DATE_FORMAT_DD_MM_YYYY));
                 }
                 if (poQuatation.getCurrency()!=null){
                     model.setCurrencyCode(poQuatation.getCurrency().getCurrencyIsoCode());
@@ -1504,8 +1510,8 @@ public class PoQuatationRestHelper {
         String htmlContent="";
         try {
             String emailBody=poEmailBody.getPath();
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+emailBody).getURI()));
-            byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource("classpath:"+PURCHASE_ORDER_TEMPLATE).getURI()));
+            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("CLASSPATH_PREFIX"+emailBody).getURI()));
+            byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource("CLASSPATH_PREFIX"+PURCHASE_ORDER_TEMPLATE).getURI()));
             String amountInWords="-";
             String vatInWords="-";
 
@@ -1515,10 +1521,10 @@ public class PoQuatationRestHelper {
             if(postingRequestModel !=null && postingRequestModel.getVatInWords() !=null)
                 vatInWords= postingRequestModel.getVatInWords();
 
-            htmlText = new String(bodyData, StandardCharsets.UTF_8).replace("{amountInWords}",amountInWords).replace("{vatInWords}",vatInWords);
-            htmlContent= new String(contentData, StandardCharsets.UTF_8).replace("{currency}",poQuatation.getCurrency().getCurrencyIsoCode())
-                                                                        .replace("{amountInWords}",amountInWords)
-                                                                        .replace("{vatInWords}",vatInWords);
+            htmlText = new String(bodyData, StandardCharsets.UTF_8).replace(TEMPLATE_VAR_AMOUNT_IN_WORDS,amountInWords).replace(TEMPLATE_VAR_VAT_IN_WORDS,vatInWords);
+            htmlContent= new String(contentData, StandardCharsets.UTF_8).replace(TEMPLATE_VAR_CURRENCY,poQuatation.getCurrency().getCurrencyIsoCode())
+                                                                        .replace(TEMPLATE_VAR_AMOUNT_IN_WORDS,amountInWords)
+                                                                        .replace(TEMPLATE_VAR_VAT_IN_WORDS,vatInWords);
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_QUOTATION, e);
         }
@@ -1556,7 +1562,7 @@ public class PoQuatationRestHelper {
             emailLogs.setModuleName("PURCHASE ORDER");
             emaiLogsService.persist(emailLogs);
         } else {
-            logger.info("BILLING ADDRESS NOT PRESENT");
+            logger.info(ERROR_BILLING_ADDRESS_NOT_PRESENT);
         }
     }
     public Map<String, String> getPOData(PoQuatation poQuatation, Integer userId) {
@@ -1615,8 +1621,7 @@ public class PoQuatationRestHelper {
                     }
                     break;
                 case MailUtility.VAT_TYPE:
-                    if (MailUtility.VAT_TYPE != null)
-                        getVat(poQuatation,poDataMap,value);
+                    getVat(poQuatation,poDataMap,value);
                     break;
                 case MailUtility.SUPPLIER_NAME:
                     getContact(poQuatation,poDataMap,value);
@@ -1650,7 +1655,7 @@ public class PoQuatationRestHelper {
                     break;
                 case MailUtility.COMPANYLOGO:
                     if (user.getCompany() != null  && user.getCompany().getCompanyLogo() != null) {
-                        String image = " data:image/jpg;base64," + DatatypeConverter.printBase64Binary(
+                        String image = DATA_IMAGE_JPG_BASE64 + DatatypeConverter.printBase64Binary(
                                 user.getCompany().getCompanyLogo()) ;
                         poDataMap.put(value, image);
                     } else {
@@ -1765,7 +1770,7 @@ public class PoQuatationRestHelper {
     }
     private void getPOReceiveDate(PoQuatation poQuatation, Map<String, String> poDataMap, String value) {
         if (poQuatation.getPoReceiveDate() != null) {
-            poDataMap.put(value, dateFormtUtil.getLocalDateTimeAsString(poQuatation.getPoReceiveDate(), dateFormat));
+            poDataMap.put(value, dateFormtUtil.getLocalDateTimeAsString(poQuatation.getPoReceiveDate(), DATE_FORMAT_DD_MM_YYYY));
         }
         else{
             poDataMap.put(value, "---");
@@ -1773,7 +1778,7 @@ public class PoQuatationRestHelper {
     }
     private void getPOApproveDate(PoQuatation poQuatation, Map<String, String> poDataMap, String value) {
         if (poQuatation.getPoApproveDate() != null) {
-            poDataMap.put(value,  dateFormtUtil.getLocalDateTimeAsString(poQuatation.getPoApproveDate(), dateFormat));
+            poDataMap.put(value,  dateFormtUtil.getLocalDateTimeAsString(poQuatation.getPoApproveDate(), DATE_FORMAT_DD_MM_YYYY));
         }
         else{
             poDataMap.put(value, "---");
@@ -1796,8 +1801,8 @@ public class PoQuatationRestHelper {
         String htmlContent="";
         try {
             String emailBody=grnEmailBody.getPath();
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+emailBody).getURI()));
-            byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource("classpath:"+GRN_TEMPLATE).getURI()));
+            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("CLASSPATH_PREFIX"+emailBody).getURI()));
+            byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource("CLASSPATH_PREFIX"+GRN_TEMPLATE).getURI()));
             htmlText = new String(bodyData, StandardCharsets.UTF_8);
             htmlContent= new String(contentData, StandardCharsets.UTF_8);
 
@@ -1839,7 +1844,7 @@ public class PoQuatationRestHelper {
             emailLogs.setModuleName("GOODS RECEIVED NOTE");
             emaiLogsService.persist(emailLogs);
         } else {
-            logger.info("BILLING ADDRESS NOT PRESENT");
+            logger.info(ERROR_BILLING_ADDRESS_NOT_PRESENT);
         }
     }
     private Map<String, String> getGRNData(PoQuatation poQuatation, Integer userId) {
@@ -1896,7 +1901,7 @@ public class PoQuatationRestHelper {
                     break;
                 case MailUtility.COMPANYLOGO:
                     if (user.getCompany() != null  && user.getCompany().getCompanyLogo() != null) {
-                        String image = " data:image/jpg;base64," + DatatypeConverter.printBase64Binary(
+                        String image = DATA_IMAGE_JPG_BASE64 + DatatypeConverter.printBase64Binary(
                                 user.getCompany().getCompanyLogo()) ;
                         grnDataMap.put(value, image);
                     } else {
@@ -2002,7 +2007,7 @@ public class PoQuatationRestHelper {
     }
     private void getGrnReceiveDate(PoQuatation poQuatation, Map<String, String> grnDataMap, String value) {
         if (poQuatation.getGrnReceiveDate() != null) {
-            grnDataMap.put(value, dateFormtUtil.getLocalDateTimeAsString(poQuatation.getGrnReceiveDate(), dateFormat));
+            grnDataMap.put(value, dateFormtUtil.getLocalDateTimeAsString(poQuatation.getGrnReceiveDate(), DATE_FORMAT_DD_MM_YYYY));
         }
         else{
             grnDataMap.put(value, "---");
@@ -2359,10 +2364,10 @@ public class PoQuatationRestHelper {
                     model.setCustomerName(poQuatation.getCustomer().getFirstName()+" "+poQuatation.getCustomer().getLastName());
                 }
                 if (poQuatation.getQuotaionExpiration() != null) {
-                    model.setQuotaionExpiration(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getQuotaionExpiration(), dateFormat));
+                    model.setQuotaionExpiration(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getQuotaionExpiration(), DATE_FORMAT_DD_MM_YYYY));
                 }
                 if (poQuatation.getQuotaionDate() != null) {
-                    model.setQuotationCreatedDate(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getQuotaionDate(), dateFormat));
+                    model.setQuotationCreatedDate(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getQuotaionDate(), DATE_FORMAT_DD_MM_YYYY));
                 }
                 if (poQuatation.getCurrency()!=null){
                     model.setCurrencyName(poQuatation.getCurrency().getCurrencyName());
@@ -2408,8 +2413,8 @@ public class PoQuatationRestHelper {
         try {
             String emailBody=quatationEmailBody.getPath();
 
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+emailBody).getURI()));
-            byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource("classpath:"+ QUOTATION_TEMPLATE).getURI()));
+            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("CLASSPATH_PREFIX"+emailBody).getURI()));
+            byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource("CLASSPATH_PREFIX"+ QUOTATION_TEMPLATE).getURI()));
 
             String amountInWords="-";
             String vatInWords="-";
@@ -2420,10 +2425,10 @@ public class PoQuatationRestHelper {
             if(postingRequestModel !=null && postingRequestModel.getVatInWords() !=null)
                 vatInWords= postingRequestModel.getVatInWords();
 
-            htmlText = new String(bodyData, StandardCharsets.UTF_8).replace("{amountInWords}",amountInWords).replace("{vatInWords}",vatInWords);
-            htmlContent= new String(contentData, StandardCharsets.UTF_8).replace("{currency}",poQuatation.getCurrency().getCurrencyIsoCode())
-                    .replace("{amountInWords}",amountInWords)
-                    .replace("{vatInWords}",vatInWords);
+            htmlText = new String(bodyData, StandardCharsets.UTF_8).replace(TEMPLATE_VAR_AMOUNT_IN_WORDS,amountInWords).replace(TEMPLATE_VAR_VAT_IN_WORDS,vatInWords);
+            htmlContent= new String(contentData, StandardCharsets.UTF_8).replace(TEMPLATE_VAR_CURRENCY,poQuatation.getCurrency().getCurrencyIsoCode())
+                    .replace(TEMPLATE_VAR_AMOUNT_IN_WORDS,amountInWords)
+                    .replace(TEMPLATE_VAR_VAT_IN_WORDS,vatInWords);
 
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_QUOTATION, e);
@@ -2489,7 +2494,8 @@ public class PoQuatationRestHelper {
                 case MailUtility.QUOTATION_TOTAL_VAT_AMOUNT:
                     if (poQuatation.getTotalVatAmount() != null) {
                         quotationDataMap.put(value, poQuatation.getTotalVatAmount().toString());
-                    }                    break;
+                    }
+                    break;
                 case MailUtility.TOTAL_NET:
                     if (poQuatation.getTotalAmount()!=null && poQuatation.getTotalVatAmount()!=null && poQuatation.getTotalExciseAmount()!=null)
                         quotationDataMap.put(value, poQuatation.getTotalAmount().subtract(poQuatation.getTotalVatAmount()).subtract(poQuatation.getTotalExciseAmount()).toString());
@@ -2514,7 +2520,7 @@ public class PoQuatationRestHelper {
                     break;
                 case MailUtility.COMPANYLOGO:
                     if (user.getCompany() != null  && user.getCompany().getCompanyLogo() != null) {
-                        String image = " data:image/jpg;base64," + DatatypeConverter.printBase64Binary(
+                        String image = DATA_IMAGE_JPG_BASE64 + DatatypeConverter.printBase64Binary(
                                 user.getCompany().getCompanyLogo()) ;
                         quotationDataMap.put(value, image);
                     } else {
@@ -2690,7 +2696,7 @@ public class PoQuatationRestHelper {
 
     private void getQuotationExpirationDate(PoQuatation poQuatation, Map<String, String> dataMap, String value) {
         if (poQuatation.getQuotaionExpiration() != null) {
-            dataMap.put(value, dateFormtUtil.getLocalDateTimeAsString(poQuatation.getQuotaionExpiration(), dateFormat));
+            dataMap.put(value, dateFormtUtil.getLocalDateTimeAsString(poQuatation.getQuotaionExpiration(), DATE_FORMAT_DD_MM_YYYY));
         }
         else{
             dataMap.put(value, "---");
@@ -2698,7 +2704,7 @@ public class PoQuatationRestHelper {
     }
     private void getQuotationCreatedDate(PoQuatation poQuatation, Map<String, String> dataMap, String value) {
         if (poQuatation.getQuotaionDate() != null) {
-            dataMap.put(value, dateFormtUtil.getLocalDateTimeAsString(poQuatation.getQuotaionDate(), dateFormat));
+            dataMap.put(value, dateFormtUtil.getLocalDateTimeAsString(poQuatation.getQuotaionDate(), DATE_FORMAT_DD_MM_YYYY));
         }
         else{
             dataMap.put(value, "---");
@@ -2757,9 +2763,9 @@ public class PoQuatationRestHelper {
                 vatInWords= postingRequestModel.getVatInWords();
 
         try {
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+invoiceEmailBody.getPath()).getURI()));
+            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("CLASSPATH_PREFIX"+invoiceEmailBody.getPath()).getURI()));
 
-            htmlText = new String(bodyData, StandardCharsets.UTF_8).replace("{amountInWords}",amountInWords.concat("ONLY")).replace("{vatInWords}",vatInWords.concat("ONLY"));
+            htmlText = new String(bodyData, StandardCharsets.UTF_8).replace(TEMPLATE_VAR_AMOUNT_IN_WORDS,amountInWords.concat("ONLY")).replace(TEMPLATE_VAR_VAT_IN_WORDS,vatInWords.concat("ONLY"));
 
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_QUOTATION, e);
@@ -2788,7 +2794,7 @@ public class PoQuatationRestHelper {
         String htmlText="";
 
         try {
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+invoiceEmailBody.getPath()).getURI()));
+            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("CLASSPATH_PREFIX"+invoiceEmailBody.getPath()).getURI()));
 
             htmlText = new String(bodyData, StandardCharsets.UTF_8);
 

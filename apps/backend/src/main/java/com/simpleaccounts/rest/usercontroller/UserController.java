@@ -63,6 +63,9 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @RestController
 @RequestMapping(value = "/rest/user")
 public class UserController{
+	private static final String LOG_NO_DATA_FOUND = "NO DATA FOUND = INTERNAL_SERVER_ERROR";
+	private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
+	private static final String LOG_ERROR = "Error";
 
 	private  Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -121,7 +124,7 @@ public class UserController{
 			if (filterModel.getActive() != null)
 				filterDataMap.put(UserFilterEnum.ACTIVE, filterModel.getActive().equals(1) ? true : false);
 			if (filterModel.getDob() != null && !filterModel.getDob().isEmpty()) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+				SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
 				LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getDob()).getTime())
 						.atZone(ZoneId.systemDefault()).toLocalDateTime();
 				filterDataMap.put(UserFilterEnum.DOB, dateTime);
@@ -164,7 +167,7 @@ public class UserController{
 			return new ResponseEntity<>("Deleted Successful",HttpStatus.OK);
 
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(LOG_ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
@@ -181,7 +184,7 @@ public class UserController{
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		logger.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
+		logger.info(LOG_NO_DATA_FOUND);
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
@@ -252,7 +255,7 @@ public class UserController{
 		} catch (Exception ex) {
 			logger.error(ERROR, ex);
 		}
-		logger.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
+		logger.info(LOG_NO_DATA_FOUND);
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	private void getTransactionCategory(User user, TransactionCategory contactCategory) {
@@ -302,7 +305,7 @@ public class UserController{
 
 			return new ResponseEntity<>("Updated successful",HttpStatus.OK);
 		} catch (Exception e) {
-			logger.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
+			logger.info(LOG_NO_DATA_FOUND);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

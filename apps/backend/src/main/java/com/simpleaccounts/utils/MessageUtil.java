@@ -18,6 +18,8 @@ public class MessageUtil implements ApplicationContextAware {
 	    private static ReloadableResourceBundleMessageSource messageSource;
 
 	    @Override
+	    // Setting static field is intentional for ApplicationContextAware pattern to enable static access
+	    @SuppressWarnings("java:S2696")
 	    public void setApplicationContext(ApplicationContext appContext) {
 	    	MessageUtil.appContext = appContext;
 	    }

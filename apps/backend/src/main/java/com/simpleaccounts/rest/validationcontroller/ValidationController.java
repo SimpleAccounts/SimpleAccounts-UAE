@@ -32,6 +32,9 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Component
 @RequestMapping("/rest/validation")
 public class ValidationController {
+    private static final String JSON_KEY_DELETE_FLAG = "deleteFlag";
+    private static final String JSON_KEY_EMAIL = "email";
+    private static final String JSON_KEY_ACCOUNT_NUMBER = "accountNumber";
 
     @Autowired
     private ProductService productService;
@@ -110,7 +113,7 @@ public class ValidationController {
                     Map<String, Object> param = new HashMap<>();
                     param = new HashMap<>();
                     param.put("name", validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<VatCategory> vatList = vatCategoryService.findByAttributes(param);
                     if(vatList!= null && vatList.size()>0)
                         return new ResponseEntity<>("Vat name already exists", HttpStatus.OK);
@@ -118,8 +121,8 @@ public class ValidationController {
                         return new ResponseEntity<>("Vat name does not exists", HttpStatus.OK);
                 case 3: //Contact Validation
                     param = new HashMap<>();
-                    param.put("email", validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_EMAIL, validationModel.getName());
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Contact> list = contactService.findByAttributes(param);
                     if(list!= null && list.size()>0)
                         return new ResponseEntity<>("Contact email already exists", HttpStatus.OK);
@@ -128,7 +131,7 @@ public class ValidationController {
                 case 4:  //Chart of Account
                     param = new HashMap<>();
                     param.put("transactionCategoryName",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<TransactionCategory> transactionCategoryList = transactionCategoryService.findByAttributes(param);
                     if(transactionCategoryList!= null && transactionCategoryList.size()>0)
                         return new ResponseEntity<>("Chart Of Account already exists", HttpStatus.OK);
@@ -136,8 +139,8 @@ public class ValidationController {
                         return new ResponseEntity<>("Chart Of Account does not exists", HttpStatus.OK);
                 case 5://bank
                     param = new HashMap<>();
-                    param.put("accountNumber",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_ACCOUNT_NUMBER,validationModel.getName());
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<BankAccount> bankAccountList = bankAccountService.findByAttributes(param);
                     if(bankAccountList!= null && bankAccountList.size()>0 ){
                             return new ResponseEntity<>("Bank Account Already Exists", HttpStatus.OK);
@@ -147,7 +150,7 @@ public class ValidationController {
                 case 6:
                     param = new HashMap<>();
                     param.put("referenceNumber",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Invoice> invoiceList = invoiceService.findByAttributes(param);
                     if(invoiceList!= null && invoiceList.size()>0)
                         return new ResponseEntity<>("Invoice Number Already Exists", HttpStatus.OK);
@@ -165,7 +168,7 @@ public class ValidationController {
                 case 8: //Role
                     param = new HashMap<>();
                     param.put("roleName",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Role> rolelist = roleService.findByAttributes(param);
                     if(rolelist!= null && rolelist.size()>0)
                         return new ResponseEntity<>("Role Name Already Exists", HttpStatus.OK);
@@ -174,7 +177,7 @@ public class ValidationController {
                 case 9: //user
                     param = new HashMap<>();
                     param.put("userEmail",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<User> userList = userService.findByAttributes(param);
                     if(userList!= null && userList.size()>0)
                         return new ResponseEntity<>("User Already Exists", HttpStatus.OK);
@@ -183,7 +186,7 @@ public class ValidationController {
                 case 10: //Currency Exchange
                     param = new HashMap<>();
                     param.put("currencyCode",validationModel.getCurrencyCode());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<CurrencyConversion> currencyConversions = currencyExchangeService.findByAttributes(param);
                     if(currencyConversions!= null && currencyConversions.size()>0)
                         return new ResponseEntity<>("Currency Conversions Already Exists", HttpStatus.OK);
@@ -192,7 +195,7 @@ public class ValidationController {
                 case 11: //RFQ
                     param = new HashMap<>();
                     param.put("rfqNumber",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<PoQuatation> poQuatationList = poQuatationService.findByAttributes(param);
                     if(poQuatationList!= null && poQuatationList.size()>0)
                         return new ResponseEntity<>("RFQ Number Already Exists", HttpStatus.OK);
@@ -201,7 +204,7 @@ public class ValidationController {
                 case 12: //Po
                     param = new HashMap<>();
                     param.put("poNumber",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<PoQuatation> poQuatationList1 = poQuatationService.findByAttributes(param);
                     if(poQuatationList1!= null && poQuatationList1.size()>0)
                         return new ResponseEntity<>("Po Number Already Exists", HttpStatus.OK);
@@ -210,7 +213,7 @@ public class ValidationController {
                 case 13: //GRN
                     param = new HashMap<>();
                     param.put("grnNumber",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<PoQuatation> poQuatationList2 = poQuatationService.findByAttributes(param);
                     if(poQuatationList2!= null && poQuatationList2.size()>0)
                         return new ResponseEntity<>("GRN Number Already Exists", HttpStatus.OK);
@@ -219,7 +222,7 @@ public class ValidationController {
                 case 14: //Quotation
                     param = new HashMap<>();
                     param.put("QuotationNumber",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<PoQuatation> poQuatationList3 = poQuatationService.findByAttributes(param);
                     if(poQuatationList3!= null && poQuatationList3.size()>0)
                         return new ResponseEntity<>("Quotation Number Already Exists", HttpStatus.OK);
@@ -228,7 +231,7 @@ public class ValidationController {
                 case 15: //EmployeeCode
                     param = new HashMap<>();
                     param.put("employeeCode",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Employment> employeeList = employmentService.findByAttributes(param);
                     if(employeeList!= null && employeeList.size()>0)
                         return new ResponseEntity<>("Employee Code Already Exists", HttpStatus.OK);
@@ -237,7 +240,7 @@ public class ValidationController {
                 case 16: //COA Name
                     param = new HashMap<>();
                     param.put("transactionCategoryName",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<TransactionCategory> coaList = transactionCategoryService.findByAttributes(param);
                     if(coaList!= null && coaList.size()>0)
                         return new ResponseEntity<>("Transaction Category Name Already Exists", HttpStatus.OK);
@@ -245,8 +248,8 @@ public class ValidationController {
                         return new ResponseEntity<>("transaction Category Name does not exists", HttpStatus.OK);
                 case 17://update-bank
                     param = new HashMap<>();
-                    param.put("accountNumber",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_ACCOUNT_NUMBER,validationModel.getName());
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<BankAccount> bankAccountList1 = bankAccountService.findByAttributes(param);
                     if(bankAccountList1!= null && bankAccountList1.size()>0 ){
                         if( validationModel.getCheckId()!=bankAccountList1.get(0).getBankAccountId()){
@@ -260,7 +263,7 @@ public class ValidationController {
                 case 18: //ExpenseNumber
                     param = new HashMap<>();
                     param.put("expenseNumber",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Expense> espenseList = expenseService.findByAttributes(param);
                     if(espenseList!= null && espenseList.size()>0)
                         return new ResponseEntity<>("Expense Number Already Exists", HttpStatus.OK);
@@ -268,8 +271,8 @@ public class ValidationController {
                         return new ResponseEntity<>("Expense Number does not exists", HttpStatus.OK);
                 case 19: //AccountNumber
                     param = new HashMap<>();
-                    param.put("accountNumber",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_ACCOUNT_NUMBER,validationModel.getName());
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<EmployeeBankDetails> employeeBankDetailsList = employeeBankDetailsService.findByAttributes(param);
                     if(employeeBankDetailsList!= null && employeeBankDetailsList.size()>0)
                         return new ResponseEntity<>("Account Number Already Exists", HttpStatus.OK);
@@ -278,7 +281,7 @@ public class ValidationController {
                 case 20: //Journal Reference
                     param = new HashMap<>();
                         param.put("journlReferencenNo",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Journal> journalList = journalService.findByAttributes(param);
                     if(journalList!= null && journalList.size()>0)
                         return new ResponseEntity<>("Journal Reference Number Already Exists", HttpStatus.OK);
@@ -288,7 +291,7 @@ public class ValidationController {
                 case 21: //Tax Reg Number Check For Contact
                     param = new HashMap<>();
                     param.put("vatRegistrationNumber",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Contact> contactList = contactService.findByAttributes(param);
                     if(contactList!= null && contactList.size()>0)
                         return new ResponseEntity<>("Tax Registration Number Already Exists", HttpStatus.OK);
@@ -297,8 +300,8 @@ public class ValidationController {
 
                 case 22: //email Check For Contact
                     param = new HashMap<>();
-                    param.put("email",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_EMAIL,validationModel.getName());
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Contact> contactList1 = contactService.findByAttributes(param);
                     if(contactList1!= null && contactList1.size()>0)
                         return new ResponseEntity<>("Email Already Exists", HttpStatus.OK);
@@ -307,7 +310,7 @@ public class ValidationController {
                 case 23: //Labor card Id ( Employee )
                     param = new HashMap<>();
                     param.put("labourCard",validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Employment> employeelabourCardList = employmentService.findByAttributes(param);
                     if(employeelabourCardList!= null && employeelabourCardList.size()>0)
                         return new ResponseEntity<>("Labour Card Id Already Exists", HttpStatus.OK);
@@ -315,8 +318,8 @@ public class ValidationController {
                         return new ResponseEntity<>("Labour Card Id Does Not Exists", HttpStatus.OK);
                 case 24: //Employee email validation
                     param = new HashMap<>();
-                    param.put("email", validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_EMAIL, validationModel.getName());
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Employee> employees = employeeService.findByAttributes(param);
                     if(employees!= null && employees.size()>0)
                         return new ResponseEntity<>("Employee email already exists", HttpStatus.OK);
@@ -326,7 +329,7 @@ public class ValidationController {
                     param = new HashMap<>();
                     if(validationModel.getName()!=null && !validationModel.getName().isEmpty()) {
                         param.put("designationId", Integer.parseInt(validationModel.getName()));
-                        param.put("deleteFlag", false);
+                        param.put(JSON_KEY_DELETE_FLAG, false);
                         List<EmployeeDesignation> employeeDesignations = employeeDesignationService.findByAttributes(param);
                         if (employeeDesignations != null && employeeDesignations.size() > 0)
                             return new ResponseEntity<>("Designation ID already exists", HttpStatus.OK);
@@ -338,7 +341,7 @@ public class ValidationController {
                     param = new HashMap<>();
                     if(validationModel.getName()!=null && !validationModel.getName().isEmpty()) {
                         param.put("designationName", (validationModel.getName()));
-                        param.put("deleteFlag", false);
+                        param.put(JSON_KEY_DELETE_FLAG, false);
                         List<EmployeeDesignation> employeeDesignations = employeeDesignationNameService.findByAttributes(param);
                         if (employeeDesignations != null && employeeDesignations.size() > 0)
                             return new ResponseEntity<>("Designation name already exists", HttpStatus.OK);
@@ -364,7 +367,7 @@ public class ValidationController {
                 case 29: //Salary Component name
                      param = new HashMap<>();
                     param.put("description", validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<SalaryComponent> salaryComponentList = salaryComponentService.findByAttributes(param);
                     if(salaryComponentList!= null && salaryComponentList.size()>0)
                         return new ResponseEntity<>("Description Name Already Exists", HttpStatus.OK);
@@ -373,7 +376,7 @@ public class ValidationController {
                 case 30: //Salary Component code
                     param = new HashMap<>();
                     param.put("componentCode", validationModel.getName());
-                    param.put("deleteFlag", false);
+                    param.put(JSON_KEY_DELETE_FLAG, false);
                     List<SalaryComponent> salaryComponentList1 = salaryComponentService.findByAttributes(param);
                     if(salaryComponentList1!= null && salaryComponentList1.size()>0)
                         return new ResponseEntity<>("Component ID Already Exists", HttpStatus.OK);

@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class VatReportFilingServiceImpl implements VatReportFilingService {
-    private static final String dateFormat = "dd/MM/yyyy";
+    private static final String DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY = "dd/MM/yyyy";
     @Autowired
     private DateFormatUtil dateUtils;
     @Autowired
@@ -182,10 +182,10 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
          for (VatReportFiling vatReportFiling:vatReportFilingList){
              User user=userService.findByPK(vatReportFiling.getCreatedBy());
              if (vatReportFiling.getStartDate()!=null){
-                  startDate =DateTimeFormatter.ofPattern("dd/MM/yyyy").format(vatReportFiling.getStartDate());
+                  startDate =DateTimeFormatter.ofPattern(DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY).format(vatReportFiling.getStartDate());
              }
             if (vatReportFiling.getEndDate()!=null){
-                 endDate =DateTimeFormatter.ofPattern("dd/MM/yyyy").format(vatReportFiling.getEndDate());
+                 endDate =DateTimeFormatter.ofPattern(DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY).format(vatReportFiling.getEndDate());
             }
 
              if (vatReportFiling.getStatus().equals(CommonStatusEnum.UN_FILED.getValue())){
@@ -236,10 +236,10 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
             for (VatReportFiling vatReportFiling:vatReportFilingList){
                 User user=userService.findByPK(vatReportFiling.getCreatedBy());
                 if (vatReportFiling.getStartDate()!=null){
-                    startDate =DateTimeFormatter.ofPattern("dd/MM/yyyy").format(vatReportFiling.getStartDate());
+                    startDate =DateTimeFormatter.ofPattern(DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY).format(vatReportFiling.getStartDate());
                 }
                 if (vatReportFiling.getEndDate()!=null){
-                    endDate =DateTimeFormatter.ofPattern("dd/MM/yyyy").format(vatReportFiling.getEndDate());
+                    endDate =DateTimeFormatter.ofPattern(DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY).format(vatReportFiling.getEndDate());
                 }
 
                 if (vatReportFiling.getStatus().equals(CommonStatusEnum.UN_FILED.getValue())){
@@ -316,8 +316,8 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
     }
 
     public void postFiledVat(VatReportFiling vatReportFiling,Integer userId,Date filedDate){
-        String startDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getStartDate().atStartOfDay(),dateFormat);
-        String endDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getEndDate().atStartOfDay(),dateFormat);
+        String startDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getStartDate().atStartOfDay(),DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY);
+        String endDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getEndDate().atStartOfDay(),DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY);
 
         VatReportFilingRequestModel vatReportFilingRequestModel=new VatReportFilingRequestModel();
         vatReportFilingRequestModel.setEndDate(endDate);
@@ -469,7 +469,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
             vatPayment.setReceiptAttachmentPath(fileName);
         }
         if (recordVatPaymentRequestModel.getVatPaymentDate()!=null){
-            vatPayment.setVatPaymentDate(dateUtils.getDateStrAsLocalDateTime(recordVatPaymentRequestModel.getVatPaymentDate(),dateFormat));
+            vatPayment.setVatPaymentDate(dateUtils.getDateStrAsLocalDateTime(recordVatPaymentRequestModel.getVatPaymentDate(),DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY));
         }
         if (recordVatPaymentRequestModel.getAmount()!=null){
             vatPayment.setAmount(recordVatPaymentRequestModel.getAmount());
@@ -664,8 +664,8 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
                vatTaxAgencyRepository.deleteById(vatTaxAgencyList.get(0).getId());
            }
            //enable edit For Invoices
-           String startDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getStartDate().atStartOfDay(),dateFormat);
-           String endDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getEndDate().atStartOfDay(),dateFormat);
+           String startDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getStartDate().atStartOfDay(),DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY);
+           String endDate = dateFormatUtil.getLocalDateTimeAsString(vatReportFiling.getEndDate().atStartOfDay(),DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY);
 
            VatReportFilingRequestModel vatReportFilingRequestModel=new VatReportFilingRequestModel();
            vatReportFilingRequestModel.setEndDate(endDate);
@@ -741,10 +741,10 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
                    vatPaymentHistoryModel.setAmountReclaimed(vatRecordPaymentHistory.getAmountReclaimed());
                }
                if (vatRecordPaymentHistory.getStartDate()!=null){
-                    startDate =DateTimeFormatter.ofPattern("dd/MM/yyyy").format(vatRecordPaymentHistory.getStartDate());
+                    startDate =DateTimeFormatter.ofPattern(DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY).format(vatRecordPaymentHistory.getStartDate());
                }
                if (vatRecordPaymentHistory.getEndDate()!=null){
-                    endDate =DateTimeFormatter.ofPattern("dd/MM/yyyy").format(vatRecordPaymentHistory.getEndDate());
+                    endDate =DateTimeFormatter.ofPattern(DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY).format(vatRecordPaymentHistory.getEndDate());
                }
                 vatPaymentHistoryModel.setCurrency(companyService.getCompanyCurrency().getCurrencyIsoCode());
                 vatPaymentHistoryModel.setTaxReturns(startDate +" "+endDate);
@@ -774,10 +774,10 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
                     vatPaymentHistoryModel.setAmountReclaimed(vatRecordPaymentHistory.getAmountReclaimed());
                 }
                 if (vatRecordPaymentHistory.getStartDate()!=null){
-                    startDate =DateTimeFormatter.ofPattern("dd/MM/yyyy").format(vatRecordPaymentHistory.getStartDate());
+                    startDate =DateTimeFormatter.ofPattern(DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY).format(vatRecordPaymentHistory.getStartDate());
                 }
                 if (vatRecordPaymentHistory.getEndDate()!=null){
-                    endDate =DateTimeFormatter.ofPattern("dd/MM/yyyy").format(vatRecordPaymentHistory.getEndDate());
+                    endDate =DateTimeFormatter.ofPattern(DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY).format(vatRecordPaymentHistory.getEndDate());
                 }
                 if(vatRecordPaymentHistory.getVatPayment().getVatReportFiling().getVatNumber()!=null){
                     vatPaymentHistoryModel.setVatNumber(vatRecordPaymentHistory.getVatPayment().getVatReportFiling().getVatNumber());

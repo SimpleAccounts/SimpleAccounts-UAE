@@ -270,7 +270,19 @@ private ProfitLossTotal calculateProfitAndLossTotalsFromList(List<TransactionCat
 			case COST_OF_GOODS_SOLD:
 				totalCostOfGoodsSold = totalCostOfGoodsSold.add(closingBalance);
 				break;
+			case ACCOUNTS_RECEIVABLE:
+			case BANK:
+			case CASH:
+			case CURRENT_ASSET:
+			case FIXED_ASSET:
+			case OTHER_CURRENT_ASSET:
+			case STOCK:
+			case ACCOUNTS_PAYABLE:
+			case OTHER_CURRENT_LIABILITIES:
+			case OTHER_LIABILITY:
+			case EQUITY:
 			default:
+				// Other chart of account categories not included in profit/loss calculation
 				break;
 		}
 	}

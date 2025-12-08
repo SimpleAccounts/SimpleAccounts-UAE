@@ -22,6 +22,7 @@ public class EmployeeUserRelationServiceImpl extends EmployeeUserRelationService
     protected Dao<Integer, EmployeeUserRelation> getDao() {
         return employeeUserRelationDao;
     }
+    // Empty method - implementation not required for this service
     public  void addEmployeeUserRelation(Employee employee, User user)
    {
 

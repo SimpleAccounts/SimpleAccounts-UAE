@@ -30,6 +30,15 @@ import javax.persistence.TypedQuery;
 @Component
 public class FinancialReportRestHelper {
 
+	private static final String RETAINED_EARNINGS = "RETAINED_EARNINGS";
+	private static final String OTHER_CHARGES = "OTHER_CHARGES";
+	private static final String OPENING_BALANCE_EQUITY_OFFSET = "OPENING_BALANCE_EQUITY_OFFSET";
+	private static final String RETAINED_EARNINGS_DISPLAY = "Retained Earnings";
+	private static final String OTHER_CHARGES_DISPLAY = "Other Charges";
+	private static final String OPENING_BALANCE_EQUITY_OFFSET_DISPLAY = "Opening Balance Equity Offset";
+	private static final String OPENING_BALANCE_OFFSET_ASSETS = "Opening Balance Offset Assets";
+	private static final String OPENING_BALANCE_OFFSET_LIABILITIES = "Opening Balance Offset Liabilities";
+
 	@Autowired
 	TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
@@ -105,14 +114,14 @@ public class FinancialReportRestHelper {
 				BigDecimal closingBalance = transactionCategoryClosingBalance.getClosingBalance();
 
 				switch (transactionCategoryName) {
-					case "Opening Balance Offset Assets":
+					case OPENING_BALANCE_OFFSET_ASSETS:
 
 						if (closingBalance.longValue() < 0)
 							openingBalanceOffsetAsset = openingBalanceOffsetAsset.add(closingBalance.negate());
 						else
 							openingBalanceOffsetAsset = openingBalanceOffsetAsset.add(closingBalance);
 						continue;
-					case "Opening Balance Offset Liabilities":
+					case OPENING_BALANCE_OFFSET_LIABILITIES:
 						if (closingBalance.longValue() < 0)
 							openingBalanceOffsetLiabilities = openingBalanceOffsetLiabilities.add(closingBalance.negate());
 						else
@@ -122,7 +131,7 @@ public class FinancialReportRestHelper {
 				}
 
 				boolean isNegative = false;
-				if (closingBalance.longValue() < 0 && !transactionCategoryName.equalsIgnoreCase("Retained Earnings") &&
+				if (closingBalance.longValue() < 0 && !transactionCategoryName.equalsIgnoreCase("RETAINED_EARNINGS") &&
 						!transactionCategoryName.equalsIgnoreCase("Commission Paid") &&
 						!transactionCategoryName.equalsIgnoreCase("Cost of Goods Sold") &&
 						!transactionCategoryName.equalsIgnoreCase("Equipment Hire") &&
@@ -227,7 +236,7 @@ public class FinancialReportRestHelper {
 						break;
 
 					case EQUITY:
-						if (!isNegative && transactionCategoryName.equalsIgnoreCase("Retained Earnings"))
+						if (!isNegative && transactionCategoryName.equalsIgnoreCase("RETAINED_EARNINGS"))
 							closingBalance = closingBalance.negate();
 						balanceSheetResponseModel.getEquities().put(transactionCategoryName,closingBalance);
 						totalEquities = totalEquities.add(closingBalance);
@@ -237,7 +246,7 @@ public class FinancialReportRestHelper {
 						if (!isNegative)
 							closingBalance = closingBalance.negate();
 						if (transactionCategoryName.equalsIgnoreCase("Sales") ||
-								transactionCategoryName.equalsIgnoreCase("Other Charges")) {
+								transactionCategoryName.equalsIgnoreCase("OTHER_CHARGES")) {
 							totalOperatingIncome = totalOperatingIncome.add(closingBalance);
 						} else {
 							totalNonOperatingIncome = totalNonOperatingIncome.add(closingBalance);
@@ -269,20 +278,20 @@ public class FinancialReportRestHelper {
 
 			if (transactionCategoryClosingBalanceMap.containsKey(65)) {
 				BigDecimal existingRetainedEarnings = balanceSheetResponseModel.getEquities()
-						.getOrDefault("Retained Earnings", BigDecimal.ZERO);
-				balanceSheetResponseModel.getEquities().put("Retained Earnings", existingRetainedEarnings.add(totalRetainedEarnings));
+						.getOrDefault("RETAINED_EARNINGS", BigDecimal.ZERO);
+				balanceSheetResponseModel.getEquities().put("RETAINED_EARNINGS", existingRetainedEarnings.add(totalRetainedEarnings));
 			} else {
-				balanceSheetResponseModel.getEquities().put("Retained Earnings", totalRetainedEarnings);
+				balanceSheetResponseModel.getEquities().put("RETAINED_EARNINGS", totalRetainedEarnings);
 			}
 
 			equityOffset = openingBalanceOffsetLiabilities.subtract(openingBalanceOffsetAsset);
 			if (equityOffset.longValue()<0) {
 				equityOffset = equityOffset.negate();
-				balanceSheetResponseModel.getCurrentAssets().put("Opening Balance Equity Offset", equityOffset);
+				balanceSheetResponseModel.getCurrentAssets().put("OPENING_BALANCE_EQUITY_OFFSET", equityOffset);
 				totalCurrentAssets = totalCurrentAssets.add(equityOffset);
 			}
 			else if (equityOffset.longValue()!=0) {
-				balanceSheetResponseModel.getEquities().put("Opening Balance Equity Offset", equityOffset);
+				balanceSheetResponseModel.getEquities().put("OPENING_BALANCE_EQUITY_OFFSET", equityOffset);
 				totalEquities = totalEquities.add(equityOffset);
 			}
 			balanceSheetResponseModel.setTotalBank(totalBank);
@@ -350,7 +359,7 @@ public class FinancialReportRestHelper {
 				switch (chartOfAccountCategoryCodeEnum) {
 					case INCOME:
 						if (transactionCategoryName.equalsIgnoreCase("Sales") ||
-								transactionCategoryName.equalsIgnoreCase("Other Charges") ||
+								transactionCategoryName.equalsIgnoreCase("OTHER_CHARGES") ||
 								transactionCategoryName.equalsIgnoreCase("Interest Income")) {
 							responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
 							totalOperatingIncome = totalOperatingIncome.add(closingBalance);
@@ -588,13 +597,13 @@ public class FinancialReportRestHelper {
 					case EQUITY:
 						trialBalanceResponseModel.getEquities().put(transactionCategoryName,closingBalance);
 
-						if (transactionTypeDebitFlag&&transactionCategoryName.equalsIgnoreCase("Opening Balance Equity Offset")||
+						if (transactionTypeDebitFlag&&transactionCategoryName.equalsIgnoreCase("OPENING_BALANCE_EQUITY_OFFSET")||
 								transactionTypeDebitFlag&&transactionCategoryName.contains("Owners Drawing")||
 								transactionTypeDebitFlag&&transactionCategoryName.contains("Dividend")||
 								transactionTypeDebitFlag&&transactionCategoryName.contains("Share Premium")||
 								transactionTypeDebitFlag&&transactionCategoryName.contains("Owners Equity")||
 								transactionTypeDebitFlag&&transactionCategoryName.contains("Owners Capital")||
-								transactionTypeDebitFlag&&transactionCategoryName.contains("Retained Earnings")||
+								transactionTypeDebitFlag&&transactionCategoryName.contains("RETAINED_EARNINGS")||
 								transactionTypeDebitFlag&&transactionCategoryName.contains("Owners Current Account"))
 						{
 							totalDebitAmount = totalDebitAmount.add(closingBalance);
@@ -723,6 +732,9 @@ public class FinancialReportRestHelper {
 					vatReportResponseModel.setTotalAmountForFujairah(vatReportModel.getTotalAmount().subtract(vatReportModel.getTotalVatAmount()));
 					vatReportResponseModel.setTotalVatForFujairah(vatReportModel.getTotalVatAmount());
 					vatReportResponseModel.setNameForFujairah(vatReportModel.getPlaceOfSupplyName());
+					break;
+				default:
+					// Unknown place of supply ID - no action needed
 					break;
 		 	}
 
@@ -884,7 +896,7 @@ public class FinancialReportRestHelper {
 				switch (chartOfAccountCategoryCodeEnum) {
 					case INCOME:
 						if (transactionCategoryName.equalsIgnoreCase("Sales Discount") ||
-							transactionCategoryName.equalsIgnoreCase("Other Charges") ||
+							transactionCategoryName.equalsIgnoreCase("OTHER_CHARGES") ||
 									transactionCategoryName.equalsIgnoreCase("Interest Income")
 //								transactionCategoryName.equalsIgnoreCase("Current Asset") ||
 //								transactionCategoryName.equalsIgnoreCase("Sales ")
@@ -898,10 +910,11 @@ public class FinancialReportRestHelper {
 //							responseModel.getNonOperatingIncome().put(transactionCategoryName, closingBalance);
 //							totalNonOperatingIncome = totalNonOperatingIncome.add(closingBalance);
 //					}
-						if(isNegative)
+						if(isNegative) {
 							grossCashOutflow = grossCashOutflow.add(closingBalance);
-						else
-						grossCashInflow = grossCashInflow.add(closingBalance);
+						} else {
+							grossCashInflow = grossCashInflow.add(closingBalance);
+						}
 						break;
 					case ACCOUNTS_PAYABLE:
 						responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);

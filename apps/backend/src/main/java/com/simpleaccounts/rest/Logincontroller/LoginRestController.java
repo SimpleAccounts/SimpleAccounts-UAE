@@ -80,7 +80,7 @@ public class LoginRestController {
 	@LogRequest
 	@ApiOperation(value = "resetPassword")
 	@PostMapping(value = "/resetPassword")
-	public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordModel resetPasswordModel) {
+	public ResponseEntity<Object> resetPassword(@RequestBody ResetPasswordModel resetPasswordModel) {
 		try{
 			SimpleAccountsMessage message= null;
 			List<User> userList = userJpaRepository.findUsersByForgotPasswordToken(resetPasswordModel.getToken());

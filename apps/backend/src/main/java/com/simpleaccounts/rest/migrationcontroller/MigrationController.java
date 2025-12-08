@@ -71,7 +71,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping(value = "/rest/migration")
-public class MigrationController {	
+public class MigrationController {
+    private static final String LOG_INFO_PATTERN = "info{}";
+    private static final String MSG_NO_FILES_AVAILABLE = "No Files Available";
+    
     private  final Logger logger = LoggerFactory.getLogger(MigrationController.class);
 
     @Autowired
@@ -199,7 +202,7 @@ public class MigrationController {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             String productName = dataMigrationModel.getName();
            String path = request.getServletContext().getRealPath("/");
-           log.info("info{}",path);
+           log.info(LOG_INFO_PATTERN,path);
             String version = dataMigrationModel.getVersion();
             String fileLocation =path + "/" + basePath;
            // String migFromDate  = dataMigrationModel.getMigFromDate();
@@ -215,7 +218,7 @@ public class MigrationController {
             log.info("Response{}",dataMigrationRespModel);
             //this will delete the uploaded files after completion of migration records
             String migrationPath =path+ "/" + basePath;
-            log.info("info{}",migrationPath);
+            log.info(LOG_INFO_PATTERN,migrationPath);
             String rollBackMigratedData = zohoMigrationService.rollBackMigratedData(migrationPath);
             return new  ResponseEntity<> (dataMigrationRespModel,HttpStatus.OK);
 
@@ -237,7 +240,7 @@ public class MigrationController {
         try {
             String path = request.getServletContext().getRealPath("/");
             String migrationPath =path+ "/" + basePath;
-            log.info("info{}",migrationPath);
+            log.info(LOG_INFO_PATTERN,migrationPath);
             log.debug("MigrationController::uploadFolder: Total File Length {}", files.length);
             
             String deleteMigratedFiles = zohoMigrationService.deleteMigratedFiles(migrationPath);
@@ -274,7 +277,7 @@ public class MigrationController {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             String path = request.getServletContext().getRealPath("/");
             String migrationPath =path+ "/" + basePath;
-            log.info("info{}",migrationPath);
+            log.info(LOG_INFO_PATTERN,migrationPath);
             FileHelper.setRootPath(migrationPath);
             TransactionCategoryListResponseModel transactionCategory = migrationService.getTransactionCategory();
             log.info("Response{}",transactionCategory);
@@ -299,7 +302,7 @@ public class MigrationController {
         try {
             String path = request.getServletContext().getRealPath("/");
             String migrationPath =path+ "/" + basePath;
-            log.info("info{}",migrationPath);
+            log.info(LOG_INFO_PATTERN,migrationPath);
 			if (fileName.equals("Contacts.csv")) {
 				List<ContactsModel> contactsModel = zohoMigrationService.getCsvFileDataForIContacts(migrationPath,fileName);
 				return new ResponseEntity<>(contactsModel, HttpStatus.OK);
@@ -370,7 +373,7 @@ public class MigrationController {
         }
         else
         	{
-        		return new  ResponseEntity<>( "No Files Available",HttpStatus.OK);
+        		return new  ResponseEntity<>( MSG_NO_FILES_AVAILABLE,HttpStatus.OK);
         	}
 		} catch (IOException e) {
 			 return (new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
@@ -394,7 +397,7 @@ public class MigrationController {
         if (!zohoDeletedFileNames.isEmpty()){
             return new ResponseEntity<>(zohoDeletedFileNames,HttpStatus.OK);
         }
-        else return new  ResponseEntity<>( "No Files Available",HttpStatus.OK);
+        else return new  ResponseEntity<>( MSG_NO_FILES_AVAILABLE,HttpStatus.OK);
     }
 
     /**
@@ -427,7 +430,7 @@ public class MigrationController {
             Integer userId = (jwtTokenUtil.getUserIdFromHttpRequest(request));
             String path = request.getServletContext().getRealPath("/");
             String migrationPath =path+ "/" + basePath;
-            log.info("info{}",migrationPath);
+            log.info(LOG_INFO_PATTERN,migrationPath);
             String rollBackMigratedData = zohoMigrationService.rollBackMigratedData(migrationPath);
             return new ResponseEntity<>(rollBackMigratedData,HttpStatus.OK);
         }catch (Exception e){

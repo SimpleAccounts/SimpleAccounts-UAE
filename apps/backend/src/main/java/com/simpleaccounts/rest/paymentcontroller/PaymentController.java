@@ -285,7 +285,7 @@ public class PaymentController {
 				supplierInvoicePayment.setPayment(payment);
 				supplierInvoicePayment.setCreatedBy(userId);
 				Contact contact=contactService.findByPK(paymentModel.getContactId());
-				contactService.sendInvoiceThankYouMail(contact,2,supplierInvoicePayment.getSupplierInvoice().getReferenceNumber(),paymentModel.getAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString(),dateFormtUtil.getLocalDateTimeAsString(payment.getPaymentDate().atStartOfDay(),"dd/MM/yyyy").replaceAll("/","-"), supplierInvoicePayment.getDueAmount(), request);
+				contactService.sendInvoiceThankYouMail(contact,2,supplierInvoicePayment.getSupplierInvoice().getReferenceNumber(),paymentModel.getAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString(),dateFormtUtil.getLocalDateTimeAsString(payment.getPaymentDate().atStartOfDay(),"dd/MM/yyyy").replace("/","-"), supplierInvoicePayment.getDueAmount(), request);
 				supplierInvoicePaymentService.persist(supplierInvoicePayment);
 			}
 			// Post journal

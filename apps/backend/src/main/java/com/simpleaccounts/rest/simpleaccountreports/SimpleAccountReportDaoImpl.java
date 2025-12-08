@@ -32,6 +32,10 @@ import java.util.stream.Collectors;
 @Component
 public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<Integer, SalesByCustomerModel> implements SimpleAccountReportDao {
 
+    private static final String QUERY_PARAM_START_DATE = "startDate";
+    private static final String QUERY_PARAM_END_DATE = "endDate";
+    private static final String ACCOUNT_RECEIVABLE = "Account Receivable";
+
     @Autowired
     private DateFormatUtil dateUtil;
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionCategoryClosingBalanceDaoImpl.class);
@@ -102,8 +106,8 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
                 "and i.invoiceDate BETWEEN :startDate and :endDate  " +
                 "GROUP by i.contact.contactId, c.firstName, c.lastName, c.organization";
         Query query = getEntityManager().createQuery(quertStr);
-        query.setParameter("startDate", requestModel.getStartDate().toLocalDate());
-        query.setParameter("endDate", requestModel.getEndDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate().toLocalDate());
         List<Object> list = query.getResultList();
 
         for (Object object : list) {
@@ -159,8 +163,8 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
                 "and i.invoiceDate BETWEEN :startDate and :endDate " +
                 "GROUP by i.contact.contactId, c.firstName, c.lastName, c.organization";
         Query query = getEntityManager().createQuery(quertStr);
-        query.setParameter("startDate", requestModel.getStartDate().toLocalDate());
-        query.setParameter("endDate", requestModel.getEndDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate().toLocalDate());
         List<Object> list = query.getResultList();
 
         for (Object object : list) {
@@ -210,8 +214,8 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
                 "GROUP BY ilt.product.productID, ilt.product.productName " +
                 "ORDER BY ilt.product.productName ASC";
         Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("startDate", requestModel.getStartDate().toLocalDate());
-        query.setParameter("endDate", requestModel.getEndDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate().toLocalDate());
         List<Object> list = query.getResultList();
 
         List<CreditNoteLineItem> creditNoteLineItems = creditNoteLineItemRepository
@@ -401,6 +405,9 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
                     }
 
                     break;
+                default:
+                    // Other posting types not handled in customer statement
+                    break;
             }
         }
 
@@ -545,6 +552,9 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
                     }
 
                     break;
+                default:
+                    // Other posting types not handled in supplier statement
+                    break;
             }
         }
 
@@ -562,8 +572,8 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
                 "GROUP BY ilt.product.productID, ilt.product.productName " +
                 "ORDER BY ilt.product.productName ASC";
         Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("startDate", requestModel.getStartDate().toLocalDate());
-        query.setParameter("endDate", requestModel.getEndDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate().toLocalDate());
         List<Object> list = query.getResultList();
 
         List<CreditNoteLineItem> creditNoteLineItems = creditNoteLineItemRepository
@@ -631,8 +641,8 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
         //quertStr.setParameter("currentDate",dateUtil.get(new Date()));
         //i.invoiceDueDate <=:currentDate
         Query query = getEntityManager().createQuery(quertStr);
-        query.setParameter("startDate", requestModel.getStartDate().toLocalDate());
-        query.setParameter("endDate", requestModel.getEndDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate().toLocalDate());
         List<Object> list = query.getResultList();
 
         for(Object object : list)
@@ -679,8 +689,8 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
         //quertStr.setParameter("currentDate",dateUtil.get(new Date()));
         //i.invoiceDueDate <=:currentDate
         Query query = getEntityManager().createQuery(quertStr);
-        query.setParameter("startDate", requestModel.getStartDate().toLocalDate());
-        query.setParameter("endDate", requestModel.getEndDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate().toLocalDate());
         List<Object> list = query.getResultList();
 
         for(Object object : list)
@@ -726,8 +736,8 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
                 " i.id=il.invoice.id and il.product.productID=p.productID and i.type in (2,7) and i.status in (3,5,6)  and i.invoiceDate BETWEEN :startDate and :endDate order by i.id desc ";
 
         Query query = getEntityManager().createQuery(quertStr);
-        query.setParameter("startDate", requestModel.getStartDate().toLocalDate());
-        query.setParameter("endDate", requestModel.getEndDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate().toLocalDate());
         List<Object> list = query.getResultList();
 
         for(Object object : list){
@@ -810,8 +820,8 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
                 " i.id=il.invoice.id and il.product.productID=p.productID and i.type=1 and i.status in (3,5,6) and i.invoiceDate BETWEEN :startDate and :endDate order by i.id desc ";
 
         Query query = getEntityManager().createQuery(quertStr);
-        query.setParameter("startDate", requestModel.getStartDate().toLocalDate());
-        query.setParameter("endDate", requestModel.getEndDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate().toLocalDate());
         List<Object> list = query.getResultList();
 
         for(Object object : list){
@@ -913,8 +923,8 @@ public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<I
         OffsetDateTime sDate = startDate.atOffset(offset);
         OffsetDateTime eDate = endDate.atOffset(offset);
             Query query = getEntityManager().createQuery(quertStr);
-            query.setParameter("startDate",sDate);
-            query.setParameter("endDate", eDate);
+            query.setParameter(QUERY_PARAM_START_DATE,sDate);
+            query.setParameter(QUERY_PARAM_END_DATE, eDate);
             List<Object> list = query.getResultList();
 
             for(Object object : list)
@@ -1054,8 +1064,8 @@ public ExpenseDetailsResponseModel getExpenseDetails(ReportRequestModel requestM
         BigDecimal totalAmountWithTax = BigDecimal.ZERO;
         String quertStr = "SELECT tc.transactionCategoryId,tc.transactionCategoryName as transactionCategoryName, Sum(e.expenseAmount*e.exchangeRate) as TotalAmount, Sum(e.expenseVatAmount*e.exchangeRate) as TotalVatAmount, e.exclusiveVat FROM Expense e,TransactionCategory tc,VatCategory v  WHERE e.vatCategory.id=v.id and e.transactionCategory.transactionCategoryId=tc.transactionCategoryId and e.status in (3) and e.expenseDate BETWEEN :startDate and :endDate  GROUP by tc.transactionCategoryName,tc.transactionCategoryId, e.exclusiveVat";
         Query query = getEntityManager().createQuery(quertStr);
-        query.setParameter("startDate", requestModel.getStartDate().toLocalDate());
-        query.setParameter("endDate", requestModel.getEndDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate().toLocalDate());
         List<Object> list = query.getResultList();
 
         for(Object object : list)
@@ -1165,8 +1175,8 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
         //quertStr.setParameter("currentDate",dateUtil.get(new Date()));
         //i.invoiceDueDate <=:currentDate
         Query query = getEntityManager().createQuery(quertStr);
-        query.setParameter("startDate", requestModel.getStartDate().toLocalDate());
-        query.setParameter("endDate", requestModel.getEndDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate().toLocalDate());
+        query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate().toLocalDate());
         List<Object> list = query.getResultList();
 
         for(Object object : list)
@@ -1298,8 +1308,8 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                 " cir.receipt.receiptDate BETWEEN :startDate and :endDate ";
 
         Query query = getEntityManager().createQuery(quertStr);
-        query.setParameter("startDate", requestModel.getStartDate());
-        query.setParameter("endDate", requestModel.getEndDate());
+        query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate());
+        query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate());
 //        query.setParameter("customerId", requestModel.getCustomerId());
         List<Object> list = query.getResultList();
         Integer id=0;
@@ -1535,7 +1545,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                         generalLedgerListing.setTransactionID(customerInvoiceReceipt.getTransaction().getTransactionId());
                         generalLedgerListing.setSourceDocumentID("-");
                           if(customerInvoiceReceipt.getTransaction().getDebitCreditFlag() == 'C') {
-                            generalLedgerListing.setSourceType("Account Receivable");
+                            generalLedgerListing.setSourceType(ACCOUNT_RECEIVABLE);
                         }else{
                             generalLedgerListing.setSourceType("Account Payable");
                         }
@@ -1564,7 +1574,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                         if(supplierInvoicePayment.getTransaction().getDebitCreditFlag() == 'D') {
                             generalLedgerListing.setSourceType("Account Payable");
                         }else{
-                            generalLedgerListing.setSourceType("Account Receivable");
+                            generalLedgerListing.setSourceType(ACCOUNT_RECEIVABLE);
                         }
                         if(supplierInvoicePayment.getTransaction().getDebitCreditFlag() == 'D'){
                             generalLedgerListing.setDebit(invoiceLineItem.getUnitPrice());
@@ -1761,7 +1771,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                         if(customerInvoiceReceipt.getTransaction().getDebitCreditFlag() == 'D') {
                             generalLedgerListing.setSourceType("Account Payable");
                         }else{
-                            generalLedgerListing.setSourceType("Account Receivable");
+                            generalLedgerListing.setSourceType(ACCOUNT_RECEIVABLE);
                         }
                         if(customerInvoiceReceipt.getTransaction().getDebitCreditFlag() == 'C'){
                             generalLedgerListing.setCredit(invoiceLineItem.getUnitPrice());
@@ -1786,7 +1796,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                         generalLedgerListing.setName(invoiceLineItem.getInvoice().getReferenceNumber());
                         generalLedgerListing.setSourceDocumentID("-");
                         if(supplierInvoicePayment.getTransaction().getDebitCreditFlag() == 'C') {
-                            generalLedgerListing.setSourceType("Account Receivable");
+                            generalLedgerListing.setSourceType(ACCOUNT_RECEIVABLE);
                         }else{
                             generalLedgerListing.setSourceType("Account Payable");
                         }

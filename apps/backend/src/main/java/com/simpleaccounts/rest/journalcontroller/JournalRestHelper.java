@@ -37,7 +37,7 @@ import com.simpleaccounts.service.VatCategoryService;
 @Component
 public class JournalRestHelper {
 	private final Logger logger = LoggerFactory.getLogger(JournalRestHelper.class);
-	private static final boolean isList = true;
+	private static final boolean IS_LIST = true;
 	@Autowired
 	private CurrencyService currencyService;
 
@@ -75,8 +75,9 @@ public class JournalRestHelper {
 			if (journal1.getPostingReferenceType()!=null) {
 				journal.setPostingReferenceType(journal1.getPostingReferenceType());
 			}
-			if (journal1.getJournlReferencenNo()!=null)
-			journal.setJournlReferencenNo(journal1.getJournlReferencenNo());
+			if (journal1.getJournlReferencenNo()!=null) {
+				journal.setJournlReferencenNo(journal1.getJournlReferencenNo());
+			}
 			List<Integer> list = new ArrayList<>();
 			list.add(journal1.getId());
 			journalService.deleteByIds(list);
@@ -183,7 +184,7 @@ public class JournalRestHelper {
 			List<JournalModel> journalModelList = new ArrayList<>();
 			if (responseModel.getData() != null) {
 				for (Journal journal : (List<Journal>) responseModel.getData()) {
-					journalModelList.add(getModel(journal, isList));
+					journalModelList.add(getModel(journal, IS_LIST));
 				}
 				responseModel.setData(journalModelList);
 				return responseModel;
@@ -391,7 +392,7 @@ public class JournalRestHelper {
 	public List<JournalModel> getEntriesListModel(List<Journal> journalList) {
 		List<JournalModel> journalModelList = new ArrayList<>();
 		for (Journal journal : journalList) {
-			journalModelList.add(getModel(journal, isList));
+			journalModelList.add(getModel(journal, IS_LIST));
 		}
 		return journalModelList;
 	}

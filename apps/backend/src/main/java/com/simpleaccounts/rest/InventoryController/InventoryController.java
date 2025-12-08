@@ -179,7 +179,7 @@ public class InventoryController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Update Inventory")
     @PostMapping(value = "/update")
-    public ResponseEntity<?> update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
+	public ResponseEntity<Object> update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             productRequestModel.setCreatedBy(userId);
