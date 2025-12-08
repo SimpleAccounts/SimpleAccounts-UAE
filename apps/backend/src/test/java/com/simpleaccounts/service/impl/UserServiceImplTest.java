@@ -81,8 +81,7 @@ class UserServiceImplTest {
         List<DropdownModel> result = userService.getUserForDropdown();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotNull().hasSize(2);
         verify(dao).getUserForDropdown();
     }
 
@@ -163,8 +162,7 @@ class UserServiceImplTest {
         List<User> result = userService.getAllUserNotEmployee();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotNull().hasSize(2);
     }
 
     private User createUser(Integer id, String firstName, String lastName, String email) {

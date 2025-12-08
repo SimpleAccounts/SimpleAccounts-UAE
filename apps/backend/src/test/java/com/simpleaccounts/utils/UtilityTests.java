@@ -143,8 +143,7 @@ class UtilityTests {
             TimeZone timezone = TimeZone.getDefault();
             Date currentTime = new Date();
             Date result = DateUtils.getStartDate(DateUtils.Duration.THIS_WEEK, timezone, currentTime);
-            assertThat(result).isNotNull();
-            assertThat(result).isBeforeOrEqualTo(currentTime);
+            assertThat(result).isNotNull().isBeforeOrEqualTo(currentTime);
         }
 
         @Test
@@ -165,8 +164,7 @@ class UtilityTests {
             TimeZone timezone = TimeZone.getDefault();
             Date currentTime = new Date();
             Date result = DateUtils.getStartDate(DateUtils.Duration.LAST_3_MONTHS, timezone, currentTime);
-            assertThat(result).isNotNull();
-            assertThat(result).isBefore(currentTime);
+            assertThat(result).isNotNull().isBefore(currentTime);
         }
 
         @Test

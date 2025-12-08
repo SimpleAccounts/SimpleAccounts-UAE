@@ -36,8 +36,7 @@ class CountryServiceImplTest {
 
     List<Country> result = countryService.getCountries();
 
-    assertThat(result).isNotNull();
-    assertThat(result).hasSize(2);
+    assertThat(result).isNotNull().hasSize(2);
     verify(countryDao).getCountries();
   }
 
@@ -48,8 +47,7 @@ class CountryServiceImplTest {
 
     List<Country> result = countryService.getCountries();
 
-    assertThat(result).isNotNull();
-    assertThat(result).isEmpty();
+    assertThat(result).isNotNull().isEmpty();
   }
 
   @Test
