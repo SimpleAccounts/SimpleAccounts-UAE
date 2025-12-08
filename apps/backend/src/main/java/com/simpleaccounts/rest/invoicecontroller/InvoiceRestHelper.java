@@ -63,6 +63,7 @@ public class InvoiceRestHelper {
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
 	private static final String ERROR_PROCESSING_INVOICE = "Error processing invoice";
 	private static final String CLASSPATH_PREFIX = "classpath:";
+	private static final String JSON_KEY_INVOICE = "invoice";
 	@Autowired
 	VatCategoryService vatCategoryService;
 
