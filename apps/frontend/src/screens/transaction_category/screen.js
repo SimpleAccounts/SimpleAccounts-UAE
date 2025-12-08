@@ -23,8 +23,6 @@ import { Loader } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
-import 'react-images-uploader/styles.css'
-import 'react-images-uploader/font.css'
 import './style.scss'
 
 import * as TransactionActions from './actions'
