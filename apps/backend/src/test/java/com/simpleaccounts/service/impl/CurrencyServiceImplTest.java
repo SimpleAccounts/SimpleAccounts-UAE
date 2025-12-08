@@ -66,8 +66,7 @@ class CurrencyServiceImplTest {
 
         List<Currency> result = currencyService.getCurrenciesProfile();
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotNull().hasSize(2);
         verify(currencyDao).getCurrenciesProfile();
     }
 
@@ -78,8 +77,7 @@ class CurrencyServiceImplTest {
 
         List<Currency> result = currencyService.getCurrenciesProfile();
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -93,8 +91,7 @@ class CurrencyServiceImplTest {
 
         List<Currency> result = currencyService.getActiveCurrencies();
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(1);
+        assertThat(result).isNotNull().hasSize(1);
     }
 
     @Test
@@ -108,8 +105,7 @@ class CurrencyServiceImplTest {
 
         List<Currency> result = currencyService.getCompanyCurrencies();
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(1);
+        assertThat(result).isNotNull().hasSize(1);
     }
 
     @Test

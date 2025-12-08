@@ -86,8 +86,7 @@ class CompanyServiceImplTest {
 
     List<DropdownModel> result = companyService.getCompaniesForDropdown();
 
-    assertThat(result).isNotNull();
-    assertThat(result).hasSize(2);
+    assertThat(result).isNotNull().hasSize(2);
   }
 
   @Test

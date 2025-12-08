@@ -169,8 +169,7 @@ class UserDaoImplTest {
     List<DropdownModel> result = userDao.getUserForDropdown();
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).hasSize(2);
+    assertThat(result).isNotNull().hasSize(2);
   }
 
   @Test
@@ -273,8 +272,7 @@ class UserDaoImplTest {
     List<User> result = userDao.getAllUserNotEmployee();
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).hasSize(2);
+    assertThat(result).isNotNull().hasSize(2);
   }
 
   @Test
@@ -288,8 +286,7 @@ class UserDaoImplTest {
     List<User> result = userDao.getAllUserNotEmployee();
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).isEmpty();
+    assertThat(result).isNotNull().isEmpty();
   }
 
   @Test

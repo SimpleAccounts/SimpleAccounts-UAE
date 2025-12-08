@@ -56,9 +56,7 @@ class ChartOfAccountCategoryDaoImplTest {
         List<ChartOfAccountCategory> result = chartOfAccountCategoryDao.getChartOfAccountCategoryList();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(5);
-        assertThat(result).isEqualTo(expectedCategories);
+        assertThat(result).isNotNull().hasSize(5).isEqualTo(expectedCategories);
     }
 
     @Test
@@ -74,8 +72,7 @@ class ChartOfAccountCategoryDaoImplTest {
         List<ChartOfAccountCategory> result = chartOfAccountCategoryDao.getChartOfAccountCategoryList();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test

@@ -11,6 +11,14 @@ public class CommonColumnConstants {
     public static final String DDMMYYYY="dd-MM-yyyy";
     public static final String START_DATE= "startDate";
     public static final String END_DATE="endDate";
+    public static final String CURRENT_DATE = "currentDate";
+    public static final String REFERENCE_TYPE = "referenceType";
+    public static final String TRANSACTION_CATEGORY = "transactionCategory";
+    public static final String TRANSACTION_CATEGORY_ID = "transactionCategoryId";
+    public static final String STATUS = "status";
+    public static final String EDIT_FLAG = "editFlag";
+    public static final String PRODUCT_ID = "productId";
+    public static final String DELETE_FLAG = "deleteFlag";
     public static final String ORDER_BY=" order by ";
     public static final String WELCOME_TO_SIMPLEACCOUNTS ="Welcome to SimpleAccounts";
 

@@ -22,7 +22,6 @@ import java.util.Map;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -68,7 +67,6 @@ public Integer getDbConncection(){
 	}
 
 	@Override
-	@Transactional
 	public void deleteByIds(List<Integer> ids) {
 		if (ids != null && !ids.isEmpty()) {
 			for (Integer id : ids) {

@@ -34,8 +34,7 @@ class DropdownModelTest {
     DropdownModel model1 = new DropdownModel(1, "Test");
     DropdownModel model2 = new DropdownModel(1, "Test");
 
-    assertThat(model1).isEqualTo(model2);
-    assertThat(model1).hasSameHashCodeAs(model2);
+    assertThat(model1).isEqualTo(model2).hasSameHashCodeAs(model2);
   }
 
   @Test
