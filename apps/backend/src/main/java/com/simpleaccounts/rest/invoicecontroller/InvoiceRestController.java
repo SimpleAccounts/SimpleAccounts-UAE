@@ -573,7 +573,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
 	@GetMapping(value = "/getSuggestionInvoicesFotCust")
 	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionUnpaidInvoicesForCustomer(
-			@RequestParam("amount") BigDecimal amount, @RequestParam("currency") Integer currency, @RequestParam("id") Integer contactId,@RequestParam("bankId") Integer bankId,
+			@RequestParam("amount") BigDecimal amount, @RequestParam("currency") Integer currency, @RequestParam("id") Integer contactId,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -598,7 +598,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
 	@GetMapping(value = "/getSuggestionInvoicesFotVend")
 	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionUnpaidInvoicesForVendor(
-			@RequestParam("amount") BigDecimal amount,@RequestParam("id")   Integer contactId,@RequestParam("currency") Integer currency,@RequestParam("bankId") Integer bankId,
+			@RequestParam("amount") BigDecimal amount, @RequestParam("id") Integer contactId, @RequestParam("currency") Integer currency,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);

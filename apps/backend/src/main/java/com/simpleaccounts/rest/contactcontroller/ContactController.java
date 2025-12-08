@@ -395,7 +395,7 @@ public class ContactController {
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity<Object> deletes(@RequestBody DeleteModel ids, HttpServletRequest request) {
+	public ResponseEntity<Object> deletes(@RequestBody DeleteModel ids) {
 
 		try {
 			SimpleAccountsMessage message= null;

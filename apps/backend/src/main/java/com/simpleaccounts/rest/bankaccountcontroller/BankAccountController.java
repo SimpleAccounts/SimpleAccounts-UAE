@@ -614,7 +614,7 @@ public class BankAccountController{
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Bank Accounts")
 	@DeleteMapping(value = "/multiple")
-	public ResponseEntity<Object> deleteBankAccounts(@RequestBody DeleteModel ids, HttpServletRequest httpServletRequest) {
+	public ResponseEntity<Object> deleteBankAccounts(@RequestBody DeleteModel ids) {
 		try {
 			bankAccountService.deleteByIds(ids.getIds());
 			SimpleAccountsMessage message = null;

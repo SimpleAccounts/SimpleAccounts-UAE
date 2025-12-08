@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +99,7 @@ public class InvoiceScannerRestController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Add New Invoice")
     @PostMapping(value = "/invoiceScan/save")
-    public ResponseEntity<Object> save(@RequestBody String jsonString , HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Object> save(@RequestBody String jsonString , HttpServletRequest request) {
         try {
             InvoiceRequestModel requestModel = new InvoiceRequestModel();
             List<InvoiceLineItemModel> invoiceLineItemModelList = new ArrayList<>();
@@ -164,7 +163,7 @@ public class InvoiceScannerRestController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Add New Expense")
     @PostMapping(value = "/expenseScan/save")
-    public ResponseEntity<Object> save(@RequestBody String jsonString, HttpServletRequest request) {
+    public ResponseEntity<Object> saveExpense(HttpServletRequest request) {
 
         try {
             ExpenseModel expenseModel = new ExpenseModel();

@@ -520,9 +520,7 @@ public class PoQuatationRestHelper {
                     }
                     break;
                 case MailUtility.VAT_TYPE:
-                    if (MailUtility.VAT_TYPE != null) {
-                        getVat(poQuatation,rfqDataMap,value);
-                    }
+                    getVat(poQuatation,rfqDataMap,value);
                     break;
                 case MailUtility.TOTAL:
                     if (poQuatation.getTotalAmount()!=null) {
@@ -1623,9 +1621,7 @@ public class PoQuatationRestHelper {
                     }
                     break;
                 case MailUtility.VAT_TYPE:
-                    if (MailUtility.VAT_TYPE != null) {
-                        getVat(poQuatation,poDataMap,value);
-                    }
+                    getVat(poQuatation,poDataMap,value);
                     break;
                 case MailUtility.SUPPLIER_NAME:
                     getContact(poQuatation,poDataMap,value);

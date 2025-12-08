@@ -573,7 +573,7 @@ public class CompanyController {
 	@LogExecutionTime
 	@ApiOperation(value = "Get Database Connection", response = List.class)
 	@GetMapping(value = "/getHealthCheck")
-	public ResponseEntity<Object> getDbConnection(HttpServletRequest request) {
+	public ResponseEntity<Object> getDbConnection() {
 		try {
 			Integer company = companyService.getDbConncection();
 			if (company == null) {
