@@ -222,10 +222,11 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter("transactionCategory", transactionCategoryService.findByPK(2));
 		query.setMaxResults(1);
 		BigDecimal totalInvoiceReceiptAmount = query.getSingleResult();
-		if (totalInvoiceReceiptAmount != null && totalInvoiceAmount != null )
+		if (totalInvoiceReceiptAmount != null && totalInvoiceAmount != null ) {
 			overDueAmountFloat = totalInvoiceAmount.subtract(totalInvoiceReceiptAmount).floatValue();
-		 else if (totalInvoiceAmount != null)
+		} else if (totalInvoiceAmount != null) {
 			overDueAmountFloat = totalInvoiceAmount.floatValue();
+		}
 		return overDueAmountFloat;
 	}
 	private Float getTotalEarningsWeeklyMonthly(Date startDate, Date endDate){

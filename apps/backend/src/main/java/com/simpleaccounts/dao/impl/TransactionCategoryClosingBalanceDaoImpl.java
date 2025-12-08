@@ -224,10 +224,11 @@ private DateFormatUtil dateUtil;
                 query.setParameter("startDate",startDate.toLocalDate());
         query.setParameter("endDate",endDate.toLocalDate());
         List<Object> list = query.getResultList();
-        if(list!=null&& list.size()>0)
+        if(list!=null&& list.size()>0) {
             return getVatModalFromDB(list);
-        else
-        return vatReportModelList;
+        } else {
+            return vatReportModelList;
+        }
     }
 
     @Override
