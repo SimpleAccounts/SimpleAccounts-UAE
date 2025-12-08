@@ -1,6 +1,6 @@
 import React from 'react';
 import './style.css';
-import Loader from 'react-loader-spinner'
+import { Circles } from 'react-loader-spinner'
 import { withRouter, } from "react-router-dom";
 
 // const styles = {
@@ -226,7 +226,7 @@ class ImageUploader extends React.Component {
             {this.renderErrors()}
           </div>
           {loadFile ? (
-            <Loader type="Circles" color="#2064d8" height={50} width={50}/>
+            <Circles color="#2064d8" height={50} width={50}/>
           ) 
            :
           null
