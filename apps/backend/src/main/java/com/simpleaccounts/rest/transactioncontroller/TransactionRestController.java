@@ -1873,7 +1873,7 @@ public class TransactionRestController {
 		}
 		else
 		{
-			expenseBuilder.payee("Company Expense");
+			expenseBuilder.payee(CommonColumnConstants.COMPANY_EXPENSE);
 		}
 		if (model.getDate() != null) {
 			LocalDate transactionDate = Instant.ofEpochMilli(model.getDate().getTime())

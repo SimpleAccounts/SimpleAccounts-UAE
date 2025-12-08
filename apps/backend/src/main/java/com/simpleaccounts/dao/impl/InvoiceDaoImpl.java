@@ -310,7 +310,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	@Override
 	public List<Invoice> getUnpaidInvoice(Integer contactId, ContactTypeEnum type) {
 		TypedQuery<Invoice> query = getEntityManager().createNamedQuery("unpaidInvoices", Invoice.class);
-		query.setParameter("status", Arrays.asList(
+		query.setParameter(CommonColumnConstants.STATUS, Arrays.asList(
 				new Integer[] { CommonStatusEnum.PARTIALLY_PAID.getValue(), CommonStatusEnum.POST.getValue() }));
 		query.setParameter("id", contactId);
 		query.setParameter("type", type.getValue());
@@ -327,12 +327,12 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		if (!user.getRole().getRoleCode().equals(1)){
 
 		 query = getEntityManager().createNamedQuery("suggestionUnpaidInvoices", Invoice.class);
-		query.setParameter("status", Arrays.asList(new Integer[]{
+		query.setParameter(CommonColumnConstants.STATUS, Arrays.asList(new Integer[]{
 				CommonStatusEnum.PARTIALLY_PAID.getValue(), CommonStatusEnum.POST.getValue()}));
 		if (currency != null || !currency.equals(0)) {
-			//query.setParameter("currency", currency );
+			//query.setParameter(CommonColumnConstants.CURRENCY, currency );
 			//below code updated mudassar fro #1960 & #1961
-			query.setParameter("currency", Arrays.asList(new Integer[]{
+			query.setParameter(CommonColumnConstants.CURRENCY, Arrays.asList(new Integer[]{
 					currency,  companyCurrency }));
 		}
 		query.setParameter("type", type.getValue());
@@ -344,9 +344,9 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 			query.setParameter("status", Arrays.asList(new Integer[]{
 					CommonStatusEnum.PARTIALLY_PAID.getValue(), CommonStatusEnum.POST.getValue()}));
 			if (currency != null || !currency.equals(0)) {
-				//query.setParameter("currency", currency);
+				//query.setParameter(CommonColumnConstants.CURRENCY, currency);
 				//below code updated mudassar fro #1960 & #1961
-				query.setParameter("currency", Arrays.asList(new Integer[]{currency, companyCurrency}));
+				query.setParameter(CommonColumnConstants.CURRENCY, Arrays.asList(new Integer[]{currency, companyCurrency}));
 			}
 			query.setParameter("type", type.getValue());
 			query.setParameter("id", contactId);
@@ -360,7 +360,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		TypedQuery<Invoice> query = getEntityManager().createNamedQuery("suggestionExplainedInvoices", Invoice.class);
 		query.setParameter("status", Arrays.asList(new Integer[] {
 				CommonStatusEnum.PARTIALLY_PAID.getValue(), CommonStatusEnum.POST.getValue() }));
-		query.setParameter("currency", currency);
+		query.setParameter(CommonColumnConstants.CURRENCY, currency);
 		query.setParameter("type", type.getValue());
 		query.setParameter("id", contactId);
 		query.setParameter("userId", userId);
@@ -403,7 +403,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	}
 	@Override
 	public void sumOfTotalAmountWithoutVat(ReportRequestModel reportRequestModel, VatReportResponseModel vatReportResponseModel){
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonColumnConstants.DD_MM_YYYY);
 		LocalDate startDate = LocalDate.parse(reportRequestModel.getStartDate(),formatter);
 		LocalDate endDate = LocalDate.parse(reportRequestModel.getEndDate(),formatter);
 		Boolean editFlag = Boolean.TRUE;
@@ -420,13 +420,13 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 				" FROM Invoice i,InvoiceLineItem  il WHERE i.status not in(2) AND i.type=2 and i.id = il.invoice.id and il.vatCategory.id in (2) AND i.editFlag=:editFlag AND i.invoiceDate between :startDate and :endDate",BigDecimal.class);
 		query.setParameter(CommonColumnConstants.START_DATE,startDate);
 		query.setParameter(CommonColumnConstants.END_DATE,endDate);
-		query.setParameter("editFlag",editFlag);
+		query.setParameter(CommonColumnConstants.EDIT_FLAG,editFlag);
 		BigDecimal amountWithoutVat = query.getSingleResult();
 		vatReportResponseModel.setZeroRatedSupplies(amountWithoutVat);
 	}
 	@Override
 	public void getSumOfTotalAmountWithVat(ReportRequestModel reportRequestModel, VatReportResponseModel vatReportResponseModel){
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonColumnConstants.DD_MM_YYYY);
 		LocalDate startDate = LocalDate.parse(reportRequestModel.getStartDate(),formatter);
 		LocalDate endDate = LocalDate.parse(reportRequestModel.getEndDate(),formatter);
 		Boolean editFlag = Boolean.TRUE;
@@ -440,7 +440,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 			}
 		}
 		String queryStr = "SELECT SUM(il.subTotal*i.exchangeRate) AS TOTAL_AMOUNT, SUM(il.vatAmount*i.exchangeRate) AS TOTAL_VAT_AMOUNT FROM Invoice i ,InvoiceLineItem il WHERE i.id = il.invoice.id AND i.status not in(2) AND i.type=1 AND i.isReverseChargeEnabled=false AND i.deleteFlag=false AND i.editFlag=:editFlag AND il.vatCategory.id in (1) AND i.invoiceDate between :startDate And :endDate AND i.totalVatAmount>"+BigDecimal.ZERO;
-		List<Object> list = getEntityManager().createQuery(queryStr).setParameter("startDate",startDate).setParameter("endDate",endDate).setParameter("editFlag",editFlag).getResultList();
+		List<Object> list = getEntityManager().createQuery(queryStr).setParameter("startDate",startDate).setParameter("endDate",endDate).setParameter(CommonColumnConstants.EDIT_FLAG,editFlag).getResultList();
 		if(list!=null&& list.size()>0) {
 		List<VatReportModel> vatReportModelList = getVatModalFromDB(list);
 		for(VatReportModel vatReportModel:vatReportModelList){
@@ -451,7 +451,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	}
 	@Override
 	public void sumOfTotalAmountWithoutVatForRCM(ReportRequestModel reportRequestModel, VatReportResponseModel vatReportResponseModel){
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonColumnConstants.DD_MM_YYYY);
 		LocalDate startDate = LocalDate.parse(reportRequestModel.getStartDate(),formatter);
 		LocalDate endDate = LocalDate.parse(reportRequestModel.getEndDate(),formatter);
 		Boolean editFlag = Boolean.TRUE;
@@ -468,13 +468,13 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 				" FROM Invoice i,InvoiceLineItem  il WHERE i.id = il.invoice.id and il.vatCategory.id in (2) and i.status not in(2) AND i.type=1 and i.isReverseChargeEnabled=true AND i.editFlag=:editFlag AND i.invoiceDate between :startDate and :endDate AND i.totalVatAmount="+BigDecimal.ZERO,BigDecimal.class);
 		query.setParameter(CommonColumnConstants.START_DATE,startDate);
 		query.setParameter(CommonColumnConstants.END_DATE,endDate);
-		query.setParameter("editFlag",editFlag);
+		query.setParameter(CommonColumnConstants.EDIT_FLAG,editFlag);
 		BigDecimal amountWithoutVat = query.getSingleResult();
 //		vatReportResponseModel.setZeroRatedSupplies(amountWithoutVat);
 	}
 	@Override
 	public void getSumOfTotalAmountWithVatForRCM(ReportRequestModel reportRequestModel, VatReportResponseModel vatReportResponseModel){
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonColumnConstants.DD_MM_YYYY);
 		LocalDate startDate = LocalDate.parse(reportRequestModel.getStartDate(),formatter);
 		LocalDate endDate = LocalDate.parse(reportRequestModel.getEndDate(),formatter);
 		Boolean editFlag = Boolean.TRUE;
@@ -488,7 +488,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 			}
 		}
 		String queryStr = "SELECT SUM(i.totalAmount*i.exchangeRate) AS TOTAL_AMOUNT, SUM(i.totalVatAmount*i.exchangeRate) AS TOTAL_VAT_AMOUNT FROM Invoice i WHERE i.status not in(2) AND i.type=1 AND i.isReverseChargeEnabled=True AND i.deleteFlag=false AND i.editFlag=:editFlag AND i.invoiceDate BETWEEN :startDate AND :endDate AND i.totalVatAmount>"+BigDecimal.ZERO;
-		List<Object> list = getEntityManager().createQuery(queryStr).setParameter("startDate",startDate).setParameter("endDate",endDate).setParameter("editFlag",editFlag).getResultList();
+		List<Object> list = getEntityManager().createQuery(queryStr).setParameter("startDate",startDate).setParameter("endDate",endDate).setParameter(CommonColumnConstants.EDIT_FLAG,editFlag).getResultList();
 		if(list!=null&& list.size()>0) {
 			List<VatReportModel> vatReportModelList = getVatModalRCMFromDB(list);
 			for(VatReportModel vatReportModel:vatReportModelList){
@@ -497,7 +497,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 			}
 		}
 		String expenseQuery = "SELECT SUM(e.expenseAmount*e.exchangeRate) AS TOTAL_AMOUNT, SUM(e.expenseVatAmount*e.exchangeRate) AS TOTAL_VAT_AMOUNT FROM Expense e WHERE e.status not in(1) AND e.isReverseChargeEnabled=True AND e.deleteFlag=false AND e.editFlag=:editFlag AND e.expenseDate BETWEEN :startDate AND :endDate AND e.vatCategory.id in (1,2)";
-		List<Object> expenseList = getEntityManager().createQuery(expenseQuery).setParameter("startDate",startDate).setParameter("endDate",endDate).setParameter("editFlag",editFlag).getResultList();
+		List<Object> expenseList = getEntityManager().createQuery(expenseQuery).setParameter("startDate",startDate).setParameter("endDate",endDate).setParameter(CommonColumnConstants.EDIT_FLAG,editFlag).getResultList();
 		if(expenseList!=null&& expenseList.size()>0) {
 			List<VatReportModel> vatReportModelList = getVatModalRCMFromDB(expenseList);
 			for(VatReportModel vatReportModel:vatReportModelList){

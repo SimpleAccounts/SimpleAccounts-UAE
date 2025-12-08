@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest;
 
 import com.simpleaccounts.aop.LogRequest;
+import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.ExpenseStatusEnum;
@@ -278,7 +279,7 @@ public abstract class AbstractDoubleEntryRestController {
 			if (journal != null) {
 				journalService.persist(journal);
 				Expense expense = expenseService.findByPK(postingRequestModel.getPostingRefId());
-				if (expense.getPayee().equalsIgnoreCase("Company Expense")){
+				if (expense.getPayee().equalsIgnoreCase(CommonColumnConstants.COMPANY_EXPENSE)){
 				TransactionExpenses transactionExpenses =  transactionExpensesRepository.findByExpense(expense);
 				transactionExpensesService.delete(transactionExpenses);
 				Transaction transaction = transactionService.findByPK(transactionExpenses.getTransaction().getTransactionId());

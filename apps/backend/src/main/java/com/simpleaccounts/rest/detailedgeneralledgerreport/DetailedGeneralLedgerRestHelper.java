@@ -17,6 +17,7 @@ import com.simpleaccounts.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.service.bankaccount.TransactionService;
@@ -265,7 +266,7 @@ public class DetailedGeneralLedgerRestHelper {
 								} else if (expense.getEmployee() != null) {
 									model.setName(expense.getEmployee().getFirstName() + " " + expense.getEmployee().getLastName());
 								} else {
-									if (expense.getPayee() != null && expense.getPayee().equalsIgnoreCase("Company Expense"))
+									if (expense.getPayee() != null && expense.getPayee().equalsIgnoreCase(CommonColumnConstants.COMPANY_EXPENSE))
 										model.setName(expense.getPayee());
 									else {
 										TransactionCategory transactionCategory = transactionCategoryService.findByPK(Integer.parseInt(expense.getPayee()));

@@ -336,11 +336,11 @@ public class ExpenseRestHelper {
 		journal.setJournalDate(expense.getExpenseDate());
 		journal.setTransactionDate(expense.getExpenseDate());
 		if (expense.getBankAccount()!=null){
-			journal.setDescription("Company Expense");
+			journal.setDescription(CommonColumnConstants.COMPANY_EXPENSE);
 		}
 		else {
 			if(expense.getPayMode() == PayMode.CASH) {
-				journal.setDescription("Company Expense");
+				journal.setDescription(CommonColumnConstants.COMPANY_EXPENSE);
 			}else {
 				TransactionCategory transactionCategory = transactionCategoryService.findByPK(Integer.parseInt(expense.getPayee()));
 				journal.setDescription(transactionCategory.getTransactionCategoryName());
@@ -396,10 +396,10 @@ public class ExpenseRestHelper {
 			expenseModel.setExpenseVatAmount(entity.getExpenseVatAmount());
 			expenseModel.setExpenseStatus(ExpenseStatusEnum.getExpenseStatusByValue(entity.getStatus()));
 			if (entity.getBankAccount()!=null){
-				expenseModel.setPayee("Company Expense");
+				expenseModel.setPayee(CommonColumnConstants.COMPANY_EXPENSE);
 			}
-			else if (entity.getPayMode() == PayMode.CASH && entity.getPayee().equals("Company Expense")){
-					expenseModel.setPayee("Company Expense");
+			else if (entity.getPayMode() == PayMode.CASH && entity.getPayee().equals(CommonColumnConstants.COMPANY_EXPENSE)){
+					expenseModel.setPayee(CommonColumnConstants.COMPANY_EXPENSE);
 				}
 		else {
 					TransactionCategory transactionCategory = transactionCategoryService.findByPK(Integer.parseInt(entity.getPayee()));
@@ -481,8 +481,8 @@ public class ExpenseRestHelper {
 				expenseModel.setExpenseId(expense.getExpenseId());
 				expenseModel.setBankGenerated(expense.getBankGenerated());
 				if (expense.getPayee()!=null){
-					if(expense.getPayee() != null && expense.getPayee().equalsIgnoreCase("Company Expense")){
-						expenseModel.setPayee("Company Expense");
+					if(expense.getPayee() != null && expense.getPayee().equalsIgnoreCase(CommonColumnConstants.COMPANY_EXPENSE)){
+						expenseModel.setPayee(CommonColumnConstants.COMPANY_EXPENSE);
 					}
 					else {
 						TransactionCategory payeeTransactionCategory=transactionCategoryService.findByPK(Integer.parseInt(expense.getPayee()));
@@ -648,15 +648,15 @@ public class ExpenseRestHelper {
 		journal.setJournalDate(expense.getExpenseDate());
 		journal.setTransactionDate(expense.getExpenseDate());
 		journal.setTransactionDate(expense.getExpenseDate());
-		journal.setDescription("Reversal of journal entry against Expense No:-"+expense.getExpenseNumber());
+		journal.setDescription(CommonColumnConstants.REVERSAL_JOURNAL_EXPENSE_PREFIX + expense.getExpenseNumber());
 		if (expense.getBankAccount()!=null){
-			journal.setDescription("Reversal of journal entry against Expense No:-"+expense.getExpenseNumber());
+			journal.setDescription(CommonColumnConstants.REVERSAL_JOURNAL_EXPENSE_PREFIX + expense.getExpenseNumber());
 		}
 		else {
 			if(expense.getPayMode() == PayMode.CASH) {
-				journal.setDescription("Reversal of journal entry against Expense No:-"+expense.getExpenseNumber());
+				journal.setDescription(CommonColumnConstants.REVERSAL_JOURNAL_EXPENSE_PREFIX + expense.getExpenseNumber());
 			}else {
-				journal.setDescription("Reversal of journal entry against Expense No:-"+expense.getExpenseNumber());
+				journal.setDescription(CommonColumnConstants.REVERSAL_JOURNAL_EXPENSE_PREFIX + expense.getExpenseNumber());
 			}
 		}
 		return journal;
