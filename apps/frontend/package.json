@@ -103,7 +103,7 @@
     "simple-line-icons": "^2.4.1",
     "spinkit": "1.2.5",
     "styled-components": "^5.3.11",
-    "to-words": "^3.0.0",
+    "to-words": "^4.9.0",
     "yup": "^1.7.1"
   },
   "devDependencies": {
