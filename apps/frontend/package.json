@@ -91,7 +91,7 @@
     "react-sidebar": "^3.0.2",
     "react-stepper-horizontal": "^1.0.11",
     "react-switch": "^6.0.0",
-    "react-test-renderer": "^18.2.0",
+    "react-test-renderer": "^19.2.1",
     "react-text-mask-hoc": "^0.11.0",
     "react-to-print": "^2.12.4",
     "react-toastify": "^5.2.1",
