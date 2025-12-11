@@ -441,17 +441,40 @@ public class MigrationController {
     }
     
 	@LogRequest
-	@ApiOperation(value = "Download Sample csv of Migration")
-	@GetMapping(value = "/downloadcsv/{fileName:.+}")
-	public ResponseEntity<Object> downloadSimpleFile(@PathVariable String fileName) {
-		if (StringUtils.isBlank(fileName) || !SAFE_SAMPLE_FILE_NAME.matcher(fileName).matches()) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		ClassLoader classLoader = getClass().getClassLoader();
-		java.net.URL resourceUrl = classLoader.getResource("sample-file/" + fileName);
-		if (resourceUrl == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+		@ApiOperation(value = "Download Sample csv of Migration")
+		@GetMapping(value = "/downloadcsv/{fileName:.+}")
+		public ResponseEntity<Object> downloadSimpleFile(@PathVariable String fileName) {
+			if (StringUtils.isBlank(fileName) || !SAFE_SAMPLE_FILE_NAME.matcher(fileName).matches()) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			ClassLoader classLoader = getClass().getClassLoader();
+			String resourcePath;
+			switch (fileName) {
+				case "Chart_Of_Accounts.csv":
+					resourcePath = "sample-file/Chart_Of_Accounts.csv";
+					break;
+				case "Contacts.csv":
+					resourcePath = "sample-file/Contacts.csv";
+					break;
+				case "Credit_Note.csv":
+					resourcePath = "sample-file/Credit_Note.csv";
+					break;
+				case "Invoice.csv":
+					resourcePath = "sample-file/Invoice.csv";
+					break;
+				case "Opening_Balances.csv":
+					resourcePath = "sample-file/Opening_Balances.csv";
+					break;
+				case "Product.csv":
+					resourcePath = "sample-file/Product.csv";
+					break;
+				default:
+					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			java.net.URL resourceUrl = classLoader.getResource(resourcePath);
+			if (resourceUrl == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
 		File file = new File(resourceUrl.getFile());
 		String content = null;
 		try {
