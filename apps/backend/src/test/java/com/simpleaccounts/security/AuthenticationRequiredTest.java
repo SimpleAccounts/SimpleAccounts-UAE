@@ -55,12 +55,3 @@ public class AuthenticationRequiredTest {
             SecurityContextHolder.getContext().getAuthentication());
     }
 }
-
-
-
-
-
-
-
-
-

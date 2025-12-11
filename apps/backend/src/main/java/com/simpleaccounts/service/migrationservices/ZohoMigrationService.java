@@ -118,9 +118,10 @@ import com.simpleaccounts.utils.FileHelper;
 import lombok.extern.slf4j.Slf4j;
 
 
-@Component
-@Slf4j
-public class ZohoMigrationService {
+	@Component
+	@Slf4j
+	@SuppressWarnings("java:S3973")
+	public class ZohoMigrationService {
 	
 	private static final String SETTER_METHOD_SET_CURRENCY = "setCurrency";
 	private static final String SETTER_METHOD_SET_CURRENCY_CODE = "setCurrencyCode";
@@ -195,14 +196,14 @@ public class ZohoMigrationService {
         List<DataMigrationRespModel> list = new ArrayList<>();
         ProductMigrationParser parser = ProductMigrationParser.getInstance();
         Product product = parser.getAppVersionsToProductMap().get(productName + "_v" + version);
-        List<String> files = getFilesPresent(fileLocation);
-        
-        if(files != null)
-		{
-        	for (Object file : files) {
-        		List<Map<String, String>> mapList = migrationUtil.parseCSVFile((String) fileLocation + File.separator + file);
-        		List<Map<String, String>> itemsToRemove = new ArrayList<Map<String, String>>();
-        		for (Map<String, String> mapRecord : mapList) {
+	        List<String> files = getFilesPresent(fileLocation);
+	        
+	        if(files != null)
+			{
+	        	for (String file : files) {
+	        		List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
+	        		List<Map<String, String>> itemsToRemove = new ArrayList<Map<String, String>>();
+	        		for (Map<String, String> mapRecord : mapList) {
         			
         			// for Invoice
         			if (mapRecord.containsKey(INVOICE_DATE)) {
@@ -247,21 +248,28 @@ public class ZohoMigrationService {
         		}
         		mapList.removeAll(itemsToRemove);
         		
-        		List<Product.TableList.Table> tableList = product.getTableList().getTable();
-        		List<Product.TableList.Table> tables = migrationUtil.getTableName(tableList, (String) file);
-        		DataMigrationRespModel dataMigrationRespModel = new DataMigrationRespModel();
-        		Company company = companyService.getCompany();
-        		dataMigrationRespModel.setMigrationBeginningDate(company.getAccountStartDate().toString());
-        		dataMigrationRespModel.setExecutionDate(LocalDateTime.now().toString());
-        		dataMigrationRespModel.setFileName((String) file);
-        		dataMigrationRespModel.setRecordCount((Files.lines(Paths.get(fileLocation.toString() + "/" + file.toString())).count()) - 1);
+	        		List<Product.TableList.Table> tableList = product.getTableList().getTable();
+	        		List<Product.TableList.Table> tables = migrationUtil.getTableName(tableList, file);
+	        		DataMigrationRespModel dataMigrationRespModel = new DataMigrationRespModel();
+	        		Company company = companyService.getCompany();
+		        		dataMigrationRespModel.setMigrationBeginningDate(company.getAccountStartDate().toString());
+		        		dataMigrationRespModel.setExecutionDate(LocalDateTime.now().toString());
+		        		dataMigrationRespModel.setFileName(file);
+		        		long recordCount = 0;
+		        		Path recordCountPath = Paths.get(fileLocation, file);
+		        		try (Stream<String> lines = Files.lines(recordCountPath)) {
+		        			recordCount = lines.count() - 1;
+		        		} catch (IOException e) {
+	        			LOG.error("Failed to count records for file {}", file, e);
+	        		}
+	        		dataMigrationRespModel.setRecordCount(recordCount);
         		dataMigrationRespModel.setRecordsMigrated((long) mapList.size());
         		dataMigrationRespModel.setRecordsRemoved((long) itemsToRemove.size());
-        		list.add(dataMigrationRespModel);
-        		if (isSpecialHandlingNeeded(productName, file.toString())) {
-        			handleProductSpecificTables(tables, mapList, userId, request);
-        			continue;
-        		}
+	        		list.add(dataMigrationRespModel);
+	        		if (isSpecialHandlingNeeded(productName, file)) {
+	        			handleProductSpecificTables(tables, mapList, userId, request);
+	        			continue;
+	        		}
         		if(tables != null) 
 				{
 					LOG.info("processTheMigratedData tables ==>{} ", tables);
@@ -2277,9 +2285,9 @@ public class ZohoMigrationService {
 			throws IOException {
 		List<DataMigrationRespModel> list = new ArrayList<>();
 		log.info("getSummaryFileLocation{}", fileLocation);
-		List files = getFilesPresent(fileLocation);
-		for (Object file : files) {
-			List<Map<String, String>> mapList = migrationUtil.parseCSVFile((String) fileLocation + File.separator + file);
+		List<String> files = getFilesPresent(fileLocation);
+		for (String file : files) {
+			List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
 
 			List<Map<String, String>> itemsToRemove = new ArrayList<Map<String, String>>();
 
@@ -2322,11 +2330,17 @@ public class ZohoMigrationService {
 
 			DataMigrationRespModel dataMigrationRespModel = new DataMigrationRespModel();
 			Company company = companyService.getCompany();
-			dataMigrationRespModel.setMigrationBeginningDate(company.getAccountStartDate().toString());
-			dataMigrationRespModel.setExecutionDate(LocalDateTime.now().toString());
-			dataMigrationRespModel.setFileName((String) file);
-			dataMigrationRespModel.setRecordCount(
-					(Files.lines(Paths.get(fileLocation.toString() + "/" + file.toString())).count()) - 1);
+				dataMigrationRespModel.setMigrationBeginningDate(company.getAccountStartDate().toString());
+				dataMigrationRespModel.setExecutionDate(LocalDateTime.now().toString());
+				dataMigrationRespModel.setFileName(file);
+				long recordCount = 0;
+				Path recordCountPath = Paths.get(fileLocation, file);
+				try (Stream<String> lines = Files.lines(recordCountPath)) {
+					recordCount = lines.count() - 1;
+				} catch (IOException e) {
+					LOG.error("Failed to count records for file {}", file, e);
+				}
+				dataMigrationRespModel.setRecordCount(recordCount);
 			dataMigrationRespModel.setRecordsMigrated((long) mapList.size());
 			dataMigrationRespModel.setRecordsRemoved((long) itemsToRemove.size());
 			list.add(dataMigrationRespModel);
@@ -2405,4 +2419,3 @@ public class ZohoMigrationService {
 		}
 	}
 }
-

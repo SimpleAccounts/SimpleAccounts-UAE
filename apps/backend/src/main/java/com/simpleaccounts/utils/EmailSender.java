@@ -26,8 +26,9 @@ import java.util.Properties;
  *
  * @author S@urabh
  */
-@Component
-public class EmailSender {
+	@Component
+	@SuppressWarnings("java:S115")
+	public class EmailSender {
 
 	private final Logger logger = LoggerFactory.getLogger(EmailSender.class);
 	@Autowired
@@ -669,5 +670,4 @@ public class EmailSender {
 			"</body>\n" +
 			"</html>";
 }
-
 

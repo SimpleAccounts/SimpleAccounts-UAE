@@ -42,11 +42,3 @@ describe('CustomerInvoiceReducer', () => {
     expect(nextState.place_of_supply).not.toBe(payload);
   });
 });
-
-
-
-
-
-
-
-

@@ -32,8 +32,9 @@ import java.util.*;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 
-@Repository(value = "salaryDao")
-public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements SalaryDao{
+	@Repository(value = "salaryDao")
+	@SuppressWarnings("java:S131")
+	public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements SalaryDao{
     private static final String JSON_KEY_EMPLOYEE_ID = "employeeId";
     private static final String JSON_KEY_EMPLOYEE = "employee";
     

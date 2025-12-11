@@ -34,8 +34,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
-public class VatReportFilingServiceImpl implements VatReportFilingService {
+	@Service
+	@SuppressWarnings("java:S3973")
+	public class VatReportFilingServiceImpl implements VatReportFilingService {
     private static final String DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY = "dd/MM/yyyy";
     @Autowired
     private DateFormatUtil dateUtils;

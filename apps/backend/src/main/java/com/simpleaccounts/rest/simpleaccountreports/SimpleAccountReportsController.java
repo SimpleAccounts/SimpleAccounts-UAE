@@ -455,7 +455,7 @@ public class SimpleAccountReportsController {
     @LogRequest
     @ApiOperation(value = "Get Statement of Accounts Report")
     @GetMapping(value = "/statementOfAccounts")
-    public ResponseEntity<?> getStatementOfAccounts(ReportRequestModel requestModel,@RequestParam(value = "contactId",required = false) Integer contactId,
+    public ResponseEntity<Object> getStatementOfAccounts(ReportRequestModel requestModel,@RequestParam(value = "contactId",required = false) Integer contactId,
                                                                            HttpServletRequest request) {
 
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -478,7 +478,7 @@ public class SimpleAccountReportsController {
     @LogRequest
     @ApiOperation(value = "Get Statement of Accounts Report For Supplier ")
     @GetMapping(value = "/supplierStatementOfAccounts")
-    public ResponseEntity<?> getsupplierStatementOfAccounts(ReportRequestModel requestModel,@RequestParam(value = "contactId",required = false) Integer contactId,
+    public ResponseEntity<Object> getsupplierStatementOfAccounts(ReportRequestModel requestModel,@RequestParam(value = "contactId",required = false) Integer contactId,
                                                     HttpServletRequest request) {
 
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);

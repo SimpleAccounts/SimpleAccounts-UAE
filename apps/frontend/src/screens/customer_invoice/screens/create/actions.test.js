@@ -73,11 +73,3 @@ describe('customer invoice create actions', () => {
     });
   });
 });
-
-
-
-
-
-
-
-

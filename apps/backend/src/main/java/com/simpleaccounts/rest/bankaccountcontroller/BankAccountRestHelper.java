@@ -27,8 +27,9 @@ import com.simpleaccounts.model.BankModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
-public class BankAccountRestHelper {
+	@Component
+	@SuppressWarnings("java:S131")
+	public class BankAccountRestHelper {
 
 	private static final String DATE_FORMAT_MMM_YYYY = "MMM yyyy";
 

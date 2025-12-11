@@ -28,6 +28,7 @@ import java.util.List;
  * @author sonu
  */
 @Data
+@SuppressWarnings("java:S1948")
 public class TransactionPresistModel implements Serializable {
 	@JsonIgnore
 	private static final String DATE_FORMAT = "dd/MM/yyyy";

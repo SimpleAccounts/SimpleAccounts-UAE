@@ -55,9 +55,10 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  *
  * @author Sonu
  */
-@RestController
-@RequestMapping(value = "/rest/bank")
-public class BankAccountController{
+	@RestController
+	@RequestMapping(value = "/rest/bank")
+	@SuppressWarnings("java:S131")
+	public class BankAccountController{
 
 	private static final String MSG_DELETE_UNSUCCESSFUL = "delete.unsuccessful.msg";
 

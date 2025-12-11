@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -74,6 +75,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MigrationController {
     private static final String LOG_INFO_PATTERN = "info{}";
     private static final String MSG_NO_FILES_AVAILABLE = "No Files Available";
+    private static final Pattern SAFE_SAMPLE_FILE_NAME = Pattern.compile("^[a-zA-Z0-9._-]+$");
     
     private  final Logger logger = LoggerFactory.getLogger(MigrationController.class);
 
@@ -197,7 +199,7 @@ public class MigrationController {
     @ApiOperation(value = "Migrate The Data To SimpleAccounts")
     @PostMapping(value = "/migrate")
     @LogRequest
-    public ResponseEntity<?> saveMigratedData(DataMigrationModel dataMigrationModel,HttpServletRequest request){
+    public ResponseEntity<Object> saveMigratedData(DataMigrationModel dataMigrationModel,HttpServletRequest request){
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             String productName = dataMigrationModel.getName();
@@ -272,7 +274,7 @@ public class MigrationController {
     @ApiOperation(value = "List of Transaction Category")
     @GetMapping(value = "/listOfTransactionCategory")
     @LogRequest
-    public ResponseEntity<?> listOfTransactionCategory(HttpServletRequest request){
+    public ResponseEntity<Object> listOfTransactionCategory(HttpServletRequest request){
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             String path = request.getServletContext().getRealPath("/");
@@ -297,7 +299,7 @@ public class MigrationController {
     @ApiOperation(value = "Get CSV File Data ")
     @GetMapping(value = "/getFileData")
     @LogRequest
-    public ResponseEntity<?> getCsvFileData(String fileName,HttpServletRequest request){
+    public ResponseEntity<Object> getCsvFileData(String fileName,HttpServletRequest request){
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         try {
             String path = request.getServletContext().getRealPath("/");
@@ -360,7 +362,7 @@ public class MigrationController {
     @LogRequest
     @ApiOperation("List Of All Uploaded Files ")
     @GetMapping(value = "/getListOfAllFiles")
-    public ResponseEntity<?> getListOfAllFilesNames(HttpServletRequest request){
+    public ResponseEntity<Object> getListOfAllFilesNames(HttpServletRequest request){
         Integer userId = (jwtTokenUtil.getUserIdFromHttpRequest(request));
         String path = request.getServletContext().getRealPath("/");
         String migrationPath =path+ "/" + basePath;
@@ -388,7 +390,7 @@ public class MigrationController {
     @LogRequest
     @ApiOperation("Delete Uploaded Files ")
     @DeleteMapping(value = "/deleteFiles")
-    public ResponseEntity<?> deleteFilesByFilesNames(@RequestBody UploadedFilesDeletionReqModel fileNames ,HttpServletRequest request){
+    public ResponseEntity<Object> deleteFilesByFilesNames(@RequestBody UploadedFilesDeletionReqModel fileNames ,HttpServletRequest request){
         Integer userId = (jwtTokenUtil.getUserIdFromHttpRequest(request));
         String path = request.getServletContext().getRealPath("/");
         String migrationPath =path+ "/" + basePath;
@@ -425,7 +427,7 @@ public class MigrationController {
     @LogRequest
     @ApiOperation("Delete Uploaded Files ")
     @DeleteMapping(value = "/rollbackMigratedData")
-    public ResponseEntity<?> rollbackMigratedData(HttpServletRequest request){
+    public ResponseEntity<Object> rollbackMigratedData(HttpServletRequest request){
         try {
             Integer userId = (jwtTokenUtil.getUserIdFromHttpRequest(request));
             String path = request.getServletContext().getRealPath("/");
@@ -438,16 +440,43 @@ public class MigrationController {
         }
     }
     
-    @LogRequest
-	@ApiOperation(value = "Download Sample csv of Migration")
-	@GetMapping(value = "/downloadcsv/{fileName:.+}")
-	public ResponseEntity<?> downloadSimpleFile(@PathVariable String fileName, HttpServletRequest request) {
-		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("sample-file/"+fileName).getFile());
-		String filepath = file.getAbsolutePath();
+	@LogRequest
+		@ApiOperation(value = "Download Sample csv of Migration")
+		@GetMapping(value = "/downloadcsv/{fileName:.+}")
+		public ResponseEntity<Object> downloadSimpleFile(@PathVariable String fileName) {
+			if (StringUtils.isBlank(fileName) || !SAFE_SAMPLE_FILE_NAME.matcher(fileName).matches()) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			ClassLoader classLoader = getClass().getClassLoader();
+			String resourcePath;
+			switch (fileName) {
+				case "Chart_Of_Accounts.csv":
+					resourcePath = "sample-file/Chart_Of_Accounts.csv";
+					break;
+				case "Contacts.csv":
+					resourcePath = "sample-file/Contacts.csv";
+					break;
+				case "Credit_Note.csv":
+					resourcePath = "sample-file/Credit_Note.csv";
+					break;
+				case "Invoice.csv":
+					resourcePath = "sample-file/Invoice.csv";
+					break;
+				case "Opening_Balances.csv":
+					resourcePath = "sample-file/Opening_Balances.csv";
+					break;
+				case "Product.csv":
+					resourcePath = "sample-file/Product.csv";
+					break;
+				default:
+					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			java.net.URL resourceUrl = classLoader.getResource(resourcePath);
+			if (resourceUrl == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		File file = new File(resourceUrl.getFile());
 		String content = null;
-		Path path = Paths.get(filepath);
-		Resource resource = null;
 		try {
 			content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 

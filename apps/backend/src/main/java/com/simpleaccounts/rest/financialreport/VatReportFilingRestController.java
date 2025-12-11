@@ -97,10 +97,10 @@ public class VatReportFilingRestController {
         }
     }
 
-    @LogRequest
-    @ApiOperation(value = "Get Vat Report Filing List For Bank")
-    @GetMapping(value = "/getVatReportListForBank")
-    public ResponseEntity<?> getVatReportListForBank(Integer id, HttpServletRequest request) {
+	@LogRequest
+	@ApiOperation(value = "Get Vat Report Filing List For Bank")
+	@GetMapping(value = "/getVatReportListForBank")
+	public ResponseEntity<Object> getVatReportListForBank(Integer id) {
         try {
             List<VatReportResponseListForBank> vatReportResponseListForBanks = new ArrayList<>();
             List<VatReportFiling> vatReportFilingListForPaymentOrClaim = new ArrayList<>();
@@ -136,7 +136,7 @@ public class VatReportFilingRestController {
     @Transactional
     @ApiOperation(value = "Generate Vat Report")
     @PostMapping(value = "/generateVatReport")
-    public ResponseEntity<?> generateVatReport(@RequestBody VatReportFilingRequestModel vatReportFilingRequestModel,
+    public ResponseEntity<Object> generateVatReport(@RequestBody VatReportFilingRequestModel vatReportFilingRequestModel,
                                                HttpServletRequest httpServletRequest){
      try{
          SimpleAccountsMessage message = null;
@@ -196,7 +196,7 @@ public class VatReportFilingRestController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "File Vat Report")
     @PostMapping(value = "/fileVatReport")
-    public ResponseEntity<?> fileReport(@ModelAttribute FileTheVatReportRequestModel fileTheVatReportRequestModel,HttpServletRequest request ){
+    public ResponseEntity<Object> fileReport(@ModelAttribute FileTheVatReportRequestModel fileTheVatReportRequestModel,HttpServletRequest request ){
         try {
             SimpleAccountsMessage message= null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -218,7 +218,7 @@ public class VatReportFilingRestController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Undo Filed Vat Report")
     @PostMapping(value = "/undoFiledVatReport")
-    public ResponseEntity<?> undoFiledVatReport(@RequestBody PostingRequestModel postingRequestModel,HttpServletRequest request){
+    public ResponseEntity<Object> undoFiledVatReport(@RequestBody PostingRequestModel postingRequestModel,HttpServletRequest request){
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
            Journal journal =  vatReportFilingService.undoFiledVatReport(postingRequestModel,userId);
@@ -235,7 +235,7 @@ public class VatReportFilingRestController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Record Vat Payment")
     @PostMapping(value = "/recordVatPayment")
-    public ResponseEntity<?> recordVatPayment(RecordVatPaymentRequestModel recordVatPaymentRequestModel,HttpServletRequest
+    public ResponseEntity<Object> recordVatPayment(RecordVatPaymentRequestModel recordVatPaymentRequestModel,HttpServletRequest
             request){
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -250,7 +250,7 @@ public class VatReportFilingRestController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Delete Vat Report By ID")
     @DeleteMapping(value = "/delete")
-    public ResponseEntity<?> delete(@RequestParam(value = "id") Integer id) {
+    public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id) {
         try {
             SimpleAccountsMessage message= null;
 

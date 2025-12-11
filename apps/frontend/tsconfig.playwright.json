@@ -12,13 +12,3 @@
   },
   "include": ["playwright.config.ts", "e2e/**/*.ts"]
 }
-
-
-
-
-
-
-
-
-
-

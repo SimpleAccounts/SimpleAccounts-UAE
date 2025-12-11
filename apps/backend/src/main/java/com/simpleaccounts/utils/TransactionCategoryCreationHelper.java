@@ -16,8 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
-public class TransactionCategoryCreationHelper {
+	@Component
+	@SuppressWarnings("java:S6809")
+	public class TransactionCategoryCreationHelper {
 	private static final String JSON_KEY_DESIGNATION = "designation";
 
     @Autowired

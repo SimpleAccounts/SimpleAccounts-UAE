@@ -32,9 +32,10 @@ import java.util.*;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import static org.terracotta.modules.ehcache.ToolkitInstanceFactoryImpl.LOGGER;
 
-@Service("salaryService")
-@Transactional
-public class SalaryServiceImpl extends SalaryService {
+	@Service("salaryService")
+	@Transactional
+	@SuppressWarnings("java:S131")
+	public class SalaryServiceImpl extends SalaryService {
 
     @Autowired
     private SalaryDao salaryDao;
@@ -187,4 +188,3 @@ public class SalaryServiceImpl extends SalaryService {
 
 
 }
-

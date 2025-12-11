@@ -111,7 +111,7 @@ public class TransactionImportController{
 	@LogRequest
 	@ApiOperation(value = "Download csv of Tranaction")
 	@GetMapping(value = "/downloadcsv")
-	public ResponseEntity<?> downloadSimpleFile() {
+	public ResponseEntity<Object> downloadSimpleFile() {
 		ClassLoader classLoader = getClass().getClassLoader();
 		File file = new File(classLoader.getResource("excel-file/SampleTransaction1.csv").getFile());
 		String filepath = file.getAbsolutePath();
@@ -319,5 +319,4 @@ public class TransactionImportController{
 		return new ResponseEntity<>(dataMap, HttpStatus.OK);
 	}
 }
-
 

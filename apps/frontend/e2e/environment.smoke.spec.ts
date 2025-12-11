@@ -6,13 +6,3 @@ test.describe('Environment smoke check', () => {
     await expect(page).toHaveTitle(/Playwright Smoke/);
   });
 });
-
-
-
-
-
-
-
-
-
-

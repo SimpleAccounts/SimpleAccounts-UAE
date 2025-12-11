@@ -133,7 +133,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Add New Expense")
 	@PostMapping(value = "/save")
-	public ResponseEntity<?> save(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
+	public ResponseEntity<Object> save(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message = null;
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -176,7 +176,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Update Expense")
 	@PostMapping(value = "/update")
-	public ResponseEntity<?> update(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
+	public ResponseEntity<Object> update(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message = null;
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -225,7 +225,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<?> delete(@RequestParam("expenseId") Integer expenseId) {
+	public ResponseEntity<Object> delete(@RequestParam("expenseId") Integer expenseId) {
 		try {
 			SimpleAccountsMessage message = null;
 			Expense expense = expenseService.findByPK(expenseId);
@@ -255,7 +255,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
 	@DeleteMapping( value = "/deletes")
-	public ResponseEntity<?> bulkDelete(@RequestBody DeleteModel expenseIds) {
+	public ResponseEntity<Object> bulkDelete(@RequestBody DeleteModel expenseIds) {
 		try {
 			expenseService.deleteByIds(expenseIds.getIds());
 			return ResponseEntity.status(HttpStatus.OK).build();

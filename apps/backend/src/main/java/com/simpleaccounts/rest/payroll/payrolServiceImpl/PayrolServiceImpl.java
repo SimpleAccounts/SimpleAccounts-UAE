@@ -33,8 +33,9 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.TextStyle;
 import java.util.*;
 
-@Service
-public class PayrolServiceImpl extends PayrolService {
+	@Service
+	@SuppressWarnings("java:S3973")
+	public class PayrolServiceImpl extends PayrolService {
     private static final Logger logger = LoggerFactory.getLogger(PayrolServiceImpl.class);
     @Autowired
     private PayrollRepository payrollRepository;

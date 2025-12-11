@@ -35,7 +35,7 @@ public class ReportsConfigurationRestController {
     @LogRequest
     @ApiOperation(value = "Get Report columns By ID")
     @GetMapping(value = "/getById")
-    public ResponseEntity<?> getReportConfigurationById(@RequestParam("id") Integer id) {
+    public ResponseEntity<Object> getReportConfigurationById(@RequestParam("id") Integer id) {
         JsonNode rootNode = null;
         try {
             ReportsConfiguration reportsConfiguration = reportsColumnConfigurationRepository.findById(id).get();
@@ -53,7 +53,7 @@ public class ReportsConfigurationRestController {
     @LogRequest
     @ApiOperation(value = "Update Report Columns Configuration")
     @PostMapping(value = "/update")
-    public ResponseEntity<?> update(@RequestBody ReportsConfigurationModel model, HttpServletRequest request) {
+    public ResponseEntity<Object> update(@RequestBody ReportsConfigurationModel model, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             User user = userService.findByPK(userId);

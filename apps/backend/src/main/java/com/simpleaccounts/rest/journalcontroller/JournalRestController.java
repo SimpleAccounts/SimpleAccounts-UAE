@@ -48,9 +48,10 @@ import static com.simpleaccounts.constant.PostingReferenceTypeEnum.*;
  *
  * @author saurabhg
  */
-@RestController
-@RequestMapping(value = "/rest/journal")
-public class JournalRestController {
+	@RestController
+	@RequestMapping(value = "/rest/journal")
+	@SuppressWarnings({"java:S131", "java:S6809"})
+	public class JournalRestController {
 	private static final String MSG_DELETE_UNSUCCESSFUL = "delete.unsuccessful.msg";
 	
 	private final Logger logger = LoggerFactory.getLogger(JournalRestController.class);
@@ -130,7 +131,7 @@ public class JournalRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Journal By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<?> deleteJournal(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<Object> deleteJournal(@RequestParam(value = "id") Integer id) {
 		try {
 			deleteJournalInternal(id);
 			SimpleAccountsMessage message = null;
@@ -161,7 +162,7 @@ public class JournalRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Journal in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity<?> deleteJournals(@RequestBody DeleteModel ids) {
+	public ResponseEntity<Object> deleteJournals(@RequestBody DeleteModel ids) {
 		try {
 			for (Integer id : ids.getIds()) {
 				deleteJournalInternal(id);
@@ -196,7 +197,7 @@ public class JournalRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Add New Journal Invoice")
 	@PostMapping(value = "/save")
-	public ResponseEntity<?> save(@RequestBody JournalRequestModel journalRequestModel, HttpServletRequest request) {
+	public ResponseEntity<Object> save(@RequestBody JournalRequestModel journalRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Journal journal = journalRestHelper.getEntity(journalRequestModel, userId);
@@ -231,7 +232,7 @@ public class JournalRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Update Journal")
 	@PostMapping(value = "/update")
-	public ResponseEntity<?> update(@RequestBody JournalRequestModel jouralRequestModel, HttpServletRequest request) {
+	public ResponseEntity<Object> update(@RequestBody JournalRequestModel jouralRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Journal journal = journalRestHelper.getEntity(jouralRequestModel, userId);
@@ -262,7 +263,7 @@ public class JournalRestController {
 	@LogRequest
 	@ApiOperation(value = "Get Journals By Invoice ID")
 	@GetMapping(value = "/getJournalsByInvoiceId")
-	public ResponseEntity<?> getJournalsByInvoiceId(@RequestParam(value = "id") Integer id,@RequestParam(value = "type") Integer type) {
+	public ResponseEntity<Object> getJournalsByInvoiceId(@RequestParam(value = "id") Integer id,@RequestParam(value = "type") Integer type) {
 		List<Journal> journalList = new ArrayList<>();
 		try {
 			switch (type){

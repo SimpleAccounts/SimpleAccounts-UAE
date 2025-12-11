@@ -48,7 +48,7 @@ public class RoleModuleController {
     @LogRequest
     @ApiOperation(value = "Get Module List")
     @GetMapping(value = "/getListForAllRoles")
-    public ResponseEntity<?> getModuleList(){
+    public ResponseEntity<Object> getModuleList(){
 //        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest();
         List<ModuleResponseModel> response  = new ArrayList<>();
         List<RoleModuleRelation> modulesList=roleModuleRelationService.getListOfSimpleAccountsModulesForAllRoles();
@@ -59,10 +59,10 @@ public class RoleModuleController {
 
     }
 
-    @LogRequest
-    @ApiOperation(value = "Get Module List")
-    @GetMapping(value = "/getList")
-    public ResponseEntity<?> getModuleList(HttpServletRequest request, Integer roleCode){
+	@LogRequest
+	@ApiOperation(value = "Get Module List")
+	@GetMapping(value = "/getList")
+	public ResponseEntity<Object> getModuleList(HttpServletRequest request){
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         List<ModuleResponseModel> response  = new ArrayList<>();
         List<SimpleAccountsModules> modulesList=roleModuleService.getListOfSimpleAccountsModules();
@@ -76,7 +76,7 @@ public class RoleModuleController {
     @LogRequest
     @ApiOperation(value = "Get Module List By RoleCode")
     @GetMapping(value = "/getModuleListByRoleCode")
-    public ResponseEntity<?> getModuleListByRoleCode(@RequestParam int roleCode){
+    public ResponseEntity<Object> getModuleListByRoleCode(@RequestParam int roleCode){
         List<ModuleResponseModel> response  = new ArrayList<>();
         List<RoleModuleRelation> modulesList=roleModuleService.getModuleListByRoleCode(roleCode);
         if (modulesList != null) {

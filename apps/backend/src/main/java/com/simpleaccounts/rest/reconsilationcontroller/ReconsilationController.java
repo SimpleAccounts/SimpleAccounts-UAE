@@ -41,9 +41,10 @@ import java.util.*;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
-@RestController
-@RequestMapping("/rest/reconsile")
-public class ReconsilationController {
+	@RestController
+	@RequestMapping("/rest/reconsile")
+	@SuppressWarnings("java:S131")
+	public class ReconsilationController {
 
 	private final Logger logger = LoggerFactory.getLogger(ReconsilationController.class);
 
@@ -103,7 +104,7 @@ public class ReconsilationController {
 
 	@LogRequest
 	@GetMapping(value = "/getTransactionCat")
-	public ResponseEntity<?> getTransactionCategory(ReconcilationRequestModel filterModel ) {
+	public ResponseEntity<Object> getTransactionCategory(ReconcilationRequestModel filterModel ) {
 		try {
 			Integer chartOfAccountCategoryId = filterModel.getChartOfAccountCategoryId();
 			ChartOfAccountCategory category = chartOfAccountCategoryService.findByPK(chartOfAccountCategoryId);

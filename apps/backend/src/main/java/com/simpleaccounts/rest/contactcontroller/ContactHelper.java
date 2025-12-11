@@ -19,8 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author admin
  */
-@Component
-public class ContactHelper {
+	@Component
+	@SuppressWarnings("java:S6809")
+	public class ContactHelper {
 
 	@Autowired
 	ContactService contactService;

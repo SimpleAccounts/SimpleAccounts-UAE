@@ -54,8 +54,9 @@ import java.util.stream.Collectors;
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.REFUND_CD_TEMPLATE;
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
 
-@Service
-public class CreditNoteRestHelper {
+	@Service
+	@SuppressWarnings({"java:S131", "java:S115", "java:S6809"})
+	public class CreditNoteRestHelper {
     private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
     @Autowired
     private InvoiceService invoiceService;

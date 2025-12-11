@@ -2251,7 +2251,7 @@ public class TransactionRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Un explain Transaction", response = Transaction.class)
 	@PostMapping(value = "/unexplain")
-	public ResponseEntity<?> unExplainTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
+		public ResponseEntity<Object> unExplainTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
 												  HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		Transaction trnx = isValidTransactionToExplain(transactionPresistModel);
@@ -2836,7 +2836,7 @@ public class TransactionRestController {
 	@LogRequest
 	@ApiOperation(value = "Get first created transaction date")
 	@GetMapping(value = "/getTransactionDate")
-	public ResponseEntity<?> getFirstTransactionDate() {
+		public ResponseEntity<Object> getFirstTransactionDate() {
 		Transaction transaction = transactionRepository.getFirstRecord();
 		if (transaction != null) {
 			return new ResponseEntity<>(transaction.getTransactionDate(), HttpStatus.OK);

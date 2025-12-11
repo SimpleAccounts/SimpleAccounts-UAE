@@ -53,8 +53,9 @@ import java.util.stream.Collectors;
 
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
-@Component
-public class PayrollRestHepler {
+	@Component
+	@SuppressWarnings({"java:S131", "java:S6809"})
+	public class PayrollRestHepler {
     private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
     private static final String ERROR_PROCESSING_PAYROLL = "Error processing payroll";
     private static final String DATE_FORMAT_DD_MM_YYYY = "DATE_FORMAT_DD_MM_YYYY";

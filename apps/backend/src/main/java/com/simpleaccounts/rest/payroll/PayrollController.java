@@ -1291,7 +1291,7 @@ public class PayrollController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Employee Payroll list")
     @GetMapping(value = "/payrollemployee/list")
-    public ResponseEntity<?> getPayrollEmployee(HttpServletRequest request) {
+	    public ResponseEntity<Object> getPayrollEmployee(HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             List<PayrollEmployeeModel> response = getPayrollEmployeeList(userId);
@@ -1343,7 +1343,7 @@ public class PayrollController {
     @LogRequest
     @ApiOperation(value = "Get Salary components")
     @GetMapping(value = "/getSalaryList")
-    public ResponseEntity<?> getSalaryComponent(@RequestParam(defaultValue = "0") int pageNo,
+	    public ResponseEntity<Object> getSalaryComponent(@RequestParam(defaultValue = "0") int pageNo,
                                                 @RequestParam(defaultValue = "10") int pageSize,
                                                 @RequestParam(required = false, defaultValue = "true") boolean paginationDisable,
                                                 @RequestParam(required = false) String order,
@@ -1362,7 +1362,7 @@ public class PayrollController {
     @LogRequest
     @ApiOperation(value = "Delete Salary components")
     @DeleteMapping(value = "/deleteSalaryComponent")
-    public ResponseEntity<?> deleteSalaryComponent(@RequestParam(value = "id") Integer id,
+	    public ResponseEntity<Object> deleteSalaryComponent(@RequestParam(value = "id") Integer id,
                                                 HttpServletRequest request){
         try {
           SalaryComponent salaryComponent = salaryComponentRepository.findById(id).get();
@@ -1425,4 +1425,3 @@ public class PayrollController {
         return PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
     }
 }
-

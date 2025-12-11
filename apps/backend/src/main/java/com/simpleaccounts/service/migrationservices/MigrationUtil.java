@@ -71,9 +71,10 @@ import com.simpleaccounts.utils.TransactionCategoryCreationHelper;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Component
-@Slf4j
-public class MigrationUtil {
+	@Component
+	@Slf4j
+	@SuppressWarnings("java:S131")
+	public class MigrationUtil {
 	
 	private static final String LOG_ERROR_PREFIX = "Error =";
 	private static final String JSON_KEY_TRANSACTION_CATEGORY_NAME = "transactionCategoryName";
@@ -253,7 +254,7 @@ public class MigrationUtil {
                     // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                     //LocalDateTime dateTime = LocalDateTime.parse(val.toString(), formatter);
                     LocalDateTime dateTime = dateFormtUtil.getDateStrAsLocalDateTime(val.toString(), getDateFormat());
-                    Class<?>[] paramTypes = {LocalDateTime.class};
+                    Class[] paramTypes = {LocalDateTime.class};
                     Method method = entity.getClass().getMethod(setterMethod, paramTypes);
                     method.invoke(entity, dateTime);
                     break;
@@ -261,20 +262,20 @@ public class MigrationUtil {
                 case "Integer":
 
                     Integer integer = (int) Double.parseDouble((String) val);
-                    Class<?>[] intParamTypes = {Integer.class};
+                    Class[] intParamTypes = {Integer.class};
                     method = entity.getClass().getMethod(setterMethod, intParamTypes);
                     method.invoke(entity, integer);
                     break;
                 case "String":
 
                     String string = val.toString();
-                    Class<?>[] stringParamTypes = {String.class};
+                    Class[] stringParamTypes = {String.class};
                     method = entity.getClass().getMethod(setterMethod, stringParamTypes);
                     method.invoke(entity, string);
                     break;
                 case "Object":
 
-                    Class<?> className = val.getClass();
+                    Class className = val.getClass();
                     method = entity.getClass().getMethod(setterMethod, className);
                     method.invoke(entity, val);
                     break;
@@ -282,14 +283,14 @@ public class MigrationUtil {
                 case "BigDecimal":
 
                     BigDecimal bigDecimal = new BigDecimal((String) val);
-                    Class<?>[] bigDecimalParamTypes = {BigDecimal.class};
+                    Class[] bigDecimalParamTypes = {BigDecimal.class};
                     method = entity.getClass().getMethod(setterMethod, bigDecimalParamTypes);
                     method.invoke(entity, bigDecimal);
                     break;
 
                 case "Float":
                     Float floatValue = (float) Double.parseDouble((String) val);
-                    Class<?>[] floatParamTypes = {Float.class};
+                    Class[] floatParamTypes = {Float.class};
                     method = entity.getClass().getMethod(setterMethod, floatParamTypes);
                     method.invoke(entity, floatValue);
                     break;
@@ -392,8 +393,8 @@ public class MigrationUtil {
      */
     protected void setDefaultSetterValues(Object entity, Integer userId) {
 
-        Class<?>[] intParamTypes = {Integer.class};
-        Class<?>[] dateParamTypes = {LocalDateTime.class};
+        Class[] intParamTypes = {Integer.class};
+        Class[] dateParamTypes = {LocalDateTime.class};
         Method method = null;
         try {
             method = entity.getClass().getMethod("setCreatedBy", intParamTypes);

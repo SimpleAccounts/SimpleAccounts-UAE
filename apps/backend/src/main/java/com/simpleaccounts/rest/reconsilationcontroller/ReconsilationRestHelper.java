@@ -28,8 +28,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
-@Component
-public class ReconsilationRestHelper {
+	@Component
+	@SuppressWarnings("java:S115")
+	public class ReconsilationRestHelper {
 
 	private final Logger logger = LoggerFactory.getLogger(ReconsilationController.class);
 

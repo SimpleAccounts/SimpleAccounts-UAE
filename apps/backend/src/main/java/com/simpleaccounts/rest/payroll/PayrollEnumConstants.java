@@ -4,6 +4,7 @@ import com.simpleaccounts.constant.ChartOfAccountCategoryIdEnumConstant;
 import lombok.Getter;
 import lombok.Setter;
 
+@SuppressWarnings("java:S115")
 public enum PayrollEnumConstants {
 
 

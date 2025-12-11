@@ -117,7 +117,7 @@ PoQuatationController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "New Request For Quatation")
     @PostMapping(value = "/saverfq")
-    public ResponseEntity<?> saveRequestForQuatation(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
+    public ResponseEntity<Object> saveRequestForQuatation(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
             SimpleAccountsMessage message=null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -149,7 +149,7 @@ PoQuatationController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Update Request For Quatation")
     @PostMapping(value = "/updaterfq")
-    public ResponseEntity<?> updateRequestForQuatation(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
+    public ResponseEntity<Object> updateRequestForQuatation(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
             SimpleAccountsMessage message=null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -182,7 +182,7 @@ PoQuatationController {
     @LogRequest
     @ApiOperation(value = "Send RFQ")
     @PostMapping(value = "/sendrfq")
-    public ResponseEntity<?> sendRfq(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
+    public ResponseEntity<Object> sendRfq(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
         try {
             SimpleAccountsMessage message=null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -237,7 +237,7 @@ PoQuatationController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "New Request For Purchase Order")
     @PostMapping(value = "/savepo")
-    public ResponseEntity<?> savePurchaseOrder(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
+    public ResponseEntity<Object> savePurchaseOrder(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
             SimpleAccountsMessage message= null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -281,7 +281,7 @@ PoQuatationController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Update Request For Purchase Order")
     @PostMapping(value = "/updatepo")
-    public ResponseEntity<?> updatePurchaseOrder(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
+    public ResponseEntity<Object> updatePurchaseOrder(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
             SimpleAccountsMessage message= null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -320,7 +320,7 @@ PoQuatationController {
     @LogRequest
     @ApiOperation(value = "Send Purchase Order")
     @PostMapping(value = "/sendPO")
-    public ResponseEntity<?> sendPO(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
+    public ResponseEntity<Object> sendPO(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
         try {
             SimpleAccountsMessage message= null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -376,7 +376,7 @@ PoQuatationController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "New Request For Purchase Order")
     @PostMapping(value = "/savegrn")
-    public ResponseEntity<?> saveGoodsReceiveNotes(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
+    public ResponseEntity<Object> saveGoodsReceiveNotes(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
             SimpleAccountsMessage message = null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -420,7 +420,7 @@ PoQuatationController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Update Goods Receive Notes")
     @PostMapping(value = "/updategrn")
-    public ResponseEntity<?> updateGoodsReceiveNotes(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
+    public ResponseEntity<Object> updateGoodsReceiveNotes(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
             SimpleAccountsMessage message = null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -454,7 +454,7 @@ PoQuatationController {
     @LogRequest
     @ApiOperation(value = "Send GRN")
     @PostMapping(value = "/sendGRN")
-    public ResponseEntity<?> sendGRN(@RequestParam("id") Integer id, HttpServletRequest request) {
+    public ResponseEntity<Object> sendGRN(@RequestParam("id") Integer id, HttpServletRequest request) {
         try {
             SimpleAccountsMessage message = null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -480,7 +480,7 @@ PoQuatationController {
     @Transactional
     @ApiOperation(value = "Post GRN")
     @PostMapping(value = "/postGRN")
-    public ResponseEntity<?> postGRN(@RequestParam("id") Integer id, HttpServletRequest request) {
+    public ResponseEntity<Object> postGRN(@RequestParam("id") Integer id, HttpServletRequest request) {
         try {
             SimpleAccountsMessage message = null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -519,7 +519,7 @@ PoQuatationController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Delete RFQ PO GRN By ID")
     @DeleteMapping(value = "/delete")
-    public ResponseEntity<?> delete(@RequestParam(value = "id") Integer id) {
+    public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id) {
         PoQuatation poQuatation = poQuatationService.findByPK(id);
         Map<String, Object> param = new HashMap<>();
         param.put("childID", poQuatation);
@@ -558,7 +558,7 @@ PoQuatationController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "New Request For Quatation")
     @PostMapping(value = "/saveQuatation")
-    public ResponseEntity<?> saveQuatation(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
+    public ResponseEntity<Object> saveQuatation(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
             SimpleAccountsMessage message= null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -590,7 +590,7 @@ PoQuatationController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Update Request For Quatation")
     @PostMapping(value = "/updateQuatation")
-    public ResponseEntity<?> updateQuatation(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
+    public ResponseEntity<Object> updateQuatation(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
             SimpleAccountsMessage message= null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -657,7 +657,7 @@ PoQuatationController {
     @LogRequest
     @ApiOperation(value = "Send Quotation")
     @PostMapping(value = "/sendQuotation")
-    public ResponseEntity<?> sendQuotation(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
+    public ResponseEntity<Object> sendQuotation(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
@@ -717,7 +717,7 @@ PoQuatationController {
     @LogRequest
     @ApiOperation(value = "Change Status")
     @PostMapping(value = "/changeStatus")
-    public ResponseEntity<?> changeStatus(@RequestParam(value = "id") Integer id,@RequestParam(value = "status")String status, HttpServletRequest request) {
+    public ResponseEntity<Object> changeStatus(@RequestParam(value = "id") Integer id,@RequestParam(value = "status")String status, HttpServletRequest request) {
         try {
             SimpleAccountsMessage message = null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);

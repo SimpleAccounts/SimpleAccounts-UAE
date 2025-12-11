@@ -23,11 +23,3 @@ public final class H2Functions {
         return Timestamp.valueOf(dateTime);
     }
 }
-
-
-
-
-
-
-
-

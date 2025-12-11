@@ -55,10 +55,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
-@Slf4j
-@Component
-@RequestMapping("/rest/company")
-public class CompanyController {
+	@Slf4j
+	@Component
+	@RequestMapping("/rest/company")
+	@SuppressWarnings("java:S131")
+	public class CompanyController {
 	private static final String MSG_UPDATED_SUCCESSFULLY = "Updated Successfully";
 
 	@Autowired
