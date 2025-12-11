@@ -104,17 +104,19 @@ class UtilityTests {
             assertThat(diff).isEqualTo(10);
         }
 
-        @Test
-        @DisplayName("Should calculate difference between Dates")
-        void testDiffDates() {
-            Calendar cal1 = Calendar.getInstance();
-            cal1.set(2024, Calendar.JUNE, 20);
-            Calendar cal2 = Calendar.getInstance();
-            cal2.set(2024, Calendar.JUNE, 15);
+	        @Test
+	        @DisplayName("Should calculate difference between Dates")
+	        void testDiffDates() {
+	            Calendar cal1 = Calendar.getInstance();
+	            cal1.set(2024, Calendar.JUNE, 20, 0, 0, 0);
+	            cal1.set(Calendar.MILLISECOND, 0);
+	            Calendar cal2 = Calendar.getInstance();
+	            cal2.set(2024, Calendar.JUNE, 15, 0, 0, 0);
+	            cal2.set(Calendar.MILLISECOND, 0);
 
-            int diff = dateUtils.diff(cal1.getTime(), cal2.getTime());
-            assertThat(diff).isEqualTo(5);
-        }
+	            int diff = dateUtils.diff(cal1.getTime(), cal2.getTime());
+	            assertThat(diff).isEqualTo(5);
+	        }
 
         @Test
         @DisplayName("Should format date to string")

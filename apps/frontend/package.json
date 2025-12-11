@@ -14,7 +14,7 @@
     "@mui/x-data-grid": "^5.17.0",
     "@progress/kendo-drawing": "^1.6.0",
     "@progress/kendo-react-pdf": "^3.11.0",
-    "@react-pdf/renderer": "^1.6.8",
+    "@react-pdf/renderer": "^4.3.1",
     "ag-grid-community": "^26.1.0",
     "ag-grid-react": "^26.1.0",
     "ajv": "^8.17.1",
@@ -27,7 +27,7 @@
     "bootstrap-daterangepicker": "^3.0.5",
     "chart.js": "^2.8.0",
     "classnames": "^2.3.1",
-    "codemirror": "^5.47.0",
+    "codemirror": "^6.0.2",
     "convert-array-to-csv": "^2.0.0",
     "core-js": "^3.13.0",
     "crypto-js": "^4.2.0",
@@ -163,7 +163,7 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/__mocks__/fileMock.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!react-password-checklist|lodash-es|until-async|axios)"
+      "node_modules/(?!react-password-checklist|lodash-es|until-async|axios|codemirror|@codemirror|@marijn|style-mod|w3c-keyname)"
     ]
   },
   "overrides": {
