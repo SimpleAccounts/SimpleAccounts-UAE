@@ -14,7 +14,7 @@
     "@mui/x-data-grid": "^5.17.0",
     "@progress/kendo-drawing": "^1.6.0",
     "@progress/kendo-react-pdf": "^3.11.0",
-    "@react-pdf/renderer": "^1.6.8",
+    "@react-pdf/renderer": "^4.3.1",
     "ag-grid-community": "^26.1.0",
     "ag-grid-react": "^26.1.0",
     "ajv": "^8.17.1",
