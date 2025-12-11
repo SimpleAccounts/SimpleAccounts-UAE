@@ -43,9 +43,10 @@ import io.swagger.annotations.ApiOperation;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
-@RestController
-@RequestMapping(value = "/rest/transactionCategoryBalance")
-public class TransactionCategoryBalanceController {
+	@RestController
+	@RequestMapping(value = "/rest/transactionCategoryBalance")
+	@SuppressWarnings({"java:S3973", "java:S131"})
+	public class TransactionCategoryBalanceController {
 	private final Logger logger = LoggerFactory.getLogger(TransactionCategoryBalanceController.class);
 
 	@Autowired
@@ -70,7 +71,7 @@ public class TransactionCategoryBalanceController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Save")
 	@PostMapping(value = "/save")
-	public ResponseEntity<?> save(@ModelAttribute ListOfTCBPModel persistmodelList,
+	public ResponseEntity<Object> save(@ModelAttribute ListOfTCBPModel persistmodelList,
 									   HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -221,7 +222,7 @@ public class TransactionCategoryBalanceController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "/Update")
 	@PostMapping(value = "update")
-	public ResponseEntity<?> update(@RequestBody TransactioncategoryBalancePersistModel persistModel,
+	public ResponseEntity<Object> update(@RequestBody TransactioncategoryBalancePersistModel persistModel,
 										 HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);

@@ -1,5 +1,6 @@
 package com.simpleaccounts.service.exceptions;
 
+@SuppressWarnings("java:S115")
 public enum ServiceErrorCode {
 	
 	

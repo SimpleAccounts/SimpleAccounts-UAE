@@ -103,7 +103,7 @@ public class CreditNoteRestController {
     @PostMapping(value = "/save")
     @ApiOperation(value = "Add New Credit Note")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<?> save(@ModelAttribute CreditNoteRequestModel creditNoteRequestModel,
+    public ResponseEntity<Object> save(@ModelAttribute CreditNoteRequestModel creditNoteRequestModel,
                                   HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -138,7 +138,7 @@ public class CreditNoteRestController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Update Credit Note")
     @PostMapping(value = "/update")
-    public ResponseEntity<?> update(@ModelAttribute CreditNoteRequestModel requestModel,
+    public ResponseEntity<Object> update(@ModelAttribute CreditNoteRequestModel requestModel,
                                     HttpServletRequest request) {
         try {
             SimpleAccountsMessage message = null;
@@ -210,7 +210,7 @@ public class CreditNoteRestController {
     @LogRequest
     @ApiOperation(value = "Post Journal Entry For Credit Note")
     @PostMapping(value = "/creditNotePosting")
-    public ResponseEntity<?> posting(@RequestBody PostingRequestModel postingRequestModel,
+    public ResponseEntity<Object> posting(@RequestBody PostingRequestModel postingRequestModel,
                                                     HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -240,7 +240,7 @@ public class CreditNoteRestController {
     @LogRequest
     @ApiOperation(value = "Add New Refund")
     @PostMapping(value = "/recordPaymentCNWithoutInvoice")
-    public ResponseEntity<?> recordPaymentCNWithoutInvoice(@ModelAttribute RecordPaymentAgainstCNWithoutInvoice requestModel,
+    public ResponseEntity<Object> recordPaymentCNWithoutInvoice(@ModelAttribute RecordPaymentAgainstCNWithoutInvoice requestModel,
                                                            HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -255,7 +255,7 @@ public class CreditNoteRestController {
     @LogRequest
     @ApiOperation(value = "Add New Refund")
     @PostMapping(value = "/refund")
-    public ResponseEntity<?> save(@ModelAttribute RecordPaymentForCN requestModel,
+    public ResponseEntity<Object> save(@ModelAttribute RecordPaymentForCN requestModel,
                                   HttpServletRequest request) {
         try {
             SimpleAccountsMessage message = null;
@@ -273,7 +273,7 @@ public class CreditNoteRestController {
     @LogRequest
     @ApiOperation(value = "Apply To Invoice")
     @PostMapping(value = "/applyToInvoice")
-    public ResponseEntity<?> save(
+    public ResponseEntity<Object> save(
             @ModelAttribute RefundAgainstInvoicesRequestModel refundAgainstInvoicesRequestModel,
             HttpServletRequest request) {
         try {
@@ -314,7 +314,7 @@ public class CreditNoteRestController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Delete Credit Note By ID")
     @PostMapping(value = "/delete")
-    public ResponseEntity<?> delete(@RequestParam(value = "id") Integer id) {
+    public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id) {
 
             try {
                 Optional<CreditNote> optionalCreditNote = creditNoteRepository.findById(id);

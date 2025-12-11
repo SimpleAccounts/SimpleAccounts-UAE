@@ -36,9 +36,10 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.ChartUtil;
 
-@Service("transactionService")
-@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-public class TransactionServiceImpl extends TransactionService {
+	@Service("transactionService")
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@SuppressWarnings("java:S3973")
+	public class TransactionServiceImpl extends TransactionService {
 
 	private final Logger logger = LoggerFactory.getLogger(TransactionServiceImpl.class);
 

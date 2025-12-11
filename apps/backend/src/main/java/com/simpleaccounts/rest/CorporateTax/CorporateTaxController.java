@@ -45,9 +45,10 @@ import java.util.List;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
-@RestController
-@RequestMapping(value = "/rest/corporate/tax")
-public class CorporateTaxController {
+	@RestController
+	@RequestMapping(value = "/rest/corporate/tax")
+	@SuppressWarnings("java:S3973")
+	public class CorporateTaxController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 

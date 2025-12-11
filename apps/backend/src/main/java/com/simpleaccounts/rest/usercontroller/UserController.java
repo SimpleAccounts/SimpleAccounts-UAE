@@ -422,7 +422,7 @@ public class UserController{
 	@LogRequest
 	@ApiOperation(value = "Reset new password")
 	@PostMapping(value = "/resetNewpassword")
-	public ResponseEntity<?> resetNewPassword(@ModelAttribute UserModel userModel, HttpServletRequest request) {
+	public ResponseEntity<Object> resetNewPassword(@ModelAttribute UserModel userModel, HttpServletRequest request) {
 
 		try {
 			SimpleAccountsMessage message= null;
@@ -472,7 +472,7 @@ public class UserController{
 	@LogRequest
 	@ApiOperation(value = "User Invite Password Email")
 	@GetMapping(value = "/getUserInviteEmail")
-	public ResponseEntity<?> getUserInviteEmail(@RequestParam(value = "userId") Integer userId ,@RequestParam(value = "loginUrl")  String loginUrl , HttpServletRequest request){
+	public ResponseEntity<Object> getUserInviteEmail(@RequestParam(value = "userId") Integer userId ,@RequestParam(value = "loginUrl")  String loginUrl , HttpServletRequest request){
 		try {
 			SimpleAccountsMessage message= null;
 			UserModel selecteduser  = new UserModel();

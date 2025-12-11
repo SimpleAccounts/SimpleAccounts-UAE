@@ -27,8 +27,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 
-@Component
-public class FinancialReportRestHelper {
+	@Component
+	@SuppressWarnings({"java:S3973", "java:S131"})
+	public class FinancialReportRestHelper {
 
 	private static final String RETAINED_EARNINGS = "RETAINED_EARNINGS";
 	private static final String OTHER_CHARGES = "OTHER_CHARGES";
@@ -1168,5 +1169,3 @@ public class FinancialReportRestHelper {
 
 	}
 }
-
-

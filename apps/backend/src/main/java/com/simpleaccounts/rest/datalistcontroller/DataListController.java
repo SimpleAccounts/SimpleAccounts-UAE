@@ -42,9 +42,10 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  *
  * @author Sonu
  */
-@RestController
-@RequestMapping(value = "/rest/datalist")
-public class DataListController {
+	@RestController
+	@RequestMapping(value = "/rest/datalist")
+	@SuppressWarnings("java:S131")
+	public class DataListController {
 
 	private final Logger logger = LoggerFactory.getLogger(DataListController.class);
 
@@ -295,7 +296,7 @@ public class DataListController {
 	@LogRequest
 	@ApiOperation(value = "Get getProductCategoryList")
 	@GetMapping(value ="/getProductCategoryList")
-	public ResponseEntity<?> getProductCategoryList(HttpServletRequest request){
+	public ResponseEntity<Object> getProductCategoryList(HttpServletRequest request){
 		try {
 			List<ProductCategory> list = productCategoryRepository.getProductCategories(logger.getName());
 			List<ProductCategoryListModel> productCategoryListModels=new ArrayList<>();
@@ -572,7 +573,7 @@ public class DataListController {
 	@LogRequest
 	@ApiOperation(value = "Get Tax Treatment Category")
 	@GetMapping(value ="/getTaxTreatment")
-	public ResponseEntity<?> getTaxTreatmentList(HttpServletRequest request){
+	public ResponseEntity<Object> getTaxTreatmentList(HttpServletRequest request){
 		try {
 			List<TaxtTreatmentdto> list = taxTreatmentService.getList();
 			return new ResponseEntity<>(list,HttpStatus.OK);
@@ -586,7 +587,7 @@ public class DataListController {
 	@LogRequest
 	@ApiOperation(value = "Get getUnitTypeList")
 	@GetMapping(value ="/getUnitTypeList")
-	public ResponseEntity<?> getUnitTypeList(HttpServletRequest request){
+	public ResponseEntity<Object> getUnitTypeList(HttpServletRequest request){
 		try {
 			List<UnitType> list = unitTypesRepository.findAll();
 			List<UnitTypeListModel> unitTypeListModels=new ArrayList<>();
@@ -613,7 +614,7 @@ public class DataListController {
 	@LogRequest
 	@ApiOperation(value = "Get getUnitTypeList")
 	@GetMapping(value ="/getNoteSettingsInfo")
-	public ResponseEntity<?> getNoteSettingsInfo(HttpServletRequest request){
+	public ResponseEntity<Object> getNoteSettingsInfo(HttpServletRequest request){
 		try {
 			NotesSettings notesSettings = notesSettingsRepository.findAll().get(0);
 			return new ResponseEntity<>(notesSettings,HttpStatus.OK);
@@ -636,7 +637,7 @@ public class DataListController {
 	@LogRequest
 	@ApiOperation(value = "Save Default Notes Info")
 	@PostMapping(value ="/saveNoteSettingsInfo")
-	public ResponseEntity<?> saveNoteSettingsInfo(@RequestParam(value = "defaultNote") String defaultNote,
+	public ResponseEntity<Object> saveNoteSettingsInfo(@RequestParam(value = "defaultNote") String defaultNote,
 												  @RequestParam(value = "defaultFootNote") String defaultFootNote,
 												  @RequestParam(value = "defaultTermsAndConditions") String defaultTermsAndConditions,
 												  HttpServletRequest request)

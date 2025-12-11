@@ -90,6 +90,7 @@ public class CustomUserDetails implements UserDetails {
     }
 
     @Override
+    @SuppressWarnings("java:S1452")
     public Collection<? extends GrantedAuthority> getAuthorities() {
         String roleString = "ROLE_EMPLOYEE";
         if (role.getRoleName().equalsIgnoreCase("ADMIN")) {

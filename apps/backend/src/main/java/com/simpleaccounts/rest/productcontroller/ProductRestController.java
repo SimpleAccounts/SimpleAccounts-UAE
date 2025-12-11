@@ -124,7 +124,7 @@ public class ProductRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Product By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<?> deleteProduct(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<Object> deleteProduct(@RequestParam(value = "id") Integer id) {
 		try {
 			SimpleAccountsMessage message = null;
 			Product product = productService.findByPK(id);
@@ -145,7 +145,7 @@ public class ProductRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Product in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity<?> deleteProducts(@RequestBody DeleteModel ids) {
+	public ResponseEntity<Object> deleteProducts(@RequestBody DeleteModel ids) {
 		try {
 			SimpleAccountsMessage message = null;
 			productService.deleteByIds(ids.getIds());
@@ -178,7 +178,7 @@ public class ProductRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Add New Product")
 	@PostMapping(value = "/save")
-	public ResponseEntity<?> save(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
+	public ResponseEntity<Object> save(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
 		try {
 			Map<String, Object> map = new HashMap<>();
 			map.put("productCode", productRequestModel.getProductCode());
@@ -213,7 +213,7 @@ public class ProductRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Update Product")
 	@PostMapping(value = "/update")
-	public ResponseEntity<?> update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
+	public ResponseEntity<Object> update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message= null;
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -251,7 +251,7 @@ public class ProductRestController {
 	@LogRequest
 	@ApiOperation(value = "Get Transaction category For Product")
 	@GetMapping(value = "/getTransactionCategoryListForSalesProduct")
-	public ResponseEntity<?> getTransactionCategoryListForProduct(){
+	public ResponseEntity<Object> getTransactionCategoryListForProduct(){
 		List<SingleLevelDropDownModel> response  = new ArrayList<>();
 		List<TransactionCategory> transactionCategoryList = transactionCategoryService.getTransactionCategoryListForSalesProduct();
         if (transactionCategoryList!=null){
@@ -265,7 +265,7 @@ public class ProductRestController {
 	@LogRequest
 	@ApiOperation(value = "Get Transaction category For Product")
 	@GetMapping(value = "/getTransactionCategoryListForPurchaseProduct")
-	public ResponseEntity<?> getTransactionCategoryListForPurchaseProduct(){
+	public ResponseEntity<Object> getTransactionCategoryListForPurchaseProduct(){
 		List<SingleLevelDropDownModel> response  = new ArrayList<>();
 		List<TransactionCategory> transactionCategoryList = transactionCategoryService.getTransactionCategoryListForPurchaseProduct();
 		if (transactionCategoryList!=null){
@@ -277,7 +277,7 @@ public class ProductRestController {
 	@LogRequest
 	@ApiOperation(value = "Get Transaction category For Inventory")
 	@GetMapping(value = "/getTransactionCategoryListForInventory")
-	public ResponseEntity<?> getTransactionCategoryListForInventory(){
+	public ResponseEntity<Object> getTransactionCategoryListForInventory(){
 		List<DropdownModel> response  = new ArrayList<>();
 		List<TransactionCategory> transactionCategoryList = transactionCategoryService.getTransactionCategoryListForInventory();
 		if (transactionCategoryList!=null){

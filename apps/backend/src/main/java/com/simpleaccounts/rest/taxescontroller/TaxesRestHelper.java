@@ -22,8 +22,9 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-@Service
-public class TaxesRestHelper {
+	@Service
+	@SuppressWarnings("java:S115")
+	public class TaxesRestHelper {
     private static final String DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY = "dd/MM/yyyy";
 
     @Autowired

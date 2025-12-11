@@ -52,9 +52,10 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  *
  * @author saurabhg 2/1/2020
  */
-@RestController
-@RequestMapping(value = "/rest/employee")
-public class EmployeeController {
+	@RestController
+	@RequestMapping(value = "/rest/employee")
+	@SuppressWarnings("java:S3973")
+	public class EmployeeController {
 
 	private final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
@@ -147,7 +148,7 @@ public class EmployeeController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Employee By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<?> deleteEmployee(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<Object> deleteEmployee(@RequestParam(value = "id") Integer id) {
 		try {
 			Employee employee = employeeRepository.findById(id).get();
 			if(employee!=null){
@@ -240,7 +241,7 @@ public class EmployeeController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Save new Employee")
 	@PostMapping(value = "/save")
-	public ResponseEntity<?> save(@ModelAttribute EmployeePersistModel employeePersistModel, HttpServletRequest request) {
+	public ResponseEntity<Object> save(@ModelAttribute EmployeePersistModel employeePersistModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		try {
 			SimpleAccountsMessage message = null;
@@ -291,7 +292,7 @@ public class EmployeeController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Update Employee")
 	@PostMapping(value = "/update")
-	public ResponseEntity<?> update(@ModelAttribute EmployeePersistModel employeePersistModel, HttpServletRequest request) {
+	public ResponseEntity<Object> update(@ModelAttribute EmployeePersistModel employeePersistModel, HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message = null;
 			if (employeePersistModel.getId() != null && employeePersistModel.getId() > 0) {
@@ -384,7 +385,7 @@ public class EmployeeController {
 	@LogRequest
 	@ApiOperation(value = "Employee Invite Email")
 	@GetMapping(value = "/getEmployeeInviteEmail")
-	public ResponseEntity<?> getEmployeeInviteEmail(@RequestParam(value = "id") Integer employeeId , HttpServletRequest request){
+	public ResponseEntity<Object> getEmployeeInviteEmail(@RequestParam(value = "id") Integer employeeId , HttpServletRequest request){
 		try {
 			SimpleAccountsMessage message= null;
 			Employee employee=employeeService.findByPK(employeeId);

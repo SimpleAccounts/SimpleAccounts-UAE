@@ -50,7 +50,7 @@ public class CurrencyConversionController{
     @ApiOperation(value = "Save Currency Conversion", response = CurrencyConversion.class)
     @PostMapping(value = "/save")
 
-    public ResponseEntity<?> saveConvertedCurrency(@RequestBody CurrencyConversionRequestModel currencyConversionRequestModel
+    public ResponseEntity<Object> saveConvertedCurrency(@RequestBody CurrencyConversionRequestModel currencyConversionRequestModel
             , HttpServletRequest request){
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
@@ -76,7 +76,7 @@ public class CurrencyConversionController{
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "update Currency Conversion", response = CurrencyConversion.class)
     @PostMapping("/update")
-    public ResponseEntity<?> updateConvertedCurrency(@RequestBody CurrencyConversionRequestModel
+    public ResponseEntity<Object> updateConvertedCurrency(@RequestBody CurrencyConversionRequestModel
                                                                       currencyConversionRequestModel,HttpServletRequest request){
         try {
             SimpleAccountsMessage message = null;
@@ -156,7 +156,7 @@ public class CurrencyConversionController{
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Delete Currency by Currency Code", response = CurrencyConversion.class)
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteCurrency(@RequestParam("id") int id,
+    public ResponseEntity<Object> deleteCurrency(@RequestParam("id") int id,
                                                    HttpServletRequest request) {
         try {
             SimpleAccountsMessage message = null;

@@ -214,7 +214,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Invoice By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<?> delete(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id) {
 		Invoice invoice = invoiceService.findByPK(id);
 		try {
 			SimpleAccountsMessage message = null;
@@ -241,7 +241,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Invoices in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity<?> delete(@RequestBody DeleteModel ids) {
+	public ResponseEntity<Object> delete(@RequestBody DeleteModel ids) {
 		try {
 			SimpleAccountsMessage message= null;
 			message = new SimpleAccountsMessage("0044",
@@ -271,7 +271,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Add New Invoice")
 	@PostMapping(value = "/save")
-	public ResponseEntity<?> save(@ModelAttribute InvoiceRequestModel requestModel, HttpServletRequest request) {
+	public ResponseEntity<Object> save(@ModelAttribute InvoiceRequestModel requestModel, HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message = null;
 			    String rootPath = request.getServletContext().getRealPath("/");
@@ -328,7 +328,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Update Invoice")
 	@PostMapping(value = "/update")
-	public ResponseEntity<?> update(@ModelAttribute InvoiceRequestModel requestModel, HttpServletRequest request) {
+	public ResponseEntity<Object> update(@ModelAttribute InvoiceRequestModel requestModel, HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message= null;
 			String rootPath = request.getServletContext().getRealPath("/");
@@ -419,7 +419,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@LogRequest
 	@ApiOperation(value = "Send Invoice")
 	@PostMapping(value = "/send")
-	public ResponseEntity<?> update(@RequestParam("id") Integer id, HttpServletRequest request) {
+	public ResponseEntity<Object> update(@RequestParam("id") Integer id, HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message= null;
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -665,7 +665,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 	@LogRequest
 	@GetMapping(value = "/getPlaceOfSupplyForDropdown")
-	public ResponseEntity<?> getPlaceOfSupplyForDropdown() {
+	public ResponseEntity<Object> getPlaceOfSupplyForDropdown() {
 		try {
 			List<PlaceOfSupplyResponseModel> response  = new ArrayList<>();
 			List<PlaceOfSupply> modulesList=placeOfSupplyService.getPlaceOfSupplyForDropdown();

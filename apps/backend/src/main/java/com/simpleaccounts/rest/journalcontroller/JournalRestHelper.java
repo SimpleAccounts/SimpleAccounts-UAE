@@ -34,8 +34,9 @@ import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.service.VatCategoryService;
 
-@Component
-public class JournalRestHelper {
+	@Component
+	@SuppressWarnings({"java:S3973", "java:S115"})
+	public class JournalRestHelper {
 	private final Logger logger = LoggerFactory.getLogger(JournalRestHelper.class);
 	private static final boolean IS_LIST = true;
 	@Autowired

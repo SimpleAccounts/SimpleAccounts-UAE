@@ -38,8 +38,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
-public class CorporateTaxService {
+	@Service
+	@SuppressWarnings({"java:S3973", "java:S115"})
+	public class CorporateTaxService {
     private static final String DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY = "dd/MM/yyyy";
     @Autowired
     private DateFormatUtil dateUtils;

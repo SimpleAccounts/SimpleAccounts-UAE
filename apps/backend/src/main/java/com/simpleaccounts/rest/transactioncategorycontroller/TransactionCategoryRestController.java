@@ -164,7 +164,7 @@ public class TransactionCategoryRestController{
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Transaction Category")
 	@DeleteMapping(value = "/deleteTransactionCategory")
-	public ResponseEntity<?> deleteTransactionCategory(@RequestParam("id") Integer id) {
+	public ResponseEntity<Object> deleteTransactionCategory(@RequestParam("id") Integer id) {
 		try{
 		SimpleAccountsMessage message= null;
 		TransactionCategory transactionCategories = transactionCategoryService.findByPK(id);
@@ -190,7 +190,7 @@ public class TransactionCategoryRestController{
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Transaction Category In Bulk")
 	@DeleteMapping(value = "/deleteTransactionCategories")
-	public ResponseEntity<?> deleteTransactionCategories(@RequestBody DeleteModel ids) {
+	public ResponseEntity<Object> deleteTransactionCategories(@RequestBody DeleteModel ids) {
 		try {
 			SimpleAccountsMessage message= null;
 			transactionCategoryService.deleteByIds(ids.getIds());
@@ -209,7 +209,7 @@ public class TransactionCategoryRestController{
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Add New Transaction Category")
 	@PostMapping(value = "/save")
-	public ResponseEntity<?> save(@RequestBody TransactionCategoryBean transactionCategoryBean,
+	public ResponseEntity<Object> save(@RequestBody TransactionCategoryBean transactionCategoryBean,
 			HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message= null;
@@ -238,7 +238,7 @@ public class TransactionCategoryRestController{
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Update Transaction Category")
 	@PostMapping(value = "/update")
-	public ResponseEntity<?> update(@RequestBody TransactionCategoryBean transactionCategoryBean,
+	public ResponseEntity<Object> update(@RequestBody TransactionCategoryBean transactionCategoryBean,
 			HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message= null;

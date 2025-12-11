@@ -94,7 +94,7 @@ public class ProductCategoryRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Product Category")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<?> deleteTransactionCategory(@RequestParam("id") Integer id) {
+	public ResponseEntity<Object> deleteTransactionCategory(@RequestParam("id") Integer id) {
 		SimpleAccountsMessage message= null;
 		ProductCategory productCategories = productCategoryService.findByPK(id);
 		if (productCategories == null) {
@@ -112,7 +112,7 @@ public class ProductCategoryRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Product Category In Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity<?> deleteTransactionCategories(@RequestBody DeleteModel ids) {
+	public ResponseEntity<Object> deleteTransactionCategories(@RequestBody DeleteModel ids) {
 		try {
 			SimpleAccountsMessage message= null;
 			productCategoryService.deleteByIds(ids.getIds());
@@ -132,7 +132,7 @@ public class ProductCategoryRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Add New Product Category")
 	@PostMapping(value = "/save")
-	public ResponseEntity<?> save(@RequestBody ProductCategoryListModel productCategoryModel, HttpServletRequest request) {
+	public ResponseEntity<Object> save(@RequestBody ProductCategoryListModel productCategoryModel, HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message= null;
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -156,7 +156,7 @@ public class ProductCategoryRestController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Update Product Category")
 	@PostMapping(value = "/update")
-	public ResponseEntity<?> update(@RequestBody ProductCategoryListModel productCategoryModel,
+	public ResponseEntity<Object> update(@RequestBody ProductCategoryListModel productCategoryModel,
 			HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message= null;

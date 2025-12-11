@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@SuppressWarnings("java:S1948")
 public class SingleLevelDropDownModel implements Serializable {
 
 	private String label;

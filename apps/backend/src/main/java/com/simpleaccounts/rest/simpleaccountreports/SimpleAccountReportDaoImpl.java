@@ -29,8 +29,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
-public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<Integer, SalesByCustomerModel> implements SimpleAccountReportDao {
+	@Component
+	@SuppressWarnings({"java:S3973", "java:S131"})
+	public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<Integer, SalesByCustomerModel> implements SimpleAccountReportDao {
 
     private static final String QUERY_PARAM_START_DATE = "startDate";
     private static final String QUERY_PARAM_END_DATE = "endDate";

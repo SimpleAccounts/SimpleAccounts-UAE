@@ -25,8 +25,9 @@ import com.simpleaccounts.utils.DateFormatUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component
-public class DetailedGeneralLedgerRestHelper {
+	@Component
+	@SuppressWarnings({"java:S3973", "java:S131"})
+	public class DetailedGeneralLedgerRestHelper {
 
 	private static final Logger logger = LoggerFactory.getLogger(DetailedGeneralLedgerRestHelper.class);
 

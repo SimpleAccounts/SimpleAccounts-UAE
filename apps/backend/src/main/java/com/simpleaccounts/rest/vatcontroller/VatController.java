@@ -104,7 +104,7 @@ public class VatController{
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "delete Vat Category by Id")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<?> delete(@RequestParam(value = "id") Integer id) {
+		public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id) {
 		SimpleAccountsMessage message= null;
 		VatCategory vatCategory = vatCategoryService.findByPK(id);
 		if (vatCategory != null) {
@@ -123,7 +123,7 @@ public class VatController{
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Vat Category in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity<?> deletes(@RequestBody DeleteModel ids) {
+		public ResponseEntity<Object> deletes(@RequestBody DeleteModel ids) {
 		try {
 			SimpleAccountsMessage message= null;
 			vatCategoryService.deleteByIds(ids.getIds());
@@ -156,7 +156,7 @@ public class VatController{
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Add New Vat Category")
 	@PostMapping(value = "/save")
-	public ResponseEntity<?> save(@RequestBody VatCategoryRequestModel vatCatRequestModel, HttpServletRequest request) {
+		public ResponseEntity<Object> save(@RequestBody VatCategoryRequestModel vatCatRequestModel, HttpServletRequest request) {
 		SimpleAccountsMessage message= null;
 		try {
 			VatCategory vatCategory = vatCategoryRestHelper.getEntity(vatCatRequestModel);
@@ -182,7 +182,7 @@ public class VatController{
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Update Vat Category")
 	@PostMapping(value = "/update")
-	public ResponseEntity<?> update(@RequestBody VatCategoryRequestModel vatCatRequestModel, HttpServletRequest request) {
+		public ResponseEntity<Object> update(@RequestBody VatCategoryRequestModel vatCatRequestModel, HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message= null;
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);

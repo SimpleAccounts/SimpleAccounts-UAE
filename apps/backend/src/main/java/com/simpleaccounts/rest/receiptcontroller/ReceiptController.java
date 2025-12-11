@@ -53,9 +53,10 @@ import io.swagger.annotations.ApiOperation;
 /**
  * @author $@urabh : For Customer invoice
  */
-@RestController
-@RequestMapping("/rest/receipt")
-public class ReceiptController {
+	@RestController
+	@RequestMapping("/rest/receipt")
+	@SuppressWarnings("java:S3973")
+	public class ReceiptController {
 
 	private final Logger logger = LoggerFactory.getLogger(ReceiptController.class);
 
@@ -151,7 +152,7 @@ public class ReceiptController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Receipt By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<?> deleteReceipt(@RequestParam(value = "id") Integer id) {
+		public ResponseEntity<Object> deleteReceipt(@RequestParam(value = "id") Integer id) {
 		try {
 			SimpleAccountsMessage message= null;
 			Receipt receipt = receiptService.findByPK(id);
@@ -174,7 +175,7 @@ public class ReceiptController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Receipt in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity<?> deleteReceipts(@RequestBody DeleteModel ids) {
+		public ResponseEntity<Object> deleteReceipts(@RequestBody DeleteModel ids) {
 		try {
 			SimpleAccountsMessage message=null;
 			receiptService.deleteByIds(ids.getIds());
@@ -210,7 +211,7 @@ public class ReceiptController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Add New Receipt")
 	@PostMapping(value = "/save")
-	public ResponseEntity<?> save(@ModelAttribute ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
+		public ResponseEntity<Object> save(@ModelAttribute ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
@@ -356,7 +357,7 @@ public class ReceiptController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Update Receipt")
 	@PostMapping(value = "/update")
-	public ResponseEntity<?> update(@ModelAttribute ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
+	public ResponseEntity<Object> update(@ModelAttribute ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message= null;
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);

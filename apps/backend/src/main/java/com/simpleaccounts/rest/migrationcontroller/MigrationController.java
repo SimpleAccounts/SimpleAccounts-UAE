@@ -197,7 +197,7 @@ public class MigrationController {
     @ApiOperation(value = "Migrate The Data To SimpleAccounts")
     @PostMapping(value = "/migrate")
     @LogRequest
-    public ResponseEntity<?> saveMigratedData(DataMigrationModel dataMigrationModel,HttpServletRequest request){
+    public ResponseEntity<Object> saveMigratedData(DataMigrationModel dataMigrationModel,HttpServletRequest request){
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             String productName = dataMigrationModel.getName();
@@ -272,7 +272,7 @@ public class MigrationController {
     @ApiOperation(value = "List of Transaction Category")
     @GetMapping(value = "/listOfTransactionCategory")
     @LogRequest
-    public ResponseEntity<?> listOfTransactionCategory(HttpServletRequest request){
+    public ResponseEntity<Object> listOfTransactionCategory(HttpServletRequest request){
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             String path = request.getServletContext().getRealPath("/");
@@ -297,7 +297,7 @@ public class MigrationController {
     @ApiOperation(value = "Get CSV File Data ")
     @GetMapping(value = "/getFileData")
     @LogRequest
-    public ResponseEntity<?> getCsvFileData(String fileName,HttpServletRequest request){
+    public ResponseEntity<Object> getCsvFileData(String fileName,HttpServletRequest request){
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         try {
             String path = request.getServletContext().getRealPath("/");
@@ -360,7 +360,7 @@ public class MigrationController {
     @LogRequest
     @ApiOperation("List Of All Uploaded Files ")
     @GetMapping(value = "/getListOfAllFiles")
-    public ResponseEntity<?> getListOfAllFilesNames(HttpServletRequest request){
+    public ResponseEntity<Object> getListOfAllFilesNames(HttpServletRequest request){
         Integer userId = (jwtTokenUtil.getUserIdFromHttpRequest(request));
         String path = request.getServletContext().getRealPath("/");
         String migrationPath =path+ "/" + basePath;
@@ -388,7 +388,7 @@ public class MigrationController {
     @LogRequest
     @ApiOperation("Delete Uploaded Files ")
     @DeleteMapping(value = "/deleteFiles")
-    public ResponseEntity<?> deleteFilesByFilesNames(@RequestBody UploadedFilesDeletionReqModel fileNames ,HttpServletRequest request){
+    public ResponseEntity<Object> deleteFilesByFilesNames(@RequestBody UploadedFilesDeletionReqModel fileNames ,HttpServletRequest request){
         Integer userId = (jwtTokenUtil.getUserIdFromHttpRequest(request));
         String path = request.getServletContext().getRealPath("/");
         String migrationPath =path+ "/" + basePath;
@@ -425,7 +425,7 @@ public class MigrationController {
     @LogRequest
     @ApiOperation("Delete Uploaded Files ")
     @DeleteMapping(value = "/rollbackMigratedData")
-    public ResponseEntity<?> rollbackMigratedData(HttpServletRequest request){
+    public ResponseEntity<Object> rollbackMigratedData(HttpServletRequest request){
         try {
             Integer userId = (jwtTokenUtil.getUserIdFromHttpRequest(request));
             String path = request.getServletContext().getRealPath("/");
@@ -441,7 +441,7 @@ public class MigrationController {
     @LogRequest
 	@ApiOperation(value = "Download Sample csv of Migration")
 	@GetMapping(value = "/downloadcsv/{fileName:.+}")
-	public ResponseEntity<?> downloadSimpleFile(@PathVariable String fileName, HttpServletRequest request) {
+	public ResponseEntity<Object> downloadSimpleFile(@PathVariable String fileName, HttpServletRequest request) {
 		ClassLoader classLoader = getClass().getClassLoader();
 		File file = new File(classLoader.getResource("sample-file/"+fileName).getFile());
 		String filepath = file.getAbsolutePath();

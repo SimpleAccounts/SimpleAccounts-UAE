@@ -118,9 +118,10 @@ import com.simpleaccounts.utils.FileHelper;
 import lombok.extern.slf4j.Slf4j;
 
 
-@Component
-@Slf4j
-public class ZohoMigrationService {
+	@Component
+	@Slf4j
+	@SuppressWarnings("java:S3973")
+	public class ZohoMigrationService {
 	
 	private static final String SETTER_METHOD_SET_CURRENCY = "setCurrency";
 	private static final String SETTER_METHOD_SET_CURRENCY_CODE = "setCurrencyCode";
@@ -251,10 +252,17 @@ public class ZohoMigrationService {
         		List<Product.TableList.Table> tables = migrationUtil.getTableName(tableList, (String) file);
         		DataMigrationRespModel dataMigrationRespModel = new DataMigrationRespModel();
         		Company company = companyService.getCompany();
-        		dataMigrationRespModel.setMigrationBeginningDate(company.getAccountStartDate().toString());
-        		dataMigrationRespModel.setExecutionDate(LocalDateTime.now().toString());
-        		dataMigrationRespModel.setFileName((String) file);
-        		dataMigrationRespModel.setRecordCount((Files.lines(Paths.get(fileLocation.toString() + "/" + file.toString())).count()) - 1);
+	        		dataMigrationRespModel.setMigrationBeginningDate(company.getAccountStartDate().toString());
+	        		dataMigrationRespModel.setExecutionDate(LocalDateTime.now().toString());
+	        		dataMigrationRespModel.setFileName((String) file);
+	        		long recordCount = 0;
+	        		Path recordCountPath = Paths.get(fileLocation.toString(), file.toString());
+	        		try (Stream<String> lines = Files.lines(recordCountPath)) {
+	        			recordCount = lines.count() - 1;
+	        		} catch (IOException e) {
+	        			LOG.error("Failed to count records for file {}", file, e);
+	        		}
+	        		dataMigrationRespModel.setRecordCount(recordCount);
         		dataMigrationRespModel.setRecordsMigrated((long) mapList.size());
         		dataMigrationRespModel.setRecordsRemoved((long) itemsToRemove.size());
         		list.add(dataMigrationRespModel);
@@ -2322,11 +2330,17 @@ public class ZohoMigrationService {
 
 			DataMigrationRespModel dataMigrationRespModel = new DataMigrationRespModel();
 			Company company = companyService.getCompany();
-			dataMigrationRespModel.setMigrationBeginningDate(company.getAccountStartDate().toString());
-			dataMigrationRespModel.setExecutionDate(LocalDateTime.now().toString());
-			dataMigrationRespModel.setFileName((String) file);
-			dataMigrationRespModel.setRecordCount(
-					(Files.lines(Paths.get(fileLocation.toString() + "/" + file.toString())).count()) - 1);
+				dataMigrationRespModel.setMigrationBeginningDate(company.getAccountStartDate().toString());
+				dataMigrationRespModel.setExecutionDate(LocalDateTime.now().toString());
+				dataMigrationRespModel.setFileName((String) file);
+				long recordCount = 0;
+				Path recordCountPath = Paths.get(fileLocation.toString(), file.toString());
+				try (Stream<String> lines = Files.lines(recordCountPath)) {
+					recordCount = lines.count() - 1;
+				} catch (IOException e) {
+					LOG.error("Failed to count records for file {}", file, e);
+				}
+				dataMigrationRespModel.setRecordCount(recordCount);
 			dataMigrationRespModel.setRecordsMigrated((long) mapList.size());
 			dataMigrationRespModel.setRecordsRemoved((long) itemsToRemove.size());
 			list.add(dataMigrationRespModel);
@@ -2405,4 +2419,3 @@ public class ZohoMigrationService {
 		}
 	}
 }
-

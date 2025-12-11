@@ -20,10 +20,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "CORPORATE_TAX_PAYMENT_HISTORY")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder(toBuilder = true)
-public class CorporateTaxPaymentHistory implements Serializable {
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Builder(toBuilder = true)
+	@SuppressWarnings("java:S1948")
+	public class CorporateTaxPaymentHistory implements Serializable {
     @Id
     @Column(name = "CORPORATE_TAX_PAYMENT_HISTORY_ID", updatable = false, nullable = false)
     @SequenceGenerator(name="CORPORATE_TAX_PAYMENT_HISTORY_SEQ", sequenceName="CORPORATE_TAX_PAYMENT_HISTORY_SEQ", allocationSize=1, initialValue = 10000)

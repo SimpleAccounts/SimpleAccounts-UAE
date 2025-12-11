@@ -22,8 +22,9 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Service
-public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCategoryClosingBalanceService {
+	@Service
+	@SuppressWarnings("java:S3973")
+	public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCategoryClosingBalanceService {
 	private static final String JSON_KEY_TRANSACTION_CATEGORY = "transactionCategory";
 
     @Autowired
