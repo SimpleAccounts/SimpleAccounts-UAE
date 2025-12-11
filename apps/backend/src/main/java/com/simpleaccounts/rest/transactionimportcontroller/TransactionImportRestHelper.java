@@ -104,7 +104,7 @@ public class TransactionImportRestHelper {
 		try {
 			InputStream inputStream = fileattached.getInputStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-			CSVParser parser = new CSVParser(br, CSVFormat.EXCEL);
+			CSVParser parser = CSVFormat.EXCEL.parse(br);
 			listParser = parser.getRecords();
 		} catch (IOException e) {
 			LOGGER.error(ERROR, e);
