@@ -1,3 +1,15 @@
+# ------------------------------------------------------
+# Build Stage - Maven build
+# ------------------------------------------------------
+FROM maven:3.8-openjdk-8 AS builder
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests -q
+
+# ------------------------------------------------------
+# Runtime Stage - Tomcat
+# ------------------------------------------------------
 FROM eclipse-temurin:8-jdk-jammy
 
 ENV JAVA_OPTS -Xms512m  -Xmx512m
@@ -139,4 +151,6 @@ RUN set -e \
 
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
-COPY target/ROOT.war ${CATALINA_HOME}/webapps/
+
+# Copy WAR from builder stage
+COPY --from=builder /app/target/ROOT.war ${CATALINA_HOME}/webapps/
