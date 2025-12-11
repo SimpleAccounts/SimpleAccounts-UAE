@@ -125,7 +125,7 @@ class LogIn extends React.Component {
 			.logIn(obj)
 			.then((res) => {
 				toast.success('Log in Succesfully', {
-					position: toast.POSITION.TOP_RIGHT,
+					position: 'top-right',
 				});
 
 				this.props.history.push(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
@@ -137,7 +137,7 @@ class LogIn extends React.Component {
 						? 'Log in failed. '
 						: 'Something Went Wrong',
 					{
-						position: toast.POSITION.TOP_RIGHT,
+						position: 'top-right',
 					},
 				);
 			});

@@ -4,24 +4,25 @@ services:
 
   backend:
     container_name: simpleaccounts-backend
-    image: ghcr.io/datainn/simpleaccounts-backend-ae:blue.berry.81
+    build: ../../apps/backend
+    image: simpleaccounts-backend:latest
     restart: always
     ports:
       - "8080:8080"
     environment:
-      SIMPLEACCOUNTS_SMTP_USER: ""
-      SIMPLEACCOUNTS_SMTP_PASS: ""
-      SIMPLEACCOUNTS_SMTP_HOST: ""
-      SIMPLEACCOUNTS_SMTP_PORT: ""
-      SIMPLEACCOUNTS_SMTP_AUTH: ""
-      SIMPLEACCOUNTS_SMTP_STARTTLS_ENABLE: ""
-      SIMPLEACCOUNTS_RELEASE: blue.berry.81
-      SIMPLEACCOUNTS_HOST: http://backend:8080
-      SIMPLEACCOUNTS_DB_HOST: host.docker.internal
-      SIMPLEACCOUNTS_DB: simpleaccounts_db
-      SIMPLEACCOUNTS_DB_USER: simpleaccounts_db_user
-      SIMPLEACCOUNTS_DB_PASSWORD: SimpleAccounts@2023
-      SIMPLEACCOUNTS_DB_PORT: 5432
+      SIMPLEACCOUNTS_SMTP_USER: ${SIMPLEACCOUNTS_SMTP_USER}
+      SIMPLEACCOUNTS_SMTP_PASS: ${SIMPLEACCOUNTS_SMTP_PASS}
+      SIMPLEACCOUNTS_SMTP_HOST: ${SIMPLEACCOUNTS_SMTP_HOST}
+      SIMPLEACCOUNTS_SMTP_PORT: ${SIMPLEACCOUNTS_SMTP_PORT}
+      SIMPLEACCOUNTS_SMTP_AUTH: ${SIMPLEACCOUNTS_SMTP_AUTH}
+      SIMPLEACCOUNTS_SMTP_STARTTLS_ENABLE: ${SIMPLEACCOUNTS_SMTP_STARTTLS_ENABLE}
+      SIMPLEACCOUNTS_RELEASE: ${BACKEND_RELEASE}
+      SIMPLEACCOUNTS_HOST: ${BACKEND_HOST_INTERNAL}
+      SIMPLEACCOUNTS_DB_HOST: ${SIMPLEACCOUNTS_DB_HOST}
+      SIMPLEACCOUNTS_DB: ${SIMPLEACCOUNTS_DB}
+      SIMPLEACCOUNTS_DB_USER: ${SIMPLEACCOUNTS_DB_USER}
+      SIMPLEACCOUNTS_DB_PASSWORD: ${SIMPLEACCOUNTS_DB_PASSWORD}
+      SIMPLEACCOUNTS_DB_PORT: ${SIMPLEACCOUNTS_DB_PORT}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -29,13 +30,14 @@ services:
 
   frontend:
     container_name: simpleaccounts-frontend
-    image: ghcr.io/datainn/simpleaccounts-frontend-ae:blue.berry.112
+    build: ../../apps/frontend
+    image: simpleaccounts-frontend:latest
     restart: always
     ports:
       - "80:80"
     environment:
-      SIMPLEACCOUNTS_RELEASE: blue.berry.112
-      SIMPLEACCOUNTS_HOST: http://localhost:8080
+      SIMPLEACCOUNTS_RELEASE: ${FRONTEND_RELEASE}
+      SIMPLEACCOUNTS_HOST: ${FRONTEND_HOST_PUBLIC}
     depends_on:
       - backend
     networks:
