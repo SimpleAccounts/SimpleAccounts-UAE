@@ -1,4 +1,16 @@
-FROM openjdk:8-jdk-slim
+# ------------------------------------------------------
+# Build Stage - Maven build
+# ------------------------------------------------------
+FROM maven:3.8-openjdk-8 AS builder
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests -q
+
+# ------------------------------------------------------
+# Runtime Stage - Tomcat
+# ------------------------------------------------------
+FROM eclipse-temurin:8-jdk-jammy
 
 ENV JAVA_OPTS -Xms512m  -Xmx512m
 ENV CATALINA_HOME /usr/local/tomcat
@@ -25,6 +37,8 @@ RUN set -eux; \
 	apt-get install -y --no-install-recommends \
 		gnupg dirmngr \
 		wget ca-certificates \
+		libapr1 \
+		libapr1-dev \
 	; \
 	\
 	ddist() { \
@@ -100,7 +114,7 @@ RUN set -eux; \
 	\
 # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
 	apt-mark auto '.*' > /dev/null; \
-	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
+	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark libapr1 libapr1-dev > /dev/null; \
 	find "$TOMCAT_NATIVE_LIBDIR" -type f -executable -exec ldd '{}' ';' \
 		| awk '/=>/ { print $(NF-1) }' \
 		| sort -u \
@@ -123,7 +137,7 @@ RUN set -eux; \
 	chmod 777 logs temp work
 
 RUN rm -rf ${CATALINA_HOME}/conf/context.xml
-COPY tomcat_home/conf/context.xml ${CATALINA_HOME}/conf/
+COPY src/main/webapp/META-INF/context.xml ${CATALINA_HOME}/conf/context.xml
 
 # verify Tomcat Native is working properly
 RUN set -e \
@@ -137,4 +151,6 @@ RUN set -e \
 
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
-COPY /target/ROOT.war ${CATALINA_HOME}/webapps/
+
+# Copy WAR from builder stage
+COPY --from=builder /app/target/ROOT.war ${CATALINA_HOME}/webapps/

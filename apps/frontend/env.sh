@@ -18,7 +18,9 @@ do
   fi
 
   # Read value of current variable if exists as Environment variable
-  value=$(printf '%s\n' "${!varname}")
+  if [ -n "$varname" ]; then
+    value=$(eval echo "\$$varname" 2>/dev/null)
+  fi
   # Otherwise use value from .env file
   [[ -z $value ]] && value=${varvalue}
 
