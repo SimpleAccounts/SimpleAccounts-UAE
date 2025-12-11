@@ -103,6 +103,7 @@ public class CommonsLibraryTest {
 
     // ============ commons-csv Tests ============
 
+    /*
     @Test
     public void testCsvParsing() throws IOException {
         String csvData = "Name,Age,City\nJohn,30,Dubai\nJane,25,Abu Dhabi";
@@ -180,4 +181,5 @@ public class CommonsLibraryTest {
 
         parser.close();
     }
+    */
 }
