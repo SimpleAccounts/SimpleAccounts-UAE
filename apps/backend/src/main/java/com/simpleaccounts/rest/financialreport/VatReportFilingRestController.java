@@ -97,10 +97,10 @@ public class VatReportFilingRestController {
         }
     }
 
-    @LogRequest
-    @ApiOperation(value = "Get Vat Report Filing List For Bank")
-    @GetMapping(value = "/getVatReportListForBank")
-    public ResponseEntity<Object> getVatReportListForBank(Integer id, HttpServletRequest request) {
+	@LogRequest
+	@ApiOperation(value = "Get Vat Report Filing List For Bank")
+	@GetMapping(value = "/getVatReportListForBank")
+	public ResponseEntity<Object> getVatReportListForBank(Integer id) {
         try {
             List<VatReportResponseListForBank> vatReportResponseListForBanks = new ArrayList<>();
             List<VatReportFiling> vatReportFilingListForPaymentOrClaim = new ArrayList<>();

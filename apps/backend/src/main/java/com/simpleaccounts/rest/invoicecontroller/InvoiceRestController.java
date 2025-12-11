@@ -243,6 +243,8 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@DeleteMapping(value = "/deletes")
 	public ResponseEntity<Object> delete(@RequestBody DeleteModel ids) {
 		try {
+			int requestedIds = ids != null && ids.getIds() != null ? ids.getIds().size() : 0;
+			logger.info("Bulk invoice delete requested for {} ids", requestedIds);
 			SimpleAccountsMessage message= null;
 			message = new SimpleAccountsMessage("0044",
 					MessageUtil.getMessage("invoice.deleted.successful.msg.0044"), false);

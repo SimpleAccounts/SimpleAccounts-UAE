@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -74,6 +75,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MigrationController {
     private static final String LOG_INFO_PATTERN = "info{}";
     private static final String MSG_NO_FILES_AVAILABLE = "No Files Available";
+    private static final Pattern SAFE_SAMPLE_FILE_NAME = Pattern.compile("^[a-zA-Z0-9._-]+$");
     
     private  final Logger logger = LoggerFactory.getLogger(MigrationController.class);
 
@@ -438,16 +440,20 @@ public class MigrationController {
         }
     }
     
-    @LogRequest
+	@LogRequest
 	@ApiOperation(value = "Download Sample csv of Migration")
 	@GetMapping(value = "/downloadcsv/{fileName:.+}")
-	public ResponseEntity<Object> downloadSimpleFile(@PathVariable String fileName, HttpServletRequest request) {
+	public ResponseEntity<Object> downloadSimpleFile(@PathVariable String fileName) {
+		if (StringUtils.isBlank(fileName) || !SAFE_SAMPLE_FILE_NAME.matcher(fileName).matches()) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("sample-file/"+fileName).getFile());
-		String filepath = file.getAbsolutePath();
+		java.net.URL resourceUrl = classLoader.getResource("sample-file/" + fileName);
+		if (resourceUrl == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		File file = new File(resourceUrl.getFile());
 		String content = null;
-		Path path = Paths.get(filepath);
-		Resource resource = null;
 		try {
 			content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 

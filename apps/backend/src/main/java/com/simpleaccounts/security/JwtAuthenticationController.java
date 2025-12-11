@@ -43,8 +43,15 @@ public class JwtAuthenticationController {
 				.loadUserByUsername(authenticationRequest.getUsername());
 		
 		final String token = jwtTokenUtil.generateToken(userDetails);
-		log.info("User {} logged in successfully.",authenticationRequest.getUsername());
+		log.info("User {} logged in successfully.", sanitizeForLog(authenticationRequest.getUsername()));
 		return ResponseEntity.ok(new JwtResponse(token));
+	}
+
+	private static String sanitizeForLog(String value) {
+		if (value == null) {
+			return "unknown";
+		}
+		return value.replace('\n', '_').replace('\r', '_').replace('\t', '_');
 	}
 
 	private void authenticate(String username, String password) throws Exception {

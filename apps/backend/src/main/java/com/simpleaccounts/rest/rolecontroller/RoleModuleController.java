@@ -59,10 +59,10 @@ public class RoleModuleController {
 
     }
 
-    @LogRequest
-    @ApiOperation(value = "Get Module List")
-    @GetMapping(value = "/getList")
-    public ResponseEntity<Object> getModuleList(HttpServletRequest request, Integer roleCode){
+	@LogRequest
+	@ApiOperation(value = "Get Module List")
+	@GetMapping(value = "/getList")
+	public ResponseEntity<Object> getModuleList(HttpServletRequest request){
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         List<ModuleResponseModel> response  = new ArrayList<>();
         List<SimpleAccountsModules> modulesList=roleModuleService.getListOfSimpleAccountsModules();

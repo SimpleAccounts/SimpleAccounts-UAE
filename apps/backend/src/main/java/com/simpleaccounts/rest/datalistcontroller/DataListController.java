@@ -296,7 +296,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 	@LogRequest
 	@ApiOperation(value = "Get getProductCategoryList")
 	@GetMapping(value ="/getProductCategoryList")
-	public ResponseEntity<Object> getProductCategoryList(HttpServletRequest request){
+	public ResponseEntity<Object> getProductCategoryList(){
 		try {
 			List<ProductCategory> list = productCategoryRepository.getProductCategories(logger.getName());
 			List<ProductCategoryListModel> productCategoryListModels=new ArrayList<>();
@@ -573,7 +573,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 	@LogRequest
 	@ApiOperation(value = "Get Tax Treatment Category")
 	@GetMapping(value ="/getTaxTreatment")
-	public ResponseEntity<Object> getTaxTreatmentList(HttpServletRequest request){
+	public ResponseEntity<Object> getTaxTreatmentList(){
 		try {
 			List<TaxtTreatmentdto> list = taxTreatmentService.getList();
 			return new ResponseEntity<>(list,HttpStatus.OK);
@@ -587,7 +587,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 	@LogRequest
 	@ApiOperation(value = "Get getUnitTypeList")
 	@GetMapping(value ="/getUnitTypeList")
-	public ResponseEntity<Object> getUnitTypeList(HttpServletRequest request){
+	public ResponseEntity<Object> getUnitTypeList(){
 		try {
 			List<UnitType> list = unitTypesRepository.findAll();
 			List<UnitTypeListModel> unitTypeListModels=new ArrayList<>();
@@ -614,7 +614,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 	@LogRequest
 	@ApiOperation(value = "Get getUnitTypeList")
 	@GetMapping(value ="/getNoteSettingsInfo")
-	public ResponseEntity<Object> getNoteSettingsInfo(HttpServletRequest request){
+	public ResponseEntity<Object> getNoteSettingsInfo(){
 		try {
 			NotesSettings notesSettings = notesSettingsRepository.findAll().get(0);
 			return new ResponseEntity<>(notesSettings,HttpStatus.OK);

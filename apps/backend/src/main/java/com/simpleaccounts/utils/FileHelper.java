@@ -116,12 +116,24 @@ public class FileHelper {
 		String storagePath = FileHelper.getRootPath() + basePath;
 		createFolderIfNotExist(storagePath);
 		Map<String, String> map = getFileName(multipartFile, fileTypeEnum);
+		if (map == null || map.isEmpty()) {
+			return filePath;
+		}
+		Path storageRoot = Paths.get(storagePath).toAbsolutePath().normalize();
 		for (Map.Entry<String, String> entry : map.entrySet()) {
-			File folder = new File(storagePath + entry.getKey());
+			Path folderPath = storageRoot.resolve(entry.getKey()).normalize();
+			if (!folderPath.startsWith(storageRoot)) {
+				throw new IOException("Invalid folder path");
+			}
+			File folder = folderPath.toFile();
 			if (!folder.isDirectory()) {
 				folder.mkdirs();
 			}
-			File file = new File(storagePath + entry.getValue());
+			Path resolvedFilePath = storageRoot.resolve(entry.getValue()).normalize();
+			if (!resolvedFilePath.startsWith(storageRoot)) {
+				throw new IOException("Invalid file path");
+			}
+			File file = resolvedFilePath.toFile();
 			if (!file.exists()) {
 				file.createNewFile();
 			}
