@@ -125,12 +125,3 @@ class FinancialReportControllerTest {
         return user;
     }
 }
-
-
-
-
-
-
-
-
-

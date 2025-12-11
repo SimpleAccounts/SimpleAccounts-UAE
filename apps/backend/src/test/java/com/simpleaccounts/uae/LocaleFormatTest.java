@@ -26,13 +26,3 @@ public class LocaleFormatTest {
         assertEquals("9,876,543.20", formatted);
     }
 }
-
-
-
-
-
-
-
-
-
-

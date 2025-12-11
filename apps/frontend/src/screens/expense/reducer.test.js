@@ -54,12 +54,3 @@ describe('ExpenseReducer', () => {
     expect(nextState.pay_to_list[1]).toEqual(payload[0]);
   });
 });
-
-
-
-
-
-
-
-
-

@@ -42,13 +42,3 @@ public final class LocaleFormatUtil {
         return NUMBER_FORMAT.format(number);
     }
 }
-
-
-
-
-
-
-
-
-
-
