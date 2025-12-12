@@ -118,24 +118,22 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 		List<Predicate> predicates = new ArrayList<>();
 		for (DbFilter dbFilter : dbFilters) {
 			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
-				// Safely build condition based on DbFilter's fields
-				switch (dbFilter.getCondition()) {
-					case "=":
-						predicates.add(cb.equal(root.get(dbFilter.getDbCoulmnName()), dbFilter.getValue()));
-						break;
-					case "like":
-						predicates.add(cb.like(root.get(dbFilter.getDbCoulmnName()), "%" + dbFilter.getValue() + "%"));
-						break;
-					case ">":
-						predicates.add(cb.greaterThan(root.get(dbFilter.getDbCoulmnName()), (Comparable) dbFilter.getValue()));
-						break;
-					case "<":
-						predicates.add(cb.lessThan(root.get(dbFilter.getDbCoulmnName()), (Comparable) dbFilter.getValue()));
-						break;
-					// Add more conditions as needed, or a default for unsupported conditions
-					default:
-						log.warn("Unsupported condition: {}", dbFilter.getCondition());
-						break;
+				String condition = dbFilter.getCondition().trim().toLowerCase();
+				// Handle typical JPQL conditions containing parameter placeholders
+				if (condition.startsWith("=")) {
+					predicates.add(cb.equal(root.get(dbFilter.getDbCoulmnName()), dbFilter.getValue()));
+				} else if (condition.contains("like")) {
+					predicates.add(cb.like(root.get(dbFilter.getDbCoulmnName()), "%" + dbFilter.getValue() + "%"));
+				} else if (condition.startsWith(">=")) {
+					predicates.add(cb.greaterThanOrEqualTo(root.get(dbFilter.getDbCoulmnName()), (Comparable) dbFilter.getValue()));
+				} else if (condition.startsWith("<=")) {
+					predicates.add(cb.lessThanOrEqualTo(root.get(dbFilter.getDbCoulmnName()), (Comparable) dbFilter.getValue()));
+				} else if (condition.startsWith(">")) {
+					predicates.add(cb.greaterThan(root.get(dbFilter.getDbCoulmnName()), (Comparable) dbFilter.getValue()));
+				} else if (condition.startsWith("<")) {
+					predicates.add(cb.lessThan(root.get(dbFilter.getDbCoulmnName()), (Comparable) dbFilter.getValue()));
+				} else {
+					log.warn("Unsupported condition: {}", dbFilter.getCondition());
 				}
 			}
 		}
