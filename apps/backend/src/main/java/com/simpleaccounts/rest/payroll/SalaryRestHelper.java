@@ -116,7 +116,7 @@ public class SalaryRestHelper {
         User user = userService.findByPK(userId);
 
         Map<String, Object> CategoryParam = new HashMap<>();
-        CategoryParam.put("transactionCategoryName","PAYROLL_LIABILITY");
+CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
         List<TransactionCategory> payrollTransactionCategoryList = transactionCategoryService.findByAttributes(CategoryParam);
 
         if (payrollTransactionCategoryList != null && !payrollTransactionCategoryList.isEmpty()) {
@@ -173,7 +173,7 @@ public class SalaryRestHelper {
                     salary.setSalaryComponent(salaryComponent.getSalaryComponentId());
                     salary.setType(0);
                     salary.setNoOfDays(salaryComponent.getNoOfDays());
-                    salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), "DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY"));
+                    salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY));
                     salary.setTotalAmount(salaryAsPerNoOfWorkingDays);
                     salaryService.persist(salary);
                     if (salaryComponent.getSalaryStructure().getId()==PayrollEnumConstants.Deduction
@@ -198,7 +198,7 @@ public class SalaryRestHelper {
                 salary.setEmployeeId(employee);
                 salary.setNoOfDays(noOfDays);
                 salary.setType(1);
-                salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), "DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY"));
+                salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY));
                 salary.setTotalAmount(salaryForjournalEntry);
                 salaryService.persist(salary);
 
@@ -244,7 +244,7 @@ public class SalaryRestHelper {
             finalPayrolltransactionCategory.setChartOfAccount(chartOfAccountService.findByPK(13));
             finalPayrolltransactionCategory.setSelectableFlag(Boolean.FALSE);
             finalPayrolltransactionCategory.setTransactionCategoryCode("02-02-016");
-            finalPayrolltransactionCategory.setTransactionCategoryName("PAYROLL_LIABILITY");
+            finalPayrolltransactionCategory.setTransactionCategoryName(PAYROLL_LIABILITY);
             finalPayrolltransactionCategory.setTransactionCategoryDescription("Other Liability");
             //ParentTransactionCategory null
             finalPayrolltransactionCategory.setCreatedDate(LocalDateTime.now());
@@ -261,7 +261,7 @@ public class SalaryRestHelper {
 
 
             Map<String, Object> payrollCategoryParam = new HashMap<>();
-            payrollCategoryParam.put("transactionCategoryName","PAYROLL_LIABILITY");
+            payrollCategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
             List<TransactionCategory> payrollList = transactionCategoryService.findByAttributes(payrollCategoryParam);
 
 
@@ -316,7 +316,7 @@ public class SalaryRestHelper {
                     salary.setEmployeeId(employee);
                     salary.setType(0);
                     salary.setNoOfDays(salaryComponent.getNoOfDays());
-                    salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), "DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY"));
+                    salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY));
                     salary.setTotalAmount(salaryAsPerNoOfWorkingDays);
                     salaryService.persist(salary);
                     if (salaryComponent.getSalaryStructure().getId()==PayrollEnumConstants.Deduction.getId()){
@@ -337,7 +337,7 @@ public class SalaryRestHelper {
                 salary.setEmployeeId(employee);
                 salary.setNoOfDays(noOfDays);
                 salary.setType(1);
-                salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), "DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY"));
+                salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY));
                 salary.setTotalAmount(salaryForjournalEntry);
                 salaryService.persist(salary);
 
@@ -473,35 +473,35 @@ public class SalaryRestHelper {
                  String result = model.getCategory();
                  result = result.substring(0, result.indexOf("-"));
                  count++;
-                 transactionRows= transactionRows.concat("HTML_TR_TD_OPEN" +count.toString() + "</td>"+
+                 transactionRows= transactionRows.concat(HTML_TR_TD_OPEN +count.toString() + "</td>"+
                          "<td style=\"text-align: right;\">" + model.getTransactionDate() + " </td>" +
                          "<td style=\"text-align: right;\">" + model.getTransactionType() + " </td>"+
                          "<td style=\"text-align: right;\">" + result + " </td>"+
-                         "<td style=\"text-align: right;\"> AED " + model.getAmount() + "HTML_TD_TR_CLOSE");
+                         "<td style=\"text-align: right;\"> AED " + model.getAmount() + HTML_TD_TR_CLOSE);
 
              }
              }
          if(salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_FIXED)!=null)
             for (int i = 0; i < salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_FIXED).size(); i++) {
                 SalaryComponent salaryComponent= salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_FIXED).get(i);
-                earningRows= earningRows.concat("HTML_TR_TD_OPEN" + salaryComponent.getComponentName() + "</td>"+
-                        "<td style=\"text-align: right;\">  AED  " + salaryComponent.getComponentValue() + "HTML_TD_TR_CLOSE");
+                earningRows= earningRows.concat(HTML_TR_TD_OPEN + salaryComponent.getComponentName() + "</td>"+
+                        "<td style=\"text-align: right;\">  AED  " + salaryComponent.getComponentValue() + HTML_TD_TR_CLOSE);
 
             }
         if(salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_FIXED_ALLOWANCE)!=null)
             for (int i = 0; i < salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_FIXED_ALLOWANCE).size(); i++)
             {
                 SalaryComponent salaryComponent= salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_FIXED_ALLOWANCE).get(i);
-                earningRows=  earningRows.concat("HTML_TR_TD_OPEN" + salaryComponent.getComponentName() + " </td>"+
-                        "<td style=\"text-align: right;\">   AED  " + salaryComponent.getComponentValue() + "HTML_TD_TR_CLOSE");
+                earningRows=  earningRows.concat(HTML_TR_TD_OPEN + salaryComponent.getComponentName() + " </td>"+
+                        "<td style=\"text-align: right;\">   AED  " + salaryComponent.getComponentValue() + HTML_TD_TR_CLOSE);
 
             }
         if(salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_DEDUCTION)!=null)
             for (int i = 0; i < salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_DEDUCTION).size(); i++)
             {
                 SalaryComponent salaryComponent= salarySlipModel.getSalarySlipResult().get(SALARY_TYPE_DEDUCTION).get(i);
-                deductionRows=  deductionRows.concat("HTML_TR_TD_OPEN" + salaryComponent.getComponentName() + " </td>"+
-                        "<td style=\"text-align: right;\">   AED  " + salaryComponent.getComponentValue() + "HTML_TD_TR_CLOSE");
+                deductionRows=  deductionRows.concat(HTML_TR_TD_OPEN + salaryComponent.getComponentName() + " </td>"+
+                        "<td style=\"text-align: right;\">   AED  " + salaryComponent.getComponentValue() + HTML_TD_TR_CLOSE);
             }
         BigDecimal totalAandB = totalB.add(salarySlipModel.getNetPay().subtract(salarySlipModel.getDeductions()));
 

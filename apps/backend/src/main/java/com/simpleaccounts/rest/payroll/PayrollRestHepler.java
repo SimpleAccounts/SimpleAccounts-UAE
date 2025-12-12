@@ -251,7 +251,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
             employment.setContractType(employmentPersistModel.getContractType());
         }
         if (employmentPersistModel.getDateOfJoining() != null) {
-            employment.setDateOfJoining(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
+            employment.setDateOfJoining(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getDateOfJoining(), DATE_FORMAT_DD_MM_YYYY));
         }else
             employment.setDateOfJoining(LocalDateTime.now());
 
@@ -265,13 +265,13 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
             employment.setPassportNumber(employmentPersistModel.getPassportNumber());
         }
         if (employmentPersistModel.getPassportExpiryDate() != null && !employmentPersistModel.getPassportExpiryDate().isEmpty()) {
-            employment.setPassportExpiryDate(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getPassportExpiryDate(), "DATE_FORMAT_DD_MM_YYYY"));
+            employment.setPassportExpiryDate(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getPassportExpiryDate(), DATE_FORMAT_DD_MM_YYYY));
         }
 //        else
 //            employment.setPassportExpiryDate(LocalDateTime.now());
 
         if (employmentPersistModel.getVisaExpiryDate() != null) {
-            employment.setVisaExpiryDate(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getVisaExpiryDate(), "DATE_FORMAT_DD_MM_YYYY"));
+            employment.setVisaExpiryDate(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getVisaExpiryDate(), DATE_FORMAT_DD_MM_YYYY));
         }  else
             employment.setVisaExpiryDate(LocalDateTime.now());
 
@@ -500,13 +500,13 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
         employmentPersistModel.setEmployee(employment.getEmployee().getId());
         employmentPersistModel.setAvailedLeaves(employment.getAvailedLeaves());
         employmentPersistModel.setDepartment(employment.getDepartment());
-        employmentPersistModel.setDateOfJoining(dateUtil.getLocalDateTimeAsString(employment.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
+        employmentPersistModel.setDateOfJoining(dateUtil.getLocalDateTimeAsString(employment.getDateOfJoining(), DATE_FORMAT_DD_MM_YYYY));
         employmentPersistModel.setContractType(employment.getContractType());
         employmentPersistModel.setLabourCard(employment.getLabourCard());
         employmentPersistModel.setVisaNumber(employment.getVisaNumber());
-        employmentPersistModel.setVisaExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getVisaExpiryDate(), "DATE_FORMAT_DD_MM_YYYY"));
+        employmentPersistModel.setVisaExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getVisaExpiryDate(), DATE_FORMAT_DD_MM_YYYY));
         employmentPersistModel.setPassportNumber(employment.getPassportNumber());
-        employmentPersistModel.setPassportExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getPassportExpiryDate(), "DATE_FORMAT_DD_MM_YYYY"));
+        employmentPersistModel.setPassportExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getPassportExpiryDate(), DATE_FORMAT_DD_MM_YYYY));
         employmentPersistModel.setLeavesAvailed(employment.getLeavesAvailed());
         employmentPersistModel.setGrossSalary(employment.getGrossSalary());
         return employmentPersistModel;
@@ -660,7 +660,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
             employment.setContractType(employeePersistModel.getContractType());
         }
         if (employeePersistModel.getDateOfJoining() != null) {
-            employment.setDateOfJoining(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
+            employment.setDateOfJoining(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), DATE_FORMAT_DD_MM_YYYY));
         }
 
         if (employeePersistModel.getLabourCard() != null) {
@@ -673,10 +673,10 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
             employment.setPassportNumber(employeePersistModel.getPassportNumber());
         }
         if (employeePersistModel.getPassportExpiryDate() != null) {
-            employment.setPassportExpiryDate(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
+            employment.setPassportExpiryDate(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), DATE_FORMAT_DD_MM_YYYY));
         }
         if (employeePersistModel.getVisaExpiryDate() != null) {
-            employment.setVisaExpiryDate(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
+            employment.setVisaExpiryDate(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), DATE_FORMAT_DD_MM_YYYY));
         }
         if (employeePersistModel.getVisaNumber() != null) {
             employment.setVisaNumber(employeePersistModel.getVisaNumber());
@@ -1610,7 +1610,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
               }
             }
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("DATE_FORMAT_DD_MM_YYYY");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
         for(Integer employeeId :payrollEmployeesIdsListToSendMail) {
             salaryController.getSalariesByEmployeeId(employeeId, payroll.getPayrollDate().format(formatter).replace("-", "/"), startDate, endDate, true, request);
         }

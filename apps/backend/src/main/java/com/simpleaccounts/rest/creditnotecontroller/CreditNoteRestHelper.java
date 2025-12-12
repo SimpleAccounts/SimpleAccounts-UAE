@@ -1087,12 +1087,12 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
         Map<String, Object> customerMap = new HashMap<>();
             customerMap.put(JSON_KEY_CONTACT,  creditNote.getContact().getContactId());
         if (isCreditNote){
-            customerMap.put("contactType", 2);
+            customerMap.put(JSON_KEY_CONTACT_TYPE, 2);
         }
         else {
-            customerMap.put("contactType", 1);
+            customerMap.put(JSON_KEY_CONTACT_TYPE, 1);
         }
-        customerMap.put("deleteFlag",Boolean.FALSE);
+        customerMap.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
         List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
                 .findByAttributes(customerMap);
         TransactionCategory transactionCategory = null;
@@ -1142,8 +1142,8 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
         JournalLineItem journalLineItem1 = new JournalLineItem();
         Map<String, Object> customerMap = new HashMap<>();
             customerMap.put(JSON_KEY_CONTACT,  creditNote.getContact().getContactId());
-        customerMap.put("contactType", 2);
-        customerMap.put("deleteFlag",Boolean.FALSE);
+        customerMap.put(JSON_KEY_CONTACT_TYPE, 2);
+        customerMap.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
         List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
                 .findByAttributes(customerMap);
         TransactionCategory transactionCategory = null;
