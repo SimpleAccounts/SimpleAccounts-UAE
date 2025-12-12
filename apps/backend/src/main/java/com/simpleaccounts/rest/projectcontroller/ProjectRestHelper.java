@@ -16,17 +16,24 @@ import com.simpleaccounts.service.ProjectService;
 @Service
 public class ProjectRestHelper {
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
+
+	private final LanguageService languageService;
+
+	private final CurrencyService currencyservice;
+
+	private final ProjectService projectService;
 
 	@Autowired
-	private LanguageService languageService;
-
-	@Autowired
-	private CurrencyService currencyservice;
-
-	@Autowired
-	private ProjectService projectService;
+	public ProjectRestHelper(ContactService contactService,
+							 LanguageService languageService,
+							 CurrencyService currencyservice,
+							 ProjectService projectService) {
+		this.contactService = contactService;
+		this.languageService = languageService;
+		this.currencyservice = currencyservice;
+		this.projectService = projectService;
+	}
 
 	public List<ProjectListModel> getListModel(Object projectList) {
 		List<ProjectListModel> projectListModels = new ArrayList();

@@ -30,14 +30,20 @@ public class BankAccountServiceImpl extends BankAccountService {
 
 	private static final String BANK_ACCOUNT = "BANK_ACCOUNT";
 
-	@Autowired
-	public BankAccountDao bankAccountDao;
+	public final BankAccountDao bankAccountDao;
+
+	private final DateFormatUtil dateFormatUtil;
+	
+	private final BankDetailsRepository bankDetailsRepository;
 
 	@Autowired
-	private DateFormatUtil dateFormatUtil;
-	
-	@Autowired
-	private BankDetailsRepository bankDetailsRepository;
+	public BankAccountServiceImpl(BankAccountDao bankAccountDao,
+								  DateFormatUtil dateFormatUtil,
+								  BankDetailsRepository bankDetailsRepository) {
+		this.bankAccountDao = bankAccountDao;
+		this.dateFormatUtil = dateFormatUtil;
+		this.bankDetailsRepository = bankDetailsRepository;
+	}
 
 	@Override
 	public List<BankAccount> getBankAccounts() {

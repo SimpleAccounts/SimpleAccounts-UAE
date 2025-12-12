@@ -25,13 +25,19 @@ import com.simpleaccounts.service.TransactionCategoryBalanceService;
 @Service
 public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBalanceService {
 
-	@Autowired
-	private TransactionCategoryBalanceDao transactionCategoryBalanceDao;
-	@Autowired
-	private DateUtils dateUtils;
+	private final TransactionCategoryBalanceDao transactionCategoryBalanceDao;
+	private final DateUtils dateUtils;
+
+	private final TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
 	@Autowired
-	private TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
+	public TransactionCategoryBalanceServiceImpl(TransactionCategoryBalanceDao transactionCategoryBalanceDao,
+												 DateUtils dateUtils,
+												 TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService) {
+		this.transactionCategoryBalanceDao = transactionCategoryBalanceDao;
+		this.dateUtils = dateUtils;
+		this.transactionCategoryClosingBalanceService = transactionCategoryClosingBalanceService;
+	}
 
 	@Override
 	protected Dao<Integer, TransactionCategoryBalance> getDao() {

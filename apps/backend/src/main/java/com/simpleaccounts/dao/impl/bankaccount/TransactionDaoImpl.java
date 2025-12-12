@@ -322,7 +322,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 			filterBuilder.append(CommonColumnConstants.ORDER_BY);
 		}
 		if (transactionStatus != null) {
-			builder.append(" AND t.explanationStatusCode = ").append(transactionStatus);
+			builder.append(" AND t.explanationStatusCode = :transactionStatus");
 		}
 		TypedQuery<TransactionView> query = getEntityManager().createQuery(
 				"SELECT t FROM TransactionView t WHERE t.bankAccountId =:bankAccountId AND t.parentTransaction = null"
@@ -330,6 +330,9 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 						+ "  t.transactionDate DESC, t.transactionId DESC",
 				TransactionView.class);
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
+		if (transactionStatus != null) {
+			query.setParameter("transactionStatus", transactionStatus);
+		}
 		query.setFirstResult(pageSize);
 		query.setMaxResults(rowCount);
 		List<TransactionView> transactionViewList = query.getResultList();
@@ -344,12 +347,15 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 																	   Integer transactionStatus) {
 		StringBuilder builder = new StringBuilder("");
 		if (transactionStatus != null) {
-			builder.append(" AND t.explanationStatusCode = ").append(transactionStatus);
+			builder.append(" AND t.explanationStatusCode = :transactionStatus");
 		}
 		Query query = getEntityManager().createQuery(
 				"SELECT COUNT(t) FROM TransactionView t WHERE t.parentTransaction = null AND t.bankAccountId =:bankAccountId"
 						+ builder.toString());
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
+		if (transactionStatus != null) {
+			query.setParameter("transactionStatus", transactionStatus);
+		}
 		List<Object> countList = query.getResultList();
 		if (countList != null && !countList.isEmpty()) {
 			return ((Long) countList.get(0)).intValue();
@@ -583,9 +589,10 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId,
 												   TransactionExplinationStatusEnum transactionExplinationStatusEnum)
 	{
-		StringBuilder queryBuilder = new StringBuilder("Update Transaction t set t.transactionExplinationStatusEnum = '").append(transactionExplinationStatusEnum)
-				.append("' WHERE t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate <= :endDate");
+		StringBuilder queryBuilder = new StringBuilder("Update Transaction t set t.transactionExplinationStatusEnum = :status")
+				.append(" WHERE t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate <= :endDate");
 		Query query = getEntityManager().createQuery(queryBuilder.toString());
+		query.setParameter("status", transactionExplinationStatusEnum);
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankId);
 		query.setParameter(CommonColumnConstants.END_DATE, reconcileDate.plusHours(23).plusMinutes(59));
 		query.executeUpdate();

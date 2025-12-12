@@ -256,10 +256,11 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 
 	@Override
 	public List<ENTITY> dumpData() {
-		@SuppressWarnings("unchecked")
-		List<ENTITY> resultList = entityManager.createQuery("Select t from " + entityClass.getSimpleName() + " t")
-				.getResultList();
-		return resultList;
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<ENTITY> cq = cb.createQuery(entityClass);
+		Root<ENTITY> root = cq.from(entityClass);
+		cq.select(root);
+		return entityManager.createQuery(cq).getResultList();
 	}
 
 	private boolean isOrderBy(DbFilter dbFilter) {

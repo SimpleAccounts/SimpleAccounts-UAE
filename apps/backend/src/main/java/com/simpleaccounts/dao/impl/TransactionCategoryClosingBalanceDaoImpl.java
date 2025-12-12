@@ -94,7 +94,7 @@ public class TransactionCategoryClosingBalanceDaoImpl extends AbstractDao<Intege
         }
 
         String queryStr = "select cb from TransactionCategoryClosingBalance cb where cb.deleteFlag = false and cb.closingBalanceDate " +dateClause+
-                " and cb.transactionCategory.chartOfAccount.chartOfAccountCode in ("+chartOfAccountCodes+") order by cb.closingBalanceDate DESC  ";
+                " and cb.transactionCategory.chartOfAccount.chartOfAccountCode in :accountCodes order by cb.closingBalanceDate DESC  ";
 
         TypedQuery<TransactionCategoryClosingBalance> query = getEntityManager().createQuery(queryStr, TransactionCategoryClosingBalance.class);
         if (fromDate != null) {
@@ -103,6 +103,16 @@ public class TransactionCategoryClosingBalanceDaoImpl extends AbstractDao<Intege
         if (toDate != null) {
             query.setParameter(CommonColumnConstants.END_DATE, toDate);
         }
+
+        List<String> accountCodesList = new ArrayList<>();
+        if (chartOfAccountCodes != null && !chartOfAccountCodes.isEmpty()) {
+            String[] codes = chartOfAccountCodes.split(",");
+            for (String code : codes) {
+                accountCodesList.add(code.trim().replace("'", ""));
+            }
+        }
+        query.setParameter("accountCodes", accountCodesList);
+
         List<TransactionCategoryClosingBalance> list = query.getResultList();
         return list != null && !list.isEmpty() ? list : null;
     }
