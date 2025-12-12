@@ -20,29 +20,25 @@ import com.simpleaccounts.service.InvoiceLineItemService;
 import com.simpleaccounts.service.StateService;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MigrationServiceImpl implements MigrationService {
     private final Logger logger = LoggerFactory.getLogger(MigrationController.class);
 
-    @Autowired
-    private CountryService countryService;
+    private final CountryService countryService;
 
-    @Autowired
-    private StateService stateService;
+    private final StateService stateService;
 
-    @Autowired
-    private InvoiceLineItemService invoiceLineItemService;
+    private final InvoiceLineItemService invoiceLineItemService;
     
-    @Autowired
-    private ZohoMigrationService zohoMigrationService;
+    private final ZohoMigrationService zohoMigrationService;
     
-    @Autowired
-    private SimpleAccountMigrationService simpleAccountMigrationService;
+    private final SimpleAccountMigrationService simpleAccountMigrationService;
     
-    @Autowired
-    private MigrationUtil migrationUtil;
+    private final MigrationUtil migrationUtil;
 
 	@Override
 	public List<DataMigrationRespModel> processTheMigratedData(String productName, String version, String fileLocation,

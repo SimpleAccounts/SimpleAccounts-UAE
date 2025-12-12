@@ -1,10 +1,11 @@
 package com.simpleaccounts.rest.payroll;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.AbstractDao;
-import com.simpleaccounts.entity.EmployeeBankDetails;
+
 import com.simpleaccounts.entity.Payroll;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
@@ -16,10 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 @Repository(value = "payrollDao")
+@RequiredArgsConstructor
 public class PayrollDaoImpl extends AbstractDao<Integer, Payroll> implements PayrollDao
  {
-  @Autowired
-  private DatatableSortingFilterConstant datatableUtil;
+  private final DatatableSortingFilterConstant datatableUtil;
 
   public PaginationResponseModel getList(Map<PayrollFilterEnum, Object> filterMap, PaginationModel paginationModel){
    List<DbFilter> dbFilters = new ArrayList<>();

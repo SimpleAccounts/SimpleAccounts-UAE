@@ -33,5 +33,4 @@ public class SalaryComponentPersistModel implements Serializable {
     private Boolean isComponentDeletable;
     private String invoiceType;
 
-
 }

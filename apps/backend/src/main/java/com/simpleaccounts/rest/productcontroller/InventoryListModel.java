@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.productcontroller;
 
-
 import lombok.Getter;
 import lombok.Setter;
 

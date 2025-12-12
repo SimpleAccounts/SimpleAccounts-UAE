@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.payroll.service.Impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.SalaryStructure;
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;
@@ -16,10 +17,10 @@ import java.util.Map;
 
 @Service("salaryStructureService")
 @Transactional
+@RequiredArgsConstructor
 public class SalaryStructureServiceImpl extends SalaryStructureService {
 
-    @Autowired
-    private SalaryStructureDao salaryStructureDao;
+    private final SalaryStructureDao salaryStructureDao;
 
     @Override
     protected Dao<Integer, SalaryStructure> getDao() {

@@ -13,6 +13,4 @@ public interface CorporateTaxPaymentHistoryRepository extends JpaRepository<Corp
 
     CorporateTaxPaymentHistory findCorporateTaxPaymentHistoryByCorporateTaxPayment(CorporateTaxPayment corporateTaxPayment);
 
-
-
 }

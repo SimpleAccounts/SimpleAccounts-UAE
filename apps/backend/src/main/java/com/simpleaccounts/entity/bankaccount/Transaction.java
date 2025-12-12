@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
 import javax.persistence.*;
 
@@ -15,7 +13,6 @@ import org.hibernate.annotations.ColumnDefault;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.simpleaccounts.constant.TransactionCreationMode;
 import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
-import com.simpleaccounts.entity.converter.DateConverter;
 
 import lombok.Data;
 
@@ -74,10 +71,6 @@ public class Transaction implements Serializable {
 	@Column(name = "DEBIT_CREDIT_FLAG")
 	private Character debitCreditFlag;
 
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "EXPLAINED_PROJECT_ID")
-//	private Project project;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "EXPLAINED_TRANSACTION_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANX_EXPLAINED_TRANX_CATEGORY_CODE_TRANX_CATEGORY"))
 	private TransactionCategory explainedTransactionCategory;
@@ -107,10 +100,6 @@ public class Transaction implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "BANK_ACCOUNT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_BANK_ACCOUNT_TRANSACTION_BANK_ACCOUNT_ID_BANK_ACCOUNT"))
 	private BankAccount bankAccount;
-
-//	@OneToMany(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "EXPLANATION_STATUS_CODE")
-//	private List<TransactionStatus> transactionStatus;
 
 	@Basic(optional = false)
 	@Column(name = "CURRENT_BALANCE")
@@ -180,11 +169,7 @@ public class Transaction implements Serializable {
 	@Column(name = "ENTRY_TYPE")
 	private Integer entryType;
 
-//	@Column(name = "REFERENCE_ID")
-//	private Integer referenceId;
 //
-//	@Column(name = "REFERENCE_TYPE")
-//	private Integer referenceType;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PARENT_TRANSACTION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_PARENT_TRANSACTION_ID_TRANSACTION"))

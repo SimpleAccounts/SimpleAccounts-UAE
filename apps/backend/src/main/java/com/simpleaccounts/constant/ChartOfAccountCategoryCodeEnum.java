@@ -56,5 +56,4 @@ public enum ChartOfAccountCategoryCodeEnum {
         chartOfAccountCategoryCodeEnumMap = tempChartOfAccountCategoryCodeEnumMap;
     }
 
-
 }

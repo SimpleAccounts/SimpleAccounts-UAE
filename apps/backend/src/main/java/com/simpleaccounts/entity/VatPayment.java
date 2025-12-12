@@ -1,10 +1,10 @@
 package com.simpleaccounts.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.simpleaccounts.constant.PayMode;
+
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -99,12 +99,6 @@ public class VatPayment implements Serializable {
     @ColumnDefault(value = "false")
     @Basic(optional = false)
     private Boolean isVatReclaimable = Boolean.FALSE;
-
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
 
     @PrePersist
     public void updateDates() {

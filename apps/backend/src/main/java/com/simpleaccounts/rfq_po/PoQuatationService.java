@@ -1,7 +1,5 @@
 package com.simpleaccounts.rfq_po;
 
-
-import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;

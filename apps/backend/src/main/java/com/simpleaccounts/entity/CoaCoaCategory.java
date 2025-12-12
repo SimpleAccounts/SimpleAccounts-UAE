@@ -8,7 +8,6 @@ import javax.persistence.*;
 
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 
-import com.simpleaccounts.entity.converter.DateConverter;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -38,7 +37,6 @@ public class CoaCoaCategory implements Serializable{
 	@Basic(optional = false)
 	  //@Convert(converter = DateConverter.class)
     private LocalDateTime createdDate = LocalDateTime.now();
-
 
 	@Column(name = "LAST_UPDATED_BY")
 	private Integer lastUpdateBy;

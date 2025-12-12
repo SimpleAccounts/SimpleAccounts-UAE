@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl.bankaccount;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +16,11 @@ import com.simpleaccounts.service.bankaccount.ImportedDraftTransactonService;
 
 @Service("importedDraftTransactonService")
 @Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
+@RequiredArgsConstructor
 public class ImportedDraftTransactonServiceImpl extends
 		ImportedDraftTransactonService {
 	
-	@Autowired
-	private ImportedDraftTransactonDao importedDraftTransactonDao;
+	private final ImportedDraftTransactonDao importedDraftTransactonDao;
 
 	@Override
 	public List<ImportedDraftTransaction> getImportedDraftTransactionsByCriteria(

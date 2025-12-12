@@ -70,11 +70,13 @@ import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.TransactionCategoryCreationHelper;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 	@Component
 	@Slf4j
 	@SuppressWarnings("java:S131")
-	public class MigrationUtil {
+	@RequiredArgsConstructor
+public class MigrationUtil {
 	
 	private static final String LOG_ERROR_PREFIX = "Error =";
 	private static final String JSON_KEY_TRANSACTION_CATEGORY_NAME = "transactionCategoryName";
@@ -86,59 +88,41 @@ import lombok.extern.slf4j.Slf4j;
 	  
 	  private String dateFormat = "mm/dd/yyyy";
 
-		@Autowired
-		private CurrencyService currencyService;
+		private final CurrencyService currencyService;
 	
-		@Autowired
-		private DateFormatUtil dateFormtUtil;
+		private final DateFormatUtil dateFormtUtil;
 	
-		@Autowired
-		private CountryService countryService;
+		private final CountryService countryService;
 	
-		@Autowired
-		private StateService stateService;
+		private final StateService stateService;
 	
-		@Autowired
-		private PlaceOfSupplyService placeOfSupplyService;
+		private final PlaceOfSupplyService placeOfSupplyService;
 	
-		@Autowired
-		private InvoiceLineItemService invoiceLineItemService;
+		private final InvoiceLineItemService invoiceLineItemService;
 	
-		@Autowired
-		private ContactService contactService;
+		private final ContactService contactService;
 	
-		@Autowired
-		private ProductService productService;
+		private final ProductService productService;
 	
-		@Autowired
-		private VatCategoryService vatCategoryService;
+		private final VatCategoryService vatCategoryService;
 	
-		@Autowired
-		private ProductLineItemService productLineItemService;
+		private final ProductLineItemService productLineItemService;
 	
-		@Autowired
-		private ExpenseService expenseService;
+		private final ExpenseService expenseService;
 	
-		@Autowired
-		private CurrencyExchangeService currencyExchangeService;
+		private final CurrencyExchangeService currencyExchangeService;
 	
-		@Autowired
-		private InventoryService inventoryService;
+		private final InventoryService inventoryService;
 	
-		@Autowired
-		private ChartOfAccountCategoryService chartOfAccountCategoryService;
+		private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 	
-		@Autowired
-		private TransactionCategoryCreationHelper transactionCategoryCreationHelper;
+		private final TransactionCategoryCreationHelper transactionCategoryCreationHelper;
 	
-		@Autowired
-		private TransactionCategoryService transactionCategoryService;
+		private final TransactionCategoryService transactionCategoryService;
 		
-		@Autowired
-		private TaxTreatmentRepository taxTreatmentRepository;
+		private final TaxTreatmentRepository taxTreatmentRepository;
 	  
-		@Autowired
-		private PlaceOfSupplyRepository placeOfSupplyRepository;
+		private final PlaceOfSupplyRepository placeOfSupplyRepository;
 		
 	  /**
 	     * This method returns tableName from file name
@@ -250,9 +234,7 @@ import lombok.extern.slf4j.Slf4j;
         try {
             switch (dataType) {
                 case "LocalDateTime":
-                    //2021-05-02 00:00:00
-                    // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                    //LocalDateTime dateTime = LocalDateTime.parse(val.toString(), formatter);
+
                     LocalDateTime dateTime = dateFormtUtil.getDateStrAsLocalDateTime(val.toString(), getDateFormat());
                     Class[] paramTypes = {LocalDateTime.class};
                     Method method = entity.getClass().getMethod(setterMethod, paramTypes);
@@ -296,9 +278,7 @@ import lombok.extern.slf4j.Slf4j;
                     break;
 
                 default:
-//                    stringParamTypes = {String.class, String.class};
-//                    method = entity.getClass().getMethod(setterMethod, stringParamTypes);
-//                    method.invoke(entity, val);
+
             }
         } catch (Exception e) {
             LOG.error("Error during migration", e);
@@ -716,7 +696,6 @@ import lombok.extern.slf4j.Slf4j;
 					tCategoryList.add(transactionCategory.getTransactionCategoryName().toString());
 				}
 				for (Map<String, String> mapRecord : mapList) {
-					List<TransactionCategoryModelForMigration> transactionCategoryModelForMigrationList = new ArrayList<>();
 					if (file.equals("Invoice.csv") || file.equals("Bill.csv") || file.equals("Item.csv")) {
 						if (mapRecord.containsKey(ACCOUNT)) {
 							Map<String, Object> map = new HashMap<>();
@@ -745,7 +724,6 @@ import lombok.extern.slf4j.Slf4j;
 								if (existList.contains(transactionCategoryModelForMigration)) {
 									continue;
 								} else {
-									transactionCategoryModelForMigrationList.add(transactionCategoryModelForMigration);
 									existList.add(transactionCategoryModelForMigration);
 								}
 							} else {
@@ -786,7 +764,6 @@ import lombok.extern.slf4j.Slf4j;
 									if (existList.contains(transactionCategoryModelForMigration)) {
 										continue;
 									} else {
-										transactionCategoryModelForMigrationList.add(transactionCategoryModelForMigration);
 										existList.add(transactionCategoryModelForMigration);
 									}
 								} else {
@@ -806,7 +783,6 @@ import lombok.extern.slf4j.Slf4j;
 			}
 			return transactionCategoryListResponseModel;
 		}
-
 
 	    /**
 	      * This method returns list of files present under specified directory
@@ -850,7 +826,6 @@ import lombok.extern.slf4j.Slf4j;
 	        List<String> fileOrder = Arrays.asList("Contacts.csv","Contact.csv","Vendors.csv", "Item.csv", "Exchange_Rate.csv", "Invoice.csv", "Bill.csv", "Expense.csv", "Credit_Note.csv", "Purchase_Order.csv", "Chart_of_Accounts.csv");
 	        return fileOrder;
 	    }
-
 
 	    protected TaxTreatment getTaxTreatmentByValue(String val) {
 	    	return taxTreatmentRepository.findByTaxTreatment(val);

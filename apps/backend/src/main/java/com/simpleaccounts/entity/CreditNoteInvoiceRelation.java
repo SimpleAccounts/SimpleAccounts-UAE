@@ -1,7 +1,5 @@
 package com.simpleaccounts.entity;
 
-import com.simpleaccounts.entity.converter.DateConverter;
-import com.simpleaccounts.rfq_po.PoQuatation;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,7 +7,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @Entity

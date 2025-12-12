@@ -1,20 +1,18 @@
 package com.simpleaccounts.rest.payroll;
 
 import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.constant.CommonStatusEnum;
-import com.simpleaccounts.constant.DefaultTypeConstant;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
-import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;
+import lombok.RequiredArgsConstructor;
+
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.JournalLineItemDao;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.SalaryComponent;
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+
 import com.simpleaccounts.model.EmployeeBankDetailsPersistModel;
 import com.simpleaccounts.model.EmploymentPersistModel;
 import com.simpleaccounts.repository.*;
 import com.simpleaccounts.rest.*;
-import com.simpleaccounts.rest.invoicecontroller.InvoiceRequestFilterModel;
+
 import com.simpleaccounts.rest.payroll.dto.PayrollEmployeeDto;
 import com.simpleaccounts.rest.payroll.model.GeneratePayrollPersistModel;
 import com.simpleaccounts.rest.payroll.model.PayrolRequestModel;
@@ -25,7 +23,7 @@ import com.simpleaccounts.rest.payroll.service.SalaryComponentService;
 import com.simpleaccounts.rest.payroll.service.SalaryRoleService;
 import com.simpleaccounts.rest.payroll.service.SalaryStructureService;
 import com.simpleaccounts.rest.payroll.service.SalaryTemplateService;
-import com.simpleaccounts.rest.usercontroller.UserModel;
+
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import io.swagger.annotations.ApiOperation;
@@ -45,14 +43,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.io.FileWriter;
+
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
@@ -62,47 +58,37 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping("/rest/payroll")
+@RequiredArgsConstructor
 public class PayrollController {
 	private static final String MSG_UPDATED = "Updated";
 
     private final Logger logger = LoggerFactory.getLogger(PayrollController.class);
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    private RoleModuleRelationService roleModuleRelationService;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final RoleModuleRelationService roleModuleRelationService;
 
-    @Autowired
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
-    @Autowired
-    private PayrolService payrolService;
+    private final PayrolService payrolService;
 
     @Autowired
     SalaryComponentService salaryComponentService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     EmployeeBankDetailsService employeeBankDetailsService;
 
-    @Autowired
-    private PayrollRestHepler payrollRestHepler;
+    private final PayrollRestHepler payrollRestHepler;
 
-    @Autowired
-    private EmploymentService employmentService;
+    private final EmploymentService employmentService;
 
-    @Autowired
-    private SalaryRoleService salaryRoleService;
+    private final SalaryRoleService salaryRoleService;
 
-    @Autowired
-    private SalaryTemplateService salaryTemplateService;
+    private final SalaryTemplateService salaryTemplateService;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
-    @Autowired
-    private SalaryStructureService salaryStructureService;
+    private final TransactionCategoryService transactionCategoryService;
+    private final SalaryStructureService salaryStructureService;
 
     @Autowired
     PayrollRepository payrollRepository;
@@ -110,29 +96,19 @@ public class PayrollController {
     @Autowired
     protected JournalService journalService;
 
-    @Autowired
-    private JournalLineItemService journalLineItemService;
+    private final JournalLineItemService journalLineItemService;
 
+    private final JournalLineItemRepository journalLineItemRepository;
 
-    @Autowired
-    private JournalLineItemRepository journalLineItemRepository;
+    private final SalaryRepository salaryRepository;
 
-    @Autowired
-    private SalaryRepository salaryRepository;
+    private final PayrolEmployeeRepository payrolEmployeeRepository;
 
-    @Autowired
-    private PayrolEmployeeRepository payrolEmployeeRepository;
+    private final JournalLineItemDao journalLineItemDao;
 
-    @Autowired
-    private JournalLineItemDao journalLineItemDao;
-
-    @Autowired
-    private TransactionCategoryBalanceService transactionCategoryBalanceService;
-    @Autowired
-    private PayrollEmployeeRepository payrollEmployeeRepository;
-    @Autowired
-    private SalaryComponentRepository salaryComponentRepository;
-
+    private final TransactionCategoryBalanceService transactionCategoryBalanceService;
+    private final PayrollEmployeeRepository payrollEmployeeRepository;
+    private final SalaryComponentRepository salaryComponentRepository;
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
@@ -195,7 +171,6 @@ public class PayrollController {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @LogRequest
     @ApiOperation(value = "Get EmployeeBankDetails By ID")
@@ -375,9 +350,6 @@ public class PayrollController {
         }
     }
 
-    //#################################################################################################################################################################################
-    //Salary Structure : Update
-
     @LogRequest
     @ApiOperation(value = "Get Salary Structure list", response = List.class)
     @GetMapping(value = "/salaryStructureList")
@@ -452,9 +424,6 @@ public class PayrollController {
     public ResponseEntity<List<DropdownObjectModel>> getSalaryStructureForDropdown() {
         return new ResponseEntity<>(salaryStructureService.getSalaryStructureDropdown(), HttpStatus.OK);
     }
-
-//#################################################################################################################################################################################
-    //Salary Template :
 
     @LogRequest
     @ApiOperation(value = "Get Salary Template list", response = List.class)
@@ -591,21 +560,8 @@ public class PayrollController {
         }
     }
 
-    //    @ApiOperation(value = "Delete Salary Template By ID")
-//    @DeleteMapping(value = "/deleteSalaryTemplate")
-//    public ResponseEntity<String> deleteSalaryTemplate(@RequestParam(value = "id") Integer id) {
-//        try {
-//            SalaryTemplate salaryTemplate = salaryTemplateService.findByPK(id);
-//            if (salaryTemplate!= null) {
 //
-//                salaryTemplateService.update(salaryTemplate, salaryTemplate.getId());
-//            }
-//            return new ResponseEntity(HttpStatus.OK);
-//        } catch (Exception e) {
-//            logger.error(ERROR, e);
-//            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+
 //
 ////##############################################################################################################################################################
 //
@@ -713,23 +669,12 @@ public class PayrollController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-//    @ApiOperation(value = "get a salary Sleep")
-//    @PostMapping(value = "/getSalaryCalculations")
-//    public ResponseEntity<SalaryCalculationModel> getSalaryCalculations(@RequestParam BigDecimal grossSalary, @RequestParam Integer designationId , HttpServletRequest request)
-//    {
-//        try {
-//            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//            User user = userService.findByPK(userId);
+
 //
 //            SalaryCalculationModel salaryCalculationModel = payrollRestHepler.getSalaryCalculations(designationId,grossSalary);
 //
 //            return new ResponseEntity(salaryCalculationModel, HttpStatus.OK);
 //
-//        } catch (Exception e) {
-//            logger.error(ERROR, e);
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 
     @LogRequest
     @ApiOperation(value = "Get Unpaid Payroll list")
@@ -748,7 +693,6 @@ public class PayrollController {
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 
     /**
      * This API is used to get all the payroll list.
@@ -807,7 +751,6 @@ public class PayrollController {
                 payrollListModel.setExistEmpList(empIdList);
 
                 payrollListModelList.add(payrollListModel);
-
 
             }
             if (payrollListModelList == null) {
@@ -951,7 +894,6 @@ public class PayrollController {
         }
     }
 
-
     /**
      * This API is used to get List of approved user.
      *
@@ -1000,7 +942,6 @@ public class PayrollController {
         }
     }
 
-
     @LogRequest
     @ApiOperation(value = "getAllPayrollEmployee ", notes = "Getting Aprovered Users data")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
@@ -1022,8 +963,6 @@ public class PayrollController {
             return (new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
-
-
 
     @LogRequest
     @ApiOperation(value = "Generate a payroll")
@@ -1059,7 +998,6 @@ public class PayrollController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     /**
      * Payroll Void Journal Reverse Entry
@@ -1101,7 +1039,6 @@ public class PayrollController {
         }
     }
 
-
     /**
      * This API is used to get user and role.
      *
@@ -1121,7 +1058,6 @@ public class PayrollController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @LogRequest
     @ApiOperation(value = "getAllPayrollEmployeeForApprover ", notes = "Getting getAllPayrollEmployeeforApprover ")
@@ -1166,7 +1102,6 @@ public class PayrollController {
         }
     }
 
-
     /**
      * This API is used to reject a payroll and convert to draft.
      *
@@ -1188,7 +1123,6 @@ public class PayrollController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     /**
      * This API is used create and submit payroll.
@@ -1268,7 +1202,6 @@ public class PayrollController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
@@ -1375,7 +1308,6 @@ public class PayrollController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     private List<SalaryComponentPersistModel> getListSalaryComponent(PaginationResponseModel responseModel,int pageNo, int pageSize,
                                                                      boolean paginationDisable, String sortOrder, String sortingCol){

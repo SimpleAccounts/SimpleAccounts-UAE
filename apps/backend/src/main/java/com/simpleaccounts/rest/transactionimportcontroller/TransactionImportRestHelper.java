@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.transactionimportcontroller;
 
 import java.io.BufferedReader;
+import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,7 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
@@ -48,6 +49,7 @@ import com.simpleaccounts.service.bankaccount.TransactionService;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Component
+@RequiredArgsConstructor
 public class TransactionImportRestHelper {
 	private final Logger LOGGER = LoggerFactory.getLogger(TransactionImportRestHelper.class);
 
@@ -62,7 +64,6 @@ public class TransactionImportRestHelper {
 	private boolean transactionDateBoolean = false;
 	private boolean descriptionBoolean = false;
 	private List<TransactionModel> transactionList = new ArrayList<>();
-	private List<TransactionModel> invalidTransactionList = new ArrayList<>();
 	private boolean debitAmountBoolean = false;
 	private boolean creditAmountBoolean = false;
 	List<String> headerText = new ArrayList<String>();
@@ -80,20 +81,15 @@ public class TransactionImportRestHelper {
 	private Integer headerCount;
 	private String dateFormat;
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
-	@Autowired
-	private DateFormatDao dateFormatDao;
+	private final DateFormatDao dateFormatDao;
 
-	@Autowired
-	private TransactionParsingSettingDao transactionParsingSettingDao;
+	private final TransactionParsingSettingDao transactionParsingSettingDao;
 
-	@Autowired
-	private TransactionService transactionService;
+	private final TransactionService transactionService;
 
-	@Autowired
-	private DateFormatService dateFormatService;
+	private final DateFormatService dateFormatService;
 
 	public void handleFileUpload(@ModelAttribute("modelCircular") MultipartFile fileattached) {
 		List<CSVRecord> listParser = new ArrayList<>();
@@ -284,9 +280,6 @@ public class TransactionImportRestHelper {
 			dateFormat = transactionParsingSettingDao.getDateFormatByTemplateId(transactionImportModel.getTemplateId());
 			DateFormat formatter = new SimpleDateFormat(dateFormat);
 
-			//BigDecimal currentBalance = transactionService
-			//		.getCurrentBalanceByBankId(transactionImportModel.getBankId());
-
 			for (Map<String, Object> dataMap : transactionImportModel.getImportDataMap()) {
 				com.simpleaccounts.entity.bankaccount.Transaction trnx = new com.simpleaccounts.entity.bankaccount.Transaction();
 				trnx.setBankAccount(bankAcc);
@@ -298,28 +291,18 @@ public class TransactionImportRestHelper {
 					String data = (String) dataMap.get(dbColEnum.getDbColumnName());
 					switch (dbColEnum) {
 
-//					case CREDIT_DEBIT_FLAG:
-//						trnx.setDebitCreditFlag(data.charAt(0));
-//						break;
-
 					case CR_AMOUNT:
 					case DR_AMOUNT:
 //					case AMOUNT:
 
 						MathContext mc = new MathContext(4); // 2 precision
 
-						// need to create enum
-//						if (dataMap.containsKey(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName())) {
-//							trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
 ////							if (dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()).equals("C")) {
 ////								currentBalance = currentBalance.add(trnx.getTransactionAmount());
 ////							} else {
 ////								currentBalance = currentBalance.subtract(trnx.getTransactionAmount());
 ////							}
-//							trnx.setDebitCreditFlag(
-//									((String) dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()))
-//											.charAt(0));
-//						} else {
+
 							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDbColumnName());
 								if (!data.isEmpty() && !data.equals("-")) {
@@ -344,7 +327,6 @@ public class TransactionImportRestHelper {
 									}
 								}
 							}
-
 
 					//	trnx.setCurrentBalance(currentBalance);
 						break;
@@ -376,10 +358,8 @@ public class TransactionImportRestHelper {
 				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.NOT_EXPLAIN);
 				transactions.add(trnx);
 
-
 			}
-		//	bankAcc.setCurrentBalance(currentBalance);
-			//bankAccountService.update(bankAcc);
+
 			return transactions;
 		}
 		return null;
@@ -394,14 +374,8 @@ public class TransactionImportRestHelper {
 
 			BankAccount bankAcc = bankAccountService.findByPK(transactionImportModel.getBankId());
 
-//			dateFormat = transactionParsingSettingDao.getDateFormatByTemplateId(transactionImportModel.getTemplateId());
-//			DateFormat dateFormat = dateFormatService.findByPK(transactionImportModel.getDateFormatId());
-
 			com.simpleaccounts.entity.DateFormat dateFormat = dateFormatService.findByPK(transactionImportModel.getDateFormatId());
 			DateFormat formatter = new SimpleDateFormat(dateFormat.getFormat());
-
-			//BigDecimal currentBalance = transactionService
-			//		.getCurrentBalanceByBankId(transactionImportModel.getBankId());
 
 			for (Map<String, Object> dataMap : transactionImportModel.getImportDataMap()) {
 				com.simpleaccounts.entity.bankaccount.Transaction trnx = new com.simpleaccounts.entity.bankaccount.Transaction();
@@ -414,28 +388,18 @@ public class TransactionImportRestHelper {
 					String data = (String) dataMap.get(dbColEnum.getDisplayName());
 					switch (dbColEnum) {
 
-//					case CREDIT_DEBIT_FLAG:
-//						trnx.setDebitCreditFlag(data.charAt(0));
-//						break;
-
 						case CR_AMOUNT:
 						case DR_AMOUNT:
 //					case AMOUNT:
 
 							MathContext mc = new MathContext(4); // 2 precision
 
-							// need to create enum
-//						if (dataMap.containsKey(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName())) {
-//							trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
 ////							if (dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()).equals("C")) {
 ////								currentBalance = currentBalance.add(trnx.getTransactionAmount());
 ////							} else {
 ////								currentBalance = currentBalance.subtract(trnx.getTransactionAmount());
 ////							}
-//							trnx.setDebitCreditFlag(
-//									((String) dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()))
-//											.charAt(0));
-//						} else {
+
 							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDisplayName());
 								if (!data.equals("-")) {
@@ -460,7 +424,6 @@ public class TransactionImportRestHelper {
 									}
 								}
 							}
-
 
 							//	trnx.setCurrentBalance(currentBalance);
 							break;
@@ -492,10 +455,8 @@ public class TransactionImportRestHelper {
 				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.NOT_EXPLAIN);
 				transactions.add(trnx);
 
-
 			}
-			//	bankAcc.setCurrentBalance(currentBalance);
-			//bankAccountService.update(bankAcc);
+
 			return transactions;
 		}
 		return null;

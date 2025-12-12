@@ -91,8 +91,7 @@ public class SimpleCorsFilter implements Filter {
         if (origin != null && allowedOrigins.contains(origin)) {
             return origin;
         }
-        // Default: return empty string (no CORS header) for non-matching origins
-        // But for backward compatibility, if no specific origins are configured, allow all
+
         return allowedOrigins.isEmpty() ? "*" : "";
     }
 

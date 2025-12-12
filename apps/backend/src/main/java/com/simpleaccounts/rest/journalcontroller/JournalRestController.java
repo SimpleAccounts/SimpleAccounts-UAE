@@ -1,10 +1,9 @@
 package com.simpleaccounts.rest.journalcontroller;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
+import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,45 +50,34 @@ import static com.simpleaccounts.constant.PostingReferenceTypeEnum.*;
 	@RestController
 	@RequestMapping(value = "/rest/journal")
 	@SuppressWarnings({"java:S131", "java:S6809"})
-	public class JournalRestController {
+	@RequiredArgsConstructor
+public class JournalRestController {
 	private static final String MSG_DELETE_UNSUCCESSFUL = "delete.unsuccessful.msg";
 	
 	private final Logger logger = LoggerFactory.getLogger(JournalRestController.class);
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private JournalService journalService;
+	private final JournalService journalService;
 
-	@Autowired
-	private JournalRestHelper journalRestHelper;
+	private final JournalRestHelper journalRestHelper;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private JournalRepository journalRepository;
+	private final JournalRepository journalRepository;
 
-	@Autowired
-	private CustomerInvoiceReceiptRepository customerInvoiceReceiptRepository;
+	private final CustomerInvoiceReceiptRepository customerInvoiceReceiptRepository;
 
-	@Autowired
-	private PaymentRepository paymentRepository;
+	private final PaymentRepository paymentRepository;
 
-	@Autowired
-	private SupplierInvoicePaymentRepository supplierInvoicePaymentRepository;
+	private final SupplierInvoicePaymentRepository supplierInvoicePaymentRepository;
 
-	@Autowired
-	private CreditNoteRepository creditNoteRepository;
+	private final CreditNoteRepository creditNoteRepository;
 
-	@Autowired
-	private JournalLineItemRepository journalLineItemRepository;
+	private final JournalLineItemRepository journalLineItemRepository;
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final ExpenseService expenseService;
 
 	@LogRequest
 	@ApiOperation(value = "Get Journal List")
@@ -107,9 +95,7 @@ import static com.simpleaccounts.constant.PostingReferenceTypeEnum.*;
 			filterDataMap.put(JournalFilterEnum.REFERENCE_NO, filterModel.getJournalReferenceNo());
 			if (filterModel.getJournalDate() != null && !filterModel.getJournalDate().isEmpty()) {
 				LocalDate date = LocalDate.parse(filterModel.getJournalDate());
-//				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//				LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getJournalDate()).getTime())
-//						.atZone(ZoneId.systemDefault()).toLocalDateTime();
+
 				filterDataMap.put(JournalFilterEnum.JOURNAL_DATE, date);
 			}
 			//filterDataMap.put(JournalFilterEnum.DELETE_FLAG, false);

@@ -6,6 +6,7 @@
 package com.simpleaccounts.rest.productwarehousecontroller;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,13 +30,12 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/productwarehouse")
+@RequiredArgsConstructor
 public class ProductWareHouseController{
 
-	@Autowired
-	private  ProductWareHouseRestHelper productWareHouseRestHelper;
+	private final  ProductWareHouseRestHelper productWareHouseRestHelper;
 
-	@Autowired
-	private ProductWarehouseService productWarehouseService;
+	private final ProductWarehouseService productWarehouseService;
 
 	@LogRequest
 	@ApiOperation(value = "get Ware House List")

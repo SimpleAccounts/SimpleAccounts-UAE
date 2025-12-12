@@ -1,7 +1,8 @@
 package com.simpleaccounts.rest.payroll.payrolServiceImpl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
-import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;
+import lombok.RequiredArgsConstructor;
+
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.*;
@@ -22,9 +23,8 @@ import com.simpleaccounts.utils.DateFormatUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.time.*;
@@ -35,22 +35,18 @@ import java.util.*;
 
 	@Service
 	@SuppressWarnings("java:S3973")
-	public class PayrolServiceImpl extends PayrolService {
+	@RequiredArgsConstructor
+public class PayrolServiceImpl extends PayrolService {
     private static final Logger logger = LoggerFactory.getLogger(PayrolServiceImpl.class);
-    @Autowired
-    private PayrollRepository payrollRepository;
-    @Autowired
-    private PayrolEmployeeRepository payrolEmployeeRepository;
-    @Autowired
-    private EmployeeService employeeService;
+    private final PayrollRepository payrollRepository;
+    private final PayrolEmployeeRepository payrolEmployeeRepository;
+    private final EmployeeService employeeService;
     
-    @Autowired
-    private UserJpaRepository userJpaRepository;
+    private final UserJpaRepository userJpaRepository;
 
     @Autowired
 	PayrollRestHepler payrollRestHepler;
-    @Autowired
-    private EmployeeSalaryComponentRelationRepository  EmpSalaryCompRelRepository;
+    private final EmployeeSalaryComponentRelationRepository  EmpSalaryCompRelRepository;
 	@Autowired
 	SalaryService salaryService;
 	@Autowired
@@ -58,8 +54,7 @@ import java.util.*;
 	@Autowired
 	DateFormatUtil dateFormatUtil;
 
-	@Autowired
-	private PayrollDao payrollDao;
+	private final PayrollDao payrollDao;
 
     private static final String APPROVER = "Payroll Approver";
     private static final String ADMIN = "Admin";
@@ -71,7 +66,6 @@ import java.util.*;
 
     public Payroll createNewPayrol(User user, PayrolRequestModel payrolRequestModel, Integer userId){
 
-
            Payroll payroll = new Payroll();
            payroll.setDeleteFlag(Boolean.FALSE);
            payroll.setIsActive(true);
@@ -81,10 +75,6 @@ import java.util.*;
 
 //        if(payrolRequestModel.getPayrollDate()!=null) {
            payroll.setGeneratedBy(user.getUserId().toString());
-           //        if(payrolRequestModel.getPayrollDate()!=null) {
-//        }
-//           payroll.setPayrollDate(LocalDateTime.now());
-//		     payroll.setPayrollDate(dateConvertIntoLocalDataTime(payrolRequestModel.getSalaryDate()));
 
 		if (payrolRequestModel.getSalaryDate() != null) {
 			Instant instant = Instant.ofEpochMilli(payrolRequestModel.getSalaryDate().getTime());
@@ -109,7 +99,6 @@ import java.util.*;
 			payrollEmployee.setPayrollId(payrollRepository.findById(payroll.getId()));
 			payrolEmployeeRepository.save(payrollEmployee);
 		}
-
 
 		List<GeneratePayrollPersistModel> generatePayrollPersistModels = new ArrayList<>();
 		payrollRestHepler.generatePayroll(payrolRequestModel, generatePayrollPersistModels,user,payroll);
@@ -148,12 +137,10 @@ import java.util.*;
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		LocalDateTime datetime = LocalDateTime.parse(outputDate,dtf);
 
-
 		return datetime;
 
 	}
     public void savePayrollEmployeeRelation(Integer payrollId, User user, List<Integer> employeeListIds){
-
 
         for(Integer employee : employeeListIds){
             PayrollEmployee payrollEmployee = new PayrollEmployee();
@@ -242,7 +229,6 @@ import java.util.*;
 		if(allEmployeeList!=null && !allEmployeeList.isEmpty()) {
 			for (PayrollEmployeeDto payrollEmp : allEmployeeList) {
 
-
 				if (empList.contains(payrollEmp.getEmpId()))
 					continue;
 
@@ -325,7 +311,6 @@ import java.util.*;
 			}
 		}
 
-
 		return PayrollEmployeeDtoList;
 	}
 
@@ -339,8 +324,7 @@ import java.util.*;
         payroll.setPayrollApprover(payrolRequestModel.getApproverId());
 		payroll.setComment(null);
         payroll.setGeneratedBy(user.getUserId().toString());
-//        payroll.setPayrollDate(LocalDateTime.now());
-//		payroll.setPayrollDate(dateConvertIntoLocalDataTime(payrolRequestModel.getSalaryDate()));
+
 		if (payrolRequestModel.getSalaryDate() != null) {
 			Instant instant = Instant.ofEpochMilli(payrolRequestModel.getSalaryDate().getTime());
 			LocalDateTime payrollDate = LocalDateTime.ofInstant(instant,
@@ -406,7 +390,6 @@ import java.util.*;
 			}
 			payrollRepository.delete(payroll);
 		}
-
 
    }
 	

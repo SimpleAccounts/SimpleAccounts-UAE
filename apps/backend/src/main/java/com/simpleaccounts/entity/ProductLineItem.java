@@ -2,7 +2,7 @@ package com.simpleaccounts.entity;
 
 import com.simpleaccounts.constant.ProductPriceType;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -83,6 +83,5 @@ public class ProductLineItem implements Serializable {
 	@ColumnDefault(value = "false")
 	@Column(name = "IS_MIGRATED_RECORD")
 	private Boolean isMigratedRecord = false;
-
 
 }

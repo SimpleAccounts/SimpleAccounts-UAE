@@ -15,7 +15,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class FileStorageService {
 
@@ -32,22 +31,25 @@ public class FileStorageService {
         } catch (Exception ex) {
         	 logger.error(ERROR, ex);
         }
-    }
-    public Resource loadFileAsResource(String fileName) throws FileNotFoundException {
-        try {
-        	
-            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
-            if (resource.exists()) {
-                return resource;
-            } else {
-                throw new FileNotFoundException("File not found " + fileName);
+	    }
+	    public Resource loadFileAsResource(String fileName) throws FileNotFoundException {
+	        try {
+	        	
+	            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+				if (!filePath.startsWith(this.fileStorageLocation)) {
+					throw new FileNotFoundException("File not found " + fileName);
+				}
+	            Resource resource = new UrlResource(filePath.toUri());
+	            if (resource.exists()) {
+	                return resource;
+	            } else {
+	                throw new FileNotFoundException("File not found " + fileName);
             }
         } catch (MalformedURLException ex) {
             //throw new FileNotFoundException("File not found " + fileName, ex);
             throw new FileNotFoundException("File not found " + fileName);
-        }
-    }
+	        }
+	    }
     
     public Resource loadFileAsResource1() throws FileNotFoundException {
         try {

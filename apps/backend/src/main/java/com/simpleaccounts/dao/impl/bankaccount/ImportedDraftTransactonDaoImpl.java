@@ -1,6 +1,5 @@
 package com.simpleaccounts.dao.impl.bankaccount;
 
-
 import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 

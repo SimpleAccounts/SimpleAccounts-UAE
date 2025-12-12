@@ -6,8 +6,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.simpleaccounts.entity.Role;
-import com.simpleaccounts.entity.User;
 import com.simpleaccounts.model.TrialBalanceResponseModel;
 import com.simpleaccounts.model.VatReportResponseModel;
 import com.simpleaccounts.security.JwtTokenUtil;
@@ -38,8 +36,6 @@ class FinancialReportControllerTest {
 
     @Test
     void getProfitAndLossShouldReturnOkWhenReportExists() {
-        when(jwtTokenUtil.getUserIdFromHttpRequest(request)).thenReturn(11);
-        when(userService.findByPK(11)).thenReturn(buildUser(1));
         ProfitAndLossResponseModel responseModel = new ProfitAndLossResponseModel();
         when(financialReportRestHelper.getProfitAndLossReport(any())).thenReturn(responseModel);
 
@@ -53,8 +49,6 @@ class FinancialReportControllerTest {
 
     @Test
     void getProfitAndLossShouldReturnNotFoundWhenHelperReturnsNull() {
-        when(jwtTokenUtil.getUserIdFromHttpRequest(request)).thenReturn(22);
-        when(userService.findByPK(22)).thenReturn(buildUser(2));
         when(financialReportRestHelper.getProfitAndLossReport(any())).thenReturn(null);
 
         ResponseEntity<ProfitAndLossResponseModel> response =
@@ -65,8 +59,6 @@ class FinancialReportControllerTest {
 
     @Test
     void getVatReturnReportShouldReturnOk() {
-        when(jwtTokenUtil.getUserIdFromHttpRequest(request)).thenReturn(33);
-        when(userService.findByPK(33)).thenReturn(buildUser(3));
         VatReportResponseModel vatReport = new VatReportResponseModel();
         when(financialReportRestHelper.getVatReturnReport(any())).thenReturn(vatReport);
 
@@ -79,8 +71,6 @@ class FinancialReportControllerTest {
 
     @Test
     void getVatReturnReportShouldReturnNotFoundWhenNull() {
-        when(jwtTokenUtil.getUserIdFromHttpRequest(request)).thenReturn(44);
-        when(userService.findByPK(44)).thenReturn(buildUser(2));
         when(financialReportRestHelper.getVatReturnReport(any())).thenReturn(null);
 
         ResponseEntity<VatReportResponseModel> response =
@@ -91,8 +81,6 @@ class FinancialReportControllerTest {
 
     @Test
     void getTrialBalanceShouldPropagateHelperResponse() {
-        when(jwtTokenUtil.getUserIdFromHttpRequest(request)).thenReturn(55);
-        when(userService.findByPK(55)).thenReturn(buildUser(1));
         TrialBalanceResponseModel model = new TrialBalanceResponseModel();
         when(financialReportRestHelper.getTrialBalanceReport(any())).thenReturn(model);
 
@@ -106,8 +94,6 @@ class FinancialReportControllerTest {
 
     @Test
     void getCashFlowShouldReturnNotFoundWhenNull() {
-        when(jwtTokenUtil.getUserIdFromHttpRequest(request)).thenReturn(66);
-        when(userService.findByPK(66)).thenReturn(buildUser(3));
         when(financialReportRestHelper.getCashFlowReport(any())).thenReturn(null);
 
         ResponseEntity<CashFlowResponseModel> response =
@@ -115,13 +101,5 @@ class FinancialReportControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         verify(financialReportRestHelper, times(1)).getCashFlowReport(any());
-    }
-
-    private User buildUser(int roleCode) {
-        Role role = new Role();
-        role.setRoleCode(roleCode);
-        User user = new User();
-        user.setRole(role);
-        return user;
     }
 }

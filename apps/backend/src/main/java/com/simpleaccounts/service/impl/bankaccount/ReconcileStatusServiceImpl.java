@@ -1,10 +1,11 @@
 package com.simpleaccounts.service.impl.bankaccount;
 
 import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.TransactionFilterEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.bankaccount.ReconcileStatusDao;
-import com.simpleaccounts.dao.impl.bankaccount.ReconcileStatusDaoImpl;
+
 import com.simpleaccounts.entity.bankaccount.ReconcileStatus;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
@@ -21,12 +22,11 @@ import java.util.Map;
 
 @Service("reconcileStatusService")
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+@RequiredArgsConstructor
 public class ReconcileStatusServiceImpl extends ReconcileStatusService  {
 
-    @Autowired
-    private ReconcileStatusDao reconcilestatusDao;
-    @Autowired
-    TransactionServiceImpl transactionService;
+    private final ReconcileStatusDao reconcilestatusDao;
+    private final TransactionServiceImpl transactionService;
 
     @Override
     public  List<ReconcileStatus> getAllReconcileStatusListByBankAccountId(Integer bankAccountId){

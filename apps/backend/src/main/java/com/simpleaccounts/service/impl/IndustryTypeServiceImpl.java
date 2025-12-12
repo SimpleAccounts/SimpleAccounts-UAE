@@ -6,6 +6,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.IndustryTypeDao;
 import com.simpleaccounts.entity.IndustryType;
 import com.simpleaccounts.service.IndustryTypeService;
@@ -20,10 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("industryTypeService")
 @Transactional
+@RequiredArgsConstructor
 public class IndustryTypeServiceImpl extends IndustryTypeService {
 
-    @Autowired
-    private IndustryTypeDao industryTypeDao;
+    private final IndustryTypeDao industryTypeDao;
 
     @Override
     protected Dao<Integer, IndustryType> getDao() {

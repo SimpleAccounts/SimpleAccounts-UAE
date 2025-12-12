@@ -1,7 +1,7 @@
 package com.simpleaccounts.rest.rolecontroller;
 
 import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.constant.ProductPriceType;
+
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.model.RoleRequestModel;
 import com.simpleaccounts.security.JwtTokenUtil;
@@ -210,8 +210,6 @@ public class RoleModuleController {
 //        if (!userList.isEmpty()) {
            Integer response = userList.size();
             return new ResponseEntity<>(response, HttpStatus.OK);
-//        }
-//        return new ResponseEntity("unable to fetch the user information",HttpStatus.OK);
 
     }
 

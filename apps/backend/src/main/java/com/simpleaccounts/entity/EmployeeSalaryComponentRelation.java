@@ -1,13 +1,11 @@
 package com.simpleaccounts.entity;
 
-
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "EMPLOYEE_SALARY_COMPONENT_RELATION")
@@ -42,7 +40,6 @@ public class EmployeeSalaryComponentRelation implements Serializable {
     @Basic
     @Column(name="FORMULA")
     private String formula;
-
 
     @Column(name = "NO_OF_DAYS")
     @ColumnDefault(value = "30")

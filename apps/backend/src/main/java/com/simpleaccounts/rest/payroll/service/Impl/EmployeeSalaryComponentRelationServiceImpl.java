@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EmployeeSalaryComponentRelationServiceImpl extends EmployeeSalaryComponentRelationService {
 
-
     @Autowired
     EmployeeSalaryComponentRelationDao employeeSalaryComponentRelationDao;
 

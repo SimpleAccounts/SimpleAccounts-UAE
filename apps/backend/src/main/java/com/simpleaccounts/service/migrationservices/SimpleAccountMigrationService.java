@@ -82,68 +82,52 @@ import com.simpleaccounts.service.VatCategoryService;
 import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class SimpleAccountMigrationService {
 	
 	private static final String TYPE_OBJECT = "Object";
 	
 	private final Logger LOG = LoggerFactory.getLogger(SimpleAccountMigrationService.class);
 	
-	@Autowired
-    private String basePath;
+	private final String basePath;
     
-    @Autowired
-    private MigrationUtil migrationUtil; 
+    private final MigrationUtil migrationUtil; 
     
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
     
-    @Autowired
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
     
-    @Autowired
-    private InvoiceRestHelper invoiceRestHelper;
+    private final InvoiceRestHelper invoiceRestHelper;
     
-    @Autowired
-    private JournalService journalService;
+    private final JournalService journalService;
     
-    @Autowired
-    private CountryService countryService;
+    private final CountryService countryService;
 
-    @Autowired
-    private StateService stateService;
+    private final StateService stateService;
     
-    @Autowired
-    private InvoiceLineItemService invoiceLineItemService;
+    private final InvoiceLineItemService invoiceLineItemService;
 
-    @Autowired
-    private ContactService contactService;
+    private final ContactService contactService;
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
     
-    @Autowired
-    private ProductLineItemService productLineItemService;
+    private final ProductLineItemService productLineItemService;
     
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
     
-    @Autowired
-    private CurrencyExchangeService currencyExchangeService;
+    private final CurrencyExchangeService currencyExchangeService;
     
-    @Autowired
-	private  UserService userService;
+    private final  UserService userService;
     
-	@Autowired
-	private ChartOfAccountService transactionTypeService;
+	private final ChartOfAccountService transactionTypeService;
 	
-	@Autowired
-	private VatCategoryService vatCategoryService;
+	private final VatCategoryService vatCategoryService;
 	
-	@Autowired
-	private CoacTransactionCategoryService coacTransactionCategoryService;
+	private final CoacTransactionCategoryService coacTransactionCategoryService;
 
     List<DataMigrationRespModel> processTheMigratedData(String productName, String version, String fileLocation,
 			Integer userId, String migFromDate) throws IOException {
@@ -411,7 +395,6 @@ public class SimpleAccountMigrationService {
 		}
 	}
 
-
 	/**
      * This method will handle Product / Item
      * @param tables
@@ -432,9 +415,7 @@ public class SimpleAccountMigrationService {
 
 		List<Product.TableList.Table.ColumnList.Column> productTableColumnList = productTable.getColumnList().getColumn();
 		List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList = productLineItemTable.getColumnList().getColumn();
-		//List<Product.TableList.Table.ColumnList.Column> inventoryTableColumnList = inventoryTable.getColumnList().getColumn();
-		
-		// csv records
+
 		if(mapList != null) {
 			for (Map<String, String> record : mapList) {
 				Object productEntity = migrationUtil.getObject(productTable.getEntityName());
@@ -504,7 +485,6 @@ public class SimpleAccountMigrationService {
 			}
 		}
 	}
-
 
 	private void createCustomerInvoice(List<Table> tables, List<Map<String, String>> mapList, Integer userId) {
 

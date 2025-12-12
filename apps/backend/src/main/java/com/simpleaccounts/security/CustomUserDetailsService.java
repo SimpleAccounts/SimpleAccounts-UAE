@@ -1,7 +1,7 @@
 package com.simpleaccounts.security;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.simpleaccounts.entity.User;
@@ -9,19 +9,16 @@ import com.simpleaccounts.service.UserService;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Class UserLoginService
  */
 @Component
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService
 {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    //@Transactional(readOnly = true)
-   // @Cacheable(cacheNames = "userCache", key = "#emailAddress")
     public CustomUserDetails loadUserByUsername(String emailAddress)
             throws UsernameNotFoundException {
         Optional<User> user = userService.getUserByEmail(emailAddress);

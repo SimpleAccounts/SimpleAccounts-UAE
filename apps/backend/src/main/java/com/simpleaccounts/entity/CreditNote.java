@@ -1,15 +1,12 @@
 package com.simpleaccounts.entity;
 
-import com.simpleaccounts.constant.DiscountType;
-import com.simpleaccounts.entity.converter.DateConverter;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Collection;
@@ -132,12 +129,6 @@ public class CreditNote implements Serializable {
     @ColumnDefault(value = "false")
     @Column(name = "IS_REVERSE_CHARGE_ENABLED")
     private Boolean isReverseChargeEnabled = false;
-
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creditNote")
     @org.hibernate.annotations.ForeignKey(name = "none")

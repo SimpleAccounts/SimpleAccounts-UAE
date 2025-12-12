@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.usercontroller;
 
-
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;

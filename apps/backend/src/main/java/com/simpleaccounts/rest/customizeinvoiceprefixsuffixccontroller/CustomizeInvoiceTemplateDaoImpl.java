@@ -1,9 +1,9 @@
 package com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller;
 
 import com.simpleaccounts.dao.AbstractDao;
-import com.simpleaccounts.dao.InvoiceDao;
+
 import com.simpleaccounts.entity.CustomizeInvoiceTemplate;
-import com.simpleaccounts.entity.Invoice;
+
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;

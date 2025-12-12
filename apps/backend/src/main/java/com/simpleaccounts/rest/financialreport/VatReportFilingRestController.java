@@ -7,8 +7,7 @@ import com.simpleaccounts.entity.*;
 import com.simpleaccounts.model.VatReportRequestFilterModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.PostingRequestModel;
-import com.simpleaccounts.rest.productcontroller.ProductListModel;
-import com.simpleaccounts.rest.productcontroller.ProductRequestFilterModel;
+
 import com.simpleaccounts.rest.vatcontroller.VatReportResponseListForBank;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
@@ -17,6 +16,7 @@ import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,30 +32,22 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping(value = "/rest/vatReport")
+@RequiredArgsConstructor
 public class VatReportFilingRestController {
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private VatReportFilingService vatReportFilingService;
+    private final VatReportFilingService vatReportFilingService;
 
-    @Autowired
-    private VatReportService vatReportService;
+    private final VatReportService vatReportService;
 
-    @Autowired
-    private VatRecordPaymentHistoryService vatRecordPaymentHistoryService;
-    @Autowired
-    private JournalService journalService;
+    private final VatRecordPaymentHistoryService vatRecordPaymentHistoryService;
+    private final JournalService journalService;
 
+    private final DateFormatUtil dateFormatUtil;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
-
-    @Autowired
-    private VatReportFilingRepository vatReportFilingRepository;
+    private final VatReportFilingRepository vatReportFilingRepository;
 
     @LogRequest
     @ApiOperation(value = "Get Vat Report Filing List")
@@ -190,7 +182,6 @@ public class VatReportFilingRestController {
          return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
      }
     }
-
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)

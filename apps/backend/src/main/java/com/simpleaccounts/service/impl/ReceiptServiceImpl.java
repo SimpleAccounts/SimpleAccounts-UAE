@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,10 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.ReceiptService;
 
 @Service("ReceiptService")
+@RequiredArgsConstructor
 public class ReceiptServiceImpl extends ReceiptService {
 
-	@Autowired
-	private ReceiptDao receiptDao;
+	private final ReceiptDao receiptDao;
 
 	@Override
 	public PaginationResponseModel getReceiptList(Map<ReceiptFilterEnum, Object> filterMap,

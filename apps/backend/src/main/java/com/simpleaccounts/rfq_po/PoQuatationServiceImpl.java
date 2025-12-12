@@ -1,12 +1,13 @@
 package com.simpleaccounts.rfq_po;
 
 import com.simpleaccounts.dao.Dao;
-import com.simpleaccounts.entity.Invoice;
+import lombok.RequiredArgsConstructor;
+
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,9 +16,9 @@ import java.util.Map;
 
 @Service("poQuatationService")
 @Transactional
+@RequiredArgsConstructor
 public class PoQuatationServiceImpl extends PoQuatationService{
-    @Autowired
-    private PoQuatationDao poQuatationDao;
+    private final PoQuatationDao poQuatationDao;
     @Override
     protected Dao<Integer, PoQuatation> getDao() {
         return this.poQuatationDao;

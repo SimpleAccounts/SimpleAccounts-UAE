@@ -1,7 +1,8 @@
 package com.simpleaccounts.rest.journalcontroller;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import lombok.RequiredArgsConstructor;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -36,38 +37,29 @@ import com.simpleaccounts.service.VatCategoryService;
 
 	@Component
 	@SuppressWarnings({"java:S3973", "java:S115"})
-	public class JournalRestHelper {
+	@RequiredArgsConstructor
+public class JournalRestHelper {
 	private final Logger logger = LoggerFactory.getLogger(JournalRestHelper.class);
 	private static final boolean IS_LIST = true;
-	@Autowired
-	private CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
-	@Autowired
-	private JournalService journalService;
+	private final JournalService journalService;
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private VatCategoryService vatCategoryService;
+	private final VatCategoryService vatCategoryService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private JournalLineItemService journalLineItemService;
+	private final JournalLineItemService journalLineItemService;
 
-	@Autowired
-	private InvoiceNumberUtil invoiceNumberUtil;
+	private final InvoiceNumberUtil invoiceNumberUtil;
 
-	@Autowired
-	private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+	private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
-	@Autowired
-	private DateFormatHelper dateFormatHelper;
+	private final DateFormatHelper dateFormatHelper;
 
 	public Journal getEntity(JournalRequestModel journalRequestModel, Integer userId) {
 		Journal journal = new Journal();
@@ -241,7 +233,6 @@ import com.simpleaccounts.service.VatCategoryService;
 				JournalLineItemRequestModel requestModel = getLineItemModel(lineItem, list);
 				requestModels.add(requestModel);
 
-
 			}
 			model.setJournalLineItems(requestModels);
 		}
@@ -272,7 +263,6 @@ import com.simpleaccounts.service.VatCategoryService;
 			}
 		}
 		requestModel.setDescription(lineItem.getDescription());
-
 
 		requestModel.setCreditAmount(lineItem.getCreditAmount() != null ? lineItem.getCreditAmount().add(creditVatAmt)
 				: BigDecimal.valueOf(0));

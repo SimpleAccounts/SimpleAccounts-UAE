@@ -1,19 +1,18 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
-import com.simpleaccounts.entity.Expense;
-import com.simpleaccounts.entity.Invoice;
+
 import com.simpleaccounts.entity.VatReportFiling;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.financialreport.CreditDebitAggregator;
 import com.simpleaccounts.rest.financialreport.FinancialReportRequestModel;
 import com.simpleaccounts.rest.financialreport.VatReportFilingRequestModel;
-import com.simpleaccounts.rest.simpleaccountreports.SupplierInvoiceDetailsModel;
+
 import com.simpleaccounts.rest.taxescontroller.TaxesFilterEnum;
 import com.simpleaccounts.rest.taxescontroller.TaxesFilterModel;
-import com.simpleaccounts.service.ExpenseService;
-import com.simpleaccounts.service.InvoiceService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,15 +43,14 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Repository
+@RequiredArgsConstructor
 public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem> implements JournalLineItemDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JournalLineItemDaoImpl.class);
 
-	@Autowired
-	private DateFormatUtil dateUtil;
+	private final DateFormatUtil dateUtil;
 
-	@Autowired
-	private DatatableSortingFilterConstant datatableUtil;
+	private final DatatableSortingFilterConstant datatableUtil;
 
 	@Override
 	@Transactional
@@ -138,7 +136,6 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			response.setData(this.executeQuery(dbFilters, paginationModel));
 			return response;
 	}
-
 
 	@Override
 	public Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(
@@ -396,7 +393,6 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		debitNoteQuery.setParameter(CommonColumnConstants.END_DATE,endDate.toLocalDate());
 		debitNoteQuery.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY_ID,transactionCategoryId);
 		BigDecimal debitNoteAmount= (BigDecimal) debitNoteQuery.getSingleResult();
-
 
 		BigDecimal vatAmount =  BigDecimal.ZERO;
 		if(invoiceAmount!=null){

@@ -16,6 +16,7 @@ import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.Customize
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.InvoiceNumberUtil;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import org.springframework.util.CollectionUtils;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ProductRestHelper {
 
 	@Autowired
@@ -40,39 +42,27 @@ public class ProductRestHelper {
 	@Autowired
 	ProductWarehouseService productWarehouseService;
 
-	@Autowired
-	private ProductLineItemService productLineItemService;
+	private final ProductLineItemService productLineItemService;
 
-	@Autowired
-	private InventoryService inventoryService;
+	private final InventoryService inventoryService;
 
-	@Autowired
-	private UnitTypesRepository unitTypesRepository;
+	private final UnitTypesRepository unitTypesRepository;
 
-	@Autowired
-	private JournalService journalService;
+	private final JournalService journalService;
 
+	private final ContactService contactService;
 
-	@Autowired
-	private ContactService contactService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final InventoryHistoryService inventoryHistoryService;
 
-	@Autowired
-	private InventoryHistoryService inventoryHistoryService;
+	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
 
-	@Autowired
-	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+	private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
-	@Autowired
-	private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+	private final InvoiceNumberUtil invoiceNumberUtil;
 
-	@Autowired
-	private InvoiceNumberUtil invoiceNumberUtil;
-
-	@Autowired
-	private ExciseTaxRepository exciseTaxRepository;
+	private final ExciseTaxRepository exciseTaxRepository;
 	public Product getEntity(ProductRequestModel productModel) {
 		Product product = new Product();
 		if (productModel.getProductID() != null) {
@@ -579,7 +569,6 @@ public class ProductRestHelper {
 		String input1  = productRequestModel.getSalesUnitPrice().toString();
 		BigDecimal a = new BigDecimal(input1);
 		float sellingPrice = a.floatValue();
-
 
 			inventory.setUnitSellingPrice(sellingPrice);
 		}

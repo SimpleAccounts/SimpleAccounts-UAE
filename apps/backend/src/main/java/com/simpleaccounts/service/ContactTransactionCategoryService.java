@@ -2,7 +2,7 @@ package com.simpleaccounts.service;
 
 import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.ContactTransactionCategoryRelation;
-import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
+
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 
 /**

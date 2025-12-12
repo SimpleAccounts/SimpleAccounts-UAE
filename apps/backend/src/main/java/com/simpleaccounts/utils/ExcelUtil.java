@@ -1,6 +1,8 @@
 package com.simpleaccounts.utils;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +33,8 @@ public class ExcelUtil {
 
 			File file = null;
 			try {
-				file = File.createTempFile(multipartFile.getName(), ".xlsx");
+				Path tempPath = Files.createTempFile(multipartFile.getName(), ".xlsx");
+				file = tempPath.toFile();
 				multipartFile.transferTo(file);
 			} catch (IOException e) {
 				LOGGER.error("Error", e);

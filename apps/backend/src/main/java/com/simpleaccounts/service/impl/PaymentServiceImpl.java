@@ -6,6 +6,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.dbfilter.PaymentFilterEnum;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.PaymentDao;
 import com.simpleaccounts.entity.Payment;
@@ -25,10 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("paymentService")
 @Transactional
+@RequiredArgsConstructor
 public class PaymentServiceImpl extends PaymentService {
 
-	@Autowired
-	private PaymentDao paymentDao;
+	private final PaymentDao paymentDao;
 
 	@Override
 	protected Dao<Integer, Payment> getDao() {

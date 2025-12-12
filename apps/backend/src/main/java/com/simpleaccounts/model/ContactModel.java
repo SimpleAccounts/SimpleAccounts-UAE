@@ -1,6 +1,5 @@
 package com.simpleaccounts.model;
 
-import com.simpleaccounts.entity.Country;
 import com.simpleaccounts.entity.Currency;
 import java.io.Serializable;
 

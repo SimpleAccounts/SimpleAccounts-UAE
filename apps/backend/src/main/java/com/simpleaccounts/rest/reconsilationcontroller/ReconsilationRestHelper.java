@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.reconsilationcontroller;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -30,32 +31,24 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 	@Component
 	@SuppressWarnings("java:S115")
-	public class ReconsilationRestHelper {
+	@RequiredArgsConstructor
+public class ReconsilationRestHelper {
 
 	private final Logger logger = LoggerFactory.getLogger(ReconsilationController.class);
 
-	@Autowired
-	private ReconcileStatusService reconcileStatusService;
+	private final ReconcileStatusService reconcileStatusService;
 
-	@Autowired
-	private DateFormatUtil dateUtil;
+	private final DateFormatUtil dateUtil;
 
+	private final ExpenseService expenseService;
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
-
-	@Autowired
-	private VatCategoryService vatCategoryService;
-	@Autowired
-	private BankAccountService bankAccountService;
-	@Autowired
-	private CurrencyExchangeService currencyExchangeService;
+	private final VatCategoryService vatCategoryService;
+	private final BankAccountService bankAccountService;
+	private final CurrencyExchangeService currencyExchangeService;
 
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
 
@@ -132,8 +125,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 //Todo
 	public Journal getByTransactionType(Integer transactionCategoryCode, BigDecimal amount, int userId,
 										Transaction transaction, boolean isdebitFromBank, BigDecimal exchangeRate) {
-		//CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(transaction.getBankAccount()
-		//		.getBankAccountCurrency().getCurrencyCode());
+
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
@@ -290,20 +282,10 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 		ChartOfAccount transactionType = transactionCategory.getChartOfAccount();
 
-//		boolean isdebitFromBank = transactionType.getChartOfAccountId().equals(ChartOfAccountConstant.MONEY_IN)
-//				|| (transactionType.getParentChartOfAccount() != null
-//				&& transactionType.getParentChartOfAccount().getChartOfAccountId() != null
-//				&& transactionType.getParentChartOfAccount().getChartOfAccountId()
-//				.equals(ChartOfAccountConstant.MONEY_IN)) ? Boolean.TRUE : Boolean.FALSE;
-
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 		journalLineItem1.setTransactionCategory(transaction.getExplainedTransactionCategory());
-//		if (!isdebitFromBank) {
-//			journalLineItem1.setDebitAmount(amount.multiply(transactionPresistModel.getExchangeRate()));
-//		} else {
-//			journalLineItem1.setCreditAmount(amount.multiply(transactionPresistModel.getExchangeRate()));
-//		}
+
 		journalLineItem1.setDebitAmount(amount.multiply(transactionPresistModel.getExchangeRate()));
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
 		journalLineItem1.setReferenceId(expense.getExpenseId());
@@ -314,11 +296,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 		JournalLineItem journalLineItem2 = new JournalLineItem();
 		journalLineItem2.setTransactionCategory(transaction.getBankAccount().getTransactionCategory());
-//		if (isdebitFromBank) {
-//			journalLineItem2.setDebitAmount(transaction.getTransactionAmount().multiply(transactionPresistModel.getExchangeRate()));
-//		} else {
-//			journalLineItem2.setCreditAmount(transaction.getTransactionAmount().multiply(transactionPresistModel.getExchangeRate()));
-//		}
+
 		journalLineItem2.setCreditAmount(amount.multiply(transactionPresistModel.getExchangeRate()));
 		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
 		journalLineItem2.setReferenceId(expense.getExpenseId());
@@ -457,9 +435,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 		for (ReconcileStatus reconcileStatus : (List<ReconcileStatus>) reconcileStatusList) {
 			ReconcileStatusListModel reconcileStatusListModel = new ReconcileStatusListModel();
 			reconcileStatusListModel.setReconcileId(reconcileStatus.getReconcileId());
-//			reconcileStatusListModel.setReconciledDate(reconcileStatus.getReconciledDate() != null
-//					? dateUtil.getLocalDateTimeAsString(reconcileStatus.getReconciledDate(), "dd-MM-yyyy")
-//					: "-");
+
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
 			ZoneId timeZone = ZoneId.systemDefault();
 			Date date = Date.from(reconcileStatus.getReconciledDate().toLocalDate().atStartOfDay(timeZone).toInstant());

@@ -39,7 +39,6 @@ public enum TransactionCategoryCodeEnum {
     RETAINED_EARNINGS("05-01-007"),
     GCC_VAT_PAYABLE("02-02-017");
 
-
 	
     @Getter
     private final String code;

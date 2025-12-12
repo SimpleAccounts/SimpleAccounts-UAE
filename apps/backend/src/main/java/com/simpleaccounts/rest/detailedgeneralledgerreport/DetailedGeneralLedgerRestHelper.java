@@ -1,7 +1,8 @@
 package com.simpleaccounts.rest.detailedgeneralledgerreport;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import lombok.RequiredArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -27,41 +28,33 @@ import org.slf4j.LoggerFactory;
 
 	@Component
 	@SuppressWarnings({"java:S3973", "java:S131"})
-	public class DetailedGeneralLedgerRestHelper {
+	@RequiredArgsConstructor
+public class DetailedGeneralLedgerRestHelper {
 
 	private static final Logger logger = LoggerFactory.getLogger(DetailedGeneralLedgerRestHelper.class);
 
-	@Autowired
-	private JournalLineItemService journalLineItemService;
+	private final JournalLineItemService journalLineItemService;
 
-	@Autowired
-	private TransactionService transactionalService;
+	private final TransactionService transactionalService;
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final ExpenseService expenseService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private PaymentService paymentService;
+	private final PaymentService paymentService;
 
-	@Autowired
-	private ReceiptService receiptService;
+	private final ReceiptService receiptService;
 
-	@Autowired
-	private DateFormatUtil dateUtil;
+	private final DateFormatUtil dateUtil;
 	@Autowired
 	TransactionCategoryService transactionCategoryService;
 
 	@Autowired
 	PayrollRepository payrollRepository;
 
-	@Autowired
-	private CreditNoteRepository creditNoteRepository;
+	private final CreditNoteRepository creditNoteRepository;
 
 	@Autowired
 	TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
@@ -208,8 +201,7 @@ import org.slf4j.LoggerFactory;
 
 					switch (postingType) {
 						case BANK_ACCOUNT:
-							//bankAccountMap = findOrGetFromDbBn(bankAccountMap, lineItem.getReferenceId());
-							//BankAccount bn = bankAccountMap.get(lineItem.getReferenceId());
+
 							model.setAmount(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
 							model.setDebitAmount(lineItem.getDebitAmount());
 							model.setCreditAmount(lineItem.getCreditAmount());
@@ -229,12 +221,7 @@ import org.slf4j.LoggerFactory;
 								String d = tr.getTransactionDate().format(formatter);
 								model.setDate(d);
 							}
-							// model.setCreditAmount(lineItem.getCreditAmount());
-							// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-							// if (tr.getTransactionDate()!=null){
-							// 	String d = tr.getTransactionDate().format(formatter);
-							// 	model.setDate(d);
-							// }
+
 							model.setCreditAmount(lineItem.getCreditAmount());
 							// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 							if (tr.getTransactionDate()!=null){
@@ -250,10 +237,7 @@ import org.slf4j.LoggerFactory;
 							expenseMap = findOrGetFromDbEx(expenseMap, lineItem.getReferenceId());
 							Expense expense = expenseMap.get(lineItem.getReferenceId());
 							if (expense != null) {
-								//model.setPostingReferenceTypeEnum(PostingReferenceTypeEnum.EXPENSE.getDisplayName());
-//								model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
-//								model.setDebitAmount(isDebit ? lineItem.getDebitAmount() : new BigDecimal(0));
-//								model.setCreditAmount(isDebit ? new BigDecimal(0) : lineItem.getCreditAmount());
+
 								model.setCreditAmount(lineItem.getCreditAmount());
 								model.setDebitAmount(lineItem.getDebitAmount());
 								if (lineItem.getCreditAmount().compareTo(BigDecimal.ZERO)==1){
@@ -291,19 +275,7 @@ import org.slf4j.LoggerFactory;
 							invoiceMap = findOrGetFromDbIn(invoiceMap, lineItem.getReferenceId());
 							Invoice invoice = invoiceMap.get(lineItem.getReferenceId());
 
-//							model.setReferenceNo(journal.getJournlReferencenNo());
-							//model.setAmount(invoice.getTotalAmount());
 							BigDecimal amount = BigDecimal.ZERO;
-//							if (isDebit) {
-//								model.setCreditAmount(BigDecimal.ZERO);
-//								model.setDebitAmount(lineItem.getDebitAmount());
-//								amount = lineItem.getDebitAmount();
-//							} else {
-//								model.setCreditAmount(lineItem.getCreditAmount());
-//								model.setDebitAmount(BigDecimal.ZERO);
-//								amount = lineItem.getCreditAmount();
-//							}
-//							model.setAmount(amount);
 
 							model.setCreditAmount(lineItem.getCreditAmount());
 							model.setDebitAmount(lineItem.getDebitAmount());
@@ -318,8 +290,6 @@ import org.slf4j.LoggerFactory;
 						model.setCreditAmount(amountCredit);
 						model.setDebitAmount(amountDebit);
 						model.setAmount(amountDebit.intValue()!=0?amountDebit:amountCredit);*/
-							//model.setCreditAmount(!isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO);
-							//model.setDebitAmount(isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO);
 
 							if (invoice.getContact().getOrganization() != null && !invoice.getContact().getOrganization().isEmpty()){
 								model.setName(invoice.getContact().getOrganization());
@@ -359,8 +329,6 @@ import org.slf4j.LoggerFactory;
 						model.setCreditAmount(amountCredit);
 						model.setDebitAmount(amountDebit);
 						model.setAmount(amountDebit.intValue()!=0?amountDebit:amountCredit);*/
-							//model.setCreditAmount(!isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO);
-							//model.setDebitAmount(isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO);
 
 							if (creditNote.getContact().getOrganization() != null && !creditNote.getContact().getOrganization().isEmpty()){
 								model.setName(creditNote.getContact().getOrganization());
@@ -370,7 +338,6 @@ import org.slf4j.LoggerFactory;
 							model.setTransactonRefNo(creditNote.getCreditNoteNumber());
 							model.setInvoiceType(creditNote.getType());
 							break;
-
 
 						case MANUAL:
 						case BALANCE_ADJUSTMENT:

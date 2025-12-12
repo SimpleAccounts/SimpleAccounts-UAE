@@ -3,12 +3,12 @@ package com.simpleaccounts.rest.creditnotecontroller;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.Currency;
+
 import com.simpleaccounts.model.AppliedInvoiceCreditNote;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.PostingRequestModel;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
-import com.simpleaccounts.rest.usercontroller.UserModel;
+
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.FileHelper;
@@ -17,6 +17,7 @@ import com.simpleaccounts.utils.SimpleAccountsMessage;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -40,37 +41,28 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @Slf4j
 @RestController
 @RequestMapping(value = "/rest/creditNote")
+@RequiredArgsConstructor
 public class CreditNoteRestController {
     private final Logger logger = LoggerFactory.getLogger(CreditNoteRestController.class);
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
 
-    @Autowired
-    private CreditNoteRestHelper creditNoteRestHelper;
+    private final CreditNoteRestHelper creditNoteRestHelper;
 
-    @Autowired
-    private JournalService journalService;
+    private final JournalService journalService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
-    @Autowired
-    private CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
+    private final CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
 
-    @Autowired
-    private FileAttachmentService fileAttachmentService;
+    private final FileAttachmentService fileAttachmentService;
 
-    @Autowired
-    private CreditNoteRepository creditNoteRepository;
+    private final CreditNoteRepository creditNoteRepository;
 
-    @Autowired
-    private InvoiceRestHelper invoiceRestHelper;
+    private final InvoiceRestHelper invoiceRestHelper;
 
     @LogRequest
     @ApiOperation(value = "Get Credit Note List")

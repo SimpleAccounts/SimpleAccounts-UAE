@@ -13,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -30,9 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		// configure AuthenticationManager so that it knows from where to load
-		// user for matching credentials
-		// Use BCryptPasswordEncoder
+
 		auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
 	}
 
@@ -48,12 +47,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-	@SuppressWarnings("java:S4502") // CSRF protection is intentionally disabled for this stateless REST API
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		// CSRF protection is disabled because this is a stateless REST API using JWT tokens.
-		// JWT tokens are sent in the Authorization header, not cookies, so CSRF attacks are not applicable.
-		// See OWASP: https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html
-		httpSecurity.csrf().disable()
+
+		httpSecurity
+				.csrf()
+				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+				.ignoringAntMatchers("/rest/**", "/public/**")
+				.and()
 				// dont authenticate this particular request
 				.authorizeRequests().// all other requests need to be authenticated
 			//antMatchers("/config/getreleasenumber").permitAll().
@@ -68,10 +68,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				antMatchers("/public/**").permitAll().
 				antMatchers("/rest/company/getSimpleAccountsreleasenumber").permitAll().
 				antMatchers("/rest/**").authenticated().and().
-				// make sure we use stateless session; session won't be used to
-				// store user's state.
+
 				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+					.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		// Add a filter to validate the tokens with every request
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

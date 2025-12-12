@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.detailedgeneralledgerreport;
 
 import java.util.*;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.Transaction;
@@ -29,18 +30,16 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping("/rest/detailedGeneralLedgerReport")
+@RequiredArgsConstructor
 public class DetailedGeneralLedgerReportController {
 
 	private final Logger logger = LoggerFactory.getLogger(DetailedGeneralLedgerReportController.class);
 
-	@Autowired
-	private DetailedGeneralLedgerRestHelper detailedGeneralLedgerRestHelper;
+	private final DetailedGeneralLedgerRestHelper detailedGeneralLedgerRestHelper;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
 	TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
@@ -48,21 +47,13 @@ public class DetailedGeneralLedgerReportController {
 	@LogRequest
 	@ApiOperation(value = "Get list of DateFormat")
 	@GetMapping(value = "/getList")
-	public ResponseEntity<List> getDateFormat(ReportRequestModel reportRequestModel,
-											  HttpServletRequest request) {
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userService.findByPK(userId);
-
-		Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-		if(user.getRole().getRoleCode()!=1) {
-			filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-		}
-		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
-		List list = detailedGeneralLedgerRestHelper.getDetailedGeneralLedgerReport(reportRequestModel);
-		try {
-			if (list == null) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
+		public ResponseEntity<List> getDateFormat(ReportRequestModel reportRequestModel,
+												  HttpServletRequest request) {
+			List list = detailedGeneralLedgerRestHelper.getDetailedGeneralLedgerReport(reportRequestModel);
+			try {
+				if (list == null) {
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}

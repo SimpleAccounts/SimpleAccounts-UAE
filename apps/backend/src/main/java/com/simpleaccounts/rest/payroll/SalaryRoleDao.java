@@ -11,9 +11,7 @@ import java.util.Map;
 
 public interface SalaryRoleDao extends Dao<Integer, SalaryRole> {
 
-
     List<DropdownObjectModel> getSalaryRolesForDropdownObjectModel();
-
 
     PaginationResponseModel getSalaryRoleList(Map<Object, Object> filterDataMap, PaginationModel paginationModel);
 }

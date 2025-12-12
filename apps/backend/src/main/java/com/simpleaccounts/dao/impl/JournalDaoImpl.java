@@ -2,17 +2,16 @@ package com.simpleaccounts.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
 import java.util.Map;
 
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.dao.JournalLineItemDao;
-import com.simpleaccounts.service.JournalLineItemService;
-import com.simpleaccounts.service.JournalService;
+
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
@@ -28,16 +27,14 @@ import com.simpleaccounts.service.TransactionCategoryBalanceService;
 import javax.persistence.Query;
 @Slf4j
 @Repository
+@RequiredArgsConstructor
 public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements JournalDao {
 
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
-	@Autowired
-	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
 
-	@Autowired
-	private JournalLineItemDao journalLineItemDao;
+	private final JournalLineItemDao journalLineItemDao;
 
 	@Override
 	public void deleteByIds(List<Integer> ids) {

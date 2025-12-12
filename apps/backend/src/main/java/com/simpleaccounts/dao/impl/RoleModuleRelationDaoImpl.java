@@ -3,9 +3,7 @@ package com.simpleaccounts.dao.impl;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.RoleModuleRelationDao;
 import com.simpleaccounts.entity.RoleModuleRelation;
-import com.simpleaccounts.entity.SimpleAccountsModules;
-import com.simpleaccounts.service.RoleModuleRelationService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;

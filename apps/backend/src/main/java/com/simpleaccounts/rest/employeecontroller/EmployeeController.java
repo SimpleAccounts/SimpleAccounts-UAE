@@ -1,12 +1,13 @@
 package com.simpleaccounts.rest.employeecontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.dbfilter.EmployeeFilterEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.repository.EmployeeRepository;
 import com.simpleaccounts.repository.EmployeeSalaryComponentRelationRepository;
-import com.simpleaccounts.rest.CorporateTax.CorporateTaxFiling;
+
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
@@ -14,17 +15,14 @@ import com.simpleaccounts.rest.payroll.PayrollRestHepler;
 import com.simpleaccounts.rest.payroll.SalaryTemplatePersistModel;
 import com.simpleaccounts.rest.payroll.dto.PayrollEmployeeDto;
 import com.simpleaccounts.rest.payroll.service.EmployeeSalaryComponentRelationService;
-import com.simpleaccounts.rest.payroll.service.SalaryComponentService;
-import com.simpleaccounts.rest.payroll.service.SalaryTemplateService;
-import com.simpleaccounts.rest.usercontroller.UserModel;
-import com.simpleaccounts.rfq_po.PoQuatation;
+
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.EmployeeBankDetailsService;
 import com.simpleaccounts.service.EmployeeParentRelationService;
 import com.simpleaccounts.service.EmployeeService;
 
 import com.simpleaccounts.service.EmploymentService;
-import com.simpleaccounts.utils.DateFormatUtil;
+
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import com.simpleaccounts.utils.TransactionCategoryCreationHelper;
@@ -55,44 +53,33 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 	@RestController
 	@RequestMapping(value = "/rest/employee")
 	@SuppressWarnings("java:S3973")
-	public class EmployeeController {
+	@RequiredArgsConstructor
+public class EmployeeController {
 
 	private final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
-	@Autowired
-	private EmployeeService employeeService;
+	private final EmployeeService employeeService;
 
-	@Autowired
-	private EmployeeHelper employeeHelper;
+	private final EmployeeHelper employeeHelper;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private PayrollRestHepler payrollRestHepler;
+	private final PayrollRestHepler payrollRestHepler;
 
-	@Autowired
-	private EmployeeParentRelationService employeeParentRelationService;
+	private final EmployeeParentRelationService employeeParentRelationService;
 
-	@Autowired
-	private EmploymentService employmentService;
+	private final EmploymentService employmentService;
 
-	@Autowired
-	private EmployeeBankDetailsService employeeBankDetailsService;
+	private final EmployeeBankDetailsService employeeBankDetailsService;
 
 	@Autowired
 	EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
 
-	@Autowired
-	private TransactionCategoryCreationHelper transactionCategoryCreationHelper;
-	@Autowired
-	private EmployeeRepository employeeRepository;
-	@Autowired
-	private EmploymentRepository employmentRepository;
-	@Autowired
-	private EmployeeSalaryComponentRelationRepository employeeSalaryComponentRelationRepository;
-	@Autowired
-	private EmployeeBankDetailsRepository employeeBankDetailsRepository;
+	private final TransactionCategoryCreationHelper transactionCategoryCreationHelper;
+	private final EmployeeRepository employeeRepository;
+	private final EmploymentRepository employmentRepository;
+	private final EmployeeSalaryComponentRelationRepository employeeSalaryComponentRelationRepository;
+	private final EmployeeBankDetailsRepository employeeBankDetailsRepository;
 
 	@LogRequest
 	@ApiOperation(value = "Get Employee List")
@@ -261,14 +248,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 				employee.setDeleteFlag(Boolean.FALSE);
 				employeeService.persist(employee);
 			employeeService.sendInvitationMail(employee, request);
-//			EmployeeBankDetails employeeBankDetails = payrollRestHepler.getEntity(employeePersistModel);
-//			employeeBankDetails.setEmployee(employee);
-//			employeeBankDetails.setCreatedBy(userId);
-//			employeeBankDetails.setCreatedDate(LocalDateTime.now());
-//			employeeBankDetailsService.persist(employeeBankDetails);
-//			Employment employment = payrollRestHepler.getEmploymentEntity(employeePersistModel);
-//			employment.setEmployee(employee);
-//			employmentService.persist(employment);
+
 			if(employee.getParentId()!=null) {
 				Employee parentId = employeeService.findByPK(employee.getParentId());
 				Employee childId = employee;
@@ -304,14 +284,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 				employee.setCreatedDate(LocalDateTime.now());
 				employeeService.update(employee);
 
-//			EmployeeBankDetails employeeBankDetails = payrollRestHepler.getEmployeeBankDetailsEntity(employeePersistModel,employee,userId);
-//			employeeBankDetails.setEmployee(employee);
-//			employeeBankDetails.setCreatedBy(userId);
-//			employeeBankDetails.setCreatedDate(LocalDateTime.now());
-//			employeeBankDetailsService.update(employeeBankDetails);
-//			Employment employment = payrollRestHepler.getEmploymentsEntity(employeePersistModel,employee,userId);
-//			employment.setEmployee(employee);
-//			employmentService.update(employment);
 /**
  * added for Update employee Transaction category
  */

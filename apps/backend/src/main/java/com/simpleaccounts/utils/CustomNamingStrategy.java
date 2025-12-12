@@ -30,7 +30,6 @@ import org.hibernate.boot.model.naming.ImplicitIndexNameSource;
  */
 public class CustomNamingStrategy implements ImplicitNamingStrategy {
 
-
     public Identifier determinePrimaryTableName(ImplicitEntityNameSource implicitEntityNameSource) {
         return null;
     }

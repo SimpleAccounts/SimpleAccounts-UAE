@@ -25,7 +25,7 @@ import com.simpleaccounts.rest.currencyconversioncontroller.CurrencyConversionRe
 import com.simpleaccounts.rest.usercontroller.UserModel;
 import com.simpleaccounts.rest.usercontroller.UserRestHelper;
 import com.simpleaccounts.service.*;
-import com.simpleaccounts.utils.MessageUtil;
+
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +51,7 @@ import com.simpleaccounts.security.JwtTokenUtil;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
@@ -59,74 +60,54 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 	@Component
 	@RequestMapping("/rest/company")
 	@SuppressWarnings("java:S131")
-	public class CompanyController {
+	@RequiredArgsConstructor
+public class CompanyController {
 	private static final String MSG_UPDATED_SUCCESSFULLY = "Updated Successfully";
 
-	@Autowired
-	private CountryService countryService;
+	private final CountryService countryService;
 
-	@Autowired
-	private EmaiLogsService emaiLogsService;
+	private final EmaiLogsService emaiLogsService;
 
-	@Autowired
-	private StateService stateService;
+	private final StateService stateService;
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
 	@Autowired
 	protected JournalService journalService;
 
-	@Autowired
-	private CoacTransactionCategoryService coacTransactionCategoryService;
+	private final CoacTransactionCategoryService coacTransactionCategoryService;
 
-	@Autowired
-	private BankAccountStatusService bankAccountStatusService;
+	private final BankAccountStatusService bankAccountStatusService;
 
-	@Autowired
-	private CompanyService companyService;
+	private final CompanyService companyService;
 
-	@Autowired
-	private CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
-	@Autowired
-	private CompanyTypeService companyTypeService;
+	private final CompanyTypeService companyTypeService;
 
-	@Autowired
-	private IndustryTypeService industryTypeService;
+	private final IndustryTypeService industryTypeService;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private CompanyRestHelper companyRestHelper;
+	private final CompanyRestHelper companyRestHelper;
 
-	@Autowired
-	private CompanyTypeRepository companyTypeRepository;
+	private final CompanyTypeRepository companyTypeRepository;
 
-	@Autowired
-	private RoleService roleService;
+	private final RoleService roleService;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private CurrencyExchangeService currencyExchangeService;
+	private final CurrencyExchangeService currencyExchangeService;
 
-	@Autowired
-	private BankAccountTypeService bankAccountTypeService;
+	private final BankAccountTypeService bankAccountTypeService;
 
-	@Autowired
-	private UserRestHelper userRestHelper;
+	private final UserRestHelper userRestHelper;
 
-	@Autowired
-	private BankAccountRestHelper bankRestHelper;
+	private final BankAccountRestHelper bankRestHelper;
 
-	@Autowired
-	private UserService userServiceNew;
+	private final UserService userServiceNew;
 
 	/**
 	 * @Deprecated
@@ -427,7 +408,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 		}
 	}
 
-
 	@LogRequest
 	@GetMapping(value = "/getCountry")
 	public ResponseEntity<List<Country>> getCountry() {
@@ -466,7 +446,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
 
 	private TransactionCategory getValidTransactionCategory(TransactionCategory transactionCategory) {
 		String transactionCategoryCode = transactionCategory.getChartOfAccount().getChartOfAccountCode();
@@ -691,9 +670,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 		}
 	}
 
-
-	@Autowired
-	private Environment env;
+	private final Environment env;
 
 	/**
 	 * Added for returning simpleaccounts release number

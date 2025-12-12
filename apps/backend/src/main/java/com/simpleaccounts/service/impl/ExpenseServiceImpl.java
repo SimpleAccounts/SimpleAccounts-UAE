@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -30,6 +31,7 @@ import com.simpleaccounts.utils.ChartUtil;
 
 @Service("expenseService")
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+@RequiredArgsConstructor
 public class ExpenseServiceImpl extends ExpenseService {
 
 	@Autowired
@@ -44,8 +46,7 @@ public class ExpenseServiceImpl extends ExpenseService {
 	@Autowired
 	ChartUtil util;
 
-	@Autowired
-	private TransactionExpensesService transactionExpensesService;
+	private final TransactionExpensesService transactionExpensesService;
 
 	@Override
 	public List<Expense> getExpenses(Integer userId, List<Integer> statusList) {

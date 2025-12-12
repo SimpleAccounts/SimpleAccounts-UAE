@@ -7,7 +7,6 @@ import com.simpleaccounts.criteria.AbstractCriteria;
 import com.simpleaccounts.criteria.SortOrder;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 
-
 @Getter
 @Setter
 public class ImportedDraftTransactionCriteria extends AbstractCriteria {

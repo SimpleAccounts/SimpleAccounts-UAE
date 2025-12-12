@@ -6,7 +6,6 @@ import lombok.Setter;
 import com.simpleaccounts.criteria.AbstractCriteria;
 import com.simpleaccounts.criteria.SortOrder;
 
-
 @Getter
 @Setter
 public class ChartOfAccountCriteria extends AbstractCriteria {

@@ -12,11 +12,8 @@ import java.util.Map;
 @Repository
 public interface SalaryTemplateDao extends Dao<Integer, SalaryTemplate> {
 
-
    public PaginationResponseModel getSalaryTemplateList(Map<Object, Object> filterDataMap, PaginationModel paginationModel);
 
-
    public  List getDefaultTemplates();
-
 
 }

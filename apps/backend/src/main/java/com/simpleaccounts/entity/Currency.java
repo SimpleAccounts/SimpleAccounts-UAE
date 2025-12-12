@@ -2,9 +2,7 @@ package com.simpleaccounts.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-import com.simpleaccounts.entity.converter.DateConverter;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -33,7 +31,6 @@ import javax.persistence.*;
 @Table(name = "CURRENCY")
 @Data
 public class Currency implements Serializable {
-
 
     	@Id
     @Column(name = "CURRENCY_CODE", updatable = false, nullable = false)

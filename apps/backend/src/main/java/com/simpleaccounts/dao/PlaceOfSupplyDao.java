@@ -1,6 +1,5 @@
 package com.simpleaccounts.dao;
 
-
 import com.simpleaccounts.entity.PlaceOfSupply;
 
 import java.util.List;

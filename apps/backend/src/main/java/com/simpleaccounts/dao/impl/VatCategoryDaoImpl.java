@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import java.util.ArrayList;
+import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +21,9 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import javax.persistence.TypedQuery;
 
 @Repository
+@RequiredArgsConstructor
 public class VatCategoryDaoImpl extends AbstractDao<Integer, VatCategory> implements VatCategoryDao {
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public List<VatCategory> getVatCategoryList() {

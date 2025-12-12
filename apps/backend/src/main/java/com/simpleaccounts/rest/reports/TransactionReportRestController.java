@@ -43,17 +43,24 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 public class TransactionReportRestController {
 	private final Logger logger = LoggerFactory.getLogger(TransactionReportRestController.class);
 
-	@Autowired
-	private ChartOfAccountService transactionTypeService;
+	private final ChartOfAccountService transactionTypeService;
+
+	private final TransactionCategoryService transactionCategoryService;
+
+	private final TransactionService transactionService;
+
+	private final InvoiceService invoiceService;
 
 	@Autowired
-	private TransactionCategoryService transactionCategoryService;
-
-	@Autowired
-	private TransactionService transactionService;
-
-	@Autowired
-	InvoiceService invoiceService;
+	public TransactionReportRestController(ChartOfAccountService transactionTypeService,
+										   TransactionCategoryService transactionCategoryService,
+										   TransactionService transactionService,
+										   InvoiceService invoiceService) {
+		this.transactionTypeService = transactionTypeService;
+		this.transactionCategoryService = transactionCategoryService;
+		this.transactionService = transactionService;
+		this.invoiceService = invoiceService;
+	}
 
 	@LogRequest
 	@ApiOperation(value = "Get All Financial Periods")

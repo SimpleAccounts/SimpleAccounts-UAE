@@ -10,8 +10,6 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.simpleaccounts.entity.converter.DateConverter;
-
 import lombok.Data;
 
 /**

@@ -6,6 +6,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.ConfigurationDao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.Configuration;
 import com.simpleaccounts.service.ConfigurationService;
@@ -20,10 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ConfigurationServiceImpl extends ConfigurationService {
 
-    @Autowired
-    private ConfigurationDao dao;
+    private final ConfigurationDao dao;
 
     @Override
     public Configuration getConfigurationByName(String cofigurationName) {

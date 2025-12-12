@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -20,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.mail.javamail.JavaMailSender;
+
 import org.springframework.stereotype.Service;
 
 import com.simpleaccounts.constant.EmailConstant;
@@ -38,16 +39,15 @@ import java.time.LocalDateTime;
 import com.simpleaccounts.dao.UserDao;
 
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TEST_MAIL_TEMPLATE;
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
 
 @Service("userService")
+@RequiredArgsConstructor
 public class UserServiceImpl extends UserService{
 	private static final String LOG_ERROR = "Error";
 
 	private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-	@Autowired
-	private UserJpaRepository userJpaRepo;
+	private final UserJpaRepository userJpaRepo;
 	
 	@Value("${simpleaccounts.baseUrl}")
 	private String baseUrl;
@@ -56,15 +56,12 @@ public class UserServiceImpl extends UserService{
 	@Qualifier(value = "userDao")
 	private UserDao dao;
 
-	@Autowired
-	private RandomString randomString;
+	private final RandomString randomString;
 
-	@Autowired
-	private EmailSender emailSender;
+	private final EmailSender emailSender;
 	@Autowired
 	ResourceLoader resourceLoader;
-	@Autowired
-	private DateUtils dateUtils;
+	private final DateUtils dateUtils;
 
 	@Override
 	public UserDao getDao() {
@@ -157,7 +154,6 @@ public class UserServiceImpl extends UserService{
 
 	@Override
 	public boolean newUserMail(User user,String loginUrl,String password) {
-
 
 		try {
 			emailSender.send(user.getUserEmail(), "Welcome To SimpleAccounts",

@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.migration.model;
 
-
 import lombok.Data;
 
 @Data

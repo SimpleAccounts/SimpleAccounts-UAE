@@ -3,7 +3,7 @@ package com.simpleaccounts.dao.impl;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.DesignationTransactionCategoryDao;
 import com.simpleaccounts.entity.DesignationTransactionCategory;
-import com.simpleaccounts.entity.Inventory;
+
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;

@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.receiptcontroller;
 
 import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -29,6 +30,7 @@ import com.simpleaccounts.rest.invoicecontroller.InvoiceDueAmountModel;
 import com.simpleaccounts.utils.FileHelper;
 
 @Component
+@RequiredArgsConstructor
 public class ReceiptRestHelper {
 	private static final String JSON_KEY_DELETE_FLAG = "deleteFlag";
 	private static final String JSON_KEY_CONTACT = "contact";
@@ -36,32 +38,23 @@ public class ReceiptRestHelper {
 	
 	private final Logger logger = LoggerFactory.getLogger(ReceiptRestHelper.class);
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
 
-	@Autowired
-	private ReceiptService receiptService;
+	private final ReceiptService receiptService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private FileHelper fileHelper;
+	private final FileHelper fileHelper;
 
-	@Autowired
-	private JournalLineItemService journalLineItemService;
+	private final JournalLineItemService journalLineItemService;
 
-	@Autowired
-	private CustomerInvoiceReceiptService customerInvoiceReceiptService;
+	private final CustomerInvoiceReceiptService customerInvoiceReceiptService;
 
-	@Autowired
-	private PaymentService paymentService;
+	private final PaymentService paymentService;
 
-	@Autowired
-	private  ContactTransactionCategoryService contactTransactionCategoryService;
+	private final  ContactTransactionCategoryService contactTransactionCategoryService;
 
 	public List<ReceiptModel> getListModel(Object receipts) {
 		List<ReceiptModel> receiptModelList = new ArrayList<ReceiptModel>();
@@ -87,27 +80,21 @@ public class ReceiptRestHelper {
 			if (receipt.getInvoice() !=null && receipt.getInvoice().getCurrency().getCurrencyIsoCode()!=null) {
 					model.setCurrencyIsoCode(receipt.getInvoice().getCurrency().getCurrencyIsoCode());
 				}
-//				if (receipt.getInvoice().getCurrency().getCurrencyName()!=null) {
-//					model.setCurrencyName(receipt.getInvoice().getCurrency().getCurrencyName());
-//				}
+
 				model.setReceiptNo(receipt.getReceiptNo());
 				getContact(receipt, model);
 
-				List<CustomerInvoiceReceipt> receiptEntryList = customerInvoiceReceiptService
-						.findForReceipt(receipt.getId());
-				if (receiptEntryList != null && !receiptEntryList.isEmpty()) {
-					List<String> invIdlist = new ArrayList<>();
-					Currency currency = new Currency();
-					String currencyIsoCode = "";
-					for (CustomerInvoiceReceipt receiptEntry : receiptEntryList) {
-						//invIdlist.add(receiptEntry.getCustomerInvoice().getId().toString());
-						invIdlist.add(receiptEntry.getCustomerInvoice().getCurrency().getCurrencyIsoCode());
-                        invIdlist.add(receiptEntry.getCustomerInvoice().getCurrency().getCurrencySymbol());
-						//invIdlist.add(receiptEntry.getCustomerInvoice().getCurrency().getCurrencyName());
-						currencyIsoCode =receiptEntry.getCustomerInvoice().getCurrency().getCurrencyIsoCode();
+					List<CustomerInvoiceReceipt> receiptEntryList = customerInvoiceReceiptService
+							.findForReceipt(receipt.getId());
+					if (receiptEntryList != null && !receiptEntryList.isEmpty()) {
+						String currencyIsoCode = null;
+						for (CustomerInvoiceReceipt receiptEntry : receiptEntryList) {
+							currencyIsoCode = receiptEntry.getCustomerInvoice().getCurrency().getCurrencyIsoCode();
+						}
+						if (currencyIsoCode != null) {
+							model.setCurrencyIsoCode(currencyIsoCode);
+						}
 					}
-					model.setCurrencyIsoCode(currencyIsoCode);
-				}
 					if(receipt.getInvoice()!=null){
 						model.setInvoiceNumber(receipt.getInvoice().getReferenceNumber());
 					}
@@ -131,7 +118,6 @@ public class ReceiptRestHelper {
 				model.setContactId(receipt.getContact().getContactId());
 				model.setCustomerName(receipt.getContact().getFirstName() + " " + receipt.getContact().getLastName());
 			}
-
 
 		}
 	}
@@ -179,7 +165,6 @@ public class ReceiptRestHelper {
 		receipt.setPayMode(receiptRequestModel.getPayMode());
 		receipt.setDepositeToTransactionCategory(
 				transactionCategoryService.findByPK(receiptRequestModel.getDepositeTo()));
-
 
 		return receipt;
 
@@ -243,15 +228,7 @@ public class ReceiptRestHelper {
 				if (receiptRequestModel.getTotalAppliedCreditAmount()!=null){
 					invoice.setDueAmount(invoice.getDueAmount().subtract(receiptRequestModel.getTotalAppliedCreditAmount()));
 				}
-//				if (invoice.getDueAmount().longValue()==0) {
-//					if (invoice.getType() == 1 || invoice.getType() == 2) {
-//						invoice.setStatus(CommonStatusEnum.PAID.getValue());
-//					} else if (invoice.getType() == 7) {
-//						invoice.setStatus(CommonStatusEnum.CLOSED.getValue());
-//					}
-//				}
-//				else
-//					invoice.setStatus(CommonStatusEnum.PARTIALLY_PAID.getValue());
+
 				if (invoice.getDueAmount().longValue()==0)
 					invoice.setStatus(CommonStatusEnum.PAID.getValue());
 				else
@@ -262,9 +239,7 @@ public class ReceiptRestHelper {
 				else {
 					invoice.setStatus(CommonStatusEnum.PARTIALLY_PAID.getValue());
 				}
-//				invoice.setStatus(dueAmountModel.getDueAmount().subtract(receiptRequestModel.getAmount());
-//				? InvoiceStatusEnum.PAID.getValue()
-//						: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+
 				receipt.setCustomerInvoice(invoice);
 				receipt.setPaidAmount(receiptRequestModel.getAmount());
 				receipt.setDeleteFlag(Boolean.FALSE);
@@ -290,15 +265,11 @@ public class ReceiptRestHelper {
 				: new Journal();
 		JournalLineItem journalLineItem1 = journal.getJournalLineItems() != null
 				&& journal.getJournalLineItems().size() > 0 ? journalLineItemList.get(0) : new JournalLineItem();
-//		TransactionCategory transactionCategory = transactionCategoryService
-//				.findTransactionCategoryByTransactionCategoryCode(
-//						TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode());
-		//Reference Id similar to Invoice Id
+
 		journalLineItem1.setReferenceId(transactionId);
 		Receipt receipt=receiptService.findByPK(postingRequestModel.getPostingRefId());
 	BigDecimal	invoiceExchangeRate =  receipt.getInvoice().getExchangeRate();
-//		TransactionCategory transactionCategory = receipt.getInvoice().getContact().getTransactionCategory();
-//		journalLineItem1.setTransactionCategory(transactionCategory);
+
 		Map<String, Object> map = new HashMap<>();
 		map.put(JSON_KEY_CONTACT,receipt.getInvoice().getContact());
 		map.put(JSON_KEY_CONTACT_TYPE, receipt.getInvoice().getType());
@@ -399,9 +370,7 @@ public class ReceiptRestHelper {
 				: new Journal();
 		JournalLineItem journalLineItem1 = journal.getJournalLineItems() != null
 				&& journal.getJournalLineItems().size() > 0 ? journalLineItemList.get(0) : new JournalLineItem();
-//		TransactionCategory transactionCategory = transactionCategoryService
-//				.findTransactionCategoryByTransactionCategoryCode(
-//						TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
+
 		Payment payment = paymentService.findByPK(postingRequestModel.getPostingRefId());
 		Map<String, Object> supplierMap = new HashMap<>();
 		supplierMap.put(JSON_KEY_CONTACT, payment.getInvoice().getContact().getContactId());

@@ -58,8 +58,6 @@ public class ContactListModel {
 
     private Boolean isActive;
 
-
-
     public String getFullName() {
         StringBuilder sb = new StringBuilder();
         if (firstName != null && !firstName.isEmpty()) {

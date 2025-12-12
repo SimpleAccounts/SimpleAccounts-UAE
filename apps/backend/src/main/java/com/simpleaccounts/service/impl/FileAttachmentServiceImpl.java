@@ -1,18 +1,18 @@
 package com.simpleaccounts.service.impl;
 
-
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.FileAttachmentDao;
 import com.simpleaccounts.entity.FileAttachment;
-import com.simpleaccounts.entity.Invoice;
+
 import com.simpleaccounts.service.FileAttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class FileAttachmentServiceImpl  extends FileAttachmentService {
-    @Autowired
-    private FileAttachmentDao fileAttachmentDao;
+    private final FileAttachmentDao fileAttachmentDao;
     @Override
     protected Dao<Integer, FileAttachment> getDao() {
         return fileAttachmentDao;

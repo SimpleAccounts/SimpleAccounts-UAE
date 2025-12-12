@@ -8,12 +8,10 @@
         import org.hibernate.annotations.CreationTimestamp;
         import org.hibernate.annotations.UpdateTimestamp;
 
-
         import java.math.BigDecimal;
         import java.time.LocalDateTime;
         import java.util.Date;
         import javax.persistence.*;
-
 
 		/**
 		 * Middle table for mapping between transaction and expense

@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.CorporateTax;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.aop.LogExecutionTime;
 import com.simpleaccounts.aop.LogRequest;
@@ -8,17 +9,17 @@ import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.entity.Company;
 import com.simpleaccounts.entity.User;
-import com.simpleaccounts.entity.VatPayment;
+
 import com.simpleaccounts.rest.CorporateTax.Model.CorporateTaxDateModel;
 import com.simpleaccounts.rest.CorporateTax.Model.CorporateTaxPaymentModel;
 import com.simpleaccounts.rest.CorporateTax.Model.PaymentHistoryModel;
 import com.simpleaccounts.rest.CorporateTax.Repositories.CorporateTaxSettingRepository;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.rest.companycontroller.CompanyRestHelper;
+
 import com.simpleaccounts.rest.financialreport.FinancialReportRequestModel;
 import com.simpleaccounts.rest.financialreport.FinancialReportRestHelper;
 import com.simpleaccounts.rest.financialreport.ProfitAndLossResponseModel;
-import com.simpleaccounts.rest.financialreport.RecordVatPaymentRequestModel;
+
 import com.simpleaccounts.rfq_po.PoQuatationController;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.CompanyService;
@@ -48,26 +49,20 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 	@RestController
 	@RequestMapping(value = "/rest/corporate/tax")
 	@SuppressWarnings("java:S3973")
-	public class CorporateTaxController {
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+	@RequiredArgsConstructor
+public class CorporateTaxController {
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private CompanyService companyService;
-    @Autowired
-    private UserService userService;
+    private final CompanyService companyService;
+    private final UserService userService;
 
-    @Autowired
-    private CorporateTaxSettingRepository corporateTaxSettingRepository;
+    private final CorporateTaxSettingRepository corporateTaxSettingRepository;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
+    private final DateFormatUtil dateFormatUtil;
 
-    @Autowired
-    private FinancialReportRestHelper financialReportRestHelper;
+    private final FinancialReportRestHelper financialReportRestHelper;
 
-    @Autowired
-    private CorporateTaxFilingRepository corporateTaxFilingRepository;
+    private final CorporateTaxFilingRepository corporateTaxFilingRepository;
 
     @Autowired
      CorporateTaxService corporateTaxService;
@@ -206,13 +201,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             CorporateTaxFiling corporateTaxFiling = corporateTaxFilingRepository.findById(id).get();
-//            CorporateTaxModel corporateTaxModel = new CorporateTaxModel();
-//            corporateTaxModel.setId(corporateTaxFiling.getId());
-//            corporateTaxModel.setStartDate(corporateTaxFiling.getStartDate().toString());
-//            corporateTaxModel.setEndDate(corporateTaxFiling.getEndDate().toString());
-//            corporateTaxModel.setReportingPeriod(corporateTaxFiling.getReportingPeriod());
-//            corporateTaxModel.setReportingForYear(corporateTaxFiling.getReportingForYear());
-//            corporateTaxModel.setViewCtReport(corporateTaxFiling.getViewCtReport());
+
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(corporateTaxFiling.getViewCtReport());
             return new ResponseEntity<>(rootNode,HttpStatus.OK);

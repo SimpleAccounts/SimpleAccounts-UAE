@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.InventoryController;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.InventoryFilterEnum;
 import com.simpleaccounts.entity.Inventory;
 import com.simpleaccounts.entity.InventoryHistory;
@@ -32,9 +33,9 @@ import java.util.*;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
-
 @RestController
 @RequestMapping(value = "/rest/inventory")
+@RequiredArgsConstructor
 public class InventoryController {
     private final Logger logger = LoggerFactory.getLogger(ProductRestController.class);
     @Autowired
@@ -42,31 +43,17 @@ public class InventoryController {
     @Autowired
     InventoryService inventoryService;
 
-    @Autowired
-    private ProductRestHelper productRestHelper;
+    private final ProductRestHelper productRestHelper;
 
     @Autowired
     TranscationCategoryHelper transcationCategoryHelper;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private InventoryHistoryService inventoryHistoryService;
+    private final InventoryHistoryService inventoryHistoryService;
 
-//    @ApiOperation(value = "Get Transaction category For Inventory")
-//    @GetMapping(value = "/getTransactionCategoryListForInventory")
-//    public ResponseEntity getTransactionCategoryListForInventory(){
-//        List<SingleLevelDropDownModel> response  = new ArrayList<>();
-//        List<TransactionCategory> transactionCategoryList = transactionCategoryService.getTransactionCategoryListForInventory();
-//        if (transactionCategoryList!=null){
-//            response = transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCategoryList);
-//        }
-//        return new ResponseEntity (response, HttpStatus.OK);
-//    }
     
     @LogRequest
     @ApiOperation(value = "Get Inventory Product List")
@@ -99,21 +86,7 @@ public class InventoryController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    //	@ApiOperation(value = "Get Inventory Product By ID")
-//	@GetMapping(value = "/getInventoryProductById")
-//	public ResponseEntity<ProductRequestModel> getInventoryProductById(@RequestParam(value = "id") Integer id) {
-//		try {
-//			Inventory inventoryProduct = inventoryService.findByPK(id);
-//			if (inventoryProduct == null) {
-//				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//			} else {
-//				return new ResponseEntity<>(productRestHelper.getRequestModel(inventoryProduct), HttpStatus.OK);
-//			}
-//		} catch (Exception e) {
-//			logger.error(ERROR, e);
-//			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
+
     
     @LogRequest
     @ApiOperation(value = "Get Product By ID")
@@ -373,7 +346,5 @@ public class InventoryController {
         }
         return new ResponseEntity<>(inventoryHistoryModelList, HttpStatus.OK);
     }
-
-
 
 }

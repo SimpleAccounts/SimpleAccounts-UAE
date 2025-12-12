@@ -1,8 +1,7 @@
 package com.simpleaccounts.entity;
 
 import com.simpleaccounts.constant.CommonConstant;
-import com.simpleaccounts.constant.CommonStatusEnum;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import com.simpleaccounts.constant.DiscountType;
 import com.simpleaccounts.constant.InvoiceDuePeriodEnum;
 
@@ -18,7 +17,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 
 import org.hibernate.annotations.ColumnDefault;
 

@@ -6,6 +6,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.TaxTransactionDao;
 import com.simpleaccounts.entity.TaxTransaction;
 import com.simpleaccounts.service.TaxTransactionService;
@@ -20,10 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("taxTransactionService")
 @Transactional
+@RequiredArgsConstructor
 public class TaxTransactionServiceImpl extends TaxTransactionService {
 
-    @Autowired
-    private TaxTransactionDao taxTransactionDao;
+    private final TaxTransactionDao taxTransactionDao;
 
     @Override
     protected Dao<Integer, TaxTransaction> getDao() {

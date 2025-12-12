@@ -6,9 +6,10 @@
 package com.simpleaccounts.rest.contactcontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.DefaultTypeConstant;
-import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
+
 import com.simpleaccounts.constant.dbfilter.ContactFilterEnum;
 import com.simpleaccounts.constant.dbfilter.ORDERBYENUM;
 import com.simpleaccounts.entity.Contact;
@@ -47,43 +48,33 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping("/rest/contact")
+@RequiredArgsConstructor
 public class ContactController {
 	private static final String JSON_KEY_DELETE_FLAG = "deleteFlag";
 
 	private final Logger logger = LoggerFactory.getLogger(ContactController.class);
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
 
-	@Autowired
-	private TransactionCategoryCreationHelper transactionCategoryCreationHelper;
+	private final TransactionCategoryCreationHelper transactionCategoryCreationHelper;
 
-	@Autowired
-	private ContactHelper contactHelper;
+	private final ContactHelper contactHelper;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private ContactTransactionCategoryService contactTransactionCategoryService;
+	private final ContactTransactionCategoryService contactTransactionCategoryService;
 
-	@Autowired
-	private PoQuatationService poQuatationService;
+	private final PoQuatationService poQuatationService;
 
-	@Autowired
-	private InventoryService inventoryService;
+	private final InventoryService inventoryService;
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
 	@LogRequest
 	@GetMapping(value = "/getContactList")

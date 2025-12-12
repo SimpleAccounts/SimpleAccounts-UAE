@@ -1,6 +1,5 @@
 package com.simpleaccounts.entity;
 
-import com.simpleaccounts.entity.converter.DateConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -50,12 +49,6 @@ public class VatReportFiling implements Serializable {
     @Column(name = "LAST_UPDATE_DATE")
     //@Convert(converter = DateConverter.class)
     private LocalDateTime lastUpdateDate;
-
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
 
     @Column(name = "START_DATE")
     private LocalDate startDate;

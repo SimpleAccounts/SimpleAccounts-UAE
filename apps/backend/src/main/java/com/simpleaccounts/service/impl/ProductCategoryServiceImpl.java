@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,20 +25,16 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.ProductCategoryService;
 
 @Service("ProductCategoryService")
+@RequiredArgsConstructor
 public class ProductCategoryServiceImpl extends ProductCategoryService {
 
 	private static final String PRODUCT_CATEGORY = "PRODUCT_CATEGORY";
 
-	@Autowired
-	private ProductCategoryDao productCategoryDao;
-	@Autowired
-	private CacheManager cacheManager;
+	private final ProductCategoryDao productCategoryDao;
+	private final CacheManager cacheManager;
 
 	@Override
 	public List<ProductCategory> findAllProductCategoryByUserId(Integer userId, boolean isDeleted) {
-		Map<String, Object> parameterDataMap = new HashMap<>();
-		parameterDataMap.put("createdBy", userId);
-
 		List<DbFilter> filterList = new ArrayList<>();
 		filterList.add(DbFilter.builder().dbCoulmnName("createdBy").condition(" = :createdBy").value(userId).build());
 		filterList.add(

@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +42,7 @@ import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.FileTypeEnum;
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;
-import com.simpleaccounts.entity.CreditNoteInvoiceRelation;
+
 import com.simpleaccounts.entity.Expense;
 import com.simpleaccounts.entity.FileAttachment;
 import com.simpleaccounts.entity.Invoice;
@@ -84,6 +84,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -92,57 +93,41 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping(value = "/rest/invoice")
+@RequiredArgsConstructor
 public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	private final Logger logger = LoggerFactory.getLogger(InvoiceRestController.class);
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private InvoiceRestHelper invoiceRestHelper;
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final InvoiceRestHelper invoiceRestHelper;
+	private final BankAccountService bankAccountService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
 
-	@Autowired
-	private ChartUtil chartUtil;
+	private final ChartUtil chartUtil;
 
-	@Autowired
-	private ExpenseRestHelper expenseRestHelper;
+	private final ExpenseRestHelper expenseRestHelper;
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final ExpenseService expenseService;
 
-	@Autowired
-	private CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private InvoiceLineItemService invoiceLineItemService;
+	private final InvoiceLineItemService invoiceLineItemService;
 
-	@Autowired
-	private PlaceOfSupplyService placeOfSupplyService;
+	private final PlaceOfSupplyService placeOfSupplyService;
 
-	@Autowired
-    private FileAttachmentService fileAttachmentService;
+	private final FileAttachmentService fileAttachmentService;
 
-	@Autowired
-	private CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
+	private final CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
 
-	@Autowired
-	private PoQuatationService poQuatationService;
+	private final PoQuatationService poQuatationService;
 
-	@Autowired
-	private QuotationInvoiceRepository quotationInvoiceRepository;
+	private final QuotationInvoiceRepository quotationInvoiceRepository;
 
-	@Autowired
-	private JournalLineItemRepository journalLineItemRepository;
+	private final JournalLineItemRepository journalLineItemRepository;
 
 	@LogRequest
 	@ApiOperation(value = "Get Invoice List")
@@ -167,19 +152,15 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 				filterDataMap.put(InvoiceFilterEnum.INVOICE_AMOUNT, filterModel.getAmount());
 			}
 			if (filterModel.getInvoiceDate() != null && !filterModel.getInvoiceDate().isEmpty()) {
-//				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//				Date dateTime =  dateFormat.parse(filterModel.getInvoiceDate());
+
 				LocalDate date = LocalDate.parse(filterModel.getInvoiceDate());
-//				LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getInvoiceDate()).getTime())
-//					.atZone(ZoneId.systemDefault()).toLocalDateTime();
+
 				filterDataMap.put(InvoiceFilterEnum.INVOICE_DATE, date);
 			}
 			if (filterModel.getInvoiceDueDate() != null && !filterModel.getInvoiceDueDate().isEmpty()) {
 //				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 				LocalDate date = LocalDate.parse(filterModel.getInvoiceDueDate());
-//				LocalDateTime dateTime = Instant
-//						.ofEpochMilli(dateFormat.parse(filterModel.getInvoiceDueDate()).getTime())
-//						.atZone(ZoneId.systemDefault()).toLocalDateTime();
+
 				filterDataMap.put(InvoiceFilterEnum.INVOICE_DUE_DATE, date);
 			}
 			filterDataMap.put(InvoiceFilterEnum.STATUS, filterModel.getStatus());
@@ -231,10 +212,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 					MessageUtil.getMessage("delete.unsuccessful.msg"), true);
 			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-//		InvoiceLineItem invoiceLineItem = invoiceLineItemService.deleteByInvoiceId(invoice.getId());
-//		if (invoiceLineItem!=null){
-//			invoiceLineItemService.delete(invoiceLineItem);
-//		}
+
 	}
 
 	@LogRequest
@@ -338,12 +316,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			FileHelper.setRootPath(rootPath);
 			log.info("In Update {}",requestModel.getInvoiceDueDate());
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//			Boolean checkInvoiceNumber = invoiceRestHelper.doesInvoiceNumberExist(requestModel.getReferenceNumber());
-//			if (checkInvoiceNumber){
-//				SimpleAccountsMessage errorMessage = new SimpleAccountsMessage("0023",
-//						MessageUtil.getMessage("invoicenumber.alreadyexists.0023"), true);
-//				logger.info(errorMessage.getMessage());
-//				return new  ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+
 //
 //			}
 			Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);

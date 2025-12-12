@@ -6,9 +6,6 @@ import java.time.LocalDateTime;
 import com.simpleaccounts.constant.ProductPriceType;
 import com.simpleaccounts.constant.ProductType;
 
-import com.simpleaccounts.entity.Contact;
-import com.simpleaccounts.entity.Product;
-import com.simpleaccounts.entity.UnitType;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -21,7 +21,6 @@ public class EmployeeParentRelationServiceImpl extends EmployeeParentRelationSer
         return this.employeeParentRelationDao;
     }
 
-
     public void addEmployeeParentRelation(Employee parentId, Employee childId,Integer userId){
 
         EmployeeParentRelation employeeParentRelation = new EmployeeParentRelation();
@@ -36,6 +35,5 @@ public class EmployeeParentRelationServiceImpl extends EmployeeParentRelationSer
         persist(employeeParentRelation);
 
     }
-
 
 }

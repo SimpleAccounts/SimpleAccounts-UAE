@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.currencyconversioncontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.CompanyService;
@@ -19,31 +20,24 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/rest/currencyConversion")
+@RequiredArgsConstructor
 public class CurrencyConversionController{
     private final Logger logger = LoggerFactory.getLogger(CurrencyConversionController.class);
 
-    @Autowired
-  private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
-    @Autowired
-    private CurrencyExchangeService currencyExchangeService;
+    private final CurrencyExchangeService currencyExchangeService;
 
-    @Autowired
-    private CurrencyConversionHelper currencyConversionHelper;
+    private final CurrencyConversionHelper currencyConversionHelper;
 
-    @Autowired
-    private CurrencyService currencyService;
+    private final CurrencyService currencyService;
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
@@ -181,20 +175,11 @@ public class CurrencyConversionController{
         }
 
     }
-//    @LogRequest
-//    @ApiOperation(value = "Get Users Count For Role")
-//    @GetMapping(value = "/getUsersCountForRole")
-//    public ResponseEntity<Integer> getUsersCountForRole(@RequestParam int roleId){
+
 //
-//        Role role = roleService.findByPK(roleId);
-//        Map<String,Object> param=new HashMap<>();
-//        param.put("role", role);
-//        param.put("isActive", true);
-//        param.put("deleteFlag", false);
-//        List<User> userList = userService.findByAttributes(param);
+
 ////        if (!userList.isEmpty()) {
-//        Integer response = userList.size();
-//        return new ResponseEntity<>(response, HttpStatus.OK);
+
 ////        }
 ////        return new ResponseEntity("unable to fetch the user information",HttpStatus.OK);
 //

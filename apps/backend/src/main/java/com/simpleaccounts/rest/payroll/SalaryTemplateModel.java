@@ -1,9 +1,6 @@
 package com.simpleaccounts.rest.payroll;
 
-
-import com.simpleaccounts.entity.SalaryStructure;
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -14,6 +11,5 @@ public class SalaryTemplateModel {
     private String description;
     private String formula;
     private String flatAmount;
-
 
 }

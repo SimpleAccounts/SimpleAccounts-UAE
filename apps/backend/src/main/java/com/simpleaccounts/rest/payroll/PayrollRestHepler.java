@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.payroll;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.constant.EmailConstant;
@@ -55,12 +56,12 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 	@Component
 	@SuppressWarnings({"java:S131", "java:S6809"})
-	public class PayrollRestHepler {
+	@RequiredArgsConstructor
+public class PayrollRestHepler {
     private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
     private static final String ERROR_PROCESSING_PAYROLL = "Error processing payroll";
     private static final String DATE_FORMAT_DD_MM_YYYY = "DATE_FORMAT_DD_MM_YYYY";
-    @Autowired
-    private EmployeeBankDetailsService employeeBankDetailsService;
+    private final EmployeeBankDetailsService employeeBankDetailsService;
     @Autowired
     RoleModuleRelationService roleModuleRelationService;
 
@@ -72,55 +73,41 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
     JournalService journalService;
     @Autowired
     EmployeeTransactioncategoryService employeeTransactioncategoryService;
-    @Autowired
-    private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+    private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
     @Autowired
     InvoiceNumberUtil invoiceNumberUtil;
-    @Autowired
-    private EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
+    private final EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
 
-    @Autowired
-    private EmploymentService employmentService;
+    private final EmploymentService employmentService;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
     @Autowired
     SalaryService salaryService;
 
-    @Autowired
-    private SalaryRoleService salaryRoleService;
+    private final SalaryRoleService salaryRoleService;
 
-    @Autowired
-    private SalaryTemplateService salaryTemplateService;
+    private final SalaryTemplateService salaryTemplateService;
 
-    @Autowired
-    private EmployeeSalaryComponentRelationDao employeeSalaryComponentRelationDao;
+    private final EmployeeSalaryComponentRelationDao employeeSalaryComponentRelationDao;
 
-    @Autowired
-    private SalaryStructureService salaryStructureService;
+    private final SalaryStructureService salaryStructureService;
 
-    @Autowired
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
+    private final DateFormatUtil dateFormatUtil;
 
-    @Autowired
-    private DateFormatUtil dateUtil;
+    private final DateFormatUtil dateUtil;
 
-    @Autowired
-    private SalaryComponentService salaryComponentService;
+    private final SalaryComponentService salaryComponentService;
 
-    @Autowired
-    private EmployeeParentRelationService employeeParentRelationService;
+    private final EmployeeParentRelationService employeeParentRelationService;
 
     @Autowired
     PayrollRepository payrollRepository;
 
     @Autowired
     UserJpaRepository userJpaRepository;
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
     @Autowired
     SalaryRepository salaryRepository;
@@ -131,20 +118,15 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
     UserService userService;
     @Autowired
     EmailSender emailSender;
-    @Autowired
-    private EmaiLogsService emaiLogsService;
-    @Autowired
-    private PayrolService payrolService;
+    private final EmaiLogsService emaiLogsService;
+    private final PayrolService payrolService;
 
-    @Autowired
-    private JournalLineItemRepository journalLineItemRepository;
+    private final JournalLineItemRepository journalLineItemRepository;
 
     @Autowired
     SalaryController salaryController;
-    @Autowired
-    private PayrollEmployeeRepository payrollEmployeeRepository;
-    @Autowired
-    private EmployeeSalaryComponentRelationRepository employeeSalaryComponentRelationRepository;
+    private final PayrollEmployeeRepository payrollEmployeeRepository;
+    private final EmployeeSalaryComponentRelationRepository employeeSalaryComponentRelationRepository;
 
     public EmployeeBankDetails getEntity(EmployeeBankDetailsPersistModel employeeBankDetailsPersistModel) throws IOException {
         EmployeeBankDetails employeeBankDetails = new EmployeeBankDetails();
@@ -240,9 +222,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
         if (employmentPersistModel.getEmployeeCode() != null) {
             employment.setEmployeeCode(employmentPersistModel.getEmployeeCode());
         }
-//        if (employmentPersistModel.getAgentId() != null) {
-//            employment.setAgentId(employmentPersistModel.getAgentId());
-//        }
+
         if (employmentPersistModel.getAvailedLeaves() != null) {
             employment.setAvailedLeaves(employmentPersistModel.getAvailedLeaves());
         }
@@ -251,7 +231,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
             employment.setContractType(employmentPersistModel.getContractType());
         }
         if (employmentPersistModel.getDateOfJoining() != null) {
-            employment.setDateOfJoining(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
+            employment.setDateOfJoining(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getDateOfJoining(), DATE_FORMAT_DD_MM_YYYY));
         }else
             employment.setDateOfJoining(LocalDateTime.now());
 
@@ -265,13 +245,11 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
             employment.setPassportNumber(employmentPersistModel.getPassportNumber());
         }
         if (employmentPersistModel.getPassportExpiryDate() != null && !employmentPersistModel.getPassportExpiryDate().isEmpty()) {
-            employment.setPassportExpiryDate(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getPassportExpiryDate(), "DATE_FORMAT_DD_MM_YYYY"));
+            employment.setPassportExpiryDate(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getPassportExpiryDate(), DATE_FORMAT_DD_MM_YYYY));
         }
-//        else
-//            employment.setPassportExpiryDate(LocalDateTime.now());
 
         if (employmentPersistModel.getVisaExpiryDate() != null) {
-            employment.setVisaExpiryDate(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getVisaExpiryDate(), "DATE_FORMAT_DD_MM_YYYY"));
+            employment.setVisaExpiryDate(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getVisaExpiryDate(), DATE_FORMAT_DD_MM_YYYY));
         }  else
             employment.setVisaExpiryDate(LocalDateTime.now());
 
@@ -377,24 +355,11 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
             salaryTemplate.setSalaryComponentId(salaryComponentService.findByPK(salaryTemplatePersistModel.getSalaryComponentId()));
         }
 
-
         return salaryTemplate;
     }
 
     //
-//    public void getSalaryAllTemplate(EmployeePersistModel employeePersistModel , Employee employee,
-//                                       List<SalaryTemplatePersistModel> salaryTemplatePersistModels) {
-//        if (employeePersistModel.getSalaryTemplatesString() != null && !employeePersistModel.getSalaryTemplatesString().isEmpty()) {
-//            ObjectMapper mapper = new ObjectMapper();
-//            try {
-//                salaryTemplatePersistModels = mapper.readValue(employeePersistModel.getSalaryTemplatesString(),
-//                        new TypeReference<List<SalaryTemplatePersistModel>>() {
-//                        });
-//            } catch (IOException ex) {
-//                logger.error("Error", ex);
-//            }
-//            if (!salaryTemplatePersistModels.isEmpty()) {
-//               getSalaryTemplates(salaryTemplatePersistModels, employee);
+
 //
 //            }
 //
@@ -439,7 +404,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
                 employeeSalaryComponentRelation.setFlatAmount(salaryComponent.getFlatAmount());
                 employeeSalaryComponentRelation.setDescription(salaryComponent.getDescription());
                 employeeSalaryComponentRelationService.persist(employeeSalaryComponentRelation);
-
 
             } catch (Exception e) {
                 logger.error("Error", e);
@@ -492,7 +456,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
         return salaryTemplates;
     }
 
-
     public EmploymentPersistModel getEmploymentModel(Employment employment) {
         EmploymentPersistModel employmentPersistModel = new EmploymentPersistModel();
 
@@ -500,18 +463,17 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
         employmentPersistModel.setEmployee(employment.getEmployee().getId());
         employmentPersistModel.setAvailedLeaves(employment.getAvailedLeaves());
         employmentPersistModel.setDepartment(employment.getDepartment());
-        employmentPersistModel.setDateOfJoining(dateUtil.getLocalDateTimeAsString(employment.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
+        employmentPersistModel.setDateOfJoining(dateUtil.getLocalDateTimeAsString(employment.getDateOfJoining(), DATE_FORMAT_DD_MM_YYYY));
         employmentPersistModel.setContractType(employment.getContractType());
         employmentPersistModel.setLabourCard(employment.getLabourCard());
         employmentPersistModel.setVisaNumber(employment.getVisaNumber());
-        employmentPersistModel.setVisaExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getVisaExpiryDate(), "DATE_FORMAT_DD_MM_YYYY"));
+        employmentPersistModel.setVisaExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getVisaExpiryDate(), DATE_FORMAT_DD_MM_YYYY));
         employmentPersistModel.setPassportNumber(employment.getPassportNumber());
-        employmentPersistModel.setPassportExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getPassportExpiryDate(), "DATE_FORMAT_DD_MM_YYYY"));
+        employmentPersistModel.setPassportExpiryDate(dateUtil.getLocalDateTimeAsString(employment.getPassportExpiryDate(), DATE_FORMAT_DD_MM_YYYY));
         employmentPersistModel.setLeavesAvailed(employment.getLeavesAvailed());
         employmentPersistModel.setGrossSalary(employment.getGrossSalary());
         return employmentPersistModel;
     }
-
 
     public SalaryRolePersistModel getSalaryRoleModel(SalaryRole salaryRole) {
         SalaryRolePersistModel salaryRolePersistModel = new SalaryRolePersistModel();
@@ -527,10 +489,8 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
         salaryTemplatePersistModel.setId(salaryTemplate.getId());
 
-
         return salaryTemplatePersistModel;
     }
-
 
     public SalaryStructurePersistModel getSalaryStructureModel(SalaryStructure salaryStructure) {
         SalaryStructurePersistModel salaryStructurePersistModel = new SalaryStructurePersistModel();
@@ -578,7 +538,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
         }
         return paginationResponseModel;
     }
-
 
     public PaginationResponseModel getSalaryStructureListModel(PaginationResponseModel paginationResponseModel) {
         List<SalaryStructureListModel> modelList = new ArrayList<>();
@@ -660,7 +619,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
             employment.setContractType(employeePersistModel.getContractType());
         }
         if (employeePersistModel.getDateOfJoining() != null) {
-            employment.setDateOfJoining(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
+            employment.setDateOfJoining(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), DATE_FORMAT_DD_MM_YYYY));
         }
 
         if (employeePersistModel.getLabourCard() != null) {
@@ -673,10 +632,10 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
             employment.setPassportNumber(employeePersistModel.getPassportNumber());
         }
         if (employeePersistModel.getPassportExpiryDate() != null) {
-            employment.setPassportExpiryDate(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
+            employment.setPassportExpiryDate(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), DATE_FORMAT_DD_MM_YYYY));
         }
         if (employeePersistModel.getVisaExpiryDate() != null) {
-            employment.setVisaExpiryDate(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), "DATE_FORMAT_DD_MM_YYYY"));
+            employment.setVisaExpiryDate(dateUtil.getDateStrAsLocalDateTime(employeePersistModel.getDateOfJoining(), DATE_FORMAT_DD_MM_YYYY));
         }
         if (employeePersistModel.getVisaNumber() != null) {
             employment.setVisaNumber(employeePersistModel.getVisaNumber());
@@ -759,16 +718,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
             salaryTemplate.setSalaryComponentId(salaryComponentService.findByPK(model1.getSalaryComponentId()));
             salaryTemplates.add(salaryTemplate);
             salaryTemplateService.persist(salaryTemplate);
-//                EmployeeSalaryComponentRelation employeeSalaryComponentRelation = new EmployeeSalaryComponentRelation();
-//                employeeSalaryComponentRelation.setEmployeeId(employee);
-//                SalaryComponent salaryComponent = salaryComponentService.findByPK(salaryTemplate.getSalaryComponentId().getId());
-//                employeeSalaryComponentRelation.setSalaryComponentId(salaryComponent);
-//                employeeSalaryComponentRelation.setDeleteFlag(false);
-//                employeeSalaryComponentRelation.setSalaryStructure(salaryComponent.getSalaryStructure());
-//                employeeSalaryComponentRelation.setFormula(salaryComponent.getFormula());
-//                employeeSalaryComponentRelation.setFlatAmount(salaryComponent.getFlatAmount());
-//                employeeSalaryComponentRelation.setDescription(salaryComponent.getDescription());
-//                employeeSalaryTempRelationService.persist(employeeSalaryComponentRelation);
+
             try {
 
             } catch (Exception e) {
@@ -798,11 +748,9 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
         }
 
-
     }
 
     void getSalaryComponents(List<SalaryComponentPersistModel> salaryComponentPersistModels, SalaryComponentPersistModel salaryComponentPersistModel) {
-        List<SalaryComponent> salaryComponentList = new ArrayList<>();
         if (salaryComponentPersistModels != null && !salaryComponentPersistModels.isEmpty()) {
             for (SalaryComponentPersistModel model : salaryComponentPersistModels) {
                 try {
@@ -822,7 +770,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
                         if (model.getComponentCode() != null && !model.getComponentCode().isEmpty()) {
                             salaryComponent.setComponentCode(model.getComponentCode());
                         }
-                        salaryComponentList.add(salaryComponent);
                         if (model.getInvoiceType() != null && !model.getInvoiceType().isEmpty()) {
                             Integer invoiceType=Integer.parseInt(model.getInvoiceType());
                             CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(invoiceType);
@@ -968,7 +915,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
         }
 
-
     public void updateAllSalaryComponent(SalaryComponentPersistModel salaryComponentPersistModel, List<SalaryComponentPersistModel> salaryComponentPersistModels) {
 
         if (salaryComponentPersistModel.getSalaryComponentString() != null && !salaryComponentPersistModel.getSalaryComponentString().isEmpty()) {
@@ -1021,7 +967,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
             }
             salaryComponentService.persist(salaryComponent);
         }
-        List<SalaryComponent> salaryComponentList = new ArrayList<>();
         for (SalaryComponentPersistModel model : salaryComponentPersistModels) {
 
             try {
@@ -1038,7 +983,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
                     if(model.getComponentType()!=null && !model.getComponentType().isEmpty()) {
                         salaryComponent.setComponentType(model.getComponentType());
                     }
-                    salaryComponentList.add(salaryComponent);
                     salaryComponentService.persist(salaryComponent);
                     EmployeeSalaryComponentRelation employeeSalaryComponentRelation = new EmployeeSalaryComponentRelation();
                     if(model.getEmployeeId()!=null) {
@@ -1053,7 +997,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
                         employeeSalaryComponentRelation.setYearlyAmount(model.getYearlyAmount());
                         employeeSalaryComponentRelation.setNoOfDays(BigDecimal.valueOf(30));
                         employeeSalaryComponentRelationService.persist(employeeSalaryComponentRelation);
-                        salaryComponentList.add(salaryComponent);
                         Map<String, Object> employmentParam = new HashMap<>();
                         employmentParam.put("employee", employeeSalaryComponentRelation.getEmployeeId());
                         List<Employment> employmentList = employmentService.findByAttributes(employmentParam);
@@ -1095,9 +1038,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
                 logger.error("Error", e);
             }
 
-
         }
-
 
     }
 
@@ -1135,7 +1076,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
         }
         List<EmployeeSalaryComponentRelation> employeeSalaryComponentRelationList = employeeSalaryComponentRelationDao.getDefaultSalaryComponentByEmployeeId(id);
 
-
         if (employeeSalaryComponentRelationList != null && !employeeSalaryComponentRelationList.isEmpty()) {
 
             for (EmployeeSalaryComponentRelation object : employeeSalaryComponentRelationList) {
@@ -1160,7 +1100,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
                     salaryComponentRelationModel.setFlatAmount(object.getFlatAmount());
                 }
 
-
                 salaryComponentRelationModel.setSalaryStructure(object.getSalaryComponentId().getSalaryStructure().getId());
                 salaryComponentRelationModel.setEmployeeId(object.getEmployeeId().getId());
                 salaryComponentRelationModel.setSalaryComponentId(object.getSalaryComponentId().getId());
@@ -1173,7 +1112,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
             }
         }
-
 
         employeeSalaryComponentRelationModel.setSalaryComponentResult(salaryComponentMap);
         return employeeSalaryComponentRelationModel;
@@ -1194,7 +1132,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
                 BigDecimal totalSalaryPerMonth = employeeSalaryComponentRelation.getMonthlyAmount();
                 BigDecimal salaryPerDay = totalSalaryPerMonth.divide(employeeSalaryComponentRelation.getNoOfDays());
                 BigDecimal salaryForThisComponentAsPerNoOfWorkingDays = salaryPerDay.multiply(employeeSalaryComponentRelation.getNoOfDays());
-
 
                 switch (PayrollEnumConstants.get(employeeSalaryComponentRelation.getSalaryStructure().getId())) {
                     case Fixed:
@@ -1262,7 +1199,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
     public void deleteSalaryComponentRow(Integer employeeId, Integer componentId) {
 
-
         employeeSalaryComponentRelationService.delete(employeeSalaryComponentRelationService.findByPK(componentId));
 
     }
@@ -1304,7 +1240,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
             salaryComponentPersistModel.setIsComponentDeletable(Boolean.TRUE);
         }
 
-
         return salaryComponentPersistModel;
     }
 
@@ -1329,7 +1264,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
         return payrollRepository.findById(id);
     }
 
-
     public void  generatePayroll(PayrolRequestModel payrolRequestModel, List<GeneratePayrollPersistModel> generatePayrollPersistModels, User user,Payroll payroll) {
 
         if (payrolRequestModel.getGeneratePayrollString() != null && !payrolRequestModel.getGeneratePayrollString().isEmpty()) {
@@ -1345,9 +1279,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
         }
     }
 
-
     void genereateSalary(List<GeneratePayrollPersistModel> generatePayrollPersistModels, PayrolRequestModel payrolRequestModel, User user,Payroll payroll) {
-
 
             Integer empCount=null;
             Map<String, Object> paramSalary = new HashMap<>();
@@ -1371,7 +1303,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
                 param.put("employeeId", employee);
                 List<EmployeeSalaryComponentRelation> employeeSalaryComponentList = employeeSalaryComponentRelationService.findByAttributes(param);
 
-
                 for (EmployeeSalaryComponentRelation salaryComponent : employeeSalaryComponentList) {
 
                     BigDecimal totalSalaryPerMonth = salaryComponent.getMonthlyAmount();
@@ -1388,8 +1319,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
                     salary.setNoOfDays(model.getNoOfDays());
                     salary.setLopDays(model.getLopDay());
                     salary.setPayrollId(payrollRepository.findById(payroll.getId()));
-                    //salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(payrolRequestModel.getSalaryDate(), "dd/MM/yyyy"));
-//                    salary.setSalaryDate(dateConvertIntoLocalDataTime(payrolRequestModel.getSalaryDate()).with(LocalTime.MIN));
+
                     if (payrolRequestModel.getSalaryDate() != null) {
                         Instant instant = Instant.ofEpochMilli(payrolRequestModel.getSalaryDate().getTime());
                         LocalDateTime salaryDate = LocalDateTime.ofInstant(instant,
@@ -1397,7 +1327,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
                         salary.setSalaryDate(salaryDate);}
                     salary.setTotalAmount(salaryAsPerNoOfWorkingDays);
                     salaryService.persist(salary);
-                    if (salaryComponent.getSalaryStructure().getId()!=PayrollEnumConstants.Deduction.getId()){
+                    if (!Objects.equals(salaryComponent.getSalaryStructure().getId(), PayrollEnumConstants.Deduction.getId())){
                           totalSalary = totalSalary.add(salaryAsPerNoOfWorkingDays);
                     }
 
@@ -1410,8 +1340,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
                 salary.setLopDays(model.getLopDay());
                 salary.setType(1);
                 salary.setPayrollId(payrollRepository.findById(payroll.getId()));
-               // salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(payrolRequestModel.getSalaryDate(), "dd/MM/yyyy"));
-//                salary.setSalaryDate(dateConvertIntoLocalDataTime(payrolRequestModel.getSalaryDate()).with(LocalTime.MIN));
+
             if (payrolRequestModel.getSalaryDate() != null) {
                 Instant instant = Instant.ofEpochMilli(payrolRequestModel.getSalaryDate().getTime());
                 LocalDateTime salaryDate = LocalDateTime.ofInstant(instant,
@@ -1425,8 +1354,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
             empCount= payrolRequestModel.getEmployeeListIds().size();
             payroll.setStatus("Draft");
             payroll.setEmployeeCount(empCount);
-//            payroll.setTotalAmountPayroll(totalPayrollAmount);
-//            payroll.setDueAmountPayroll(totalPayrollAmount);
+
             payrollRepository.save(payroll);
 
     }
@@ -1439,7 +1367,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
     payrollRepository.save(payroll);
 //    if(payroll.getGeneratedBy().equals(payroll.getPayrollApprover())==false)
         sendApprovalMail(payroll,approverId,request);
-
 
     }
     public boolean sendApprovalMail(Payroll payroll,Integer approverId,HttpServletRequest request) {
@@ -1490,7 +1417,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
     }
     @Transactional(rollbackFor = Exception.class)
     public void generatePayroll(User user, Integer payrollId,String startDate,String endDate,HttpServletRequest request,List<Integer> payrollEmployeesIdsListToSendMail) {
-
 
         Map<String, Object> paramSalary = new HashMap<>();
         paramSalary.put("payrollId", payrollId);
@@ -1610,7 +1536,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
               }
             }
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("DATE_FORMAT_DD_MM_YYYY");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
         for(Integer employeeId :payrollEmployeesIdsListToSendMail) {
             salaryController.getSalariesByEmployeeId(employeeId, payroll.getPayrollDate().format(formatter).replace("-", "/"), startDate, endDate, true, request);
         }
@@ -1681,14 +1607,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
         return true;
     }
 
-
-//    public Object getUserAndRole(User user) {
-//        UserAndRoleResponseModel userAndRoleResponseModel = new UserAndRoleResponseModel();
-//        userAndRoleResponseModel.setUserId(user.getUserId());
 //
-//        return userAndRoleResponseModel;
-//    }
-
 
     /**
      * To Convert Input date into LocalDate Format.
@@ -1720,7 +1639,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 				LocalDateTime datetime = LocalDateTime.parse(outputDate,dtf);
-
 
     	      return datetime;
 
@@ -1943,7 +1861,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
                 postingRequestModel.getPostingRefId(),
                 PostingReferenceTypeEnum.PAYROLL_APPROVED);
 
-
         if (journalLineItemList!=null && !journalLineItemList.isEmpty()){
             Collection<Journal> journalList=journalLineItemList.stream()
                     .distinct()
@@ -2020,7 +1937,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
             }
         List<String> receiversName = new ArrayList<>();
         List<String> receiverList = new ArrayList<>();
-        if(user1!=null && user1.getUserId()!= user.getUserId()) {
+        if(user1!=null && !Objects.equals(user1.getUserId(), user.getUserId())) {
             receiverList.add(user1.getUserEmail());
             receiversName.add(user1.getFirstName() + " " + user1.getLastName());
         }

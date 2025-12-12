@@ -6,8 +6,9 @@
 package com.simpleaccounts.rest.vatcontroller;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
-import java.util.Date;
+
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -52,22 +53,18 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping(value = "/rest/vat")
+@RequiredArgsConstructor
 public class VatController{
 	private final Logger logger = LoggerFactory.getLogger(VatController.class);
-	@Autowired
-	private VatCategoryService vatCategoryService;
+	private final VatCategoryService vatCategoryService;
 
-	@Autowired
-	private VatCategoryRestHelper vatCategoryRestHelper;
+	private final VatCategoryRestHelper vatCategoryRestHelper;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private ProductService productService;
+	private final ProductService productService;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
 	@LogRequest
 	@ApiOperation(value = "Get Vat Category List")
@@ -77,11 +74,8 @@ public class VatController{
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		User user = userService.findByPK(userId);
 
-
 		Map<VatCategoryFilterEnum, Object> filterDataMap = new EnumMap<>(VatCategoryFilterEnum.class);
-//		if(user.getRole().getRoleCode()!=1) {
-//			filterDataMap.put(VatCategoryFilterEnum.USER_ID, userId);
-//		}
+
 		filterDataMap.put(VatCategoryFilterEnum.VAT_CATEGORY_NAME, filterModel.getName());
 		if (filterModel.getVatPercentage() != null && !filterModel.getVatPercentage().contentEquals("")) {
 			filterDataMap.put(VatCategoryFilterEnum.VAT_RATE, new BigDecimal(filterModel.getVatPercentage()));

@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.dbfilter.VatReportFilterEnum;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.*;
 import com.simpleaccounts.entity.VatRecordPaymentHistory;
 import com.simpleaccounts.entity.VatReportFiling;
@@ -13,11 +14,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-
         import com.simpleaccounts.constant.dbfilter.ProductFilterEnum;
         import com.simpleaccounts.constant.dbfilter.VatReportFilterEnum;
         import com.simpleaccounts.dao.Dao;
-import com.simpleaccounts.dao.VatReportsDao;
+
         import com.simpleaccounts.entity.Product;
         import com.simpleaccounts.entity.VatReportFiling;
         import com.simpleaccounts.rest.PaginationModel;
@@ -34,12 +34,11 @@ import com.simpleaccounts.dao.VatReportsDao;
         import java.util.List;
         import java.util.Map;
 
-
 @Service("VatRecordPaymentHistoryService")
+@RequiredArgsConstructor
 public class VatRecordPaymentHistoryServiceImpl extends VatRecordPaymentHistoryService {
 
-    @Autowired
-    private VatRecordPaymentHistoryDao vatReportsDao;
+    private final VatRecordPaymentHistoryDao vatReportsDao;
 
     @Override
     protected Dao<Integer, VatRecordPaymentHistory> getDao() {

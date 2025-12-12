@@ -6,6 +6,7 @@
 package com.simpleaccounts.helper;
 
 import com.simpleaccounts.constant.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -18,7 +19,7 @@ import com.simpleaccounts.rest.CorporateTax.CorporateTaxPayment;
 import com.simpleaccounts.rest.CorporateTax.Repositories.CorporateTaxPaymentRepository;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.ReconsileRequestLineItemModel;
-import com.simpleaccounts.rest.creditnotecontroller.CreditNoteListModel;
+
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
 import com.simpleaccounts.rest.financialreport.VatPaymentRepository;
 import com.simpleaccounts.rest.transactioncontroller.TransactionPresistModel;
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
  * @author Uday
  */
 @Service
+@RequiredArgsConstructor
 public class TransactionHelper {
 
 	private static final String INVOICE_AMOUNT_LABEL = " ,Invoice Amount: ";
@@ -50,49 +52,34 @@ public class TransactionHelper {
 	private static final String CONTACT_NAME_SEPARATOR = " (";
 	private static final String CONTACT_NAME_SUFFIX = ")";
 
-	@Autowired
-	private DateFormatUtil dateUtil;
+	private final DateFormatUtil dateUtil;
 
-	@Autowired
-	private TransactionStatusService transactionStatusService;
+	private final TransactionStatusService transactionStatusService;
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private TransactionExpensesService transactionExpensesService;
+	private final TransactionExpensesService transactionExpensesService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private CreditNoteInvoiceRelationService creditNoteService;
+	private final CreditNoteInvoiceRelationService creditNoteService;
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final ExpenseService expenseService;
 
-	@Autowired
-	private TransactionExpensesPayrollService transactionExpensesPayrollService;
+	private final TransactionExpensesPayrollService transactionExpensesPayrollService;
 
-	@Autowired
-	private TransactionExplanationLineItemRepository transactionExplanationLineItemRepository;
+	private final TransactionExplanationLineItemRepository transactionExplanationLineItemRepository;
 
-	@Autowired
-	private PayrollRepository payrollRepository;
+	private final PayrollRepository payrollRepository;
 
-	@Autowired
-	private TransactionExplanationRepository transactionExplanationRepository;
+	private final TransactionExplanationRepository transactionExplanationRepository;
 
-	@Autowired
-	private VatPaymentRepository vatPaymentRepository;
+	private final VatPaymentRepository vatPaymentRepository;
 
-	@Autowired
-	private CorporateTaxPaymentRepository corporateTaxPaymentRepository;
-	@Autowired
-	private CreditNoteRepository creditNoteRepository;
+	private final CorporateTaxPaymentRepository corporateTaxPaymentRepository;
+	private final CreditNoteRepository creditNoteRepository;
 
 	public List<TransactionViewModel> getModelList(Object trasactionList) {
 
@@ -154,73 +141,17 @@ public class TransactionHelper {
 		}
 	}
 
-//	public List<TransactionPresistModel> getModel2(List<TransactionExplinationLineItem> explinationLineItems , Transaction transaction){
-//		List<TransactionPresistModel> transactionPresistModelList = new ArrayList<>();
 //
-//		for(TransactionExplinationLineItem explinationLineItem : explinationLineItems){
-//				TransactionPresistModel model = new TransactionPresistModel();
-//				model.setBankId(explinationLineItem.getBankAccount().getBankAccountId());
-//				model.setTransactionId(transaction.getTransactionId());
-//				model.setDescription(transaction.getExplainedTransactionDescription());
-//				if (explinationLineItem.getExchangeRate()!=null){
-//					model.setExchangeRate(explinationLineItem.getExchangeRate());
-//				}
-//				if (explinationLineItem.getExplainedTransactionCategory() != null) {
-//					model.setExpenseCategory(explinationLineItem.getExplainedTransactionCategory().getTransactionCategoryId());
-//				}
-//				if (explinationLineItem.getCoaCategory() != null) {
-//					model.setCoaCategoryId(explinationLineItem.getCoaCategory().getChartOfAccountCategoryId());
-//				}
-//				if (explinationLineItem.getExplainedTransactionCategory() != null) {
-//					if(explinationLineItem.getExplainedTransactionCategory().getChartOfAccount()
-//							.getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode())
-//							&& explinationLineItem.getTransactionDescription().contains("="))
-//					{
-//						model.setTransactionCategoryLabel(
-//								explinationLineItem.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountName());
-//						String description = explinationLineItem.getTransactionDescription();
-//						model.setTransactionCategoryId(Integer.parseInt(description.substring(description.indexOf("=")+1,description.length())));
-//						description = description.substring(0,description.indexOf(":"));
-//						model.setDescription(description);
-//						model.setExpenseCategory(null);
-//					}
-//					else {
-//						model.setTransactionCategoryLabel(
-//								explinationLineItem.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountName());
-//						if(explinationLineItem.getExplainedTransactionCategory().getParentTransactionCategory()!=null
-//								&& explinationLineItem.getExplainedTransactionCategory().getParentTransactionCategory().getTransactionCategoryId()!=null
+
 ////				        && transaction.getExplainedTransactionCategory().getParentTransactionCategory().getTransactionCategoryName().equalsIgnoreCase("Salaries and Employee Wages")
-//						){
-//							model.setTransactionCategoryId(explinationLineItem.getExplainedTransactionCategory().getParentTransactionCategory().getTransactionCategoryId());
-//							model.setEmployeeId(explinationLineItem.getExplainedTransactionCategory().getTransactionCategoryId());
-//						}else
-//							model.setTransactionCategoryId(explinationLineItem.getExplainedTransactionCategory().getTransactionCategoryId());
-//					}
-//				}
-//				model.setAmount(transaction.getTransactionDueAmount());
-//				model.setDueAmount(transaction.getTransactionDueAmount());
-//				if (transaction.getTransactionDate() != null) {
-//					model.setDate1(transaction.getTransactionDate());
-//				}
-//				model.setReference(explinationLineItem.getReferenceStr());
+
 //				//Expense
-//			if (explinationLineItem.getVatCategory() != null)
-//				model.setVatId(explinationLineItem.getVatCategory().getId());
-//			if(explinationLineItem.getExpense()!= null) {
-//				model.setExpenseType(explinationLineItem.getExpense().getExpenseType());
-//			}
+
 //			//Invoice
-//			if(explinationLineItem.getContact()!= null){
-//				model.setVendorId(explinationLineItem.getContact().getContactId());
-//				model.setCustomerId(explinationLineItem.getContact().getContactId());
-//			}
+
 //
 //
 //
-//			transactionPresistModelList.add(model);
-//			}
-//		return transactionPresistModelList;
-//	};
 
 		public List<TransactionPresistModel> getModel(Transaction transaction, List<TransactionExplanation> explanationList) {
 		List<TransactionPresistModel> transactionPresistModelList = new ArrayList<>();

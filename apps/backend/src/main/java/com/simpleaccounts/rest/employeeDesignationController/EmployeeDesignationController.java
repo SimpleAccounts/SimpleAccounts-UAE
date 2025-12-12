@@ -1,9 +1,10 @@
 package com.simpleaccounts.rest.employeeDesignationController;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeDesignation;
-import com.simpleaccounts.entity.SalaryRole;
+
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.model.EmployeeDesignationPersistModel;
 import com.simpleaccounts.repository.EmployeeRepository;
@@ -38,24 +39,19 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping("/rest/employeeDesignation")
+@RequiredArgsConstructor
 public class EmployeeDesignationController {
 
     private final Logger logger = LoggerFactory.getLogger(EmployeeDesignationController.class);
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private EmployeeDesignationRestHelper employeeDesignationRestHelper;
-    @Autowired
-    private EmployeeDesignationService employeeDesignationService;
-    @Autowired
-    private EmployeeService employeeService;
+    private final UserService userService;
+    private final EmployeeDesignationRestHelper employeeDesignationRestHelper;
+    private final EmployeeDesignationService employeeDesignationService;
+    private final EmployeeService employeeService;
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Save a Employee Designation",response = EmployeeDesignation.class)

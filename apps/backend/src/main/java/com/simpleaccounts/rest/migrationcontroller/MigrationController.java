@@ -5,8 +5,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -68,10 +67,12 @@ import com.simpleaccounts.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 @Slf4j
 @RestController
 @RequestMapping(value = "/rest/migration")
+@RequiredArgsConstructor
 public class MigrationController {
     private static final String LOG_INFO_PATTERN = "info{}";
     private static final String MSG_NO_FILES_AVAILABLE = "No Files Available";
@@ -79,41 +80,28 @@ public class MigrationController {
     
     private  final Logger logger = LoggerFactory.getLogger(MigrationController.class);
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private FileHelper fileHelper;
+    private final FileHelper fileHelper;
 
-    	@Value("${simpleaccounts.migration.pathlocation}")    @Autowired
-    private String basePath;
+    	@Value("${simpleaccounts.migration.pathlocation}")    private final String basePath;
 
     @Autowired
     ResourceLoader resourceLoader;
 
-//    @Autowired
-//    private String basePath;
+    private final CountryService countryService;
 
-    @Autowired
-    private CountryService countryService;
+    private final StateService stateService;
 
-    @Autowired
-    private StateService stateService;
-
-    @Autowired
-    private MigrationService migrationService;
+    private final MigrationService migrationService;
     
-    @Autowired
-    private ZohoMigrationService zohoMigrationService;
+    private final ZohoMigrationService zohoMigrationService;
     
-    @Autowired
-    private SimpleAccountMigrationService simpleAccountMigrationService;
+    private final SimpleAccountMigrationService simpleAccountMigrationService;
 
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
     
-    @Autowired
-    private FileStorageService fileStorageService;
+    private final FileStorageService fileStorageService;
 
 //    /**
 //     * This Api Will return The List Of Products Which User Wants To Migrate
@@ -155,7 +143,6 @@ public class MigrationController {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
 
     }
 

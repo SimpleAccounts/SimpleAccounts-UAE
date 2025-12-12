@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.*;
 
-import com.simpleaccounts.entity.converter.DateConverter;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -53,8 +52,7 @@ public class TransactionView implements Serializable {
     private String transactionCategoryName;
     @Column(name = "TRANSACTION_TYPE_NAME")
     private String transactionTypeName;
-//    @Column(name = "EXPLANATION_STATUS_CODE")
-//    private Integer explanationStatusCode;
+
     @Column(name = "EXPLANATION_STATUS_NAME")
     private String explanationStatusName;
     @Column(name = "REFERENCE_NAME")

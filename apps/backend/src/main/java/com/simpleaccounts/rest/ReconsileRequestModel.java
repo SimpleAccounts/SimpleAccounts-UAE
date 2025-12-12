@@ -32,8 +32,6 @@ public class ReconsileRequestModel {
 	private Integer vendorId;
 	private Integer customerId;
 
-	// MONEY PAID TO USER
-	// MONEY RECEIVED FROM OTHER
 	private Integer employeeId;
 
 	// Transafer To

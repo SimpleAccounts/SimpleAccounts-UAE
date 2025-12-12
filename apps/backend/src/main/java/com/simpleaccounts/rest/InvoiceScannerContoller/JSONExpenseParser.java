@@ -1,7 +1,7 @@
 package com.simpleaccounts.rest.InvoiceScannerContoller;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.dao.ContactDao;
@@ -25,27 +25,20 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class JSONExpenseParser {
 
-    @Autowired
-    private  ProductRepository productRepository;
+    private final  ProductRepository productRepository;
 
-    @Autowired
-    private CurrencyConversionRepository currencyConversionRepository;
+    private final CurrencyConversionRepository currencyConversionRepository;
 
-    @Autowired
-    private CurrencyDao currencyDao;
-    @Autowired
-    private ProductDao productDao;
+    private final CurrencyDao currencyDao;
+    private final ProductDao productDao;
 
-    @Autowired
-    private ContactDao contactDao;
-    @Autowired
-    private ProductService productService;
-    @Autowired
-    private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
-    @Autowired
-    private ProductRestHelper productRestHelper;
+    private final ContactDao contactDao;
+    private final ProductService productService;
+    private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+    private final ProductRestHelper productRestHelper;
 
     private static final String AMOUNT_DUE = "AmountDue";
     private static final String VALUE = "value";
@@ -195,11 +188,7 @@ public class JSONExpenseParser {
                     }
                     }
             }
-//            if(jsonObject.get(0).has(PAYMENT_TERMS)){
-//                if(jsonObject.get(0).get(PAYMENT_TERMS).has(VALUE)) {
-//                    requestModel.setTerm(InvoiceDuePeriodEnum.valueOf(jsonObject.get(0).get(PAYMENT_TERMS).get(VALUE).textValue()));
-//                }
-//            }
+
             if(jsonObject.get(0).has(SUB_TOTAL)) {
                 if (jsonObject.get(0).get(SUB_TOTAL).has(AMOUNT)) {
                     requestModel.setTotalAmount(jsonObject.get(0).get(SUB_TOTAL).get(AMOUNT).decimalValue());

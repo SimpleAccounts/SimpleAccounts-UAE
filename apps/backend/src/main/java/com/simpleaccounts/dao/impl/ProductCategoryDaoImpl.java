@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import java.util.ArrayList;
+import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Map;
 
@@ -17,9 +18,9 @@ import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 
 @Repository
+@RequiredArgsConstructor
 public class ProductCategoryDaoImpl extends AbstractDao<Integer, ProductCategory> implements ProductCategoryDao {
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public PaginationResponseModel getProductCategoryList(Map<ProductCategoryFilterEnum, Object> filterMap,

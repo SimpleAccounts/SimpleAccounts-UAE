@@ -83,12 +83,6 @@ public class CorporateTaxPayment implements Serializable {
     @JoinColumn(name = "DEPOSIT_TO_TRANSACTION_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CORPORATE_TAX_PAYMENT_DEPOSIT_TO_TRAX_CATEGORY_ID_TRAX_CATEGORY"))
     private TransactionCategory depositToTransactionCategory;
 
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
-
     @PrePersist
     public void updateDates() {
         createdDate = LocalDateTime.now();

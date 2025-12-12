@@ -11,8 +11,6 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import com.simpleaccounts.entity.converter.DateConverter;
-
 import lombok.Data;
 
 /**
@@ -111,12 +109,6 @@ public class Journal implements Serializable {
 	@Column(name = "TRANSACTION_DATE")
 	//@Convert(converter = DateConverter.class)
 	private LocalDate transactionDate;
-
-//	@Column(name = "VERSION_NUMBER")
-//	@ColumnDefault(value = "1")
-//	@Basic(optional = false)
-//	@Version
-//	private Integer versionNumber = 1;
 
 	@Column(name = "REVERSAL_FLAG")
 	@ColumnDefault(value = "false")

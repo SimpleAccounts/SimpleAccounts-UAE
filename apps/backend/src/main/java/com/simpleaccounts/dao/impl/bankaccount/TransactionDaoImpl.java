@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl.bankaccount;
 
 import com.simpleaccounts.constant.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.TransactionFilterEnum;
 import com.simpleaccounts.model.TransactionReportRestModel;
@@ -34,11 +35,11 @@ import java.util.Map;
 import javax.persistence.TypedQuery;
 
 @Repository
+@RequiredArgsConstructor
 public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implements TransactionDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TransactionDaoImpl.class);
-	@Autowired
-	private DateUtils dateUtils;
+	private final DateUtils dateUtils;
 
 	@Override
 	public Transaction updateOrCreateTransaction(Transaction transaction) {
@@ -124,24 +125,27 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	}
 
 	@Override
-	public List<TransactionReportRestModel> getTransactionsReport(Integer transactionTypeId,
-																  Integer transactionCategoryId, Date startDate, Date endDate, Integer bankAccountId, Integer pageNo,
-																  Integer pageSize) {
-		TypedQuery<Transaction> query = getTransactionTypedQuery(transactionTypeId, transactionCategoryId, startDate, endDate);
-		int maxRows = CommonUtil.DEFAULT_ROW_COUNT;
-		if (pageSize != null) {
-			maxRows = pageSize;
-		}
-		int start = 0;
-		if (pageNo != null) {
-			pageNo = pageNo * maxRows;
-			start = pageNo;
-		}
-		query.setFirstResult(start);
-		query.setMaxResults(maxRows);
-		List<TransactionReportRestModel> transactionReportRestModelList = new ArrayList<>();
-		List<Transaction> transactionList = query.getResultList();
-		if (transactionList != null && !transactionList.isEmpty()) {
+		public List<TransactionReportRestModel> getTransactionsReport(Integer transactionTypeId,
+																	  Integer transactionCategoryId, Date startDate, Date endDate, Integer bankAccountId, Integer pageNo,
+																	  Integer pageSize) {
+			TypedQuery<Transaction> query = getTransactionTypedQuery(transactionTypeId, transactionCategoryId, startDate, endDate);
+			int maxRows = pageSize != null && pageSize > 0 ? pageSize : CommonUtil.DEFAULT_ROW_COUNT;
+			int maxAllowedRows = 1000;
+			maxRows = Math.min(maxRows, maxAllowedRows);
+
+			int pageNumber = pageNo != null ? pageNo : 0;
+			if (pageNumber < 0) {
+				pageNumber = 0;
+			}
+
+			long offset = (long) pageNumber * (long) maxRows;
+			int start = offset > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) offset;
+
+			query.setFirstResult(start);
+			query.setMaxResults(maxRows);
+			List<TransactionReportRestModel> transactionReportRestModelList = new ArrayList<>();
+			List<Transaction> transactionList = query.getResultList();
+			if (transactionList != null && !transactionList.isEmpty()) {
 			for (Transaction transaction : transactionList) {
 				TransactionReportRestModel transactionReportRestModel = new TransactionReportRestModel();
 				if (transaction.getBankAccount() != null) {
@@ -162,8 +166,8 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 				transactionReportRestModelList.add(transactionReportRestModel);
 			}
 		}
-		return transactionReportRestModelList;
-	}
+			return transactionReportRestModelList;
+		}
 
 	private TypedQuery<Transaction> getTransactionTypedQuery(Integer transactionTypeId, Integer transactionCategoryId, Date startDate, Date endDate) {
 		StringBuilder builder = new StringBuilder();
@@ -322,7 +326,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 			filterBuilder.append(CommonColumnConstants.ORDER_BY);
 		}
 		if (transactionStatus != null) {
-			builder.append(" AND t.explanationStatusCode = ").append(transactionStatus);
+			builder.append(" AND t.explanationStatusCode = :transactionStatus");
 		}
 		TypedQuery<TransactionView> query = getEntityManager().createQuery(
 				"SELECT t FROM TransactionView t WHERE t.bankAccountId =:bankAccountId AND t.parentTransaction = null"
@@ -330,6 +334,9 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 						+ "  t.transactionDate DESC, t.transactionId DESC",
 				TransactionView.class);
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
+		if (transactionStatus != null) {
+			query.setParameter("transactionStatus", transactionStatus);
+		}
 		query.setFirstResult(pageSize);
 		query.setMaxResults(rowCount);
 		List<TransactionView> transactionViewList = query.getResultList();
@@ -344,12 +351,15 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 																	   Integer transactionStatus) {
 		StringBuilder builder = new StringBuilder("");
 		if (transactionStatus != null) {
-			builder.append(" AND t.explanationStatusCode = ").append(transactionStatus);
+			builder.append(" AND t.explanationStatusCode = :transactionStatus");
 		}
 		Query query = getEntityManager().createQuery(
 				"SELECT COUNT(t) FROM TransactionView t WHERE t.parentTransaction = null AND t.bankAccountId =:bankAccountId"
 						+ builder.toString());
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
+		if (transactionStatus != null) {
+			query.setParameter("transactionStatus", transactionStatus);
+		}
 		List<Object> countList = query.getResultList();
 		if (countList != null && !countList.isEmpty()) {
 			return ((Long) countList.get(0)).intValue();
@@ -568,7 +578,6 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		return (int)result;
 	}
 
-
 	public  LocalDateTime getTransactionStartDateToReconcile(LocalDateTime reconcileDate, Integer bankId)
 	{
 		StringBuilder queryBuilder = new StringBuilder("SELECT t FROM Transaction t " +
@@ -583,9 +592,10 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId,
 												   TransactionExplinationStatusEnum transactionExplinationStatusEnum)
 	{
-		StringBuilder queryBuilder = new StringBuilder("Update Transaction t set t.transactionExplinationStatusEnum = '").append(transactionExplinationStatusEnum)
-				.append("' WHERE t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate <= :endDate");
+		StringBuilder queryBuilder = new StringBuilder("Update Transaction t set t.transactionExplinationStatusEnum = :status")
+				.append(" WHERE t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate <= :endDate");
 		Query query = getEntityManager().createQuery(queryBuilder.toString());
+		query.setParameter("status", transactionExplinationStatusEnum);
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankId);
 		query.setParameter(CommonColumnConstants.END_DATE, reconcileDate.plusHours(23).plusMinutes(59));
 		query.executeUpdate();

@@ -1,6 +1,5 @@
 package com.simpleaccounts.dao.impl;
 
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,6 +34,5 @@ public class ActivityDaoImpl extends AbstractDao<Integer, Activity> implements A
 		}
 		return result;
 	}
-
 
 }

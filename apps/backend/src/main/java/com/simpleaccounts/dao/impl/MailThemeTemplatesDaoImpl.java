@@ -1,17 +1,13 @@
 package com.simpleaccounts.dao.impl;
 
-import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.dao.AbstractDao;
-import com.simpleaccounts.dao.LanguageDao;
+
 import com.simpleaccounts.dao.MailThemeTemplates;
 import com.simpleaccounts.dao.MailThemeTemplatesDao;
-import com.simpleaccounts.entity.Language;
+
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import java.util.List;
-
 
 /**
  * Created by Suraj Rahade .

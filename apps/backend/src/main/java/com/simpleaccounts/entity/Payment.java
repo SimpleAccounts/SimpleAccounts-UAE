@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.simpleaccounts.constant.PayMode;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;

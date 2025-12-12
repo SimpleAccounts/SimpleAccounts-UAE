@@ -2,9 +2,7 @@ package com.simpleaccounts.rest.taxescontroller;
 
 import lombok.Getter;
 
-
 public enum TaxesFilterEnum {
-
 
     USER_ID("createdBy", " = :createdBy "),
     DELETE_FLAG("deleteFlag", " = :deleteFlag "),

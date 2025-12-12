@@ -31,7 +31,6 @@ public class CommonColumnConstants {
     public static final String CONTACT_BY_ID ="Contact.contactByID";
     public static final String UPDATE_CONTACT ="updateContact";
 
-
     public static final String CURRENCY_CODE="currencyCode";
     public static final String CREATED_DATE="createdDate";
 

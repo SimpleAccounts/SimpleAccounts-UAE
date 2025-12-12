@@ -21,6 +21,7 @@ import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,62 +39,42 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping(value = "/rest/invoiceScanner")
+@RequiredArgsConstructor
 public class InvoiceScannerRestController {
     private final Logger logger = LoggerFactory.getLogger(InvoiceScannerRestController.class);
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    private JSONExpenseParser jsonExpenseParser;
-    @Autowired
-    private InvoiceRestHelper invoiceRestHelper;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final JSONExpenseParser jsonExpenseParser;
+    private final InvoiceRestHelper invoiceRestHelper;
 
-    @Autowired
-    private FileAttachmentService fileAttachmentService;
-    @Autowired
-    private InvoiceService invoiceService;
+    private final FileAttachmentService fileAttachmentService;
+    private final InvoiceService invoiceService;
 
-    @Autowired
-    private BankAccountService bankAccountService;
+    private final BankAccountService bankAccountService;
 
+    private final ContactService contactService;
 
-    @Autowired
-    private ContactService contactService;
+    private final ExpenseRestHelper expenseRestHelper;
 
+    private final ExpenseService expenseService;
 
-    @Autowired
-    private ExpenseRestHelper expenseRestHelper;
+    private final CurrencyService currencyService;
 
-    @Autowired
-    private ExpenseService expenseService;
+    private final UserService userService;
 
-    @Autowired
-    private CurrencyService currencyService;
+    private final InvoiceLineItemService invoiceLineItemService;
 
-    @Autowired
-    private UserService userService;
+    private final PlaceOfSupplyService placeOfSupplyService;
 
-    @Autowired
-    private InvoiceLineItemService invoiceLineItemService;
+    private final CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
 
-    @Autowired
-    private PlaceOfSupplyService placeOfSupplyService;
+    private final PoQuatationService poQuatationService;
 
-    @Autowired
-    private CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
+    private final QuotationInvoiceRepository quotationInvoiceRepository;
 
-    @Autowired
-    private PoQuatationService poQuatationService;
+    private final JournalLineItemRepository journalLineItemRepository;
 
-    @Autowired
-    private QuotationInvoiceRepository quotationInvoiceRepository;
-
-    @Autowired
-    private JournalLineItemRepository journalLineItemRepository;
-
-    @Autowired
-    private InvoiceScannerService invoiceScannerService;
-
+    private final InvoiceScannerService invoiceScannerService;
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
@@ -105,7 +86,6 @@ public class InvoiceScannerRestController {
             List<InvoiceLineItemModel> invoiceLineItemModelList = new ArrayList<>();
 
             jsonExpenseParser.parseInvoice(jsonString,requestModel,invoiceLineItemModelList);
-
 
             String rootPath = request.getServletContext().getRealPath("/");
             log.info("filePath {}",rootPath);

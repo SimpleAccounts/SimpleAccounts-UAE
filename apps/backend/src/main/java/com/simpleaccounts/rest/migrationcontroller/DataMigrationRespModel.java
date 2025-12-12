@@ -2,8 +2,6 @@ package com.simpleaccounts.rest.migrationcontroller;
 
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class DataMigrationRespModel {
     private String migrationBeginningDate;

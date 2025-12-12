@@ -1,6 +1,5 @@
 package com.simpleaccounts.rfq_po;
 
-
 import com.simpleaccounts.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
 

@@ -2,7 +2,7 @@ package com.simpleaccounts.entity;
 
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import java.io.Serializable;
 
 import lombok.Data;
@@ -149,14 +149,12 @@ public class Purchase implements Serializable {
     @org.hibernate.annotations.ForeignKey(name = "none")
     private Collection<PurchaseLineItem> purchaseLineItems;
 
-
     public void addPurchaseItem( final PurchaseLineItem purchaseLineItem) {
         if (null == this.purchaseLineItems) {
           purchaseLineItems = new ArrayList<>();
         }
         purchaseLineItems.add(purchaseLineItem);
     }
-
 
     @PrePersist
     public void updateDates() {

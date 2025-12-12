@@ -1,6 +1,5 @@
 package com.simpleaccounts.service;
 
-
 import com.simpleaccounts.entity.TaxTreatment;
 import com.simpleaccounts.rest.contactcontroller.TaxtTreatmentdto;
 

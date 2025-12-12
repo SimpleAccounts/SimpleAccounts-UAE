@@ -6,12 +6,10 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Created By Zain Khan On 19-10-2020
  */
-
 
 @Entity
 @Table(name = "SIMPLEACCOUNTS_MODULES")
@@ -92,12 +90,7 @@ public class SimpleAccountsModules {
     @Version
     private Integer versionNumber = 1;
 
-
-//    @OneToMany(mappedBy = "simpleAccountsModules", fetch = FetchType.LAZY)
-//    private List<RoleModuleRelation> roleModuleRelationList;
 //
-//    public SimpleAccountsModules(Integer simpleAccountsModuleId) {
-//        this.simpleAccountsModuleId = simpleAccountsModuleId;
-//    }
+
 }
 

@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.vatcontroller;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +14,10 @@ import com.simpleaccounts.entity.VatCategory;
 import com.simpleaccounts.service.VatCategoryService;
 
 @Component
+@RequiredArgsConstructor
 public class VatCategoryRestHelper {
 
-	@Autowired
-	private VatCategoryService vatCategoryService;
+	private final VatCategoryService vatCategoryService;
 
 	@Autowired CompanyService companyService;
 

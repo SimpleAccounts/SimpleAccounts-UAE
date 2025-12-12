@@ -21,6 +21,4 @@ public class TransactionsModel {
     private BigDecimal paymentAmount;
     private BigDecimal balanceAmount;
 
-
-
 }

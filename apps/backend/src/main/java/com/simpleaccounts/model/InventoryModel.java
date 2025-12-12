@@ -19,5 +19,4 @@ public class InventoryModel {
     private Integer  purchaseQuantity;
     private Contact supplierId ;
 
-
 }

@@ -2,7 +2,7 @@ package com.simpleaccounts.entity;
 
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,11 +31,9 @@ public class TransactionExplanation {
     @JoinColumn(name = "TRANSACTION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_"))
     private Transaction transaction;
 
-
     @Column(name = "REMAINING_BALANCE")
     @ColumnDefault(value = "0.00")
     private BigDecimal currentBalance = BigDecimal.ZERO;
-
 
     @Basic(optional = false)
     @Column(name = "PAID_AMOUNT")
@@ -76,7 +74,6 @@ public class TransactionExplanation {
     @Column(name = "EXCHANGE_RATE", precision = 19, scale = 9)
     private BigDecimal exchangeRate;
 
-
     @Column(name = "CREATED_BY")
     @ColumnDefault(value = "0")
     @Basic(optional = false)
@@ -111,11 +108,5 @@ public class TransactionExplanation {
     @ColumnDefault(value = "false")
     @Basic(optional = false)
     private Boolean deleteFlag = Boolean.FALSE;
-
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
 
 }

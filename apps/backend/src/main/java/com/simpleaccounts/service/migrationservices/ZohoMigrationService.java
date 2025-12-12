@@ -116,12 +116,13 @@ import com.simpleaccounts.service.VatCategoryService;
 import com.simpleaccounts.utils.FileHelper;
 
 import lombok.extern.slf4j.Slf4j;
-
+import lombok.RequiredArgsConstructor;
 
 	@Component
 	@Slf4j
 	@SuppressWarnings("java:S3973")
-	public class ZohoMigrationService {
+	@RequiredArgsConstructor
+public class ZohoMigrationService {
 	
 	private static final String SETTER_METHOD_SET_CURRENCY = "setCurrency";
 	private static final String SETTER_METHOD_SET_CURRENCY_CODE = "setCurrencyCode";
@@ -129,62 +130,43 @@ import lombok.extern.slf4j.Slf4j;
 	
     private final Logger LOG = LoggerFactory.getLogger(ZohoMigrationService.class);
 	
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
 
-    @Autowired
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
     
-    @Autowired
-    private InvoiceLineItemService invoiceLineItemService;
+    private final InvoiceLineItemService invoiceLineItemService;
 
-    @Autowired
-    private ContactService contactService;
+    private final ContactService contactService;
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private CurrencyService currencyService;
+    private final CurrencyService currencyService;
 
-    @Autowired
-    private VatCategoryService vatCategoryService;
+    private final VatCategoryService vatCategoryService;
 
-    @Autowired
-    private InvoiceRestHelper invoiceRestHelper;
+    private final InvoiceRestHelper invoiceRestHelper;
 
-    @Autowired
-    private JournalService journalService;
+    private final JournalService journalService;
 
-    @Autowired
-    private ProductLineItemService productLineItemService;
+    private final ProductLineItemService productLineItemService;
 
-    @Autowired
-    private ExpenseService expenseService;
+    private final ExpenseService expenseService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
     
-    @Autowired
-    private CurrencyExchangeService currencyExchangeService;
+    private final CurrencyExchangeService currencyExchangeService;
     
-    @Autowired
-	private  ContactTransactionCategoryService contactTransactionCategoryService;
+    private final  ContactTransactionCategoryService contactTransactionCategoryService;
     
-    @Autowired
-    private String basePath;
+    private final String basePath;
     
-    @Autowired
-    private MigrationUtil migrationUtil; 
+    private final MigrationUtil migrationUtil; 
     
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
     
-    @Autowired
-    private CountryService countryService;
+    private final CountryService countryService;
 
-    @Autowired
-    private StateService stateService;
+    private final StateService stateService;
 
     
     /*************************************************************** start  
@@ -596,15 +578,13 @@ import lombok.extern.slf4j.Slf4j;
 	        			List<ProductLineItem> lineItem = new ArrayList<>();
 	        			ProductLineItem productLineItemEntitySales = null;
 	        			ProductLineItem productLineItemEntityPurchase = null;
-	        			// Object productLineItemEntitySales = getObject(productLineItemTable.getEntityName());
-	        			// Object productLineItemEntityPurchase = getObject(productLineItemTable.getEntityName());
+
 	        			String itemType = record.get("Item Type");
 	        			if (itemType.equalsIgnoreCase("Inventory")||itemType.equalsIgnoreCase("Sales")||
 	        					itemType.equalsIgnoreCase("Sales and Purchases")){
 	        				productLineItemEntitySales = getExistingProductLineItemForSales(record,productLineItemTable.
 	        						getEntityName(),productLineItemTableColumnList,userId,productEntity,lineItem);
-	        				// setColumnValue(productLineItemTableColumnList, record, productLineItemEntitySales);
-	        				//setColumnValue(productLineItemTableColumnList, record, productLineItemEntityPurchase);
+
 	        				((ProductLineItem) productLineItemEntitySales).setProduct((com.simpleaccounts.entity.Product) productEntity);
 	        				((ProductLineItem) productLineItemEntitySales).setIsMigratedRecord(true);
 	        				productLineItemService.persist(productLineItemEntitySales);
@@ -618,8 +598,7 @@ import lombok.extern.slf4j.Slf4j;
 	        				((ProductLineItem) productLineItemEntityPurchase).setProduct((com.simpleaccounts.entity.Product) productEntity);
 	        				((ProductLineItem) productLineItemEntityPurchase).setIsMigratedRecord(true);
 	        				productLineItemService.persist(productLineItemEntityPurchase);
-	        				// setDefaultSetterValues(productLineItemEntitySales, userId);
-	        				// setDefaultSetterValues(productLineItemEntityPurchase, userId);
+
 	        				lineItem.add(productLineItemEntityPurchase);
 	        			}
 	        			productService.persist(productEntity);
@@ -710,8 +689,7 @@ import lombok.extern.slf4j.Slf4j;
 	        		((InvoiceLineItem) invoiceLineItemEntity).setProduct(productEntity);
 	        		((InvoiceLineItem) invoiceLineItemEntity).setDiscountType(DiscountType.FIXED);
 	        		invoiceLineItemService.persist(invoiceLineItemEntity);
-//	            Journal journal = invoiceRestHelper.invoicePosting(new PostingRequestModel(invoiceEntity.getId()), userId);
-//	            journalService.persist(journal);
+
 	        		if(record.get(INVOICE_STATUS).equalsIgnoreCase(DRAFT))
 	        		{
 	        			invoiceEntity.setStatus(CommonStatusEnum.PENDING.getValue());
@@ -904,7 +882,6 @@ import lombok.extern.slf4j.Slf4j;
 
 	        }
 
-
 	    }
 		
 		/**
@@ -940,10 +917,7 @@ import lombok.extern.slf4j.Slf4j;
 			SimpleAccountsService currencyConversionService = (SimpleAccountsService) migrationUtil.getService(
 					currencyConversionTable.getServiceName());
 			for (Map<String, String> record : mapList) {
-	
-				// CurrencyConversion currencyConversion = getExchangeRate(record,
-				// currencyConversionTable.getEntityName(), currencyConversionTableColumnList,
-				// userId);
+
 				List<CurrencyConversion> currencyConversion = currencyExchangeService.getCurrencyConversionList();
 				Object currencyConversionEntity = migrationUtil.getObject(currencyConversionTable.getEntityName());
 	
@@ -1051,8 +1025,7 @@ import lombok.extern.slf4j.Slf4j;
 		       // String productCode = record.get("Item ID");
 		        Map<String, Object> param = new HashMap<>();
 		        param.put("productName", productName);
-		      //  param.put("productCode", productCode);
-		       // param.put("priceType", ProductPriceType.BOTH) ;
+
 		        List<com.simpleaccounts.entity.Product> productList = productService.findByAttributes(param);
 		        for (com.simpleaccounts.entity.Product product:productList){
 		            return product;
@@ -1718,7 +1691,6 @@ import lombok.extern.slf4j.Slf4j;
 					tCategoryList.add(transactionCategory.getTransactionCategoryName().toString());
 				}
 				for (Map<String, String> mapRecord : mapList) {
-					List<TransactionCategoryModelForMigration> transactionCategoryModelForMigrationList = new ArrayList<>();
 					if (file.equals("Invoice.csv") || file.equals("Bill.csv") || file.equals("Item.csv")) {
 						if (mapRecord.containsKey(ACCOUNT)) {
 							Map<String, Object> map = new HashMap<>();
@@ -1747,7 +1719,6 @@ import lombok.extern.slf4j.Slf4j;
 								if (existList.contains(transactionCategoryModelForMigration)) {
 									continue;
 								} else {
-									transactionCategoryModelForMigrationList.add(transactionCategoryModelForMigration);
 									existList.add(transactionCategoryModelForMigration);
 								}
 							} else {
@@ -1788,7 +1759,6 @@ import lombok.extern.slf4j.Slf4j;
 									if (existList.contains(transactionCategoryModelForMigration)) {
 										continue;
 									} else {
-										transactionCategoryModelForMigrationList.add(transactionCategoryModelForMigration);
 										existList.add(transactionCategoryModelForMigration);
 									}
 								} else {

@@ -16,6 +16,9 @@ import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,6 +37,10 @@ class IndustryTypeDaoImplTest {
 
     @Mock
     private TypedQuery<IndustryType> typedQuery;
+
+    @Mock private CriteriaBuilder criteriaBuilder;
+    @Mock private CriteriaQuery<IndustryType> criteriaQuery;
+    @Mock private Root<IndustryType> root;
 
     @InjectMocks
     private IndustryTypeDaoImpl dao;
@@ -289,9 +296,11 @@ class IndustryTypeDaoImplTest {
     void dumpDataReturnsAllRecords() {
         // Arrange
         List<IndustryType> types = createIndustryTypeList(10);
-        String query = "Select t from IndustryType t";
 
-        when(entityManager.createQuery(query)).thenReturn(typedQuery);
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery(IndustryType.class)).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(IndustryType.class)).thenReturn(root);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(types);
 
         // Act

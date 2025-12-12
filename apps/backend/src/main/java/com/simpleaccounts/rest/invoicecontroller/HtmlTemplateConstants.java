@@ -19,5 +19,4 @@ public class HtmlTemplateConstants {
     public static final String REJECT_MAIL_TEMPLATE="MailTemplates/payrollRejectionMail.html";
     public static final String VOID_MAIL_TEMPLATE="MailTemplates/payrollVoidanceMail.html";
 
-
 }

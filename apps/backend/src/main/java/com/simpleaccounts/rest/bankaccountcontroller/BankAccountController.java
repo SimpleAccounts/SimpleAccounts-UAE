@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.bankaccountcontroller;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -58,67 +59,48 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 	@RestController
 	@RequestMapping(value = "/rest/bank")
 	@SuppressWarnings("java:S131")
-	public class BankAccountController{
+	@RequiredArgsConstructor
+public class BankAccountController{
 
 	private static final String MSG_DELETE_UNSUCCESSFUL = "delete.unsuccessful.msg";
 
 	private  final Logger logger = LoggerFactory.getLogger(BankAccountController.class);
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
 	@Autowired
 	protected JournalService journalService;
 
-	@Autowired
-	private CoacTransactionCategoryService coacTransactionCategoryService;
-	@Autowired
-	private TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
+	private final CoacTransactionCategoryService coacTransactionCategoryService;
+	private final TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
+	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
 
-	@Autowired
-	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+	private final BankAccountStatusService bankAccountStatusService;
 
+	private final UserService userServiceNew;
 
-	@Autowired
-	private BankAccountStatusService bankAccountStatusService;
+	private final CurrencyService currencyService;
 
-	@Autowired
-	private UserService userServiceNew;
+	private final BankAccountTypeService bankAccountTypeService;
 
+	private final CountryService countryService;
 
-	@Autowired
-	private CurrencyService currencyService;
+	private final BankAccountRestHelper bankAccountRestHelper;
 
-	@Autowired
-	private BankAccountTypeService bankAccountTypeService;
-
-	@Autowired
-	private CountryService countryService;
-
-	@Autowired
-	private BankAccountRestHelper bankAccountRestHelper;
-
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
-	@Autowired
-	private ExpenseService expenseService;
+	private final TransactionCategoryService transactionCategoryService;
+	private final ExpenseService expenseService;
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private BankAccountRestHelper bankRestHelper;
+	private final BankAccountRestHelper bankRestHelper;
 
-	@Autowired
-	private TransactionService transactionService;
+	private final TransactionService transactionService;
 
-	@Autowired
-	private CurrencyExchangeService currencyExchangeService;
-	@Autowired
-	private UserService userService;
+	private final CurrencyExchangeService currencyExchangeService;
+	private final UserService userService;
 
-	@Autowired
-	private JournalLineItemRepository journalLineItemRepository;
+	private final JournalLineItemRepository journalLineItemRepository;
 
 	@LogRequest
 	@ApiOperation(value = "Get All Bank Accounts", response = List.class)
@@ -129,9 +111,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 		User user = userService.findByPK(userId);
 
 		Map<BankAccounrFilterEnum, Object> filterDataMap = new EnumMap<>(BankAccounrFilterEnum.class);
-//		if(user.getRole().getRoleCode()!=1) {
-//			filterDataMap.put(BankAccounrFilterEnum.USER_ID, userId);
-//		}
+
 		filterDataMap.put(BankAccounrFilterEnum.BANK_ACCOUNT_NAME, filterModel.getBankAccountName());
 		filterDataMap.put(BankAccounrFilterEnum.BANK_BNAME, filterModel.getBankName());
 		filterDataMap.put(BankAccounrFilterEnum.ACCOUNT_NO, filterModel.getAccountNumber());
@@ -207,7 +187,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 				JournalLineItem journalLineItem2 = new JournalLineItem();
 				journalLineItem2.setTransactionCategory(transactionCategory);
-
 
 				if (!isDebit) {
 					journalLineItem2.setDebitAmount(openBigDecimal);
@@ -422,7 +401,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 		}
 	}
 
-
 	/**
 	 * @Deprecated
 	 */
@@ -456,10 +434,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 				Map<String,Object> filterMap = new HashMap<>();
 				filterMap.put("transactionCategory",bankAccount.getTransactionCategory());
 
-//				Journal journal = journalService.getJournalByReferenceId(bankAccount.getTransactionCategory().getTransactionCategoryId());
-//				if (journal != null) {
-//					journalService.deleteByIds(Arrays.asList(journal.getId()));
-//				}
 				List<JournalLineItem> bankJLIList= journalLineItemRepository.findAllByReferenceIdAndReferenceType(
 						bankAccount.getTransactionCategory().getTransactionCategoryId(),
 						PostingReferenceTypeEnum.BANK_ACCOUNT);
@@ -595,7 +569,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 			if (closingBalance!=null && closingBalance.getClosingBalance()!=null) {
 				bankModel.setClosingBalance(closingBalance.getBankAccountClosingBalance());
 			}
-
 
 			if (bankAccount == null) {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);

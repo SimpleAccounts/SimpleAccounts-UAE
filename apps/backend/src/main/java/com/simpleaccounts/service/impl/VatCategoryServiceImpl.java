@@ -1,14 +1,15 @@
 package com.simpleaccounts.service.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.Cacheable;
+
 import org.springframework.stereotype.Service;
 
 import com.simpleaccounts.constant.dbfilter.VatCategoryFilterEnum;
@@ -24,13 +25,12 @@ import java.time.LocalDateTime;
 
 @Service("vatCategoryService")
 
+@RequiredArgsConstructor
 public class VatCategoryServiceImpl extends VatCategoryService {
 
-	@Autowired
-	private VatCategoryDao vatCategoryDao;
+	private final VatCategoryDao vatCategoryDao;
 
-	@Autowired
-	private CacheManager cacheManager;
+	private final CacheManager cacheManager;
 
 	private static final String VAT_CATEGORY = "VAT_CATEGORY";
 

@@ -2,7 +2,7 @@ package com.simpleaccounts.entity.bankaccount;
 
 import com.simpleaccounts.entity.Country;
 import com.simpleaccounts.entity.Currency;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import java.io.Serializable;
 
 import lombok.Data;

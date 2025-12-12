@@ -2,6 +2,7 @@
 package com.simpleaccounts.rest.reconsilationcontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simpleaccounts.constant.ReconsileCategoriesEnumConstant;
@@ -44,49 +45,37 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 	@RestController
 	@RequestMapping("/rest/reconsile")
 	@SuppressWarnings("java:S131")
-	public class ReconsilationController {
+	@RequiredArgsConstructor
+public class ReconsilationController {
 
 	private final Logger logger = LoggerFactory.getLogger(ReconsilationController.class);
 
-	@Autowired
-	private ReconcileStatusService reconcileStatusService;
+	private final ReconcileStatusService reconcileStatusService;
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final ReconsilationRestHelper reconsilationRestHelper;
 
-	@Autowired
-	private ReconsilationRestHelper reconsilationRestHelper;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final TranscationCategoryHelper transcationCategoryHelper;
 
-	@Autowired
-	private TranscationCategoryHelper transcationCategoryHelper;
+	private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
-	@Autowired
-	private ChartOfAccountCategoryService chartOfAccountCategoryService;
+	private final VatCategoryService vatCategoryService;
 
-	@Autowired
-	private VatCategoryService vatCategoryService;
+	private final ContactService contactService;
 
-	@Autowired
-	private ContactService contactService;
+	private final UserService userServiceNew;
 
-	@Autowired
-	private UserService userServiceNew;
-
-	@Autowired
-	private TransactionService transactionService;
+	private final TransactionService transactionService;
 
 	@Autowired
 	TransactionCategoryClosingBalanceServiceImpl transactionCategoryClosingBalanceService;
 
-	@Autowired
-	private TransactionExpensesRepository transactionExpensesRepository;
+	private final TransactionExpensesRepository transactionExpensesRepository;
 
 	@LogRequest
 	@GetMapping(value = "/getByReconcilationCatCode")
@@ -112,11 +101,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 			List<TransactionCategory> transactionCatList = null;
 			List<Object> list = new ArrayList<>();
 			BankAccount bankAccount =bankAccountService.findByPK(filterModel.getBankId());
-//			Map<String,Object> filterMap = new HashMap<>();
-//			filterMap.put("contactType",2);
-//			filterMap.put("currency",bankAccount.getBankAccountCurrency());
-//			List<Contact> customerContactList =
-//					contactService.findByAttributes(filterMap);
+
 			List<Contact> customerContactList = contactService.getCustomerContacts(bankAccount.getBankAccountCurrency());
 			List<DropdownModel> dropdownModelList = new ArrayList<>();
 			for (Contact contact:customerContactList){
@@ -166,11 +151,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 					list.add(new SingleLevelDropDownModel("Vat Included", vatCategoryService.getVatCategoryForDropDown()));
 					list.add(new SingleLevelDropDownModel("Customer", dropdownModelList));
 					 bankAccount =bankAccountService.findByPK(filterModel.getBankId());
-//					 filterMap = new HashMap<>();
-//					filterMap.put("contactType",1);
-//					filterMap.put("currency",bankAccount.getBankAccountCurrency());
-//					List<Contact> vendorContactList =
-//							contactService.findByAttributes(filterMap);
+
 					List<Contact> supplierContactList = contactService.getSupplierContacts(bankAccount.getBankAccountCurrency());
 					dropdownModelList = new ArrayList<>();
 					for (Contact contact:supplierContactList){
@@ -212,11 +193,11 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 							for(TransactionCategory transactionCategory : transactionCatList)
 							{
                              Integer transactionCategoryId = transactionCategory.getTransactionCategoryId();
-								if(transactionCategoryId == bankTransactionCategoryId)
-								{
-									//tempTransactionCatogaryList.add(transactionCategory);
-								}
-								else
+									if(Objects.equals(transactionCategoryId, bankTransactionCategoryId))
+									{
+										//tempTransactionCatogaryList.add(transactionCategory);
+									}
+									else
 								{
 									tempTransactionCatogaryList.add(transactionCategory);
 								}
@@ -264,12 +245,10 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-
 	@LogRequest
 	@ApiOperation(value = "Get ReconcileStatusList")
 	@GetMapping(value = "/list")
 	public ResponseEntity<PaginationResponseModel> getAllReconcileStatus(ReconcileStatusRequestModel filterModel) {
-
 
 		Map<TransactionFilterEnum, Object> dataMap = new EnumMap<>(TransactionFilterEnum.class);
 

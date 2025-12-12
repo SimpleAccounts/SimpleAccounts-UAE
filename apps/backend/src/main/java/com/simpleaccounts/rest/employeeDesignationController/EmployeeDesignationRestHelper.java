@@ -1,11 +1,12 @@
 package com.simpleaccounts.rest.employeeDesignationController;
 
 import com.simpleaccounts.entity.EmployeeDesignation;
-import com.simpleaccounts.entity.SalaryTemplate;
+import lombok.RequiredArgsConstructor;
+
 import com.simpleaccounts.model.EmployeeDesignationListModel;
 import com.simpleaccounts.model.EmployeeDesignationPersistModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.rest.payroll.service.SalaryTemplateListModal;
+
 import com.simpleaccounts.service.EmployeeDesignationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,10 +17,10 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class EmployeeDesignationRestHelper {
 
-    @Autowired
-    private EmployeeDesignationService employeeDesignationService;
+    private final EmployeeDesignationService employeeDesignationService;
     //SalaryDesignation
 
     public EmployeeDesignation getEmployeeDesignationEntity(EmployeeDesignationPersistModel employeeDesignationPersistModel) throws IOException
@@ -39,7 +40,6 @@ public class EmployeeDesignationRestHelper {
             employeeDesignation.setParentId(employeeDesignationPersistModel.getParentId());
         return employeeDesignation;
     }
-
 
     public EmployeeDesignationPersistModel getEmployeeDesignationModel(EmployeeDesignation employeeDesignation)
     {

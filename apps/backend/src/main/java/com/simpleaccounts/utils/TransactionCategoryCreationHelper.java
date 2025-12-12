@@ -1,6 +1,7 @@
 package com.simpleaccounts.utils;
 
 import com.simpleaccounts.constant.DefaultTypeConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -9,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -18,29 +17,23 @@ import java.util.Map;
 
 	@Component
 	@SuppressWarnings("java:S6809")
-	public class TransactionCategoryCreationHelper {
+	@RequiredArgsConstructor
+public class TransactionCategoryCreationHelper {
 	private static final String JSON_KEY_DESIGNATION = "designation";
 
-    @Autowired
-    private  TransactionCategoryService transactionCategoryService;
+    private final  TransactionCategoryService transactionCategoryService;
 
-    @Autowired
-    private  CoacTransactionCategoryService coacTransactionCategoryService;
+    private final  CoacTransactionCategoryService coacTransactionCategoryService;
 
-    @Autowired
-    private  ContactTransactionCategoryService contactTransactionCategoryService;
+    private final  ContactTransactionCategoryService contactTransactionCategoryService;
 
-    @Autowired
-    private  EmployeeTransactioncategoryService employeeTransactioncategoryService;
+    private final  EmployeeTransactioncategoryService employeeTransactioncategoryService;
 
-    @Autowired
-    private  ContactService contactService;
+    private final  ContactService contactService;
 
-    @Autowired
-    private  DesignationTransactionCategoryService designationTransactionCategoryService;
+    private final  DesignationTransactionCategoryService designationTransactionCategoryService;
 
-    @Autowired
-    private EmployeeDesignationService employeeDesignationService;
+    private final EmployeeDesignationService employeeDesignationService;
 
     @Transactional(rollbackFor = Exception.class)
     public void createTransactionCategoryForEmployee(Employee employee)
@@ -65,8 +58,7 @@ import java.util.Map;
 
                 TransactionCategory transactionCategory = getTransactionCategory(transactionCategoryName,transactionCategoryName,
                         employee.getCreatedBy(),parentTransactionCategory);
-//                coacTransactionCategoryService.addCoacTransactionCategory(transactionCategory.getChartOfAccount(),
-//                        transactionCategory);
+
                 EmployeeTransactionCategoryRelation employeeTransactionCategoryRelation = new EmployeeTransactionCategoryRelation();
                 employeeTransactionCategoryRelation.setEmployee(employee);
                 employeeTransactionCategoryRelation.setTransactionCategory(transactionCategory);
@@ -107,8 +99,7 @@ import java.util.Map;
 
                 TransactionCategory transactionCategory = getTransactionCategory(transactionCategoryName,transactionCategoryName,
                         employee.getCreatedBy(),parentTransactionCategory);
-//                coacTransactionCategoryService.addCoacTransactionCategory(transactionCategory.getChartOfAccount(),
-//                        transactionCategory);
+
                 EmployeeTransactionCategoryRelation employeeTransactionCategoryRelation = new EmployeeTransactionCategoryRelation();
                 employeeTransactionCategoryRelation.setEmployee(employee);
                 employeeTransactionCategoryRelation.setTransactionCategory(transactionCategory);
@@ -135,9 +126,7 @@ import java.util.Map;
                }
                TransactionCategory transactionCategory = getTransactionCategory(transactionCategoryName,transactionCategoryName,
                        contact.getCreatedBy(),parentTransactionCategory);
-//               coacTransactionCategoryService.addCoacTransactionCategory(contact.getTransactionCategory().getChartOfAccount(),
-//                       contact.getTransactionCategory());
-//               contactTransactionCategoryService.addContactTransactionCategory(contact, transactionCategory);
+
                ContactTransactionCategoryRelation contactTransactionCategoryRelation = new ContactTransactionCategoryRelation();
                contactTransactionCategoryRelation.setContact(contact);
                contactTransactionCategoryRelation.setTransactionCategory(transactionCategory);
@@ -156,9 +145,7 @@ import java.util.Map;
                }
                transactionCategory = getTransactionCategory(transactionCategoryName,transactionCategoryName,
                        contact.getCreatedBy(),parentTransactionCategory);
-//               coacTransactionCategoryService.addCoacTransactionCategory(contact.getTransactionCategory().getChartOfAccount(),
-//                       contact.getTransactionCategory());
-//               contactTransactionCategoryService.addContactTransactionCategory(contact, transactionCategory);
+
                 contactTransactionCategoryRelation = new ContactTransactionCategoryRelation();
                contactTransactionCategoryRelation.setContact(contact);
                contactTransactionCategoryRelation.setTransactionCategory(transactionCategory);
@@ -194,9 +181,6 @@ import java.util.Map;
                transactionCategory = getTransactionCategory(transactionCategoryName,transactionCategoryName,
                        contact.getCreatedBy(),parentTransactionCategory);
 
-//               coacTransactionCategoryService.addCoacTransactionCategory(contact.getTransactionCategory().getChartOfAccount(),
-//                       contact.getTransactionCategory());
-//               contactTransactionCategoryService.addContactTransactionCategory(contact, transactionCategory);
                contactTransactionCategoryRelation = new ContactTransactionCategoryRelation();
                contactTransactionCategoryRelation.setContact(contact);
                contactTransactionCategoryRelation.setTransactionCategory(transactionCategory);

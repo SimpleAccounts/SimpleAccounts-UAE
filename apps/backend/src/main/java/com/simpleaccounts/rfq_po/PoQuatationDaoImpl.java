@@ -1,11 +1,12 @@
 package com.simpleaccounts.rfq_po;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+import lombok.RequiredArgsConstructor;
+
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.dao.AbstractDao;
-import com.simpleaccounts.entity.Invoice;
+
 import com.simpleaccounts.rest.DropdownModel;
-import com.simpleaccounts.rest.InviceSingleLevelDropdownModel;
+
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 @Repository(value = "poQuatationDao")
+@RequiredArgsConstructor
 public class PoQuatationDaoImpl extends AbstractDao<Integer,PoQuatation> implements PoQuatationDao {
-    @Autowired
-    private DatatableSortingFilterConstant datatableUtil;
+    private final DatatableSortingFilterConstant datatableUtil;
 
    public PaginationResponseModel getRfqList(Map<RfqFilterEnum, Object> filterDataMap, PaginationModel paginationModel){
         List<DbFilter> dbFilters = new ArrayList<>();

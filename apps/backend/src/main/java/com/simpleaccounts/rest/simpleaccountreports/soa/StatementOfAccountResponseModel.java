@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.simpleaccountreports.soa;
 
-import com.simpleaccounts.rest.simpleaccountreports.SupplierInvoiceDetailsModel;
 import lombok.Data;
 
 import java.math.BigDecimal;

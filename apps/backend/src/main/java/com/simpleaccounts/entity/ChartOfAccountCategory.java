@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import com.simpleaccounts.entity.converter.DateConverter;
 import org.hibernate.annotations.ColumnDefault;
 
 import lombok.Data;
@@ -38,7 +37,6 @@ public class ChartOfAccountCategory implements Serializable {
 	@Basic(optional = false)
 	  //@Convert(converter = DateConverter.class)
     private LocalDateTime createdDate = LocalDateTime.now();
-
 
 	@Column(name = "LAST_UPDATED_BY")
 	private Integer lastUpdateBy;

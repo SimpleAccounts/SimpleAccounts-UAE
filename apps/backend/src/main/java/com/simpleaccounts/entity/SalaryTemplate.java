@@ -1,13 +1,11 @@
 package com.simpleaccounts.entity;
 
-import com.simpleaccounts.entity.converter.DateConverter;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @NamedQueries({
         @NamedQuery(name = "allSalaryTemplates", query = "SELECT s FROM SalaryTemplate s "),
@@ -27,11 +25,9 @@ public class SalaryTemplate implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SALARY_TEMPLATE_SEQ")
     private Integer id;
 
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SALARY_COMPONENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_SALARY_TEMPLATE_SALARY_COMPONENT_ID_SALARY_COMPONENT"))
     private SalaryComponent salaryComponentId;
-
 
     @Column(name = "IS_ACTIVE")
 //    @ColumnDefault(value = "1")

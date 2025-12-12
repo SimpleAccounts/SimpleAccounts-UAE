@@ -1,8 +1,9 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.dao.AbstractDao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.ContactTransactionCategoryRelationDao;
-import com.simpleaccounts.entity.CoacTransactionCategory;
+
 import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.ContactTransactionCategoryRelation;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -11,15 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
-import java.util.List;
 
 /**
  * Created By Zain Khan
  */
 @Repository("contactTransactionCategoryRelationDao")
+@RequiredArgsConstructor
 public class ContactTransactionCategoryDaoImpl extends AbstractDao<Integer, ContactTransactionCategoryRelation> implements ContactTransactionCategoryRelationDao {
-  @Autowired
-  private ContactService contactService;
+  private final ContactService contactService;
    public void addContactTransactionCategory(Contact contact, TransactionCategory transactionCategory) {
        String query = "SELECT MAX(id) FROM ContactTransactionCategoryRelation ORDER BY id DESC";
 

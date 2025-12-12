@@ -2,7 +2,7 @@ package com.simpleaccounts.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,13 +25,19 @@ import com.simpleaccounts.service.TransactionCategoryBalanceService;
 @Service
 public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBalanceService {
 
-	@Autowired
-	private TransactionCategoryBalanceDao transactionCategoryBalanceDao;
-	@Autowired
-	private DateUtils dateUtils;
+	private final TransactionCategoryBalanceDao transactionCategoryBalanceDao;
+	private final DateUtils dateUtils;
+
+	private final TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
 	@Autowired
-	private TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
+	public TransactionCategoryBalanceServiceImpl(TransactionCategoryBalanceDao transactionCategoryBalanceDao,
+												 DateUtils dateUtils,
+												 TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService) {
+		this.transactionCategoryBalanceDao = transactionCategoryBalanceDao;
+		this.dateUtils = dateUtils;
+		this.transactionCategoryClosingBalanceService = transactionCategoryClosingBalanceService;
+	}
 
 	@Override
 	protected Dao<Integer, TransactionCategoryBalance> getDao() {
@@ -44,10 +50,8 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 	}
 
 	@Override
-	// TODO Remain for update completed create and delete
-	// TODO Need to split this method as get amount and update TransactionCategoryBalance
+	
 	public synchronized BigDecimal updateRunningBalance(JournalLineItem lineItem) {
-		List<TransactionCategoryBalance> balanceList = new ArrayList<>();
 		if (lineItem != null) {
 			TransactionCategory category = lineItem.getTransactionCategory();
 
@@ -88,7 +92,6 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 				}
 			}
 			balance.setRunningBalance(runningBalance);
-			balanceList.add(balance);
 			transactionCategoryBalanceDao.update(balance);
 			transactionCategoryClosingBalanceService.updateClosingBalance(lineItem);
 			return balance.getRunningBalance();
@@ -98,7 +101,6 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 	}
 
 	public synchronized BigDecimal updateRunningBalanceAndOpeningBalance(JournalLineItem lineItem,Boolean updateOpeningBalance) {
-		List<TransactionCategoryBalance> balanceList = new ArrayList<>();
 		if (lineItem != null) {
 			TransactionCategory category = lineItem.getTransactionCategory();
 
@@ -144,7 +146,6 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 				balance.setOpeningBalance(runningBalance.negate());
 			else if(updateOpeningBalance&& runningBalance!=null)
 				balance.setOpeningBalance(runningBalance);
-			balanceList.add(balance);
 			transactionCategoryBalanceDao.update(balance);
 			transactionCategoryClosingBalanceService.updateClosingBalance(lineItem);
 			return balance.getRunningBalance();

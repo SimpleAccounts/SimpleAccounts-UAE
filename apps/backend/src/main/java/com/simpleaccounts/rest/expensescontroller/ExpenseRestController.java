@@ -18,11 +18,9 @@ import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +29,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,35 +55,27 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @Slf4j
 @RestController
 @RequestMapping("/rest/expense")
+@RequiredArgsConstructor
 public class ExpenseRestController extends AbstractDoubleEntryRestController {
 	private final Logger logger = LoggerFactory.getLogger(ExpenseRestController.class);
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final ExpenseService expenseService;
 
-	@Autowired
-	private ExpenseRestHelper expenseRestHelper;
+	private final ExpenseRestHelper expenseRestHelper;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private TransactionCategoryService expenseTransactionCategoryService;
+	private final TransactionCategoryService expenseTransactionCategoryService;
 
-	@Autowired
-	private CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
-	@Autowired
-	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private FileAttachmentService fileAttachmentService;
+	private final FileAttachmentService fileAttachmentService;
 
-    @Autowired
-	private InvoiceRestHelper invoiceRestHelper;
+    private final InvoiceRestHelper invoiceRestHelper;
 	@LogRequest
 	@ApiOperation(value = "Get Expense List")
 	@GetMapping(value = "/getList")
@@ -102,10 +93,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 			if (expenseRequestFilterModel.getExpenseDate() != null
 					&& !expenseRequestFilterModel.getExpenseDate().isEmpty()) {
 				LocalDate date = LocalDate.parse(expenseRequestFilterModel.getExpenseDate());
-//				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-//				LocalDateTime dateTime = Instant
-//						.ofEpochMilli(dateFormat.parse(expenseRequestFilterModel.getExpenseDate()).getTime())
-//						.atZone(ZoneId.systemDefault()).toLocalDateTime();
+
 				filterDataMap.put(ExpenseFIlterEnum.EXPENSE_DATE, date);
 			}
 			if (expenseRequestFilterModel.getTransactionCategoryId() != null) {

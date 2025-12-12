@@ -5,14 +5,13 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projection;
-import org.hibernate.criterion.Projections;
+
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.TransactionExpensesDao;
-import com.simpleaccounts.entity.Expense;
+
 import com.simpleaccounts.entity.TransactionExpenses;
 
 @Repository
@@ -27,8 +26,7 @@ public class TransactionExpensesDaoImpl extends AbstractDao<Integer, Transaction
 			criteria.createAlias("transaction", "tr");
 			criteria.add(Restrictions.eq("tr.transactionId", transactionId));
 		}
-//		Projection projection = Projections.property("expense");
-//		criteria.setProjection(projection);
+
 		return criteria.list();
 	}
 

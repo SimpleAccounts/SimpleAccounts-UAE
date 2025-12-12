@@ -31,8 +31,7 @@ class CsvParserTest {
 
     @BeforeEach
     void setUp() {
-        csvParser = new CsvParser();
-        ReflectionTestUtils.setField(csvParser, "dateformatDao", dateFormatDao);
+        csvParser = new CsvParser(dateFormatDao);
     }
 
     @SuppressWarnings("unchecked")

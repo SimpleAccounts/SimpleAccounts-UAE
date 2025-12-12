@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
 @Repository(value = "salaryStructureDao")
 public class SalaryStructureDaoImpl extends AbstractDao<Integer, SalaryStructure> implements SalaryStructureDao
 {

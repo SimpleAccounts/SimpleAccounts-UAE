@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl.bankaccount;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,12 +25,12 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import javax.persistence.TypedQuery;
 
 @Repository
+@RequiredArgsConstructor
 public class BankAccountDaoImpl extends AbstractDao<Integer, BankAccount> implements BankAccountDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BankAccountDaoImpl.class);
 
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public List<BankAccount> getBankAccounts() {

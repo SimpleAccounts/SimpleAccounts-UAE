@@ -6,6 +6,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
@@ -32,22 +33,18 @@ import java.util.Map;
  * @author Ashish
  */
 @Repository(value = "paymentDao")
+@RequiredArgsConstructor
 public class PaymentDaoImpl extends AbstractDao<Integer, Payment> implements PaymentDao {
 
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
-	@Autowired
-	private SupplierInvoicePaymentDao supplierInvoicePaymentDao;
+	private final SupplierInvoicePaymentDao supplierInvoicePaymentDao;
 
-	@Autowired
-	private JournalLineItemDao journalLineItemDao;
+	private final JournalLineItemDao journalLineItemDao;
 
-	@Autowired
-	private JournalDao journalDao;
+	private final JournalDao journalDao;
 
-	@Autowired
-	private InvoiceDao invoiceDao;
+	private final InvoiceDao invoiceDao;
 
 	@Override
 	public PaginationResponseModel getPayments(Map<PaymentFilterEnum, Object> filterMap,

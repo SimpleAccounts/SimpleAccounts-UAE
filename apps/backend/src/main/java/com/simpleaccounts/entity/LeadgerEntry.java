@@ -13,7 +13,6 @@ import org.springframework.lang.Nullable;
 
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 
-
 /**
  * Created by Uday
  */

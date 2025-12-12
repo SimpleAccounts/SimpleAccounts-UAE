@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.simpleaccounts.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.userdetails.User;
@@ -18,10 +19,12 @@ public class JwtTokenUtilTest {
 
     private JwtTokenUtil jwtTokenUtil;
     private String secret = "mySecretKeyForTestingOnly1234567890";
+    private UserService userService;
 
     @Before
     public void setUp() {
-        jwtTokenUtil = new JwtTokenUtil();
+        userService = mock(UserService.class);
+        jwtTokenUtil = new JwtTokenUtil(userService);
         // Inject the secret value manually
         ReflectionTestUtils.setField(jwtTokenUtil, "secret", secret);
     }

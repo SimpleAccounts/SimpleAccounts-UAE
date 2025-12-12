@@ -2,9 +2,9 @@ package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.InventoryHistoryDao;
-import com.simpleaccounts.entity.Inventory;
+
 import com.simpleaccounts.entity.InventoryHistory;
-import com.simpleaccounts.model.InventoryHistoryModel;
+
 import com.simpleaccounts.rest.InventoryController.InventoryRevenueModel;
 import com.simpleaccounts.rest.InventoryController.TopInventoryRevenueModel;
 import com.simpleaccounts.service.InventoryHistoryService;

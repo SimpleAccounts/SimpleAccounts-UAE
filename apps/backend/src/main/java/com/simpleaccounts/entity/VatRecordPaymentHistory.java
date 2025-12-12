@@ -1,7 +1,7 @@
 package com.simpleaccounts.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +12,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 
 @Entity
 @Table(name = "VAT_RECORD_PAYMENT_HISTORY")
@@ -51,12 +50,6 @@ public class VatRecordPaymentHistory implements Serializable {
     @Column(name = "LAST_UPDATE_DATE")
     //@Convert(converter = DateConverter.class)
     private LocalDateTime lastUpdateDate;
-
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
 
     @Column(name = "START_DATE")
     private LocalDateTime startDate;

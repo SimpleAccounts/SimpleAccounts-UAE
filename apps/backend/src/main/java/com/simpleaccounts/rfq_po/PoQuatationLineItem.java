@@ -3,7 +3,7 @@ package com.simpleaccounts.rfq_po;
 import com.simpleaccounts.constant.DiscountType;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -126,6 +126,5 @@ public class PoQuatationLineItem {
     @Basic(optional = false)
     @Version
     private Integer versionNumber = 1;
-
 
 }

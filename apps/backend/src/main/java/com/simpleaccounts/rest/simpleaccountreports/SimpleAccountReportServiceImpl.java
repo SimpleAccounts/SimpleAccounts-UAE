@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 
 import com.simpleaccounts.rest.simpleaccountreports.Aging.AgingListModel;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.rest.simpleaccountreports.Aging.AgingRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditResponseModel;
@@ -12,11 +13,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class SimpleAccountReportServiceImpl extends SimpleAccountReportService{
 
-
-    @Autowired
-    private SimpleAccountReportDao simpleAccountReportDao;
+    private final SimpleAccountReportDao simpleAccountReportDao;
 
     public SalesByCustomerResponseModel getListOfSalesByCustomer(ReportRequestModel requestModel,SalesByCustomerResponseModel salesByCustomerResponseModel){
 
@@ -63,12 +63,10 @@ public class SimpleAccountReportServiceImpl extends SimpleAccountReportService{
         return simpleAccountReportDao.getcreditNoteDetails(requestModel,creditNoteDetailsResponseModel);
     }
 
-
     public ExpenseDetailsResponseModel getListOfExpenseDetails(ReportRequestModel requestModel, ExpenseDetailsResponseModel expenseDetailsResponseModel){
 
         return simpleAccountReportDao.getExpenseDetails(requestModel,expenseDetailsResponseModel);
     }
-
 
     public ExpenseByCategoryResponseModel getListOfExpenseByCategory(ReportRequestModel requestModel, ExpenseByCategoryResponseModel expenseByCategoryResponseModel){
 

@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.dbfilter.DateFormatFilterEnum;
@@ -30,22 +31,18 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/rest/simpleaccountReports")
+@RequiredArgsConstructor
 public class SimpleAccountReportsController {
 
     private final Logger logger = LoggerFactory.getLogger(SimpleAccountReportsController.class);
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
+    private final simpleAccountReportRestHelper simpleAccountReportRestHelper;
 
-    @Autowired
-    private simpleAccountReportRestHelper simpleAccountReportRestHelper;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private SimpleAccountReportDaoImpl simpleAccountReportDao;
+    private final SimpleAccountReportDaoImpl simpleAccountReportDao;
 
     @LogRequest
     @ApiOperation(value = "Get salesbycustomer Report")
@@ -53,13 +50,6 @@ public class SimpleAccountReportsController {
     public ResponseEntity<SalesByCustomerResponseModel> getSalesbycustomer(ReportRequestModel requestModel,
                                                                 HttpServletRequest request) {
 
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         SalesByCustomerResponseModel salesByCustomerResponseModel = simpleAccountReportRestHelper.getSalesByCustomer(requestModel);
         try {
             if (salesByCustomerResponseModel == null) {
@@ -76,13 +66,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/purchasebyVendor")
     public ResponseEntity<PurchseByVendorResponseModel> getSalesbyVendor(ReportRequestModel requestModel,
                                                                          HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         PurchseByVendorResponseModel purchseByVendorResponseModel = simpleAccountReportRestHelper.getPurchaseByVendor(requestModel);
         try {
             if (purchseByVendorResponseModel == null) {
@@ -99,13 +82,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/salesbyproduct")
     public ResponseEntity<SalesByProductResponseModel> getSalesByProduct(ReportRequestModel requestModel,
                                                                          HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         SalesByProductResponseModel salesByProductResponseModel = simpleAccountReportRestHelper.getSalesByProduct(requestModel);
         try {
             if (salesByProductResponseModel == null) {
@@ -122,13 +98,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/purchasebyproduct")
     public ResponseEntity<PurchaseByProductResponseModel> getPurchaseByProduct(ReportRequestModel requestModel,
                                                                          HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         PurchaseByProductResponseModel purchaseByProductResponseModel = simpleAccountReportRestHelper.getPurchaseByProduct(requestModel);
         try {
             if (purchaseByProductResponseModel == null) {
@@ -145,13 +114,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/ReceivableInvoiceSummary")
     public ResponseEntity<ReceivableInvoiceSummaryResponseModel> getReceivableInvoiceSummary(ReportRequestModel requestModel,
                                                                          HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         ReceivableInvoiceSummaryResponseModel receivableInvoiceSummaryResponseModel = simpleAccountReportRestHelper.getreceivableInvoiceSummary(requestModel);
         try {
             if (receivableInvoiceSummaryResponseModel == null) {
@@ -168,13 +130,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/PayableInvoiceSummary")
     public ResponseEntity<PayableInvoiceSummaryResponseModel> getPayableInvoiceSummary(ReportRequestModel requestModel,
                                                                                              HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         PayableInvoiceSummaryResponseModel payableInvoiceSummaryResponseModel = simpleAccountReportRestHelper.getPayableInvoiceSummary(requestModel);
         try {
             if (payableInvoiceSummaryResponseModel == null) {
@@ -263,13 +218,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/ExpenseByCategory")
     public ResponseEntity<ExpenseByCategoryResponseModel> getExpenseByCategory(ReportRequestModel requestModel,
                                                  HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         ExpenseByCategoryResponseModel expenseByCategoryResponseModel = simpleAccountReportRestHelper.getExpenseByCategoryDetails(requestModel);
         try {
             if (expenseByCategoryResponseModel == null) {
@@ -281,19 +229,11 @@ public class SimpleAccountReportsController {
         return new ResponseEntity<>(expenseByCategoryResponseModel, HttpStatus.OK);
     }
 
-
     @LogRequest
     @ApiOperation(value = "Get invoice Details")
     @GetMapping(value = "/invoiceDetails")
     public ResponseEntity<InvoiceDetailsResponseModel> getInvoiceDetails(ReportRequestModel requestModel,
                                                                                              HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         InvoiceDetailsResponseModel invoiceDetailsResponseModel = simpleAccountReportRestHelper.getInvoiceDetails(requestModel);
         try {
             if (invoiceDetailsResponseModel == null) {
@@ -310,13 +250,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/supplierInvoiceDetails")
     public ResponseEntity<SupplierInvoiceDetailsResponseModel> getSupplierInvoiceDetails(ReportRequestModel requestModel,
                                                                          HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         SupplierInvoiceDetailsResponseModel supplierInvoiceDetailsResponseModel = simpleAccountReportRestHelper.getSupplierInvoiceDetails(requestModel);
         try {
             if (supplierInvoiceDetailsResponseModel == null) {
@@ -332,13 +265,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/getPayrollSummary")
     public ResponseEntity<PayrollSummaryResponseModel> getPayrollSummary(ReportRequestModel requestModel,
                                                                          HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         PayrollSummaryResponseModel payrollSummaryResponseModel = simpleAccountReportRestHelper.getPayrollSummary(requestModel);
         try {
             if (payrollSummaryResponseModel == null) {
@@ -364,13 +290,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/StatementOfAccountReport")
     public ResponseEntity<StatementOfAccountResponseModel> getSOA(StatementOfAccountRequestModel requestModel,
                                                                   HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         StatementOfAccountResponseModel statementOfAccountResponseModel = simpleAccountReportRestHelper.getSOADetails(requestModel);
         try {
             if (statementOfAccountResponseModel == null) {
@@ -382,19 +301,11 @@ public class SimpleAccountReportsController {
         return new ResponseEntity<>(statementOfAccountResponseModel, HttpStatus.OK);
     }
 
-
     @LogRequest
     @ApiOperation(value = "Get FTA Audit Report")
     @GetMapping(value = "/getFtaAuditReport")
     public ResponseEntity<FtaAuditResponseModel> getFtaAuditReport(FtaAuditRequestModel requestModel,
                                                                    HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         FtaAuditResponseModel ftaAuditResponseModel = simpleAccountReportRestHelper.getFtaAuditReport(requestModel);
         try {
             if (ftaAuditResponseModel == null) {
@@ -411,13 +322,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/getFtaExciseAuditReport")
     public ResponseEntity<FtaAuditResponseModel> getFtaExciseAuditReport(FtaAuditRequestModel requestModel,
                                                                    HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         FtaAuditResponseModel ftaAuditResponseModel = simpleAccountReportRestHelper.getFtaExciseAuditReport(requestModel);
         try {
             if (ftaAuditResponseModel == null) {
@@ -434,13 +338,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/getAgingReport")
     public ResponseEntity<AgingListModel> getAgingReport(AgingRequestModel requestModel,
                                                          HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         AgingListModel agingListModel = simpleAccountReportRestHelper.getAgingReport(requestModel);
         try {
             if (agingListModel == null) {
@@ -457,15 +354,7 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/statementOfAccounts")
     public ResponseEntity<Object> getStatementOfAccounts(ReportRequestModel requestModel,@RequestParam(value = "contactId",required = false) Integer contactId,
                                                                            HttpServletRequest request) {
-
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
-    ResponseModelStatementOfAccounts responseModelStatementOfAccounts = simpleAccountReportDao.getStatementOfAccounts(requestModel,contactId);
+        ResponseModelStatementOfAccounts responseModelStatementOfAccounts = simpleAccountReportDao.getStatementOfAccounts(requestModel,contactId);
         try {
             if (responseModelStatementOfAccounts == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -480,14 +369,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/supplierStatementOfAccounts")
     public ResponseEntity<Object> getsupplierStatementOfAccounts(ReportRequestModel requestModel,@RequestParam(value = "contactId",required = false) Integer contactId,
                                                     HttpServletRequest request) {
-
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-        if (user.getRole().getRoleCode() != 1) {
-            filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-        }
-        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
         ResponseModelStatementOfAccounts responseModelStatementOfAccounts = simpleAccountReportDao.getsupplierStatementOfAccounts(requestModel,contactId);
         try {
             if (responseModelStatementOfAccounts == null) {
@@ -499,7 +380,3 @@ public class SimpleAccountReportsController {
         return new ResponseEntity<>(responseModelStatementOfAccounts, HttpStatus.OK);
     }
 }
-
-
-
-

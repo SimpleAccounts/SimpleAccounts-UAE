@@ -3,7 +3,7 @@ package com.simpleaccounts.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
+
 import javax.persistence.*;
 
 import lombok.Data;

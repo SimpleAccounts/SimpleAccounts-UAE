@@ -1,25 +1,23 @@
 package com.simpleaccounts.rest.rolecontroller;
 
-
 import com.simpleaccounts.entity.Role;
 import com.simpleaccounts.entity.RoleModuleRelation;
 import com.simpleaccounts.entity.SimpleAccountsModules;
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+
 import com.simpleaccounts.model.RoleRequestModel;
-import com.simpleaccounts.rest.SingleLevelDropDownModel;
-import com.simpleaccounts.rest.transactioncategorycontroller.TransactionCategoryModel;
+
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.RoleService;
 import com.simpleaccounts.service.impl.RoleServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 
 @Component

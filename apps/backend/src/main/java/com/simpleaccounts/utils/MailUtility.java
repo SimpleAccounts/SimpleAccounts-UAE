@@ -1,6 +1,7 @@
 package com.simpleaccounts.utils;
 
 //import com.itextpdf.html2pdf.HtmlConverter;
+import lombok.RequiredArgsConstructor;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.simpleaccounts.entity.Configuration;
 import com.simpleaccounts.entity.Mail;
@@ -11,7 +12,7 @@ import com.simpleaccounts.constant.ConfigurationConstants;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
+
 import java.util.*;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -19,8 +20,6 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
-
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,23 +29,20 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-
 /**
  *
  * @author h
  */
 @Component
+@RequiredArgsConstructor
 public class MailUtility {
 	private final static Logger LOGGER = LoggerFactory.getLogger(MailUtility.class);
 
-	@Autowired
-	private MailIntegration MailIntegration;
+	private final MailIntegration MailIntegration;
 
-	@Autowired
-	private ConfigurationService configurationService;
+	private final ConfigurationService configurationService;
 
-	@Autowired
-	private Environment env;
+	private final Environment env;
 
 	public static final String INVOICE_REFEREBCE_NO = "Invoice_Reference_Number";
 	public static final String CN_REFERENCE_NO = "cn_referene_no";
@@ -145,12 +141,9 @@ public class MailUtility {
 
 					MimeMultipart mimeMultipart1=new MimeMultipart();
 					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-						//construct the text body part
-						//now write the PDF content to the output stream
-						byte[] bytes = writePdf(outputStream,body);
-						//byte[] bytes = outputStream.toByteArray();
 
-						//construct the pdf body part
+						byte[] bytes = writePdf(outputStream,body);
+
 						DataSource dataSource = new ByteArrayDataSource(bytes, "APPLICATION_PDF");
 						DataSource dataSource1 = new ByteArrayDataSource(body.getBytes(),"application");
 
@@ -205,12 +198,9 @@ public class MailUtility {
 
 					MimeMultipart mimeMultipart1=new MimeMultipart();
 					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-						//construct the text body part
-						//now write the PDF content to the output stream
-						byte[] bytes = writePdf(outputStream,pdfBody);
-						//byte[] bytes = outputStream.toByteArray();
 
-						//construct the pdf body part
+						byte[] bytes = writePdf(outputStream,pdfBody);
+
 						DataSource dataSource = new ByteArrayDataSource(bytes, "APPLICATION_PDF");
 
 						MimeBodyPart pdfBodyPart = new MimeBodyPart();
@@ -277,14 +267,12 @@ public class MailUtility {
 		mailProps.put("mail.transport.protocol", "smtp");
 		mailProps.put("mail.smtps.host", mailConfigurationModel.getMailhost() != null ? mailConfigurationModel.getMailhost() : System.getenv("SIMPLEACCOUNTS_SMTP_HOST"));
 		mailProps.put("mail.smtp.starttls.enable",mailConfigurationModel.getMailstmpStartTLSEnable() != null ? mailConfigurationModel.getMailstmpStartTLSEnable(): System.getenv("SIMPLEACCOUNTS_SMTP_STARTTLS_ENABLE"));
-		mailProps.put("mail.smtp.debug", "true");
+		mailProps.put("mail.smtp.debug", "false");
 		mailProps.put("mail.smtp.port",mailConfigurationModel.getMailport() != null ? mailConfigurationModel.getMailport() : System.getenv("SIMPLEACCOUNTS_SMTP_PORT"));
-//    mailProps.put("mail.smtps.auth", mailConfigurationModel.getMailsmtpAuth());
-//    mailProps.put("mail.smtp.socketFactory.port", System.getenv(ConfigurationConstants.SIMPLEACCOUNTS_SMTP_PORT));
+
 		mailProps.put("mail.smtp.starttls.enable prop", "true");
 		mailProps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		mailProps.put("mail.smtp.ssl.checkserveridentity", true);
-		System.out.println("Email Properties :"+ mailProps);
 		sender.setJavaMailProperties(mailProps);
 		return sender;
 	}
@@ -446,7 +434,6 @@ public class MailUtility {
 		dataMap.put(TAX_AMOUNT,"{taxAmount}");
 		dataMap.put(CONTACT_ADDRESS_LINE1,"{contactAddressLine1}");
 		dataMap.put(CONTACT_ADDRESS_LINE2,"{contactAddressLine2}");
-
 
 		return dataMap;
 	}
@@ -688,8 +675,6 @@ public class MailUtility {
 		dataMap.put(EXCISE_TAX,"{exciseCategory}");
 		dataMap.put(EXCISE_AMOUNT, "{exciseAmount}");
 
-
-
 		return dataMap;
 	}
 	public void triggerEmailOnBackground3(String subject, String mailcontent, String pdfBody, List<MultipartFile> multiparts, String fromEmailId,
@@ -713,8 +698,7 @@ public class MailUtility {
 					mail.setBody(mailcontent);
 					MimeMultipart mimeMultipart1=new MimeMultipart();
 					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-						//construct the text body part
-						//now write the PDF content to the output stream
+
 						MimeBodyPart contentBodyPart = new MimeBodyPart();
 						contentBodyPart.setContent(mailcontent,"TEXT_HTML");
 						mimeMultipart1.addBodyPart(contentBodyPart);

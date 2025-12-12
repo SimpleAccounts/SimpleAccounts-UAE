@@ -2,12 +2,11 @@ package com.simpleaccounts.entity;
 
 import com.simpleaccounts.rfq_po.PoQuatation;
 import lombok.*;
-import org.hibernate.Hibernate;
+
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter

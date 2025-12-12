@@ -1,7 +1,5 @@
 package com.simpleaccounts.entity;
 
-
-import com.simpleaccounts.entity.converter.DateConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +10,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @NamedQueries({
            @NamedQuery(name = "findVatTaxAgencyByVatReportFillingId", query = "SELECT vta FROM VatTaxAgency  vta where  vta.vatReportFiling.id = :vatReportFillingId") })
@@ -97,11 +94,5 @@ public class VatTaxAgency implements Serializable {
     @Column(name = "ORDER_SEQUENCE")
     @Basic(optional = true)
     private Integer orderSequence;
-
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
 
 }

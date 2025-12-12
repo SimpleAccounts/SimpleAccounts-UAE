@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.payroll.service.Impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.payroll.*;
@@ -14,13 +15,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @Service("salaryTemplateService")
 @Transactional
+@RequiredArgsConstructor
 public class SalaryTemplateServiceImpl extends SalaryTemplateService {
 
-    @Autowired
-    private SalaryTemplateDao salaryTemplateDao;
+    private final SalaryTemplateDao salaryTemplateDao;
 
     @Override
     protected Dao<Integer, com.simpleaccounts.entity.SalaryTemplate> getDao() {

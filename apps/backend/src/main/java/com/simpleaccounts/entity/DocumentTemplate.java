@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.*;
 
-import com.simpleaccounts.entity.converter.DateConverter;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -49,7 +48,6 @@ public class DocumentTemplate implements Serializable {
 	@Basic(optional = false)
 	  //@Convert(converter = DateConverter.class)
     private LocalDateTime createdDate = LocalDateTime.now();
-
 
 	@Column(name = "LAST_UPDATED_BY")
 	private Integer lastUpdateBy;

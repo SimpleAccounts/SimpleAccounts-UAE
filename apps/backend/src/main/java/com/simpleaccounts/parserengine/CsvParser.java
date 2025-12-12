@@ -1,6 +1,7 @@
 package com.simpleaccounts.parserengine;
 
 import java.io.BufferedReader;
+import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,12 +32,12 @@ import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSe
 import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingPersistModel;
 
 @Component
+@RequiredArgsConstructor
 public class CsvParser implements TransactionFileParser {
 
 	private final Logger logger = LoggerFactory.getLogger(CsvParser.class);
 
-	@Autowired
-	private DateFormatDao dateformatDao;
+	private final DateFormatDao dateformatDao;
 
 	@Override
 	public List<Map<String, String>> parseSmaple(TransactionParsingSettingPersistModel model) {
@@ -115,7 +116,6 @@ public class CsvParser implements TransactionFileParser {
 						if (headerIndexMap.containsKey(cellCount)) {
 							String displayName = headerIndexMap.get(cellCount).getDisplayName();
 
-
 							// check for date format
 							if (model.getDateFormatId() != null
 									&& displayName.equalsIgnoreCase(TransactionEnum.TRANSACTION_DATE.getDisplayName())) {
@@ -126,8 +126,7 @@ public class CsvParser implements TransactionFileParser {
 									formatter.parse(data);
 									dataMap.put(displayName, data);
 								} catch (ParseException e) {
-									// errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount,
-									// cellCount);
+
 									errorList.add(rowCount + "," + cellCount);
 								}
 							}
@@ -146,8 +145,7 @@ public class CsvParser implements TransactionFileParser {
 									new BigDecimal(data.trim());
 									dataMap.put(displayName, data.trim());
 								} catch (Exception e) {
-									// errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount,
-									// cellCount);
+
 									dataMap.put(displayName,"0");
 //									errorList.add(rowCount + "," + cellCount);
 								}

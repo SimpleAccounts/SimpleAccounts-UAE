@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.Transaction;
@@ -36,73 +37,50 @@ import java.util.stream.Collectors;
 
 	@Service
 	@SuppressWarnings("java:S3973")
-	public class VatReportFilingServiceImpl implements VatReportFilingService {
+	@RequiredArgsConstructor
+public class VatReportFilingServiceImpl implements VatReportFilingService {
     private static final String DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY = "dd/MM/yyyy";
-    @Autowired
-    private DateFormatUtil dateUtils;
-    @Autowired
-    private DateFormatHelper dateFormatHelper;
+    private final DateFormatUtil dateUtils;
+    private final DateFormatHelper dateFormatHelper;
 
-    @Autowired
-    private VatReportFilingRepository vatReportFilingRepository;
+    private final VatReportFilingRepository vatReportFilingRepository;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
+    private final DateFormatUtil dateFormatUtil;
 
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
-    @Autowired
-    private VatTaxAgencyRepository vatTaxAgencyRepository;
+    private final VatTaxAgencyRepository vatTaxAgencyRepository;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
 
-    @Autowired
-    private JournalLineItemService journalLineItemService;
+    private final JournalLineItemService journalLineItemService;
 
-    @Autowired
-    private JournalService journalService;
+    private final JournalService journalService;
 
-    @Autowired
-    private FileHelper fileHelper;
+    private final FileHelper fileHelper;
 
-    @Autowired
-    private VatPaymentRepository vatPaymentRepository;
+    private final VatPaymentRepository vatPaymentRepository;
 
+    private final BankAccountService bankAccountService;
 
-    @Autowired
-    private BankAccountService bankAccountService;
+    private final TransactionService transactionService;
 
-    @Autowired
-    private TransactionService transactionService;
+    private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
-    @Autowired
-    private ChartOfAccountCategoryService chartOfAccountCategoryService;
+    private final VatRecordPaymentHistoryRepository vatRecordPaymentHistoryRepository;
 
-    @Autowired
-    private VatRecordPaymentHistoryRepository vatRecordPaymentHistoryRepository;
+    private final UserService userService;
 
+    private final InvoiceService invoiceService;
+    private final ExpenseService expenseService;
 
-    @Autowired
-    private UserService userService;
+    private final JournalLineItemRepository journalLineItemRepository;
 
-    @Autowired
-    private InvoiceService invoiceService;
-    @Autowired
-    private ExpenseService expenseService;
+    private final TransactionExplanationRepository transactionExplanationRepository;
 
-    @Autowired
-    private JournalLineItemRepository journalLineItemRepository;
+    private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
-    @Autowired
-    private TransactionExplanationRepository transactionExplanationRepository;
-
-    @Autowired
-    private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
-
-    @Autowired
-    private InvoiceNumberUtil invoiceNumberUtil;
+    private final InvoiceNumberUtil invoiceNumberUtil;
     @Override
     public boolean processVatReport(VatReportFilingRequestModel vatReportFilingRequestModel, User user){
         VatReportFiling vatReportFiling = new VatReportFiling();
@@ -226,7 +204,6 @@ import java.util.stream.Collectors;
      }
         return vatReportResponseModels;
     }
-
 
     public List<VatReportResponseModel> getVatReportFilingList2(List<VatReportFiling> vatReportFilingList){
         String startDate = "";
@@ -427,10 +404,7 @@ import java.util.stream.Collectors;
            vatReportFiling.setBalanceDue(vatReportFilingBalanceDue);
            vatReportFiling.setStatus(CommonStatusEnum.PARTIALLY_PAID.getValue());
        }
-//       else{
-//           vatReportFiling.setBalanceDue(BigDecimal.ZERO);
-//           vatReportFiling.setStatus(CommonStatusEnum.RECLAIMED.getValue());
-//       }
+
        vatReportFilingRepository.save(vatReportFiling);
        createCashTransactionForVatPayment(vatPayment,recordVatPaymentRequestModel,userId);
        createVatRecordPaymentHistory(vatPayment,userId);
@@ -570,7 +544,6 @@ import java.util.stream.Collectors;
         journalLineItem1.setJournal(journal);
         journalLineItemList.add(journalLineItem1);
 
-
         journalLineItem2.setTransactionCategory(depositeToTransactionCategory);
         if (vatPayment.getIsVatReclaimable().equals(Boolean.FALSE)) {
             journalLineItem2.setReferenceType(PostingReferenceTypeEnum.VAT_PAYMENT);
@@ -706,20 +679,8 @@ import java.util.stream.Collectors;
    /*
    This method will revert the payment as well as journal entries back
     */
-//    public void revertBackRecordedVatPayment(PostingRequestModel postingRequestModel, Integer userId){
-//        Journal journal = journalService.getJournalByReferenceIdAndType(postingRequestModel.getPostingRefId(),
-//                PostingReferenceTypeEnum.valueOf(postingRequestModel.getPostingRefType()));
-//        if (journal != null) {
-//            journalService.deleteByIds(Arrays.asList(journal.getId()));
-//        }
-//        if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.PUBLISH.name())){
-//            VatReportFiling vatReportFiling = vatReportFilingRepository.findById(postingRequestModel.getPostingRefId()).get();
-//            VatPayment vatPayment = vatPaymentRepository.getPaymentByVatReportFilingId(vatReportFiling.getId());
-//            BigDecimal balanceDue = vatReportFiling.getBalanceDue();
-//            vatReportFiling.setBalanceDue(balanceDue.add(vatPayment.getAmount()));
+
 //            //if (vatReportFiling.getBalanceDue().compareTo()){}
-//        }
-//    }
 
     @Override
     public List<VatPaymentHistoryModel> getVatPaymentRecordList() {

@@ -1,5 +1,6 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 import com.simpleaccounts.constant.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.impl.TransactionCategoryClosingBalanceDaoImpl;
 import com.simpleaccounts.entity.*;
@@ -31,67 +32,45 @@ import java.util.stream.Collectors;
 
 	@Component
 	@SuppressWarnings({"java:S3973", "java:S131"})
-	public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<Integer, SalesByCustomerModel> implements SimpleAccountReportDao {
+	@RequiredArgsConstructor
+public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<Integer, SalesByCustomerModel> implements SimpleAccountReportDao {
 
     private static final String QUERY_PARAM_START_DATE = "startDate";
     private static final String QUERY_PARAM_END_DATE = "endDate";
     private static final String ACCOUNT_RECEIVABLE = "Account Receivable";
 
-    @Autowired
-    private DateFormatUtil dateUtil;
+    private final DateFormatUtil dateUtil;
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionCategoryClosingBalanceDaoImpl.class);
-    @Autowired
-    private InvoiceRestHelper invoiceRestHelper;
-    @Autowired
-    private InvoiceService invoiceService;
-    @Autowired
-    private InvoiceLineItemService lineItemService;
-    @Autowired
-    private ContactTransactionCategoryService contactTransactionCategoryService;
-    @Autowired
-    private TransactionCategoryBalanceService transactionCategoryBalanceService;
-    @Autowired
-    private UserService userService;
+    private final InvoiceRestHelper invoiceRestHelper;
+    private final InvoiceService invoiceService;
+    private final InvoiceLineItemService lineItemService;
+    private final ContactTransactionCategoryService contactTransactionCategoryService;
+    private final TransactionCategoryBalanceService transactionCategoryBalanceService;
+    private final UserService userService;
 
-    @Autowired
-    private JournalLineItemService journalLineItemService;
-    @Autowired
-    private PayrollRestHepler payrollRestHepler;
+    private final JournalLineItemService journalLineItemService;
+    private final PayrollRestHepler payrollRestHepler;
 
-    @Autowired
-    private DateFormatUtil dateUtils;
+    private final DateFormatUtil dateUtils;
 
-    @Autowired
-    private CompanyRepository companyRepository;
+    private final CompanyRepository companyRepository;
 
-    @Autowired
-    private TaxAgencyRepository taxAgencyRepository;
+    private final TaxAgencyRepository taxAgencyRepository;
 
-    @Autowired
-    private InvoiceLineitemRepository invoiceLineitemRepository;
+    private final InvoiceLineitemRepository invoiceLineitemRepository;
 
-    @Autowired
-    private InvoiceReceiptRepository invoiceReceiptRepository;
-    @Autowired
-    private DateFormatUtil dateFormtUtil;
+    private final InvoiceReceiptRepository invoiceReceiptRepository;
+    private final DateFormatUtil dateFormtUtil;
 
-    @Autowired
-    private InvoicePaymentRepository invoicePaymentRepository;
+    private final InvoicePaymentRepository invoicePaymentRepository;
 
-    @Autowired
-    private InvoiceRepository invoiceRepository;
-    @Autowired
-    private JournalLineItemRepository journalLineItemRepository;
-    @Autowired
-    private TransactionRepository transactionRepository;
-    @Autowired
-    private CreditNoteRepository creditNoteRepository;
-    @Autowired
-    private TransactionExplanationRepository transactionExplanationRepository;
+    private final InvoiceRepository invoiceRepository;
+    private final JournalLineItemRepository journalLineItemRepository;
+    private final TransactionRepository transactionRepository;
+    private final CreditNoteRepository creditNoteRepository;
+    private final TransactionExplanationRepository transactionExplanationRepository;
 
-    @Autowired
-    private CreditNoteLineItemRepository creditNoteLineItemRepository ;
-
+    private final CreditNoteLineItemRepository creditNoteLineItemRepository ;
 
     public SalesByCustomerResponseModel getSalesByCustomer(ReportRequestModel requestModel,
                                                            SalesByCustomerResponseModel salesByCustomerResponseModel){
@@ -638,9 +617,7 @@ import java.util.stream.Collectors;
         BigDecimal totalBalance = BigDecimal.ZERO;
         String quertStr = "SELECT i.referenceNumber as InvoiceNum,i.contact.firstName as ContactName ,i.invoiceDate as InvoiceDate, i.status as STATUS ,i.invoiceDueDate as InvoiceDueDate,(i.totalAmount * i.exchangeRate) as TotalAmount,(i.dueAmount * i.exchangeRate) as BALANCE , (i.totalAmount * i.exchangeRate) as InvoiceTotalAmount, i.contact.lastName as lastName,i.contact.organization as organization,i.id as invoiceId FROM Invoice i WHERE" +
                 " i.type in (2,7) and i.status in  (3,5,6) and i.deleteFlag = false and i.invoiceDate BETWEEN :startDate and :endDate ";
-        // SELECT `REFERENCE_NUMBER`,`INVOICE_DATE`,`INVOICE_DUE_DATE`,`TOTAL_AMOUNT`,`CONTACT_ID` FROM `invoice`
-        //quertStr.setParameter("currentDate",dateUtil.get(new Date()));
-        //i.invoiceDueDate <=:currentDate
+
         Query query = getEntityManager().createQuery(quertStr);
         query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate().toLocalDate());
         query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate().toLocalDate());
@@ -686,9 +663,7 @@ import java.util.stream.Collectors;
         BigDecimal totalBalance = BigDecimal.ZERO;
         String quertStr = "SELECT i.referenceNumber as InvoiceNum,i.contact.firstName as ContactName ,i.invoiceDate as InvoiceDate, i.status as STATUS ,i.invoiceDueDate as InvoiceDueDate,(i.totalAmount * i.exchangeRate) as TotalAmount,(i.dueAmount * i.exchangeRate) as BALANCE , (i.totalAmount * i.exchangeRate)  as InvoiceTotalAmount ,i.contact.lastName as lastName, i.contact.organization as organization,i.id as invoiceId  FROM Invoice i WHERE" +
                 " i.type=1 and i.status in  (3,5,6) and i.deleteFlag = false and i.invoiceDate BETWEEN :startDate and :endDate ";
-        // SELECT `REFERENCE_NUMBER`,`INVOICE_DATE`,`INVOICE_DUE_DATE`,`TOTAL_AMOUNT`,`CONTACT_ID` FROM `invoice`
-        //quertStr.setParameter("currentDate",dateUtil.get(new Date()));
-        //i.invoiceDueDate <=:currentDate
+
         Query query = getEntityManager().createQuery(quertStr);
         query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate().toLocalDate());
         query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate().toLocalDate());
@@ -915,9 +890,7 @@ import java.util.stream.Collectors;
             BigDecimal totalAmount = BigDecimal.ZERO;
             BigDecimal totalBalance = BigDecimal.ZERO;
             String quertStr = "SELECT i.creditNoteNumber as creditNoteNumber,i.contact.firstName as ContactName ,i.creditNoteDate as InvoiceDate, i.status as STATUS ,(i.totalAmount*i.exchangeRate) as TotalAmount,(i.dueAmount*i.exchangeRate) as BALANCE , (i.totalAmount*i.exchangeRate) as InvoiceTotalAmount,i.contact.lastName as lastName, i.contact.organization as organization,i.type as type,i.invoiceId as invoiceId,i.isCNWithoutProduct as isCNWithoutProduct,i.creditNoteId as creditNoteId FROM CreditNote i WHERE i.creditNoteDate BETWEEN :startDate and :endDate order by creditNoteDate desc ";
-            // SELECT `REFERENCE_NUMBER`,`INVOICE_DATE`,`INVOICE_DUE_DATE`,`TOTAL_AMOUNT`,`CONTACT_ID` FROM `invoice`
-            //quertStr.setParameter("currentDate",dateUtil.get(new Date()));
-            //i.invoiceDueDate <=:currentDate
+
         LocalDateTime startDate = requestModel.getStartDate();
         LocalDateTime endDate = requestModel.getEndDate();
         ZoneOffset offset = ZoneOffset.UTC;
@@ -942,9 +915,7 @@ import java.util.stream.Collectors;
                 creditNoteSummaryModel.setCreditNoteDate(((OffsetDateTime) objectArray[2]).toLocalDate());
 
                 int status = (int) objectArray[3];
-//                if(status>2 && status<5)
-//                    creditNoteSummaryModel.setStatus(invoiceRestHelper.getInvoiceStatus(status,creditNoteSummaryModel.getInvoiceDueDate()));
-//                else
+
                     creditNoteSummaryModel.setStatus(CommonStatusEnum.getInvoiceTypeByValue(status));
                     if( objectArray[4] != null ) {
                         totalAmount = totalAmount.add((BigDecimal) objectArray[4]);
@@ -984,23 +955,7 @@ public ExpenseDetailsResponseModel getExpenseDetails(ReportRequestModel requestM
     BigDecimal totalVatAmount = BigDecimal.ZERO;
     BigDecimal totalAmountWithTax = BigDecimal.ZERO;
     String quertStr = " SELECT DISTINCT e.expenseId AS expenseId, e.status AS status, e.expenseDate AS expenseDate, e.payee AS payee, e.payMode AS payMode, tc.transactionCategoryName AS transactionCategoryName, v.name AS vatName, (e.expenseAmount * e.exchangeRate) AS expenseAmount, (e.expenseVatAmount * e.exchangeRate) AS expenseVatAmount, e.expenseNumber AS expenseNumber FROM Expense e INNER JOIN TransactionCategory tc ON e.transactionCategory.transactionCategoryId = tc.transactionCategoryId LEFT JOIN VatCategory v ON e.vatCategory.id = v.id WHERE e.status IN (3) AND e.expenseDate BETWEEN :startDate AND :endDate ORDER BY e.expenseDate ASC, tc.transactionCategoryName ASC";
-//    SELECT DISTINCT
-//    e.`EXPENSE_ID`,e.`STATUS`,e.EXPENSE_DATE,e.PAYEE,tc.TRANSACTION_CATEGORY_NAME,e.PAY_MODE,
-//    v.NAME,e.EXPENSE_AMOUNT,e.EXPENSE_VAT_AMOUNT
-//    FROM `expense` as e, `vat_category` as v, `transaction_category` as tc
-//    WHERE e.VAT_ID=v.ID and
-//    e.TRANSACTION_CATEGORY_CODE=tc.TRANSACTION_CATEGORY_ID and
-//    e.EXPENSE_DATE BETWEEN "2021-07-01" and "2021-07-14";
-//            0 e.expenseId as expenseId,
-//            1 e.status as status,
-//            2 e.expenseDate as expenseDate,
-//            3 e.payee as payee,
-//            4 e.payMode as payMode,
-//            5 e.expenseAmount as expenseAmount ,
-//            6 tc.transactionCategoryName as transactionCategoryName,
-//            7 v.name as vatName ,
-//            8 e.expenseAmount as expenseAmount,
-//            9 e.expenseVatAmount as expenseVatAmount
+
     Query query = getEntityManager().createQuery(quertStr);
     query.setParameter("startDate", requestModel.getStartDate().toLocalDate());
     query.setParameter("endDate", requestModel.getEndDate().toLocalDate());
@@ -1016,9 +971,7 @@ public ExpenseDetailsResponseModel getExpenseDetails(ReportRequestModel requestM
         expenseSummaryModel.setPaidBy((String) objectArray[3]);
         expenseSummaryModel.setPayMode((PayMode) objectArray[4]);
         int status = (int) objectArray[1];
-//                if(status>2 && status<5)
-//                    creditNoteSummaryModel.setStatus(invoiceRestHelper.getInvoiceStatus(status,creditNoteSummaryModel.getInvoiceDueDate()));
-//                else
+
         expenseSummaryModel.setTransactionCategoryName((String) objectArray[5]);
         expenseSummaryModel.setVatName((String) objectArray[6]);
         expenseSummaryModel.setStatus(ExpenseStatusEnum.getExpenseStatusByValue(status));
@@ -1046,16 +999,6 @@ public ExpenseDetailsResponseModel getExpenseDetails(ReportRequestModel requestM
     expenseDetailsResponseModel.setTotalAmountWithoutTax(totalAmountWithTax);
     return expenseDetailsResponseModel;
 }
-
-//    SELECT DISTINCT tc.TRANSACTION_CATEGORY_NAME,tc.TRANSACTION_CATEGORY_NAME,SUM(e.EXPENSE_AMOUNT),SUM(e.EXPENSE_VAT_AMOUNT)
-//    FROM `expense` as e, `transaction_category` as tc WHERE e.TRANSACTION_CATEGORY_CODE=tc.TRANSACTION_CATEGORY_ID and
-//    e.EXPENSE_DATE BETWEEN "2021-07-01" and "2021-07-14"
-//    GROUP BY e.TRANSACTION_CATEGORY_CODE;
-
-//    tc.transactionCategoryId,
-//    tc.transactionCategoryName as transactionCategoryName,
-//    Sum(e.expenseAmount) as TotalAmount,
-//    Sum(e.expenseAmount) as TotalVatAmount
 
     public ExpenseByCategoryResponseModel getExpenseByCategoryDetails(ReportRequestModel requestModel,ExpenseByCategoryResponseModel expenseByCategoryResponseModel){
 
@@ -1121,9 +1064,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
     BigDecimal totalBalance = BigDecimal.ZERO;
     String quertStr = "SELECT i.referenceNumber as InvoiceNum,i.contact.firstName as ContactName ,i.invoiceDate as InvoiceDate, i.status as STATUS ,i.invoiceDueDate as InvoiceDueDate,(i.totalAmount*i.exchangeRate) as TotalAmount,(i.dueAmount*i.exchangeRate) as BALANCE , (i.totalAmount*i.exchangeRate) as InvoiceTotalAmount, i.contact.lastName as lastName, i.contact.organization as organization,i.id as invoiceId FROM Invoice i WHERE" +
             " i.type=2and i.status in (3,5,6) and i.deleteFlag = false and i.invoiceDate BETWEEN :startDate and :endDate ";
-    // SELECT `REFERENCE_NUMBER`,`INVOICE_DATE`,`INVOICE_DUE_DATE`,`TOTAL_AMOUNT`,`CONTACT_ID` FROM `invoice`
-    //quertStr.setParameter("currentDate",dateUtil.get(new Date()));
-    //i.invoiceDueDate <=:currentDate
+
     Query query = getEntityManager().createQuery(quertStr);
     query.setParameter("startDate", requestModel.getStartDate().toLocalDate());
     query.setParameter("endDate", requestModel.getEndDate().toLocalDate());
@@ -1162,7 +1103,6 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
     return invoiceDetailsResponseModel;
 }
 
-
 //getSupplierInvoiceDetails
 
     public SupplierInvoiceDetailsResponseModel getSupplierInvoiceDetails(ReportRequestModel requestModel,SupplierInvoiceDetailsResponseModel invoiceDetailsResponseModel){
@@ -1172,9 +1112,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
         BigDecimal totalBalance = BigDecimal.ZERO;
         String quertStr = "SELECT i.referenceNumber as InvoiceNum,i.contact.firstName as ContactName ,i.invoiceDate as InvoiceDate, i.status as STATUS ,i.invoiceDueDate as InvoiceDueDate,(i.totalAmount*i.exchangeRate) as TotalAmount,(i.dueAmount*i.exchangeRate) as BALANCE , (i.totalAmount*i.exchangeRate) as InvoiceTotalAmount, i.contact.lastName as lastName FROM Invoice i WHERE" +
                 " i.type=1 and i.deleteFlag = false and i.invoiceDate BETWEEN :startDate and :endDate ";
-        // SELECT `REFERENCE_NUMBER`,`INVOICE_DATE`,`INVOICE_DUE_DATE`,`TOTAL_AMOUNT`,`CONTACT_ID` FROM `invoice`
-        //quertStr.setParameter("currentDate",dateUtil.get(new Date()));
-        //i.invoiceDueDate <=:currentDate
+
         Query query = getEntityManager().createQuery(quertStr);
         query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate().toLocalDate());
         query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate().toLocalDate());
@@ -1259,10 +1197,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                 payrollSummaryModel.setDueAmount(payroll.getDueAmountPayroll());
             if(payroll.getTotalAmountPayroll()!=null)
                 payrollSummaryModel.setTotalAmount(payroll.getTotalAmountPayroll());
-//            totalAmount = totalAmount.add((BigDecimal) objectArray[5]);
-//            totalBalance = totalBalance.add((BigDecimal) objectArray[6]);
-//            payrollSummaryModel.setBalance((BigDecimal) objectArray[6]);
-//            payrollSummaryModel.setTotalInvoiceAmount((BigDecimal) objectArray[7]);
+
             payrollSummaryModelList.add(payrollSummaryModel);
         }
         payrollSummaryResponseModel.setPayrollSummaryModelList(payrollSummaryModelList);
@@ -1330,9 +1265,6 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                 transactionModel.setBalanceAmount((BigDecimal) objectArray[4]);
                 totalAmount = totalAmount.add((BigDecimal) objectArray[3]);
 
-
-
-
                    transactionModel.setAmount(invoice.getTotalAmount());
                     if(!id.equals(invoice.getId())) {
                         totalInvoicedAmount = totalInvoicedAmount.add(invoice.getTotalAmount()); id=invoice.getId();
@@ -1340,8 +1272,6 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                    if(!invoice.getDueAmount().equals(BigDecimal.ZERO)){
                        totalBalance = totalBalance.add(invoice.getDueAmount());
                    }
-
-
 
                 Integer type=(Integer) objectArray[6];
 
@@ -1373,7 +1303,6 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
         //soa response
         soa_response.setTransactionsModelList(transactionModelList);
 
-
         return soa_response;
     }
     @Override
@@ -1403,12 +1332,9 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
         Query Squery = getEntityManager().createQuery(SquertStr);
         List<Contact> supplierList = Squery.getResultList();
 
-
-
         List<InvoiceLineItem> invoiceLineItemList = invoiceLineitemRepository.findAll();
 
         Optional<VatTaxAgency> optionalTaxAgency = taxAgencyRepository.findById(requestModel.getTaxAgencyId());
-
 
         if (optionalCompany.isPresent()) {
 
@@ -1427,7 +1353,6 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
         fta_response.setEndDate(requestModel.getEndDate());
         fta_response.setProductVersion("-");
         fta_response.setFafVersion("-");
-
 
             fta_response.setCreationDate(vatTaxAgency.getCreatedDate());
 
@@ -1493,7 +1418,6 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
             fta_response.setSupplierSupplyListingResponseModels(supplierSupplyListingRes);
             fta_response.setSupplierTransactionCountTotal(supplierSupplyListingRes.size());
 
-
             // Supply Data
             for (InvoiceLineItem invoiceLineItem : invoiceLineItemList) {
                 CustomerSupplyListingResponseModel customerSupplyList = new CustomerSupplyListingResponseModel();
@@ -1525,7 +1449,6 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                     customerSupplyListingRes.add(customerSupplyList);
 
                 }
-
 
             }
             fta_response.setSupplyTotal(supplyTotal);
@@ -1592,7 +1515,6 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
 
                 }
 
-
             }
             fta_response.setTotalCredit(TotalCredit);
             fta_response.setTotalDebit(TotalDebit);
@@ -1600,7 +1522,6 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
             fta_response.setGeneralLedgerListingResponseModels(generalLedgerListingRes);
             fta_response.setGLTCurrency(company.getCurrencyCode().getCurrencyIsoCode());
         }
-
 
         return fta_response;
     }
@@ -1632,12 +1553,9 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
         Query Squery = getEntityManager().createQuery(SquertStr);
         List<Contact> supplierList = Squery.getResultList();
 
-
-
         List<InvoiceLineItem> invoiceLineItemList = invoiceLineitemRepository.findAll();
 
       Optional<VatTaxAgency> optionalTaxAgency = taxAgencyRepository.findById(requestModel.getTaxAgencyId());
-
 
         if (optionalCompany.isPresent()) {
 
@@ -1718,7 +1636,6 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
             fta_Excise_response.setSupplierSupplyListingResponseModels(supplierSupplyListingRes);
             fta_Excise_response.setSupplierTransactionCountTotal(supplierSupplyListingRes.size());
 
-
             // Supply Data
             for (InvoiceLineItem invoiceLineItem : invoiceLineItemList) {
                 CustomerSupplyListingResponseModel customerSupplyList = new CustomerSupplyListingResponseModel();
@@ -1749,7 +1666,6 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                     customerSupplyListingRes.add(customerSupplyList);
 
                 }
-
 
             }
             fta_Excise_response.setSupplyTotal(supplyTotal);
@@ -1822,7 +1738,6 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
             fta_Excise_response.setGeneralLedgerListingResponseModels(generalLedgerListingRes);
             fta_Excise_response.setGLTCurrency(company.getCurrencyCode().getCurrencyIsoCode());
         }
-
 
         return fta_Excise_response;
     }

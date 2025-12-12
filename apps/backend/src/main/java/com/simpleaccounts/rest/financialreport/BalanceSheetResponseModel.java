@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.financialreport;
 
-
 import lombok.Data;
 
 import java.math.BigDecimal;

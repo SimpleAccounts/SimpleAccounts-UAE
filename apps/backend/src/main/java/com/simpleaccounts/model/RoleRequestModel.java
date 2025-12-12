@@ -1,6 +1,5 @@
 package com.simpleaccounts.model;
 
-
 import lombok.Data;
 import org.springframework.stereotype.Component;
 

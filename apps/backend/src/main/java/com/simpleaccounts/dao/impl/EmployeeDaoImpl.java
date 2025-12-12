@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.EmployeeFilterEnum;
 import com.simpleaccounts.dao.AbstractDao;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -28,9 +30,9 @@ import org.apache.commons.collections4.CollectionUtils;
  * Created by Uday on 26/12/2019.
  */
 @Repository(value = "employeeDao")
+@RequiredArgsConstructor
 public class EmployeeDaoImpl extends AbstractDao<Integer, Employee> implements EmployeeDao {
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public List<DropdownModel> getEmployeesForDropdown() {
@@ -71,13 +73,13 @@ public class EmployeeDaoImpl extends AbstractDao<Integer, Employee> implements E
 		}
 
 		for (Employee employee : employeeDbList){
-			for(EmployeeUserRelation employeeUserRelation : employeeUserRelationsList1) {
+				for(EmployeeUserRelation employeeUserRelation : employeeUserRelationsList1) {
 
-				if (employeeUserRelation.getEmployee().getId()==employee.getId()) {
-					employeeList.remove(employee);
+					if (Objects.equals(employeeUserRelation.getEmployee().getId(), employee.getId())) {
+						employeeList.remove(employee);
+					}
 				}
 			}
-		}
 
 		List<DropdownObjectModel> dropdownObjectModelList = new ArrayList<>();
 		if (employeeList != null && employeeList.size() > 0) {

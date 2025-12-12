@@ -5,7 +5,6 @@ import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.Salary;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository

@@ -1,6 +1,5 @@
 package com.simpleaccounts.model;
 
-
 import lombok.Getter;
 import lombok.Setter;
 

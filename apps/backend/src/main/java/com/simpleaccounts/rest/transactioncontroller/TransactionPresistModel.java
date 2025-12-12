@@ -62,8 +62,6 @@ public class TransactionPresistModel implements Serializable {
 	private BigDecimal transactionExpenseAmount;
 	private BigDecimal transactionVatAmount;
 
-	// MONEY PAID TO USER
-	// MONEY RECEIVED FROM OTHER
 	private Integer employeeId;
 
 	// Transfer To
@@ -109,6 +107,5 @@ public class TransactionPresistModel implements Serializable {
 	private BigDecimal exchangeGainOrLoss;
 
 	private Boolean isCTNCreated ;
-
 
 }

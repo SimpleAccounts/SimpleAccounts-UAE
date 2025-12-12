@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -26,12 +27,12 @@ import com.simpleaccounts.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simpleaccounts.service.JournalLineItemService;
 
 @Service("JournalLineItemService")
+@RequiredArgsConstructor
 public class JournalLineItemServiceImpl extends JournalLineItemService {
 
 	private final Logger logger = LoggerFactory.getLogger(JournalLineItemServiceImpl.class);
 
-	@Autowired
-	private JournalLineItemDao journalLineItemDao;
+	private final JournalLineItemDao journalLineItemDao;
 
 	@Override
 	protected Dao<Integer, JournalLineItem> getDao() {

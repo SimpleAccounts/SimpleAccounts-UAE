@@ -1,49 +1,32 @@
 package com.simpleaccounts.rest.payroll;
 import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.constant.EmailConstant;
-import com.simpleaccounts.constant.dbfilter.DateFormatFilterEnum;
+import lombok.RequiredArgsConstructor;
+
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.model.SalaryPersistModel;
-import com.simpleaccounts.rest.detailedgeneralledgerreport.ReportRequestModel;
-import com.simpleaccounts.rest.employeecontroller.EmployeeController;
-import com.simpleaccounts.rest.employeecontroller.EmployeeListModel;
-import com.simpleaccounts.rest.payroll.model.MoneyPaidToUserModel;
+
 import com.simpleaccounts.rest.payroll.service.Impl.SalaryServiceImpl;
 import com.simpleaccounts.rest.payroll.service.SalaryService;
 import com.simpleaccounts.rest.payroll.service.SalaryTemplateService;
 import com.simpleaccounts.security.JwtTokenUtil;
-import com.simpleaccounts.service.EmaiLogsService;
-import com.simpleaccounts.service.EmployeeService;
+
 import com.simpleaccounts.service.EmploymentService;
 import com.simpleaccounts.service.UserService;
-import com.simpleaccounts.utils.EmailSender;
-import com.simpleaccounts.utils.MailUtility;
+
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.DatatypeConverter;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PAYSLIP_TEMPLATE;
 
 /**
  *
@@ -51,21 +34,16 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PA
  */
 @RestController
 @RequestMapping("/rest/Salary")
+@RequiredArgsConstructor
 public class SalaryController {
 
     private final Logger logger = LoggerFactory.getLogger(PayrollController.class);
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private SalaryRestHelper salaryRestHelper;
-
-//    @Autowired
-//    private EmployeeTransactionCategoryRelation employeeTransactionCategoryRelation;
+    private final SalaryRestHelper salaryRestHelper;
 
     @Autowired
     EmploymentService employmentService;
@@ -77,8 +55,6 @@ public class SalaryController {
     SalaryService salaryService;
     @Autowired
     SalaryServiceImpl salaryServiceImpl;
-
-
 
     @LogRequest
     @ApiOperation(value = "Get SalaryPerMonth  List")
@@ -156,7 +132,6 @@ public class SalaryController {
                                               @RequestParam(required = false) String startDate,
                                               @RequestParam(required = false) String endDate) {
 
-
         List list = salaryServiceImpl.getEmployeeTransactions(employeeId,startDate,endDate);
         try {
             if (list == null) {
@@ -181,8 +156,5 @@ public class SalaryController {
         }
     }
 
-
 }
-
-
 

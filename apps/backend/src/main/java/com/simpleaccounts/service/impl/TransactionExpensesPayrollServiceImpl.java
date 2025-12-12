@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.service.TransactionExpensesPayrollService;
 import com.simpleaccounts.service.TransactionExpensesService;
@@ -23,10 +24,10 @@ import java.util.List;
         import com.simpleaccounts.service.TransactionExpensesService;
 
 @Service
+@RequiredArgsConstructor
 public class TransactionExpensesPayrollServiceImpl extends TransactionExpensesPayrollService {
 
-    @Autowired
-    private TransactionExpensesPayrollDao transactionExpensesdao;
+    private final TransactionExpensesPayrollDao transactionExpensesdao;
 
     @Override
     protected Dao<Integer, TransactionExpensesPayroll> getDao() {

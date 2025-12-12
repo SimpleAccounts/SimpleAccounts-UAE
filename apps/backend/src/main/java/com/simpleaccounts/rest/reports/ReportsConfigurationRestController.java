@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.reports;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.ReportsConfiguration;
@@ -17,20 +18,17 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
-
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping("/rest/reportsconfiguration")
+@RequiredArgsConstructor
 public class ReportsConfigurationRestController {
     private final Logger log = LoggerFactory.getLogger(ReportsConfigurationRestController.class);
 
-    @Autowired
-    private  ReportsColumnConfigurationRepository reportsColumnConfigurationRepository;
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    private UserService userService;
+    private final  ReportsColumnConfigurationRepository reportsColumnConfigurationRepository;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final UserService userService;
 
     @LogRequest
     @ApiOperation(value = "Get Report columns By ID")
@@ -48,7 +46,6 @@ public class ReportsConfigurationRestController {
         }
         return new ResponseEntity<>(rootNode ,HttpStatus.OK);
     }
-
 
     @LogRequest
     @ApiOperation(value = "Update Report Columns Configuration")

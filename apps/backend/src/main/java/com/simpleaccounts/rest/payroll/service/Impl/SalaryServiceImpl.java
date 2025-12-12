@@ -1,11 +1,11 @@
 package com.simpleaccounts.rest.payroll.service.Impl;
-import com.simpleaccounts.constant.ChartOfAccountCategoryIdEnumConstant;
+
 import com.simpleaccounts.constant.CommonColumnConstants;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+
 import com.simpleaccounts.repository.JournalLineItemRepository;
 import com.simpleaccounts.rest.payroll.*;
 import com.simpleaccounts.rest.payroll.SalaryComponent;
@@ -18,27 +18,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.chrono.ChronoLocalDate;
+
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-import static org.terracotta.modules.ehcache.ToolkitInstanceFactoryImpl.LOGGER;
 
 	@Service("salaryService")
 	@Transactional
 	@SuppressWarnings("java:S131")
-	public class SalaryServiceImpl extends SalaryService {
+	@RequiredArgsConstructor
+public class SalaryServiceImpl extends SalaryService {
 
-    @Autowired
-    private SalaryDao salaryDao;
+    private final SalaryDao salaryDao;
     @Autowired
     EmployeeService employeeService;
     @Autowired
@@ -51,10 +44,8 @@ import static org.terracotta.modules.ehcache.ToolkitInstanceFactoryImpl.LOGGER;
     }
     @Autowired
     DateFormatUtil dateFormatUtil;
-    @Autowired
-    private EmployeeTransactionCategoryRelationRepository employeeTransactionCategoryRelationRepository;
-    @Autowired
-    private JournalLineItemRepository journalLineItemRepository;
+    private final EmployeeTransactionCategoryRelationRepository employeeTransactionCategoryRelationRepository;
+    private final JournalLineItemRepository journalLineItemRepository;
 
     public SalarySlipModel getSalaryByEmployeeId(Integer employeeId,String salaryDate){
 
@@ -138,7 +129,6 @@ import static org.terracotta.modules.ehcache.ToolkitInstanceFactoryImpl.LOGGER;
 
     public  SalaryListPerMonthResponseModel getSalaryPerMonthList(SalaryPerMonthRequestModel requestModel , SalaryListPerMonthResponseModel salaryListPerMonthResponseModel){
 
-
         return salaryDao.getSalaryPerMonthList(requestModel, salaryListPerMonthResponseModel);
     }
 
@@ -185,6 +175,5 @@ import static org.terracotta.modules.ehcache.ToolkitInstanceFactoryImpl.LOGGER;
         return  moneyPaidToUserModelList;
 
     }
-
 
 }

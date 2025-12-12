@@ -1,7 +1,7 @@
 package com.simpleaccounts.rest.creditnotecontroller;
 
 import com.simpleaccounts.entity.CreditNote;
-import com.simpleaccounts.entity.User;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

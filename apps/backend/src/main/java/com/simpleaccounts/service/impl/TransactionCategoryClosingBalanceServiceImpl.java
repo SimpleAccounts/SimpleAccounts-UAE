@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.TransactionCategoryClosingBalanceDao;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
@@ -24,14 +25,13 @@ import java.util.*;
 
 	@Service
 	@SuppressWarnings("java:S3973")
-	public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCategoryClosingBalanceService {
+	@RequiredArgsConstructor
+public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCategoryClosingBalanceService {
 	private static final String JSON_KEY_TRANSACTION_CATEGORY = "transactionCategory";
 
-    @Autowired
-    private TransactionCategoryClosingBalanceDao transactionCategoryClosingBalanceDao;
+    private final TransactionCategoryClosingBalanceDao transactionCategoryClosingBalanceDao;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
+    private final DateFormatUtil dateFormatUtil;
 
     @Autowired
     BankAccountService bankAccountService;

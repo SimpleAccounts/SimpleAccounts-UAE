@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.TransactionCategoryBalanceFilterEnum;
@@ -32,10 +33,10 @@ import java.util.Map;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Repository
+@RequiredArgsConstructor
 public class TransactionCategoryClosingBalanceDaoImpl extends AbstractDao<Integer, TransactionCategoryClosingBalance>
         implements TransactionCategoryClosingBalanceDao {
-    @Autowired
-    private DateFormatUtil dateUtil;
+    private final DateFormatUtil dateUtil;
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionCategoryClosingBalanceDaoImpl.class);
 
     public List<TransactionCategoryClosingBalance> getList(ReportRequestModel reportRequestModel)
@@ -94,7 +95,7 @@ public class TransactionCategoryClosingBalanceDaoImpl extends AbstractDao<Intege
         }
 
         String queryStr = "select cb from TransactionCategoryClosingBalance cb where cb.deleteFlag = false and cb.closingBalanceDate " +dateClause+
-                " and cb.transactionCategory.chartOfAccount.chartOfAccountCode in ("+chartOfAccountCodes+") order by cb.closingBalanceDate DESC  ";
+                " and cb.transactionCategory.chartOfAccount.chartOfAccountCode in :accountCodes order by cb.closingBalanceDate DESC  ";
 
         TypedQuery<TransactionCategoryClosingBalance> query = getEntityManager().createQuery(queryStr, TransactionCategoryClosingBalance.class);
         if (fromDate != null) {
@@ -103,6 +104,16 @@ public class TransactionCategoryClosingBalanceDaoImpl extends AbstractDao<Intege
         if (toDate != null) {
             query.setParameter(CommonColumnConstants.END_DATE, toDate);
         }
+
+        List<String> accountCodesList = new ArrayList<>();
+        if (chartOfAccountCodes != null && !chartOfAccountCodes.isEmpty()) {
+            String[] codes = chartOfAccountCodes.split(",");
+            for (String code : codes) {
+                accountCodesList.add(code.trim().replace("'", ""));
+            }
+        }
+        query.setParameter("accountCodes", accountCodesList);
+
         List<TransactionCategoryClosingBalance> list = query.getResultList();
         return list != null && !list.isEmpty() ? list : null;
     }
@@ -225,7 +236,6 @@ public class TransactionCategoryClosingBalanceDaoImpl extends AbstractDao<Intege
         }
         return vatReportModelList;
     }
-
 
     @Override
     public BigDecimal sumOfTotalAmountClosingBalance(FinancialReportRequestModel reportRequestModel, String lastMonth){

@@ -1,10 +1,10 @@
 package com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller;
 
-
 import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.entity.CurrencyConversion;
+import lombok.RequiredArgsConstructor;
+
 import com.simpleaccounts.entity.CustomizeInvoiceTemplate;
-import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
+
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
@@ -25,11 +23,11 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping(value = "/rest/customizeinvoiceprefixsuffix")
+@RequiredArgsConstructor
 public class CustomizeInvoiceTemplateController {
     private final Logger logger = LoggerFactory.getLogger(CustomizeInvoiceTemplateController.class);
 
-    @Autowired
-    private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+    private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
     @LogRequest
     @ApiOperation(value = "Get Invoice Prefix List")
@@ -48,32 +46,6 @@ public class CustomizeInvoiceTemplateController {
         return new ResponseEntity ("No result found for id-"+invoiceType, HttpStatus.NO_CONTENT);
 
     }
-
-//    @ApiOperation(value = "update Invoice Prefix Suffix", response = CurrencyConversion.class)
-//    @PostMapping("/update")
-//    public ResponseEntity<String> updateConvertedCurrency(@RequestBody CustomizeInvoiceTemplateRequestModel
-//                                                                  customizeInvoiceTemplateRequestModel,
-//                                                          HttpServletRequest request){
-//        try {
-//            CustomizeInvoiceTemplate customizeInvoiceTemplate = customizeInvoiceTemplateService.findByPK(customizeInvoiceTemplateRequestModel.getId());
-//            if (customizeInvoiceTemplate != null) {
-//                String getValue= customizeInvoiceTemplateRequestModel.getPrefix().trim();
-//                String suffixValue =  "";
-//                customizeInvoiceTemplate.setPrefix(customizeInvoiceTemplateRequestModel.getPrefix());
-//                customizeInvoiceTemplate.setSuffix(customizeInvoiceTemplateRequestModel.getSuffix());
-//                customizeInvoiceTemplate.setType(customizeInvoiceTemplateRequestModel.getType());
-//                customizeInvoiceTemplate.setId(customizeInvoiceTemplateRequestModel.getId());
-//                customizeInvoiceTemplateService.update(customizeInvoiceTemplate);
-//                return new ResponseEntity<>("Updated Successfully..", HttpStatus.OK);
-//            }
-//            else{
-//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//            }
-//        } catch (Exception e) {
-//            logger.error(ERROR, e);
-//        }
-//        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
 
     @LogRequest
     @ApiOperation(value = "Next invoice No")

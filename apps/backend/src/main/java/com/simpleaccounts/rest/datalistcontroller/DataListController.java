@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.datalistcontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.constant.dbfilter.*;
 import com.simpleaccounts.entity.*;
@@ -45,60 +46,44 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 	@RestController
 	@RequestMapping(value = "/rest/datalist")
 	@SuppressWarnings("java:S131")
-	public class DataListController {
+	@RequiredArgsConstructor
+public class DataListController {
 
 	private final Logger logger = LoggerFactory.getLogger(DataListController.class);
 
-	@Autowired
-	private CountryService countryService;
+	private final CountryService countryService;
 
-	@Autowired
-	private CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
-	@Autowired
-	private ChartOfAccountService transactionTypeService;
+	private final ChartOfAccountService transactionTypeService;
 
-	@Autowired
-	private IndustryTypeService industryTypeService;
+	private final IndustryTypeService industryTypeService;
 
-	@Autowired
-	private VatCategoryService vatCategoryService;
+	private final VatCategoryService vatCategoryService;
 
-	@Autowired
-	private VatCategoryRestHelper vatCategoryRestHelper;
+	private final VatCategoryRestHelper vatCategoryRestHelper;
 
-	@Autowired
-	private StateService stateService;
+	private final StateService stateService;
 
-	@Autowired
-	private ChartOfAccountCategoryService chartOfAccountCategoryService;
+	private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
-	@Autowired
-	private ProductService productService;
+	private final ProductService productService;
 
-	@Autowired
-	private ProductRestHelper productRestHelper;
+	private final ProductRestHelper productRestHelper;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private CompanyTypeRepository companyTypeRepository;
+	private final CompanyTypeRepository companyTypeRepository;
 
-	@Autowired
-	private ExciseTaxRestHelper exciseTaxRestHelper;
+	private final ExciseTaxRestHelper exciseTaxRestHelper;
 
-	@Autowired
-	private TaxTreatmentService taxTreatmentService;
+	private final TaxTreatmentService taxTreatmentService;
 
-	@Autowired
-	private UnitTypesRepository unitTypesRepository;
+	private final UnitTypesRepository unitTypesRepository;
 
-	@Autowired
-	private NotesSettingsRepository notesSettingsRepository;
+	private final NotesSettingsRepository notesSettingsRepository;
 
-	@Autowired
-	private ProductCategoryRepository productCategoryRepository;
+	private final ProductCategoryRepository productCategoryRepository;
 
 	@LogRequest
 	@GetMapping(value = "/getcountry")
@@ -354,9 +339,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 				List<EnumDropdownModel> modelList = new ArrayList<>();
 				for (PayMode payMode : payModes)
 					switch (payMode){
-//						case BANK:
-//							modelList.add(new EnumDropdownModel(payMode.toString(), payMode.toString()));
-//							break;
+
 						case CASH:
 							modelList.add(new  EnumDropdownModel(payMode.toString(), payMode.toString()));
 							break;
@@ -367,7 +350,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 							// Unknown pay mode - no action needed
 							break;
 					}
-
 
 				return new ResponseEntity<>(modelList, HttpStatus.OK);
 			} else {
@@ -582,7 +564,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
 
 	@LogRequest
 	@ApiOperation(value = "Get getUnitTypeList")

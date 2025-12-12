@@ -3,7 +3,7 @@ package com.simpleaccounts.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
+
 import java.util.List;
 
 import javax.persistence.*;
@@ -12,7 +12,6 @@ import org.hibernate.annotations.ColumnDefault;
 
 import com.simpleaccounts.constant.ProductPriceType;
 import com.simpleaccounts.constant.ProductType;
-import com.simpleaccounts.entity.converter.DateConverter;
 
 import lombok.Data;
 

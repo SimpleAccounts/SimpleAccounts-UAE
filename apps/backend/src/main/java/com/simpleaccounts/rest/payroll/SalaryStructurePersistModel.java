@@ -1,12 +1,8 @@
 package com.simpleaccounts.rest.payroll;
 
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
 import java.io.Serializable;
 
 /**

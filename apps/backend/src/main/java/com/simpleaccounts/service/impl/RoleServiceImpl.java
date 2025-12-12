@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.RoleDao;
 import com.simpleaccounts.entity.Role;
 import com.simpleaccounts.service.RoleService;
@@ -15,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class RoleServiceImpl extends RoleService {
 
-    @Autowired
-    private RoleDao roleDao;
+    private final RoleDao roleDao;
 
     @Override
     public List<Role> getRoles() {

@@ -10,5 +10,4 @@ public class DefaultSalaryTemplateModel {
 
     Map<String , List<SalaryTemplateModel>> salaryComponentResult;
 
-
 }

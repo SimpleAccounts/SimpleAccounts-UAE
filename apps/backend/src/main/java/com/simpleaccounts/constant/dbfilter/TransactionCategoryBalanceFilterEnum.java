@@ -4,7 +4,6 @@ import lombok.Getter;
 
 public enum TransactionCategoryBalanceFilterEnum {
 
-
 	ID("id", " = :id"),
 	DELETE_FLAG("deleteFlag", " = :deleteFlag"),
 	ORDER_BY("transactionCategoryBalanceId"," =:transactionCategoryBalanceId"),

@@ -7,7 +7,6 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Created By Zain Khan On 16-12-2020

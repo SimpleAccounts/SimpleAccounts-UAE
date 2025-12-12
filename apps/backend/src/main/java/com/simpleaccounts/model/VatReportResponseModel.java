@@ -1,6 +1,5 @@
 package com.simpleaccounts.model;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -50,6 +49,5 @@ public class VatReportResponseModel {
     private BigDecimal totalAmountVatOnExpensesAndAllOtherInputs;
     private BigDecimal debitNoteSales;
     private BigDecimal debitNoteSalesVat;
-
 
 }

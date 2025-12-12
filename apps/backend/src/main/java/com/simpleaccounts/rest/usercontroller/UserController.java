@@ -6,6 +6,7 @@
 package com.simpleaccounts.rest.usercontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.entity.*;
@@ -14,7 +15,7 @@ import com.simpleaccounts.integration.MailIntegration;
 import com.simpleaccounts.repository.PasswordHistoryRepository;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.rest.employeecontroller.EmployeeHelper;
+
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.constant.EmailConstant;
@@ -62,6 +63,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping(value = "/rest/user")
+@RequiredArgsConstructor
 public class UserController{
 	private static final String LOG_NO_DATA_FOUND = "NO DATA FOUND = INTERNAL_SERVER_ERROR";
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
@@ -69,49 +71,33 @@ public class UserController{
 
 	private  Logger logger = LoggerFactory.getLogger(UserController.class);
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private EmaiLogsService emaiLogsService;
+	private final EmaiLogsService emaiLogsService;
 
-	@Autowired
-	private  FileHelper fileUtility;
+	private final  FileHelper fileUtility;
 
-	@Autowired
-	private  RoleService roleService;
+	private final  RoleService roleService;
 
-	@Autowired
-	private  ConfigurationService configurationService;
+	private final  ConfigurationService configurationService;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private  CompanyService companyService;
+	private final  CompanyService companyService;
 
-	@Autowired
-	private UserRestHelper userRestHelper;
+	private final UserRestHelper userRestHelper;
 
-	@Autowired
-	private MailIntegration mailIntegration;
+	private final MailIntegration mailIntegration;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private CoacTransactionCategoryService coacTransactionCategoryService;
+	private final CoacTransactionCategoryService coacTransactionCategoryService;
 
-	@Autowired
-	private EmployeeService employeeService;
+	private final EmployeeService employeeService;
 
-	@Autowired
-	private EmployeeUserRelationHelper employeeUserRelationHelper;
+	private final EmployeeUserRelationHelper employeeUserRelationHelper;
 
-
-
-	@Autowired
-	private PasswordHistoryRepository passwordHistoryRepository;
+	private final PasswordHistoryRepository passwordHistoryRepository;
 
 	@LogRequest
 	@ApiOperation(value = "Get User List")

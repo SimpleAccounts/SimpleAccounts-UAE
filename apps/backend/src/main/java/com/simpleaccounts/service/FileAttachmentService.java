@@ -3,7 +3,7 @@ import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.FileTypeEnum;
 import com.simpleaccounts.dao.FileAttachmentDao;
 import com.simpleaccounts.entity.FileAttachment;
-import com.simpleaccounts.exceptions.FileAttachmentNotFoundException;
+
 import com.simpleaccounts.exceptions.FileAttachmentStorageException;
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRequestModel;
 import com.simpleaccounts.rest.expensescontroller.ExpenseModel;
@@ -12,9 +12,7 @@ import com.simpleaccounts.rest.transactioncontroller.TransactionPresistModel;
 import com.simpleaccounts.rfq_po.PoQuatationRequestModel;
 import com.simpleaccounts.utils.FileHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -26,8 +24,7 @@ public abstract class  FileAttachmentService extends SimpleAccountsService <Inte
     private FileHelper fileHelper;
 
     public FileAttachment storeFile(MultipartFile file, FileTypeEnum fileTypeEnum, InvoiceRequestModel requestModel) throws IOException {
-        // Normalize file name
-      //  String fileName = StringUtils.cleanPath(file.getOriginalFilename(),fileTypeEnum);
+
         String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(),
 						requestModel.getType().equals(ContactTypeEnum.SUPPLIER.getValue().toString())
 								? FileTypeEnum.SUPPLIER_INVOICE
@@ -75,7 +72,6 @@ public abstract class  FileAttachmentService extends SimpleAccountsService <Inte
         }
     }
 
-
     public FileAttachment storeTransactionFile(MultipartFile file, TransactionPresistModel transactionPresistModel) throws IOException {
         String fileName = fileHelper.saveFile(transactionPresistModel.getAttachmentFile(),FileTypeEnum.TRANSATION);
         try {
@@ -91,8 +87,7 @@ public abstract class  FileAttachmentService extends SimpleAccountsService <Inte
     }
 
     public FileAttachment storeRfqPoGrnFile(MultipartFile file, PoQuatationRequestModel requestModel) throws IOException {
-        // Normalize file name
-        //  String fileName = StringUtils.cleanPath(file.getOriginalFilename(),fileTypeEnum);
+
         String fileName = "";
             switch(requestModel.getType()){
                 case "3":

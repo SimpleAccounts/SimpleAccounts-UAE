@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.transactionparsingcontroller;
 
 import java.util.ArrayList;
+import lombok.RequiredArgsConstructor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +19,12 @@ import com.simpleaccounts.service.DateFormatService;
 import com.simpleaccounts.service.TransactionParsingSettingService;
 
 @Component
+@RequiredArgsConstructor
 public class TransactionParsingSettingRestHelper {
 
-	@Autowired
-	private TransactionParsingSettingService transactionParsingSettingService;
+	private final TransactionParsingSettingService transactionParsingSettingService;
 
-	@Autowired
-	private DateFormatService dateFormatService;
+	private final DateFormatService dateFormatService;
 
 	public TransactionParsingSetting getEntity(TransactionParsingSettingPersistModel model) {
 		if (model != null) {

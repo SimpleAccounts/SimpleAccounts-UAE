@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public class PlaceOfSupplyDaoImpl extends AbstractDao<Integer, PlaceOfSupply> implements PlaceOfSupplyDao {
 
-
     public List<PlaceOfSupply> getPlaceOfSupplyForDropdown(){
         return getEntityManager().createNamedQuery("getAllPlaceOfSupplyForDropdown", PlaceOfSupply.class).getResultList();
     }

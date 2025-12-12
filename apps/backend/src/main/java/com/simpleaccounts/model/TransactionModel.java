@@ -5,7 +5,6 @@
  */
 package com.simpleaccounts.model;
 
-
 import java.math.BigDecimal;
 import lombok.Data;
 

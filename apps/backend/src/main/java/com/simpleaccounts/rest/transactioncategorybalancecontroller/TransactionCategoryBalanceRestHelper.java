@@ -1,15 +1,13 @@
 package com.simpleaccounts.rest.transactioncategorybalancecontroller;
 
 import java.time.Instant;
+import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
-import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
-import com.simpleaccounts.rest.reconsilationcontroller.ReconsilationController;
 import com.simpleaccounts.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,21 +20,16 @@ import com.simpleaccounts.exceptions.ServiceException;
 import com.simpleaccounts.service.TransactionCategoryBalanceService;
 import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.service.exceptions.ServiceErrorCode;
-import com.simpleaccounts.utils.DateFormatUtil;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Component
+@RequiredArgsConstructor
 public class TransactionCategoryBalanceRestHelper {
 	private final Logger logger = LoggerFactory.getLogger(TransactionCategoryBalanceRestHelper.class);
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
 
-	@Autowired
-	private DateUtils dateUtil;
+	private final DateUtils dateUtil;
 
 	public TransactionCategoryBalance getEntity(TransactioncategoryBalancePersistModel persistModel) {
 
@@ -78,16 +71,7 @@ public class TransactionCategoryBalanceRestHelper {
 
 			for (TransactionCategoryBalance balance : balaneList) {
 				if(balance!=null && balance.getTransactionCategory()!=null) {
-//					if (balance.getTransactionCategory().getTransactionCategoryCode()
-//							.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode())
-//							|| balance.getTransactionCategory().getTransactionCategoryCode()
-//							.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())
-//							|| balance.getTransactionCategory().getChartOfAccount().getChartOfAccountCode()
-//							.equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode()) || balance
-//							.getTransactionCategory()
-//							.getTransactionCategoryCode().equalsIgnoreCase(TransactionCategoryCodeEnum.EMPLOYEE_REIMBURSEMENT
-//									.getCode()))
-//						continue;
+
 					TransactionCategoryBalanceListModel model = new TransactionCategoryBalanceListModel();
 					model.setTransactionCategoryId(balance.getTransactionCategory().getTransactionCategoryId());
 					model.setTransactionCategoryBalanceId(balance.getId());

@@ -6,10 +6,11 @@
 package com.simpleaccounts.rest.transactioncategorycontroller;
 
 import java.util.*;
+import lombok.RequiredArgsConstructor;
 import java.util.stream.Collectors;
 
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.repository.*;
@@ -31,37 +32,28 @@ import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
  * @author daynil
  */
 @Service
+@RequiredArgsConstructor
 public class TranscationCategoryHelper {
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private VatCategoryService vatCategoryService;
+	private final VatCategoryService vatCategoryService;
 
-	@Autowired
-	private ChartOfAccountService transactionTypeService;
+	private final ChartOfAccountService transactionTypeService;
 
-	@Autowired
-	private EmployeeTransactioncategoryService employeeTransactioncategoryService;
+	private final EmployeeTransactioncategoryService employeeTransactioncategoryService;
 
-	@Autowired
-	private EmployeeService employeeService;
+	private final EmployeeService employeeService;
 
-	@Autowired
-	private JournalLineItemService journalLineItemService;
+	private final JournalLineItemService journalLineItemService;
 
-	@Autowired
-	private JournalLineItemRepository journalLineItemRepository;
+	private final JournalLineItemRepository journalLineItemRepository;
 
-	@Autowired
-	private InvoiceLineitemRepository invoiceLineitemRepository;
+	private final InvoiceLineitemRepository invoiceLineitemRepository;
 
-	@Autowired
-	private ExpenseRepository expenseRepository;
+	private final ExpenseRepository expenseRepository;
 
-	@Autowired
-	private ProductLineItemRepository productLineItemRepository;
+	private final ProductLineItemRepository productLineItemRepository;
 
 	public TransactionCategory getEntity(TransactionCategoryBean transactionCategoryBean) {
 		TransactionCategory transactionCategory = new TransactionCategory();
@@ -108,12 +100,7 @@ public class TranscationCategoryHelper {
 
 		if (transactionCategories != null) {
 			for (TransactionCategory transactionCategory : (List<TransactionCategory>) transactionCategories) {
-//				if (transactionCategory.getChartOfAccount().getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode())
-//						|| transactionCategory.getTransactionCategoryCode()
-//						.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode()) ||
-//						transactionCategory.getTransactionCategoryCode()
-//								.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode()))
-//					continue;
+
 				TransactionCategoryModel transactionCategoryModel = new TransactionCategoryModel();
 				BeanUtils.copyProperties(transactionCategory, transactionCategoryModel);
 				if (transactionCategory.getChartOfAccount() != null) {
@@ -250,12 +237,10 @@ public class TranscationCategoryHelper {
 	public List<SingleLevelDropDownModel> getSinleLevelDropDownModelList(List<TransactionCategory> transactionCatList) {
 		List<SingleLevelDropDownModel>
 				modelList = new ArrayList<>();
-		Map<Object, Object> chartOfAccountDropdownModelList = new HashMap<>();
 		Map<Integer, List<TransactionCategory>> idTrnxCatListMap = new HashMap<>();
 		List<TransactionCategory> transactionCategoryList = new ArrayList<>();
 		for (TransactionCategory trnxCat : transactionCatList) {
-//			if (trnxCat.getChartOfAccount().getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.CASH.getCode()))
-//				continue;
+
 			if (trnxCat.getChartOfAccount() != null) {
 				if (idTrnxCatListMap.containsKey(trnxCat.getChartOfAccount().getChartOfAccountId())) {
 					transactionCategoryList = idTrnxCatListMap.get(trnxCat.getChartOfAccount().getChartOfAccountId());
@@ -277,14 +262,12 @@ public class TranscationCategoryHelper {
 				dropDownModelList.add(
 						new DropdownModel(trnxCat.getTransactionCategoryId(), trnxCat.getTransactionCategoryName()));
 			}
-			chartOfAccountDropdownModelList.put(parentCategory, dropDownModelList);
 			modelList.add(new SingleLevelDropDownModel(parentCategory, dropDownModelList));
 		}
 		return modelList;
 	}
 	public List<SingleLevelDropDownModel> getSingleLevelDropDownModelListForManualJournal(List<TransactionCategory> transactionCatList) {
 		List<SingleLevelDropDownModel> modelList = new ArrayList<>();
-		Map<Object, Object> chartOfAccountDropdownModelList = new HashMap<>();
 		Map<Integer, List<TransactionCategory>> idTrnxCatListMap = new HashMap<>();
 		List<TransactionCategory> transactionCategoryList = new ArrayList<>();
 		transactionCatList = transactionCatList.stream().filter(transactionCategory ->
@@ -293,11 +276,6 @@ public class TranscationCategoryHelper {
 		Map<String,Object> map = new HashMap<>();
 		map.put("deleteFlag",Boolean.FALSE);
 	     List<EmployeeTransactionCategoryRelation> employeeTransactionCategoryRelationList = employeeTransactioncategoryService.findByAttributes(map);
-//		 if (employeeTransactionCategoryRelationList.size()>0)
-//			 for (EmployeeTransactionCategoryRelation employeeTransactionCategoryRelation:employeeTransactionCategoryRelationList){
-//				 transactionCatList.remove(employeeTransactionCategoryRelation.getTransactionCategory());
-//			 }
-
 
 		for (TransactionCategory trnxCat : transactionCatList) {
 			if (trnxCat.getChartOfAccount() != null) {
@@ -321,7 +299,6 @@ public class TranscationCategoryHelper {
 				dropDownModelList.add(
 						new DropdownModel(trnxCat.getTransactionCategoryId(), trnxCat.getTransactionCategoryName()));
 			}
-			chartOfAccountDropdownModelList.put(parentCategory, dropDownModelList);
 			modelList.add(new SingleLevelDropDownModel(parentCategory, dropDownModelList));
 		}
 		return modelList;

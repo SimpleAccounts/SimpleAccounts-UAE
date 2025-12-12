@@ -8,9 +8,8 @@ package com.simpleaccounts.service;
 import com.simpleaccounts.constant.dbfilter.CompanyFilterEnum;
 import com.simpleaccounts.entity.Company;
 import com.simpleaccounts.entity.Currency;
-import com.simpleaccounts.entity.CurrencyConversion;
+
 import com.simpleaccounts.rest.DropdownModel;
-import com.simpleaccounts.rest.companycontroller.RegistrationModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

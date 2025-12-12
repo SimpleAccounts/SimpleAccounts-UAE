@@ -4,8 +4,6 @@ import com.simpleaccounts.model.JwtResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.simpleaccounts.aop.LogExecutionTime;
-import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.model.JwtRequest;
 import java.util.Objects;
 
@@ -24,14 +22,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 public class JwtAuthenticationController {
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
+	private final AuthenticationManager authenticationManager;
+
+	private final JwtTokenUtil jwtTokenUtil;
+
+    private final CustomUserDetailsService jwtInMemoryUserDetailsService;
 
 	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
-
-        @Autowired
-	private CustomUserDetailsService jwtInMemoryUserDetailsService;
+	public JwtAuthenticationController(AuthenticationManager authenticationManager,
+									   JwtTokenUtil jwtTokenUtil,
+									   CustomUserDetailsService jwtInMemoryUserDetailsService) {
+		this.authenticationManager = authenticationManager;
+		this.jwtTokenUtil = jwtTokenUtil;
+		this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
+	}
 
 	@PostMapping(value = "/auth/token")
 		public ResponseEntity<Object> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)

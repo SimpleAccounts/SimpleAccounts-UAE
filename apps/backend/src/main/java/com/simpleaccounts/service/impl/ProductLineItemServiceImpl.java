@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.simpleaccounts.dao.Dao;
@@ -9,10 +10,10 @@ import com.simpleaccounts.entity.ProductLineItem;
 import com.simpleaccounts.service.ProductLineItemService;
 
 @Service
+@RequiredArgsConstructor
 public class ProductLineItemServiceImpl extends ProductLineItemService {
 
-	@Autowired
-	private ProductLineItemDao productLineItemDao;
+	private final ProductLineItemDao productLineItemDao;
 
 	@Override
 	protected Dao<Integer, ProductLineItem> getDao() {

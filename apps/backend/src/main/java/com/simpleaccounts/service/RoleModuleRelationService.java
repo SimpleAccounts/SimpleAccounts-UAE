@@ -1,10 +1,8 @@
 package com.simpleaccounts.service;
 
 import com.simpleaccounts.entity.RoleModuleRelation;
-import com.simpleaccounts.entity.SimpleAccountsModules;
 
 import java.util.List;
-
 
 public abstract class RoleModuleRelationService extends SimpleAccountsService<Integer, RoleModuleRelation> {
  public abstract List<RoleModuleRelation> getRoleModuleRelationByRoleCode(Integer roleCode);

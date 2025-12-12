@@ -4,7 +4,6 @@ import com.simpleaccounts.constant.CommonColumnConstants;
 
 public enum MailEnum {
 
-
     FORGOT_PASSWORD("Forgot your password? Don't worry",
             "<p>Dear ${user},</p><br/><p> Your password is reset successfully, your new password is : <pre>${newPassword}</pre> </p> <br/> Thank you."),
     SIGN_UP_VERIFICATION(CommonColumnConstants.WELCOME_TO_SIMPLEACCOUNTS,

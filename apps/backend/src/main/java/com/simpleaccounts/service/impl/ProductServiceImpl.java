@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.dbfilter.ProductFilterEnum;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,12 +20,11 @@ import com.simpleaccounts.service.ProductService;
 import java.util.Map;
 
 @Service("ProductService")
+@RequiredArgsConstructor
 public class ProductServiceImpl extends ProductService {
 
-    @Autowired
-    private ProductDao productDao;
-    @Autowired
-    private CacheManager cacheManager;
+    private final ProductDao productDao;
+    private final CacheManager cacheManager;
 
     @Override
     protected Dao<Integer, Product> getDao() {

@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.paymentcontroller;
 
 import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -27,33 +28,26 @@ import com.simpleaccounts.rest.invoicecontroller.InvoiceDueAmountModel;
 import com.simpleaccounts.utils.FileHelper;
 
 @Component
+@RequiredArgsConstructor
 public class PaymentRestHelper {
 
 	private final Logger logger = LoggerFactory.getLogger(PaymentRestHelper.class);
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private FileHelper fileHelper;
+	private final FileHelper fileHelper;
 
-	@Autowired
-	private JournalLineItemService journalLineItemService;
+	private final JournalLineItemService journalLineItemService;
 
-	@Autowired
-	private SupplierInvoicePaymentService supplierInvoicePaymentService;
+	private final SupplierInvoicePaymentService supplierInvoicePaymentService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private PaymentService paymentService;
+	private final PaymentService paymentService;
 
-	@Autowired
-	private  ContactTransactionCategoryService contactTransactionCategoryService;
+	private final  ContactTransactionCategoryService contactTransactionCategoryService;
 
 	public Payment convertToPayment(PaymentPersistModel paymentModel) throws IOException {
 		Payment payment = new Payment();
@@ -149,7 +143,6 @@ public class PaymentRestHelper {
 				paymentModel.setSupplierId((payment.getSupplier().getContactId()));
 				paymentModel.setSupplierName(payment.getSupplier().getFirstName() + " " + payment.getSupplier().getLastName());
 			}
-
 
 		}
 	}

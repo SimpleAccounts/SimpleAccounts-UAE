@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.creditnotecontroller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.entity.*;
@@ -20,7 +21,7 @@ import com.simpleaccounts.rest.invoicecontroller.InvoiceListModel;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
 import com.simpleaccounts.rest.receiptcontroller.ReceiptRequestModel;
 import com.simpleaccounts.security.JwtTokenUtil;
-import org.springframework.web.multipart.MultipartFile;
+
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.*;
@@ -52,14 +53,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.REFUND_CD_TEMPLATE;
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
 
 	@Service
 	@SuppressWarnings({"java:S131", "java:S115", "java:S6809"})
-	public class CreditNoteRestHelper {
+	@RequiredArgsConstructor
+public class CreditNoteRestHelper {
     private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
-    @Autowired
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
 
     private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
     private static final String DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY = "dd/MM/yyyy";
@@ -71,15 +71,11 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
     private static final String TRANSACTION_DESCRIPTION_MANUAL_CREDIT_NOTE = "Manual Transaction Created Against CreditNote No ";
     private static final String TEMPLATE_PLACEHOLDER_PAYMODE = "{paymode}";
     private static final String TEMPLATE_PLACEHOLDER_NUMBER = "{number}";
-    @Autowired
-    private InvoiceLineItemService invoiceLineItemService;
-    @Autowired
-    private DateFormatHelper dateFormatHelper;
+    private final InvoiceLineItemService invoiceLineItemService;
+    private final DateFormatHelper dateFormatHelper;
 
-    @Autowired
-    private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
-    @Autowired
-    private InvoiceRestHelper invoiceRestHelper;
+    private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+    private final InvoiceRestHelper invoiceRestHelper;
 
     @Autowired
     InvoiceNumberUtil invoiceNumberUtil;
@@ -87,80 +83,56 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
     @Autowired
     ContactService contactService;
 
-    @Autowired
-    private DateFormatUtil dateFormtUtil;
+    private final DateFormatUtil dateFormtUtil;
 
     @Autowired
     VatCategoryService vatCategoryService;
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
 
-    @Autowired
-    private InventoryService inventoryService;
+    private final InventoryService inventoryService;
 
-    @Autowired
-    private InventoryHistoryService inventoryHistoryService;
+    private final InventoryHistoryService inventoryHistoryService;
 
-    @Autowired
-    private DateUtils dateUtils;
+    private final DateUtils dateUtils;
 
-    @Autowired
-    private JournalLineItemService journalLineItemService;
+    private final JournalLineItemService journalLineItemService;
 
-    @Autowired
-    private ReceiptService receiptService;
+    private final ReceiptService receiptService;
 
-    @Autowired
-    private CurrencyService currencyService;
+    private final CurrencyService currencyService;
 
-    @Autowired
-    private PlaceOfSupplyService placeOfSupplyService;
+    private final PlaceOfSupplyService placeOfSupplyService;
 
-    @Autowired
-    private ExciseTaxService exciseTaxService;
+    private final ExciseTaxService exciseTaxService;
 
-    @Autowired
-    private CreditNoteRepository creditNoteRepository;
+    private final CreditNoteRepository creditNoteRepository;
 
-    @Autowired
-    private CreditNoteLineItemRepository creditNoteLineItemRepository;
+    private final CreditNoteLineItemRepository creditNoteLineItemRepository;
 
-    @Autowired
-    private BankAccountService bankAccountService;
+    private final BankAccountService bankAccountService;
 
-    @Autowired
-    private TransactionService transactionService;
+    private final TransactionService transactionService;
 
-    @Autowired
-    private ChartOfAccountCategoryService chartOfAccountCategoryService;
+    private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
-    @Autowired
-    private JournalService journalService;
+    private final JournalService journalService;
 
-    @Autowired
-    private CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
+    private final CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
 
-    @Autowired
-    private UnitTypesRepository unitTypesRepository;
+    private final UnitTypesRepository unitTypesRepository;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
+    private final DateFormatUtil dateFormatUtil;
 
-    @Autowired
-    private JournalLineItemRepository journalLineItemRepository;
+    private final JournalLineItemRepository journalLineItemRepository;
 
-    @Autowired
-    private TransactionExplanationRepository transactionExplanationRepository;
+    private final TransactionExplanationRepository transactionExplanationRepository;
 
-    @Autowired
-    private ContactTransactionCategoryService contactTransactionCategoryService;
+    private final ContactTransactionCategoryService contactTransactionCategoryService;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @Autowired
     UserService userService;
@@ -173,14 +145,11 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
 
     @Autowired
     EmaiLogsService emaiLogsService;
-    @Autowired
-    private TransactionExplinationLineItemRepository transactionExplinationLineItemRepository;
+    private final TransactionExplinationLineItemRepository transactionExplinationLineItemRepository;
 
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
-    @Autowired
-    private FileAttachmentService fileAttachmentService;
+    private final FileAttachmentService fileAttachmentService;
 
     public CreditNote getEntity(CreditNoteRequestModel creditNoteRequestModel, Integer userId) {
         CreditNote creditNote = null;
@@ -367,7 +336,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
         journalLineItem1.setCreatedBy(userId);
         journalLineItem1.setJournal(journal);
         journalLineItemList.add(journalLineItem1);
-
 
         List<CreditNoteLineItem> creditNoteLineItemList = creditNoteLineItemRepository.findAllByCreditNote(creditNote);
         Map<Integer, List<CreditNoteLineItem>> tnxCatIdCnLnItemMap = new HashMap<>();
@@ -582,17 +550,11 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
                 journalLineItemList.add(journalLineItem);
             }
         }
-        journal.setJournalLineItems(journalLineItemList);
-        journal.setCreatedBy(userId);
-
-        if (creditNote != null) {
-            journal.setJournalDate(creditNote.getCreditNoteDate().toLocalDate());
-            journal.setTransactionDate(creditNote.getCreditNoteDate().toLocalDate());
-        } else {
-            journal.setJournalDate(LocalDate.now());
-            journal.setTransactionDate(creditNote.getCreditNoteDate().toLocalDate());
-        }
-        journal.setJournlReferencenNo(creditNote.getCreditNoteNumber());
+	        journal.setJournalLineItems(journalLineItemList);
+	        journal.setCreatedBy(userId);
+	        journal.setJournalDate(creditNote.getCreditNoteDate().toLocalDate());
+	        journal.setTransactionDate(creditNote.getCreditNoteDate().toLocalDate());
+	        journal.setJournlReferencenNo(creditNote.getCreditNoteNumber());
         if (creditNote.getType()==7){
             journal.setDescription("Credit Note");
             journal.setPostingReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
@@ -610,8 +572,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
                                  Map<Integer, List<CreditNoteLineItem>> tnxCatIdCnLnItemMap, Map<Integer, TransactionCategory> tnxCatMap, Integer userId) {
         TransactionCategory category;
         for (CreditNoteLineItem lineItem : creditNoteLineItemList) {
-            // sales for customer
-            // purchase for vendor
+
             Product product = productService.findByPK(lineItem.getProduct().getProductID());
             if (product.getIsInventoryEnabled()) {
                 if (lineItem.getCreditNote().getType() == 7) {
@@ -1087,12 +1048,12 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
         Map<String, Object> customerMap = new HashMap<>();
             customerMap.put(JSON_KEY_CONTACT,  creditNote.getContact().getContactId());
         if (isCreditNote){
-            customerMap.put("contactType", 2);
+            customerMap.put(JSON_KEY_CONTACT_TYPE, 2);
         }
         else {
-            customerMap.put("contactType", 1);
+            customerMap.put(JSON_KEY_CONTACT_TYPE, 1);
         }
-        customerMap.put("deleteFlag",Boolean.FALSE);
+        customerMap.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
         List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
                 .findByAttributes(customerMap);
         TransactionCategory transactionCategory = null;
@@ -1142,8 +1103,8 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
         JournalLineItem journalLineItem1 = new JournalLineItem();
         Map<String, Object> customerMap = new HashMap<>();
             customerMap.put(JSON_KEY_CONTACT,  creditNote.getContact().getContactId());
-        customerMap.put("contactType", 2);
-        customerMap.put("deleteFlag",Boolean.FALSE);
+        customerMap.put(JSON_KEY_CONTACT_TYPE, 2);
+        customerMap.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
         List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
                 .findByAttributes(customerMap);
         TransactionCategory transactionCategory = null;
@@ -1158,86 +1119,13 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
             journalLineItem1.setDebitAmount(creditNote.getTotalAmount());
         journalLineItem1.setReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
         journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
-        journalLineItem1.setCreatedBy(userId);
-        journalLineItem1.setJournal(journal);
-        journalLineItemList.add(journalLineItem1);
-        Map<String, Object> param = new HashMap<>();
-        param.put("invoice", creditNote);
-        param.put("deleteFlag", false);
-        List<InvoiceLineItem> invoiceLineItemList = invoiceLineItemService.findByAttributes(param);
-        Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap = new HashMap<>();
-        Map<Integer, TransactionCategory> tnxcatMap = new HashMap<>();
-       // customerInvoice(isCustomerCreditNote, invoiceLineItemList, tnxcatIdInvLnItemMap, tnxcatMap, userId);
-        Boolean isEligibleForInventoryAssetJournalEntry = false;
-        BigDecimal inventoryAssetValue = BigDecimal.ZERO;
-        for (Integer categoryId : tnxcatIdInvLnItemMap.keySet()) {
-            List<InvoiceLineItem> sortedItemList = tnxcatIdInvLnItemMap.get(categoryId);
-            BigDecimal totalAmount = BigDecimal.ZERO;
-            BigDecimal inventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
-            TransactionCategory purchaseCategory = null;
-            Boolean isEligibleForInventoryJournalEntry = false;
-            for (InvoiceLineItem sortedLineItem : sortedItemList) {
-                BigDecimal amntWithoutVat = sortedLineItem.getUnitPrice()
-                        .multiply(BigDecimal.valueOf(sortedLineItem.getQuantity()));
-                totalAmount = totalAmount.add(amntWithoutVat);
-                if (sortedLineItem.getProduct().getIsInventoryEnabled() && isCustomerCreditNote) {
-                    List<Inventory> inventoryList = inventoryService.getInventoryByProductId(sortedLineItem.getProduct().getProductID());
-                    for (Inventory inventory : inventoryList) {
-                        inventoryAssetValuePerTransactionCategory = inventoryAssetValuePerTransactionCategory.add(BigDecimal.valueOf(sortedLineItem.getQuantity()).multiply(BigDecimal.valueOf
-                                (inventory.getUnitCost())));
-                    }
-                    purchaseCategory = sortedLineItem.getTrnsactioncCategory() != null ? sortedLineItem.getTrnsactioncCategory()
-                            : sortedLineItem.getProduct().getLineItemList().stream()
-                            .filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
-                            .getTransactioncategory();
-                    isEligibleForInventoryJournalEntry = true;
-                }
-            }
-            if (isCustomerCreditNote && isEligibleForInventoryJournalEntry) {
-                JournalLineItem journalLineItem = new JournalLineItem();
-                journalLineItem.setTransactionCategory(transactionCategoryService
-                        .findTransactionCategoryByTransactionCategoryCode(
-                                TransactionCategoryCodeEnum.INVENTORY_ASSET.getCode()));
-                journalLineItem.setDebitAmount(inventoryAssetValuePerTransactionCategory);
-                journalLineItem.setReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
-                journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
-                journalLineItem.setCreatedBy(userId);
-                journalLineItem.setJournal(journal);
-                journalLineItemList.add(journalLineItem);
-                inventoryAssetValue = inventoryAssetValue.add(inventoryAssetValuePerTransactionCategory);
-                isEligibleForInventoryAssetJournalEntry = true;
-            }
-            if (creditNote.getDiscount() != null) {
-                totalAmount = totalAmount.subtract(creditNote.getDiscount());
-            }
-            JournalLineItem journalLineItem = new JournalLineItem();
-            journalLineItem.setTransactionCategory(tnxcatMap.get(categoryId));
-            if (isCustomerCreditNote)
-                journalLineItem.setDebitAmount(totalAmount);
-            else
-                journalLineItem.setCreditAmount(totalAmount);
-            journalLineItem.setReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
-            journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
-            journalLineItem.setCreatedBy(userId);
-            journalLineItem.setJournal(journal);
-            journalLineItemList.add(journalLineItem);
-        }
-        if (isCustomerCreditNote && isEligibleForInventoryAssetJournalEntry) {
-            JournalLineItem journalLineItem = new JournalLineItem();
-            journalLineItem.setTransactionCategory(transactionCategoryService
-                    .findTransactionCategoryByTransactionCategoryCode(
-                            TransactionCategoryCodeEnum.COST_OF_GOODS_SOLD.getCode()));
-            journalLineItem.setCreditAmount(inventoryAssetValue);
-            journalLineItem.setReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
-            journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
-            journalLineItem.setCreatedBy(userId);
-            journalLineItem.setJournal(journal);
-            journalLineItemList.add(journalLineItem);
-        }
-        if (creditNote.getTotalVatAmount().compareTo(BigDecimal.ZERO) > 0) {
-            JournalLineItem journalLineItem = new JournalLineItem();
-            TransactionCategory inputVatCategory = transactionCategoryService
-                    .findTransactionCategoryByTransactionCategoryCode(
+	        journalLineItem1.setCreatedBy(userId);
+	        journalLineItem1.setJournal(journal);
+	        journalLineItemList.add(journalLineItem1);
+	        if (creditNote.getTotalVatAmount().compareTo(BigDecimal.ZERO) > 0) {
+	            JournalLineItem journalLineItem = new JournalLineItem();
+	            TransactionCategory inputVatCategory = transactionCategoryService
+	                    .findTransactionCategoryByTransactionCategoryCode(
                             isCustomerCreditNote ? TransactionCategoryCodeEnum.OUTPUT_VAT.getCode()
                                     : TransactionCategoryCodeEnum.INPUT_VAT.getCode());
             journalLineItem.setTransactionCategory(inputVatCategory);
@@ -1251,18 +1139,13 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
             journalLineItem.setJournal(journal);
             journalLineItemList.add(journalLineItem);
         }
-        journal.setJournalLineItems(journalLineItemList);
-        journal.setCreatedBy(userId);
-        journal.setPostingReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
-        if (creditNote != null) {
-            journal.setJournalDate(creditNote.getInvoiceDate());
-            journal.setTransactionDate(creditNote.getInvoiceDate());
-        } else {
-            journal.setJournalDate(LocalDate.now());
-            journal.setTransactionDate(creditNote.getInvoiceDate());
-        }
-        return journal;
-    }
+	        journal.setJournalLineItems(journalLineItemList);
+	        journal.setCreatedBy(userId);
+	        journal.setPostingReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
+	        journal.setJournalDate(creditNote.getInvoiceDate());
+	        journal.setTransactionDate(creditNote.getInvoiceDate());
+	        return journal;
+	    }
 
     public CreditNote createCNWithoutInvoice(CreditNoteRequestModel creditNoteRequestModel, Integer userId) {
         CreditNote creditNote = null;
@@ -1637,7 +1520,6 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
     }
         return appliedInvoiceCreditNoteList;
     }
-
 
     public String recordPaymentCNWithoutInvoice(RecordPaymentAgainstCNWithoutInvoice requestModel, Integer userId,HttpServletRequest request) {
         if (requestModel.getPayMode() == PayMode.CASH) {
@@ -2184,6 +2066,5 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         }
         return journal;
     }
-
 
 }

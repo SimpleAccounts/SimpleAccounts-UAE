@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.financialreport;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -26,10 +27,10 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-
 	@Component
 	@SuppressWarnings({"java:S3973", "java:S131"})
-	public class FinancialReportRestHelper {
+	@RequiredArgsConstructor
+public class FinancialReportRestHelper {
 
 	private static final String RETAINED_EARNINGS = "RETAINED_EARNINGS";
 	private static final String OTHER_CHARGES = "OTHER_CHARGES";
@@ -49,14 +50,11 @@ import javax.persistence.TypedQuery;
 	@Autowired
 	ExpenseService expenseService;
 
-	@Autowired
-	private CreditNoteLineItemRepository creditNoteLineItemRepository;
+	private final CreditNoteLineItemRepository creditNoteLineItemRepository;
 
-	@Autowired
-	private EntityManager entityManager;
+	private final EntityManager entityManager;
 
-	@Autowired
-	private VatReportFilingRepository vatReportFilingRepository;
+	private final VatReportFilingRepository vatReportFilingRepository;
 
 	@Autowired
 	DateFormatUtil dateUtil;
@@ -750,11 +748,7 @@ import javax.persistence.TypedQuery;
 		if (vatReportResponseModel.getExemptSupplies()!=null)
 		vatReportResponseModel.setTotalAmount(vatReportResponseModel.getTotalAmount().add(vatReportResponseModel.getExemptSupplies()));
 		vatReportResponseModel.setTotalValueOfDueTaxForThePeriod(vatReportResponseModel.getTotalVatAmount());
-        //Add other parameter to the report
-		//	vatReportResponseModel.setTotalAmountWithVatForSupplierInvoice(vatReportResponseModel.getTotalAmount());
 
-
-		    //Standard rated expenses
 		BigDecimal supplierVatTotal = BigDecimal.ZERO;
 		BigDecimal debitNoteSalesVat = BigDecimal.ZERO;
 		if(vatReportResponseModel.getDebitNoteSalesVat()!=null){
@@ -786,8 +780,6 @@ import javax.persistence.TypedQuery;
 			vatReportResponseModel.setTotalAmountVatOnExpensesAndAllOtherInputs((vatReportResponseModel.getTotalAmountVatOnExpensesAndAllOtherInputs().add(vatReportResponseModel.getReverseChargeProvisionsTotalAmount())));
 
 		}
-		    //Total value of recoverable tax for the period
-		//    vatReportResponseModel.setTotalVatOnExpensesAndAllOtherInputs(supplierVatTotal.add(vatReportResponseModel.getReverseChargeProvisionsVatAmount()!=null ? vatReportResponseModel.getReverseChargeProvisionsVatAmount():BigDecimal.ZERO));
 
 		    if (vatReportResponseModel.getTotalVatAmountForExpense()!=null && vatReportResponseModel.getTotalVatAmountForSupplierInvoice()!=null) {
 				vatReportResponseModel.setTotalValueOfRecoverableTaxForThePeriod(vatReportResponseModel.getTotalVatAmountForExpense()
@@ -834,8 +826,6 @@ import javax.persistence.TypedQuery;
 		requestModel.setChartOfAccountCodes(chartOfAccountCodes);
 		List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getListByChartOfAccountIds(requestModel);
 
-		//Block to get prvious month and year from startdate
-		// Assuming startDate is a LocalDate
 		String startDateText = reportRequestModel.getStartDate();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate startDate = LocalDate.parse(startDateText, formatter);
@@ -871,19 +861,10 @@ import javax.persistence.TypedQuery;
 				String transactionCategoryName = transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryName();
 				 closingBalance = transactionCategoryClosingBalance.getClosingBalance();
 
-
 				LocalDateTime balanceDate = transactionCategoryClosingBalance.getClosingBalanceDate();
-//				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//				LocalDateTime startDate = LocalDateTime.parse(reportRequestModel.getStartDate(), );
-//				LocalDateTime endDate = LocalDateTime.parse(reportRequestModel.getEndDate());
+
 //
 //				//block to get sum of previous month closing balances
-//				if (balanceDate != null && !balanceDate.isBefore(startDate) && balanceDate.isBefore(endDate)) {
-//					BigDecimal balanceValue = transactionCategoryClosingBalance.getClosingBalance();
-//					if (balanceValue != null) {
-//						closingBalance = closingBalance.add(balanceValue);
-//					}
-//				}
 
 				ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.
 						getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
@@ -899,8 +880,7 @@ import javax.persistence.TypedQuery;
 						if (transactionCategoryName.equalsIgnoreCase("Sales Discount") ||
 							transactionCategoryName.equalsIgnoreCase("OTHER_CHARGES") ||
 									transactionCategoryName.equalsIgnoreCase("Interest Income")
-//								transactionCategoryName.equalsIgnoreCase("Current Asset") ||
-//								transactionCategoryName.equalsIgnoreCase("Sales ")
+
 							){
 							responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
 							totalOperatingIncome = totalOperatingIncome.add(closingBalance).negate();
@@ -908,9 +888,7 @@ import javax.persistence.TypedQuery;
 							responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
 							totalOperatingIncome = totalOperatingIncome.add(closingBalance);
 						}
-//							responseModel.getNonOperatingIncome().put(transactionCategoryName, closingBalance);
-//							totalNonOperatingIncome = totalNonOperatingIncome.add(closingBalance);
-//					}
+
 						if(isNegative) {
 							grossCashOutflow = grossCashOutflow.add(closingBalance);
 						} else {
@@ -922,8 +900,7 @@ import javax.persistence.TypedQuery;
 						totalOperatingIncome = totalOperatingIncome.add(closingBalance);
 						//if(isNegative)
 							grossCashOutflow = grossCashOutflow.add(closingBalance);
-//						else
-//							grossCashInflow = grossCashInflow.add(closingBalance);
+
 						break;
 					case ACCOUNTS_RECEIVABLE:
 						responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
@@ -1017,10 +994,7 @@ import javax.persistence.TypedQuery;
 							totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
 							grossCashInflow = grossCashInflow.add(closingBalance);
 						}
-//						if(isNegative)
-//							grossCashOutflow = grossCashOutflow.add(closingBalance);
-//						else
-//							grossCashInflow = grossCashInflow.add(closingBalance);
+
 						break;
 
 					case COST_OF_GOODS_SOLD:
@@ -1041,8 +1015,6 @@ import javax.persistence.TypedQuery;
 			responseModel.setTotalInvestingActivities(totalInvestingActivities);
 			responseModel.setTotalFinancingActivities(totalFinancingActivities);
 			responseModel.setTotalCostOfGoodsSold(totalCostOfGoodsSold);
-
-
 
 			BigDecimal grossProfit = totalOperatingIncome.subtract(totalNonOperatingIncome).subtract(totalCostOfGoodsSold);
 			responseModel.setGrossProfit(grossProfit);
@@ -1072,8 +1044,6 @@ import javax.persistence.TypedQuery;
 					.subtract(totalOperatingExpense.add(totalNonOperatingExpense));
 			responseModel.setNetProfitLoss(netProfitLoss);
 
-			//block for Gross Cash In Flow
-			//BigDecimal grossCashInflow = totalOperatingIncome.add(totalInvestingActivities).add(totalFinancingActivities);
 			responseModel.setGrossCashInflow(grossCashInflow);
 
 			//block for Gross Cash out Flow

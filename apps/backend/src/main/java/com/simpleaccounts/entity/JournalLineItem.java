@@ -5,14 +5,12 @@ import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.persistence.*;
 
 import org.hibernate.annotations.ColumnDefault;
 
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
 
 import lombok.Data;
 
@@ -124,12 +122,6 @@ public class JournalLineItem implements Serializable {
 	@ColumnDefault(value = "false")
 	@Basic(optional = false)
 	private Boolean deleteFlag = Boolean.FALSE;
-
-//	@Column(name = "VERSION_NUMBER")
-//	@ColumnDefault(value = "1")
-//	@Basic(optional = false)
-//	@Version
-//	private Integer versionNumber = 1;
 
 	@ManyToOne
 	@JoinColumn(name = "JOURNAL_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_JOURNAL_LINE_ITEM_JOURNAL_ID_JOURNAL"))

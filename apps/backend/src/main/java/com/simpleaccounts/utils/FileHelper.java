@@ -24,6 +24,7 @@ import javax.mail.internet.MimeMultipart;
 import com.simpleaccounts.rest.migrationcontroller.DataMigrationRespModel;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,11 +41,11 @@ import com.simpleaccounts.constant.FileTypeEnum;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class FileHelper {
 
 	 @Value("resources/migrationuploadedfiles/")
-	@Autowired
-	private String basePath;
+	private final String basePath;
 
 	@Getter @Setter
 	public static String rootPath;
@@ -150,9 +151,7 @@ public class FileHelper {
 		}
 		return new FileInputStream(file);
 
-
 	}
-
 
 	public void createFolderIfNotExist(String filePath) {
 		File folder = new File(filePath);

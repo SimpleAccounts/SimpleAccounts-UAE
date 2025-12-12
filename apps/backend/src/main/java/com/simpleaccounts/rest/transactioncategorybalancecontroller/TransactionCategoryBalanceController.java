@@ -1,10 +1,11 @@
 package com.simpleaccounts.rest.transactioncategorybalancecontroller;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
+
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,15 +15,13 @@ import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
 import com.simpleaccounts.constant.dbfilter.ORDERBYENUM;
-import com.simpleaccounts.constant.dbfilter.ProductCategoryFilterEnum;
-import com.simpleaccounts.constant.dbfilter.ProductFilterEnum;
+
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.rest.bankaccountcontroller.BankAccountRestHelper;
-import com.simpleaccounts.rest.invoicecontroller.InvoiceRequestModel;
+
 import com.simpleaccounts.rest.migration.model.ListOfTCBPModel;
-import com.simpleaccounts.rest.productcontroller.ProductListModel;
+
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
@@ -41,31 +40,24 @@ import com.simpleaccounts.security.JwtTokenUtil;
 
 import io.swagger.annotations.ApiOperation;
 
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-
 	@RestController
 	@RequestMapping(value = "/rest/transactionCategoryBalance")
 	@SuppressWarnings({"java:S3973", "java:S131"})
-	public class TransactionCategoryBalanceController {
+	@RequiredArgsConstructor
+public class TransactionCategoryBalanceController {
 	private final Logger logger = LoggerFactory.getLogger(TransactionCategoryBalanceController.class);
 
-	@Autowired
-	private UserService userServiceNew;
+	private final UserService userServiceNew;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
 
-	@Autowired
-	private TransactionCategoryBalanceRestHelper transactionCategoryBalanceRestHelper;
+	private final TransactionCategoryBalanceRestHelper transactionCategoryBalanceRestHelper;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private JournalService journalService;
+	private final JournalService journalService;
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
@@ -83,15 +75,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 				TransactionCategory transactionCategory = transactionCategoryService
 						.findTransactionCategoryByTransactionCategoryCode(
 								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
-					//	getValidTransactionCategory(category);
-//				transactionCategoryService
-//						.findTransactionCategoryByTransactionCategoryCode(
-//								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
-//				boolean isDebit = false;
-//				if (StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
-//						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())) {
-//					isDebit = true;
-//				}
+
 				List<JournalLineItem> journalLineItemList = new ArrayList<>();
 				Journal journal = new Journal();
 				JournalLineItem journalLineItem1 = new JournalLineItem();
@@ -158,37 +142,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 		}
 
 	}
-
-//	private TransactionCategory getValidTransactionCategory(TransactionCategory transactionCategory) {
-//		String transactionCategoryCode = transactionCategory.getChartOfAccount().getChartOfAccountCode();
-//		ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
-//		if (chartOfAccountCategoryCodeEnum == null)
-//			return null;
-//		switch (chartOfAccountCategoryCodeEnum) {
-//			case ACCOUNTS_RECEIVABLE:
-//			case BANK:
-//			case CASH:
-//			case CURRENT_ASSET:
-//			case FIXED_ASSET:
-//			case OTHER_CURRENT_ASSET:
-//			case STOCK:
-//				return transactionCategoryService
-//						.findTransactionCategoryByTransactionCategoryCode(
-//								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
-//			case OTHER_LIABILITY:
-//			case OTHER_CURRENT_LIABILITIES:
-//			case EQUITY:
-//			case ADMIN_EXPENSE:
-//			case OTHER_EXPENSE:
-//			case COST_OF_GOODS_SOLD:
-//				return transactionCategoryService
-//						.findTransactionCategoryByTransactionCategoryCode(
-//								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode());
-//		}
-//		return transactionCategoryService
-//				.findTransactionCategoryByTransactionCategoryCode(
-//						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
-//	}
 
 	private boolean getValidTransactionCategoryType(TransactionCategory transactionCategory) {
 		String transactionCategoryCode = transactionCategory.getChartOfAccount().getChartOfAccountCode();

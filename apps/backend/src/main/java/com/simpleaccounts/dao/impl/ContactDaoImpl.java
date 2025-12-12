@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.CommonConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
@@ -10,15 +11,13 @@ import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.ContactDao;
 import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.Currency;
-import com.simpleaccounts.entity.Invoice;
-import com.simpleaccounts.entity.Product;
+
 import com.simpleaccounts.model.ContactModel;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.contactcontroller.ContactRequestFilterModel;
-import com.simpleaccounts.rest.migrationcontroller.MigrationController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.persistence.NamedQuery;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import org.apache.commons.collections4.CollectionUtils;
@@ -41,12 +39,12 @@ import org.slf4j.LoggerFactory;
  * Created by mohsin on 3/3/2017.
  */
 @Repository(value = "contactDao")
+@RequiredArgsConstructor
 public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements ContactDao {
 	
 	private final Logger logger = LoggerFactory.getLogger(ContactDaoImpl.class);
 
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public List<DropdownModel> getContactForDropdown(Integer contactType) {

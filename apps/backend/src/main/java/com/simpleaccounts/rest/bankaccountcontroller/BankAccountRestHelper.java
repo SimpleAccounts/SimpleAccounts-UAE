@@ -1,13 +1,14 @@
 package com.simpleaccounts.rest.bankaccountcontroller;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.bankaccount.*;
@@ -29,15 +30,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 	@Component
 	@SuppressWarnings("java:S131")
-	public class BankAccountRestHelper {
+	@RequiredArgsConstructor
+public class BankAccountRestHelper {
 
 	private static final String DATE_FORMAT_MMM_YYYY = "MMM yyyy";
 
 	@Autowired
 	BankAccountService bankAccountService;
 
-	@Autowired
-	private DateFormatUtil dateUtil;
+	private final DateFormatUtil dateUtil;
 
 	@Autowired
 	BankAccountStatusService bankAccountStatusService;
@@ -57,24 +58,18 @@ import org.springframework.transaction.annotation.Transactional;
 	@Autowired
 	CountryService countryService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
 
-	@Autowired
-	private BankDetailsRepository bankDetailsRepository;
+	private final BankDetailsRepository bankDetailsRepository;
 
 	@Autowired
 	TransactionRepository transactionRepository;
 
-	@Autowired
-	private ChartUtil util;
+	private final ChartUtil util;
 
-	@Autowired
-	private DateFormatUtil dateFormatUtil;
-
+	private final DateFormatUtil dateFormatUtil;
 
 	public PaginationResponseModel getListModel(PaginationResponseModel pagiantionResponseModel) {
 
@@ -137,8 +132,7 @@ import org.springframework.transaction.annotation.Transactional;
 			Integer res = transactionService.getTransactionCountByBankAccountId(bank.getBankAccountId());
 			bankModel.setTransactionCount(res);
 			if (bank.getOpeningDate() != null) {
-				//LocalDateTime openingDate = bank.getOpeningDate();
-				//openingDate = LocalDateTime.ofInstant(ZoneId.of(System.getProperty("simpleaccounts.user.timezone","Asia/Dubai")));
+
 				bankModel.setOpeningDate(bank.getOpeningDate());
 			}
 			if (bank.getBankAccountStatus() != null) {
@@ -203,8 +197,7 @@ import org.springframework.transaction.annotation.Transactional;
 		bankAccount.setVersionNumber(1);
 		if (bankModel.getOpeningDate()!= null) {
 //			//LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
-//					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
-//					.toLocalDateTime();
+
 			bankAccount.setOpeningDate(bankModel.getOpeningDate());
 		}
 		if (bankModel.getBankAccountStatus() != null) {
@@ -248,14 +241,6 @@ import org.springframework.transaction.annotation.Transactional;
 		}
 		return bankAccount;
 	}
-//	private void openingDate(BankModel bankModel, BankAccount bankAccount) {
-//		if (bankModel.getOpeningDate()!= null) {
-//			LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
-//					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
-//					.toLocalDateTime();
-//			bankAccount.setOpeningDate(openingDate);
-//		}
-//	}
 
 	public BankAccount getBankAccountByBankAccountModel(BankModel bankModel) {
 		if (bankModel.getBankAccountId() != null) {
