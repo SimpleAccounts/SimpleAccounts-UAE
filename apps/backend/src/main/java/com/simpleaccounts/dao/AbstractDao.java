@@ -10,6 +10,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -57,54 +58,37 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 
 	@Override
 	public List<ENTITY> executeQuery(List<DbFilter> dbFilters) {
-		StringBuilder queryBuilder = new StringBuilder("SELECT o FROM ").append(entityClass.getName()).append(" o ");
-		int i = 0;
-		for (DbFilter dbFilter : dbFilters) {
-			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
-				if (i > 0) {
-					queryBuilder.append(AND_CLAUSE);
-				} else {
-					queryBuilder.append(WHERE_CLAUSE);
-				}
-				queryBuilder.append("o.").append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
-				i++;
-			}
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<ENTITY> cq = cb.createQuery(entityClass);
+		Root<ENTITY> root = cq.from(entityClass);
+
+		List<Predicate> predicates = buildPredicates(dbFilters, root, cb);
+		if (!predicates.isEmpty()) {
+			cq.where(predicates.toArray(new Predicate[0]));
 		}
 
-		TypedQuery<ENTITY> typedQuery = entityManager.createQuery(queryBuilder.toString(), entityClass);
-		for (DbFilter dbFilter : dbFilters) {
-			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
-				typedQuery.setParameter(dbFilter.getDbCoulmnName(), dbFilter.getValue());
-			}
-		}
-
+		TypedQuery<ENTITY> typedQuery = entityManager.createQuery(cq);
 		return typedQuery.getResultList();
 	}
 
 	@Override
 	public List<ENTITY> executeQuery(List<DbFilter> dbFilters, PaginationModel paginationModel) {
-		StringBuilder queryBuilder = new StringBuilder("FROM ").append(entityClass.getName());
-		int i = 0;
-		for (DbFilter dbFilter : dbFilters) {
-			boolean orderBy = isOrderBy(dbFilter);
-			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !orderBy) {
-				if (i > 0) {
-					queryBuilder.append(AND_CLAUSE);
-				} else {
-					queryBuilder.append(WHERE_CLAUSE);
-				}
-				queryBuilder.append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
-				i++;
-			}
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<ENTITY> cq = cb.createQuery(entityClass);
+		Root<ENTITY> root = cq.from(entityClass);
+
+		List<Predicate> predicates = buildPredicates(dbFilters, root, cb);
+		if (!predicates.isEmpty()) {
+			cq.where(predicates.toArray(new Predicate[0]));
 		}
-		sortingCol(paginationModel, queryBuilder);
-		log.info("queryBuilder {}:",queryBuilder.toString());
-		TypedQuery<ENTITY> typedQuery = entityManager.createQuery(queryBuilder.toString(), entityClass);
-		for (DbFilter dbFilter : dbFilters) {
-			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !isOrderBy(dbFilter)) {
-				typedQuery.setParameter(dbFilter.getDbCoulmnName(), dbFilter.getValue());
-			}
+
+		// Add sorting
+		List<Order> orders = buildOrders(dbFilters, root, cb, paginationModel);
+		if (!orders.isEmpty()) {
+			cq.orderBy(orders);
 		}
+
+		TypedQuery<ENTITY> typedQuery = entityManager.createQuery(cq);
 
 		if (paginationModel != null && !paginationModel.isPaginationDisable()) {
 			typedQuery.setFirstResult(paginationModel.getPageNo());
@@ -114,40 +98,76 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 		return typedQuery.getResultList();
 	}
 
-	private void sortingCol(PaginationModel paginationModel, StringBuilder queryBuilder) {
-		if (paginationModel != null && paginationModel.getSortingCol() != null
-				&& !paginationModel.getSortingCol().isEmpty() && !paginationModel.getSortingCol().contains(" ") && !paginationModel.getSortingCol().contains("-1") ) {
-			queryBuilder.append(" order by " + paginationModel.getSortingCol() + " " + paginationModel.getOrder());
-		}
-	}
-
 	@Override
 	public Integer getResultCount(List<DbFilter> dbFilters) {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+		Root<ENTITY> root = cq.from(entityClass);
+		cq.select(cb.count(root)); // Select count for result size
 
-		StringBuilder queryBuilder = new StringBuilder("FROM ").append(entityClass.getName());
-		int i = 0;
-		for (DbFilter dbFilter : dbFilters) {
-			boolean orderBy = isOrderBy(dbFilter);
-			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !orderBy) {
-				if (i > 0) {
-					queryBuilder.append(AND_CLAUSE);
-				} else {
-					queryBuilder.append(WHERE_CLAUSE);
-				}
-				queryBuilder.append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
-				i++;
-			}
+		List<Predicate> predicates = buildPredicates(dbFilters, root, cb);
+		if (!predicates.isEmpty()) {
+			cq.where(predicates.toArray(new Predicate[0]));
 		}
 
-		TypedQuery<ENTITY> typedQuery = entityManager.createQuery(queryBuilder.toString(), entityClass);
-		for (DbFilter dbFilter : dbFilters) {
-			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !isOrderBy(dbFilter)) {
-				typedQuery.setParameter(dbFilter.getDbCoulmnName(), dbFilter.getValue());
-			}
-		}
-		List<ENTITY> result = typedQuery.getResultList();
-		return result != null && !result.isEmpty() ? result.size() : 0;
+		TypedQuery<Long> typedQuery = entityManager.createQuery(cq);
+		return typedQuery.getSingleResult().intValue();
 	}
+
+	private List<Predicate> buildPredicates(List<DbFilter> dbFilters, Root<ENTITY> root, CriteriaBuilder cb) {
+		List<Predicate> predicates = new ArrayList<>();
+		for (DbFilter dbFilter : dbFilters) {
+			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
+				// Safely build condition based on DbFilter's fields
+				switch (dbFilter.getCondition()) {
+					case "=":
+						predicates.add(cb.equal(root.get(dbFilter.getDbCoulmnName()), dbFilter.getValue()));
+						break;
+					case "like":
+						predicates.add(cb.like(root.get(dbFilter.getDbCoulmnName()), "%" + dbFilter.getValue() + "%"));
+						break;
+					case ">":
+						predicates.add(cb.greaterThan(root.get(dbFilter.getDbCoulmnName()), (Comparable) dbFilter.getValue()));
+						break;
+					case "<":
+						predicates.add(cb.lessThan(root.get(dbFilter.getDbCoulmnName()), (Comparable) dbFilter.getValue()));
+						break;
+					// Add more conditions as needed, or a default for unsupported conditions
+					default:
+						log.warn("Unsupported condition: {}", dbFilter.getCondition());
+						break;
+				}
+			}
+		}
+		return predicates;
+	}
+
+	private List<Order> buildOrders(List<DbFilter> dbFilters, Root<ENTITY> root, CriteriaBuilder cb, PaginationModel paginationModel) {
+		List<Order> orders = new ArrayList<>();
+
+		// Process orderBy from dbFilters if present
+		for (DbFilter dbFilter : dbFilters) {
+			if (isOrderBy(dbFilter)) {
+				if (dbFilter.getValue().toString().equalsIgnoreCase(ORDERBYENUM.ASC.toString())) {
+					orders.add(cb.asc(root.get(dbFilter.getDbCoulmnName())));
+				} else if (dbFilter.getValue().toString().equalsIgnoreCase(ORDERBYENUM.DESC.toString())) {
+					orders.add(cb.desc(root.get(dbFilter.getDbCoulmnName())));
+				}
+			}
+		}
+		
+		// Also consider paginationModel's sortingCol and order
+		if (paginationModel != null && paginationModel.getSortingCol() != null
+				&& !paginationModel.getSortingCol().isEmpty() && !paginationModel.getSortingCol().contains(" ") && !paginationModel.getSortingCol().contains("-1")) {
+			if (paginationModel.getOrder().equalsIgnoreCase(ORDERBYENUM.ASC.toString())) {
+				orders.add(cb.asc(root.get(paginationModel.getSortingCol())));
+			} else if (paginationModel.getOrder().equalsIgnoreCase(ORDERBYENUM.DESC.toString())) {
+				orders.add(cb.desc(root.get(paginationModel.getSortingCol())));
+			}
+		}
+		return orders;
+	}
+
 
 	@Override
 	public ENTITY persist(ENTITY entity) {

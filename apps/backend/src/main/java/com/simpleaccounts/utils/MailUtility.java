@@ -273,7 +273,6 @@ public class MailUtility {
 		mailProps.put("mail.smtp.starttls.enable prop", "true");
 		mailProps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		mailProps.put("mail.smtp.ssl.checkserveridentity", true);
-		LOGGER.debug("Email Properties :{}", mailProps);
 		sender.setJavaMailProperties(mailProps);
 		return sender;
 	}
