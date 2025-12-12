@@ -505,8 +505,6 @@ PoQuatationController {
           rfqPoGrnInvoiceRelationService.delete(rfqPoGrnRelation);
         }
         if (poQuatation != null) {
-            List<Integer> receiptList = new ArrayList<>();
-            receiptList.add(id);
             poQuatationService.delete(poQuatation);
 
         }

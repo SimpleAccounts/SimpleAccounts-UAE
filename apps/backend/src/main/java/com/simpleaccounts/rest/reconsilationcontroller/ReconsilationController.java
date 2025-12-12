@@ -193,11 +193,11 @@ public class ReconsilationController {
 							for(TransactionCategory transactionCategory : transactionCatList)
 							{
                              Integer transactionCategoryId = transactionCategory.getTransactionCategoryId();
-								if(transactionCategoryId == bankTransactionCategoryId)
-								{
-									//tempTransactionCatogaryList.add(transactionCategory);
-								}
-								else
+									if(Objects.equals(transactionCategoryId, bankTransactionCategoryId))
+									{
+										//tempTransactionCatogaryList.add(transactionCategory);
+									}
+									else
 								{
 									tempTransactionCatogaryList.add(transactionCategory);
 								}

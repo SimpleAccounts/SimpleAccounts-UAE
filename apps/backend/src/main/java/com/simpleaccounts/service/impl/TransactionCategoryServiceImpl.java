@@ -53,8 +53,6 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 
 	@Override
 	public List<TransactionCategory> findAllTransactionCategoryByUserId(Integer userId) {
-		Map<String, Object> parameterDataMap = new HashMap<>();
-		parameterDataMap.put("createdBy", userId);
 		DbFilter dbFilter = DbFilter.builder().dbCoulmnName("createdBy").condition(" = :createdBy").value(userId)
 				.build();
 		return getDao().executeQuery(Arrays.asList(dbFilter));

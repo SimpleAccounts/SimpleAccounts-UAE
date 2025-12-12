@@ -13,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -46,10 +47,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-	@SuppressWarnings("java:S4502") // CSRF protection is intentionally disabled for this stateless REST API
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 
-		httpSecurity.csrf().disable()
+		httpSecurity
+				.csrf()
+				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+				.ignoringAntMatchers("/rest/**", "/public/**")
+				.and()
 				// dont authenticate this particular request
 				.authorizeRequests().// all other requests need to be authenticated
 			//antMatchers("/config/getreleasenumber").permitAll().
@@ -66,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				antMatchers("/rest/**").authenticated().and().
 
 				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+					.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		// Add a filter to validate the tokens with every request
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

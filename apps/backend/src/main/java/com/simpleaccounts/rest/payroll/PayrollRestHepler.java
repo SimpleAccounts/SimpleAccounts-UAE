@@ -751,7 +751,6 @@ public class PayrollRestHepler {
     }
 
     void getSalaryComponents(List<SalaryComponentPersistModel> salaryComponentPersistModels, SalaryComponentPersistModel salaryComponentPersistModel) {
-        List<SalaryComponent> salaryComponentList = new ArrayList<>();
         if (salaryComponentPersistModels != null && !salaryComponentPersistModels.isEmpty()) {
             for (SalaryComponentPersistModel model : salaryComponentPersistModels) {
                 try {
@@ -771,7 +770,6 @@ public class PayrollRestHepler {
                         if (model.getComponentCode() != null && !model.getComponentCode().isEmpty()) {
                             salaryComponent.setComponentCode(model.getComponentCode());
                         }
-                        salaryComponentList.add(salaryComponent);
                         if (model.getInvoiceType() != null && !model.getInvoiceType().isEmpty()) {
                             Integer invoiceType=Integer.parseInt(model.getInvoiceType());
                             CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(invoiceType);
@@ -969,7 +967,6 @@ public class PayrollRestHepler {
             }
             salaryComponentService.persist(salaryComponent);
         }
-        List<SalaryComponent> salaryComponentList = new ArrayList<>();
         for (SalaryComponentPersistModel model : salaryComponentPersistModels) {
 
             try {
@@ -986,7 +983,6 @@ public class PayrollRestHepler {
                     if(model.getComponentType()!=null && !model.getComponentType().isEmpty()) {
                         salaryComponent.setComponentType(model.getComponentType());
                     }
-                    salaryComponentList.add(salaryComponent);
                     salaryComponentService.persist(salaryComponent);
                     EmployeeSalaryComponentRelation employeeSalaryComponentRelation = new EmployeeSalaryComponentRelation();
                     if(model.getEmployeeId()!=null) {
@@ -1001,7 +997,6 @@ public class PayrollRestHepler {
                         employeeSalaryComponentRelation.setYearlyAmount(model.getYearlyAmount());
                         employeeSalaryComponentRelation.setNoOfDays(BigDecimal.valueOf(30));
                         employeeSalaryComponentRelationService.persist(employeeSalaryComponentRelation);
-                        salaryComponentList.add(salaryComponent);
                         Map<String, Object> employmentParam = new HashMap<>();
                         employmentParam.put("employee", employeeSalaryComponentRelation.getEmployeeId());
                         List<Employment> employmentList = employmentService.findByAttributes(employmentParam);
@@ -1332,7 +1327,7 @@ public class PayrollRestHepler {
                         salary.setSalaryDate(salaryDate);}
                     salary.setTotalAmount(salaryAsPerNoOfWorkingDays);
                     salaryService.persist(salary);
-                    if (salaryComponent.getSalaryStructure().getId()!=PayrollEnumConstants.Deduction.getId()){
+                    if (!Objects.equals(salaryComponent.getSalaryStructure().getId(), PayrollEnumConstants.Deduction.getId())){
                           totalSalary = totalSalary.add(salaryAsPerNoOfWorkingDays);
                     }
 
@@ -1942,7 +1937,7 @@ public class PayrollRestHepler {
             }
         List<String> receiversName = new ArrayList<>();
         List<String> receiverList = new ArrayList<>();
-        if(user1!=null && user1.getUserId()!= user.getUserId()) {
+        if(user1!=null && !Objects.equals(user1.getUserId(), user.getUserId())) {
             receiverList.add(user1.getUserEmail());
             receiversName.add(user1.getFirstName() + " " + user1.getLastName());
         }

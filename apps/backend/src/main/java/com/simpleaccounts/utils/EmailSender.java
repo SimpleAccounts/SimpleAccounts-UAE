@@ -45,15 +45,15 @@ public class EmailSender {
 		Properties prop = new Properties();
 		prop.put("mail.smtp.host", mailDefaultConfigurationModel.getMailhost() != null ? mailDefaultConfigurationModel.getMailhost()
 				: System.getenv("SIMPLEACCOUNTS_SMTP_HOST"));
-		prop.put("mail.smtp.port", mailDefaultConfigurationModel.getMailport() != null ? mailDefaultConfigurationModel.getMailport()
-				: System.getenv("SIMPLEACCOUNTS_SMTP_PORT"));
-		prop.put("mail.smtp.auth", mailDefaultConfigurationModel.getMailsmtpAuth() != null ? mailDefaultConfigurationModel.getMailsmtpAuth()
-				: System.getenv("SIMPLEACCOUNTS_SMTP_AUTH"));
-//		prop.put("mail.smtp.socketFactory.port", "465");
-		prop.put("mail.smtp.starttls.enable prop", mailDefaultConfigurationModel.getMailstmpStartTLSEnable() != null ? mailDefaultConfigurationModel.getMailstmpStartTLSEnable()
-				: System.getenv("SIMPLEACCOUNTS_SMTP_STARTTLS_ENABLE"));
-		prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-		prop.put("mail.smtp.ssl.checkserveridentity", true);
+			prop.put("mail.smtp.port", mailDefaultConfigurationModel.getMailport() != null ? mailDefaultConfigurationModel.getMailport()
+					: System.getenv("SIMPLEACCOUNTS_SMTP_PORT"));
+			prop.put("mail.smtp.auth", mailDefaultConfigurationModel.getMailsmtpAuth() != null ? mailDefaultConfigurationModel.getMailsmtpAuth()
+					: System.getenv("SIMPLEACCOUNTS_SMTP_AUTH"));
+	//		prop.put("mail.smtp.socketFactory.port", "465");
+			prop.put("mail.smtp.starttls.enable", mailDefaultConfigurationModel.getMailstmpStartTLSEnable() != null ? mailDefaultConfigurationModel.getMailstmpStartTLSEnable()
+					: System.getenv("SIMPLEACCOUNTS_SMTP_STARTTLS_ENABLE"));
+			prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+			prop.put("mail.smtp.ssl.checkserveridentity", "true");
 
 		Session session;
 		session = Session.getInstance(prop, new javax.mail.Authenticator() {
@@ -72,15 +72,14 @@ public class EmailSender {
 			message.setSubject(subject);
 			if (!html) {
 				message.setText(content);
-			} else {
-				message.setContent(content, "text/html");
-			}
-			System.out.println(content);
-			Transport.send(message);
-		} catch (MessagingException e) {
-			logger.error(ErrorConstant.ERROR, e);
-		} catch (UnsupportedEncodingException e) {
-			logger.error("Error sending email", e);
+				} else {
+					message.setContent(content, "text/html");
+				}
+				Transport.send(message);
+			} catch (MessagingException e) {
+				logger.error(ErrorConstant.ERROR, e);
+			} catch (UnsupportedEncodingException e) {
+				logger.error("Error sending email", e);
 		}
 	}
 
@@ -662,4 +661,3 @@ public class EmailSender {
 			"</body>\n" +
 			"</html>";
 }
-

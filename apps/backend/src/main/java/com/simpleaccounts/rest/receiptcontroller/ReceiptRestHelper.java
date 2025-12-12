@@ -84,21 +84,17 @@ public class ReceiptRestHelper {
 				model.setReceiptNo(receipt.getReceiptNo());
 				getContact(receipt, model);
 
-				List<CustomerInvoiceReceipt> receiptEntryList = customerInvoiceReceiptService
-						.findForReceipt(receipt.getId());
-				if (receiptEntryList != null && !receiptEntryList.isEmpty()) {
-					List<String> invIdlist = new ArrayList<>();
-					Currency currency = new Currency();
-					String currencyIsoCode = "";
-					for (CustomerInvoiceReceipt receiptEntry : receiptEntryList) {
-						//invIdlist.add(receiptEntry.getCustomerInvoice().getId().toString());
-						invIdlist.add(receiptEntry.getCustomerInvoice().getCurrency().getCurrencyIsoCode());
-                        invIdlist.add(receiptEntry.getCustomerInvoice().getCurrency().getCurrencySymbol());
-						//invIdlist.add(receiptEntry.getCustomerInvoice().getCurrency().getCurrencyName());
-						currencyIsoCode =receiptEntry.getCustomerInvoice().getCurrency().getCurrencyIsoCode();
+					List<CustomerInvoiceReceipt> receiptEntryList = customerInvoiceReceiptService
+							.findForReceipt(receipt.getId());
+					if (receiptEntryList != null && !receiptEntryList.isEmpty()) {
+						String currencyIsoCode = null;
+						for (CustomerInvoiceReceipt receiptEntry : receiptEntryList) {
+							currencyIsoCode = receiptEntry.getCustomerInvoice().getCurrency().getCurrencyIsoCode();
+						}
+						if (currencyIsoCode != null) {
+							model.setCurrencyIsoCode(currencyIsoCode);
+						}
 					}
-					model.setCurrencyIsoCode(currencyIsoCode);
-				}
 					if(receipt.getInvoice()!=null){
 						model.setInvoiceNumber(receipt.getInvoice().getReferenceNumber());
 					}

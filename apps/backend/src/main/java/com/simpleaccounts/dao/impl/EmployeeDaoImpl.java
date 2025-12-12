@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -72,13 +73,13 @@ public class EmployeeDaoImpl extends AbstractDao<Integer, Employee> implements E
 		}
 
 		for (Employee employee : employeeDbList){
-			for(EmployeeUserRelation employeeUserRelation : employeeUserRelationsList1) {
+				for(EmployeeUserRelation employeeUserRelation : employeeUserRelationsList1) {
 
-				if (employeeUserRelation.getEmployee().getId()==employee.getId()) {
-					employeeList.remove(employee);
+					if (Objects.equals(employeeUserRelation.getEmployee().getId(), employee.getId())) {
+						employeeList.remove(employee);
+					}
 				}
 			}
-		}
 
 		List<DropdownObjectModel> dropdownObjectModelList = new ArrayList<>();
 		if (employeeList != null && employeeList.size() > 0) {

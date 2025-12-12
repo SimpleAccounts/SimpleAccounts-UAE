@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PAYSLIP_MAIL_TEMPLATE;
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PAYSLIP_TEMPLATE;
@@ -143,8 +144,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
                     salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY));
                     salary.setTotalAmount(salaryAsPerNoOfWorkingDays);
                     salaryService.persist(salary);
-                    if (salaryComponent.getSalaryStructure().getId()==PayrollEnumConstants.Deduction
-                            .getId()){
+                    if (Objects.equals(salaryComponent.getSalaryStructure().getId(), PayrollEnumConstants.Deduction.getId())){
                       //  salaryForjournalEntry = salaryForjournalEntry.subtract(BigDecimal.valueOf(totalSalaryForSingleDay * salaryComponent.getNoOfDays()));
                     }
                     else {
@@ -253,7 +253,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
                     salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY));
                     salary.setTotalAmount(salaryAsPerNoOfWorkingDays);
                     salaryService.persist(salary);
-                    if (salaryComponent.getSalaryStructure().getId()==PayrollEnumConstants.Deduction.getId()){
+                    if (Objects.equals(salaryComponent.getSalaryStructure().getId(), PayrollEnumConstants.Deduction.getId())){
                         salaryForjournalEntry = salaryForjournalEntry.subtract(totalSalaryForSingleDay.multiply(salaryComponent.getNoOfDays()));
                     }
                     else {

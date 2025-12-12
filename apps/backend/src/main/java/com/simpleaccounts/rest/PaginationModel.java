@@ -13,11 +13,11 @@ import lombok.Data;
  *
  * @author uday
  */
-@Data
-public class PaginationModel {
-	private Integer pageNo;
-	private Integer pageSize;
-	private String order;
+	@Data
+	public class PaginationModel {
+		private Integer pageNo;
+		private Integer pageSize;
+		private String order;
 	private String sortingCol;
 	private boolean paginationDisable;
 
@@ -35,19 +35,25 @@ public class PaginationModel {
 		return sortingCol;
 	}
 
-	public Integer getPageNo() {
-		if (pageNo == null) {
-			pageNo = 0;
-		} else {
-			pageNo = pageNo * getPageSize();
-		}
-		return pageNo;
-	}
+		public Integer getPageNo() {
+			int pageNumber = pageNo == null ? 0 : pageNo;
+			if (pageNumber < 0) {
+				return 0;
+			}
 
-	public Integer getPageSize() {
-		if (pageSize == null) {
-			pageSize = 10;
+			int size = getPageSize();
+			long offset = (long) pageNumber * (long) size;
+			if (offset > Integer.MAX_VALUE) {
+				return Integer.MAX_VALUE;
+			}
+			return (int) offset;
 		}
-		return pageSize;
+
+		public Integer getPageSize() {
+			if (pageSize == null || pageSize <= 0) {
+				return 10;
+			}
+			int maxPageSize = 1000;
+			return Math.min(pageSize, maxPageSize);
+		}
 	}
-}

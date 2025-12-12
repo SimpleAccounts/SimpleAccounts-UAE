@@ -47,21 +47,13 @@ public class DetailedGeneralLedgerReportController {
 	@LogRequest
 	@ApiOperation(value = "Get list of DateFormat")
 	@GetMapping(value = "/getList")
-	public ResponseEntity<List> getDateFormat(ReportRequestModel reportRequestModel,
-											  HttpServletRequest request) {
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userService.findByPK(userId);
-
-		Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-		if(user.getRole().getRoleCode()!=1) {
-			filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-		}
-		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
-		List list = detailedGeneralLedgerRestHelper.getDetailedGeneralLedgerReport(reportRequestModel);
-		try {
-			if (list == null) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
+		public ResponseEntity<List> getDateFormat(ReportRequestModel reportRequestModel,
+												  HttpServletRequest request) {
+			List list = detailedGeneralLedgerRestHelper.getDetailedGeneralLedgerReport(reportRequestModel);
+			try {
+				if (list == null) {
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}

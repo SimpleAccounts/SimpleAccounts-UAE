@@ -1893,7 +1893,7 @@ public class InvoiceRestHelper {
 
 	}
 	private void getContact(Contact contact, Map<String, String> invoiceDataMap, String value) {
-		if(contact!= null && !contact.getOrganization().isEmpty()){
+		if(contact!= null && contact.getOrganization() != null && !contact.getOrganization().isEmpty()){
 			invoiceDataMap.put(value,contact.getOrganization());
 		}
 		else if (contact != null && !contact.getFirstName().isEmpty()) {
@@ -1916,47 +1916,28 @@ public class InvoiceRestHelper {
 
 	}
 	private void getContactAddress1(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
-		if (invoice.getContact() != null || !invoice.getContact().getAddressLine1().isEmpty()) {
-			StringBuilder sb = new StringBuilder();
-			Contact c = invoice.getContact();
-			if (c.getAddressLine1() != null && !c.getAddressLine1().isEmpty()) {
-				sb.append(c.getAddressLine1()).append(" ");
-			}
-
-			invoiceDataMap.put(value, sb.toString());
-		}
-		else{
+		Contact c = invoice.getContact();
+		if (c != null && c.getAddressLine1() != null && !c.getAddressLine1().isEmpty()) {
+			invoiceDataMap.put(value, c.getAddressLine1() + " ");
+		} else {
 			invoiceDataMap.put(value, "---");
 		}
 
 	}
 	private void getCNContactAddress1(Contact contact, Map<String, String> invoiceDataMap, String value) {
-		if (contact != null || !contact.getAddressLine1().isEmpty()) {
-			StringBuilder sb = new StringBuilder();
-			Contact c = contact;
-			if (c.getAddressLine1() != null && !c.getAddressLine1().isEmpty()) {
-				sb.append(c.getAddressLine1()).append(" ");
-			}
-			invoiceDataMap.put(value, sb.toString());
-		}
-		else{
+		if (contact != null && contact.getAddressLine1() != null && !contact.getAddressLine1().isEmpty()) {
+			invoiceDataMap.put(value, contact.getAddressLine1() + " ");
+		} else {
 			invoiceDataMap.put(value, "---");
 		}
 
 	}
 
 	private void getContactAddress2(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
-		if (invoice.getContact() != null || !invoice.getContact().getAddressLine1().isEmpty()) {
-			StringBuilder sb = new StringBuilder();
-			Contact c = invoice.getContact();
-
-			if (c.getAddressLine2() != null && !c.getAddressLine2().isEmpty()) {
-				sb.append(c.getAddressLine2()).append(" ");
-			}
-
-			invoiceDataMap.put(value, sb.toString());
-		}
-		else{
+		Contact c = invoice.getContact();
+		if (c != null && c.getAddressLine2() != null && !c.getAddressLine2().isEmpty()) {
+			invoiceDataMap.put(value, c.getAddressLine2() + " ");
+		} else {
 			invoiceDataMap.put(value, "---");
 		}
 
@@ -2945,14 +2926,8 @@ public class InvoiceRestHelper {
 		journal.setJournalLineItems(journalLineItemList);
 		journal.setCreatedBy(userId);
 		journal.setPostingReferenceType(PostingReferenceTypeEnum.INVOICE);
-		if(invoice!=null) {
-			journal.setJournalDate(invoice.getInvoiceDate());
-			journal.setTransactionDate(invoice.getInvoiceDate());
-		}
-		else {
-			//journal.setJournalDate(LocalDate.now());
-			journal.setTransactionDate(invoice.getInvoiceDate());
-		}
+		journal.setJournalDate(invoice.getInvoiceDate());
+		journal.setTransactionDate(invoice.getInvoiceDate());
 		journal.setJournlReferencenNo(invoice.getReferenceNumber());
 		if (invoice.getType()==1){
 			journal.setDescription("Supplier Invoice");
@@ -3186,13 +3161,13 @@ public class InvoiceRestHelper {
 
 	private void getName(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		int row=0;
-		if (invoice.getInvoiceLineItems() != null) {
-			for(InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()){
-				if (invoiceLineItem.getVatCategory()!= null && invoiceLineItem.getVatCategory().equals("STANDARD RATED TAX(5%)")) {
-					if (row==0){
-						row++;
-						invoiceDataMap.put(value, invoiceLineItem.getVatCategory().getName());
-					}
+			if (invoice.getInvoiceLineItems() != null) {
+				for(InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()){
+					if (invoiceLineItem.getVatCategory()!= null && "STANDARD RATED TAX(5%)".equals(invoiceLineItem.getVatCategory().getName())) {
+						if (row==0){
+							row++;
+							invoiceDataMap.put(value, invoiceLineItem.getVatCategory().getName());
+						}
 					else if(invoiceLineItem.getVatAmount().intValueExact()>0) {
 						invoiceDataMap.put("{vatCategory"+row+"}", invoiceLineItem.getVatCategory().getName());
 						row++;
@@ -3476,19 +3451,13 @@ public class InvoiceRestHelper {
 		if (invoice.getType()==1){
 			journal.setDescription("Reversal of journal entry against Supplier Invoice No:-"+invoice.getReferenceNumber());
 		}
-		else {
-			journal.setDescription("Reversal of journal entry against Customer Invoice No:-"+invoice.getReferenceNumber());
-		}
-		if(invoice!=null) {
+			else {
+				journal.setDescription("Reversal of journal entry against Customer Invoice No:-"+invoice.getReferenceNumber());
+			}
 			journal.setJournalDate(invoice.getInvoiceDate());
 			journal.setTransactionDate(invoice.getInvoiceDate());
+			return journal;
 		}
-		else {
-			//journal.setJournalDate(LocalDate.now());
-			journal.setTransactionDate(invoice.getInvoiceDate());
-		}
-		return journal;
-	}
 	private void reverseCustomerInvoice(boolean isCustomerInvoice, List<InvoiceLineItem> invoiceLineItemList,
 								 Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap, Map<Integer, TransactionCategory> tnxcatMap,Integer
 										 userId) {

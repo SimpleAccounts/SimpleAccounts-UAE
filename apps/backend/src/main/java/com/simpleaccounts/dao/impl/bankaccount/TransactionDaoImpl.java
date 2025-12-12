@@ -125,24 +125,27 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	}
 
 	@Override
-	public List<TransactionReportRestModel> getTransactionsReport(Integer transactionTypeId,
-																  Integer transactionCategoryId, Date startDate, Date endDate, Integer bankAccountId, Integer pageNo,
-																  Integer pageSize) {
-		TypedQuery<Transaction> query = getTransactionTypedQuery(transactionTypeId, transactionCategoryId, startDate, endDate);
-		int maxRows = CommonUtil.DEFAULT_ROW_COUNT;
-		if (pageSize != null) {
-			maxRows = pageSize;
-		}
-		int start = 0;
-		if (pageNo != null) {
-			pageNo = pageNo * maxRows;
-			start = pageNo;
-		}
-		query.setFirstResult(start);
-		query.setMaxResults(maxRows);
-		List<TransactionReportRestModel> transactionReportRestModelList = new ArrayList<>();
-		List<Transaction> transactionList = query.getResultList();
-		if (transactionList != null && !transactionList.isEmpty()) {
+		public List<TransactionReportRestModel> getTransactionsReport(Integer transactionTypeId,
+																	  Integer transactionCategoryId, Date startDate, Date endDate, Integer bankAccountId, Integer pageNo,
+																	  Integer pageSize) {
+			TypedQuery<Transaction> query = getTransactionTypedQuery(transactionTypeId, transactionCategoryId, startDate, endDate);
+			int maxRows = pageSize != null && pageSize > 0 ? pageSize : CommonUtil.DEFAULT_ROW_COUNT;
+			int maxAllowedRows = 1000;
+			maxRows = Math.min(maxRows, maxAllowedRows);
+
+			int pageNumber = pageNo != null ? pageNo : 0;
+			if (pageNumber < 0) {
+				pageNumber = 0;
+			}
+
+			long offset = (long) pageNumber * (long) maxRows;
+			int start = offset > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) offset;
+
+			query.setFirstResult(start);
+			query.setMaxResults(maxRows);
+			List<TransactionReportRestModel> transactionReportRestModelList = new ArrayList<>();
+			List<Transaction> transactionList = query.getResultList();
+			if (transactionList != null && !transactionList.isEmpty()) {
 			for (Transaction transaction : transactionList) {
 				TransactionReportRestModel transactionReportRestModel = new TransactionReportRestModel();
 				if (transaction.getBankAccount() != null) {
@@ -163,8 +166,8 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 				transactionReportRestModelList.add(transactionReportRestModel);
 			}
 		}
-		return transactionReportRestModelList;
-	}
+			return transactionReportRestModelList;
+		}
 
 	private TypedQuery<Transaction> getTransactionTypedQuery(Integer transactionTypeId, Integer transactionCategoryId, Date startDate, Date endDate) {
 		StringBuilder builder = new StringBuilder();

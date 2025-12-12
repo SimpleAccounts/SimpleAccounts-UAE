@@ -550,17 +550,11 @@ public class CreditNoteRestHelper {
                 journalLineItemList.add(journalLineItem);
             }
         }
-        journal.setJournalLineItems(journalLineItemList);
-        journal.setCreatedBy(userId);
-
-        if (creditNote != null) {
-            journal.setJournalDate(creditNote.getCreditNoteDate().toLocalDate());
-            journal.setTransactionDate(creditNote.getCreditNoteDate().toLocalDate());
-        } else {
-            journal.setJournalDate(LocalDate.now());
-            journal.setTransactionDate(creditNote.getCreditNoteDate().toLocalDate());
-        }
-        journal.setJournlReferencenNo(creditNote.getCreditNoteNumber());
+	        journal.setJournalLineItems(journalLineItemList);
+	        journal.setCreatedBy(userId);
+	        journal.setJournalDate(creditNote.getCreditNoteDate().toLocalDate());
+	        journal.setTransactionDate(creditNote.getCreditNoteDate().toLocalDate());
+	        journal.setJournlReferencenNo(creditNote.getCreditNoteNumber());
         if (creditNote.getType()==7){
             journal.setDescription("Credit Note");
             journal.setPostingReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
@@ -1125,86 +1119,13 @@ public class CreditNoteRestHelper {
             journalLineItem1.setDebitAmount(creditNote.getTotalAmount());
         journalLineItem1.setReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
         journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
-        journalLineItem1.setCreatedBy(userId);
-        journalLineItem1.setJournal(journal);
-        journalLineItemList.add(journalLineItem1);
-        Map<String, Object> param = new HashMap<>();
-        param.put("invoice", creditNote);
-        param.put("deleteFlag", false);
-        List<InvoiceLineItem> invoiceLineItemList = invoiceLineItemService.findByAttributes(param);
-        Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap = new HashMap<>();
-        Map<Integer, TransactionCategory> tnxcatMap = new HashMap<>();
-       // customerInvoice(isCustomerCreditNote, invoiceLineItemList, tnxcatIdInvLnItemMap, tnxcatMap, userId);
-        Boolean isEligibleForInventoryAssetJournalEntry = false;
-        BigDecimal inventoryAssetValue = BigDecimal.ZERO;
-        for (Integer categoryId : tnxcatIdInvLnItemMap.keySet()) {
-            List<InvoiceLineItem> sortedItemList = tnxcatIdInvLnItemMap.get(categoryId);
-            BigDecimal totalAmount = BigDecimal.ZERO;
-            BigDecimal inventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
-            TransactionCategory purchaseCategory = null;
-            Boolean isEligibleForInventoryJournalEntry = false;
-            for (InvoiceLineItem sortedLineItem : sortedItemList) {
-                BigDecimal amntWithoutVat = sortedLineItem.getUnitPrice()
-                        .multiply(BigDecimal.valueOf(sortedLineItem.getQuantity()));
-                totalAmount = totalAmount.add(amntWithoutVat);
-                if (sortedLineItem.getProduct().getIsInventoryEnabled() && isCustomerCreditNote) {
-                    List<Inventory> inventoryList = inventoryService.getInventoryByProductId(sortedLineItem.getProduct().getProductID());
-                    for (Inventory inventory : inventoryList) {
-                        inventoryAssetValuePerTransactionCategory = inventoryAssetValuePerTransactionCategory.add(BigDecimal.valueOf(sortedLineItem.getQuantity()).multiply(BigDecimal.valueOf
-                                (inventory.getUnitCost())));
-                    }
-                    purchaseCategory = sortedLineItem.getTrnsactioncCategory() != null ? sortedLineItem.getTrnsactioncCategory()
-                            : sortedLineItem.getProduct().getLineItemList().stream()
-                            .filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
-                            .getTransactioncategory();
-                    isEligibleForInventoryJournalEntry = true;
-                }
-            }
-            if (isCustomerCreditNote && isEligibleForInventoryJournalEntry) {
-                JournalLineItem journalLineItem = new JournalLineItem();
-                journalLineItem.setTransactionCategory(transactionCategoryService
-                        .findTransactionCategoryByTransactionCategoryCode(
-                                TransactionCategoryCodeEnum.INVENTORY_ASSET.getCode()));
-                journalLineItem.setDebitAmount(inventoryAssetValuePerTransactionCategory);
-                journalLineItem.setReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
-                journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
-                journalLineItem.setCreatedBy(userId);
-                journalLineItem.setJournal(journal);
-                journalLineItemList.add(journalLineItem);
-                inventoryAssetValue = inventoryAssetValue.add(inventoryAssetValuePerTransactionCategory);
-                isEligibleForInventoryAssetJournalEntry = true;
-            }
-            if (creditNote.getDiscount() != null) {
-                totalAmount = totalAmount.subtract(creditNote.getDiscount());
-            }
-            JournalLineItem journalLineItem = new JournalLineItem();
-            journalLineItem.setTransactionCategory(tnxcatMap.get(categoryId));
-            if (isCustomerCreditNote)
-                journalLineItem.setDebitAmount(totalAmount);
-            else
-                journalLineItem.setCreditAmount(totalAmount);
-            journalLineItem.setReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
-            journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
-            journalLineItem.setCreatedBy(userId);
-            journalLineItem.setJournal(journal);
-            journalLineItemList.add(journalLineItem);
-        }
-        if (isCustomerCreditNote && isEligibleForInventoryAssetJournalEntry) {
-            JournalLineItem journalLineItem = new JournalLineItem();
-            journalLineItem.setTransactionCategory(transactionCategoryService
-                    .findTransactionCategoryByTransactionCategoryCode(
-                            TransactionCategoryCodeEnum.COST_OF_GOODS_SOLD.getCode()));
-            journalLineItem.setCreditAmount(inventoryAssetValue);
-            journalLineItem.setReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
-            journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
-            journalLineItem.setCreatedBy(userId);
-            journalLineItem.setJournal(journal);
-            journalLineItemList.add(journalLineItem);
-        }
-        if (creditNote.getTotalVatAmount().compareTo(BigDecimal.ZERO) > 0) {
-            JournalLineItem journalLineItem = new JournalLineItem();
-            TransactionCategory inputVatCategory = transactionCategoryService
-                    .findTransactionCategoryByTransactionCategoryCode(
+	        journalLineItem1.setCreatedBy(userId);
+	        journalLineItem1.setJournal(journal);
+	        journalLineItemList.add(journalLineItem1);
+	        if (creditNote.getTotalVatAmount().compareTo(BigDecimal.ZERO) > 0) {
+	            JournalLineItem journalLineItem = new JournalLineItem();
+	            TransactionCategory inputVatCategory = transactionCategoryService
+	                    .findTransactionCategoryByTransactionCategoryCode(
                             isCustomerCreditNote ? TransactionCategoryCodeEnum.OUTPUT_VAT.getCode()
                                     : TransactionCategoryCodeEnum.INPUT_VAT.getCode());
             journalLineItem.setTransactionCategory(inputVatCategory);
@@ -1218,18 +1139,13 @@ public class CreditNoteRestHelper {
             journalLineItem.setJournal(journal);
             journalLineItemList.add(journalLineItem);
         }
-        journal.setJournalLineItems(journalLineItemList);
-        journal.setCreatedBy(userId);
-        journal.setPostingReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
-        if (creditNote != null) {
-            journal.setJournalDate(creditNote.getInvoiceDate());
-            journal.setTransactionDate(creditNote.getInvoiceDate());
-        } else {
-            journal.setJournalDate(LocalDate.now());
-            journal.setTransactionDate(creditNote.getInvoiceDate());
-        }
-        return journal;
-    }
+	        journal.setJournalLineItems(journalLineItemList);
+	        journal.setCreatedBy(userId);
+	        journal.setPostingReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
+	        journal.setJournalDate(creditNote.getInvoiceDate());
+	        journal.setTransactionDate(creditNote.getInvoiceDate());
+	        return journal;
+	    }
 
     public CreditNote createCNWithoutInvoice(CreditNoteRequestModel creditNoteRequestModel, Integer userId) {
         CreditNote creditNote = null;

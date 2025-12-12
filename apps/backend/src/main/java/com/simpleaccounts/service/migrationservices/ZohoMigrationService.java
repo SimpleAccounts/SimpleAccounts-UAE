@@ -1691,7 +1691,6 @@ public class ZohoMigrationService {
 					tCategoryList.add(transactionCategory.getTransactionCategoryName().toString());
 				}
 				for (Map<String, String> mapRecord : mapList) {
-					List<TransactionCategoryModelForMigration> transactionCategoryModelForMigrationList = new ArrayList<>();
 					if (file.equals("Invoice.csv") || file.equals("Bill.csv") || file.equals("Item.csv")) {
 						if (mapRecord.containsKey(ACCOUNT)) {
 							Map<String, Object> map = new HashMap<>();
@@ -1720,7 +1719,6 @@ public class ZohoMigrationService {
 								if (existList.contains(transactionCategoryModelForMigration)) {
 									continue;
 								} else {
-									transactionCategoryModelForMigrationList.add(transactionCategoryModelForMigration);
 									existList.add(transactionCategoryModelForMigration);
 								}
 							} else {
@@ -1761,7 +1759,6 @@ public class ZohoMigrationService {
 									if (existList.contains(transactionCategoryModelForMigration)) {
 										continue;
 									} else {
-										transactionCategoryModelForMigrationList.add(transactionCategoryModelForMigration);
 										existList.add(transactionCategoryModelForMigration);
 									}
 								} else {

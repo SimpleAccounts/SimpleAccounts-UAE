@@ -50,9 +50,8 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 	}
 
 	@Override
-
+	
 	public synchronized BigDecimal updateRunningBalance(JournalLineItem lineItem) {
-		List<TransactionCategoryBalance> balanceList = new ArrayList<>();
 		if (lineItem != null) {
 			TransactionCategory category = lineItem.getTransactionCategory();
 
@@ -93,7 +92,6 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 				}
 			}
 			balance.setRunningBalance(runningBalance);
-			balanceList.add(balance);
 			transactionCategoryBalanceDao.update(balance);
 			transactionCategoryClosingBalanceService.updateClosingBalance(lineItem);
 			return balance.getRunningBalance();
@@ -103,7 +101,6 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 	}
 
 	public synchronized BigDecimal updateRunningBalanceAndOpeningBalance(JournalLineItem lineItem,Boolean updateOpeningBalance) {
-		List<TransactionCategoryBalance> balanceList = new ArrayList<>();
 		if (lineItem != null) {
 			TransactionCategory category = lineItem.getTransactionCategory();
 
@@ -149,7 +146,6 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 				balance.setOpeningBalance(runningBalance.negate());
 			else if(updateOpeningBalance&& runningBalance!=null)
 				balance.setOpeningBalance(runningBalance);
-			balanceList.add(balance);
 			transactionCategoryBalanceDao.update(balance);
 			transactionCategoryClosingBalanceService.updateClosingBalance(lineItem);
 			return balance.getRunningBalance();

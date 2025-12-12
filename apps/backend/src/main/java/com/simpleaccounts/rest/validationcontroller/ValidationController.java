@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -233,7 +234,7 @@ public class ValidationController {
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<BankAccount> bankAccountList1 = bankAccountService.findByAttributes(param);
                     if(bankAccountList1!= null && bankAccountList1.size()>0 ){
-                        if( validationModel.getCheckId()!=bankAccountList1.get(0).getBankAccountId()){
+                        if(!Objects.equals(validationModel.getCheckId(), bankAccountList1.get(0).getBankAccountId())){
                             return new ResponseEntity<>("Bank Account Already Exists", HttpStatus.OK);
                         }
                         else

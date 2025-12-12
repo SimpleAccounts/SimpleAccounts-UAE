@@ -64,7 +64,6 @@ public class TransactionImportRestHelper {
 	private boolean transactionDateBoolean = false;
 	private boolean descriptionBoolean = false;
 	private List<TransactionModel> transactionList = new ArrayList<>();
-	private List<TransactionModel> invalidTransactionList = new ArrayList<>();
 	private boolean debitAmountBoolean = false;
 	private boolean creditAmountBoolean = false;
 	List<String> headerText = new ArrayList<String>();

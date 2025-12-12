@@ -35,9 +35,6 @@ public class ProductCategoryServiceImpl extends ProductCategoryService {
 
 	@Override
 	public List<ProductCategory> findAllProductCategoryByUserId(Integer userId, boolean isDeleted) {
-		Map<String, Object> parameterDataMap = new HashMap<>();
-		parameterDataMap.put("createdBy", userId);
-
 		List<DbFilter> filterList = new ArrayList<>();
 		filterList.add(DbFilter.builder().dbCoulmnName("createdBy").condition(" = :createdBy").value(userId).build());
 		filterList.add(

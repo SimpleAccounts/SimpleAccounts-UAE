@@ -46,13 +46,6 @@ public class FinancialReportController {
 	@GetMapping(value = "/profitandloss")
 	public ResponseEntity<ProfitAndLossResponseModel> getFormat(FinancialReportRequestModel reportRequestModel,
 																HttpServletRequest request) {
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userService.findByPK(userId);
-		Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-		if (user.getRole().getRoleCode() != 1) {
-			filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-		}
-		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
 		ProfitAndLossResponseModel profitAndLossResponseModel = financialReportRestHelper.getProfitAndLossReport(reportRequestModel);
 		try {
 			if (profitAndLossResponseModel == null) {
@@ -69,13 +62,6 @@ public class FinancialReportController {
 	@GetMapping(value = "/balanceSheet")
 	public ResponseEntity<BalanceSheetResponseModel> getFormatBalanceSheet(FinancialReportRequestModel reportRequestModel,
 																		   HttpServletRequest request) {
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userService.findByPK(userId);
-		Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-		if (user.getRole().getRoleCode() != 1) {
-			filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-		}
-		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
 		BalanceSheetResponseModel balanceSheetResponseModel = financialReportRestHelper.getBalanceSheetReport(reportRequestModel);
 
 		try {
@@ -93,13 +79,6 @@ public class FinancialReportController {
 	@GetMapping(value = "/trialBalanceReport")
 	public ResponseEntity<TrialBalanceResponseModel> getTrialBalanceReport(FinancialReportRequestModel reportRequestModel,
 																		   HttpServletRequest request) {
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userService.findByPK(userId);
-		Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-		if (user.getRole().getRoleCode() != 1) {
-			filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-		}
-		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
 		TrialBalanceResponseModel trialBalanceResponseModel = financialReportRestHelper.getTrialBalanceReport(reportRequestModel);
 		try {
 			if (trialBalanceResponseModel == null) {
@@ -116,36 +95,22 @@ public class FinancialReportController {
 	@GetMapping(value = "/vatReturnReport")
 	public ResponseEntity<VatReportResponseModel> getvatReturnReport(FinancialReportRequestModel reportRequestModel,
 																	 HttpServletRequest request) {
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userService.findByPK(userId);
-		Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-		if (user.getRole().getRoleCode() != 1) {
-			filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-		}
-			filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
-			VatReportResponseModel vatReportResponseModel = financialReportRestHelper.getVatReturnReport(reportRequestModel);
-			try {
-				if (vatReportResponseModel == null) {
-					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-				}
-			} catch (Exception e) {
-				logger.error(ERROR, e);
+		VatReportResponseModel vatReportResponseModel = financialReportRestHelper.getVatReturnReport(reportRequestModel);
+		try {
+			if (vatReportResponseModel == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity<>(vatReportResponseModel, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
 		}
+		return new ResponseEntity<>(vatReportResponseModel, HttpStatus.OK);
+	}
 
 	@LogRequest
 	@ApiOperation(value = "Get CashFlow Report")
 	@GetMapping(value = "/cashflow")
 	public ResponseEntity<CashFlowResponseModel> getFormatCashFlow(FinancialReportRequestModel reportRequestModel,
 																HttpServletRequest request) {
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userService.findByPK(userId);
-		Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
-		if (user.getRole().getRoleCode() != 1) {
-			filterDataMap.put(DateFormatFilterEnum.USER_ID, userId);
-		}
-		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
 		CashFlowResponseModel cashFlowResponseModel = financialReportRestHelper.getCashFlowReport(reportRequestModel);
 		try {
 			if (cashFlowResponseModel == null) {
@@ -158,4 +123,3 @@ public class FinancialReportController {
 	}
 
 }
-
