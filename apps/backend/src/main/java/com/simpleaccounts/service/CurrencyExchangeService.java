@@ -1,9 +1,7 @@
 package com.simpleaccounts.service;
 
-import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.CurrencyConversion;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**

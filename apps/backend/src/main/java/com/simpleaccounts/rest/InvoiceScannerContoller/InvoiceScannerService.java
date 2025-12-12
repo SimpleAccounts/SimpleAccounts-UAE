@@ -1,8 +1,7 @@
 package com.simpleaccounts.rest.InvoiceScannerContoller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.dao.CurrencyDao;
 import com.simpleaccounts.entity.*;
@@ -26,12 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ServerErrorException;
 
 import javax.persistence.EntityManager;
-import java.io.IOException;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.*;
 
 @Service
@@ -390,7 +389,6 @@ public class InvoiceScannerService {
         expense.setExclusiveVat(model.getExclusiveVat());
         expenseBuilder.expenseAmount(model.getExpenseAmount());
 
-
         if (model.getExpenseDate() != null) {
             LocalDate date = dateFormatHelper.convertToLocalDateViaSqlDate(model.getExpenseDate());
             expenseBuilder.expenseDate(date);
@@ -433,7 +431,6 @@ public class InvoiceScannerService {
         if(model.getPayMode()!=null){
             expenseBuilder.payMode(model.getPayMode());
         }
-
 
         if (model.getBankAccountId() != null) {
             expenseBuilder.bankAccount(bankAccountService.findByPK(model.getBankAccountId()));

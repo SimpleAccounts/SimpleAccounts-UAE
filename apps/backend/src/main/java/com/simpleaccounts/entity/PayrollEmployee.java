@@ -1,17 +1,13 @@
 
 package com.simpleaccounts.entity;
 
-
-import com.simpleaccounts.entity.converter.DateConverter;
 import lombok.Data;
 import javax.persistence.*;
 
-import com.simpleaccounts.rest.payroll.dto.PayrollEmployeeDto;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @Entity
@@ -57,7 +53,6 @@ public class PayrollEmployee {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "EMPLOYEE_ID",referencedColumnName="EMPLOYEE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PAYROLL_EMPLOYEE_EMPLOYEE_ID_EMPLOYEE"))
     private Employee employeeID;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PAYROLL_ID",referencedColumnName="PAYROLL_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PAYROLL_EMPLOYEE_PAYROLL_ID_PAYROLL"))

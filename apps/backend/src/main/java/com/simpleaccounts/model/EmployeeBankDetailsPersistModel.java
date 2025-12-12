@@ -1,12 +1,7 @@
 package com.simpleaccounts.model;
 
-import com.simpleaccounts.entity.Employee;
-import com.simpleaccounts.entity.converter.DateConverter;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;

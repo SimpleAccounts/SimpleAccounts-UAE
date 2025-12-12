@@ -1,8 +1,6 @@
 package com.simpleaccounts.model;
 
-
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 

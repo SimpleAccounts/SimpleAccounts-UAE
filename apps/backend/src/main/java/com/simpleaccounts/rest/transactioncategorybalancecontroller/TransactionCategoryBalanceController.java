@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
+
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,15 +14,13 @@ import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
 import com.simpleaccounts.constant.dbfilter.ORDERBYENUM;
-import com.simpleaccounts.constant.dbfilter.ProductCategoryFilterEnum;
-import com.simpleaccounts.constant.dbfilter.ProductFilterEnum;
+
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.rest.bankaccountcontroller.BankAccountRestHelper;
-import com.simpleaccounts.rest.invoicecontroller.InvoiceRequestModel;
+
 import com.simpleaccounts.rest.migration.model.ListOfTCBPModel;
-import com.simpleaccounts.rest.productcontroller.ProductListModel;
+
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
@@ -40,8 +38,6 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 
 import io.swagger.annotations.ApiOperation;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 	@RestController
 	@RequestMapping(value = "/rest/transactionCategoryBalance")

@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
 import javax.persistence.*;
 
@@ -15,7 +13,6 @@ import org.hibernate.annotations.ColumnDefault;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.simpleaccounts.constant.TransactionCreationMode;
 import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
-import com.simpleaccounts.entity.converter.DateConverter;
 
 import lombok.Data;
 

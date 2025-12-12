@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.constant.dbfilter.VatCategoryFilterEnum;
+
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.model.TrialBalanceResponseModel;
 import com.simpleaccounts.model.VatReportResponseModel;
@@ -159,8 +159,4 @@ public class FinancialReportController {
 	}
 
 }
-
-
-
-
 

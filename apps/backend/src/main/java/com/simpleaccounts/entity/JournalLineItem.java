@@ -5,14 +5,12 @@ import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.persistence.*;
 
 import org.hibernate.annotations.ColumnDefault;
 
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
 
 import lombok.Data;
 

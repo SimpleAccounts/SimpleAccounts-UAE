@@ -23,7 +23,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -94,7 +94,6 @@ public class TransactionImportController{
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-
 
 	@LogRequest
 	@ApiOperation(value = "Get Bank Account List")
@@ -290,7 +289,6 @@ public class TransactionImportController{
 
 		dataMap = csvParser.parseImportData(model, inputStream);
 
-
 		if (dataMap == null) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -311,7 +309,6 @@ public class TransactionImportController{
 		Map dataMap = null;
 
 		dataMap = csvParser.parseImportData(model, inputStream);
-
 
 		if (dataMap == null) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

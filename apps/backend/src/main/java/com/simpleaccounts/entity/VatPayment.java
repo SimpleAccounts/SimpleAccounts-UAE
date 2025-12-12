@@ -1,10 +1,10 @@
 package com.simpleaccounts.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.simpleaccounts.constant.PayMode;
+
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 

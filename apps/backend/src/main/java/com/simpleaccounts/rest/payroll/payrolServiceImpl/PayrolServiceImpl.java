@@ -1,7 +1,7 @@
 package com.simpleaccounts.rest.payroll.payrolServiceImpl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
-import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;
+
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.*;
@@ -22,9 +22,8 @@ import com.simpleaccounts.utils.DateFormatUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.time.*;
@@ -71,7 +70,6 @@ import java.util.*;
 
     public Payroll createNewPayrol(User user, PayrolRequestModel payrolRequestModel, Integer userId){
 
-
            Payroll payroll = new Payroll();
            payroll.setDeleteFlag(Boolean.FALSE);
            payroll.setIsActive(true);
@@ -110,7 +108,6 @@ import java.util.*;
 			payrolEmployeeRepository.save(payrollEmployee);
 		}
 
-
 		List<GeneratePayrollPersistModel> generatePayrollPersistModels = new ArrayList<>();
 		payrollRestHepler.generatePayroll(payrolRequestModel, generatePayrollPersistModels,user,payroll);
 
@@ -148,12 +145,10 @@ import java.util.*;
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		LocalDateTime datetime = LocalDateTime.parse(outputDate,dtf);
 
-
 		return datetime;
 
 	}
     public void savePayrollEmployeeRelation(Integer payrollId, User user, List<Integer> employeeListIds){
-
 
         for(Integer employee : employeeListIds){
             PayrollEmployee payrollEmployee = new PayrollEmployee();
@@ -242,7 +237,6 @@ import java.util.*;
 		if(allEmployeeList!=null && !allEmployeeList.isEmpty()) {
 			for (PayrollEmployeeDto payrollEmp : allEmployeeList) {
 
-
 				if (empList.contains(payrollEmp.getEmpId()))
 					continue;
 
@@ -325,7 +319,6 @@ import java.util.*;
 			}
 		}
 
-
 		return PayrollEmployeeDtoList;
 	}
 
@@ -406,7 +399,6 @@ import java.util.*;
 			}
 			payrollRepository.delete(payroll);
 		}
-
 
    }
 	

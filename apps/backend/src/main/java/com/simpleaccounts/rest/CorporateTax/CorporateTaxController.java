@@ -8,17 +8,17 @@ import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.entity.Company;
 import com.simpleaccounts.entity.User;
-import com.simpleaccounts.entity.VatPayment;
+
 import com.simpleaccounts.rest.CorporateTax.Model.CorporateTaxDateModel;
 import com.simpleaccounts.rest.CorporateTax.Model.CorporateTaxPaymentModel;
 import com.simpleaccounts.rest.CorporateTax.Model.PaymentHistoryModel;
 import com.simpleaccounts.rest.CorporateTax.Repositories.CorporateTaxSettingRepository;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.rest.companycontroller.CompanyRestHelper;
+
 import com.simpleaccounts.rest.financialreport.FinancialReportRequestModel;
 import com.simpleaccounts.rest.financialreport.FinancialReportRestHelper;
 import com.simpleaccounts.rest.financialreport.ProfitAndLossResponseModel;
-import com.simpleaccounts.rest.financialreport.RecordVatPaymentRequestModel;
+
 import com.simpleaccounts.rfq_po.PoQuatationController;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.CompanyService;

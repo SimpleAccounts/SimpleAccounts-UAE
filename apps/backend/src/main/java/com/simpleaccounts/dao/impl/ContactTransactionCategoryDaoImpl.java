@@ -2,7 +2,7 @@ package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.ContactTransactionCategoryRelationDao;
-import com.simpleaccounts.entity.CoacTransactionCategory;
+
 import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.ContactTransactionCategoryRelation;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
-import java.util.List;
 
 /**
  * Created By Zain Khan

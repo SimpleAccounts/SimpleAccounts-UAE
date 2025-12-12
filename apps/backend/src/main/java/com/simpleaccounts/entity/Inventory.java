@@ -2,11 +2,9 @@ package com.simpleaccounts.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.persistence.*;
 
-import com.simpleaccounts.entity.converter.DateConverter;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -33,7 +31,6 @@ public class Inventory implements Serializable{
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="INVENTORY_SEQ")
     @Column(name = "INVENTORY_ID", updatable = false, nullable = false)
     private Integer inventoryID;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PRODUCT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVENTORY_PRODUCT_ID_PRODUCT"))
@@ -74,7 +71,6 @@ public class Inventory implements Serializable{
     @Basic
     @Column(name = "REORDER_LEVEL")
     private Integer  reorderLevel ;
-
 
     @Column(name = "CREATED_BY")
     @ColumnDefault(value = "0")
@@ -117,6 +113,5 @@ public class Inventory implements Serializable{
 //    @Basic(optional = false)
 //    @Version
 //    private Integer versionNumber = 1;
-
 
 }

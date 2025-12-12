@@ -4,7 +4,7 @@ import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.security.JwtTokenUtil;
-import com.simpleaccounts.service.ContactService;
+
 import com.simpleaccounts.service.JournalLineItemService;
 import com.simpleaccounts.service.TransactionCategoryService;
 import io.swagger.annotations.ApiOperation;
@@ -45,7 +45,6 @@ public class TaxesRestController {
     @Autowired
     private TaxesRestHelper taxesRestHelper;
 
-
     @LogRequest
     @ApiOperation(value = "Get Vat Transation list")
     @GetMapping(value = "/getVatTransationList")
@@ -82,8 +81,6 @@ public class TaxesRestController {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
 
     }
 }

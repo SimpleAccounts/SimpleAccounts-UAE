@@ -2,17 +2,15 @@ package com.simpleaccounts.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
 import java.util.Map;
 
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.dao.JournalLineItemDao;
-import com.simpleaccounts.service.JournalLineItemService;
-import com.simpleaccounts.service.JournalService;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.DbFilter;

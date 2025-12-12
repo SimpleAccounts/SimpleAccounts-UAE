@@ -6,13 +6,10 @@ import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditResponseModel;
 import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountResponseModel;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-
 public interface SimpleAccountReportDao {
-
 
    public SalesByCustomerResponseModel getSalesByCustomer(ReportRequestModel requestModel,SalesByCustomerResponseModel salesByCustomerResponseModel);
 
@@ -37,7 +34,6 @@ public interface SimpleAccountReportDao {
    public ExpenseByCategoryResponseModel getExpenseByCategoryDetails(ReportRequestModel requestModel, ExpenseByCategoryResponseModel expenseByCategoryResponseModel);
 
    public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestModel, InvoiceDetailsResponseModel invoiceDetailsResponseModel);
-
 
    public SupplierInvoiceDetailsResponseModel getSupplierInvoiceDetails(ReportRequestModel requestModel, SupplierInvoiceDetailsResponseModel supplierInvoiceDetailsResponseModel);
 

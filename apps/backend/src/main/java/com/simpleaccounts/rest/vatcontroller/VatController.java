@@ -7,7 +7,7 @@ package com.simpleaccounts.rest.vatcontroller;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
+
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +76,6 @@ public class VatController{
 															  HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		User user = userService.findByPK(userId);
-
 
 		Map<VatCategoryFilterEnum, Object> filterDataMap = new EnumMap<>(VatCategoryFilterEnum.class);
 //		if(user.getRole().getRoleCode()!=1) {

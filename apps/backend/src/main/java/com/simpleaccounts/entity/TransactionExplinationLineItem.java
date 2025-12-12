@@ -5,12 +5,9 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
-import com.simpleaccounts.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-
-import com.simpleaccounts.entity.converter.DateConverter;
 
 import lombok.Data;
 

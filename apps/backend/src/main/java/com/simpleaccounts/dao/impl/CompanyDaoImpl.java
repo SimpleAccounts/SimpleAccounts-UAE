@@ -13,9 +13,8 @@ import com.simpleaccounts.entity.Company;
 import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.rest.DropdownModel;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 import java.util.Map;
 

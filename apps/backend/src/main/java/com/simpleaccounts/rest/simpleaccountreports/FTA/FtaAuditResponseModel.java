@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
+
 import java.util.List;
 @Data
 public class FtaAuditResponseModel {
@@ -54,6 +54,5 @@ public class FtaAuditResponseModel {
     private BigDecimal totalCredit;
     private Integer transactionCountTotal;
     private String GLTCurrency;
-
 
 }

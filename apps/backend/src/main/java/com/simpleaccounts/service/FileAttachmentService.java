@@ -3,7 +3,7 @@ import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.FileTypeEnum;
 import com.simpleaccounts.dao.FileAttachmentDao;
 import com.simpleaccounts.entity.FileAttachment;
-import com.simpleaccounts.exceptions.FileAttachmentNotFoundException;
+
 import com.simpleaccounts.exceptions.FileAttachmentStorageException;
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRequestModel;
 import com.simpleaccounts.rest.expensescontroller.ExpenseModel;
@@ -12,9 +12,7 @@ import com.simpleaccounts.rest.transactioncontroller.TransactionPresistModel;
 import com.simpleaccounts.rfq_po.PoQuatationRequestModel;
 import com.simpleaccounts.utils.FileHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -74,7 +72,6 @@ public abstract class  FileAttachmentService extends SimpleAccountsService <Inte
             throw new FileAttachmentStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
     }
-
 
     public FileAttachment storeTransactionFile(MultipartFile file, TransactionPresistModel transactionPresistModel) throws IOException {
         String fileName = fileHelper.saveFile(transactionPresistModel.getAttachmentFile(),FileTypeEnum.TRANSATION);

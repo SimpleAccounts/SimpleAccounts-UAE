@@ -1,7 +1,7 @@
 package com.simpleaccounts.rest.taxtransactioncontroller;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -17,10 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.simpleaccounts.constant.TaxTransactionStatusConstant;
 import com.simpleaccounts.constant.TransactionCreditDebitConstant;
-import com.simpleaccounts.constant.TransactionRefrenceTypeConstant;
-import com.simpleaccounts.entity.Invoice;
-import com.simpleaccounts.entity.Purchase;
-import com.simpleaccounts.entity.PurchaseLineItem;
+
 import com.simpleaccounts.entity.TaxTransaction;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.service.InvoiceService;
@@ -104,7 +101,6 @@ public class TaxTranscationRestHelper {
 //					vatOut = vatOut.add(getVatFromTransaction(transaction));
 //				}
 			}
-
 
 		taxTransaction.setVatIn(vatIn);
 

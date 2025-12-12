@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +42,7 @@ import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.FileTypeEnum;
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;
-import com.simpleaccounts.entity.CreditNoteInvoiceRelation;
+
 import com.simpleaccounts.entity.Expense;
 import com.simpleaccounts.entity.FileAttachment;
 import com.simpleaccounts.entity.Invoice;

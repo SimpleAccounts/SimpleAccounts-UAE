@@ -32,7 +32,6 @@ import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;

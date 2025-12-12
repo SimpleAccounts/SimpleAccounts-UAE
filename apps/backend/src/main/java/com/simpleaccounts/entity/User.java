@@ -1,9 +1,8 @@
 package com.simpleaccounts.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.simpleaccounts.constant.CommonConstant;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import java.io.Serializable;
 import lombok.Data;
 
@@ -11,7 +10,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Type;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * Created by mohsinh on 2/26/2017.
@@ -52,7 +50,6 @@ public class User implements Serializable {
 	//@Convert(converter = DateConverter.class)
 	private LocalDateTime dateOfBirth;
 
-
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "COMPANY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_SA_USER_COMPANY_ID_COMPANY"))
 	private Company company;
@@ -90,7 +87,6 @@ public class User implements Serializable {
 	@Basic(optional = false)
 	@Version
 	private Integer versionNumber = 1;
-
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ROLE_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_SA_USER_ROLE_CODE_ROLE"))

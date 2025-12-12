@@ -1,13 +1,12 @@
 
 package com.simpleaccounts.entity;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "PAYROLL")
@@ -42,7 +41,6 @@ public class Payroll implements Serializable {
     @Basic
     @Column(name = "GENERATED_BY")
     private String generatedBy;
-
 
     @Basic
     @Column(name = "APPROVED_BY")

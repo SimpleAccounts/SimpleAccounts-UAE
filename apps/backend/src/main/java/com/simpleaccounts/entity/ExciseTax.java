@@ -8,8 +8,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
-
 
 /**
  * Created by Suraj on 26/11/2021.

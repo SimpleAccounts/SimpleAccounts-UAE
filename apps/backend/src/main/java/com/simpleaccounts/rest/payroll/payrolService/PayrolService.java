@@ -1,9 +1,7 @@
 package com.simpleaccounts.rest.payroll.payrolService;
 
-
-import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
-import com.simpleaccounts.entity.Invoice;
+
 import com.simpleaccounts.entity.Payroll;
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.rest.PaginationModel;
@@ -33,7 +31,6 @@ public abstract class PayrolService extends SimpleAccountsService<Integer, Payro
    public abstract List<PayrollEmployeeDto>getAllPayrollEmployee(Integer payrollId,String payrollDate);
 
    public abstract List<PayrollEmployeeDto> getAllPayrollEmployeeForApprover(Integer payrollid);
-
 
    public abstract void deletePayroll(Integer id);
     

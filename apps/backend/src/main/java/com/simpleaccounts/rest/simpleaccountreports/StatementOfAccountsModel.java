@@ -1,9 +1,7 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 
-
 import lombok.Data;
 
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
@@ -20,7 +18,5 @@ public class StatementOfAccountsModel {
     private Integer contactId;
     private Integer invoiceId;
     private Boolean isCNWithoutProduct;
-
-
 
 }

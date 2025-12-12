@@ -1,17 +1,14 @@
 package com.simpleaccounts.entity;
 
-
-import com.simpleaccounts.entity.converter.DateConverter;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import com.simpleaccounts.constant.CommonConstant;
+
 import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Created By Zain Khan On 16-12-2020

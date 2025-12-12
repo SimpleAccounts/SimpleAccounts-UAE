@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Date;
+
 import java.util.List;
 
 @Getter
@@ -26,6 +25,5 @@ public class RfqListModel {
     private String currencyCode;
     private String currencyName;
     private String VatRegistrationNumber;
-
 
 }

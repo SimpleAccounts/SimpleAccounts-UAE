@@ -7,8 +7,7 @@ import com.simpleaccounts.entity.*;
 import com.simpleaccounts.model.VatReportRequestFilterModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.PostingRequestModel;
-import com.simpleaccounts.rest.productcontroller.ProductListModel;
-import com.simpleaccounts.rest.productcontroller.ProductRequestFilterModel;
+
 import com.simpleaccounts.rest.vatcontroller.VatReportResponseListForBank;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
@@ -49,7 +48,6 @@ public class VatReportFilingRestController {
     private VatRecordPaymentHistoryService vatRecordPaymentHistoryService;
     @Autowired
     private JournalService journalService;
-
 
     @Autowired
     private DateFormatUtil dateFormatUtil;
@@ -190,7 +188,6 @@ public class VatReportFilingRestController {
          return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
      }
     }
-
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)

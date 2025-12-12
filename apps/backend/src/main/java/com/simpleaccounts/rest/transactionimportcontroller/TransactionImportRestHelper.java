@@ -11,7 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
@@ -345,7 +345,6 @@ public class TransactionImportRestHelper {
 								}
 							}
 
-
 					//	trnx.setCurrentBalance(currentBalance);
 						break;
 
@@ -375,7 +374,6 @@ public class TransactionImportRestHelper {
 				trnx.setCreationMode(TransactionCreationMode.IMPORT);
 				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.NOT_EXPLAIN);
 				transactions.add(trnx);
-
 
 			}
 		//	bankAcc.setCurrentBalance(currentBalance);
@@ -461,7 +459,6 @@ public class TransactionImportRestHelper {
 								}
 							}
 
-
 							//	trnx.setCurrentBalance(currentBalance);
 							break;
 
@@ -491,7 +488,6 @@ public class TransactionImportRestHelper {
 				trnx.setCreationMode(TransactionCreationMode.IMPORT);
 				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.NOT_EXPLAIN);
 				transactions.add(trnx);
-
 
 			}
 			//	bankAcc.setCurrentBalance(currentBalance);

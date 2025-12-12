@@ -5,7 +5,6 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "GRN_SUPPLIER_INVOICE_RELATION")

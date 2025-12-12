@@ -11,7 +11,7 @@ import java.util.Map;
 import com.simpleaccounts.constant.dbfilter.CompanyFilterEnum;
 import com.simpleaccounts.entity.Company;
 import com.simpleaccounts.entity.Currency;
-import com.simpleaccounts.entity.CurrencyConversion;
+
 import com.simpleaccounts.rest.DropdownModel;
 
 /**

@@ -14,7 +14,7 @@ import com.simpleaccounts.integration.MailIntegration;
 import com.simpleaccounts.repository.PasswordHistoryRepository;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.rest.employeecontroller.EmployeeHelper;
+
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.constant.EmailConstant;
@@ -107,8 +107,6 @@ public class UserController{
 
 	@Autowired
 	private EmployeeUserRelationHelper employeeUserRelationHelper;
-
-
 
 	@Autowired
 	private PasswordHistoryRepository passwordHistoryRepository;

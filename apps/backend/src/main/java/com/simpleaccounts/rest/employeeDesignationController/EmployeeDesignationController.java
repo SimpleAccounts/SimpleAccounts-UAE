@@ -3,7 +3,7 @@ package com.simpleaccounts.rest.employeeDesignationController;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeDesignation;
-import com.simpleaccounts.entity.SalaryRole;
+
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.model.EmployeeDesignationPersistModel;
 import com.simpleaccounts.repository.EmployeeRepository;

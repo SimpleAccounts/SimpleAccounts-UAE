@@ -2,8 +2,6 @@ package com.simpleaccounts.rest.companycontroller;
 
 import lombok.Data;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
 import java.util.Date;
 
 @Data

@@ -11,7 +11,7 @@ import com.simpleaccounts.constant.ConfigurationConstants;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
+
 import java.util.*;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -19,8 +19,6 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
-
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +27,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
 
 /**
  *
@@ -447,7 +444,6 @@ public class MailUtility {
 		dataMap.put(CONTACT_ADDRESS_LINE1,"{contactAddressLine1}");
 		dataMap.put(CONTACT_ADDRESS_LINE2,"{contactAddressLine2}");
 
-
 		return dataMap;
 	}
 
@@ -687,8 +683,6 @@ public class MailUtility {
 		dataMap.put(DESCRIPTION,"{description}");
 		dataMap.put(EXCISE_TAX,"{exciseCategory}");
 		dataMap.put(EXCISE_AMOUNT, "{exciseAmount}");
-
-
 
 		return dataMap;
 	}

@@ -2,7 +2,7 @@ package com.simpleaccounts.rest.simpleaccountreports;
 
 import lombok.Data;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+
 import java.util.Date;
 
 @Data

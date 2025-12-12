@@ -11,7 +11,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
 import com.simpleaccounts.entity.bankaccount.Transaction;
-import com.simpleaccounts.entity.converter.DateConverter;
 
 import lombok.Data;
 

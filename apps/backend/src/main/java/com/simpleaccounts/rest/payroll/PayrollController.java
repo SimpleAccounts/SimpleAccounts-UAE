@@ -1,20 +1,17 @@
 package com.simpleaccounts.rest.payroll;
 
 import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.constant.CommonStatusEnum;
-import com.simpleaccounts.constant.DefaultTypeConstant;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
-import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;
+
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.JournalLineItemDao;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.SalaryComponent;
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+
 import com.simpleaccounts.model.EmployeeBankDetailsPersistModel;
 import com.simpleaccounts.model.EmploymentPersistModel;
 import com.simpleaccounts.repository.*;
 import com.simpleaccounts.rest.*;
-import com.simpleaccounts.rest.invoicecontroller.InvoiceRequestFilterModel;
+
 import com.simpleaccounts.rest.payroll.dto.PayrollEmployeeDto;
 import com.simpleaccounts.rest.payroll.model.GeneratePayrollPersistModel;
 import com.simpleaccounts.rest.payroll.model.PayrolRequestModel;
@@ -25,7 +22,7 @@ import com.simpleaccounts.rest.payroll.service.SalaryComponentService;
 import com.simpleaccounts.rest.payroll.service.SalaryRoleService;
 import com.simpleaccounts.rest.payroll.service.SalaryStructureService;
 import com.simpleaccounts.rest.payroll.service.SalaryTemplateService;
-import com.simpleaccounts.rest.usercontroller.UserModel;
+
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import io.swagger.annotations.ApiOperation;
@@ -45,14 +42,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.io.FileWriter;
+
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
@@ -113,7 +108,6 @@ public class PayrollController {
     @Autowired
     private JournalLineItemService journalLineItemService;
 
-
     @Autowired
     private JournalLineItemRepository journalLineItemRepository;
 
@@ -132,7 +126,6 @@ public class PayrollController {
     private PayrollEmployeeRepository payrollEmployeeRepository;
     @Autowired
     private SalaryComponentRepository salaryComponentRepository;
-
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
@@ -195,7 +188,6 @@ public class PayrollController {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @LogRequest
     @ApiOperation(value = "Get EmployeeBankDetails By ID")
@@ -749,7 +741,6 @@ public class PayrollController {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
     /**
      * This API is used to get all the payroll list.
      *
@@ -807,7 +798,6 @@ public class PayrollController {
                 payrollListModel.setExistEmpList(empIdList);
 
                 payrollListModelList.add(payrollListModel);
-
 
             }
             if (payrollListModelList == null) {
@@ -951,7 +941,6 @@ public class PayrollController {
         }
     }
 
-
     /**
      * This API is used to get List of approved user.
      *
@@ -1000,7 +989,6 @@ public class PayrollController {
         }
     }
 
-
     @LogRequest
     @ApiOperation(value = "getAllPayrollEmployee ", notes = "Getting Aprovered Users data")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
@@ -1022,8 +1010,6 @@ public class PayrollController {
             return (new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
-
-
 
     @LogRequest
     @ApiOperation(value = "Generate a payroll")
@@ -1059,7 +1045,6 @@ public class PayrollController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     /**
      * Payroll Void Journal Reverse Entry
@@ -1101,7 +1086,6 @@ public class PayrollController {
         }
     }
 
-
     /**
      * This API is used to get user and role.
      *
@@ -1121,7 +1105,6 @@ public class PayrollController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @LogRequest
     @ApiOperation(value = "getAllPayrollEmployeeForApprover ", notes = "Getting getAllPayrollEmployeeforApprover ")
@@ -1166,7 +1149,6 @@ public class PayrollController {
         }
     }
 
-
     /**
      * This API is used to reject a payroll and convert to draft.
      *
@@ -1188,7 +1170,6 @@ public class PayrollController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     /**
      * This API is used create and submit payroll.
@@ -1268,7 +1249,6 @@ public class PayrollController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
@@ -1375,7 +1355,6 @@ public class PayrollController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     private List<SalaryComponentPersistModel> getListSalaryComponent(PaginationResponseModel responseModel,int pageNo, int pageSize,
                                                                      boolean paginationDisable, String sortOrder, String sortingCol){

@@ -2,7 +2,7 @@ package com.simpleaccounts.entity;
 
 import com.simpleaccounts.constant.CommonConstant;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -157,7 +157,6 @@ public class Employee implements Serializable {
     @Basic
     @Column(name = "MARITAL_STATUS")
     private String maritalStauts;
-
 
     @Basic
     @Column(name = "IS_ACTIVE")

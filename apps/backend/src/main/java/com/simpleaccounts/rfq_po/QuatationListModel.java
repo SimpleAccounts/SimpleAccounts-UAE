@@ -3,7 +3,6 @@ package com.simpleaccounts.rfq_po;
 import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -35,6 +34,5 @@ public class QuatationListModel {
     private BigDecimal untaxedAmount;
 
     private String VatRegistrationNumber;
-
 
 }

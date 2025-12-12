@@ -1,7 +1,5 @@
 package com.simpleaccounts.entity;
 
-
-import com.simpleaccounts.entity.converter.DateConverter;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -9,7 +7,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Created by adil on 2/13/2021.
@@ -24,7 +21,6 @@ import java.util.Date;
 @Data
 //@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
 public class InventoryHistory implements Serializable {
-
 
     private static final long serialVersionUID = 1L;
 
@@ -74,7 +70,6 @@ public class InventoryHistory implements Serializable {
     @ColumnDefault(value = "false")
     @Basic(optional = false)
     private Boolean deleteFlag = Boolean.FALSE;
-
 
     @Column(name = "CREATED_BY")
     @ColumnDefault(value = "0")

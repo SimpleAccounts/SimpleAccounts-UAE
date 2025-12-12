@@ -7,7 +7,7 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.repository.PayrollRepository;
 import com.simpleaccounts.repository.ProductRepository;
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
-import com.simpleaccounts.rest.payroll.PayrollService;
+
 import com.simpleaccounts.rest.payroll.service.SalaryComponentService;
 import com.simpleaccounts.rfq_po.PoQuatation;
 import com.simpleaccounts.rfq_po.PoQuatationService;

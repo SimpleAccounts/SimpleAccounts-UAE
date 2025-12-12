@@ -1,13 +1,10 @@
 package com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller;
 
-
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.CustomizeInvoiceTemplate;
-import com.simpleaccounts.entity.Invoice;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Created By Zain Khan On 20-11-2020

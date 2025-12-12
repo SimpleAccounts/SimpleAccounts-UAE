@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.simpleaccounts.constant.PayMode;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import java.io.Serializable;
 
 import lombok.Data;
@@ -13,7 +13,6 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -66,7 +65,6 @@ public class Expense implements Serializable {
 	@Formula("date_trunc('day',EXPENSE_DATE)")
 	private LocalDateTime expenseTruncDate;
 
-
 	@Basic
 	@Column(name = "EXPENSE_DESCRIPTION")
 	private String expenseDescription;
@@ -94,7 +92,6 @@ public class Expense implements Serializable {
 	@JoinColumn(name = "EMPLOYEE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPENSE_EMPLOYEE_ID_EMPLOYEE"))
 	@JsonManagedReference
 	private Employee employee;
-
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPENSE_USER_ID_USER"))

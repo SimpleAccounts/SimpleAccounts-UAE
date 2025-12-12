@@ -1,12 +1,12 @@
 package com.simpleaccounts.rfq_po;
 
 import com.simpleaccounts.dao.Dao;
-import com.simpleaccounts.entity.Invoice;
+
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,6 +1,5 @@
 package com.simpleaccounts.entity.bankaccount;
 
-import com.simpleaccounts.entity.converter.DateConverter;
 import java.io.Serializable;
 
 import lombok.Data;

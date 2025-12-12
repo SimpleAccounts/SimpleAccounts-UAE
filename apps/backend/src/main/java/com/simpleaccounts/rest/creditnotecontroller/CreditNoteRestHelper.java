@@ -20,7 +20,7 @@ import com.simpleaccounts.rest.invoicecontroller.InvoiceListModel;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
 import com.simpleaccounts.rest.receiptcontroller.ReceiptRequestModel;
 import com.simpleaccounts.security.JwtTokenUtil;
-import org.springframework.web.multipart.MultipartFile;
+
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.*;
@@ -52,7 +52,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.REFUND_CD_TEMPLATE;
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
 
 	@Service
 	@SuppressWarnings({"java:S131", "java:S115", "java:S6809"})
@@ -367,7 +366,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
         journalLineItem1.setCreatedBy(userId);
         journalLineItem1.setJournal(journal);
         journalLineItemList.add(journalLineItem1);
-
 
         List<CreditNoteLineItem> creditNoteLineItemList = creditNoteLineItemRepository.findAllByCreditNote(creditNote);
         Map<Integer, List<CreditNoteLineItem>> tnxCatIdCnLnItemMap = new HashMap<>();
@@ -1638,7 +1636,6 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         return appliedInvoiceCreditNoteList;
     }
 
-
     public String recordPaymentCNWithoutInvoice(RecordPaymentAgainstCNWithoutInvoice requestModel, Integer userId,HttpServletRequest request) {
         if (requestModel.getPayMode() == PayMode.CASH) {
             Map<String, Object> param = new HashMap<>();
@@ -2184,6 +2181,5 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         }
         return journal;
     }
-
 
 }

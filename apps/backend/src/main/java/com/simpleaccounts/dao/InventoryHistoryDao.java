@@ -1,13 +1,11 @@
 package com.simpleaccounts.dao;
 
 import com.simpleaccounts.entity.InventoryHistory;
-import com.simpleaccounts.model.InventoryHistoryModel;
+
 import com.simpleaccounts.rest.InventoryController.InventoryRevenueModel;
 import com.simpleaccounts.rest.InventoryController.TopInventoryRevenueModel;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
 
 public interface InventoryHistoryDao extends Dao<Integer, InventoryHistory> {
 

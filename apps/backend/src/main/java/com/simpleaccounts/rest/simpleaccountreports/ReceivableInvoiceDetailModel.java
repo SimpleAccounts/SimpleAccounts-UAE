@@ -4,8 +4,6 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 public class ReceivableInvoiceDetailModel {
@@ -25,6 +23,5 @@ public class ReceivableInvoiceDetailModel {
     private BigDecimal totalAmount;
     private BigDecimal balance;
     private String currencyName;
-
 
 }

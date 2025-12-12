@@ -5,17 +5,17 @@ import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.impl.TransactionCategoryClosingBalanceDaoImpl;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.repository.PayrollRepository;
-import com.simpleaccounts.rest.detailedgeneralledgerreport.ReportRequestModel;
+
 import com.simpleaccounts.rest.payroll.service.EmployeeSalaryComponentRelationService;
 import com.simpleaccounts.rest.payroll.service.IncompleteEmployeeProfileModel;
 import com.simpleaccounts.rest.payroll.service.SalarySlipListtModel;
-import com.simpleaccounts.rest.simpleaccountreports.PurchaseByVendorModel;
+
 import com.simpleaccounts.service.EmployeeBankDetailsService;
 import com.simpleaccounts.service.EmployeeService;
 import com.simpleaccounts.service.EmploymentService;
 import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateFormatUtil;
-import lombok.Data;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +25,9 @@ import javax.persistence.Query;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
+
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-
 
 	@Repository(value = "salaryDao")
 	@SuppressWarnings("java:S131")

@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.bankaccount.*;
@@ -74,7 +74,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 	@Autowired
 	private DateFormatUtil dateFormatUtil;
-
 
 	public PaginationResponseModel getListModel(PaginationResponseModel pagiantionResponseModel) {
 

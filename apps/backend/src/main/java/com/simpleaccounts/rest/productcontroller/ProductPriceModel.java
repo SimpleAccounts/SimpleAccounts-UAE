@@ -2,7 +2,6 @@ package com.simpleaccounts.rest.productcontroller;
 
 import java.math.BigDecimal;
 
-import com.simpleaccounts.constant.ProductPriceType;
 import lombok.Data;
 
 @Data

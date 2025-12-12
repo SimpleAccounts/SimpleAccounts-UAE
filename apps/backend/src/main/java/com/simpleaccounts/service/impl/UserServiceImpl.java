@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.mail.javamail.JavaMailSender;
+
 import org.springframework.stereotype.Service;
 
 import com.simpleaccounts.constant.EmailConstant;
@@ -38,7 +38,6 @@ import java.time.LocalDateTime;
 import com.simpleaccounts.dao.UserDao;
 
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TEST_MAIL_TEMPLATE;
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
 
 @Service("userService")
 public class UserServiceImpl extends UserService{
@@ -157,7 +156,6 @@ public class UserServiceImpl extends UserService{
 
 	@Override
 	public boolean newUserMail(User user,String loginUrl,String password) {
-
 
 		try {
 			emailSender.send(user.getUserEmail(), "Welcome To SimpleAccounts",

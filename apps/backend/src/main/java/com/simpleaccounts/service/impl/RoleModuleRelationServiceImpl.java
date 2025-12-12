@@ -1,10 +1,9 @@
 package com.simpleaccounts.service.impl;
 
-
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.RoleModuleRelationDao;
 import com.simpleaccounts.entity.RoleModuleRelation;
-import com.simpleaccounts.entity.SimpleAccountsModules;
+
 import com.simpleaccounts.service.RoleModuleRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,27 +1,14 @@
 package com.simpleaccounts.dao.impl;
 
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.simpleaccounts.entity.RoleModuleRelation;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.CurrencyExchangeDao;
-import com.simpleaccounts.entity.Currency;
+
 import com.simpleaccounts.entity.CurrencyConversion;
 
 import javax.persistence.TypedQuery;
@@ -79,7 +66,6 @@ public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConver
 //		} catch (Exception e) {
 //			logger.error("Error", e);
 //		}
-
 
 //	}
 	@Override

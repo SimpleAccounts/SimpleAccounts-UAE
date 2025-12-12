@@ -2,7 +2,7 @@ package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.PlaceOfSupplyDao;
-import com.simpleaccounts.entity.Invoice;
+
 import com.simpleaccounts.entity.PlaceOfSupply;
 import com.simpleaccounts.service.PlaceOfSupplyService;
 import org.springframework.beans.factory.annotation.Autowired;

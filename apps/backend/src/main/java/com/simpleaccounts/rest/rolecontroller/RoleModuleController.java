@@ -1,7 +1,7 @@
 package com.simpleaccounts.rest.rolecontroller;
 
 import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.constant.ProductPriceType;
+
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.model.RoleRequestModel;
 import com.simpleaccounts.security.JwtTokenUtil;

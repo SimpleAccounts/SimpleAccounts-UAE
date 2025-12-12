@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-import com.simpleaccounts.entity.converter.DateConverter;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +42,6 @@ public class BankDetails implements Serializable {
 	@Basic(optional = false)
 	  //@Convert(converter = DateConverter.class)
     private LocalDateTime createdDate = LocalDateTime.now();
-
 
 	@Column(name = "LAST_UPDATED_BY")
 	private Integer lastUpdateBy;

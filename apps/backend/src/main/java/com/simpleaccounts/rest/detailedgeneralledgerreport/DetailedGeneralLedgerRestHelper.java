@@ -1,7 +1,7 @@
 package com.simpleaccounts.rest.detailedgeneralledgerreport;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -370,7 +370,6 @@ import org.slf4j.LoggerFactory;
 							model.setTransactonRefNo(creditNote.getCreditNoteNumber());
 							model.setInvoiceType(creditNote.getType());
 							break;
-
 
 						case MANUAL:
 						case BALANCE_ADJUSTMENT:

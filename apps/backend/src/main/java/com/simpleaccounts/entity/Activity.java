@@ -4,9 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
-import com.simpleaccounts.entity.converter.DateConverter;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;

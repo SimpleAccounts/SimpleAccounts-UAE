@@ -1,7 +1,7 @@
 package com.simpleaccounts.entity;
 
 import com.simpleaccounts.constant.CommonConstant;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +14,6 @@ import org.hibernate.annotations.ColumnDefault;
 /**
  * Created by mohsinh on 2/26/2017.
  */
-
 
 @NamedQueries({
     @NamedQuery(name = "projectsForDropdown",

@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.payroll;
 
-import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.constant.EmailConstant;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
@@ -12,7 +11,7 @@ import com.simpleaccounts.rest.employeecontroller.EmployeeListModel;
 import com.simpleaccounts.rest.payroll.model.MoneyPaidToUserModel;
 import com.simpleaccounts.rest.payroll.service.EmployeeSalaryComponentRelationService;
 import com.simpleaccounts.rest.payroll.service.Impl.SalaryServiceImpl;
-import com.simpleaccounts.rest.payroll.service.SalaryComponentService;
+
 import com.simpleaccounts.rest.payroll.service.SalaryService;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
@@ -20,7 +19,7 @@ import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.EmailSender;
 import com.simpleaccounts.utils.MailUtility;
-import org.apache.commons.lang.StringUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
@@ -120,7 +118,6 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
         List<TransactionCategory> payrollTransactionCategoryList = transactionCategoryService.findByAttributes(CategoryParam);
 
         if (payrollTransactionCategoryList != null && !payrollTransactionCategoryList.isEmpty()) {
-
 
             List<Integer> employeeListId = salaryPersistModel.getEmployeeListIds();
             //Traverse list get employee id
@@ -231,14 +228,10 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
                 journal.setTransactionDate(LocalDateTime.now().toLocalDate());
                 journalService.persist(journal);
 
-
             }
         }
 
-
-
         else {
-
 
             TransactionCategory finalPayrolltransactionCategory = new TransactionCategory();
             finalPayrolltransactionCategory.setChartOfAccount(chartOfAccountService.findByPK(13));
@@ -257,13 +250,9 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
             CoacTransactionCategory coacTransactionCategoryRelation = new CoacTransactionCategory();
             coacTransactionCategoryService.addCoacTransactionCategory(finalPayrolltransactionCategory.getChartOfAccount(),finalPayrolltransactionCategory);
 
-
-
-
             Map<String, Object> payrollCategoryParam = new HashMap<>();
             payrollCategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
             List<TransactionCategory> payrollList = transactionCategoryService.findByAttributes(payrollCategoryParam);
-
 
             List<Integer> employeeListId = salaryPersistModel.getEmployeeListIds();
             //Traverse list get employee id
@@ -372,11 +361,8 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
             }
         }
 
-
-
             return "Salary generated successfully" ;
         }
-
 
     public SalaryListPerMonthResponseModel getSalaryPerMonthList(SalaryPerMonthRequestModel requestModel) {
 
@@ -398,7 +384,6 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
         IncompleteEmployeeResponseModel incompleteEmployeeResponseModel = new IncompleteEmployeeResponseModel();
         return salaryService.getIncompleteEmployeeList(incompleteEmployeeResponseModel);
     }
-
 
     /**
      * Payslip Emails Method

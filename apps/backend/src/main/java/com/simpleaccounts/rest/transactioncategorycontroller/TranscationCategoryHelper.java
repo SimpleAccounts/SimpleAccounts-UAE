@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.repository.*;
@@ -297,7 +297,6 @@ public class TranscationCategoryHelper {
 //			 for (EmployeeTransactionCategoryRelation employeeTransactionCategoryRelation:employeeTransactionCategoryRelationList){
 //				 transactionCatList.remove(employeeTransactionCategoryRelation.getTransactionCategory());
 //			 }
-
 
 		for (TransactionCategory trnxCat : transactionCatList) {
 			if (trnxCat.getChartOfAccount() != null) {

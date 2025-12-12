@@ -5,7 +5,6 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity(name = "NOTES_SETTINGS")
 @Table(name = "NOTES_SETTINGS")

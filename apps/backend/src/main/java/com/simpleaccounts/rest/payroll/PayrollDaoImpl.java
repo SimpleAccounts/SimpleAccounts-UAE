@@ -4,7 +4,7 @@ import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.AbstractDao;
-import com.simpleaccounts.entity.EmployeeBankDetails;
+
 import com.simpleaccounts.entity.Payroll;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;

@@ -16,7 +16,7 @@ import com.simpleaccounts.rest.PostingRequestModel;
 import com.simpleaccounts.rest.financialreport.FinancialReportRequestModel;
 import com.simpleaccounts.rest.financialreport.FinancialReportRestHelper;
 import com.simpleaccounts.rest.financialreport.ProfitAndLossResponseModel;
-import com.simpleaccounts.rest.financialreport.RecordVatPaymentRequestModel;
+
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.DateFormatUtil;

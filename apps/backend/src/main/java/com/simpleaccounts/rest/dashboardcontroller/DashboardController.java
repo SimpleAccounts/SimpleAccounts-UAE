@@ -26,9 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -59,7 +58,6 @@ public class DashboardController {
 
 	@Autowired
 	private DashboardRestHelper dashboardRestHelper;
-
 
 	@LogRequest
 	@GetMapping(value = "/getVatReport")
@@ -355,6 +353,4 @@ private static final class ProfitLossTotal {
 	}
 }
 }
-
-
 

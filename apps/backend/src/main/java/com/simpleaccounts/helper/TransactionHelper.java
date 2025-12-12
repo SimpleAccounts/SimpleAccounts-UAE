@@ -18,7 +18,7 @@ import com.simpleaccounts.rest.CorporateTax.CorporateTaxPayment;
 import com.simpleaccounts.rest.CorporateTax.Repositories.CorporateTaxPaymentRepository;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.ReconsileRequestLineItemModel;
-import com.simpleaccounts.rest.creditnotecontroller.CreditNoteListModel;
+
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
 import com.simpleaccounts.rest.financialreport.VatPaymentRepository;
 import com.simpleaccounts.rest.transactioncontroller.TransactionPresistModel;

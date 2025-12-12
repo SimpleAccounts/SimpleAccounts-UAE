@@ -4,7 +4,7 @@ import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.EmployeeDesignationDao;
 import com.simpleaccounts.entity.EmployeeDesignation;
-import com.simpleaccounts.entity.SalaryStructure;
+
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
@@ -18,7 +18,6 @@ import java.util.Map;
 @Repository(value = "employeeDesignationDao")
 public class EmployeeDesignationDaoImpl extends AbstractDao<Integer, EmployeeDesignation> implements EmployeeDesignationDao
 {
-
 
     public List<DropdownObjectModel> getEmployeeDesignationDropdown(){
 
@@ -61,7 +60,6 @@ public class EmployeeDesignationDaoImpl extends AbstractDao<Integer, EmployeeDes
         resposne.setCount(this.getResultCount(dbFilters));
         resposne.setData(this.executeQuery(dbFilters, paginationModel));
         return resposne;
-
 
     }
 

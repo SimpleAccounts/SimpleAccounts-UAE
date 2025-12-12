@@ -1,6 +1,5 @@
 package com.simpleaccounts.repository;
 
-import com.simpleaccounts.entity.Product;
 import com.simpleaccounts.entity.ProductLineItem;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import org.springframework.data.jpa.repository.JpaRepository;

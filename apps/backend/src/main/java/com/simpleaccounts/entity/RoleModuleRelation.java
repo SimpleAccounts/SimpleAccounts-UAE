@@ -1,6 +1,5 @@
 package com.simpleaccounts.entity;
 
-import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -52,7 +51,6 @@ public class RoleModuleRelation {
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
     private LocalDateTime createdDate = LocalDateTime.now();
-
 
     @Column(name = "LAST_UPDATED_BY")
         private Integer lastUpdateBy;

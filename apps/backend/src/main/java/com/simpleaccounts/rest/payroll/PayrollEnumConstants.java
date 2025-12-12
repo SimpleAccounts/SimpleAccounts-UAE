@@ -1,12 +1,10 @@
 package com.simpleaccounts.rest.payroll;
 
-import com.simpleaccounts.constant.ChartOfAccountCategoryIdEnumConstant;
 import lombok.Getter;
 import lombok.Setter;
 
 @SuppressWarnings("java:S115")
 public enum PayrollEnumConstants {
-
 
     Fixed("Fixed",1), Variable("Variable",2),Deduction("Deduction",3),Fixed_Allowance("Fixed Allowance",4),
     DEFAULT("Default",0);
@@ -30,7 +28,5 @@ public enum PayrollEnumConstants {
         }
         return PayrollEnumConstants.DEFAULT;
     }
-
-
 
 }

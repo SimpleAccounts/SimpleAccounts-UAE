@@ -2,13 +2,12 @@ package com.simpleaccounts.entity;
 
 import com.simpleaccounts.constant.DiscountType;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import java.io.Serializable;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;

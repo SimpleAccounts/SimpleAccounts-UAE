@@ -9,7 +9,6 @@ import org.hibernate.annotations.ColumnDefault;
 
 import com.simpleaccounts.constant.PayMode;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
 
 import lombok.Data;
 

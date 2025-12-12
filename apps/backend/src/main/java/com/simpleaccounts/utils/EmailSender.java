@@ -1,6 +1,5 @@
 package com.simpleaccounts.utils;
 
-import com.simpleaccounts.constant.ConfigurationConstants;
 import com.simpleaccounts.constant.ErrorConstant;
 import com.simpleaccounts.service.ConfigurationService;
 import org.slf4j.Logger;

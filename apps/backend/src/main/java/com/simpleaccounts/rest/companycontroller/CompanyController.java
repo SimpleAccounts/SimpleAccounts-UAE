@@ -25,7 +25,7 @@ import com.simpleaccounts.rest.currencyconversioncontroller.CurrencyConversionRe
 import com.simpleaccounts.rest.usercontroller.UserModel;
 import com.simpleaccounts.rest.usercontroller.UserRestHelper;
 import com.simpleaccounts.service.*;
-import com.simpleaccounts.utils.MessageUtil;
+
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -427,7 +427,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 		}
 	}
 
-
 	@LogRequest
 	@GetMapping(value = "/getCountry")
 	public ResponseEntity<List<Country>> getCountry() {
@@ -466,7 +465,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
 
 	private TransactionCategory getValidTransactionCategory(TransactionCategory transactionCategory) {
 		String transactionCategoryCode = transactionCategory.getChartOfAccount().getChartOfAccountCode();
@@ -690,7 +688,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
 
 	@Autowired
 	private Environment env;

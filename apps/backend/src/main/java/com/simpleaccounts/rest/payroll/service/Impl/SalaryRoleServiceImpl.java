@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.payroll.service.Impl;
 
-import com.simpleaccounts.constant.dbfilter.BankAccounrFilterEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.SalaryRole;
 import com.simpleaccounts.rest.DropdownObjectModel;
@@ -25,7 +24,6 @@ public class SalaryRoleServiceImpl extends SalaryRoleService {
     protected Dao<Integer, SalaryRole> getDao() {
         return this.salaryRoleDao;
     }
-
 
     public  List<DropdownObjectModel> getSalaryRolesForDropdownObjectModel(){
 

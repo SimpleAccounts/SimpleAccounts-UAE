@@ -1,10 +1,7 @@
 package com.simpleaccounts.rest.CorporateTax;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.simpleaccounts.entity.User;
-import com.simpleaccounts.entity.VatPayment;
-import com.simpleaccounts.entity.bankaccount.Transaction;
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -64,7 +61,6 @@ import java.time.LocalDateTime;
     @Column(name = "LAST_UPDATE_DATE")
     //@Convert(converter = DateConverter.class)
     private LocalDateTime lastUpdateDate;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CORPORATE_TAX_PAYMENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CORPORATE_TAX_PAYMENT_HISTORY_CORPORATE_TAX_PAYMENT_ID_CORPORATE_TAX_PAYMENT"))

@@ -2,8 +2,7 @@ package com.simpleaccounts.rest.invoicecontroller;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
+
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -514,7 +513,6 @@ public class InvoiceRestHelper {
 		productService.update(product);
 	}
 
-
 	public InvoiceRequestModel getRequestModel(Invoice invoice) {
 		InvoiceRequestModel requestModel = new InvoiceRequestModel();
 		Map<String,Object> map = new HashMap<>();
@@ -878,7 +876,6 @@ public class InvoiceRestHelper {
 		Query query = entityManager.createQuery(quertStr);
 
 		MailThemeTemplates invoiceEmailBody = (MailThemeTemplates) query.getSingleResult();
-
 
 		Contact contact = invoice.getContact();
 //		Configuration invoiceEmailSub = configurationService
@@ -2247,7 +2244,6 @@ public class InvoiceRestHelper {
 			return stringBuilder.toString();
 		}
 
-
 	private void getProduct(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		int row=0;
 		if (invoice.getInvoiceLineItems() != null) {
@@ -2388,7 +2384,6 @@ public class InvoiceRestHelper {
 			}}
 	}
 
-
 	private void getDiscount(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		int row=0;
 		if (value.equals("{invoiceDiscount}")){
@@ -2448,7 +2443,6 @@ public class InvoiceRestHelper {
 		}
 	}
 	}
-
 
 	private void getExciseAmount(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		int row=0;
@@ -2653,7 +2647,6 @@ public class InvoiceRestHelper {
 				}
 			}}
 	}
-
 
 	private void getContactPoNumber(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		if (invoice.getContact().getPoBoxNumber() != null && !invoice.getContact().getPoBoxNumber().isEmpty()) {
@@ -3393,7 +3386,6 @@ public class InvoiceRestHelper {
 				}
 			}}
 	}
-
 
 	// Reverse Journal Entries for Invoices
 	@Transactional(rollbackFor = Exception.class)

@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.payroll;
 
-import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.rest.payroll.service.IncompleteEmployeeProfileModel;
 import lombok.Data;
 

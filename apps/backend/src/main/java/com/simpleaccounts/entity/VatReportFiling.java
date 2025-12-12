@@ -1,6 +1,5 @@
 package com.simpleaccounts.entity;
 
-import com.simpleaccounts.entity.converter.DateConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

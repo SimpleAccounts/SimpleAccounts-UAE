@@ -1,11 +1,11 @@
 package com.simpleaccounts.rest.employeeDesignationController;
 
 import com.simpleaccounts.entity.EmployeeDesignation;
-import com.simpleaccounts.entity.SalaryTemplate;
+
 import com.simpleaccounts.model.EmployeeDesignationListModel;
 import com.simpleaccounts.model.EmployeeDesignationPersistModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.rest.payroll.service.SalaryTemplateListModal;
+
 import com.simpleaccounts.service.EmployeeDesignationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,7 +39,6 @@ public class EmployeeDesignationRestHelper {
             employeeDesignation.setParentId(employeeDesignationPersistModel.getParentId());
         return employeeDesignation;
     }
-
 
     public EmployeeDesignationPersistModel getEmployeeDesignationModel(EmployeeDesignation employeeDesignation)
     {

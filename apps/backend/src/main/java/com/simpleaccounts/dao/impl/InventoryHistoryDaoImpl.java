@@ -1,12 +1,12 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.InventoryHistoryDao;
-import com.simpleaccounts.entity.Inventory;
+
 import com.simpleaccounts.entity.InventoryHistory;
-import com.simpleaccounts.model.InventoryHistoryModel;
+
 import com.simpleaccounts.rest.InventoryController.InventoryRevenueModel;
 import com.simpleaccounts.rest.InventoryController.TopInventoryRevenueModel;
 import com.simpleaccounts.utils.DateUtils;
@@ -62,7 +62,6 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
             return BigDecimal.valueOf(result);
     return  BigDecimal.ZERO;
     }
-
 
     private BigDecimal getTotalQtySold(Date startDate, Date endDate) {
         TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("getTotalQtySold", BigDecimal.class);
@@ -140,7 +139,6 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
         Date endDate = DateUtils.getEndDate(DateUtils.Duration.THIS_MONTH, TimeZone.getDefault(), date);
         topInventoryRevenueModel.setTotalProfitMonthly(getProfit(startDate, endDate,topInventoryRevenueModel.getTotalProfitMonthly()));
 
-
         startDate = DateUtils.getStartDate(DateUtils.Duration.LAST_3_MONTHS, TimeZone.getDefault(), date);
 //        endDate = DateUtils.getEndDate(DateUtils.Duration.LAST_3_MONTHS, TimeZone.getDefault(), date);
         topInventoryRevenueModel.setTotalProfitQuarterly(getProfit(startDate, endDate,topInventoryRevenueModel.getTotalProfitQuarterly()));
@@ -179,7 +177,6 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
         Date startDate = DateUtils.getStartDate(DateUtils.Duration.THIS_MONTH, TimeZone.getDefault(), date);
         Date endDate = DateUtils.getEndDate(DateUtils.Duration.THIS_MONTH, TimeZone.getDefault(), date);
         topInventoryRevenueModel.setLowSellingProductsMonthly(getLowSellingProducts(startDate, endDate,topInventoryRevenueModel.getLowSellingProductsMonthly()));
-
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.LAST_3_MONTHS, TimeZone.getDefault(), date);
 //        endDate = DateUtils.getEndDate(DateUtils.Duration.LAST_3_MONTHS, TimeZone.getDefault(), date);

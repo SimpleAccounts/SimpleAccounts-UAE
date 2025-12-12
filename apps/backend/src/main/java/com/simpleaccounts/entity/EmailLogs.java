@@ -1,17 +1,15 @@
 package com.simpleaccounts.entity;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Created By Muzammil Sayed On 28-2-2022
  */
-
 
 @Entity
 @Table(name = "EMAIL_LOGS")

@@ -2,11 +2,8 @@ package com.simpleaccounts.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-import com.simpleaccounts.entity.converter.DateConverter;
 import lombok.Data;
-
 
 import org.hibernate.annotations.ColumnDefault;
 

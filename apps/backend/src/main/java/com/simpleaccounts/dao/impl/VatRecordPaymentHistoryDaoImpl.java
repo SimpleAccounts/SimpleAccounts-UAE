@@ -19,8 +19,7 @@ import java.util.Map;
         import com.simpleaccounts.constant.dbfilter.ProductFilterEnum;
         import com.simpleaccounts.constant.dbfilter.VatReportFilterEnum;
         import com.simpleaccounts.dao.AbstractDao;
-import com.simpleaccounts.dao.VatReportsDao;
-import com.simpleaccounts.entity.VatReportFiling;
+
         import com.simpleaccounts.rest.PaginationModel;
         import com.simpleaccounts.rest.PaginationResponseModel;
         import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,6 @@ import com.simpleaccounts.entity.VatReportFiling;
         import java.util.Map;
 
 @Repository
-
 
 public class VatRecordPaymentHistoryDaoImpl extends AbstractDao<Integer, VatRecordPaymentHistory> implements VatRecordPaymentHistoryDao {
     @Autowired

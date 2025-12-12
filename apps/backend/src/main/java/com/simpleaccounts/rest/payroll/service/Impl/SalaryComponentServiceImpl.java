@@ -1,12 +1,11 @@
 package com.simpleaccounts.rest.payroll.service.Impl;
 
-
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.SalaryComponent;
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.rest.payroll.PayRollFilterModel;
+
 import com.simpleaccounts.rest.payroll.dao.SalaryComponentDao;
 import com.simpleaccounts.rest.payroll.service.SalaryComponentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ public class SalaryComponentServiceImpl extends SalaryComponentService {
     protected Dao<Integer, SalaryComponent> getDao() {
         return this.salaryComponentDao;
     }
-
 
     public List<DropdownObjectModel> getSalaryComponentForDropdownObjectModel(Integer id){
 

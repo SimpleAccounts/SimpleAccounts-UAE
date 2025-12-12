@@ -8,7 +8,6 @@ import javax.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.simpleaccounts.entity.VatCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
 
 import lombok.Data;
 
@@ -115,6 +114,5 @@ public class TransactionCategory implements Serializable {
 	@ColumnDefault(value = "false")
 	@Column(name = "IS_MIGRATED_RECORD")
 	private Boolean isMigratedRecord = false;
-
 
 }

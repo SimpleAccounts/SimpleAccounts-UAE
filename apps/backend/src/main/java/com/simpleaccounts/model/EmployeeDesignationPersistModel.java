@@ -1,8 +1,5 @@
 package com.simpleaccounts.model;
 
-import com.simpleaccounts.entity.Employee;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

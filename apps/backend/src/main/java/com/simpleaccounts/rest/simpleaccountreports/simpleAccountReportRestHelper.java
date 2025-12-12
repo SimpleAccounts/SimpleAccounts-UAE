@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.simpleaccountreports;
-import com.simpleaccounts.rest.financialreport.BalanceSheetResponseModel;
-import com.simpleaccounts.rest.financialreport.FinancialReportRequestModel;
+
 import com.simpleaccounts.rest.simpleaccountreports.Aging.AgingListModel;
 import com.simpleaccounts.rest.simpleaccountreports.Aging.AgingRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditRequestModel;
@@ -10,9 +9,7 @@ import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountRespon
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
-
 
 @Component
 public class simpleAccountReportRestHelper {
@@ -40,13 +37,11 @@ SimpleAccountReportService simpleAccountReportService;
 
         return salesByProductResponseModel;
 
-
     }
 
     public  PurchseByVendorResponseModel getPurchaseByVendor(ReportRequestModel requestModel) {
 
         PurchseByVendorResponseModel purchseByVendorResponseModel = new PurchseByVendorResponseModel();
-
 
         return simpleAccountReportService.getListOfPurchaseByVendor(requestModel,purchseByVendorResponseModel);
 
@@ -99,11 +94,9 @@ public ExpenseDetailsResponseModel getExpenseDetails(ReportRequestModel requestM
     return simpleAccountReportService.getListOfExpenseDetails(requestModel,expenseDetailsResponseModel);
 }
 
-
     public  ExpenseByCategoryResponseModel getExpenseByCategoryDetails(ReportRequestModel requestModel) {
 
         ExpenseByCategoryResponseModel expenseByCategoryResponseModel = new ExpenseByCategoryResponseModel();
-
 
         return simpleAccountReportService.getListOfExpenseByCategory(requestModel,expenseByCategoryResponseModel);
 
@@ -115,7 +108,6 @@ public ExpenseDetailsResponseModel getExpenseDetails(ReportRequestModel requestM
 
         return simpleAccountReportService.getListOfInvoiceDetails(requestModel,invoiceDetailsResponseModel);
     }
-
 
     public SupplierInvoiceDetailsResponseModel getSupplierInvoiceDetails(ReportRequestModel requestModel) {
 

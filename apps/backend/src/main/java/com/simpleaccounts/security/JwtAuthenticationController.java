@@ -4,8 +4,6 @@ import com.simpleaccounts.model.JwtResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.simpleaccounts.aop.LogExecutionTime;
-import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.model.JwtRequest;
 import java.util.Objects;
 

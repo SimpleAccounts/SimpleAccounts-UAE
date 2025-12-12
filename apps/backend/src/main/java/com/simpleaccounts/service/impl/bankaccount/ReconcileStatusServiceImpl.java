@@ -4,7 +4,7 @@ import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
 import com.simpleaccounts.constant.dbfilter.TransactionFilterEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.bankaccount.ReconcileStatusDao;
-import com.simpleaccounts.dao.impl.bankaccount.ReconcileStatusDaoImpl;
+
 import com.simpleaccounts.entity.bankaccount.ReconcileStatus;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;

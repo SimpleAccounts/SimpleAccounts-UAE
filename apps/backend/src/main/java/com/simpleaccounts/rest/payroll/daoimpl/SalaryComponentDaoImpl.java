@@ -1,11 +1,10 @@
 package com.simpleaccounts.rest.payroll.daoimpl;
 
-
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.dao.AbstractDao;
-import com.simpleaccounts.entity.EmployeeSalaryComponentRelation;
+
 import com.simpleaccounts.entity.SalaryComponent;
-import com.simpleaccounts.entity.SalaryRole;
+
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
@@ -20,7 +19,6 @@ import java.util.Map;
 
 @Repository(value = "salaryComponentDao")
 public class SalaryComponentDaoImpl extends AbstractDao<Integer, SalaryComponent> implements SalaryComponentDao {
-
 
    public List<DropdownObjectModel> getSalaryComponentsForDropdownObjectModel(Integer id){
 
@@ -59,7 +57,6 @@ public class SalaryComponentDaoImpl extends AbstractDao<Integer, SalaryComponent
         String query = "SELECT s FROM SalaryComponent s where s.id < 4 and s.deleteFlag = false order by s.id ASC ";
         TypedQuery<SalaryComponent> typedQuery = getEntityManager().createQuery(query, SalaryComponent.class);
         List<SalaryComponent> salaryComponentList = typedQuery.getResultList();
-
 
         return salaryComponentList;
     }

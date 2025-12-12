@@ -1,7 +1,7 @@
 package com.simpleaccounts.repository;
 
 import com.simpleaccounts.entity.bankaccount.Transaction;
-import com.simpleaccounts.rest.invoicecontroller.InvoiceDueAmountResultSet;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

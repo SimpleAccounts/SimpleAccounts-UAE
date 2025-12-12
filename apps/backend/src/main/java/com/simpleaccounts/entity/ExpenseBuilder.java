@@ -1,7 +1,5 @@
 package com.simpleaccounts.entity;
 
-import lombok.Builder;
-
 public class ExpenseBuilder {
     private Expense expense;
 

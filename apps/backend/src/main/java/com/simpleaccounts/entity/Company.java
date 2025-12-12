@@ -1,7 +1,7 @@
 package com.simpleaccounts.entity;
 
 import com.simpleaccounts.constant.CommonConstant;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import lombok.Data;
@@ -9,7 +9,6 @@ import lombok.Data;
 import javax.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Type;

@@ -2,8 +2,6 @@ package com.simpleaccounts.rest.simpleaccountreports.FTA;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class FtaAuditRequestModel {
 

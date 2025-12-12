@@ -8,7 +8,7 @@ package com.simpleaccounts.rest.contactcontroller;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.DefaultTypeConstant;
-import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
+
 import com.simpleaccounts.constant.dbfilter.ContactFilterEnum;
 import com.simpleaccounts.constant.dbfilter.ORDERBYENUM;
 import com.simpleaccounts.entity.Contact;

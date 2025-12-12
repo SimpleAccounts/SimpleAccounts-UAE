@@ -1,11 +1,8 @@
 package com.simpleaccounts.entity;
 
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.*;
-
 
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;

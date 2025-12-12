@@ -3,12 +3,12 @@ package com.simpleaccounts.rest.creditnotecontroller;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.Currency;
+
 import com.simpleaccounts.model.AppliedInvoiceCreditNote;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.PostingRequestModel;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
-import com.simpleaccounts.rest.usercontroller.UserModel;
+
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.FileHelper;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;

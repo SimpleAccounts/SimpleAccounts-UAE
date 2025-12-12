@@ -1,7 +1,7 @@
 package com.simpleaccounts.rest.journalcontroller;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -241,7 +241,6 @@ import com.simpleaccounts.service.VatCategoryService;
 				JournalLineItemRequestModel requestModel = getLineItemModel(lineItem, list);
 				requestModels.add(requestModel);
 
-
 			}
 			model.setJournalLineItems(requestModels);
 		}
@@ -272,7 +271,6 @@ import com.simpleaccounts.service.VatCategoryService;
 			}
 		}
 		requestModel.setDescription(lineItem.getDescription());
-
 
 		requestModel.setCreditAmount(lineItem.getCreditAmount() != null ? lineItem.getCreditAmount().add(creditVatAmt)
 				: BigDecimal.valueOf(0));

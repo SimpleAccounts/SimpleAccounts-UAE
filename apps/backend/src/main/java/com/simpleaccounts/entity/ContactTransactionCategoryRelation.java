@@ -1,14 +1,12 @@
 package com.simpleaccounts.entity;
 
-
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
 
 /**
  * Created By Zain Khan
@@ -18,7 +16,6 @@ import java.time.LocalDateTime;
 @Data
 @NamedQueries({})
 public class ContactTransactionCategoryRelation {
-
 
     	@Id
     @Column(name = "USER_CONTACT_TRANSACTION_CATEGORY_RELATION_ID", updatable = false, nullable = false)
@@ -71,5 +68,4 @@ public class ContactTransactionCategoryRelation {
     private Integer versionNumber = 1;
 
 }
-
 

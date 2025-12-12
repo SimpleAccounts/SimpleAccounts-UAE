@@ -1,10 +1,7 @@
 package com.simpleaccounts.rfq_po;
 
-
-import com.simpleaccounts.constant.CommonConstant;
-import com.simpleaccounts.constant.DiscountType;
 import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.converter.DateConverter;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +11,6 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * Created By Zain Khan
@@ -107,7 +103,6 @@ public class PoQuatation {
     @Column(name = "TOTAL_VAT_AMOUNT")
     @ColumnDefault(value = "0.00")
     private BigDecimal totalVatAmount;
-
 
     @Column(name = "QUOTATION_NUMBER")
     private String QuotationNumber;

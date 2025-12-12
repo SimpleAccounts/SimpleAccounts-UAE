@@ -6,7 +6,6 @@ import com.simpleaccounts.rest.financialreport.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 public interface VatReportFilingService {
     public boolean processVatReport(VatReportFilingRequestModel vatReportFilingRequestModel, User user);
