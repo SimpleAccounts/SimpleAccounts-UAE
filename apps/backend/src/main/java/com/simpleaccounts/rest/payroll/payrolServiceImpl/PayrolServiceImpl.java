@@ -75,10 +75,6 @@ public class PayrolServiceImpl extends PayrolService {
 
 //        if(payrolRequestModel.getPayrollDate()!=null) {
            payroll.setGeneratedBy(user.getUserId().toString());
-           //        if(payrolRequestModel.getPayrollDate()!=null) {
-//        }
-//           payroll.setPayrollDate(LocalDateTime.now());
-//		     payroll.setPayrollDate(dateConvertIntoLocalDataTime(payrolRequestModel.getSalaryDate()));
 
 		if (payrolRequestModel.getSalaryDate() != null) {
 			Instant instant = Instant.ofEpochMilli(payrolRequestModel.getSalaryDate().getTime());
@@ -328,8 +324,7 @@ public class PayrolServiceImpl extends PayrolService {
         payroll.setPayrollApprover(payrolRequestModel.getApproverId());
 		payroll.setComment(null);
         payroll.setGeneratedBy(user.getUserId().toString());
-//        payroll.setPayrollDate(LocalDateTime.now());
-//		payroll.setPayrollDate(dateConvertIntoLocalDataTime(payrolRequestModel.getSalaryDate()));
+
 		if (payrolRequestModel.getSalaryDate() != null) {
 			Instant instant = Instant.ofEpochMilli(payrolRequestModel.getSalaryDate().getTime());
 			LocalDateTime payrollDate = LocalDateTime.ofInstant(instant,

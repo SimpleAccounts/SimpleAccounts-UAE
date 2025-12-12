@@ -100,12 +100,7 @@ public class TranscationCategoryHelper {
 
 		if (transactionCategories != null) {
 			for (TransactionCategory transactionCategory : (List<TransactionCategory>) transactionCategories) {
-//				if (transactionCategory.getChartOfAccount().getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode())
-//						|| transactionCategory.getTransactionCategoryCode()
-//						.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode()) ||
-//						transactionCategory.getTransactionCategoryCode()
-//								.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode()))
-//					continue;
+
 				TransactionCategoryModel transactionCategoryModel = new TransactionCategoryModel();
 				BeanUtils.copyProperties(transactionCategory, transactionCategoryModel);
 				if (transactionCategory.getChartOfAccount() != null) {
@@ -246,8 +241,7 @@ public class TranscationCategoryHelper {
 		Map<Integer, List<TransactionCategory>> idTrnxCatListMap = new HashMap<>();
 		List<TransactionCategory> transactionCategoryList = new ArrayList<>();
 		for (TransactionCategory trnxCat : transactionCatList) {
-//			if (trnxCat.getChartOfAccount().getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.CASH.getCode()))
-//				continue;
+
 			if (trnxCat.getChartOfAccount() != null) {
 				if (idTrnxCatListMap.containsKey(trnxCat.getChartOfAccount().getChartOfAccountId())) {
 					transactionCategoryList = idTrnxCatListMap.get(trnxCat.getChartOfAccount().getChartOfAccountId());
@@ -285,10 +279,6 @@ public class TranscationCategoryHelper {
 		Map<String,Object> map = new HashMap<>();
 		map.put("deleteFlag",Boolean.FALSE);
 	     List<EmployeeTransactionCategoryRelation> employeeTransactionCategoryRelationList = employeeTransactioncategoryService.findByAttributes(map);
-//		 if (employeeTransactionCategoryRelationList.size()>0)
-//			 for (EmployeeTransactionCategoryRelation employeeTransactionCategoryRelation:employeeTransactionCategoryRelationList){
-//				 transactionCatList.remove(employeeTransactionCategoryRelation.getTransactionCategory());
-//			 }
 
 		for (TransactionCategory trnxCat : transactionCatList) {
 			if (trnxCat.getChartOfAccount() != null) {

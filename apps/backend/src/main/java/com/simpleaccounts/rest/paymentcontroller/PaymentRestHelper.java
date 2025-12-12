@@ -144,7 +144,6 @@ public class PaymentRestHelper {
 				paymentModel.setSupplierName(payment.getSupplier().getFirstName() + " " + payment.getSupplier().getLastName());
 			}
 
-
 		}
 	}
 	public PaymentPersistModel convertToPaymentPersistModel(Payment payment) {

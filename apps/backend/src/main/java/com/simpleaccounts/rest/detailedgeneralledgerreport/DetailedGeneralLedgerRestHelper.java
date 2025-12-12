@@ -201,8 +201,7 @@ public class DetailedGeneralLedgerRestHelper {
 
 					switch (postingType) {
 						case BANK_ACCOUNT:
-							//bankAccountMap = findOrGetFromDbBn(bankAccountMap, lineItem.getReferenceId());
-							//BankAccount bn = bankAccountMap.get(lineItem.getReferenceId());
+
 							model.setAmount(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
 							model.setDebitAmount(lineItem.getDebitAmount());
 							model.setCreditAmount(lineItem.getCreditAmount());
@@ -222,12 +221,7 @@ public class DetailedGeneralLedgerRestHelper {
 								String d = tr.getTransactionDate().format(formatter);
 								model.setDate(d);
 							}
-							// model.setCreditAmount(lineItem.getCreditAmount());
-							// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-							// if (tr.getTransactionDate()!=null){
-							// 	String d = tr.getTransactionDate().format(formatter);
-							// 	model.setDate(d);
-							// }
+
 							model.setCreditAmount(lineItem.getCreditAmount());
 							// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 							if (tr.getTransactionDate()!=null){
@@ -243,10 +237,7 @@ public class DetailedGeneralLedgerRestHelper {
 							expenseMap = findOrGetFromDbEx(expenseMap, lineItem.getReferenceId());
 							Expense expense = expenseMap.get(lineItem.getReferenceId());
 							if (expense != null) {
-								//model.setPostingReferenceTypeEnum(PostingReferenceTypeEnum.EXPENSE.getDisplayName());
-//								model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
-//								model.setDebitAmount(isDebit ? lineItem.getDebitAmount() : new BigDecimal(0));
-//								model.setCreditAmount(isDebit ? new BigDecimal(0) : lineItem.getCreditAmount());
+
 								model.setCreditAmount(lineItem.getCreditAmount());
 								model.setDebitAmount(lineItem.getDebitAmount());
 								if (lineItem.getCreditAmount().compareTo(BigDecimal.ZERO)==1){
@@ -284,19 +275,7 @@ public class DetailedGeneralLedgerRestHelper {
 							invoiceMap = findOrGetFromDbIn(invoiceMap, lineItem.getReferenceId());
 							Invoice invoice = invoiceMap.get(lineItem.getReferenceId());
 
-//							model.setReferenceNo(journal.getJournlReferencenNo());
-							//model.setAmount(invoice.getTotalAmount());
 							BigDecimal amount = BigDecimal.ZERO;
-//							if (isDebit) {
-//								model.setCreditAmount(BigDecimal.ZERO);
-//								model.setDebitAmount(lineItem.getDebitAmount());
-//								amount = lineItem.getDebitAmount();
-//							} else {
-//								model.setCreditAmount(lineItem.getCreditAmount());
-//								model.setDebitAmount(BigDecimal.ZERO);
-//								amount = lineItem.getCreditAmount();
-//							}
-//							model.setAmount(amount);
 
 							model.setCreditAmount(lineItem.getCreditAmount());
 							model.setDebitAmount(lineItem.getDebitAmount());
@@ -311,8 +290,6 @@ public class DetailedGeneralLedgerRestHelper {
 						model.setCreditAmount(amountCredit);
 						model.setDebitAmount(amountDebit);
 						model.setAmount(amountDebit.intValue()!=0?amountDebit:amountCredit);*/
-							//model.setCreditAmount(!isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO);
-							//model.setDebitAmount(isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO);
 
 							if (invoice.getContact().getOrganization() != null && !invoice.getContact().getOrganization().isEmpty()){
 								model.setName(invoice.getContact().getOrganization());
@@ -352,8 +329,6 @@ public class DetailedGeneralLedgerRestHelper {
 						model.setCreditAmount(amountCredit);
 						model.setDebitAmount(amountDebit);
 						model.setAmount(amountDebit.intValue()!=0?amountDebit:amountCredit);*/
-							//model.setCreditAmount(!isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO);
-							//model.setDebitAmount(isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO);
 
 							if (creditNote.getContact().getOrganization() != null && !creditNote.getContact().getOrganization().isEmpty()){
 								model.setName(creditNote.getContact().getOrganization());

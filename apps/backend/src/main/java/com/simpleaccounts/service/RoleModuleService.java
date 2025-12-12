@@ -1,6 +1,5 @@
 package com.simpleaccounts.service;
 
-
 import com.simpleaccounts.entity.RoleModuleRelation;
 import com.simpleaccounts.entity.SimpleAccountsModules;
 

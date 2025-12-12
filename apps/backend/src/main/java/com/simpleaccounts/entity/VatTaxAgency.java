@@ -95,10 +95,4 @@ public class VatTaxAgency implements Serializable {
     @Basic(optional = true)
     private Integer orderSequence;
 
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
-
 }

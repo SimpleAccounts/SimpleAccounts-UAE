@@ -201,13 +201,7 @@ public class CorporateTaxController {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             CorporateTaxFiling corporateTaxFiling = corporateTaxFilingRepository.findById(id).get();
-//            CorporateTaxModel corporateTaxModel = new CorporateTaxModel();
-//            corporateTaxModel.setId(corporateTaxFiling.getId());
-//            corporateTaxModel.setStartDate(corporateTaxFiling.getStartDate().toString());
-//            corporateTaxModel.setEndDate(corporateTaxFiling.getEndDate().toString());
-//            corporateTaxModel.setReportingPeriod(corporateTaxFiling.getReportingPeriod());
-//            corporateTaxModel.setReportingForYear(corporateTaxFiling.getReportingForYear());
-//            corporateTaxModel.setViewCtReport(corporateTaxFiling.getViewCtReport());
+
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(corporateTaxFiling.getViewCtReport());
             return new ResponseEntity<>(rootNode,HttpStatus.OK);

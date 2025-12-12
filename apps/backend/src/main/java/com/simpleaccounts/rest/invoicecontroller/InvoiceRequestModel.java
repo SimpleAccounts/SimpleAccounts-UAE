@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
-
 @Getter
 @Setter
 public class InvoiceRequestModel {
@@ -24,7 +23,6 @@ public class InvoiceRequestModel {
     private Date invoiceDate;
     private Date invoiceDueDate;
     private Integer placeOfSupplyId;
-
 
     private Integer currencyCode;
     private String currencyName;

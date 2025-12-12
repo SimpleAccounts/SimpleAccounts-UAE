@@ -1,7 +1,5 @@
 package com.simpleaccounts.entity;
 
-
-
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -20,7 +18,6 @@ import java.io.Serializable;
 public class UnitType  implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
 
     	@Id
 	@SequenceGenerator(name="UNIT_TYPE_SEQ", sequenceName="UNIT_TYPE_SEQ", allocationSize=1, initialValue = 10000)

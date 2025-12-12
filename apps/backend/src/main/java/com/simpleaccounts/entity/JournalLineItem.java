@@ -123,12 +123,6 @@ public class JournalLineItem implements Serializable {
 	@Basic(optional = false)
 	private Boolean deleteFlag = Boolean.FALSE;
 
-//	@Column(name = "VERSION_NUMBER")
-//	@ColumnDefault(value = "1")
-//	@Basic(optional = false)
-//	@Version
-//	private Integer versionNumber = 1;
-
 	@ManyToOne
 	@JoinColumn(name = "JOURNAL_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_JOURNAL_LINE_ITEM_JOURNAL_ID_JOURNAL"))
 	private Journal journal;

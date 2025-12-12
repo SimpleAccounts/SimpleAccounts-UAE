@@ -42,7 +42,6 @@ public class TransactionCategoryClosingBalance {
     @Basic(optional = false)
     private BigDecimal openingBalance = BigDecimal.ZERO;
 
-
     @Column(name = "CLOSING_BALANCE")
     @ColumnDefault(value = "0.00")
     @Basic(optional = false)

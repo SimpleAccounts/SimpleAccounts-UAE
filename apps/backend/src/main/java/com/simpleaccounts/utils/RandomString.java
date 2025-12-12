@@ -20,8 +20,6 @@ public class RandomString {
 
 		for (int i = 0; i < n; i++) {
 
-			// generate a cryptographically secure random number between
-			// 0 to alphaNumericString variable length
 			int index = SECURE_RANDOM.nextInt(alphaNumericString.length());
 
 			// add Character one by one in end of sb

@@ -132,8 +132,7 @@ public class BankAccountRestHelper {
 			Integer res = transactionService.getTransactionCountByBankAccountId(bank.getBankAccountId());
 			bankModel.setTransactionCount(res);
 			if (bank.getOpeningDate() != null) {
-				//LocalDateTime openingDate = bank.getOpeningDate();
-				//openingDate = LocalDateTime.ofInstant(ZoneId.of(System.getProperty("simpleaccounts.user.timezone","Asia/Dubai")));
+
 				bankModel.setOpeningDate(bank.getOpeningDate());
 			}
 			if (bank.getBankAccountStatus() != null) {
@@ -198,8 +197,7 @@ public class BankAccountRestHelper {
 		bankAccount.setVersionNumber(1);
 		if (bankModel.getOpeningDate()!= null) {
 //			//LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
-//					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
-//					.toLocalDateTime();
+
 			bankAccount.setOpeningDate(bankModel.getOpeningDate());
 		}
 		if (bankModel.getBankAccountStatus() != null) {
@@ -243,14 +241,6 @@ public class BankAccountRestHelper {
 		}
 		return bankAccount;
 	}
-//	private void openingDate(BankModel bankModel, BankAccount bankAccount) {
-//		if (bankModel.getOpeningDate()!= null) {
-//			LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
-//					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
-//					.toLocalDateTime();
-//			bankAccount.setOpeningDate(openingDate);
-//		}
-//	}
 
 	public BankAccount getBankAccountByBankAccountModel(BankModel bankModel) {
 		if (bankModel.getBankAccountId() != null) {

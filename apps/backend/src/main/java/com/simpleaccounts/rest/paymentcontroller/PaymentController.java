@@ -89,7 +89,6 @@ public class PaymentController {
 
 	private final TransactionExplanationRepository transactionExplanationRepository;
 
-
 	@LogRequest
 	@ApiOperation(value = "Get All Payments")
 	@GetMapping(value = "/getlist")
@@ -297,9 +296,6 @@ public class PaymentController {
 
 			Payment payment = paymentRestHelper.convertToPayment(paymentModel);
 
-			// No need to Update data in Mapping Table
-
-			// Update journal
 			Journal journal = paymentRestHelper.paymentPosting(
 					new PostingRequestModel(payment.getPaymentId(), payment.getInvoiceAmount()), userId,
 					payment.getDepositeToTransactionCategory(),0);

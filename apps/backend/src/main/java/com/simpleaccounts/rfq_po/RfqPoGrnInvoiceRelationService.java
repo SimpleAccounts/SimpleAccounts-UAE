@@ -4,7 +4,6 @@ import com.simpleaccounts.service.SimpleAccountsService;
 
 import java.util.List;
 
-
 public abstract class RfqPoGrnInvoiceRelationService extends SimpleAccountsService<Integer, RfqPoGrnRelation> {
     public abstract void addRfqPoGrnRelation(PoQuatation parentPoQuatation,PoQuatation childPoQuotation);
 

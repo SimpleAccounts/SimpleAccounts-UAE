@@ -95,9 +95,7 @@ public class JournalRestController {
 			filterDataMap.put(JournalFilterEnum.REFERENCE_NO, filterModel.getJournalReferenceNo());
 			if (filterModel.getJournalDate() != null && !filterModel.getJournalDate().isEmpty()) {
 				LocalDate date = LocalDate.parse(filterModel.getJournalDate());
-//				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//				LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getJournalDate()).getTime())
-//						.atZone(ZoneId.systemDefault()).toLocalDateTime();
+
 				filterDataMap.put(JournalFilterEnum.JOURNAL_DATE, date);
 			}
 			//filterDataMap.put(JournalFilterEnum.DELETE_FLAG, false);

@@ -26,7 +26,6 @@ public enum InvoiceFilterEnum {
     CURRECY("currency"," = :currency"),
     CURRECY_SYMBOL("currency"," = :currency");
 
-
     @Getter
     String dbColumnName;
 

@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-
 @Service("InventoryService")
 public  class InventoryServiceImpl extends InventoryService {
 

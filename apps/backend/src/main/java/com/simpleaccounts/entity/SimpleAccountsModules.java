@@ -90,11 +90,7 @@ public class SimpleAccountsModules {
     @Version
     private Integer versionNumber = 1;
 
-//    @OneToMany(mappedBy = "simpleAccountsModules", fetch = FetchType.LAZY)
-//    private List<RoleModuleRelation> roleModuleRelationList;
 //
-//    public SimpleAccountsModules(Integer simpleAccountsModuleId) {
-//        this.simpleAccountsModuleId = simpleAccountsModuleId;
-//    }
+
 }
 

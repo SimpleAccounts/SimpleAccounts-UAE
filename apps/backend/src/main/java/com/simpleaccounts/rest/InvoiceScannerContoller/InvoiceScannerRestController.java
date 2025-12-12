@@ -52,9 +52,7 @@ public class InvoiceScannerRestController {
 
     private final BankAccountService bankAccountService;
 
-
     private final ContactService contactService;
-
 
     private final ExpenseRestHelper expenseRestHelper;
 
@@ -78,7 +76,6 @@ public class InvoiceScannerRestController {
 
     private final InvoiceScannerService invoiceScannerService;
 
-
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Add New Invoice")
@@ -89,7 +86,6 @@ public class InvoiceScannerRestController {
             List<InvoiceLineItemModel> invoiceLineItemModelList = new ArrayList<>();
 
             jsonExpenseParser.parseInvoice(jsonString,requestModel,invoiceLineItemModelList);
-
 
             String rootPath = request.getServletContext().getRealPath("/");
             log.info("filePath {}",rootPath);

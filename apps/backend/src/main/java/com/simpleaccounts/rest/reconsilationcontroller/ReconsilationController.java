@@ -54,7 +54,6 @@ public class ReconsilationController {
 
 	private final BankAccountService bankAccountService;
 
-
 	private final TransactionCategoryService transactionCategoryService;
 
 	private final ReconsilationRestHelper reconsilationRestHelper;
@@ -102,11 +101,7 @@ public class ReconsilationController {
 			List<TransactionCategory> transactionCatList = null;
 			List<Object> list = new ArrayList<>();
 			BankAccount bankAccount =bankAccountService.findByPK(filterModel.getBankId());
-//			Map<String,Object> filterMap = new HashMap<>();
-//			filterMap.put("contactType",2);
-//			filterMap.put("currency",bankAccount.getBankAccountCurrency());
-//			List<Contact> customerContactList =
-//					contactService.findByAttributes(filterMap);
+
 			List<Contact> customerContactList = contactService.getCustomerContacts(bankAccount.getBankAccountCurrency());
 			List<DropdownModel> dropdownModelList = new ArrayList<>();
 			for (Contact contact:customerContactList){
@@ -156,11 +151,7 @@ public class ReconsilationController {
 					list.add(new SingleLevelDropDownModel("Vat Included", vatCategoryService.getVatCategoryForDropDown()));
 					list.add(new SingleLevelDropDownModel("Customer", dropdownModelList));
 					 bankAccount =bankAccountService.findByPK(filterModel.getBankId());
-//					 filterMap = new HashMap<>();
-//					filterMap.put("contactType",1);
-//					filterMap.put("currency",bankAccount.getBankAccountCurrency());
-//					List<Contact> vendorContactList =
-//							contactService.findByAttributes(filterMap);
+
 					List<Contact> supplierContactList = contactService.getSupplierContacts(bankAccount.getBankAccountCurrency());
 					dropdownModelList = new ArrayList<>();
 					for (Contact contact:supplierContactList){
@@ -254,12 +245,10 @@ public class ReconsilationController {
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-
 	@LogRequest
 	@ApiOperation(value = "Get ReconcileStatusList")
 	@GetMapping(value = "/list")
 	public ResponseEntity<PaginationResponseModel> getAllReconcileStatus(ReconcileStatusRequestModel filterModel) {
-
 
 		Map<TransactionFilterEnum, Object> dataMap = new EnumMap<>(TransactionFilterEnum.class);
 

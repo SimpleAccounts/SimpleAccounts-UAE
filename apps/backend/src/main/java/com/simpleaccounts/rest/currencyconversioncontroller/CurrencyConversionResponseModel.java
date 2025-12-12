@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.currencyconversioncontroller;
 
-
 import lombok.Getter;
 import lombok.Setter;
 

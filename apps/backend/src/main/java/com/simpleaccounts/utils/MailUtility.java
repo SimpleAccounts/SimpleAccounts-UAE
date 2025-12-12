@@ -141,12 +141,9 @@ public class MailUtility {
 
 					MimeMultipart mimeMultipart1=new MimeMultipart();
 					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-						//construct the text body part
-						//now write the PDF content to the output stream
-						byte[] bytes = writePdf(outputStream,body);
-						//byte[] bytes = outputStream.toByteArray();
 
-						//construct the pdf body part
+						byte[] bytes = writePdf(outputStream,body);
+
 						DataSource dataSource = new ByteArrayDataSource(bytes, "APPLICATION_PDF");
 						DataSource dataSource1 = new ByteArrayDataSource(body.getBytes(),"application");
 
@@ -201,12 +198,9 @@ public class MailUtility {
 
 					MimeMultipart mimeMultipart1=new MimeMultipart();
 					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-						//construct the text body part
-						//now write the PDF content to the output stream
-						byte[] bytes = writePdf(outputStream,pdfBody);
-						//byte[] bytes = outputStream.toByteArray();
 
-						//construct the pdf body part
+						byte[] bytes = writePdf(outputStream,pdfBody);
+
 						DataSource dataSource = new ByteArrayDataSource(bytes, "APPLICATION_PDF");
 
 						MimeBodyPart pdfBodyPart = new MimeBodyPart();
@@ -275,8 +269,7 @@ public class MailUtility {
 		mailProps.put("mail.smtp.starttls.enable",mailConfigurationModel.getMailstmpStartTLSEnable() != null ? mailConfigurationModel.getMailstmpStartTLSEnable(): System.getenv("SIMPLEACCOUNTS_SMTP_STARTTLS_ENABLE"));
 		mailProps.put("mail.smtp.debug", "true");
 		mailProps.put("mail.smtp.port",mailConfigurationModel.getMailport() != null ? mailConfigurationModel.getMailport() : System.getenv("SIMPLEACCOUNTS_SMTP_PORT"));
-//    mailProps.put("mail.smtps.auth", mailConfigurationModel.getMailsmtpAuth());
-//    mailProps.put("mail.smtp.socketFactory.port", System.getenv(ConfigurationConstants.SIMPLEACCOUNTS_SMTP_PORT));
+
 		mailProps.put("mail.smtp.starttls.enable prop", "true");
 		mailProps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		mailProps.put("mail.smtp.ssl.checkserveridentity", true);
@@ -706,8 +699,7 @@ public class MailUtility {
 					mail.setBody(mailcontent);
 					MimeMultipart mimeMultipart1=new MimeMultipart();
 					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-						//construct the text body part
-						//now write the PDF content to the output stream
+
 						MimeBodyPart contentBodyPart = new MimeBodyPart();
 						contentBodyPart.setContent(mailcontent,"TEXT_HTML");
 						mimeMultipart1.addBodyPart(contentBodyPart);

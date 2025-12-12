@@ -1,6 +1,5 @@
 package com.simpleaccounts.model;
 
-
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -9,7 +8,6 @@ import java.util.Map;
 
 @Data
 public class TrialBalanceResponseModel {
-
 
     private Map<String,String> transactionCategoryMapper= new HashMap<>();
 
@@ -25,10 +23,5 @@ public class TrialBalanceResponseModel {
     private BigDecimal totalCreditAmount;
     private BigDecimal totalDebitAmount;
     private BigDecimal stocks;
-
-
-
-
-
 
 }

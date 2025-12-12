@@ -75,15 +75,7 @@ public class TransactionCategoryBalanceController {
 				TransactionCategory transactionCategory = transactionCategoryService
 						.findTransactionCategoryByTransactionCategoryCode(
 								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
-					//	getValidTransactionCategory(category);
-//				transactionCategoryService
-//						.findTransactionCategoryByTransactionCategoryCode(
-//								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
-//				boolean isDebit = false;
-//				if (StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
-//						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())) {
-//					isDebit = true;
-//				}
+
 				List<JournalLineItem> journalLineItemList = new ArrayList<>();
 				Journal journal = new Journal();
 				JournalLineItem journalLineItem1 = new JournalLineItem();
@@ -150,37 +142,6 @@ public class TransactionCategoryBalanceController {
 		}
 
 	}
-
-//	private TransactionCategory getValidTransactionCategory(TransactionCategory transactionCategory) {
-//		String transactionCategoryCode = transactionCategory.getChartOfAccount().getChartOfAccountCode();
-//		ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
-//		if (chartOfAccountCategoryCodeEnum == null)
-//			return null;
-//		switch (chartOfAccountCategoryCodeEnum) {
-//			case ACCOUNTS_RECEIVABLE:
-//			case BANK:
-//			case CASH:
-//			case CURRENT_ASSET:
-//			case FIXED_ASSET:
-//			case OTHER_CURRENT_ASSET:
-//			case STOCK:
-//				return transactionCategoryService
-//						.findTransactionCategoryByTransactionCategoryCode(
-//								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
-//			case OTHER_LIABILITY:
-//			case OTHER_CURRENT_LIABILITIES:
-//			case EQUITY:
-//			case ADMIN_EXPENSE:
-//			case OTHER_EXPENSE:
-//			case COST_OF_GOODS_SOLD:
-//				return transactionCategoryService
-//						.findTransactionCategoryByTransactionCategoryCode(
-//								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode());
-//		}
-//		return transactionCategoryService
-//				.findTransactionCategoryByTransactionCategoryCode(
-//						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
-//	}
 
 	private boolean getValidTransactionCategoryType(TransactionCategory transactionCategory) {
 		String transactionCategoryCode = transactionCategory.getChartOfAccount().getChartOfAccountCode();

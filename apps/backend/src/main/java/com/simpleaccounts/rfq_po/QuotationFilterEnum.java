@@ -15,18 +15,6 @@ public enum QuotationFilterEnum {
     DELETE_FLAG("deleteFlag", " = :deleteFlag "),
     ORDER_BY("id"," =:id");
 
-    //CUSTOMERNAME("customerName"," =:customerName");
-//    QUOTATIONEXPIRATION("quotaionExpiration"," =:quotaionExpiration");
-//    TERMSANDCONDITION("termsAndCondition"," =:termsAndCondition");
-//    PAYMENTTERMS("paymentTerms"," =:paymentTerms");
-//    PRODUCT("product"," =:product");
-//    QUANTITY("quantity"," =:quantity");
-//    UNITPRICE("unitPrice"," =:unitPrice");
-//    TAXES("taxes"," =:taxes");
-//    SUBTOTAL("subTotal"," =:subTotal");
-//    UNTAXEDAMOUNT(" untaxedAmount"," =:untaxedAmount");
-
-
     @Getter
     String dbColumnName;
 

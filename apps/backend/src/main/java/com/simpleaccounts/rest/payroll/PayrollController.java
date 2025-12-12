@@ -350,9 +350,6 @@ public class PayrollController {
         }
     }
 
-    //#################################################################################################################################################################################
-    //Salary Structure : Update
-
     @LogRequest
     @ApiOperation(value = "Get Salary Structure list", response = List.class)
     @GetMapping(value = "/salaryStructureList")
@@ -427,9 +424,6 @@ public class PayrollController {
     public ResponseEntity<List<DropdownObjectModel>> getSalaryStructureForDropdown() {
         return new ResponseEntity<>(salaryStructureService.getSalaryStructureDropdown(), HttpStatus.OK);
     }
-
-//#################################################################################################################################################################################
-    //Salary Template :
 
     @LogRequest
     @ApiOperation(value = "Get Salary Template list", response = List.class)
@@ -566,21 +560,8 @@ public class PayrollController {
         }
     }
 
-    //    @ApiOperation(value = "Delete Salary Template By ID")
-//    @DeleteMapping(value = "/deleteSalaryTemplate")
-//    public ResponseEntity<String> deleteSalaryTemplate(@RequestParam(value = "id") Integer id) {
-//        try {
-//            SalaryTemplate salaryTemplate = salaryTemplateService.findByPK(id);
-//            if (salaryTemplate!= null) {
 //
-//                salaryTemplateService.update(salaryTemplate, salaryTemplate.getId());
-//            }
-//            return new ResponseEntity(HttpStatus.OK);
-//        } catch (Exception e) {
-//            logger.error(ERROR, e);
-//            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+
 //
 ////##############################################################################################################################################################
 //
@@ -688,23 +669,12 @@ public class PayrollController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-//    @ApiOperation(value = "get a salary Sleep")
-//    @PostMapping(value = "/getSalaryCalculations")
-//    public ResponseEntity<SalaryCalculationModel> getSalaryCalculations(@RequestParam BigDecimal grossSalary, @RequestParam Integer designationId , HttpServletRequest request)
-//    {
-//        try {
-//            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//            User user = userService.findByPK(userId);
+
 //
 //            SalaryCalculationModel salaryCalculationModel = payrollRestHepler.getSalaryCalculations(designationId,grossSalary);
 //
 //            return new ResponseEntity(salaryCalculationModel, HttpStatus.OK);
 //
-//        } catch (Exception e) {
-//            logger.error(ERROR, e);
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 
     @LogRequest
     @ApiOperation(value = "Get Unpaid Payroll list")

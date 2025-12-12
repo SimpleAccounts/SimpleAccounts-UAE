@@ -237,7 +237,6 @@ public class TransactionCategoryClosingBalanceDaoImpl extends AbstractDao<Intege
         return vatReportModelList;
     }
 
-
     @Override
     public BigDecimal sumOfTotalAmountClosingBalance(FinancialReportRequestModel reportRequestModel, String lastMonth){
         TypedQuery<BigDecimal> query =getEntityManager().createQuery( "SELECT SUM(tcb.closingBalance)  " +

@@ -146,7 +146,6 @@ public class ContactHelper {
 		return contact;
 	}
 
-
 	public ContactPersistModel getContactPersistModel(Contact contact) {
 		ContactPersistModel.ContactPersistModelBuilder builder = ContactPersistModel.builder()
 				.contactId(contact.getContactId()).contactType(contact.getContactType())

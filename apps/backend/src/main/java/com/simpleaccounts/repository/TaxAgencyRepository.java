@@ -9,6 +9,5 @@ import java.util.Optional;
 @Repository
 public interface TaxAgencyRepository extends JpaRepository<VatTaxAgency,Integer> {
 
-
     Optional<VatTaxAgency> findById(Integer id);
 }

@@ -3,7 +3,6 @@ package com.simpleaccounts.rest.simpleaccountreports;
 import com.simpleaccounts.constant.CommonColumnConstants;
 import lombok.Data;
 
-
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,13 +11,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-
 @Data
 public class ReportRequestModel implements Serializable {
 
     private String startDate;
     private String endDate;
-
 
     public LocalDateTime getStartDate() {
         SimpleDateFormat dateFormatter = new SimpleDateFormat(CommonColumnConstants.DD_MM_YYYY);

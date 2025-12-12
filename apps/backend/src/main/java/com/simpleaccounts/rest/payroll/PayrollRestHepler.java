@@ -222,9 +222,7 @@ public class PayrollRestHepler {
         if (employmentPersistModel.getEmployeeCode() != null) {
             employment.setEmployeeCode(employmentPersistModel.getEmployeeCode());
         }
-//        if (employmentPersistModel.getAgentId() != null) {
-//            employment.setAgentId(employmentPersistModel.getAgentId());
-//        }
+
         if (employmentPersistModel.getAvailedLeaves() != null) {
             employment.setAvailedLeaves(employmentPersistModel.getAvailedLeaves());
         }
@@ -249,8 +247,6 @@ public class PayrollRestHepler {
         if (employmentPersistModel.getPassportExpiryDate() != null && !employmentPersistModel.getPassportExpiryDate().isEmpty()) {
             employment.setPassportExpiryDate(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getPassportExpiryDate(), DATE_FORMAT_DD_MM_YYYY));
         }
-//        else
-//            employment.setPassportExpiryDate(LocalDateTime.now());
 
         if (employmentPersistModel.getVisaExpiryDate() != null) {
             employment.setVisaExpiryDate(dateUtil.getDateStrAsLocalDateTime(employmentPersistModel.getVisaExpiryDate(), DATE_FORMAT_DD_MM_YYYY));
@@ -359,24 +355,11 @@ public class PayrollRestHepler {
             salaryTemplate.setSalaryComponentId(salaryComponentService.findByPK(salaryTemplatePersistModel.getSalaryComponentId()));
         }
 
-
         return salaryTemplate;
     }
 
     //
-//    public void getSalaryAllTemplate(EmployeePersistModel employeePersistModel , Employee employee,
-//                                       List<SalaryTemplatePersistModel> salaryTemplatePersistModels) {
-//        if (employeePersistModel.getSalaryTemplatesString() != null && !employeePersistModel.getSalaryTemplatesString().isEmpty()) {
-//            ObjectMapper mapper = new ObjectMapper();
-//            try {
-//                salaryTemplatePersistModels = mapper.readValue(employeePersistModel.getSalaryTemplatesString(),
-//                        new TypeReference<List<SalaryTemplatePersistModel>>() {
-//                        });
-//            } catch (IOException ex) {
-//                logger.error("Error", ex);
-//            }
-//            if (!salaryTemplatePersistModels.isEmpty()) {
-//               getSalaryTemplates(salaryTemplatePersistModels, employee);
+
 //
 //            }
 //
@@ -421,7 +404,6 @@ public class PayrollRestHepler {
                 employeeSalaryComponentRelation.setFlatAmount(salaryComponent.getFlatAmount());
                 employeeSalaryComponentRelation.setDescription(salaryComponent.getDescription());
                 employeeSalaryComponentRelationService.persist(employeeSalaryComponentRelation);
-
 
             } catch (Exception e) {
                 logger.error("Error", e);
@@ -474,7 +456,6 @@ public class PayrollRestHepler {
         return salaryTemplates;
     }
 
-
     public EmploymentPersistModel getEmploymentModel(Employment employment) {
         EmploymentPersistModel employmentPersistModel = new EmploymentPersistModel();
 
@@ -494,7 +475,6 @@ public class PayrollRestHepler {
         return employmentPersistModel;
     }
 
-
     public SalaryRolePersistModel getSalaryRoleModel(SalaryRole salaryRole) {
         SalaryRolePersistModel salaryRolePersistModel = new SalaryRolePersistModel();
 
@@ -509,10 +489,8 @@ public class PayrollRestHepler {
 
         salaryTemplatePersistModel.setId(salaryTemplate.getId());
 
-
         return salaryTemplatePersistModel;
     }
-
 
     public SalaryStructurePersistModel getSalaryStructureModel(SalaryStructure salaryStructure) {
         SalaryStructurePersistModel salaryStructurePersistModel = new SalaryStructurePersistModel();
@@ -560,7 +538,6 @@ public class PayrollRestHepler {
         }
         return paginationResponseModel;
     }
-
 
     public PaginationResponseModel getSalaryStructureListModel(PaginationResponseModel paginationResponseModel) {
         List<SalaryStructureListModel> modelList = new ArrayList<>();
@@ -741,16 +718,7 @@ public class PayrollRestHepler {
             salaryTemplate.setSalaryComponentId(salaryComponentService.findByPK(model1.getSalaryComponentId()));
             salaryTemplates.add(salaryTemplate);
             salaryTemplateService.persist(salaryTemplate);
-//                EmployeeSalaryComponentRelation employeeSalaryComponentRelation = new EmployeeSalaryComponentRelation();
-//                employeeSalaryComponentRelation.setEmployeeId(employee);
-//                SalaryComponent salaryComponent = salaryComponentService.findByPK(salaryTemplate.getSalaryComponentId().getId());
-//                employeeSalaryComponentRelation.setSalaryComponentId(salaryComponent);
-//                employeeSalaryComponentRelation.setDeleteFlag(false);
-//                employeeSalaryComponentRelation.setSalaryStructure(salaryComponent.getSalaryStructure());
-//                employeeSalaryComponentRelation.setFormula(salaryComponent.getFormula());
-//                employeeSalaryComponentRelation.setFlatAmount(salaryComponent.getFlatAmount());
-//                employeeSalaryComponentRelation.setDescription(salaryComponent.getDescription());
-//                employeeSalaryTempRelationService.persist(employeeSalaryComponentRelation);
+
             try {
 
             } catch (Exception e) {
@@ -779,7 +747,6 @@ public class PayrollRestHepler {
             getSalaryComponents(salaryComponentPersistModels, salaryComponentPersistModel);
 
         }
-
 
     }
 
@@ -950,7 +917,6 @@ public class PayrollRestHepler {
 
         }
 
-
     public void updateAllSalaryComponent(SalaryComponentPersistModel salaryComponentPersistModel, List<SalaryComponentPersistModel> salaryComponentPersistModels) {
 
         if (salaryComponentPersistModel.getSalaryComponentString() != null && !salaryComponentPersistModel.getSalaryComponentString().isEmpty()) {
@@ -1077,9 +1043,7 @@ public class PayrollRestHepler {
                 logger.error("Error", e);
             }
 
-
         }
-
 
     }
 
@@ -1117,7 +1081,6 @@ public class PayrollRestHepler {
         }
         List<EmployeeSalaryComponentRelation> employeeSalaryComponentRelationList = employeeSalaryComponentRelationDao.getDefaultSalaryComponentByEmployeeId(id);
 
-
         if (employeeSalaryComponentRelationList != null && !employeeSalaryComponentRelationList.isEmpty()) {
 
             for (EmployeeSalaryComponentRelation object : employeeSalaryComponentRelationList) {
@@ -1142,7 +1105,6 @@ public class PayrollRestHepler {
                     salaryComponentRelationModel.setFlatAmount(object.getFlatAmount());
                 }
 
-
                 salaryComponentRelationModel.setSalaryStructure(object.getSalaryComponentId().getSalaryStructure().getId());
                 salaryComponentRelationModel.setEmployeeId(object.getEmployeeId().getId());
                 salaryComponentRelationModel.setSalaryComponentId(object.getSalaryComponentId().getId());
@@ -1155,7 +1117,6 @@ public class PayrollRestHepler {
 
             }
         }
-
 
         employeeSalaryComponentRelationModel.setSalaryComponentResult(salaryComponentMap);
         return employeeSalaryComponentRelationModel;
@@ -1176,7 +1137,6 @@ public class PayrollRestHepler {
                 BigDecimal totalSalaryPerMonth = employeeSalaryComponentRelation.getMonthlyAmount();
                 BigDecimal salaryPerDay = totalSalaryPerMonth.divide(employeeSalaryComponentRelation.getNoOfDays());
                 BigDecimal salaryForThisComponentAsPerNoOfWorkingDays = salaryPerDay.multiply(employeeSalaryComponentRelation.getNoOfDays());
-
 
                 switch (PayrollEnumConstants.get(employeeSalaryComponentRelation.getSalaryStructure().getId())) {
                     case Fixed:
@@ -1244,7 +1204,6 @@ public class PayrollRestHepler {
 
     public void deleteSalaryComponentRow(Integer employeeId, Integer componentId) {
 
-
         employeeSalaryComponentRelationService.delete(employeeSalaryComponentRelationService.findByPK(componentId));
 
     }
@@ -1286,7 +1245,6 @@ public class PayrollRestHepler {
             salaryComponentPersistModel.setIsComponentDeletable(Boolean.TRUE);
         }
 
-
         return salaryComponentPersistModel;
     }
 
@@ -1311,7 +1269,6 @@ public class PayrollRestHepler {
         return payrollRepository.findById(id);
     }
 
-
     public void  generatePayroll(PayrolRequestModel payrolRequestModel, List<GeneratePayrollPersistModel> generatePayrollPersistModels, User user,Payroll payroll) {
 
         if (payrolRequestModel.getGeneratePayrollString() != null && !payrolRequestModel.getGeneratePayrollString().isEmpty()) {
@@ -1327,9 +1284,7 @@ public class PayrollRestHepler {
         }
     }
 
-
     void genereateSalary(List<GeneratePayrollPersistModel> generatePayrollPersistModels, PayrolRequestModel payrolRequestModel, User user,Payroll payroll) {
-
 
             Integer empCount=null;
             Map<String, Object> paramSalary = new HashMap<>();
@@ -1353,7 +1308,6 @@ public class PayrollRestHepler {
                 param.put("employeeId", employee);
                 List<EmployeeSalaryComponentRelation> employeeSalaryComponentList = employeeSalaryComponentRelationService.findByAttributes(param);
 
-
                 for (EmployeeSalaryComponentRelation salaryComponent : employeeSalaryComponentList) {
 
                     BigDecimal totalSalaryPerMonth = salaryComponent.getMonthlyAmount();
@@ -1370,8 +1324,7 @@ public class PayrollRestHepler {
                     salary.setNoOfDays(model.getNoOfDays());
                     salary.setLopDays(model.getLopDay());
                     salary.setPayrollId(payrollRepository.findById(payroll.getId()));
-                    //salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(payrolRequestModel.getSalaryDate(), "dd/MM/yyyy"));
-//                    salary.setSalaryDate(dateConvertIntoLocalDataTime(payrolRequestModel.getSalaryDate()).with(LocalTime.MIN));
+
                     if (payrolRequestModel.getSalaryDate() != null) {
                         Instant instant = Instant.ofEpochMilli(payrolRequestModel.getSalaryDate().getTime());
                         LocalDateTime salaryDate = LocalDateTime.ofInstant(instant,
@@ -1392,8 +1345,7 @@ public class PayrollRestHepler {
                 salary.setLopDays(model.getLopDay());
                 salary.setType(1);
                 salary.setPayrollId(payrollRepository.findById(payroll.getId()));
-               // salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(payrolRequestModel.getSalaryDate(), "dd/MM/yyyy"));
-//                salary.setSalaryDate(dateConvertIntoLocalDataTime(payrolRequestModel.getSalaryDate()).with(LocalTime.MIN));
+
             if (payrolRequestModel.getSalaryDate() != null) {
                 Instant instant = Instant.ofEpochMilli(payrolRequestModel.getSalaryDate().getTime());
                 LocalDateTime salaryDate = LocalDateTime.ofInstant(instant,
@@ -1407,8 +1359,7 @@ public class PayrollRestHepler {
             empCount= payrolRequestModel.getEmployeeListIds().size();
             payroll.setStatus("Draft");
             payroll.setEmployeeCount(empCount);
-//            payroll.setTotalAmountPayroll(totalPayrollAmount);
-//            payroll.setDueAmountPayroll(totalPayrollAmount);
+
             payrollRepository.save(payroll);
 
     }
@@ -1421,7 +1372,6 @@ public class PayrollRestHepler {
     payrollRepository.save(payroll);
 //    if(payroll.getGeneratedBy().equals(payroll.getPayrollApprover())==false)
         sendApprovalMail(payroll,approverId,request);
-
 
     }
     public boolean sendApprovalMail(Payroll payroll,Integer approverId,HttpServletRequest request) {
@@ -1472,7 +1422,6 @@ public class PayrollRestHepler {
     }
     @Transactional(rollbackFor = Exception.class)
     public void generatePayroll(User user, Integer payrollId,String startDate,String endDate,HttpServletRequest request,List<Integer> payrollEmployeesIdsListToSendMail) {
-
 
         Map<String, Object> paramSalary = new HashMap<>();
         paramSalary.put("payrollId", payrollId);
@@ -1663,14 +1612,7 @@ public class PayrollRestHepler {
         return true;
     }
 
-
-//    public Object getUserAndRole(User user) {
-//        UserAndRoleResponseModel userAndRoleResponseModel = new UserAndRoleResponseModel();
-//        userAndRoleResponseModel.setUserId(user.getUserId());
 //
-//        return userAndRoleResponseModel;
-//    }
-
 
     /**
      * To Convert Input date into LocalDate Format.
@@ -1702,7 +1644,6 @@ public class PayrollRestHepler {
 
 				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 				LocalDateTime datetime = LocalDateTime.parse(outputDate,dtf);
-
 
     	      return datetime;
 
@@ -1924,7 +1865,6 @@ public class PayrollRestHepler {
         List<JournalLineItem> journalLineItemList= journalLineItemRepository.findAllByReferenceIdAndReferenceType(
                 postingRequestModel.getPostingRefId(),
                 PostingReferenceTypeEnum.PAYROLL_APPROVED);
-
 
         if (journalLineItemList!=null && !journalLineItemList.isEmpty()){
             Collection<Journal> journalList=journalLineItemList.stream()

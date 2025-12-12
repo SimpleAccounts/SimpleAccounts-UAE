@@ -18,7 +18,6 @@ public class DashboardInvoiceDataModel {
 	private data paidCustomerData;
 	private data paidSupplierData;
 
-
 	@Data
 	@AllArgsConstructor
 	@NoArgsConstructor

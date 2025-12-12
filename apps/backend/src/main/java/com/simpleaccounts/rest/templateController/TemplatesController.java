@@ -34,13 +34,9 @@ public class TemplatesController {
     
     private final Logger logger = LoggerFactory.getLogger(VatController.class);
 
-
     private final JwtTokenUtil jwtTokenUtil;
 
-
     private final EntityManager entityManager;
-
-
 
     @Autowired
     MailThemeTemplatesService mailThemeTemplatesService;
@@ -53,14 +49,9 @@ public class TemplatesController {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             mailThemeTemplatesService.updateMailTheme(templateId);
-//            Query query1=getEntityManager()
-//                    .createQuery("UPDATE MailThemeTemplates m SET m.templateEnable=false WHERE m.templateEnable=true ");
-//            query1.executeUpdate();
+
 //
-//            Query query=getEntityManager()
-//                    .createQuery("UPDATE MailThemeTemplates m SET m.templateEnable=true WHERE m.templateId = :templateId ");
-//            query.setParameter("templateId", templateId);
-//            query.executeUpdate();
+
             return new ResponseEntity<>("Email template Theme Updated Successful", HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);

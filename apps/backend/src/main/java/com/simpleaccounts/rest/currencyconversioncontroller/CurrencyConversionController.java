@@ -175,20 +175,11 @@ public class CurrencyConversionController{
         }
 
     }
-//    @LogRequest
-//    @ApiOperation(value = "Get Users Count For Role")
-//    @GetMapping(value = "/getUsersCountForRole")
-//    public ResponseEntity<Integer> getUsersCountForRole(@RequestParam int roleId){
+
 //
-//        Role role = roleService.findByPK(roleId);
-//        Map<String,Object> param=new HashMap<>();
-//        param.put("role", role);
-//        param.put("isActive", true);
-//        param.put("deleteFlag", false);
-//        List<User> userList = userService.findByAttributes(param);
+
 ////        if (!userList.isEmpty()) {
-//        Integer response = userList.size();
-//        return new ResponseEntity<>(response, HttpStatus.OK);
+
 ////        }
 ////        return new ResponseEntity("unable to fetch the user information",HttpStatus.OK);
 //

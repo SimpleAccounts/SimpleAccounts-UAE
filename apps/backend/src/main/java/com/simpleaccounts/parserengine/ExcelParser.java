@@ -112,8 +112,7 @@ public class ExcelParser implements TransactionFileParser {
 					Row row = iterator.next();
 					if(isEmptyRow(row))
 						continue;
-					//				}
-//				for (Row row : sheet) {
+
 					Map<String, String> dataMap = new LinkedHashMap<>();
 
 					for (Cell cell : row) {

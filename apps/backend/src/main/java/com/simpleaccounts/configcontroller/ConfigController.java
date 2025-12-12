@@ -12,7 +12,6 @@ import com.simpleaccounts.constant.ConfigurationConstants;
 
 import io.swagger.annotations.ApiOperation;
 
-
 @RestController
 @RequestMapping("/rest/config")
 @RequiredArgsConstructor

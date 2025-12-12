@@ -19,7 +19,6 @@ public abstract class ProjectService extends SimpleAccountsService<Integer, Proj
 
 	public abstract PaginationResponseModel getProjectList(Map<ProjectFilterEnum, Object> filterMap,PaginationModel paginationModel);
 
-
 	public abstract void updateProjectRevenueBudget(BigDecimal revenueAmount, Project project);
 
 	public abstract void deleteByIds(List<Integer> ids);

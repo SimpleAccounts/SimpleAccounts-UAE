@@ -1,6 +1,5 @@
 package com.simpleaccounts.service.migrationservices;
 
-
 import com.simpleaccounts.rest.migration.model.UploadedFilesDeletionReqModel;
 import com.simpleaccounts.rest.migrationcontroller.DataMigrationRespModel;
 import com.simpleaccounts.rest.migrationcontroller.TransactionCategoryListResponseModel;

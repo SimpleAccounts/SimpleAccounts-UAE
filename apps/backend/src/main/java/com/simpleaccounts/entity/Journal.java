@@ -110,12 +110,6 @@ public class Journal implements Serializable {
 	//@Convert(converter = DateConverter.class)
 	private LocalDate transactionDate;
 
-//	@Column(name = "VERSION_NUMBER")
-//	@ColumnDefault(value = "1")
-//	@Basic(optional = false)
-//	@Version
-//	private Integer versionNumber = 1;
-
 	@Column(name = "REVERSAL_FLAG")
 	@ColumnDefault(value = "false")
 	@Basic(optional = false)

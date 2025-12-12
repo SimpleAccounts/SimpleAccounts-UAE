@@ -39,12 +39,9 @@ public class ProductMigrationParser {
     }
 
     private ProductMigrationParser() {
-//        if (reload){
-//            synchronized(this){
+
                 boolean loaded = init();
-//                reload = false;
-//            }
-//        }
+
     }
 
     private static boolean init() {

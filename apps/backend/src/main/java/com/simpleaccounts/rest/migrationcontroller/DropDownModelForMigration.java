@@ -3,7 +3,6 @@ package com.simpleaccounts.rest.migrationcontroller;
 import lombok.Builder;
 import lombok.Data;
 
-
 /**
  *
  * @author uday

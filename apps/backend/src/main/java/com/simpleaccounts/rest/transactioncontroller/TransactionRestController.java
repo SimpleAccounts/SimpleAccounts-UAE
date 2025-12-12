@@ -143,7 +143,6 @@ public class TransactionRestController {
 
 	private final PayrollRepository payrollRepository;
 
-
 	private final InvoiceNumberUtil invoiceNumberUtil;
 
 	private final VatPaymentRepository vatPaymentRepository;
@@ -777,7 +776,6 @@ public class TransactionRestController {
 		journalLineItem1.setJournal(journal);
 		journalLineItemList.add(journalLineItem1);
 
-
 		journalLineItem2.setTransactionCategory(depositeToTransactionCategory);
 		if (vatPayment.getIsVatReclaimable().equals(Boolean.FALSE)) {
 			journalLineItem2.setReferenceType(PostingReferenceTypeEnum.VAT_PAYMENT);
@@ -854,8 +852,7 @@ public class TransactionRestController {
 		}
 		// explain transaction
 		updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
-		// create Journal entry for Transaction explanation
-		//Employee reimbursement and bank
+
 		journal = reconsilationRestHelper.getByTransactionTypeForPayroll(transactionPresistModel,transactionCategoryId
 				, userId, trnx,expense,transactionAmount);
 		journal.setJournalDate(trnx.getTransactionDate().toLocalDate());
@@ -914,7 +911,6 @@ public class TransactionRestController {
 					payroll.setDueAmountPayroll(BigDecimal.ZERO);
 					transactionExpensesPayroll.setExplinationStatus(TransactionExplinationStatusEnum.PARTIAL);
 					transactionExpensesPayroll.setRemainingToExplain(trnx.getTransactionDueAmount());
-
 
 				}
 
@@ -1413,8 +1409,7 @@ public class TransactionRestController {
 				break;
 			//-----------------------------------------------------Sales Chart of Account Category-----------------------------------------
 			case SALES:
-				// Customer Invoices
-				// Get invoice
+
 				Map<String, Object> param = new HashMap<>();
 				param.put("transaction", trnx);
 				trnx.setTransactionDueAmount(BigDecimal.ZERO);
@@ -1774,8 +1769,7 @@ public class TransactionRestController {
 		if (transactionPresistModel.getDescription() != null) {
 			trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
 		}
-		// create Journal entry for Expense
-		//Chart of account in expense and user
+
 		Journal journal = null;
 		int transactionCategoryId = 0;
 		if(transactionPresistModel.getTransactionCategoryId()==null||transactionPresistModel.getExpenseCategory()!=null) {
@@ -1792,8 +1786,7 @@ public class TransactionRestController {
 		}
 		// explain transaction
 		updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
-		// create Journal entry for Transaction explanation
-		//Employee reimbursement and bank
+
 		journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel,transactionCategoryId
 				, userId, trnx,expense);
 		journal.setDescription("Expense");

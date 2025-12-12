@@ -19,8 +19,6 @@ public class CustomUserDetailsService implements UserDetailsService
 {
     private final UserService userService;
 
-    //@Transactional(readOnly = true)
-   // @Cacheable(cacheNames = "userCache", key = "#emailAddress")
     public CustomUserDetails loadUserByUsername(String emailAddress)
             throws UsernameNotFoundException {
         Optional<User> user = userService.getUserByEmail(emailAddress);

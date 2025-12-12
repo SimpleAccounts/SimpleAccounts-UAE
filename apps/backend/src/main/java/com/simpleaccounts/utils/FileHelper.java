@@ -151,9 +151,7 @@ public class FileHelper {
 		}
 		return new FileInputStream(file);
 
-
 	}
-
 
 	public void createFolderIfNotExist(String filePath) {
 		File folder = new File(filePath);

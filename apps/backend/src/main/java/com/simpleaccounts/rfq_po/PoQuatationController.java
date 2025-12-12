@@ -1,6 +1,5 @@
 package com.simpleaccounts.rfq_po;
 
-
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.entity.*;
@@ -231,9 +230,7 @@ PoQuatationController {
         try {
             SimpleAccountsMessage message= null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//            String rootPath = request.getServletContext().getRealPath("/");
-//			log.info("filePath {}",rootPath);
-//			FileHelper.setRootPath(rootPath);
+
 			
             PoQuatation poQuatation=null;
             PoQuatation parentpoQuatation=null;
@@ -244,14 +241,7 @@ PoQuatationController {
             if (parentpoQuatation!=null) {
                 poQuatation.setRfqNumber(parentpoQuatation.getRfqNumber());
             }
-            //To save the uploaded file in db.
-//            if (requestModel.getAttachmentFile()!=null) {
-//                MultipartFile file = requestModel.getAttachmentFile();
-//                if (file != null) {
-//                    FileAttachment fileAttachment = fileAttachmentService.storeRfqPoGrnFile(file , requestModel);
-//                    poQuatation.setAttachmentFileName(fileAttachment);
-//                }
-//            }
+
             poQuatationService.persist(poQuatation);
             if (parentpoQuatation!=null) {
                 rfqPoGrnInvoiceRelationService.addRfqPoGrnRelation(parentpoQuatation,poQuatation);
@@ -450,10 +440,7 @@ PoQuatationController {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             poQuatationRestHelper.sendGRN(poQuatationService.findByPK(id), userId,request);
             PoQuatation poQuatation=poQuatationService.findByPK(id);
-//            if (poQuatation!=null){
-//              Invoice invoice =poQuatationRestHelper.createSupplierInvoiceForGrn(poQuatation,userId);
-//                invoiceService.persist(invoice);
-//            }
+
             poQuatationService.update(poQuatation);
             message = new SimpleAccountsMessage("0059",
                     MessageUtil.getMessage("grn.sent.successful.msg.0059"), false);
@@ -672,37 +659,9 @@ PoQuatationController {
     }
 
 //    // This Api will create an supplier invoice for the GRN
-//    @ApiOperation(value = "Post Quotation")
-//    @PostMapping(value = "/postQuotation")
-//    public ResponseEntity<String> postQuotation(@RequestParam("id") Integer id, HttpServletRequest request) {
-//        try {
-//            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//            PoQuatation poQuatation=poQuatationService.findByPK(id);
-//            if (poQuatation!=null) {
-//                Invoice invoice = poQuatationRestHelper.createSupplierInvoiceForGrn(poQuatation, userId);
-//                invoiceService.persist(invoice);
-//                PostingRequestModel postingRequestModel = new PostingRequestModel();
-//                postingRequestModel.setPostingRefId(invoice.getId());
-//                postingRequestModel.setPostingRefType("INVOICE");
-//                postingRequestModel.setAmount(invoice.getTotalAmount());
-//                Journal journal = null;
-//                journal = invoiceRestHelper.invoicePosting(postingRequestModel, userId);
-//                if (journal != null) {
-//                    journalService.persist(journal);
-//                }
-//                invoice.setStatus(InvoiceStatusEnum.POST.getValue());
-//                invoiceRestHelper.send(invoice,userId);
-//                invoiceService.persist(invoice);
-//            }
-//            poQuatation.setStatus(InvoiceStatusEnum.POST_GRN.getValue());
-//            poQuatationService.update(poQuatation);
+
 //
-//            return new ResponseEntity<>("Sent Successfully", HttpStatus.OK);
-//        } catch (Exception e) {
-//            logger.error(ERROR, e);
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//    }
+
     
     @LogRequest
     @ApiOperation(value = "Change Status")

@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.payroll;
 
-
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -17,6 +16,5 @@ public class EmployeeSalaryComponentRelationModel {
     private Integer salaryStructure;
     private BigDecimal monthlyAmount;
     private BigDecimal yearlyAmount;
-
 
 }

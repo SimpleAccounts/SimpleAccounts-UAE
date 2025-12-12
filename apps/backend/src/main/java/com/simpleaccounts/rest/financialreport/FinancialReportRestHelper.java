@@ -27,7 +27,6 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-
 	@Component
 	@SuppressWarnings({"java:S3973", "java:S131"})
 	@RequiredArgsConstructor
@@ -749,11 +748,7 @@ public class FinancialReportRestHelper {
 		if (vatReportResponseModel.getExemptSupplies()!=null)
 		vatReportResponseModel.setTotalAmount(vatReportResponseModel.getTotalAmount().add(vatReportResponseModel.getExemptSupplies()));
 		vatReportResponseModel.setTotalValueOfDueTaxForThePeriod(vatReportResponseModel.getTotalVatAmount());
-        //Add other parameter to the report
-		//	vatReportResponseModel.setTotalAmountWithVatForSupplierInvoice(vatReportResponseModel.getTotalAmount());
 
-
-		    //Standard rated expenses
 		BigDecimal supplierVatTotal = BigDecimal.ZERO;
 		BigDecimal debitNoteSalesVat = BigDecimal.ZERO;
 		if(vatReportResponseModel.getDebitNoteSalesVat()!=null){
@@ -785,8 +780,6 @@ public class FinancialReportRestHelper {
 			vatReportResponseModel.setTotalAmountVatOnExpensesAndAllOtherInputs((vatReportResponseModel.getTotalAmountVatOnExpensesAndAllOtherInputs().add(vatReportResponseModel.getReverseChargeProvisionsTotalAmount())));
 
 		}
-		    //Total value of recoverable tax for the period
-		//    vatReportResponseModel.setTotalVatOnExpensesAndAllOtherInputs(supplierVatTotal.add(vatReportResponseModel.getReverseChargeProvisionsVatAmount()!=null ? vatReportResponseModel.getReverseChargeProvisionsVatAmount():BigDecimal.ZERO));
 
 		    if (vatReportResponseModel.getTotalVatAmountForExpense()!=null && vatReportResponseModel.getTotalVatAmountForSupplierInvoice()!=null) {
 				vatReportResponseModel.setTotalValueOfRecoverableTaxForThePeriod(vatReportResponseModel.getTotalVatAmountForExpense()
@@ -833,8 +826,6 @@ public class FinancialReportRestHelper {
 		requestModel.setChartOfAccountCodes(chartOfAccountCodes);
 		List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getListByChartOfAccountIds(requestModel);
 
-		//Block to get prvious month and year from startdate
-		// Assuming startDate is a LocalDate
 		String startDateText = reportRequestModel.getStartDate();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate startDate = LocalDate.parse(startDateText, formatter);
@@ -870,19 +861,10 @@ public class FinancialReportRestHelper {
 				String transactionCategoryName = transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryName();
 				 closingBalance = transactionCategoryClosingBalance.getClosingBalance();
 
-
 				LocalDateTime balanceDate = transactionCategoryClosingBalance.getClosingBalanceDate();
-//				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//				LocalDateTime startDate = LocalDateTime.parse(reportRequestModel.getStartDate(), );
-//				LocalDateTime endDate = LocalDateTime.parse(reportRequestModel.getEndDate());
+
 //
 //				//block to get sum of previous month closing balances
-//				if (balanceDate != null && !balanceDate.isBefore(startDate) && balanceDate.isBefore(endDate)) {
-//					BigDecimal balanceValue = transactionCategoryClosingBalance.getClosingBalance();
-//					if (balanceValue != null) {
-//						closingBalance = closingBalance.add(balanceValue);
-//					}
-//				}
 
 				ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.
 						getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
@@ -898,8 +880,7 @@ public class FinancialReportRestHelper {
 						if (transactionCategoryName.equalsIgnoreCase("Sales Discount") ||
 							transactionCategoryName.equalsIgnoreCase("OTHER_CHARGES") ||
 									transactionCategoryName.equalsIgnoreCase("Interest Income")
-//								transactionCategoryName.equalsIgnoreCase("Current Asset") ||
-//								transactionCategoryName.equalsIgnoreCase("Sales ")
+
 							){
 							responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
 							totalOperatingIncome = totalOperatingIncome.add(closingBalance).negate();
@@ -907,9 +888,7 @@ public class FinancialReportRestHelper {
 							responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
 							totalOperatingIncome = totalOperatingIncome.add(closingBalance);
 						}
-//							responseModel.getNonOperatingIncome().put(transactionCategoryName, closingBalance);
-//							totalNonOperatingIncome = totalNonOperatingIncome.add(closingBalance);
-//					}
+
 						if(isNegative) {
 							grossCashOutflow = grossCashOutflow.add(closingBalance);
 						} else {
@@ -921,8 +900,7 @@ public class FinancialReportRestHelper {
 						totalOperatingIncome = totalOperatingIncome.add(closingBalance);
 						//if(isNegative)
 							grossCashOutflow = grossCashOutflow.add(closingBalance);
-//						else
-//							grossCashInflow = grossCashInflow.add(closingBalance);
+
 						break;
 					case ACCOUNTS_RECEIVABLE:
 						responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
@@ -1016,10 +994,7 @@ public class FinancialReportRestHelper {
 							totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
 							grossCashInflow = grossCashInflow.add(closingBalance);
 						}
-//						if(isNegative)
-//							grossCashOutflow = grossCashOutflow.add(closingBalance);
-//						else
-//							grossCashInflow = grossCashInflow.add(closingBalance);
+
 						break;
 
 					case COST_OF_GOODS_SOLD:
@@ -1040,8 +1015,6 @@ public class FinancialReportRestHelper {
 			responseModel.setTotalInvestingActivities(totalInvestingActivities);
 			responseModel.setTotalFinancingActivities(totalFinancingActivities);
 			responseModel.setTotalCostOfGoodsSold(totalCostOfGoodsSold);
-
-
 
 			BigDecimal grossProfit = totalOperatingIncome.subtract(totalNonOperatingIncome).subtract(totalCostOfGoodsSold);
 			responseModel.setGrossProfit(grossProfit);
@@ -1071,8 +1044,6 @@ public class FinancialReportRestHelper {
 					.subtract(totalOperatingExpense.add(totalNonOperatingExpense));
 			responseModel.setNetProfitLoss(netProfitLoss);
 
-			//block for Gross Cash In Flow
-			//BigDecimal grossCashInflow = totalOperatingIncome.add(totalInvestingActivities).add(totalFinancingActivities);
 			responseModel.setGrossCashInflow(grossCashInflow);
 
 			//block for Gross Cash out Flow

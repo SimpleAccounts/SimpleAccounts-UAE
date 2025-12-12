@@ -8,7 +8,6 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import java.util.List;
 import java.util.Map;
 
-
 public interface EmployeeDesignationDao extends Dao<Integer, EmployeeDesignation> {
 
    public List<DropdownObjectModel> getEmployeeDesignationDropdown();
@@ -16,6 +15,5 @@ public interface EmployeeDesignationDao extends Dao<Integer, EmployeeDesignation
    public  List<DropdownObjectModel> getParentEmployeeDesignationForDropdown();
 
    public  PaginationResponseModel getEmployeeDesignationList(Map<Object, Object> filterDataMap, PaginationModel paginationModel);
-
 
 }

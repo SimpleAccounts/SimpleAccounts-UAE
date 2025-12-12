@@ -8,7 +8,6 @@ public enum ServiceErrorCode {
 	RecordDoesntExists("Record does not Exists", true),
 	BadRequest("Bad Request", true);
 
-
 	public String getErrorDescription() {
 		return errorDescription;
 	}

@@ -10,4 +10,3 @@ public interface CoacTransactionCategoryDao extends Dao<Integer, CoacTransaction
 
 }
 
-

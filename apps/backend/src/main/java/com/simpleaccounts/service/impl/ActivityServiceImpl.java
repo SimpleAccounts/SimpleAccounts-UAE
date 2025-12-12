@@ -21,6 +21,4 @@ public class ActivityServiceImpl implements ActivityService {
 		return activityDao.getLatestActivites( maxActiviyCount);
 	}
 
-
-
 }

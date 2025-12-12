@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
 @Repository(value = "salaryTemplateDao")
 public class SalaryTemplateDaoImpl extends AbstractDao<Integer, SalaryTemplate> implements SalaryTemplateDao
 {

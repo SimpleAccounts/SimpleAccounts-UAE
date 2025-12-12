@@ -253,7 +253,6 @@ public class ProductRestController {
 			response = transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCategoryList);
 		}
 
-
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	

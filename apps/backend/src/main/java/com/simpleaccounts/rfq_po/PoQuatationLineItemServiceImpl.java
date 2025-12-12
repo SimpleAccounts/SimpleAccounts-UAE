@@ -22,7 +22,4 @@ public class PoQuatationLineItemServiceImpl extends PoQuatationLineItemService{
          poQuatationLineItemDao.deleteByRfqId(id);
     }
 
-//    public  void deleteByQuotationId(Integer id){
-//        poQuatationLineItemDao.deleteByQuotationId(id);
-//    }
 }

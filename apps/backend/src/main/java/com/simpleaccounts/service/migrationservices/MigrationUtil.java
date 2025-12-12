@@ -234,9 +234,7 @@ public class MigrationUtil {
         try {
             switch (dataType) {
                 case "LocalDateTime":
-                    //2021-05-02 00:00:00
-                    // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                    //LocalDateTime dateTime = LocalDateTime.parse(val.toString(), formatter);
+
                     LocalDateTime dateTime = dateFormtUtil.getDateStrAsLocalDateTime(val.toString(), getDateFormat());
                     Class[] paramTypes = {LocalDateTime.class};
                     Method method = entity.getClass().getMethod(setterMethod, paramTypes);
@@ -280,9 +278,7 @@ public class MigrationUtil {
                     break;
 
                 default:
-//                    stringParamTypes = {String.class, String.class};
-//                    method = entity.getClass().getMethod(setterMethod, stringParamTypes);
-//                    method.invoke(entity, val);
+
             }
         } catch (Exception e) {
             LOG.error("Error during migration", e);
@@ -791,7 +787,6 @@ public class MigrationUtil {
 			return transactionCategoryListResponseModel;
 		}
 
-
 	    /**
 	      * This method returns list of files present under specified directory
 	     *
@@ -834,7 +829,6 @@ public class MigrationUtil {
 	        List<String> fileOrder = Arrays.asList("Contacts.csv","Contact.csv","Vendors.csv", "Item.csv", "Exchange_Rate.csv", "Invoice.csv", "Bill.csv", "Expense.csv", "Credit_Note.csv", "Purchase_Order.csv", "Chart_of_Accounts.csv");
 	        return fileOrder;
 	    }
-
 
 	    protected TaxTreatment getTaxTreatmentByValue(String val) {
 	    	return taxTreatmentRepository.findByTaxTreatment(val);

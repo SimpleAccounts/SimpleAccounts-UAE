@@ -13,6 +13,4 @@ public class PurchaseByProductModel {
     private BigDecimal totalAmountForAProduct;
     private Double averageAmount;
 
-
-
 }

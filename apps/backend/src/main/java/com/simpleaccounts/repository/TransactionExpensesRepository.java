@@ -1,6 +1,5 @@
 package com.simpleaccounts.repository;
 
-
 import com.simpleaccounts.entity.Expense;
 import com.simpleaccounts.entity.TransactionExpenses;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -10,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
 
 @Repository
 public interface TransactionExpensesRepository extends JpaRepository<TransactionExpenses,Integer> {

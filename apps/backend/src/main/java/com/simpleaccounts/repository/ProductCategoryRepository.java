@@ -13,6 +13,4 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
     @Query("SELECT pc FROM ProductCategory pc WHERE pc.deleteFlag = false")
     List<ProductCategory> getProductCategories(@Param("name") String name);
 
-
-
 }

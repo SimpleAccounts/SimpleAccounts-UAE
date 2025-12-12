@@ -1,8 +1,6 @@
 package com.simpleaccounts.rfq_po;
 
-
 import com.simpleaccounts.service.SimpleAccountsService;
-
 
 public abstract class PoQuatationLineItemService extends SimpleAccountsService<Integer,PoQuatationLineItem> {
 

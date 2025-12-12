@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
-
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
@@ -47,7 +46,6 @@ public class ReportsConfigurationRestController {
         }
         return new ResponseEntity<>(rootNode ,HttpStatus.OK);
     }
-
 
     @LogRequest
     @ApiOperation(value = "Update Report Columns Configuration")

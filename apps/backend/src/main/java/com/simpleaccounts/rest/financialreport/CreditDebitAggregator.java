@@ -6,7 +6,6 @@ public class CreditDebitAggregator {
     private String transactionCategoryCode;
     private String transactionCategoryName;
 
-
     public CreditDebitAggregator(Double creditAmount, Double debitAmount, String transactionCategoryCode, String transactionCategoryName) {
         this.creditAmount = creditAmount;
         this.debitAmount = debitAmount;

@@ -89,9 +89,6 @@ public class MigrationController {
     @Autowired
     ResourceLoader resourceLoader;
 
-//    @Autowired
-//    private String basePath;
-
     private final CountryService countryService;
 
     private final StateService stateService;

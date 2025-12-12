@@ -71,16 +71,7 @@ public class TransactionCategoryBalanceRestHelper {
 
 			for (TransactionCategoryBalance balance : balaneList) {
 				if(balance!=null && balance.getTransactionCategory()!=null) {
-//					if (balance.getTransactionCategory().getTransactionCategoryCode()
-//							.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode())
-//							|| balance.getTransactionCategory().getTransactionCategoryCode()
-//							.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())
-//							|| balance.getTransactionCategory().getChartOfAccount().getChartOfAccountCode()
-//							.equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode()) || balance
-//							.getTransactionCategory()
-//							.getTransactionCategoryCode().equalsIgnoreCase(TransactionCategoryCodeEnum.EMPLOYEE_REIMBURSEMENT
-//									.getCode()))
-//						continue;
+
 					TransactionCategoryBalanceListModel model = new TransactionCategoryBalanceListModel();
 					model.setTransactionCategoryId(balance.getTransactionCategory().getTransactionCategoryId());
 					model.setTransactionCategoryBalanceId(balance.getId());

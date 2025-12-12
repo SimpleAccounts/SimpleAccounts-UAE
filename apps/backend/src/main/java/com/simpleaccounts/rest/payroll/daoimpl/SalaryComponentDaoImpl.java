@@ -27,10 +27,6 @@ public class SalaryComponentDaoImpl extends AbstractDao<Integer, SalaryComponent
                query.setParameter("salaryStructure", id);
                List<SalaryComponent> salaryComponentList = query.getResultList();
 
-//       String query = "SELECT s FROM SalaryComponent s where s.salaryStructure.id = :salaryStructure order by s.id ASC ";
-//       TypedQuery<SalaryComponent> typedQuery = getEntityManager().createQuery(query, SalaryComponent.class);
-//       List<SalaryComponent> salaryComponentList = typedQuery.getResultList();
-
        List<DropdownObjectModel> dropdownObjectModelList = new ArrayList<>();
        if (salaryComponentList != null && salaryComponentList.size() > 0) {
            for (SalaryComponent salaryComponent : salaryComponentList) {

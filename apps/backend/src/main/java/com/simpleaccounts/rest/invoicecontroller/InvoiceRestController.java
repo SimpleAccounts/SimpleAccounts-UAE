@@ -152,19 +152,15 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 				filterDataMap.put(InvoiceFilterEnum.INVOICE_AMOUNT, filterModel.getAmount());
 			}
 			if (filterModel.getInvoiceDate() != null && !filterModel.getInvoiceDate().isEmpty()) {
-//				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//				Date dateTime =  dateFormat.parse(filterModel.getInvoiceDate());
+
 				LocalDate date = LocalDate.parse(filterModel.getInvoiceDate());
-//				LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getInvoiceDate()).getTime())
-//					.atZone(ZoneId.systemDefault()).toLocalDateTime();
+
 				filterDataMap.put(InvoiceFilterEnum.INVOICE_DATE, date);
 			}
 			if (filterModel.getInvoiceDueDate() != null && !filterModel.getInvoiceDueDate().isEmpty()) {
 //				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 				LocalDate date = LocalDate.parse(filterModel.getInvoiceDueDate());
-//				LocalDateTime dateTime = Instant
-//						.ofEpochMilli(dateFormat.parse(filterModel.getInvoiceDueDate()).getTime())
-//						.atZone(ZoneId.systemDefault()).toLocalDateTime();
+
 				filterDataMap.put(InvoiceFilterEnum.INVOICE_DUE_DATE, date);
 			}
 			filterDataMap.put(InvoiceFilterEnum.STATUS, filterModel.getStatus());
@@ -216,10 +212,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 					MessageUtil.getMessage("delete.unsuccessful.msg"), true);
 			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-//		InvoiceLineItem invoiceLineItem = invoiceLineItemService.deleteByInvoiceId(invoice.getId());
-//		if (invoiceLineItem!=null){
-//			invoiceLineItemService.delete(invoiceLineItem);
-//		}
+
 	}
 
 	@LogRequest
@@ -323,12 +316,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			FileHelper.setRootPath(rootPath);
 			log.info("In Update {}",requestModel.getInvoiceDueDate());
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//			Boolean checkInvoiceNumber = invoiceRestHelper.doesInvoiceNumberExist(requestModel.getReferenceNumber());
-//			if (checkInvoiceNumber){
-//				SimpleAccountsMessage errorMessage = new SimpleAccountsMessage("0023",
-//						MessageUtil.getMessage("invoicenumber.alreadyexists.0023"), true);
-//				logger.info(errorMessage.getMessage());
-//				return new  ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+
 //
 //			}
 			Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);

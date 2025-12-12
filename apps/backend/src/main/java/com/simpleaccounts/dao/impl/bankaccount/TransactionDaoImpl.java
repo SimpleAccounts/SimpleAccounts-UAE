@@ -575,7 +575,6 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		return (int)result;
 	}
 
-
 	public  LocalDateTime getTransactionStartDateToReconcile(LocalDateTime reconcileDate, Integer bankId)
 	{
 		StringBuilder queryBuilder = new StringBuilder("SELECT t FROM Transaction t " +

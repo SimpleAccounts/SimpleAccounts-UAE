@@ -88,9 +88,4 @@ public class TransactionExplinationLineItem {
 	@JoinColumn(name = "JOURNAL_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLINATION_LINE_ITEM_JOURNAL_ID_JOURNAL"))
 	private Journal journal;
 
-//	@Column(name = "VERSION_NUMBER")
-//	@ColumnDefault(value = "1")
-//	@Basic(optional = false)
-//	@Version
-//	private Integer versionNumber = 1;
 }

@@ -50,12 +50,6 @@ public class VatReportFiling implements Serializable {
     //@Convert(converter = DateConverter.class)
     private LocalDateTime lastUpdateDate;
 
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
-
     @Column(name = "START_DATE")
     private LocalDate startDate;
 

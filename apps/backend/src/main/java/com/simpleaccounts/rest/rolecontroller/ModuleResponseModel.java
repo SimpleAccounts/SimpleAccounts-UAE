@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.rolecontroller;
 
-
 import lombok.Getter;
 import lombok.Setter;
 

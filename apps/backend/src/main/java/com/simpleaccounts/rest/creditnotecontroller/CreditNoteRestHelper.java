@@ -578,8 +578,7 @@ public class CreditNoteRestHelper {
                                  Map<Integer, List<CreditNoteLineItem>> tnxCatIdCnLnItemMap, Map<Integer, TransactionCategory> tnxCatMap, Integer userId) {
         TransactionCategory category;
         for (CreditNoteLineItem lineItem : creditNoteLineItemList) {
-            // sales for customer
-            // purchase for vendor
+
             Product product = productService.findByPK(lineItem.getProduct().getProductID());
             if (product.getIsInventoryEnabled()) {
                 if (lineItem.getCreditNote().getType() == 7) {

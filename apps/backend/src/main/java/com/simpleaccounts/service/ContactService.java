@@ -47,7 +47,6 @@ public abstract class ContactService extends SimpleAccountsService<Integer, Cont
      */
     public abstract boolean sendInvoiceThankYouMail(Contact contact, Integer invoiceType, String number, String amount, String date, BigDecimal dueAmount, HttpServletRequest request);
 
-
     public abstract Integer getCurrencyCodeByInputColoumnValue(String val);
 
     public abstract List<Contact> getCustomerContacts(Currency currency);

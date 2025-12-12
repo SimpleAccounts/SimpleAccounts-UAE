@@ -395,7 +395,6 @@ public class SimpleAccountMigrationService {
 		}
 	}
 
-
 	/**
      * This method will handle Product / Item
      * @param tables
@@ -416,9 +415,7 @@ public class SimpleAccountMigrationService {
 
 		List<Product.TableList.Table.ColumnList.Column> productTableColumnList = productTable.getColumnList().getColumn();
 		List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList = productLineItemTable.getColumnList().getColumn();
-		//List<Product.TableList.Table.ColumnList.Column> inventoryTableColumnList = inventoryTable.getColumnList().getColumn();
-		
-		// csv records
+
 		if(mapList != null) {
 			for (Map<String, String> record : mapList) {
 				Object productEntity = migrationUtil.getObject(productTable.getEntityName());
@@ -488,7 +485,6 @@ public class SimpleAccountMigrationService {
 			}
 		}
 	}
-
 
 	private void createCustomerInvoice(List<Table> tables, List<Map<String, String>> mapList, Integer userId) {
 

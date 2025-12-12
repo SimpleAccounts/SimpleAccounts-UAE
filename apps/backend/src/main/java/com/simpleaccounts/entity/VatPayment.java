@@ -100,12 +100,6 @@ public class VatPayment implements Serializable {
     @Basic(optional = false)
     private Boolean isVatReclaimable = Boolean.FALSE;
 
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
-
     @PrePersist
     public void updateDates() {
         createdDate = LocalDateTime.now();

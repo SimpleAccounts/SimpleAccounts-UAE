@@ -12,8 +12,7 @@ public class QuatationListModel {
     private Integer supplierId;
     private String supplierName;
     private String quatationNumber;
-//    private String quaReceiveDate;
-//    private String quaExpiryDate;
+
     private String status;
     private String type;
     private BigDecimal totalAmount;

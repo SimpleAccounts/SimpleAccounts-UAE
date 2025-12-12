@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 /**
  *
  * @author admin
@@ -82,7 +81,6 @@ public class EmployeeListModel implements Serializable{
     }
     private byte[] profileImageBinary;
 
-
     private Integer createdBy = 0;
 
     private String createdDate;
@@ -114,7 +112,6 @@ public class EmployeeListModel implements Serializable{
     private String swiftCode;
     private String routingCode;
     private Integer parentType;
-
 
     private Integer childID;
 

@@ -25,5 +25,4 @@ public enum TransactionFilterEnum {
         this.condition = condition;
     }
 
-
 }

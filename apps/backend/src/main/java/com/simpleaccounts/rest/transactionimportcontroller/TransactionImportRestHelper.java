@@ -281,9 +281,6 @@ public class TransactionImportRestHelper {
 			dateFormat = transactionParsingSettingDao.getDateFormatByTemplateId(transactionImportModel.getTemplateId());
 			DateFormat formatter = new SimpleDateFormat(dateFormat);
 
-			//BigDecimal currentBalance = transactionService
-			//		.getCurrentBalanceByBankId(transactionImportModel.getBankId());
-
 			for (Map<String, Object> dataMap : transactionImportModel.getImportDataMap()) {
 				com.simpleaccounts.entity.bankaccount.Transaction trnx = new com.simpleaccounts.entity.bankaccount.Transaction();
 				trnx.setBankAccount(bankAcc);
@@ -295,28 +292,18 @@ public class TransactionImportRestHelper {
 					String data = (String) dataMap.get(dbColEnum.getDbColumnName());
 					switch (dbColEnum) {
 
-//					case CREDIT_DEBIT_FLAG:
-//						trnx.setDebitCreditFlag(data.charAt(0));
-//						break;
-
 					case CR_AMOUNT:
 					case DR_AMOUNT:
 //					case AMOUNT:
 
 						MathContext mc = new MathContext(4); // 2 precision
 
-						// need to create enum
-//						if (dataMap.containsKey(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName())) {
-//							trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
 ////							if (dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()).equals("C")) {
 ////								currentBalance = currentBalance.add(trnx.getTransactionAmount());
 ////							} else {
 ////								currentBalance = currentBalance.subtract(trnx.getTransactionAmount());
 ////							}
-//							trnx.setDebitCreditFlag(
-//									((String) dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()))
-//											.charAt(0));
-//						} else {
+
 							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDbColumnName());
 								if (!data.isEmpty() && !data.equals("-")) {
@@ -373,8 +360,7 @@ public class TransactionImportRestHelper {
 				transactions.add(trnx);
 
 			}
-		//	bankAcc.setCurrentBalance(currentBalance);
-			//bankAccountService.update(bankAcc);
+
 			return transactions;
 		}
 		return null;
@@ -389,14 +375,8 @@ public class TransactionImportRestHelper {
 
 			BankAccount bankAcc = bankAccountService.findByPK(transactionImportModel.getBankId());
 
-//			dateFormat = transactionParsingSettingDao.getDateFormatByTemplateId(transactionImportModel.getTemplateId());
-//			DateFormat dateFormat = dateFormatService.findByPK(transactionImportModel.getDateFormatId());
-
 			com.simpleaccounts.entity.DateFormat dateFormat = dateFormatService.findByPK(transactionImportModel.getDateFormatId());
 			DateFormat formatter = new SimpleDateFormat(dateFormat.getFormat());
-
-			//BigDecimal currentBalance = transactionService
-			//		.getCurrentBalanceByBankId(transactionImportModel.getBankId());
 
 			for (Map<String, Object> dataMap : transactionImportModel.getImportDataMap()) {
 				com.simpleaccounts.entity.bankaccount.Transaction trnx = new com.simpleaccounts.entity.bankaccount.Transaction();
@@ -409,28 +389,18 @@ public class TransactionImportRestHelper {
 					String data = (String) dataMap.get(dbColEnum.getDisplayName());
 					switch (dbColEnum) {
 
-//					case CREDIT_DEBIT_FLAG:
-//						trnx.setDebitCreditFlag(data.charAt(0));
-//						break;
-
 						case CR_AMOUNT:
 						case DR_AMOUNT:
 //					case AMOUNT:
 
 							MathContext mc = new MathContext(4); // 2 precision
 
-							// need to create enum
-//						if (dataMap.containsKey(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName())) {
-//							trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
 ////							if (dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()).equals("C")) {
 ////								currentBalance = currentBalance.add(trnx.getTransactionAmount());
 ////							} else {
 ////								currentBalance = currentBalance.subtract(trnx.getTransactionAmount());
 ////							}
-//							trnx.setDebitCreditFlag(
-//									((String) dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()))
-//											.charAt(0));
-//						} else {
+
 							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDisplayName());
 								if (!data.equals("-")) {
@@ -487,8 +457,7 @@ public class TransactionImportRestHelper {
 				transactions.add(trnx);
 
 			}
-			//	bankAcc.setCurrentBalance(currentBalance);
-			//bankAccountService.update(bankAcc);
+
 			return transactions;
 		}
 		return null;

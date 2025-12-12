@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller;
 
-
 import lombok.Data;
 
 @Data

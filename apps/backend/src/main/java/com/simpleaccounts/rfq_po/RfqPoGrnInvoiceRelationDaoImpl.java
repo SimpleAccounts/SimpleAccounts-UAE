@@ -8,7 +8,6 @@ import java.util.List;
 @Repository(value = "rfqPoGrnInvoiceRelationDao")
 public class RfqPoGrnInvoiceRelationDaoImpl  extends AbstractDao<Integer, RfqPoGrnRelation> implements RfqPoGrnInvoiceRelationDao{
 
-
  public void addRfqPoGrnRelation(PoQuatation parentPoQuatation, PoQuatation childPoQuotation){
 
      RfqPoGrnRelation rfqPoGrnRelation = new RfqPoGrnRelation();

@@ -13,5 +13,4 @@ public interface InvoiceAmoutResultSet {
 	String getCurrency();
 	Boolean getExclusiveVat();
 
-
 }

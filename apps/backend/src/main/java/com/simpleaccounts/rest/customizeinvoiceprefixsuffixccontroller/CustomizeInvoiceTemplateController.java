@@ -47,32 +47,6 @@ public class CustomizeInvoiceTemplateController {
 
     }
 
-//    @ApiOperation(value = "update Invoice Prefix Suffix", response = CurrencyConversion.class)
-//    @PostMapping("/update")
-//    public ResponseEntity<String> updateConvertedCurrency(@RequestBody CustomizeInvoiceTemplateRequestModel
-//                                                                  customizeInvoiceTemplateRequestModel,
-//                                                          HttpServletRequest request){
-//        try {
-//            CustomizeInvoiceTemplate customizeInvoiceTemplate = customizeInvoiceTemplateService.findByPK(customizeInvoiceTemplateRequestModel.getId());
-//            if (customizeInvoiceTemplate != null) {
-//                String getValue= customizeInvoiceTemplateRequestModel.getPrefix().trim();
-//                String suffixValue =  "";
-//                customizeInvoiceTemplate.setPrefix(customizeInvoiceTemplateRequestModel.getPrefix());
-//                customizeInvoiceTemplate.setSuffix(customizeInvoiceTemplateRequestModel.getSuffix());
-//                customizeInvoiceTemplate.setType(customizeInvoiceTemplateRequestModel.getType());
-//                customizeInvoiceTemplate.setId(customizeInvoiceTemplateRequestModel.getId());
-//                customizeInvoiceTemplateService.update(customizeInvoiceTemplate);
-//                return new ResponseEntity<>("Updated Successfully..", HttpStatus.OK);
-//            }
-//            else{
-//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//            }
-//        } catch (Exception e) {
-//            logger.error(ERROR, e);
-//        }
-//        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-
     @LogRequest
     @ApiOperation(value = "Next invoice No")
     @GetMapping(value = "/getNextInvoiceNo")

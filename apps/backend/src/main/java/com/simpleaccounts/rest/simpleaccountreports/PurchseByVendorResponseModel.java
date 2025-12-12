@@ -8,7 +8,6 @@ import java.util.List;
 @Data
 public class PurchseByVendorResponseModel {
 
-
     List<PurchaseByVendorModel> pByVendorList;
     BigDecimal totalExcludingVat;
     BigDecimal totalAmount;

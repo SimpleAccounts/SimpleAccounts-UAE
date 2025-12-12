@@ -52,8 +52,7 @@ public class TransactionView implements Serializable {
     private String transactionCategoryName;
     @Column(name = "TRANSACTION_TYPE_NAME")
     private String transactionTypeName;
-//    @Column(name = "EXPLANATION_STATUS_CODE")
-//    private Integer explanationStatusCode;
+
     @Column(name = "EXPLANATION_STATUS_NAME")
     private String explanationStatusName;
     @Column(name = "REFERENCE_NAME")

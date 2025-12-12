@@ -31,9 +31,7 @@ public class VatReportDaoImpl extends AbstractDao<Integer, VatReportFiling> impl
         filterMap.forEach(
                 (productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
                         .condition(productFilter.getCondition()).value(value).build()));
-//        if (paginationModel != null)
-//            paginationModel.setSortingCol(
-//                    dataTableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.VAT_REPORT_FILLING));
+
         Integer count =this.getResultCount(dbFilters);
         //To solve pagination issue for search , reset the page No. to 0
         if(count<10 && paginationModel != null) paginationModel.setPageNo(0);

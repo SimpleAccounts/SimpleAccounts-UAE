@@ -339,9 +339,7 @@ public class DataListController {
 				List<EnumDropdownModel> modelList = new ArrayList<>();
 				for (PayMode payMode : payModes)
 					switch (payMode){
-//						case BANK:
-//							modelList.add(new EnumDropdownModel(payMode.toString(), payMode.toString()));
-//							break;
+
 						case CASH:
 							modelList.add(new  EnumDropdownModel(payMode.toString(), payMode.toString()));
 							break;
@@ -352,7 +350,6 @@ public class DataListController {
 							// Unknown pay mode - no action needed
 							break;
 					}
-
 
 				return new ResponseEntity<>(modelList, HttpStatus.OK);
 			} else {
@@ -567,7 +564,6 @@ public class DataListController {
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
 
 	@LogRequest
 	@ApiOperation(value = "Get getUnitTypeList")

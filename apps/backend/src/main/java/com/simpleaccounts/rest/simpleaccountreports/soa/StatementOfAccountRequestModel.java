@@ -18,7 +18,6 @@ public class StatementOfAccountRequestModel implements Serializable {
     private String endDate;
     private Integer customerId;
 
-
     public LocalDateTime getStartDate() {
         SimpleDateFormat dateFormatter = new SimpleDateFormat(CommonColumnConstants.DD_MM_YYYY);
         Date d;

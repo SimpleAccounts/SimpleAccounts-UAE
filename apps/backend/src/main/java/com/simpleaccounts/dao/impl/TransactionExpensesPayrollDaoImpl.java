@@ -23,8 +23,7 @@ public class TransactionExpensesPayrollDaoImpl extends AbstractDao<Integer, Tran
             criteria.createAlias("transaction", "tr");
             criteria.add(Restrictions.eq("tr.transactionId", transactionId));
         }
-//		Projection projection = Projections.property("expense");
-//		criteria.setProjection(projection);
+
         return criteria.list();
     }
 

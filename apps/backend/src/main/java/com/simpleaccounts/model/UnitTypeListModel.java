@@ -2,7 +2,6 @@ package com.simpleaccounts.model;
 
 import lombok.Data;
 
-
 @Data
 public class UnitTypeListModel {
 

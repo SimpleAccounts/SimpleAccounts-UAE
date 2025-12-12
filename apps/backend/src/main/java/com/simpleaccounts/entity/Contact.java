@@ -139,16 +139,6 @@ public class Contact implements Serializable {
 	@Basic(optional = false)
 	private Boolean deleteFlag = Boolean.FALSE;
 
-//	@Column(name = "VERSION_NUMBER")
-//	@ColumnDefault(value = "1")
-//	@Basic(optional = false)
-//	@Version
-//	private Integer versionNumber = 1;
-
-//	@OneToOne
-//	@JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_CONTACT_TRANSACTION_CATEGORY_CODE_TRANSACTION_CATEGORY"))
-//	private TransactionCategory transactionCategory;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PLACE_OF_SUPPLY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CONTACT_PLACE_OF_SUPPLY_ID_PLACE_OF_SUPPLY"))
 	private PlaceOfSupply placeOfSupplyId;

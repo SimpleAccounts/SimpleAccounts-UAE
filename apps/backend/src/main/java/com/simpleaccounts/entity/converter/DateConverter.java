@@ -23,8 +23,6 @@ public class DateConverter implements AttributeConverter<LocalDateTime, Timestam
             if (localDateTime == null) {
                 return null;
             }
-//            localDateTime = LocalDateTime.ofInstant(localDateTime.toInstant(ZoneOffset.UTC), ZoneId.of(System.getProperty("simpleaccounts.user.timezone","Asia/Dubai")));
-//            localDateTime =localDateTime.with(LocalTime.MIN);
 
             return Timestamp.valueOf(localDateTime);
 

@@ -116,7 +116,6 @@ public class CsvParser implements TransactionFileParser {
 						if (headerIndexMap.containsKey(cellCount)) {
 							String displayName = headerIndexMap.get(cellCount).getDisplayName();
 
-
 							// check for date format
 							if (model.getDateFormatId() != null
 									&& displayName.equalsIgnoreCase(TransactionEnum.TRANSACTION_DATE.getDisplayName())) {
@@ -127,8 +126,7 @@ public class CsvParser implements TransactionFileParser {
 									formatter.parse(data);
 									dataMap.put(displayName, data);
 								} catch (ParseException e) {
-									// errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount,
-									// cellCount);
+
 									errorList.add(rowCount + "," + cellCount);
 								}
 							}
@@ -147,8 +145,7 @@ public class CsvParser implements TransactionFileParser {
 									new BigDecimal(data.trim());
 									dataMap.put(displayName, data.trim());
 								} catch (Exception e) {
-									// errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount,
-									// cellCount);
+
 									dataMap.put(displayName,"0");
 //									errorList.add(rowCount + "," + cellCount);
 								}

@@ -4,7 +4,6 @@ import lombok.Getter;
 
 public enum VatCategoryFilterEnum {
 
-
 	   VAT_CATEGORY_NAME("name", " like CONCAT('%',:name,'%')"),
 	   VAT_RATE("vat", " = :vat"),
 	   USER_ID("createdBy", " = :createdBy "),

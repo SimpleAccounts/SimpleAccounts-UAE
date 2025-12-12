@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 @Slf4j
 @RestController
 @RequestMapping(value = "/rest/mail")

@@ -35,7 +35,6 @@ import com.simpleaccounts.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
-
 /**
  *
  * @author saurabhg 26/12/19

@@ -198,8 +198,7 @@ public class InvoiceScannerService {
             Integer invoiceType=Integer.parseInt(invoiceModel.getType());
             invoice.setType(invoiceType);
             CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(invoiceType);
-            //	String prefix=invoiceNumberUtil.fetchPrefixFromString(invoiceModel.getReferenceNumber());
-            //		template.setPrefix(prefix);
+
             String suffix=invoiceNumberUtil.fetchSuffixFromString(invoiceModel.getReferenceNumber());
             template.setSuffix(Integer.parseInt(suffix));
             String prefix= invoice.getReferenceNumber().substring(0,invoice.getReferenceNumber().lastIndexOf(suffix));
@@ -318,9 +317,6 @@ public class InvoiceScannerService {
                     lineItem.setTrnsactioncCategory(transactionCategoryService.findByPK(model.getTransactionCategoryId()));
                 }
 
-//				if (model.getTransactionCategoryId() != null)
-//					lineItem.setTrnsactioncCategory(
-//							transactionCategoryService.findByPK(model.getTransactionCategoryId()));
                 lineItems.add(lineItem);
             } catch (Exception e) {
                 logger.error("Error", e);

@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.financialreport;
 
-
 import com.simpleaccounts.entity.VatTaxAgency;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

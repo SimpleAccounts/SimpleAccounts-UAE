@@ -1,6 +1,5 @@
 package com.simpleaccounts.helper;
 
-
 import com.simpleaccounts.rest.dashboardcontroller.DateRequestModel;
 import org.springframework.stereotype.Component;
 

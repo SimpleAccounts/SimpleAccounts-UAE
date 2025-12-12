@@ -38,7 +38,6 @@ public class SimpleAccountReportsController {
 
     private final JwtTokenUtil jwtTokenUtil;
 
-
     private final simpleAccountReportRestHelper simpleAccountReportRestHelper;
 
     private final UserService userService;
@@ -279,7 +278,6 @@ public class SimpleAccountReportsController {
         return new ResponseEntity<>(expenseByCategoryResponseModel, HttpStatus.OK);
     }
 
-
     @LogRequest
     @ApiOperation(value = "Get invoice Details")
     @GetMapping(value = "/invoiceDetails")
@@ -379,7 +377,6 @@ public class SimpleAccountReportsController {
         }
         return new ResponseEntity<>(statementOfAccountResponseModel, HttpStatus.OK);
     }
-
 
     @LogRequest
     @ApiOperation(value = "Get FTA Audit Report")
@@ -497,7 +494,4 @@ public class SimpleAccountReportsController {
         return new ResponseEntity<>(responseModelStatementOfAccounts, HttpStatus.OK);
     }
 }
-
-
-
 

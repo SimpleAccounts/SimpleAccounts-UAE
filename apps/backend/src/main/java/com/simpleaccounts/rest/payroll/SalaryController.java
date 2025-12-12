@@ -45,9 +45,6 @@ public class SalaryController {
 
     private final SalaryRestHelper salaryRestHelper;
 
-//    @Autowired
-//    private EmployeeTransactionCategoryRelation employeeTransactionCategoryRelation;
-
     @Autowired
     EmploymentService employmentService;
 

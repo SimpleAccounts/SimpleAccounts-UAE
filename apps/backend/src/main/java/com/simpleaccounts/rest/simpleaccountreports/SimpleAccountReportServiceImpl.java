@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SimpleAccountReportServiceImpl extends SimpleAccountReportService{
 
-
     private final SimpleAccountReportDao simpleAccountReportDao;
 
     public SalesByCustomerResponseModel getListOfSalesByCustomer(ReportRequestModel requestModel,SalesByCustomerResponseModel salesByCustomerResponseModel){
@@ -64,12 +63,10 @@ public class SimpleAccountReportServiceImpl extends SimpleAccountReportService{
         return simpleAccountReportDao.getcreditNoteDetails(requestModel,creditNoteDetailsResponseModel);
     }
 
-
     public ExpenseDetailsResponseModel getListOfExpenseDetails(ReportRequestModel requestModel, ExpenseDetailsResponseModel expenseDetailsResponseModel){
 
         return simpleAccountReportDao.getExpenseDetails(requestModel,expenseDetailsResponseModel);
     }
-
 
     public ExpenseByCategoryResponseModel getListOfExpenseByCategory(ReportRequestModel requestModel, ExpenseByCategoryResponseModel expenseByCategoryResponseModel){
 

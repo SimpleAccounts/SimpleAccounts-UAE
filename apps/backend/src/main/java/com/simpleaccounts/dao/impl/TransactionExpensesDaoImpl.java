@@ -26,8 +26,7 @@ public class TransactionExpensesDaoImpl extends AbstractDao<Integer, Transaction
 			criteria.createAlias("transaction", "tr");
 			criteria.add(Restrictions.eq("tr.transactionId", transactionId));
 		}
-//		Projection projection = Projections.property("expense");
-//		criteria.setProjection(projection);
+
 		return criteria.list();
 	}
 

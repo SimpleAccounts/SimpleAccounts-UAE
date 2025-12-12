@@ -23,7 +23,6 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.BankAccountService;
 import com.simpleaccounts.utils.DateFormatUtil;
 
-
 @Service("bankAccountService")
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class BankAccountServiceImpl extends BankAccountService {

@@ -5,21 +5,14 @@
 // */
 //package com.simpleaccounts.service.impl.invoice;
 //
-//import com.simpleaccounts.entity.invoice.InvoiceLineItem;
-//import com.simpleaccounts.service.invoice.InvoiceLineItemService;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
+
 //
 ///**
 // *
 // * @author sonu
 // */
-//@Service
-//@Transactional
-//public class InvoiceLineItemServiceImpl extends InvoiceLineItemService {
+
 //
-//    public InvoiceLineItem findById(Integer ids) {
-//        return getDao().findByPK(ids);
-//    }
+
 //
 //}

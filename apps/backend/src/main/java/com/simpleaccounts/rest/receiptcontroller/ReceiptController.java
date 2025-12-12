@@ -355,9 +355,6 @@ public class ReceiptController {
 				receipt.setReceiptAttachmentPath(fileName);
 			}
 
-			// No need to Update data in Mapping Table
-
-			// Update journal
 			Journal journal = receiptRestHelper.receiptPosting(
 					new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
 					receipt.getDepositeToTransactionCategory(),BigDecimal.ZERO,0,0);

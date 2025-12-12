@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.payroll;
 
-
 import lombok.Data;
 
 import java.util.List;
@@ -9,6 +8,5 @@ import java.util.List;
 public class SalaryListPerMonthResponseModel {
 
     private List<SalaryPerMonthModel> resultSalaryPerMonthList;
-
 
 }

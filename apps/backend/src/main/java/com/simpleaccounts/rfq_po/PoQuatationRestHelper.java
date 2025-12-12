@@ -39,7 +39,6 @@ import java.util.*;
 
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
-
 @Component
 @RequiredArgsConstructor
 public class PoQuatationRestHelper {
@@ -2380,7 +2379,6 @@ public class PoQuatationRestHelper {
         return quatationListModels;
     }
 
-
     public void sendQuotation(PoQuatation poQuatation, Integer userId, PostingRequestModel postingRequestModel,HttpServletRequest request) {
         String subject = "";
         String body = "";
@@ -2737,7 +2735,6 @@ public class PoQuatationRestHelper {
                     "</tr>");
         }
 
-
         String htmlText="";
         String amountInWords="-";
         String vatInWords="-";
@@ -2774,7 +2771,6 @@ public class PoQuatationRestHelper {
                     "                 <td style=\"text-align:center\">{unitType"+row+"}</td>"+
                     "            </tr>");
         }
-
 
         String htmlText="";
 

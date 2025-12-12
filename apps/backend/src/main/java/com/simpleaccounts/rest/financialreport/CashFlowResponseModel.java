@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.financialreport;
 
-
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +19,6 @@ public class CashFlowResponseModel {
     private BigDecimal endingBalance;
     private BigDecimal netIncome;
 
-
     private BigDecimal totalOperatingIncome;
     private BigDecimal totalCostOfGoodsSold;
     private BigDecimal grossProfit;
@@ -35,7 +33,6 @@ public class CashFlowResponseModel {
     private Map<String,BigDecimal> nonOperatingActivities  = new HashMap<>();
     private Map<String,BigDecimal> investingActivities  = new HashMap<>();
     private Map<String,BigDecimal> financingActivities  = new HashMap<>();
-
 
     private Map<String,BigDecimal> operatingIncome  = new HashMap<>();
     private Map<String,BigDecimal> nonOperatingIncome = new HashMap<>();

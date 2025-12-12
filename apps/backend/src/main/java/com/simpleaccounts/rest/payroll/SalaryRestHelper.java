@@ -114,22 +114,12 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
         if (payrollTransactionCategoryList != null && !payrollTransactionCategoryList.isEmpty()) {
 
             List<Integer> employeeListId = salaryPersistModel.getEmployeeListIds();
-            //Traverse list get employee id
-//        BigDecimal grossSalary = BigDecimal.ZERO;
+
             BigDecimal totalSalaryForSingleDay = BigDecimal.valueOf(Float.valueOf(0));
             BigDecimal salaryForjournalEntry = BigDecimal.ZERO;
             for (Integer employeeId : employeeListId) {
                 Employee employee = employeeService.findByPK(employeeId);
-//            Map<String, Object> param1 = new HashMap<>();
-//            param1.put("employee", employee);
-//            List<Employment> employmentList = employmentService.findByAttributes(param1);
-                // get emplyee deatils from id (gross . sal role id )
-//            for (Employment employment1 : employmentList) {
-//                grossSalary = employment1.getGrossSalary();
-//            }
-//            SalaryRole salaryRoleId = employee.getSalaryRoleId();
-                // Get No.of days from leave management and provide empid and month - By default get it from API
-                // Get salary template components from salary template
+
                 BigDecimal totSalaryForEmployeePerMonth = BigDecimal.ZERO;
                 Map<String, Object> param = new HashMap<>();
                 param.put("employeeId", employee);
@@ -137,21 +127,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
                 BigDecimal noOfDays = BigDecimal.valueOf(0);
                 //Traverse salary template component list and for each component calculate salary for number of days
                 for (EmployeeSalaryComponentRelation salaryComponent : employeeSalaryComponentList) {
-                    //totalSalary = grossSalary.multiply(formula2);
-                    //totalSalary = totalSalary.divide(BigDecimal.valueOf(30),2, RoundingMode.HALF_UP);
-                    //a.divide(b, 2, RoundingMode.HALF_UP)
-                    //totalSalary = totalSalary.multiply(BigDecimal.valueOf(salaryPersistModel.getNoOfDays()));
-                    // Now create Salary for each component based on calculations , and then persist the salary object
-//                totalSalaryForSingleDay = totalSalaryForSingleDay.divide(BigDecimal.valueOf(30),2, RoundingMode.HALF_UP);
-//                if (salaryComponent.getFormula()!=null && ! salaryComponent.getFormula().isEmpty()) {
-//                    Double formula = Double.parseDouble(salaryComponent.getFormula());
-//                    formula = formula / 100;
-//                    BigDecimal formula2 = BigDecimal.valueOf(formula);
-//                    totalSalaryForSingleDay = totalSalaryForSingleDay.add(grossSalary.multiply(formula2));
-//                }
-//                else {
-//                    totalSalaryForSingleDay = totalSalaryForSingleDay.add(BigDecimal.valueOf(Integer.parseInt(salaryComponent.getFlatAmount())));
-//                }
+
                     noOfDays = salaryComponent.getNoOfDays();
                     BigDecimal totalSalaryPerMonth = salaryComponent.getMonthlyAmount();
                     totalSalaryForSingleDay = totalSalaryPerMonth.divide(salaryComponent.getNoOfDays());
@@ -249,22 +225,11 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
             List<TransactionCategory> payrollList = transactionCategoryService.findByAttributes(payrollCategoryParam);
 
             List<Integer> employeeListId = salaryPersistModel.getEmployeeListIds();
-            //Traverse list get employee id
-//        BigDecimal grossSalary = BigDecimal.ZERO;
+
             BigDecimal totalSalaryForSingleDay = BigDecimal.valueOf(Float.valueOf(0));
             BigDecimal salaryForjournalEntry = BigDecimal.ZERO;
             for (Integer employeeId : employeeListId) {
                 Employee employee = employeeService.findByPK(employeeId);
-//            Map<String, Object> param1 = new HashMap<>();
-//            param1.put("employee", employee);
-//            List<Employment> employmentList = employmentService.findByAttributes(param1);
-                // get emplyee deatils from id (gross . sal role id )
-//            for (Employment employment1 : employmentList) {
-//                grossSalary = employment1.getGrossSalary();
-//            }
-//            SalaryRole salaryRoleId = employee.getSalaryRoleId();
-                // Get No.of days from leave management and provide empid and month - By default get it from API
-                // Get salary template components from salary template
 
                 Map<String, Object> param = new HashMap<>();
                 param.put("employeeId", employee);
@@ -272,21 +237,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
                 BigDecimal noOfDays = BigDecimal.valueOf(0);
                 //Traverse salary template component list and for each component calculate salary for number of days
                 for (EmployeeSalaryComponentRelation salaryComponent : employeeSalaryComponentList) {
-                    //totalSalary = grossSalary.multiply(formula2);
-                    //totalSalary = totalSalary.divide(BigDecimal.valueOf(30),2, RoundingMode.HALF_UP);
-                    //a.divide(b, 2, RoundingMode.HALF_UP)
-                    //totalSalary = totalSalary.multiply(BigDecimal.valueOf(salaryPersistModel.getNoOfDays()));
-                    // Now create Salary for each component based on calculations , and then persist the salary object
-//                totalSalaryForSingleDay = totalSalaryForSingleDay.divide(BigDecimal.valueOf(30),2, RoundingMode.HALF_UP);
-//                if (salaryComponent.getFormula()!=null && ! salaryComponent.getFormula().isEmpty()) {
-//                    Double formula = Double.parseDouble(salaryComponent.getFormula());
-//                    formula = formula / 100;
-//                    BigDecimal formula2 = BigDecimal.valueOf(formula);
-//                    totalSalaryForSingleDay = totalSalaryForSingleDay.add(grossSalary.multiply(formula2));
-//                }
-//                else {
-//                    totalSalaryForSingleDay = totalSalaryForSingleDay.add(BigDecimal.valueOf(Integer.parseInt(salaryComponent.getFlatAmount())));
-//                }
+
                     noOfDays= salaryComponent.getNoOfDays();
                     BigDecimal totalSalaryPerMonth = salaryComponent.getMonthlyAmount();
                     totalSalaryForSingleDay = totalSalaryPerMonth.divide(salaryComponent.getNoOfDays());

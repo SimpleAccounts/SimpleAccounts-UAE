@@ -210,8 +210,6 @@ public class RoleModuleController {
 //        if (!userList.isEmpty()) {
            Integer response = userList.size();
             return new ResponseEntity<>(response, HttpStatus.OK);
-//        }
-//        return new ResponseEntity("unable to fetch the user information",HttpStatus.OK);
 
     }
 

@@ -130,12 +130,6 @@ public class CreditNote implements Serializable {
     @Column(name = "IS_REVERSE_CHARGE_ENABLED")
     private Boolean isReverseChargeEnabled = false;
 
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
-
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creditNote")
     @org.hibernate.annotations.ForeignKey(name = "none")
     private Collection<CreditNoteLineItem> creditNoteLineItems;

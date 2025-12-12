@@ -325,5 +325,4 @@ public class InvoiceServiceImpl extends InvoiceService {
 		return transactionType;
 	}
 
-
 }

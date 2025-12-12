@@ -109,10 +109,4 @@ public class TransactionExplanation {
     @Basic(optional = false)
     private Boolean deleteFlag = Boolean.FALSE;
 
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
-
 }

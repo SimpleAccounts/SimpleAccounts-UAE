@@ -12,9 +12,7 @@ import java.util.Map;
  * This is a cache service class implemented to support the chart of account cache.
  */
 
-
 public class ChartOfAccountCacheService {
-
 
     private static Map<String, List<DropdownModel>> chartOfAccountCacheMap = new HashMap<>();
     private static ChartOfAccountCacheService CHART_OF_ACCOUNT_CONFIG_CACHE = new ChartOfAccountCacheService();
@@ -26,8 +24,6 @@ public class ChartOfAccountCacheService {
     public static ChartOfAccountCacheService getInstance() {
        return CHART_OF_ACCOUNT_CONFIG_CACHE;
     }
-
-
 
     /**
      * This method will get list of all the chart of accounts process them as desired result and store it to the cache.

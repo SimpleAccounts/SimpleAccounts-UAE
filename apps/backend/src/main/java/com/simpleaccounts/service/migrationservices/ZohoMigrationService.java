@@ -118,7 +118,6 @@ import com.simpleaccounts.utils.FileHelper;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 
-
 	@Component
 	@Slf4j
 	@SuppressWarnings("java:S3973")
@@ -579,15 +578,13 @@ public class ZohoMigrationService {
 	        			List<ProductLineItem> lineItem = new ArrayList<>();
 	        			ProductLineItem productLineItemEntitySales = null;
 	        			ProductLineItem productLineItemEntityPurchase = null;
-	        			// Object productLineItemEntitySales = getObject(productLineItemTable.getEntityName());
-	        			// Object productLineItemEntityPurchase = getObject(productLineItemTable.getEntityName());
+
 	        			String itemType = record.get("Item Type");
 	        			if (itemType.equalsIgnoreCase("Inventory")||itemType.equalsIgnoreCase("Sales")||
 	        					itemType.equalsIgnoreCase("Sales and Purchases")){
 	        				productLineItemEntitySales = getExistingProductLineItemForSales(record,productLineItemTable.
 	        						getEntityName(),productLineItemTableColumnList,userId,productEntity,lineItem);
-	        				// setColumnValue(productLineItemTableColumnList, record, productLineItemEntitySales);
-	        				//setColumnValue(productLineItemTableColumnList, record, productLineItemEntityPurchase);
+
 	        				((ProductLineItem) productLineItemEntitySales).setProduct((com.simpleaccounts.entity.Product) productEntity);
 	        				((ProductLineItem) productLineItemEntitySales).setIsMigratedRecord(true);
 	        				productLineItemService.persist(productLineItemEntitySales);
@@ -601,8 +598,7 @@ public class ZohoMigrationService {
 	        				((ProductLineItem) productLineItemEntityPurchase).setProduct((com.simpleaccounts.entity.Product) productEntity);
 	        				((ProductLineItem) productLineItemEntityPurchase).setIsMigratedRecord(true);
 	        				productLineItemService.persist(productLineItemEntityPurchase);
-	        				// setDefaultSetterValues(productLineItemEntitySales, userId);
-	        				// setDefaultSetterValues(productLineItemEntityPurchase, userId);
+
 	        				lineItem.add(productLineItemEntityPurchase);
 	        			}
 	        			productService.persist(productEntity);
@@ -693,8 +689,7 @@ public class ZohoMigrationService {
 	        		((InvoiceLineItem) invoiceLineItemEntity).setProduct(productEntity);
 	        		((InvoiceLineItem) invoiceLineItemEntity).setDiscountType(DiscountType.FIXED);
 	        		invoiceLineItemService.persist(invoiceLineItemEntity);
-//	            Journal journal = invoiceRestHelper.invoicePosting(new PostingRequestModel(invoiceEntity.getId()), userId);
-//	            journalService.persist(journal);
+
 	        		if(record.get(INVOICE_STATUS).equalsIgnoreCase(DRAFT))
 	        		{
 	        			invoiceEntity.setStatus(CommonStatusEnum.PENDING.getValue());
@@ -887,7 +882,6 @@ public class ZohoMigrationService {
 
 	        }
 
-
 	    }
 		
 		/**
@@ -923,10 +917,7 @@ public class ZohoMigrationService {
 			SimpleAccountsService currencyConversionService = (SimpleAccountsService) migrationUtil.getService(
 					currencyConversionTable.getServiceName());
 			for (Map<String, String> record : mapList) {
-	
-				// CurrencyConversion currencyConversion = getExchangeRate(record,
-				// currencyConversionTable.getEntityName(), currencyConversionTableColumnList,
-				// userId);
+
 				List<CurrencyConversion> currencyConversion = currencyExchangeService.getCurrencyConversionList();
 				Object currencyConversionEntity = migrationUtil.getObject(currencyConversionTable.getEntityName());
 	
@@ -1034,8 +1025,7 @@ public class ZohoMigrationService {
 		       // String productCode = record.get("Item ID");
 		        Map<String, Object> param = new HashMap<>();
 		        param.put("productName", productName);
-		      //  param.put("productCode", productCode);
-		       // param.put("priceType", ProductPriceType.BOTH) ;
+
 		        List<com.simpleaccounts.entity.Product> productList = productService.findByAttributes(param);
 		        for (com.simpleaccounts.entity.Product product:productList){
 		            return product;

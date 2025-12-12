@@ -79,12 +79,6 @@ public class InvoiceLineItem implements Serializable {
 	@Basic(optional = false)
 	private Boolean deleteFlag = Boolean.FALSE;
 
-//	@Column(name = "VERSION_NUMBER")
-//	@ColumnDefault(value = "1")
-//	@Basic(optional = false)
-//	@Version
-//	private Integer versionNumber = 1;
-
 	@ManyToOne
 	@JoinColumn(name = "INVOICE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_INVOICE_ID_INVOICE"))
 	private Invoice invoice;

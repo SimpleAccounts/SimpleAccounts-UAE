@@ -2,7 +2,6 @@ package com.simpleaccounts.constant;
 
 public enum WebLayerErrorCodeEnum {
 
-
 	TEST1("Some Test 1", false), TEST2("Some Test2", true);
 
 	private String errorDescription;
@@ -28,6 +27,5 @@ public enum WebLayerErrorCodeEnum {
 	void setBusinessException(boolean businessException) {
 		this.businessException = businessException;
 	}
-
 
 }

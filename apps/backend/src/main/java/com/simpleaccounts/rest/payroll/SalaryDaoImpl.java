@@ -60,9 +60,6 @@ public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements Salar
                 "FROM Salary s,SalaryComponent sc,SalaryStructure str " +
                 "WHERE s.salaryComponent.id = sc.id and s.employeeId = :employeeId and sc.salaryStructure.id = str.id ");
         query.setParameter("employeeId", employee);
-//        if (dateForSalary != null) {
-//            query.setParameter("presentDate",  dateForSalary);
-//        }
 
         return query.getResultList();
     }

@@ -201,8 +201,7 @@ public class InvoiceRestHelper {
 			Integer invoiceType=Integer.parseInt(invoiceModel.getType());
 			invoice.setType(invoiceType);
 			CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(invoiceType);
-			//	String prefix=invoiceNumberUtil.fetchPrefixFromString(invoiceModel.getReferenceNumber());
-			//		template.setPrefix(prefix);
+
 			String suffix=invoiceNumberUtil.fetchSuffixFromString(invoiceModel.getReferenceNumber());
 			template.setSuffix(Integer.parseInt(suffix));
 			String prefix= invoice.getReferenceNumber().substring(0,invoice.getReferenceNumber().lastIndexOf(suffix));
@@ -266,30 +265,9 @@ public class InvoiceRestHelper {
 		}
 	}
 
-//	private void invoiceDueDate(InvoiceRequestModel invoiceModel, Invoice invoice) {
-//		log.info("invoiceDueDate before {}", invoiceModel.getInvoiceDueDate());
 //
-//		if (invoiceModel.getInvoiceDueDate() != null) {
-//			Instant instant = Instant.ofEpochMilli(invoiceModel.getInvoiceDueDate().getTime());
-//			LocalDateTime invoiceDueDate = LocalDateTime.ofInstant(instant,
-//					ZoneId.systemDefault());
-//			//	invoiceDueDate=invoiceDueDate.withHour(0).withMinute(0).withSecond(0).withNano(0);seconds = 1631881535
-//			log.info("invoiceDueDate {}",invoiceDueDate );
-//			invoice.setInvoiceDueDate(invoiceDueDate);
-//			log.info("invoiceDueDate setvalue {}",invoiceDueDate );
-//		}
-//	}
 
-//	private void invoiceDate(InvoiceRequestModel invoiceModel, Invoice invoice) {
-//		log.info("invoiceDate before {}", invoiceModel.getInvoiceDate());
-//		if (invoiceModel.getInvoiceDate() != null) {
-//			Instant instant = Instant.ofEpochMilli(invoiceModel.getInvoiceDate().getTime());
-//			LocalDateTime invoiceDate = LocalDateTime.ofInstant(instant,
-//					ZoneId.systemDefault());
-//			invoice.setInvoiceDate(invoiceDate);
-//			log.info("invoiceDate setvalue {}",invoiceDate );
-//		}
-//	}
+//			//	invoiceDueDate=invoiceDueDate.withHour(0).withMinute(0).withSecond(0).withNano(0);seconds = 1631881535
 
 	public List<InvoiceLineItem>
 	getLineItems(List<InvoiceLineItemModel> itemModels, Invoice invoice, Integer userId) {
@@ -349,9 +327,6 @@ public class InvoiceRestHelper {
 					lineItem.setTrnsactioncCategory(transactionCategoryService.findByPK(model.getTransactionCategoryId()));
 				}
 
-//				if (model.getTransactionCategoryId() != null)
-//					lineItem.setTrnsactioncCategory(
-//							transactionCategoryService.findByPK(model.getTransactionCategoryId()));
 				lineItems.add(lineItem);
 			} catch (Exception e) {
 				logger.error("Error", e);
@@ -368,8 +343,7 @@ public class InvoiceRestHelper {
 		for(Inventory inventory : inventoryList)
 		{
 			int stockOnHand = inventory.getStockOnHand();
-			//	if(stockOnHand>inventory.getReorderLevel())
-			//	{
+
 			if(stockOnHand > remainingQty )
 			{
 				stockOnHand = stockOnHand - remainingQty ;
@@ -452,8 +426,7 @@ public class InvoiceRestHelper {
 			inventory.setCreatedDate(LocalDateTime.now());
 			inventory.setLastUpdateBy(inventory.getLastUpdateBy());
 			inventory.setLastUpdateDate(LocalDateTime.now());
-//			UnitType unitType = new UnitType();
-//			unitType.setUnitType(1);
+
 			int reOrderLevel = model.getQuantity()/10;
 			inventory.setReorderLevel(reOrderLevel);
 //			inventory.setUnitTypeId(unitType);
@@ -610,9 +583,7 @@ public class InvoiceRestHelper {
 		}
 		List<InvoiceLineItemModel> lineItemModels = new ArrayList<>();
 		invoiceLineItems(invoice, requestModel, lineItemModels);
-//		if (invoice.getReceiptAttachmentPath() != null) {
-//			requestModel.setFilePath("/file/" + fileHelper.convertFilePthToUrl(invoice.getReceiptAttachmentPath()));
-//		}
+
 		if (invoice.getDiscountType() != null) {
 			requestModel.setDiscountType(invoice.getDiscountType());
 		}
@@ -794,13 +765,6 @@ public class InvoiceRestHelper {
 			}
 		}
 	}
-//	private void currency(Invoice invoice, InvoiceListModel model) {
-//		if (invoice.getCurrency() != null) {
-//			if (invoice.getCurrency().getCurrencyName() != null || invoice.getCurrency().getCurrencyIsoCode() != null) {
-//				model.setName(invoice.getCurrency().getCurrencyIsoCode());
-//			}
-//		}
-//	}
 
 	private String getFullName(Contact contact) {
 		StringBuilder sb = new StringBuilder();
@@ -856,8 +820,6 @@ public class InvoiceRestHelper {
 		MailThemeTemplates invoiceEmailBody = (MailThemeTemplates) query.getSingleResult();
 
 		Contact contact = invoice.getContact();
-//		Configuration invoiceEmailSub = configurationService
-//				.getConfigurationByName(ConfigurationConstants.INVOICE_MAIL_TAMPLATE_SUBJECT);
 
 		Map<String, String> map = getInvoiceData(invoice, userId);
 
@@ -894,9 +856,6 @@ public class InvoiceRestHelper {
 		if (invoiceEmailBody != null && invoiceEmailBody.getTemplateSubject() != null) {
 			subject = mailUtility.create(map, invoiceEmailBody.getTemplateSubject());
 		}
-
-//		Configuration invoiceEmailBody = configurationService
-//				.getConfigurationByName(ConfigurationConstants.INVOICE_MAIL_TAMPLATE_BODY);
 
 		if (invoiceEmailBody != null && !StringUtils.isEmpty(htmlText)) {
 			if (invoice.getInvoiceLineItems().size()>1){
@@ -1021,8 +980,7 @@ public class InvoiceRestHelper {
 		}
 		if(invoice!=null && creditNote.getIsCNWithoutProduct()==Boolean.FALSE){
 		contact= invoice.getContact();
-//		Configuration invoiceEmailSub = configurationService
-//				.getConfigurationByName(ConfigurationConstants.INVOICE_MAIL_TAMPLATE_SUBJECT);
+
 		 map = getInvoiceData(invoice, userId);
 		}
 		else {
@@ -1083,9 +1041,6 @@ public class InvoiceRestHelper {
 			subject = "CREDIT NOTE-"+creditNote.getCreditNoteNumber();
 		}
 
-//		Configuration invoiceEmailBody = configurationService
-//				.getConfigurationByName(ConfigurationConstants.INVOICE_MAIL_TAMPLATE_BODY);
-
 		if (creditNoteEmailBody != null && creditNoteEmailBody.getTemplateBody() != null) {
 			if (creditNote!=null && creditNote.getCreditNoteLineItems().size()>1){
 				body = mailUtility.create(map, updateCreditNoteLineItem(creditNote.getCreditNoteLineItems().size(),creditNoteEmailBody));
@@ -1121,28 +1076,9 @@ public class InvoiceRestHelper {
 			logger.info("BILLING ADDRESS NOT PRESENT");
 		}
 	}
-//	private String updateInvoiceLineItem(int size, Configuration invoiceEmailBody) {
-//		String productRow = "<tr>\r\n                <td>{product}</td>\r\n                 <td>{description}</td>\r\n                 <td>{quantity}</td>\r\n                 <td>{unitPrice}</td>\r\n                 <td>{vatType}</td>\r\n                <td>{subTotal}</td>\r\n            </tr>\r\n";
-//		StringBuilder productRowBuilder = new StringBuilder(productRow);
-//		for (int row=1;row<size;row++){
-//			productRowBuilder.append("<tr>\n" +
-//					"                <td>{product"+row+"}</td>\n" +
-//					"                 <td>{description"+row+"}</td>\n" +
-//					"                 <td>{quantity"+row+"}</td>\n" +
-//					"                 <td>{unitPrice"+row+"}</td>\n" +
-//					"                 <td>{vatType"+row+"}</td>\n" +
-//					"                <td>{subTotal"+row+"}</td>\n" +
-//					"            </tr>\n");
-//		}
-//		String emailBody = invoiceEmailBody.getValue();
-//		StringBuilder emailBodyBuilder = new StringBuilder();
-//         emailBodyBuilder.append(emailBody.substring(0,emailBody.indexOf(productRow)));
-//         emailBodyBuilder.append(productRowBuilder.toString());
-//         emailBodyBuilder.append(emailBody.substring(emailBody.indexOf(productRow)+productRow.length(),emailBody.length()));
+
 ////		emailBody = emailBody.replace(productRow,productRowBuilder.toString());
 ////		invoiceEmailBody.setValue(emailBodyBuilder.toString());
-//		return emailBodyBuilder.toString();
-//	}
 
 	private String updateInvoiceLineItem(int size, MailThemeTemplates invoiceEmailBody) {
 
@@ -1163,8 +1099,6 @@ public class InvoiceRestHelper {
 					"</tr>");
 		}
 
-//		String taxRow="<tr><td style=\"text-align:left\">{vatCategory}</td><td style=\"text-align:center\">{currency} {taxableAmount}</td><td style=\"text-align:center\">{currency} {invoiceLineItemVatAmount}</td></tr>";
-//		StringBuilder taxRowBuilder = new StringBuilder(taxRow);
 		/*for (int row=1;row<size;row++){
 			taxRowBuilder.append("<tr><td style=\"text-align:left\">{vatCategory"+ row +"}</td><td style=\"text-align:center\">{currency} {unitPrice"+ row +"}</td><td style=\"text-align:center\">{currency} {invoiceLineItemVatAmount"+ row +"}</td></tr>");
 		}*/
@@ -1186,11 +1120,6 @@ public class InvoiceRestHelper {
 		emailBodyBuilder.append(productRowBuilder.toString());
 		emailBodyBuilder.append(htmlText.substring(htmlText.indexOf(productRow)+1+productRow.length(),htmlText.length()));
 			log.info(emailBodyBuilder.toString());
-		//Adding tax summary details html content
-//		StringBuilder emailBodyBuilderNew = new StringBuilder();
-//		emailBodyBuilderNew.append(emailBodyBuilder.substring(0,emailBodyBuilder.indexOf(taxRow)));
-//		emailBodyBuilderNew.append(taxRowBuilder.toString());
-//		emailBodyBuilderNew.append(emailBodyBuilder.substring(emailBodyBuilder.indexOf(taxRow)+taxRow.length(),emailBodyBuilder.length()));
 
 		return emailBodyBuilder.toString();
 	}
@@ -1272,9 +1201,7 @@ public class InvoiceRestHelper {
 				case MailUtility.CONTACT_NAME:
 					getContact(invoice, invoiceDataMap, value);
 					break;
-//				case MailUtility.CREDIT_NOTE_CONTACT_NAME:
-//					getCNContact(invoice, invoiceDataMap, value);
-//					break;
+
 				case MailUtility.CONTACT_ADDRESS_LINE1:
 					getContactAddress1(invoice, invoiceDataMap, value);
 					break;
@@ -1418,10 +1345,7 @@ public class InvoiceRestHelper {
 					if (MailUtility.CN_VAT_TYPE != null)
 						getCNVat(invoice, invoiceDataMap, value);
 					break;
-//				case MailUtility.INVOICE_LINEITEM_VAT_AMOUNT:
-//					if (MailUtility.VAT_AMOUNT != null)
-//						getVatAmount(invoice, invoiceDataMap, value);
-//					break;
+
 				case MailUtility.DUE_AMOUNT:
 					if (invoice.getDueAmount() != null) {
 						invoiceDataMap.put(value, invoice.getDueAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
@@ -1516,9 +1440,7 @@ public class InvoiceRestHelper {
 				case MailUtility.NOTES:
 					getNotes(invoice, invoiceDataMap, value);
 					break;
-//					case MailUtility.VAT_ID:
-//						getName(invoice, invoiceDataMap, value);
-//						break;
+
 				case MailUtility.INVOICE_LINEITEM_EXCISE_TAX:
 					if (MailUtility.INVOICE_LINEITEM_EXCISE_TAX != null)
 						getInvoiceLineItemExciseTax(invoice, invoiceDataMap, value);
@@ -1746,8 +1668,7 @@ public class InvoiceRestHelper {
 						invoiceDataMap.put("{invoiceLineItemExciseTax"+row+"}", "---");
 						row++;
 					}
-//					invoiceDataMap.put("{description"+row+"}", "---");
-//					row++;
+
 				}
 			}}
 	}
@@ -1866,8 +1787,7 @@ public class InvoiceRestHelper {
 						invoiceDataMap.put("{description"+row+"}", "---");
 						row++;
 					}
-//					invoiceDataMap.put("{description"+row+"}", "---");
-//					row++;
+
 				}
 			}
 		}
@@ -1897,8 +1817,7 @@ public class InvoiceRestHelper {
 						invoiceDataMap.put("{cnDescription"+row+"}", "---");
 						row++;
 					}
-//					invoiceDataMap.put("{description"+row+"}", "---");
-//					row++;
+
 				}
 			}
 		}
@@ -2003,12 +1922,7 @@ public class InvoiceRestHelper {
 			if (c.getAddressLine1() != null && !c.getAddressLine1().isEmpty()) {
 				sb.append(c.getAddressLine1()).append(" ");
 			}
-//			if (c.getAddressLine2() != null && !c.getAddressLine2().isEmpty()) {
-//				sb.append(c.getAddressLine2()).append(" ");
-//			}
-//			if (c.getAddressLine3() != null && !c.getAddressLine3().isEmpty()) {
-//				sb.append(c.getAddressLine3());
-//			}
+
 			invoiceDataMap.put(value, sb.toString());
 		}
 		else{
@@ -2035,15 +1949,11 @@ public class InvoiceRestHelper {
 		if (invoice.getContact() != null || !invoice.getContact().getAddressLine1().isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			Contact c = invoice.getContact();
-//			if (c.getAddressLine1() != null && !c.getAddressLine1().isEmpty()) {
-//				sb.append(c.getAddressLine1()).append(" ");
-//			}
+
 			if (c.getAddressLine2() != null && !c.getAddressLine2().isEmpty()) {
 				sb.append(c.getAddressLine2()).append(" ");
 			}
-//			if (c.getAddressLine3() != null && !c.getAddressLine3().isEmpty()) {
-//				sb.append(c.getAddressLine3());
-//			}
+
 			invoiceDataMap.put(value, sb.toString());
 		}
 		else{
@@ -2586,16 +2496,7 @@ public class InvoiceRestHelper {
 						invoiceDataMap.put("{subTotal"+row+"}",  invoiceLineItem.getSubTotal().setScale(2, BigDecimal.ROUND_HALF_EVEN)+"");
 						row++;
 					}
-//				if(invoiceLineItem.getSubTotal() != null ){
-//					if (row==0) {
-//						row++;
-//						invoiceDataMap.put("{taxableAmount" + row + "}", invoiceLineItem.getSubTotal().setScale(2, BigDecimal.ROUND_HALF_EVEN) + "");
-//					}
-//				}
-//				else {
-//					invoiceDataMap.put("{taxableAmount"+row+"}",  invoiceLineItem.getSubTotal().setScale(2, BigDecimal.ROUND_HALF_EVEN)+"");
-//					row++;
-//				}
+
 				}
 				else{
 					invoiceDataMap.put(value, "---");
@@ -2643,14 +2544,6 @@ public class InvoiceRestHelper {
 		}
 	}
 
-	//	private void getDiscount(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
-//		if (invoice.getDiscount() != null) {
-//			invoiceDataMap.put(value, invoice.getDiscount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
-//		}
-//		else{
-//			invoiceDataMap.put(value, "---");
-//		}
-//	}
 	private void getVat(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		int row=0;
 		if (invoice.getInvoiceLineItems() != null) {
@@ -2800,16 +2693,7 @@ public class InvoiceRestHelper {
 
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
-//		TransactionCategory transactionCategory = transactionCategoryService
-//				.findTransactionCategoryByTransactionCategoryCode(
-//						isCustomerInvoice ? TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode()
-//								: TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
 
-//		if(invoice.getContact() != null)
-//		{
-//			TransactionCategory transactionCategory = invoice.getContact().getTransactionCategory();
-//			journalLineItem1.setTransactionCategory(transactionCategory);
-//		}
 			Map<String, Object> map = new HashMap<>();
 			map.put("contact",invoice.getContact());
 			map.put("contactType", invoice.getType());
@@ -2824,8 +2708,7 @@ public class InvoiceRestHelper {
 			journalLineItem1.setDebitAmount(amountWithoutDiscount.multiply(invoice.getExchangeRate()));
 //			journalLineItem1.setDebitAmount(invoice.getTotalAmount().divide(invoice.getExchangeRate(), 2, RoundingMode.HALF_UP));
 		else
-			//journalLineItem1.setCreditAmount(invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()));
-			//journalLineItem1.setCreditAmount(invoice.getTotalAmount().multiply(invoice.getExchangeRate()));
+
 		if (invoice.getIsReverseChargeEnabled().equals(Boolean.TRUE)){
 			BigDecimal amnt = amountWithoutDiscount.subtract(invoice.getTotalVatAmount());
 			journalLineItem1.setCreditAmount(amnt.multiply(invoice.getExchangeRate()));
@@ -2881,10 +2764,7 @@ public class InvoiceRestHelper {
 				if	(sortedLineItem.getProduct().getIsInventoryEnabled() !=null&&sortedLineItem.getProduct().getIsInventoryEnabled()  && isCustomerInvoice){
 					List<Inventory> inventoryList = inventoryService.getInventoryByProductId(sortedLineItem.getProduct().
 							getProductID());
-					//		for (Inventory inventory:inventoryList) {
-//						inventoryAssetValuePerTransactionCategory = inventoryAssetValuePerTransactionCategory.add(BigDecimal.
-//								valueOf(sortedLineItem.getQuantity()).multiply(BigDecimal.valueOf
-//								(inventory.getUnitCost())));
+
 					if (sortedLineItem.getProduct().getAvgPurchaseCost()!=null) {
 						inventoryAssetValuePerTransactionCategory = inventoryAssetValuePerTransactionCategory.add(BigDecimal.
 								valueOf(sortedLineItem.getQuantity()).multiply(BigDecimal.valueOf
@@ -2908,19 +2788,7 @@ public class InvoiceRestHelper {
 			}if(isCustomerInvoice && isEligibleForInventoryJournalEntry) {
 				sumOfInventoryAssetValuePerTransactionCategory = sumOfInventoryAssetValuePerTransactionCategory.add
 						(inventoryAssetValuePerTransactionCategory);
-//				JournalLineItem journalLineItem = new JournalLineItem();
-//				journalLineItem.setTransactionCategory(transactionCategoryService
-//						.findTransactionCategoryByTransactionCategoryCode(
-//								TransactionCategoryCodeEnum.INVENTORY_ASSET.getCode()));
-//				journalLineItem.setCreditAmount(inventoryAssetValuePerTransactionCategory.multiply(invoice.getExchangeRate()));
-//				journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
-//				journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
-//				journalLineItem.setCreatedBy(userId);
-//				journalLineItem.setJournal(journal);
-//				journalLineItemList.add(journalLineItem);
-//				inventoryAssetValue = inventoryAssetValue.add(inventoryAssetValuePerTransactionCategory.multiply(invoice.
-//						getExchangeRate()));
-//				isEligibleForInventoryAssetJournalEntry = true;
+
 			}
 			//This list contains ILI which consist of excise Tax included in product price group by Transaction Category Id
 			List<InvoiceLineItem> inclusiveExciseLineItems = sortedItemList.stream().
@@ -2963,18 +2831,6 @@ public class InvoiceRestHelper {
 			journalLineItem.setJournal(journal);
 			journalLineItemList.add(journalLineItem);
 
-//			if(isCustomerInvoice && isEligibleForInventoryAssetJournalEntry) {
-//				 journalLineItem = new JournalLineItem();
-//				journalLineItem.setTransactionCategory(transactionCategoryService
-//						.findTransactionCategoryByTransactionCategoryCode(
-//								TransactionCategoryCodeEnum.COST_OF_GOODS_SOLD.getCode()));
-//				journalLineItem.setDebitAmount(inventoryAssetValue);
-//				journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
-//				journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
-//				journalLineItem.setCreatedBy(userId);
-//				journalLineItem.setJournal(journal);
-//				journalLineItemList.add(journalLineItem);
-//			}
 		}
 		//For multiple products Inventory Asset entry for journal  Should be single.
 		if(isCustomerInvoice && isEligibleForInventoryJournalEntry) {
@@ -3104,20 +2960,7 @@ public class InvoiceRestHelper {
 		else {
 			journal.setDescription("Customer Invoice");
 		}
-//		List<JournalLineItem> debitedJournalLineItems = journalLineItemList.stream().filter(journalLineItem -> journalLineItem.getDebitAmount()!=null
-//				&& journalLineItem.getDebitAmount().compareTo(BigDecimal.ZERO)>0).collect(Collectors.toList());
-//		        String string = new String();
-//				for (JournalLineItem journalLineItem:debitedJournalLineItems){
-//					string = string.concat(journalLineItem.getTransactionCategory().getTransactionCategoryName()+",");
-//				}
-//				string = string.concat(" Acc Dr. to ");
-//		List<JournalLineItem> creditedJournalLineItems = journalLineItemList.stream().filter(journalLineItem -> journalLineItem.getCreditAmount()!=null
-//				&& journalLineItem.getCreditAmount().compareTo(BigDecimal.ZERO)>0).collect(Collectors.toList());
-//		for (JournalLineItem journalLineItem:creditedJournalLineItems){
-//			string = string.concat(journalLineItem.getTransactionCategory().getTransactionCategoryName()+",");
-//		}
-//		string = string.concat(" Acc Cr.");
-//		journal.setDescription(string);
+
 		return journal;
 	}
 
@@ -3126,8 +2969,7 @@ public class InvoiceRestHelper {
 										 userId) {
 		TransactionCategory category;
 		for (InvoiceLineItem lineItem : invoiceLineItemList) {
-			// sales for customer
-			// purchase for vendor
+
 			Product product=productService.findByPK(lineItem.getProduct().getProductID());
 			if(product.getIsInventoryEnabled() != null && product.getIsInventoryEnabled() )
 			{
@@ -3308,9 +3150,7 @@ public class InvoiceRestHelper {
 			if (CommonStatusEnum.getInvoiceTypeByValue(invoice.getStatus()) != null && !CommonStatusEnum.getInvoiceTypeByValue(invoice.getStatus()).isEmpty()) {
 				sb.append(CommonStatusEnum.getInvoiceTypeByValue(invoice.getStatus())).append(" ");
 				invoice.getStatus();
-//				if (CommonStatusEnum.getInvoiceTypeByValue(invoice.getStatus()) != null && !CommonStatusEnum.getInvoiceTypeByValue(invoice.getStatus()).isEmpty()) {
-//					sb.append(CommonStatusEnum.getInvoiceTypeByValue(invoice.getStatus())).append(" ");
-//				}
+
 				invoiceDataMap.put(value, sb.toString());
 			} else {
 				invoiceDataMap.put(value, "---");
@@ -3378,15 +3218,7 @@ public class InvoiceRestHelper {
 
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
-//		TransactionCategory transactionCategory = transactionCategoryService
-//				.findTransactionCategoryByTransactionCategoryCode(
-//						isCustomerInvoice ? TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode()
-//								: TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
-//		if(invoice.getContact() != null)
-//		{
-//			TransactionCategory transactionCategory = invoice.getContact().getTransactionCategory();
-//			journalLineItem1.setTransactionCategory(transactionCategory);
-//		}
+
 		Map<String, Object> map = new HashMap<>();
 		map.put("contact",invoice.getContact());
 		map.put("contactType", invoice.getType());
@@ -3401,8 +3233,7 @@ public class InvoiceRestHelper {
 			journalLineItem1.setCreditAmount(amountWithoutDiscount.multiply(invoice.getExchangeRate()));
 //			journalLineItem1.setDebitAmount(invoice.getTotalAmount().divide(invoice.getExchangeRate(), 2, RoundingMode.HALF_UP));
 		else
-			//journalLineItem1.setCreditAmount(invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()));
-			//journalLineItem1.setCreditAmount(invoice.getTotalAmount().multiply(invoice.getExchangeRate()));
+
 			if (invoice.getIsReverseChargeEnabled().equals(Boolean.TRUE)){
 				BigDecimal amnt = amountWithoutDiscount.subtract(invoice.getTotalVatAmount());
 				journalLineItem1.setDebitAmount(amnt.multiply(invoice.getExchangeRate()));
@@ -3459,11 +3290,7 @@ public class InvoiceRestHelper {
 				if	(sortedLineItem.getProduct().getIsInventoryEnabled() !=null&&sortedLineItem.getProduct().getIsInventoryEnabled()  && isCustomerInvoice){
 					List<Inventory> inventoryList = inventoryService.getInventoryByProductId(sortedLineItem.getProduct().
 							getProductID());
-					//		for (Inventory inventory:inventoryList) {
-//						inventoryAssetValuePerTransactionCategory = inventoryAssetValuePerTransactionCategory.add(BigDecimal.
-//								valueOf(sortedLineItem.getQuantity()).multiply(BigDecimal.valueOf
 
-//								(inventory.getUnitCost())));
 					if (sortedLineItem.getProduct().getAvgPurchaseCost()!=null) {
 						inventoryAssetValuePerTransactionCategory = inventoryAssetValuePerTransactionCategory.add(BigDecimal.
 								valueOf(sortedLineItem.getQuantity()).multiply(BigDecimal.valueOf
@@ -3487,19 +3314,7 @@ public class InvoiceRestHelper {
 			}if(isCustomerInvoice && isEligibleForInventoryJournalEntry) {
 				sumOfInventoryAssetValuePerTransactionCategory = sumOfInventoryAssetValuePerTransactionCategory.add
 						(inventoryAssetValuePerTransactionCategory);
-//				JournalLineItem journalLineItem = new JournalLineItem();
-//				journalLineItem.setTransactionCategory(transactionCategoryService
-//						.findTransactionCategoryByTransactionCategoryCode(
-//								TransactionCategoryCodeEnum.INVENTORY_ASSET.getCode()));
-//				journalLineItem.setCreditAmount(inventoryAssetValuePerTransactionCategory.multiply(invoice.getExchangeRate()));
-//				journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
-//				journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
-//				journalLineItem.setCreatedBy(userId);
-//				journalLineItem.setJournal(journal);
-//				journalLineItemList.add(journalLineItem);
-//				inventoryAssetValue = inventoryAssetValue.add(inventoryAssetValuePerTransactionCategory.multiply(invoice.
-//						getExchangeRate()));
-//				isEligibleForInventoryAssetJournalEntry = true;
+
 			}
 			//This list contains ILI which consist of excise Tax included in product price group by Transaction Category Id
 			List<InvoiceLineItem> inclusiveExciseLineItems = sortedItemList.stream().
@@ -3542,18 +3357,6 @@ public class InvoiceRestHelper {
 			journalLineItem.setJournal(journal);
 			journalLineItemList.add(journalLineItem);
 
-//			if(isCustomerInvoice && isEligibleForInventoryAssetJournalEntry) {
-//				 journalLineItem = new JournalLineItem();
-//				journalLineItem.setTransactionCategory(transactionCategoryService
-//						.findTransactionCategoryByTransactionCategoryCode(
-//								TransactionCategoryCodeEnum.COST_OF_GOODS_SOLD.getCode()));
-//				journalLineItem.setDebitAmount(inventoryAssetValue);
-//				journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
-//				journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
-//				journalLineItem.setCreatedBy(userId);
-//				journalLineItem.setJournal(journal);
-//				journalLineItemList.add(journalLineItem);
-//			}
 		}
 		//For multiple products Inventory Asset entry for journal  Should be single.
 		if(isCustomerInvoice && isEligibleForInventoryJournalEntry) {
@@ -3691,8 +3494,7 @@ public class InvoiceRestHelper {
 										 userId) {
 		TransactionCategory category;
 		for (InvoiceLineItem lineItem : invoiceLineItemList) {
-			// sales for customer
-			// purchase for vendor
+
 			Product product=productService.findByPK(lineItem.getProduct().getProductID());
 			if(product.getIsInventoryEnabled() != null && product.getIsInventoryEnabled() )
 			{

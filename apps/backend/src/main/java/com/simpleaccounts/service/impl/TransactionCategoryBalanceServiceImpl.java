@@ -50,8 +50,7 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 	}
 
 	@Override
-	// TODO Remain for update completed create and delete
-	// TODO Need to split this method as get amount and update TransactionCategoryBalance
+
 	public synchronized BigDecimal updateRunningBalance(JournalLineItem lineItem) {
 		List<TransactionCategoryBalance> balanceList = new ArrayList<>();
 		if (lineItem != null) {

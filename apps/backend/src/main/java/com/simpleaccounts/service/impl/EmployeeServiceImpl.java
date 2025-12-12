@@ -162,8 +162,6 @@ public class EmployeeServiceImpl extends EmployeeService {
                     payrollEmployeeDto.setGrossPay(grossPay);
                     payrollEmployeeDto.setDeduction(deduction);
                     payrollEmployeeDto.setNetPay(netPay);
-//                    payrollEmployeeDto.setNetPay(netPay);
-//                    payrollEmployeeDto.setJoiningDate(employment.getDateOfJoining());
 
                     PayrollEmployeeDtoList.add(payrollEmployeeDto);
                 }

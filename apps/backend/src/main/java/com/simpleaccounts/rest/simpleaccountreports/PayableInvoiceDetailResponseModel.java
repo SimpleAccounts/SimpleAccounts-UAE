@@ -15,5 +15,4 @@ public class PayableInvoiceDetailResponseModel {
     private BigDecimal totalBalance;
     private BigDecimal totalVatAmount;
 
-
 }

@@ -323,8 +323,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter(CommonColumnConstants.STATUS, Arrays.asList(new Integer[]{
 				CommonStatusEnum.PARTIALLY_PAID.getValue(), CommonStatusEnum.POST.getValue()}));
 		if (currency != null || !currency.equals(0)) {
-			//query.setParameter(CommonColumnConstants.CURRENCY, currency );
-			//below code updated mudassar fro #1960 & #1961
+
 			query.setParameter(CommonColumnConstants.CURRENCY, Arrays.asList(new Integer[]{
 					currency,  companyCurrency }));
 		}
@@ -337,8 +336,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 			query.setParameter("status", Arrays.asList(new Integer[]{
 					CommonStatusEnum.PARTIALLY_PAID.getValue(), CommonStatusEnum.POST.getValue()}));
 			if (currency != null || !currency.equals(0)) {
-				//query.setParameter(CommonColumnConstants.CURRENCY, currency);
-				//below code updated mudassar fro #1960 & #1961
+
 				query.setParameter(CommonColumnConstants.CURRENCY, Arrays.asList(new Integer[]{currency, companyCurrency}));
 			}
 			query.setParameter("type", type.getValue());

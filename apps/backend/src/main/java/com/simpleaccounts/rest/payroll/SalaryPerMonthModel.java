@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.payroll;
 
-
 import lombok.Data;
 
 import java.math.BigDecimal;

@@ -165,8 +165,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 										.condition(" NOT IN(:transactionCategoryCode)")
 										.value(transactionCategoryCodeEnums).build());
 		Integer count = this.getResultCount(dbFilters);
-		//To solve pagination issue for search , reset the page No. to 0
-//		if(count<10) paginationModel.setPageNo(0);
+
 		List<TransactionCategory> list = this.executeQuery(dbFilters, paginationModel);
 		return new PaginationResponseModel(count,list);
 	}

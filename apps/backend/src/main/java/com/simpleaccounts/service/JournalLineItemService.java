@@ -27,7 +27,6 @@ public abstract class JournalLineItemService extends SimpleAccountsService<Integ
 	public abstract Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(
 			FinancialReportRequestModel reportRequestModel, String reportType);
 
-
 	public abstract PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> filterMap, TaxesFilterModel paginationModel, List<TransactionCategory> transactionCategoryList);
 
 	public abstract  Map<Integer, CreditDebitAggregator> getTaxReport(Date startDate, Date endDate);
@@ -38,6 +37,5 @@ public abstract class JournalLineItemService extends SimpleAccountsService<Integ
 
 	public abstract List<Object> getIdsAndTypeInTotalInputVat(VatReportFiling vatReportFiling, VatReportFilingRequestModel vatReportFilingRequestModel, Integer transactionCategoryId);
 	public abstract List<Object> getIdsAndTypeInTotalOutputVat(VatReportFiling vatReportFiling, VatReportFilingRequestModel vatReportFilingRequestModel, Integer transactionCategoryId);
-
 
 }

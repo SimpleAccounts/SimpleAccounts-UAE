@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.simpleaccounts.entity.Payroll;
 import com.simpleaccounts.rest.payroll.service.PayrollService;
 
-
 @Service
 @RequiredArgsConstructor
 public class PayrollServiceImpl implements PayrollService{

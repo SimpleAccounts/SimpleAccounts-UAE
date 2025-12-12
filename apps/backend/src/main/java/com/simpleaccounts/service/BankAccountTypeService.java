@@ -1,10 +1,7 @@
 package com.simpleaccounts.service;
 
-
-
 import com.simpleaccounts.entity.bankaccount.BankAccountType;
 import java.util.List;
-
 
 public abstract class BankAccountTypeService extends SimpleAccountsService<Integer, BankAccountType> {
 

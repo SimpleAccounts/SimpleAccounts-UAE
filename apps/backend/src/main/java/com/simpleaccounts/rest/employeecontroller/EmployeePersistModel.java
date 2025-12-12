@@ -99,8 +99,7 @@ public class EmployeePersistModel {
     private String  emergencyContactName2;
     private String emergencyContactNumber2;
     private String  emergencyContactRelationship2;
-    //private Integer nationality;
-    // Educational details section
+
     private  String university;
     private String qualification;
     private  String qualificationYearOfCompletionDate;

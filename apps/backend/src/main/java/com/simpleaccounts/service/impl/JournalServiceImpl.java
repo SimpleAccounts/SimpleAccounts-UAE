@@ -49,7 +49,6 @@ public class JournalServiceImpl extends JournalService {
 		journalDao.deleteAndUpdateByIds(ids,updateOpeningBalance);
 	}
 
-
 	@Override
 	protected Dao<Integer, Journal> getDao() {
 		return journalDao;

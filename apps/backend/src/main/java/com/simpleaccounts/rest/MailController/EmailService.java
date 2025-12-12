@@ -42,7 +42,6 @@ import java.util.Map;
 
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
-
 @Service
 public class EmailService {
     private final Logger logger = LoggerFactory.getLogger(EmailService.class);
@@ -72,7 +71,6 @@ public class EmailService {
     private EmaiLogsService emaiLogsService;
     @Autowired
     UserService userService;
-
 
     final freemarker.template.Configuration configuration;
 
@@ -373,7 +371,6 @@ public class EmailService {
         logger.info(freeMakerHtmlContent);
         //End of FreeMaker
 
-
         try {
             String emailBody = quotationEmailBody.getPath();
 
@@ -467,7 +464,6 @@ public class EmailService {
         freeMakerHtmlContent = getTemplateToHtmlString(model, fileName);
         logger.info(freeMakerHtmlContent);
         //End of FreeMaker
-
 
         try {
             String emailBody = quotationEmailBody.getPath();

@@ -75,9 +75,7 @@ public class VatController{
 		User user = userService.findByPK(userId);
 
 		Map<VatCategoryFilterEnum, Object> filterDataMap = new EnumMap<>(VatCategoryFilterEnum.class);
-//		if(user.getRole().getRoleCode()!=1) {
-//			filterDataMap.put(VatCategoryFilterEnum.USER_ID, userId);
-//		}
+
 		filterDataMap.put(VatCategoryFilterEnum.VAT_CATEGORY_NAME, filterModel.getName());
 		if (filterModel.getVatPercentage() != null && !filterModel.getVatPercentage().contentEquals("")) {
 			filterDataMap.put(VatCategoryFilterEnum.VAT_RATE, new BigDecimal(filterModel.getVatPercentage()));

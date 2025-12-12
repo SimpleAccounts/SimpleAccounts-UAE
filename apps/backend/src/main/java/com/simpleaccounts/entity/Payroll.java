@@ -101,11 +101,5 @@ public class Payroll implements Serializable {
    //@Convert(converter = DateConverter.class)
     private LocalDateTime lastUpdateDate = LocalDateTime.now();
 
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
-
 }
 

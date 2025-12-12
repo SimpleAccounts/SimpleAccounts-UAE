@@ -34,12 +34,10 @@ public class TransactionCategoryBalance {
 	@Basic(optional = false)
 	private BigDecimal openingBalance = BigDecimal.ZERO;
 
-
 	@Column(name = "RUNNING_BALANCE")
 	@ColumnDefault(value = "0.00")
 	@Basic(optional = false)
 	private BigDecimal runningBalance = BigDecimal.ZERO;
-
 
 	@Column(name = "EFFECTIVE_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")

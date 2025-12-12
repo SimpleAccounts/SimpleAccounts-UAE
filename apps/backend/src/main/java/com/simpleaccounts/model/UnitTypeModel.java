@@ -7,7 +7,6 @@ import javax.persistence.*;
 @Data
 public class UnitTypeModel {
 
-
     private Integer unitTypeId;
 
     private Integer  unitType;

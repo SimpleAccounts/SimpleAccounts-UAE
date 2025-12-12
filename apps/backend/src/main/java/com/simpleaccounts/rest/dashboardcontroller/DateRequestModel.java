@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.dashboardcontroller;
 
-
 import lombok.Data;
 
 @Data

@@ -93,10 +93,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 			if (expenseRequestFilterModel.getExpenseDate() != null
 					&& !expenseRequestFilterModel.getExpenseDate().isEmpty()) {
 				LocalDate date = LocalDate.parse(expenseRequestFilterModel.getExpenseDate());
-//				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-//				LocalDateTime dateTime = Instant
-//						.ofEpochMilli(dateFormat.parse(expenseRequestFilterModel.getExpenseDate()).getTime())
-//						.atZone(ZoneId.systemDefault()).toLocalDateTime();
+
 				filterDataMap.put(ExpenseFIlterEnum.EXPENSE_DATE, date);
 			}
 			if (expenseRequestFilterModel.getTransactionCategoryId() != null) {

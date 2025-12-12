@@ -19,5 +19,4 @@ public interface JournalDao extends Dao<Integer, Journal> {
 
     public Journal getJournalByReferenceIdAndType(Integer transactionId, PostingReferenceTypeEnum refType);
 
-
 }

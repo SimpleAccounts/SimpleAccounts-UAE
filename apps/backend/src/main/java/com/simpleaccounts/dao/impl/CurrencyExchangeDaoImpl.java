@@ -19,55 +19,10 @@ public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConver
 //	private static String accessKey = "c6267cc9e9bd2735a5a2637aa778d61a";
 	private final Logger logger = LoggerFactory.getLogger(CurrencyExchangeDaoImpl.class);
 
-//	@Override
-//	public void saveExchangeCurrencies(Currency baseCurrency, List<Currency> convertCurrenies) {
-//		try {
-//			System.out.println("baseCurrency====" + baseCurrency.getCurrencyIsoCode());
-//			System.out.println("convertCurrenies====" + convertCurrenies);
-//			List<String> listOfCounteries = new ArrayList<>();
-//			for (Currency currency : convertCurrenies) {
-//				listOfCounteries.add(currency.getCurrencyIsoCode());
-//			}
 //
-//			String currencyIsoName = StringUtils.join(listOfCounteries, ',');
-//			System.out.println("currencyIsoName=" + currencyIsoName);
-//			String url = "http://data.fixer.io/api/latest?access_key="
-//					+ URLEncoder.encode( accessKey , StandardCharsets.UTF_8.toString()) + "&base="
-//					+ URLEncoder.encode(baseCurrency.getCurrencyIsoCode(), "UTF-8") + "&symbols="
-//					+ URLEncoder.encode(currencyIsoName, "UTF8");
-//			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-//			HttpGet httpGet = new HttpGet(url);
-//			CloseableHttpResponse response = httpClient.execute(httpGet);
-//			String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-//
-//			JSONObject obj = new JSONObject(responseString);
-//			JSONObject rates = obj.getJSONObject("rates");
-//			for (Currency currency : convertCurrenies) {
-//				try {
-//					double value = rates.getDouble(currency.getCurrencyIsoCode());
-//					System.out.println("responseString1==" + currency);
-//					System.out.println("responseString2==" + value);
-//					System.out.println("responseString==" + responseString);
-//					CurrencyConversion currencyConversion = new CurrencyConversion();
-//					currencyConversion.setCurrencyCode(baseCurrency.getCurrencyCode());
-//					currencyConversion.setCurrencyCodeConvertedTo(currency.getCurrencyCode());
-//					currencyConversion.setCreatedDate(LocalDateTime.now());
-//					currencyConversion.setExchangeRate(BigDecimal.valueOf(value));
-//					persist(currencyConversion);
-//				} catch (Exception e) {
-//					CurrencyConversion currencyConversion = new CurrencyConversion();
-//					currencyConversion.setCurrencyCode(baseCurrency.getCurrencyCode());
-//					currencyConversion.setCurrencyCodeConvertedTo(currency.getCurrencyCode());
-//					currencyConversion.setCreatedDate(LocalDateTime.now());
-//					currencyConversion.setExchangeRate(BigDecimal.ZERO);
-//					persist(currencyConversion);
-//				}
-//			}
-//		} catch (Exception e) {
-//			logger.error("Error", e);
-//		}
 
-//	}
+//
+
 	@Override
 	public CurrencyConversion getExchangeRate(Integer currencyCode){
 		TypedQuery<CurrencyConversion> query = getEntityManager().createQuery(
@@ -88,8 +43,7 @@ public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConver
 	public List<CurrencyConversion> getActiveCurrencyConversionList(){
 		return this.executeNamedQuery("listOfActiveCurrency");
 	}
-//	@Override
-//	public List<CurrencyConversion> getCompanyCurrency() {
+
 ////		TypedQuery<CurrencyConversion> query = getEntityManager().createQuery("SELECT cc.currencyCode, cc.exchangeRate FROM CurrencyConversion cc where cc.currencyCode IN (select c.currencyCode from Currency c)", CurrencyConversion.class);
 ////		List<CurrencyConversion> currencyList = query.getResultList();
 ////		if (currencyList != null && !currencyList.isEmpty()) {

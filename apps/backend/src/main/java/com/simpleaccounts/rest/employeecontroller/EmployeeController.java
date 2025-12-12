@@ -248,14 +248,7 @@ public class EmployeeController {
 				employee.setDeleteFlag(Boolean.FALSE);
 				employeeService.persist(employee);
 			employeeService.sendInvitationMail(employee, request);
-//			EmployeeBankDetails employeeBankDetails = payrollRestHepler.getEntity(employeePersistModel);
-//			employeeBankDetails.setEmployee(employee);
-//			employeeBankDetails.setCreatedBy(userId);
-//			employeeBankDetails.setCreatedDate(LocalDateTime.now());
-//			employeeBankDetailsService.persist(employeeBankDetails);
-//			Employment employment = payrollRestHepler.getEmploymentEntity(employeePersistModel);
-//			employment.setEmployee(employee);
-//			employmentService.persist(employment);
+
 			if(employee.getParentId()!=null) {
 				Employee parentId = employeeService.findByPK(employee.getParentId());
 				Employee childId = employee;
@@ -291,14 +284,6 @@ public class EmployeeController {
 				employee.setCreatedDate(LocalDateTime.now());
 				employeeService.update(employee);
 
-//			EmployeeBankDetails employeeBankDetails = payrollRestHepler.getEmployeeBankDetailsEntity(employeePersistModel,employee,userId);
-//			employeeBankDetails.setEmployee(employee);
-//			employeeBankDetails.setCreatedBy(userId);
-//			employeeBankDetails.setCreatedDate(LocalDateTime.now());
-//			employeeBankDetailsService.update(employeeBankDetails);
-//			Employment employment = payrollRestHepler.getEmploymentsEntity(employeePersistModel,employee,userId);
-//			employment.setEmployee(employee);
-//			employmentService.update(employment);
 /**
  * added for Update employee Transaction category
  */

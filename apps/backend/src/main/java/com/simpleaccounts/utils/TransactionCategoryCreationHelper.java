@@ -58,8 +58,7 @@ public class TransactionCategoryCreationHelper {
 
                 TransactionCategory transactionCategory = getTransactionCategory(transactionCategoryName,transactionCategoryName,
                         employee.getCreatedBy(),parentTransactionCategory);
-//                coacTransactionCategoryService.addCoacTransactionCategory(transactionCategory.getChartOfAccount(),
-//                        transactionCategory);
+
                 EmployeeTransactionCategoryRelation employeeTransactionCategoryRelation = new EmployeeTransactionCategoryRelation();
                 employeeTransactionCategoryRelation.setEmployee(employee);
                 employeeTransactionCategoryRelation.setTransactionCategory(transactionCategory);
@@ -100,8 +99,7 @@ public class TransactionCategoryCreationHelper {
 
                 TransactionCategory transactionCategory = getTransactionCategory(transactionCategoryName,transactionCategoryName,
                         employee.getCreatedBy(),parentTransactionCategory);
-//                coacTransactionCategoryService.addCoacTransactionCategory(transactionCategory.getChartOfAccount(),
-//                        transactionCategory);
+
                 EmployeeTransactionCategoryRelation employeeTransactionCategoryRelation = new EmployeeTransactionCategoryRelation();
                 employeeTransactionCategoryRelation.setEmployee(employee);
                 employeeTransactionCategoryRelation.setTransactionCategory(transactionCategory);
@@ -128,9 +126,7 @@ public class TransactionCategoryCreationHelper {
                }
                TransactionCategory transactionCategory = getTransactionCategory(transactionCategoryName,transactionCategoryName,
                        contact.getCreatedBy(),parentTransactionCategory);
-//               coacTransactionCategoryService.addCoacTransactionCategory(contact.getTransactionCategory().getChartOfAccount(),
-//                       contact.getTransactionCategory());
-//               contactTransactionCategoryService.addContactTransactionCategory(contact, transactionCategory);
+
                ContactTransactionCategoryRelation contactTransactionCategoryRelation = new ContactTransactionCategoryRelation();
                contactTransactionCategoryRelation.setContact(contact);
                contactTransactionCategoryRelation.setTransactionCategory(transactionCategory);
@@ -149,9 +145,7 @@ public class TransactionCategoryCreationHelper {
                }
                transactionCategory = getTransactionCategory(transactionCategoryName,transactionCategoryName,
                        contact.getCreatedBy(),parentTransactionCategory);
-//               coacTransactionCategoryService.addCoacTransactionCategory(contact.getTransactionCategory().getChartOfAccount(),
-//                       contact.getTransactionCategory());
-//               contactTransactionCategoryService.addContactTransactionCategory(contact, transactionCategory);
+
                 contactTransactionCategoryRelation = new ContactTransactionCategoryRelation();
                contactTransactionCategoryRelation.setContact(contact);
                contactTransactionCategoryRelation.setTransactionCategory(transactionCategory);
@@ -187,9 +181,6 @@ public class TransactionCategoryCreationHelper {
                transactionCategory = getTransactionCategory(transactionCategoryName,transactionCategoryName,
                        contact.getCreatedBy(),parentTransactionCategory);
 
-//               coacTransactionCategoryService.addCoacTransactionCategory(contact.getTransactionCategory().getChartOfAccount(),
-//                       contact.getTransactionCategory());
-//               contactTransactionCategoryService.addContactTransactionCategory(contact, transactionCategory);
                contactTransactionCategoryRelation = new ContactTransactionCategoryRelation();
                contactTransactionCategoryRelation.setContact(contact);
                contactTransactionCategoryRelation.setTransactionCategory(transactionCategory);

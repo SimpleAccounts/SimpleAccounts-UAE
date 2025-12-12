@@ -38,10 +38,6 @@ public class InventoryHistory implements Serializable {
     @JoinColumn(name = "SUPPLIER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVENTORY_HISTORY_SUPPLIER_ID_SUPPLIER"))
     private Contact supplierId ;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "CUSTOMER_ID")
-//    private Contact customerId ;
-
     @Basic
     @Column(name = "QUANTITY")
     private Float  quantity ;
@@ -93,9 +89,4 @@ public class InventoryHistory implements Serializable {
     @Basic(optional = true)
     private Integer orderSequence;
 
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
 }

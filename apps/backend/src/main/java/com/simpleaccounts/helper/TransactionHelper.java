@@ -141,73 +141,17 @@ public class TransactionHelper {
 		}
 	}
 
-//	public List<TransactionPresistModel> getModel2(List<TransactionExplinationLineItem> explinationLineItems , Transaction transaction){
-//		List<TransactionPresistModel> transactionPresistModelList = new ArrayList<>();
 //
-//		for(TransactionExplinationLineItem explinationLineItem : explinationLineItems){
-//				TransactionPresistModel model = new TransactionPresistModel();
-//				model.setBankId(explinationLineItem.getBankAccount().getBankAccountId());
-//				model.setTransactionId(transaction.getTransactionId());
-//				model.setDescription(transaction.getExplainedTransactionDescription());
-//				if (explinationLineItem.getExchangeRate()!=null){
-//					model.setExchangeRate(explinationLineItem.getExchangeRate());
-//				}
-//				if (explinationLineItem.getExplainedTransactionCategory() != null) {
-//					model.setExpenseCategory(explinationLineItem.getExplainedTransactionCategory().getTransactionCategoryId());
-//				}
-//				if (explinationLineItem.getCoaCategory() != null) {
-//					model.setCoaCategoryId(explinationLineItem.getCoaCategory().getChartOfAccountCategoryId());
-//				}
-//				if (explinationLineItem.getExplainedTransactionCategory() != null) {
-//					if(explinationLineItem.getExplainedTransactionCategory().getChartOfAccount()
-//							.getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode())
-//							&& explinationLineItem.getTransactionDescription().contains("="))
-//					{
-//						model.setTransactionCategoryLabel(
-//								explinationLineItem.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountName());
-//						String description = explinationLineItem.getTransactionDescription();
-//						model.setTransactionCategoryId(Integer.parseInt(description.substring(description.indexOf("=")+1,description.length())));
-//						description = description.substring(0,description.indexOf(":"));
-//						model.setDescription(description);
-//						model.setExpenseCategory(null);
-//					}
-//					else {
-//						model.setTransactionCategoryLabel(
-//								explinationLineItem.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountName());
-//						if(explinationLineItem.getExplainedTransactionCategory().getParentTransactionCategory()!=null
-//								&& explinationLineItem.getExplainedTransactionCategory().getParentTransactionCategory().getTransactionCategoryId()!=null
+
 ////				        && transaction.getExplainedTransactionCategory().getParentTransactionCategory().getTransactionCategoryName().equalsIgnoreCase("Salaries and Employee Wages")
-//						){
-//							model.setTransactionCategoryId(explinationLineItem.getExplainedTransactionCategory().getParentTransactionCategory().getTransactionCategoryId());
-//							model.setEmployeeId(explinationLineItem.getExplainedTransactionCategory().getTransactionCategoryId());
-//						}else
-//							model.setTransactionCategoryId(explinationLineItem.getExplainedTransactionCategory().getTransactionCategoryId());
-//					}
-//				}
-//				model.setAmount(transaction.getTransactionDueAmount());
-//				model.setDueAmount(transaction.getTransactionDueAmount());
-//				if (transaction.getTransactionDate() != null) {
-//					model.setDate1(transaction.getTransactionDate());
-//				}
-//				model.setReference(explinationLineItem.getReferenceStr());
+
 //				//Expense
-//			if (explinationLineItem.getVatCategory() != null)
-//				model.setVatId(explinationLineItem.getVatCategory().getId());
-//			if(explinationLineItem.getExpense()!= null) {
-//				model.setExpenseType(explinationLineItem.getExpense().getExpenseType());
-//			}
+
 //			//Invoice
-//			if(explinationLineItem.getContact()!= null){
-//				model.setVendorId(explinationLineItem.getContact().getContactId());
-//				model.setCustomerId(explinationLineItem.getContact().getContactId());
-//			}
+
 //
 //
 //
-//			transactionPresistModelList.add(model);
-//			}
-//		return transactionPresistModelList;
-//	};
 
 		public List<TransactionPresistModel> getModel(Transaction transaction, List<TransactionExplanation> explanationList) {
 		List<TransactionPresistModel> transactionPresistModelList = new ArrayList<>();

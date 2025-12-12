@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.InvoiceScannerContoller;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -189,11 +188,7 @@ public class JSONExpenseParser {
                     }
                     }
             }
-//            if(jsonObject.get(0).has(PAYMENT_TERMS)){
-//                if(jsonObject.get(0).get(PAYMENT_TERMS).has(VALUE)) {
-//                    requestModel.setTerm(InvoiceDuePeriodEnum.valueOf(jsonObject.get(0).get(PAYMENT_TERMS).get(VALUE).textValue()));
-//                }
-//            }
+
             if(jsonObject.get(0).has(SUB_TOTAL)) {
                 if (jsonObject.get(0).get(SUB_TOTAL).has(AMOUNT)) {
                     requestModel.setTotalAmount(jsonObject.get(0).get(SUB_TOTAL).get(AMOUNT).decimalValue());

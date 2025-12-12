@@ -14,7 +14,5 @@ public class SalaryDeatilByEmployeeIdNoOfDaysResponseModel {
     private String employeeName;
     private BigDecimal noOfDays;
 
-
 }
-
 

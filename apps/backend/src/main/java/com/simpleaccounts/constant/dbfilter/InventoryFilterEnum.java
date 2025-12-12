@@ -13,7 +13,6 @@ public enum InventoryFilterEnum {
     STOCK_IN_HAND("stockOnHand","= :stockOnHand"),
     REORDER_LEVEL("reorderLevel","= :reorderlevel");
 
-
     @Getter
     String dbColumnName;
 

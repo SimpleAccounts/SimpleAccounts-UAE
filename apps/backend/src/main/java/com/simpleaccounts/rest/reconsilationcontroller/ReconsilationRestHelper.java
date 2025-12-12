@@ -40,7 +40,6 @@ public class ReconsilationRestHelper {
 
 	private final DateFormatUtil dateUtil;
 
-
 	private final ExpenseService expenseService;
 
 	private final InvoiceService invoiceService;
@@ -126,8 +125,7 @@ public class ReconsilationRestHelper {
 //Todo
 	public Journal getByTransactionType(Integer transactionCategoryCode, BigDecimal amount, int userId,
 										Transaction transaction, boolean isdebitFromBank, BigDecimal exchangeRate) {
-		//CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(transaction.getBankAccount()
-		//		.getBankAccountCurrency().getCurrencyCode());
+
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
@@ -284,20 +282,10 @@ public class ReconsilationRestHelper {
 
 		ChartOfAccount transactionType = transactionCategory.getChartOfAccount();
 
-//		boolean isdebitFromBank = transactionType.getChartOfAccountId().equals(ChartOfAccountConstant.MONEY_IN)
-//				|| (transactionType.getParentChartOfAccount() != null
-//				&& transactionType.getParentChartOfAccount().getChartOfAccountId() != null
-//				&& transactionType.getParentChartOfAccount().getChartOfAccountId()
-//				.equals(ChartOfAccountConstant.MONEY_IN)) ? Boolean.TRUE : Boolean.FALSE;
-
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 		journalLineItem1.setTransactionCategory(transaction.getExplainedTransactionCategory());
-//		if (!isdebitFromBank) {
-//			journalLineItem1.setDebitAmount(amount.multiply(transactionPresistModel.getExchangeRate()));
-//		} else {
-//			journalLineItem1.setCreditAmount(amount.multiply(transactionPresistModel.getExchangeRate()));
-//		}
+
 		journalLineItem1.setDebitAmount(amount.multiply(transactionPresistModel.getExchangeRate()));
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
 		journalLineItem1.setReferenceId(expense.getExpenseId());
@@ -308,11 +296,7 @@ public class ReconsilationRestHelper {
 
 		JournalLineItem journalLineItem2 = new JournalLineItem();
 		journalLineItem2.setTransactionCategory(transaction.getBankAccount().getTransactionCategory());
-//		if (isdebitFromBank) {
-//			journalLineItem2.setDebitAmount(transaction.getTransactionAmount().multiply(transactionPresistModel.getExchangeRate()));
-//		} else {
-//			journalLineItem2.setCreditAmount(transaction.getTransactionAmount().multiply(transactionPresistModel.getExchangeRate()));
-//		}
+
 		journalLineItem2.setCreditAmount(amount.multiply(transactionPresistModel.getExchangeRate()));
 		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
 		journalLineItem2.setReferenceId(expense.getExpenseId());
@@ -451,9 +435,7 @@ public class ReconsilationRestHelper {
 		for (ReconcileStatus reconcileStatus : (List<ReconcileStatus>) reconcileStatusList) {
 			ReconcileStatusListModel reconcileStatusListModel = new ReconcileStatusListModel();
 			reconcileStatusListModel.setReconcileId(reconcileStatus.getReconcileId());
-//			reconcileStatusListModel.setReconciledDate(reconcileStatus.getReconciledDate() != null
-//					? dateUtil.getLocalDateTimeAsString(reconcileStatus.getReconciledDate(), "dd-MM-yyyy")
-//					: "-");
+
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
 			ZoneId timeZone = ZoneId.systemDefault();
 			Date date = Date.from(reconcileStatus.getReconciledDate().toLocalDate().atStartOfDay(timeZone).toInstant());

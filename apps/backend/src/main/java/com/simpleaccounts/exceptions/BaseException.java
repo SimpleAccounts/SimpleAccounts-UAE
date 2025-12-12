@@ -1,6 +1,5 @@
 package com.simpleaccounts.exceptions;
 
-
 public abstract class BaseException extends RuntimeException {
 
 	private static final long serialVersionUID = 605231601334551397L;

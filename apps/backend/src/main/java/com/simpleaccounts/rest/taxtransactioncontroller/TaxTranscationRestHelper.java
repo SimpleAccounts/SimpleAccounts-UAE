@@ -88,16 +88,12 @@ public class TaxTranscationRestHelper {
 		taxTransaction.setEndDate(endDate);
 		for (Transaction transaction : creditTransactionList) {
 			Date transDate = Date.from(transaction.getTransactionDate().atZone(ZoneId.systemDefault()).toInstant());
-//				if (transDate.compareTo(startDate) >= 0 && transDate.compareTo(endDate) <= 0 && transaction.getReferenceId() != null) {
-//					vatIn = vatIn.add(getVatFromTransaction(transaction));
-//				}
+
 			}
 		for (Transaction transaction : debitTransactionList) {
 			Date transactionDate = Date
 					.from(transaction.getTransactionDate().atZone(ZoneId.systemDefault()).toInstant());
-//				if (transactionDate.compareTo(startDate) >= 0 && transactionDate.compareTo(endDate) <= 0 && transaction.getReferenceId() != null) {
-//					vatOut = vatOut.add(getVatFromTransaction(transaction));
-//				}
+
 			}
 
 		taxTransaction.setVatIn(vatIn);
@@ -171,20 +167,7 @@ public class TaxTranscationRestHelper {
 //		Integer refId = transaction.getReferenceId();
 		BigDecimal totalVat = BigDecimal.ZERO;
 		BigDecimal vatPercent = BigDecimal.ZERO;
-//		if (transaction.getReferenceType() == TransactionRefrenceTypeConstant.INVOICE) {
-//			Invoice invoice= invoiceService.findByPK(refId);
-//		}
-//		if (transaction.getReferenceType() == TransactionRefrenceTypeConstant.PURCHASE) {
-//			Purchase purchase = purchaseService.findByPK(refId);
-//			for (PurchaseLineItem purchaseLineItem : purchase.getPurchaseLineItems()) {
-//				BigDecimal totalAmount = purchaseLineItem.getPurchaseLineItemUnitPrice()
-//						.multiply(new BigDecimal(purchaseLineItem.getPurchaseLineItemQuantity()));
-//				if (purchaseLineItem.getPurchaseLineItemVat() != null) {
-//					vatPercent = purchaseLineItem.getPurchaseLineItemVat().getVat();
-//				}
-//				totalVat = (totalAmount.multiply(vatPercent)).divide(new BigDecimal(100), 5, RoundingMode.HALF_UP);
-//			}
-//		}
+
 		return totalVat;
 	}
 

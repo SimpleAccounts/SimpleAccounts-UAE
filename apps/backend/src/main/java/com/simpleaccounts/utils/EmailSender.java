@@ -84,8 +84,6 @@ public class EmailSender {
 		}
 	}
 
-
-
 	public final static String RESET_PASSWORD = "<!DOCTYPE html>\n" +
 			"<html>\n" +
 			"   <head>\n" +

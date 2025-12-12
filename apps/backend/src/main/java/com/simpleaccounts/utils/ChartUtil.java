@@ -33,9 +33,7 @@ public class ChartUtil {
 
 	public Map<Object, Number> getCashMap(List<Object[]> rows, Integer count) {
 		Map<Object, Number> cashMap = new LinkedHashMap<>(0);
-//		if (rows == null || rows.size() == 0) {
-//			return cashMap;
-//		}
+
 		List<ChartData> chartDatas = convert(rows);
 		Collections.sort(chartDatas);
 

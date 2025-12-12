@@ -40,10 +40,6 @@ public class Inventory implements Serializable{
     @JoinColumn(name = "SUPPLIER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVENTORY_SUPPLIER_ID_SUPPLIER"))
     private Contact supplierId ;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "CUSTOMER_ID")
-//    private Contact customerId ;
-
     @Basic
     @Column(name = "PURCHASE_ORDER")
     private Integer   purchaseQuantity;
@@ -99,19 +95,9 @@ public class Inventory implements Serializable{
     @Basic(optional = false)
     private Boolean deleteFlag = Boolean.FALSE;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "INVOICE_ID")
-//    private Invoice invoice;
-
     @Basic(optional = false)
     @ColumnDefault(value = "false")
     @Column(name = "IS_MIGRATED_RECORD")
     private Boolean isMigratedRecord = Boolean.FALSE;
-
-//    @Column(name = "VERSION_NUMBER")
-//    @ColumnDefault(value = "1")
-//    @Basic(optional = false)
-//    @Version
-//    private Integer versionNumber = 1;
 
 }

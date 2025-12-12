@@ -12,7 +12,6 @@ import com.simpleaccounts.constant.ExcellDelimiterEnum;
 
 import lombok.Data;
 
-
 @Entity
 @Table(name = "TRANSACTION_PARSING_SETTING")
 @Data
@@ -47,10 +46,8 @@ public class TransactionParsingSetting implements Serializable {
 	@Column(name = "SKIP_COLUMNS")
 	private String skipColumns;
 
-
 	@Column(name = "HEADER_ROW_NO")
 	private Integer headerRowNo;
-
 
 	@Column(name = "TEXT_QUALIFIER")
 	private String textQualifier;

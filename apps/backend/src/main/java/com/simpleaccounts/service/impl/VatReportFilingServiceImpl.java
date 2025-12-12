@@ -61,7 +61,6 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
 
     private final VatPaymentRepository vatPaymentRepository;
 
-
     private final BankAccountService bankAccountService;
 
     private final TransactionService transactionService;
@@ -69,7 +68,6 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
     private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
     private final VatRecordPaymentHistoryRepository vatRecordPaymentHistoryRepository;
-
 
     private final UserService userService;
 
@@ -206,7 +204,6 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
      }
         return vatReportResponseModels;
     }
-
 
     public List<VatReportResponseModel> getVatReportFilingList2(List<VatReportFiling> vatReportFilingList){
         String startDate = "";
@@ -407,10 +404,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
            vatReportFiling.setBalanceDue(vatReportFilingBalanceDue);
            vatReportFiling.setStatus(CommonStatusEnum.PARTIALLY_PAID.getValue());
        }
-//       else{
-//           vatReportFiling.setBalanceDue(BigDecimal.ZERO);
-//           vatReportFiling.setStatus(CommonStatusEnum.RECLAIMED.getValue());
-//       }
+
        vatReportFilingRepository.save(vatReportFiling);
        createCashTransactionForVatPayment(vatPayment,recordVatPaymentRequestModel,userId);
        createVatRecordPaymentHistory(vatPayment,userId);
@@ -550,7 +544,6 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
         journalLineItem1.setJournal(journal);
         journalLineItemList.add(journalLineItem1);
 
-
         journalLineItem2.setTransactionCategory(depositeToTransactionCategory);
         if (vatPayment.getIsVatReclaimable().equals(Boolean.FALSE)) {
             journalLineItem2.setReferenceType(PostingReferenceTypeEnum.VAT_PAYMENT);
@@ -686,20 +679,8 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
    /*
    This method will revert the payment as well as journal entries back
     */
-//    public void revertBackRecordedVatPayment(PostingRequestModel postingRequestModel, Integer userId){
-//        Journal journal = journalService.getJournalByReferenceIdAndType(postingRequestModel.getPostingRefId(),
-//                PostingReferenceTypeEnum.valueOf(postingRequestModel.getPostingRefType()));
-//        if (journal != null) {
-//            journalService.deleteByIds(Arrays.asList(journal.getId()));
-//        }
-//        if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.PUBLISH.name())){
-//            VatReportFiling vatReportFiling = vatReportFilingRepository.findById(postingRequestModel.getPostingRefId()).get();
-//            VatPayment vatPayment = vatPaymentRepository.getPaymentByVatReportFilingId(vatReportFiling.getId());
-//            BigDecimal balanceDue = vatReportFiling.getBalanceDue();
-//            vatReportFiling.setBalanceDue(balanceDue.add(vatPayment.getAmount()));
+
 //            //if (vatReportFiling.getBalanceDue().compareTo()){}
-//        }
-//    }
 
     @Override
     public List<VatPaymentHistoryModel> getVatPaymentRecordList() {

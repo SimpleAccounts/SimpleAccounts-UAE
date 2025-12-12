@@ -50,7 +50,6 @@ public class ProductRestHelper {
 
 	private final JournalService journalService;
 
-
 	private final ContactService contactService;
 
 	private final TransactionCategoryService transactionCategoryService;
@@ -570,7 +569,6 @@ public class ProductRestHelper {
 		String input1  = productRequestModel.getSalesUnitPrice().toString();
 		BigDecimal a = new BigDecimal(input1);
 		float sellingPrice = a.floatValue();
-
 
 			inventory.setUnitSellingPrice(sellingPrice);
 		}

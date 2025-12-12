@@ -74,14 +74,11 @@ public class BankAccountController{
 	private final CoacTransactionCategoryService coacTransactionCategoryService;
 	private final TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
-
 	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
-
 
 	private final BankAccountStatusService bankAccountStatusService;
 
 	private final UserService userServiceNew;
-
 
 	private final CurrencyService currencyService;
 
@@ -114,9 +111,7 @@ public class BankAccountController{
 		User user = userService.findByPK(userId);
 
 		Map<BankAccounrFilterEnum, Object> filterDataMap = new EnumMap<>(BankAccounrFilterEnum.class);
-//		if(user.getRole().getRoleCode()!=1) {
-//			filterDataMap.put(BankAccounrFilterEnum.USER_ID, userId);
-//		}
+
 		filterDataMap.put(BankAccounrFilterEnum.BANK_ACCOUNT_NAME, filterModel.getBankAccountName());
 		filterDataMap.put(BankAccounrFilterEnum.BANK_BNAME, filterModel.getBankName());
 		filterDataMap.put(BankAccounrFilterEnum.ACCOUNT_NO, filterModel.getAccountNumber());
@@ -192,7 +187,6 @@ public class BankAccountController{
 
 				JournalLineItem journalLineItem2 = new JournalLineItem();
 				journalLineItem2.setTransactionCategory(transactionCategory);
-
 
 				if (!isDebit) {
 					journalLineItem2.setDebitAmount(openBigDecimal);
@@ -407,7 +401,6 @@ public class BankAccountController{
 		}
 	}
 
-
 	/**
 	 * @Deprecated
 	 */
@@ -441,10 +434,6 @@ public class BankAccountController{
 				Map<String,Object> filterMap = new HashMap<>();
 				filterMap.put("transactionCategory",bankAccount.getTransactionCategory());
 
-//				Journal journal = journalService.getJournalByReferenceId(bankAccount.getTransactionCategory().getTransactionCategoryId());
-//				if (journal != null) {
-//					journalService.deleteByIds(Arrays.asList(journal.getId()));
-//				}
 				List<JournalLineItem> bankJLIList= journalLineItemRepository.findAllByReferenceIdAndReferenceType(
 						bankAccount.getTransactionCategory().getTransactionCategoryId(),
 						PostingReferenceTypeEnum.BANK_ACCOUNT);
@@ -580,7 +569,6 @@ public class BankAccountController{
 			if (closingBalance!=null && closingBalance.getClosingBalance()!=null) {
 				bankModel.setClosingBalance(closingBalance.getBankAccountClosingBalance());
 			}
-
 
 			if (bankAccount == null) {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);

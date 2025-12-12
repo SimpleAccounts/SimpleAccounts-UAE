@@ -101,9 +101,7 @@ public class TransactionCategoryRestController{
 		User user = userService.findByPK(userId);
 
 		Map<TransactionCategoryFilterEnum, Object> filterDataMap = new HashMap();
-//		if(user.getRole().getRoleCode()!=1) {
-//			filterDataMap.put(TransactionCategoryFilterEnum.USER_ID, userId);
-//		}
+
 		filterDataMap.put(TransactionCategoryFilterEnum.TRANSACTION_CATEGORY_CODE,
 				filterModel.getTransactionCategoryCode());
 		filterDataMap.put(TransactionCategoryFilterEnum.TRANSACTION_CATEGORY_NAME,
@@ -300,7 +298,6 @@ public class TransactionCategoryRestController{
 		if (transactionCategoryList!=null){
 			response = transcationCategoryHelper.getSingleLevelDropDownModelListForManualJournal(transactionCategoryList);
 		}
-
 
 		return new ResponseEntity (response, HttpStatus.OK);
 	}

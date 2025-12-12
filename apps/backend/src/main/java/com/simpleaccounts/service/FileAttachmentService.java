@@ -24,8 +24,7 @@ public abstract class  FileAttachmentService extends SimpleAccountsService <Inte
     private FileHelper fileHelper;
 
     public FileAttachment storeFile(MultipartFile file, FileTypeEnum fileTypeEnum, InvoiceRequestModel requestModel) throws IOException {
-        // Normalize file name
-      //  String fileName = StringUtils.cleanPath(file.getOriginalFilename(),fileTypeEnum);
+
         String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(),
 						requestModel.getType().equals(ContactTypeEnum.SUPPLIER.getValue().toString())
 								? FileTypeEnum.SUPPLIER_INVOICE
@@ -88,8 +87,7 @@ public abstract class  FileAttachmentService extends SimpleAccountsService <Inte
     }
 
     public FileAttachment storeRfqPoGrnFile(MultipartFile file, PoQuatationRequestModel requestModel) throws IOException {
-        // Normalize file name
-        //  String fileName = StringUtils.cleanPath(file.getOriginalFilename(),fileTypeEnum);
+
         String fileName = "";
             switch(requestModel.getType()){
                 case "3":
