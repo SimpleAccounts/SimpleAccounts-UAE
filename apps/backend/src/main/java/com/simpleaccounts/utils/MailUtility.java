@@ -267,13 +267,13 @@ public class MailUtility {
 		mailProps.put("mail.transport.protocol", "smtp");
 		mailProps.put("mail.smtps.host", mailConfigurationModel.getMailhost() != null ? mailConfigurationModel.getMailhost() : System.getenv("SIMPLEACCOUNTS_SMTP_HOST"));
 		mailProps.put("mail.smtp.starttls.enable",mailConfigurationModel.getMailstmpStartTLSEnable() != null ? mailConfigurationModel.getMailstmpStartTLSEnable(): System.getenv("SIMPLEACCOUNTS_SMTP_STARTTLS_ENABLE"));
-		mailProps.put("mail.smtp.debug", "true");
+		mailProps.put("mail.smtp.debug", "false");
 		mailProps.put("mail.smtp.port",mailConfigurationModel.getMailport() != null ? mailConfigurationModel.getMailport() : System.getenv("SIMPLEACCOUNTS_SMTP_PORT"));
 
 		mailProps.put("mail.smtp.starttls.enable prop", "true");
 		mailProps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		mailProps.put("mail.smtp.ssl.checkserveridentity", true);
-		System.out.println("Email Properties :"+ mailProps);
+		LOGGER.debug("Email Properties :{}", mailProps);
 		sender.setJavaMailProperties(mailProps);
 		return sender;
 	}
