@@ -79,139 +79,188 @@ public class TransactionRestController {
 	private static final String JSON_KEY_TRANSACTION = "transaction";
 	
 	private final Logger logger = LoggerFactory.getLogger(TransactionRestController.class);
-	@Autowired
-	JwtTokenUtil jwtTokenUtil;
-	@Autowired
-	TransactionRepository transactionRepository;
+	
+	private final JwtTokenUtil jwtTokenUtil;
+	
+	private final TransactionRepository transactionRepository;
 
-	@Autowired
-	private TransactionService transactionService;
+	private final TransactionService transactionService;
 
-	@Autowired
-	private DateFormatHelper dateFormatHelper;
+	private final DateFormatHelper dateFormatHelper;
 
-	@Autowired
-	TransactionCategoryClosingBalanceServiceImpl transactionCategoryClosingBalanceService;
+	private final TransactionCategoryClosingBalanceServiceImpl transactionCategoryClosingBalanceService;
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
-	@Autowired
+	private final ChartOfAccountService chartOfAccountService;
 
-	private ChartOfAccountService chartOfAccountService;
+	private final TransactionHelper transactionHelper;
 
-	@Autowired
-	private TransactionHelper transactionHelper;
+	private final ChartUtil chartUtil;
 
-	@Autowired
-	private ChartUtil chartUtil;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final ReconsilationRestHelper reconsilationRestHelper;
 
-	@Autowired
-	private ReconsilationRestHelper reconsilationRestHelper;
+	private final JournalService journalService;
 
-	@Autowired
-	private JournalService journalService;
+	private final BankAccountService bankService;
 
-	@Autowired
-	private BankAccountService bankService;
+	private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
-	@Autowired
-	private ChartOfAccountCategoryService chartOfAccountCategoryService;
+	private final VatCategoryService vatCategoryService;
 
-	@Autowired
-	private VatCategoryService vatCategoryService;
+	private final ContactService contactService;
 
-	@Autowired
-	private ContactService contactService;
+	private final TransactionStatusService transactionStatusService;
 
-	@Autowired
-	private TransactionStatusService transactionStatusService;
+	private final FileHelper fileHelper;
 
-	@Autowired
-	private FileHelper fileHelper;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final ReceiptService receiptService;
 
-	@Autowired
-	private ReceiptService receiptService;
+	private final CustomerInvoiceReceiptService customerInvoiceReceiptService;
 
-	@Autowired
-	private CustomerInvoiceReceiptService customerInvoiceReceiptService;
+	private final ReceiptRestHelper receiptRestHelper;
 
-	@Autowired
-	private ReceiptRestHelper receiptRestHelper;
+	private final ExpenseService expenseService;
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final TransactionExpensesService transactionExpensesService;
 
-	@Autowired
-	private TransactionExpensesService transactionExpensesService;
+	private final TransactionExpensesPayrollService transactionExpensesPayrollService;
+	private final PaymentService paymentService;
 
-	@Autowired
-	private TransactionExpensesPayrollService transactionExpensesPayrollService;
-	@Autowired
-	private PaymentService paymentService;
+	private final SupplierInvoicePaymentService supplierInvoicePaymentService;
 
-	@Autowired
-	private SupplierInvoicePaymentService supplierInvoicePaymentService;
+	private final UserService userService;
 
-	@Autowired
-	private UserService userService;
+	private final CurrencyService currencyService;
 
-	@Autowired
-	private CurrencyService currencyService;
+	private final FileAttachmentService fileAttachmentService;
 
-	@Autowired
-	private FileAttachmentService fileAttachmentService;
+	private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
-	@Autowired
-	private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
-
-	@Autowired
-	private PayrollRepository payrollRepository;
+	private final PayrollRepository payrollRepository;
 
 
-	@Autowired
-	private InvoiceNumberUtil invoiceNumberUtil;
+	private final InvoiceNumberUtil invoiceNumberUtil;
+
+	private final VatPaymentRepository vatPaymentRepository;
+
+	private final VatRecordPaymentHistoryRepository vatRecordPaymentHistoryRepository;
+
+	private final VatReportFilingRepository vatReportFilingRepository;
+
+	private final JournalLineItemRepository journalLineItemRepository;
+	private final DateFormatUtil dateFormtUtil;
+
+	private final TransactionExplanationRepository transactionExplanationRepository;
+
+	private final TransactionExplanationLineItemRepository transactionExplanationLineItemRepository;
+
+	private final ContactTransactionCategoryService contactTransactionCategoryService;
+
+	private final CorporateTaxFilingRepository corporateTaxFilingRepository;
+
+	private final CorporateTaxPaymentRepository corporateTaxPaymentRepository;
+
+	private final CorporateTaxPaymentHistoryRepository corporateTaxPaymentHistoryRepository;
+
+	private final CreditNoteRepository creditNoteRepository;
 
 	@Autowired
-	private VatPaymentRepository vatPaymentRepository;
-
-	@Autowired
-	private VatRecordPaymentHistoryRepository vatRecordPaymentHistoryRepository;
-
-	@Autowired
-	private VatReportFilingRepository vatReportFilingRepository;
-
-	@Autowired
-	private JournalLineItemRepository journalLineItemRepository;
-	@Autowired
-	private DateFormatUtil dateFormtUtil;
-
-	@Autowired
-	private TransactionExplanationRepository transactionExplanationRepository;
-
-	@Autowired
-	private TransactionExplanationLineItemRepository transactionExplanationLineItemRepository;
-
-	@Autowired
-	private ContactTransactionCategoryService contactTransactionCategoryService;
-
-	@Autowired
-	private CorporateTaxFilingRepository corporateTaxFilingRepository;
-
-	@Autowired
-	private CorporateTaxPaymentRepository corporateTaxPaymentRepository;
-
-	@Autowired
-	private CorporateTaxPaymentHistoryRepository corporateTaxPaymentHistoryRepository;
-
-	@Autowired
-	private CreditNoteRepository creditNoteRepository;
+	public TransactionRestController(JwtTokenUtil jwtTokenUtil,
+									 TransactionRepository transactionRepository,
+									 TransactionService transactionService,
+									 DateFormatHelper dateFormatHelper,
+									 TransactionCategoryClosingBalanceServiceImpl transactionCategoryClosingBalanceService,
+									 BankAccountService bankAccountService,
+									 ChartOfAccountService chartOfAccountService,
+									 TransactionHelper transactionHelper,
+									 ChartUtil chartUtil,
+									 TransactionCategoryService transactionCategoryService,
+									 ReconsilationRestHelper reconsilationRestHelper,
+									 JournalService journalService,
+									 BankAccountService bankService,
+									 ChartOfAccountCategoryService chartOfAccountCategoryService,
+									 VatCategoryService vatCategoryService,
+									 ContactService contactService,
+									 TransactionStatusService transactionStatusService,
+									 FileHelper fileHelper,
+									 InvoiceService invoiceService,
+									 ReceiptService receiptService,
+									 CustomerInvoiceReceiptService customerInvoiceReceiptService,
+									 ReceiptRestHelper receiptRestHelper,
+									 ExpenseService expenseService,
+									 TransactionExpensesService transactionExpensesService,
+									 TransactionExpensesPayrollService transactionExpensesPayrollService,
+									 PaymentService paymentService,
+									 SupplierInvoicePaymentService supplierInvoicePaymentService,
+									 UserService userService,
+									 CurrencyService currencyService,
+									 FileAttachmentService fileAttachmentService,
+									 CustomizeInvoiceTemplateService customizeInvoiceTemplateService,
+									 PayrollRepository payrollRepository,
+									 InvoiceNumberUtil invoiceNumberUtil,
+									 VatPaymentRepository vatPaymentRepository,
+									 VatRecordPaymentHistoryRepository vatRecordPaymentHistoryRepository,
+									 VatReportFilingRepository vatReportFilingRepository,
+									 JournalLineItemRepository journalLineItemRepository,
+									 DateFormatUtil dateFormtUtil,
+									 TransactionExplanationRepository transactionExplanationRepository,
+									 TransactionExplanationLineItemRepository transactionExplanationLineItemRepository,
+									 ContactTransactionCategoryService contactTransactionCategoryService,
+									 CorporateTaxFilingRepository corporateTaxFilingRepository,
+									 CorporateTaxPaymentRepository corporateTaxPaymentRepository,
+									 CorporateTaxPaymentHistoryRepository corporateTaxPaymentHistoryRepository,
+									 CreditNoteRepository creditNoteRepository) {
+		this.jwtTokenUtil = jwtTokenUtil;
+		this.transactionRepository = transactionRepository;
+		this.transactionService = transactionService;
+		this.dateFormatHelper = dateFormatHelper;
+		this.transactionCategoryClosingBalanceService = transactionCategoryClosingBalanceService;
+		this.bankAccountService = bankAccountService;
+		this.chartOfAccountService = chartOfAccountService;
+		this.transactionHelper = transactionHelper;
+		this.chartUtil = chartUtil;
+		this.transactionCategoryService = transactionCategoryService;
+		this.reconsilationRestHelper = reconsilationRestHelper;
+		this.journalService = journalService;
+		this.bankService = bankService;
+		this.chartOfAccountCategoryService = chartOfAccountCategoryService;
+		this.vatCategoryService = vatCategoryService;
+		this.contactService = contactService;
+		this.transactionStatusService = transactionStatusService;
+		this.fileHelper = fileHelper;
+		this.invoiceService = invoiceService;
+		this.receiptService = receiptService;
+		this.customerInvoiceReceiptService = customerInvoiceReceiptService;
+		this.receiptRestHelper = receiptRestHelper;
+		this.expenseService = expenseService;
+		this.transactionExpensesService = transactionExpensesService;
+		this.transactionExpensesPayrollService = transactionExpensesPayrollService;
+		this.paymentService = paymentService;
+		this.supplierInvoicePaymentService = supplierInvoicePaymentService;
+		this.userService = userService;
+		this.currencyService = currencyService;
+		this.fileAttachmentService = fileAttachmentService;
+		this.customizeInvoiceTemplateService = customizeInvoiceTemplateService;
+		this.payrollRepository = payrollRepository;
+		this.invoiceNumberUtil = invoiceNumberUtil;
+		this.vatPaymentRepository = vatPaymentRepository;
+		this.vatRecordPaymentHistoryRepository = vatRecordPaymentHistoryRepository;
+		this.vatReportFilingRepository = vatReportFilingRepository;
+		this.journalLineItemRepository = journalLineItemRepository;
+		this.dateFormtUtil = dateFormtUtil;
+		this.transactionExplanationRepository = transactionExplanationRepository;
+		this.transactionExplanationLineItemRepository = transactionExplanationLineItemRepository;
+		this.contactTransactionCategoryService = contactTransactionCategoryService;
+		this.corporateTaxFilingRepository = corporateTaxFilingRepository;
+		this.corporateTaxPaymentRepository = corporateTaxPaymentRepository;
+		this.corporateTaxPaymentHistoryRepository = corporateTaxPaymentHistoryRepository;
+		this.creditNoteRepository = creditNoteRepository;
+	}
 	@LogRequest
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
