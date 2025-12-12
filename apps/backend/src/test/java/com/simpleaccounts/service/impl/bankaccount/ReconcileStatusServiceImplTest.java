@@ -11,9 +11,9 @@ import com.simpleaccounts.entity.bankaccount.ReconcileStatus;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -25,8 +25,12 @@ class ReconcileStatusServiceImplTest {
     @Mock
     private TransactionServiceImpl transactionService;
 
-    @InjectMocks
     private ReconcileStatusServiceImpl service;
+
+    @BeforeEach
+    void setUp() {
+        service = new ReconcileStatusServiceImpl(reconcileStatusDao, transactionService);
+    }
 
     @Test
     void deleteByIdsShouldResetTransactionsAndSoftDeleteStatuses() {

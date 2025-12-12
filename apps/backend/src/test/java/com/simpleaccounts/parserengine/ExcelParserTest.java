@@ -35,8 +35,7 @@ class ExcelParserTest {
 
     @BeforeEach
     void setUp() {
-        excelParser = new ExcelParser();
-        ReflectionTestUtils.setField(excelParser, "dateformatDao", dateFormatDao);
+        excelParser = new ExcelParser(dateFormatDao);
     }
 
     @SuppressWarnings("unchecked")

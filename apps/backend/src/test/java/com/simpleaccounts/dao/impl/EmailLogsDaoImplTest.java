@@ -17,6 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +38,10 @@ class EmailLogsDaoImplTest {
 
     @Mock
     private TypedQuery<EmailLogs> typedQuery;
+
+    @Mock private CriteriaBuilder criteriaBuilder;
+    @Mock private CriteriaQuery<EmailLogs> criteriaQuery;
+    @Mock private Root<EmailLogs> root;
 
     @InjectMocks
     private EmailLogsDaoImpl emailLogsDao;
@@ -273,7 +280,10 @@ class EmailLogsDaoImplTest {
         // Arrange
         List<EmailLogs> expectedResults = Arrays.asList(testEmailLog, createTestEmailLog());
 
-        when(entityManager.createQuery(anyString())).thenReturn(typedQuery);
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery(EmailLogs.class)).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(EmailLogs.class)).thenReturn(root);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(expectedResults);
 
         // Act

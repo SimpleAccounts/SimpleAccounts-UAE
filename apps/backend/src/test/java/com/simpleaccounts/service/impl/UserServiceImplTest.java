@@ -15,12 +15,18 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import com.simpleaccounts.repository.UserJpaRepository;
+import com.simpleaccounts.utils.DateUtils;
+import com.simpleaccounts.utils.EmailSender;
+import com.simpleaccounts.utils.RandomString;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("UserServiceImpl Unit Tests")
@@ -29,8 +35,25 @@ class UserServiceImplTest {
     @Mock
     private UserDao dao;
 
+    @Mock
+    private UserJpaRepository userJpaRepo;
+
+    @Mock
+    private RandomString randomString;
+
+    @Mock
+    private EmailSender emailSender;
+
+    @Mock
+    private DateUtils dateUtils;
+
     @InjectMocks
     private UserServiceImpl userService;
+
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(userService, "dao", dao);
+    }
 
     @Test
     @DisplayName("Should find user by ID")

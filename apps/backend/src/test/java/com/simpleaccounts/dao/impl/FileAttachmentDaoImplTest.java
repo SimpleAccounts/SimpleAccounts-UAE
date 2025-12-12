@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,6 +41,10 @@ class FileAttachmentDaoImplTest {
 
     @Mock
     private TypedQuery<FileAttachment> typedQuery;
+
+    @Mock private CriteriaBuilder criteriaBuilder;
+    @Mock private CriteriaQuery<FileAttachment> criteriaQuery;
+    @Mock private Root<FileAttachment> root;
 
     @InjectMocks
     private FileAttachmentDaoImpl fileAttachmentDao;
@@ -269,7 +276,10 @@ class FileAttachmentDaoImplTest {
         // Arrange
         List<FileAttachment> expectedResults = Arrays.asList(testFileAttachment, createTestFileAttachment());
 
-        when(entityManager.createQuery(anyString())).thenReturn(typedQuery);
+        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
+        when(criteriaBuilder.createQuery(FileAttachment.class)).thenReturn(criteriaQuery);
+        when(criteriaQuery.from(FileAttachment.class)).thenReturn(root);
+        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
         when(typedQuery.getResultList()).thenReturn(expectedResults);
 
         // Act

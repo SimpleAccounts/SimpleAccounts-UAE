@@ -26,8 +26,7 @@ import java.util.Map;
 public class ReconcileStatusServiceImpl extends ReconcileStatusService  {
 
     private final ReconcileStatusDao reconcilestatusDao;
-    @Autowired
-    TransactionServiceImpl transactionService;
+    private final TransactionServiceImpl transactionService;
 
     @Override
     public  List<ReconcileStatus> getAllReconcileStatusListByBankAccountId(Integer bankAccountId){
