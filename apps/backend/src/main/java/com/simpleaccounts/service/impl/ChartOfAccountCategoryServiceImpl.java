@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 import javax.transaction.Transactional;
 
@@ -15,10 +16,10 @@ import com.simpleaccounts.service.ChartOfAccountCategoryService;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ChartOfAccountCategoryServiceImpl extends ChartOfAccountCategoryService {
 
-	@Autowired
-	private ChartOfAccountCategoryDao dao;
+	private final ChartOfAccountCategoryDao dao;
 
 	@Override
 	protected Dao<Integer, ChartOfAccountCategory> getDao() {

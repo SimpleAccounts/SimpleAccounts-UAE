@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.detailedgeneralledgerreport;
 
 import java.util.*;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.Transaction;
@@ -29,18 +30,16 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping("/rest/detailedGeneralLedgerReport")
+@RequiredArgsConstructor
 public class DetailedGeneralLedgerReportController {
 
 	private final Logger logger = LoggerFactory.getLogger(DetailedGeneralLedgerReportController.class);
 
-	@Autowired
-	private DetailedGeneralLedgerRestHelper detailedGeneralLedgerRestHelper;
+	private final DetailedGeneralLedgerRestHelper detailedGeneralLedgerRestHelper;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
 	TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;

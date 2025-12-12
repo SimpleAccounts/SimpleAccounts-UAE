@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 
 import com.simpleaccounts.entity.VatReportFiling;
@@ -42,15 +43,14 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Repository
+@RequiredArgsConstructor
 public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem> implements JournalLineItemDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JournalLineItemDaoImpl.class);
 
-	@Autowired
-	private DateFormatUtil dateUtil;
+	private final DateFormatUtil dateUtil;
 
-	@Autowired
-	private DatatableSortingFilterConstant datatableUtil;
+	private final DatatableSortingFilterConstant datatableUtil;
 
 	@Override
 	@Transactional

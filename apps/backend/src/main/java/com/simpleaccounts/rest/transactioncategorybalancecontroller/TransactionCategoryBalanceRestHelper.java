@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.transactioncategorybalancecontroller;
 
 import java.time.Instant;
+import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -21,16 +22,14 @@ import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.service.exceptions.ServiceErrorCode;
 
 @Component
+@RequiredArgsConstructor
 public class TransactionCategoryBalanceRestHelper {
 	private final Logger logger = LoggerFactory.getLogger(TransactionCategoryBalanceRestHelper.class);
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
 
-	@Autowired
-	private DateUtils dateUtil;
+	private final DateUtils dateUtil;
 
 	public TransactionCategoryBalance getEntity(TransactioncategoryBalancePersistModel persistModel) {
 

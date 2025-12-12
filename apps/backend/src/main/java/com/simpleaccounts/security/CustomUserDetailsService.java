@@ -1,6 +1,7 @@
 package com.simpleaccounts.security;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.simpleaccounts.entity.User;
@@ -13,10 +14,10 @@ import org.springframework.stereotype.Component;
  * The Class UserLoginService
  */
 @Component
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService
 {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     //@Transactional(readOnly = true)
    // @Cacheable(cacheNames = "userCache", key = "#emailAddress")

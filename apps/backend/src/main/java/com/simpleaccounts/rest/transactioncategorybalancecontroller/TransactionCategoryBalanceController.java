@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.transactioncategorybalancecontroller;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -42,26 +43,21 @@ import io.swagger.annotations.ApiOperation;
 	@RestController
 	@RequestMapping(value = "/rest/transactionCategoryBalance")
 	@SuppressWarnings({"java:S3973", "java:S131"})
-	public class TransactionCategoryBalanceController {
+	@RequiredArgsConstructor
+public class TransactionCategoryBalanceController {
 	private final Logger logger = LoggerFactory.getLogger(TransactionCategoryBalanceController.class);
 
-	@Autowired
-	private UserService userServiceNew;
+	private final UserService userServiceNew;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
 
-	@Autowired
-	private TransactionCategoryBalanceRestHelper transactionCategoryBalanceRestHelper;
+	private final TransactionCategoryBalanceRestHelper transactionCategoryBalanceRestHelper;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private JournalService journalService;
+	private final JournalService journalService;
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)

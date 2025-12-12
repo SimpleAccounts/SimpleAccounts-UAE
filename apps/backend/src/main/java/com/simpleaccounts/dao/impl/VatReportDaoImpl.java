@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 
 import com.simpleaccounts.constant.dbfilter.VatReportFilterEnum;
@@ -19,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
+@RequiredArgsConstructor
 public class VatReportDaoImpl extends AbstractDao<Integer, VatReportFiling> implements VatReportsDao {
-    @Autowired
-    private DatatableSortingFilterConstant dataTableUtil;
+    private final DatatableSortingFilterConstant dataTableUtil;
 
     @Override
     public PaginationResponseModel getVatReportList(Map<VatReportFilterEnum, Object> filterMap,

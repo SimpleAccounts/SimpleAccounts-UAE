@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -37,15 +38,14 @@ import java.time.ZoneId;
 import javax.persistence.TypedQuery;
 
 @Repository
+@RequiredArgsConstructor
 public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements ExpenseDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseDaoImpl.class);
 
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
-	@Autowired
-	private VatReportFilingRepository vatReportFilingRepository;
+	private final VatReportFilingRepository vatReportFilingRepository;
 
 	@Override
 	public List<Expense> getAllExpenses(Integer userId, List<Integer> statusList) {

@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.reconsilationcontroller;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -30,32 +31,25 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 	@Component
 	@SuppressWarnings("java:S115")
-	public class ReconsilationRestHelper {
+	@RequiredArgsConstructor
+public class ReconsilationRestHelper {
 
 	private final Logger logger = LoggerFactory.getLogger(ReconsilationController.class);
 
-	@Autowired
-	private ReconcileStatusService reconcileStatusService;
+	private final ReconcileStatusService reconcileStatusService;
 
-	@Autowired
-	private DateFormatUtil dateUtil;
+	private final DateFormatUtil dateUtil;
 
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final ExpenseService expenseService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private VatCategoryService vatCategoryService;
-	@Autowired
-	private BankAccountService bankAccountService;
-	@Autowired
-	private CurrencyExchangeService currencyExchangeService;
+	private final VatCategoryService vatCategoryService;
+	private final BankAccountService bankAccountService;
+	private final CurrencyExchangeService currencyExchangeService;
 
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
 

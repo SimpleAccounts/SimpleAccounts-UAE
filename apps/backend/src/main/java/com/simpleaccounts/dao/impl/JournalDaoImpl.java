@@ -9,6 +9,7 @@ import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.dao.JournalLineItemDao;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -26,16 +27,14 @@ import com.simpleaccounts.service.TransactionCategoryBalanceService;
 import javax.persistence.Query;
 @Slf4j
 @Repository
+@RequiredArgsConstructor
 public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements JournalDao {
 
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
-	@Autowired
-	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
 
-	@Autowired
-	private JournalLineItemDao journalLineItemDao;
+	private final JournalLineItemDao journalLineItemDao;
 
 	@Override
 	public void deleteByIds(List<Integer> ids) {

@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.productcontroller;
 
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,31 +46,25 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping(value = "/rest/product")
+@RequiredArgsConstructor
 public class ProductRestController {
 	private final Logger logger = LoggerFactory.getLogger(ProductRestController.class);
-	@Autowired
-	private ProductService productService;
+	private final ProductService productService;
 
-	@Autowired
-	private VatCategoryService vatCategoryService;
+	private final VatCategoryService vatCategoryService;
 
-	@Autowired
-	private ProductRestHelper productRestHelper;
+	private final ProductRestHelper productRestHelper;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private InvoiceLineItemService invoiceLineItemService;
+	private final InvoiceLineItemService invoiceLineItemService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
 	@Autowired
 	TranscationCategoryHelper transcationCategoryHelper;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
 	@LogRequest
 	@ApiOperation(value = "Get Product List")

@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.Logincontroller;
 
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,16 +32,14 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/public")
+@RequiredArgsConstructor
 public class LoginRestController {
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private EmaiLogsService emaiLogsService;
+	private final EmaiLogsService emaiLogsService;
 
-	@Autowired
-	private UserRestHelper userRestHelper;
+	private final UserRestHelper userRestHelper;
 
 	@Autowired
 	PasswordHistoryRepository passwordHistoryRepository;

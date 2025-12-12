@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.InventoryHistoryDao;
@@ -19,9 +20,9 @@ import java.math.BigDecimal;
 import java.util.*;
 
 @Repository
+@RequiredArgsConstructor
 public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHistory> implements InventoryHistoryDao {
-    @Autowired
-    private DateUtils dateUtil;
+    private final DateUtils dateUtil;
    public InventoryHistory getHistoryByInventoryId(Integer invoiceId){
        TypedQuery<InventoryHistory> query = getEntityManager().createNamedQuery(
                "getHistoryByInventoryId", InventoryHistory.class);

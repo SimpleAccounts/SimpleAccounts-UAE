@@ -1,6 +1,7 @@
 package com.simpleaccounts.rfq_po;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.PaginationModel;
@@ -15,9 +16,9 @@ import java.util.Map;
 
 @Service("poQuatationService")
 @Transactional
+@RequiredArgsConstructor
 public class PoQuatationServiceImpl extends PoQuatationService{
-    @Autowired
-    private PoQuatationDao poQuatationDao;
+    private final PoQuatationDao poQuatationDao;
     @Override
     protected Dao<Integer, PoQuatation> getDao() {
         return this.poQuatationDao;

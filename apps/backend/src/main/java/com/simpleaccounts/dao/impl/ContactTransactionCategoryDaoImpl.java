@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.dao.AbstractDao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.ContactTransactionCategoryRelationDao;
 
 import com.simpleaccounts.entity.Contact;
@@ -16,9 +17,9 @@ import javax.persistence.TypedQuery;
  * Created By Zain Khan
  */
 @Repository("contactTransactionCategoryRelationDao")
+@RequiredArgsConstructor
 public class ContactTransactionCategoryDaoImpl extends AbstractDao<Integer, ContactTransactionCategoryRelation> implements ContactTransactionCategoryRelationDao {
-  @Autowired
-  private ContactService contactService;
+  private final ContactService contactService;
    public void addContactTransactionCategory(Contact contact, TransactionCategory transactionCategory) {
        String query = "SELECT MAX(id) FROM ContactTransactionCategoryRelation ORDER BY id DESC";
 

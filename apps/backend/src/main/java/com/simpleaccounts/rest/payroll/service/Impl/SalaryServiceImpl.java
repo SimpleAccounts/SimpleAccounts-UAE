@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.payroll.service.Impl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.*;
@@ -27,10 +28,10 @@ import java.util.*;
 	@Service("salaryService")
 	@Transactional
 	@SuppressWarnings("java:S131")
-	public class SalaryServiceImpl extends SalaryService {
+	@RequiredArgsConstructor
+public class SalaryServiceImpl extends SalaryService {
 
-    @Autowired
-    private SalaryDao salaryDao;
+    private final SalaryDao salaryDao;
     @Autowired
     EmployeeService employeeService;
     @Autowired
@@ -43,10 +44,8 @@ import java.util.*;
     }
     @Autowired
     DateFormatUtil dateFormatUtil;
-    @Autowired
-    private EmployeeTransactionCategoryRelationRepository employeeTransactionCategoryRelationRepository;
-    @Autowired
-    private JournalLineItemRepository journalLineItemRepository;
+    private final EmployeeTransactionCategoryRelationRepository employeeTransactionCategoryRelationRepository;
+    private final JournalLineItemRepository journalLineItemRepository;
 
     public SalarySlipModel getSalaryByEmployeeId(Integer employeeId,String salaryDate){
 

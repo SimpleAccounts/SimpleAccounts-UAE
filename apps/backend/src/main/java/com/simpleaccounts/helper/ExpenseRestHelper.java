@@ -6,6 +6,7 @@
 package com.simpleaccounts.helper;
 
 import com.simpleaccounts.constant.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.Transaction;
@@ -36,60 +37,44 @@ import java.time.LocalDate;
  * @author daynil
  */
 @Component
+@RequiredArgsConstructor
 public class ExpenseRestHelper {
 
 	private final Logger logger = LoggerFactory.getLogger(ExpenseRestHelper.class);
 
-	@Autowired
-	private VatCategoryService vatCategoryService;
+	private final VatCategoryService vatCategoryService;
 
-	@Autowired
-	private CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
-	@Autowired
-	private ProjectService projectService;
+	private final ProjectService projectService;
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final ExpenseService expenseService;
 
-	@Autowired
-	private EmployeeService employeeService;
+	private final EmployeeService employeeService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
-	@Autowired
-	private FileHelper fileHelper;
+	private final FileHelper fileHelper;
 
-	@Autowired
-	private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+	private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
-	@Autowired
-	private InvoiceNumberUtil invoiceNumberUtil;
+	private final InvoiceNumberUtil invoiceNumberUtil;
 
-	@Autowired
-	private TaxTreatmentService taxTreatmentService;
+	private final TaxTreatmentService taxTreatmentService;
 
-	@Autowired
-	private PlaceOfSupplyService placeOfSupplyService;
+	private final PlaceOfSupplyService placeOfSupplyService;
 
-	@Autowired
-	private TransactionService transactionService;
+	private final TransactionService transactionService;
 
-	@Autowired
-	private TransactionExpensesService transactionExpensesService;
+	private final TransactionExpensesService transactionExpensesService;
 
-	@Autowired
-	private ChartOfAccountCategoryService chartOfAccountCategoryService;
+	private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
-	@Autowired
-	private DateFormatHelper dateFormatHelper;
+	private final DateFormatHelper dateFormatHelper;
 
-	@Autowired
-	private TransactionExplanationRepository transactionExplanationRepository;
+	private final TransactionExplanationRepository transactionExplanationRepository;
 
 	public Expense getExpenseEntity(ExpenseModel model) {
 		Expense expense = initializeExpense(model);

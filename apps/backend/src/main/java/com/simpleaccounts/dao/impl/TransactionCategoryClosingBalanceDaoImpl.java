@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.TransactionCategoryBalanceFilterEnum;
@@ -32,10 +33,10 @@ import java.util.Map;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Repository
+@RequiredArgsConstructor
 public class TransactionCategoryClosingBalanceDaoImpl extends AbstractDao<Integer, TransactionCategoryClosingBalance>
         implements TransactionCategoryClosingBalanceDao {
-    @Autowired
-    private DateFormatUtil dateUtil;
+    private final DateFormatUtil dateUtil;
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionCategoryClosingBalanceDaoImpl.class);
 
     public List<TransactionCategoryClosingBalance> getList(ReportRequestModel reportRequestModel)

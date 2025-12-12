@@ -1,6 +1,7 @@
 package com.simpleaccounts.utils;
 
 import com.simpleaccounts.constant.ErrorConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.service.ConfigurationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,13 +28,12 @@ import java.util.Properties;
  */
 	@Component
 	@SuppressWarnings("java:S115")
-	public class EmailSender {
+	@RequiredArgsConstructor
+public class EmailSender {
 
 	private final Logger logger = LoggerFactory.getLogger(EmailSender.class);
-	@Autowired
-	private ConfigurationService configurationService;
-	@Autowired
-	private Environment env;
+	private final ConfigurationService configurationService;
+	private final Environment env;
 	public void send(String recipients, String subject, String content, String fromEmail,String fromName,  boolean html)
 			throws MessagingException {
 		MailConfigurationModel mailDefaultConfigurationModel = MailUtility
@@ -84,12 +84,7 @@ import java.util.Properties;
 		}
 	}
 
-	public static void main(String[] args) throws MessagingException {
-		EmailSender emailSender = new EmailSender();
-		emailSender.send("", "Subject", RESET_PASSWORD,
-				EmailConstant.ADMIN_SUPPORT_EMAIL,
-				EmailConstant.ADMIN_EMAIL_SENDER_NAME, true);
-	}
+
 
 	public final static String RESET_PASSWORD = "<!DOCTYPE html>\n" +
 			"<html>\n" +

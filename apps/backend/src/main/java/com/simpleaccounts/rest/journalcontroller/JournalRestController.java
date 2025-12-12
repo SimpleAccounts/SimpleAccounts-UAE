@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.journalcontroller;
 
 import java.time.LocalDate;
+import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 
 import java.util.*;
@@ -49,45 +50,34 @@ import static com.simpleaccounts.constant.PostingReferenceTypeEnum.*;
 	@RestController
 	@RequestMapping(value = "/rest/journal")
 	@SuppressWarnings({"java:S131", "java:S6809"})
-	public class JournalRestController {
+	@RequiredArgsConstructor
+public class JournalRestController {
 	private static final String MSG_DELETE_UNSUCCESSFUL = "delete.unsuccessful.msg";
 	
 	private final Logger logger = LoggerFactory.getLogger(JournalRestController.class);
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private JournalService journalService;
+	private final JournalService journalService;
 
-	@Autowired
-	private JournalRestHelper journalRestHelper;
+	private final JournalRestHelper journalRestHelper;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private JournalRepository journalRepository;
+	private final JournalRepository journalRepository;
 
-	@Autowired
-	private CustomerInvoiceReceiptRepository customerInvoiceReceiptRepository;
+	private final CustomerInvoiceReceiptRepository customerInvoiceReceiptRepository;
 
-	@Autowired
-	private PaymentRepository paymentRepository;
+	private final PaymentRepository paymentRepository;
 
-	@Autowired
-	private SupplierInvoicePaymentRepository supplierInvoicePaymentRepository;
+	private final SupplierInvoicePaymentRepository supplierInvoicePaymentRepository;
 
-	@Autowired
-	private CreditNoteRepository creditNoteRepository;
+	private final CreditNoteRepository creditNoteRepository;
 
-	@Autowired
-	private JournalLineItemRepository journalLineItemRepository;
+	private final JournalLineItemRepository journalLineItemRepository;
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final ExpenseService expenseService;
 
 	@LogRequest
 	@ApiOperation(value = "Get Journal List")

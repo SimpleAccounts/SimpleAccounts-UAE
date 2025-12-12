@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.EmployeeTransactionCategoryDao;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeTransactionCategoryRelation;
@@ -13,9 +14,9 @@ import org.springframework.stereotype.Service;
  * Created By Zain Khan
  */
 @Service("employeeTransactionCategoryService")
+@RequiredArgsConstructor
 public class EmployeeTransactionCategoryServiceImpl extends EmployeeTransactioncategoryService {
-    @Autowired
-    private EmployeeTransactionCategoryDao employeeTransactionCategoryDao;
+    private final EmployeeTransactionCategoryDao employeeTransactionCategoryDao;
 
     @Override
     protected Dao<Integer, EmployeeTransactionCategoryRelation> getDao() {

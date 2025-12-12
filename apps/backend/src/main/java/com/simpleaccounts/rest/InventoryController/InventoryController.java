@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.InventoryController;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.InventoryFilterEnum;
 import com.simpleaccounts.entity.Inventory;
 import com.simpleaccounts.entity.InventoryHistory;
@@ -35,6 +36,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping(value = "/rest/inventory")
+@RequiredArgsConstructor
 public class InventoryController {
     private final Logger logger = LoggerFactory.getLogger(ProductRestController.class);
     @Autowired
@@ -42,20 +44,16 @@ public class InventoryController {
     @Autowired
     InventoryService inventoryService;
 
-    @Autowired
-    private ProductRestHelper productRestHelper;
+    private final ProductRestHelper productRestHelper;
 
     @Autowired
     TranscationCategoryHelper transcationCategoryHelper;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private InventoryHistoryService inventoryHistoryService;
+    private final InventoryHistoryService inventoryHistoryService;
 
 //    @ApiOperation(value = "Get Transaction category For Inventory")
 //    @GetMapping(value = "/getTransactionCategoryListForInventory")

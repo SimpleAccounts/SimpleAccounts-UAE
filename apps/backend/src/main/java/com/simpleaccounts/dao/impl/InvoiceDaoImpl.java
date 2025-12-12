@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,31 +47,24 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.utils.DateUtils;
 
 @Repository
+@RequiredArgsConstructor
 public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements InvoiceDao {
 
-	@Autowired
-	private DateUtils dateUtil;
+	private final DateUtils dateUtil;
 
-	@Autowired
-	private DateFormatUtil dateUtils;
+	private final DateFormatUtil dateUtils;
 
-	@Autowired
-	private DatatableSortingFilterConstant datatableUtil;
+	private final DatatableSortingFilterConstant datatableUtil;
 
-	@Autowired
-	private JournalDao journalDao;
+	private final JournalDao journalDao;
 
-	@Autowired
-	private JournalLineItemDao journalLineItemDao;
+	private final JournalLineItemDao journalLineItemDao;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private VatReportFilingRepository vatReportFilingRepository;
+	private final VatReportFilingRepository vatReportFilingRepository;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
 	@Override
 	public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap,

@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.dao.ProjectDao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.Project;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by Utkarsh Bhavsar on 20/03/17.
  */
 @Repository
+@RequiredArgsConstructor
 public class ProjectDaoImpl extends AbstractDao<Integer, Project> implements ProjectDao {
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public PaginationResponseModel getProjectList(Map<ProjectFilterEnum, Object> filterMap,

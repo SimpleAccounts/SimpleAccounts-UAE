@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.InvoiceScannerContoller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.dao.CurrencyDao;
@@ -34,6 +35,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class InvoiceScannerService {
 
     private static final String JSON_KEY_AMOUNT_DUE = "AmountDue";
@@ -42,17 +44,13 @@ public class InvoiceScannerService {
     private static final String JSON_KEY_CURRENCY_ISO_CODE = "currencyIsoCode";
     private static final String JSON_KEY_BILLING_ADDRESS = "BillingAddress";
 
-    @Autowired
-    private PaymentRepository paymentRepository;
+    private final PaymentRepository paymentRepository;
 
-    @Autowired
-    private CurrencyConversionRepository currencyConversionRepository;
+    private final CurrencyConversionRepository currencyConversionRepository;
 
-    @Autowired
-    private ReceiptRepository receiptRepository;
+    private final ReceiptRepository receiptRepository;
 
-    @Autowired
-    private CreditNoteRepository creditNoteRepository;
+    private final CreditNoteRepository creditNoteRepository;
     private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     @Autowired
@@ -74,41 +72,29 @@ public class InvoiceScannerService {
     @Autowired
     InvoiceLineItemService invoiceLineItemService;
 
-    @Autowired
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
 
-    @Autowired
-    private FileHelper fileHelper;
+    private final FileHelper fileHelper;
 
-    @Autowired
-    private MailUtility mailUtility;
+    private final MailUtility mailUtility;
 
-    @Autowired
-    private EmaiLogsService emaiLogsService;
+    private final EmaiLogsService emaiLogsService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private DateUtils dateUtils;
+    private final DateUtils dateUtils;
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
 
-    @Autowired
-    private DateFormatUtil dateFormtUtil;
+    private final DateFormatUtil dateFormtUtil;
 
-    @Autowired
-    private CurrencyExchangeService currencyExchangeService;
+    private final CurrencyExchangeService currencyExchangeService;
 
-    @Autowired
-    private PlaceOfSupplyService placeOfSupplyService;
+    private final PlaceOfSupplyService placeOfSupplyService;
 
-    @Autowired
-    private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+    private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
     @Autowired
     InvoiceNumberUtil invoiceNumberUtil;
@@ -122,42 +108,29 @@ public class InvoiceScannerService {
     @Autowired
     ProductLineItemService productLineItemService;
 
-    @Autowired
-    private CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
+    private final CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
 
-    @Autowired
-    private ExciseTaxService exciseTaxService;
+    private final ExciseTaxService exciseTaxService;
 
     private int size;
 
-    @Autowired
-    private  CompanyService companyService;
+    private final  CompanyService companyService;
 
-    @Autowired
-    private  CountryService countryService;
+    private final  CountryService countryService;
 
-    @Autowired
-    private StateService stateService;
-    @Autowired
-    private UnitTypesRepository unitTypesRepository;
+    private final StateService stateService;
+    private final UnitTypesRepository unitTypesRepository;
 
-    @Autowired
-    private  ContactTransactionCategoryService contactTransactionCategoryService;
+    private final  ContactTransactionCategoryService contactTransactionCategoryService;
 
-    @Autowired
-    private DateFormatHelper dateFormatHelper;
-    @Autowired
-    private ExpenseService expenseService;
+    private final DateFormatHelper dateFormatHelper;
+    private final ExpenseService expenseService;
 
-    @Autowired
-    private TaxTreatmentService taxTreatmentService;
-    @Autowired
-    private EmployeeService employeeService;
-    @Autowired
-    private BankAccountService bankAccountService;
+    private final TaxTreatmentService taxTreatmentService;
+    private final EmployeeService employeeService;
+    private final BankAccountService bankAccountService;
 
-    @Autowired
-    private CurrencyDao currencyDao;
+    private final CurrencyDao currencyDao;
 
     @Transactional(rollbackFor = Exception.class)
     public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId,  List<InvoiceLineItemModel> itemModels) {

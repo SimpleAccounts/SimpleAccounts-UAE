@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.payroll;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.JournalLineItemDao;
@@ -57,47 +58,37 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping("/rest/payroll")
+@RequiredArgsConstructor
 public class PayrollController {
 	private static final String MSG_UPDATED = "Updated";
 
     private final Logger logger = LoggerFactory.getLogger(PayrollController.class);
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    private RoleModuleRelationService roleModuleRelationService;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final RoleModuleRelationService roleModuleRelationService;
 
-    @Autowired
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
-    @Autowired
-    private PayrolService payrolService;
+    private final PayrolService payrolService;
 
     @Autowired
     SalaryComponentService salaryComponentService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     EmployeeBankDetailsService employeeBankDetailsService;
 
-    @Autowired
-    private PayrollRestHepler payrollRestHepler;
+    private final PayrollRestHepler payrollRestHepler;
 
-    @Autowired
-    private EmploymentService employmentService;
+    private final EmploymentService employmentService;
 
-    @Autowired
-    private SalaryRoleService salaryRoleService;
+    private final SalaryRoleService salaryRoleService;
 
-    @Autowired
-    private SalaryTemplateService salaryTemplateService;
+    private final SalaryTemplateService salaryTemplateService;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
-    @Autowired
-    private SalaryStructureService salaryStructureService;
+    private final TransactionCategoryService transactionCategoryService;
+    private final SalaryStructureService salaryStructureService;
 
     @Autowired
     PayrollRepository payrollRepository;
@@ -105,27 +96,19 @@ public class PayrollController {
     @Autowired
     protected JournalService journalService;
 
-    @Autowired
-    private JournalLineItemService journalLineItemService;
+    private final JournalLineItemService journalLineItemService;
 
-    @Autowired
-    private JournalLineItemRepository journalLineItemRepository;
+    private final JournalLineItemRepository journalLineItemRepository;
 
-    @Autowired
-    private SalaryRepository salaryRepository;
+    private final SalaryRepository salaryRepository;
 
-    @Autowired
-    private PayrolEmployeeRepository payrolEmployeeRepository;
+    private final PayrolEmployeeRepository payrolEmployeeRepository;
 
-    @Autowired
-    private JournalLineItemDao journalLineItemDao;
+    private final JournalLineItemDao journalLineItemDao;
 
-    @Autowired
-    private TransactionCategoryBalanceService transactionCategoryBalanceService;
-    @Autowired
-    private PayrollEmployeeRepository payrollEmployeeRepository;
-    @Autowired
-    private SalaryComponentRepository salaryComponentRepository;
+    private final TransactionCategoryBalanceService transactionCategoryBalanceService;
+    private final PayrollEmployeeRepository payrollEmployeeRepository;
+    private final SalaryComponentRepository salaryComponentRepository;
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)

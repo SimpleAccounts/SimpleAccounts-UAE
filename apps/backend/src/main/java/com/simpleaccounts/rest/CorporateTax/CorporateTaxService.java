@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.CorporateTax;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
@@ -40,45 +41,33 @@ import java.util.Map;
 
 	@Service
 	@SuppressWarnings({"java:S3973", "java:S115"})
-	public class CorporateTaxService {
+	@RequiredArgsConstructor
+public class CorporateTaxService {
     private static final String DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY = "dd/MM/yyyy";
-    @Autowired
-    private DateFormatUtil dateUtils;
-    @Autowired
-    private UserService userService;
+    private final DateFormatUtil dateUtils;
+    private final UserService userService;
 
-    @Autowired
-    private  CorporateTaxFilingRepository corporateTaxFilingRepository;
+    private final  CorporateTaxFilingRepository corporateTaxFilingRepository;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
 
-    @Autowired
-    private JournalService journalService;
+    private final JournalService journalService;
 
-    @Autowired
-    private CorporateTaxPaymentRepository corporateTaxPaymentRepository;
+    private final CorporateTaxPaymentRepository corporateTaxPaymentRepository;
 
-    @Autowired
-    private ChartOfAccountCategoryService chartOfAccountCategoryService;
+    private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
-    @Autowired
-    private TransactionExplanationRepository transactionExplanationRepository;
+    private final TransactionExplanationRepository transactionExplanationRepository;
 
-    @Autowired
-    private BankAccountService bankAccountService;
+    private final BankAccountService bankAccountService;
 
-    @Autowired
-    private TransactionService transactionService;
+    private final TransactionService transactionService;
 
-    @Autowired
-    private CorporateTaxPaymentHistoryRepository corporateTaxPaymentHistoryRepository;
+    private final CorporateTaxPaymentHistoryRepository corporateTaxPaymentHistoryRepository;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
+    private final DateFormatUtil dateFormatUtil;
 
-    @Autowired
-    private FinancialReportRestHelper financialReportRestHelper;
+    private final FinancialReportRestHelper financialReportRestHelper;
 
     DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY);
 

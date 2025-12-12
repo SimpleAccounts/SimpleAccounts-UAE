@@ -2,6 +2,7 @@
 package com.simpleaccounts.rest.reconsilationcontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simpleaccounts.constant.ReconsileCategoriesEnumConstant;
@@ -44,49 +45,38 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 	@RestController
 	@RequestMapping("/rest/reconsile")
 	@SuppressWarnings("java:S131")
-	public class ReconsilationController {
+	@RequiredArgsConstructor
+public class ReconsilationController {
 
 	private final Logger logger = LoggerFactory.getLogger(ReconsilationController.class);
 
-	@Autowired
-	private ReconcileStatusService reconcileStatusService;
+	private final ReconcileStatusService reconcileStatusService;
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private ReconsilationRestHelper reconsilationRestHelper;
+	private final ReconsilationRestHelper reconsilationRestHelper;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private TranscationCategoryHelper transcationCategoryHelper;
+	private final TranscationCategoryHelper transcationCategoryHelper;
 
-	@Autowired
-	private ChartOfAccountCategoryService chartOfAccountCategoryService;
+	private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
-	@Autowired
-	private VatCategoryService vatCategoryService;
+	private final VatCategoryService vatCategoryService;
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
 
-	@Autowired
-	private UserService userServiceNew;
+	private final UserService userServiceNew;
 
-	@Autowired
-	private TransactionService transactionService;
+	private final TransactionService transactionService;
 
 	@Autowired
 	TransactionCategoryClosingBalanceServiceImpl transactionCategoryClosingBalanceService;
 
-	@Autowired
-	private TransactionExpensesRepository transactionExpensesRepository;
+	private final TransactionExpensesRepository transactionExpensesRepository;
 
 	@LogRequest
 	@GetMapping(value = "/getByReconcilationCatCode")

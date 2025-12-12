@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import java.util.ArrayList;
+import lombok.RequiredArgsConstructor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,13 +24,12 @@ import com.simpleaccounts.entity.TransactionCategoryBalance;
 import com.simpleaccounts.rest.PaginationResponseModel;
 
 @Repository
+@RequiredArgsConstructor
 public class TransactionCategoryBalanceDaoImpl extends AbstractDao<Integer, TransactionCategoryBalance>
 		implements TransactionCategoryBalanceDao {
-	@Autowired
-	private ChartOfAccountService chartOfAccountService;
+	private final ChartOfAccountService chartOfAccountService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 	@Override
 	public PaginationResponseModel getAll(Map<TransactionCategoryBalanceFilterEnum, Object> filterMap, PaginationModel paginationModel) {
 		List<DbFilter> dbFilters = new ArrayList<>();

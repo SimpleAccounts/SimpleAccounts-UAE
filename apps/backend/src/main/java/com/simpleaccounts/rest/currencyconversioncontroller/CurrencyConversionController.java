@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.currencyconversioncontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.CompanyService;
@@ -24,23 +25,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/rest/currencyConversion")
+@RequiredArgsConstructor
 public class CurrencyConversionController{
     private final Logger logger = LoggerFactory.getLogger(CurrencyConversionController.class);
 
-    @Autowired
-  private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
-    @Autowired
-    private CurrencyExchangeService currencyExchangeService;
+    private final CurrencyExchangeService currencyExchangeService;
 
-    @Autowired
-    private CurrencyConversionHelper currencyConversionHelper;
+    private final CurrencyConversionHelper currencyConversionHelper;
 
-    @Autowired
-    private CurrencyService currencyService;
+    private final CurrencyService currencyService;
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)

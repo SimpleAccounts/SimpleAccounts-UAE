@@ -6,6 +6,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.SearchViewDao;
 import com.simpleaccounts.entity.SearchView;
 import com.simpleaccounts.service.SearchViewService;
@@ -20,10 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("searchViewService")
 @Transactional
+@RequiredArgsConstructor
 public class SearchViewServiceImpl extends SearchViewService {
 
-    @Autowired
-    private SearchViewDao searchViewDao;
+    private final SearchViewDao searchViewDao;
 
     @Override
     public List<SearchView> getSearchedItem(String searchToken) {

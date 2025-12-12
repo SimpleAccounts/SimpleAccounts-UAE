@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.employeecontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.dbfilter.EmployeeFilterEnum;
 import com.simpleaccounts.entity.*;
@@ -52,44 +53,33 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 	@RestController
 	@RequestMapping(value = "/rest/employee")
 	@SuppressWarnings("java:S3973")
-	public class EmployeeController {
+	@RequiredArgsConstructor
+public class EmployeeController {
 
 	private final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
-	@Autowired
-	private EmployeeService employeeService;
+	private final EmployeeService employeeService;
 
-	@Autowired
-	private EmployeeHelper employeeHelper;
+	private final EmployeeHelper employeeHelper;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private PayrollRestHepler payrollRestHepler;
+	private final PayrollRestHepler payrollRestHepler;
 
-	@Autowired
-	private EmployeeParentRelationService employeeParentRelationService;
+	private final EmployeeParentRelationService employeeParentRelationService;
 
-	@Autowired
-	private EmploymentService employmentService;
+	private final EmploymentService employmentService;
 
-	@Autowired
-	private EmployeeBankDetailsService employeeBankDetailsService;
+	private final EmployeeBankDetailsService employeeBankDetailsService;
 
 	@Autowired
 	EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
 
-	@Autowired
-	private TransactionCategoryCreationHelper transactionCategoryCreationHelper;
-	@Autowired
-	private EmployeeRepository employeeRepository;
-	@Autowired
-	private EmploymentRepository employmentRepository;
-	@Autowired
-	private EmployeeSalaryComponentRelationRepository employeeSalaryComponentRelationRepository;
-	@Autowired
-	private EmployeeBankDetailsRepository employeeBankDetailsRepository;
+	private final TransactionCategoryCreationHelper transactionCategoryCreationHelper;
+	private final EmployeeRepository employeeRepository;
+	private final EmploymentRepository employmentRepository;
+	private final EmployeeSalaryComponentRelationRepository employeeSalaryComponentRelationRepository;
+	private final EmployeeBankDetailsRepository employeeBankDetailsRepository;
 
 	@LogRequest
 	@ApiOperation(value = "Get Employee List")

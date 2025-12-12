@@ -1,6 +1,7 @@
 package com.simpleaccounts.parserengine;
 
 import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,14 +30,14 @@ import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSe
 import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingPersistModel;
 
 @Component
+@RequiredArgsConstructor
 public class ExcelParser implements TransactionFileParser {
 
 	private static final String LOG_ERROR_PREFIX = "ERROR = ";
 
 	private final Logger logger = LoggerFactory.getLogger(ExcelParser.class);
 
-	@Autowired
-	private DateFormatDao dateformatDao;
+	private final DateFormatDao dateformatDao;
 
 	@Override
 	public List<Map<String, String>> parseSmaple(TransactionParsingSettingPersistModel model) {

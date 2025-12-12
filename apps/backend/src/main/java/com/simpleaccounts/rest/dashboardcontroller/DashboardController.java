@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.dashboardcontroller;
 
 import com.simpleaccounts.aop.LogExecutionTime;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
@@ -37,18 +38,16 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping("/rest/dashboardReport")
+@RequiredArgsConstructor
 public class DashboardController {
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy";
 	private final Logger logger = LoggerFactory.getLogger(FinancialReportController.class);
 
-	@Autowired
-	private ChartUtil chartUtil;
+	private final ChartUtil chartUtil;
 
-	@Autowired
-	private DateFormatUtil dateFormatUtil;
+	private final DateFormatUtil dateFormatUtil;
 
-	@Autowired
-	private FinancialReportRestHelper financialReportRestHelper;
+	private final FinancialReportRestHelper financialReportRestHelper;
 
 	@Autowired
 	TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
@@ -56,8 +55,7 @@ public class DashboardController {
 	@Autowired
 	TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private DashboardRestHelper dashboardRestHelper;
+	private final DashboardRestHelper dashboardRestHelper;
 
 	@LogRequest
 	@GetMapping(value = "/getVatReport")

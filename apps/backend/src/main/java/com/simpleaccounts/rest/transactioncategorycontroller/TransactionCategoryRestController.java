@@ -6,6 +6,7 @@
 package com.simpleaccounts.rest.transactioncategorycontroller;
 
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,34 +56,27 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/transactioncategory")
+@RequiredArgsConstructor
 public class TransactionCategoryRestController{
 	private final Logger logger = LoggerFactory.getLogger(TransactionCategoryRestController.class);
-	@Autowired
-	private  TransactionCategoryService transactionCategoryService;
+	private final  TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private  ChartOfAccountService chartOfAccountService;
+	private final  ChartOfAccountService chartOfAccountService;
 
-	@Autowired
-	private  UserService userServiceNew;
+	private final  UserService userServiceNew;
 
 	@Autowired
 	CoacTransactionCategoryService coacTransactionCategoryService;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private TranscationCategoryHelper transcationCategoryHelper;
+	private final TranscationCategoryHelper transcationCategoryHelper;
 
-	@Autowired
-	private TransactionService transactionService;
+	private final TransactionService transactionService;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private TransactionExpensesRepository transactionExpensesRepository;
+	private final TransactionExpensesRepository transactionExpensesRepository;
 
 	@LogRequest
 	@ApiOperation(value = "Get All Transaction Categories for the Loggedin User and the Master data")

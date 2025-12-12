@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.entity.TaxTreatment;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.repository.TaxTreatmentRepository;
 import com.simpleaccounts.rest.contactcontroller.TaxtTreatmentdto;
 import com.simpleaccounts.service.TaxTreatmentService;
@@ -10,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TaxTreatmentServiceImpl implements TaxTreatmentService {
-    @Autowired
-    private TaxTreatmentRepository taxTreatmentRepository;
+    private final TaxTreatmentRepository taxTreatmentRepository;
 
     public List<TaxtTreatmentdto> getList(){
         List<TaxtTreatmentdto> taxTreatmentDtoList = new ArrayList<>();

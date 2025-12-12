@@ -1,6 +1,7 @@
 package com.simpleaccounts.configcontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +15,10 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/rest/config")
+@RequiredArgsConstructor
 public class ConfigController{
 
-	@Autowired
-	private Environment env;
+	private final Environment env;
 
 	@LogRequest
 	@ApiOperation(value = "Get Release Number")

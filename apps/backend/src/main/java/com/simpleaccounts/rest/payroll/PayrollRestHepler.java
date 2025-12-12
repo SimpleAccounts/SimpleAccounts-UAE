@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.payroll;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.constant.EmailConstant;
@@ -55,12 +56,12 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 	@Component
 	@SuppressWarnings({"java:S131", "java:S6809"})
-	public class PayrollRestHepler {
+	@RequiredArgsConstructor
+public class PayrollRestHepler {
     private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
     private static final String ERROR_PROCESSING_PAYROLL = "Error processing payroll";
     private static final String DATE_FORMAT_DD_MM_YYYY = "DATE_FORMAT_DD_MM_YYYY";
-    @Autowired
-    private EmployeeBankDetailsService employeeBankDetailsService;
+    private final EmployeeBankDetailsService employeeBankDetailsService;
     @Autowired
     RoleModuleRelationService roleModuleRelationService;
 
@@ -72,55 +73,41 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
     JournalService journalService;
     @Autowired
     EmployeeTransactioncategoryService employeeTransactioncategoryService;
-    @Autowired
-    private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+    private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
     @Autowired
     InvoiceNumberUtil invoiceNumberUtil;
-    @Autowired
-    private EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
+    private final EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
 
-    @Autowired
-    private EmploymentService employmentService;
+    private final EmploymentService employmentService;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
     @Autowired
     SalaryService salaryService;
 
-    @Autowired
-    private SalaryRoleService salaryRoleService;
+    private final SalaryRoleService salaryRoleService;
 
-    @Autowired
-    private SalaryTemplateService salaryTemplateService;
+    private final SalaryTemplateService salaryTemplateService;
 
-    @Autowired
-    private EmployeeSalaryComponentRelationDao employeeSalaryComponentRelationDao;
+    private final EmployeeSalaryComponentRelationDao employeeSalaryComponentRelationDao;
 
-    @Autowired
-    private SalaryStructureService salaryStructureService;
+    private final SalaryStructureService salaryStructureService;
 
-    @Autowired
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
+    private final DateFormatUtil dateFormatUtil;
 
-    @Autowired
-    private DateFormatUtil dateUtil;
+    private final DateFormatUtil dateUtil;
 
-    @Autowired
-    private SalaryComponentService salaryComponentService;
+    private final SalaryComponentService salaryComponentService;
 
-    @Autowired
-    private EmployeeParentRelationService employeeParentRelationService;
+    private final EmployeeParentRelationService employeeParentRelationService;
 
     @Autowired
     PayrollRepository payrollRepository;
 
     @Autowired
     UserJpaRepository userJpaRepository;
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
     @Autowired
     SalaryRepository salaryRepository;
@@ -131,20 +118,15 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
     UserService userService;
     @Autowired
     EmailSender emailSender;
-    @Autowired
-    private EmaiLogsService emaiLogsService;
-    @Autowired
-    private PayrolService payrolService;
+    private final EmaiLogsService emaiLogsService;
+    private final PayrolService payrolService;
 
-    @Autowired
-    private JournalLineItemRepository journalLineItemRepository;
+    private final JournalLineItemRepository journalLineItemRepository;
 
     @Autowired
     SalaryController salaryController;
-    @Autowired
-    private PayrollEmployeeRepository payrollEmployeeRepository;
-    @Autowired
-    private EmployeeSalaryComponentRelationRepository employeeSalaryComponentRelationRepository;
+    private final PayrollEmployeeRepository payrollEmployeeRepository;
+    private final EmployeeSalaryComponentRelationRepository employeeSalaryComponentRelationRepository;
 
     public EmployeeBankDetails getEntity(EmployeeBankDetailsPersistModel employeeBankDetailsPersistModel) throws IOException {
         EmployeeBankDetails employeeBankDetails = new EmployeeBankDetails();

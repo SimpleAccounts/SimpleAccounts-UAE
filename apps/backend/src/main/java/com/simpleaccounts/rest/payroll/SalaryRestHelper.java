@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.payroll;
 
 import com.simpleaccounts.constant.DefaultTypeConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.EmailConstant;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.entity.*;
@@ -47,6 +48,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PA
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PAYSLIP_TEMPLATE;
 
 @Component
+@RequiredArgsConstructor
 public class SalaryRestHelper {
     private final Logger logger = LoggerFactory.getLogger(SalaryRestHelper.class);
     private static final String PAYROLL_LIABILITY = "PAYROLL_LIABILITY";
@@ -56,29 +58,21 @@ public class SalaryRestHelper {
     private static final String SALARY_TYPE_FIXED = "Fixed";
     private static final String SALARY_TYPE_FIXED_ALLOWANCE = "Fixed Allowance";
     private static final String SALARY_TYPE_DEDUCTION = "Deduction";
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
-    @Autowired
-    private JournalService journalService;
+    private final JournalService journalService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private SalaryService salaryService;
+    private final SalaryService salaryService;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
+    private final DateFormatUtil dateFormatUtil;
 
-    @Autowired
-    private ChartOfAccountService chartOfAccountService;
+    private final ChartOfAccountService chartOfAccountService;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
 
     @Autowired
     CoacTransactionCategoryService coacTransactionCategoryService;

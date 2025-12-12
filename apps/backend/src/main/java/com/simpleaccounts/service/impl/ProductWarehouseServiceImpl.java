@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,10 @@ import com.simpleaccounts.service.ProductWarehouseService;
  */
 @Service("warehouseService")
 
+@RequiredArgsConstructor
 public class ProductWarehouseServiceImpl extends ProductWarehouseService {
 
-    @Autowired
-    private ProductWarehouseDao productWarehouseDao;
+    private final ProductWarehouseDao productWarehouseDao;
 
     @Override
     protected Dao<Integer, ProductWarehouse> getDao() {

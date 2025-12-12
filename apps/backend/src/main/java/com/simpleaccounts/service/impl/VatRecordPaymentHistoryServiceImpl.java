@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.dbfilter.VatReportFilterEnum;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.*;
 import com.simpleaccounts.entity.VatRecordPaymentHistory;
 import com.simpleaccounts.entity.VatReportFiling;
@@ -34,10 +35,10 @@ import java.util.Map;
         import java.util.Map;
 
 @Service("VatRecordPaymentHistoryService")
+@RequiredArgsConstructor
 public class VatRecordPaymentHistoryServiceImpl extends VatRecordPaymentHistoryService {
 
-    @Autowired
-    private VatRecordPaymentHistoryDao vatReportsDao;
+    private final VatRecordPaymentHistoryDao vatReportsDao;
 
     @Override
     protected Dao<Integer, VatRecordPaymentHistory> getDao() {

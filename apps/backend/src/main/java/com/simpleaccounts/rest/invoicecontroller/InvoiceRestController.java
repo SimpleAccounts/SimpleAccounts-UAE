@@ -84,6 +84,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -92,57 +93,41 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping(value = "/rest/invoice")
+@RequiredArgsConstructor
 public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	private final Logger logger = LoggerFactory.getLogger(InvoiceRestController.class);
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private InvoiceRestHelper invoiceRestHelper;
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final InvoiceRestHelper invoiceRestHelper;
+	private final BankAccountService bankAccountService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
 
-	@Autowired
-	private ChartUtil chartUtil;
+	private final ChartUtil chartUtil;
 
-	@Autowired
-	private ExpenseRestHelper expenseRestHelper;
+	private final ExpenseRestHelper expenseRestHelper;
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final ExpenseService expenseService;
 
-	@Autowired
-	private CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private InvoiceLineItemService invoiceLineItemService;
+	private final InvoiceLineItemService invoiceLineItemService;
 
-	@Autowired
-	private PlaceOfSupplyService placeOfSupplyService;
+	private final PlaceOfSupplyService placeOfSupplyService;
 
-	@Autowired
-    private FileAttachmentService fileAttachmentService;
+	private final FileAttachmentService fileAttachmentService;
 
-	@Autowired
-	private CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
+	private final CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
 
-	@Autowired
-	private PoQuatationService poQuatationService;
+	private final PoQuatationService poQuatationService;
 
-	@Autowired
-	private QuotationInvoiceRepository quotationInvoiceRepository;
+	private final QuotationInvoiceRepository quotationInvoiceRepository;
 
-	@Autowired
-	private JournalLineItemRepository journalLineItemRepository;
+	private final JournalLineItemRepository journalLineItemRepository;
 
 	@LogRequest
 	@ApiOperation(value = "Get Invoice List")

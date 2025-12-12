@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.dateformatcontroller;
 
 import java.util.ArrayList;
+import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,10 @@ import com.simpleaccounts.entity.DateFormat;
 import com.simpleaccounts.service.DateFormatService;
 
 @Component
+@RequiredArgsConstructor
 public class DateFormatRestHelper {
 
-	@Autowired
-	private DateFormatService dateFormatService;
+	private final DateFormatService dateFormatService;
 
 	public List<DateFormatListModel> getModelList(List<DateFormat> dateFormatList) {
 		List<DateFormatListModel> modelList = new ArrayList<>();

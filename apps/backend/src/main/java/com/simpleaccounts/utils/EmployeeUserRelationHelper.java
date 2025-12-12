@@ -1,5 +1,6 @@
 package com.simpleaccounts.utils;
 import com.simpleaccounts.entity.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -7,10 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
+@RequiredArgsConstructor
 public class EmployeeUserRelationHelper {
 
-    @Autowired
-    private EmployeeUserRelationService employeeUserRelationService;
+    private final EmployeeUserRelationService employeeUserRelationService;
 
     @Transactional(rollbackFor = Exception.class)
     public void createUserForEmployee(Employee employee,User user)

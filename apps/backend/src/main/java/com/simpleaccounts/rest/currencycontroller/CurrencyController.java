@@ -6,6 +6,7 @@
 package com.simpleaccounts.rest.currencycontroller;
 
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,12 +52,12 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping(value = "/rest/currency")
+@RequiredArgsConstructor
 public class CurrencyController {
 
 	private final Logger logger = LoggerFactory.getLogger(CurrencyController.class);
 
-	@Autowired
-	private CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
@@ -64,17 +65,13 @@ public class CurrencyController {
 	@Autowired
 	UserService userServiceNew;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final ExpenseService expenseService;
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
 
 	
 	@LogRequest

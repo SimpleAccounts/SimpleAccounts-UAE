@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.EmployeeFilterEnum;
 import com.simpleaccounts.dao.AbstractDao;
@@ -28,9 +29,9 @@ import org.apache.commons.collections4.CollectionUtils;
  * Created by Uday on 26/12/2019.
  */
 @Repository(value = "employeeDao")
+@RequiredArgsConstructor
 public class EmployeeDaoImpl extends AbstractDao<Integer, Employee> implements EmployeeDao {
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public List<DropdownModel> getEmployeesForDropdown() {

@@ -16,6 +16,7 @@ import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @Slf4j
 @RestController
 @RequestMapping(value = "/rest/poquatation")
+@RequiredArgsConstructor
 public class
 PoQuatationController {
     private static final String LOG_FILE_PATH = "filePath {}";
@@ -46,41 +48,29 @@ PoQuatationController {
     private static final String MSG_SENT_UNSUCCESSFUL = "sent.unsuccessful.msg";
     
     private final Logger logger = LoggerFactory.getLogger(PoQuatationController.class);
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private PoQuatationRestHelper poQuatationRestHelper;
+    private final PoQuatationRestHelper poQuatationRestHelper;
 
-    @Autowired
-    private PoQuatationService poQuatationService;
+    private final PoQuatationService poQuatationService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private ContactService contactService;
+    private final ContactService contactService;
 
-    @Autowired
-    private PoQuatationLineItemService poQuatationLineItemService;
+    private final PoQuatationLineItemService poQuatationLineItemService;
 
-    @Autowired
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
 
-    @Autowired
-    private FileAttachmentService fileAttachmentService;
+    private final FileAttachmentService fileAttachmentService;
 
-    @Autowired
-    private RfqPoGrnInvoiceRelationService rfqPoGrnInvoiceRelationService;
+    private final RfqPoGrnInvoiceRelationService rfqPoGrnInvoiceRelationService;
 
-    @Autowired
-    private RfqPoGrnInvoiceRelationDao rfqPoGrnInvoiceRelationDao;
+    private final RfqPoGrnInvoiceRelationDao rfqPoGrnInvoiceRelationDao;
 
-    @Autowired
-    private InvoiceRestHelper invoiceRestHelper;
+    private final InvoiceRestHelper invoiceRestHelper;
 
-    @Autowired
-    private JournalService journalService;
+    private final JournalService journalService;
 
     @LogRequest
     @ApiOperation(value = "Get Invoice List")

@@ -116,12 +116,14 @@ import com.simpleaccounts.service.VatCategoryService;
 import com.simpleaccounts.utils.FileHelper;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 
 	@Component
 	@Slf4j
 	@SuppressWarnings("java:S3973")
-	public class ZohoMigrationService {
+	@RequiredArgsConstructor
+public class ZohoMigrationService {
 	
 	private static final String SETTER_METHOD_SET_CURRENCY = "setCurrency";
 	private static final String SETTER_METHOD_SET_CURRENCY_CODE = "setCurrencyCode";
@@ -129,62 +131,43 @@ import lombok.extern.slf4j.Slf4j;
 	
     private final Logger LOG = LoggerFactory.getLogger(ZohoMigrationService.class);
 	
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
 
-    @Autowired
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
     
-    @Autowired
-    private InvoiceLineItemService invoiceLineItemService;
+    private final InvoiceLineItemService invoiceLineItemService;
 
-    @Autowired
-    private ContactService contactService;
+    private final ContactService contactService;
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private CurrencyService currencyService;
+    private final CurrencyService currencyService;
 
-    @Autowired
-    private VatCategoryService vatCategoryService;
+    private final VatCategoryService vatCategoryService;
 
-    @Autowired
-    private InvoiceRestHelper invoiceRestHelper;
+    private final InvoiceRestHelper invoiceRestHelper;
 
-    @Autowired
-    private JournalService journalService;
+    private final JournalService journalService;
 
-    @Autowired
-    private ProductLineItemService productLineItemService;
+    private final ProductLineItemService productLineItemService;
 
-    @Autowired
-    private ExpenseService expenseService;
+    private final ExpenseService expenseService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
     
-    @Autowired
-    private CurrencyExchangeService currencyExchangeService;
+    private final CurrencyExchangeService currencyExchangeService;
     
-    @Autowired
-	private  ContactTransactionCategoryService contactTransactionCategoryService;
+    private final  ContactTransactionCategoryService contactTransactionCategoryService;
     
-    @Autowired
-    private String basePath;
+    private final String basePath;
     
-    @Autowired
-    private MigrationUtil migrationUtil; 
+    private final MigrationUtil migrationUtil; 
     
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
     
-    @Autowired
-    private CountryService countryService;
+    private final CountryService countryService;
 
-    @Autowired
-    private StateService stateService;
+    private final StateService stateService;
 
     
     /*************************************************************** start  

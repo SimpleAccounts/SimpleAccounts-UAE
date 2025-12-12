@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 import javax.transaction.Transactional;
 
@@ -14,10 +15,10 @@ import com.simpleaccounts.service.ReconcileCategoryService;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class ReconcileCategoryServiceImpl extends ReconcileCategoryService {
 
-	@Autowired
-	private ReconcileCategoryDao reconcileCategoryDao;
+	private final ReconcileCategoryDao reconcileCategoryDao;
 
 	@Override
 	protected Dao<Integer, ReconcileCategory> getDao() {

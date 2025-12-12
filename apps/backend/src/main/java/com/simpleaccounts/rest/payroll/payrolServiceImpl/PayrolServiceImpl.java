@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.payroll.payrolServiceImpl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.Dao;
@@ -34,22 +35,18 @@ import java.util.*;
 
 	@Service
 	@SuppressWarnings("java:S3973")
-	public class PayrolServiceImpl extends PayrolService {
+	@RequiredArgsConstructor
+public class PayrolServiceImpl extends PayrolService {
     private static final Logger logger = LoggerFactory.getLogger(PayrolServiceImpl.class);
-    @Autowired
-    private PayrollRepository payrollRepository;
-    @Autowired
-    private PayrolEmployeeRepository payrolEmployeeRepository;
-    @Autowired
-    private EmployeeService employeeService;
+    private final PayrollRepository payrollRepository;
+    private final PayrolEmployeeRepository payrolEmployeeRepository;
+    private final EmployeeService employeeService;
     
-    @Autowired
-    private UserJpaRepository userJpaRepository;
+    private final UserJpaRepository userJpaRepository;
 
     @Autowired
 	PayrollRestHepler payrollRestHepler;
-    @Autowired
-    private EmployeeSalaryComponentRelationRepository  EmpSalaryCompRelRepository;
+    private final EmployeeSalaryComponentRelationRepository  EmpSalaryCompRelRepository;
 	@Autowired
 	SalaryService salaryService;
 	@Autowired
@@ -57,8 +54,7 @@ import java.util.*;
 	@Autowired
 	DateFormatUtil dateFormatUtil;
 
-	@Autowired
-	private PayrollDao payrollDao;
+	private final PayrollDao payrollDao;
 
     private static final String APPROVER = "Payroll Approver";
     private static final String ADMIN = "Admin";

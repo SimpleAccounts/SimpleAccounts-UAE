@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import java.util.Map;
 
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
@@ -18,13 +19,12 @@ import com.simpleaccounts.service.JournalService;
 import com.simpleaccounts.service.TransactionCategoryBalanceService;
 
 @Service("JournalServiceImpl")
+@RequiredArgsConstructor
 public class JournalServiceImpl extends JournalService {
 
-	@Autowired
-	private JournalDao journalDao;
+	private final JournalDao journalDao;
 
-	@Autowired
-	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
 
 	@Override
 	public PaginationResponseModel getJornalList(Map<JournalFilterEnum, Object> filterMap,

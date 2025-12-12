@@ -1,5 +1,6 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 import com.simpleaccounts.constant.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.impl.TransactionCategoryClosingBalanceDaoImpl;
 import com.simpleaccounts.entity.*;
@@ -31,66 +32,45 @@ import java.util.stream.Collectors;
 
 	@Component
 	@SuppressWarnings({"java:S3973", "java:S131"})
-	public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<Integer, SalesByCustomerModel> implements SimpleAccountReportDao {
+	@RequiredArgsConstructor
+public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<Integer, SalesByCustomerModel> implements SimpleAccountReportDao {
 
     private static final String QUERY_PARAM_START_DATE = "startDate";
     private static final String QUERY_PARAM_END_DATE = "endDate";
     private static final String ACCOUNT_RECEIVABLE = "Account Receivable";
 
-    @Autowired
-    private DateFormatUtil dateUtil;
+    private final DateFormatUtil dateUtil;
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionCategoryClosingBalanceDaoImpl.class);
-    @Autowired
-    private InvoiceRestHelper invoiceRestHelper;
-    @Autowired
-    private InvoiceService invoiceService;
-    @Autowired
-    private InvoiceLineItemService lineItemService;
-    @Autowired
-    private ContactTransactionCategoryService contactTransactionCategoryService;
-    @Autowired
-    private TransactionCategoryBalanceService transactionCategoryBalanceService;
-    @Autowired
-    private UserService userService;
+    private final InvoiceRestHelper invoiceRestHelper;
+    private final InvoiceService invoiceService;
+    private final InvoiceLineItemService lineItemService;
+    private final ContactTransactionCategoryService contactTransactionCategoryService;
+    private final TransactionCategoryBalanceService transactionCategoryBalanceService;
+    private final UserService userService;
 
-    @Autowired
-    private JournalLineItemService journalLineItemService;
-    @Autowired
-    private PayrollRestHepler payrollRestHepler;
+    private final JournalLineItemService journalLineItemService;
+    private final PayrollRestHepler payrollRestHepler;
 
-    @Autowired
-    private DateFormatUtil dateUtils;
+    private final DateFormatUtil dateUtils;
 
-    @Autowired
-    private CompanyRepository companyRepository;
+    private final CompanyRepository companyRepository;
 
-    @Autowired
-    private TaxAgencyRepository taxAgencyRepository;
+    private final TaxAgencyRepository taxAgencyRepository;
 
-    @Autowired
-    private InvoiceLineitemRepository invoiceLineitemRepository;
+    private final InvoiceLineitemRepository invoiceLineitemRepository;
 
-    @Autowired
-    private InvoiceReceiptRepository invoiceReceiptRepository;
-    @Autowired
-    private DateFormatUtil dateFormtUtil;
+    private final InvoiceReceiptRepository invoiceReceiptRepository;
+    private final DateFormatUtil dateFormtUtil;
 
-    @Autowired
-    private InvoicePaymentRepository invoicePaymentRepository;
+    private final InvoicePaymentRepository invoicePaymentRepository;
 
-    @Autowired
-    private InvoiceRepository invoiceRepository;
-    @Autowired
-    private JournalLineItemRepository journalLineItemRepository;
-    @Autowired
-    private TransactionRepository transactionRepository;
-    @Autowired
-    private CreditNoteRepository creditNoteRepository;
-    @Autowired
-    private TransactionExplanationRepository transactionExplanationRepository;
+    private final InvoiceRepository invoiceRepository;
+    private final JournalLineItemRepository journalLineItemRepository;
+    private final TransactionRepository transactionRepository;
+    private final CreditNoteRepository creditNoteRepository;
+    private final TransactionExplanationRepository transactionExplanationRepository;
 
-    @Autowired
-    private CreditNoteLineItemRepository creditNoteLineItemRepository ;
+    private final CreditNoteLineItemRepository creditNoteLineItemRepository ;
 
 
     public SalesByCustomerResponseModel getSalesByCustomer(ReportRequestModel requestModel,

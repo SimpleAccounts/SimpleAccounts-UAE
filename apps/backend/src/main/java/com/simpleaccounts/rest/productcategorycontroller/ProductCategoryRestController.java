@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.productcategorycontroller;
 
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,22 +42,18 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/productcategory")
+@RequiredArgsConstructor
 public class ProductCategoryRestController {
 	private final Logger logger = LoggerFactory.getLogger(ProductCategoryRestController.class);
-	@Autowired
-	private ProductCategoryService productCategoryService;
+	private final ProductCategoryService productCategoryService;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private UserService userServiceNew;
+	private final UserService userServiceNew;
 
-	@Autowired
-	private ProductCategoryRestHelper productCategoryRestHelper;
+	private final ProductCategoryRestHelper productCategoryRestHelper;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
 	@LogRequest
 	@ApiOperation(value = "Get All Product Categories for the Loggedin User and the Master data")

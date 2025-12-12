@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.EmployeeDesignationDao;
 import com.simpleaccounts.entity.EmployeeDesignation;
 import com.simpleaccounts.rest.DropdownObjectModel;
@@ -16,10 +17,10 @@ import java.util.Map;
 
 @Service("employeeDesignationService")
 @Transactional
+@RequiredArgsConstructor
 public class EmployeeDesignationServiceImpl extends EmployeeDesignationService {
 
-    @Autowired
-    private EmployeeDesignationDao employeeDesignationDao;
+    private final EmployeeDesignationDao employeeDesignationDao;
     @Override
     protected Dao<Integer, EmployeeDesignation> getDao() {
         return this.employeeDesignationDao;

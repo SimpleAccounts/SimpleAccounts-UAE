@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.CustomizeInvoiceTemplate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,10 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
+@RequiredArgsConstructor
 public class CustomizeInvoiceTemplateServiceImpl extends CustomizeInvoiceTemplateService{
 
-    @Autowired
-    private CustomizeInvoiceTemplateDao customizeInvoiceTemplateDao;
+    private final CustomizeInvoiceTemplateDao customizeInvoiceTemplateDao;
 
     @Override
     protected Dao<Integer, CustomizeInvoiceTemplate> getDao() {

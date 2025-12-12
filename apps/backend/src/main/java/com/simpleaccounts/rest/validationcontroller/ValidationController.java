@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.validationcontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -31,70 +32,50 @@ import static org.springframework.util.StringUtils.isEmpty;
 
 @Component
 @RequestMapping("/rest/validation")
+@RequiredArgsConstructor
 public class ValidationController {
     private static final String JSON_KEY_DELETE_FLAG = "deleteFlag";
     private static final String JSON_KEY_EMAIL = "email";
     private static final String JSON_KEY_ACCOUNT_NUMBER = "accountNumber";
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private SalaryComponentService salaryComponentService;
+    private final SalaryComponentService salaryComponentService;
 
-    @Autowired
-    private VatCategoryService vatCategoryService;
+    private final VatCategoryService vatCategoryService;
 
-    @Autowired
-    private ContactService contactService;
+    private final ContactService contactService;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
 
-    @Autowired
-    private BankAccountService bankAccountService;
+    private final BankAccountService bankAccountService;
 
-    @Autowired
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private CurrencyExchangeService currencyExchangeService;
+    private final CurrencyExchangeService currencyExchangeService;
 
-    @Autowired
-    private PoQuatationService poQuatationService;
+    private final PoQuatationService poQuatationService;
 
-    @Autowired
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
-    @Autowired
-    private EmployeeDesignationService employeeDesignationService;
+    private final EmployeeDesignationService employeeDesignationService;
 
-    @Autowired
-    private EmployeeDesignationService employeeDesignationNameService;
+    private final EmployeeDesignationService employeeDesignationNameService;
 
-    @Autowired
-    private EmploymentService employmentService;
-    @Autowired
-    private ExpenseService expenseService;
+    private final EmploymentService employmentService;
+    private final ExpenseService expenseService;
 
-    @Autowired
-    private EmployeeBankDetailsService employeeBankDetailsService;
+    private final EmployeeBankDetailsService employeeBankDetailsService;
 
-    @Autowired
-    private JournalService journalService;
+    private final JournalService journalService;
 
-    @Autowired
-    private PayrollRepository payrollRepository;
-    @Autowired
-    private CreditNoteRepository creditNoteRepository;
-    @Autowired
-    private ProductRepository productRepository;
+    private final PayrollRepository payrollRepository;
+    private final CreditNoteRepository creditNoteRepository;
+    private final ProductRepository productRepository;
     @LogRequest
     @ApiOperation(value = "Validate entries before adding to the system")
     @GetMapping(value = "/validate")

@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.ProductFilterEnum;
 import java.util.List;
@@ -21,9 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.Query;
 
 @Repository
+@RequiredArgsConstructor
 public class ProductDaoImpl extends AbstractDao<Integer, Product> implements ProductDao {
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public PaginationResponseModel getProductList(Map<ProductFilterEnum, Object> filterMap,

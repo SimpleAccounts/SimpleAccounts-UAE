@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.transactionimportcontroller;
 
 import java.io.BufferedReader;
+import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -48,6 +49,7 @@ import com.simpleaccounts.service.bankaccount.TransactionService;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Component
+@RequiredArgsConstructor
 public class TransactionImportRestHelper {
 	private final Logger LOGGER = LoggerFactory.getLogger(TransactionImportRestHelper.class);
 
@@ -80,20 +82,15 @@ public class TransactionImportRestHelper {
 	private Integer headerCount;
 	private String dateFormat;
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
-	@Autowired
-	private DateFormatDao dateFormatDao;
+	private final DateFormatDao dateFormatDao;
 
-	@Autowired
-	private TransactionParsingSettingDao transactionParsingSettingDao;
+	private final TransactionParsingSettingDao transactionParsingSettingDao;
 
-	@Autowired
-	private TransactionService transactionService;
+	private final TransactionService transactionService;
 
-	@Autowired
-	private DateFormatService dateFormatService;
+	private final DateFormatService dateFormatService;
 
 	public void handleFileUpload(@ModelAttribute("modelCircular") MultipartFile fileattached) {
 		List<CSVRecord> listParser = new ArrayList<>();

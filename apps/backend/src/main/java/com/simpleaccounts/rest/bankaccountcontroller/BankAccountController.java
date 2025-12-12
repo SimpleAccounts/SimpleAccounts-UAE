@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.bankaccountcontroller;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -58,67 +59,51 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 	@RestController
 	@RequestMapping(value = "/rest/bank")
 	@SuppressWarnings("java:S131")
-	public class BankAccountController{
+	@RequiredArgsConstructor
+public class BankAccountController{
 
 	private static final String MSG_DELETE_UNSUCCESSFUL = "delete.unsuccessful.msg";
 
 	private  final Logger logger = LoggerFactory.getLogger(BankAccountController.class);
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
 	@Autowired
 	protected JournalService journalService;
 
-	@Autowired
-	private CoacTransactionCategoryService coacTransactionCategoryService;
-	@Autowired
-	private TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
+	private final CoacTransactionCategoryService coacTransactionCategoryService;
+	private final TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
 
-	@Autowired
-	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
 
 
-	@Autowired
-	private BankAccountStatusService bankAccountStatusService;
+	private final BankAccountStatusService bankAccountStatusService;
 
-	@Autowired
-	private UserService userServiceNew;
+	private final UserService userServiceNew;
 
 
-	@Autowired
-	private CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
-	@Autowired
-	private BankAccountTypeService bankAccountTypeService;
+	private final BankAccountTypeService bankAccountTypeService;
 
-	@Autowired
-	private CountryService countryService;
+	private final CountryService countryService;
 
-	@Autowired
-	private BankAccountRestHelper bankAccountRestHelper;
+	private final BankAccountRestHelper bankAccountRestHelper;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
-	@Autowired
-	private ExpenseService expenseService;
+	private final TransactionCategoryService transactionCategoryService;
+	private final ExpenseService expenseService;
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private BankAccountRestHelper bankRestHelper;
+	private final BankAccountRestHelper bankRestHelper;
 
-	@Autowired
-	private TransactionService transactionService;
+	private final TransactionService transactionService;
 
-	@Autowired
-	private CurrencyExchangeService currencyExchangeService;
-	@Autowired
-	private UserService userService;
+	private final CurrencyExchangeService currencyExchangeService;
+	private final UserService userService;
 
-	@Autowired
-	private JournalLineItemRepository journalLineItemRepository;
+	private final JournalLineItemRepository journalLineItemRepository;
 
 	@LogRequest
 	@ApiOperation(value = "Get All Bank Accounts", response = List.class)

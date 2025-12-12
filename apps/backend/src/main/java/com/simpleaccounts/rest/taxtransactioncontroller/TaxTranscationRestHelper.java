@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.taxtransactioncontroller;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,19 +27,16 @@ import com.simpleaccounts.service.TaxTransactionService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 
 @Component
+@RequiredArgsConstructor
 public class TaxTranscationRestHelper {
 
-	@Autowired
-	private TaxTransactionService taxTransactionService;
+	private final TaxTransactionService taxTransactionService;
 
-	@Autowired
-	private TransactionService transactionService;
+	private final TransactionService transactionService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private PurchaseService purchaseService;
+	private final PurchaseService purchaseService;
 
 	private BigDecimal vatIn = new BigDecimal(0);
 	private BigDecimal vatOut = new BigDecimal(0);

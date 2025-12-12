@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.transactionparsingcontroller;
 
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,27 +42,22 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping(value = "/rest/transactionParsing")
+@RequiredArgsConstructor
 public class TransactionParsingSettingController {
 
 	private final Logger logger = LoggerFactory.getLogger(TransactionParsingSettingController.class);
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private TransactionParsingSettingRestHelper transactionParsingRestHelper;
+	private final TransactionParsingSettingRestHelper transactionParsingRestHelper;
 
-	@Autowired
-	private TransactionParsingSettingService transactionParsingSettingService;
+	private final TransactionParsingSettingService transactionParsingSettingService;
 
-	@Autowired
-	private CsvParser csvParser;
+	private final CsvParser csvParser;
 
-	@Autowired
-	private ExcelParser excelParser;
+	private final ExcelParser excelParser;
 
-	@Autowired
-	private FileHelper fileHelper;
+	private final FileHelper fileHelper;
 
 	@LogRequest
 	@ApiOperation("Parse excel file for Data")

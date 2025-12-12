@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.companycontroller;
 
 import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -26,48 +27,37 @@ import org.springframework.stereotype.Component;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Component
+@RequiredArgsConstructor
 public class CompanyRestHelper{
 	
 	private final Logger logger = LoggerFactory.getLogger(CompanyRestHelper.class);
 	
-	@Autowired
-	private IndustryTypeService industryTypeService;
+	private final IndustryTypeService industryTypeService;
 
-	@Autowired
-	private CountryService countryService;
+	private final CountryService countryService;
 
-	@Autowired
-	private CompanyTypeService companyTypeService;
+	private final CompanyTypeService companyTypeService;
 
-	@Autowired
-	private StateService stateService;
+	private final StateService stateService;
 
-	@Autowired
-	private CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
 	@Autowired
 	UserService userService;
 
-	@Autowired
-	private InvoiceRepository invoiceRepository;
+	private final InvoiceRepository invoiceRepository;
 
-	@Autowired
-	private ExpenseRepository expenseRepository;
+	private final ExpenseRepository expenseRepository;
 
-	@Autowired
-	private CreditNoteRepository creditNoteRepository;
+	private final CreditNoteRepository creditNoteRepository;
 
-	@Autowired
-	private VatReportFilingRepository vatReportFilingRepository;
+	private final VatReportFilingRepository vatReportFilingRepository;
 
-	@Autowired
-	private PoQuatationRepository poQuatationRepository;
+	private final PoQuatationRepository poQuatationRepository;
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
 
-	@Autowired
-	private ProductRepository productRepository;
+	private final ProductRepository productRepository;
 
 	public List<CompanyListModel> getModelList(List<Company> companyList) {
 		List<CompanyListModel> coModelList = new ArrayList<>();

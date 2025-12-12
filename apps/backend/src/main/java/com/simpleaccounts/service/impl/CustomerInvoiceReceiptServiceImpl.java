@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,10 +12,10 @@ import com.simpleaccounts.entity.CustomerInvoiceReceipt;
 import com.simpleaccounts.service.CustomerInvoiceReceiptService;
 
 @Service
+@RequiredArgsConstructor
 public class CustomerInvoiceReceiptServiceImpl extends CustomerInvoiceReceiptService {
 
-	@Autowired
-	private CustomerInvoiceReceiptDao customerInvoiceReceiptDao;
+	private final CustomerInvoiceReceiptDao customerInvoiceReceiptDao;
 
 	@Override
 	protected Dao<Integer, CustomerInvoiceReceipt> getDao() {

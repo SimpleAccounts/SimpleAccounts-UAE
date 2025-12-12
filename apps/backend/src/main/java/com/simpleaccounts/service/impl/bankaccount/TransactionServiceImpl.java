@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl.bankaccount;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,23 +40,19 @@ import com.simpleaccounts.utils.ChartUtil;
 	@Service("transactionService")
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	@SuppressWarnings("java:S3973")
-	public class TransactionServiceImpl extends TransactionService {
+	@RequiredArgsConstructor
+public class TransactionServiceImpl extends TransactionService {
 
 	private final Logger logger = LoggerFactory.getLogger(TransactionServiceImpl.class);
 
-	@Autowired
-	private ChartUtil util;
+	private final ChartUtil util;
 
-	@Autowired
-	private TransactionDao transactionDao;
+	private final TransactionDao transactionDao;
 
-	@Autowired
-	private BankAccountDao bankAccountDao;
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountDao bankAccountDao;
+	private final BankAccountService bankAccountService;
 
-	@Autowired
-    private ReconcileStatusService reconcileStatusService;
+	private final ReconcileStatusService reconcileStatusService;
 
 	private static final String TRANSACTION = "TRANSACTION";
 

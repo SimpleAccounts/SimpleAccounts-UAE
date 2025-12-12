@@ -6,6 +6,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.dbfilter.CompanyFilterEnum;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.CompanyDao;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.*;
@@ -30,50 +31,38 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("companyService")
 @Transactional
+@RequiredArgsConstructor
 public class CompanyServiceImpl extends CompanyService {
 
     private final Logger logger = LoggerFactory.getLogger(CompanyServiceImpl.class);
-    @Autowired
-    private CompanyDao companyDao;
+    private final CompanyDao companyDao;
 
-    @Autowired
-    private BankAccountService bankAccountService;
+    private final BankAccountService bankAccountService;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
 
     @Autowired
     protected JournalService journalService;
 
-    @Autowired
-    private CoacTransactionCategoryService coacTransactionCategoryService;
+    private final CoacTransactionCategoryService coacTransactionCategoryService;
 
-    @Autowired
-    private BankAccountStatusService bankAccountStatusService;
+    private final BankAccountStatusService bankAccountStatusService;
 
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
-    @Autowired
-    private CurrencyService currencyService;
+    private final CurrencyService currencyService;
 
-    @Autowired
-    private CompanyTypeService companyTypeService;
+    private final CompanyTypeService companyTypeService;
 
-    @Autowired
-    private IndustryTypeService industryTypeService;
+    private final IndustryTypeService industryTypeService;
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private CurrencyExchangeService currencyExchangeService;
+    private final CurrencyExchangeService currencyExchangeService;
 
-    @Autowired
-    private BankAccountTypeService bankAccountTypeService;
+    private final BankAccountTypeService bankAccountTypeService;
 
     @Override
     protected Dao<Integer, Company> getDao() {

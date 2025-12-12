@@ -6,6 +6,7 @@
 package com.simpleaccounts.rest.vatcontroller;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 
 import java.util.EnumMap;
@@ -52,22 +53,18 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping(value = "/rest/vat")
+@RequiredArgsConstructor
 public class VatController{
 	private final Logger logger = LoggerFactory.getLogger(VatController.class);
-	@Autowired
-	private VatCategoryService vatCategoryService;
+	private final VatCategoryService vatCategoryService;
 
-	@Autowired
-	private VatCategoryRestHelper vatCategoryRestHelper;
+	private final VatCategoryRestHelper vatCategoryRestHelper;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private ProductService productService;
+	private final ProductService productService;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
 	@LogRequest
 	@ApiOperation(value = "Get Vat Category List")

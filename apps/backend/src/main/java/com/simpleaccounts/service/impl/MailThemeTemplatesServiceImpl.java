@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.MailThemeTemplates;
 import com.simpleaccounts.dao.MailThemeTemplatesDao;
 
@@ -16,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("mailThemeTemplatesService")
 @Transactional
+@RequiredArgsConstructor
 public class MailThemeTemplatesServiceImpl extends MailThemeTemplatesService {
 
-    @Autowired
-    private MailThemeTemplatesDao mailThemeTemplatesDao;
+    private final MailThemeTemplatesDao mailThemeTemplatesDao;
 
     @Override
     protected Dao<Integer, MailThemeTemplates> getDao() {

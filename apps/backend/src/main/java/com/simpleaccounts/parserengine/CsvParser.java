@@ -1,6 +1,7 @@
 package com.simpleaccounts.parserengine;
 
 import java.io.BufferedReader;
+import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,12 +32,12 @@ import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSe
 import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingPersistModel;
 
 @Component
+@RequiredArgsConstructor
 public class CsvParser implements TransactionFileParser {
 
 	private final Logger logger = LoggerFactory.getLogger(CsvParser.class);
 
-	@Autowired
-	private DateFormatDao dateformatDao;
+	private final DateFormatDao dateformatDao;
 
 	@Override
 	public List<Map<String, String>> parseSmaple(TransactionParsingSettingPersistModel model) {

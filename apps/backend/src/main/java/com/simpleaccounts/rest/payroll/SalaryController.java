@@ -1,5 +1,6 @@
 package com.simpleaccounts.rest.payroll;
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.model.SalaryPersistModel;
@@ -33,18 +34,16 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping("/rest/Salary")
+@RequiredArgsConstructor
 public class SalaryController {
 
     private final Logger logger = LoggerFactory.getLogger(PayrollController.class);
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private SalaryRestHelper salaryRestHelper;
+    private final SalaryRestHelper salaryRestHelper;
 
 //    @Autowired
 //    private EmployeeTransactionCategoryRelation employeeTransactionCategoryRelation;

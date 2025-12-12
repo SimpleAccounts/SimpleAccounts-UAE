@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.payroll;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.impl.TransactionCategoryClosingBalanceDaoImpl;
 import com.simpleaccounts.entity.*;
@@ -31,7 +32,8 @@ import java.util.*;
 
 	@Repository(value = "salaryDao")
 	@SuppressWarnings("java:S131")
-	public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements SalaryDao{
+	@RequiredArgsConstructor
+public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements SalaryDao{
     private static final String JSON_KEY_EMPLOYEE_ID = "employeeId";
     private static final String JSON_KEY_EMPLOYEE = "employee";
     
@@ -48,8 +50,7 @@ import java.util.*;
     EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
     @Autowired
     DateFormatUtil dateFormatUtil;
-    @Autowired
-    private PayrollRepository payrollRepository;
+    private final PayrollRepository payrollRepository;
 
     public List getSalaryByEmployeeId(Employee employee,String salaryDate){
 

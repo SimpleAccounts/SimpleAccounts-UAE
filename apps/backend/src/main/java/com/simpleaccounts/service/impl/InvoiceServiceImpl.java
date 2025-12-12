@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -44,11 +45,11 @@ import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateUtils;
 
 @Service("SupplierInvoiceService")
+@RequiredArgsConstructor
 public class InvoiceServiceImpl extends InvoiceService {
 	private final Logger logger = LoggerFactory.getLogger(InvoiceServiceImpl.class);
 
-	@Autowired
-	private InvoiceDao supplierInvoiceDao;
+	private final InvoiceDao supplierInvoiceDao;
 
 	@Autowired
 	ChartUtil util;
@@ -56,26 +57,19 @@ public class InvoiceServiceImpl extends InvoiceService {
 	@Autowired
 	DateUtils dateUtils;
 
-	@Autowired
-	private JournalDao journalDao;
+	private final JournalDao journalDao;
 
-	@Autowired
-	private JournalLineItemDao journalLineItemDao;
+	private final JournalLineItemDao journalLineItemDao;
 
-	@Autowired
-	private CustomerInvoiceReceiptDao customerInvoiceReceiptDao;
+	private final CustomerInvoiceReceiptDao customerInvoiceReceiptDao;
 
-	@Autowired
-	private SupplierInvoicePaymentDao supplierInvoicePaymentDao;
+	private final SupplierInvoicePaymentDao supplierInvoicePaymentDao;
 	
-	@Autowired
-	private InvoiceRepository invoiceRepository;
+	private final InvoiceRepository invoiceRepository;
 	
-	@Autowired
-	private JournalLineItemService journalLineItemService;
+	private final JournalLineItemService journalLineItemService;
 
-	@Autowired
-	private VatReportFilingRepository vatReportFilingRepository;
+	private final VatReportFilingRepository vatReportFilingRepository;
 
 	@Override
 	protected Dao<Integer, Invoice> getDao() {

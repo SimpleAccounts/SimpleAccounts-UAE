@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.EmployeeUserRelationDao;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeUserRelation;
@@ -14,9 +15,9 @@ import org.springframework.stereotype.Service;
  * Created By Suraj Rahade
  */
 @Service("employeeUserRelationService")
+@RequiredArgsConstructor
 public class EmployeeUserRelationServiceImpl extends EmployeeUserRelationService {
-    @Autowired
-    private EmployeeUserRelationDao employeeUserRelationDao;
+    private final EmployeeUserRelationDao employeeUserRelationDao;
 
     @Override
     protected Dao<Integer, EmployeeUserRelation> getDao() {

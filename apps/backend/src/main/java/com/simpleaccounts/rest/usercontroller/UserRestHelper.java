@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.usercontroller;
 
 import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,26 +27,21 @@ import com.simpleaccounts.utils.DateFormatUtil;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Component
+@RequiredArgsConstructor
 public class UserRestHelper {
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
 	
 	private final Logger logger = LoggerFactory.getLogger(UserRestHelper.class);
-	@Autowired
-	private RoleService roleService;
+	private final RoleService roleService;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private DateFormatUtil dateUtil;
+	private final DateFormatUtil dateUtil;
 
-	@Autowired
-	private PasswordHistoryRepository passwordHistoryRepository;
+	private final PasswordHistoryRepository passwordHistoryRepository;
 
-	@Autowired
-	private UserCredentialRepository userCredentialRepository;
-	@Autowired
-	private EmployeeUserRelationRepository employeeUserRelationRepository;
+	private final UserCredentialRepository userCredentialRepository;
+	private final EmployeeUserRelationRepository employeeUserRelationRepository;
 
 	public List<UserModel> getModelList(Object userList) {
 		List<UserModel> userModelList = new ArrayList<>();

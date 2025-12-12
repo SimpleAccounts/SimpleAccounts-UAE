@@ -1,5 +1,6 @@
 package com.simpleaccounts.rfq_po;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.dao.AbstractDao;
@@ -18,9 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 @Repository(value = "poQuatationDao")
+@RequiredArgsConstructor
 public class PoQuatationDaoImpl extends AbstractDao<Integer,PoQuatation> implements PoQuatationDao {
-    @Autowired
-    private DatatableSortingFilterConstant datatableUtil;
+    private final DatatableSortingFilterConstant datatableUtil;
 
    public PaginationResponseModel getRfqList(Map<RfqFilterEnum, Object> filterDataMap, PaginationModel paginationModel){
         List<DbFilter> dbFilters = new ArrayList<>();

@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl.bankaccount;
 
 import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.TransactionFilterEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.bankaccount.ReconcileStatusDao;
@@ -21,10 +22,10 @@ import java.util.Map;
 
 @Service("reconcileStatusService")
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+@RequiredArgsConstructor
 public class ReconcileStatusServiceImpl extends ReconcileStatusService  {
 
-    @Autowired
-    private ReconcileStatusDao reconcilestatusDao;
+    private final ReconcileStatusDao reconcilestatusDao;
     @Autowired
     TransactionServiceImpl transactionService;
 

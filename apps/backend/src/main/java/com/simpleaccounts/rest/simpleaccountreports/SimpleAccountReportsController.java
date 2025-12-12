@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.dbfilter.DateFormatFilterEnum;
@@ -30,22 +31,19 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/rest/simpleaccountReports")
+@RequiredArgsConstructor
 public class SimpleAccountReportsController {
 
     private final Logger logger = LoggerFactory.getLogger(SimpleAccountReportsController.class);
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
 
-    @Autowired
-    private simpleAccountReportRestHelper simpleAccountReportRestHelper;
+    private final simpleAccountReportRestHelper simpleAccountReportRestHelper;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private SimpleAccountReportDaoImpl simpleAccountReportDao;
+    private final SimpleAccountReportDaoImpl simpleAccountReportDao;
 
     @LogRequest
     @ApiOperation(value = "Get salesbycustomer Report")

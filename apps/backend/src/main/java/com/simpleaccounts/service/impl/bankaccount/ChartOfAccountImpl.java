@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl.bankaccount;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +13,10 @@ import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 
 @Service("transactionTypeService")
+@RequiredArgsConstructor
 public class ChartOfAccountImpl extends ChartOfAccountService {
 
-	@Autowired
-	private ChartOfAccountDao chartOfAccountDao;
+	private final ChartOfAccountDao chartOfAccountDao;
 
 	@Override
 	public List<ChartOfAccount> getChartOfAccountByCriteria(ChartOfAccountCriteria chartOfAccountCriteria) {

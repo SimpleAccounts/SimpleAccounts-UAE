@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.financialreport;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -29,7 +30,8 @@ import javax.persistence.TypedQuery;
 
 	@Component
 	@SuppressWarnings({"java:S3973", "java:S131"})
-	public class FinancialReportRestHelper {
+	@RequiredArgsConstructor
+public class FinancialReportRestHelper {
 
 	private static final String RETAINED_EARNINGS = "RETAINED_EARNINGS";
 	private static final String OTHER_CHARGES = "OTHER_CHARGES";
@@ -49,14 +51,11 @@ import javax.persistence.TypedQuery;
 	@Autowired
 	ExpenseService expenseService;
 
-	@Autowired
-	private CreditNoteLineItemRepository creditNoteLineItemRepository;
+	private final CreditNoteLineItemRepository creditNoteLineItemRepository;
 
-	@Autowired
-	private EntityManager entityManager;
+	private final EntityManager entityManager;
 
-	@Autowired
-	private VatReportFilingRepository vatReportFilingRepository;
+	private final VatReportFilingRepository vatReportFilingRepository;
 
 	@Autowired
 	DateFormatUtil dateUtil;

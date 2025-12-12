@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -40,13 +41,13 @@ import com.simpleaccounts.dao.UserDao;
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TEST_MAIL_TEMPLATE;
 
 @Service("userService")
+@RequiredArgsConstructor
 public class UserServiceImpl extends UserService{
 	private static final String LOG_ERROR = "Error";
 
 	private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-	@Autowired
-	private UserJpaRepository userJpaRepo;
+	private final UserJpaRepository userJpaRepo;
 	
 	@Value("${simpleaccounts.baseUrl}")
 	private String baseUrl;
@@ -55,15 +56,12 @@ public class UserServiceImpl extends UserService{
 	@Qualifier(value = "userDao")
 	private UserDao dao;
 
-	@Autowired
-	private RandomString randomString;
+	private final RandomString randomString;
 
-	@Autowired
-	private EmailSender emailSender;
+	private final EmailSender emailSender;
 	@Autowired
 	ResourceLoader resourceLoader;
-	@Autowired
-	private DateUtils dateUtils;
+	private final DateUtils dateUtils;
 
 	@Override
 	public UserDao getDao() {

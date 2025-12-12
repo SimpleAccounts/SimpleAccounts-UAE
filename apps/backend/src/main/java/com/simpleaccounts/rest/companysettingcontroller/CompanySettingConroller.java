@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.companysettingcontroller;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,13 +19,12 @@ import com.simpleaccounts.service.ConfigurationService;
 
 @RestController
 @RequestMapping("/rest/companySetting")
+@RequiredArgsConstructor
 public class CompanySettingConroller {
 
-	@Autowired
-	private CompanySettingRestHelper companySettingRestHelper;
+	private final CompanySettingRestHelper companySettingRestHelper;
 
-	@Autowired
-	private ConfigurationService configurationService;
+	private final ConfigurationService configurationService;
 
 	@LogRequest
 	@GetMapping(value = "/get")

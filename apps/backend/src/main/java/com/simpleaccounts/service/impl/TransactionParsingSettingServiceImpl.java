@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,10 @@ import com.simpleaccounts.entity.TransactionParsingSetting;
 import com.simpleaccounts.service.TransactionParsingSettingService;
 
 @Service
+@RequiredArgsConstructor
 public class TransactionParsingSettingServiceImpl extends TransactionParsingSettingService {
 
-	@Autowired
-	private TransactionParsingSettingDao transactionParsingSettingDao;
+	private final TransactionParsingSettingDao transactionParsingSettingDao;
 
 	@Override
 	protected Dao<Long, TransactionParsingSetting> getDao() {

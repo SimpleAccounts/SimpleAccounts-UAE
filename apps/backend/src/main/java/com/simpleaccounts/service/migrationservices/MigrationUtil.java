@@ -70,11 +70,13 @@ import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.TransactionCategoryCreationHelper;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 	@Component
 	@Slf4j
 	@SuppressWarnings("java:S131")
-	public class MigrationUtil {
+	@RequiredArgsConstructor
+public class MigrationUtil {
 	
 	private static final String LOG_ERROR_PREFIX = "Error =";
 	private static final String JSON_KEY_TRANSACTION_CATEGORY_NAME = "transactionCategoryName";
@@ -86,59 +88,41 @@ import lombok.extern.slf4j.Slf4j;
 	  
 	  private String dateFormat = "mm/dd/yyyy";
 
-		@Autowired
-		private CurrencyService currencyService;
+		private final CurrencyService currencyService;
 	
-		@Autowired
-		private DateFormatUtil dateFormtUtil;
+		private final DateFormatUtil dateFormtUtil;
 	
-		@Autowired
-		private CountryService countryService;
+		private final CountryService countryService;
 	
-		@Autowired
-		private StateService stateService;
+		private final StateService stateService;
 	
-		@Autowired
-		private PlaceOfSupplyService placeOfSupplyService;
+		private final PlaceOfSupplyService placeOfSupplyService;
 	
-		@Autowired
-		private InvoiceLineItemService invoiceLineItemService;
+		private final InvoiceLineItemService invoiceLineItemService;
 	
-		@Autowired
-		private ContactService contactService;
+		private final ContactService contactService;
 	
-		@Autowired
-		private ProductService productService;
+		private final ProductService productService;
 	
-		@Autowired
-		private VatCategoryService vatCategoryService;
+		private final VatCategoryService vatCategoryService;
 	
-		@Autowired
-		private ProductLineItemService productLineItemService;
+		private final ProductLineItemService productLineItemService;
 	
-		@Autowired
-		private ExpenseService expenseService;
+		private final ExpenseService expenseService;
 	
-		@Autowired
-		private CurrencyExchangeService currencyExchangeService;
+		private final CurrencyExchangeService currencyExchangeService;
 	
-		@Autowired
-		private InventoryService inventoryService;
+		private final InventoryService inventoryService;
 	
-		@Autowired
-		private ChartOfAccountCategoryService chartOfAccountCategoryService;
+		private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 	
-		@Autowired
-		private TransactionCategoryCreationHelper transactionCategoryCreationHelper;
+		private final TransactionCategoryCreationHelper transactionCategoryCreationHelper;
 	
-		@Autowired
-		private TransactionCategoryService transactionCategoryService;
+		private final TransactionCategoryService transactionCategoryService;
 		
-		@Autowired
-		private TaxTreatmentRepository taxTreatmentRepository;
+		private final TaxTreatmentRepository taxTreatmentRepository;
 	  
-		@Autowired
-		private PlaceOfSupplyRepository placeOfSupplyRepository;
+		private final PlaceOfSupplyRepository placeOfSupplyRepository;
 		
 	  /**
 	     * This method returns tableName from file name

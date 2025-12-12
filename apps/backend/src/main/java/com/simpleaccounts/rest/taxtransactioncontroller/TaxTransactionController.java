@@ -6,6 +6,7 @@
 package com.simpleaccounts.rest.taxtransactioncontroller;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -34,13 +35,12 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/taxtransaction")
+@RequiredArgsConstructor
 public class TaxTransactionController{
 
-	@Autowired
-	private  TaxTransactionService taxTransactionService;
+	private final  TaxTransactionService taxTransactionService;
 
-	@Autowired
-	private  TaxTranscationRestHelper taxTranscationRestHelper;
+	private final  TaxTranscationRestHelper taxTranscationRestHelper;
 
 	@LogRequest
 	@ApiOperation(value = "Get Open Tax Transaction List")

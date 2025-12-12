@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.CorporateTax;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.aop.LogExecutionTime;
 import com.simpleaccounts.aop.LogRequest;
@@ -48,26 +49,20 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 	@RestController
 	@RequestMapping(value = "/rest/corporate/tax")
 	@SuppressWarnings("java:S3973")
-	public class CorporateTaxController {
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+	@RequiredArgsConstructor
+public class CorporateTaxController {
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private CompanyService companyService;
-    @Autowired
-    private UserService userService;
+    private final CompanyService companyService;
+    private final UserService userService;
 
-    @Autowired
-    private CorporateTaxSettingRepository corporateTaxSettingRepository;
+    private final CorporateTaxSettingRepository corporateTaxSettingRepository;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
+    private final DateFormatUtil dateFormatUtil;
 
-    @Autowired
-    private FinancialReportRestHelper financialReportRestHelper;
+    private final FinancialReportRestHelper financialReportRestHelper;
 
-    @Autowired
-    private CorporateTaxFilingRepository corporateTaxFilingRepository;
+    private final CorporateTaxFilingRepository corporateTaxFilingRepository;
 
     @Autowired
      CorporateTaxService corporateTaxService;

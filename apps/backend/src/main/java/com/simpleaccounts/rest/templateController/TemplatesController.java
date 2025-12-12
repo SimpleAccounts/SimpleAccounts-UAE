@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.templateController;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.rest.vatcontroller.VatController;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.MailThemeTemplatesService;
@@ -28,17 +29,16 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping(value = "/rest/templates")
+@RequiredArgsConstructor
 public class TemplatesController {
     
     private final Logger logger = LoggerFactory.getLogger(VatController.class);
 
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
 
-    @Autowired
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
 
 

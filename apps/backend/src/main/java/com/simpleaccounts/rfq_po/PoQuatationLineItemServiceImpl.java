@@ -1,6 +1,7 @@
 package com.simpleaccounts.rfq_po;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +10,9 @@ import javax.transaction.Transactional;
 @Service("poQuatationLineItemService")
 @Transactional
 
+@RequiredArgsConstructor
 public class PoQuatationLineItemServiceImpl extends PoQuatationLineItemService{
-    @Autowired
-    private PoQuatationLineItemDao poQuatationLineItemDao;
+    private final PoQuatationLineItemDao poQuatationLineItemDao;
     @Override
     protected Dao<Integer, PoQuatationLineItem> getDao() {
         return this.poQuatationLineItemDao;

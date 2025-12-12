@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.bankaccountcontroller;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -29,15 +30,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 	@Component
 	@SuppressWarnings("java:S131")
-	public class BankAccountRestHelper {
+	@RequiredArgsConstructor
+public class BankAccountRestHelper {
 
 	private static final String DATE_FORMAT_MMM_YYYY = "MMM yyyy";
 
 	@Autowired
 	BankAccountService bankAccountService;
 
-	@Autowired
-	private DateFormatUtil dateUtil;
+	private final DateFormatUtil dateUtil;
 
 	@Autowired
 	BankAccountStatusService bankAccountStatusService;
@@ -57,23 +58,18 @@ import org.springframework.transaction.annotation.Transactional;
 	@Autowired
 	CountryService countryService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
 
-	@Autowired
-	private BankDetailsRepository bankDetailsRepository;
+	private final BankDetailsRepository bankDetailsRepository;
 
 	@Autowired
 	TransactionRepository transactionRepository;
 
-	@Autowired
-	private ChartUtil util;
+	private final ChartUtil util;
 
-	@Autowired
-	private DateFormatUtil dateFormatUtil;
+	private final DateFormatUtil dateFormatUtil;
 
 	public PaginationResponseModel getListModel(PaginationResponseModel pagiantionResponseModel) {
 

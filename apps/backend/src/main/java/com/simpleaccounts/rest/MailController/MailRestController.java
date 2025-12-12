@@ -20,6 +20,7 @@ import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,31 +33,22 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @RestController
 @RequestMapping(value = "/rest/mail")
+@RequiredArgsConstructor
 public class MailRestController {
-    @Autowired
-    private PoQuatationRepository poQuatationRepository;
-    @Autowired
-    private QuotationInvoiceRepository quotationInvoiceRepository;
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    private InvoiceRepository invoiceRepository;
-    @Autowired
-    private InvoiceRestHelper invoiceRestHelper;
+    private final PoQuatationRepository poQuatationRepository;
+    private final QuotationInvoiceRepository quotationInvoiceRepository;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final InvoiceRepository invoiceRepository;
+    private final InvoiceRestHelper invoiceRestHelper;
 
-    @Autowired
-    private CreditNoteRepository creditNoteRepository;
+    private final CreditNoteRepository creditNoteRepository;
 
-    @Autowired
-    private CreditNoteRestHelper creditNoteRestHelper;
+    private final CreditNoteRestHelper creditNoteRestHelper;
 
-    @Autowired
-    private JournalService journalService;
+    private final JournalService journalService;
 
-    @Autowired
-    private MailThemeTemplatesService mailThemeTemplatesService;
-    @Autowired
-    private EmailService emailService;
+    private final MailThemeTemplatesService mailThemeTemplatesService;
+    private final EmailService emailService;
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)

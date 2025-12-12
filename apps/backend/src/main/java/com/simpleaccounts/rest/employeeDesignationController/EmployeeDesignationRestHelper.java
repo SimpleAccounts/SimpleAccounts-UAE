@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.employeeDesignationController;
 
 import com.simpleaccounts.entity.EmployeeDesignation;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.model.EmployeeDesignationListModel;
 import com.simpleaccounts.model.EmployeeDesignationPersistModel;
@@ -16,10 +17,10 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class EmployeeDesignationRestHelper {
 
-    @Autowired
-    private EmployeeDesignationService employeeDesignationService;
+    private final EmployeeDesignationService employeeDesignationService;
     //SalaryDesignation
 
     public EmployeeDesignation getEmployeeDesignationEntity(EmployeeDesignationPersistModel employeeDesignationPersistModel) throws IOException

@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.util.ArrayList;
+import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,10 @@ import com.simpleaccounts.entity.TransactionExpenses;
 import com.simpleaccounts.service.TransactionExpensesService;
 
 @Service
+@RequiredArgsConstructor
 public class TransactionExpensesServiceImpl extends TransactionExpensesService {
 
-	@Autowired
-	private TransactionExpensesDao transactionExpensesdao;
+	private final TransactionExpensesDao transactionExpensesdao;
 
 	@Override
 	protected Dao<Integer, TransactionExpenses> getDao() {

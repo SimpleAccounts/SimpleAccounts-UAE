@@ -67,10 +67,12 @@ import com.simpleaccounts.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 @Slf4j
 @RestController
 @RequestMapping(value = "/rest/migration")
+@RequiredArgsConstructor
 public class MigrationController {
     private static final String LOG_INFO_PATTERN = "info{}";
     private static final String MSG_NO_FILES_AVAILABLE = "No Files Available";
@@ -78,14 +80,11 @@ public class MigrationController {
     
     private  final Logger logger = LoggerFactory.getLogger(MigrationController.class);
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private FileHelper fileHelper;
+    private final FileHelper fileHelper;
 
-    	@Value("${simpleaccounts.migration.pathlocation}")    @Autowired
-    private String basePath;
+    	@Value("${simpleaccounts.migration.pathlocation}")    private final String basePath;
 
     @Autowired
     ResourceLoader resourceLoader;
@@ -93,26 +92,19 @@ public class MigrationController {
 //    @Autowired
 //    private String basePath;
 
-    @Autowired
-    private CountryService countryService;
+    private final CountryService countryService;
 
-    @Autowired
-    private StateService stateService;
+    private final StateService stateService;
 
-    @Autowired
-    private MigrationService migrationService;
+    private final MigrationService migrationService;
     
-    @Autowired
-    private ZohoMigrationService zohoMigrationService;
+    private final ZohoMigrationService zohoMigrationService;
     
-    @Autowired
-    private SimpleAccountMigrationService simpleAccountMigrationService;
+    private final SimpleAccountMigrationService simpleAccountMigrationService;
 
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
     
-    @Autowired
-    private FileStorageService fileStorageService;
+    private final FileStorageService fileStorageService;
 
 //    /**
 //     * This Api Will return The List Of Products Which User Wants To Migrate

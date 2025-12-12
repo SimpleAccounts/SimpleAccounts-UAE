@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.employeecontroller;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.repository.PayrolEmployeeRepository;
 import com.simpleaccounts.rest.payroll.service.EmployeeSalaryComponentRelationService;
@@ -29,42 +30,32 @@ import org.springframework.transaction.annotation.Transactional;
  * @author admin
  */
 @Component
+@RequiredArgsConstructor
 public class EmployeeHelper {
 
 	private static final Logger logger = LoggerFactory.getLogger(EmployeeHelper.class);
 
-	@Autowired
-	private CountryService countryService;
+	private final CountryService countryService;
 
-	@Autowired
-	private SalaryComponentService salaryComponentService;
+	private final SalaryComponentService salaryComponentService;
 
-	@Autowired
-	private EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
+	private final EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
 
 	@Autowired
 	CurrencyService currencyService;
 
-	@Autowired
-	private EmployeeService employeeService;
+	private final EmployeeService employeeService;
 
-	@Autowired
-	private SalaryRoleService salaryRoleService;
+	private final SalaryRoleService salaryRoleService;
 
-	@Autowired
-	private EmployeeBankDetailsService employeeBankDetailsService;
+	private final EmployeeBankDetailsService employeeBankDetailsService;
 
-	@Autowired
-	private EmployeeDesignationService employeeDesignationService;
-	@Autowired
-	private StateService stateService;
-	@Autowired
-	private EmploymentService employmentService;
-	@Autowired
-	private DateFormatUtil dateUtil;
+	private final EmployeeDesignationService employeeDesignationService;
+	private final StateService stateService;
+	private final EmploymentService employmentService;
+	private final DateFormatUtil dateUtil;
 
-	@Autowired
-	private PayrolEmployeeRepository payrolEmployeeRepository;
+	private final PayrolEmployeeRepository payrolEmployeeRepository;
 	public List<EmployeeListModel> getListModel(Object employeList) {
 
 		List<EmployeeListModel> employeeListModels = new ArrayList<>();

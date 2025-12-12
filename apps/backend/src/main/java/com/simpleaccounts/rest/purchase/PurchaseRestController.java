@@ -6,6 +6,7 @@
 package com.simpleaccounts.rest.purchase;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -55,24 +56,19 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping("/rest/purchase")
+@RequiredArgsConstructor
 public class PurchaseRestController {
 	private final Logger logger = LoggerFactory.getLogger(PurchaseRestController.class);
-	@Autowired
-	private PurchaseService purchaseService;
+	private final PurchaseService purchaseService;
 
-	@Autowired
-	private ProjectService projectService;
-	@Autowired
-	private UserService userServiceNew;
+	private final ProjectService projectService;
+	private final UserService userServiceNew;
 
-	@Autowired
-	private VatCategoryService vatCategoryService;
+	private final VatCategoryService vatCategoryService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
 	@Autowired
 	PurchaseRestControllerHelper purchaseControllerRestHelper;

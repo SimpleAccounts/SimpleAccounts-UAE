@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.CommonConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
@@ -38,12 +39,12 @@ import org.slf4j.LoggerFactory;
  * Created by mohsin on 3/3/2017.
  */
 @Repository(value = "contactDao")
+@RequiredArgsConstructor
 public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements ContactDao {
 	
 	private final Logger logger = LoggerFactory.getLogger(ContactDaoImpl.class);
 
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public List<DropdownModel> getContactForDropdown(Integer contactType) {

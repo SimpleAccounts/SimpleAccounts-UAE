@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.dbfilter.VatReportFilterEnum;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.Dao;
 
 import com.simpleaccounts.dao.VatReportsDao;
@@ -17,10 +18,10 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service("VatReportService")
+@RequiredArgsConstructor
 public class VatReportServiceImp extends VatReportService {
 
-    @Autowired
-    private VatReportsDao vatReportsDao;
+    private final VatReportsDao vatReportsDao;
 
     @Override
     protected Dao<Integer, VatReportFiling> getDao() {

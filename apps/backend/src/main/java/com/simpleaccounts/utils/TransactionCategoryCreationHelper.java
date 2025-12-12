@@ -1,6 +1,7 @@
 package com.simpleaccounts.utils;
 
 import com.simpleaccounts.constant.DefaultTypeConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -16,29 +17,23 @@ import java.util.Map;
 
 	@Component
 	@SuppressWarnings("java:S6809")
-	public class TransactionCategoryCreationHelper {
+	@RequiredArgsConstructor
+public class TransactionCategoryCreationHelper {
 	private static final String JSON_KEY_DESIGNATION = "designation";
 
-    @Autowired
-    private  TransactionCategoryService transactionCategoryService;
+    private final  TransactionCategoryService transactionCategoryService;
 
-    @Autowired
-    private  CoacTransactionCategoryService coacTransactionCategoryService;
+    private final  CoacTransactionCategoryService coacTransactionCategoryService;
 
-    @Autowired
-    private  ContactTransactionCategoryService contactTransactionCategoryService;
+    private final  ContactTransactionCategoryService contactTransactionCategoryService;
 
-    @Autowired
-    private  EmployeeTransactioncategoryService employeeTransactioncategoryService;
+    private final  EmployeeTransactioncategoryService employeeTransactioncategoryService;
 
-    @Autowired
-    private  ContactService contactService;
+    private final  ContactService contactService;
 
-    @Autowired
-    private  DesignationTransactionCategoryService designationTransactionCategoryService;
+    private final  DesignationTransactionCategoryService designationTransactionCategoryService;
 
-    @Autowired
-    private EmployeeDesignationService employeeDesignationService;
+    private final EmployeeDesignationService employeeDesignationService;
 
     @Transactional(rollbackFor = Exception.class)
     public void createTransactionCategoryForEmployee(Employee employee)

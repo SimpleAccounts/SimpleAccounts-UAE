@@ -6,6 +6,7 @@
 package com.simpleaccounts.helper;
 
 import com.simpleaccounts.constant.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
  * @author Uday
  */
 @Service
+@RequiredArgsConstructor
 public class TransactionHelper {
 
 	private static final String INVOICE_AMOUNT_LABEL = " ,Invoice Amount: ";
@@ -50,49 +52,34 @@ public class TransactionHelper {
 	private static final String CONTACT_NAME_SEPARATOR = " (";
 	private static final String CONTACT_NAME_SUFFIX = ")";
 
-	@Autowired
-	private DateFormatUtil dateUtil;
+	private final DateFormatUtil dateUtil;
 
-	@Autowired
-	private TransactionStatusService transactionStatusService;
+	private final TransactionStatusService transactionStatusService;
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private TransactionExpensesService transactionExpensesService;
+	private final TransactionExpensesService transactionExpensesService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private CreditNoteInvoiceRelationService creditNoteService;
+	private final CreditNoteInvoiceRelationService creditNoteService;
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final ExpenseService expenseService;
 
-	@Autowired
-	private TransactionExpensesPayrollService transactionExpensesPayrollService;
+	private final TransactionExpensesPayrollService transactionExpensesPayrollService;
 
-	@Autowired
-	private TransactionExplanationLineItemRepository transactionExplanationLineItemRepository;
+	private final TransactionExplanationLineItemRepository transactionExplanationLineItemRepository;
 
-	@Autowired
-	private PayrollRepository payrollRepository;
+	private final PayrollRepository payrollRepository;
 
-	@Autowired
-	private TransactionExplanationRepository transactionExplanationRepository;
+	private final TransactionExplanationRepository transactionExplanationRepository;
 
-	@Autowired
-	private VatPaymentRepository vatPaymentRepository;
+	private final VatPaymentRepository vatPaymentRepository;
 
-	@Autowired
-	private CorporateTaxPaymentRepository corporateTaxPaymentRepository;
-	@Autowired
-	private CreditNoteRepository creditNoteRepository;
+	private final CorporateTaxPaymentRepository corporateTaxPaymentRepository;
+	private final CreditNoteRepository creditNoteRepository;
 
 	public List<TransactionViewModel> getModelList(Object trasactionList) {
 

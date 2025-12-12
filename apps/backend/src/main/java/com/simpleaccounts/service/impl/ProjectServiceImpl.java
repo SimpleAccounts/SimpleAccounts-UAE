@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,10 @@ import java.math.BigDecimal;
  * Created by Utkarsh Bhavsar on 21/03/17.
  */
 @Service("projectService")
+@RequiredArgsConstructor
 public class ProjectServiceImpl extends ProjectService {
 
-    @Autowired
-    private ProjectDao projectDao;
+    private final ProjectDao projectDao;
 
     @Override
     @Transactional(readOnly = true)

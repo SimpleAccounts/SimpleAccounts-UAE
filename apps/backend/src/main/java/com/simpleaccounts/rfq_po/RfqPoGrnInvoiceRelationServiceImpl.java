@@ -1,6 +1,7 @@
 package com.simpleaccounts.rfq_po;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,9 +11,9 @@ import java.util.List;
 
 @Service("rfqPoGrnInvoiceRelationService")
 @Transactional
+@RequiredArgsConstructor
 public class RfqPoGrnInvoiceRelationServiceImpl extends RfqPoGrnInvoiceRelationService {
-    @Autowired
-    private RfqPoGrnInvoiceRelationDao rfqPoGrnInvoiceRelationDao;
+    private final RfqPoGrnInvoiceRelationDao rfqPoGrnInvoiceRelationDao;
     @Override
     protected Dao<Integer, RfqPoGrnRelation> getDao() {
         return this.rfqPoGrnInvoiceRelationDao;

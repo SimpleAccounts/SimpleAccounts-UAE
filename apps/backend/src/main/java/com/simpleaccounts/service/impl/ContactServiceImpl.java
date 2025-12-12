@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.EmailConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.ContactFilterEnum;
 import com.simpleaccounts.dao.ContactDao;
 import com.simpleaccounts.dao.Dao;
@@ -48,6 +49,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
  */
 @Service("contactService")
 @Transactional
+@RequiredArgsConstructor
 public class ContactServiceImpl extends ContactService {
     private static final String TEMPLATE_VAR_PAYMODE = "{paymode}";
     private static final String TEMPLATE_VAR_NUMBER = "{number}";
@@ -55,8 +57,7 @@ public class ContactServiceImpl extends ContactService {
     private final Logger logger = LoggerFactory.getLogger(ContactService.class);
     @Autowired
     ResourceLoader resourceLoader;
-    @Autowired
-    private ContactDao contactDao;
+    private final ContactDao contactDao;
     @Autowired
     UserService userService;
     @Autowired
@@ -64,8 +65,7 @@ public class ContactServiceImpl extends ContactService {
     @Autowired
     EmaiLogsService emaiLogsService;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
     @Override
     public List<DropdownModel> getContactForDropdown(Integer contactType) {
         return this.contactDao.getContactForDropdown(contactType);

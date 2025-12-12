@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,10 @@ import com.simpleaccounts.entity.State;
 import com.simpleaccounts.service.StateService;
 
 @Service
+@RequiredArgsConstructor
 public class StateServiceImpl extends StateService {
 
-	@Autowired
-	private StateDao stateDao;
+	private final StateDao stateDao;
 
 	@Override
 	protected Dao<Integer, State> getDao() {

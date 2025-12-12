@@ -1,6 +1,7 @@
 package com.simpleaccounts.utils;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -25,10 +26,10 @@ import com.simpleaccounts.model.DashboardInvoiceDataModel;
 import com.simpleaccounts.service.report.model.BankAccountTransactionReportModel;
 
 @Component
+@RequiredArgsConstructor
 public class ChartUtil {
 
-	@Autowired
-	private DateFormatUtil dateFormatUtil;
+	private final DateFormatUtil dateFormatUtil;
 
 	public Map<Object, Number> getCashMap(List<Object[]> rows, Integer count) {
 		Map<Object, Number> cashMap = new LinkedHashMap<>(0);

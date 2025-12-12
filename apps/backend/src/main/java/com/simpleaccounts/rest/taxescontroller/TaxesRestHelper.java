@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.taxescontroller;
 
 import com.simpleaccounts.entity.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.service.ExpenseService;
 import com.simpleaccounts.service.InvoiceService;
@@ -21,27 +22,21 @@ import java.util.ArrayList;
 import java.util.List;
 	@Service
 	@SuppressWarnings("java:S115")
-	public class TaxesRestHelper {
+	@RequiredArgsConstructor
+public class TaxesRestHelper {
     private static final String DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY = "dd/MM/yyyy";
 
-    @Autowired
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
 
-    @Autowired
-    private ExpenseService expenseService;
+    private final ExpenseService expenseService;
 
-    @Autowired
-    private PaymentService paymentService;
+    private final PaymentService paymentService;
 
-    @Autowired
-    private ReceiptService receiptService;
+    private final ReceiptService receiptService;
 
-    @Autowired
-    private TransactionService transactionService;
-    @Autowired
-    private DateUtils dateUtils;
-    @Autowired
-    private DateFormatUtil dateFormtUtil;
+    private final TransactionService transactionService;
+    private final DateUtils dateUtils;
+    private final DateFormatUtil dateFormtUtil;
 
     public  List<VatListModel> getListModel(Object vatTransation) {
         List<VatListModel> vatListModels = new ArrayList<>();

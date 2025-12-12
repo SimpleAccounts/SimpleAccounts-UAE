@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.InventoryFilterEnum;
@@ -26,10 +27,10 @@ import java.util.Map;
  */
 
 @Repository
+@RequiredArgsConstructor
 public class InventoryDaoImpl extends AbstractDao<Integer, Inventory> implements InventoryDao {
 
-    @Autowired
-    private DatatableSortingFilterConstant dataTableUtil;
+    private final DatatableSortingFilterConstant dataTableUtil;
 
     @Override
     public PaginationResponseModel getInventoryList(Map<InventoryFilterEnum, Object> filterMap,

@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.entity.CustomizeInvoiceTemplate;
 
@@ -22,11 +23,11 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping(value = "/rest/customizeinvoiceprefixsuffix")
+@RequiredArgsConstructor
 public class CustomizeInvoiceTemplateController {
     private final Logger logger = LoggerFactory.getLogger(CustomizeInvoiceTemplateController.class);
 
-    @Autowired
-    private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+    private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
     @LogRequest
     @ApiOperation(value = "Get Invoice Prefix List")

@@ -29,6 +29,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,35 +55,27 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @Slf4j
 @RestController
 @RequestMapping("/rest/expense")
+@RequiredArgsConstructor
 public class ExpenseRestController extends AbstractDoubleEntryRestController {
 	private final Logger logger = LoggerFactory.getLogger(ExpenseRestController.class);
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final ExpenseService expenseService;
 
-	@Autowired
-	private ExpenseRestHelper expenseRestHelper;
+	private final ExpenseRestHelper expenseRestHelper;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private TransactionCategoryService expenseTransactionCategoryService;
+	private final TransactionCategoryService expenseTransactionCategoryService;
 
-	@Autowired
-	private CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
-	@Autowired
-	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+	private final TransactionCategoryBalanceService transactionCategoryBalanceService;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private FileAttachmentService fileAttachmentService;
+	private final FileAttachmentService fileAttachmentService;
 
-    @Autowired
-	private InvoiceRestHelper invoiceRestHelper;
+    private final InvoiceRestHelper invoiceRestHelper;
 	@LogRequest
 	@ApiOperation(value = "Get Expense List")
 	@GetMapping(value = "/getList")

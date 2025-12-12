@@ -6,6 +6,7 @@
 package com.simpleaccounts.rest.contactcontroller;
 
 import com.simpleaccounts.entity.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.service.*;
 
@@ -21,7 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 	@Component
 	@SuppressWarnings("java:S6809")
-	public class ContactHelper {
+	@RequiredArgsConstructor
+public class ContactHelper {
 
 	@Autowired
 	ContactService contactService;
@@ -32,17 +34,13 @@ import org.springframework.transaction.annotation.Transactional;
 	@Autowired
 	CurrencyService currencyService;
 
-	@Autowired
-	private StateService stateService;
+	private final StateService stateService;
 
-	@Autowired
-	private TaxTreatmentService taxTreatmentService;
+	private final TaxTreatmentService taxTreatmentService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private ContactTransactionCategoryService contactTransactionCategoryService;
+	private final ContactTransactionCategoryService contactTransactionCategoryService;
 
 	public ContactListModel getModel(Contact contact) {
 		return ContactListModel.builder().id(contact.getContactId()).contactType(contact.getContactType())

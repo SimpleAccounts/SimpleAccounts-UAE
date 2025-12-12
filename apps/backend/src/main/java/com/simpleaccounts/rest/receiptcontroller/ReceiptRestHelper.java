@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.receiptcontroller;
 
 import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -29,6 +30,7 @@ import com.simpleaccounts.rest.invoicecontroller.InvoiceDueAmountModel;
 import com.simpleaccounts.utils.FileHelper;
 
 @Component
+@RequiredArgsConstructor
 public class ReceiptRestHelper {
 	private static final String JSON_KEY_DELETE_FLAG = "deleteFlag";
 	private static final String JSON_KEY_CONTACT = "contact";
@@ -36,32 +38,23 @@ public class ReceiptRestHelper {
 	
 	private final Logger logger = LoggerFactory.getLogger(ReceiptRestHelper.class);
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
 
-	@Autowired
-	private ReceiptService receiptService;
+	private final ReceiptService receiptService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private FileHelper fileHelper;
+	private final FileHelper fileHelper;
 
-	@Autowired
-	private JournalLineItemService journalLineItemService;
+	private final JournalLineItemService journalLineItemService;
 
-	@Autowired
-	private CustomerInvoiceReceiptService customerInvoiceReceiptService;
+	private final CustomerInvoiceReceiptService customerInvoiceReceiptService;
 
-	@Autowired
-	private PaymentService paymentService;
+	private final PaymentService paymentService;
 
-	@Autowired
-	private  ContactTransactionCategoryService contactTransactionCategoryService;
+	private final  ContactTransactionCategoryService contactTransactionCategoryService;
 
 	public List<ReceiptModel> getListModel(Object receipts) {
 		List<ReceiptModel> receiptModelList = new ArrayList<ReceiptModel>();

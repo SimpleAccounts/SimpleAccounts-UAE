@@ -6,6 +6,7 @@
 package com.simpleaccounts.rest.transactioncategorycontroller;
 
 import java.util.*;
+import lombok.RequiredArgsConstructor;
 import java.util.stream.Collectors;
 
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
@@ -31,37 +32,28 @@ import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
  * @author daynil
  */
 @Service
+@RequiredArgsConstructor
 public class TranscationCategoryHelper {
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private VatCategoryService vatCategoryService;
+	private final VatCategoryService vatCategoryService;
 
-	@Autowired
-	private ChartOfAccountService transactionTypeService;
+	private final ChartOfAccountService transactionTypeService;
 
-	@Autowired
-	private EmployeeTransactioncategoryService employeeTransactioncategoryService;
+	private final EmployeeTransactioncategoryService employeeTransactioncategoryService;
 
-	@Autowired
-	private EmployeeService employeeService;
+	private final EmployeeService employeeService;
 
-	@Autowired
-	private JournalLineItemService journalLineItemService;
+	private final JournalLineItemService journalLineItemService;
 
-	@Autowired
-	private JournalLineItemRepository journalLineItemRepository;
+	private final JournalLineItemRepository journalLineItemRepository;
 
-	@Autowired
-	private InvoiceLineitemRepository invoiceLineitemRepository;
+	private final InvoiceLineitemRepository invoiceLineitemRepository;
 
-	@Autowired
-	private ExpenseRepository expenseRepository;
+	private final ExpenseRepository expenseRepository;
 
-	@Autowired
-	private ProductLineItemRepository productLineItemRepository;
+	private final ProductLineItemRepository productLineItemRepository;
 
 	public TransactionCategory getEntity(TransactionCategoryBean transactionCategoryBean) {
 		TransactionCategory transactionCategory = new TransactionCategory();

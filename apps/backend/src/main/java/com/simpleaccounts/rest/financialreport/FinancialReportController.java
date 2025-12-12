@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.financialreport;
 
 import java.util.EnumMap;
+import lombok.RequiredArgsConstructor;
 import java.util.Map;
 
 import com.simpleaccounts.aop.LogRequest;
@@ -29,18 +30,16 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping("/rest/financialReport")
+@RequiredArgsConstructor
 public class FinancialReportController {
 
 	private final Logger logger = LoggerFactory.getLogger(FinancialReportController.class);
 
-	@Autowired
-	private FinancialReportRestHelper financialReportRestHelper;
+	private final FinancialReportRestHelper financialReportRestHelper;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
 	@LogRequest
 	@ApiOperation(value = "Get Profit and Loss Report")

@@ -1,6 +1,7 @@
 package com.simpleaccounts.rfq_po;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.dao.MailThemeTemplates;
@@ -40,6 +41,7 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 
 @Component
+@RequiredArgsConstructor
 public class PoQuatationRestHelper {
     private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
     final Logger logger = LoggerFactory.getLogger(PoQuatationRestHelper.class);
@@ -52,33 +54,24 @@ public class PoQuatationRestHelper {
     private static final String ERROR_BILLING_ADDRESS_NOT_PRESENT = "BILLING ADDRESS NOT PRESENT";
     @PersistenceContext
     private EntityManager entityManager;
-    @Autowired
-    private DateFormatUtil dateFormtUtil;
+    private final DateFormatUtil dateFormtUtil;
     @Autowired
     ResourceLoader resourceLoader;
-    @Autowired
-    private ContactService contactService;
+    private final ContactService contactService;
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private VatCategoryService vatCategoryService;
+    private final VatCategoryService vatCategoryService;
 
-    @Autowired
-    private PoQuatationLineItemService poQuatationLineItemService;
+    private final PoQuatationLineItemService poQuatationLineItemService;
 
-    @Autowired
-    private MailUtility mailUtility;
+    private final MailUtility mailUtility;
 
-    @Autowired
-    private ConfigurationService configurationService;
+    private final ConfigurationService configurationService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-   private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+    private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
     @Autowired
     InvoiceNumberUtil invoiceNumberUtil;
@@ -86,29 +79,21 @@ public class PoQuatationRestHelper {
     @Autowired
     PoQuatationService poQuatationService;
 
-    @Autowired
-    private CurrencyExchangeService currencyExchangeService;
+    private final CurrencyExchangeService currencyExchangeService;
 
-    @Autowired
-    private PlaceOfSupplyService placeOfSupplyService;
+    private final PlaceOfSupplyService placeOfSupplyService;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
 
-    @Autowired
-    private RfqPoGrnInvoiceRelationDao rfqPoGrnInvoiceRelationDao;
+    private final RfqPoGrnInvoiceRelationDao rfqPoGrnInvoiceRelationDao;
 
-    @Autowired
-    private CurrencyService currencyService;
+    private final CurrencyService currencyService;
 
-    @Autowired
-    private ExciseTaxService exciseTaxService;
+    private final ExciseTaxService exciseTaxService;
 
-    @Autowired
-    private EmaiLogsService emaiLogsService;
+    private final EmaiLogsService emaiLogsService;
 
-    @Autowired
-    private UnitTypesRepository unitTypesRepository;
+    private final UnitTypesRepository unitTypesRepository;
     @Transactional(rollbackFor = Exception.class)
     public PoQuatation getRfqEntity(PoQuatationRequestModel requestModel, Integer userId) {
         PoQuatation poQuatation = new PoQuatation();

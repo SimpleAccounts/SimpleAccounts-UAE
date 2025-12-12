@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl.bankaccount;
 
 import java.util.*;
+import lombok.RequiredArgsConstructor;
 import java.util.stream.Collectors;
 
 import javax.persistence.TypedQuery;
@@ -26,18 +27,16 @@ import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 
 @Repository(value = "transactionCategoryDao")
+@RequiredArgsConstructor
 public class TransactionCategoryDaoImpl extends AbstractDao<Integer, TransactionCategory>
 		implements TransactionCategoryDao {
 
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
-	@Autowired
-	private ChartOfAccountService chartOfAccountService;
+	private final ChartOfAccountService chartOfAccountService;
 
 	@Lazy
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 	@Override
 	public TransactionCategory getDefaultTransactionCategory() {
 		List<TransactionCategory> transactionCategories = findAllTransactionCategory();

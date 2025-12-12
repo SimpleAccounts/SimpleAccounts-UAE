@@ -24,6 +24,7 @@ import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.Customize
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.*;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,15 +50,12 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class InvoiceRestHelper {
-	@Autowired
-	private PaymentRepository paymentRepository;
-	@Autowired
-	private CurrencyConversionRepository currencyConversionRepository;
-	@Autowired
-	private ReceiptRepository receiptRepository;
-	@Autowired
-	private CreditNoteRepository creditNoteRepository;
+	private final PaymentRepository paymentRepository;
+	private final CurrencyConversionRepository currencyConversionRepository;
+	private final ReceiptRepository receiptRepository;
+	private final CreditNoteRepository creditNoteRepository;
 	private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
 	private static final String ERROR_PROCESSING_INVOICE = "Error processing invoice";
@@ -85,41 +83,29 @@ public class InvoiceRestHelper {
 	@Autowired
 	InvoiceLineItemService invoiceLineItemService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private FileHelper fileHelper;
+	private final FileHelper fileHelper;
 
-	@Autowired
-	private MailUtility mailUtility;
+	private final MailUtility mailUtility;
 
-	@Autowired
-	private EmaiLogsService emaiLogsService;
+	private final EmaiLogsService emaiLogsService;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private DateUtils dateUtils;
+	private final DateUtils dateUtils;
 
-	@Autowired
-	private ProductService productService;
+	private final ProductService productService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private DateFormatUtil dateFormtUtil;
+	private final DateFormatUtil dateFormtUtil;
 
-	@Autowired
-	private CurrencyExchangeService currencyExchangeService;
+	private final CurrencyExchangeService currencyExchangeService;
 
-	@Autowired
-	private PlaceOfSupplyService placeOfSupplyService;
+	private final PlaceOfSupplyService placeOfSupplyService;
 
-	@Autowired
-	private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+	private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
 	@Autowired
 	InvoiceNumberUtil invoiceNumberUtil;
@@ -133,30 +119,22 @@ public class InvoiceRestHelper {
 	@Autowired
 	ProductLineItemService productLineItemService;
 
-	@Autowired
-	private CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
+	private final CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
 
-	@Autowired
-	private ExciseTaxService exciseTaxService;
+	private final ExciseTaxService exciseTaxService;
 
 	private int size;
 
-	@Autowired
-	private  CompanyService companyService;
+	private final  CompanyService companyService;
 
-	@Autowired
-	private  CountryService countryService;
+	private final  CountryService countryService;
 
-	@Autowired
-	private StateService stateService;
-	@Autowired
-	private UnitTypesRepository unitTypesRepository;
+	private final StateService stateService;
+	private final UnitTypesRepository unitTypesRepository;
 
-	@Autowired
-	private  ContactTransactionCategoryService contactTransactionCategoryService;
+	private final  ContactTransactionCategoryService contactTransactionCategoryService;
 
-	@Autowired
-	private DateFormatHelper dateFormatHelper;
+	private final DateFormatHelper dateFormatHelper;
 
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();

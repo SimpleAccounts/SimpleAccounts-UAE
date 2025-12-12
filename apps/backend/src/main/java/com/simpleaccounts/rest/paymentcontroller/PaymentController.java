@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.paymentcontroller;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -51,58 +52,42 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/payment")
+@RequiredArgsConstructor
 public class PaymentController {
 
 	private final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private DateFormatUtil dateFormtUtil;
+	private final DateFormatUtil dateFormtUtil;
 
-	@Autowired
-	private PaymentService paymentService;
+	private final PaymentService paymentService;
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
 
-	@Autowired
-	private PaymentRestHelper paymentRestHelper;
+	private final PaymentRestHelper paymentRestHelper;
 
-	@Autowired
-	private UserService userServiceNew;
+	private final UserService userServiceNew;
 
-	@Autowired
-	private SupplierInvoicePaymentService supplierInvoicePaymentService;
+	private final SupplierInvoicePaymentService supplierInvoicePaymentService;
 
-	@Autowired
-	private JournalService journalService;
+	private final JournalService journalService;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
-	@Autowired
-	private ChartOfAccountCategoryService chartOfAccountCategoryService;
+	private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
-	@Autowired
-	private TransactionService transactionService;
+	private final TransactionService transactionService;
 
-	@Autowired
-	private TransactionStatusService transactionStatusService;
+	private final TransactionStatusService transactionStatusService;
 
-	@Autowired
-	private CreditNoteRepository creditNoteRepository;
+	private final CreditNoteRepository creditNoteRepository;
 
-	@Autowired
+	private final PaymentDebitNoteRelationRepository paymentDebitNoteRelationRepository;
 
-	private PaymentDebitNoteRelationRepository paymentDebitNoteRelationRepository;
-
-	@Autowired
-	private TransactionExplanationRepository transactionExplanationRepository;
+	private final TransactionExplanationRepository transactionExplanationRepository;
 
 
 	@LogRequest

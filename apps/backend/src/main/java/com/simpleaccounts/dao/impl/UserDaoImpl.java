@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.dao.AbstractDao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.UserDao;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +26,10 @@ import javax.persistence.TypedQuery;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository(value = "userDao")
+@RequiredArgsConstructor
 public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
 
-	@Autowired
-	private DatatableSortingFilterConstant dataTableUtil;
+	private final DatatableSortingFilterConstant dataTableUtil;
 
 	public Optional<User> getUserByEmail(String emailAddress) {
 		Query query = this.getEntityManager().createQuery("SELECT u FROM User AS u WHERE u.userEmail =:email AND u.isActive=true AND u.deleteFlag=false");

@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.creditnotecontroller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.entity.*;
@@ -55,10 +56,10 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.RE
 
 	@Service
 	@SuppressWarnings({"java:S131", "java:S115", "java:S6809"})
-	public class CreditNoteRestHelper {
+	@RequiredArgsConstructor
+public class CreditNoteRestHelper {
     private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
-    @Autowired
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
 
     private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
     private static final String DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY = "dd/MM/yyyy";
@@ -70,15 +71,11 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.RE
     private static final String TRANSACTION_DESCRIPTION_MANUAL_CREDIT_NOTE = "Manual Transaction Created Against CreditNote No ";
     private static final String TEMPLATE_PLACEHOLDER_PAYMODE = "{paymode}";
     private static final String TEMPLATE_PLACEHOLDER_NUMBER = "{number}";
-    @Autowired
-    private InvoiceLineItemService invoiceLineItemService;
-    @Autowired
-    private DateFormatHelper dateFormatHelper;
+    private final InvoiceLineItemService invoiceLineItemService;
+    private final DateFormatHelper dateFormatHelper;
 
-    @Autowired
-    private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
-    @Autowired
-    private InvoiceRestHelper invoiceRestHelper;
+    private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+    private final InvoiceRestHelper invoiceRestHelper;
 
     @Autowired
     InvoiceNumberUtil invoiceNumberUtil;
@@ -86,80 +83,56 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.RE
     @Autowired
     ContactService contactService;
 
-    @Autowired
-    private DateFormatUtil dateFormtUtil;
+    private final DateFormatUtil dateFormtUtil;
 
     @Autowired
     VatCategoryService vatCategoryService;
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
 
-    @Autowired
-    private InventoryService inventoryService;
+    private final InventoryService inventoryService;
 
-    @Autowired
-    private InventoryHistoryService inventoryHistoryService;
+    private final InventoryHistoryService inventoryHistoryService;
 
-    @Autowired
-    private DateUtils dateUtils;
+    private final DateUtils dateUtils;
 
-    @Autowired
-    private JournalLineItemService journalLineItemService;
+    private final JournalLineItemService journalLineItemService;
 
-    @Autowired
-    private ReceiptService receiptService;
+    private final ReceiptService receiptService;
 
-    @Autowired
-    private CurrencyService currencyService;
+    private final CurrencyService currencyService;
 
-    @Autowired
-    private PlaceOfSupplyService placeOfSupplyService;
+    private final PlaceOfSupplyService placeOfSupplyService;
 
-    @Autowired
-    private ExciseTaxService exciseTaxService;
+    private final ExciseTaxService exciseTaxService;
 
-    @Autowired
-    private CreditNoteRepository creditNoteRepository;
+    private final CreditNoteRepository creditNoteRepository;
 
-    @Autowired
-    private CreditNoteLineItemRepository creditNoteLineItemRepository;
+    private final CreditNoteLineItemRepository creditNoteLineItemRepository;
 
-    @Autowired
-    private BankAccountService bankAccountService;
+    private final BankAccountService bankAccountService;
 
-    @Autowired
-    private TransactionService transactionService;
+    private final TransactionService transactionService;
 
-    @Autowired
-    private ChartOfAccountCategoryService chartOfAccountCategoryService;
+    private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
-    @Autowired
-    private JournalService journalService;
+    private final JournalService journalService;
 
-    @Autowired
-    private CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
+    private final CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
 
-    @Autowired
-    private UnitTypesRepository unitTypesRepository;
+    private final UnitTypesRepository unitTypesRepository;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
+    private final DateFormatUtil dateFormatUtil;
 
-    @Autowired
-    private JournalLineItemRepository journalLineItemRepository;
+    private final JournalLineItemRepository journalLineItemRepository;
 
-    @Autowired
-    private TransactionExplanationRepository transactionExplanationRepository;
+    private final TransactionExplanationRepository transactionExplanationRepository;
 
-    @Autowired
-    private ContactTransactionCategoryService contactTransactionCategoryService;
+    private final ContactTransactionCategoryService contactTransactionCategoryService;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @Autowired
     UserService userService;
@@ -172,14 +145,11 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.RE
 
     @Autowired
     EmaiLogsService emaiLogsService;
-    @Autowired
-    private TransactionExplinationLineItemRepository transactionExplinationLineItemRepository;
+    private final TransactionExplinationLineItemRepository transactionExplinationLineItemRepository;
 
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
-    @Autowired
-    private FileAttachmentService fileAttachmentService;
+    private final FileAttachmentService fileAttachmentService;
 
     public CreditNote getEntity(CreditNoteRequestModel creditNoteRequestModel, Integer userId) {
         CreditNote creditNote = null;

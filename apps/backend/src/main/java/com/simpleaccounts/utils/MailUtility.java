@@ -1,6 +1,7 @@
 package com.simpleaccounts.utils;
 
 //import com.itextpdf.html2pdf.HtmlConverter;
+import lombok.RequiredArgsConstructor;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.simpleaccounts.entity.Configuration;
 import com.simpleaccounts.entity.Mail;
@@ -33,17 +34,15 @@ import org.springframework.web.multipart.MultipartFile;
  * @author h
  */
 @Component
+@RequiredArgsConstructor
 public class MailUtility {
 	private final static Logger LOGGER = LoggerFactory.getLogger(MailUtility.class);
 
-	@Autowired
-	private MailIntegration MailIntegration;
+	private final MailIntegration MailIntegration;
 
-	@Autowired
-	private ConfigurationService configurationService;
+	private final ConfigurationService configurationService;
 
-	@Autowired
-	private Environment env;
+	private final Environment env;
 
 	public static final String INVOICE_REFEREBCE_NO = "Invoice_Reference_Number";
 	public static final String CN_REFERENCE_NO = "cn_referene_no";

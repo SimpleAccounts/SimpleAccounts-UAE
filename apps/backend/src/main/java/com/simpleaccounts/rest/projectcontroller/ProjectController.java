@@ -6,6 +6,7 @@
 package com.simpleaccounts.rest.projectcontroller;
 
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,18 +48,16 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping(value = "/rest/project")
+@RequiredArgsConstructor
 public class ProjectController{
 
 	private  final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
-	@Autowired
-	private  ProjectService projectService;
+	private final  ProjectService projectService;
 
-	@Autowired
-	private  ProjectRestHelper projectRestHelper;
+	private final  ProjectRestHelper projectRestHelper;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
 	@LogRequest
 	@ApiOperation(value = "Get Project By ID")

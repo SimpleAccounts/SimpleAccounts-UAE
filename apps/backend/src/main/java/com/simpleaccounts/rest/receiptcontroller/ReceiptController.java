@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.receiptcontroller;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 
@@ -56,59 +57,43 @@ import io.swagger.annotations.ApiOperation;
 	@RestController
 	@RequestMapping("/rest/receipt")
 	@SuppressWarnings("java:S3973")
-	public class ReceiptController {
+	@RequiredArgsConstructor
+public class ReceiptController {
 
 	private final Logger logger = LoggerFactory.getLogger(ReceiptController.class);
 
-	@Autowired
-	private DateFormatUtil dateFormtUtil;
-	@Autowired
-	private ReceiptService receiptService;
+	private final DateFormatUtil dateFormtUtil;
+	private final ReceiptService receiptService;
 
-	@Autowired
-	private ReceiptRestHelper receiptRestHelper;
+	private final ReceiptRestHelper receiptRestHelper;
 
-	@Autowired
-	private ContactService contactService;
+	private final ContactService contactService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private CustomerInvoiceReceiptService customerInvoiceReceiptService;
+	private final CustomerInvoiceReceiptService customerInvoiceReceiptService;
 
-	@Autowired
-	private JournalService journalService;
+	private final JournalService journalService;
 
-	@Autowired
-	private FileHelper fileHelper;
+	private final FileHelper fileHelper;
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
-	@Autowired
-	private TransactionService transactionService;
+	private final TransactionService transactionService;
 
-	@Autowired
-	private TransactionStatusService transactionStatusService;
+	private final TransactionStatusService transactionStatusService;
 
-	@Autowired
-	private ChartOfAccountCategoryService chartOfAccountCategoryService;
+	private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
-	@Autowired
-	private CreditNoteRepository creditNoteRepository;
+	private final CreditNoteRepository creditNoteRepository;
 
-	@Autowired
-	private ReceiptCreditNoteRelationRepository receiptCreditNoteRelationRepository;
+	private final ReceiptCreditNoteRelationRepository receiptCreditNoteRelationRepository;
 
-	@Autowired
-	private TransactionExplanationRepository transactionExplanationRepository;
+	private final TransactionExplanationRepository transactionExplanationRepository;
 
 	@LogRequest
 	@ApiOperation(value = "Get receipt List")

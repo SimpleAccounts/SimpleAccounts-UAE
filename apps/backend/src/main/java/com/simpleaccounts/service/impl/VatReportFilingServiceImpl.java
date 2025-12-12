@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.Transaction;
@@ -36,73 +37,52 @@ import java.util.stream.Collectors;
 
 	@Service
 	@SuppressWarnings("java:S3973")
-	public class VatReportFilingServiceImpl implements VatReportFilingService {
+	@RequiredArgsConstructor
+public class VatReportFilingServiceImpl implements VatReportFilingService {
     private static final String DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY = "dd/MM/yyyy";
-    @Autowired
-    private DateFormatUtil dateUtils;
-    @Autowired
-    private DateFormatHelper dateFormatHelper;
+    private final DateFormatUtil dateUtils;
+    private final DateFormatHelper dateFormatHelper;
 
-    @Autowired
-    private VatReportFilingRepository vatReportFilingRepository;
+    private final VatReportFilingRepository vatReportFilingRepository;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
+    private final DateFormatUtil dateFormatUtil;
 
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
-    @Autowired
-    private VatTaxAgencyRepository vatTaxAgencyRepository;
+    private final VatTaxAgencyRepository vatTaxAgencyRepository;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
 
-    @Autowired
-    private JournalLineItemService journalLineItemService;
+    private final JournalLineItemService journalLineItemService;
 
-    @Autowired
-    private JournalService journalService;
+    private final JournalService journalService;
 
-    @Autowired
-    private FileHelper fileHelper;
+    private final FileHelper fileHelper;
 
-    @Autowired
-    private VatPaymentRepository vatPaymentRepository;
+    private final VatPaymentRepository vatPaymentRepository;
 
 
-    @Autowired
-    private BankAccountService bankAccountService;
+    private final BankAccountService bankAccountService;
 
-    @Autowired
-    private TransactionService transactionService;
+    private final TransactionService transactionService;
 
-    @Autowired
-    private ChartOfAccountCategoryService chartOfAccountCategoryService;
+    private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
-    @Autowired
-    private VatRecordPaymentHistoryRepository vatRecordPaymentHistoryRepository;
+    private final VatRecordPaymentHistoryRepository vatRecordPaymentHistoryRepository;
 
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private InvoiceService invoiceService;
-    @Autowired
-    private ExpenseService expenseService;
+    private final InvoiceService invoiceService;
+    private final ExpenseService expenseService;
 
-    @Autowired
-    private JournalLineItemRepository journalLineItemRepository;
+    private final JournalLineItemRepository journalLineItemRepository;
 
-    @Autowired
-    private TransactionExplanationRepository transactionExplanationRepository;
+    private final TransactionExplanationRepository transactionExplanationRepository;
 
-    @Autowired
-    private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+    private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
-    @Autowired
-    private InvoiceNumberUtil invoiceNumberUtil;
+    private final InvoiceNumberUtil invoiceNumberUtil;
     @Override
     public boolean processVatReport(VatReportFilingRequestModel vatReportFilingRequestModel, User user){
         VatReportFiling vatReportFiling = new VatReportFiling();

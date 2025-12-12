@@ -1,6 +1,7 @@
 package com.simpleaccounts.security;
 
 import java.io.Serializable;
+import lombok.RequiredArgsConstructor;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 @SuppressWarnings("java:S1948")
+@RequiredArgsConstructor
 public class JwtTokenUtil implements Serializable {
 
 	private static final long serialVersionUID = -2550185165626007488L;
@@ -33,8 +35,7 @@ public class JwtTokenUtil implements Serializable {
 	@Value("${jwt.secret}")
 	private transient String secret;
 
-	@Autowired
-	private transient UserService userServiceNew;
+	private final transient UserService userServiceNew;
 
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);

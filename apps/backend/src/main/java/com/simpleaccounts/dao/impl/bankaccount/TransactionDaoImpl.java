@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl.bankaccount;
 
 import com.simpleaccounts.constant.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.TransactionFilterEnum;
 import com.simpleaccounts.model.TransactionReportRestModel;
@@ -34,11 +35,11 @@ import java.util.Map;
 import javax.persistence.TypedQuery;
 
 @Repository
+@RequiredArgsConstructor
 public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implements TransactionDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TransactionDaoImpl.class);
-	@Autowired
-	private DateUtils dateUtils;
+	private final DateUtils dateUtils;
 
 	@Override
 	public Transaction updateOrCreateTransaction(Transaction transaction) {

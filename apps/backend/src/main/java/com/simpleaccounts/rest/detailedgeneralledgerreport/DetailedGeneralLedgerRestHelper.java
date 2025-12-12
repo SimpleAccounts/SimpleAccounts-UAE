@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.detailedgeneralledgerreport;
 
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -27,41 +28,33 @@ import org.slf4j.LoggerFactory;
 
 	@Component
 	@SuppressWarnings({"java:S3973", "java:S131"})
-	public class DetailedGeneralLedgerRestHelper {
+	@RequiredArgsConstructor
+public class DetailedGeneralLedgerRestHelper {
 
 	private static final Logger logger = LoggerFactory.getLogger(DetailedGeneralLedgerRestHelper.class);
 
-	@Autowired
-	private JournalLineItemService journalLineItemService;
+	private final JournalLineItemService journalLineItemService;
 
-	@Autowired
-	private TransactionService transactionalService;
+	private final TransactionService transactionalService;
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
-	@Autowired
-	private ExpenseService expenseService;
+	private final ExpenseService expenseService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	private PaymentService paymentService;
+	private final PaymentService paymentService;
 
-	@Autowired
-	private ReceiptService receiptService;
+	private final ReceiptService receiptService;
 
-	@Autowired
-	private DateFormatUtil dateUtil;
+	private final DateFormatUtil dateUtil;
 	@Autowired
 	TransactionCategoryService transactionCategoryService;
 
 	@Autowired
 	PayrollRepository payrollRepository;
 
-	@Autowired
-	private CreditNoteRepository creditNoteRepository;
+	private final CreditNoteRepository creditNoteRepository;
 
 	@Autowired
 	TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;

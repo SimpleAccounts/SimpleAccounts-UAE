@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.EmailConstant;
 import com.simpleaccounts.constant.dbfilter.EmployeeFilterEnum;
 import com.simpleaccounts.dao.Dao;
@@ -48,22 +49,18 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TH
  */
 @Service("employeeService")
 @Transactional
+@RequiredArgsConstructor
 public class EmployeeServiceImpl extends EmployeeService {
 
     private final Logger logger = LoggerFactory.getLogger(ContactService.class);
 
-    @Autowired
-    private EmployeeDao employeeDao;
-    @Autowired
-    private EmployeeRepository employeeRepository;
-    @Autowired
-    private EmployeeSalaryComponentRelationRepository EmpSalaryCompRelRepository;
+    private final EmployeeDao employeeDao;
+    private final EmployeeRepository employeeRepository;
+    private final EmployeeSalaryComponentRelationRepository EmpSalaryCompRelRepository;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
+    private final DateFormatUtil dateFormatUtil;
 
-    @Autowired
-    private EmploymentService employmentService;
+    private final EmploymentService employmentService;
 
     @Autowired
     ResourceLoader resourceLoader;
@@ -77,8 +74,7 @@ public class EmployeeServiceImpl extends EmployeeService {
     @Autowired
     UserService userService;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @Override
     public List<DropdownModel> getEmployeesForDropdown() {

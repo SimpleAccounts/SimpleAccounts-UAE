@@ -6,6 +6,7 @@
 package com.simpleaccounts.rest.transactionimportcontroller;
 
 import java.io.*;
+import lombok.RequiredArgsConstructor;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -63,37 +64,28 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping(value = "/rest/transactionimport")
+@RequiredArgsConstructor
 public class TransactionImportController{
 
 	private  final Logger logger = LoggerFactory.getLogger(TransactionImportController.class);
-	@Autowired
-	private CsvParser csvParser;
+	private final CsvParser csvParser;
 
-	@Autowired
-	private ExcelParser excelParser;
+	private final ExcelParser excelParser;
 
-	@Autowired
-	private FileHelper fileHelper;
+	private final FileHelper fileHelper;
 
-	@Autowired
-	private BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
-	@Autowired
-	private TransactionService transactionService;
+	private final TransactionService transactionService;
 
-	@Autowired
-	private UserService userServiceNew;
+	private final UserService userServiceNew;
 
-	@Autowired
-	private TransactionParsingSettingService transactionParsingSettingService;
-	@Autowired
-	private TransactionParsingSettingRestHelper transactionParsingSettingRestHelper;
+	private final TransactionParsingSettingService transactionParsingSettingService;
+	private final TransactionParsingSettingRestHelper transactionParsingSettingRestHelper;
 
-	@Autowired
-	private	TransactionImportRestHelper transactionImportRestHelper;
+	private final	TransactionImportRestHelper transactionImportRestHelper;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
 	@LogRequest
 	@ApiOperation(value = "Get Bank Account List")
