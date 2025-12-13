@@ -54,7 +54,7 @@ public class LoginRestController {
 		Map<String, Object> attribute = new HashMap<String, Object>();
 		attribute.put("userEmail", jwtRequest.getUsername());
 		List<User> userList = userService.findByAttributes(attribute);
-		if (userList == null || (userList != null && userList.isEmpty()))
+		if (userList == null || userList.isEmpty())
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		for(User user :userList) {
 
@@ -82,8 +82,8 @@ public class LoginRestController {
 		try{
 			SimpleAccountsMessage message= null;
 			List<User> userList = userJpaRepository.findUsersByForgotPasswordToken(resetPasswordModel.getToken());
-			if (userList == null || (userList != null && userList.isEmpty()) || (userList != null && !userList.isEmpty()
-					&& userList.get(0).getForgotPasswordTokenExpiryDate().isBefore(LocalDateTime.now())))
+			if (userList == null || userList.isEmpty() || 
+					userList.get(0).getForgotPasswordTokenExpiryDate().isBefore(LocalDateTime.now()))
 				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
 			User user = userList.get(0);
@@ -93,7 +93,7 @@ public class LoginRestController {
 			if (passwordHistoryList!=null){
 				for (PasswordHistory passwordHistory:passwordHistoryList){
 					boolean passwordExist = passwordEncoder.matches(resetPasswordModel.getPassword(), passwordHistory.getPassword());
-					if (passwordExist==true){
+					if (passwordExist){
 						message= null;
 						message = new SimpleAccountsMessage("",
 								MessageUtil.getMessage("resetPassword.AlreadyExist.msg.0090"), true);
