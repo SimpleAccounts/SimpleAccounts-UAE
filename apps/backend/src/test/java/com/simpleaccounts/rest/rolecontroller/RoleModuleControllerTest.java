@@ -231,9 +231,9 @@ class RoleModuleControllerTest {
     @DisplayName("Should return module list with modules")
     void getModuleListReturnsModulesWithData() throws Exception {
         List<SimpleAccountsModules> modules = Arrays.asList(
-            createModule(1, "Invoicing", "INV"),
-            createModule(2, "Banking", "BNK"),
-            createModule(3, "Payroll", "PAY")
+            createModule(1, "Invoicing"),
+            createModule(2, "Banking"),
+            createModule(3, "Payroll")
         );
         List<ModuleResponseModel> responseModels = new ArrayList<>();
 
@@ -269,7 +269,7 @@ class RoleModuleControllerTest {
         return user;
     }
 
-    private SimpleAccountsModules createModule(Integer id, String name, String code) {
+    private SimpleAccountsModules createModule(Integer id, String name) {
         SimpleAccountsModules module = new SimpleAccountsModules();
         module.setSimpleAccountsModuleId(id);
         module.setSimpleAccountsModuleName(name);
@@ -279,7 +279,7 @@ class RoleModuleControllerTest {
     private List<SimpleAccountsModules> createModuleList(int count) {
         List<SimpleAccountsModules> modules = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            modules.add(createModule(i + 1, "Module " + (i + 1), "MOD" + (i + 1)));
+            modules.add(createModule(i + 1, "Module " + (i + 1)));
         }
         return modules;
     }
@@ -291,7 +291,7 @@ class RoleModuleControllerTest {
         Role role = createRole(roleCode, "Role " + roleCode);
         relation.setRole(role);
 
-        SimpleAccountsModules module = createModule(moduleId, "Module " + moduleId, "MOD" + moduleId);
+        SimpleAccountsModules module = createModule(moduleId, "Module " + moduleId);
         relation.setSimpleAccountsModule(module);
 
         return relation;

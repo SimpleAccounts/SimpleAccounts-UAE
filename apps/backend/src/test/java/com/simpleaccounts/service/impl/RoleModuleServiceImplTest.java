@@ -45,9 +45,9 @@ class RoleModuleServiceImplTest {
     void getListOfSimpleAccountsModulesReturnsModulesList() {
         // Arrange
         List<SimpleAccountsModules> expectedModules = Arrays.asList(
-            createModule(1, "Invoicing", "INV"),
-            createModule(2, "Banking", "BNK"),
-            createModule(3, "Payroll", "PAY")
+            createModule(1, "Invoicing"),
+            createModule(2, "Banking"),
+            createModule(3, "Payroll")
         );
 
         when(roleModuleDao.getListOfSimpleAccountsModules())
@@ -155,8 +155,8 @@ class RoleModuleServiceImplTest {
     void getListOfSimpleAccountsModulesReturnsCorrectNames() {
         // Arrange
         List<SimpleAccountsModules> modules = Arrays.asList(
-            createModule(1, "Dashboard", "DSH"),
-            createModule(2, "Reports", "RPT")
+            createModule(1, "Dashboard"),
+            createModule(2, "Reports")
         );
 
         when(roleModuleDao.getListOfSimpleAccountsModules())
@@ -219,7 +219,7 @@ class RoleModuleServiceImplTest {
     void findByPKCallsDao() {
         // Arrange
         Integer moduleId = 1;
-        SimpleAccountsModules expectedModule = createModule(moduleId, "Test Module", "TST");
+        SimpleAccountsModules expectedModule = createModule(moduleId, "Test Module");
 
         when(roleModuleDao.findByPK(moduleId))
             .thenReturn(expectedModule);
@@ -233,7 +233,7 @@ class RoleModuleServiceImplTest {
         verify(roleModuleDao).findByPK(moduleId);
     }
 
-    private SimpleAccountsModules createModule(Integer id, String name, String code) {
+    private SimpleAccountsModules createModule(Integer id, String name) {
         SimpleAccountsModules module = new SimpleAccountsModules();
         module.setSimpleAccountsModuleId(id);
         module.setSimpleAccountsModuleName(name);
@@ -248,7 +248,7 @@ class RoleModuleServiceImplTest {
         role.setRoleCode(roleCode);
         relation.setRole(role);
 
-        SimpleAccountsModules module = createModule(moduleId, "Module " + moduleId, "MOD" + moduleId);
+        SimpleAccountsModules module = createModule(moduleId, "Module " + moduleId);
         relation.setSimpleAccountsModule(module);
 
         return relation;

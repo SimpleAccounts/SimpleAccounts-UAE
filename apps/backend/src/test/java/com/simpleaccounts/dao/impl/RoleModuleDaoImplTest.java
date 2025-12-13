@@ -51,9 +51,9 @@ class RoleModuleDaoImplTest {
     void getListOfSimpleAccountsModulesReturnsList() {
         // Arrange
         List<SimpleAccountsModules> expectedModules = Arrays.asList(
-            createModule(1, "Invoicing", "INV"),
-            createModule(2, "Banking", "BNK"),
-            createModule(3, "Payroll", "PAY")
+            createModule(1, "Invoicing"),
+            createModule(2, "Banking"),
+            createModule(3, "Payroll")
         );
 
         when(entityManager.createNamedQuery("listOfSimpleAccountsModules", SimpleAccountsModules.class))
@@ -215,7 +215,7 @@ class RoleModuleDaoImplTest {
     void findByPKReturnsModule() {
         // Arrange
         Integer moduleId = 1;
-        SimpleAccountsModules expectedModule = createModule(moduleId, "Test Module", "TST");
+        SimpleAccountsModules expectedModule = createModule(moduleId, "Test Module");
 
         when(entityManager.find(SimpleAccountsModules.class, moduleId))
             .thenReturn(expectedModule);
@@ -291,8 +291,8 @@ class RoleModuleDaoImplTest {
     void getListOfSimpleAccountsModulesReturnsCorrectNames() {
         // Arrange
         List<SimpleAccountsModules> modules = Arrays.asList(
-            createModule(1, "Dashboard", "DSH"),
-            createModule(2, "Reports", "RPT")
+            createModule(1, "Dashboard"),
+            createModule(2, "Reports")
         );
 
         when(entityManager.createNamedQuery("listOfSimpleAccountsModules", SimpleAccountsModules.class))
@@ -312,7 +312,7 @@ class RoleModuleDaoImplTest {
     @DisplayName("Should persist new module")
     void persistModulePersistsEntity() {
         // Arrange
-        SimpleAccountsModules module = createModule(100, "New Module", "NEW");
+        SimpleAccountsModules module = createModule(100, "New Module");
 
         // Act
         roleModuleDao.getEntityManager().persist(module);
@@ -325,7 +325,7 @@ class RoleModuleDaoImplTest {
     @DisplayName("Should update existing module")
     void updateModuleMergesEntity() {
         // Arrange
-        SimpleAccountsModules module = createModule(1, "Updated Module", "UPD");
+        SimpleAccountsModules module = createModule(1, "Updated Module");
         when(entityManager.merge(module)).thenReturn(module);
 
         // Act
@@ -336,7 +336,7 @@ class RoleModuleDaoImplTest {
         assertThat(result).isNotNull();
     }
 
-    private SimpleAccountsModules createModule(Integer id, String name, String code) {
+    private SimpleAccountsModules createModule(Integer id, String name) {
         SimpleAccountsModules module = new SimpleAccountsModules();
         module.setSimpleAccountsModuleId(id);
         module.setSimpleAccountsModuleName(name);
@@ -351,7 +351,7 @@ class RoleModuleDaoImplTest {
         role.setRoleCode(roleCode);
         relation.setRole(role);
 
-        SimpleAccountsModules module = createModule(moduleId, "Module " + moduleId, "MOD" + moduleId);
+        SimpleAccountsModules module = createModule(moduleId, "Module " + moduleId);
         relation.setSimpleAccountsModule(module);
 
         return relation;
