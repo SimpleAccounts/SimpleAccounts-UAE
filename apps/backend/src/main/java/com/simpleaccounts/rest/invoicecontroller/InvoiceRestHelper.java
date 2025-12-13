@@ -320,9 +320,8 @@ public class InvoiceRestHelper {
 		return lineItems;
 	}
 
-	private void handleCustomerInvoiceInventory(InvoiceLineItem model,Product product,Integer userId) {
+	private void handleCustomerInvoiceInventory(InvoiceLineItem model) {
 		List<Inventory> inventoryList = inventoryService.getProductByProductId(model.getProduct().getProductID());
-		int qtyUpdate=0;
 		int remainingQty = model.getQuantity();
 		for(Inventory inventory : inventoryList)
 		{
@@ -331,7 +330,6 @@ public class InvoiceRestHelper {
 			if(stockOnHand > remainingQty )
 			{
 				stockOnHand = stockOnHand - remainingQty ;
-				qtyUpdate += remainingQty;
 				inventory.setQuantitySold(inventory.getQuantitySold()+remainingQty);
 				remainingQty -= remainingQty;
 				inventory.setStockOnHand(stockOnHand);
@@ -339,7 +337,6 @@ public class InvoiceRestHelper {
 			}
 			else
 			{
-				qtyUpdate += stockOnHand;
 				remainingQty -= stockOnHand;
 				inventory.setStockOnHand(0);
 				inventory.setQuantitySold(inventory.getQuantitySold()+stockOnHand);
@@ -1592,7 +1589,6 @@ public class InvoiceRestHelper {
 		return invoiceDataMap;
 	}
 	private void getTaxableAmount(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
-		int row=0;
 		if (invoice.getInvoiceLineItems() != null) {
 			BigDecimal taxableAmount=BigDecimal.ZERO;
 			for(InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()){
@@ -1605,7 +1601,6 @@ public class InvoiceRestHelper {
 		}
 	}
 	private void getTaxAmount(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
-		int row=0;
 		if (invoice.getInvoiceLineItems() != null) {
 			BigDecimal taxAmount=BigDecimal.ZERO;
 			for(InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()){
@@ -2921,13 +2916,12 @@ public class InvoiceRestHelper {
 		for (InvoiceLineItem lineItem : invoiceLineItemList) {
 
 			Product product=productService.findByPK(lineItem.getProduct().getProductID());
-				if(Boolean.TRUE.equals(product.getIsInventoryEnabled()))
-				{
-					if(lineItem.getInvoice().getType() ==2){
-						handleCustomerInvoiceInventory(lineItem,product,userId);
-				}
-				else {
-					handleSupplierInvoiceInventory(lineItem,product,lineItem.getInvoice().getContact(),userId);
+								if(Boolean.TRUE.equals(product.getIsInventoryEnabled()))
+								{
+									if(lineItem.getInvoice().getType() ==2){
+										handleCustomerInvoiceInventory(lineItem);
+									}
+									else {					handleSupplierInvoiceInventory(lineItem,product,lineItem.getInvoice().getContact(),userId);
 				}
 			}
 			if (isCustomerInvoice)

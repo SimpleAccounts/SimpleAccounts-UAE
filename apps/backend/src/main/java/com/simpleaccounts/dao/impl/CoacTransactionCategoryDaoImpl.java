@@ -1,6 +1,5 @@
 package com.simpleaccounts.dao.impl;
 
-
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.CoacTransactionCategoryDao;
 import com.simpleaccounts.entity.CoacTransactionCategory;

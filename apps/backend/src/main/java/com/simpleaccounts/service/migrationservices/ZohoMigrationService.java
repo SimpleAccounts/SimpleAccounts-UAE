@@ -260,8 +260,7 @@ public class ZohoMigrationService {
 								String setterMethod = column.getSetterMethod();
 								if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_CURRENCY)) {
 									Currency currency = migrationUtil.getCurrencyIdByValue(val);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, currency, TYPE_OBJECT);
-								} else if (setterMethod.equalsIgnoreCase("setCountry")) {
+									                                    migrationUtil.setRecordIntoEntity(entity, setterMethod, currency, TYPE_OBJECT);								} else if (setterMethod.equalsIgnoreCase("setCountry")) {
 									Integer value = migrationUtil.getCountryIdByValue(val);
 									Country country = countryService.findByPK(value);
 									migrationUtil.setRecordIntoEntity(entity, setterMethod, country, TYPE_OBJECT);

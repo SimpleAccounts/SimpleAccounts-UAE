@@ -1,6 +1,5 @@
 package com.simpleaccounts.service.impl;
 
-
 import com.simpleaccounts.dao.CountryDao;
 import com.simpleaccounts.entity.Country;
 import com.simpleaccounts.service.CountryService;
