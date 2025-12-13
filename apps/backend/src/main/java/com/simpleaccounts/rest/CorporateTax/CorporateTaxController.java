@@ -309,7 +309,7 @@ public class CorporateTaxController {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             PaginationResponseModel responseModel = new PaginationResponseModel();
-            List<CorporateTaxModel> response = corporateTaxService.getCorporateTaxList(responseModel,pageNo,pageSize,paginationDisable,order,sortingCol);
+            corporateTaxService.getCorporateTaxList(responseModel,pageNo,pageSize,paginationDisable,order,sortingCol);
             return new ResponseEntity<>(responseModel,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

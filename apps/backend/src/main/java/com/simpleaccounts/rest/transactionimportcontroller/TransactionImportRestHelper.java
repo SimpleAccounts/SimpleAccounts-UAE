@@ -114,7 +114,7 @@ public class TransactionImportRestHelper {
 		totalErrorRows = 0;
 		renderButtonOnValidData = true;
 		isDataRepeated = false;
-		Integer headerValue;
+		int headerValue;
 		getHeaderListData();
 		Set<String> setToReturn = new HashSet<>();
 		for (String name : headerTextData) {

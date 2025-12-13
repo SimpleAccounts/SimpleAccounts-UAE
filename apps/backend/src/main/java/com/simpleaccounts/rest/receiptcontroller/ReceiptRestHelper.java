@@ -257,6 +257,9 @@ public class ReceiptRestHelper {
 		param.put("referenceId", postingRequestModel.getPostingRefId());
 		param.put(JSON_KEY_DELETE_FLAG, false);
 		journalLineItemList = journalLineItemService.findByAttributes(param);
+		if (journalLineItemList == null) {
+			journalLineItemList = new ArrayList<>();
+		}
 
 		Journal journal;
 		JournalLineItem journalLineItem1;
@@ -370,6 +373,9 @@ public class ReceiptRestHelper {
 		param.put("referenceId", postingRequestModel.getPostingRefId());
 		param.put(JSON_KEY_DELETE_FLAG, false);
 		journalLineItemList = journalLineItemService.findByAttributes(param);
+		if (journalLineItemList == null) {
+			journalLineItemList = new ArrayList<>();
+		}
 
 		Journal journal;
 		JournalLineItem journalLineItem1;

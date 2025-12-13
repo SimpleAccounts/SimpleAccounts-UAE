@@ -170,7 +170,7 @@ public class TransactionImportController{
 	}
 
 	void save(TransactionModel transaction, Integer id, Integer bankId) {
-		logger.info("transaction=== {}", transaction);
+		logger.debug("Saving imported transaction");
 		try {
 			User loggedInUser = userServiceNew.findByPK(id);
 			com.simpleaccounts.entity.bankaccount.Transaction transaction1 = new com.simpleaccounts.entity.bankaccount.Transaction();
@@ -324,4 +324,3 @@ public class TransactionImportController{
 		return new ResponseEntity<>(dataMap, HttpStatus.OK);
 	}
 }
-

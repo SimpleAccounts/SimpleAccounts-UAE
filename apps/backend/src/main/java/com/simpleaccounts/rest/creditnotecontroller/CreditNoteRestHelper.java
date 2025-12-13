@@ -1850,6 +1850,7 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         int remainingQty = model.getQuantity();
         for(Inventory inventory : inventoryList)
         {
+            Integer auditUserId = userId != null ? userId : inventory.getLastUpdateBy();
             int stockOnHand = inventory.getStockOnHand();
             if(stockOnHand > remainingQty )
             {
@@ -1866,9 +1867,9 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
             }
             inventoryService.update(inventory);
             InventoryHistory inventoryHistory = new InventoryHistory();
-            inventoryHistory.setCreatedBy(inventory.getCreatedBy());
+            inventoryHistory.setCreatedBy(auditUserId);
             inventoryHistory.setCreatedDate(LocalDateTime.now());
-            inventoryHistory.setLastUpdateBy(inventory.getLastUpdateBy());
+            inventoryHistory.setLastUpdateBy(auditUserId);
             inventoryHistory.setLastUpdateDate(LocalDateTime.now());
             inventoryHistory.setTransactionDate(creditNoteInvoiceRelation.getInvoice().getInvoiceDate());
             inventoryHistory.setInventory(inventory);

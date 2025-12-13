@@ -58,9 +58,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -807,10 +804,6 @@ public class MigrationUtil {
 	            }
 	        }
 	        LOG.info("Input File in Order ==> {} ", resultSet);
-	        Set<String> obj = Stream.of(new File(dir).listFiles())
-	                .filter(file -> !file.isDirectory())
-	                .map(File::getName)
-	                .collect(Collectors.toSet());
 	
 	        return resultSet;
 	    }

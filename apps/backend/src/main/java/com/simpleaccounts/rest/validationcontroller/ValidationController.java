@@ -338,7 +338,11 @@ public class ValidationController {
                     return new ResponseEntity<>("Employee email does not exists", HttpStatus.OK);
             case 25:
                 if (validationModel.getName() != null && !validationModel.getName().isEmpty()) {
-                    param.put("designationId", Integer.parseInt(validationModel.getName()));
+                    try {
+                        param.put("designationId", Integer.parseInt(validationModel.getName()));
+                    } catch (NumberFormatException e) {
+                        return new ResponseEntity<>("Invalid designation ID", HttpStatus.OK);
+                    }
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<EmployeeDesignation> employeeDesignations = employeeDesignationService.findByAttributes(param);
                     if (employeeDesignations != null && !employeeDesignations.isEmpty())
