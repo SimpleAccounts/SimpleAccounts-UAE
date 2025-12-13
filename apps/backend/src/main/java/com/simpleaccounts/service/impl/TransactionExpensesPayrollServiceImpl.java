@@ -2,6 +2,7 @@ package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.*;
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.Expense;
 import com.simpleaccounts.service.TransactionExpensesPayrollService;

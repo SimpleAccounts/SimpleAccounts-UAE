@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 @Service
 @RequiredArgsConstructor

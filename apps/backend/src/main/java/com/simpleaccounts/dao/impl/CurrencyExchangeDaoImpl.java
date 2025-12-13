@@ -9,6 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import com.simpleaccounts.dao.AbstractDao;
+import com.simpleaccounts.dao.CurrencyExchangeDao;
+
+import com.simpleaccounts.entity.CurrencyConversion;
+
+import javax.persistence.TypedQuery;
+
 @Repository
 public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConversion> implements CurrencyExchangeDao {
 
@@ -39,4 +46,11 @@ public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConver
 		return this.executeNamedQuery("listOfActiveCurrency");
 	}
 
+////		TypedQuery<CurrencyConversion> query = getEntityManager().createQuery("SELECT cc.currencyCode, cc.exchangeRate FROM CurrencyConversion cc where cc.currencyCode IN (select c.currencyCode from Currency c)", CurrencyConversion.class);
+////		List<CurrencyConversion> currencyList = query.getResultList();
+////		if (currencyList != null && !currencyList.isEmpty()) {
+////			return currencyList;
+////		}
+//	//	return this.executeNamedQuery("getcompanyCurrency");
+//	}
 }

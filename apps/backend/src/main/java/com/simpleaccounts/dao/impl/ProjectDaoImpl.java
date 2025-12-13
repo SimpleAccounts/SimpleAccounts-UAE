@@ -1,5 +1,12 @@
 package com.simpleaccounts.dao.impl;
 
+import com.simpleaccounts.dao.ProjectDao;
+import lombok.RequiredArgsConstructor;
+import com.simpleaccounts.entity.Project;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.ProjectFilterEnum;

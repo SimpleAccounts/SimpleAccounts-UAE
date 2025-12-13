@@ -13,6 +13,7 @@ import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.ReconcileStatusService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;

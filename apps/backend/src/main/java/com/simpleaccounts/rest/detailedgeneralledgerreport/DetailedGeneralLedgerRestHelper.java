@@ -2,6 +2,12 @@ package com.simpleaccounts.rest.detailedgeneralledgerreport;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.Transaction;
@@ -276,6 +282,12 @@ public class DetailedGeneralLedgerRestHelper {
 							else {
 								model.setAmount(lineItem.getDebitAmount());
 							}
+						/*BigDecimal amountCredit = !isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO;
+						BigDecimal amountDebit = isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO;
+						model.setCreditAmount(amountCredit);
+						model.setDebitAmount(amountDebit);
+						model.setAmount(amountDebit.intValue()!=0?amountDebit:amountCredit);*/
+
 							if (invoice.getContact().getOrganization() != null && !invoice.getContact().getOrganization().isEmpty()){
 								model.setName(invoice.getContact().getOrganization());
 							}else{
@@ -309,6 +321,12 @@ public class DetailedGeneralLedgerRestHelper {
 								amount = lineItem.getDebitAmount();
 							}
 							model.setAmount(amount);
+						/*BigDecimal amountCredit = !isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO;
+						BigDecimal amountDebit = isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO;
+						model.setCreditAmount(amountCredit);
+						model.setDebitAmount(amountDebit);
+						model.setAmount(amountDebit.intValue()!=0?amountDebit:amountCredit);*/
+
 							if (creditNote.getContact().getOrganization() != null && !creditNote.getContact().getOrganization().isEmpty()){
 								model.setName(creditNote.getContact().getOrganization());
 							}else{

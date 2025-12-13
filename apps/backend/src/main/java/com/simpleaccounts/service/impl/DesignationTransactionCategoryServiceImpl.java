@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.DesignationTransactionCategoryDao;
 import com.simpleaccounts.entity.DesignationTransactionCategory;
 import com.simpleaccounts.service.DesignationTransactionCategoryService;

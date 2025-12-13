@@ -3,6 +3,17 @@ package com.simpleaccounts.dao.impl.bankaccount;
 import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
+import com.simpleaccounts.service.TransactionCategoryService;
+import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
+import java.util.*;
+import java.util.stream.Collectors;
+import javax.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.TransactionCategoryFilterEnum;
 import com.simpleaccounts.dao.AbstractDao;
@@ -144,6 +155,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		List<String> transactionCategoryCodeEnums=new ArrayList<>();
 		transactionCategoryCodeEnums.add(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode());
 		transactionCategoryCodeEnums.add(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
+//		transactionCategoryCodeEnums.add(TransactionCategoryCodeEnum.PETTY_CASH.getCode());
 
 		Map<String,Object> transactionCategorymap = new HashMap<>();
 		ChartOfAccount chartOfAccount=chartOfAccountService.findByPK(7);

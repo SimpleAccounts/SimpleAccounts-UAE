@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.payroll;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.AbstractDao;

@@ -26,14 +26,23 @@ import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
+import com.simpleaccounts.repository.TransactionExpensesRepository;
+import com.simpleaccounts.rest.SingleLevelDropDownModel;
+import com.simpleaccounts.service.CoacTransactionCategoryService;
+import com.simpleaccounts.service.bankaccount.TransactionService;
+import com.simpleaccounts.utils.MessageUtil;
+import com.simpleaccounts.utils.SimpleAccountsMessage;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +53,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.simpleaccounts.aop.LogRequest;
+import com.simpleaccounts.bank.model.DeleteModel;
+import com.simpleaccounts.constant.dbfilter.ORDERBYENUM;
+import com.simpleaccounts.constant.dbfilter.TransactionCategoryFilterEnum;
+import com.simpleaccounts.entity.User;
+import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
+import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+import com.simpleaccounts.rest.PaginationResponseModel;
+import com.simpleaccounts.security.JwtTokenUtil;
+import com.simpleaccounts.service.TransactionCategoryService;
+import com.simpleaccounts.service.UserService;
+import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
+
+import io.swagger.annotations.ApiOperation;
 
 /**
  *
@@ -78,7 +102,7 @@ public class TransactionCategoryRestController{
 	public ResponseEntity<List<TransactionCategoryModel>> getAllTransactionCategory(HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		List<TransactionCategory> transactionCategories = transactionCategoryService.findAllTransactionCategory();
-
+			//	.findAllTransactionCategoryByUserId(userId);
 		if (transactionCategories != null) {
 			return new ResponseEntity<>(transcationCategoryHelper.getListModel(transactionCategories), HttpStatus.OK);
 		}
@@ -169,6 +193,7 @@ public class TransactionCategoryRestController{
 			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+//		return new ResponseEntity<>("Deleted successfull",HttpStatus.OK);
 	}
 
 	@LogRequest
@@ -182,7 +207,7 @@ public class TransactionCategoryRestController{
 			message = new SimpleAccountsMessage("0068",
 					MessageUtil.getMessage("chartofaccount.deleted.successful.msg.0068"), false);
 			return new ResponseEntity<>(message,HttpStatus.OK);
-
+//			return new ResponseEntity<>("Deleted successful",HttpStatus.OK);
 		} catch (Exception e) {SimpleAccountsMessage message= null;
 			message = new SimpleAccountsMessage("",
 					MessageUtil.getMessage("delete.unsuccessful.msg"), true);
@@ -211,7 +236,7 @@ public class TransactionCategoryRestController{
 			message = new SimpleAccountsMessage("0069",
 					MessageUtil.getMessage("chartofaccount.created.successful.msg.0069"), false);
 			return new ResponseEntity<>(message,HttpStatus.OK);
-
+//			return new ResponseEntity<>("Saved successful",HttpStatus.OK);
 		} catch (Exception e) {SimpleAccountsMessage message= null;
 			message = new SimpleAccountsMessage("",
 					MessageUtil.getMessage("create.unsuccessful.msg"), true);
@@ -247,7 +272,7 @@ public class TransactionCategoryRestController{
 			message = new SimpleAccountsMessage("0070",
 					MessageUtil.getMessage("chartofaccount.updated.successful.msg.0070"), false);
 			return new ResponseEntity<>(message,HttpStatus.OK);
-
+//			return new ResponseEntity<>("Updated successfull",HttpStatus.OK);
 		} catch (Exception e) {SimpleAccountsMessage message= null;
 			message = new SimpleAccountsMessage("",
 					MessageUtil.getMessage("update.unsuccessful.msg"), true);

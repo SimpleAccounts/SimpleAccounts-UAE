@@ -3,6 +3,12 @@ package com.simpleaccounts.rest.bankaccountcontroller;
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
 import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.bankaccount.*;
@@ -184,6 +190,7 @@ public class BankAccountRestHelper {
 		bankAccount.setSwiftCode(bankModel.getSwiftCode());
 		bankAccount.setVersionNumber(1);
 		if (bankModel.getOpeningDate()!= null) {
+//			//LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
 
 			bankAccount.setOpeningDate(bankModel.getOpeningDate());
 		}

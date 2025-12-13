@@ -3,6 +3,7 @@ package com.simpleaccounts.rest.creditnotecontroller;
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.REFUND_CD_TEMPLATE;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.entity.*;

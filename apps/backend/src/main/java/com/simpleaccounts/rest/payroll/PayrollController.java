@@ -3,6 +3,8 @@ package com.simpleaccounts.rest.payroll;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
+
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.JournalLineItemDao;
 import com.simpleaccounts.entity.*;
@@ -41,6 +43,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+
+import java.math.BigDecimal;
+
+import java.time.LocalDateTime;
+
+import java.util.*;
+
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -651,6 +663,12 @@ public class PayrollController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+//
+//            SalaryCalculationModel salaryCalculationModel = payrollRestHepler.getSalaryCalculations(designationId,grossSalary);
+//
+//            return new ResponseEntity(salaryCalculationModel, HttpStatus.OK);
+//
 
     @LogRequest
     @ApiOperation(value = "Get Unpaid Payroll list")

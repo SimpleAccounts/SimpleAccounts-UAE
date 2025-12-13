@@ -4,6 +4,7 @@ import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.InventoryHistoryDao;
 import com.simpleaccounts.entity.InventoryHistory;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.rest.InventoryController.InventoryRevenueModel;
 import com.simpleaccounts.rest.InventoryController.TopInventoryRevenueModel;
 import com.simpleaccounts.utils.DateUtils;

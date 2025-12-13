@@ -1,6 +1,7 @@
 package com.simpleaccounts.utils;
 
 import com.simpleaccounts.constant.ErrorConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.service.ConfigurationService;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
@@ -44,7 +45,7 @@ public class EmailSender {
 					: System.getenv("SIMPLEACCOUNTS_SMTP_PORT"));
 			prop.put("mail.smtp.auth", mailDefaultConfigurationModel.getMailsmtpAuth() != null ? mailDefaultConfigurationModel.getMailsmtpAuth()
 					: System.getenv("SIMPLEACCOUNTS_SMTP_AUTH"));
-
+	//		prop.put("mail.smtp.socketFactory.port", "465");
 			prop.put("mail.smtp.starttls.enable", mailDefaultConfigurationModel.getMailstmpStartTLSEnable() != null ? mailDefaultConfigurationModel.getMailstmpStartTLSEnable()
 					: System.getenv("SIMPLEACCOUNTS_SMTP_STARTTLS_ENABLE"));
 			prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");

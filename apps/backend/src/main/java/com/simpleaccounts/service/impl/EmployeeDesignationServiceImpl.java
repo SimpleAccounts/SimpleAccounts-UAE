@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.EmployeeDesignationDao;
 import com.simpleaccounts.entity.EmployeeDesignation;
 import com.simpleaccounts.rest.DropdownObjectModel;

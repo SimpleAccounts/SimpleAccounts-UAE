@@ -1,5 +1,6 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 import com.simpleaccounts.constant.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.impl.TransactionCategoryClosingBalanceDaoImpl;
 import com.simpleaccounts.entity.*;

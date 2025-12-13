@@ -17,6 +17,8 @@ import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.service.VatCategoryService;
 import com.simpleaccounts.utils.InvoiceNumberUtil;
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;

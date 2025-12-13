@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.dbfilter.VatReportFilterEnum;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.VatReportsDao;
 import com.simpleaccounts.entity.VatReportFiling;
@@ -9,8 +10,8 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.VatReportService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 @Service("VatReportService")
 @RequiredArgsConstructor
 public class VatReportServiceImp extends VatReportService {

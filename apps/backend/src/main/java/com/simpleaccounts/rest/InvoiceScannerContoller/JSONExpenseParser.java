@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.InvoiceScannerContoller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.dao.ContactDao;

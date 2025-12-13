@@ -3,6 +3,7 @@ package com.simpleaccounts.service.impl;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.CommonStatusEnum;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.entity.VatRecordPaymentHistory;
@@ -676,6 +677,8 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
    /*
    This method will revert the payment as well as journal entries back
     */
+
+//            //if (vatReportFiling.getBalanceDue().compareTo()){}
 
     @Override
     public List<VatPaymentHistoryModel> getVatPaymentRecordList() {

@@ -1,8 +1,7 @@
 package com.simpleaccounts.rest.rolecontroller;
 
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-
 import com.simpleaccounts.aop.LogRequest;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.model.RoleRequestModel;
 import com.simpleaccounts.security.JwtTokenUtil;
@@ -17,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +43,7 @@ public class RoleModuleController {
     @ApiOperation(value = "Get Module List")
     @GetMapping(value = "/getListForAllRoles")
     public ResponseEntity<Object> getModuleList(){
-
+//        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest();
         List<ModuleResponseModel> response  = new ArrayList<>();
         List<RoleModuleRelation> modulesList=roleModuleRelationService.getListOfSimpleAccountsModulesForAllRoles();
         if (modulesList != null) {
@@ -201,7 +201,7 @@ public class RoleModuleController {
         param.put("isActive", true);
         param.put("deleteFlag", false);
         List<User> userList = userService.findByAttributes(param);
-
+//        if (!userList.isEmpty()) {
            Integer response = userList.size();
             return new ResponseEntity<>(response, HttpStatus.OK);
 

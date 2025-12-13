@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ResourceLoader;
@@ -251,6 +252,8 @@ public class InvoiceRestHelper {
 	}
 
 //
+
+//			//	invoiceDueDate=invoiceDueDate.withHour(0).withMinute(0).withSecond(0).withNano(0);seconds = 1631881535
 
 	public List<InvoiceLineItem>
 	getLineItems(List<InvoiceLineItemModel> itemModels, Invoice invoice, Integer userId) {
@@ -1059,6 +1062,9 @@ public class InvoiceRestHelper {
 			logger.info("BILLING ADDRESS NOT PRESENT");
 		}
 	}
+
+////		emailBody = emailBody.replace(productRow,productRowBuilder.toString());
+////		invoiceEmailBody.setValue(emailBodyBuilder.toString());
 
 	private String updateInvoiceLineItem(int size, MailThemeTemplates invoiceEmailBody) {
 

@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.payroll.service.Impl;
 
-
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.SalaryComponent;
 import com.simpleaccounts.rest.DropdownObjectModel;

@@ -1,5 +1,4 @@
 package com.simpleaccounts.service;
-
 import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.FileTypeEnum;
 import com.simpleaccounts.dao.FileAttachmentDao;
@@ -44,7 +43,7 @@ public abstract class  FileAttachmentService extends SimpleAccountsService <Inte
     }
     public FileAttachment getFile(Integer fileId) {
         return fileAttachmentDao.findByPK(fileId);
-
+//                .orElseThrow(() -> new FileAttachmentNotFoundException("File not found with id " + fileId));
     }
 
     public FileAttachment storeExpenseFile(MultipartFile file, ExpenseModel expenseModel) throws IOException {

@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 
-
 import com.simpleaccounts.rest.simpleaccountreports.Aging.AgingListModel;
 import com.simpleaccounts.rest.simpleaccountreports.Aging.AgingRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditRequestModel;
@@ -10,6 +9,8 @@ import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountRespon
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor

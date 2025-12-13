@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.CreditNoteInvoiceRelationDao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.CreditNoteInvoiceRelation;
 import com.simpleaccounts.service.CreditNoteInvoiceRelationService;

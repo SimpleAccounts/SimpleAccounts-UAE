@@ -1,5 +1,9 @@
 package com.simpleaccounts.security;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.service.UserService;
 import java.util.Optional;

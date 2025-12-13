@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.CorporateTax;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;

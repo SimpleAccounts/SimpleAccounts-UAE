@@ -3,6 +3,7 @@ package com.simpleaccounts.service.impl;
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
 
 import com.simpleaccounts.constant.EmailConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.ContactFilterEnum;
 import com.simpleaccounts.dao.ContactDao;
 import com.simpleaccounts.dao.Dao;

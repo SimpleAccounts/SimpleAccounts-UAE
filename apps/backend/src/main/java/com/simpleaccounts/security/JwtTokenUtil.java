@@ -7,6 +7,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.Serializable;
+import lombok.RequiredArgsConstructor;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

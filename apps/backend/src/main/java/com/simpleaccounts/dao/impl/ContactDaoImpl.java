@@ -2,6 +2,7 @@ package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.CommonConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.ContactFilterEnum;

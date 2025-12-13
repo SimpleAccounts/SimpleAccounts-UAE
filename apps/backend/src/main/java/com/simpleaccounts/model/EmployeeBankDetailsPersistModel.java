@@ -1,5 +1,9 @@
 package com.simpleaccounts.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Getter;

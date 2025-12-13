@@ -1,5 +1,7 @@
 package com.simpleaccounts.utils;
 
+//import com.itextpdf.html2pdf.HtmlConverter;
+import lombok.RequiredArgsConstructor;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.simpleaccounts.constant.ConfigurationConstants;
 import com.simpleaccounts.entity.Configuration;

@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.currencyconversioncontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.CompanyService;
@@ -16,10 +17,16 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/rest/currencyConversion")
@@ -61,7 +68,7 @@ public class CurrencyConversionController{
               message = new SimpleAccountsMessage("0032",
                         MessageUtil.getMessage("currency.conversion.created.successful.msg.0032"), false);
                 return new ResponseEntity<>(message,HttpStatus.OK);
-
+//        return new ResponseEntity<>("Saved Successfully..", HttpStatus.OK);
     }
 
     @LogRequest
@@ -87,7 +94,7 @@ public class CurrencyConversionController{
                 message = new SimpleAccountsMessage("0034",
                         MessageUtil.getMessage("currency.conversion.updated.successful.msg.0034"), false);
                 return new ResponseEntity<>(message,HttpStatus.OK);
-
+//                return new ResponseEntity<>("Updated Successfully.", HttpStatus.OK);
             }
             else{
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -161,7 +168,7 @@ public class CurrencyConversionController{
                 message = new SimpleAccountsMessage("0033",
                         MessageUtil.getMessage("currency.conversion.deleted.successful.msg.0033"), false);
                 return new ResponseEntity<>(message,HttpStatus.OK);
-
+//                return new ResponseEntity<>(currencyConversion, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -176,4 +183,10 @@ public class CurrencyConversionController{
 
 //
 
+////        if (!userList.isEmpty()) {
+
+////        }
+////        return new ResponseEntity("unable to fetch the user information",HttpStatus.OK);
+//
+//    }
 }

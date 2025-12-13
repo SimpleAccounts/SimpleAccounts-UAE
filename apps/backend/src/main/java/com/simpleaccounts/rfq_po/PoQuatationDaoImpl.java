@@ -3,6 +3,7 @@ import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.rest.DropdownModel;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import java.util.ArrayList;
