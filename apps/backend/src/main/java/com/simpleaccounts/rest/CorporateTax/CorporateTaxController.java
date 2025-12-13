@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -85,8 +86,13 @@ public class CorporateTaxController {
                 for(CorporateTaxSettings corporateTaxSettings1:corporateTaxSettingsList){
                     corporateTaxSettings1.setSelectedFlag(Boolean.FALSE);
                 }
-                corporateTaxSettings = corporateTaxSettingRepository.findById(model.getCorporateTaxSettingId()).get();
-                corporateTaxSettings.setSelectedFlag(Boolean.TRUE);
+                Optional<CorporateTaxSettings> optionalSettings = corporateTaxSettingRepository.findById(model.getCorporateTaxSettingId());
+                if (optionalSettings.isPresent()) {
+                    corporateTaxSettings = optionalSettings.get();
+                    corporateTaxSettings.setSelectedFlag(Boolean.TRUE);
+                } else {
+                    return new ResponseEntity<>("Corporate Tax Setting not found", HttpStatus.NOT_FOUND);
+                }
             }
             corporateTaxSettingRepository.save(corporateTaxSettings);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -102,7 +108,7 @@ public class CorporateTaxController {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             Company company = null;
-            List<CorporateTaxSettings> corporateTaxSettingsList =new ArrayList<>();
+            List<CorporateTaxSettings> corporateTaxSettingsList;
             List<CorporateTaxDateModel> corporateTaxDateModelList = new ArrayList<>();
             corporateTaxSettingsList = corporateTaxSettingRepository.findAll();
             for(CorporateTaxSettings corporateTaxSettings:corporateTaxSettingsList) {
@@ -195,7 +201,11 @@ public class CorporateTaxController {
     public ResponseEntity<Object> viewct(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            CorporateTaxFiling corporateTaxFiling = corporateTaxFilingRepository.findById(id).get();
+            Optional<CorporateTaxFiling> optionalFiling = corporateTaxFilingRepository.findById(id);
+            if (!optionalFiling.isPresent()) {
+                return new ResponseEntity<>("Corporate Tax Filing not found", HttpStatus.NOT_FOUND);
+            }
+            CorporateTaxFiling corporateTaxFiling = optionalFiling.get();
 
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(corporateTaxFiling.getViewCtReport());
@@ -214,7 +224,11 @@ public class CorporateTaxController {
     public ResponseEntity<String> filect(@RequestBody CorporateTaxModel corporateTaxModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            CorporateTaxFiling corporateTaxFiling = corporateTaxFilingRepository.findById(corporateTaxModel.getId()).get();
+            Optional<CorporateTaxFiling> optionalFiling = corporateTaxFilingRepository.findById(corporateTaxModel.getId());
+            if (!optionalFiling.isPresent()) {
+                return new ResponseEntity<>("Corporate Tax Filing not found", HttpStatus.NOT_FOUND);
+            }
+            CorporateTaxFiling corporateTaxFiling = optionalFiling.get();
             LocalDateTime filedOn = dateFormatUtil.getDateStrAsLocalDateTime(corporateTaxModel.getTaxFiledOn(),
                     CommonColumnConstants.DD_MM_YYYY);
             LocalDate fo = filedOn.toLocalDate();
@@ -251,7 +265,11 @@ public class CorporateTaxController {
     public ResponseEntity<String> unfilect(@RequestBody CorporateTaxModel corporateTaxModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            CorporateTaxFiling corporateTaxFiling = corporateTaxFilingRepository.findById(corporateTaxModel.getId()).get();
+            Optional<CorporateTaxFiling> optionalFiling = corporateTaxFilingRepository.findById(corporateTaxModel.getId());
+            if (!optionalFiling.isPresent()) {
+                return new ResponseEntity<>("Corporate Tax Filing not found", HttpStatus.NOT_FOUND);
+            }
+            CorporateTaxFiling corporateTaxFiling = optionalFiling.get();
             corporateTaxFiling.setTaxFiledOn(null);
             if(corporateTaxFiling.getTaxableAmount().compareTo(BigDecimal.ZERO) > 0) {
                 corporateTaxService.createReverseJournalForCT(corporateTaxFiling, userId);
@@ -323,7 +341,11 @@ public class CorporateTaxController {
     public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id) {
         try {
             SimpleAccountsMessage message= null;
-            CorporateTaxFiling corporateTaxFiling = corporateTaxFilingRepository.findById(id).get();
+            Optional<CorporateTaxFiling> optionalFiling = corporateTaxFilingRepository.findById(id);
+            if (!optionalFiling.isPresent()) {
+                return new ResponseEntity<>("Corporate Tax Filing not found", HttpStatus.NOT_FOUND);
+            }
+            CorporateTaxFiling corporateTaxFiling = optionalFiling.get();
             corporateTaxFiling.setDeleteFlag(Boolean.TRUE);
             corporateTaxFilingRepository.save(corporateTaxFiling);
             message = new SimpleAccountsMessage("0091",
