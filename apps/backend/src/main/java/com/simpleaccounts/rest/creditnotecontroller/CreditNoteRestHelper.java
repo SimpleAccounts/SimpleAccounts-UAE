@@ -162,7 +162,6 @@ public class CreditNoteRestHelper {
         creditNote.setDeleteFlag(Boolean.FALSE);
         creditNote.setIsCNWithoutProduct(creditNoteRequestModel.getIsCreatedWIWP());
         if (creditNoteRequestModel.getPlaceOfSupplyId() != null) {
-            PlaceOfSupply placeOfSupply = placeOfSupplyService.findByPK(creditNoteRequestModel.getPlaceOfSupplyId());
             creditNote.setPlaceOfSupplyId(creditNoteRequestModel.getPlaceOfSupplyId());
         }
         if (creditNoteRequestModel.getTotalAmount() != null) {
@@ -1848,16 +1847,15 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
             Product product=productService.findByPK(creditNoteLineItem.getProduct().getProductID());
             if(product.getIsInventoryEnabled() != null && product.getIsInventoryEnabled() )
             {
-                handleReverseCNInventory(creditNoteLineItem,product,userId);
+                handleReverseCNInventory(creditNoteLineItem,userId);
             }
         }
     }
-    private void handleReverseCNInventory(CreditNoteLineItem model,Product product,Integer userId) {
+    private void handleReverseCNInventory(CreditNoteLineItem model,Integer userId) {
         Map<String, Object> relationMap = new HashMap<>();
         relationMap.put(JSON_KEY_CREDIT_NOTE, model.getCreditNote());
         CreditNoteInvoiceRelation creditNoteInvoiceRelation = creditNoteInvoiceRelationService.findByAttributes(relationMap).get(0);
         List<Inventory> inventoryList = inventoryService.getProductByProductId(model.getProduct().getProductID());
-        int qtyUpdate=0;
         int remainingQty = model.getQuantity();
         for(Inventory inventory : inventoryList)
         {
@@ -1865,14 +1863,12 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
             if(stockOnHand > remainingQty )
             {
                 stockOnHand = stockOnHand - remainingQty ;
-                qtyUpdate += remainingQty;
                 inventory.setQuantitySold(inventory.getQuantitySold()+remainingQty);
                 remainingQty -= remainingQty;
                 inventory.setStockOnHand(stockOnHand);
             }
             else
             {
-                qtyUpdate += stockOnHand;
                 remainingQty -= stockOnHand;
                 inventory.setStockOnHand(0);
                 inventory.setQuantitySold(inventory.getQuantitySold()+stockOnHand);
