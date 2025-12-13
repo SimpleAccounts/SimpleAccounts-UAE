@@ -1190,8 +1190,7 @@ public class ZohoMigrationService {
 						migrationUtil.setRecordIntoEntity(expense, setterMethod, currency, "Object");
 					} else if (setterMethod.equalsIgnoreCase("setTransactionCategory")) {
 						TransactionCategory transactionCategory =
-								migrationUtil.getTransactionCategoryByName(val, recordData);
-						migrationUtil.setRecordIntoEntity(expense, setterMethod, transactionCategory, "Object");
+								                                                              migrationUtil.getTransactionCategoryByName(recordData);						migrationUtil.setRecordIntoEntity(expense, setterMethod, transactionCategory, "Object");
 					} else if (setterMethod.equalsIgnoreCase("setVatCategory")) {
 						VatCategory vatCategory = migrationUtil.getVatCategoryByValue(val);
 						migrationUtil.setRecordIntoEntity(expense, setterMethod, vatCategory, "Object");
@@ -1461,8 +1460,7 @@ public class ZohoMigrationService {
 	            else if(setterMethod.equalsIgnoreCase("setPriceType")){
 	                if (StringUtils.isEmpty(val))
 	                    continue;
-	                ProductPriceType value = migrationUtil.getProductPriceType(val, recordData);
-	                migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, TYPE_OBJECT);
+	                                      ProductPriceType value = migrationUtil.getProductPriceType(recordData);	                migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, TYPE_OBJECT);
 	                if (productEntity instanceof ProductLineItem){
 	                    if (StringUtils.isEmpty(val))
 	                        continue;
