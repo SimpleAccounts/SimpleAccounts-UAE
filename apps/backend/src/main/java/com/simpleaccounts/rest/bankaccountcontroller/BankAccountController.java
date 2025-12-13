@@ -7,7 +7,6 @@ import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
 import com.simpleaccounts.constant.dbfilter.BankAccounrFilterEnum;
 import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.bankaccount.*;
 import com.simpleaccounts.model.BankModel;
 import com.simpleaccounts.model.DashBoardBankDataModel;
@@ -20,31 +19,17 @@ import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
-import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
-import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
-import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.Currency;
-import com.simpleaccounts.entity.bankaccount.*;
-import com.simpleaccounts.model.DashBoardBankDataModel;
-import com.simpleaccounts.repository.JournalLineItemRepository;
-import com.simpleaccounts.service.*;
-import com.simpleaccounts.utils.MessageUtil;
-import com.simpleaccounts.utils.SimpleAccountsMessage;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,17 +43,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.bank.model.DeleteModel;
-import com.simpleaccounts.constant.dbfilter.BankAccounrFilterEnum;
-import com.simpleaccounts.model.BankModel;
-import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.security.JwtTokenUtil;
-import com.simpleaccounts.service.bankaccount.TransactionService;
-
-import io.swagger.annotations.ApiOperation;
-
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**

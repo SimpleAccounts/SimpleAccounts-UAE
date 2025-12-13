@@ -1,13 +1,10 @@
 package com.simpleaccounts.rest.invoicecontroller;
 
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.dao.MailThemeTemplates;
 import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.helper.DateFormatHelper;
 import com.simpleaccounts.repository.UnitTypesRepository;
@@ -30,20 +27,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerErrorException;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 @Service
 @Slf4j
@@ -1588,9 +1581,6 @@ public class InvoiceRestHelper {
 		}
 		return invoiceDataMap;
 	}
-
-
-
 
 	private void getInvoiceLineItemExciseTax(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		int row=0;

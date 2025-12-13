@@ -1,12 +1,5 @@
 package com.simpleaccounts.dao.impl;
 
-import java.util.ArrayList;
-import lombok.RequiredArgsConstructor;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.ProductCategoryFilterEnum;

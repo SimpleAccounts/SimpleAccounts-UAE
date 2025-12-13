@@ -1,7 +1,5 @@
 package com.simpleaccounts.rest.MailController;
 
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
-
 import com.simpleaccounts.constant.ConfigurationConstants;
 import com.simpleaccounts.constant.EmailConstant;
 import com.simpleaccounts.dao.MailThemeTemplates;
@@ -23,7 +21,6 @@ import freemarker.template.TemplateException;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;

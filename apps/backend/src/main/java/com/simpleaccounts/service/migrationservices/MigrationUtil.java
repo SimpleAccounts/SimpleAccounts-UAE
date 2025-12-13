@@ -1,14 +1,5 @@
 package com.simpleaccounts.service.migrationservices;
 
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.ACCOUNT;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.COST_OF_GOODS_SOLD;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.DUE_ON_RECEIPT;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.EXPENSE_ACCOUNT;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.INVENTORY_ASSET;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.SALES;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.VAT_0;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.VAT_5;
-
 import com.simpleaccounts.constant.InvoiceDuePeriodEnum;
 import com.simpleaccounts.constant.ProductPriceType;
 import com.simpleaccounts.constant.ProductType;
@@ -64,6 +55,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.ACCOUNT;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.COST_OF_GOODS_SOLD;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.DUE_ON_RECEIPT;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.EXPENSE_ACCOUNT;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.INVENTORY_ASSET;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.SALES;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.VAT_0;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.VAT_5;
 
 @Component
 	@Slf4j

@@ -1,7 +1,5 @@
 package com.simpleaccounts.rest.companycontroller;
 
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-
 import com.simpleaccounts.aop.LogExecutionTime;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.bank.model.DeleteModel;
@@ -10,7 +8,6 @@ import com.simpleaccounts.constant.*;
 import com.simpleaccounts.constant.dbfilter.CompanyFilterEnum;
 import com.simpleaccounts.constant.dbfilter.StateFilterEnum;
 import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.BankAccountStatus;
 import com.simpleaccounts.entity.bankaccount.BankAccountType;
@@ -48,17 +45,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.simpleaccounts.aop.LogExecutionTime;
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.bank.model.DeleteModel;
-import com.simpleaccounts.constant.dbfilter.CompanyFilterEnum;
-import com.simpleaccounts.security.JwtTokenUtil;
-
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Slf4j
 	@Component

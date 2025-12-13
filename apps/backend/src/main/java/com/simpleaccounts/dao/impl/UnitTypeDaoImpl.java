@@ -1,4 +1,5 @@
 package com.simpleaccounts.dao.impl;
+
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.UnitTypeDao;
 import com.simpleaccounts.entity.UnitType;

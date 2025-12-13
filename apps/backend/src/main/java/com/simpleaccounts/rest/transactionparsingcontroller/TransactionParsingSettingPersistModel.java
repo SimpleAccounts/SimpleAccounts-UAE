@@ -1,12 +1,9 @@
 package com.simpleaccounts.rest.transactionparsingcontroller;
 
-import java.util.Map;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import com.simpleaccounts.criteria.enums.TransactionEnum;
-
+import java.util.Map;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class TransactionParsingSettingPersistModel {

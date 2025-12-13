@@ -1,11 +1,10 @@
 package com.simpleaccounts.entity;
 
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+import java.time.LocalDateTime;
+import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * Created By Zain Khan

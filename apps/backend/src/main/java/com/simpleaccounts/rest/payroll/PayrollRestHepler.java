@@ -1,15 +1,11 @@
 package com.simpleaccounts.rest.payroll;
 
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
-
 import com.fasterxml.jackson.core.type.TypeReference;
-import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.constant.EmailConstant;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.SalaryComponent;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.model.EmployeeBankDetailsPersistModel;
 import com.simpleaccounts.model.EmploymentPersistModel;
@@ -21,7 +17,6 @@ import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
 import com.simpleaccounts.rest.payroll.dao.EmployeeSalaryComponentRelationDao;
 import com.simpleaccounts.rest.payroll.model.GeneratePayrollPersistModel;
 import com.simpleaccounts.rest.payroll.model.PayrolRequestModel;
-import com.simpleaccounts.rest.payroll.model.PayrollListModel;
 import com.simpleaccounts.rest.payroll.payrolService.PayrolService;
 import com.simpleaccounts.rest.payroll.service.*;
 import com.simpleaccounts.service.*;
@@ -41,7 +36,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.TextStyle;
 import java.util.*;
-import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
@@ -52,6 +46,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 @Component
 	@SuppressWarnings({"java:S131", "java:S6809"})

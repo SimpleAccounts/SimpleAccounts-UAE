@@ -1,8 +1,7 @@
 package com.simpleaccounts.rest.payroll.model;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
+import lombok.Data;
 
 @Data
 public class PayrollEmployeeModel {

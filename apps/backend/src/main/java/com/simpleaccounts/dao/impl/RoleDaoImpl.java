@@ -1,12 +1,10 @@
 package com.simpleaccounts.dao.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Repository;
-
+import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.RoleDao;
 import com.simpleaccounts.entity.Role;
-import com.simpleaccounts.dao.AbstractDao;
+import java.util.List;
+import org.springframework.stereotype.Repository;
 
 /**
  * Created by mohsin on 3/3/2017.

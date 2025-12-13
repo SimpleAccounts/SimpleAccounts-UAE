@@ -1,6 +1,7 @@
 package com.simpleaccounts.entity;
 
 import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
+import com.simpleaccounts.entity.Journal;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -9,12 +10,6 @@ import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-
-import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
-import com.simpleaccounts.entity.Journal;
-import com.simpleaccounts.entity.bankaccount.Transaction;
-
-import lombok.Data;
 
 @NamedQueries({
 		@NamedQuery(name = "findAllTransactionStatues", query = "SELECT t FROM TransactionStatus t where t.deleteFlag = FALSE order by t.explinationStatus ASC"),

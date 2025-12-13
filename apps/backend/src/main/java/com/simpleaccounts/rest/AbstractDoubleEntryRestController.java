@@ -1,12 +1,10 @@
 package com.simpleaccounts.rest;
 
 import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.ExpenseStatusEnum;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.helper.ExpenseRestHelper;
 import com.simpleaccounts.repository.JournalLineItemRepository;
 import com.simpleaccounts.repository.TransactionExpensesRepository;
@@ -21,7 +19,6 @@ import io.swagger.annotations.ApiOperation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +27,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
-import com.simpleaccounts.security.JwtTokenUtil;
-import io.swagger.annotations.ApiOperation;
-
-import javax.servlet.http.HttpServletRequest;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  *

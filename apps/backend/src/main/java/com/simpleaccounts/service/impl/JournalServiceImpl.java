@@ -1,9 +1,5 @@
 package com.simpleaccounts.service.impl;
 
-import java.util.List;
-import lombok.RequiredArgsConstructor;
-import java.util.Map;
-
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.constant.dbfilter.JournalFilterEnum;
 import com.simpleaccounts.dao.Dao;

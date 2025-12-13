@@ -1,11 +1,5 @@
 package com.simpleaccounts.service.impl;
 
-import java.util.List;
-import lombok.RequiredArgsConstructor;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-
 import com.simpleaccounts.constant.dbfilter.ReceiptFilterEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.ReceiptDao;

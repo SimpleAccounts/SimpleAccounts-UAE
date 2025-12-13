@@ -1,12 +1,9 @@
 package com.simpleaccounts.rest.InvoiceScannerContoller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import lombok.RequiredArgsConstructor;
-
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.dao.CurrencyDao;
 import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.helper.DateFormatHelper;
 import com.simpleaccounts.repository.UnitTypesRepository;
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
@@ -30,15 +27,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ServerErrorException;
-
-import javax.persistence.EntityManager;
-
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor

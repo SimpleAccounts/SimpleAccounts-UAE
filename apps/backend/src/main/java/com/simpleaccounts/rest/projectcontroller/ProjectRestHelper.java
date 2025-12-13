@@ -1,17 +1,15 @@
 package com.simpleaccounts.rest.projectcontroller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.simpleaccounts.entity.Project;
 import com.simpleaccounts.service.ContactService;
 import com.simpleaccounts.service.CurrencyService;
 import com.simpleaccounts.service.LanguageService;
 import com.simpleaccounts.service.ProjectService;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProjectRestHelper {

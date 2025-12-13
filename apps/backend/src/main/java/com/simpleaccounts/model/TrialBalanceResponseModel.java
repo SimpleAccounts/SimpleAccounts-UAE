@@ -1,10 +1,9 @@
 package com.simpleaccounts.model;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Data;
 
 @Data
 public class TrialBalanceResponseModel {

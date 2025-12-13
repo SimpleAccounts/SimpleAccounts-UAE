@@ -2,7 +2,6 @@ package com.simpleaccounts.rest.receiptcontroller;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
 import lombok.Data;
 
 @Data

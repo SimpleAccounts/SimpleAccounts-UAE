@@ -2,18 +2,13 @@ package com.simpleaccounts.entity.bankaccount;
 
 import com.simpleaccounts.entity.Country;
 import com.simpleaccounts.entity.Currency;
-
 import java.io.Serializable;
-
-import lombok.Data;
-
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import javax.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by mohsinh on 2/26/2017.

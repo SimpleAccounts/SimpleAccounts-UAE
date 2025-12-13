@@ -1,11 +1,6 @@
 package com.simpleaccounts.rest.usercontroller;
 
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-
 import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.PasswordHistory;
-import com.simpleaccounts.entity.User;
-import com.simpleaccounts.entity.UserCredential;
 import com.simpleaccounts.repository.EmployeeUserRelationRepository;
 import com.simpleaccounts.repository.PasswordHistoryRepository;
 import com.simpleaccounts.repository.UserCredentialRepository;
@@ -15,7 +10,6 @@ import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import java.io.IOException;
-import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Component
 @RequiredArgsConstructor

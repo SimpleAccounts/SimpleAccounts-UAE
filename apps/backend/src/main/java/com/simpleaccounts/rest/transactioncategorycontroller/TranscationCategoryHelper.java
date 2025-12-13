@@ -7,15 +7,11 @@ package com.simpleaccounts.rest.transactioncategorycontroller;
 
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
 import com.simpleaccounts.constant.DefaultTypeConstant;
-import java.util.*;
-import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.repository.*;
-import com.simpleaccounts.repository.ExpenseRepository;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.SingleLevelDropDownModel;
 import com.simpleaccounts.service.*;

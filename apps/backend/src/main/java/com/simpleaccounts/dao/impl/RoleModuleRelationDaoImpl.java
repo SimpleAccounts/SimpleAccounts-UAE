@@ -3,10 +3,6 @@ package com.simpleaccounts.dao.impl;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.RoleModuleRelationDao;
 import com.simpleaccounts.entity.RoleModuleRelation;
-
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.TypedQuery;

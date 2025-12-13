@@ -1,7 +1,5 @@
 package com.simpleaccounts.rest.dateformatcontroller;
 
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.dbfilter.DateFormatFilterEnum;
@@ -27,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Controller
 @RequestMapping("/rest/dateFormat")

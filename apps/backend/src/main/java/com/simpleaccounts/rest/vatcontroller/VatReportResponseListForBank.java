@@ -1,10 +1,9 @@
 package com.simpleaccounts.rest.vatcontroller;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import lombok.Data;
 
 @Data
 public class VatReportResponseListForBank implements Serializable {

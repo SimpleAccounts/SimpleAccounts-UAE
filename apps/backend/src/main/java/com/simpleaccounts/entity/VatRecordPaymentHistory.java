@@ -1,17 +1,15 @@
 package com.simpleaccounts.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "VAT_RECORD_PAYMENT_HISTORY")

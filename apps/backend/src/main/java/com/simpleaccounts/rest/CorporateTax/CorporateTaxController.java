@@ -1,9 +1,6 @@
 package com.simpleaccounts.rest.CorporateTax;
 
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-
 import com.fasterxml.jackson.databind.JsonNode;
-import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.aop.LogExecutionTime;
 import com.simpleaccounts.aop.LogRequest;
@@ -42,6 +39,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 	@RequestMapping(value = "/rest/corporate/tax")

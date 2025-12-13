@@ -1,7 +1,6 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.dao.AbstractDao;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.ContactTransactionCategoryRelationDao;
 import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.ContactTransactionCategoryRelation;

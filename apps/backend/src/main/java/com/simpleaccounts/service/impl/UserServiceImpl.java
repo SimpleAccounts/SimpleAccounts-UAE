@@ -1,7 +1,5 @@
 package com.simpleaccounts.service.impl;
 
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TEST_MAIL_TEMPLATE;
-
 import com.simpleaccounts.constant.EmailConstant;
 import com.simpleaccounts.constant.dbfilter.UserFilterEnum;
 import com.simpleaccounts.dao.UserDao;
@@ -31,6 +29,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TEST_MAIL_TEMPLATE;
 
 @Service("userService")
 public class UserServiceImpl extends UserService{

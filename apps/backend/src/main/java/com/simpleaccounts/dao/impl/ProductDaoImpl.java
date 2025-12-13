@@ -1,24 +1,21 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.ProductFilterEnum;
-import java.util.List;
-
-import org.springframework.stereotype.Repository;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.ProductDao;
 import com.simpleaccounts.entity.Product;
 import com.simpleaccounts.entity.ProductLineItem;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.Query;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor

@@ -1,4 +1,5 @@
 package com.simpleaccounts.dao;
+
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeParentRelation;
 

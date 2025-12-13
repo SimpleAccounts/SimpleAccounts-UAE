@@ -5,8 +5,6 @@
  */
 package com.simpleaccounts.dao.impl;
 
-import com.simpleaccounts.constant.DatatableSortingFilterConstant;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;

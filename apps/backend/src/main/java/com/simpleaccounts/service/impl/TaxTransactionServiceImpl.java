@@ -6,7 +6,6 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.TaxTransactionDao;
 import com.simpleaccounts.entity.TaxTransaction;
 import com.simpleaccounts.service.TaxTransactionService;

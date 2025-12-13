@@ -2,16 +2,14 @@ package com.simpleaccounts.entity;
 
 import com.simpleaccounts.constant.DiscountType;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 /**
  * Created by Zain Khan.
