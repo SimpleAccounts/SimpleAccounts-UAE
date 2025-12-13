@@ -296,8 +296,6 @@ public class TransactionImportRestHelper {
 					case DR_AMOUNT:
 //					case AMOUNT:
 
-						MathContext mc = new MathContext(4); // 2 precision
-
 							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDbColumnName());
 								if (!data.isEmpty() && !data.equals("-")) {
@@ -368,8 +366,8 @@ public class TransactionImportRestHelper {
 
 			BankAccount bankAcc = bankAccountService.findByPK(transactionImportModel.getBankId());
 
-			com.simpleaccounts.entity.DateFormat dateFormat = dateFormatService.findByPK(transactionImportModel.getDateFormatId());
-			DateFormat formatter = new SimpleDateFormat(dateFormat.getFormat());
+			com.simpleaccounts.entity.DateFormat dateFormatEntity = dateFormatService.findByPK(transactionImportModel.getDateFormatId());
+			DateFormat formatter = new SimpleDateFormat(dateFormatEntity.getFormat());
 
 			for (Map<String, Object> dataMap : transactionImportModel.getImportDataMap()) {
 				com.simpleaccounts.entity.bankaccount.Transaction trnx = new com.simpleaccounts.entity.bankaccount.Transaction();
@@ -385,8 +383,6 @@ public class TransactionImportRestHelper {
 						case CR_AMOUNT:
 						case DR_AMOUNT:
 //					case AMOUNT:
-
-							MathContext mc = new MathContext(4); // 2 precision
 
 							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDisplayName());
