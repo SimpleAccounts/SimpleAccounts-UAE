@@ -124,8 +124,6 @@ public class ReconsilationRestHelper {
 
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
-		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
-
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 		journalLineItem1.setTransactionCategory(transaction.getExplainedTransactionCategory());
@@ -175,8 +173,6 @@ public class ReconsilationRestHelper {
 			exchangeRate = currencyExchangeService.getExchangeRate(transactionPresistModel.getCurrencyCode()).getExchangeRate();
 		}
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
-
-		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
 
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
@@ -258,8 +254,6 @@ public class ReconsilationRestHelper {
 
 		BigDecimal exchangeRate = transactionPresistModel.getExchangeRate();
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
-
-		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
 
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();

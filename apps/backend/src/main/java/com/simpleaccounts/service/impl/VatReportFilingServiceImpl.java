@@ -98,17 +98,20 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
                 customizeInvoiceTemplateService.persist(template);
             }
         }
-        BigDecimal totalVatPayable = BigDecimal.ZERO;
-        BigDecimal totalInputVatAmount = BigDecimal.ZERO;
-        BigDecimal totalOutputVatAmount = BigDecimal.ZERO;
+        BigDecimal totalInputVatAmount;
+        BigDecimal totalOutputVatAmount;
         BigDecimal totalAmount = BigDecimal.ZERO;
 
-         totalInputVatAmount=journalLineItemService.totalInputVatAmount(vatReportFiling,vatReportFilingRequestModel,88) !=null?
-                 journalLineItemService.totalInputVatAmount(vatReportFiling,vatReportFilingRequestModel,88)
-                 :BigDecimal.ZERO;
-         totalOutputVatAmount=journalLineItemService.totalOutputVatAmount(vatReportFiling,vatReportFilingRequestModel,94) !=null?
-        journalLineItemService.totalOutputVatAmount(vatReportFiling,vatReportFilingRequestModel,94)
-                 :BigDecimal.ZERO;
+         totalInputVatAmount =
+                 journalLineItemService.totalInputVatAmount(vatReportFiling, vatReportFilingRequestModel, 88) != null
+                         ? journalLineItemService.totalInputVatAmount(
+                                 vatReportFiling, vatReportFilingRequestModel, 88)
+                         : BigDecimal.ZERO;
+         totalOutputVatAmount =
+                 journalLineItemService.totalOutputVatAmount(vatReportFiling, vatReportFilingRequestModel, 94) != null
+                         ? journalLineItemService.totalOutputVatAmount(
+                                 vatReportFiling, vatReportFilingRequestModel, 94)
+                         : BigDecimal.ZERO;
 
          if (totalInputVatAmount!=null && totalOutputVatAmount !=null){
              totalAmount = totalOutputVatAmount.subtract(totalInputVatAmount);

@@ -73,29 +73,8 @@ public class PurchaseRestController {
 	public ResponseEntity<List<PurchaseRestModel>> populatePurchases() {
 		List<PurchaseRestModel> purchaseModels = new ArrayList<>();
 		try {
-			int totalPurchases = 0;
-			int totalPaid = 0;
-			int totalPartiallyPaid = 0;
-			int totalUnPaid = 0;
 			if (purchaseService.getAllPurchase() != null) {
 				for (Purchase purchase : purchaseService.getAllPurchase()) {
-					if (purchase.getStatus() != null) {
-
-						switch (purchase.getStatus()) {
-							case InvoicePurchaseStatusConstant.PAID:
-								totalPaid++;
-								break;
-							case InvoicePurchaseStatusConstant.PARTIALPAID:
-								totalPartiallyPaid++;
-								break;
-							case InvoicePurchaseStatusConstant.UNPAID:
-								totalUnPaid++;
-								break;
-							default:
-								break;
-							}
-					}
-					totalPurchases++;
 					PurchaseRestModel model = purchaseControllerRestHelper.getPurchaseModel(purchase);
 					purchaseModels.add(model);
 				}

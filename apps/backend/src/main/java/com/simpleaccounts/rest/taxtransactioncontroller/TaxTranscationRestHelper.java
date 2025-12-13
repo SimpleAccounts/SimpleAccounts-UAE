@@ -82,14 +82,11 @@ public class TaxTranscationRestHelper {
 
 		taxTransaction.setEndDate(endDate);
 		for (Transaction transaction : creditTransactionList) {
-			Date transDate = Date.from(transaction.getTransactionDate().atZone(ZoneId.systemDefault()).toInstant());
-
-			}
+			// Intentionally left blank (no per-transaction aggregation yet)
+		}
 		for (Transaction transaction : debitTransactionList) {
-			Date transactionDate = Date
-					.from(transaction.getTransactionDate().atZone(ZoneId.systemDefault()).toInstant());
-
-			}
+			// Intentionally left blank (no per-transaction aggregation yet)
+		}
 
 		taxTransaction.setVatIn(vatIn);
 
@@ -161,7 +158,6 @@ public class TaxTranscationRestHelper {
 	public BigDecimal getVatFromTransaction(Transaction transaction) {
 
 		BigDecimal totalVat = BigDecimal.ZERO;
-		BigDecimal vatPercent = BigDecimal.ZERO;
 
 		return totalVat;
 	}

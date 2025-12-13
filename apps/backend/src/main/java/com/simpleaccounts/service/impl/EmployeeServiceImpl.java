@@ -127,7 +127,7 @@ public class EmployeeServiceImpl extends EmployeeService {
 
                     BigDecimal grossPay = BigDecimal.ZERO;
                     BigDecimal deduction = BigDecimal.ZERO;
-                    BigDecimal netPay = BigDecimal.ZERO;
+                    BigDecimal netPay;
                     BigDecimal LopDay = BigDecimal.valueOf(0);
                     BigDecimal NoOfDays = BigDecimal.valueOf(0);
 
@@ -164,8 +164,6 @@ public class EmployeeServiceImpl extends EmployeeService {
 
     @Override
     public boolean sendInvitationMail(Employee employee, HttpServletRequest request) {
-        long millis=System.currentTimeMillis();
-
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         User user=userService.findByPK(userId);
         String image="";
@@ -173,13 +171,6 @@ public class EmployeeServiceImpl extends EmployeeService {
             image = " data:image/jpg;base64," + DatatypeConverter.printBase64Binary(
                     user.getCompany().getCompanyLogo()) ;
 
-        }
-        String htmlContent="";
-        try {
-            byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+THANK_YOU_TEMPLATE).getURI()));
-            htmlContent= new String(contentData, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            logger.error("Error processing employee service", e);
         }
 
         try {

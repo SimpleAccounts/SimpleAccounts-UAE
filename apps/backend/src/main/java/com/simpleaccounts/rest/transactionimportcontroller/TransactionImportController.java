@@ -98,7 +98,6 @@ public class TransactionImportController{
 		File file = new File(classLoader.getResource("excel-file/SampleTransaction1.csv").getFile());
 		String filepath = file.getAbsolutePath();
 		String content = null;
-		Path path = Paths.get(filepath);
 		try {
 			content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
@@ -266,7 +265,6 @@ public class TransactionImportController{
 
 		String filename = "sample.csv";
 		InputStream inputStream = fileHelper.writeFile(transactionImportRequestModel.getData(),filename);
-		File file = new File(filename);
 		Map dataMap = null;
 
 		dataMap = csvParser.parseImportData(model, inputStream);
@@ -286,7 +284,6 @@ public class TransactionImportController{
 
 		String filename = "sample.csv";
 		InputStream inputStream = fileHelper.writeFile(transactionImportRequestModel.getData(),filename);
-		File file = new File(filename);
 		Map dataMap = null;
 
 		dataMap = csvParser.parseImportData(model, inputStream);
