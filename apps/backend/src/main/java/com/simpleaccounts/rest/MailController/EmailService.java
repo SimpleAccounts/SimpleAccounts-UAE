@@ -127,12 +127,9 @@ public class EmailService {
                 emailContentModel.getSubject(),
                 emailContentModel.getEmailContent(),
                 emailContentModel.getPdfBody(),
-                files,
                 emailContentModel.getFromEmailAddress(),
                 EmailConstant.ADMIN_EMAIL_SENDER_NAME,
-                new String[]{emailContentModel.getBillingEmail()},
                 true,
-                emailContentModel.getPdfFilesData(),
                 fileNames,fileMetaData,
                 emailContentModel
         );

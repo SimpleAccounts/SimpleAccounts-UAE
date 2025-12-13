@@ -709,9 +709,9 @@ public class MailUtility {
 
 		return dataMap;
 	}
-	public void triggerEmailOnBackground3(String subject, String mailcontent, String pdfBody, List<MultipartFile> multiparts, String fromEmailId,
-										  String fromName, String[] toMailAddress, boolean isHtml,
-										  String[] pdfFilesStrings, List<File> files,
+	public void triggerEmailOnBackground3(String subject, String mailcontent, String pdfBody, String fromEmailId,
+										  String fromName, boolean isHtml,
+										  List<File> files,
 										  Map<String,byte[]> fileMetaData, EmailContentModel emailContentModel) {
 		List<MimeMultipart> mimeMultiparts=new ArrayList<>();
 		Thread t = new Thread(new Runnable() {
