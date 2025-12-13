@@ -15,14 +15,13 @@ import com.simpleaccounts.rest.invoicecontroller.InvoiceRequestModel;
 import com.simpleaccounts.rest.productcontroller.ProductRequestModel;
 import com.simpleaccounts.rest.productcontroller.ProductRestHelper;
 import com.simpleaccounts.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor

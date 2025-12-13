@@ -1,14 +1,5 @@
 package com.simpleaccounts.service.impl.bankaccount;
 
-import java.util.List;
-import lombok.RequiredArgsConstructor;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.simpleaccounts.dao.JournalDao;
 import com.simpleaccounts.dao.JournalLineItemDao;
 import com.simpleaccounts.dao.bankaccount.TransactionStatusDao;
@@ -16,20 +7,31 @@ import com.simpleaccounts.entity.JournalLineItem;
 import com.simpleaccounts.entity.TransactionStatus;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceRestController;
 import com.simpleaccounts.service.bankaccount.TransactionStatusService;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 @Service("transactionStatusService")
-@RequiredArgsConstructor
 public class TransactionStatusServiceImpl extends TransactionStatusService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InvoiceRestController.class);
 
-	@Autowired
-	@Qualifier(value = "transactionStatusDao")
-	private TransactionStatusDao dao;
+	private final TransactionStatusDao dao;
 
 	private final JournalDao journalDao;
 
 	private final JournalLineItemDao journalLineItemDao;
+
+	public TransactionStatusServiceImpl(
+			@Qualifier("transactionStatusDao") TransactionStatusDao dao,
+			JournalDao journalDao,
+			JournalLineItemDao journalLineItemDao) {
+		this.dao = dao;
+		this.journalDao = journalDao;
+		this.journalLineItemDao = journalLineItemDao;
+	}
 
 	@Override
 	public TransactionStatusDao getDao() {

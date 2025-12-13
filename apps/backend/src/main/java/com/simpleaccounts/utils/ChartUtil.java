@@ -1,5 +1,10 @@
 package com.simpleaccounts.utils;
 
+import com.simpleaccounts.constant.CommonStatusEnum;
+import com.simpleaccounts.entity.Invoice;
+import com.simpleaccounts.model.ChartData;
+import com.simpleaccounts.model.DashboardInvoiceDataModel;
+import com.simpleaccounts.service.report.model.BankAccountTransactionReportModel;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import java.text.SimpleDateFormat;
@@ -15,15 +20,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import com.simpleaccounts.constant.CommonStatusEnum;
-import com.simpleaccounts.entity.Invoice;
-import com.simpleaccounts.model.ChartData;
-import com.simpleaccounts.model.DashboardInvoiceDataModel;
-import com.simpleaccounts.service.report.model.BankAccountTransactionReportModel;
 
 @Component
 @RequiredArgsConstructor
@@ -164,8 +162,8 @@ public class ChartUtil {
 	public Object getCashFlow(Map<Object, Number> inflow, Map<Object, Number> outFlow) {
 
 		List<Object> months = new ArrayList<>();
-		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, Object> inflowMap = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> inflowMap = new HashMap<>();
 		List<Number> inflowData = new ArrayList<>();
 		List<Number> outflowData = new ArrayList<>();
 
@@ -180,7 +178,7 @@ public class ChartUtil {
 		inflowMap.put("sum", inflowData.stream().mapToInt(Number::intValue).sum());
 		map.put("inflow", inflowMap);
 
-		Map<String, Object> outflowMap = new HashMap<String, Object>();
+		Map<String, Object> outflowMap = new HashMap<>();
 		outflowMap.put("label", "Outflow");
 		outflowMap.put("data", outflowData);
 		outflowMap.put("sum", outflowData.stream().mapToInt(Number::intValue).sum());
@@ -220,11 +218,11 @@ public class ChartUtil {
 		Map<String, BigDecimal> paidCustomerMap = calculate(paidCustomerInvoice);
 		Map<String, BigDecimal> paidSupplierMap = calculate(paidSupplierInvoice);
 
-		List<Object> paidAmountList = new LinkedList<Object>();
-		List<Object> dueAmountList = new LinkedList<Object>();
-		List<Object> overDueAmountList = new LinkedList<Object>();
-		List<Object> paidCustomerList = new LinkedList<Object>();
-		List<Object> paidSupplierList = new LinkedList<Object>();
+		List<Object> paidAmountList = new LinkedList<>();
+		List<Object> dueAmountList = new LinkedList<>();
+		List<Object> overDueAmountList = new LinkedList<>();
+		List<Object> paidCustomerList = new LinkedList<>();
+		List<Object> paidSupplierList = new LinkedList<>();
 		List<String> mntList = getEmptyInvoiceChartData(monthCount);
 
 		for (String mnt : mntList) {
@@ -251,7 +249,7 @@ public class ChartUtil {
 
 	private Map<String, BigDecimal> calculate(List<Invoice> invList) {
 
-		Map<String, BigDecimal> map = new HashMap<String, BigDecimal>();
+		Map<String, BigDecimal> map = new HashMap<>();
 		for (Invoice inv : invList) {
 			String mnt = dateFormatUtil.getLocalDateTimeAsString(inv.getInvoiceDate().atStartOfDay(), "MMM yyyy");
 			if (map.containsKey(mnt)) {

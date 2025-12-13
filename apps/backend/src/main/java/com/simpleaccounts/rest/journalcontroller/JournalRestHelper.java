@@ -1,5 +1,21 @@
 package com.simpleaccounts.rest.journalcontroller;
 
+import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+import com.simpleaccounts.entity.CustomizeInvoiceTemplate;
+import com.simpleaccounts.entity.Journal;
+import com.simpleaccounts.entity.JournalLineItem;
+import com.simpleaccounts.entity.User;
+import com.simpleaccounts.helper.DateFormatHelper;
+import com.simpleaccounts.rest.PaginationResponseModel;
+import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateService;
+import com.simpleaccounts.service.ContactService;
+import com.simpleaccounts.service.CurrencyService;
+import com.simpleaccounts.service.JournalLineItemService;
+import com.simpleaccounts.service.JournalService;
+import com.simpleaccounts.service.TransactionCategoryService;
+import com.simpleaccounts.service.UserService;
+import com.simpleaccounts.service.VatCategoryService;
+import com.simpleaccounts.utils.InvoiceNumberUtil;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 
@@ -12,30 +28,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.simpleaccounts.entity.CustomizeInvoiceTemplate;
-import com.simpleaccounts.helper.DateFormatHelper;
-import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateService;
-import com.simpleaccounts.utils.InvoiceNumberUtil;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
-import com.simpleaccounts.entity.Journal;
-import com.simpleaccounts.entity.JournalLineItem;
-import com.simpleaccounts.entity.User;
-import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.service.ContactService;
-import com.simpleaccounts.service.CurrencyService;
-import com.simpleaccounts.service.JournalLineItemService;
-import com.simpleaccounts.service.JournalService;
-import com.simpleaccounts.service.TransactionCategoryService;
-import com.simpleaccounts.service.UserService;
-import com.simpleaccounts.service.VatCategoryService;
-
-	@Component
+@Component
 	@SuppressWarnings({"java:S3973", "java:S115"})
 	@RequiredArgsConstructor
 public class JournalRestHelper {
@@ -193,7 +191,7 @@ public class JournalRestHelper {
 		JournalModel model = new JournalModel();
 		model.setJournalId(journal.getId());
 		model.setDescription(journal.getDescription());
-		//model.setJournalReferenceNo(isManual ? journal.getJournlReferencenNo() : " ");
+
 		if (journal.getJournlReferencenNo()!=null){
 			model.setJournalReferenceNo(journal.getJournlReferencenNo());
 		}

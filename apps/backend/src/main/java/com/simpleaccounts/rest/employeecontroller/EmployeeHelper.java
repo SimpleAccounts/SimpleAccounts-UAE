@@ -8,18 +8,14 @@ import com.simpleaccounts.rest.payroll.service.EmployeeSalaryComponentRelationSe
 import com.simpleaccounts.rest.payroll.service.SalaryComponentService;
 import com.simpleaccounts.rest.payroll.service.SalaryRoleService;
 import com.simpleaccounts.service.*;
-
+import com.simpleaccounts.utils.DateFormatUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
-
 import java.time.LocalDateTime;
-
 import java.util.*;
-
-import com.simpleaccounts.utils.DateFormatUtil;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +35,7 @@ public class EmployeeHelper {
 
 	private final EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
 
-	@Autowired
-	CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
 	private final EmployeeService employeeService;
 

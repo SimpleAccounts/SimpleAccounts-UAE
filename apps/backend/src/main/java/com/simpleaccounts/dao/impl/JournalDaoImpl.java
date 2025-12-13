@@ -95,7 +95,7 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 		query.setParameter("referenceId", transactionId);
 
 		List<Journal> resultList = query.getResultList();
-		return resultList.size()==0?null:resultList.get(0);
+		return resultList.isEmpty()?null:resultList.get(0);
 	}
 	public Journal getJournalByReferenceIdAndType(Integer transactionId, PostingReferenceTypeEnum refType) {
 		Query query = getEntityManager().createNamedQuery("getJournalByReferenceIdAndType");
@@ -103,6 +103,6 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 		query.setParameter("referenceType", refType);
 
 		List<Journal> resultList = query.getResultList();
-		return resultList.size() == 0 ? null : resultList.get(0);
+		return resultList.isEmpty() ? null : resultList.get(0);
 	}
 }

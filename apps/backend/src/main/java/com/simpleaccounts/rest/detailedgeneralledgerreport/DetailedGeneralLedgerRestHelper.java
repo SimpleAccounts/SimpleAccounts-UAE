@@ -1,32 +1,34 @@
 package com.simpleaccounts.rest.detailedgeneralledgerreport;
 
+import com.simpleaccounts.constant.CommonColumnConstants;
+import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
+import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.exceptions.ServiceException;
 import com.simpleaccounts.repository.PayrollRepository;
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
 import com.simpleaccounts.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.simpleaccounts.constant.CommonColumnConstants;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
-import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.DateFormatUtil;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-	@Component
+@Component
 	@SuppressWarnings({"java:S3973", "java:S131"})
 	@RequiredArgsConstructor
 public class DetailedGeneralLedgerRestHelper {
@@ -48,22 +50,17 @@ public class DetailedGeneralLedgerRestHelper {
 	private final ReceiptService receiptService;
 
 	private final DateFormatUtil dateUtil;
-	@Autowired
-	TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	PayrollRepository payrollRepository;
+	private final PayrollRepository payrollRepository;
 
 	private final CreditNoteRepository creditNoteRepository;
 
-	@Autowired
-	TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
+	private final TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
-	@Autowired
-	CustomerInvoiceReceiptService customerInvoiceReceiptService;
+	private final CustomerInvoiceReceiptService customerInvoiceReceiptService;
 
-	@Autowired
-	SupplierInvoicePaymentService supplierInvoicePaymentService;
+	private final SupplierInvoicePaymentService supplierInvoicePaymentService;
 
 	public Map<Integer, Expense> findOrGetFromDbEx(Map<Integer, Expense> expenseMap, Integer id) {
 
@@ -205,7 +202,7 @@ public class DetailedGeneralLedgerRestHelper {
 							model.setAmount(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
 							model.setDebitAmount(lineItem.getDebitAmount());
 							model.setCreditAmount(lineItem.getCreditAmount());
-							//model.setName( bn.getBankName()+"-"+bn.getBankAccountName());
+
 							break;
 
 						case TRANSACTION_RECONSILE:
@@ -223,7 +220,7 @@ public class DetailedGeneralLedgerRestHelper {
 							}
 
 							model.setCreditAmount(lineItem.getCreditAmount());
-							// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
 							if (tr.getTransactionDate()!=null){
 								String d = tr.getTransactionDate().format(formatter);
 								model.setDate(d);
@@ -240,9 +237,9 @@ public class DetailedGeneralLedgerRestHelper {
 
 								model.setCreditAmount(lineItem.getCreditAmount());
 								model.setDebitAmount(lineItem.getDebitAmount());
-								if (lineItem.getCreditAmount().compareTo(BigDecimal.ZERO)==1){
-									model.setAmount(lineItem.getCreditAmount());
-								}
+									if (lineItem.getCreditAmount().compareTo(BigDecimal.ZERO)>0){
+										model.setAmount(lineItem.getCreditAmount());
+									}
 								else {
 									model.setAmount(lineItem.getDebitAmount());
 								}
@@ -279,9 +276,9 @@ public class DetailedGeneralLedgerRestHelper {
 
 							model.setCreditAmount(lineItem.getCreditAmount());
 							model.setDebitAmount(lineItem.getDebitAmount());
-							if (lineItem.getCreditAmount().compareTo(BigDecimal.ZERO)==1){
-								model.setAmount(lineItem.getCreditAmount());
-							}
+								if (lineItem.getCreditAmount().compareTo(BigDecimal.ZERO)>0){
+									model.setAmount(lineItem.getCreditAmount());
+								}
 							else {
 								model.setAmount(lineItem.getDebitAmount());
 							}
@@ -312,7 +309,7 @@ public class DetailedGeneralLedgerRestHelper {
 							CreditNote creditNote = creditNoteMap.get(lineItem.getReferenceId());
 
 							model.setReferenceNo(journal.getJournlReferencenNo());
-							//model.setAmount(invoice.getTotalAmount());
+
 							 amount = BigDecimal.ZERO;
 							if (isDebit) {
 								model.setDebitAmount(lineItem.getDebitAmount());
@@ -509,9 +506,9 @@ public class DetailedGeneralLedgerRestHelper {
 		BigDecimal openingBalance = transactionCategoryClosingBalance.getOpeningBalance();
 		if(transactionCategoryClosingBalance.getOpeningBalance().longValue()<=0) {
 			openingBalanceModel.setCreditAmount(transactionCategoryClosingBalance.getOpeningBalance().negate());
-			//openingBalanceModel.setDebitAmount(BigDecimal.ZERO);
+
 		}else {
-			//openingBalanceModel.setCreditAmount(BigDecimal.ZERO);
+
 			openingBalanceModel.setDebitAmount(transactionCategoryClosingBalance.getOpeningBalance());
 		}openingBalanceModel.setAmount(transactionCategoryClosingBalance.getOpeningBalance());
 		openingBalanceModel.setTransactionTypeName(transactionTypeName);
@@ -525,10 +522,10 @@ public class DetailedGeneralLedgerRestHelper {
 			closingBalance= closingBalance.negate();
 		if(isCredit) {
 			closingBalanceModel.setCreditAmount(closingBalance);
-			//closingBalanceModel.setDebitAmount(BigDecimal.ZERO);
+
 		}
 		else {
-			//closingBalanceModel.setCreditAmount(BigDecimal.ZERO);
+
 			closingBalanceModel.setDebitAmount(closingBalance);
 		}
 		closingBalanceModel.setPostingReferenceTypeEnum("Closing Balance");

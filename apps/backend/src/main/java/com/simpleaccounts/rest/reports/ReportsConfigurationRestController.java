@@ -1,5 +1,7 @@
 package com.simpleaccounts.rest.reports;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,9 +11,11 @@ import com.simpleaccounts.entity.User;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.UserService;
 import io.swagger.annotations.ApiOperation;
+import java.time.LocalDateTime;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

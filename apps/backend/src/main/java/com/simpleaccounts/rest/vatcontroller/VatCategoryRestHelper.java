@@ -1,17 +1,15 @@
 package com.simpleaccounts.rest.vatcontroller;
 
+import com.simpleaccounts.entity.Company;
+import com.simpleaccounts.entity.VatCategory;
+import com.simpleaccounts.service.CompanyService;
+import com.simpleaccounts.service.VatCategoryService;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.simpleaccounts.entity.Company;
-import com.simpleaccounts.service.CompanyService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import com.simpleaccounts.entity.VatCategory;
-import com.simpleaccounts.service.VatCategoryService;
 
 @Component
 @RequiredArgsConstructor
@@ -19,7 +17,7 @@ public class VatCategoryRestHelper {
 
 	private final VatCategoryService vatCategoryService;
 
-	@Autowired CompanyService companyService;
+	private final CompanyService companyService;
 
 	public VatCategory getEntity(VatCategoryRequestModel vatCatRequestModel) {
 
@@ -49,14 +47,13 @@ public class VatCategoryRestHelper {
 			for (VatCategory vatCategory : (List<VatCategory>) vatCategories) {
 				VatCategoryModel vatCatModel = new VatCategoryModel();
 
-				//if(company.getIsRegisteredVat()!= null && company.getIsRegisteredVat()) {
 					if(vatCategory.getId() != 10 ) {
 						vatCatModel.setId(vatCategory.getId());
 						vatCatModel.setVat(vatCategory.getVat());
 						vatCatModel.setName(vatCategory.getName());
 
 					vatCatModelList.add(vatCatModel);
-					//}
+
 				}
 			}
 			if(company.getIsRegisteredVat()!= null && !company.getIsRegisteredVat()) {

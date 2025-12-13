@@ -1,7 +1,6 @@
 package com.simpleaccounts.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -61,9 +60,7 @@ class ActivityServiceImplTest {
 
         List<Activity> result = activityService.getLatestActivites(maxCount);
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
-        assertThat(result).containsExactly(testActivity, activity2);
+        assertThat(result).isNotNull().hasSize(2).containsExactly(testActivity, activity2);
         assertThat(result.get(0).getActivityCode()).isEqualTo("TEST001");
         assertThat(result.get(1).getActivityCode()).isEqualTo("TEST002");
         verify(activityDao, times(1)).getLatestActivites(maxCount);
@@ -76,8 +73,7 @@ class ActivityServiceImplTest {
 
         List<Activity> result = activityService.getLatestActivites(maxCount);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
         verify(activityDao, times(1)).getLatestActivites(maxCount);
     }
 
@@ -89,8 +85,7 @@ class ActivityServiceImplTest {
 
         List<Activity> result = activityService.getLatestActivites(maxCount);
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(1);
+        assertThat(result).isNotNull().hasSize(1);
         assertThat(result.get(0)).isEqualTo(testActivity);
         verify(activityDao, times(1)).getLatestActivites(maxCount);
     }
@@ -102,8 +97,7 @@ class ActivityServiceImplTest {
 
         List<Activity> result = activityService.getLatestActivites(maxCount);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
         verify(activityDao, times(1)).getLatestActivites(maxCount);
     }
 
@@ -114,8 +108,7 @@ class ActivityServiceImplTest {
 
         List<Activity> result = activityService.getLatestActivites(maxCount);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
         verify(activityDao, times(1)).getLatestActivites(maxCount);
     }
 
@@ -135,8 +128,7 @@ class ActivityServiceImplTest {
 
         List<Activity> result = activityService.getLatestActivites(maxCount);
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(100);
+        assertThat(result).isNotNull().hasSize(100);
         assertThat(result.get(0).getActivityCode()).isEqualTo("TEST0");
         assertThat(result.get(99).getActivityCode()).isEqualTo("TEST99");
         verify(activityDao, times(1)).getLatestActivites(maxCount);
@@ -158,8 +150,7 @@ class ActivityServiceImplTest {
 
         List<Activity> result = activityService.getLatestActivites(maxCount);
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(5);
+        assertThat(result).isNotNull().hasSize(5);
         assertThat(result.get(0).getModuleCode()).isEqualTo("USER");
         assertThat(result.get(1).getModuleCode()).isEqualTo("INVOICE");
         assertThat(result.get(2).getModuleCode()).isEqualTo("PAYMENT");
@@ -180,8 +171,7 @@ class ActivityServiceImplTest {
 
         List<Activity> result = activityService.getLatestActivites(maxCount);
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotNull().hasSize(2);
         assertThat(result.get(1).getField1()).isNull();
         assertThat(result.get(1).getField2()).isNull();
         assertThat(result.get(1).getField3()).isNull();
@@ -207,8 +197,7 @@ class ActivityServiceImplTest {
 
         List<Activity> result = activityService.getLatestActivites(maxCount);
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(3);
+        assertThat(result).isNotNull().hasSize(3);
         assertThat(result.get(0).getActivityCode()).isEqualTo("NEW001");
         assertThat(result.get(1).getActivityCode()).isEqualTo("REC001");
         assertThat(result.get(2).getActivityCode()).isEqualTo("OLD001");
@@ -240,8 +229,7 @@ class ActivityServiceImplTest {
 
         List<Activity> result = activityService.getLatestActivites(maxCount);
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotNull().hasSize(2);
         assertThat(result.get(0).getDeleteFlag()).isFalse();
         assertThat(result.get(1).getDeleteFlag()).isTrue();
         verify(activityDao, times(1)).getLatestActivites(maxCount);
@@ -291,8 +279,7 @@ class ActivityServiceImplTest {
 
         List<Activity> result = activityService.getLatestActivites(maxCount);
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotNull().hasSize(2);
         assertThat(result.get(0).isLoggingRequired()).isTrue();
         assertThat(result.get(1).isLoggingRequired()).isFalse();
         verify(activityDao, times(1)).getLatestActivites(maxCount);
@@ -315,8 +302,7 @@ class ActivityServiceImplTest {
 
         List<Activity> result = activityService.getLatestActivites(maxCount);
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(3);
+        assertThat(result).isNotNull().hasSize(3);
         assertThat(result.get(0).getCreatedBy()).isEqualTo(1);
         assertThat(result.get(1).getCreatedBy()).isEqualTo(2);
         assertThat(result.get(2).getCreatedBy()).isEqualTo(0);

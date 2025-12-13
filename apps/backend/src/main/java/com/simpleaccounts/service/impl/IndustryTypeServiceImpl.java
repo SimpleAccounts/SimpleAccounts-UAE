@@ -11,7 +11,7 @@ import com.simpleaccounts.dao.IndustryTypeDao;
 import com.simpleaccounts.entity.IndustryType;
 import com.simpleaccounts.service.IndustryTypeService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

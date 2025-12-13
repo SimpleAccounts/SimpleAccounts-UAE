@@ -4,6 +4,7 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -237,11 +238,10 @@ public class PaymentController {
 					JSONObject obj =  (JSONObject)dnObject;
 					CreditNote creditDebitNote = creditNoteRepository.findById(obj.getInt("value")).get();
 					PaymentDebitNoteRelation paymentDebitNoteRelation = new PaymentDebitNoteRelation();
-					if (paymentAmountAfterApplyingCredits.compareTo(creditDebitNote.getDueAmount())==1 ||
-							paymentAmountAfterApplyingCredits.compareTo(creditDebitNote.getDueAmount())==0){
-						paymentAmountAfterApplyingCredits = paymentAmountAfterApplyingCredits.subtract(creditDebitNote.getDueAmount());
-						paymentDebitNoteRelation.setAppliedDNAmount(creditDebitNote.getDueAmount());
-						creditDebitNote.setDueAmount(BigDecimal.ZERO);
+						if (paymentAmountAfterApplyingCredits.compareTo(creditDebitNote.getDueAmount()) >= 0) {
+							paymentAmountAfterApplyingCredits = paymentAmountAfterApplyingCredits.subtract(creditDebitNote.getDueAmount());
+							paymentDebitNoteRelation.setAppliedDNAmount(creditDebitNote.getDueAmount());
+							creditDebitNote.setDueAmount(BigDecimal.ZERO);
 						creditDebitNote.setStatus(CommonStatusEnum.CLOSED.getValue());
 						creditNoteRepository.save(creditDebitNote);
 					}
@@ -269,7 +269,7 @@ public class PaymentController {
 				supplierInvoicePayment.setPayment(payment);
 				supplierInvoicePayment.setCreatedBy(userId);
 				Contact contact=contactService.findByPK(paymentModel.getContactId());
-				contactService.sendInvoiceThankYouMail(contact,2,supplierInvoicePayment.getSupplierInvoice().getReferenceNumber(),paymentModel.getAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString(),dateFormtUtil.getLocalDateTimeAsString(payment.getPaymentDate().atStartOfDay(),"dd/MM/yyyy").replace("/","-"), supplierInvoicePayment.getDueAmount(), request);
+				contactService.sendInvoiceThankYouMail(contact,2,supplierInvoicePayment.getSupplierInvoice().getReferenceNumber(),paymentModel.getAmount().setScale(2, RoundingMode.HALF_EVEN).toString(),dateFormtUtil.getLocalDateTimeAsString(payment.getPaymentDate().atStartOfDay(),"dd/MM/yyyy").replace("/","-"), supplierInvoicePayment.getDueAmount(), request);
 				supplierInvoicePaymentService.persist(supplierInvoicePayment);
 			}
 			// Post journal

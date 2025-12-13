@@ -1,19 +1,16 @@
         package com.simpleaccounts.entity;
 
-        import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
-        import com.simpleaccounts.entity.bankaccount.Transaction;
-        import com.simpleaccounts.entity.converter.DateConverter;
-        import lombok.Data;
-        import org.hibernate.annotations.ColumnDefault;
-        import org.hibernate.annotations.CreationTimestamp;
-        import org.hibernate.annotations.UpdateTimestamp;
+import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
+import com.simpleaccounts.entity.bankaccount.Transaction;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import javax.persistence.*;
+import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-        import java.math.BigDecimal;
-        import java.time.LocalDateTime;
-        import java.util.Date;
-        import javax.persistence.*;
-
-		/**
+/**
 		 * Middle table for mapping between transaction and expense
 		 */
 @Entity

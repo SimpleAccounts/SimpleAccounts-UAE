@@ -11,7 +11,7 @@ import com.simpleaccounts.dao.TaxTransactionDao;
 import com.simpleaccounts.entity.TaxTransaction;
 import com.simpleaccounts.service.TaxTransactionService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

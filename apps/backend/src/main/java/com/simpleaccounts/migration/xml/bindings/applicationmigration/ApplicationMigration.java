@@ -169,7 +169,7 @@ public class ApplicationMigration {
          */
         public List<ApplicationMigration.ApplicationList.Application> getApplication() {
             if (application == null) {
-                application = new ArrayList<ApplicationMigration.ApplicationList.Application>();
+                application = new ArrayList<>();
             }
             return this.application;
         }
@@ -315,7 +315,7 @@ public class ApplicationMigration {
                  */
                 public List<BigDecimal> getVersion() {
                     if (version == null) {
-                        version = new ArrayList<BigDecimal>();
+                        version = new ArrayList<>();
                     }
                     return this.version;
                 }

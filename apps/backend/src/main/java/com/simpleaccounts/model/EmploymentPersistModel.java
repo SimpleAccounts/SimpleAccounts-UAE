@@ -1,11 +1,10 @@
 package com.simpleaccounts.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *

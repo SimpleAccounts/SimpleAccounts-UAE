@@ -1,47 +1,38 @@
 package com.simpleaccounts.service.impl;
 
-import java.io.IOException;
-import lombok.RequiredArgsConstructor;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.mail.MessagingException;
-
-import com.simpleaccounts.model.JwtRequest;
-import com.simpleaccounts.repository.UserJpaRepository;
-import com.simpleaccounts.rest.DropdownModel;
-import com.simpleaccounts.rest.usercontroller.UserModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ResourceLoader;
-
-import org.springframework.stereotype.Service;
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TEST_MAIL_TEMPLATE;
 
 import com.simpleaccounts.constant.EmailConstant;
 import com.simpleaccounts.constant.dbfilter.UserFilterEnum;
+import com.simpleaccounts.dao.UserDao;
 import com.simpleaccounts.entity.User;
+import com.simpleaccounts.model.JwtRequest;
+import com.simpleaccounts.repository.UserJpaRepository;
+import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
+import com.simpleaccounts.rest.usercontroller.UserModel;
 import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.DateUtils;
 import com.simpleaccounts.utils.EmailSender;
 import com.simpleaccounts.utils.RandomString;
-
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
-
-import com.simpleaccounts.dao.UserDao;
-
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.TEST_MAIL_TEMPLATE;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import javax.mail.MessagingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Service;
 
 @Service("userService")
-@RequiredArgsConstructor
 public class UserServiceImpl extends UserService{
 	private static final String LOG_ERROR = "Error";
 
@@ -52,16 +43,28 @@ public class UserServiceImpl extends UserService{
 	@Value("${simpleaccounts.baseUrl}")
 	private String baseUrl;
 
-	@Autowired
-	@Qualifier(value = "userDao")
-	private UserDao dao;
+	private final UserDao dao;
 
 	private final RandomString randomString;
 
 	private final EmailSender emailSender;
-	@Autowired
-	ResourceLoader resourceLoader;
+	private final ResourceLoader resourceLoader;
 	private final DateUtils dateUtils;
+
+	public UserServiceImpl(
+			UserJpaRepository userJpaRepo,
+			@Qualifier("userDao") UserDao dao,
+			RandomString randomString,
+			EmailSender emailSender,
+			ResourceLoader resourceLoader,
+			DateUtils dateUtils) {
+		this.userJpaRepo = userJpaRepo;
+		this.dao = dao;
+		this.randomString = randomString;
+		this.emailSender = emailSender;
+		this.resourceLoader = resourceLoader;
+		this.dateUtils = dateUtils;
+	}
 
 	@Override
 	public UserDao getDao() {

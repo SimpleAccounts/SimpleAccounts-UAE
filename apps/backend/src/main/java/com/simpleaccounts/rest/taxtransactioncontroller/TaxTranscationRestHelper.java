@@ -1,5 +1,13 @@
 package com.simpleaccounts.rest.taxtransactioncontroller;
 
+import com.simpleaccounts.constant.TaxTransactionStatusConstant;
+import com.simpleaccounts.constant.TransactionCreditDebitConstant;
+import com.simpleaccounts.entity.TaxTransaction;
+import com.simpleaccounts.entity.bankaccount.Transaction;
+import com.simpleaccounts.service.InvoiceService;
+import com.simpleaccounts.service.PurchaseService;
+import com.simpleaccounts.service.TaxTransactionService;
+import com.simpleaccounts.service.bankaccount.TransactionService;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 
@@ -12,8 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import com.simpleaccounts.constant.TaxTransactionStatusConstant;
@@ -164,7 +171,7 @@ public class TaxTranscationRestHelper {
 	}
 
 	public BigDecimal getVatFromTransaction(Transaction transaction) {
-//		Integer refId = transaction.getReferenceId();
+
 		BigDecimal totalVat = BigDecimal.ZERO;
 		BigDecimal vatPercent = BigDecimal.ZERO;
 

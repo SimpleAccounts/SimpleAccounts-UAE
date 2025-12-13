@@ -64,10 +64,44 @@ import com.simpleaccounts.service.migrationservices.MigrationService;
 import com.simpleaccounts.service.migrationservices.SimpleAccountMigrationService;
 import com.simpleaccounts.service.migrationservices.ZohoMigrationService;
 import com.simpleaccounts.utils.FileHelper;
-
 import io.swagger.annotations.ApiOperation;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -86,8 +120,7 @@ public class MigrationController {
 
     	@Value("${simpleaccounts.migration.pathlocation}")    private final String basePath;
 
-    @Autowired
-    ResourceLoader resourceLoader;
+    private final ResourceLoader resourceLoader;
 
     private final CountryService countryService;
 
@@ -112,19 +145,17 @@ public class MigrationController {
     @LogRequest
     @ApiOperation(value = "Persist Account Start Date")
     @PostMapping(value = "/saveAccountStartDate")
-    public ResponseEntity saveAccountStartDate(Date accountStartDate, HttpServletRequest request){
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+    public ResponseEntity<Void> saveAccountStartDate(Date accountStartDate, HttpServletRequest request){
         Company company = companyService.getCompany();
         accountStartDate(accountStartDate,company);
         companyService.update(company);
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
     @LogRequest
     @ApiOperation(value = "Get All Products Names And Version")
     @GetMapping(value = "/list")
     public ResponseEntity<List<DropDownModelForMigration>> getMigratingProductsList(HttpServletRequest request) {
         try{
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             List<DropDownModelForMigration> responseModel = new ArrayList<>();
             String rootPath = request.getServletContext().getRealPath("/");
             FileHelper.setRootPath(rootPath);
@@ -157,7 +188,6 @@ public class MigrationController {
     @GetMapping(value = "/getVersionListByPrioductName")
     public ResponseEntity<List<DropDownModelForMigration>> getVersionListByPrioductName(@RequestParam String productName, HttpServletRequest request) {
         try{
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             List<DropDownModelForMigration> responseModel = new ArrayList<>();
 
             ProductMigrationParser parser = ProductMigrationParser.getInstance();
@@ -184,35 +214,34 @@ public class MigrationController {
      * @return
      */
     @ApiOperation(value = "Migrate The Data To SimpleAccounts")
-    @PostMapping(value = "/migrate")
-    @LogRequest
-    public ResponseEntity<Object> saveMigratedData(DataMigrationModel dataMigrationModel,HttpServletRequest request){
-        try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            String productName = dataMigrationModel.getName();
-           String path = request.getServletContext().getRealPath("/");
-           log.info(LOG_INFO_PATTERN,path);
-            String version = dataMigrationModel.getVersion();
-            String fileLocation =path + "/" + basePath;
-           // String migFromDate  = dataMigrationModel.getMigFromDate();
-            Company company = companyService.getCompany();
-            String migFromDate = company.getAccountStartDate().toString();
-            String[] migrationDate = migFromDate.split("T");
-            String date = migrationDate[0];
-            if (StringUtils.isEmpty(version) || StringUtils.isEmpty(productName)){
-                return new  ResponseEntity("Invalid Request",HttpStatus.OK);
-            }
-         List<DataMigrationRespModel> dataMigrationRespModel =   migrationService.processTheMigratedData(productName,
-                 version,fileLocation,userId,date,request);
-            log.info("Response{}",dataMigrationRespModel);
-            //this will delete the uploaded files after completion of migration records
-            String migrationPath =path+ "/" + basePath;
-            log.info(LOG_INFO_PATTERN,migrationPath);
-            String rollBackMigratedData = zohoMigrationService.rollBackMigratedData(migrationPath);
-            return new  ResponseEntity<> (dataMigrationRespModel,HttpStatus.OK);
+	    @PostMapping(value = "/migrate")
+	    @LogRequest
+	    public ResponseEntity<Object> saveMigratedData(DataMigrationModel dataMigrationModel,HttpServletRequest request){
+	        try {
+	            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+	            String productName = dataMigrationModel.getName();
+	           String path = request.getServletContext().getRealPath("/");
+	           log.info(LOG_INFO_PATTERN,path);
+	            String version = dataMigrationModel.getVersion();
+	            String migrationPath = Paths.get(path, basePath).toString();
 
-        }catch (Exception e){
-            logger.error(ERROR, e);
+	            Company company = companyService.getCompany();
+	            String migFromDate = company.getAccountStartDate().toString();
+	            String[] migrationDate = migFromDate.split("T");
+	            String date = migrationDate[0];
+	            if (StringUtils.isEmpty(version) || StringUtils.isEmpty(productName)){
+	                return new ResponseEntity<>("Invalid Request",HttpStatus.OK);
+	            }
+	         List<DataMigrationRespModel> dataMigrationRespModel =   migrationService.processTheMigratedData(productName,
+	                 version,migrationPath,userId,date,request);
+	            log.info("Response{}",dataMigrationRespModel);
+	            //this will delete the uploaded files after completion of migration records
+	            log.info(LOG_INFO_PATTERN,migrationPath);
+	            log.info("rollBackMigratedData: {}", zohoMigrationService.rollBackMigratedData(migrationPath));
+	            return new  ResponseEntity<> (dataMigrationRespModel,HttpStatus.OK);
+
+	        }catch (Exception e){
+	            logger.error(ERROR, e);
             return (new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
@@ -228,18 +257,18 @@ public class MigrationController {
     public ResponseEntity<List<DataMigrationRespModel>> uploadFolder(@RequestBody MultipartFile[] files,HttpServletRequest request) {
         try {
             String path = request.getServletContext().getRealPath("/");
-            String migrationPath =path+ "/" + basePath;
+            String migrationPath = Paths.get(path, basePath).toString();
             log.info(LOG_INFO_PATTERN,migrationPath);
             log.debug("MigrationController::uploadFolder: Total File Length {}", files.length);
             
-            String deleteMigratedFiles = zohoMigrationService.deleteMigratedFiles(migrationPath);
+            log.info("deleteMigratedFiles: {}", zohoMigrationService.deleteMigratedFiles(migrationPath));
             List<DataMigrationRespModel> dataMigrationRespModelList = fileHelper.saveMultiFile(migrationPath, files);
-            return new ResponseEntity(dataMigrationRespModelList,HttpStatus.OK);
+            return new ResponseEntity<>(dataMigrationRespModelList,HttpStatus.OK);
             
             
         }catch (Exception e){
             logger.error(ERROR, e);
-            return new  ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     private void accountStartDate(Date  accountStartDate, Company company) {
@@ -263,9 +292,8 @@ public class MigrationController {
     @LogRequest
     public ResponseEntity<Object> listOfTransactionCategory(HttpServletRequest request){
         try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             String path = request.getServletContext().getRealPath("/");
-            String migrationPath =path+ "/" + basePath;
+            String migrationPath = Paths.get(path, basePath).toString();
             log.info(LOG_INFO_PATTERN,migrationPath);
             FileHelper.setRootPath(migrationPath);
             TransactionCategoryListResponseModel transactionCategory = migrationService.getTransactionCategory();
@@ -287,10 +315,9 @@ public class MigrationController {
     @GetMapping(value = "/getFileData")
     @LogRequest
     public ResponseEntity<Object> getCsvFileData(String fileName,HttpServletRequest request){
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         try {
             String path = request.getServletContext().getRealPath("/");
-            String migrationPath =path+ "/" + basePath;
+            String migrationPath = Paths.get(path, basePath).toString();
             log.info(LOG_INFO_PATTERN,migrationPath);
 			if (fileName.equals("Contacts.csv")) {
 				List<ContactsModel> contactsModel = zohoMigrationService.getCsvFileDataForIContacts(migrationPath,fileName);
@@ -350,9 +377,8 @@ public class MigrationController {
     @ApiOperation("List Of All Uploaded Files ")
     @GetMapping(value = "/getListOfAllFiles")
     public ResponseEntity<Object> getListOfAllFilesNames(HttpServletRequest request){
-        Integer userId = (jwtTokenUtil.getUserIdFromHttpRequest(request));
         String path = request.getServletContext().getRealPath("/");
-        String migrationPath =path+ "/" + basePath;
+        String migrationPath = Paths.get(path, basePath).toString();
         log.info("info{}",migrationPath);
         List<String> zohoFileNames;
 		try {
@@ -378,9 +404,8 @@ public class MigrationController {
     @ApiOperation("Delete Uploaded Files ")
     @DeleteMapping(value = "/deleteFiles")
     public ResponseEntity<Object> deleteFilesByFilesNames(@RequestBody UploadedFilesDeletionReqModel fileNames ,HttpServletRequest request){
-        Integer userId = (jwtTokenUtil.getUserIdFromHttpRequest(request));
         String path = request.getServletContext().getRealPath("/");
-        String migrationPath =path+ "/" + basePath;
+        String migrationPath = Paths.get(path, basePath).toString();
         log.info("info{}",migrationPath);
         List<DataMigrationRespModel> zohoDeletedFileNames = migrationService.deleteFiles(migrationPath,fileNames);
         if (!zohoDeletedFileNames.isEmpty()){
@@ -399,9 +424,8 @@ public class MigrationController {
     @GetMapping(value = "/getMigrationSummary")
     public ResponseEntity<List<DataMigrationRespModel>> getMigrationSummary(HttpServletRequest request) throws IOException {
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        String fileLocation = basePath;
         String path = request.getServletContext().getRealPath("/");
-        String migrationPath =path+ "/" + basePath;
+        String migrationPath = Paths.get(path, basePath).toString();
         log.info("info{}",migrationPath);
         Company company = companyService.getCompany();
         String migFromDate = company.getAccountStartDate().toString();
@@ -416,9 +440,8 @@ public class MigrationController {
     @DeleteMapping(value = "/rollbackMigratedData")
     public ResponseEntity<Object> rollbackMigratedData(HttpServletRequest request){
         try {
-            Integer userId = (jwtTokenUtil.getUserIdFromHttpRequest(request));
             String path = request.getServletContext().getRealPath("/");
-            String migrationPath =path+ "/" + basePath;
+            String migrationPath = Paths.get(path, basePath).toString();
             log.info(LOG_INFO_PATTERN,migrationPath);
             String rollBackMigratedData = zohoMigrationService.rollBackMigratedData(migrationPath);
             return new ResponseEntity<>(rollBackMigratedData,HttpStatus.OK);

@@ -1,5 +1,7 @@
 package com.simpleaccounts.service.impl;
 
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
+
 import com.simpleaccounts.constant.EmailConstant;
 import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.ContactFilterEnum;
@@ -16,7 +18,9 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.contactcontroller.ContactRequestFilterModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.ContactService;
-
+import com.simpleaccounts.service.EmaiLogsService;
+import com.simpleaccounts.service.UserService;
+import com.simpleaccounts.utils.EmailSender;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -26,23 +30,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import com.simpleaccounts.service.EmaiLogsService;
-import com.simpleaccounts.service.UserService;
-import com.simpleaccounts.utils.EmailSender;
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.DatatypeConverter;
-
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
 
 /**
  * Created by mohsin on 3/3/2017.
@@ -55,15 +52,11 @@ public class ContactServiceImpl extends ContactService {
     private static final String TEMPLATE_VAR_NUMBER = "{number}";
     
     private final Logger logger = LoggerFactory.getLogger(ContactService.class);
-    @Autowired
-    ResourceLoader resourceLoader;
+    private final ResourceLoader resourceLoader;
     private final ContactDao contactDao;
-    @Autowired
-    UserService userService;
-    @Autowired
-    EmailSender emailSender;
-    @Autowired
-    EmaiLogsService emaiLogsService;
+    private final UserService userService;
+    private final EmailSender emailSender;
+    private final EmaiLogsService emaiLogsService;
 
     private final JwtTokenUtil jwtTokenUtil;
     @Override
@@ -120,7 +113,7 @@ public class ContactServiceImpl extends ContactService {
     @Override
     public boolean sendInvoiceThankYouMail(Contact contact, Integer invoiceType, String number, String amount, String date, BigDecimal dueAmount, HttpServletRequest request) {
         long millis=System.currentTimeMillis();
-//        java.sql.Date date=new java.sql.Date(millis);
+
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         User user=userService.findByPK(userId);
         String image="";
@@ -139,7 +132,7 @@ public class ContactServiceImpl extends ContactService {
         String temp1 = htmlContent.replace("{name}", contact.getOrganization() != null && !contact.getOrganization().isEmpty() ?
                 contact.getOrganization() :
                 (contact.getFirstName() + " " + contact.getLastName()))
-                .replace("{date}", date.toString() )
+                .replace("{date}", date )
                 .replace("{amount}",contact.getCurrency().getCurrencyIsoCode()+" "+amount)
                 .replace("{companylogo}",image)
                 .replace("{dueAmount}", dueAmount.toPlainString());

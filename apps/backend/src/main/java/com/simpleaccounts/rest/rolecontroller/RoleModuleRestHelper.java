@@ -3,39 +3,34 @@ package com.simpleaccounts.rest.rolecontroller;
 import com.simpleaccounts.entity.Role;
 import com.simpleaccounts.entity.RoleModuleRelation;
 import com.simpleaccounts.entity.SimpleAccountsModules;
-
 import com.simpleaccounts.model.RoleRequestModel;
-
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.RoleService;
 import com.simpleaccounts.service.impl.RoleServiceImpl;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-
-import java.util.List;
-
 @Component
+@RequiredArgsConstructor
 public class RoleModuleRestHelper {
 
     private final Logger logger = LoggerFactory.getLogger(RoleModuleRestHelper.class);
 
-    @Autowired
-    RoleService roleService;
+    private final RoleService roleService;
 
-    @Autowired
-    RoleRequestModel roleRequestModel;
+    private final RoleRequestModel roleRequestModel;
 
-    @Autowired
-    RoleServiceImpl roleServiceImpl;
+    private final RoleServiceImpl roleServiceImpl;
 
-    @Autowired
-    JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
     public Role getEntity(RoleRequestModel roleRequestModel,  HttpServletRequest request) {
 

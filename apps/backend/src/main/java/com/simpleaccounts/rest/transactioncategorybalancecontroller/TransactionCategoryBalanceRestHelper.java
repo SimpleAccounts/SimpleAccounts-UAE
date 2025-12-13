@@ -20,6 +20,17 @@ import com.simpleaccounts.exceptions.ServiceException;
 import com.simpleaccounts.service.TransactionCategoryBalanceService;
 import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.service.exceptions.ServiceErrorCode;
+import com.simpleaccounts.utils.DateUtils;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
@@ -80,7 +91,7 @@ public class TransactionCategoryBalanceRestHelper {
 					model.setRunningBalance(balance.getRunningBalance());
 					model.setTransactionCategoryName(balance.getTransactionCategory().getTransactionCategoryName());
 					model.setChartOfAccount(balance.getTransactionCategory().getChartOfAccount().getChartOfAccountName());
-					//model.setCurrencySymbol(balance.get);
+
 					modelList.add(model);
 				}
 				else

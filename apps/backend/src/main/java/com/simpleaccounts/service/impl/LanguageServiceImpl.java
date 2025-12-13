@@ -1,20 +1,21 @@
 package com.simpleaccounts.service.impl;
 
+
 import com.simpleaccounts.dao.LanguageDao;
 import com.simpleaccounts.entity.Language;
 import com.simpleaccounts.service.LanguageService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
  * Created by mohsin on 3/11/2017.
  */
 @Service
+@RequiredArgsConstructor
 public class LanguageServiceImpl extends LanguageService {
 
-    @Autowired
-    LanguageDao languageDao;
+    private final LanguageDao languageDao;
 
     @Override
     public List<Language> getLanguages() {

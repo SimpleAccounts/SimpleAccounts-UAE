@@ -6,16 +6,17 @@ import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditResponseModel;
 import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountResponseModel;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class simpleAccountReportRestHelper {
 
-@Autowired
-SimpleAccountReportService simpleAccountReportService;
+private final SimpleAccountReportService simpleAccountReportService;
 
     public  PurchaseByProductResponseModel getPurchaseByProduct(ReportRequestModel requestModel) {
 

@@ -1,5 +1,6 @@
 package com.simpleaccounts.service.impl;
 
+
 import com.simpleaccounts.constant.dbfilter.CurrencyFilterEnum;
 import com.simpleaccounts.dao.CurrencyDao;
 import com.simpleaccounts.entity.Currency;
@@ -7,20 +8,19 @@ import com.simpleaccounts.entity.CurrencyConversion;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.CurrencyService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by mohsin on 3/11/2017.
  */
 @Service("currencyService")
+@RequiredArgsConstructor
 public class CurrencyServiceImpl extends CurrencyService {
 
-	@Autowired
-	CurrencyDao currencyDao;
+	private final CurrencyDao currencyDao;
 
 	@Override
 	public List<Currency> getCurrencies() {

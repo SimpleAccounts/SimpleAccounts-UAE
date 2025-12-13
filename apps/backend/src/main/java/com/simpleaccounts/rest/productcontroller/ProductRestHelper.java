@@ -1,12 +1,12 @@
 package com.simpleaccounts.rest.productcontroller;
 
+import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+import com.simpleaccounts.constant.ProductPriceType;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -15,13 +15,17 @@ import com.simpleaccounts.repository.UnitTypesRepository;
 import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateService;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.InvoiceNumberUtil;
-import lombok.extern.slf4j.Slf4j;
+import com.simpleaccounts.constant.ProductPriceType;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.simpleaccounts.constant.ProductPriceType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
@@ -30,17 +34,13 @@ import org.springframework.util.CollectionUtils;
 @RequiredArgsConstructor
 public class ProductRestHelper {
 
-	@Autowired
-	VatCategoryService vatCategoryService;
+	private final VatCategoryService vatCategoryService;
 
-	@Autowired
-	ProductService productService;
+	private final ProductService productService;
 
-	@Autowired
-	ProductCategoryService productCategoryService;
+	private final ProductCategoryService productCategoryService;
 
-	@Autowired
-	ProductWarehouseService productWarehouseService;
+	private final ProductWarehouseService productWarehouseService;
 
 	private final ProductLineItemService productLineItemService;
 

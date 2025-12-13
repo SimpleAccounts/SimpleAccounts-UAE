@@ -5,27 +5,26 @@
  */
 package com.simpleaccounts.rest.transactioncategorycontroller;
 
-import java.util.*;
-import lombok.RequiredArgsConstructor;
-import java.util.stream.Collectors;
-
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
-
+import com.simpleaccounts.constant.DefaultTypeConstant;
+import java.util.*;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
 import com.simpleaccounts.entity.*;
-import com.simpleaccounts.repository.*;
-import com.simpleaccounts.repository.ExpenseRepository;
-import com.simpleaccounts.service.*;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+import com.simpleaccounts.repository.*;
+import com.simpleaccounts.repository.ExpenseRepository;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.SingleLevelDropDownModel;
+import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
+import java.util.*;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 
 /**
  *
@@ -118,9 +117,9 @@ public class TranscationCategoryHelper {
 					transactionCategoryModel.setVatCategoryId(transactionCategory.getVatCategory().getId());
 				}
 
-				if (transactionCategory.getEditableFlag() == true){
+					if (Boolean.TRUE.equals(transactionCategory.getEditableFlag())){
 					List<JournalLineItem> journalLineItemListEntries = journalLineItemRepository.findAllByTransactionCategory(transactionCategory);
-					if(journalLineItemListEntries!=null && journalLineItemListEntries.size()!=0)
+					if(journalLineItemListEntries!=null && !journalLineItemListEntries.isEmpty())
 						transactionCategoryModel.setEditableFlag(false);
 					else{
 						List<InvoiceLineItem> invoiceLineItemList = invoiceLineitemRepository.findAllByTrnsactioncCategory(transactionCategory);
@@ -128,18 +127,18 @@ public class TranscationCategoryHelper {
 								.filter(invoiceLineItem -> invoiceLineItem.getInvoice().getDeleteFlag()!= true )
 								.collect(Collectors.toList());
 
-						if(invoiceLineItemList!=null && invoiceLineItemList.size()!=0)
+						if(invoiceLineItemList!=null && !invoiceLineItemList.isEmpty())
 							transactionCategoryModel.setEditableFlag(false);
 						else {
 							List<Expense> expenseList = expenseRepository.findAllByTransactionCategory(transactionCategory);
-							if (expenseList!=null && expenseList.size()!=0)
+							if (expenseList!=null && !expenseList.isEmpty())
 								transactionCategoryModel.setEditableFlag(false);
 							else {
 								List<ProductLineItem> productLineItems = productLineItemRepository.findAllByTransactioncategory(transactionCategory);
 								productLineItems = productLineItems.stream()
 										.filter(productLineItem -> productLineItem.getProduct().getDeleteFlag()!= true )
 										.collect(Collectors.toList());
-								if (productLineItems!=null && productLineItems.size()!=0)
+								if (productLineItems!=null && !productLineItems.isEmpty())
 									transactionCategoryModel.setEditableFlag(false);
 							}
 						}
@@ -150,7 +149,7 @@ public class TranscationCategoryHelper {
 					transactionCategoryModelList.add(transactionCategoryModel);
 			}
 		}
-		// Collections.reverse(transactionCategoryModelList);
+
 		return transactionCategoryModelList;
 	}
 
@@ -315,11 +314,11 @@ public class TranscationCategoryHelper {
 			List<EmployeeTransactionCategoryRelation> employeeTransactionCategoryRelationList=employeeTransactioncategoryService.findByAttributes(param);
 
 			//added check for Inactive Employee TC's
-			if(employeeTransactionCategoryRelationList.size()!=0
-					&& employeeTransactionCategoryRelationList.get(0).getEmployee().getIsActive()==true) {
-				parentCategory = transactionCategory.getChartOfAccount().getChartOfAccountName();
-				dropDownModelList.add(
-						new DropdownModel(transactionCategory.getTransactionCategoryId(), transactionCategory.getTransactionCategoryName()));
+				if(!employeeTransactionCategoryRelationList.isEmpty()
+						&& Boolean.TRUE.equals(employeeTransactionCategoryRelationList.get(0).getEmployee().getIsActive())) {
+					parentCategory = transactionCategory.getChartOfAccount().getChartOfAccountName();
+					dropDownModelList.add(
+							new DropdownModel(transactionCategory.getTransactionCategoryId(), transactionCategory.getTransactionCategoryName()));
 			}//if
 		}
 		return dropDownModelList;

@@ -9,13 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.simpleaccounts.constant.CommonStatusEnum;
-import com.simpleaccounts.entity.VatReportFiling;
-import com.simpleaccounts.rest.financialreport.VatReportFilingRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;
@@ -27,6 +20,7 @@ import com.simpleaccounts.dao.JournalLineItemDao;
 import com.simpleaccounts.dao.SupplierInvoicePaymentDao;
 import com.simpleaccounts.entity.Invoice;
 import com.simpleaccounts.entity.JournalLineItem;
+import com.simpleaccounts.entity.VatReportFiling;
 import com.simpleaccounts.model.EarningDetailsModel;
 import com.simpleaccounts.model.OverDueAmountDetailsModel;
 import com.simpleaccounts.model.VatReportResponseModel;
@@ -36,6 +30,7 @@ import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simpleaccounts.rest.financialreport.AmountDetailRequestModel;
+import com.simpleaccounts.rest.financialreport.VatReportFilingRepository;
 import com.simpleaccounts.rest.financialreport.VatReportFilingRequestModel;
 import com.simpleaccounts.rest.invoice.dto.InvoiceAmoutResultSet;
 import com.simpleaccounts.rest.invoice.dto.VatAmountDto;
@@ -43,6 +38,16 @@ import com.simpleaccounts.service.InvoiceService;
 import com.simpleaccounts.service.JournalLineItemService;
 import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateUtils;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 @Service("SupplierInvoiceService")
 @RequiredArgsConstructor
@@ -51,11 +56,9 @@ public class InvoiceServiceImpl extends InvoiceService {
 
 	private final InvoiceDao supplierInvoiceDao;
 
-	@Autowired
-	ChartUtil util;
+	private final ChartUtil util;
 
-	@Autowired
-	DateUtils dateUtils;
+	private final DateUtils dateUtils;
 
 	private final JournalDao journalDao;
 
@@ -266,9 +269,9 @@ public class InvoiceServiceImpl extends InvoiceService {
 			VatAmountDto amountDto = new VatAmountDto();
 			BigDecimal amount = invoiceResultSet.getTotalAmount().subtract(invoiceResultSet.getTotalVatAmount());
 			amountDto.setId(invoiceResultSet.getId());
-			amountDto.setDate(invoiceResultSet.getInvoiceDate().toString());
+			amountDto.setDate(invoiceResultSet.getInvoiceDate());
 			amountDto.setEntry(invoiceResultSet.getReferenceNumber());
-			//amountDto.setTransactionType(getReferenceNumber(invoiceResultSet.getId()));
+
 			amountDto.setAmount(amount);
 			amountDto.setVatAmount(invoiceResultSet.getTotalVatAmount());
 			amountDto.setCurrency(invoiceResultSet.getCurrency());
@@ -284,9 +287,9 @@ public class InvoiceServiceImpl extends InvoiceService {
 					amountDto.setAmount(amount);
 				}
 				amountDto.setId(invoiceResultSet.getId());
-				amountDto.setDate(invoiceResultSet.getInvoiceDate().toString());
+				amountDto.setDate(invoiceResultSet.getInvoiceDate());
 				amountDto.setEntry(invoiceResultSet.getReferenceNumber());
-				//amountDto.setTransactionType(getReferenceNumber(invoiceResultSet.getId()));
+
 				amountDto.setVatAmount(invoiceResultSet.getTotalVatAmount());
 				amountDto.setCurrency(invoiceResultSet.getCurrency());
 				amoutDtoList.add(amountDto);

@@ -8,9 +8,7 @@ package com.simpleaccounts.service;
 import com.simpleaccounts.constant.dbfilter.CompanyFilterEnum;
 import com.simpleaccounts.entity.Company;
 import com.simpleaccounts.entity.Currency;
-
 import com.simpleaccounts.rest.DropdownModel;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +35,5 @@ public abstract class CompanyService extends SimpleAccountsService<Integer, Comp
     public abstract List<DropdownModel> getCompaniesForDropdown();
 
    public abstract Currency getCompanyCurrency();
-
-//   public abstract String registerCompany(RegistrationModel registrationModel) throws Exception;
 
 }

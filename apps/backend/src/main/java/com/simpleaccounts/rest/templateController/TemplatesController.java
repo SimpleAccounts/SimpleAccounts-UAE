@@ -2,10 +2,17 @@ package com.simpleaccounts.rest.templateController;
 
 import com.simpleaccounts.aop.LogRequest;
 import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.rest.vatcontroller.VatController;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.MailThemeTemplatesService;
 import io.swagger.annotations.ApiOperation;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +45,7 @@ public class TemplatesController {
 
     private final EntityManager entityManager;
 
-    @Autowired
-    MailThemeTemplatesService mailThemeTemplatesService;
+    private final MailThemeTemplatesService mailThemeTemplatesService;
     
     @LogRequest
     @Transactional(rollbackFor = Exception.class)

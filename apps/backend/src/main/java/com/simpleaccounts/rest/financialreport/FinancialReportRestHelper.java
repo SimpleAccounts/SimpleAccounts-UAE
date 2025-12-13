@@ -21,13 +21,16 @@ import com.simpleaccounts.service.ExpenseService;
 import com.simpleaccounts.service.InvoiceService;
 import com.simpleaccounts.service.TransactionCategoryClosingBalanceService;
 import com.simpleaccounts.utils.DateFormatUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import java.math.BigDecimal;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-	@Component
+@Component
 	@SuppressWarnings({"java:S3973", "java:S131"})
 	@RequiredArgsConstructor
 public class FinancialReportRestHelper {
@@ -41,14 +44,11 @@ public class FinancialReportRestHelper {
 	private static final String OPENING_BALANCE_OFFSET_ASSETS = "Opening Balance Offset Assets";
 	private static final String OPENING_BALANCE_OFFSET_LIABILITIES = "Opening Balance Offset Liabilities";
 
-	@Autowired
-	TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
+	private final TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
-	@Autowired
-	InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
-	@Autowired
-	ExpenseService expenseService;
+	private final ExpenseService expenseService;
 
 	private final CreditNoteLineItemRepository creditNoteLineItemRepository;
 
@@ -56,8 +56,7 @@ public class FinancialReportRestHelper {
 
 	private final VatReportFilingRepository vatReportFilingRepository;
 
-	@Autowired
-	DateFormatUtil dateUtil;
+	private final DateFormatUtil dateUtil;
 
 	/**
 	 *
@@ -872,7 +871,7 @@ public class FinancialReportRestHelper {
 					continue;
 				boolean isNegative = false;
 				if (closingBalance.longValue() < 0) {
-				//	closingBalance = closingBalance.negate();
+
 					isNegative=true;
 				}
 				switch (chartOfAccountCategoryCodeEnum) {
@@ -898,7 +897,7 @@ public class FinancialReportRestHelper {
 					case ACCOUNTS_PAYABLE:
 						responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
 						totalOperatingIncome = totalOperatingIncome.add(closingBalance);
-						//if(isNegative)
+
 							grossCashOutflow = grossCashOutflow.add(closingBalance);
 
 						break;

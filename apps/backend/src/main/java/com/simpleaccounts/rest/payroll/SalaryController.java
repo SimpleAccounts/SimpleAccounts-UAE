@@ -1,19 +1,20 @@
 package com.simpleaccounts.rest.payroll;
-import com.simpleaccounts.aop.LogRequest;
-import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
+import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.model.SalaryPersistModel;
-
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.rest.payroll.service.Impl.SalaryServiceImpl;
 import com.simpleaccounts.rest.payroll.service.SalaryService;
 import com.simpleaccounts.rest.payroll.service.SalaryTemplateService;
 import com.simpleaccounts.security.JwtTokenUtil;
-
 import com.simpleaccounts.service.EmploymentService;
 import com.simpleaccounts.service.UserService;
-
 import io.swagger.annotations.ApiOperation;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,16 +46,12 @@ public class SalaryController {
 
     private final SalaryRestHelper salaryRestHelper;
 
-    @Autowired
-    EmploymentService employmentService;
+    private final EmploymentService employmentService;
 
-    @Autowired
-    SalaryTemplateService salaryTemplateService;
+    private final SalaryTemplateService salaryTemplateService;
 
-    @Autowired
-    SalaryService salaryService;
-    @Autowired
-    SalaryServiceImpl salaryServiceImpl;
+    private final SalaryService salaryService;
+    private final SalaryServiceImpl salaryServiceImpl;
 
     @LogRequest
     @ApiOperation(value = "Get SalaryPerMonth  List")
@@ -116,9 +113,9 @@ public class SalaryController {
                                                                    @RequestParam(value = "sendMail") Boolean sendMail,HttpServletRequest request) {
         try {
            SalarySlipModel salarySlipModel=   salaryService.getSalaryByEmployeeId(employeeId,salaryDate);
-           if(sendMail==true && employeeId!=null) {
-               salaryRestHelper.sendPayslipEmail(salarySlipModel, employeeId, startDate, endDate, request);
-           }
+	           if(Boolean.TRUE.equals(sendMail) && employeeId!=null) {
+	               salaryRestHelper.sendPayslipEmail(salarySlipModel, employeeId, startDate, endDate, request);
+	           }
             return   new ResponseEntity<>(salarySlipModel,HttpStatus.OK);
        } catch (Exception e) {
         logger.error(ERROR, e);
@@ -157,4 +154,3 @@ public class SalaryController {
     }
 
 }
-

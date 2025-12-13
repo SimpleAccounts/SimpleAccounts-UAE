@@ -1,21 +1,21 @@
 package com.simpleaccounts.service.impl;
+
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.EmployeeParentRelationDao;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeParentRelation;
 import com.simpleaccounts.service.EmployeeParentRelationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 @Service("employeeParentRelationService")
 @Transactional
+@RequiredArgsConstructor
 public class EmployeeParentRelationServiceImpl extends EmployeeParentRelationService {
 
-    @Autowired
-    EmployeeParentRelationDao employeeParentRelationDao;
+    private final EmployeeParentRelationDao employeeParentRelationDao;
 
     protected Dao<Integer, EmployeeParentRelation> getDao() {
         return this.employeeParentRelationDao;

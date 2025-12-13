@@ -1,5 +1,17 @@
 package com.simpleaccounts.rest.reconsilationcontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
+import com.simpleaccounts.constant.*;
+import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
+import com.simpleaccounts.entity.bankaccount.ReconcileStatus;
+import com.simpleaccounts.entity.bankaccount.Transaction;
+import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+import com.simpleaccounts.rest.transactioncontroller.TransactionPresistModel;
+import com.simpleaccounts.service.*;
+import com.simpleaccounts.service.bankaccount.ReconcileStatusService;
+import com.simpleaccounts.utils.DateFormatUtil;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import java.text.ParseException;
@@ -9,27 +21,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-
-import com.simpleaccounts.constant.*;
-import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.bankaccount.ReconcileStatus;
-import com.simpleaccounts.rest.transactioncontroller.TransactionPresistModel;
-import com.simpleaccounts.service.*;
-import com.simpleaccounts.service.bankaccount.ReconcileStatusService;
-import com.simpleaccounts.utils.DateFormatUtil;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
-import com.simpleaccounts.entity.bankaccount.Transaction;
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-
-	@Component
+@Component
 	@SuppressWarnings("java:S115")
 	@RequiredArgsConstructor
 public class ReconsilationRestHelper {
@@ -184,7 +182,7 @@ public class ReconsilationRestHelper {
 			exchangeRate = transactionPresistModel.getExchangeRate();
 		}
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
-		//BigDecimal amount = transactionPresistModel.getAmount();
+
 		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
 
 		ChartOfAccount transactionType = transactionCategory.getChartOfAccount();
@@ -274,10 +272,10 @@ public class ReconsilationRestHelper {
 	public Journal getByTransactionTypeForPayroll(@ModelAttribute TransactionPresistModel transactionPresistModel,
 										Integer transactionCategoryCode, int userId,
 										Transaction transaction, Expense expense,BigDecimal amount) {
-		//CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(transactionPresistModel.getCurrencyCode());
+
 		BigDecimal exchangeRate = transactionPresistModel.getExchangeRate();
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
-//		BigDecimal amount = transactionPresistModel.getAmount();
+
 		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
 
 		ChartOfAccount transactionType = transactionCategory.getChartOfAccount();
@@ -448,7 +446,7 @@ public class ReconsilationRestHelper {
 			date = Date.from(reconcileStatus.getReconciledDate().toLocalDate().atStartOfDay(timeZone).toInstant());
 			String reconsileDate = simpleDateFormat.format(date);
 			reconcileStatusListModel.setReconciledDuration(openingDate+ " - "+reconsileDate);
-			//reconcileStatusListModel.setReconciledDuration(dateUtil.getLocalDateTimeAsString(bankOpeningDate, "dd-MM-yyyy").toString()+" - "+dateUtil.getLocalDateTimeAsString(reconcileStatus.getReconciledDate(), "dd-MM-yyyy").toString());
+
 			reconcileStatusModelList.add(reconcileStatusListModel);
 		}
 		return reconcileStatusModelList;

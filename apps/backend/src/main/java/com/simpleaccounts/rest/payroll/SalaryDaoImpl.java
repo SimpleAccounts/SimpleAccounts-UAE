@@ -6,31 +6,31 @@ import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.impl.TransactionCategoryClosingBalanceDaoImpl;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.repository.PayrollRepository;
-
 import com.simpleaccounts.rest.payroll.service.EmployeeSalaryComponentRelationService;
 import com.simpleaccounts.rest.payroll.service.IncompleteEmployeeProfileModel;
 import com.simpleaccounts.rest.payroll.service.SalarySlipListtModel;
-
 import com.simpleaccounts.service.EmployeeBankDetailsService;
 import com.simpleaccounts.service.EmployeeService;
 import com.simpleaccounts.service.EmploymentService;
 import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateFormatUtil;
-
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import javax.persistence.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import javax.persistence.Query;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import javax.persistence.Query;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
-	@Repository(value = "salaryDao")
+@Repository(value = "salaryDao")
 	@SuppressWarnings("java:S131")
 	@RequiredArgsConstructor
 public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements SalaryDao{
@@ -38,18 +38,12 @@ public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements Salar
     private static final String JSON_KEY_EMPLOYEE = "employee";
     
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionCategoryClosingBalanceDaoImpl.class);
-    @Autowired
-    EmployeeService employeeService;
-    @Autowired
-    EmploymentService employmentService;
-    @Autowired
-    ChartUtil chartUtil;
-    @Autowired
-    EmployeeBankDetailsService employeeBankDetailsService;
-    @Autowired
-    EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
-    @Autowired
-    DateFormatUtil dateFormatUtil;
+    private final EmployeeService employeeService;
+    private final EmploymentService employmentService;
+    private final ChartUtil chartUtil;
+    private final EmployeeBankDetailsService employeeBankDetailsService;
+    private final EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
+    private final DateFormatUtil dateFormatUtil;
     private final PayrollRepository payrollRepository;
 
     public List getSalaryByEmployeeId(Employee employee,String salaryDate){
@@ -68,7 +62,7 @@ public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements Salar
 
         List<SalaryPerMonthModel> salaryPerMonthModelList = new ArrayList<>();
         salaryListPerMonthResponseModel.setResultSalaryPerMonthList(salaryPerMonthModelList);
-        //  String quertStr = "SELECT i.contact.contactId as ContactId, c.firstName as Name, count(i.id) as InvoiceCount, Sum(i.totalAmount) as TotalAmount, Sum(i.totalVatAmount) as TotalVatAmount FROM Invoice i, Contact c WHERE i.contact.contactId=c.contactId and i.type=1 and i.createdDate BETWEEN :startDate and :endDate GROUP by i.contact.contactId";
+
         String quertStr = " SELECT s from  Salary s where s.salaryDate < :presentDate GROUP BY s.employeeId,s.salaryComponent.id";
         Query query = getEntityManager().createQuery(quertStr);
         query.setParameter("presentDate",  dateFormatUtil.getDateStrAsLocalDateTime(requestModel.getPresentDate(), CommonColumnConstants.DD_MM_YYYY));
@@ -132,10 +126,10 @@ public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements Salar
             if (employeeBankDetailsList!=null && !employeeBankDetailsList.isEmpty()) {
                 employeeBankDetails = employeeBankDetailsList.get(0);
             }
-            if (employment.getId()!=null&&!employmentList.isEmpty()&&!employeeBankDetailsList.isEmpty()&&employeeBankDetails.getId()!=null&&((salary.getMonthlyAmount()).compareTo(BigDecimal.ZERO)>0)&&((salary.getYearlyAmount()).compareTo(BigDecimal.ZERO)>0)
-                    &&salary.getEmployeeId().getIsActive()==true) {
-                if (salaryPaidEmployeeList.contains(salary.getEmployeeId().getId()))
-                    continue;
+	            if (employment.getId()!=null&&!employmentList.isEmpty()&&!employeeBankDetailsList.isEmpty()&&employeeBankDetails.getId()!=null&&((salary.getMonthlyAmount()).compareTo(BigDecimal.ZERO)>0)&&((salary.getYearlyAmount()).compareTo(BigDecimal.ZERO)>0)
+	                    && Boolean.TRUE.equals(salary.getEmployeeId().getIsActive())) {
+	                if (salaryPaidEmployeeList.contains(salary.getEmployeeId().getId()))
+	                    continue;
                 SalaryPerMonthModel salaryPerMonthModel = salaryMap.get(salary.getEmployeeId().getId());
                 if (salaryPerMonthModel == null) {
                     salaryPerMonthModel = new SalaryPerMonthModel();
@@ -143,7 +137,7 @@ public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements Salar
                     salaryPerMonthModel.setEmployeeName(salary.getEmployeeId().getFirstName() + " " + salary.getEmployeeId().getLastName());
                     salaryPerMonthModel.setPayDays(salary.getNoOfDays());
                     salaryPerMonthModel.setStatus("Draft");
-                    // salaryPaidEmployeeList.add(salary.getEmployeeId().getId());
+
                     salaryMap.put(salary.getEmployeeId().getId(), salaryPerMonthModel);
 
                     salaryPerMonthModelList.add(salaryPerMonthModel);

@@ -3,6 +3,7 @@ package com.simpleaccounts.rest.reconsilationcontroller;
 
 import com.simpleaccounts.aop.LogRequest;
 import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simpleaccounts.constant.ReconsileCategoriesEnumConstant;
@@ -25,6 +26,13 @@ import com.simpleaccounts.service.bankaccount.ReconcileStatusService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.service.impl.TransactionCategoryClosingBalanceServiceImpl;
 import io.swagger.annotations.ApiOperation;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +41,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-
-	@RestController
+@RestController
 	@RequestMapping("/rest/reconsile")
 	@SuppressWarnings("java:S131")
 	@RequiredArgsConstructor
@@ -72,8 +71,7 @@ public class ReconsilationController {
 
 	private final TransactionService transactionService;
 
-	@Autowired
-	TransactionCategoryClosingBalanceServiceImpl transactionCategoryClosingBalanceService;
+	private final TransactionCategoryClosingBalanceServiceImpl transactionCategoryClosingBalanceService;
 
 	private final TransactionExpensesRepository transactionExpensesRepository;
 

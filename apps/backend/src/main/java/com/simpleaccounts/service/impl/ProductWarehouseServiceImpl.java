@@ -9,6 +9,9 @@ import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.ProductWarehouseDao;
 import com.simpleaccounts.entity.ProductWarehouse;
 import com.simpleaccounts.service.ProductWarehouseService;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Utkarsh Bhavsar on 21/03/17.

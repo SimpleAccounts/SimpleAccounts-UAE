@@ -1,15 +1,13 @@
 package com.simpleaccounts.contract;
 
+import static org.assertj.core.api.Assertions.*;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.regex.Pattern;
-
-import static org.assertj.core.api.Assertions.*;
 
 /**
  * Contract tests for API schema validation.

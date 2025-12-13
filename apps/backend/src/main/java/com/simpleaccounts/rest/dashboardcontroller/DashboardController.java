@@ -2,6 +2,7 @@ package com.simpleaccounts.rest.dashboardcontroller;
 
 import com.simpleaccounts.aop.LogExecutionTime;
 import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
@@ -16,6 +17,12 @@ import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateFormatUtil;
 import io.swagger.annotations.ApiOperation;
+import java.math.BigDecimal;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,11 +56,9 @@ public class DashboardController {
 
 	private final FinancialReportRestHelper financialReportRestHelper;
 
-	@Autowired
-	TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
+	private final TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
-	@Autowired
-	TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
 	private final DashboardRestHelper dashboardRestHelper;
 

@@ -103,3 +103,4 @@ class FinancialReportControllerTest {
         verify(financialReportRestHelper, times(1)).getCashFlowReport(any());
     }
 }
+

@@ -1,13 +1,12 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 
-import java.util.Map;
-import lombok.RequiredArgsConstructor;
-
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.dbfilter.DateFormatFilterEnum;
 import com.simpleaccounts.entity.User;
 import java.util.EnumMap;
-
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.rest.simpleaccountreports.Aging.AgingListModel;
 import com.simpleaccounts.rest.simpleaccountreports.Aging.AgingRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditRequestModel;
@@ -17,6 +16,8 @@ import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountRespon
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.UserService;
 import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

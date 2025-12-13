@@ -1,26 +1,25 @@
 package com.simpleaccounts.fileuploadconfig;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
+import com.simpleaccounts.utils.OSValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import com.simpleaccounts.utils.OSValidator;
 
 /**
  * @author S@urabh
  */
 @Configuration
+@RequiredArgsConstructor
 public class StaticResourceConfiguration implements WebMvcConfigurer {
 
-	@Autowired
-	OSValidator osVaidator;
+	private final OSValidator osVaidator;
 
 	/**
 	 * {@link com.simpleaccounts.fileuploadconfig.FileUploadConfig#getFileBaseLocation}
 	 */
-	@Autowired
-	private String basePath;
+	private final String basePath;
 
 	/**
 	 * @param basePath set base path for view file from server

@@ -3,13 +3,13 @@ package com.simpleaccounts.service.impl;
 import com.simpleaccounts.constant.dbfilter.VatReportFilterEnum;
 import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.*;
+import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.VatRecordPaymentHistory;
-import com.simpleaccounts.entity.VatReportFiling;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.VatRecordPaymentHistoryService;
-import com.simpleaccounts.service.VatReportService;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

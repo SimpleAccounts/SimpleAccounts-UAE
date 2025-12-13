@@ -1,5 +1,7 @@
 package com.simpleaccounts.rfq_po;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.entity.*;
@@ -10,13 +12,14 @@ import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.FileHelper;
-
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
+import java.time.ZoneId;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -636,9 +639,9 @@ PoQuatationController {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-            if (postingRequestModel.getMarkAsSent().booleanValue()==Boolean.FALSE){
-                poQuatationRestHelper.sendQuotation(poQuatationService.findByPK(postingRequestModel.getPostingRefId()), userId,postingRequestModel,request);
-            }
+	            if (!Boolean.TRUE.equals(postingRequestModel.getMarkAsSent())){
+	                poQuatationRestHelper.sendQuotation(poQuatationService.findByPK(postingRequestModel.getPostingRefId()), userId,postingRequestModel,request);
+	            }
             PoQuatation poQuatation=poQuatationService.findByPK(postingRequestModel.getPostingRefId());
             if(poQuatation.getStatus() != 3){
                 poQuatation.setStatus(CommonStatusEnum.POST.getValue());

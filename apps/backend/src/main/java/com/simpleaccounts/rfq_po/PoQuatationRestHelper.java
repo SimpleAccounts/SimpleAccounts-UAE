@@ -1,12 +1,14 @@
 package com.simpleaccounts.rfq_po;
 
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.dao.MailThemeTemplates;
-import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.repository.UnitTypesRepository;
 import com.simpleaccounts.rest.PostingRequestModel;
 import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateService;
@@ -14,21 +16,9 @@ import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.InvoiceNumberUtil;
 import com.simpleaccounts.utils.MailUtility;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -36,7 +26,18 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 @Component
@@ -54,8 +55,7 @@ public class PoQuatationRestHelper {
     @PersistenceContext
     private EntityManager entityManager;
     private final DateFormatUtil dateFormtUtil;
-    @Autowired
-    ResourceLoader resourceLoader;
+    private final ResourceLoader resourceLoader;
     private final ContactService contactService;
 
     private final ProductService productService;
@@ -72,11 +72,9 @@ public class PoQuatationRestHelper {
 
     private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
-    @Autowired
-    InvoiceNumberUtil invoiceNumberUtil;
+    private final InvoiceNumberUtil invoiceNumberUtil;
 
-    @Autowired
-    PoQuatationService poQuatationService;
+    private final PoQuatationService poQuatationService;
 
     private final CurrencyExchangeService currencyExchangeService;
 
@@ -472,12 +470,12 @@ public class PoQuatationRestHelper {
                     break;
                 case MailUtility.RFQ_AMOUNT:
                     if (poQuatation.getTotalAmount() != null) {
-                        rfqDataMap.put(value, poQuatation.getTotalAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+                        rfqDataMap.put(value, poQuatation.getTotalAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
                     }
                     break;
                 case MailUtility.RFQ_VAT_AMOUNT:
                     if (poQuatation.getTotalVatAmount() != null) {
-                        rfqDataMap.put(value, poQuatation.getTotalVatAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+                        rfqDataMap.put(value, poQuatation.getTotalVatAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
                     }
                     break;
                 case MailUtility.PRODUCT:
@@ -644,10 +642,10 @@ public class PoQuatationRestHelper {
                 if (poQuatationLineItem.getVatAmount()!=null){
                     if (row==0){
                         row++;
-                        rfqDataMap.put(value,poQuatationLineItem.getVatAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+                        rfqDataMap.put(value,poQuatationLineItem.getVatAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
                     }
                     else {
-                        rfqDataMap.put("{vatAmount"+row+"}",poQuatationLineItem.getVatAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+                        rfqDataMap.put("{vatAmount"+row+"}",poQuatationLineItem.getVatAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
                         row++;
                     }
                 }
@@ -687,7 +685,7 @@ public class PoQuatationRestHelper {
 
     private void getTotalExciseAmount(PoQuatation poQuatation, Map<String, String> rfqDataMap, String value) {
         if (poQuatation.getTotalExciseAmount() != null) {
-            rfqDataMap.put(value, poQuatation.getTotalExciseAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+            rfqDataMap.put(value, poQuatation.getTotalExciseAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
         }
         else{
             rfqDataMap.put(value, "---");
@@ -924,10 +922,10 @@ public class PoQuatationRestHelper {
                 if (poQuatationLineItem.getUnitCost()!=null){
                     if (row==0){
                         row++;
-                        rfqDataMap.put(value,poQuatationLineItem.getUnitCost().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+                        rfqDataMap.put(value,poQuatationLineItem.getUnitCost().setScale(2, RoundingMode.HALF_EVEN).toString());
                     }
                     else {
-                        rfqDataMap.put("{unitPrice"+row+"}",poQuatationLineItem.getUnitCost().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+                        rfqDataMap.put("{unitPrice"+row+"}",poQuatationLineItem.getUnitCost().setScale(2, RoundingMode.HALF_EVEN).toString());
                         row++;
                     }
                 }
@@ -964,10 +962,10 @@ public class PoQuatationRestHelper {
                 if (poQuatationLineItem.getExciseAmount()!= null) {
                     if (row==0){
                         row++;
-                        rfqDataMap.put(value, poQuatationLineItem.getExciseAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+                        rfqDataMap.put(value, poQuatationLineItem.getExciseAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
                     }
                     else {
-                        rfqDataMap.put("{exciseAmount"+row+"}", poQuatationLineItem.getExciseAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+                        rfqDataMap.put("{exciseAmount"+row+"}", poQuatationLineItem.getExciseAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
                         row++;
                     }
                 }
@@ -1019,7 +1017,7 @@ public class PoQuatationRestHelper {
     }
     private void getTotal(PoQuatation poQuatation, Map<String, String> rfqDataMap, String value) {
         if (poQuatation.getTotalAmount() != null) {
-            rfqDataMap.put(value, poQuatation.getTotalAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+            rfqDataMap.put(value, poQuatation.getTotalAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
         }
         else{
             rfqDataMap.put(value, "---");
@@ -1052,10 +1050,10 @@ public class PoQuatationRestHelper {
                 if (poQuatationLineItem.getSubTotal() != null) {
                     if (row==0){
                         row++;
-                        rfqDataMap.put(value, poQuatationLineItem.getSubTotal().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString() );
+                        rfqDataMap.put(value, poQuatationLineItem.getSubTotal().setScale(2, RoundingMode.HALF_EVEN).toString() );
                     }
                     else {
-                        rfqDataMap.put("{subTotal"+row+"}",poQuatationLineItem.getSubTotal().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+                        rfqDataMap.put("{subTotal"+row+"}",poQuatationLineItem.getSubTotal().setScale(2, RoundingMode.HALF_EVEN).toString());
                         row++;
                     }
                 }
@@ -1567,12 +1565,12 @@ public class PoQuatationRestHelper {
                     break;
                 case MailUtility.PO_AMOUNT:
                     if (poQuatation.getTotalAmount() != null) {
-                        poDataMap.put(value, poQuatation.getTotalAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+                        poDataMap.put(value, poQuatation.getTotalAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
                     }
                     break;
                 case MailUtility.PO_VAT_AMOUNT:
                     if (poQuatation.getTotalVatAmount() != null) {
-                        poDataMap.put(value, poQuatation.getTotalVatAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+                        poDataMap.put(value, poQuatation.getTotalVatAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
                     }
                     else{
                         poDataMap.put(value, "---");
@@ -2661,11 +2659,11 @@ public class PoQuatationRestHelper {
                         if (row==0){
                             row++;
                             String percentagesymbol = invoiceLineItem.getDiscountType().equals(DiscountType.PERCENTAGE) ? "%" : "";
-                            invoiceDataMap.put(value, invoiceLineItem.getDiscount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString() +percentagesymbol);
+                            invoiceDataMap.put(value, invoiceLineItem.getDiscount().setScale(2, RoundingMode.HALF_EVEN).toString() +percentagesymbol);
                         }
                         else {
                             String percentagesymbol = invoiceLineItem.getDiscountType().equals(DiscountType.PERCENTAGE) ? "%" : "";
-                            invoiceDataMap.put("{discount"+row+"}", invoiceLineItem.getDiscount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString()+percentagesymbol);
+                            invoiceDataMap.put("{discount"+row+"}", invoiceLineItem.getDiscount().setScale(2, RoundingMode.HALF_EVEN).toString()+percentagesymbol);
                             row++;
                         }
                     }
@@ -2789,4 +2787,3 @@ public class PoQuatationRestHelper {
         return emailBodyBuilder.toString();
     }
 }
-

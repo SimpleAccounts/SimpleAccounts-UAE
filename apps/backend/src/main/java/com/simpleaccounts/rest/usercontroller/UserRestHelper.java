@@ -1,30 +1,28 @@
 package com.simpleaccounts.rest.usercontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
+import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.PasswordHistory;
+import com.simpleaccounts.entity.User;
+import com.simpleaccounts.entity.UserCredential;
+import com.simpleaccounts.repository.EmployeeUserRelationRepository;
+import com.simpleaccounts.repository.PasswordHistoryRepository;
+import com.simpleaccounts.repository.UserCredentialRepository;
+import com.simpleaccounts.service.RoleService;
+import com.simpleaccounts.service.UserService;
+import com.simpleaccounts.utils.DateFormatUtil;
+import com.simpleaccounts.utils.MessageUtil;
+import com.simpleaccounts.utils.SimpleAccountsMessage;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.simpleaccounts.entity.PasswordHistory;
-import com.simpleaccounts.entity.UserCredential;
-import com.simpleaccounts.entity.*;
-import com.simpleaccounts.repository.EmployeeUserRelationRepository;
-import com.simpleaccounts.repository.PasswordHistoryRepository;
-import com.simpleaccounts.repository.UserCredentialRepository;
-import com.simpleaccounts.utils.MessageUtil;
-import com.simpleaccounts.utils.SimpleAccountsMessage;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.simpleaccounts.entity.User;
-import com.simpleaccounts.service.RoleService;
-import com.simpleaccounts.service.UserService;
-import com.simpleaccounts.utils.DateFormatUtil;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Component
 @RequiredArgsConstructor
@@ -90,10 +88,10 @@ public class UserRestHelper {
 			user.setIsActive(userModel.getActive());
 			if(userModel.getTimeZone()!=null)
 				user.setUserTimezone(userModel.getTimeZone());
-			if(userModel.getUserPhotoChange()) {
-				if (userModel.getProfilePic() != null) {
-					try {
-						user.setProfileImageBinary(userModel.getProfilePic().getBytes());
+				if(Boolean.TRUE.equals(userModel.getUserPhotoChange())) {
+					if (userModel.getProfilePic() != null) {
+						try {
+							user.setProfileImageBinary(userModel.getProfilePic().getBytes());
 					} catch (IOException e) {
 						logger.error(ERROR, e);
 					}
@@ -102,12 +100,10 @@ public class UserRestHelper {
 				}
 			}
 			user.setIsActive(userModel.getActive());
-			if (userModel.getIsAlreadyAvailableEmployee()!=null && userModel.getIsAlreadyAvailableEmployee() ||
-					userModel.getIsNewEmployee()!=null && userModel.getIsNewEmployee() )
-			{user.setIsDesignationEnabled(true);}
-			else
-			{user.setIsDesignationEnabled(false);}
-			return user;
+				boolean designationEnabled = Boolean.TRUE.equals(userModel.getIsAlreadyAvailableEmployee())
+						|| Boolean.TRUE.equals(userModel.getIsNewEmployee());
+				user.setIsDesignationEnabled(designationEnabled);
+				return user;
 		}
 		return null;
 	}

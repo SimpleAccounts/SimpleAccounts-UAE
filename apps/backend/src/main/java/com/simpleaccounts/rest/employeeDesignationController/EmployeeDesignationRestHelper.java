@@ -1,20 +1,17 @@
 package com.simpleaccounts.rest.employeeDesignationController;
 
 import com.simpleaccounts.entity.EmployeeDesignation;
-import lombok.RequiredArgsConstructor;
-
 import com.simpleaccounts.model.EmployeeDesignationListModel;
 import com.simpleaccounts.model.EmployeeDesignationPersistModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.service.EmployeeDesignationService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor

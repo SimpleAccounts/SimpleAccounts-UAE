@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.Title;
 import com.simpleaccounts.service.TitleService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**

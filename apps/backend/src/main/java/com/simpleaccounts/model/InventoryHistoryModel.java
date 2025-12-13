@@ -4,8 +4,6 @@ import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.Product;
 import lombok.Data;
 
-import javax.persistence.*;
-
 @Data
 public class InventoryHistoryModel {
 

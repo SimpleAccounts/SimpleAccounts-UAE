@@ -1,15 +1,20 @@
 package com.simpleaccounts.rest.detailedgeneralledgerreport;
 
-import java.util.*;
-import lombok.RequiredArgsConstructor;
-
+import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.Transaction;
+import java.util.*;
+import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.TransactionCategoryClosingBalanceService;
 import com.simpleaccounts.service.UserService;
+import io.swagger.annotations.ApiOperation;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +46,7 @@ public class DetailedGeneralLedgerReportController {
 
 	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
+	private final TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
 	@LogRequest
 	@ApiOperation(value = "Get list of DateFormat")

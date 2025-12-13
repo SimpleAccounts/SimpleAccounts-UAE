@@ -14,8 +14,11 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-	@Component
+@Component
 	@SuppressWarnings("java:S6809")
 	@RequiredArgsConstructor
 public class TransactionCategoryCreationHelper {
@@ -49,12 +52,10 @@ public class TransactionCategoryCreationHelper {
             }
             List<DesignationTransactionCategory> designationTransactionCategoryList=
                     designationTransactionCategoryService.findByAttributes(param);
-//                    designationTransactionCategoryService.getListByDesignationId(employee.getDesignation().getId());
 
             for (DesignationTransactionCategory designationTransactionCategory:designationTransactionCategoryList){
                 String transactionCategoryName =designationTransactionCategory.getTransactionCategory().getTransactionCategoryName() +" - " +employee.getFirstName() + " " + employee.getLastName();
                 TransactionCategory parentTransactionCategory =designationTransactionCategory.getTransactionCategory();
-//                String transactionCategoryName =parentTransactionCategory.getChartOfAccount().getChartOfAccountName()+" - "+ employee.getFirstName() + " " + employee.getLastName();
 
                 TransactionCategory transactionCategory = getTransactionCategory(transactionCategoryName,transactionCategoryName,
                         employee.getCreatedBy(),parentTransactionCategory);
@@ -90,12 +91,10 @@ public class TransactionCategoryCreationHelper {
             }
             List<DesignationTransactionCategory> designationTransactionCategoryList=
                     designationTransactionCategoryService.findByAttributes(map);
-//                    designationTransactionCategoryService.getListByDesignationId(employee.getDesignation().getId());
 
             for (DesignationTransactionCategory designationTransactionCategory:designationTransactionCategoryList){
                 String transactionCategoryName =designationTransactionCategory.getTransactionCategory().getTransactionCategoryName() +" - " +employee.getFirstName() + " " + employee.getLastName();
                 TransactionCategory parentTransactionCategory =designationTransactionCategory.getTransactionCategory();
-//                String transactionCategoryName =parentTransactionCategory.getChartOfAccount().getChartOfAccountName()+" - "+ employee.getFirstName() + " " + employee.getLastName();
 
                 TransactionCategory transactionCategory = getTransactionCategory(transactionCategoryName,transactionCategoryName,
                         employee.getCreatedBy(),parentTransactionCategory);
@@ -132,7 +131,7 @@ public class TransactionCategoryCreationHelper {
                contactTransactionCategoryRelation.setTransactionCategory(transactionCategory);
                contactTransactionCategoryRelation.setContactType(1);
                contactTransactionCategoryService.persist(contactTransactionCategoryRelation);
-              // contact.setTransactionCategory(transactionCategory);
+
                contactService.persist(contact);
                break;
            case 2:
@@ -151,11 +150,11 @@ public class TransactionCategoryCreationHelper {
                contactTransactionCategoryRelation.setTransactionCategory(transactionCategory);
                contactTransactionCategoryRelation.setContactType(2);
                contactTransactionCategoryService.persist(contactTransactionCategoryRelation);
-              // contact.setTransactionCategory(transactionCategory);
+
                contactService.persist(contact);
                break;
            case 3:
-               //transactionCategoryName = contact.getFirstName() + " " + contact.getLastName();
+
                parentTransactionCategory = transactionCategoryService
                        .findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
                if(contact.getOrganization() != null && !contact.getOrganization().isEmpty()){
@@ -165,7 +164,7 @@ public class TransactionCategoryCreationHelper {
                }
                transactionCategory = getTransactionCategory(transactionCategoryName,transactionCategoryName,
                        contact.getCreatedBy(),parentTransactionCategory);
-//               contactTransactionCategoryService.addContactTransactionCategory(contact, transactionCategory);
+
                contactTransactionCategoryRelation = new ContactTransactionCategoryRelation();
                contactTransactionCategoryRelation.setContact(contact);
                contactTransactionCategoryRelation.setTransactionCategory(transactionCategory);
@@ -186,7 +185,7 @@ public class TransactionCategoryCreationHelper {
                contactTransactionCategoryRelation.setTransactionCategory(transactionCategory);
                contactTransactionCategoryRelation.setContactType(2);
                contactTransactionCategoryService.persist(contactTransactionCategoryRelation);
-           //    contact.setTransactionCategory(transactionCategory);
+
                contactService.persist(contact);
                break;
            default:

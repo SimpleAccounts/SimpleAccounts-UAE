@@ -1,5 +1,11 @@
 package com.simpleaccounts.security;
 
+import com.simpleaccounts.entity.User;
+import com.simpleaccounts.service.UserService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.Serializable;
 import lombok.RequiredArgsConstructor;
 import java.util.Date;
@@ -7,21 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import com.simpleaccounts.entity.User;
-import com.simpleaccounts.service.UserService;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 @SuppressWarnings("java:S1948")

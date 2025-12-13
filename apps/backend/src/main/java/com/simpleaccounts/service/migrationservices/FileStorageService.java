@@ -7,7 +7,6 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ public class FileStorageService {
 	                throw new FileNotFoundException("File not found " + fileName);
             }
         } catch (MalformedURLException ex) {
-            //throw new FileNotFoundException("File not found " + fileName, ex);
+
             throw new FileNotFoundException("File not found " + fileName);
 	        }
 	    }
@@ -62,7 +61,7 @@ public class FileStorageService {
                 throw new FileNotFoundException("File not found ");
             }
         } catch (MalformedURLException ex) {
-            //throw new FileNotFoundException("File not found " + fileName, ex);
+
             throw new FileNotFoundException("File not found ");
         }
     }

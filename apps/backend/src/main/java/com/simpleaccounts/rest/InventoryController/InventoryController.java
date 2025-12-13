@@ -2,6 +2,7 @@ package com.simpleaccounts.rest.InventoryController;
 
 import com.simpleaccounts.aop.LogRequest;
 import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.constant.dbfilter.InventoryFilterEnum;
 import com.simpleaccounts.entity.Inventory;
 import com.simpleaccounts.entity.InventoryHistory;
@@ -18,6 +19,11 @@ import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
+import java.math.BigDecimal;
+import java.time.ZoneId;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,15 +44,12 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @RequiredArgsConstructor
 public class InventoryController {
     private final Logger logger = LoggerFactory.getLogger(ProductRestController.class);
-    @Autowired
-    TransactionCategoryService transactionCategoryService;
-    @Autowired
-    InventoryService inventoryService;
+    private final TransactionCategoryService transactionCategoryService;
+    private final InventoryService inventoryService;
 
     private final ProductRestHelper productRestHelper;
 
-    @Autowired
-    TranscationCategoryHelper transcationCategoryHelper;
+    private final TranscationCategoryHelper transcationCategoryHelper;
 
     private final JwtTokenUtil jwtTokenUtil;
 

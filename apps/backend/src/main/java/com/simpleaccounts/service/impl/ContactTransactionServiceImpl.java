@@ -7,7 +7,7 @@ import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.ContactTransactionCategoryRelation;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.service.ContactTransactionCategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**

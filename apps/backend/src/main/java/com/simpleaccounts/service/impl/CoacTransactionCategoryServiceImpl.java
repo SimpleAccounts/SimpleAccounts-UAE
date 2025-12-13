@@ -7,10 +7,9 @@ import com.simpleaccounts.entity.CoacTransactionCategory;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.service.CoacTransactionCategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @Transactional

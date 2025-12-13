@@ -1,62 +1,57 @@
 package com.simpleaccounts.rest.bankaccountcontroller;
 
+import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
+import com.simpleaccounts.constant.DefaultTypeConstant;
+import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
 import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
-
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.bankaccount.*;
+import com.simpleaccounts.model.BankModel;
 import com.simpleaccounts.model.DashBoardBankDataModel;
 import com.simpleaccounts.repository.TransactionRepository;
+import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.ReconcileStatusService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateFormatUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import com.simpleaccounts.constant.DefaultTypeConstant;
-import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
-import com.simpleaccounts.model.BankModel;
-import com.simpleaccounts.rest.PaginationResponseModel;
 import org.springframework.transaction.annotation.Transactional;
 
-	@Component
+@Component
 	@SuppressWarnings("java:S131")
 	@RequiredArgsConstructor
 public class BankAccountRestHelper {
 
 	private static final String DATE_FORMAT_MMM_YYYY = "MMM yyyy";
 
-	@Autowired
-	BankAccountService bankAccountService;
+	private final BankAccountService bankAccountService;
 
 	private final DateFormatUtil dateUtil;
 
-	@Autowired
-	BankAccountStatusService bankAccountStatusService;
+	private final BankAccountStatusService bankAccountStatusService;
 
-	@Autowired
-	CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
-	@Autowired
-	ReconcileStatusService reconcileStatusService;
+	private final ReconcileStatusService reconcileStatusService;
 
-	@Autowired
-	BankAccountTypeService bankAccountTypeService;
+	private final BankAccountTypeService bankAccountTypeService;
 
-	@Autowired
-	TransactionService transactionService;
+	private final TransactionService transactionService;
 
-	@Autowired
-	CountryService countryService;
+	private final CountryService countryService;
 
 	private final TransactionCategoryService transactionCategoryService;
 
@@ -64,8 +59,7 @@ public class BankAccountRestHelper {
 
 	private final BankDetailsRepository bankDetailsRepository;
 
-	@Autowired
-	TransactionRepository transactionRepository;
+	private final TransactionRepository transactionRepository;
 
 	private final ChartUtil util;
 
@@ -91,9 +85,9 @@ public class BankAccountRestHelper {
 					model.setTransactionCount(res);
 				model.setName(acc.getBankName());
 				List<ReconcileStatus> reconcileStatusList = reconcileStatusService.getAllReconcileStatusListByBankAccountId(acc.getBankAccountId());
-				if (reconcileStatusList.size()==0){
-					model.setClosingBalance(BigDecimal.ZERO);
-				}
+					if (reconcileStatusList.isEmpty()){
+						model.setClosingBalance(BigDecimal.ZERO);
+					}
 				if(reconcileStatusList != null && !reconcileStatusList.isEmpty())
 				{
 					ReconcileStatus reconcileStatus = reconcileStatusList.get(0);
@@ -154,7 +148,7 @@ public class BankAccountRestHelper {
 			if(reconcileStatusList != null && !reconcileStatusList.isEmpty()) {
 				ReconcileStatus reconcileStatus = reconcileStatusList.get(0);
 				if (reconcileStatus.getReconciledDate()!=null){
-					//	Date date = Date.from(reconcileStatus.getReconciledDate().atZone(ZoneId.systemDefault()).toInstant());
+
 					bankModel.setLastReconcileDate(reconcileStatus.getReconciledDate());
 				}
 
@@ -309,12 +303,11 @@ public class BankAccountRestHelper {
 		filterMap.put("transactionCategory",transactionCategory);
 		List<TransactionCategoryBalance> transactionCategoryBalanceList = transactionCategoryBalanceService.findByAttributes(filterMap);
 		TransactionCategoryBalance openingBalance =null;
-		if(transactionCategoryBalanceList!=null && transactionCategoryBalanceList.size()>0)
-		{
-			return transactionCategoryBalanceList.get(0);
-			//////openingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
-			//////openingBalance.setRunningBalance(bankAccount.getCurrentBalance());
-		}
+			if(transactionCategoryBalanceList!=null && !transactionCategoryBalanceList.isEmpty())
+			{
+				return transactionCategoryBalanceList.get(0);
+
+			}
 		else {
 			openingBalance = new TransactionCategoryBalance();
 			openingBalance.setCreatedBy(bankAccount.getCreatedBy());

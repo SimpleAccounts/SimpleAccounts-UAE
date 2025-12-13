@@ -1,22 +1,29 @@
 package com.simpleaccounts.rest.productcontroller;
 
-import java.time.LocalDateTime;
-import lombok.RequiredArgsConstructor;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.simpleaccounts.aop.LogRequest;
+import com.simpleaccounts.bank.model.DeleteModel;
+import com.simpleaccounts.constant.ProductPriceType;
+import com.simpleaccounts.constant.dbfilter.ORDERBYENUM;
+import com.simpleaccounts.constant.dbfilter.ProductFilterEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.rest.DropdownModel;
+import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.SingleLevelDropDownModel;
 import com.simpleaccounts.rest.transactioncategorycontroller.TranscationCategoryHelper;
+import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
+import io.swagger.annotations.ApiOperation;
+import java.time.LocalDateTime;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,8 +68,7 @@ public class ProductRestController {
 
 	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	TranscationCategoryHelper transcationCategoryHelper;
+	private final TranscationCategoryHelper transcationCategoryHelper;
 
 	private final UserService userService;
 

@@ -9,12 +9,13 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.TypedQuery;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class RoleModuleRelationDaoImpl extends AbstractDao<Integer, RoleModuleRelation> implements RoleModuleRelationDao {
     public List<RoleModuleRelation> getRoleModuleRelationByRoleCode(Integer roleCode){
 
-//        return this.executeNamedQuery("getRoleModuleRelationByRoleCode");
         TypedQuery<RoleModuleRelation> query = getEntityManager().createQuery(
                  " SELECT rm FROM RoleModuleRelation rm WHERE rm.role.roleCode=:roleCode",
                 RoleModuleRelation.class);

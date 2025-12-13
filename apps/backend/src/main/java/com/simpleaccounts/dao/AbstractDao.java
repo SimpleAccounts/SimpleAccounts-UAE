@@ -17,13 +17,14 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.FlushModeType;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
@@ -37,7 +38,7 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
+	@PersistenceUnit
 	private EntityManagerFactory emf;
 
 	@SuppressWarnings("unchecked")

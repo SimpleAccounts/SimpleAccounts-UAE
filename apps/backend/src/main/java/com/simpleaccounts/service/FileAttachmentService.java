@@ -3,7 +3,6 @@ import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.FileTypeEnum;
 import com.simpleaccounts.dao.FileAttachmentDao;
 import com.simpleaccounts.entity.FileAttachment;
-
 import com.simpleaccounts.exceptions.FileAttachmentStorageException;
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRequestModel;
 import com.simpleaccounts.rest.expensescontroller.ExpenseModel;
@@ -11,17 +10,19 @@ import com.simpleaccounts.rest.invoicecontroller.InvoiceRequestModel;
 import com.simpleaccounts.rest.transactioncontroller.TransactionPresistModel;
 import com.simpleaccounts.rfq_po.PoQuatationRequestModel;
 import com.simpleaccounts.utils.FileHelper;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 public abstract class  FileAttachmentService extends SimpleAccountsService <Integer, FileAttachment> {
-    @Autowired
     private FileAttachmentDao fileAttachmentDao;
-    @Autowired
     private FileHelper fileHelper;
+
+    @Autowired
+    void setDependencies(FileAttachmentDao fileAttachmentDao, FileHelper fileHelper) {
+        this.fileAttachmentDao = fileAttachmentDao;
+        this.fileHelper = fileHelper;
+    }
 
     public FileAttachment storeFile(MultipartFile file, FileTypeEnum fileTypeEnum, InvoiceRequestModel requestModel) throws IOException {
 

@@ -1,16 +1,5 @@
 package com.simpleaccounts.service.migrationservices;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.simpleaccounts.rest.migration.model.UploadedFilesDeletionReqModel;
 import com.simpleaccounts.rest.migrationcontroller.DataMigrationRespModel;
 import com.simpleaccounts.rest.migrationcontroller.MigrationController;
@@ -18,9 +7,16 @@ import com.simpleaccounts.rest.migrationcontroller.TransactionCategoryListRespon
 import com.simpleaccounts.service.CountryService;
 import com.simpleaccounts.service.InvoiceLineItemService;
 import com.simpleaccounts.service.StateService;
-
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -49,7 +45,7 @@ public class MigrationServiceImpl implements MigrationService {
             {
             	migratedDataList =  zohoMigrationService.processTheMigratedData(productName, version, fileLocation, userId, migFromDate,request);
             }
-            else  if(productName.equalsIgnoreCase(SimpleAccountMigrationConstants.SIMPLE__ACCOUNTS))
+            else  if(productName.equalsIgnoreCase(SimpleAccountMigrationConstants.SIMPLE_ACCOUNTS))
             {
             	migratedDataList = simpleAccountMigrationService.processTheMigratedData(productName, version, fileLocation, userId, migFromDate);
             }

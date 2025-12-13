@@ -22,6 +22,13 @@ import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.VatCategoryService;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.stereotype.Service;
 
 @Service("vatCategoryService")
 
@@ -39,7 +46,7 @@ public class VatCategoryServiceImpl extends VatCategoryService {
 	}
 
 	@Override
-	//@Cacheable(cacheNames = "vatCategoryCache", key = "#name")
+
 	public List<VatCategory> getVatCategorys(String name) {
 		return vatCategoryDao.getVatCategorys(name);
 	}
@@ -50,7 +57,7 @@ public class VatCategoryServiceImpl extends VatCategoryService {
 	}
 
 	@Override
-//	@Cacheable(cacheNames = "vatCategoryCache", key = "'default'")
+
 	public VatCategory getDefaultVatCategory() {
 		return vatCategoryDao.getDefaultVatCategory();
 	}
@@ -62,7 +69,7 @@ public class VatCategoryServiceImpl extends VatCategoryService {
 	@Override
 	public VatCategory update(VatCategory vatCategory) {
 		VatCategory vatCategoryUpdated =  super.update(vatCategory, null, getActivity(vatCategory, "UPDATED"));
-		//deleteFromCache(Collections.singletonList(vatCategoryUpdated.getId()));
+
 		return vatCategoryUpdated;
 	}
 
@@ -82,7 +89,7 @@ public class VatCategoryServiceImpl extends VatCategoryService {
 	@Override
 	public void deleteByIds(List<Integer> ids) {
 		vatCategoryDao.deleteByIds(ids);
-		//deleteFromCache(ids);
+
 	}
 
 	@Override
@@ -103,7 +110,7 @@ public class VatCategoryServiceImpl extends VatCategoryService {
 	}
 
 	@Override
-	//@Cacheable(cacheNames = "vatCategoryCache", key = "#id")
+
 	public VatCategory findByPK(Integer id) {
 		return vatCategoryDao.findByPK(id);
 	}

@@ -2,8 +2,6 @@ package com.simpleaccounts.rest.payroll.service;
 
 import lombok.Data;
 
-import javax.persistence.*;
-
 @Data
 public class SalaryTemplateListModal {
 

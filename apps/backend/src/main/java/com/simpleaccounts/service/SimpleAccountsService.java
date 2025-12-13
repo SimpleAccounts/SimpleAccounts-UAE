@@ -13,11 +13,20 @@ import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.Activity;
 import com.simpleaccounts.exceptions.ServiceException;
 import com.simpleaccounts.service.exceptions.ServiceErrorCode;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class SimpleAccountsService<PK, ENTITY> {
 
-	@Autowired
 	private ActivityDao activityDao;
+
+	@Autowired
+	void setActivityDao(ActivityDao activityDao) {
+		this.activityDao = activityDao;
+	}
 
 	public ENTITY findByPK(PK pk) {
 		ENTITY returnEntity = getDao().findByPK(pk);

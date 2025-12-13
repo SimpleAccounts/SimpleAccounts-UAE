@@ -1,5 +1,7 @@
 package com.simpleaccounts.service.impl;
 
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
+
 import com.simpleaccounts.constant.CommonColumnConstants;
 import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.EmailConstant;
@@ -17,7 +19,8 @@ import com.simpleaccounts.rest.payroll.dto.PayrollEmployeeDto;
 import com.simpleaccounts.rest.payroll.dto.PayrollEmployeeResultSet;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
-
+import com.simpleaccounts.utils.DateFormatUtil;
+import com.simpleaccounts.utils.EmailSender;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -41,8 +44,12 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
-
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by Suraj Rahade on 24/04/2021.
@@ -62,17 +69,13 @@ public class EmployeeServiceImpl extends EmployeeService {
 
     private final EmploymentService employmentService;
 
-    @Autowired
-    ResourceLoader resourceLoader;
+    private final ResourceLoader resourceLoader;
 
-    @Autowired
-    EmailSender emailSender;
+    private final EmailSender emailSender;
 
-    @Autowired
-    EmaiLogsService emaiLogsService;
+    private final EmaiLogsService emaiLogsService;
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
     private final JwtTokenUtil jwtTokenUtil;
 
@@ -174,7 +177,7 @@ public class EmployeeServiceImpl extends EmployeeService {
     @Override
     public boolean sendInvitationMail(Employee employee, HttpServletRequest request) {
         long millis=System.currentTimeMillis();
-//        java.sql.Date date=new java.sql.Date(millis);
+
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         User user=userService.findByPK(userId);
         String image="";

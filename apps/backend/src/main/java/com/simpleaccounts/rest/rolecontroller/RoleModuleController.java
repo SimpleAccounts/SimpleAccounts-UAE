@@ -1,7 +1,7 @@
 package com.simpleaccounts.rest.rolecontroller;
 
 import com.simpleaccounts.aop.LogRequest;
-
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.model.RoleRequestModel;
 import com.simpleaccounts.security.JwtTokenUtil;
@@ -10,6 +10,10 @@ import com.simpleaccounts.service.RoleModuleService;
 import com.simpleaccounts.service.RoleService;
 import com.simpleaccounts.service.UserService;
 import io.swagger.annotations.ApiOperation;
+import java.time.LocalDateTime;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,33 +21,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.util.*;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping("rest/roleModule")
+@RequiredArgsConstructor
 public class RoleModuleController {
     private final Logger logger = LoggerFactory.getLogger(RoleModuleController.class);
-    @Autowired
-    JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    RoleModuleRelationService roleModuleRelationService;
+    private final RoleModuleRelationService roleModuleRelationService;
 
-    @Autowired
-    RoleModuleService roleModuleService;
+    private final RoleModuleService roleModuleService;
 
-    @Autowired
-    RoleService roleService;
+    private final RoleService roleService;
 
-    @Autowired
-    RoleModuleRestHelper roleModuleRestHelper;
+    private final RoleModuleRestHelper roleModuleRestHelper;
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
     @LogRequest
     @ApiOperation(value = "Get Module List")
@@ -139,7 +133,7 @@ public class RoleModuleController {
             roleService.update(role);
             List<Integer> roleModuleIdList = roleRequestModel.getModuleListIds();
             List<RoleModuleRelation> roleModuleRelationList = roleModuleService.getModuleListByRoleCode(roleRequestModel.getRoleID());
-            if (roleModuleRelationList!=null && roleModuleRelationList.size()>0){
+            if (roleModuleRelationList!=null && !roleModuleRelationList.isEmpty()){
                 for (RoleModuleRelation roleModuleRelation:roleModuleRelationList){
                     roleModuleRelationService.delete(roleModuleRelation);
                     }
@@ -147,9 +141,9 @@ public class RoleModuleController {
             if (roleModuleIdList!=null){
                 for (Integer moduleId:roleModuleIdList){
                     SimpleAccountsModules simpleAccountsModule =roleModuleService.findByPK(moduleId);
-//                    RoleModuleRelation roleModuleRelation = new RoleModuleRelation();
+
                    roleModuleRelationList = roleModuleService.getModuleListByRoleCode(roleRequestModel.getRoleID(),simpleAccountsModule.getSimpleAccountsModuleId());
-                    if (roleModuleRelationList!=null && roleModuleRelationList.size()>0){
+                    if (roleModuleRelationList!=null && !roleModuleRelationList.isEmpty()){
                         for (RoleModuleRelation roleModuleRelation:roleModuleRelationList){
                             roleModuleRelation.setSimpleAccountsModule(simpleAccountsModule);
                             roleModuleRelation.setRole(role);
@@ -214,4 +208,3 @@ public class RoleModuleController {
     }
 
 }
-

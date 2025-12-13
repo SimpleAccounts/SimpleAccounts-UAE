@@ -1,7 +1,8 @@
 package com.simpleaccounts.rest.CorporateTax.Model;
 
-import lombok.Data;;
 import java.math.BigDecimal;
+import lombok.Data;
+
 @Data
 public class CorporateTaxPaymentModel {
     private Integer id;

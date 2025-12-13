@@ -32,8 +32,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.TextStyle;
 import java.util.*;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
-	@Service
+@Service
 	@SuppressWarnings("java:S3973")
 	@RequiredArgsConstructor
 public class PayrolServiceImpl extends PayrolService {
@@ -44,15 +48,11 @@ public class PayrolServiceImpl extends PayrolService {
     
     private final UserJpaRepository userJpaRepository;
 
-    @Autowired
-	PayrollRestHepler payrollRestHepler;
+	private final PayrollRestHepler payrollRestHepler;
     private final EmployeeSalaryComponentRelationRepository  EmpSalaryCompRelRepository;
-	@Autowired
-	SalaryService salaryService;
-	@Autowired
-	SalaryRepository salaryRepository;
-	@Autowired
-	DateFormatUtil dateFormatUtil;
+	private final SalaryService salaryService;
+	private final SalaryRepository salaryRepository;
+	private final DateFormatUtil dateFormatUtil;
 
 	private final PayrollDao payrollDao;
 
@@ -73,7 +73,6 @@ public class PayrolServiceImpl extends PayrolService {
 			   payroll.setPayrollApprover(payrolRequestModel.getApproverId());
 		   }
 
-//        if(payrolRequestModel.getPayrollDate()!=null) {
            payroll.setGeneratedBy(user.getUserId().toString());
 
 		if (payrolRequestModel.getSalaryDate() != null) {
@@ -112,7 +111,7 @@ public class PayrolServiceImpl extends PayrolService {
 	 * @return
 	 */
 	public LocalDateTime dateConvertIntoLocalDataTime(String strDateTime) {
-//		String time = "00:00:00";
+
 		DateTimeFormatter dtfInput = new DateTimeFormatterBuilder()
 				.parseCaseInsensitive()
 				.appendPattern("E MMM d uuuu H:m:s")
@@ -161,7 +160,6 @@ public class PayrolServiceImpl extends PayrolService {
 	   roles.add(ADMIN);
 	   roles.add(ACCOUNTANT);
 	   
-		//return userJpaRepository.findApprovedUser(APPROVER);
 		return userJpaRepository.findApprovedUser(roles);
 	}
 
@@ -225,7 +223,7 @@ public class PayrolServiceImpl extends PayrolService {
 			}
 
 		List<PayrollEmployeeDto> allEmployeeList = employeeService.getAllActiveCompleteEmployee(payrollDate);
-		// List <PayrollEmployeeResultSet> newEmployeeset  = payrolEmployeeRepository.findPayrollEmployeeDetails(payrollId);
+
 		if(allEmployeeList!=null && !allEmployeeList.isEmpty()) {
 			for (PayrollEmployeeDto payrollEmp : allEmployeeList) {
 
@@ -285,7 +283,6 @@ public class PayrolServiceImpl extends PayrolService {
 				BigDecimal deduction =  BigDecimal.ZERO;
 				BigDecimal netPay =  BigDecimal.ZERO;
 
-//				List<EmployeeSalaryComponentRelation> empSalComRel = EmpSalaryCompRelRepository.findByemployeeId(payrollEmp.getEmpId());
 				List<Salary> salaryList = salaryRepository.findByPayrollEmployeeId(payrollId,payrollEmp.getEmpId());
 				if (salaryList != null)
 					for (Salary result : salaryList) {
@@ -297,7 +294,7 @@ public class PayrolServiceImpl extends PayrolService {
 						grossPay = grossPay.add( result.getTotalAmount());
 					}
 				netPay = grossPay.subtract(deduction);
-//				perDaySalary=grossPay/30;
+
 				payrollEmployeeDto.setId(payrollEmp.getId());
 				payrollEmployeeDto.setEmpId(payrollEmp.getEmpId());
 				payrollEmployeeDto.setEmpName(payrollEmp.getEmpFirstName()+" "+payrollEmp.getEmpLastName());

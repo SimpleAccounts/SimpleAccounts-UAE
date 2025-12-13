@@ -129,11 +129,11 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 			log.info("filePath {}",rootPath);
 			FileHelper.setRootPath(rootPath);
 			Boolean checkInvoiceNumber = expenseRestHelper.doesInvoiceNumberExist(expenseModel.getExpenseNumber());
-			if (checkInvoiceNumber){
-				SimpleAccountsMessage errorMessage = new SimpleAccountsMessage("0023",
-						MessageUtil.getMessage("invoicenumber.alreadyexists.0023"), true);
-				logger.info(errorMessage.getMessage());
-				return new  ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+				if (Boolean.TRUE.equals(checkInvoiceNumber)){
+					SimpleAccountsMessage errorMessage = new SimpleAccountsMessage("0023",
+							MessageUtil.getMessage("invoicenumber.alreadyexists.0023"), true);
+					logger.info(errorMessage.getMessage());
+					return new  ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
 
 			}
 			Expense expense = expenseRestHelper.getExpenseEntity(expenseModel);

@@ -93,7 +93,7 @@ public class InvoiceScannerRestController {
             log.info("In Controller :{}",requestModel.getInvoiceDueDate());
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             Boolean checkInvoiceNumber = invoiceRestHelper.doesInvoiceNumberExist(requestModel.getReferenceNumber());
-            if (checkInvoiceNumber){
+            if (Boolean.TRUE.equals(checkInvoiceNumber)) {
                 SimpleAccountsMessage errorMessage = new SimpleAccountsMessage("0023",
                         MessageUtil.getMessage("invoicenumber.alreadyexists.0023"), true);
                 logger.info(errorMessage.getMessage());
@@ -153,7 +153,7 @@ public class InvoiceScannerRestController {
             log.info("filePath {}",rootPath);
             FileHelper.setRootPath(rootPath);
             Boolean checkInvoiceNumber = expenseRestHelper.doesInvoiceNumberExist(expenseModel.getExpenseNumber());
-            if (checkInvoiceNumber){
+            if (Boolean.TRUE.equals(checkInvoiceNumber)) {
                 SimpleAccountsMessage errorMessage = new SimpleAccountsMessage("0023",
                         MessageUtil.getMessage("invoicenumber.alreadyexists.0023"), true);
                 logger.info(errorMessage.getMessage());

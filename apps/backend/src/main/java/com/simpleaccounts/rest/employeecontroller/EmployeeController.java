@@ -1,5 +1,7 @@
 package com.simpleaccounts.rest.employeecontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
 import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.bank.model.DeleteModel;
@@ -7,7 +9,6 @@ import com.simpleaccounts.constant.dbfilter.EmployeeFilterEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.repository.EmployeeRepository;
 import com.simpleaccounts.repository.EmployeeSalaryComponentRelationRepository;
-
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
@@ -15,34 +16,27 @@ import com.simpleaccounts.rest.payroll.PayrollRestHepler;
 import com.simpleaccounts.rest.payroll.SalaryTemplatePersistModel;
 import com.simpleaccounts.rest.payroll.dto.PayrollEmployeeDto;
 import com.simpleaccounts.rest.payroll.service.EmployeeSalaryComponentRelationService;
-
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.EmployeeBankDetailsService;
 import com.simpleaccounts.service.EmployeeParentRelationService;
 import com.simpleaccounts.service.EmployeeService;
-
 import com.simpleaccounts.service.EmploymentService;
-
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import com.simpleaccounts.utils.TransactionCategoryCreationHelper;
 import io.swagger.annotations.ApiOperation;
-
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.time.LocalDateTime;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
-
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -72,8 +66,7 @@ public class EmployeeController {
 
 	private final EmployeeBankDetailsService employeeBankDetailsService;
 
-	@Autowired
-	EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
+	private final EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
 
 	private final TransactionCategoryCreationHelper transactionCategoryCreationHelper;
 	private final EmployeeRepository employeeRepository;

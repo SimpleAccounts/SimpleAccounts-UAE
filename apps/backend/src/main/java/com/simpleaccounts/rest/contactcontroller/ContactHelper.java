@@ -8,11 +8,10 @@ package com.simpleaccounts.rest.contactcontroller;
 import com.simpleaccounts.entity.*;
 import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.ContactTypeEnum;
+import com.simpleaccounts.entity.*;
 import com.simpleaccounts.service.*;
-
 import java.util.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,14 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 	@RequiredArgsConstructor
 public class ContactHelper {
 
-	@Autowired
-	ContactService contactService;
+	private final ContactService contactService;
 
-	@Autowired
-	CountryService countryService;
+	private final CountryService countryService;
 
-	@Autowired
-	CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
 	private final StateService stateService;
 

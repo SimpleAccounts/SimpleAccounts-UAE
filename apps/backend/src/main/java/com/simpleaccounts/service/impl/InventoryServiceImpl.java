@@ -1,5 +1,6 @@
 package com.simpleaccounts.service.impl;
 
+
 import com.simpleaccounts.constant.dbfilter.InventoryFilterEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.InventoryDao;
@@ -9,18 +10,17 @@ import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.productcontroller.InventoryListModel;
 import com.simpleaccounts.service.InventoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service("InventoryService")
+@RequiredArgsConstructor
 public  class InventoryServiceImpl extends InventoryService {
 
-    @Autowired
-    InventoryDao inventoryDao;
+    private final InventoryDao inventoryDao;
 
     public  PaginationResponseModel getInventoryList(Map<InventoryFilterEnum, Object> filterMap, PaginationModel paginationModel){
         return  inventoryDao.getInventoryList(filterMap,paginationModel);

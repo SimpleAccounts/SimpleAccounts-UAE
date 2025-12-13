@@ -6,7 +6,6 @@ import com.simpleaccounts.dao.impl.TransactionCategoryClosingBalanceDaoImpl;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.repository.*;
-
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
 import com.simpleaccounts.rest.payroll.PayrollRestHepler;
@@ -19,18 +18,18 @@ import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountRespon
 import com.simpleaccounts.rest.simpleaccountreports.soa.TransactionsModel;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.DateFormatUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import javax.persistence.Query;
 import java.math.BigDecimal;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.persistence.Query;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-	@Component
+@Component
 	@SuppressWarnings({"java:S3973", "java:S131"})
 	@RequiredArgsConstructor
 public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<Integer, SalesByCustomerModel> implements SimpleAccountReportDao {
@@ -1017,11 +1016,11 @@ public ExpenseDetailsResponseModel getExpenseDetails(ReportRequestModel requestM
             Object[] objectArray = (Object[])object;
 
             ExpenseByCategoryModel expenseByCategoryModel = new ExpenseByCategoryModel();
-            if(!(Boolean) objectArray[4]) {
-//            expenseByCategoryModel.setTransactionCategoryId((Integer)objectArray[0]);
-                expenseByCategoryModel.setTransactionCategoryName((String)objectArray[1]);
-                expenseByCategoryModel.setExpensesAmountSum((BigDecimal) objectArray[2]);
-                expenseByCategoryModel.setExpensesVatAmountSum((BigDecimal) objectArray[3]);
+	            if(!Boolean.TRUE.equals(objectArray[4])) {
+
+	                expenseByCategoryModel.setTransactionCategoryName((String)objectArray[1]);
+	                expenseByCategoryModel.setExpensesAmountSum((BigDecimal) objectArray[2]);
+	                expenseByCategoryModel.setExpensesVatAmountSum((BigDecimal) objectArray[3]);
 
                 BigDecimal includingVatAmountSum = (BigDecimal) objectArray[2];
                 BigDecimal excludingVatAmountSum = includingVatAmountSum.subtract((BigDecimal) objectArray[3]);
@@ -1171,7 +1170,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                 payrollSummaryModel.setGeneratedBy(payroll.getGeneratedBy());
                 User generatedByUser = userService.findByPK(Integer.parseInt(payroll.getGeneratedBy()));
             if(generatedByUser !=null)    {
-                    String payrollGeneratedName = generatedByUser.getFirstName().toString() + " " + generatedByUser.getLastName().toString();
+                    String payrollGeneratedName = generatedByUser.getFirstName() + " " + generatedByUser.getLastName();
                     payrollSummaryModel.setGeneratedByName(payrollGeneratedName);
                 }
             }
@@ -1183,7 +1182,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                 payrollSummaryModel.setPayrollApprover(payroll.getPayrollApprover());
                 User payrollApproverUser = userService.findByPK(payroll.getPayrollApprover());
                 if(payrollApproverUser != null)   {
-                    String payrollApproverName = payrollApproverUser.getFirstName().toString() + " " + payrollApproverUser.getLastName().toString();
+                    String payrollApproverName = payrollApproverUser.getFirstName() + " " + payrollApproverUser.getLastName();
                     payrollSummaryModel.setPayrollApproverName(payrollApproverName);
                 }
             }
@@ -1226,7 +1225,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
 
         soa_response.setOpeningBalance(BigDecimal.ZERO);
        List< ContactTransactionCategoryRelation> contactTransactionCategoryRelationList=contactTransactionCategoryService.findByAttributes(param);
-        if(contactTransactionCategoryRelationList.size()!=0)
+        if(!contactTransactionCategoryRelationList.isEmpty())
             for (ContactTransactionCategoryRelation contactTransactionCategoryRelation:        contactTransactionCategoryRelationList)
             {
                 if(contactTransactionCategoryRelation.getTransactionCategory().getParentTransactionCategory().getTransactionCategoryId()==2){
@@ -1234,7 +1233,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                     Map<String, Object> transactionCategoryparam = new HashMap<>();
                     transactionCategoryparam.put("transactionCategory", contactTransactionCategoryRelation.getTransactionCategory().getTransactionCategoryId());
                     List<TransactionCategoryBalance> transactionCategoryBalanceList=transactionCategoryBalanceService.findByAttributes(transactionCategoryparam);
-                   if(transactionCategoryBalanceList.size()!=0)
+                   if(!transactionCategoryBalanceList.isEmpty())
                     soa_response.setOpeningBalance(transactionCategoryBalanceList.get(0).getOpeningBalance());
                 }
 
@@ -1246,7 +1245,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
         Query query = getEntityManager().createQuery(quertStr);
         query.setParameter(QUERY_PARAM_START_DATE, requestModel.getStartDate());
         query.setParameter(QUERY_PARAM_END_DATE, requestModel.getEndDate());
-//        query.setParameter("customerId", requestModel.getCustomerId());
+
         List<Object> list = query.getResultList();
         Integer id=0;
         for(Object object : list)
@@ -1260,7 +1259,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
 
                 transactionModel.setDate((LocalDateTime) objectArray[0]);
                 transactionModel.setInvoiceNumber((String) objectArray[1]);
-//                transactionModel.setAmount((BigDecimal) objectArray[2]);
+
                 transactionModel.setPaymentAmount((BigDecimal) objectArray[3]);
                 transactionModel.setBalanceAmount((BigDecimal) objectArray[4]);
                 totalAmount = totalAmount.add((BigDecimal) objectArray[3]);
@@ -1278,11 +1277,11 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                     switch (type)
                     {
                         case 2:transactionModel.setTypeName("Invoice");
-//                            transactionModel.setTypeName("Customer Payment");
+
                                 break;
 
                         case 7: transactionModel.setTypeName("Credit Note");
-//                            transactionModel.setTypeName("Refund");
+
                                 break;
                     }
 
@@ -1621,7 +1620,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                     supplierSupplyListing.setProductDescription(invoiceLineItem.getProduct().getProductDescription());
                     supplierSupplyListing.setPurchaseValue(invoiceLineItem.getUnitPrice());
                     supplierSupplyListing.setExciseTaxValue(invoiceLineItem.getExciseAmount());
-//                  supplierSupplyListingResponseModel.setTaxCode();
+
                     supplierSupplyListing.setExciseTaxFCY(invoiceLineItem.getExciseAmount());
                     supplierSupplyListing.setPurchaseFCY(invoiceLineItem.getUnitPrice());
                     purchaseTotal = purchaseTotal.add(invoiceLineItem.getUnitPrice());
@@ -1658,7 +1657,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
                     customerSupplyList.setProductDescription(invoiceLineItem.getProduct().getProductDescription());
                     customerSupplyList.setSupplyValue(invoiceLineItem.getUnitPrice());
                     customerSupplyList.setExciseTaxValue(invoiceLineItem.getExciseAmount());
-//                    supplierSupplyListingResponseModel.setTaxCode();
+
                     customerSupplyList.setExciseTaxFCY(invoiceLineItem.getExciseAmount());
                     customerSupplyList.setSupplyFCY(invoiceLineItem.getUnitPrice());
                     supplyTotal = supplyTotal.add(invoiceLineItem.getUnitPrice());
@@ -1762,7 +1761,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
     public AgingListModel getAgingReport(AgingRequestModel requestModel) {
         AgingListModel agingListModel = new AgingListModel();
         List<AgingResponseModel> agingResponseModels = new LinkedList<>();
-//        AgingResponseModel agingResponseModel = new AgingResponseModel();
+
         Map<Integer, AgingResponseModel> agingReport = new HashMap();
         List<Invoice> queryresp = invoiceRepository.findAllByStatusAndType(3 ,2);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonColumnConstants.DD_MM_YYYY);

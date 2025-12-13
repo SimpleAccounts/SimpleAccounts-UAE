@@ -1,9 +1,9 @@
 package com.simpleaccounts.dao.impl;
 
+import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.CommonConstant;
 import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.ContactTypeEnum;
-import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.ContactFilterEnum;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
@@ -11,29 +11,24 @@ import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.ContactDao;
 import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.Currency;
-
 import com.simpleaccounts.model.ContactModel;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.contactcontroller.ContactRequestFilterModel;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 /**
  * Created by mohsin on 3/3/2017.
@@ -205,7 +200,7 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
 	public List<Contact> getCustomerContacts(Currency currency){
 		TypedQuery<Contact> query = getEntityManager().createNamedQuery(
 				"getCustomerContacts", Contact.class);
-		//query.setParameter("currency",currency);
+
 		List<Contact> contactList = query.getResultList();
 		return contactList;
 	}
@@ -213,7 +208,7 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
 	public List<Contact> getSupplierContacts(Currency currency){
 		TypedQuery<Contact> query = getEntityManager().createNamedQuery(
 				"getSupplierContacts", Contact.class);
-		//query.setParameter("currency",currency);
+
 		List<Contact> contactList = query.getResultList();
 		return contactList;
 	}

@@ -42,3 +42,4 @@ public class CustomUserDetailsTest {
         assertTrue(authority.contains("ROLE_EMPLOYEE"));
     }
 }
+

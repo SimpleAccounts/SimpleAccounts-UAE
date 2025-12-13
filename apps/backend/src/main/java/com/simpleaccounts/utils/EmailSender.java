@@ -3,24 +3,20 @@ package com.simpleaccounts.utils;
 import com.simpleaccounts.constant.ErrorConstant;
 import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.service.ConfigurationService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
-
-import com.simpleaccounts.constant.EmailConstant;
-
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Message;
-import javax.mail.Transport;
-
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 /**
  *
@@ -83,7 +79,7 @@ public class EmailSender {
 		}
 	}
 
-	public final static String RESET_PASSWORD = "<!DOCTYPE html>\n" +
+	public static final String RESET_PASSWORD = "<!DOCTYPE html>\n" +
 			"<html>\n" +
 			"   <head>\n" +
 			"      <title>Embedded Style Sheet</title>\n" +
@@ -122,7 +118,7 @@ public class EmailSender {
 			"         <div style=\"max-width:560px; margin:auto; padding:0 5%\">\n" +
 			"            <div style=\"padding:30px 0; color:#000000; line-height:1.7; font-size:17px; font-family: Arial, Helvetica, sans-serif; border-top:1px solid #1f65d7\">\n" +
 			"               <p style= \"margin: 0; \"> Hi {UserName} ! " +
-			"										<br/> We have received a request to reset the password of your account. Let us guide you to reset your password in few clicks.</p> \n" +
+			"\t\t\t\t\t\t\t\t\t\t<br/> We have received a request to reset the password of your account. Let us guide you to reset your password in few clicks.</p> \n" +
 			"            </div>\n" +
 			"            <div align= \"center \"  style= \"border-radius: 6px;background-color:#1a82e2;margin-left:20%;margin-right:20%;width:60%\">\n" +
 			"           <a href= \"LINK\" target= \"_blank \" style= \"display: inline-block; padding: 16px 36px; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px; \">Click here to reset your password !</a> \n" +
@@ -160,7 +156,7 @@ public class EmailSender {
 			"   </body>\n" +
 			"</html>";
 
-	public final static String NEW_PASSWORD = "<!DOCTYPE html>\n" +
+	public static final String NEW_PASSWORD = "<!DOCTYPE html>\n" +
 			"<html>\n" +
 			"<head>\n" +
 			"  <title>Embedded Style Sheet</title>\n" +
@@ -300,7 +296,7 @@ public class EmailSender {
 			"</body>\n" +
 			"</html>";
 
-	public final static String NEW_USER =
+	public static final String NEW_USER =
 			"<!DOCTYPE html>\n" +
 					"<html ><head>\n" +
 					"    <title>SimpleAccounts Welcome Email</title><style type=\"text/css\">\n" +
@@ -480,7 +476,7 @@ public class EmailSender {
 					"</tr>\n" +
 					"</tbody></table>\n" +
 					"</body></html>";
-	public final static String THANK_YOU_MAIL_BODY ="<!DOCTYPE html>\n" +
+	public static final String THANK_YOU_MAIL_BODY ="<!DOCTYPE html>\n" +
 			"<html>\n" +
 			"    <head>\n" +
 			"        <title>Embedded Style Sheet</title>\n" +
@@ -573,7 +569,7 @@ public class EmailSender {
 			"    </body>\n" +
 			"</html>";
 
-	public final static String invitationmailBody ="<!DOCTYPE html>\n" +
+	public static final String invitationmailBody ="<!DOCTYPE html>\n" +
 			"<html>\n" +
 			"<head>\n" +
 			"    <title>Embedded Style Sheet</title>\n" +

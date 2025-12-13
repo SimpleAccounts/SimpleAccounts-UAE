@@ -17,9 +17,15 @@ import com.simpleaccounts.rest.invoicecontroller.InvoiceRequestModel;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.*;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import javax.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,24 +59,17 @@ public class InvoiceScannerService {
     private final CreditNoteRepository creditNoteRepository;
     private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    @Autowired
-    VatCategoryService vatCategoryService;
+    private final VatCategoryService vatCategoryService;
 
-    @Autowired
-    EntityManager entityManager;
-    @Autowired
-    ProjectService projectService;
+    private final EntityManager entityManager;
+    private final ProjectService projectService;
 
-    @Autowired
-    ResourceLoader resourceLoader;
-    @Autowired
-    ContactService contactService;
+    private final ResourceLoader resourceLoader;
+    private final ContactService contactService;
 
-    @Autowired
-    CurrencyService currencyService;
+    private final CurrencyService currencyService;
 
-    @Autowired
-    InvoiceLineItemService invoiceLineItemService;
+    private final InvoiceLineItemService invoiceLineItemService;
 
     private final InvoiceService invoiceService;
 
@@ -96,17 +95,13 @@ public class InvoiceScannerService {
 
     private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
-    @Autowired
-    InvoiceNumberUtil invoiceNumberUtil;
+    private final InvoiceNumberUtil invoiceNumberUtil;
 
-    @Autowired
-    InventoryService inventoryService;
+    private final InventoryService inventoryService;
 
-    @Autowired
-    InventoryHistoryService inventoryHistoryService;
+    private final InventoryHistoryService inventoryHistoryService;
 
-    @Autowired
-    ProductLineItemService productLineItemService;
+    private final ProductLineItemService productLineItemService;
 
     private final CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
 
@@ -175,7 +170,7 @@ public class InvoiceScannerService {
             invoice.setIsReverseChargeEnabled(invoiceModel.getIsReverseChargeEnabled());
         }
         invoice.setReferenceNumber(invoiceModel.getReferenceNumber());
-        if(invoiceModel.getChangeShippingAddress()== true){
+        if(Boolean.TRUE.equals(invoiceModel.getChangeShippingAddress())){
             invoice.setChangeShippingAddress(invoiceModel.getChangeShippingAddress());
             invoice.setShippingAddress(invoiceModel.getShippingAddress());
             invoice.setShippingCountry(countryService.getCountry(invoiceModel.getShippingCountry()));
@@ -389,7 +384,7 @@ public class InvoiceScannerService {
             expenseBuilder.vatCategory(vatCategory);
             BigDecimal vatPercent =  vatCategory.getVat();
             BigDecimal vatAmount = BigDecimal.ZERO;
-            if (model.getExclusiveVat()){
+            if (Boolean.TRUE.equals(model.getExclusiveVat())){
                 vatAmount = calculateVatAmount(vatPercent,model.getExpenseAmount());
             }
             else {

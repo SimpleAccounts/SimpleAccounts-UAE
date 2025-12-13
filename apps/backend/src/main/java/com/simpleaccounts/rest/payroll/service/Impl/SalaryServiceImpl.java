@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.*;
-
 import com.simpleaccounts.repository.JournalLineItemRepository;
 import com.simpleaccounts.rest.payroll.*;
 import com.simpleaccounts.rest.payroll.SalaryComponent;
@@ -14,36 +13,33 @@ import com.simpleaccounts.rest.payroll.service.SalaryService;
 import com.simpleaccounts.service.EmployeeService;
 import com.simpleaccounts.service.EmploymentService;
 import com.simpleaccounts.utils.DateFormatUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-	@Service("salaryService")
+@Service("salaryService")
 	@Transactional
 	@SuppressWarnings("java:S131")
 	@RequiredArgsConstructor
 public class SalaryServiceImpl extends SalaryService {
 
     private final SalaryDao salaryDao;
-    @Autowired
-    EmployeeService employeeService;
-    @Autowired
-    EmploymentService employmentService;
-    @Autowired
-    SalaryService salaryService;
+    private final EmployeeService employeeService;
+    private final EmploymentService employmentService;
+    private final SalaryService salaryService;
     @Override
     protected Dao<Integer, Salary> getDao() {
         return this.salaryDao;
     }
-    @Autowired
-    DateFormatUtil dateFormatUtil;
+    private final DateFormatUtil dateFormatUtil;
     private final EmployeeTransactionCategoryRelationRepository employeeTransactionCategoryRelationRepository;
     private final JournalLineItemRepository journalLineItemRepository;
 
@@ -72,10 +68,10 @@ public class SalaryServiceImpl extends SalaryService {
                         case Variable:
                         case Fixed_Allowance:
                             salarySlipModel.setEarnings(salarySlipModel.getEarnings().add(salary.getTotalAmount()));
-                            // salarySlipModel.setGrossSalary(salarySlipModel.getGrossSalary().add(salary.getTotalAmount()));
+
                             break;
                         case Deduction:
-                            // salarySlipModel.setGrossSalary(salarySlipModel.getGrossSalary().add(salary.getTotalAmount()));
+
                             salarySlipModel.setDeductions(salarySlipModel.getDeductions().add(salary.getTotalAmount()));
                             break;
                         default:

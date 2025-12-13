@@ -1,7 +1,10 @@
 package com.simpleaccounts.dao.impl;
 
+import com.simpleaccounts.dao.AbstractDao;
+import com.simpleaccounts.dao.CurrencyExchangeDao;
+import com.simpleaccounts.entity.CurrencyConversion;
 import java.util.List;
-
+import javax.persistence.TypedQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -16,7 +19,6 @@ import javax.persistence.TypedQuery;
 @Repository
 public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConversion> implements CurrencyExchangeDao {
 
-//	private static String accessKey = "c6267cc9e9bd2735a5a2637aa778d61a";
 	private final Logger logger = LoggerFactory.getLogger(CurrencyExchangeDaoImpl.class);
 
 //

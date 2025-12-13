@@ -1,22 +1,33 @@
 package com.simpleaccounts.rest.journalcontroller;
 
+import com.simpleaccounts.aop.LogRequest;
+import com.simpleaccounts.bank.model.DeleteModel;
+import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+import com.simpleaccounts.constant.dbfilter.JournalFilterEnum;
 import java.time.LocalDate;
-import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
-
 import java.util.*;
-
 import javax.servlet.http.HttpServletRequest;
-
+import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+import static com.simpleaccounts.constant.PostingReferenceTypeEnum.*;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.repository.CustomerInvoiceReceiptRepository;
 import com.simpleaccounts.repository.JournalLineItemRepository;
 import com.simpleaccounts.repository.JournalRepository;
 import com.simpleaccounts.repository.SupplierInvoicePaymentRepository;
+import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
+import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
+import io.swagger.annotations.ApiOperation;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

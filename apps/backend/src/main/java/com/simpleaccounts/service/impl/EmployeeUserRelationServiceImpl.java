@@ -7,7 +7,7 @@ import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeUserRelation;
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.service.EmployeeUserRelationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,10 +22,13 @@ public class EmployeeUserRelationServiceImpl extends EmployeeUserRelationService
     protected Dao<Integer, EmployeeUserRelation> getDao() {
         return employeeUserRelationDao;
     }
-    // Empty method - implementation not required for this service
-    public  void addEmployeeUserRelation(Employee employee, User user)
-   {
 
+    @Override
+    public void addEmployeeUserRelation(Employee employee, User user) {
+        EmployeeUserRelation relation = new EmployeeUserRelation();
+        relation.setEmployee(employee);
+        relation.setUser(user);
+        persist(relation);
     }
 
-}
+} 

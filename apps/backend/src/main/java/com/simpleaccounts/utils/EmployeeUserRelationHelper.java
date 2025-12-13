@@ -2,7 +2,7 @@ package com.simpleaccounts.utils;
 import com.simpleaccounts.entity.*;
 import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

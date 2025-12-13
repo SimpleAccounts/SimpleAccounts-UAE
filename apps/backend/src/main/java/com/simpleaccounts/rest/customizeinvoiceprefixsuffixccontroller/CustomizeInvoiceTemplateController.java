@@ -1,14 +1,13 @@
 package com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller;
 
 import com.simpleaccounts.aop.LogRequest;
-import lombok.RequiredArgsConstructor;
-
 import com.simpleaccounts.entity.CustomizeInvoiceTemplate;
-
+import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +32,7 @@ public class CustomizeInvoiceTemplateController {
     @ApiOperation(value = "Get Invoice Prefix List")
     @GetMapping(value = "/getListForInvoicePrefixAndSuffix")
     public ResponseEntity getListForInvoicePrefix(@RequestParam(value = "invoiceType") Integer invoiceType){
-//        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest();
+
         CustomizeInvoiceTemplate customizeInvoiceTemplate=customizeInvoiceTemplateService.getCustomizeInvoiceTemplate(invoiceType);
         if (customizeInvoiceTemplate!=null){
             CustomizeInvoiceTemplateResponseModel customizeInvoiceTemplateResponseModel = new CustomizeInvoiceTemplateResponseModel();

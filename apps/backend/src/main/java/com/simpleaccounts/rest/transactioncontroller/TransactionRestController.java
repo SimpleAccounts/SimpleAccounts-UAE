@@ -55,6 +55,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -1546,7 +1547,7 @@ public class TransactionRestController {
             //sum of all explained invoices
 			sumOfConvertedExplainedAmount = sumOfConvertedExplainedAmount.add(explainParam.getConvertedInvoiceAmount());
 			contactService.sendInvoiceThankYouMail(contact,1, invoiceEntity.getReferenceNumber(),
-                    transactionPresistModel.getAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString(),
+                    transactionPresistModel.getAmount().setScale(2, RoundingMode.HALF_EVEN).toString(),
                     dateFormtUtil.getDateAsString(transactionPresistModel.getDate(),"dd/MM/yyyy") .replace("/","-"),
                     customerInvoiceReceipt.getCustomerInvoice().getDueAmount(), request);
 		}
@@ -1640,7 +1641,7 @@ public class TransactionRestController {
 				transactionExplinationLineItems.add(transactionExplinationLineItem);
 				// CREATE MAPPING BETWEEN TRANSACTION AND JOURNAL
 				contactService.sendInvoiceThankYouMail(contact,2,invoiceEntity.getReferenceNumber(),
-                        transactionPresistModel.getAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString(),
+                        transactionPresistModel.getAmount().setScale(2, RoundingMode.HALF_EVEN).toString(),
                         dateFormtUtil.getDateAsString(transactionPresistModel.getDate(),"dd/MM/yyyy").replace("/","-"),
                         supplierInvoicePayment.getDueAmount(), request);
 			}
@@ -1841,10 +1842,10 @@ public class TransactionRestController {
 			transactionExpensesService.delete(transactionExpenses);
 			Expense expense = transactionExpenses.getExpense();
 			expenseIdList.add(expense.getExpenseId());
-			if (transactionExpenses.getExpense().getBankGenerated() == true){
-				expense.setDeleteFlag(Boolean.TRUE);
-			}else{
-				expense.setStatus(ExpenseStatusEnum.DRAFT.getValue());
+				if (Boolean.TRUE.equals(transactionExpenses.getExpense().getBankGenerated())){
+					expense.setDeleteFlag(Boolean.TRUE);
+				}else{
+					expense.setStatus(ExpenseStatusEnum.DRAFT.getValue());
 			}
 
 			expenseService.update(expense);
@@ -1945,11 +1946,11 @@ public class TransactionRestController {
 			VatCategory vatCategory = vatCategoryService.findByPK(model.getVatId());
 			expenseBuilder.vatCategory(vatCategory);
 
-            if (model.getExclusiveVat()) {
-				expenseBuilder.expenseAmount(model.getTransactionExpenseAmount().subtract(model.getTransactionVatAmount()));
-			} else {
-				expenseBuilder.expenseAmount(model.getAmount());
-			}
+	            if (Boolean.TRUE.equals(model.getExclusiveVat())) {
+					expenseBuilder.expenseAmount(model.getTransactionExpenseAmount().subtract(model.getTransactionVatAmount()));
+				} else {
+					expenseBuilder.expenseAmount(model.getAmount());
+				}
 
 			if (model.getTransactionVatAmount()!=null){
 				expenseBuilder.expenseVatAmount(model.getTransactionVatAmount());
