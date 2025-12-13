@@ -243,7 +243,7 @@ class RoleModuleServiceImplTest {
 
     private RoleModuleRelation createRoleModuleRelation(Integer id, Integer roleCode, Integer moduleId) {
         RoleModuleRelation relation = new RoleModuleRelation();
-        relation.setRoleModuleRelationId(id);
+        relation.setId(id);
 
         Role role = new Role();
         role.setRoleCode(roleCode);

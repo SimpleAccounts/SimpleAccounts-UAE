@@ -31,7 +31,7 @@ class CompanyTypeServiceImplTest {
 
     @Test
     @DisplayName("Should return DAO instance")
-    void getDaoReturnsCompanyTypeDao() {
+    void getDao_shouldReturnDaoInstance_whenCalled() {
         // Act
         var result = companyTypeService.getDao();
 
@@ -42,7 +42,7 @@ class CompanyTypeServiceImplTest {
 
     @Test
     @DisplayName("Should return list of company types")
-    void getCompanyTypesReturnsTypesList() {
+    void getCompanyTypes_shouldReturnList_whenTypesExist() {
         // Arrange
         List<CompanyType> expectedTypes = Arrays.asList(
             createCompanyType(1, "LLC"),
@@ -63,7 +63,7 @@ class CompanyTypeServiceImplTest {
 
     @Test
     @DisplayName("Should return empty list when no company types exist")
-    void getCompanyTypesReturnsEmptyList() {
+    void getCompanyTypes_shouldReturnEmptyList_whenNoTypesExist() {
         // Arrange
         when(companyTypeDao.getCompanyTypes())
             .thenReturn(new ArrayList<>());
@@ -77,7 +77,7 @@ class CompanyTypeServiceImplTest {
 
     @Test
     @DisplayName("Should return single company type when only one exists")
-    void getCompanyTypesReturnsSingleType() {
+    void getCompanyTypes_shouldReturnSingleType_whenOneExists() {
         // Arrange
         List<CompanyType> types = Collections.singletonList(
             createCompanyType(1, "Sole Proprietorship")

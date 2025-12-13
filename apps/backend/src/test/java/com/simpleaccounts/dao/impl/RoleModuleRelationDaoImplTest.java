@@ -192,7 +192,7 @@ class RoleModuleRelationDaoImplTest {
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.getRoleModuleRelationId()).isEqualTo(relationId);
+        assertThat(result.getId()).isEqualTo(relationId);
     }
 
     @Test
@@ -360,7 +360,7 @@ class RoleModuleRelationDaoImplTest {
 
     private RoleModuleRelation createRoleModuleRelation(Integer id, Integer roleCode, Integer moduleId, String moduleName) {
         RoleModuleRelation relation = new RoleModuleRelation();
-        relation.setRoleModuleRelationId(id);
+        relation.setId(id);
 
         Role role = new Role();
         role.setRoleCode(roleCode);

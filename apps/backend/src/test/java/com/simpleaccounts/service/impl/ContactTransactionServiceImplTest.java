@@ -28,7 +28,7 @@ class ContactTransactionServiceImplTest {
 
     @Test
     @DisplayName("Should return DAO instance")
-    void getDaoReturnsContactTransactionCategoryRelationDao() {
+    void getDao_shouldReturnDaoInstance_whenCalled() {
         // Act
         var result = contactTransactionService.getDao();
 
@@ -39,7 +39,7 @@ class ContactTransactionServiceImplTest {
 
     @Test
     @DisplayName("Should add contact transaction category")
-    void addContactTransactionCategoryCallsDao() {
+    void addContactTransactionCategory_shouldCallDao_whenCalled() {
         // Arrange
         Contact contact = createContact(1, "John", "Doe");
         TransactionCategory transactionCategory = createTransactionCategory(1, "Test Category");
@@ -54,7 +54,7 @@ class ContactTransactionServiceImplTest {
 
     @Test
     @DisplayName("Should add contact transaction category with different contact")
-    void addContactTransactionCategoryWithDifferentContact() {
+    void addContactTransactionCategory_shouldCallDao_whenDifferentContact() {
         // Arrange
         Contact contact = createContact(2, "Jane", "Smith");
         TransactionCategory transactionCategory = createTransactionCategory(2, "Another Category");
@@ -69,7 +69,7 @@ class ContactTransactionServiceImplTest {
 
     @Test
     @DisplayName("Should handle contact with organization name")
-    void addContactTransactionCategoryWithOrganization() {
+    void addContactTransactionCategory_shouldCallDao_whenContactHasOrganization() {
         // Arrange
         Contact contact = createContact(3, "Contact", "Person");
         contact.setOrganization("Test Organization LLC");
@@ -85,7 +85,7 @@ class ContactTransactionServiceImplTest {
 
     @Test
     @DisplayName("Should add contact transaction category for customer type contact")
-    void addContactTransactionCategoryForCustomer() {
+    void addContactTransactionCategory_shouldCallDao_whenCustomerType() {
         // Arrange
         Contact contact = createContact(4, "Customer", "One");
         contact.setContactType(1); // Customer type
@@ -101,7 +101,7 @@ class ContactTransactionServiceImplTest {
 
     @Test
     @DisplayName("Should add contact transaction category for supplier type contact")
-    void addContactTransactionCategoryForSupplier() {
+    void addContactTransactionCategory_shouldCallDao_whenSupplierType() {
         // Arrange
         Contact contact = createContact(5, "Supplier", "One");
         contact.setContactType(2); // Supplier type
@@ -117,7 +117,7 @@ class ContactTransactionServiceImplTest {
 
     @Test
     @DisplayName("Should verify DAO is the correct type")
-    void getDaoReturnsCorrectType() {
+    void getDao_shouldReturnCorrectType_whenCalled() {
         // Act
         var result = contactTransactionService.getDao();
 
@@ -127,7 +127,7 @@ class ContactTransactionServiceImplTest {
 
     @Test
     @DisplayName("Should handle transaction category with chart of account")
-    void addContactTransactionCategoryWithChartOfAccount() {
+    void addContactTransactionCategory_shouldCallDao_whenChartOfAccount() {
         // Arrange
         Contact contact = createContact(6, "Test", "Contact");
         TransactionCategory transactionCategory = createTransactionCategory(6, "Chart Category");
@@ -142,7 +142,7 @@ class ContactTransactionServiceImplTest {
 
     @Test
     @DisplayName("Should call DAO exactly once per add operation")
-    void addContactTransactionCategoryCallsDaoOnce() {
+    void addContactTransactionCategory_shouldCallDaoOnce_whenCalled() {
         // Arrange
         Contact contact = createContact(7, "Single", "Call");
         TransactionCategory transactionCategory = createTransactionCategory(7, "Single Category");

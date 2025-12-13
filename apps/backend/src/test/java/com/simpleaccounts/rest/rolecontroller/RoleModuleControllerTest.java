@@ -287,7 +287,7 @@ class RoleModuleControllerTest {
 
     private RoleModuleRelation createRoleModuleRelation(Integer id, Integer roleCode, Integer moduleId) {
         RoleModuleRelation relation = new RoleModuleRelation();
-        relation.setRoleModuleRelationId(id);
+        relation.setId(id);
 
         Role role = createRole(roleCode, "Role " + roleCode);
         relation.setRole(role);
