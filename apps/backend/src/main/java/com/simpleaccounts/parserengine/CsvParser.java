@@ -77,16 +77,16 @@ public class CsvParser implements TransactionFileParser {
 		} catch (IOException e) {
 			logger.error("Error =", e);
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
 	public List<Transaction> getModelListFromFile(TransactionParsingSettingDetailModel model, MultipartFile file,
 												  Integer bankId) {
-		return null;
+		return new ArrayList<>();
 	}
 
-	public Map parseImportData(TransactionParsingSettingDetailModel model, InputStream inputStream) {
+	public Map<String, Object> parseImportData(TransactionParsingSettingDetailModel model, InputStream inputStream) {
 		String line = "";
 		String cvsSplitBy = ",";
 
@@ -196,7 +196,7 @@ public class CsvParser implements TransactionFileParser {
 
 			}
 
-			Map responseMap = new LinkedHashMap<>();
+			Map<String, Object> responseMap = new LinkedHashMap<>();
 			responseMap.put("data", list);
 			responseMap.put("error", errorList.isEmpty() ? null : errorList);
 
@@ -204,7 +204,7 @@ public class CsvParser implements TransactionFileParser {
 		} catch (IOException e) {
 			logger.error("Error = ", e);
 		}
-		return null;
+		return new HashMap<>();
 	}
 
 	public Map<Integer, Set<Integer>> addErrorCellInRow(Map<Integer, Set<Integer>> map, Integer row, Integer cell) {
