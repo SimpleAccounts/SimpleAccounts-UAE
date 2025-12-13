@@ -126,7 +126,6 @@ public class TransactionImportController{
 		String filepath = file.getAbsolutePath();
 		String content = null;
 		Path path = Paths.get(filepath);
-		Resource resource = null;
 		try {
 			content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
@@ -171,7 +170,7 @@ public class TransactionImportController{
 	}
 
 	void save(TransactionModel transaction, Integer id, Integer bankId) {
-		System.out.println("transaction===" + transaction);
+		logger.info("transaction=== {}", transaction);
 		try {
 			User loggedInUser = userServiceNew.findByPK(id);
 			com.simpleaccounts.entity.bankaccount.Transaction transaction1 = new com.simpleaccounts.entity.bankaccount.Transaction();
@@ -189,7 +188,7 @@ public class TransactionImportController{
 						BigDecimal.valueOf(Double.parseDouble(transaction.getDebit().replace(",", ""))));
 				transaction1.setDebitCreditFlag(TransactionCreditDebitConstant.DEBIT);
 				BigDecimal currentBalance =  bankAccount.getCurrentBalance();
-				currentBalance.subtract(transaction.getAmount());
+				currentBalance = currentBalance.subtract(transaction.getAmount());
 				bankAccount.setCurrentBalance(currentBalance);
 
 			}
@@ -198,7 +197,7 @@ public class TransactionImportController{
 						BigDecimal.valueOf(Double.parseDouble(transaction.getCredit().replace(",", ""))));
 				transaction1.setDebitCreditFlag(TransactionCreditDebitConstant.CREDIT);
 				BigDecimal currentBalance = bankAccount.getCurrentBalance();
-				currentBalance.add(transaction.getAmount());
+				currentBalance = currentBalance.add(transaction.getAmount());
 				bankAccount.setCurrentBalance(currentBalance);
 			}
 			transactionService.persist(transaction1);
