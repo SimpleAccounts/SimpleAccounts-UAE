@@ -262,3 +262,4 @@ class RoleModuleServiceImplTest {
         return relations;
     }
 }
+
