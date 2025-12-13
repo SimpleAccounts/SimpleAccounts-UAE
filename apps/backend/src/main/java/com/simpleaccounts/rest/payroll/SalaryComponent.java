@@ -1,9 +1,8 @@
 package com.simpleaccounts.rest.payroll;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import lombok.Data;
 
 @Data
 public class SalaryComponent {

@@ -1,8 +1,6 @@
 package com.simpleaccounts.rest.payroll.payrolServiceImpl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
-import lombok.RequiredArgsConstructor;
-
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.*;
@@ -20,11 +18,6 @@ import com.simpleaccounts.rest.payroll.payrolService.PayrolService;
 import com.simpleaccounts.rest.payroll.service.SalaryService;
 import com.simpleaccounts.service.EmployeeService;
 import com.simpleaccounts.utils.DateFormatUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.time.*;
 import java.time.format.DateTimeFormatter;

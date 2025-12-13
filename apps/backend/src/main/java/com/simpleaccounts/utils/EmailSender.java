@@ -1,7 +1,6 @@
 package com.simpleaccounts.utils;
 
 import com.simpleaccounts.constant.ErrorConstant;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.service.ConfigurationService;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;

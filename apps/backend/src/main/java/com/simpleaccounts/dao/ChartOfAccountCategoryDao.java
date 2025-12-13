@@ -1,8 +1,7 @@
 package com.simpleaccounts.dao;
 
-import java.util.List;
-
 import com.simpleaccounts.entity.ChartOfAccountCategory;
+import java.util.List;
 
 public interface ChartOfAccountCategoryDao extends Dao<Integer, ChartOfAccountCategory> {
 

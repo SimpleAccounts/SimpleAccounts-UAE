@@ -1,8 +1,7 @@
 package com.simpleaccounts.rest.companycontroller;
 
-import lombok.Data;
-
 import java.util.Date;
+import lombok.Data;
 
 @Data
 public class RegistrationModel {

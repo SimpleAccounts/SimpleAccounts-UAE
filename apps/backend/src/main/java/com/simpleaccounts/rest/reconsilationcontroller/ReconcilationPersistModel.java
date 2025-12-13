@@ -1,8 +1,8 @@
 package com.simpleaccounts.rest.reconsilationcontroller;
 
-import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import lombok.Data;
 
 @Data
 public class ReconcilationPersistModel implements Serializable {

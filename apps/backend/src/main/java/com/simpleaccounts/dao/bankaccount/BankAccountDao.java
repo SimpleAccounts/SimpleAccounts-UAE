@@ -1,14 +1,13 @@
 package com.simpleaccounts.dao.bankaccount;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
 import com.simpleaccounts.constant.dbfilter.BankAccounrFilterEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 public interface BankAccountDao extends Dao<Integer, BankAccount> {
 

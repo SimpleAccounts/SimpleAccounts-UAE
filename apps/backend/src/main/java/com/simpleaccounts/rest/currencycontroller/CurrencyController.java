@@ -5,9 +5,10 @@
  */
 package com.simpleaccounts.rest.currencycontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.ErrorConstant;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.Expense;

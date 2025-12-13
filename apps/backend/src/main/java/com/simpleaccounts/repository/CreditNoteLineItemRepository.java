@@ -2,13 +2,12 @@ package com.simpleaccounts.repository;
 
 import com.simpleaccounts.entity.CreditNote;
 import com.simpleaccounts.entity.CreditNoteLineItem;
+import java.time.LocalDate;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Repository
 public interface CreditNoteLineItemRepository extends JpaRepository<CreditNoteLineItem,Integer> {

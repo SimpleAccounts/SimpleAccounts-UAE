@@ -1,10 +1,6 @@
 package com.simpleaccounts.rfq_po;
 
 import com.simpleaccounts.dao.Dao;
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

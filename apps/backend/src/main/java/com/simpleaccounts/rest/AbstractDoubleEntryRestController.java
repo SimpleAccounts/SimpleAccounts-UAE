@@ -32,17 +32,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
-import com.simpleaccounts.security.JwtTokenUtil;
-import io.swagger.annotations.ApiOperation;
-
-import javax.servlet.http.HttpServletRequest;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 /**
  *
  * @author uday

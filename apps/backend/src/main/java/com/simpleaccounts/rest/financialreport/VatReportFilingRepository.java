@@ -1,10 +1,9 @@
 package com.simpleaccounts.rest.financialreport;
 
 import com.simpleaccounts.entity.VatReportFiling;
+import java.time.LocalDate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.time.LocalDate;
 
 public interface VatReportFilingRepository extends JpaRepository<VatReportFiling,Integer> {
     void deleteById(Integer id);

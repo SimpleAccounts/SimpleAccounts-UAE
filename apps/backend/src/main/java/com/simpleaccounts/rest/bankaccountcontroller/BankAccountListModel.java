@@ -1,8 +1,7 @@
 package com.simpleaccounts.rest.bankaccountcontroller;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
+import lombok.Data;
 
 @Data
 public class BankAccountListModel {

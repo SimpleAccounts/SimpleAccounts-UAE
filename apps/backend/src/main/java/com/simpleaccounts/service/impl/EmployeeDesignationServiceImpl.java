@@ -1,7 +1,6 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.EmployeeDesignationDao;
 import com.simpleaccounts.entity.EmployeeDesignation;
 import com.simpleaccounts.rest.DropdownObjectModel;
@@ -10,6 +9,7 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.EmployeeDesignationService;
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

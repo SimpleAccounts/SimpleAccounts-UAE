@@ -1,8 +1,7 @@
 package com.simpleaccounts.service;
 
-import java.util.List;
-
 import com.simpleaccounts.entity.bankaccount.BankAccountStatus;
+import java.util.List;
 
 public interface BankAccountStatusService {
 

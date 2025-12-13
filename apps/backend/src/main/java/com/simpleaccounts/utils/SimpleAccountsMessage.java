@@ -1,7 +1,6 @@
 package com.simpleaccounts.utils;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,8 +1,7 @@
 package com.simpleaccounts.rest.currencyconversioncontroller;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
+import lombok.Data;
 
 @Data
 public class CurrencyConversionRequestModel {

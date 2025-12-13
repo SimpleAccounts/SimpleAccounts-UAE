@@ -8,7 +8,6 @@ import com.simpleaccounts.model.VatReportResponseModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simpleaccounts.rest.financialreport.FinancialReportRequestModel;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;

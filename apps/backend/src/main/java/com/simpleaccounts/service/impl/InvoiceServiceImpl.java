@@ -1,13 +1,5 @@
 package com.simpleaccounts.service.impl;
 
-import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
@@ -38,6 +30,13 @@ import com.simpleaccounts.service.InvoiceService;
 import com.simpleaccounts.service.JournalLineItemService;
 import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateUtils;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -3,7 +3,6 @@ package com.simpleaccounts.rest.CorporateTax;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.aop.LogExecutionTime;
 import com.simpleaccounts.aop.LogRequest;

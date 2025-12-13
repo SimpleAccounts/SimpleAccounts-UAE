@@ -1,12 +1,10 @@
 package com.simpleaccounts.rest.productcategorycontroller;
 
+import com.simpleaccounts.entity.ProductCategory;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
-
-import com.simpleaccounts.entity.ProductCategory;
 
 @Component
 public class ProductCategoryRestHelper {

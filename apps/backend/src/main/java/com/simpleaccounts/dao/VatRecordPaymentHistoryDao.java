@@ -1,12 +1,9 @@
 package com.simpleaccounts.dao;
 
 import com.simpleaccounts.constant.dbfilter.VatReportFilterEnum;
-
 import com.simpleaccounts.entity.VatRecordPaymentHistory;
-
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-
 import java.util.Map;
 
 /**

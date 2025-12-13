@@ -1,9 +1,8 @@
 package com.simpleaccounts.rest.payroll;
 
 import com.simpleaccounts.rest.payroll.service.SalarySlipListtModel;
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class SalarySlipListtResponseModel {

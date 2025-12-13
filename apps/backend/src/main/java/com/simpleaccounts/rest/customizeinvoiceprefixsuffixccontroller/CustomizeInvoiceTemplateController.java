@@ -1,9 +1,9 @@
 package com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.CustomizeInvoiceTemplate;
-import lombok.RequiredArgsConstructor;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -11,10 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  * Created By Zain Khan On 20-11-2020

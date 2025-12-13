@@ -2,11 +2,10 @@ package com.simpleaccounts.integration;
 
 import com.simpleaccounts.entity.Mail;
 import com.simpleaccounts.entity.MailEnum;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.StrSubstitutor;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.StrSubstitutor;
 
 public final class MailPreparer {
 

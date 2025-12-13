@@ -1,11 +1,10 @@
 package com.simpleaccounts.entity;
 
-import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.*;
+import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 /**
  *  Created By Zain Khan On 20-11-2020

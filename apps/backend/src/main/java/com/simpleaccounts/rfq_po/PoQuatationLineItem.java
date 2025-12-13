@@ -3,14 +3,12 @@ package com.simpleaccounts.rfq_po;
 import com.simpleaccounts.constant.DiscountType;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-
-import javax.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 /**
  * Created By Zain Khan
