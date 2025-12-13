@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 /**

@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Optional;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

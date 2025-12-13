@@ -6,7 +6,6 @@ import com.simpleaccounts.dao.DesignationTransactionCategoryDao;
 import com.simpleaccounts.entity.DesignationTransactionCategory;
 import com.simpleaccounts.service.DesignationTransactionCategoryService;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service("DesignationTransactionCategoryService")

@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.MailThemeTemplates;
 import com.simpleaccounts.dao.MailThemeTemplatesDao;
 import com.simpleaccounts.service.MailThemeTemplatesService;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

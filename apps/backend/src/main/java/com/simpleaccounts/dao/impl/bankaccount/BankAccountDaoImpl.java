@@ -21,16 +21,7 @@ import com.simpleaccounts.dao.bankaccount.BankAccountDao;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor

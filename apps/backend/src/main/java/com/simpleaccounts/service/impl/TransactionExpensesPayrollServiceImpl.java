@@ -8,7 +8,6 @@ import com.simpleaccounts.entity.Expense;
 import com.simpleaccounts.service.TransactionExpensesPayrollService;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service

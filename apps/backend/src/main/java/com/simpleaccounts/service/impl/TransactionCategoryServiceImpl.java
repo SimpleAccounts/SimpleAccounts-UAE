@@ -23,12 +23,7 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.TransactionCategoryService;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service("transactionCategoryService")
 @Transactional

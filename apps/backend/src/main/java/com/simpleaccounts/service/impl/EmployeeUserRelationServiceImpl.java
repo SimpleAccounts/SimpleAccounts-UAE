@@ -7,7 +7,6 @@ import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeUserRelation;
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.service.EmployeeUserRelationService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**

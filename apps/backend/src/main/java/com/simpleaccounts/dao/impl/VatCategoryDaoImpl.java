@@ -16,13 +16,7 @@ import com.simpleaccounts.dao.VatCategoryDao;
 import com.simpleaccounts.entity.VatCategory;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import javax.persistence.TypedQuery;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor

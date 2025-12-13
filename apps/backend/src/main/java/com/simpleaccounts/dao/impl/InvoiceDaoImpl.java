@@ -40,20 +40,8 @@ import java.util.Map;
 import java.util.TimeZone;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import com.simpleaccounts.constant.dbfilter.DbFilter;
-import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;
-import com.simpleaccounts.dao.AbstractDao;
-import com.simpleaccounts.dao.InvoiceDao;
-import com.simpleaccounts.dao.JournalDao;
-import com.simpleaccounts.dao.JournalLineItemDao;
-import com.simpleaccounts.model.OverDueAmountDetailsModel;
-import com.simpleaccounts.rest.DropdownModel;
-import com.simpleaccounts.rest.PaginationModel;
-import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.utils.DateUtils;
 
 @Repository
 @RequiredArgsConstructor
