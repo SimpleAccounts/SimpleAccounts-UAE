@@ -1,6 +1,7 @@
 package com.simpleaccounts.rfq_po;
 
 import com.simpleaccounts.service.SimpleAccountsService;
+
 import java.util.List;
 
 public abstract class RfqPoGrnInvoiceRelationService extends SimpleAccountsService<Integer, RfqPoGrnRelation> {

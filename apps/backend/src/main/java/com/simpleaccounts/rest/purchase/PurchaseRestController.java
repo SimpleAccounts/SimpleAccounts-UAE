@@ -5,6 +5,27 @@
  */
 package com.simpleaccounts.rest.purchase;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.InvoicePurchaseStatusConstant;
@@ -73,8 +94,29 @@ public class PurchaseRestController {
 	public ResponseEntity<List<PurchaseRestModel>> populatePurchases() {
 		List<PurchaseRestModel> purchaseModels = new ArrayList<>();
 		try {
+			int totalPurchases = 0;
+			int totalPaid = 0;
+			int totalPartiallyPaid = 0;
+			int totalUnPaid = 0;
 			if (purchaseService.getAllPurchase() != null) {
 				for (Purchase purchase : purchaseService.getAllPurchase()) {
+					if (purchase.getStatus() != null) {
+
+						switch (purchase.getStatus()) {
+							case InvoicePurchaseStatusConstant.PAID:
+								totalPaid++;
+								break;
+							case InvoicePurchaseStatusConstant.PARTIALPAID:
+								totalPartiallyPaid++;
+								break;
+							case InvoicePurchaseStatusConstant.UNPAID:
+								totalUnPaid++;
+								break;
+							default:
+								break;
+							}
+					}
+					totalPurchases++;
 					PurchaseRestModel model = purchaseControllerRestHelper.getPurchaseModel(purchase);
 					purchaseModels.add(model);
 				}

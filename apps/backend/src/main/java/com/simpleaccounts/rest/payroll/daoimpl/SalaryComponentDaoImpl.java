@@ -2,17 +2,20 @@ package com.simpleaccounts.rest.payroll.daoimpl;
 
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.dao.AbstractDao;
+
 import com.simpleaccounts.entity.SalaryComponent;
+
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.payroll.dao.SalaryComponentDao;
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import org.springframework.stereotype.Repository;
 
 @Repository(value = "salaryComponentDao")
 public class SalaryComponentDaoImpl extends AbstractDao<Integer, SalaryComponent> implements SalaryComponentDao {

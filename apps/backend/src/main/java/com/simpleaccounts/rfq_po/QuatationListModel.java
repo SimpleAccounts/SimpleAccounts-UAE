@@ -3,6 +3,7 @@ package com.simpleaccounts.rfq_po;
 import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
+import java.math.BigDecimal;
 
 @Getter
 @Setter

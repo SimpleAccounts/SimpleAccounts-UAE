@@ -1,8 +1,9 @@
 package com.simpleaccounts.service;
 
-import com.simpleaccounts.entity.Event;
 import java.util.Date;
 import java.util.List;
+
+import com.simpleaccounts.entity.Event;
 
 public interface EventService {
 

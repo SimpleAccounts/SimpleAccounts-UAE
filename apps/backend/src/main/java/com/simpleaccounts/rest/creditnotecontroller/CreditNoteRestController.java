@@ -3,29 +3,36 @@ package com.simpleaccounts.rest.creditnotecontroller;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.entity.*;
+
 import com.simpleaccounts.model.AppliedInvoiceCreditNote;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.PostingRequestModel;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
+
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
+
 import io.swagger.annotations.ApiOperation;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.*;
-import javax.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.*;
+
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
@@ -74,9 +81,9 @@ public class CreditNoteRestController {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(httpServletRequest);
             PaginationResponseModel responseModel = new PaginationResponseModel();
-            java.util.Objects.requireNonNull(userService.findByPK(userId));
-            creditNoteRestHelper.getListModel(
-                    responseModel, contact, amount, pageNo, pageSize, order, sortingCol, type);
+           User user = userService.findByPK(userId);
+            creditNoteRestHelper.getListModel(responseModel,contact,amount,pageNo,pageSize,paginationDisable,
+                    order,sortingCol,userId,type);
             return new ResponseEntity<>(responseModel, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);

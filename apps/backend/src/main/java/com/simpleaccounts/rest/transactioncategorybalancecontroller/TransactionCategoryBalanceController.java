@@ -1,5 +1,15 @@
 package com.simpleaccounts.rest.transactioncategorybalancecontroller;
 
+import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
+import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
@@ -26,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +69,7 @@ public class TransactionCategoryBalanceController {
 									   HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			java.util.Objects.requireNonNull(userServiceNew.findByPK(userId));
+			User user = userServiceNew.findByPK(userId);
 			List<TransactioncategoryBalancePersistModel> list=persistmodelList.getPersistModelList();
 			for(TransactioncategoryBalancePersistModel persistmodel: list){
 				TransactionCategory category = transactionCategoryService.findByPK(persistmodel.getTransactionCategoryId());
@@ -170,7 +181,7 @@ public class TransactionCategoryBalanceController {
 										 HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			java.util.Objects.requireNonNull(userServiceNew.findByPK(userId));
+			User user = userServiceNew.findByPK(userId);
 			TransactionCategoryBalance transactionCategoryBalance= null;
 			if (persistModel.getTransactionCategoryBalanceId() != null) {
 				transactionCategoryBalance = transactionCategoryBalanceService

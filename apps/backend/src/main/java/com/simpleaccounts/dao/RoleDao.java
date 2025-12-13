@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao;
 
 import com.simpleaccounts.entity.Role;
+
 import java.util.List;
 
 /**

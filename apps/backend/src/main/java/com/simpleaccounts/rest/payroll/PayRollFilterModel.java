@@ -1,9 +1,10 @@
 package com.simpleaccounts.rest.payroll;
 
 import com.simpleaccounts.rest.PaginationModel;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.List;
-import lombok.Data;
 
 @Data
 public class PayRollFilterModel extends PaginationModel {

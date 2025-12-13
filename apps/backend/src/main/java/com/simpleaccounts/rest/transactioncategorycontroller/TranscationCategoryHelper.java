@@ -7,11 +7,15 @@ package com.simpleaccounts.rest.transactioncategorycontroller;
 
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
 import com.simpleaccounts.constant.DefaultTypeConstant;
+import java.util.*;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.repository.*;
+import com.simpleaccounts.repository.ExpenseRepository;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.SingleLevelDropDownModel;
 import com.simpleaccounts.service.*;
@@ -191,7 +195,7 @@ public class TranscationCategoryHelper {
 		if (list != null && !list.isEmpty()) {
 			Map<Object, Object> chartOfAccountDropdownModelList = new HashMap<>();
 			Map<Integer, List<ChartOfAccount>> idTrnxCatListMap = new HashMap<>();
-			List<ChartOfAccount> categoryList;
+			List<ChartOfAccount> categoryList = new ArrayList<>();
 			for (ChartOfAccount trnxCat : list) {
 				getParentChartOfAccount(idTrnxCatListMap, trnxCat);
 			}
@@ -233,7 +237,7 @@ public class TranscationCategoryHelper {
 		List<SingleLevelDropDownModel>
 				modelList = new ArrayList<>();
 		Map<Integer, List<TransactionCategory>> idTrnxCatListMap = new HashMap<>();
-		List<TransactionCategory> transactionCategoryList;
+		List<TransactionCategory> transactionCategoryList = new ArrayList<>();
 		for (TransactionCategory trnxCat : transactionCatList) {
 
 			if (trnxCat.getChartOfAccount() != null) {
@@ -264,10 +268,13 @@ public class TranscationCategoryHelper {
 	public List<SingleLevelDropDownModel> getSingleLevelDropDownModelListForManualJournal(List<TransactionCategory> transactionCatList) {
 		List<SingleLevelDropDownModel> modelList = new ArrayList<>();
 		Map<Integer, List<TransactionCategory>> idTrnxCatListMap = new HashMap<>();
-		List<TransactionCategory> transactionCategoryList;
+		List<TransactionCategory> transactionCategoryList = new ArrayList<>();
 		transactionCatList = transactionCatList.stream().filter(transactionCategory ->
 				!transactionCategory.getTransactionCategoryCode().equals(TransactionCategoryCodeEnum.PETTY_CASH.getCode()))
 				.filter(transactionCategory ->  !transactionCategory.getChartOfAccount().getChartOfAccountCode().equals(ChartOfAccountCategoryCodeEnum.BANK.getCode())).collect(Collectors.toList());
+		Map<String,Object> map = new HashMap<>();
+		map.put("deleteFlag",Boolean.FALSE);
+	     List<EmployeeTransactionCategoryRelation> employeeTransactionCategoryRelationList = employeeTransactioncategoryService.findByAttributes(map);
 
 		for (TransactionCategory trnxCat : transactionCatList) {
 			if (trnxCat.getChartOfAccount() != null) {
@@ -297,6 +304,8 @@ public class TranscationCategoryHelper {
 	}
 
 	public List<DropdownModel> getEmployeeTransactionCategory(List<TransactionCategory> transactionCategoryList){
+		List<SingleLevelDropDownModel> response  = new ArrayList<>();
+		String parentCategory = "";
 		List<DropdownModel> dropDownModelList = new ArrayList<>();
 		for (TransactionCategory transactionCategory:transactionCategoryList){
 
@@ -307,6 +316,7 @@ public class TranscationCategoryHelper {
 			//added check for Inactive Employee TC's
 				if(!employeeTransactionCategoryRelationList.isEmpty()
 						&& Boolean.TRUE.equals(employeeTransactionCategoryRelationList.get(0).getEmployee().getIsActive())) {
+					parentCategory = transactionCategory.getChartOfAccount().getChartOfAccountName();
 					dropDownModelList.add(
 							new DropdownModel(transactionCategory.getTransactionCategoryId(), transactionCategory.getTransactionCategoryName()));
 			}//if

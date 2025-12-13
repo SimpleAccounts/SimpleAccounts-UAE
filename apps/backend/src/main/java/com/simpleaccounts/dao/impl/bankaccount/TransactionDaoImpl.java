@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl.bankaccount;
 
 import com.simpleaccounts.constant.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.TransactionFilterEnum;
 import com.simpleaccounts.dao.AbstractDao;

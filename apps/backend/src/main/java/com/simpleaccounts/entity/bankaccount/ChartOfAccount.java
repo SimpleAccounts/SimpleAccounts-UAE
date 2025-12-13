@@ -1,14 +1,18 @@
 package com.simpleaccounts.entity.bankaccount;
 
-import com.simpleaccounts.entity.CoaCoaCategory;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.ColumnDefault;
+
+import com.simpleaccounts.entity.CoaCoaCategory;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 /**
  * Created by mohsinh on 2/26/2017.

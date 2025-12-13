@@ -1,6 +1,8 @@
 package com.simpleaccounts.rest.templateController;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.rest.vatcontroller.VatController;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.MailThemeTemplatesService;
@@ -13,10 +15,18 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
@@ -43,7 +53,7 @@ public class TemplatesController {
     @PostMapping(value = "/updateMailTemplateTheme")
     public ResponseEntity<String> update(@RequestParam(value = "templateId") Integer templateId, HttpServletRequest request) {
         try {
-            jwtTokenUtil.getUserIdFromHttpRequest(request);
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             mailThemeTemplatesService.updateMailTheme(templateId);
 
 //

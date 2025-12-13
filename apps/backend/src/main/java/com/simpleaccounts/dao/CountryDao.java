@@ -1,7 +1,8 @@
 package com.simpleaccounts.dao;
 
-import com.simpleaccounts.entity.Country;
 import java.util.List;
+
+import com.simpleaccounts.entity.Country;
 
 /**
  * Created by mohsinh on 3/10/2017.

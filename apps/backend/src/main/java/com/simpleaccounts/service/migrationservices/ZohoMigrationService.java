@@ -1,5 +1,26 @@
 package com.simpleaccounts.service.migrationservices;
 
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.ACCOUNT;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.BILL;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.BILLE_STATUS;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.BILL_DATE;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.CHART_OF_ACCOUNTS;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.CONTACTS;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.CREDIT_NOTE;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.DATE;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.DRAFT;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.EXCHANGE_RATE;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.EXPENSE;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.EXPENSE_ACCOUNT;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.EXPENSE_DATE;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.INVOICE;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.INVOICE_DATE;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.INVOICE_STATUS;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.ITEM;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.PURCHASE_ACCOUNT;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.PURCHASE_ORDER_DATE;
+import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.VENDORS;
+
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.DefaultTypeConstant;
@@ -31,6 +52,7 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.migration.ProductMigrationParser;
 import com.simpleaccounts.migration.xml.bindings.product.Product;
 import com.simpleaccounts.migration.xml.bindings.product.Product.TableList.Table;
+import com.simpleaccounts.migration.xml.bindings.product.Product.TableList.Table.ColumnList.Column;
 import com.simpleaccounts.rest.PostingRequestModel;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
 import com.simpleaccounts.rest.migration.model.BillModel;
@@ -80,6 +102,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -88,26 +111,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.ACCOUNT;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.BILL;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.BILLE_STATUS;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.BILL_DATE;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.CHART_OF_ACCOUNTS;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.CONTACTS;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.CREDIT_NOTE;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.DATE;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.DRAFT;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.EXCHANGE_RATE;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.EXPENSE;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.EXPENSE_ACCOUNT;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.EXPENSE_DATE;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.INVOICE;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.INVOICE_DATE;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.INVOICE_STATUS;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.ITEM;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.PURCHASE_ACCOUNT;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.PURCHASE_ORDER_DATE;
-import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.VENDORS;
 
 @Component
 	@Slf4j

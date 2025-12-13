@@ -1,23 +1,23 @@
 package com.simpleaccounts.utils;
 
 import org.hibernate.boot.model.naming.Identifier;
+import org.hibernate.boot.model.naming.ImplicitEntityNameSource;
+import org.hibernate.boot.model.naming.ImplicitDiscriminatorColumnNameSource;
+import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
+import org.hibernate.boot.model.naming.ImplicitJoinColumnNameSource;
+import org.hibernate.boot.model.naming.ImplicitCollectionTableNameSource;
+import org.hibernate.boot.model.naming.ImplicitIdentifierColumnNameSource;
+import org.hibernate.boot.model.naming.ImplicitPrimaryKeyJoinColumnNameSource;
+import org.hibernate.boot.model.naming.ImplicitJoinTableNameSource;
+import org.hibernate.boot.model.naming.ImplicitTenantIdColumnNameSource;
+import org.hibernate.boot.model.naming.ImplicitBasicColumnNameSource;
 import org.hibernate.boot.model.naming.ImplicitAnyDiscriminatorColumnNameSource;
 import org.hibernate.boot.model.naming.ImplicitAnyKeyColumnNameSource;
-import org.hibernate.boot.model.naming.ImplicitBasicColumnNameSource;
-import org.hibernate.boot.model.naming.ImplicitCollectionTableNameSource;
-import org.hibernate.boot.model.naming.ImplicitDiscriminatorColumnNameSource;
-import org.hibernate.boot.model.naming.ImplicitEntityNameSource;
+import org.hibernate.boot.model.naming.ImplicitMapKeyColumnNameSource;
 import org.hibernate.boot.model.naming.ImplicitForeignKeyNameSource;
-import org.hibernate.boot.model.naming.ImplicitIdentifierColumnNameSource;
+import org.hibernate.boot.model.naming.ImplicitUniqueKeyNameSource;
 import org.hibernate.boot.model.naming.ImplicitIndexColumnNameSource;
 import org.hibernate.boot.model.naming.ImplicitIndexNameSource;
-import org.hibernate.boot.model.naming.ImplicitJoinColumnNameSource;
-import org.hibernate.boot.model.naming.ImplicitJoinTableNameSource;
-import org.hibernate.boot.model.naming.ImplicitMapKeyColumnNameSource;
-import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
-import org.hibernate.boot.model.naming.ImplicitPrimaryKeyJoinColumnNameSource;
-import org.hibernate.boot.model.naming.ImplicitTenantIdColumnNameSource;
-import org.hibernate.boot.model.naming.ImplicitUniqueKeyNameSource;
 
 /**
  * A custom naming strategy implementation which uses following naming conventions:

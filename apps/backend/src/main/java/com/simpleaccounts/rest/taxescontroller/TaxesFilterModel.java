@@ -1,9 +1,9 @@
 package com.simpleaccounts.rest.taxescontroller;
 
 import com.simpleaccounts.rest.PaginationModel;
-import java.math.BigDecimal;
 import lombok.Data;
 
+import java.math.BigDecimal;
 @Data
 public class TaxesFilterModel  extends PaginationModel {
     private Integer contact;

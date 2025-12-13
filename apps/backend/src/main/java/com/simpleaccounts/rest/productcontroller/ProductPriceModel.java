@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.productcontroller;
 
 import java.math.BigDecimal;
+
 import lombok.Data;
 
 @Data

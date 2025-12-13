@@ -1,6 +1,8 @@
 package com.simpleaccounts.rest.datalistcontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.constant.dbfilter.*;
 import com.simpleaccounts.entity.*;
@@ -31,9 +33,14 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
@@ -299,7 +306,9 @@ public class DataListController {
 	@GetMapping(value = "/exciseTax")
 	public ResponseEntity< List<ExciseTaxModel> > getExciseTax() {
 		try {
-			List<ExciseTax> response = exciseTaxRestHelper.getExciseTaxList();
+			List<ExciseTax> response = new ArrayList<>();
+
+			response = exciseTaxRestHelper.getExciseTaxList();
 
 			List<ExciseTaxModel> exciseTaxModelList = new ArrayList<>();
 			for(ExciseTax exciseTax : response)

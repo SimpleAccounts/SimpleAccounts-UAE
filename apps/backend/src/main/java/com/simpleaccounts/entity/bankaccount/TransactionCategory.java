@@ -1,11 +1,15 @@
 package com.simpleaccounts.entity.bankaccount;
 
-import com.simpleaccounts.entity.VatCategory;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
 import javax.persistence.*;
-import lombok.Data;
+
 import org.hibernate.annotations.ColumnDefault;
+
+import com.simpleaccounts.entity.VatCategory;
+
+import lombok.Data;
 
 /**
  * Created by mohsinh on 2/26/2017.

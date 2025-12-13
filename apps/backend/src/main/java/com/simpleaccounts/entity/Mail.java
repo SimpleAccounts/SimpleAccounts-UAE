@@ -15,9 +15,10 @@
  */
 package com.simpleaccounts.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 @Data
 public class Mail implements Serializable {

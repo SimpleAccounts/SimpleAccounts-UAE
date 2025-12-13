@@ -1,7 +1,7 @@
 package com.simpleaccounts.service;
 
-import com.simpleaccounts.entity.Purchase;
 import java.util.List;
+import com.simpleaccounts.entity.Purchase;
 
 public abstract class PurchaseService extends SimpleAccountsService<Integer, Purchase> {
 

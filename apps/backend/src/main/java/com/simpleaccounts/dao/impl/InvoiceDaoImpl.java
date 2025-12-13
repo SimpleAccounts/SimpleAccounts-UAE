@@ -25,6 +25,7 @@ import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.DateUtils;
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -41,6 +42,18 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import com.simpleaccounts.constant.dbfilter.DbFilter;
+import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;
+import com.simpleaccounts.dao.AbstractDao;
+import com.simpleaccounts.dao.InvoiceDao;
+import com.simpleaccounts.dao.JournalDao;
+import com.simpleaccounts.dao.JournalLineItemDao;
+import com.simpleaccounts.model.OverDueAmountDetailsModel;
+import com.simpleaccounts.rest.DropdownModel;
+import com.simpleaccounts.rest.PaginationModel;
+import com.simpleaccounts.rest.PaginationResponseModel;
+import com.simpleaccounts.utils.DateUtils;
 
 @Repository
 @RequiredArgsConstructor
@@ -145,9 +158,9 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	}
 	@Override
 	public OverDueAmountDetailsModel getOverDueAmountDetails(Integer type) {
-		Float overDueAmountFloat;
-		Float overDueAmountWeeklyFloat;
-		Float overDueAmountMonthlyFloat;
+		Float overDueAmountFloat = (float) 0;
+		Float overDueAmountWeeklyFloat = (float) 0;
+		Float overDueAmountMonthlyFloat = (float) 0;
 		Date date = new Date();
 		if(type==2)
 		{
@@ -230,9 +243,11 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		return paidCustomerInvoiceAmountFloat;
 	}
 	private Float getOverDueCustomerAmountWeeklyMonthly(Integer type, Date startDate, Date endDate) {
+		TransactionCategory transactionCategory = transactionCategoryService.findByPK(84);
 		BigDecimal overDueAmountMonthly = getTotalCustomerInvoiceAmountWeeklyMonthly(type, startDate,
-				endDate, PostingReferenceTypeEnum.INVOICE);
+				endDate,transactionCategory,PostingReferenceTypeEnum.INVOICE);
 		Float overDueAmountFloat = (float) 0;
+		transactionCategory = transactionCategoryService.findByPK(2);
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("totalInvoiceReceiptAmountWeeklyMonthly", BigDecimal.class);
 		query.setParameter("type", type);
 		query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate) );
@@ -249,7 +264,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 
 	}
 	private BigDecimal getTotalCustomerInvoiceAmountWeeklyMonthly(Integer type, Date startDate, Date endDate,
-														  PostingReferenceTypeEnum referenceTypeEnum) {
+														  TransactionCategory transactionCategory,PostingReferenceTypeEnum referenceTypeEnum) {
 		TypedQuery<InvoiceOverDueModel> query = getEntityManager().createNamedQuery("totalCustomerInvoiceAmountWeeklyMonthly",
 				InvoiceOverDueModel.class);
 		query.setParameter("type", type);
@@ -262,7 +277,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
      	return type==1?invoiceOverDueModel.getDebitAmount():invoiceOverDueModel.getCreditAmount();
 	}
 	private BigDecimal getTotalSupplierInvoiceAmountWeeklyMonthly(Integer type, Date startDate, Date endDate,
-														  PostingReferenceTypeEnum referenceTypeEnum) {
+														  TransactionCategory transactionCategory,PostingReferenceTypeEnum referenceTypeEnum) {
 		TypedQuery<InvoiceOverDueModel> query = getEntityManager().createNamedQuery("totalSupplierInvoiceAmountWeeklyMonthly",
 				InvoiceOverDueModel.class);
 		query.setParameter("type", type);
@@ -275,10 +290,11 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		return type==1?invoiceOverDueModel.getDebitAmount():invoiceOverDueModel.getCreditAmount();
 	}
 	private Float getOverDueSupplierAmountWeeklyMonthly(Integer type, Date startDate, Date endDate) {
+		TransactionCategory transactionCategory = transactionCategoryService.findByPK(49);
 		BigDecimal overDueAmountMonthly = getTotalSupplierInvoiceAmountWeeklyMonthly(type, startDate, endDate,
-				PostingReferenceTypeEnum.INVOICE);
+				transactionCategory,PostingReferenceTypeEnum.INVOICE);
 		Float overDueAmountFloat = (float) 0;
-		TransactionCategory transactionCategory = transactionCategoryService.findByPK(1);
+		transactionCategory = transactionCategoryService.findByPK(1);
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("totalInvoicePaymentAmountWeeklyMonthly", BigDecimal.class);
 		query.setParameter("type", type);
 		query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate));
@@ -454,14 +470,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter(CommonColumnConstants.END_DATE,endDate);
 		query.setParameter(CommonColumnConstants.EDIT_FLAG,editFlag);
 		BigDecimal amountWithoutVat = query.getSingleResult();
-		if (amountWithoutVat == null) {
-			amountWithoutVat = BigDecimal.ZERO;
-		}
-		BigDecimal existingTotal = vatReportResponseModel.getReverseChargeProvisionsTotalAmount();
-		if (existingTotal == null) {
-			existingTotal = BigDecimal.ZERO;
-		}
-		vatReportResponseModel.setReverseChargeProvisionsTotalAmount(existingTotal.add(amountWithoutVat));
+
 	}
 	@Override
 	public void getSumOfTotalAmountWithVatForRCM(ReportRequestModel reportRequestModel, VatReportResponseModel vatReportResponseModel) {

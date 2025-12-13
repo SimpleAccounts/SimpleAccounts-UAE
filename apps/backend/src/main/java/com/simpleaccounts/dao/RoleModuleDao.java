@@ -2,6 +2,7 @@ package com.simpleaccounts.dao;
 
 import com.simpleaccounts.entity.RoleModuleRelation;
 import com.simpleaccounts.entity.SimpleAccountsModules;
+
 import java.util.List;
 
 public interface RoleModuleDao extends Dao<Integer,SimpleAccountsModules > {

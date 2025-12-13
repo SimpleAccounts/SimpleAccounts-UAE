@@ -6,6 +6,7 @@ import com.simpleaccounts.entity.Product;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.productcontroller.InventoryListModel;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;

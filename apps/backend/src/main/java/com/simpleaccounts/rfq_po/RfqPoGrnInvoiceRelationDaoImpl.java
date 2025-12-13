@@ -1,8 +1,9 @@
 package com.simpleaccounts.rfq_po;
 
 import com.simpleaccounts.dao.AbstractDao;
-import java.util.List;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository(value = "rfqPoGrnInvoiceRelationDao")
 public class RfqPoGrnInvoiceRelationDaoImpl  extends AbstractDao<Integer, RfqPoGrnRelation> implements RfqPoGrnInvoiceRelationDao{

@@ -10,8 +10,8 @@ import com.simpleaccounts.constant.dbfilter.TransactionFilterEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.Transaction;
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.helper.DateFormatHelper;
+import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.helper.TransactionHelper;
 import com.simpleaccounts.model.ExplainedInvoiceListModel;
 import com.simpleaccounts.repository.*;
@@ -34,23 +34,12 @@ import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.service.bankaccount.TransactionStatusService;
+
 import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.InvoiceNumberUtil;
 import io.swagger.annotations.ApiOperation;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -62,6 +51,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
@@ -339,7 +342,8 @@ public class TransactionRestController {
 				{  // Supplier Invoices
 					updateTransactionForSupplierInvoices(trnx,transactionPresistModel);
 					// JOURNAL LINE ITEM FOR normal transaction
-					reconsileSupplierInvoices(userId, trnx, transactionPresistModel, request);
+					List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
+					reconsileSupplierInvoices(userId, trnx, itemModels,transactionPresistModel,request);
 				}
 				break;
 			case MONEY_PAID_TO_USER:
@@ -452,7 +456,8 @@ public class TransactionRestController {
 			case SALES:
 				// Customer Invoices
 				updateTransactionForCustomerInvoices(trnx,transactionPresistModel);
-				reconsileCustomerInvoices(userId, trnx, transactionPresistModel, request);
+				List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
+				reconsileCustomerInvoices(userId, trnx, itemModels, transactionPresistModel,request);
 				break;
 			case VAT_PAYMENT:
 			case VAT_CLAIM:
@@ -550,7 +555,7 @@ public class TransactionRestController {
 		corporateTaxPayment.setPaymentDate(trnx.getTransactionDate().toLocalDate());
 		corporateTaxPayment.setAmountPaid(trnx.getTransactionAmount());
 		corporateTaxPayment.setDepositToTransactionCategory((bankAccount.getTransactionCategory()));
-		BigDecimal ctReportFilingBalanceDue;
+		BigDecimal ctReportFilingBalanceDue = BigDecimal.ZERO;
 		CorporateTaxFiling corporateTaxFiling = corporateTaxFilingRepository.findById(corporateTaxModel.getId()).get();
 		if (corporateTaxFiling.getBalanceDue().compareTo(trnx.getTransactionAmount()) > 0){
 			ctReportFilingBalanceDue = corporateTaxFiling.getBalanceDue().subtract(trnx.getTransactionAmount());
@@ -607,12 +612,12 @@ public class TransactionRestController {
 		// Post journal
 		Journal journal =  corporateTaxPaymentPosting(
 				new PostingRequestModel(corporateTaxPayment.getId(), corporateTaxPayment.getAmountPaid()), trnx.getCreatedBy(),
-				corporateTaxPayment.getDepositToTransactionCategory());
+				corporateTaxPayment.getDepositToTransactionCategory(),transactionPresistModel.getExchangeRate());
 		journalService.persist(journal);
 	}
 
 	private Journal corporateTaxPaymentPosting(PostingRequestModel postingRequestModel, Integer userId,
-                                               TransactionCategory depositeToTransactionCategory) {
+                                               TransactionCategory depositeToTransactionCategory,BigDecimal exchangeRate) {
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
@@ -655,7 +660,7 @@ public class TransactionRestController {
 		vatPayment.setAmount(trnx.getTransactionAmount());
 		vatPayment.setDepositToTransactionCategory((bankAccount.getTransactionCategory()));
 
-		BigDecimal vatReportFilingBalanceDue;
+		BigDecimal vatReportFilingBalanceDue = BigDecimal.ZERO;
 		VatReportFiling vatReportFiling = vatReportFilingRepository.findById(vatReportResponseListForBank.getId()).get();
 		if (vatReportFiling.getBalanceDue().compareTo(trnx.getTransactionAmount()) > 0){
 			vatReportFilingBalanceDue = vatReportFiling.getBalanceDue().subtract(trnx.getTransactionAmount());
@@ -810,7 +815,7 @@ public class TransactionRestController {
 //2.create new expenses
 		Expense expense =  createNewExpense(transactionPresistModel,userId);
 		//amnt check
-		BigDecimal transactionAmount; //for journal
+		BigDecimal transactionAmount = BigDecimal.ZERO; //for journal
 		if(trnx.getTransactionAmount().compareTo(payrollsTotalAmt) > 0)
 		{
 			expense.setExpenseAmount(payrollsTotalAmt);
@@ -1017,6 +1022,8 @@ public class TransactionRestController {
 		FileHelper.setRootPath(rootPath);
 		Transaction trnx = isValidTransactionToExplain(transactionPresistModel);
 		if(trnx!=null&&trnx.getTransactionExplinationStatusEnum()==TransactionExplinationStatusEnum.FULL) {
+			TransactionExplanation transactionExplanation =
+                    transactionExplanationRepository.findById(transactionPresistModel.getExplanationId()).get();
 			trnx = updateTransactionWithCommonFields(transactionPresistModel, userId, TransactionCreationMode.IMPORT, trnx);
 		}
 		else if(trnx==null) {
@@ -1043,7 +1050,8 @@ public class TransactionRestController {
 				} else {  // Supplier Invoices
 					updateTransactionForSupplierInvoices(trnx,transactionPresistModel);
 					// JOURNAL LINE ITEM FOR normal transaction
-					reconsileSupplierInvoices(userId, trnx, transactionPresistModel, request);
+					List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
+					reconsileSupplierInvoices(userId, trnx, itemModels, transactionPresistModel,request);
 				}
 				break;
 			case MONEY_PAID_TO_USER:
@@ -1159,7 +1167,8 @@ public class TransactionRestController {
 				// Customer Invoices
 				updateTransactionForCustomerInvoices(trnx,transactionPresistModel);
 				// JOURNAL LINE ITEM FOR normal transaction
-				reconsileCustomerInvoices(userId, trnx, transactionPresistModel, request);
+				List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
+				reconsileCustomerInvoices(userId, trnx, itemModels, transactionPresistModel,request);
 				break;
 			case VAT_PAYMENT:
 			case VAT_CLAIM:
@@ -1255,7 +1264,8 @@ public class TransactionRestController {
 			BigDecimal newTransactionAmount =transactionPresistModel.getAmount();
 			BigDecimal currentBalance = trnx.getBankAccount().getCurrentBalance();
 
-			BigDecimal updateTransactionAmount = newTransactionAmount.subtract(oldTransactionAmount);
+			BigDecimal updateTransactionAmount = BigDecimal.ZERO;
+			updateTransactionAmount = newTransactionAmount.subtract(oldTransactionAmount);
 			if(trnx.getDebitCreditFlag() == 'C'){
 
 				currentBalance= currentBalance.subtract(oldTransactionAmount);
@@ -1297,7 +1307,9 @@ public class TransactionRestController {
 				if (transactionExpensesList != null && !transactionExpensesList.isEmpty())
 				{
 					if(transactionPresistModel.getExpenseCategory() == 34) {
-						unExplainPayrollExpenses(trnx, transactionExpensesList, transactionExplanation);
+						List<TransactionExpensesPayroll> transactionExpensesPayrollList = transactionExpensesPayrollService
+								.findAllForTransactionExpenses(trnx.getTransactionId());
+						unExplainPayrollExpenses(transactionExpensesPayrollList,trnx,transactionExpensesList,transactionExplanation);
 					} else {
 						unExplainExpenses(transactionExpensesList,trnx,transactionExplanation);
 					}
@@ -1443,7 +1455,7 @@ public class TransactionRestController {
 	 * @param trnx
 	 * @param itemModels
 	 */
-	private void reconsileCustomerInvoices(Integer userId, Transaction trnx,
+	private void reconsileCustomerInvoices(Integer userId, Transaction trnx, List<ReconsileRequestLineItemModel> itemModels,
 										   TransactionPresistModel transactionPresistModel,HttpServletRequest request) {
 		List<ExplainedInvoiceListModel> explainedInvoiceListModelList = getExplainedInvoiceListModel(transactionPresistModel);
 		TransactionExplanation transactionExplanation = new TransactionExplanation();
@@ -1474,12 +1486,13 @@ public class TransactionRestController {
 		List<TransactionExplinationLineItem> transactionExplinationLineItems = new ArrayList<>();
 		for (ExplainedInvoiceListModel explainParam : explainedInvoiceListModelList) {
 			TransactionExplinationLineItem transactionExplinationLineItem = new TransactionExplinationLineItem();
-			BigDecimal explainedAmount = explainParam.getExplainedAmount();
+			BigDecimal explainedAmount = BigDecimal.ZERO;
 			journalAmount = journalAmount.add(explainParam.getConvertedToBaseCurrencyAmount());
 			// Update invoice Payment status
 			Invoice invoiceEntity = invoiceService.findByPK(explainParam.getInvoiceId());
 			contactId = invoiceEntity.getContact().getContactId();
 			Contact contact = invoiceEntity.getContact();
+			explainedAmount =explainParam.getExplainedAmount();
 			if (explainParam.getPartiallyPaid().equals(Boolean.TRUE)){
 				invoiceEntity.setDueAmount(invoiceEntity.getDueAmount().subtract(explainParam.getNonConvertedInvoiceAmount()));
 				invoiceEntity.setStatus(CommonStatusEnum.PARTIALLY_PAID.getValue());
@@ -1552,7 +1565,7 @@ public class TransactionRestController {
 	 * @param trnx
 	 * @param itemModels
 	 */
-	private void reconsileSupplierInvoices(Integer userId, Transaction trnx,
+	private void reconsileSupplierInvoices(Integer userId, Transaction trnx, List<ReconsileRequestLineItemModel> itemModels,
 										   TransactionPresistModel transactionPresistModel, HttpServletRequest request) {
 		List<ExplainedInvoiceListModel> explainedInvoiceListModelList = getExplainedInvoiceListModel(transactionPresistModel);
 		TransactionExplanation transactionExplanation = new TransactionExplanation();
@@ -1807,13 +1820,13 @@ public class TransactionRestController {
 	 */
 	private void unExplainExpenses( List<TransactionExpenses> transactionExpensesList, Transaction transaction,TransactionExplanation transactionExplanation) {
 		//delete existing expense
-		List<Integer> expenseIdList = deleteExpense(transactionExpensesList);
+		List<Integer> expenseIdList = deleteExpense(transactionExpensesList,transaction);
 		if (!expenseIdList.isEmpty()) {
 			clearAndUpdateTransaction(transaction,transactionExplanation);
 		}
 	}
 
-	private List<Integer> deleteExpense(List<TransactionExpenses> transactionExpensesList) {
+	private List<Integer> deleteExpense( List<TransactionExpenses> transactionExpensesList,Transaction transaction) {
 		List<Integer> expenseIdList = new ArrayList<>();
 		for(TransactionExpenses transactionExpenses : transactionExpensesList)
 		{
@@ -1830,10 +1843,8 @@ public class TransactionRestController {
 		}
 		return expenseIdList;
 	}
-	private void unExplainPayrollExpenses(
-			Transaction transaction,
-			List<TransactionExpenses> transactionExpensesList1,
-			TransactionExplanation transactionExplanation) {
+	private void unExplainPayrollExpenses( List<TransactionExpensesPayroll> transactionExpensesList,Transaction transaction,
+                                           List<TransactionExpenses> transactionExpensesList1,TransactionExplanation transactionExplanation) {
 
 		List<TransactionExplinationLineItem> transactionExplinationLineItemList =
                 transactionExplanationLineItemRepository.getTransactionExplinationLineItemsByTransactionExplanation(transactionExplanation);
@@ -2338,6 +2349,9 @@ public class TransactionRestController {
 					if (transactionPresistModel.getExpenseCategory() != null
                             && transactionPresistModel.getExpenseCategory() == 34) {
 
+						List<TransactionExpensesPayroll> transactionExpensesPayrollList = transactionExpensesPayrollService
+								.findAllForTransactionExpenses(trnx.getTransactionId());
+
 						for (TransactionExplinationLineItem transactionExpensesPayroll:transactionExplinationLineItems){
 							//Create Reverse Journal Entries For Explained Payroll
 							Journal journal = transactionExpensesPayroll.getJournal();
@@ -2372,7 +2386,7 @@ public class TransactionRestController {
                             newjournal.setJournalLineItems(newReverseJournalLineItemList);
                             journalService.persist(newjournal);
 						}
-						unExplainPayrollExpenses(trnx, transactionExpensesList, transactionExplanation);
+						unExplainPayrollExpenses(transactionExpensesPayrollList,trnx,transactionExpensesList,transactionExplanation);
 					} else {
 						unExplainExpenses(transactionExpensesList,trnx,transactionExplanation);
 					}

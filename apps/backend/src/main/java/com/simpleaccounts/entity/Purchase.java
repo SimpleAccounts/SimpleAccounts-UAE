@@ -1,14 +1,18 @@
 package com.simpleaccounts.entity;
 
-import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
+
 import java.io.Serializable;
+
+import lombok.Data;
+
+import javax.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import javax.persistence.*;
-import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
 /**

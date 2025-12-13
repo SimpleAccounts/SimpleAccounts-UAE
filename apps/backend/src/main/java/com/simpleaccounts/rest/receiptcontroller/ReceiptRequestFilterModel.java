@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.receiptcontroller;
 
 import com.simpleaccounts.rest.PaginationModel;
+
 import lombok.Data;
 
 @Data

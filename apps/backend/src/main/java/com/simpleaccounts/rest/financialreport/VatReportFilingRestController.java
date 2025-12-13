@@ -18,6 +18,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -92,7 +94,7 @@ public class VatReportFilingRestController {
 	public ResponseEntity<Object> getVatReportListForBank(Integer id) {
         try {
             List<VatReportResponseListForBank> vatReportResponseListForBanks = new ArrayList<>();
-            List<VatReportFiling> vatReportFilingListForPaymentOrClaim;
+            List<VatReportFiling> vatReportFilingListForPaymentOrClaim = new ArrayList<>();
             List<VatReportFiling> vatReportFilingList = vatReportFilingRepository.findAll();
             if (id.equals(1)){
                 vatReportFilingListForPaymentOrClaim = vatReportFilingList.stream().filter(vatReportFiling -> vatReportFiling.getIsVatReclaimable().equals(Boolean.FALSE)
@@ -227,10 +229,7 @@ public class VatReportFilingRestController {
             request){
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            VatPayment vatPayment = vatReportFilingService.recordVatPayment(recordVatPaymentRequestModel, userId);
-            if (vatPayment == null) {
-                return new ResponseEntity<>("message", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            VatPayment vatPayment = vatReportFilingService.recordVatPayment(recordVatPaymentRequestModel,userId);
             return new ResponseEntity<>("message",HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>("message",HttpStatus.INTERNAL_SERVER_ERROR);

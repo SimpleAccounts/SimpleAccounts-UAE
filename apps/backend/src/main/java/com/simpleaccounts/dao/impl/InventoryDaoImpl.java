@@ -1,6 +1,7 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.InventoryFilterEnum;
@@ -137,9 +138,10 @@ public class InventoryDaoImpl extends AbstractDao<Integer, Inventory> implements
     public BigDecimal getTotalInventoryValue(){
         Query query = getEntityManager().createQuery("SELECT SUM(i.stockOnHand*i.productId.avgPurchaseCost) FROM Inventory i");
        Object querySingleResult = query.getSingleResult();
-       BigDecimal result = (BigDecimal) querySingleResult;
-       if (result != null)
-          return result;
+       BigDecimal result = BigDecimal.ZERO;
+       result = (BigDecimal) querySingleResult;
+       if(result!=null)
+          return result ;
        return BigDecimal.ZERO;
     }
     public Integer getTotalInventoryCountForContact(int contactId){

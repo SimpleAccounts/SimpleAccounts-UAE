@@ -1,11 +1,12 @@
 package com.simpleaccounts.entity;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @Entity

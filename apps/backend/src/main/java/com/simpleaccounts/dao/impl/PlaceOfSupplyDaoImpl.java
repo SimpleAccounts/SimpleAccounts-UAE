@@ -3,8 +3,9 @@ package com.simpleaccounts.dao.impl;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.PlaceOfSupplyDao;
 import com.simpleaccounts.entity.PlaceOfSupply;
-import java.util.List;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created By Zain Khan On 21-12-2020

@@ -1,12 +1,16 @@
 package com.simpleaccounts.entity;
 
-import com.simpleaccounts.constant.PayMode;
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
 import javax.persistence.*;
-import lombok.Data;
+
 import org.hibernate.annotations.ColumnDefault;
+
+import com.simpleaccounts.constant.PayMode;
+import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+
+import lombok.Data;
 
 /**
  * @author Saurabhg

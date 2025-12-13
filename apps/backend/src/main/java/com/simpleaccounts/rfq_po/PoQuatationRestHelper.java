@@ -1,10 +1,14 @@
 package com.simpleaccounts.rfq_po;
 
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
+
 import com.fasterxml.jackson.core.type.TypeReference;
+import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.dao.MailThemeTemplates;
 import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.repository.UnitTypesRepository;
 import com.simpleaccounts.rest.PostingRequestModel;
 import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateService;
@@ -122,8 +126,7 @@ public class PoQuatationRestHelper {
         poQuatation.setRfqExpiryDate(rfqExpDate);
         }
         if (requestModel.getCurrencyCode()!=null){
-            com.simpleaccounts.entity.Currency currency =
-                    currencyService.findByPK(requestModel.getCurrencyCode());
+            Currency currency= currencyService.findByPK(requestModel.getCurrencyCode());
             poQuatation.setCurrency(currency);
         }
         if (requestModel.getSupplierId() != null) {
@@ -153,11 +156,11 @@ public class PoQuatationRestHelper {
             poQuatation.setNotes(requestModel.getNotes());
         }
         List<PoQuatationLineItemRequestModel> itemModels = new ArrayList<>();
-        lineItemString(requestModel, poQuatation, itemModels);
+        lineItemString(requestModel, userId, poQuatation, itemModels);
 
         return poQuatation;
     }
-    private void lineItemString(PoQuatationRequestModel requestModel, PoQuatation poQuatation,
+    private void lineItemString(PoQuatationRequestModel requestModel, Integer userId, PoQuatation poQuatation,
                                 List<PoQuatationLineItemRequestModel> itemModels) {
         if (requestModel.getLineItemsString() != null && !requestModel.getLineItemsString().isEmpty()) {
             ObjectMapper mapper = new ObjectMapper();
@@ -199,8 +202,7 @@ public class PoQuatationRestHelper {
             poQuatation.setPoNumber(requestModel.getPoNumber());
         }
         if (requestModel.getCurrencyCode()!=null){
-            com.simpleaccounts.entity.Currency currency =
-                    currencyService.findByPK(requestModel.getCurrencyCode());
+            Currency currency = currencyService.findByPK(requestModel.getCurrencyCode());
             poQuatation.setCurrency(currency);
         }
         Integer poType =Integer.parseInt(requestModel.getType());
@@ -245,7 +247,7 @@ public class PoQuatationRestHelper {
         }
         poQuatation.setStatus(poQuatation.getId() == null ? CommonStatusEnum.PENDING.getValue() : poQuatation.getStatus());
         List<PoQuatationLineItemRequestModel> itemModels = new ArrayList<>();
-        lineItemString(requestModel, poQuatation, itemModels);
+        lineItemString(requestModel, userId, poQuatation, itemModels);
 
         return poQuatation;
     }
@@ -274,8 +276,7 @@ public class PoQuatationRestHelper {
             poQuatation.setReferenceNumber(poQuatationRequestModel.getSupplierReferenceNumber());
         }
         if (poQuatationRequestModel.getCurrencyCode()!=null){
-            com.simpleaccounts.entity.Currency currency =
-                    currencyService.findByPK(poQuatationRequestModel.getCurrencyCode());
+            Currency currency = currencyService.findByPK(poQuatationRequestModel.getCurrencyCode());
             poQuatation.setCurrency(currency);
         }
         Instant instant = Instant.ofEpochMilli(poQuatationRequestModel.getGrnReceiveDate().getTime());
@@ -296,7 +297,7 @@ public class PoQuatationRestHelper {
         poQuatation.setTotalVatAmount(poQuatationRequestModel.getTotalVatAmount());
         poQuatation.setTotalExciseAmount(poQuatationRequestModel.getTotalExciseAmount());
         List<PoQuatationLineItemRequestModel> itemModels = new ArrayList<>();
-        lineItemString(poQuatationRequestModel, poQuatation, itemModels);
+        lineItemString(poQuatationRequestModel, userId, poQuatation, itemModels);
         return poQuatation;
     }
     public List<PoQuatationLineItem> getLineItems(List<PoQuatationLineItemRequestModel> modelList, PoQuatation poQuatation) {
@@ -431,7 +432,7 @@ public class PoQuatationRestHelper {
         }
 
         if (poQuatation.getSupplierId() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-            mailUtility.triggerEmailOnBackground2(subject,content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
+            mailUtility.triggerEmailOnBackground2(subject,content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
                     EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{poQuatation.getSupplierId().getBillingEmail()},
                     true);
             User user = userService.findByPK(userId);
@@ -1521,7 +1522,7 @@ public class PoQuatationRestHelper {
         }
 
         if (poQuatation.getSupplierId() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-            mailUtility.triggerEmailOnBackground2(subject,content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
+            mailUtility.triggerEmailOnBackground2(subject,content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
                     EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{poQuatation.getSupplierId().getBillingEmail()},
                     true);
             User user = userService.findByPK(userId);
@@ -1803,7 +1804,7 @@ public class PoQuatationRestHelper {
         }
 
         if (poQuatation.getSupplierId() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-            mailUtility.triggerEmailOnBackground2(subject,content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
+            mailUtility.triggerEmailOnBackground2(subject,content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
                     EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{poQuatation.getSupplierId().getBillingEmail()},
                     true);
             User user = userService.findByPK(userId);
@@ -2072,7 +2073,7 @@ public class PoQuatationRestHelper {
         poQuatation.setPoQuatationLineItems(itemModels);
         return poQuatation;
     }
-    public Invoice createSupplierInvoiceForGrn(PoQuatation poQuatation) {
+    public Invoice createSupplierInvoiceForGrn(PoQuatation poQuatation, Integer userId) {
         Invoice supplierInvoice= new Invoice();
         supplierInvoice.setType(1);
         String nxtInvoiceNo = customizeInvoiceTemplateService.getLastInvoice(1);
@@ -2150,8 +2151,7 @@ public class PoQuatationRestHelper {
             poQuatationLineItemService.deleteByRfqId(requestModel.getId());
         }
         if (requestModel.getCurrencyCode()!=null){
-            com.simpleaccounts.entity.Currency currency =
-                    currencyService.findByPK(requestModel.getCurrencyCode());
+            Currency currency = currencyService.findByPK(requestModel.getCurrencyCode());
             poQuatation.setCurrency(currency);
         }
         if (requestModel.getPlaceOfSupplyId() !=null){
@@ -2210,7 +2210,7 @@ public class PoQuatationRestHelper {
         }
         poQuatation.setStatus(poQuatation.getId() == null ? CommonStatusEnum.PENDING.getValue() : poQuatation.getStatus());
         List<PoQuatationLineItemRequestModel> itemModels = new ArrayList<>();
-        lineItemString(requestModel, poQuatation, itemModels);
+        lineItemString(requestModel, userId, poQuatation, itemModels);
         return poQuatation;
     }
     public PoQuatationRequestModel getQuotationModel(PoQuatation quotation) {
@@ -2426,7 +2426,7 @@ public class PoQuatationRestHelper {
         }
 
      if (poQuatation.getSupplierId() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-        mailUtility.triggerEmailOnBackground2(subject,content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
+        mailUtility.triggerEmailOnBackground2(subject,content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
                 EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{poQuatation.getSupplierId().getBillingEmail()},
                 true);
         User user = userService.findByPK(userId);

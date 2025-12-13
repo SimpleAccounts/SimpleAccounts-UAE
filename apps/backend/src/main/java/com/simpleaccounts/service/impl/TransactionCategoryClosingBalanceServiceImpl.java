@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.TransactionCategoryClosingBalanceDao;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
@@ -121,7 +122,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             param.put("closingBalanceDate", transaction.getTransactionDate());
 
             TransactionCategoryClosingBalance balance = getFirstElement(findByAttributes(param));
-            BigDecimal closingBalance;
+            BigDecimal closingBalance = BigDecimal.ZERO;
             BigDecimal bankClosingBalance =BigDecimal.ZERO;
             BigDecimal bankOpeningBalance = BigDecimal.ZERO;
             if (balance == null) {
@@ -177,6 +178,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             {
                 param = new HashMap<>();
                 param.put(JSON_KEY_TRANSACTION_CATEGORY, category);
+                closingBalance = balance.getClosingBalance();
 	                TransactionCategoryClosingBalance lastBalance = transactionCategoryClosingBalanceDao.getLastClosingBalanceByDate(category);
                 if(lastBalance!=null && lastBalance.getClosingBalance() != balance.getClosingBalance() &&
                 !(lastBalance.getClosingBalanceDate().isEqual(balance.getClosingBalanceDate())))

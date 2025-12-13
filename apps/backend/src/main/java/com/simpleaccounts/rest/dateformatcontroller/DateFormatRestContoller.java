@@ -1,5 +1,7 @@
 package com.simpleaccounts.rest.dateformatcontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.dbfilter.DateFormatFilterEnum;
@@ -25,7 +27,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Controller
 @RequestMapping("/rest/dateFormat")
@@ -107,12 +108,9 @@ public class DateFormatRestContoller {
 	@ApiOperation(value = "Update DateFormat")
 	@PostMapping(value = "/update")
 	public ResponseEntity< DateFormatResponseModel> update(DateFormatRequestModel dateFormatRequestModel, HttpServletRequest request) {
-		DateFormat existingDateFormat = dateFormatService.findByPK(dateFormatRequestModel.getId());
-		if (existingDateFormat == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+		DateFormat dateFormat = dateFormatService.findByPK(dateFormatRequestModel.getId());
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		DateFormat dateFormat = dateFormatRestHelper.getEntity(dateFormatRequestModel);
+		dateFormat = dateFormatRestHelper.getEntity(dateFormatRequestModel);
 		dateFormat.setLastUpdatedBy(userId);
 		dateFormat.setLastUpdateDate(LocalDateTime.now());
 		dateFormat = dateFormatService.update(dateFormat);

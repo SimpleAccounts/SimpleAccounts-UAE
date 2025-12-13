@@ -1,7 +1,8 @@
 package com.simpleaccounts.model;
 
-import javax.persistence.*;
 import lombok.Data;
+
+import javax.persistence.*;
 
 @Data
 public class EmployeeDesignationListModel {

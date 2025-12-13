@@ -1,6 +1,7 @@
 package com.simpleaccounts.service;
 
 import com.simpleaccounts.entity.PlaceOfSupply;
+
 import java.util.List;
 
 /**

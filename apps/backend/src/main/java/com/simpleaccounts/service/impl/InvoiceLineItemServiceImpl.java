@@ -1,5 +1,7 @@
 package com.simpleaccounts.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.InvoiceLineItemDao;
 import com.simpleaccounts.entity.InvoiceLineItem;

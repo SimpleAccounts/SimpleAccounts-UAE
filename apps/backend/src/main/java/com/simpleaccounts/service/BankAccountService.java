@@ -1,14 +1,15 @@
 package com.simpleaccounts.service;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
 import com.simpleaccounts.constant.dbfilter.BankAccounrFilterEnum;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.BankDetails;
 import com.simpleaccounts.model.DashBoardBankDataModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 
 public abstract class BankAccountService extends SimpleAccountsService<Integer, BankAccount> {
 

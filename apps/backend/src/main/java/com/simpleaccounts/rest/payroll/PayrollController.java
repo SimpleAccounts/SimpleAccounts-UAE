@@ -1,9 +1,14 @@
 package com.simpleaccounts.rest.payroll;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
+
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.JournalLineItemDao;
 import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.SalaryComponent;
 import com.simpleaccounts.model.EmployeeBankDetailsPersistModel;
 import com.simpleaccounts.model.EmploymentPersistModel;
 import com.simpleaccounts.repository.*;
@@ -38,6 +43,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+
+import java.math.BigDecimal;
+
+import java.time.LocalDateTime;
+
+import java.util.*;
+
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
@@ -500,8 +514,7 @@ public class PayrollController {
     public ResponseEntity<String> deleteSalaryComponentRow(@RequestParam(value = "id") Integer employeeId, @RequestParam(value = "componentId") Integer componentId, HttpServletRequest request) {
         try {
 
-            java.util.Objects.requireNonNull(employeeId);
-            payrollRestHepler.deleteSalaryComponentRow(componentId);
+            payrollRestHepler.deleteSalaryComponentRow(employeeId, componentId);
 
             return new ResponseEntity<>("Deleted a component row", HttpStatus.OK);
         } catch (Exception e) {
@@ -639,7 +652,7 @@ public class PayrollController {
     @GetMapping(value = "/getSalaryComponentById")
     public ResponseEntity<SalaryComponentPersistModel> getSalaryComponentById(@RequestParam(value = "id") Integer id) {
         try {
-            com.simpleaccounts.entity.SalaryComponent salaryComponent = salaryComponentService.findByPK(id);
+            SalaryComponent salaryComponent = salaryComponentService.findByPK(id);
             if (salaryComponent == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
@@ -994,7 +1007,10 @@ public class PayrollController {
     @PostMapping(value = "/convertPayrollToPaid")
     public ResponseEntity<String> convertPayrollToPaid(@RequestParam(value = "payEmpListIds") List<Integer> payEmpListIds, HttpServletRequest request) {
         try {
-            payrollRestHepler.convertPayrollToPaid(payEmpListIds);
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            User user = userService.findByPK(userId);
+
+            payrollRestHepler.convertPayrollToPaid(payEmpListIds, user);
 
             return new ResponseEntity<>("", HttpStatus.OK);
         } catch (Exception e) {
@@ -1077,7 +1093,9 @@ public class PayrollController {
     @PostMapping(value = "/rejectPayroll")
     public ResponseEntity<String> rejectPayroll(Integer payrollId, String comment, HttpServletRequest request) {
         try {
-            payrollRestHepler.rejectPayroll(payrollId, comment, request);
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            User user = userService.findByPK(userId);
+            payrollRestHepler.rejectPayroll(user, payrollId, comment,request);
 
             return new ResponseEntity<>(" Reject payroll ", HttpStatus.OK);
         } catch (Exception e) {
@@ -1188,15 +1206,15 @@ public class PayrollController {
     @GetMapping(value = "/payrollemployee/list")
 	    public ResponseEntity<Object> getPayrollEmployee(HttpServletRequest request) {
         try {
-            jwtTokenUtil.getUserIdFromHttpRequest(request);
-            List<PayrollEmployeeModel> response = getPayrollEmployeeList();
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            List<PayrollEmployeeModel> response = getPayrollEmployeeList(userId);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    private List<PayrollEmployeeModel> getPayrollEmployeeList() {
+    private List<PayrollEmployeeModel> getPayrollEmployeeList(Integer userId) {
         List<PayrollEmployeeModel> payrollEmployeeModelList = new ArrayList<>();
         List<PayrollEmployee> payrollEmployees = payrollEmployeeRepository.findByDeleteFlag(false);
         if (payrollEmployees != null) {
@@ -1259,7 +1277,7 @@ public class PayrollController {
 	    public ResponseEntity<Object> deleteSalaryComponent(@RequestParam(value = "id") Integer id,
                                                 HttpServletRequest request){
         try {
-          com.simpleaccounts.entity.SalaryComponent salaryComponent = salaryComponentRepository.findById(id).get();
+          SalaryComponent salaryComponent = salaryComponentRepository.findById(id).get();
           if(salaryComponent!=null){
               salaryComponent.setDeleteFlag(Boolean.TRUE);
               salaryComponentRepository.save(salaryComponent);
@@ -1272,15 +1290,13 @@ public class PayrollController {
 
     private List<SalaryComponentPersistModel> getListSalaryComponent(PaginationResponseModel responseModel,int pageNo, int pageSize,
                                                                      boolean paginationDisable, String sortOrder, String sortingCol){
-        logger.debug("paginationDisable={}", paginationDisable);
         Pageable paging = getSalaryComponentPageableRequest(pageNo, pageSize, sortOrder, sortingCol);
         List<SalaryComponentPersistModel> salaryComponentPersistModelList = new ArrayList<>();
-        Page<com.simpleaccounts.entity.SalaryComponent> salaryComponentPage =
-                salaryComponentRepository.findByDeleteFlag(false, paging);
-        List<com.simpleaccounts.entity.SalaryComponent> salaryComponentList = salaryComponentPage.getContent();
+        Page<SalaryComponent> salaryComponentPage = salaryComponentRepository.findByDeleteFlag(false,paging);
+        List<SalaryComponent> salaryComponentList = salaryComponentPage.getContent();
         responseModel.setCount((int) salaryComponentPage.getTotalElements());
         if (!salaryComponentList.isEmpty()) {
-            for (com.simpleaccounts.entity.SalaryComponent salaryComponent : salaryComponentList) {
+            for (SalaryComponent salaryComponent : salaryComponentList) {
                 SalaryComponentPersistModel salaryComponentPersistModel = new SalaryComponentPersistModel();
                salaryComponentPersistModel.setId(salaryComponent.getId());
                if(salaryComponent.getDescription()!=null && !salaryComponent.getDescription().isEmpty()){

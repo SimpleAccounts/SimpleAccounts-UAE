@@ -2,9 +2,12 @@ package com.simpleaccounts.rest.payroll;
 
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.SalaryTemplate;
+
+import lombok.Data;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
 import lombok.Data;
 
 @Data

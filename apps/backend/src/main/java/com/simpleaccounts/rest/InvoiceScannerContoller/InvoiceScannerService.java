@@ -1,9 +1,12 @@
 package com.simpleaccounts.rest.InvoiceScannerContoller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.RequiredArgsConstructor;
+
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.dao.CurrencyDao;
 import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.helper.DateFormatHelper;
 import com.simpleaccounts.repository.UnitTypesRepository;
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
@@ -27,6 +30,15 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ServerErrorException;
+
+import javax.persistence.EntityManager;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -213,8 +225,7 @@ public class InvoiceScannerService {
         }
 
         if (invoiceModel.getCurrencyCode() != null) {
-            com.simpleaccounts.entity.Currency currency =
-                    currencyService.findByPK(invoiceModel.getCurrencyCode());
+            Currency currency = currencyService.findByPK(invoiceModel.getCurrencyCode());
             invoice.setCurrency(currency);
         }
         lineItemString(userId, invoice, itemModels);
@@ -372,7 +383,7 @@ public class InvoiceScannerService {
             VatCategory vatCategory = vatCategoryService.findByPK(model.getVatCategoryId());
             expenseBuilder.vatCategory(vatCategory);
             BigDecimal vatPercent =  vatCategory.getVat();
-            BigDecimal vatAmount;
+            BigDecimal vatAmount = BigDecimal.ZERO;
             if (Boolean.TRUE.equals(model.getExclusiveVat())){
                 vatAmount = calculateVatAmount(vatPercent,model.getExpenseAmount());
             }
@@ -414,7 +425,7 @@ public class InvoiceScannerService {
                 }
                 Map<String, Object> param = new HashMap<>();
                 param.put(JSON_KEY_CURRENCY_ISO_CODE,json.get(0).get(JSON_KEY_AMOUNT_DUE).get(JSON_KEY_CURRENCY_CODE).textValue());
-                List<com.simpleaccounts.entity.Currency> currencyList = currencyDao.findByAttributes(param);
+                List<Currency> currencyList = currencyDao.findByAttributes(param);
                 if( currencyList != null && !currencyList.isEmpty()){
                     model.setCurrencyCode(currencyList.get(0).getCurrencyCode());
                 }

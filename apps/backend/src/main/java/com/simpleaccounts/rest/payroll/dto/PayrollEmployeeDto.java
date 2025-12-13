@@ -3,6 +3,7 @@ package com.simpleaccounts.rest.payroll.dto;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor

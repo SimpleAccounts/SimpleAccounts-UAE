@@ -1,6 +1,9 @@
 package com.simpleaccounts.rest.employeecontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.dbfilter.EmployeeFilterEnum;
 import com.simpleaccounts.entity.*;
@@ -34,7 +37,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -248,6 +250,8 @@ public class EmployeeController {
 			transactionCategoryCreationHelper.createTransactionCategoryForEmployee(employee);
 			employeeHelper.createDefaultSalaryComponentListForThisEmployee(employee);
 
+			message = new SimpleAccountsMessage("0071",
+					MessageUtil.getMessage("employee.created.successful.msg.0071"), false);
 			return new ResponseEntity<>(employee.getId().toString(),HttpStatus.OK);
 		} catch (Exception e) {
 			SimpleAccountsMessage message = null;

@@ -1,6 +1,7 @@
 package com.simpleaccounts.utils;
 
 import java.security.SecureRandom;
+
 import org.springframework.stereotype.Component;
 
 @Component

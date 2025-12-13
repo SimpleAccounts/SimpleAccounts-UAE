@@ -1,5 +1,7 @@
 package com.simpleaccounts.rest.companycontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogExecutionTime;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.bank.model.DeleteModel;
@@ -8,6 +10,7 @@ import com.simpleaccounts.constant.*;
 import com.simpleaccounts.constant.dbfilter.CompanyFilterEnum;
 import com.simpleaccounts.constant.dbfilter.StateFilterEnum;
 import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.BankAccountStatus;
 import com.simpleaccounts.entity.bankaccount.BankAccountType;
@@ -45,8 +48,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.simpleaccounts.aop.LogExecutionTime;
+import com.simpleaccounts.aop.LogRequest;
+import com.simpleaccounts.bank.model.DeleteModel;
+import com.simpleaccounts.constant.dbfilter.CompanyFilterEnum;
+import com.simpleaccounts.security.JwtTokenUtil;
+
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Slf4j
 	@Component
@@ -284,8 +296,7 @@ public class CompanyController {
 			Company company = companyRestHelper.registerCompany(registrationModel);
 			currencyService.updateCurrencyProfile(company.getCurrencyCode().getCurrencyCode());
 			CurrencyConversion currencyConversion = new CurrencyConversion();
-			com.simpleaccounts.entity.Currency currency =
-					currencyService.findByPK(company.getCurrencyCode().getCurrencyCode());
+			Currency currency = currencyService.findByPK(company.getCurrencyCode().getCurrencyCode());
 			currencyConversion.setCurrencyCode(currency);
 			currencyConversion.setCurrencyCodeConvertedTo(currency);
 			currencyConversion.setExchangeRate(BigDecimal.ONE);
@@ -527,9 +538,9 @@ public class CompanyController {
 	@LogExecutionTime
 	@ApiOperation(value = "Get Currency List", response = List.class)
 	@GetMapping(value = "/getCurrency")
-	public ResponseEntity<List<com.simpleaccounts.entity.Currency>> getCurrencies() {
+	public ResponseEntity<List<Currency>> getCurrencies() {
 		try {
-			List<com.simpleaccounts.entity.Currency> currencies = currencyService.getCurrenciesProfile();
+			List<Currency> currencies = currencyService.getCurrenciesProfile();
 			if (currencies != null && !currencies.isEmpty()) {
 				return new ResponseEntity<>(currencies, HttpStatus.OK);
 			} else {
@@ -573,7 +584,7 @@ public class CompanyController {
 	@ApiOperation(value = "Get Company Currency")
 	@GetMapping(value = "/getCompanyCurrency")
 	public ResponseEntity<Object> getCurrencyConversionById() {
-		com.simpleaccounts.entity.Currency companyCurrency = companyService.getCompanyCurrency();
+		Currency companyCurrency = companyService.getCompanyCurrency();
 		if (companyCurrency != null) {
 
 			CurrencyConversionResponseModel currencyConversionResponseModel = new CurrencyConversionResponseModel();

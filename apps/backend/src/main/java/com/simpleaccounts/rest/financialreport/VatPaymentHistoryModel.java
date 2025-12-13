@@ -1,9 +1,9 @@
 package com.simpleaccounts.rest.financialreport;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 @Data
 public class VatPaymentHistoryModel {
 

@@ -1,8 +1,9 @@
 package com.simpleaccounts.helper;
 
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 import java.util.Date;
-import org.springframework.stereotype.Component;
 
 @Component
 public class DateFormatHelper {

@@ -1,7 +1,8 @@
 package com.simpleaccounts.rest.payroll.model;
 
-import java.math.BigDecimal;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 @Data
 public class GeneratePayrollPersistModel {

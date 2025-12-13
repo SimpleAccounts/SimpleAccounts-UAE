@@ -7,6 +7,7 @@ import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingDetailModel;
 import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingPersistModel;
 import java.io.BufferedReader;
+import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -87,6 +88,7 @@ public class CsvParser implements TransactionFileParser {
 
 	public Map<String, Object> parseImportData(TransactionParsingSettingDetailModel model, InputStream inputStream) {
 		String line = "";
+		String cvsSplitBy = ",";
 
 		List<Map<String, String>> list = new LinkedList<>();
 		List<String> errorList = new ArrayList<>();

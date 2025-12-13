@@ -1,13 +1,15 @@
 package com.simpleaccounts.rest.receiptcontroller;
 
-import com.simpleaccounts.constant.PayMode;
-import com.simpleaccounts.rest.invoicecontroller.InvoiceDueAmountModel;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import lombok.Data;
-import org.json.JSONArray;
+
 import org.springframework.web.multipart.MultipartFile;
+
+import com.simpleaccounts.constant.PayMode;
+import com.simpleaccounts.rest.invoicecontroller.InvoiceDueAmountModel;
+import org.json.JSONArray;
+import lombok.Data;
 
 @Data
 public class ReceiptRequestModel {

@@ -9,6 +9,8 @@ import com.simpleaccounts.service.PurchaseService;
 import com.simpleaccounts.service.TaxTransactionService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -20,6 +22,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import com.simpleaccounts.constant.TaxTransactionStatusConstant;
+import com.simpleaccounts.constant.TransactionCreditDebitConstant;
+
+import com.simpleaccounts.entity.TaxTransaction;
+import com.simpleaccounts.entity.bankaccount.Transaction;
+import com.simpleaccounts.service.InvoiceService;
+import com.simpleaccounts.service.PurchaseService;
+import com.simpleaccounts.service.TaxTransactionService;
+import com.simpleaccounts.service.bankaccount.TransactionService;
 
 @Component
 @RequiredArgsConstructor
@@ -82,11 +94,14 @@ public class TaxTranscationRestHelper {
 
 		taxTransaction.setEndDate(endDate);
 		for (Transaction transaction : creditTransactionList) {
-			// Intentionally left blank (no per-transaction aggregation yet)
-		}
+			Date transDate = Date.from(transaction.getTransactionDate().atZone(ZoneId.systemDefault()).toInstant());
+
+			}
 		for (Transaction transaction : debitTransactionList) {
-			// Intentionally left blank (no per-transaction aggregation yet)
-		}
+			Date transactionDate = Date
+					.from(transaction.getTransactionDate().atZone(ZoneId.systemDefault()).toInstant());
+
+			}
 
 		taxTransaction.setVatIn(vatIn);
 
@@ -158,6 +173,7 @@ public class TaxTranscationRestHelper {
 	public BigDecimal getVatFromTransaction(Transaction transaction) {
 
 		BigDecimal totalVat = BigDecimal.ZERO;
+		BigDecimal vatPercent = BigDecimal.ZERO;
 
 		return totalVat;
 	}

@@ -1,9 +1,11 @@
 package com.simpleaccounts.rest.simpleaccountreports.FTA;
 
 import com.simpleaccounts.constant.ProductType;
-import java.math.BigDecimal;
-import java.util.Date;
 import lombok.Data;
+
+import java.math.BigDecimal;
+
+import java.util.Date;
 
 @Data
 public class SupplierSupplyListingResponseModel {

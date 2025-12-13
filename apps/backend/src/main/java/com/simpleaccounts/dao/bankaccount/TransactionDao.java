@@ -3,18 +3,21 @@ package com.simpleaccounts.dao.bankaccount;
 import com.simpleaccounts.constant.TransactionCreationMode;
 import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
 import com.simpleaccounts.constant.dbfilter.TransactionFilterEnum;
-import com.simpleaccounts.dao.Dao;
-import com.simpleaccounts.entity.bankaccount.BankAccount;
-import com.simpleaccounts.entity.bankaccount.Transaction;
-import com.simpleaccounts.entity.bankaccount.TransactionView;
 import com.simpleaccounts.model.TransactionReportRestModel;
-import com.simpleaccounts.rest.PaginationModel;
-import com.simpleaccounts.rest.PaginationResponseModel;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.simpleaccounts.dao.Dao;
+import com.simpleaccounts.entity.bankaccount.BankAccount;
+import com.simpleaccounts.entity.bankaccount.Transaction;
+import com.simpleaccounts.entity.bankaccount.TransactionView;
+import com.simpleaccounts.rest.PaginationModel;
+import com.simpleaccounts.rest.PaginationResponseModel;
+
 import java.util.Map;
 
 public interface TransactionDao extends Dao<Integer, Transaction> {

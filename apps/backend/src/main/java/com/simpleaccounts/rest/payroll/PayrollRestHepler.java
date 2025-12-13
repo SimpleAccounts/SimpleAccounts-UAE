@@ -1,11 +1,15 @@
 package com.simpleaccounts.rest.payroll;
 
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
+
 import com.fasterxml.jackson.core.type.TypeReference;
+import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.constant.EmailConstant;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.SalaryComponent;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.model.EmployeeBankDetailsPersistModel;
 import com.simpleaccounts.model.EmploymentPersistModel;
@@ -48,7 +52,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 @Component
 	@SuppressWarnings({"java:S131", "java:S6809"})
@@ -369,8 +372,7 @@ public class PayrollRestHepler {
                 salaryTemplateService.persist(salaryTemplate);
                 EmployeeSalaryComponentRelation employeeSalaryComponentRelation = new EmployeeSalaryComponentRelation();
                 employeeSalaryComponentRelation.setEmployeeId(employee);
-                com.simpleaccounts.entity.SalaryComponent salaryComponent =
-                        salaryComponentService.findByPK(salaryTemplate.getSalaryComponentId().getId());
+                SalaryComponent salaryComponent = salaryComponentService.findByPK(salaryTemplate.getSalaryComponentId().getId());
                 employeeSalaryComponentRelation.setSalaryComponentId(salaryComponent);
                 employeeSalaryComponentRelation.setDeleteFlag(false);
                 employeeSalaryComponentRelation.setSalaryStructure(salaryComponent.getSalaryStructure());
@@ -413,8 +415,7 @@ public class PayrollRestHepler {
                 salaryTemplateService.persist(salaryTemplate);
                 EmployeeSalaryComponentRelation employeeSalaryComponentRelation = new EmployeeSalaryComponentRelation();
                 employeeSalaryComponentRelation.setEmployeeId(employee);
-                com.simpleaccounts.entity.SalaryComponent salaryComponent =
-                        salaryComponentService.findByPK(salaryTemplate.getSalaryComponentId().getId());
+                SalaryComponent salaryComponent = salaryComponentService.findByPK(salaryTemplate.getSalaryComponentId().getId());
                 employeeSalaryComponentRelation.setSalaryComponentId(salaryComponent);
                 employeeSalaryComponentRelation.setDeleteFlag(false);
                 employeeSalaryComponentRelation.setSalaryStructure(salaryComponent.getSalaryStructure());
@@ -531,9 +532,9 @@ public class PayrollRestHepler {
         return paginationResponseModel;
     }
 
-    public EmployeeBankDetails getEmployeeBankDetailsEntity(EmployeePersistModel employeePersistModel, Employee employee) {
+    public EmployeeBankDetails getEmployeeBankDetailsEntity(EmployeePersistModel employeePersistModel, Employee employee, Integer userId) {
 
-        EmployeeBankDetails employeeBankDetails;
+        EmployeeBankDetails employeeBankDetails = new EmployeeBankDetails();
         Map<String, Object> param = new HashMap<>();
         param.put("employee", employee);
         List<EmployeeBankDetails> employeeBankDetailsList = employeeBankDetailsService.findByAttributes(param);
@@ -572,9 +573,9 @@ public class PayrollRestHepler {
         return employeeBankDetails;
     }
 
-    public Employment getEmploymentsEntity(EmployeePersistModel employeePersistModel, Employee employee) {
+    public Employment getEmploymentsEntity(EmployeePersistModel employeePersistModel, Employee employee, Integer userId) {
 
-        Employment employment;
+        Employment employment = new Employment();
         Map<String, Object> param = new HashMap<>();
         param.put("employee", employee);
         List<Employment> employmentList = employmentService.findByAttributes(param);
@@ -730,7 +731,7 @@ public class PayrollRestHepler {
             for (SalaryComponentPersistModel model : salaryComponentPersistModels) {
                 try {
                     if (model.getId() == null) {
-                        com.simpleaccounts.entity.SalaryComponent salaryComponent = new com.simpleaccounts.entity.SalaryComponent();
+                        SalaryComponent salaryComponent = new SalaryComponent();
                         salaryComponent.setSalaryStructure(salaryStructureService.findByPK(Integer.valueOf(model.getSalaryStructure())));
                         salaryComponent.setFormula(model.getFormula());
                         salaryComponent.setDeleteFlag(false);
@@ -759,8 +760,7 @@ public class PayrollRestHepler {
                         if (model.getEmployeeId() != null && model.getSalaryComponentId()!= 1) {
                             EmployeeSalaryComponentRelation employeeSalaryComponentRelation = new EmployeeSalaryComponentRelation();
                             employeeSalaryComponentRelation.setEmployeeId(employeeService.findByPK(model.getEmployeeId()));
-                            com.simpleaccounts.entity.SalaryComponent salaryComponent =
-                                    salaryComponentService.findByPK(model.getSalaryComponentId());
+                            SalaryComponent salaryComponent = salaryComponentService.findByPK(model.getSalaryComponentId());
                             employeeSalaryComponentRelation.setSalaryComponentId(salaryComponent);
                             employeeSalaryComponentRelation.setSalaryStructure(salaryStructureService.findByPK(Integer.valueOf(model.getSalaryStructure())));
                             employeeSalaryComponentRelation.setFormula(model.getFormula());
@@ -775,8 +775,7 @@ public class PayrollRestHepler {
                     if (model.getEmployeeId() != null && model.getSalaryComponentId()== 1 ) {
                         EmployeeSalaryComponentRelation employeeSalaryComponentRelation = employeeSalaryComponentRelationService.findByPK(model.getId());
                         employeeSalaryComponentRelation.setEmployeeId(employeeService.findByPK(model.getEmployeeId()));
-                        com.simpleaccounts.entity.SalaryComponent salaryComponent =
-                                salaryComponentService.findByPK(model.getSalaryComponentId());
+                        SalaryComponent salaryComponent = salaryComponentService.findByPK(model.getSalaryComponentId());
                         employeeSalaryComponentRelation.setSalaryComponentId(salaryComponent);
                         employeeSalaryComponentRelation.setSalaryStructure(salaryComponent.getSalaryStructure());
                         employeeSalaryComponentRelation.setFormula(model.getFormula());
@@ -808,7 +807,7 @@ public class PayrollRestHepler {
 
         } else {
             if (salaryComponentPersistModel.getId() == null) {
-                com.simpleaccounts.entity.SalaryComponent salaryComponent = new com.simpleaccounts.entity.SalaryComponent();
+                SalaryComponent salaryComponent = new SalaryComponent();
                 salaryComponent.setSalaryStructure(salaryStructureService.findByPK(Integer.valueOf(salaryComponentPersistModel.getSalaryStructure())));
                 salaryComponent.setFormula(salaryComponentPersistModel.getFormula());
                 salaryComponent.setDeleteFlag(false);
@@ -836,8 +835,7 @@ public class PayrollRestHepler {
                 EmployeeSalaryComponentRelation employeeSalaryComponentRelation = new EmployeeSalaryComponentRelation();
                 if (salaryComponentPersistModel.getEmployeeId() != null) {
                     employeeSalaryComponentRelation.setEmployeeId(employeeService.findByPK(salaryComponentPersistModel.getEmployeeId()));
-                    com.simpleaccounts.entity.SalaryComponent salaryComponent1 =
-                            salaryComponentService.findByPK(salaryComponent.getId());
+                    SalaryComponent salaryComponent1 = salaryComponentService.findByPK(salaryComponent.getId());
                     employeeSalaryComponentRelation.setSalaryComponentId(salaryComponent1);
                     employeeSalaryComponentRelation.setSalaryStructure(salaryComponent1.getSalaryStructure());
                     employeeSalaryComponentRelation.setFormula(salaryComponent1.getFormula());
@@ -865,8 +863,7 @@ public class PayrollRestHepler {
             } else if (salaryComponentPersistModel.getEmployeeId()!=null) {
                 EmployeeSalaryComponentRelation employeeSalaryComponentRelation = new EmployeeSalaryComponentRelation();
                 employeeSalaryComponentRelation.setEmployeeId(employeeService.findByPK(salaryComponentPersistModel.getEmployeeId()));
-                com.simpleaccounts.entity.SalaryComponent salaryComponent1 =
-                        salaryComponentService.findByPK(salaryComponentPersistModel.getId());
+                SalaryComponent salaryComponent1 = salaryComponentService.findByPK(salaryComponentPersistModel.getId());
                 employeeSalaryComponentRelation.setSalaryComponentId(salaryComponent1);
                 employeeSalaryComponentRelation.setSalaryStructure(salaryComponent1.getSalaryStructure());
                 employeeSalaryComponentRelation.setFormula(salaryComponent1.getFormula());
@@ -929,8 +926,7 @@ public class PayrollRestHepler {
             }
         }
         if(salaryComponentPersistModel.getId()!= null) {
-            com.simpleaccounts.entity.SalaryComponent salaryComponent =
-                    salaryComponentService.findByPK(salaryComponentPersistModel.getId());
+            SalaryComponent salaryComponent = salaryComponentService.findByPK(salaryComponentPersistModel.getId());
             salaryComponent.setSalaryStructure(salaryStructureService.findByPK(Integer.valueOf(salaryComponentPersistModel.getSalaryStructure())));
             salaryComponent.setFormula(salaryComponentPersistModel.getFormula());
             salaryComponent.setDeleteFlag(false);
@@ -951,7 +947,7 @@ public class PayrollRestHepler {
 
             try {
                 if (model.getId() == null) {
-                    com.simpleaccounts.entity.SalaryComponent salaryComponent = new com.simpleaccounts.entity.SalaryComponent();
+                    SalaryComponent salaryComponent = new SalaryComponent();
                     salaryComponent.setSalaryStructure(salaryStructureService.findByPK(Integer.valueOf(model.getSalaryStructure())));
                     salaryComponent.setFormula(model.getFormula());
                     salaryComponent.setDeleteFlag(false);
@@ -990,8 +986,7 @@ public class PayrollRestHepler {
                 } else if(model.getEmployeeId()!=null) {
                     EmployeeSalaryComponentRelation employeeSalaryComponentRelation = new EmployeeSalaryComponentRelation();
                     employeeSalaryComponentRelation.setEmployeeId(employeeService.findByPK(model.getEmployeeId()));
-                    com.simpleaccounts.entity.SalaryComponent salaryComponent1 =
-                            salaryComponentService.findByPK(model.getSalaryComponentId());
+                    SalaryComponent salaryComponent1 = salaryComponentService.findByPK(model.getSalaryComponentId());
                     employeeSalaryComponentRelation.setSalaryComponentId(salaryComponent1);
                     employeeSalaryComponentRelation.setSalaryStructure(salaryComponent1.getSalaryStructure());
                     employeeSalaryComponentRelation.setFormula(model.getFormula());
@@ -1028,9 +1023,8 @@ public class PayrollRestHepler {
         List<SalaryComponentListModel> modelList = new ArrayList<>();
 
         if (paginationResponseModel != null && paginationResponseModel.getData() != null) {
-            List<com.simpleaccounts.entity.SalaryComponent> salaryComponentList =
-                    (List<com.simpleaccounts.entity.SalaryComponent>) paginationResponseModel.getData();
-            for (com.simpleaccounts.entity.SalaryComponent salaryComponent : salaryComponentList) {
+            List<SalaryComponent> salaryComponentList = (List<SalaryComponent>) paginationResponseModel.getData();
+            for (SalaryComponent salaryComponent : salaryComponentList) {
                 SalaryComponentListModel model = new SalaryComponentListModel();
                 model.setId(salaryComponent.getId());
                 model.setFormula(salaryComponent.getFormula());
@@ -1175,13 +1169,13 @@ public class PayrollRestHepler {
         }
     }
 
-    public void deleteSalaryComponentRow(Integer componentId) {
+    public void deleteSalaryComponentRow(Integer employeeId, Integer componentId) {
 
         employeeSalaryComponentRelationService.delete(employeeSalaryComponentRelationService.findByPK(componentId));
 
     }
 
-    public SalaryComponentPersistModel getSalaryComponentModel(com.simpleaccounts.entity.SalaryComponent salaryComponent) {
+    public SalaryComponentPersistModel getSalaryComponentModel(SalaryComponent salaryComponent) {
         SalaryComponentPersistModel salaryComponentPersistModel = new SalaryComponentPersistModel();
 
         salaryComponentPersistModel.setId(salaryComponent.getId());
@@ -1461,6 +1455,7 @@ public class PayrollRestHepler {
                     finalPayrolltransactionCategory.setDefaltFlag(DefaultTypeConstant.NO);
                     finalPayrolltransactionCategory.setVersionNumber(1);
                     transactionCategoryService.persist(finalPayrolltransactionCategory);
+                    CoacTransactionCategory coacTransactionCategoryRelation = new CoacTransactionCategory();
                     coacTransactionCategoryService.addCoacTransactionCategory(finalPayrolltransactionCategory.getChartOfAccount(), finalPayrolltransactionCategory);
 
                     Map<String, Object> payrollCategoryParam = new HashMap<>();
@@ -1517,7 +1512,7 @@ public class PayrollRestHepler {
         }
     }
 
-    public void rejectPayroll(Integer payrollId, String comment, HttpServletRequest request) {
+    public void rejectPayroll(User user, Integer payrollId,String comment,HttpServletRequest request) {
 
         Payroll payroll = payrollRepository.findById(payrollId);
         payroll.setStatus("Rejected");
@@ -1621,6 +1616,8 @@ public class PayrollRestHepler {
 
     public List<PayrollDropdownModel> getUnpaidPayrollList(List<Payroll> payrollList) {
 
+        List<SingleLevelDropDownModel> response  = new ArrayList<>();
+        String parentCategory = "";
         List<PayrollDropdownModel> dropDownModelList = new ArrayList<>();
         if(payrollList !=null && !payrollList.isEmpty()) {
             for (Payroll payroll : payrollList) {
@@ -1641,7 +1638,7 @@ public class PayrollRestHepler {
 
     }
 
-    public void convertPayrollToPaid(List<Integer> payEmpListIds) {
+    public void convertPayrollToPaid(List<Integer> payEmpListIds, User user) {
 
         for(Integer payrollId:payEmpListIds) {
 
@@ -1887,13 +1884,14 @@ public class PayrollRestHepler {
         }//else
 
         payroll.setStatus("Voided");
+        User user= userService.findByPK(payroll.getPayrollApprover());
         payroll.setComment(postingRequestModel.getComment()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         );
-        sendVoidMail(payroll, Integer.valueOf(payroll.getGeneratedBy()), request);
+        sendVoidMail(payroll, Integer.valueOf(payroll.getGeneratedBy()),comment,request);
 
         payrollRepository.save(payroll);
     }
 
-    public boolean sendVoidMail(Payroll payroll, Integer generatorId, HttpServletRequest request) {
+    public boolean sendVoidMail( Payroll payroll,Integer generatorId ,String comment,HttpServletRequest request) {
         User user = userService.findByPK(generatorId);
         String image = "";
         if (user.getCompany() != null && user.getCompany().getCompanyLogo() != null) {

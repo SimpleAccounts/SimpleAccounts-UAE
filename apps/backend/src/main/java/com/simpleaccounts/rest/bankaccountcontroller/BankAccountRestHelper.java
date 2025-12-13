@@ -3,7 +3,14 @@ package com.simpleaccounts.rest.bankaccountcontroller;
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
 import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.bankaccount.*;
 import com.simpleaccounts.model.BankModel;
 import com.simpleaccounts.model.DashBoardBankDataModel;
@@ -285,8 +292,7 @@ public class BankAccountRestHelper {
 
 	private void bankAccountCurrency(BankModel bankModel, BankAccount bankAccount) {
 		if (bankModel.getBankAccountCurrency() != null) {
-			com.simpleaccounts.entity.Currency currency =
-					currencyService.getCurrency(Integer.valueOf(bankModel.getBankAccountCurrency()));
+			Currency currency = currencyService.getCurrency(Integer.valueOf(bankModel.getBankAccountCurrency()));
 			bankAccount.setBankAccountCurrency(currency);
 		}
 	}

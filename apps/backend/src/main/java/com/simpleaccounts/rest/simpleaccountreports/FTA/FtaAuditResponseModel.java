@@ -1,10 +1,11 @@
 package com.simpleaccounts.rest.simpleaccountreports.FTA;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import java.util.List;
 @Data
 public class FtaAuditResponseModel {
 

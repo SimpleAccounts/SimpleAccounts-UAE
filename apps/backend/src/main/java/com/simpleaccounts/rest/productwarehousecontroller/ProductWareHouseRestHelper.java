@@ -1,8 +1,9 @@
 package com.simpleaccounts.rest.productwarehousecontroller;
 
-import com.simpleaccounts.entity.ProductWarehouse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
+
+import com.simpleaccounts.entity.ProductWarehouse;
 
 @Component
 public class ProductWareHouseRestHelper {

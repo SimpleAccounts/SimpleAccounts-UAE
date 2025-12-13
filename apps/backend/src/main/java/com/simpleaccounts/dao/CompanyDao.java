@@ -5,12 +5,14 @@
  */
 package com.simpleaccounts.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.simpleaccounts.constant.dbfilter.CompanyFilterEnum;
 import com.simpleaccounts.entity.Company;
 import com.simpleaccounts.entity.Currency;
+
 import com.simpleaccounts.rest.DropdownModel;
-import java.util.List;
-import java.util.Map;
 
 /**
  *

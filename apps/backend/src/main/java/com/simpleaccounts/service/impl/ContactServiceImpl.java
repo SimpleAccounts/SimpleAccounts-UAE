@@ -1,6 +1,9 @@
 package com.simpleaccounts.service.impl;
 
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
+
 import com.simpleaccounts.constant.EmailConstant;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.ContactFilterEnum;
 import com.simpleaccounts.dao.ContactDao;
 import com.simpleaccounts.dao.Dao;
@@ -37,7 +40,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
 
 /**
  * Created by mohsin on 3/3/2017.
@@ -110,6 +112,8 @@ public class ContactServiceImpl extends ContactService {
     //CSI
     @Override
     public boolean sendInvoiceThankYouMail(Contact contact, Integer invoiceType, String number, String amount, String date, BigDecimal dueAmount, HttpServletRequest request) {
+        long millis=System.currentTimeMillis();
+
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         User user=userService.findByPK(userId);
         String image="";

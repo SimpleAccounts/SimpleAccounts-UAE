@@ -1,7 +1,8 @@
 package com.simpleaccounts.service;
 
-import com.simpleaccounts.entity.ChartOfAccountCategory;
 import java.util.List;
+
+import com.simpleaccounts.entity.ChartOfAccountCategory;
 
 public abstract class ChartOfAccountCategoryService extends SimpleAccountsService<Integer, ChartOfAccountCategory> {
 

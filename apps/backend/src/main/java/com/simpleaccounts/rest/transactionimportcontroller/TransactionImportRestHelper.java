@@ -1,5 +1,7 @@
 package com.simpleaccounts.rest.transactionimportcontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.constant.TransactionCreationMode;
 import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
 import com.simpleaccounts.constant.TransactionStatusConstant;
@@ -12,10 +14,12 @@ import com.simpleaccounts.service.BankAccountService;
 import com.simpleaccounts.service.DateFormatService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import java.io.BufferedReader;
+import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,7 +44,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Component
 @RequiredArgsConstructor
@@ -144,6 +147,7 @@ public class TransactionImportRestHelper {
 						if (headerIndexPositionCounter == header - headerValue) {
 							processHeaderColumns(cSVRecord);
 
+							headerIndexPosition++;
 							if (isDataRepeated) {
 								break;
 							}
@@ -168,8 +172,13 @@ public class TransactionImportRestHelper {
 						try {
 							transaction.setDate("date");
 							// ... (rest of the code)
+							TemporalAccessor ta = DateTimeFormatter.ofPattern(dateFormat).parse(date);
 							DateFormat formatter = new SimpleDateFormat(dateFormat, Locale.US);
-							formatter.parse(date);
+							Date dateTranscation = (Date) formatter.parse(date);
+							LocalDateTime transactionDate = Instant.ofEpochMilli(dateTranscation.getTime())
+									.atZone(ZoneId.systemDefault()).toLocalDateTime();
+							DateFormat df = new SimpleDateFormat(dateFormat);
+							String reportDate = df.format(dateTranscation);
 							transaction.setDate("");
 							if (!drAmount.isEmpty()) {
 								transaction.setDebit("debit");

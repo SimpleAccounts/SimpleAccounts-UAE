@@ -13,8 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class RoleModuleRestHelper {
@@ -33,7 +36,7 @@ public class RoleModuleRestHelper {
 
         if (roleRequestModel!= null) {
 
-            jwtTokenUtil.getUserIdFromHttpRequest(request);
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             Role role = roleService.findByPK(roleRequestModel.getRoleID());
             if (roleRequestModel.getIsActive()!=null){
                 role.setIsActive(roleRequestModel.getIsActive());

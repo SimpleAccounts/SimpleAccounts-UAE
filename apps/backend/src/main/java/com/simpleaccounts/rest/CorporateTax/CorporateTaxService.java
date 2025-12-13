@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.CorporateTax;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
@@ -73,12 +74,6 @@ public class CorporateTaxService {
                                                        String sortOrder, String sortingCol) {
         List<CorporateTaxModel> corporateTaxModelList = new ArrayList<>();
         List<CorporateTaxFiling> corporateTaxFilingList;
-
-        if (paginationDisable) {
-            pageNo = 0;
-            pageSize = Integer.MAX_VALUE;
-        }
-
         Pageable pageable =  getCTPageableRequest(pageNo, pageSize, sortOrder,sortingCol);
         Page<CorporateTaxFiling> corporateTaxFilingPage = corporateTaxFilingRepository.findByDeleteFlag( false,pageable);
         corporateTaxFilingList = corporateTaxFilingPage.getContent();
@@ -152,15 +147,9 @@ public class CorporateTaxService {
     public List<PaymentHistoryModel> getCtPaymentHistory(PaginationResponseModel responseModel,
                                                        int pageNo, int pageSize, boolean paginationDisable,
                                                        String sortOrder, String sortingCol, Integer userId) {
-        java.util.Objects.requireNonNull(userService.findByPK(userId));
+        User user = userService.findByPK(userId);
         List<PaymentHistoryModel> paymentHistoryModelList = new ArrayList<>();
-        List<CorporateTaxPaymentHistory> corporateTaxPaymentHistoryList;
-
-        if (paginationDisable) {
-            pageNo = 0;
-            pageSize = Integer.MAX_VALUE;
-        }
-
+        List<CorporateTaxPaymentHistory> corporateTaxPaymentHistoryList = new ArrayList<>();
         Pageable pageable =  getCTPageableRequest(pageNo, pageSize, sortOrder,sortingCol);
         Page<CorporateTaxPaymentHistory> corporateTaxPaymentHistoryPage = corporateTaxPaymentHistoryRepository.findAll(pageable);
         corporateTaxPaymentHistoryList = corporateTaxPaymentHistoryPage.getContent();
@@ -185,16 +174,7 @@ public class CorporateTaxService {
         return paymentHistoryModelList;
 	    }
 	    private Pageable getCTPageableRequest(int pageNo, int pageSize, String sortOrder, String sortingCol) {
-	        Sort sort = Sort.by("createdDate").descending();
-	        if (sortingCol != null && !sortingCol.isEmpty()) {
-	            sort = Sort.by(sortingCol);
-	            if (sortOrder != null && sortOrder.toLowerCase().contains("desc")) {
-	                sort = sort.descending();
-	            } else {
-	                sort = sort.ascending();
-	            }
-	        }
-	        return PageRequest.of(pageNo, pageSize, sort);
+	        return PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
 	    }
 
     public void createJournalForCT(CorporateTaxFiling corporateTaxFiling, Integer userId) {

@@ -13,6 +13,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -60,7 +61,12 @@ public class MigrationServiceImpl implements MigrationService {
 	@Override
 	public List<DataMigrationRespModel> getMigrationSummary(String fileLocation, Integer userId, String migFromDate)
 			throws IOException {
-		return zohoMigrationService.getMigrationSummary(fileLocation, userId, migFromDate);
+
+		List<DataMigrationRespModel> migrationSummaryList =  new ArrayList<>();
+		
+		migrationSummaryList = zohoMigrationService.getMigrationSummary(fileLocation, userId, migFromDate);
+				
+		return migrationSummaryList;
 	}
 
 	@Override

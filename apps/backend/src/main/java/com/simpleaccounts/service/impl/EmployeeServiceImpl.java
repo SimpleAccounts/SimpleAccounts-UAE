@@ -1,6 +1,9 @@
 package com.simpleaccounts.service.impl;
 
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
+
 import com.simpleaccounts.constant.CommonColumnConstants;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.EmailConstant;
 import com.simpleaccounts.constant.dbfilter.EmployeeFilterEnum;
 import com.simpleaccounts.dao.Dao;
@@ -28,6 +31,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import com.simpleaccounts.utils.DateFormatUtil;
+import com.simpleaccounts.utils.EmailSender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
@@ -37,7 +50,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
 
 /**
  * Created by Suraj Rahade on 24/04/2021.
@@ -127,7 +139,7 @@ public class EmployeeServiceImpl extends EmployeeService {
 
                     BigDecimal grossPay = BigDecimal.ZERO;
                     BigDecimal deduction = BigDecimal.ZERO;
-                    BigDecimal netPay;
+                    BigDecimal netPay = BigDecimal.ZERO;
                     BigDecimal LopDay = BigDecimal.valueOf(0);
                     BigDecimal NoOfDays = BigDecimal.valueOf(0);
 
@@ -164,6 +176,8 @@ public class EmployeeServiceImpl extends EmployeeService {
 
     @Override
     public boolean sendInvitationMail(Employee employee, HttpServletRequest request) {
+        long millis=System.currentTimeMillis();
+
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         User user=userService.findByPK(userId);
         String image="";
@@ -171,6 +185,13 @@ public class EmployeeServiceImpl extends EmployeeService {
             image = " data:image/jpg;base64," + DatatypeConverter.printBase64Binary(
                     user.getCompany().getCompanyLogo()) ;
 
+        }
+        String htmlContent="";
+        try {
+            byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+THANK_YOU_TEMPLATE).getURI()));
+            htmlContent= new String(contentData, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            logger.error("Error processing employee service", e);
         }
 
         try {

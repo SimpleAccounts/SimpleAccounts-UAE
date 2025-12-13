@@ -3,8 +3,9 @@ package com.simpleaccounts.rest.payroll;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.Salary;
-import java.util.List;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface SalaryDao extends Dao<Integer, Salary> {

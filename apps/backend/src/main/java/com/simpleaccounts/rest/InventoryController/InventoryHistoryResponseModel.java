@@ -1,7 +1,8 @@
 package com.simpleaccounts.rest.InventoryController;
 
-import java.util.Date;
 import lombok.Data;
+
+import java.util.Date;
 
 @Data
 public class InventoryHistoryResponseModel {

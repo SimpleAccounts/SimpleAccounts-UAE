@@ -1,16 +1,20 @@
 package com.simpleaccounts.entity.bankaccount;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.simpleaccounts.constant.TransactionCreationMode;
-import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
-import com.simpleaccounts.entity.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
+
 import javax.persistence.*;
-import lombok.Data;
+
+import com.simpleaccounts.entity.*;
 import org.hibernate.annotations.ColumnDefault;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.simpleaccounts.constant.TransactionCreationMode;
+import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
+
+import lombok.Data;
 
 /**
  * Created by mohsinh on 2/26/2017.

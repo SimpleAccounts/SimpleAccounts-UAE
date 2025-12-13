@@ -1,7 +1,9 @@
 package com.simpleaccounts.rest.detailedgeneralledgerreport;
 
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import java.math.BigDecimal;
+
+import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+
 import lombok.Data;
 
 @Data

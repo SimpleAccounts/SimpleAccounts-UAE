@@ -1,10 +1,11 @@
 package com.simpleaccounts.rest.financialreport;
 
 import com.simpleaccounts.constant.PayMode;
-import java.math.BigDecimal;
-import java.util.Date;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 public class RecordVatPaymentRequestModel {

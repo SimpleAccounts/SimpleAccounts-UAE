@@ -1,8 +1,9 @@
 package com.simpleaccounts.rest.migration.model;
 
 import com.simpleaccounts.rest.transactioncategorybalancecontroller.TransactioncategoryBalancePersistModel;
-import java.util.List;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class ListOfTCBPModel {

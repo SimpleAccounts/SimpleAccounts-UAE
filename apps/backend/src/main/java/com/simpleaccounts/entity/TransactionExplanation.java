@@ -2,13 +2,15 @@ package com.simpleaccounts.entity;
 
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Collection;
-import javax.persistence.*;
+
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Collection;
 
 /**
  * @author Muzammil

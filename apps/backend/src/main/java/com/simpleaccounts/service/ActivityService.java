@@ -1,7 +1,8 @@
 package com.simpleaccounts.service;
 
-import com.simpleaccounts.entity.Activity;
 import java.util.List;
+
+import com.simpleaccounts.entity.Activity;
 
 public interface  ActivityService {
 	

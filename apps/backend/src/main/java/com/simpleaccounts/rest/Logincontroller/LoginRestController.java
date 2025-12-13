@@ -1,6 +1,11 @@
 package com.simpleaccounts.rest.Logincontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.EmailLogs;
 import com.simpleaccounts.entity.PasswordHistory;
 import com.simpleaccounts.entity.User;
@@ -89,6 +94,7 @@ public class LoginRestController {
 				for (PasswordHistory passwordHistory:passwordHistoryList){
 					boolean passwordExist = passwordEncoder.matches(resetPasswordModel.getPassword(), passwordHistory.getPassword());
 					if (passwordExist){
+						message= null;
 						message = new SimpleAccountsMessage("",
 								MessageUtil.getMessage("resetPassword.AlreadyExist.msg.0090"), true);
 						return new ResponseEntity<>( message,HttpStatus.NOT_ACCEPTABLE);

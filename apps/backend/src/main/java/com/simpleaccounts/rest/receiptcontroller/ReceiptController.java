@@ -1,7 +1,17 @@
 package com.simpleaccounts.rest.receiptcontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+import lombok.RequiredArgsConstructor;
+
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.bank.model.DeleteModel;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.constant.dbfilter.ReceiptFilterEnum;
 import com.simpleaccounts.entity.*;
@@ -44,7 +54,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  * @author $@urabh : For Customer invoice
@@ -157,16 +166,17 @@ public class ReceiptController {
 	@DeleteMapping(value = "/deletes")
 		public ResponseEntity<Object> deleteReceipts(@RequestBody DeleteModel ids) {
 		try {
+			SimpleAccountsMessage message=null;
 			receiptService.deleteByIds(ids.getIds());
-			SimpleAccountsMessage message = new SimpleAccountsMessage("0048",
+			message = new SimpleAccountsMessage("0048",
 					MessageUtil.getMessage("receipt.deleted.successful.msg.0048"), false);
-			return new ResponseEntity<>(message, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			SimpleAccountsMessage message = new SimpleAccountsMessage("",
-					MessageUtil.getMessage("delete.unsuccessful.msg"), true);
-			return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		SimpleAccountsMessage message= null;
+		message = new SimpleAccountsMessage("",
+				MessageUtil.getMessage("delete.unsuccessful.msg"), true);
+		return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@LogRequest

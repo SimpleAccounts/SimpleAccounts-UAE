@@ -1,6 +1,9 @@
 package com.simpleaccounts.rest.CorporateTax;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.aop.LogExecutionTime;
 import com.simpleaccounts.aop.LogRequest;
@@ -39,7 +42,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 	@RequestMapping(value = "/rest/corporate/tax")
@@ -198,7 +200,7 @@ public class CorporateTaxController {
     @GetMapping(value = "/viewct")
     public ResponseEntity<Object> viewct(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
         try {
-            jwtTokenUtil.getUserIdFromHttpRequest(request);
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             Optional<CorporateTaxFiling> optionalFiling = corporateTaxFilingRepository.findById(id);
             if (!optionalFiling.isPresent()) {
                 return new ResponseEntity<>("Corporate Tax Filing not found", HttpStatus.NOT_FOUND);
@@ -289,7 +291,7 @@ public class CorporateTaxController {
             request){
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            corporateTaxService.recordCorporateTaxPayment(corporateTaxPaymentModel, userId);
+            CorporateTaxPayment corporateTaxPayment = corporateTaxService.recordCorporateTaxPayment(corporateTaxPaymentModel,userId);
             return new ResponseEntity<>("message",HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>("message",HttpStatus.INTERNAL_SERVER_ERROR);
@@ -305,6 +307,7 @@ public class CorporateTaxController {
                                      @RequestParam(required = false) String order,
                                      @RequestParam(required = false) String sortingCol){
         try {
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             PaginationResponseModel responseModel = new PaginationResponseModel();
             corporateTaxService.getCorporateTaxList(responseModel,pageNo,pageSize,paginationDisable,order,sortingCol);
             return new ResponseEntity<>(responseModel,HttpStatus.OK);
@@ -324,8 +327,7 @@ public class CorporateTaxController {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             PaginationResponseModel responseModel = new PaginationResponseModel();
-            corporateTaxService.getCtPaymentHistory(
-                    responseModel, pageNo, pageSize, paginationDisable, order, sortingCol, userId);
+            List<PaymentHistoryModel> response = corporateTaxService.getCtPaymentHistory(responseModel,pageNo,pageSize,paginationDisable,order,sortingCol,userId);
             return new ResponseEntity<>(responseModel,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

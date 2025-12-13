@@ -1,7 +1,8 @@
 package com.simpleaccounts.rest.migration.model;
 
-import java.util.List;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * Created By Zain Khan On 13-10-2021

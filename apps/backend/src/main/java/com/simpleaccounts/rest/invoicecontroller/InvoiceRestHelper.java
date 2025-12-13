@@ -1,10 +1,13 @@
 package com.simpleaccounts.rest.invoicecontroller;
 
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.dao.MailThemeTemplates;
 import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.helper.DateFormatHelper;
 import com.simpleaccounts.repository.UnitTypesRepository;
@@ -32,15 +35,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerErrorException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 @Service
 @Slf4j
@@ -207,8 +210,7 @@ public class InvoiceRestHelper {
 		invoice.setInvoiceDueDate(invoiceDueDate);
 
 		if (invoiceModel.getCurrencyCode() != null) {
-			com.simpleaccounts.entity.Currency currency =
-					currencyService.findByPK(invoiceModel.getCurrencyCode());
+			Currency currency = currencyService.findByPK(invoiceModel.getCurrencyCode());
 			invoice.setCurrency(currency);
 		}
 		List<InvoiceLineItemModel> itemModels = new ArrayList<>();
@@ -849,7 +851,7 @@ public class InvoiceRestHelper {
 				.replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS, vatInWords);
 
 		if (invoice.getContact() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-			mailUtility.triggerEmailOnBackground2(subject, content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
+			mailUtility.triggerEmailOnBackground2(subject, content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
 					EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{invoice.getContact().getBillingEmail()},
 					true);
 			EmailLogs emailLogs = new EmailLogs();
@@ -930,9 +932,11 @@ public class InvoiceRestHelper {
 		MailThemeTemplates creditNoteEmailBody =(MailThemeTemplates) query.getSingleResult();
 		Map<String, String> map = null;
 		Contact contact = null;
-		com.simpleaccounts.entity.Currency currency = null;
+		Currency currency = null;
 		String message = null;
+		String contactName = null;
 		if(invoice!=null){
+			contactName = invoice.getContact().getFirstName()+" "+invoice.getContact().getLastName();
 			currency  = invoice.getCurrency();
 			message = "Dear {contactName} , <br><br>Please review the credit note "+creditNote.getCreditNoteNumber()+".\n" +
 					"details mentioned in the document attached\n" +
@@ -944,6 +948,7 @@ public class InvoiceRestHelper {
 					"relationship with you.";
 		}
 		else {
+			contactName = creditNote.getContact().getFirstName()+" "+creditNote.getContact().getLastName();
 			currency = creditNote.getCurrency();
 			message = "Dear {contactName},<br><br>\n" +
 					"Please review the credit note " +creditNote.getCreditNoteNumber()+".\n" +
@@ -1032,7 +1037,7 @@ public class InvoiceRestHelper {
 		}
 
 		if (contact!= null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-			mailUtility.triggerEmailOnBackground2(subject, content,body, EmailConstant.ADMIN_SUPPORT_EMAIL,
+			mailUtility.triggerEmailOnBackground2(subject, content,body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
 					EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[] { contact.getBillingEmail() },
 					true);
 			EmailLogs emailLogs = new EmailLogs();
@@ -1584,6 +1589,9 @@ public class InvoiceRestHelper {
 		return invoiceDataMap;
 	}
 
+
+
+
 	private void getInvoiceLineItemExciseTax(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		int row=0;
 		if (invoice.getInvoiceLineItems() != null) {
@@ -2000,7 +2008,7 @@ public class InvoiceRestHelper {
 
 	}private void getCNContactCurrencyExchange(Contact contact, Map<String, String> invoiceDataMap, String value) {
 		if (contact !=null && contact.getCurrency() != null  ) {
-			com.simpleaccounts.entity.Currency currency = contact.getCurrency();
+			Currency currency = contact.getCurrency();
 			CurrencyConversion currencyConversion = currencyConversionRepository.findByCurrencyCode(currency);
 			if(currencyConversion.getExchangeRate().compareTo(BigDecimal.ONE) > 0) {
 				invoiceDataMap.put(value, currencyConversion.getExchangeRate().setScale(2, RoundingMode.HALF_EVEN).toString());
@@ -2661,6 +2669,8 @@ public class InvoiceRestHelper {
 			BigDecimal inventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
 			BigDecimal totalAmount = BigDecimal.ZERO;
 			BigDecimal lineItemDiscount = BigDecimal.ZERO;
+			TransactionCategory purchaseCategory = null;
+			Map<TransactionCategory,BigDecimal> transactionCategoryTotalAmountMap = new HashMap<>();
 			for (InvoiceLineItem sortedLineItem : sortedItemList) {
 
 				BigDecimal amntWithoutVat = sortedLineItem.getUnitPrice()
@@ -2698,6 +2708,10 @@ public class InvoiceRestHelper {
 						}
 					}
 
+					purchaseCategory = sortedLineItem.getTrnsactioncCategory() != null ? sortedLineItem.getTrnsactioncCategory()
+							: sortedLineItem.getProduct().getLineItemList().stream()
+							.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
+							.getTransactioncategory();
 					isEligibleForInventoryJournalEntry = true;
 				}
 			}if(isCustomerInvoice && isEligibleForInventoryJournalEntry) {
@@ -3171,6 +3185,8 @@ public class InvoiceRestHelper {
 			BigDecimal inventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
 			BigDecimal totalAmount = BigDecimal.ZERO;
 			BigDecimal lineItemDiscount = BigDecimal.ZERO;
+			TransactionCategory purchaseCategory = null;
+			Map<TransactionCategory,BigDecimal> transactionCategoryTotalAmountMap = new HashMap<>();
 			for (InvoiceLineItem sortedLineItem : sortedItemList) {
 
 				BigDecimal amntWithoutVat = sortedLineItem.getUnitPrice()
@@ -3209,6 +3225,10 @@ public class InvoiceRestHelper {
 						}
 					}
 
+					purchaseCategory = sortedLineItem.getTrnsactioncCategory() != null ? sortedLineItem.getTrnsactioncCategory()
+							: sortedLineItem.getProduct().getLineItemList().stream()
+							.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
+							.getTransactioncategory();
 					isEligibleForInventoryJournalEntry = true;
 				}
 			}if(isCustomerInvoice && isEligibleForInventoryJournalEntry) {

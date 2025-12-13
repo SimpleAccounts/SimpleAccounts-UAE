@@ -1,9 +1,11 @@
 package com.simpleaccounts.dao.bankaccount;
 
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.entity.TransactionStatus;
-import java.util.List;
-import org.springframework.stereotype.Repository;
 
 @Repository(value = "transactionStatusDao")
 public class TransactionStatusDaoImpl extends AbstractDao<Integer, TransactionStatus> implements TransactionStatusDao {

@@ -32,6 +32,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
+import com.simpleaccounts.security.JwtTokenUtil;
+import io.swagger.annotations.ApiOperation;
+
+import javax.servlet.http.HttpServletRequest;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  *
  * @author uday
@@ -223,7 +234,7 @@ public abstract class AbstractDoubleEntryRestController {
 			}
 		}
 		else if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.CREDIT_NOTE.name())){
-			journal = creditNoteRestHelper.reverseCreditNotePosting(postingRequestModel);
+			journal = creditNoteRestHelper.reverseCreditNotePosting(postingRequestModel, userId);
 			if (journal != null) {
 				journalService.persist(journal);
 				creditNoteRestHelper.creditNoteReverseInventoryHandling(postingRequestModel,userId);
@@ -260,7 +271,7 @@ public abstract class AbstractDoubleEntryRestController {
 				journalService.update(journal1);
 
 			}
-			journal = creditNoteRestHelper.reverseDebitNotePosting(postingRequestModel);
+			journal = creditNoteRestHelper.reverseDebitNotePosting(postingRequestModel, userId);
 			if (journal != null) {
 				journalService.persist(journal);
 				creditNoteRestHelper.creditNoteReverseInventoryHandling(postingRequestModel,userId);

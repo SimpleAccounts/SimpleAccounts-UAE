@@ -8,13 +8,13 @@ import com.simpleaccounts.dao.bankaccount.ReconcileStatusDao;
 import com.simpleaccounts.entity.bankaccount.ReconcileStatus;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.TypedQuery;
-import org.springframework.stereotype.Repository;
-
 @Repository
 public class ReconcileStatusDaoImpl extends AbstractDao<Integer,ReconcileStatus > implements ReconcileStatusDao {
 

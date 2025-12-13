@@ -1,9 +1,10 @@
 package com.simpleaccounts.service.bankaccount;
 
+import java.util.List;
+
 import com.simpleaccounts.criteria.bankaccount.ImportedDraftTransactionCriteria;
 import com.simpleaccounts.entity.bankaccount.ImportedDraftTransaction;
 import com.simpleaccounts.service.SimpleAccountsService;
-import java.util.List;
 
 public abstract class ImportedDraftTransactonService extends SimpleAccountsService<Integer, ImportedDraftTransaction> {
 	

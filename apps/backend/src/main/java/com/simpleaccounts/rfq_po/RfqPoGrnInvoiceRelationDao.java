@@ -1,6 +1,7 @@
 package com.simpleaccounts.rfq_po;
 
 import com.simpleaccounts.dao.Dao;
+
 import java.util.List;
 
 public interface RfqPoGrnInvoiceRelationDao extends Dao<Integer, RfqPoGrnRelation> {

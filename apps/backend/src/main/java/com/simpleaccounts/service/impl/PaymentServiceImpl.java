@@ -6,6 +6,7 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.dbfilter.PaymentFilterEnum;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.PaymentDao;
 import com.simpleaccounts.entity.Payment;

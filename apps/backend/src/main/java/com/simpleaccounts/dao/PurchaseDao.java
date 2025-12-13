@@ -1,7 +1,8 @@
 package com.simpleaccounts.dao;
 
-import com.simpleaccounts.entity.Purchase;
 import java.util.List;
+
+import com.simpleaccounts.entity.Purchase;
 
 public interface PurchaseDao extends Dao<Integer, Purchase> {
 

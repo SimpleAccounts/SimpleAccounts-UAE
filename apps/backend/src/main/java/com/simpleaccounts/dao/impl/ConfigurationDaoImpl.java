@@ -8,6 +8,7 @@ package com.simpleaccounts.dao.impl;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.ConfigurationDao;
 import com.simpleaccounts.entity.Configuration;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.TypedQuery;

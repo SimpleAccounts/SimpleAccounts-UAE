@@ -1,12 +1,12 @@
 package com.simpleaccounts.entity;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * @author Zain Khan : Middle Table Between Payment And Debit Note To Provide Many To Many Mapping

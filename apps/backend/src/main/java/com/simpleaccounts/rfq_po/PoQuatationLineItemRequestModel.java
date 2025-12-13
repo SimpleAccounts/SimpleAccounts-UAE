@@ -1,8 +1,9 @@
 package com.simpleaccounts.rfq_po;
 
 import com.simpleaccounts.constant.DiscountType;
-import java.math.BigDecimal;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 @Data
 public class PoQuatationLineItemRequestModel {

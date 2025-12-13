@@ -1,8 +1,10 @@
 package com.simpleaccounts.rest.journalcontroller;
 
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
+
+import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+
 import lombok.Data;
 
 @Data

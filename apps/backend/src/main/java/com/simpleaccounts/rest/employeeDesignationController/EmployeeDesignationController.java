@@ -3,6 +3,8 @@ package com.simpleaccounts.rest.employeeDesignationController;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeDesignation;
+import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.model.EmployeeDesignationPersistModel;
 import com.simpleaccounts.repository.EmployeeRepository;
@@ -22,10 +24,19 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
@@ -54,13 +65,14 @@ public class EmployeeDesignationController {
     public ResponseEntity<String> saveEmployeeDesignation(@ModelAttribute EmployeeDesignationPersistModel employeeDesignationPersistModel, HttpServletRequest request)
     {
         try {
-            jwtTokenUtil.getUserIdFromHttpRequest(request);
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            User user = userService.findByPK(userId);
 
             EmployeeDesignation employeeDesignation = employeeDesignationRestHelper.getEmployeeDesignationEntity(employeeDesignationPersistModel);
 
             employeeDesignationService.persist(employeeDesignation);
 
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -73,12 +85,13 @@ public class EmployeeDesignationController {
     @PostMapping(value = "/updateEmployeeDesignation")
     public ResponseEntity<String> updateEmployeeDesignation(@ModelAttribute EmployeeDesignationPersistModel employeeDesignationPersistModel, HttpServletRequest request) {
         try {
-            jwtTokenUtil.getUserIdFromHttpRequest(request);
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            User user = userService.findByPK(userId);
 
             EmployeeDesignation employeeDesignation = employeeDesignationRestHelper.getEmployeeDesignationEntity(employeeDesignationPersistModel);
 
             employeeDesignationService.update(employeeDesignation);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -110,18 +123,18 @@ public class EmployeeDesignationController {
             if (employeeDesignation != null && employeeList.size()==0) {
                 employeeDesignation.setDeleteFlag(Boolean.TRUE);
                 employeeDesignationService.update(employeeDesignation, employeeDesignation.getId());
-                return new ResponseEntity<>(HttpStatus.OK);
+                return new ResponseEntity(HttpStatus.OK);
             }else
             /**
              * “already exists http status code”
              *  The appropriate status code for "Already Exists" would be
              * '409 Conflict'
              */
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
+                return new ResponseEntity(HttpStatus.CONFLICT);
 
         } catch (Exception e) {
             logger.error(ERROR, e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -134,9 +147,7 @@ public class EmployeeDesignationController {
             if (employeeDesignation == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity<>(
-                        employeeDesignationRestHelper.getEmployeeDesignationModel(employeeDesignation),
-                        HttpStatus.OK);
+                return new ResponseEntity(employeeDesignationRestHelper.getEmployeeDesignationModel(employeeDesignation), HttpStatus.OK);
             }
         } catch (Exception e) {
             logger.error(ERROR, e);
@@ -165,7 +176,8 @@ public class EmployeeDesignationController {
     @GetMapping(value = "/EmployeeDesignationList")
     public ResponseEntity<PaginationResponseModel> getEmployeeDesignationList(PayRollFilterModel filterModel,
                                                                          HttpServletRequest request) {
-        jwtTokenUtil.getUserIdFromHttpRequest(request);
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+        User user = userService.findByPK(userId);
         Map<Object, Object> filterDataMap = new HashMap<>();
         PaginationResponseModel paginationResponseModel = employeeDesignationService.getEmployeeDesignationList(filterDataMap, filterModel);
         if (paginationResponseModel != null) {

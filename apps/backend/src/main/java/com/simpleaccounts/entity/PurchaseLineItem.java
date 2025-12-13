@@ -2,10 +2,13 @@ package com.simpleaccounts.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import lombok.Data;
+
+import javax.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
-import lombok.Data;
+
 import org.hibernate.annotations.ColumnDefault;
 
 /**

@@ -1,9 +1,9 @@
 package com.simpleaccounts.rest.payroll.model;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 @Data
 public class MoneyPaidToUserModel {
     LocalDate startDate;

@@ -1,5 +1,12 @@
 package com.simpleaccounts.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.simpleaccounts.dao.AbstractFilter;
 import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.Dao;

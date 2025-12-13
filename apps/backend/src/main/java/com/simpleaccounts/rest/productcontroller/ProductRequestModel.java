@@ -1,9 +1,11 @@
 package com.simpleaccounts.rest.productcontroller;
 
-import com.simpleaccounts.constant.ProductPriceType;
-import com.simpleaccounts.constant.ProductType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import com.simpleaccounts.constant.ProductPriceType;
+import com.simpleaccounts.constant.ProductType;
+
 import lombok.Getter;
 import lombok.Setter;
 

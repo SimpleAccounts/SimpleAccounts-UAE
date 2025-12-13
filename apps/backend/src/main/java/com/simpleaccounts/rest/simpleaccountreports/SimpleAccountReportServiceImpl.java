@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 
 import com.simpleaccounts.rest.simpleaccountreports.Aging.AgingListModel;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.rest.simpleaccountreports.Aging.AgingRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditResponseModel;

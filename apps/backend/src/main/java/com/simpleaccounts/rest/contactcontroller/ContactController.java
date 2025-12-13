@@ -7,6 +7,9 @@ package com.simpleaccounts.rest.contactcontroller;
 
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.bank.model.DeleteModel;
+import com.simpleaccounts.constant.DefaultTypeConstant;
+import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.constant.dbfilter.ContactFilterEnum;
 import com.simpleaccounts.constant.dbfilter.ORDERBYENUM;
 import com.simpleaccounts.entity.Contact;
@@ -30,10 +33,16 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.util.*;
+
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
@@ -187,6 +196,8 @@ public class ContactController {
 					MessageUtil.getMessage("create.unsuccessful.msg"), true);
 				return new ResponseEntity<>( message ,HttpStatus.INTERNAL_SERVER_ERROR);
 			}else {
+				message = new SimpleAccountsMessage("0024",
+						MessageUtil.getMessage("contact.created.successful.msg.0024"), false);
 				return new ResponseEntity<>(contactHelper.getModel(contact) ,HttpStatus.OK);
 			}
 		} catch (Exception e) {
@@ -194,6 +205,12 @@ public class ContactController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+
+
+
+
+
 
 	/**
 	 * 
@@ -273,7 +290,7 @@ public class ContactController {
 		try {
 		SimpleAccountsMessage message= null;
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		List<TransactionCategory> transactionCategoryList;
+		List<TransactionCategory> transactionCategoryList = new ArrayList<>();
 		Contact contact = contactService.findByPK(id);
 
 		contact.setDeleteFlag(true);

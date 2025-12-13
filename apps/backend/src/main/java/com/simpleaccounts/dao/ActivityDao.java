@@ -1,7 +1,8 @@
 package com.simpleaccounts.dao;
 
-import com.simpleaccounts.entity.Activity;
 import java.util.List;
+
+import com.simpleaccounts.entity.Activity;
 
 public interface ActivityDao extends Dao<Integer, Activity> {
 

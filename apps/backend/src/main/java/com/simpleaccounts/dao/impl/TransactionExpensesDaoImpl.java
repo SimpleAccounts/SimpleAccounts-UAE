@@ -1,14 +1,18 @@
 package com.simpleaccounts.dao.impl;
 
-import com.simpleaccounts.dao.AbstractDao;
-import com.simpleaccounts.dao.TransactionExpensesDao;
-import com.simpleaccounts.entity.TransactionExpenses;
 import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
+
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+
+import com.simpleaccounts.dao.AbstractDao;
+import com.simpleaccounts.dao.TransactionExpensesDao;
+
+import com.simpleaccounts.entity.TransactionExpenses;
 
 @Repository
 public class TransactionExpensesDaoImpl extends AbstractDao<Integer, TransactionExpenses>

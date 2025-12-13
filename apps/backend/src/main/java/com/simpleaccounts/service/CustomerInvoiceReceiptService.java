@@ -1,7 +1,8 @@
 package com.simpleaccounts.service;
 
-import com.simpleaccounts.entity.CustomerInvoiceReceipt;
 import java.util.List;
+
+import com.simpleaccounts.entity.CustomerInvoiceReceipt;
 
 public abstract class CustomerInvoiceReceiptService extends SimpleAccountsService<Integer, CustomerInvoiceReceipt> {
 

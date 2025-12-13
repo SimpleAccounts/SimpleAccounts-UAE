@@ -1,7 +1,9 @@
 package com.simpleaccounts.rest.financialreport;
 
-import com.simpleaccounts.rest.PaginationModel;
 import java.io.Serializable;
+
+import com.simpleaccounts.rest.PaginationModel;
+
 import lombok.Data;
 
 @Data

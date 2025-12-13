@@ -1,13 +1,15 @@
 package com.simpleaccounts.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+import org.springframework.stereotype.Service;
+
 import com.simpleaccounts.constant.dbfilter.JournalFilterEnum;
 import com.simpleaccounts.entity.Journal;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import java.util.List;
-import java.util.Map;
-import org.springframework.stereotype.Service;
 
 @Service
 public abstract class JournalService extends SimpleAccountsService<Integer, Journal> {

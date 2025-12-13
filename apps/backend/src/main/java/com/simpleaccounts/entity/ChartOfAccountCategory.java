@@ -4,9 +4,12 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.*;
-import lombok.Data;
+
 import org.hibernate.annotations.ColumnDefault;
+
+import lombok.Data;
 
 @Entity
 @Table(name = "CHART_OF_ACCOUNT_CATEGORY")

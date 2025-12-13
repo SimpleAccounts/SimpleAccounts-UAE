@@ -1,14 +1,16 @@
 package com.simpleaccounts.dao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.TransactionParsingSettingFilterEnum;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.TransactionParsingSettingDao;
 import com.simpleaccounts.entity.TransactionParsingSetting;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class TransactionParsingSettingDaoImpl extends AbstractDao<Long, TransactionParsingSetting>

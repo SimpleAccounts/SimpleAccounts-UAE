@@ -1,15 +1,17 @@
 package com.simpleaccounts.criteria.bankaccount;
 
-import com.simpleaccounts.criteria.AbstractCriteria;
-import com.simpleaccounts.criteria.SortOrder;
-import com.simpleaccounts.dao.AbstractFilter;
-import com.simpleaccounts.entity.bankaccount.ImportedDraftTransaction;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
+
 import org.apache.commons.lang3.BooleanUtils;
+
+import com.simpleaccounts.criteria.AbstractCriteria;
+import com.simpleaccounts.criteria.SortOrder;
+import com.simpleaccounts.dao.AbstractFilter;
+import com.simpleaccounts.entity.bankaccount.ImportedDraftTransaction;
 
 public class ImportedDraftTransactionFilter extends AbstractFilter<ImportedDraftTransaction> {
 

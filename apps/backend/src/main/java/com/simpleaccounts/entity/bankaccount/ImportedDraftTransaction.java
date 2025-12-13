@@ -1,10 +1,13 @@
 package com.simpleaccounts.entity.bankaccount;
 
 import java.io.Serializable;
+
+import lombok.Data;
+
+import javax.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
-import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
 /**

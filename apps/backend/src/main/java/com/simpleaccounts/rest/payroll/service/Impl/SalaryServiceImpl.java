@@ -1,11 +1,13 @@
 package com.simpleaccounts.rest.payroll.service.Impl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.repository.JournalLineItemRepository;
 import com.simpleaccounts.rest.payroll.*;
+import com.simpleaccounts.rest.payroll.SalaryComponent;
 import com.simpleaccounts.rest.payroll.model.MoneyPaidToUserModel;
 import com.simpleaccounts.rest.payroll.service.SalaryService;
 import com.simpleaccounts.service.EmployeeService;
@@ -14,6 +16,9 @@ import com.simpleaccounts.utils.DateFormatUtil;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +46,7 @@ public class SalaryServiceImpl extends SalaryService {
     public SalarySlipModel getSalaryByEmployeeId(Integer employeeId,String salaryDate){
 
         SalarySlipModel salarySlipModel = new SalarySlipModel();
-        Map<String, List<com.simpleaccounts.rest.payroll.SalaryComponent>> salarySlipMap = new LinkedHashMap<>();
+        Map<String ,List<SalaryComponent>> salarySlipMap = new LinkedHashMap<>();
         salarySlipModel.setSalarySlipResult(salarySlipMap);
         salarySlipModel.setDesignation(employeeService.findByPK(employeeId).getEmployeeDesignationId().getDesignationName());
         salarySlipModel.setEmployeename(employeeService.findByPK(employeeId).getFirstName() + " " + employeeService.findByPK(employeeId).getMiddleName() +  " " + employeeService.findByPK(employeeId).getLastName() );
@@ -79,6 +84,7 @@ public class SalaryServiceImpl extends SalaryService {
                     LocalDateTime date = (LocalDateTime) objectArray[4];
                     salarySlipModel.setPayDate(date.toLocalDate());
                     salarySlipModel.setPayPeriod(salary.getPayrollId().getPayPeriod());
+                    Integer year = date.getYear();
 
                     Integer hyphenIndex = salary.getPayrollId().getPayPeriod().indexOf("-");
                     String dateString = salary.getPayrollId().getPayPeriod().substring(0, hyphenIndex);
@@ -88,15 +94,14 @@ public class SalaryServiceImpl extends SalaryService {
                     String formattedDate = salaryMonth.format(outputFormatter);
                     salarySlipModel.setSalaryMonth(formattedDate);
 
-                    List<com.simpleaccounts.rest.payroll.SalaryComponent> salaryComponentList = salarySlipMap.get(salaryStructure);
+                    List<SalaryComponent> salaryComponentList = salarySlipMap.get(salaryStructure);
                     if (salaryComponentList == null) {
                         salaryComponentList = new ArrayList<>();
                         salarySlipMap.put(salaryStructure, salaryComponentList);
 
                     }
 
-                    com.simpleaccounts.rest.payroll.SalaryComponent salaryComponent =
-                            new com.simpleaccounts.rest.payroll.SalaryComponent();
+                    SalaryComponent salaryComponent = new SalaryComponent();
                     salaryComponent.setSalaryDate(date);
                     salaryComponent.setComponentName((String) objectArray[1]);
                     salaryComponent.setComponentValue((BigDecimal) objectArray[2]);

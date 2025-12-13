@@ -1,8 +1,9 @@
 package com.simpleaccounts.constant;
 
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.Map;
-import lombok.Getter;
 
 public enum ChartOfAccountCategoryCodeEnum {
     ACCOUNTS_RECEIVABLE("01-01"),

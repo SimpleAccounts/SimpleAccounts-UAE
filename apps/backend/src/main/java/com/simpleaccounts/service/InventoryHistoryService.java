@@ -1,8 +1,10 @@
 package com.simpleaccounts.service;
 
 import com.simpleaccounts.entity.InventoryHistory;
+
 import com.simpleaccounts.rest.InventoryController.InventoryRevenueModel;
 import com.simpleaccounts.rest.InventoryController.TopInventoryRevenueModel;
+
 import java.util.List;
 
 public abstract class InventoryHistoryService extends SimpleAccountsService<Integer, InventoryHistory>{

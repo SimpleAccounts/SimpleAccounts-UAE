@@ -1,9 +1,10 @@
 package com.simpleaccounts.rfq_po;
 
 import com.simpleaccounts.entity.Invoice;
-import java.time.LocalDateTime;
-import javax.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "GRN_SUPPLIER_INVOICE_RELATION")

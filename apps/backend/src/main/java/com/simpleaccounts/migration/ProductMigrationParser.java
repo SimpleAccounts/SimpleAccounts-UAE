@@ -3,14 +3,16 @@ package com.simpleaccounts.migration;
 import com.simpleaccounts.migration.xml.bindings.applicationmigration.ApplicationMigration;
 import com.simpleaccounts.migration.xml.bindings.product.Product;
 import com.simpleaccounts.utils.FileHelper;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import lombok.extern.slf4j.Slf4j;
+
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Slf4j
@@ -36,7 +38,8 @@ public class ProductMigrationParser {
     }
 
     private ProductMigrationParser() {
-        init();
+
+                boolean loaded = init();
 
     }
 

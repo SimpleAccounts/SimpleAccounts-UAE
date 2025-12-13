@@ -2,6 +2,8 @@
 package com.simpleaccounts.rest.reconsilationcontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simpleaccounts.constant.ReconsileCategoriesEnumConstant;
@@ -33,11 +35,11 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 	@RequestMapping("/rest/reconsile")
@@ -369,11 +371,12 @@ public class ReconsilationController {
 	@GetMapping(value = "/getChildrenTransactionCategoryList")
 	public ResponseEntity<List<SingleLevelDropDownModel>> getlistEmployeeTransactionCategory(Integer id){
 		try {
+			List<DropdownModel> response = new ArrayList<>();
 			Map<String, Object> param = new HashMap<>();
 			param.put("parentTransactionCategory", id);
 			List<TransactionCategory> transactionCategoryList =
 					transactionCategoryService.findByAttributes(param);
-			List<DropdownModel> response = transcationCategoryHelper.getEmployeeTransactionCategory(transactionCategoryList);
+			response = transcationCategoryHelper.getEmployeeTransactionCategory(transactionCategoryList);
 			return new ResponseEntity(response, HttpStatus.OK);
 		}
 		catch (Exception e) {
@@ -387,8 +390,9 @@ public class ReconsilationController {
 	public ResponseEntity<List<SingleLevelDropDownModel>> getCOACList(){
 
 		try {
+			List<DropdownModel> response = new ArrayList<>();
 			List<ChartOfAccountCategory> chartOfAccountCategory = chartOfAccountCategoryService.findAll();
-			List<DropdownModel> response = transcationCategoryHelper.getCOACList(chartOfAccountCategory);
+			response = transcationCategoryHelper.getCOACList(chartOfAccountCategory);
 			return new ResponseEntity(response, HttpStatus.OK);
 		}
 		catch (Exception e) {

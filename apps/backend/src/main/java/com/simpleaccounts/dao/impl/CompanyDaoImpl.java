@@ -12,9 +12,12 @@ import com.simpleaccounts.dao.CompanyDao;
 import com.simpleaccounts.entity.Company;
 import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.rest.DropdownModel;
+
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
+
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;

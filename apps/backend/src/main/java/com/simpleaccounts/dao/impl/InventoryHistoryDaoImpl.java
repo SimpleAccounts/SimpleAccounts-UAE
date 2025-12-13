@@ -4,6 +4,7 @@ import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.InventoryHistoryDao;
 import com.simpleaccounts.entity.InventoryHistory;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.rest.InventoryController.InventoryRevenueModel;
 import com.simpleaccounts.rest.InventoryController.TopInventoryRevenueModel;
 import com.simpleaccounts.utils.DateUtils;
@@ -22,6 +23,7 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
        TypedQuery<InventoryHistory> query = getEntityManager().createNamedQuery(
                "getHistoryByInventoryId", InventoryHistory.class);
        query.setParameter("inventoryId", invoiceId);
+       List<InventoryHistory> result= query.getResultList();
        return query.getSingleResult();
    }
     public InventoryRevenueModel getTotalRevenueForInventory(){

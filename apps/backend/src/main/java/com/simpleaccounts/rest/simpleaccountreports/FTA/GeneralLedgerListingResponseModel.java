@@ -1,8 +1,9 @@
 package com.simpleaccounts.rest.simpleaccountreports.FTA;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import lombok.Data;
 
 @Data
 public class GeneralLedgerListingResponseModel {

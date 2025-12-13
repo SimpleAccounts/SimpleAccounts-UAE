@@ -1,12 +1,15 @@
 package com.simpleaccounts.entity;
 
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
 import javax.persistence.*;
-import lombok.Data;
+
+import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+
+import lombok.Data;
 
 /**
  * @author S@urabh

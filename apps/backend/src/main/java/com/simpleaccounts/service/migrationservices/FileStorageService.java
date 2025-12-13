@@ -1,5 +1,7 @@
 package com.simpleaccounts.service.migrationservices;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -11,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Service
 public class FileStorageService {

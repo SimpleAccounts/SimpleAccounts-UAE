@@ -3,13 +3,14 @@ package com.simpleaccounts.rest.CorporateTax;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import javax.persistence.*;
-import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "CORPORATE_TAX_PAYMENT")

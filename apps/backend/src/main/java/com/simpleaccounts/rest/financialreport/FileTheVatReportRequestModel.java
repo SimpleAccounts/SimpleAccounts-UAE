@@ -1,9 +1,10 @@
 package com.simpleaccounts.rest.financialreport;
 
-import java.util.Date;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Date;
 
 @Data
 @Getter

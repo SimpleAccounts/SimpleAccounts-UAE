@@ -1,9 +1,11 @@
 package com.simpleaccounts.constant;
 
-import com.simpleaccounts.rest.EnumDropdownModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+
+import com.simpleaccounts.rest.EnumDropdownModel;
+
 import lombok.Getter;
 
 public enum ExcellDelimiterEnum {

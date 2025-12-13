@@ -1,6 +1,8 @@
 package com.simpleaccounts.rest.simpleaccountreports.soa;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,7 +10,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import lombok.Data;
 
 @Data
 public class StatementOfAccountRequestModel implements Serializable {

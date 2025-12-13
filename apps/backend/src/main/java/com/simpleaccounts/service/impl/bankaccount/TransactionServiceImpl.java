@@ -20,6 +20,7 @@ import com.simpleaccounts.service.bankaccount.ReconcileStatusService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.ChartUtil;
 import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -107,6 +108,7 @@ public class TransactionServiceImpl extends TransactionService {
 						transaction.getBankAccount().getCurrentBalance().subtract(transaction.getTransactionAmount()));
 			}
 			super.persist(transaction, null, getActivity(transaction, "Created"));
+			BigDecimal balanceAmount = transaction.getCurrentBalance();
 
 		} else {
 			BigDecimal differenceAmount = transaction.getTransactionAmount();
@@ -136,22 +138,32 @@ public class TransactionServiceImpl extends TransactionService {
 			}
 			super.persist(transaction, null, getActivity(transaction, "Created"));
 
+			BigDecimal balance = transaction.getBankAccount().getCurrentBalance();
+			if (transaction.getDebitCreditFlag() == 'D') {
+				balance = balance.subtract(transaction.getTransactionAmount());
+			} else {
+				balance = balance.add(transaction.getTransactionAmount());
+			}
+
 		}
 	}
 
 	@Override
 	public Transaction update(Transaction transaction) {
 		Transaction currentTransaction = transactionDao.findByPK(transaction.getTransactionId());
-		BigDecimal differenceAmount;
+		BigDecimal differenceAmount = new BigDecimal(0);
+		BigDecimal balanceAmount = transaction.getBankAccount().getCurrentBalance();
 		if (Objects.equals(currentTransaction.getDebitCreditFlag(), transaction.getDebitCreditFlag())) {
 			differenceAmount = transaction.getTransactionAmount().subtract(currentTransaction.getTransactionAmount());
 		} else {
 			differenceAmount = transaction.getTransactionAmount().add(currentTransaction.getTransactionAmount());
 		}
-		if (differenceAmount.compareTo(BigDecimal.ZERO) != 0) {
+		if (differenceAmount.compareTo(new BigDecimal(0)) != 0) {
 			if (transaction.getDebitCreditFlag() == 'D') {
+				balanceAmount = balanceAmount.subtract(differenceAmount);
 				transaction.setCurrentBalance(transaction.getCurrentBalance().subtract(differenceAmount));
 			} else {
+				balanceAmount = balanceAmount.add(differenceAmount);
 				transaction.setCurrentBalance(transaction.getCurrentBalance().add(differenceAmount));
 			}
 			updateLatestTransaction(differenceAmount, transaction);

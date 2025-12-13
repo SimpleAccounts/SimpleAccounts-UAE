@@ -1,14 +1,19 @@
 package com.simpleaccounts.entity;
 
-import com.simpleaccounts.constant.ProductPriceType;
-import com.simpleaccounts.constant.ProductType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
 import java.util.List;
+
 import javax.persistence.*;
-import lombok.Data;
+
 import org.hibernate.annotations.ColumnDefault;
+
+import com.simpleaccounts.constant.ProductPriceType;
+import com.simpleaccounts.constant.ProductType;
+
+import lombok.Data;
 
 /**
  * Created by mohsinh on 2/26/2017.

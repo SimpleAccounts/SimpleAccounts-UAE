@@ -1,8 +1,9 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import lombok.Data;
+import java.math.BigDecimal;
+
+import java.util.Date;
 
 @Data
 public class SupplierInvoiceDetailsModel {

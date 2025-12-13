@@ -1,7 +1,8 @@
 package com.simpleaccounts.rest.invoicecontroller;
 
-import com.simpleaccounts.constant.DiscountType;
 import java.math.BigDecimal;
+
+import com.simpleaccounts.constant.DiscountType;
 import lombok.Getter;
 import lombok.Setter;
 

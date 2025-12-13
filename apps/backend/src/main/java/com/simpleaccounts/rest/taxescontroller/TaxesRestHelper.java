@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.taxescontroller;
 
 import com.simpleaccounts.entity.*;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.service.ExpenseService;
 import com.simpleaccounts.service.InvoiceService;

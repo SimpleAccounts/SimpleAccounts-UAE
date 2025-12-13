@@ -1,12 +1,13 @@
 package com.simpleaccounts.rfq_po;
 
 import com.simpleaccounts.constant.DiscountType;
+import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class  PoQuatationRequestModel {

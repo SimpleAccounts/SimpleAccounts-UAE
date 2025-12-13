@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.rolecontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.model.RoleRequestModel;
 import com.simpleaccounts.security.JwtTokenUtil;
@@ -15,11 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping("rest/roleModule")
@@ -56,7 +57,7 @@ public class RoleModuleController {
 	@ApiOperation(value = "Get Module List")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<Object> getModuleList(HttpServletRequest request){
-        jwtTokenUtil.getUserIdFromHttpRequest(request);
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         List<ModuleResponseModel> response  = new ArrayList<>();
         List<SimpleAccountsModules> modulesList=roleModuleService.getListOfSimpleAccountsModules();
         if (modulesList != null) {
@@ -127,7 +128,7 @@ public class RoleModuleController {
                                          HttpServletRequest request) {
     Role role = null;
         try {
-            jwtTokenUtil.getUserIdFromHttpRequest(request);
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             role = roleModuleRestHelper.getEntity(roleRequestModel,request);
             roleService.update(role);
             List<Integer> roleModuleIdList = roleRequestModel.getModuleListIds();

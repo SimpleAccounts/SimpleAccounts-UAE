@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.payroll.service.Impl;
 
 import com.simpleaccounts.dao.Dao;
+import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.SalaryRole;
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;

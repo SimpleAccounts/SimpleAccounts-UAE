@@ -2,6 +2,7 @@ package com.simpleaccounts.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;

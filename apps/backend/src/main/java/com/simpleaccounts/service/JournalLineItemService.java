@@ -1,5 +1,10 @@
 package com.simpleaccounts.service;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import com.simpleaccounts.entity.JournalLineItem;
 import com.simpleaccounts.entity.VatReportFiling;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -10,10 +15,6 @@ import com.simpleaccounts.rest.financialreport.FinancialReportRequestModel;
 import com.simpleaccounts.rest.financialreport.VatReportFilingRequestModel;
 import com.simpleaccounts.rest.taxescontroller.TaxesFilterEnum;
 import com.simpleaccounts.rest.taxescontroller.TaxesFilterModel;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 public abstract class JournalLineItemService extends SimpleAccountsService<Integer, JournalLineItem> {
 

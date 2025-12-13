@@ -1,8 +1,10 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 
-import java.math.BigDecimal;
-import java.util.List;
 import lombok.Data;
+
+import java.math.BigDecimal;
+
+import java.util.List;
 
 @Data
 public class SalesByCustomerResponseModel {
