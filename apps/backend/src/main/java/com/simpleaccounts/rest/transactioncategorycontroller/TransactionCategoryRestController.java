@@ -100,7 +100,6 @@ public class TransactionCategoryRestController{
 	@ApiOperation(value = "Get All Transaction Categories for the Loggedin User and the Master data")
 	@GetMapping(value = "/gettransactioncategory")
 	public ResponseEntity<List<TransactionCategoryModel>> getAllTransactionCategory(HttpServletRequest request) {
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		List<TransactionCategory> transactionCategories = transactionCategoryService.findAllTransactionCategory();
 
 		if (transactionCategories != null) {
@@ -115,10 +114,8 @@ public class TransactionCategoryRestController{
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getAllTransactionCategoryListByFilter(TransactionCategoryRequestFilterModel filterModel,
 			HttpServletRequest request) {
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userService.findByPK(userId);
 
-		Map<TransactionCategoryFilterEnum, Object> filterDataMap = new HashMap();
+		Map<TransactionCategoryFilterEnum, Object> filterDataMap = new HashMap<>();
 
 		filterDataMap.put(TransactionCategoryFilterEnum.TRANSACTION_CATEGORY_CODE,
 				filterModel.getTransactionCategoryCode());
