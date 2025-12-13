@@ -1,5 +1,6 @@
 package com.simpleaccounts.service.impl;
 
+
 import com.simpleaccounts.dao.BankAccountTypeDao;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.bankaccount.BankAccountType;
