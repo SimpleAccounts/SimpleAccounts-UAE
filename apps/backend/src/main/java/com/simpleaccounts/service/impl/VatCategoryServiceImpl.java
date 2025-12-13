@@ -108,6 +108,9 @@ public class VatCategoryServiceImpl extends VatCategoryService {
 	}
 	private void deleteFromCache(List<Integer> ids) {
 		Cache vatCategoryCache = cacheManager.getCache("vatCategoryCache");
+		if (vatCategoryCache == null) {
+			return;
+		}
 		for (Integer id : ids ) {
 			vatCategoryCache.evict(id);
 		}

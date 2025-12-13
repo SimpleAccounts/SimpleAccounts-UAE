@@ -429,11 +429,11 @@ public class UserController{
 				user.setForgotPasswordToken(null);
 				user.setForgotPasswordTokenExpiryDate(null);
 			}
-			userService.persist(user);
-			//maintain user credential and password history
-			message = userRestHelper.saveUserCredential(user, encodedPassword, message);
-			return new ResponseEntity<>(message,HttpStatus.OK);
-		} catch (Exception e) {
+				userService.persist(user);
+				//maintain user credential and password history
+				message = userRestHelper.saveUserCredential(user, encodedPassword);
+				return new ResponseEntity<>(message,HttpStatus.OK);
+			} catch (Exception e) {
 			SimpleAccountsMessage message= null;
 			message = new SimpleAccountsMessage("",
 					MessageUtil.getMessage("resetPassword.created.UnSuccessful.msg.0089"), true);

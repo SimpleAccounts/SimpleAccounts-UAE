@@ -406,13 +406,10 @@ public class MailUtility {
 		dataMap.put(PROJECT_NAME, "{projectName}");
 		dataMap.put(INVOICE_AMOUNT, "{invoiceAmount}");
 		dataMap.put(CN_AMOUNT, "{CNAmount}");
-		dataMap.put(DUE_AMOUNT, "{dueAmount}");
-		dataMap.put(SENDER_NAME, PLACEHOLDER_SENDER_NAME);
-		dataMap.put(COMPANY_NAME, PLACEHOLDER_COMPANY_NAME);
-		dataMap.put(PROJECT_NAME, "{projectName}");
-		dataMap.put(INVOICE_AMOUNT, "{invoiceAmount}");
-		dataMap.put(DUE_AMOUNT, "{dueAmount}");
-		dataMap.put(SUB_TOTAL, PLACEHOLDER_SUB_TOTAL);
+			dataMap.put(DUE_AMOUNT, "{dueAmount}");
+			dataMap.put(SENDER_NAME, PLACEHOLDER_SENDER_NAME);
+			dataMap.put(COMPANY_NAME, PLACEHOLDER_COMPANY_NAME);
+			dataMap.put(SUB_TOTAL, PLACEHOLDER_SUB_TOTAL);
 		dataMap.put(CN_SUB_TOTAL, "{CnsubTotal}");
 		dataMap.put(MOBILE_NUMBER, PLACEHOLDER_MOBILE_NUMBER);
 		dataMap.put(CONTACT_ADDRESS, "{contactAddress}");

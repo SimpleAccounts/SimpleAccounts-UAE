@@ -830,9 +830,9 @@ public class InvoiceRestHelper {
 			logger.error(ERROR_PROCESSING_INVOICE, e);
 		}
 
-		if (htmlContent != "" && htmlContent != null) {
-			content = mailUtility.create(map, htmlContent);
-		}
+			if (!StringUtils.isEmpty(htmlContent)) {
+				content = mailUtility.create(map, htmlContent);
+			}
 
 		if (invoiceEmailBody != null && invoiceEmailBody.getTemplateSubject() != null) {
 			subject = mailUtility.create(map, invoiceEmailBody.getTemplateSubject());
@@ -1012,9 +1012,9 @@ public class InvoiceRestHelper {
 			logger.error(ERROR_PROCESSING_INVOICE, e);
 		}
 
-		if (htmlContent !="" && htmlContent !=null ){
-			content = mailUtility.create(map, htmlContent);
-		}
+			if (!StringUtils.isEmpty(htmlContent)) {
+				content = mailUtility.create(map, htmlContent);
+			}
 		if (invoice!=null && creditNoteEmailBody != null && creditNoteEmailBody.getTemplateSubject() != null && creditNote.getIsCNWithoutProduct()==Boolean.FALSE) {
 			subject = mailUtility.create(map, creditNoteEmailBody.getTemplateSubject());
 		}
@@ -1897,13 +1897,10 @@ public class InvoiceRestHelper {
 		if (invoice.getContact() != null) {
 			StringBuilder sb = new StringBuilder();
 			Contact c = invoice.getContact();
-			if (c==null) {
-				invoiceDataMap.put(value, "N/A");
-			}else if (c.getCountry() != null) {
+			if (c.getCountry() != null) {
 				sb.append(c.getCountry().getCountryName()).append(" ");
 				invoiceDataMap.put(value, sb.toString());
-			}
-			else{
+			} else {
 				invoiceDataMap.put(value, "---");
 			}
 		}
@@ -1913,13 +1910,10 @@ public class InvoiceRestHelper {
 		if (contact != null) {
 			StringBuilder sb = new StringBuilder();
 			Contact c = contact;
-			if (c==null) {
-				invoiceDataMap.put(value, "N/A");
-			}else if (c.getCountry() != null) {
+			if (c.getCountry() != null) {
 				sb.append(c.getCountry().getCountryName()).append(" ");
 				invoiceDataMap.put(value, sb.toString());
-			}
-			else{
+			} else {
 				invoiceDataMap.put(value, "---");
 			}
 		}
@@ -1929,9 +1923,7 @@ public class InvoiceRestHelper {
 		if ( invoice.getContact()!=null && invoice.getContact().getState() != null ) {
 			StringBuilder sb = new StringBuilder();
 			Contact c = invoice.getContact();
-			if (c==null) {
-				invoiceDataMap.put(value, "N/A");
-			}else if (c.getState().getStateName() != null) {
+			if (c.getState().getStateName() != null) {
 				sb.append(c.getState().getStateName()).append(" ");
 				invoiceDataMap.put(value, sb.toString());
 			}
@@ -1944,9 +1936,7 @@ public class InvoiceRestHelper {
 		if ( contact!=null && contact.getState() != null ) {
 			StringBuilder sb = new StringBuilder();
 			Contact c = contact;
-			if (c==null) {
-				invoiceDataMap.put(value, "N/A");
-			}else if (c.getState().getStateName() != null) {
+			if (c.getState().getStateName() != null) {
 				sb.append(c.getState().getStateName()).append(" ");
 				invoiceDataMap.put(value, sb.toString());
 			}
@@ -1958,14 +1948,8 @@ public class InvoiceRestHelper {
 	private void getContactCity(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		if (invoice.getContact()!=null && invoice.getContact().getCity() != null  ) {
 			StringBuilder sb = new StringBuilder();
-			Contact c = invoice.getContact();
-			if (c==null) {
-				invoiceDataMap.put(value, "N/A");
-			}
-			else if (c.getCity()!= null) {
-				sb.append(c.getCity()).append(" ");
-				invoiceDataMap.put(value, sb.toString());
-			}
+			sb.append(invoice.getContact().getCity()).append(" ");
+			invoiceDataMap.put(value, sb.toString());
 		}
 		else{
 			invoiceDataMap.put(value, "---");
@@ -1975,14 +1959,8 @@ public class InvoiceRestHelper {
 	private void getCNContactCity(Contact contact, Map<String, String> invoiceDataMap, String value) {
 		if (contact!=null && contact.getCity() != null  ) {
 			StringBuilder sb = new StringBuilder();
-			Contact c = contact;
-			if (c==null) {
-				invoiceDataMap.put(value, "N/A");
-			}
-			else if (c.getCity()!= null) {
-				sb.append(c.getCity()).append(" ");
-				invoiceDataMap.put(value, sb.toString());
-			}
+			sb.append(contact.getCity()).append(" ");
+			invoiceDataMap.put(value, sb.toString());
 		}
 		else{
 			invoiceDataMap.put(value, "---");
@@ -2467,7 +2445,7 @@ public class InvoiceRestHelper {
 		}
 	}
 	private void getCnContactPoNumber(Contact contact, Map<String, String> invoiceDataMap, String value) {
-		if (contact.getPoBoxNumber() != null && !contact.getPoBoxNumber().isEmpty()) {
+		if (contact != null && contact.getPoBoxNumber() != null && !contact.getPoBoxNumber().isEmpty()) {
 			invoiceDataMap.put(value, contact.getPoBoxNumber());
 		}
 		else{
@@ -2902,24 +2880,24 @@ public class InvoiceRestHelper {
 									else {					handleSupplierInvoiceInventory(lineItem,product,lineItem.getInvoice().getContact(),userId);
 				}
 			}
-			if (isCustomerInvoice)
-				category = lineItem.getProduct().getLineItemList().stream()
-						.filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().get()
-						.getTransactioncategory();
+				if (isCustomerInvoice)
+					category = lineItem.getProduct().getLineItemList().stream()
+							.filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().orElseThrow()
+							.getTransactioncategory();
 				else if(Boolean.TRUE.equals(lineItem.getProduct().getIsInventoryEnabled()))
 				{
 					category = transactionCategoryService
 							.findTransactionCategoryByTransactionCategoryCode(
 									TransactionCategoryCodeEnum.INVENTORY_ASSET.getCode());
 			}
-			else {
-				category =  lineItem.getProduct().getLineItemList().stream()
-						.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
-						.getTransactioncategory();
-				if (!category.equals(lineItem.getTrnsactioncCategory())){
-					category = lineItem.getTrnsactioncCategory();
+				else {
+					category =  lineItem.getProduct().getLineItemList().stream()
+							.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().orElseThrow()
+							.getTransactioncategory();
+					if (!category.equals(lineItem.getTrnsactioncCategory())){
+						category = lineItem.getTrnsactioncCategory();
+					}
 				}
-			}
 			tnxcatMap.put(category.getTransactionCategoryId(), category);
 			if (tnxcatIdInvLnItemMap.containsKey(category.getTransactionCategoryId())) {
 				tnxcatIdInvLnItemMap.get(category.getTransactionCategoryId()).add(lineItem);
@@ -3406,37 +3384,26 @@ public class InvoiceRestHelper {
 	private void reverseCustomerInvoice(boolean isCustomerInvoice, List<InvoiceLineItem> invoiceLineItemList,
 								 Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap, Map<Integer, TransactionCategory> tnxcatMap,Integer
 										 userId) {
-		TransactionCategory category;
-		for (InvoiceLineItem lineItem : invoiceLineItemList) {
-
-			Product product=productService.findByPK(lineItem.getProduct().getProductID());
-				if(Boolean.TRUE.equals(product.getIsInventoryEnabled()))
-				{
-					if(lineItem.getInvoice().getType() ==2){
-
-					}
-				else {
-
-				}
-			}
-			if (isCustomerInvoice)
-				category = lineItem.getProduct().getLineItemList().stream()
-						.filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().get()
-						.getTransactioncategory();
+			TransactionCategory category;
+			for (InvoiceLineItem lineItem : invoiceLineItemList) {
+				if (isCustomerInvoice)
+					category = lineItem.getProduct().getLineItemList().stream()
+							.filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().orElseThrow()
+							.getTransactioncategory();
 				else if(Boolean.TRUE.equals(lineItem.getProduct().getIsInventoryEnabled()))
 				{
 					category = transactionCategoryService
 							.findTransactionCategoryByTransactionCategoryCode(
 									TransactionCategoryCodeEnum.INVENTORY_ASSET.getCode());
 			}
-			else {
-				category =  lineItem.getProduct().getLineItemList().stream()
-						.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
-						.getTransactioncategory();
-				if (!category.equals(lineItem.getTrnsactioncCategory())) {
-					category = lineItem.getTrnsactioncCategory();
-				}
-				}
+				else {
+					category =  lineItem.getProduct().getLineItemList().stream()
+							.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().orElseThrow()
+							.getTransactioncategory();
+					if (!category.equals(lineItem.getTrnsactioncCategory())) {
+						category = lineItem.getTrnsactioncCategory();
+					}
+					}
 			tnxcatMap.put(category.getTransactionCategoryId(), category);
 			if (tnxcatIdInvLnItemMap.containsKey(category.getTransactionCategoryId())) {
 				tnxcatIdInvLnItemMap.get(category.getTransactionCategoryId()).add(lineItem);

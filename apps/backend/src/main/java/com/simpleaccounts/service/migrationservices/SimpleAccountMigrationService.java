@@ -880,19 +880,20 @@ public class SimpleAccountMigrationService {
 	 * @param record
 	 * @return
 	 */
-	 private com.simpleaccounts.entity.Product getExistingProduct(Map<String, String> recordData) {
-	        String productName =recordData.get("Item Name");
-	        Map<String, Object> param = new HashMap<>();
-	        param.put("productName", productName);
+		 private com.simpleaccounts.entity.Product getExistingProduct(Map<String, String> recordData) {
+		        String productName =recordData.get("Item Name");
+		        Map<String, Object> param = new HashMap<>();
+		        param.put("productName", productName);
 
-	        List<com.simpleaccounts.entity.Product> productList = productService.findByAttributes(param);
-	        for (com.simpleaccounts.entity.Product product:productList){
-	        	LOG.info("getExistingInvoice product {} ", product);
-	            return product;
-	        }
-	        return null;
+		        List<com.simpleaccounts.entity.Product> productList = productService.findByAttributes(param);
+		        if (productList == null || productList.isEmpty()) {
+		        	return null;
+		        }
+		        com.simpleaccounts.entity.Product product = productList.get(0);
+		        LOG.info("getExistingInvoice product {} ", product);
+		        return product;
 
-	    }
+		    }
 	 
 	 
 	 /**

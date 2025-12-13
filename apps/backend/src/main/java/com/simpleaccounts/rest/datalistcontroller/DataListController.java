@@ -322,10 +322,10 @@ public class DataListController {
 				exciseTaxModelList.add(exciseTaxModel);
 			}
 
-			if (exciseTaxModelList == null) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-			return new ResponseEntity<>(exciseTaxModelList, HttpStatus.OK);
+				if (exciseTaxModelList.isEmpty()) {
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				}
+				return new ResponseEntity<>(exciseTaxModelList, HttpStatus.OK);
 
 		} catch (Exception e) {
 			logger.error(ERROR, e);
@@ -627,12 +627,12 @@ public class DataListController {
 												  @RequestParam(value = "defaultTermsAndConditions") String defaultTermsAndConditions,
 												  HttpServletRequest request)
 	{
-		try {
-			Integer defaultNoteId=1;
-			NotesSettings notesSettings = notesSettingsRepository.findById(defaultNoteId).get();
-			notesSettings.setDefaultNotes(defaultNote);
-			notesSettings.setDefaultFootNotes(defaultFootNote);
-			notesSettings.setDefaultTermsAndConditions(defaultTermsAndConditions);
+			try {
+				Integer defaultNoteId=1;
+				NotesSettings notesSettings = notesSettingsRepository.findById(defaultNoteId).orElseThrow();
+				notesSettings.setDefaultNotes(defaultNote);
+				notesSettings.setDefaultFootNotes(defaultFootNote);
+				notesSettings.setDefaultTermsAndConditions(defaultTermsAndConditions);
 			notesSettingsRepository.save(notesSettings);
 			return new ResponseEntity<>(notesSettings,HttpStatus.OK);
 		}catch (Exception e){

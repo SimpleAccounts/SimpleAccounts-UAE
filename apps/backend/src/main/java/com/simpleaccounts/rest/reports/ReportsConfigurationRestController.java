@@ -37,14 +37,14 @@ public class ReportsConfigurationRestController {
     @LogRequest
     @ApiOperation(value = "Get Report columns By ID")
     @GetMapping(value = "/getById")
-    public ResponseEntity<Object> getReportConfigurationById(@RequestParam("id") Integer id) {
-        JsonNode rootNode = null;
-        try {
-            ReportsConfiguration reportsConfiguration = reportsColumnConfigurationRepository.findById(id).get();
-            if (reportsConfiguration != null) {
-                ObjectMapper mapper = new ObjectMapper();
-                rootNode = mapper.readTree(reportsConfiguration.getColumnNames());
-            }
+	    public ResponseEntity<Object> getReportConfigurationById(@RequestParam("id") Integer id) {
+	        JsonNode rootNode = null;
+	        try {
+	            ReportsConfiguration reportsConfiguration = reportsColumnConfigurationRepository.findById(id).orElse(null);
+	            if (reportsConfiguration != null) {
+	                ObjectMapper mapper = new ObjectMapper();
+	                rootNode = mapper.readTree(reportsConfiguration.getColumnNames());
+	            }
         } catch (Exception e) {
 
         }
@@ -55,13 +55,13 @@ public class ReportsConfigurationRestController {
     @ApiOperation(value = "Update Report Columns Configuration")
     @PostMapping(value = "/update")
     public ResponseEntity<Object> update(@RequestBody ReportsConfigurationModel model, HttpServletRequest request) {
-        try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
-            ReportsConfiguration reportsConfiguration = new ReportsConfiguration();
-            if(model.getId()!=null){
-                reportsConfiguration = reportsColumnConfigurationRepository.findById(model.getId()).get();
-            }
+	        try {
+	            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+	            User user = userService.findByPK(userId);
+	            ReportsConfiguration reportsConfiguration = new ReportsConfiguration();
+	            if(model.getId()!=null){
+	                reportsConfiguration = reportsColumnConfigurationRepository.findById(model.getId()).orElse(new ReportsConfiguration());
+	            }
             if(model.getReportName()!=null && !model.getReportName().isEmpty()){
                 reportsConfiguration.setReportName(model.getReportName());
             }

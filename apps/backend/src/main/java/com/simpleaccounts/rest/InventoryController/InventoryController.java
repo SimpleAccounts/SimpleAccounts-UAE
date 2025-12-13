@@ -297,12 +297,12 @@ public class InventoryController {
                 Date date = Date.from(result.getTransactionDate().atStartOfDay(timeZone).toInstant());
                 inventoryHistoryModel.setDate(date);
             }
-            if (result.getInventory()!=null && result.getInvoice()!=null){
-                inventoryHistoryModel.setQuantitySold(result.getQuantity().floatValue());
-            }
-            else {
-                inventoryHistoryModel.setQuantitySold(0F);
-            }
+	            if (result.getInventory()!=null && result.getInvoice()!=null){
+	                inventoryHistoryModel.setQuantitySold(result.getQuantity());
+	            }
+	            else {
+	                inventoryHistoryModel.setQuantitySold(0F);
+	            }
             inventoryHistoryModel.setStockOnHand(result.getInventory().getStockOnHand().floatValue());
             if (result.getProductId()!=null){
                 inventoryHistoryModel.setProductId(result.getProductId().getProductID());
