@@ -173,6 +173,9 @@ public class BankAccountController{
 					bankAccount.setCreatedBy(user.getUserId());
 				}
 				bankAccountService.persist(bankAccount);
+                if (bankAccount.getTransactionCategory() == null) {
+                    return new ResponseEntity<>("Transaction Category is missing", HttpStatus.BAD_REQUEST);
+                }
 				TransactionCategory category = transactionCategoryService.findByPK(bankAccount.getTransactionCategory().getTransactionCategoryId());
 				TransactionCategory transactionCategory = getValidTransactionCategory(category);
 				boolean isDebit=false;
