@@ -5,8 +5,8 @@ import com.simpleaccounts.repository.PayrollRepository;
 import com.simpleaccounts.rest.payroll.service.PayrollService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
+
 @Service
 @RequiredArgsConstructor
 public class PayrollServiceImpl implements PayrollService{

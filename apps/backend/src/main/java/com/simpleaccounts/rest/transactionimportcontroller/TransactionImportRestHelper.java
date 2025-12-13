@@ -14,20 +14,16 @@ import com.simpleaccounts.service.BankAccountService;
 import com.simpleaccounts.service.DateFormatService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import java.io.BufferedReader;
-import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -144,13 +140,12 @@ public class TransactionImportRestHelper {
 						headerValue = 0;
 					}
 					if (headerIndexPosition.equals(header)) {
-						if (headerIndexPositionCounter == header - headerValue) {
-							processHeaderColumns(cSVRecord);
+							if (headerIndexPositionCounter == header - headerValue) {
+								processHeaderColumns(cSVRecord);
 
-							headerIndexPosition++;
-							if (isDataRepeated) {
-								break;
-							}
+								if (isDataRepeated) {
+									break;
+								}
 							if (!transactionDateBoolean && !descriptionBoolean && !debitAmountBoolean
 									&& !creditAmountBoolean) {
 								break;
@@ -172,14 +167,9 @@ public class TransactionImportRestHelper {
 						try {
 							transaction.setDate("date");
 							// ... (rest of the code)
-							TemporalAccessor ta = DateTimeFormatter.ofPattern(dateFormat).parse(date);
-							DateFormat formatter = new SimpleDateFormat(dateFormat, Locale.US);
-							Date dateTranscation = (Date) formatter.parse(date);
-							LocalDateTime transactionDate = Instant.ofEpochMilli(dateTranscation.getTime())
-									.atZone(ZoneId.systemDefault()).toLocalDateTime();
-							DateFormat df = new SimpleDateFormat(dateFormat);
-							String reportDate = df.format(dateTranscation);
-								transaction.setDate("");
+								DateFormat formatter = new SimpleDateFormat(dateFormat, Locale.US);
+								formatter.parse(date);
+									transaction.setDate("");
 								if (!drAmount.isEmpty()) {
 									transaction.setDebit("debit");
 									new BigDecimal(drAmount);

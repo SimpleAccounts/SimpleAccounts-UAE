@@ -1,11 +1,10 @@
 package com.simpleaccounts.helper;
 
-import com.simpleaccounts.rest.dashboardcontroller.DateRequestModel;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.simpleaccounts.rest.dashboardcontroller.DateRequestModel;
+import java.util.List;
+import org.junit.jupiter.api.Test;
 
 class DashboardRestHelperTest {
 

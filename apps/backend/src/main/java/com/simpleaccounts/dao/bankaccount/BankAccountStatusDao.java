@@ -1,8 +1,7 @@
 package com.simpleaccounts.dao.bankaccount;
 
-import java.util.List;
-
 import com.simpleaccounts.entity.bankaccount.BankAccountStatus;
+import java.util.List;
 
 public interface BankAccountStatusDao {
 

@@ -4,7 +4,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.ReconcileStatus;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -13,7 +12,6 @@ import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.ReconcileStatusService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -126,12 +124,8 @@ public class ReconsilationRestHelper {
 
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
-		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
-
-		ChartOfAccount transactionType = transactionCategory.getChartOfAccount();
-
-		Journal journal = new Journal();
-		JournalLineItem journalLineItem1 = new JournalLineItem();
+			Journal journal = new Journal();
+			JournalLineItem journalLineItem1 = new JournalLineItem();
 		journalLineItem1.setTransactionCategory(transaction.getExplainedTransactionCategory());
 		if (!isdebitFromBank) {
 			journalLineItem1.setDebitAmount(transaction.getTransactionDueAmount().multiply(exchangeRate));
@@ -174,27 +168,17 @@ public class ReconsilationRestHelper {
 										Integer transactionCategoryCode, int userId,
 										Transaction transaction, Expense expense) {
 
-			BigDecimal exchangeRate = BigDecimal.ONE;
-			if (transactionPresistModel.getExchangeRate() == null){
-				 exchangeRate =  currencyExchangeService.getExchangeRate(transactionPresistModel.getCurrencyCode()).getExchangeRate();
-			}
-			else {
-				exchangeRate = transactionPresistModel.getExchangeRate();
-			}
-		List<JournalLineItem> journalLineItemList = new ArrayList<>();
+				BigDecimal exchangeRate;
+				if (transactionPresistModel.getExchangeRate() == null){
+					 exchangeRate =  currencyExchangeService.getExchangeRate(transactionPresistModel.getCurrencyCode()).getExchangeRate();
+				}
+				else {
+					exchangeRate = transactionPresistModel.getExchangeRate();
+				}
+			List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
-		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
-
-		ChartOfAccount transactionType = transactionCategory.getChartOfAccount();
-
-		boolean isdebitFromBank = transactionType.getChartOfAccountId().equals(ChartOfAccountConstant.MONEY_IN)
-				|| (transactionType.getParentChartOfAccount() != null
-				&& transactionType.getParentChartOfAccount().getChartOfAccountId() != null
-				&& transactionType.getParentChartOfAccount().getChartOfAccountId()
-				.equals(ChartOfAccountConstant.MONEY_IN)) ? Boolean.TRUE : Boolean.FALSE;
-
-		Journal journal = new Journal();
-		JournalLineItem journalLineItem1 = new JournalLineItem();
+			Journal journal = new Journal();
+			JournalLineItem journalLineItem1 = new JournalLineItem();
 		journalLineItem1.setTransactionCategory(transaction.getExplainedTransactionCategory());
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
 		journalLineItem1.setReferenceId(expense.getExpenseId());
@@ -220,18 +204,16 @@ public class ReconsilationRestHelper {
 		journalLineItem2.setCreatedBy(userId);
 		journalLineItem2.setExchangeRate(transaction.getExchangeRate());
 		journalLineItem2.setJournal(journal);
-		journalLineItemList.add(journalLineItem2);
-		if (transactionPresistModel.getVatId()!=null) {
-			VatCategory vatCategory = expense.getVatCategory();
-			BigDecimal vatAmount = expense.getExpenseVatAmount();
-			BigDecimal actualDebitAmount=BigDecimal.ZERO;
-			if (expense.getExclusiveVat().equals(Boolean.FALSE && expense.getIsReverseChargeEnabled().equals(Boolean.FALSE))){
-				actualDebitAmount = expense.getExpenseAmount().subtract(expense.getExpenseVatAmount());
-				journalLineItem1.setDebitAmount(actualDebitAmount.multiply(exchangeRate));
-			}
-			else {
-				journalLineItem1.setDebitAmount(expense.getExpenseAmount().multiply(exchangeRate));
-			}
+			journalLineItemList.add(journalLineItem2);
+			if (transactionPresistModel.getVatId()!=null) {
+				BigDecimal vatAmount = expense.getExpenseVatAmount();
+				if (Boolean.FALSE.equals(expense.getExclusiveVat())){
+					BigDecimal actualDebitAmount = expense.getExpenseAmount().subtract(expense.getExpenseVatAmount());
+					journalLineItem1.setDebitAmount(actualDebitAmount.multiply(exchangeRate));
+				}
+				else {
+					journalLineItem1.setDebitAmount(expense.getExpenseAmount().multiply(exchangeRate));
+				}
 			JournalLineItem journalLineItem = new JournalLineItem();
 			TransactionCategory inputVatCategory = transactionCategoryService
 					.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.INPUT_VAT.getCode());
@@ -276,12 +258,8 @@ public class ReconsilationRestHelper {
 		BigDecimal exchangeRate = transactionPresistModel.getExchangeRate();
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
-		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
-
-		ChartOfAccount transactionType = transactionCategory.getChartOfAccount();
-
-		Journal journal = new Journal();
-		JournalLineItem journalLineItem1 = new JournalLineItem();
+			Journal journal = new Journal();
+			JournalLineItem journalLineItem1 = new JournalLineItem();
 		journalLineItem1.setTransactionCategory(transaction.getExplainedTransactionCategory());
 
 		journalLineItem1.setDebitAmount(amount.multiply(transactionPresistModel.getExchangeRate()));
@@ -383,8 +361,6 @@ public class ReconsilationRestHelper {
 	}
 	//Todo
 	public Journal invoiceReconsile(Integer userId, Transaction transaction,boolean isCustomerInvoice ) {
-		CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(transaction.getBankAccount()
-				.getBankAccountCurrency().getCurrencyCode());
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 		Journal journal = new Journal();
 		BigDecimal totalAmount = transaction.getTransactionAmount();

@@ -25,7 +25,6 @@ import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.DateUtils;
 import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,8 +39,8 @@ import java.util.Map;
 import java.util.TimeZone;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
 
 @Repository
 @RequiredArgsConstructor
@@ -146,9 +145,9 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	}
 	@Override
 	public OverDueAmountDetailsModel getOverDueAmountDetails(Integer type) {
-		Float overDueAmountFloat = (float) 0;
-		Float overDueAmountWeeklyFloat = (float) 0;
-		Float overDueAmountMonthlyFloat = (float) 0;
+		Float overDueAmountFloat;
+		Float overDueAmountWeeklyFloat;
+		Float overDueAmountMonthlyFloat;
 		Date date = new Date();
 		if(type==2)
 		{
@@ -235,13 +234,13 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		BigDecimal overDueAmountMonthly = getTotalCustomerInvoiceAmountWeeklyMonthly(type, startDate,
 				endDate,transactionCategory,PostingReferenceTypeEnum.INVOICE);
 		Float overDueAmountFloat = (float) 0;
-		transactionCategory = transactionCategoryService.findByPK(2);
+		TransactionCategory receiptTransactionCategory = transactionCategoryService.findByPK(2);
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("totalInvoiceReceiptAmountWeeklyMonthly", BigDecimal.class);
 		query.setParameter("type", type);
 		query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate) );
 		query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
 		query.setParameter(CommonColumnConstants.REFERENCE_TYPE, PostingReferenceTypeEnum.RECEIPT);
-		query.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY, transactionCategoryService.findByPK(2));
+		query.setParameter(CommonColumnConstants.TRANSACTION_CATEGORY, receiptTransactionCategory);
 		query.setMaxResults(1);
 		BigDecimal totalInvoiceReceiptAmountMonthly = query.getSingleResult();
 		if (totalInvoiceReceiptAmountMonthly != null && overDueAmountMonthly != null )
@@ -458,6 +457,17 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter(CommonColumnConstants.END_DATE,endDate);
 		query.setParameter(CommonColumnConstants.EDIT_FLAG,editFlag);
 		BigDecimal amountWithoutVat = query.getSingleResult();
+		if (amountWithoutVat != null) {
+			if (vatReportResponseModel.getReverseChargeProvisionsTotalAmount() == null) {
+				vatReportResponseModel.setReverseChargeProvisionsTotalAmount(amountWithoutVat);
+			} else {
+				vatReportResponseModel.setReverseChargeProvisionsTotalAmount(
+						vatReportResponseModel.getReverseChargeProvisionsTotalAmount().add(amountWithoutVat));
+			}
+			if (vatReportResponseModel.getReverseChargeProvisionsVatAmount() == null) {
+				vatReportResponseModel.setReverseChargeProvisionsVatAmount(BigDecimal.ZERO);
+			}
+		}
 
 	}
 	@Override

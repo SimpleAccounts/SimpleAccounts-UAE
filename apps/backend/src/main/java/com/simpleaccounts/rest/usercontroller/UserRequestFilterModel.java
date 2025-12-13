@@ -1,7 +1,6 @@
 package com.simpleaccounts.rest.usercontroller;
 
 import com.simpleaccounts.rest.PaginationModel;
-
 import lombok.Data;
 
 @Data

@@ -1,8 +1,7 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
+import lombok.Data;
 
 @Data
 public class PurchaseByVendorModel {

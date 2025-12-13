@@ -1,12 +1,10 @@
 package com.simpleaccounts.dao.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Repository;
-
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.SupplierInvoicePaymentDao;
 import com.simpleaccounts.entity.SupplierInvoicePayment;
+import java.util.List;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class SupplierInvoicePaymentDaoImpl extends AbstractDao<Integer, SupplierInvoicePayment>

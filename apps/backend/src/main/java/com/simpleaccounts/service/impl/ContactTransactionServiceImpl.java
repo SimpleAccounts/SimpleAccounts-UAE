@@ -1,12 +1,12 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.ContactTransactionCategoryRelationDao;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.ContactTransactionCategoryRelation;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.service.ContactTransactionCategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**

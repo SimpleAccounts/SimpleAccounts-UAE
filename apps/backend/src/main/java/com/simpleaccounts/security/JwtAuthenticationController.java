@@ -1,12 +1,9 @@
 package com.simpleaccounts.security;
 
-import com.simpleaccounts.model.JwtResponse;
-
-import lombok.extern.slf4j.Slf4j;
-
 import com.simpleaccounts.model.JwtRequest;
+import com.simpleaccounts.model.JwtResponse;
 import java.util.Objects;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,8 +12,8 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController

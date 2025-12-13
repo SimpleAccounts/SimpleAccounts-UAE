@@ -7,7 +7,6 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.lenient;
 
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.entity.EmployeeBankDetails;

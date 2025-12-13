@@ -1,12 +1,11 @@
 package com.simpleaccounts.fileuploadconfig;
 
+import com.simpleaccounts.utils.OSValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.simpleaccounts.utils.OSValidator;
 
 /**
  * @author S@urabh

@@ -5,10 +5,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import com.simpleaccounts.service.UserService;
 import java.util.ArrayList;
 import java.util.Date;
-
-import com.simpleaccounts.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.userdetails.User;

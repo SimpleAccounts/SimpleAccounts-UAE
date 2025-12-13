@@ -2,7 +2,6 @@ package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.CommonConstant;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.ContactFilterEnum;
@@ -24,6 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

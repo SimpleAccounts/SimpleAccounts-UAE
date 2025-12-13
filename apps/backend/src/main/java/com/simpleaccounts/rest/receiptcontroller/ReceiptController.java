@@ -1,17 +1,9 @@
 package com.simpleaccounts.rest.receiptcontroller;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-import lombok.RequiredArgsConstructor;
 
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.bank.model.DeleteModel;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
-import javax.servlet.http.HttpServletRequest;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.constant.dbfilter.ReceiptFilterEnum;
 import com.simpleaccounts.entity.*;

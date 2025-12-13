@@ -1,10 +1,5 @@
 package com.simpleaccounts.service;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import com.simpleaccounts.constant.dbfilter.UserFilterEnum;
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.model.JwtRequest;
@@ -12,6 +7,10 @@ import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.usercontroller.UserModel;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public abstract class UserService extends SimpleAccountsService<Integer, User> {
 
