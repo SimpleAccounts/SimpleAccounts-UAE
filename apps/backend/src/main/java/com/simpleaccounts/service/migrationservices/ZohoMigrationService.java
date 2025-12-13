@@ -592,8 +592,8 @@ public class ZohoMigrationService {
 	        				Object inventoryEntity = migrationUtil.getObject(inventoryTable.getEntityName());
 	        				setColumnValue(inventoryTableColumnList , recordData ,inventoryEntity);
 	        				((Inventory) inventoryEntity).setProductId((com.simpleaccounts.entity.Product) productEntity);
-	        				Float unitCost = productLineItemEntityPurchase.getUnitPrice().floatValue();
-	        				Float unitSellingPrice = productLineItemEntitySales.getUnitPrice().floatValue();
+	        				Float unitCost = productLineItemEntityPurchase != null ? productLineItemEntityPurchase.getUnitPrice().floatValue() : 0f;
+	        				Float unitSellingPrice = productLineItemEntitySales != null ? productLineItemEntitySales.getUnitPrice().floatValue() : 0f;
 	        				((Inventory) inventoryEntity).setUnitCost(unitCost);
 	        				((Inventory) inventoryEntity).setUnitSellingPrice(unitSellingPrice);
 	        				migrationUtil.setDefaultSetterValues(inventoryEntity,userId);
