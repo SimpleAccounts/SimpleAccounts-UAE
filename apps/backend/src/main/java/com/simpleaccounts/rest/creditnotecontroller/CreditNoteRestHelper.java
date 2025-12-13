@@ -1501,10 +1501,7 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
                             + " " + creditNoteInvoiceRelation.getInvoice().getContact().getLastName());
                 }
                 requestModel.setCreditNoteId(creditNoteInvoiceRelation.getCreditNote().getCreditNoteNumber());
-                    if (creditNote.getInvoiceId()!=null && !creditNote.getInvoiceId().equals(creditNoteInvoiceRelation.getInvoice().getId())) {
-                        appliedInvoiceCreditNoteList.add(requestModel);
-                    }
-                else if(creditNote.getInvoiceId()==null) {
+                if (creditNote.getInvoiceId() == null || !creditNote.getInvoiceId().equals(creditNoteInvoiceRelation.getInvoice().getId())) {
                     appliedInvoiceCreditNoteList.add(requestModel);
                 }
         }

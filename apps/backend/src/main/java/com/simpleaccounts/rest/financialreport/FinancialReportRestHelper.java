@@ -921,29 +921,8 @@ public class FinancialReportRestHelper {
 							grossCashInflow = grossCashInflow.add(closingBalance);
 						break;
 					case OTHER_CURRENT_LIABILITIES:
-							responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
-							totalOperatingIncome = totalOperatingIncome.add(closingBalance);
-						if(isNegative)
-							grossCashOutflow = grossCashOutflow.add(closingBalance);
-						else
-							grossCashInflow = grossCashInflow.add(closingBalance);
-						break;
 					case OTHER_CURRENT_ASSET:
-							responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
-							totalOperatingIncome = totalOperatingIncome.add(closingBalance);
-						if(isNegative)
-							grossCashOutflow = grossCashOutflow.add(closingBalance);
-						else
-							grossCashInflow = grossCashInflow.add(closingBalance);
-						break;
 					case OTHER_LIABILITY:
-							responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
-							totalOperatingIncome = totalOperatingIncome.add(closingBalance);
-						if(isNegative)
-							grossCashOutflow = grossCashOutflow.add(closingBalance);
-						else
-							grossCashInflow = grossCashInflow.add(closingBalance);
-						break;
 					case CURRENT_ASSET:
 							responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
 							totalOperatingIncome = totalOperatingIncome.add(closingBalance);

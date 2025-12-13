@@ -384,14 +384,9 @@ public class DetailedGeneralLedgerRestHelper {
 
 						case REFUND:
 						case CANCEL_REFUND:
-							model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
-							model.setDebitAmount(lineItem.getDebitAmount());
-							model.setCreditAmount(lineItem.getCreditAmount());
-							break;
 						case PURCHASE:
 						case PETTY_CASH:
-
-							model.setAmount(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
+							model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
 							model.setDebitAmount(lineItem.getDebitAmount());
 							model.setCreditAmount(lineItem.getCreditAmount());
 							break;
