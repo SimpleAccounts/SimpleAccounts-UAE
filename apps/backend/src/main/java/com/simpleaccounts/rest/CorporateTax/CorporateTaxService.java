@@ -71,10 +71,9 @@ public class CorporateTaxService {
 
     public List<CorporateTaxModel> getCorporateTaxList(PaginationResponseModel responseModel,
                                                        int pageNo, int pageSize, boolean paginationDisable,
-                                                       String sortOrder, String sortingCol, Integer userId) {
-        User user = userService.findByPK(userId);
+                                                       String sortOrder, String sortingCol) {
         List<CorporateTaxModel> corporateTaxModelList = new ArrayList<>();
-        List<CorporateTaxFiling> corporateTaxFilingList = new ArrayList<>();
+        List<CorporateTaxFiling> corporateTaxFilingList;
         Pageable pageable =  getCTPageableRequest(pageNo, pageSize, sortOrder,sortingCol);
         Page<CorporateTaxFiling> corporateTaxFilingPage = corporateTaxFilingRepository.findByDeleteFlag( false,pageable);
         corporateTaxFilingList = corporateTaxFilingPage.getContent();
@@ -117,7 +116,7 @@ public class CorporateTaxService {
                                 String jsonString = objectMapper.writeValueAsString(profitAndLossResponseModel);
                                 corporateTaxFiling.setViewCtReport(jsonString);
                             }catch (Exception e){
-
+                                // Log the exception
                             }
                             corporateTaxFilingRepository.save(corporateTaxFiling);
                         }

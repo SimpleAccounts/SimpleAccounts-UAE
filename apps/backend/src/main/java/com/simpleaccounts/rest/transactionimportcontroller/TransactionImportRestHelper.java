@@ -114,7 +114,7 @@ public class TransactionImportRestHelper {
 		totalErrorRows = 0;
 		renderButtonOnValidData = true;
 		isDataRepeated = false;
-		Integer headerValue = 0;
+		int headerValue;
 		getHeaderListData();
 		Set<String> setToReturn = new HashSet<>();
 		for (String name : headerTextData) {
@@ -130,7 +130,7 @@ public class TransactionImportRestHelper {
 				int recordNo = 0;
 				int headerIndex = 0;
 				Integer header;
-				Integer headerIndexPosition = 0;
+				Integer headerIndexPosition;
 				Integer headerIndexPositionCounter = 0;
 
 				for (CSVRecord cSVRecord : listParser) {
@@ -145,31 +145,7 @@ public class TransactionImportRestHelper {
 					}
 					if (headerIndexPosition.equals(header)) {
 						if (headerIndexPositionCounter == header - headerValue) {
-							int i = 0;
-							boolean isDataPresent = true;
-							while (isDataPresent) {
-								try {
-									if (tableChange) {
-										if (cSVRecord.get(i).equals(transactionDate)) {
-											transactionDateBoolean = true;
-											transcationDatePosition = i;
-										} else if (cSVRecord.get(i).equals(description)) {
-											descriptionBoolean = true;
-											transcationDescriptionPosition = i;
-										} else if (cSVRecord.get(i).equals(debitAmount)) {
-											debitAmountBoolean = true;
-											transcationDebitPosition = i;
-										} else if (cSVRecord.get(i).equals(creditAmount)) {
-											creditAmountBoolean = true;
-											transcationCreditPosition = i;
-										}
-									}
-									headerText.add(cSVRecord.get(i));
-									i = i + 1;
-								} catch (Exception e) {
-									isDataPresent = false;
-								}
-							}
+							processHeaderColumns(cSVRecord);
 
 							headerIndexPosition++;
 							if (isDataRepeated) {
@@ -188,7 +164,6 @@ public class TransactionImportRestHelper {
 					} else {
 						TransactionModel transaction = new TransactionModel();
 						transaction.setId(++recordNo);
-						int i = 0;
 						String date = cSVRecord.get(transcationDatePosition);
 						String description = cSVRecord.get(transcationDescriptionPosition);
 						String drAmount = cSVRecord.get(transcationDebitPosition);
@@ -196,6 +171,7 @@ public class TransactionImportRestHelper {
 
 						try {
 							transaction.setDate("date");
+							// ... (rest of the code)
 							TemporalAccessor ta = DateTimeFormatter.ofPattern(dateFormat).parse(date);
 							DateFormat formatter = new SimpleDateFormat(dateFormat, Locale.US);
 							Date dateTranscation = (Date) formatter.parse(date);
@@ -258,6 +234,34 @@ public class TransactionImportRestHelper {
 		}
 	}
 
+	private void processHeaderColumns(CSVRecord cSVRecord) {
+		int i = 0;
+		boolean isDataPresent = true;
+		while (isDataPresent) {
+			try {
+				if (tableChange) {
+					if (cSVRecord.get(i).equals(transactionDate)) {
+						transactionDateBoolean = true;
+						transcationDatePosition = i;
+					} else if (cSVRecord.get(i).equals(description)) {
+						descriptionBoolean = true;
+						transcationDescriptionPosition = i;
+					} else if (cSVRecord.get(i).equals(debitAmount)) {
+						debitAmountBoolean = true;
+						transcationDebitPosition = i;
+					} else if (cSVRecord.get(i).equals(creditAmount)) {
+						creditAmountBoolean = true;
+						transcationCreditPosition = i;
+					}
+				}
+				headerText.add(cSVRecord.get(i));
+				i = i + 1;
+			} catch (Exception e) {
+				isDataPresent = false;
+			}
+		}
+	}
+
 	private void getHeaderListData() {
 		headerTextData.add(transactionDate);
 		headerTextData.add(description);
@@ -291,8 +295,6 @@ public class TransactionImportRestHelper {
 					case CR_AMOUNT:
 					case DR_AMOUNT:
 //					case AMOUNT:
-
-						MathContext mc = new MathContext(4); // 2 precision
 
 							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDbColumnName());
@@ -364,8 +366,8 @@ public class TransactionImportRestHelper {
 
 			BankAccount bankAcc = bankAccountService.findByPK(transactionImportModel.getBankId());
 
-			com.simpleaccounts.entity.DateFormat dateFormat = dateFormatService.findByPK(transactionImportModel.getDateFormatId());
-			DateFormat formatter = new SimpleDateFormat(dateFormat.getFormat());
+			com.simpleaccounts.entity.DateFormat dateFormatEntity = dateFormatService.findByPK(transactionImportModel.getDateFormatId());
+			DateFormat formatter = new SimpleDateFormat(dateFormatEntity.getFormat());
 
 			for (Map<String, Object> dataMap : transactionImportModel.getImportDataMap()) {
 				com.simpleaccounts.entity.bankaccount.Transaction trnx = new com.simpleaccounts.entity.bankaccount.Transaction();
@@ -381,8 +383,6 @@ public class TransactionImportRestHelper {
 						case CR_AMOUNT:
 						case DR_AMOUNT:
 //					case AMOUNT:
-
-							MathContext mc = new MathContext(4); // 2 precision
 
 							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDisplayName());

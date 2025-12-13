@@ -206,56 +206,11 @@ public class ContactController {
 		}
 	}
 
-	private void updateTransactionCategory(TransactionCategory contactCategory, Contact contact) {
-		if (contact.getOrganization() != null && !contact.getOrganization().isEmpty()) {
-			contactCategory.setTransactionCategoryName(contactCategory.getParentTransactionCategory().getTransactionCategoryName()+" - "+contact.getOrganization());
-		} else {
-			contactCategory.setTransactionCategoryName(contactCategory.getParentTransactionCategory().getTransactionCategoryName()+" - "+contact.getFirstName() + " " + contact.getLastName());
-		}
-		if (contact.getOrganization() != null && !contact.getOrganization().isEmpty()) {
-			contactCategory.setTransactionCategoryDescription(contactCategory.getParentTransactionCategory().getTransactionCategoryName()+" - "+contact.getOrganization());
-		} else {
-			contactCategory.setTransactionCategoryDescription(contactCategory.getParentTransactionCategory().getTransactionCategoryName()+" - "+contact.getFirstName() + " " + contact.getLastName());
-		}
-		contactCategory.setCreatedDate(LocalDateTime.now());
-		contactCategory.setCreatedBy(contact.getCreatedBy());
-		transactionCategoryService.update(contactCategory);
-	}
 
-	private TransactionCategory getTransactionCategory(String transactionCategoryName,
-			String transactionCategoryDescription, Integer userId, TransactionCategory parentTransactionCategory) {
-		TransactionCategory category = new TransactionCategory();
-		category.setChartOfAccount(parentTransactionCategory.getChartOfAccount());
-		category.setEditableFlag(Boolean.FALSE);
-		category.setSelectableFlag(Boolean.FALSE);
-		category.setTransactionCategoryCode(transactionCategoryService
-				.getNxtTransactionCatCodeByChartOfAccount(parentTransactionCategory.getChartOfAccount()));
-		category.setTransactionCategoryName(transactionCategoryName);
-		category.setTransactionCategoryDescription(transactionCategoryDescription);
-		category.setParentTransactionCategory(parentTransactionCategory);
-		category.setCreatedDate(LocalDateTime.now());
-		category.setCreatedBy(userId);
-		category.setDefaltFlag(DefaultTypeConstant.NO);
-		transactionCategoryService.persist(category);
-		return category;
 
-	}
 
-	private void createTransactionCategory(TransactionCategory contactCategoryReceivable, Contact contact) {
-		String transactionCategoryName = null;
-		if (contact.getOrganization() != null && !contact.getOrganization().isEmpty()) {
-			transactionCategoryName = contactCategoryReceivable.getTransactionCategoryName()+" - "+contact.getOrganization();
-		} else {
-			transactionCategoryName =  contactCategoryReceivable.getTransactionCategoryName()+" - "+contact.getFirstName() + " " + contact.getLastName();
-		}
-		contactService.persist(contact);
-		TransactionCategory transactionCategory = getTransactionCategory(transactionCategoryName,
-				transactionCategoryName, contact.getCreatedBy(), contactCategoryReceivable);
-		ContactTransactionCategoryRelation contactTransactionCategoryRelation = new ContactTransactionCategoryRelation();
-		contactTransactionCategoryRelation.setContact(contact);
-		contactTransactionCategoryRelation.setTransactionCategory(transactionCategory);
-		contactTransactionCategoryService.persist(contactTransactionCategoryRelation);
-	}
+
+
 
 	/**
 	 * 

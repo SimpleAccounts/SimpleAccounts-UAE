@@ -1266,10 +1266,9 @@ public class PayrollRestHepler {
 
         for (GeneratePayrollPersistModel model:generatePayrollPersistModels) {
 
-            BigDecimal totalSalaryForSingleDay = BigDecimal.ZERO;
+            BigDecimal totalSalaryForSingleDay;
                 BigDecimal totalSalary = BigDecimal.ZERO;
                 Employee employee = employeeService.findByPK(model.getEmpId());
-                BigDecimal totSalaryForEmployeePerMonth = BigDecimal.ZERO;
                 Map<String, Object> param = new HashMap<>();
                 param.put("employeeId", employee);
                 List<EmployeeSalaryComponentRelation> employeeSalaryComponentList = employeeSalaryComponentRelationService.findByAttributes(param);

@@ -85,7 +85,12 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
     public boolean processVatReport(VatReportFilingRequestModel vatReportFilingRequestModel, User user){
         VatReportFiling vatReportFiling = new VatReportFiling();
         if (vatReportFilingRequestModel.getId()!=null){
-            vatReportFiling = vatReportFilingRepository.findById(vatReportFilingRequestModel.getId()).get();
+            Optional<VatReportFiling> optionalVatReport = vatReportFilingRepository.findById(vatReportFilingRequestModel.getId());
+            if(optionalVatReport.isPresent()){
+                vatReportFiling = optionalVatReport.get();
+            } else {
+                return false;
+            }
         }
         else {
             //added vatNumber
@@ -625,7 +630,11 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
            }
        }
        if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.VAT_REPORT_FILED.name())){
-           VatReportFiling vatReportFiling = vatReportFilingRepository.findById(postingRequestModel.getPostingRefId()).get();
+           Optional<VatReportFiling> optionalVatReport = vatReportFilingRepository.findById(postingRequestModel.getPostingRefId());
+           if(!optionalVatReport.isPresent()){
+               return newjournal;
+           }
+           VatReportFiling vatReportFiling = optionalVatReport.get();
            vatReportFiling.setStatus(CommonStatusEnum.UN_FILED.getValue());
            vatReportFiling.setTaxFiledOn(null);
            vatReportFilingRepository.save(vatReportFiling);

@@ -259,7 +259,7 @@ public class TransactionRestController {
 	public ResponseEntity<PaginationResponseModel> getAllTransaction(TransactionRequestFilterModel filterModel) {
 
 		Map<TransactionFilterEnum, Object> dataMap = new EnumMap<>(TransactionFilterEnum.class);
-		if(filterModel.getSortingCol()==null|| filterModel.getSortingCol()=="-1")
+		if(filterModel.getSortingCol()==null|| "-1".equals(filterModel.getSortingCol()))
 			filterModel.setSortingCol("transactionDate");
 		if (filterModel.getBankId() != null) {
 			dataMap.put(TransactionFilterEnum.BANK_ID, bankAccountService.findByPK(filterModel.getBankId()));
@@ -1661,13 +1661,13 @@ public class TransactionRestController {
 		transactionService.update(trnx);
 	}
 
-	private void createTransactionStatus(Integer userId, Transaction trnx, ReconsileRequestLineItemModel explainParam, Invoice invoiceEntity) {
+	private void createTransactionStatus(Integer userId, Transaction trnx, ReconsileRequestLineItemModel explainParam) {
 		TransactionStatus status = new TransactionStatus();
 		status.setCreatedBy(userId);
 		status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
 		status.setTransaction(trnx);
 		status.setRemainingToExplain(explainParam.getRemainingInvoiceAmount());
-		status.setInvoice(invoiceEntity);
+		status.setInvoice(invoiceService.findByPK(explainParam.getId()));
 		transactionStatusService.persist(status);
 	}
 

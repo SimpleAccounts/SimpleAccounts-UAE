@@ -221,7 +221,7 @@ public class InvoiceScannerService {
 
         }
         catch (Exception e){
-
+            logger.error("Error parsing date", e);
         }
 
         if (invoiceModel.getCurrencyCode() != null) {
@@ -270,7 +270,7 @@ public class InvoiceScannerService {
                 if(model.getUnitType()!=null)
                     lineItem.setUnitType(model.getUnitType());
                 if(model.getUnitTypeId()!=null)
-                    lineItem.setUnitTypeId(unitTypesRepository.findById(model.getUnitTypeId()).get());
+                    lineItem.setUnitTypeId(unitTypesRepository.findById(model.getUnitTypeId()).orElse(null));
                 if (model.getExciseTaxId()!=null){
                     lineItem.setExciseCategory(exciseTaxService.getExciseTax(model.getExciseTaxId()));
                 }
@@ -429,9 +429,6 @@ public class InvoiceScannerService {
                 if( currencyList != null && !currencyList.isEmpty()){
                     model.setCurrencyCode(currencyList.get(0).getCurrencyCode());
                 }
-            }
-            if (json.get(0).get(JSON_KEY_BILLING_ADDRESS) != null) {
-
             }
         }
         return model;

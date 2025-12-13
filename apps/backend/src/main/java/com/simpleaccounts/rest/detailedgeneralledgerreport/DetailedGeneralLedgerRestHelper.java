@@ -282,11 +282,6 @@ public class DetailedGeneralLedgerRestHelper {
 							else {
 								model.setAmount(lineItem.getDebitAmount());
 							}
-						/*BigDecimal amountCredit = !isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO;
-						BigDecimal amountDebit = isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO;
-						model.setCreditAmount(amountCredit);
-						model.setDebitAmount(amountDebit);
-						model.setAmount(amountDebit.intValue()!=0?amountDebit:amountCredit);*/
 
 							if (invoice.getContact().getOrganization() != null && !invoice.getContact().getOrganization().isEmpty()){
 								model.setName(invoice.getContact().getOrganization());
@@ -321,11 +316,6 @@ public class DetailedGeneralLedgerRestHelper {
 								amount = lineItem.getDebitAmount();
 							}
 							model.setAmount(amount);
-						/*BigDecimal amountCredit = !isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO;
-						BigDecimal amountDebit = isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO;
-						model.setCreditAmount(amountCredit);
-						model.setDebitAmount(amountDebit);
-						model.setAmount(amountDebit.intValue()!=0?amountDebit:amountCredit);*/
 
 							if (creditNote.getContact().getOrganization() != null && !creditNote.getContact().getOrganization().isEmpty()){
 								model.setName(creditNote.getContact().getOrganization());
@@ -394,14 +384,9 @@ public class DetailedGeneralLedgerRestHelper {
 
 						case REFUND:
 						case CANCEL_REFUND:
-							model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
-							model.setDebitAmount(lineItem.getDebitAmount());
-							model.setCreditAmount(lineItem.getCreditAmount());
-							break;
 						case PURCHASE:
 						case PETTY_CASH:
-
-							model.setAmount(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
+							model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
 							model.setDebitAmount(lineItem.getDebitAmount());
 							model.setCreditAmount(lineItem.getCreditAmount());
 							break;

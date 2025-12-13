@@ -51,7 +51,6 @@ public class CurrencyConversionController{
 
     public ResponseEntity<Object> saveConvertedCurrency(@RequestBody CurrencyConversionRequestModel currencyConversionRequestModel
             , HttpServletRequest request){
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
         CurrencyConversion currencyConversion = new CurrencyConversion();
         Currency currency=currencyService.findByPK(currencyConversionRequestModel.getCurrencyCode());
@@ -111,30 +110,30 @@ public class CurrencyConversionController{
     @LogRequest
     @ApiOperation(value = "Get Currency List")
     @GetMapping(value = "/getCurrencyConversionList")
-    public ResponseEntity getCurrencyConversionList(){
+    public ResponseEntity<List<CurrencyConversionResponseModel>> getCurrencyConversionList(){
         List<CurrencyConversionResponseModel> response  = new ArrayList<>();
         List<CurrencyConversion> currencyList = currencyExchangeService.getCurrencyConversionList();
         if (currencyList != null) {
             response = currencyConversionHelper.getListOfConvertedCurrency(currencyList);
         }
-        return new ResponseEntity (response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @LogRequest
     @ApiOperation(value = "Get Currency List")
     @GetMapping(value = "/getActiveCurrencyConversionList")
-    public ResponseEntity getActiveCurrencyConversionList(){
+    public ResponseEntity<List<CurrencyConversionResponseModel>> getActiveCurrencyConversionList(){
         List<CurrencyConversionResponseModel> response  = new ArrayList<>();
         List<CurrencyConversion> currencyList = currencyExchangeService.getActiveCurrencyConversionList();
         if (currencyList != null) {
             response = currencyConversionHelper.getListOfConvertedCurrency(currencyList);
         }
-        return new ResponseEntity (response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @LogRequest
     @ApiOperation(value = "Get Currency List")
     @GetMapping(value = "/getCurrencyConversionById")
-    public ResponseEntity getCurrencyConversionById(@RequestParam int id)  {
+    public ResponseEntity<?> getCurrencyConversionById(@RequestParam int id)  {
         CurrencyConversion currencyConversion = currencyExchangeService.findByPK(id);
         if (currencyConversion != null) {
            CurrencyConversionResponseModel currencyConversionResponseModel = new CurrencyConversionResponseModel();
@@ -146,9 +145,9 @@ public class CurrencyConversionController{
            currencyConversionResponseModel.setExchangeRate(currencyConversion.getExchangeRate());
            currencyConversionResponseModel.setIsActive(currencyConversion.getIsActive());
            currencyConversionResponseModel.setCurrencyIsoCode(currencyConversion.getCurrencyCode().getCurrencyIsoCode());
-           return new ResponseEntity (currencyConversionResponseModel, HttpStatus.OK);
+           return new ResponseEntity<>(currencyConversionResponseModel, HttpStatus.OK);
         }
-        return new ResponseEntity ("No result found for id-"+id, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("No result found for id-"+id, HttpStatus.NO_CONTENT);
     }
     
     @LogRequest

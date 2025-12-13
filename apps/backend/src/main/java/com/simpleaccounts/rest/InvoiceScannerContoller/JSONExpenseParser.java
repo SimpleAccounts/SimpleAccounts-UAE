@@ -21,11 +21,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class JSONExpenseParser {
+
+    private static final Logger logger = LoggerFactory.getLogger(JSONExpenseParser.class);
 
     private final  ProductRepository productRepository;
 
@@ -114,10 +118,8 @@ public class JSONExpenseParser {
                 if(jsonObject.get(0).get(LINE_ITEMS).isArray()){
                     for (JsonNode jsonNode : jsonObject.get(0).get(LINE_ITEMS)) {
                         InvoiceLineItemModel invoiceLineItemModel = new InvoiceLineItemModel();
-                        if(jsonNode.has(LINE_ITEM_AMOUNT)){
-                            if(jsonNode.get(LINE_ITEM_AMOUNT).has(AMOUNT)){
+                        if(jsonNode.has(LINE_ITEM_AMOUNT) && jsonNode.get(LINE_ITEM_AMOUNT).has(AMOUNT)){
                                 invoiceLineItemModel.setSubTotal(jsonNode.get(LINE_ITEM_AMOUNT).get(AMOUNT).decimalValue());
-                            }
                         }
                         if(jsonNode.has(LINE_ITEM_DESCRIPTION)){
                             if (jsonNode.get(LINE_ITEM_DESCRIPTION).has(VALUE)) {
@@ -156,28 +158,20 @@ public class JSONExpenseParser {
                                 }
                             }
                         }
-                        if(jsonNode.has(LINE_ITEM_QUANTITY)){
-                            if(jsonNode.get(LINE_ITEM_QUANTITY).has(VALUE)){
+                        if(jsonNode.has(LINE_ITEM_QUANTITY) && jsonNode.get(LINE_ITEM_QUANTITY).has(VALUE)){
                                 invoiceLineItemModel.setQuantity(jsonNode.get(LINE_ITEM_QUANTITY).get(VALUE).intValue());
-                            }
                         }
-                        if(jsonNode.has(LINE_ITEM_TAX)){
-                            if(jsonNode.get(LINE_ITEM_TAX).has(AMOUNT)){
+                        if(jsonNode.has(LINE_ITEM_TAX) && jsonNode.get(LINE_ITEM_TAX).has(AMOUNT)){
                                 invoiceLineItemModel.setVatAmount(jsonNode.get(LINE_ITEM_TAX).get(AMOUNT).decimalValue());
 
-                            }
                         }
-                        if(jsonNode.has(LINE_ITEM_UNIT_PRICE)){
-                            if(jsonNode.get(LINE_ITEM_UNIT_PRICE).has(AMOUNT)){
+                        if(jsonNode.has(LINE_ITEM_UNIT_PRICE) && jsonNode.get(LINE_ITEM_UNIT_PRICE).has(AMOUNT)){
                                 invoiceLineItemModel.setUnitPrice(jsonNode.get(LINE_ITEM_UNIT_PRICE).get(AMOUNT).decimalValue());
 
-                            }
                         }
-                        if(jsonNode.has(LINE_ITEM_UNIT_TYPE)){
-                            if(jsonNode.get(LINE_ITEM_UNIT_TYPE).has(AMOUNT)){
+                        if(jsonNode.has(LINE_ITEM_UNIT_TYPE) && jsonNode.get(LINE_ITEM_UNIT_TYPE).has(AMOUNT)){
                                 invoiceLineItemModel.setUnitType(jsonNode.get(LINE_ITEM_UNIT_TYPE).get(AMOUNT).textValue());
 
-                            }
                         }
                         invoiceLineItemModel.setVatCategoryId("1");
                         invoiceLineItemModel.setTransactionCategoryId(49);
@@ -209,6 +203,7 @@ public class JSONExpenseParser {
 
     }
         catch (Exception e) {
+            logger.error("Error parsing invoice JSON", e);
         }
         }
 

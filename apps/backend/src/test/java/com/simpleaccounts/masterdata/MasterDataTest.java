@@ -104,8 +104,9 @@ class MasterDataTest {
             masterDataService.createAccount(Account.builder().code("1000").name("Parent").type(AccountType.ASSET).build());
             masterDataService.createAccount(Account.builder().code("1100").name("Child").type(AccountType.ASSET).parentCode("1000").build());
 
+            Account updatedAccount = Account.builder().code("1000").name("Parent").type(AccountType.ASSET).parentCode("1100").build();
             assertThatThrownBy(() ->
-                masterDataService.updateAccount("1000", Account.builder().code("1000").name("Parent").type(AccountType.ASSET).parentCode("1100").build())
+                masterDataService.updateAccount("1000", updatedAccount)
             ).isInstanceOf(IllegalArgumentException.class)
              .hasMessageContaining("Circular");
         }
@@ -286,8 +287,9 @@ class MasterDataTest {
         void shouldRejectDuplicateSku() {
             masterDataService.createProduct(Product.builder().sku("PROD-001").name("Product 1").unitPrice(BigDecimal.TEN).build());
 
+            Product product2 = Product.builder().sku("PROD-001").name("Product 2").unitPrice(BigDecimal.TEN).build();
             assertThatThrownBy(() ->
-                masterDataService.createProduct(Product.builder().sku("PROD-001").name("Product 2").unitPrice(BigDecimal.TEN).build())
+                masterDataService.createProduct(product2)
             ).isInstanceOf(IllegalArgumentException.class)
              .hasMessageContaining("SKU");
         }

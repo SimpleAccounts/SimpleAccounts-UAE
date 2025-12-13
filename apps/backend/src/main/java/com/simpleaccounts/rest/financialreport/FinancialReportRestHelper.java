@@ -35,9 +35,6 @@ import org.springframework.stereotype.Component;
 	@RequiredArgsConstructor
 public class FinancialReportRestHelper {
 
-	private static final String RETAINED_EARNINGS = "RETAINED_EARNINGS";
-	private static final String OTHER_CHARGES = "OTHER_CHARGES";
-	private static final String OPENING_BALANCE_EQUITY_OFFSET = "OPENING_BALANCE_EQUITY_OFFSET";
 	private static final String RETAINED_EARNINGS_DISPLAY = "Retained Earnings";
 	private static final String OTHER_CHARGES_DISPLAY = "Other Charges";
 	private static final String OPENING_BALANCE_EQUITY_OFFSET_DISPLAY = "Opening Balance Equity Offset";
@@ -407,8 +404,9 @@ public class FinancialReportRestHelper {
 			BigDecimal totalNonOperatingIncomeLoss = BigDecimal.ZERO;
 			if (totalNonOperatingExpense.longValue() < 0) {
 				totalNonOperatingIncomeLoss = totalNonOperatingIncome.add(totalNonOperatingExpense);
-			} else
+			} else {
 				totalNonOperatingIncomeLoss = totalNonOperatingIncome.subtract(totalNonOperatingExpense);
+			}
 			responseModel.setNonOperatingIncomeExpense(totalNonOperatingIncomeLoss);
 
 			BigDecimal netProfitLoss = totalOperatingIncome.subtract(totalNonOperatingIncome).subtract(totalCostOfGoodsSold)
@@ -923,29 +921,8 @@ public class FinancialReportRestHelper {
 							grossCashInflow = grossCashInflow.add(closingBalance);
 						break;
 					case OTHER_CURRENT_LIABILITIES:
-							responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
-							totalOperatingIncome = totalOperatingIncome.add(closingBalance);
-						if(isNegative)
-							grossCashOutflow = grossCashOutflow.add(closingBalance);
-						else
-							grossCashInflow = grossCashInflow.add(closingBalance);
-						break;
 					case OTHER_CURRENT_ASSET:
-							responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
-							totalOperatingIncome = totalOperatingIncome.add(closingBalance);
-						if(isNegative)
-							grossCashOutflow = grossCashOutflow.add(closingBalance);
-						else
-							grossCashInflow = grossCashInflow.add(closingBalance);
-						break;
 					case OTHER_LIABILITY:
-							responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
-							totalOperatingIncome = totalOperatingIncome.add(closingBalance);
-						if(isNegative)
-							grossCashOutflow = grossCashOutflow.add(closingBalance);
-						else
-							grossCashInflow = grossCashInflow.add(closingBalance);
-						break;
 					case CURRENT_ASSET:
 							responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
 							totalOperatingIncome = totalOperatingIncome.add(closingBalance);

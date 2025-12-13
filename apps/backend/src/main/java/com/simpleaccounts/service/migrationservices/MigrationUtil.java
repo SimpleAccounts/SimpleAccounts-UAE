@@ -58,9 +58,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -79,8 +76,8 @@ public class MigrationUtil {
 	
 	 private final Logger LOG = LoggerFactory.getLogger(MigrationUtil.class);
 	 
-	  private static SimpleDateFormat inSDF = new SimpleDateFormat("mm/dd/yyyy");
-	  private static SimpleDateFormat outSDF = new SimpleDateFormat("yyyy-mm-dd");
+	  private final SimpleDateFormat inSDF = new SimpleDateFormat("mm/dd/yyyy");
+	  private final SimpleDateFormat outSDF = new SimpleDateFormat("yyyy-mm-dd");
 	  
 	  private String dateFormat = "mm/dd/yyyy";
 
@@ -175,7 +172,7 @@ public class MigrationUtil {
      * @param inDate 
      * @return OutPut Date in yyyy-MM-dd format
      */
-    public static String formatDate(String inDate) {
+    public String formatDate(String inDate) {
     	
         String outDate = "";
         if (inDate != null) {
@@ -183,6 +180,7 @@ public class MigrationUtil {
                 	Date date = inSDF.parse(inDate);
                 	outDate = outSDF.format(date);
             } catch (ParseException ex) {
+                LOG.error("Error parsing date: {}", inDate, ex);
             }
         }
         return outDate;
@@ -454,7 +452,7 @@ public class MigrationUtil {
      * @param record
      * @return
      */
-    public TransactionCategory getTransactionCategoryByName(String val,Map<String, String> record) {
+    public TransactionCategory getTransactionCategoryByName(Map<String, String> record) {
         String transactionCategoryName = record.get("Paid Through");
         Map<String, Object> param = new HashMap<>();
         param.put(JSON_KEY_TRANSACTION_CATEGORY_NAME, transactionCategoryName);
@@ -489,7 +487,7 @@ public class MigrationUtil {
     * @param val
     * @return
     */
-   public ProductPriceType getProductPriceType(String val, Map<String, String> record) {
+   public ProductPriceType getProductPriceType(Map<String, String> record) {
        String inputColoumnValue = record.get("Item Type");
        if (inputColoumnValue.equalsIgnoreCase("Sales")){
            return ProductPriceType.SALES;
@@ -675,8 +673,8 @@ public class MigrationUtil {
 			log.info("insideZohoMigration{}", fileLocation);
 			List<String> notExistList = new ArrayList<>();
 			List<TransactionCategoryModelForMigration> existList = new ArrayList<>();
-			List files = getFilesPresent(fileLocation);
-			for (Object file : files) {
+			List<String> files = getFilesPresent(fileLocation);
+			for (String file : files) {
 				log.info("fileName== {}", file);
 				List<String> tCategoryList = new ArrayList<>();
 				List<Map<String, String>> mapList = parseCSVFile((String) fileLocation + File.separator + file);
@@ -806,10 +804,6 @@ public class MigrationUtil {
 	            }
 	        }
 	        LOG.info("Input File in Order ==> {} ", resultSet);
-	        Set obj = Stream.of(new File(dir).listFiles())
-	                .filter(file -> !file.isDirectory())
-	                .map(File::getName)
-	                .collect(Collectors.toSet());
 	
 	        return resultSet;
 	    }

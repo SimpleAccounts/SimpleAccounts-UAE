@@ -10,7 +10,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service("InventoryHistoryService")
+@Service
 @RequiredArgsConstructor
 public class InventoryHistoryServiceImpl extends InventoryHistoryService {
      private final InventoryHistoryDao inventoryHistoryDao;

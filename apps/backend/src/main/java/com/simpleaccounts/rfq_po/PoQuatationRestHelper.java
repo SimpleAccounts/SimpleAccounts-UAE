@@ -723,12 +723,10 @@ public class PoQuatationRestHelper {
     }
 
     private void getStatus(PoQuatation poQuatation, Map<String, String> rfqDataMap, String value) {
-        if (CommonStatusEnum.getInvoiceTypeByValue(poQuatation.getStatus()) != null && !CommonStatusEnum.getInvoiceTypeByValue(poQuatation.getStatus()).isEmpty()) {
+        String statusLabel = CommonStatusEnum.getInvoiceTypeByValue(poQuatation.getStatus());
+        if (statusLabel != null && !statusLabel.isEmpty()) {
             StringBuilder sb = new StringBuilder();
-            poQuatation.getStatus();
-            if (CommonStatusEnum.getInvoiceTypeByValue(poQuatation.getStatus()) != null && !CommonStatusEnum.getInvoiceTypeByValue(poQuatation.getStatus()).isEmpty()) {
-                sb.append(CommonStatusEnum.getInvoiceTypeByValue(poQuatation.getStatus())).append(" ");
-            }
+            sb.append(statusLabel).append(" ");
             rfqDataMap.put(value, sb.toString());
         }
         else{
@@ -816,10 +814,7 @@ public class PoQuatationRestHelper {
     private void getNotes(PoQuatation poQuatation, Map<String, String> rfqDataMap, String value) {
         if (poQuatation.getNotes() != null && !poQuatation.getNotes().isEmpty()) {
             StringBuilder sb = new StringBuilder();
-            poQuatation.getNotes();
-            if (poQuatation.getNotes() != null && !poQuatation.getNotes().isEmpty()) {
-                sb.append(poQuatation.getNotes()).append(" ");
-            }
+            sb.append(poQuatation.getNotes()).append(" ");
             rfqDataMap.put(value, sb.toString());
         }
         else{

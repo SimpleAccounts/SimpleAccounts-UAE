@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 @Component
 	@SuppressWarnings({"java:S3973", "java:S131"})
 	@RequiredArgsConstructor
-public class SimpleAccountReportDaoImpl<getFtaAuditReport> extends AbstractDao<Integer, SalesByCustomerModel> implements SimpleAccountReportDao {
+public class SimpleAccountReportDaoImpl extends AbstractDao<Integer, SalesByCustomerModel> implements SimpleAccountReportDao {
 
     private static final String QUERY_PARAM_START_DATE = "startDate";
     private static final String QUERY_PARAM_END_DATE = "endDate";
@@ -1335,7 +1335,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
 
         Optional<VatTaxAgency> optionalTaxAgency = taxAgencyRepository.findById(requestModel.getTaxAgencyId());
 
-        if (optionalCompany.isPresent()) {
+        if (optionalCompany.isPresent() && optionalTaxAgency.isPresent()) {
 
             Company company = optionalCompany.get();
          VatTaxAgency vatTaxAgency = optionalTaxAgency.get();
@@ -1556,7 +1556,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
 
       Optional<VatTaxAgency> optionalTaxAgency = taxAgencyRepository.findById(requestModel.getTaxAgencyId());
 
-        if (optionalCompany.isPresent()) {
+        if (optionalCompany.isPresent() && optionalTaxAgency.isPresent()) {
 
             Company company = optionalCompany.get();
          VatTaxAgency vatTaxAgency = optionalTaxAgency.get();
@@ -1762,7 +1762,7 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
         AgingListModel agingListModel = new AgingListModel();
         List<AgingResponseModel> agingResponseModels = new LinkedList<>();
 
-        Map<Integer, AgingResponseModel> agingReport = new HashMap();
+        Map<Integer, AgingResponseModel> agingReport = new HashMap<>();
         List<Invoice> queryresp = invoiceRepository.findAllByStatusAndType(3 ,2);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CommonColumnConstants.DD_MM_YYYY);
         LocalDate endDate = LocalDate.parse(requestModel.getEndDate(), formatter);

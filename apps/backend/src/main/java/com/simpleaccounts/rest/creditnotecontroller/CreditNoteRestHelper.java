@@ -162,7 +162,6 @@ public class CreditNoteRestHelper {
         creditNote.setDeleteFlag(Boolean.FALSE);
         creditNote.setIsCNWithoutProduct(creditNoteRequestModel.getIsCreatedWIWP());
         if (creditNoteRequestModel.getPlaceOfSupplyId() != null) {
-            PlaceOfSupply placeOfSupply = placeOfSupplyService.findByPK(creditNoteRequestModel.getPlaceOfSupplyId());
             creditNote.setPlaceOfSupplyId(creditNoteRequestModel.getPlaceOfSupplyId());
         }
         if (creditNoteRequestModel.getTotalAmount() != null) {
@@ -930,13 +929,7 @@ public class CreditNoteRestHelper {
         return creditNoteListModels;
     }
 
-    private void contact(Invoice invoice, InvoiceListModel model) {
-        if (invoice.getContact() != null) {
-            if (invoice.getContact().getFirstName() != null || invoice.getContact().getLastName() != null) {
-                model.setName(invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName());
-            }
-        }
-    }
+
 
     private List<CreditNote> getCreditNoteListForCustomer(Integer contact, Pageable paging,
                                                         PaginationResponseModel responseModel,Integer type ) {
@@ -1502,10 +1495,7 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
                             + " " + creditNoteInvoiceRelation.getInvoice().getContact().getLastName());
                 }
                 requestModel.setCreditNoteId(creditNoteInvoiceRelation.getCreditNote().getCreditNoteNumber());
-                    if (creditNote.getInvoiceId()!=null && !creditNote.getInvoiceId().equals(creditNoteInvoiceRelation.getInvoice().getId())) {
-                        appliedInvoiceCreditNoteList.add(requestModel);
-                    }
-                else if(creditNote.getInvoiceId()==null) {
+                if (creditNote.getInvoiceId() == null || !creditNote.getInvoiceId().equals(creditNoteInvoiceRelation.getInvoice().getId())) {
                     appliedInvoiceCreditNoteList.add(requestModel);
                 }
         }
@@ -1848,40 +1838,38 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
             Product product=productService.findByPK(creditNoteLineItem.getProduct().getProductID());
             if(product.getIsInventoryEnabled() != null && product.getIsInventoryEnabled() )
             {
-                handleReverseCNInventory(creditNoteLineItem,product,userId);
+                handleReverseCNInventory(creditNoteLineItem,userId);
             }
         }
     }
-    private void handleReverseCNInventory(CreditNoteLineItem model,Product product,Integer userId) {
+    private void handleReverseCNInventory(CreditNoteLineItem model,Integer userId) {
         Map<String, Object> relationMap = new HashMap<>();
         relationMap.put(JSON_KEY_CREDIT_NOTE, model.getCreditNote());
         CreditNoteInvoiceRelation creditNoteInvoiceRelation = creditNoteInvoiceRelationService.findByAttributes(relationMap).get(0);
         List<Inventory> inventoryList = inventoryService.getProductByProductId(model.getProduct().getProductID());
-        int qtyUpdate=0;
         int remainingQty = model.getQuantity();
         for(Inventory inventory : inventoryList)
         {
+            Integer auditUserId = userId != null ? userId : inventory.getLastUpdateBy();
             int stockOnHand = inventory.getStockOnHand();
             if(stockOnHand > remainingQty )
             {
                 stockOnHand = stockOnHand - remainingQty ;
-                qtyUpdate += remainingQty;
                 inventory.setQuantitySold(inventory.getQuantitySold()+remainingQty);
                 remainingQty -= remainingQty;
                 inventory.setStockOnHand(stockOnHand);
             }
             else
             {
-                qtyUpdate += stockOnHand;
                 remainingQty -= stockOnHand;
                 inventory.setStockOnHand(0);
                 inventory.setQuantitySold(inventory.getQuantitySold()+stockOnHand);
             }
             inventoryService.update(inventory);
             InventoryHistory inventoryHistory = new InventoryHistory();
-            inventoryHistory.setCreatedBy(inventory.getCreatedBy());
+            inventoryHistory.setCreatedBy(auditUserId);
             inventoryHistory.setCreatedDate(LocalDateTime.now());
-            inventoryHistory.setLastUpdateBy(inventory.getLastUpdateBy());
+            inventoryHistory.setLastUpdateBy(auditUserId);
             inventoryHistory.setLastUpdateDate(LocalDateTime.now());
             inventoryHistory.setTransactionDate(creditNoteInvoiceRelation.getInvoice().getInvoiceDate());
             inventoryHistory.setInventory(inventory);

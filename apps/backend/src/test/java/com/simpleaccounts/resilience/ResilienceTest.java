@@ -142,9 +142,17 @@ class ResilienceTest {
     @DisplayName("Circuit Breaker Tests")
     class CircuitBreakerTests {
 
+        private AtomicInteger fakeTime = new AtomicInteger(0);
+
+        @BeforeEach
+        void setUp() {
+            fakeTime.set(0);
+        }
+
         @Test
         @DisplayName("Should open circuit after threshold failures")
         void shouldOpenCircuitAfterThresholdFailures() {
+            circuitBreaker = new CircuitBreaker(5, Duration.ofSeconds(30), () -> (long) fakeTime.get());
             // Trigger 5 failures
             for (int i = 0; i < 5; i++) {
                 try {
@@ -165,8 +173,8 @@ class ResilienceTest {
 
         @Test
         @DisplayName("Should allow half-open state after cooldown")
-        void shouldAllowHalfOpenStateAfterCooldown() throws Exception {
-            circuitBreaker = new CircuitBreaker(2, Duration.ofMillis(100));
+        void shouldAllowHalfOpenStateAfterCooldown() {
+            circuitBreaker = new CircuitBreaker(2, Duration.ofMillis(100), () -> (long) fakeTime.get());
 
             // Open the circuit
             for (int i = 0; i < 2; i++) {
@@ -181,8 +189,8 @@ class ResilienceTest {
 
             assertThat(circuitBreaker.isOpen()).isTrue();
 
-            // Wait for cooldown
-            Thread.sleep(150);
+            // Advance time past cooldown
+            fakeTime.addAndGet(150);
 
             // Trigger state update by attempting an operation
             // After cooldown, circuit should transition to half-open and allow the request
@@ -195,8 +203,8 @@ class ResilienceTest {
 
         @Test
         @DisplayName("Should close circuit on successful request in half-open state")
-        void shouldCloseCircuitOnSuccessInHalfOpenState() throws Exception {
-            circuitBreaker = new CircuitBreaker(2, Duration.ofMillis(100));
+        void shouldCloseCircuitOnSuccessInHalfOpenState() {
+            circuitBreaker = new CircuitBreaker(2, Duration.ofMillis(100), () -> (long) fakeTime.get());
 
             // Open the circuit
             for (int i = 0; i < 2; i++) {
@@ -209,8 +217,8 @@ class ResilienceTest {
                 }
             }
 
-            // Wait for cooldown
-            Thread.sleep(150);
+            // Advance time past cooldown
+            fakeTime.addAndGet(150);
 
             // Success in half-open state should close circuit
             String result = circuitBreaker.execute(() -> "success");
@@ -221,8 +229,8 @@ class ResilienceTest {
 
         @Test
         @DisplayName("Should re-open circuit on failure in half-open state")
-        void shouldReopenCircuitOnFailureInHalfOpenState() throws Exception {
-            circuitBreaker = new CircuitBreaker(2, Duration.ofMillis(100));
+        void shouldReopenCircuitOnFailureInHalfOpenState() {
+            circuitBreaker = new CircuitBreaker(2, Duration.ofMillis(100), () -> (long) fakeTime.get());
 
             // Open the circuit
             for (int i = 0; i < 2; i++) {
@@ -235,8 +243,8 @@ class ResilienceTest {
                 }
             }
 
-            // Wait for cooldown
-            Thread.sleep(150);
+            // Advance time past cooldown
+            fakeTime.addAndGet(150);
 
             // Failure in half-open state should re-open circuit
             try {
@@ -532,12 +540,18 @@ class ResilienceTest {
         private int failureCount = 0;
         private long lastFailureTime = 0;
         private State state = State.CLOSED;
+        private final Supplier<Long> timeProvider;
 
         enum State { CLOSED, OPEN, HALF_OPEN }
 
         CircuitBreaker(int failureThreshold, Duration cooldownPeriod) {
+            this(failureThreshold, cooldownPeriod, System::currentTimeMillis);
+        }
+
+        CircuitBreaker(int failureThreshold, Duration cooldownPeriod, Supplier<Long> timeProvider) {
             this.failureThreshold = failureThreshold;
             this.cooldownPeriod = cooldownPeriod;
+            this.timeProvider = timeProvider;
         }
 
         synchronized <T> T execute(Supplier<T> operation) {
@@ -559,7 +573,7 @@ class ResilienceTest {
 
         private synchronized void updateState() {
             if (state == State.OPEN) {
-                long elapsed = System.currentTimeMillis() - lastFailureTime;
+                long elapsed = timeProvider.get() - lastFailureTime;
                 if (elapsed >= cooldownPeriod.toMillis()) {
                     state = State.HALF_OPEN;
                 }
@@ -573,7 +587,7 @@ class ResilienceTest {
 
         private synchronized void onFailure() {
             failureCount++;
-            lastFailureTime = System.currentTimeMillis();
+            lastFailureTime = timeProvider.get();
             if (failureCount >= failureThreshold) {
                 state = State.OPEN;
             }
