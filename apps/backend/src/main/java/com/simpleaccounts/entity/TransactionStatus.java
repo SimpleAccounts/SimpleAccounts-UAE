@@ -65,7 +65,7 @@ public class TransactionStatus implements Serializable {
 	@Column(name = "CREATED_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	@Basic(optional = false)
-	//@Convert(converter = DateConverter.class)
+
 	@CreationTimestamp
 	private LocalDateTime createdDate;
 
@@ -73,7 +73,7 @@ public class TransactionStatus implements Serializable {
 	private Integer lastUpdateBy;
 
 	@Column(name = "LAST_UPDATE_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime lastUpdateDate;
 
 	@Column(name = "DELETE_FLAG")

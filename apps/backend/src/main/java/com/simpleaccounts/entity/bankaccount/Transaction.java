@@ -23,7 +23,7 @@ import lombok.Data;
 @Table(name = "TRANSACTION")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Data
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 @NamedQueries({
 		@NamedQuery(name = "getByBankId", query = "from Transaction t where t.bankAccount.id = :id order by t.transactionId desc") })
 public class Transaction implements Serializable {
@@ -145,14 +145,14 @@ public class Transaction implements Serializable {
 	@Column(name = "CREATED_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	@Basic(optional = false)
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime createdDate;
 
 	@Column(name = "LAST_UPDATED_BY")
 	private Integer lastUpdateBy;
 
 	@Column(name = "LAST_UPDATE_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime lastUpdateDate;
 
 	@Column(name = "DELETE_FLAG")

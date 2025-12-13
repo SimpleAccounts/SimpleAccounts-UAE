@@ -314,7 +314,6 @@ class ExternalApiIntegrationTest {
     // Mock classes for testing
 
     static class MockExternalApiServer {
-        private boolean running = false;
         private final Map<String, Object> stubs = new HashMap<>();
         private final Map<String, Integer> requestCounts = new HashMap<>();
         private final Map<String, Integer> transientFailureCounts = new HashMap<>();
@@ -323,8 +322,8 @@ class ExternalApiIntegrationTest {
         private boolean shouldReturnUnauthorized = false;
         private boolean shouldReturnRateLimit = false;
 
-        void start() { running = true; }
-        void stop() { running = false; }
+        void start() { }
+        void stop() { }
         String getBaseUrl() { return "http://localhost:8089"; }
 
         void stubExchangeRate(String from, String to, BigDecimal rate) {

@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -291,7 +291,7 @@ public class InventoryController {
         List<InventoryHistoryResponseModel> inventoryHistoryModelList =new  ArrayList<>();
         for (InventoryHistory result:resultList){
             InventoryHistoryResponseModel inventoryHistoryModel=new InventoryHistoryResponseModel();
-//            inventoryHistoryModel.setDate(result.getTransactionDate());
+
             if (result.getTransactionDate()!= null) {
                 ZoneId timeZone = ZoneId.systemDefault();
                 Date date = Date.from(result.getTransactionDate().atStartOfDay(timeZone).toInstant());

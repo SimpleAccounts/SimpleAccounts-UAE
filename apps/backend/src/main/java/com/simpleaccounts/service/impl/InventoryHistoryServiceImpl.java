@@ -1,6 +1,5 @@
 package com.simpleaccounts.service.impl;
 
-
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.InventoryHistoryDao;
 import com.simpleaccounts.entity.InventoryHistory;

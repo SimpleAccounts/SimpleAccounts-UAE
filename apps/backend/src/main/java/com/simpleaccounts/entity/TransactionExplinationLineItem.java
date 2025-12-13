@@ -47,7 +47,7 @@ public class TransactionExplinationLineItem {
 	@Column(name = "CREATED_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	@CreationTimestamp
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime createdDate;
 
 	@Column(name = "DELETE_FLAG")

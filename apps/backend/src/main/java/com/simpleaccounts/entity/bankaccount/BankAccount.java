@@ -26,7 +26,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Table(name = "BANK_ACCOUNT")
 @Data
 @Transactional
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 public class BankAccount implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -55,7 +55,7 @@ public class BankAccount implements Serializable {
 	private Character personalCorporateAccountInd;
 
 	@Basic(optional = false)
-//	@ColumnDefault(value = "1")
+
 	@Column(name = "ISPRIMARY_ACCOUNT_FLAG")
 	private Boolean isprimaryAccountFlag = Boolean.TRUE;
 
@@ -99,11 +99,11 @@ public class BankAccount implements Serializable {
 	@Column(name = "CREATED_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	@Basic(optional = false)
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime createdDate;
 
 	@Column(name = "OPENING_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime openingDate;
 
 	@Basic
@@ -117,7 +117,7 @@ public class BankAccount implements Serializable {
 
 	@Basic
 	@Column(name = "LAST_UPDATE_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime lastUpdateDate;
 
 	@Column(name = "DELETE_FLAG")

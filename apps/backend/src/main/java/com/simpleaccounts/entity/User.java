@@ -47,7 +47,7 @@ public class User implements Serializable {
 
 	@Basic
 	@Column(name = "DATE_OF_BIRTH")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime dateOfBirth;
 
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -68,7 +68,7 @@ public class User implements Serializable {
 	private Integer lastUpdatedBy;
 
 	@Basic
-	//@Convert(converter = DateConverter.class)
+
 	@Column(name = "LAST_UPDATE_DATE")
 	private LocalDateTime lastUpdateDate;
 
@@ -111,7 +111,6 @@ public class User implements Serializable {
 	@Column(name = "USER_TIMEZONE")
 	private String userTimezone;
 
-	// //@Convert(converter = DateConverter.class)
 	@Column(name = "FORGOT_PASSWORD_TOKEN_EXPIRY_DATE")
 	private LocalDateTime forgotPasswordTokenExpiryDate;
 

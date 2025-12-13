@@ -9,7 +9,7 @@ import com.simpleaccounts.dao.VatReportsDao;
 import com.simpleaccounts.entity.VatReportFiling;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;

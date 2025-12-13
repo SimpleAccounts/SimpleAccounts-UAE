@@ -53,7 +53,7 @@ public class ProductLineItem implements Serializable {
 	@Column(name = "CREATED_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	@CreationTimestamp
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime createdDate;
 
 	@Column(name = "LAST_UPDATED_BY")
@@ -61,7 +61,7 @@ public class ProductLineItem implements Serializable {
 
 	@UpdateTimestamp
 	@Column(name = "LAST_UPDATE_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime lastUpdateDate;
 
 	@Column(name = "DELETE_FLAG")

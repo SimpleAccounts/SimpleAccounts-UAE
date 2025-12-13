@@ -25,7 +25,6 @@ public class UserModel {
 
     private Boolean userPhotoChange;
 
-   // @JsonFormat(pattern = "yyyy-MM-dd")
     private String dob;
 
     private Integer roleId;

@@ -634,7 +634,6 @@ class OpenApiSchemaValidationTest {
 
     static class Schema {
         private final String type;
-        private final String name;
         private final Map<String, Schema> requiredFields = new LinkedHashMap<>();
         private final Map<String, Schema> optionalFields = new LinkedHashMap<>();
         private final List<String> enumValues = new ArrayList<>();
@@ -647,12 +646,10 @@ class OpenApiSchemaValidationTest {
 
         private Schema(String type) {
             this.type = type;
-            this.name = null;
         }
 
         private Schema(String type, String name) {
             this.type = type;
-            this.name = name;
         }
 
         static Schema object(String name) { return new Schema("object", name); }

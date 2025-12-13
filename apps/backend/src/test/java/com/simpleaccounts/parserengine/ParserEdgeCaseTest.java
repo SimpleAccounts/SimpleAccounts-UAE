@@ -25,12 +25,10 @@ import org.junit.jupiter.api.io.TempDir;
 class ParserEdgeCaseTest {
 
     private CsvDataParser csvParser;
-    private ExcelDataParser excelParser;
 
     @BeforeEach
     void setUp() {
         csvParser = new CsvDataParser();
-        excelParser = new ExcelDataParser();
     }
 
     @Nested

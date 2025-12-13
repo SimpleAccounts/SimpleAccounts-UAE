@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 
 @NamedQueries({
         @NamedQuery(name = "allSalaryTemplates", query = "SELECT s FROM SalaryTemplate s "),
-       // @NamedQuery(name = "getFormulae", query = "SELECT s FROM SalaryTemplate s where  s.salaryRole.employee.id = :id and s.salaryRole.id = :id and  s.deleteFlag  = FALSE ")
+
 })
 @Entity
 @Table(name = "SALARY_TEMPLATE")
 @Data
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 public class SalaryTemplate implements Serializable {
 
     private static final long serialVersionUID = 6914121175305098995L;
@@ -30,7 +30,7 @@ public class SalaryTemplate implements Serializable {
     private SalaryComponent salaryComponentId;
 
     @Column(name = "IS_ACTIVE")
-//    @ColumnDefault(value = "1")
+
     @Basic(optional = true)
     private Boolean isActive = Boolean.TRUE;
 
@@ -55,14 +55,14 @@ public class SalaryTemplate implements Serializable {
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-   //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "LAST_UPDATED_BY")
     private Integer lastUpdateBy;
 
     @Column(name = "LAST_UPDATE_DATE")
-   //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate = LocalDateTime.now();
 
     @Column(name = "DELETE_FLAG")

@@ -1,6 +1,5 @@
 package com.simpleaccounts.service.impl;
 
-
 import com.simpleaccounts.dao.LanguageDao;
 import com.simpleaccounts.entity.Language;
 import com.simpleaccounts.service.LanguageService;

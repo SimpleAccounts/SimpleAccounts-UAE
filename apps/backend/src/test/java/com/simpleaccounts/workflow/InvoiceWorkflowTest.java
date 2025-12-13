@@ -48,7 +48,6 @@ class InvoiceWorkflowTest {
         @DisplayName("Draft invoice can transition to Approved")
         void draftCanTransitionToApproved() {
             invoiceState.setAmount(new BigDecimal("500.00"));
-            invoiceState.setDueDate(LocalDate.now().plusDays(30));
 
             boolean result = invoiceState.approve("admin");
 
@@ -82,7 +81,6 @@ class InvoiceWorkflowTest {
         @BeforeEach
         void setupApprovedInvoice() {
             invoiceState.setAmount(new BigDecimal("1000.00"));
-            invoiceState.setDueDate(LocalDate.now().plusDays(30));
             invoiceState.approve("admin");
         }
 
@@ -133,7 +131,6 @@ class InvoiceWorkflowTest {
         @BeforeEach
         void setupSentInvoice() {
             invoiceState.setAmount(new BigDecimal("1000.00"));
-            invoiceState.setDueDate(LocalDate.now().plusDays(30));
             invoiceState.approve("admin");
             invoiceState.send("customer@example.com");
         }
@@ -186,7 +183,6 @@ class InvoiceWorkflowTest {
         @BeforeEach
         void setupPaidInvoice() {
             invoiceState.setAmount(new BigDecimal("1000.00"));
-            invoiceState.setDueDate(LocalDate.now().plusDays(30));
             invoiceState.approve("admin");
             invoiceState.send("customer@example.com");
             invoiceState.recordPayment(new BigDecimal("1000.00"), LocalDate.now());
@@ -223,7 +219,6 @@ class InvoiceWorkflowTest {
         @BeforeEach
         void setupArchivedInvoice() {
             invoiceState.setAmount(new BigDecimal("1000.00"));
-            invoiceState.setDueDate(LocalDate.now().plusDays(30));
             invoiceState.approve("admin");
             invoiceState.send("customer@example.com");
             invoiceState.recordPayment(new BigDecimal("1000.00"), LocalDate.now());
@@ -279,7 +274,6 @@ class InvoiceWorkflowTest {
     static class InvoiceWorkflowState {
         private InvoiceStatus status = InvoiceStatus.DRAFT;
         private BigDecimal amount;
-        private LocalDate dueDate;
         private String approvedBy;
         private String sentTo;
         private String rejectionReason;
@@ -308,13 +302,6 @@ class InvoiceWorkflowTest {
                 throw new IllegalStateException("Invoice is not editable in " + status + " status");
             }
             this.amount = amount;
-        }
-
-        void setDueDate(LocalDate dueDate) {
-            if (!isEditable()) {
-                throw new IllegalStateException("Invoice is not editable");
-            }
-            this.dueDate = dueDate;
         }
 
         boolean approve(String approver) {

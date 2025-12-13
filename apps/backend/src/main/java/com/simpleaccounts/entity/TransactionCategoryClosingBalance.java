@@ -87,7 +87,7 @@ public class TransactionCategoryClosingBalance {
     private Integer lastUpdateBy;
 
     @Column(name = "LAST_UPDATE_DATE")
-   //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate = LocalDateTime.now();
 
     @Column(name = "VERSION_NUMBER")

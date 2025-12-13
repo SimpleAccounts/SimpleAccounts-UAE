@@ -36,7 +36,7 @@ public class Activity {
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "LAST_UPDATED_BY")
@@ -72,7 +72,7 @@ public class Activity {
 
     @Basic
     @Column(name = "LAST_UPDATE_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate;
 
     @Transient

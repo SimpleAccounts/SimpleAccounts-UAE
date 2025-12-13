@@ -272,7 +272,6 @@ class MasterDataTest {
             Product product = Product.builder()
                 .sku("PROD-001")
                 .name("Office Chair")
-                .description("Ergonomic office chair")
                 .unitPrice(new BigDecimal("500.00"))
                 .build();
 
@@ -549,7 +548,6 @@ class MasterDataTest {
     static class Product {
         private String sku;
         private String name;
-        private String description;
         private BigDecimal unitPrice;
         private String categoryCode;
         private int reorderLevel;
@@ -565,7 +563,6 @@ class MasterDataTest {
             private Product product = new Product();
             Builder sku(String sku) { product.sku = sku; return this; }
             Builder name(String name) { product.name = name; return this; }
-            Builder description(String desc) { product.description = desc; return this; }
             Builder unitPrice(BigDecimal price) { product.unitPrice = price; return this; }
             Builder categoryCode(String code) { product.categoryCode = code; return this; }
             Builder reorderLevel(int level) { product.reorderLevel = level; return this; }

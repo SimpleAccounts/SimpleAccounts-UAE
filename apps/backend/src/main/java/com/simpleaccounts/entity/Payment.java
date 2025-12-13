@@ -62,7 +62,7 @@ public class Payment implements Serializable {
 
 	@Basic
 	@Column(name = "PAYMENT_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDate paymentDate;
 
 	@Basic
@@ -85,7 +85,7 @@ public class Payment implements Serializable {
 	@Column(name = "CREATED_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	@Basic(optional = false)
-	//@Convert(converter = DateConverter.class)
+
 	@CreationTimestamp
 	private LocalDateTime createdDate;
 
@@ -94,7 +94,7 @@ public class Payment implements Serializable {
 
 	@Column(name = "LAST_UPDATE_DATE")
 	@UpdateTimestamp
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime lastUpdateDate;
 
 	@Basic

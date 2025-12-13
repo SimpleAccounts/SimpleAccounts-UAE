@@ -1,10 +1,9 @@
 package com.simpleaccounts.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
 
 import com.simpleaccounts.rest.PaginationModel;

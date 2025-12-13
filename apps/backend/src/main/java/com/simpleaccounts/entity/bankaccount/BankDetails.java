@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Table(name = "BANK_DETAILS")
 @Data
 @Transactional
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 public class BankDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -40,7 +40,7 @@ public class BankDetails implements Serializable {
 	@Column(name = "CREATED_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	@Basic(optional = false)
-	  //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
 	@Column(name = "LAST_UPDATED_BY")

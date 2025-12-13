@@ -33,7 +33,7 @@ import org.hibernate.annotations.Formula;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 public class Expense implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -58,7 +58,7 @@ public class Expense implements Serializable {
 
 	@Basic
 	@Column(name = "EXPENSE_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDate expenseDate;
 
 	@Basic
@@ -120,7 +120,7 @@ public class Expense implements Serializable {
 	@Column(name = "CREATED_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	@Basic(optional = false)
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime createdDate;
 
 	@Basic
@@ -144,7 +144,7 @@ public class Expense implements Serializable {
 	private Integer lastUpdateBy;
 
 	@Column(name = "LAST_UPDATE_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime lastUpdateDate;
 
 	@Column(name = "DELETE_FLAG")
@@ -195,7 +195,7 @@ public class Expense implements Serializable {
 	private PlaceOfSupply placeOfSupplyId;
 
 	@Column(name = "EDIT_FLAG")
-//	@ColumnDefault(value = "1")
+
 	@Basic(optional = false)
 	private Boolean editFlag = Boolean.TRUE;
 

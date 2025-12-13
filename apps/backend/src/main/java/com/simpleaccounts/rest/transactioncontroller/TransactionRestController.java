@@ -75,10 +75,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 @RestController
 @RequestMapping(value = "/rest/transaction")
 public class TransactionRestController {
-	private static final String TRANSACTION_ID_SEPARATOR = "TRANSACTION_ID_SEPARATOR";
-	private static final String ERROR_CHART_OF_CATEGORY_ID = "ERROR_CHART_OF_CATEGORY_ID";
-	private static final String JSON_KEY_TRANSACTION = "transaction";
-	
 	private final Logger logger = LoggerFactory.getLogger(TransactionRestController.class);
 	
 	private final JwtTokenUtil jwtTokenUtil;
@@ -88,8 +84,6 @@ public class TransactionRestController {
 	private final TransactionService transactionService;
 
 	private final DateFormatHelper dateFormatHelper;
-
-	private final TransactionCategoryClosingBalanceServiceImpl transactionCategoryClosingBalanceService;
 
 	private final BankAccountService bankAccountService;
 
@@ -174,7 +168,6 @@ public class TransactionRestController {
 									 TransactionRepository transactionRepository,
 									 TransactionService transactionService,
 									 DateFormatHelper dateFormatHelper,
-									 TransactionCategoryClosingBalanceServiceImpl transactionCategoryClosingBalanceService,
 									 BankAccountService bankAccountService,
 									 ChartOfAccountService chartOfAccountService,
 									 TransactionHelper transactionHelper,
@@ -219,7 +212,6 @@ public class TransactionRestController {
 		this.transactionRepository = transactionRepository;
 		this.transactionService = transactionService;
 		this.dateFormatHelper = dateFormatHelper;
-		this.transactionCategoryClosingBalanceService = transactionCategoryClosingBalanceService;
 		this.bankAccountService = bankAccountService;
 		this.chartOfAccountService = chartOfAccountService;
 		this.transactionHelper = transactionHelper;
@@ -915,7 +907,6 @@ public class TransactionRestController {
 
 				}
 
-				//TDA=PDA
 				if (trnx.getTransactionDueAmount().compareTo(payroll.getDueAmountPayroll()) == 0) {
 					journalAmountForSalaryPayrollJli = journalAmountForSalaryPayrollJli.add(payroll.getDueAmountPayroll());
 					transactionExplinationLineItem.setExplainedAmount(payroll.getDueAmountPayroll());

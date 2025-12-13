@@ -6,7 +6,7 @@ import com.simpleaccounts.constant.dbfilter.TransactionCategoryFilterEnum;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import org.springframework.stereotype.Service;
@@ -89,7 +89,7 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 	}
 
 	@Override
-//	@Cacheable(cacheNames = "transactionCategoryCache", key = "#chartOfAccountId")
+
 	public List<TransactionCategory> findAllTransactionCategoryByChartOfAccount(Integer chartOfAccountId) {
 		return dao.findAllTransactionCategoryByChartOfAccount(chartOfAccountId);
 	}
@@ -142,7 +142,7 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 	}
 
 	@Override
-//	@Cacheable(cacheNames = "transactionCategoryCache", key = "#chartOfAccountCategoryId")
+
 	public List<TransactionCategory> getTransactionCatByChartOfAccountCategoryId(Integer chartOfAccountCategoryId) {
 		return dao.getTransactionCatByChartOfAccountCategoryId(chartOfAccountCategoryId);
 	}

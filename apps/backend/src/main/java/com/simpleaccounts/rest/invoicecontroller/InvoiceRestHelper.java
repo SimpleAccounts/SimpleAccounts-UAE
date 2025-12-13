@@ -253,8 +253,6 @@ public class InvoiceRestHelper {
 
 //
 
-//			//	invoiceDueDate=invoiceDueDate.withHour(0).withMinute(0).withSecond(0).withNano(0);seconds = 1631881535
-
 	public List<InvoiceLineItem>
 	getLineItems(List<InvoiceLineItemModel> itemModels, Invoice invoice, Integer userId) {
 		List<InvoiceLineItem> lineItems = new ArrayList<>();
@@ -1062,9 +1060,6 @@ public class InvoiceRestHelper {
 			logger.info("BILLING ADDRESS NOT PRESENT");
 		}
 	}
-
-////		emailBody = emailBody.replace(productRow,productRowBuilder.toString());
-////		invoiceEmailBody.setValue(emailBodyBuilder.toString());
 
 	private String updateInvoiceLineItem(int size, MailThemeTemplates invoiceEmailBody) {
 

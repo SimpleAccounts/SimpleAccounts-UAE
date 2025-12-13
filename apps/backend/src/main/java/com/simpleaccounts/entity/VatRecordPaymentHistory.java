@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 public class VatRecordPaymentHistory implements Serializable {
 
     	@Id
@@ -41,14 +41,14 @@ public class VatRecordPaymentHistory implements Serializable {
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "LAST_UPDATED_BY")
     private Integer lastUpdateBy;
 
     @Column(name = "LAST_UPDATE_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate;
 
     @Column(name = "START_DATE")

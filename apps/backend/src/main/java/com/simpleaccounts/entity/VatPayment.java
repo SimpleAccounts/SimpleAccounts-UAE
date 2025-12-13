@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "VAT_PAYMENT")
 @Data
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 public class VatPayment implements Serializable {
     private static final long serialVersionUID = 1L;
     	@Id
@@ -40,7 +40,7 @@ public class VatPayment implements Serializable {
 
     @Basic
     @Column(name = "VAT_PAYMENT_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime vatPaymentDate;
 
     @Basic
@@ -60,14 +60,14 @@ public class VatPayment implements Serializable {
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "LAST_UPDATED_BY")
     private Integer lastUpdatedBy;
 
     @Column(name = "LAST_UPDATE_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate;
 
     @Column(name = "DELETE_FLAG")

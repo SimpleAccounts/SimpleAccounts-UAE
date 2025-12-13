@@ -18,7 +18,7 @@ import java.util.Collection;
 @Data
 @Entity
 @Table(name = "PO_QUATATION")
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 @NoArgsConstructor
 @AllArgsConstructor
 @NamedQueries({
@@ -39,14 +39,14 @@ public class PoQuatation {
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "LAST_UPDATED_BY")
     private Integer lastUpdateBy;
 
     @Column(name = "LAST_UPDATE_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate;
 
     @Column(name = "NOTES")
@@ -68,29 +68,29 @@ public class PoQuatation {
     private String rfqNumber;
 
     @Column(name = "RFQ_RECEIVE_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime rfqReceiveDate;
 
     @Column(name = "RFQ_EXPIRY_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime rfqExpiryDate;
 
     @Column(name = "PO_NUMBER")
     private String poNumber;
 
     @Column(name = "PO_APPROVE_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime poApproveDate;
 
     @Column(name = "PO_RECEIVE_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime poReceiveDate;
 
     @Column(name = "GRN_NUMBER")
     private String grnNumber;
 
     @Column(name = "GRN_RECEIVE_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime grnReceiveDate;
 
     @Column(name = "GRN_REMARKS")
@@ -112,11 +112,11 @@ public class PoQuatation {
     private Contact customer;
 
     @Column(name="QUOTATION_EXPIRATION_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime quotaionExpiration;
 
     @Column(name="QUOTATION_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime quotaionDate;
 
     @Basic

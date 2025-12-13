@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "EMAIL_LOGS")
 @Data
 @NoArgsConstructor
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 public class EmailLogs {
 
     	@Id
@@ -36,14 +36,14 @@ public class EmailLogs {
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "LAST_UPDATED_BY")
     private Integer lastUpdateBy;
 
     @Column(name = "LAST_UPDATE_DATE")
-   //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate = LocalDateTime.now();
 
     @Column(name = "DELETE_FLAG")
@@ -56,7 +56,7 @@ public class EmailLogs {
     private String baseUrl;
 
     @Column(name = "EMAIL_DATE")
-//	//@Convert(converter = DateConverter.class)
+
     private LocalDateTime emailDate;
 
     @Column(name = "MODULE_NAME")

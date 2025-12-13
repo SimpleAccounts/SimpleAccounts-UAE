@@ -32,7 +32,7 @@ public class Receipt {
 
 	@Basic
 	@Column(name = "RECEIPT_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime receiptDate;
 
 	@Basic
@@ -59,14 +59,14 @@ public class Receipt {
 	@Column(name = "CREATED_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	@Basic(optional = false)
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime createdDate;
 
 	@Column(name = "LAST_UPDATED_BY")
 	private Integer lastUpdatedBy;
 
 	@Column(name = "LAST_UPDATE_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime lastUpdateDate;
 
 	@Column(name = "DELETE_FLAG")

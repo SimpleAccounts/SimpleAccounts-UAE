@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.payroll.service.Impl;
 
-
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.EmployeeSalaryComponentRelation;
 import com.simpleaccounts.rest.payroll.dao.EmployeeSalaryComponentRelationDao;

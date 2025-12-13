@@ -34,3 +34,4 @@ export default defineConfig({
   ],
   outputDir: 'test-results/e2e'
 });
+

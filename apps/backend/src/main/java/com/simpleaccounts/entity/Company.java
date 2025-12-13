@@ -173,7 +173,7 @@ public class Company implements Serializable {
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Basic
@@ -182,7 +182,7 @@ public class Company implements Serializable {
 
     @Basic
     @Column(name = "LAST_UPDATE_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate;
 
     @Column(name = "DELETE_FLAG")
@@ -201,7 +201,7 @@ public class Company implements Serializable {
     private String dateFormat;
 
     @Column(name = "ACCOUNT_START_DATE")
-//	//@Convert(converter = DateConverter.class)
+
     private LocalDateTime accountStartDate;
 
     @Column(name = "IS_DESIGNATED_ZONE")
@@ -214,7 +214,7 @@ public class Company implements Serializable {
 
     @Basic
     @Column(name = "VAT_REGISTRATION_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime vatRegistrationDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

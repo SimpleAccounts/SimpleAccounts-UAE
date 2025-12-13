@@ -31,10 +31,6 @@ class FileUploadSecurityTest {
         validator = new FileUploadValidator();
         validator.setMaxFileSizeBytes(10 * 1024 * 1024); // 10MB
         validator.setAllowedExtensions(new HashSet<>(Arrays.asList("pdf", "jpg", "png", "xlsx", "csv")));
-        validator.setAllowedMimeTypes(new HashSet<>(Arrays.asList(
-            "application/pdf", "image/jpeg", "image/png",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"
-        )));
     }
 
     @Nested
@@ -307,11 +303,9 @@ class FileUploadSecurityTest {
     static class FileUploadValidator {
         private long maxFileSizeBytes;
         private Set<String> allowedExtensions;
-        private Set<String> allowedMimeTypes;
 
         void setMaxFileSizeBytes(long bytes) { this.maxFileSizeBytes = bytes; }
         void setAllowedExtensions(Set<String> extensions) { this.allowedExtensions = extensions; }
-        void setAllowedMimeTypes(Set<String> mimeTypes) { this.allowedMimeTypes = mimeTypes; }
 
         boolean isExtensionAllowed(String fileName) {
             if (fileName == null || !fileName.contains(".")) return false;

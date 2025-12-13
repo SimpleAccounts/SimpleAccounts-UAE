@@ -152,9 +152,9 @@ public class UserRestHelper {
 	public SimpleAccountsMessage saveUserCredential(User user, String encodedPassword, SimpleAccountsMessage message) {
 		UserCredential existingUser = userCredentialRepository.findUserCredentialByUser(user);
 		if (existingUser!=null){
-			//for existing user will create new password history
+
 			savePasswordHistory(existingUser);
-			//for existing user will update user credential
+
 			existingUser.setCreatedBy(user.getUserId());
 			existingUser.setCreatedDate(LocalDateTime.now());
 			existingUser.setLastUpdatedBy(user.getUserId());

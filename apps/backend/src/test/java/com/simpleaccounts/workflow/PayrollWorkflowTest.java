@@ -64,7 +64,6 @@ class PayrollWorkflowTest {
         void draftCanBeConfiguredWithWpsSettings() {
             payrollState.setWpsEnabled(true);
             payrollState.setWpsMolId("MOL123456");
-            payrollState.setWpsBankCode("ADCB");
 
             assertThat(payrollState.isWpsEnabled()).isTrue();
             assertThat(payrollState.getWpsMolId()).isEqualTo("MOL123456");
@@ -250,7 +249,6 @@ class PayrollWorkflowTest {
             payrollState.addEmployee("EMP002", new BigDecimal("8000.00"));
             payrollState.setWpsEnabled(true);
             payrollState.setWpsMolId("MOL123");
-            payrollState.setWpsBankCode("ADCB");
             payrollState.generatePayslips("admin");
             payrollState.sendForReview("hr_manager");
             payrollState.approve("finance_manager");
@@ -365,11 +363,9 @@ class PayrollWorkflowTest {
 
     static class PayrollRunWorkflowState {
         private PayrollStatus status = PayrollStatus.DRAFT;
-        private YearMonth period;
         private List<EmployeePayslip> payslips = new ArrayList<>();
         private boolean wpsEnabled = false;
         private String wpsMolId;
-        private String wpsBankCode;
         private String approvedBy;
         private boolean periodLocked = false;
         private boolean exported = false;
@@ -378,7 +374,6 @@ class PayrollWorkflowTest {
         private String rollbackReason;
 
         PayrollRunWorkflowState(YearMonth period) {
-            this.period = period;
         }
 
         PayrollStatus getStatus() { return status; }
@@ -400,7 +395,6 @@ class PayrollWorkflowTest {
         void setPeriodLocked(boolean locked) { this.periodLocked = locked; }
         void setWpsEnabled(boolean enabled) { this.wpsEnabled = enabled; }
         void setWpsMolId(String molId) { this.wpsMolId = molId; }
-        void setWpsBankCode(String bankCode) { this.wpsBankCode = bankCode; }
 
         void addEmployee(String employeeId, BigDecimal grossPay) {
             EmployeePayslip payslip = new EmployeePayslip(employeeId, grossPay);

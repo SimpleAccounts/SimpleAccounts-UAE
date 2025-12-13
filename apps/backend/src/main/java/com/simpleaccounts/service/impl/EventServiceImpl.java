@@ -1,6 +1,5 @@
 package com.simpleaccounts.service.impl;
 
-
 import com.simpleaccounts.entity.Event;
 import com.simpleaccounts.service.EventService;
 import com.simpleaccounts.service.InvoiceService;

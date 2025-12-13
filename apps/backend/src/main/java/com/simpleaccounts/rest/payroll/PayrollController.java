@@ -664,12 +664,6 @@ public class PayrollController {
         }
     }
 
-//
-//            SalaryCalculationModel salaryCalculationModel = payrollRestHepler.getSalaryCalculations(designationId,grossSalary);
-//
-//            return new ResponseEntity(salaryCalculationModel, HttpStatus.OK);
-//
-
     @LogRequest
     @ApiOperation(value = "Get Unpaid Payroll list")
     @GetMapping(value = "/getUnpaidPayrollList")

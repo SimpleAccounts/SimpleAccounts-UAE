@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "PAYROLL")
 @Data
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 public class Payroll implements Serializable {
 
     private static final long serialVersionUID = 6914121175305098995L;
@@ -23,7 +23,7 @@ public class Payroll implements Serializable {
     private Integer id;
 
     @Column(name = "PAYROLL_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime payrollDate;
 
     @Basic
@@ -51,7 +51,7 @@ public class Payroll implements Serializable {
     private String status;
 
     @Column(name = "RUN_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime runDate;
 
     @Basic
@@ -91,14 +91,14 @@ public class Payroll implements Serializable {
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-   //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "LAST_UPDATED_BY")
     private Integer lastUpdateBy;
 
     @Column(name = "LAST_UPDATE_DATE")
-   //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate = LocalDateTime.now();
 
 }

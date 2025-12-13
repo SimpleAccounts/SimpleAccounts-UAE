@@ -26,7 +26,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Table(name = "CONTACT")
 @Data
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 public class Contact implements Serializable {
 
 	private static final long serialVersionUID = 6914121175305098995L;
@@ -120,7 +120,7 @@ public class Contact implements Serializable {
 	@Basic(optional = false)
 	@Column(name = "CREATED_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime createdDate;
 
 	@Basic
@@ -129,7 +129,7 @@ public class Contact implements Serializable {
 
 	@Basic
 	@Column(name = "LAST_UPDATE_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime lastUpdateDate;
 
 	@Column(name = "DELETE_FLAG")

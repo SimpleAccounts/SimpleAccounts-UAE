@@ -23,7 +23,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 public class PostgresTestContainerConfig implements BeforeAllCallback {
 
     // Static container - shared across all tests
-    private static final String POSTGRES_IMAGE = "postgres:13-alpine";
     private static final String DATABASE_NAME = "simpleaccounts_test";
     private static final String USERNAME = "test";
     private static final String PASSWORD = "test";

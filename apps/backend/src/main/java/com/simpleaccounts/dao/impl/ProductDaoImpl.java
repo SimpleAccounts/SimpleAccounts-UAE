@@ -6,7 +6,6 @@ import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.ProductFilterEnum;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.ProductDao;

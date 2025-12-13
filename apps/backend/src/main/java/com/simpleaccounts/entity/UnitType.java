@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "UNIT_TYPE")
 @Data
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 public class UnitType  implements Serializable {
 
     private static final long serialVersionUID = 1L;

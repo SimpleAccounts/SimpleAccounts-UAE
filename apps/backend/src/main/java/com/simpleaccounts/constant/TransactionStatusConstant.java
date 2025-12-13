@@ -15,7 +15,6 @@ public final class TransactionStatusConstant {
     public static final int EXPLIANED = 2;
     public static final int PARTIALLYEXPLIANED = 3;
 
-    //====================Constant used in import transcation============
     public static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy";
     public static final int HEADER_COUNT = 0;
     public static final String TRANSACTION_DATE = "Transaction Date";

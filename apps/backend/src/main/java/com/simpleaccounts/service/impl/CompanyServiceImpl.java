@@ -107,14 +107,6 @@ public class CompanyServiceImpl extends CompanyService {
 
 //
 
-////            if (companyList!=null && !companyList.isEmpty()){
-////                throw new RuntimeException("Throwing exception for demoing Rollback!!!");
-////            }
-
-////        if (companyList!=null && !companyList.isEmpty()){
-////            throw new RuntimeException("Throwing exception for demoing Rollback!!!");
-////        }
-
 //
 
 //

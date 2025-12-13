@@ -19,7 +19,7 @@ import lombok.Data;
 @Entity
 @Table(name = "JOURNAL")
 @Data
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 @NamedQueries({
 		@NamedQuery(name = "getJournalByReferenceId", query = "select j from Journal j ,JournalLineItem jn where jn.journal.id = j.id and jn.deleteFlag = false and jn.referenceId = :referenceId"),
 		@NamedQuery(name = "getJournalByReferenceIdAndType", query = "select j from Journal j ,JournalLineItem jn where jn.journal.id = j.id and jn.deleteFlag = false and jn.referenceId = :referenceId and jn.referenceType = :referenceType")})
@@ -39,7 +39,7 @@ public class Journal implements Serializable {
 
 	@Basic
 	@Column(name = "JOURNAL_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDate journalDate;
 
 	@Basic
@@ -85,14 +85,14 @@ public class Journal implements Serializable {
 	@Column(name = "CREATED_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	@Basic(optional = false)
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime createdDate;
 
 	@Column(name = "LAST_UPDATED_BY")
 	private Integer lastUpdateBy;
 
 	@Column(name = "LAST_UPDATE_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime lastUpdateDate;
 
 	@Column(name = "DELETE_FLAG")
@@ -107,7 +107,7 @@ public class Journal implements Serializable {
 
 	@Basic
 	@Column(name = "TRANSACTION_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDate transactionDate;
 
 	@Column(name = "REVERSAL_FLAG")

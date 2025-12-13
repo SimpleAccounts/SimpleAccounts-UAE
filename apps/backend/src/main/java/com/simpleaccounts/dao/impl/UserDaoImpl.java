@@ -11,7 +11,7 @@ import javax.persistence.Query;
 
 import com.simpleaccounts.rest.DropdownModel;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Repository;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;

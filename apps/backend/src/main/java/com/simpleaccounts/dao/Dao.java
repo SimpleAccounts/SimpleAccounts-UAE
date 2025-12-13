@@ -38,7 +38,6 @@ public interface Dao<PK, ENTITY> {
 	 */
 	public List<ENTITY> dumpData();
 
-	// for testing
 	List<ENTITY> executeQuery(List<DbFilter> dbFilters);
 
 	Integer getResultCount(List<DbFilter> dbFilters);

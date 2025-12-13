@@ -49,17 +49,13 @@ public class TransactionReportRestController {
 
 	private final TransactionService transactionService;
 
-	private final InvoiceService invoiceService;
-
 	@Autowired
 	public TransactionReportRestController(ChartOfAccountService transactionTypeService,
 										   TransactionCategoryService transactionCategoryService,
-										   TransactionService transactionService,
-										   InvoiceService invoiceService) {
+										   TransactionService transactionService) {
 		this.transactionTypeService = transactionTypeService;
 		this.transactionCategoryService = transactionCategoryService;
 		this.transactionService = transactionService;
-		this.invoiceService = invoiceService;
 	}
 
 	@LogRequest

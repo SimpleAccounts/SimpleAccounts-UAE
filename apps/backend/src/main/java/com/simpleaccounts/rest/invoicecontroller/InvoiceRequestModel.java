@@ -65,7 +65,6 @@ public class InvoiceRequestModel {
     private String taxRegistrationNo;
     private String taxTreatment;
     
-    //if true while creating create payment
     private boolean markAsPaid;
     private BigDecimal remainingInvoiceAmount;
     private  Boolean isCnCreatedOnPaidInvoice;
