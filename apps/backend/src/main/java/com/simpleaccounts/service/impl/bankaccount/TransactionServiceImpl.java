@@ -105,11 +105,10 @@ public class TransactionServiceImpl extends TransactionService {
 			} else {
 				transaction.setCurrentBalance(
 						transaction.getBankAccount().getCurrentBalance().subtract(transaction.getTransactionAmount()));
-			}
-			super.persist(transaction, null, getActivity(transaction, "Created"));
-			BigDecimal balanceAmount = transaction.getCurrentBalance();
+				}
+				super.persist(transaction, null, getActivity(transaction, "Created"));
 
-		} else {
+			} else {
 			BigDecimal differenceAmount = transaction.getTransactionAmount();
 			if (transaction.getDebitCreditFlag() == 'D') {
 				differenceAmount = differenceAmount.negate();
@@ -135,39 +134,41 @@ public class TransactionServiceImpl extends TransactionService {
 				}
 				transaction.setCurrentBalance(balanceAmount);
 			}
-			super.persist(transaction, null, getActivity(transaction, "Created"));
+				super.persist(transaction, null, getActivity(transaction, "Created"));
 
-			BigDecimal balance = transaction.getBankAccount().getCurrentBalance();
-			if (transaction.getDebitCreditFlag() == 'D') {
-				balance = balance.subtract(transaction.getTransactionAmount());
-			} else {
-				balance = balance.add(transaction.getTransactionAmount());
+				BigDecimal balance = transaction.getBankAccount().getCurrentBalance();
+				if (transaction.getDebitCreditFlag() == 'D') {
+					balance = balance.subtract(transaction.getTransactionAmount());
+				} else {
+					balance = balance.add(transaction.getTransactionAmount());
+				}
+				updateAccountBalance(balance, transaction);
+
 			}
-
 		}
-	}
 
-	@Override
-	public Transaction update(Transaction transaction) {
-		Transaction currentTransaction = transactionDao.findByPK(transaction.getTransactionId());
-		BigDecimal differenceAmount = new BigDecimal(0);
-		BigDecimal balanceAmount = transaction.getBankAccount().getCurrentBalance();
-		if (Objects.equals(currentTransaction.getDebitCreditFlag(), transaction.getDebitCreditFlag())) {
-			differenceAmount = transaction.getTransactionAmount().subtract(currentTransaction.getTransactionAmount());
-		} else {
-			differenceAmount = transaction.getTransactionAmount().add(currentTransaction.getTransactionAmount());
-		}
-		if (differenceAmount.compareTo(new BigDecimal(0)) != 0) {
-			if (transaction.getDebitCreditFlag() == 'D') {
-				balanceAmount = balanceAmount.subtract(differenceAmount);
-				transaction.setCurrentBalance(transaction.getCurrentBalance().subtract(differenceAmount));
+		@Override
+		public Transaction update(Transaction transaction) {
+			Transaction currentTransaction = transactionDao.findByPK(transaction.getTransactionId());
+			BigDecimal differenceAmount;
+			BigDecimal balanceAmount = transaction.getBankAccount().getCurrentBalance();
+			if (Objects.equals(currentTransaction.getDebitCreditFlag(), transaction.getDebitCreditFlag())) {
+				differenceAmount = transaction.getTransactionAmount().subtract(currentTransaction.getTransactionAmount());
 			} else {
-				balanceAmount = balanceAmount.add(differenceAmount);
-				transaction.setCurrentBalance(transaction.getCurrentBalance().add(differenceAmount));
+				differenceAmount = transaction.getTransactionAmount().add(currentTransaction.getTransactionAmount());
 			}
-			updateLatestTransaction(differenceAmount, transaction);
+			if (differenceAmount.compareTo(BigDecimal.ZERO) != 0) {
+				if (transaction.getDebitCreditFlag() == 'D') {
+					balanceAmount = balanceAmount.subtract(differenceAmount);
+					transaction.setCurrentBalance(transaction.getCurrentBalance().subtract(differenceAmount));
+				} else {
+					balanceAmount = balanceAmount.add(differenceAmount);
+					transaction.setCurrentBalance(transaction.getCurrentBalance().add(differenceAmount));
+				}
+				updateLatestTransaction(differenceAmount, transaction);
+				updateAccountBalance(balanceAmount, transaction);
 
-		}
+			}
 		transaction = super.update(transaction, null, getActivity(transaction, "Updated"));
 		return transaction;
 	}

@@ -933,9 +933,7 @@ public class InvoiceRestHelper {
 		Contact contact = null;
 		Currency currency = null;
 		String message = null;
-		String contactName = null;
 		if(invoice!=null){
-			contactName = invoice.getContact().getFirstName()+" "+invoice.getContact().getLastName();
 			currency  = invoice.getCurrency();
 			message = "Dear {contactName} , <br><br>Please review the credit note "+creditNote.getCreditNoteNumber()+".\n" +
 					"details mentioned in the document attached\n" +
@@ -947,7 +945,6 @@ public class InvoiceRestHelper {
 					"relationship with you.";
 		}
 		else {
-			contactName = creditNote.getContact().getFirstName()+" "+creditNote.getContact().getLastName();
 			currency = creditNote.getCurrency();
 			message = "Dear {contactName},<br><br>\n" +
 					"Please review the credit note " +creditNote.getCreditNoteNumber()+".\n" +
@@ -2646,9 +2643,7 @@ public class InvoiceRestHelper {
 			BigDecimal inventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
 			BigDecimal totalAmount = BigDecimal.ZERO;
 			BigDecimal lineItemDiscount = BigDecimal.ZERO;
-			TransactionCategory purchaseCategory = null;
-			Map<TransactionCategory,BigDecimal> transactionCategoryTotalAmountMap = new HashMap<>();
-			for (InvoiceLineItem sortedLineItem : sortedItemList) {
+				for (InvoiceLineItem sortedLineItem : sortedItemList) {
 
 				BigDecimal amntWithoutVat = sortedLineItem.getUnitPrice()
 						.multiply(BigDecimal.valueOf(sortedLineItem.getQuantity()));
@@ -2684,13 +2679,8 @@ public class InvoiceRestHelper {
 
 						}
 					}
-
-					purchaseCategory = sortedLineItem.getTrnsactioncCategory() != null ? sortedLineItem.getTrnsactioncCategory()
-							: sortedLineItem.getProduct().getLineItemList().stream()
-							.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
-							.getTransactioncategory();
-					isEligibleForInventoryJournalEntry = true;
-				}
+						isEligibleForInventoryJournalEntry = true;
+					}
 			}if(isCustomerInvoice && isEligibleForInventoryJournalEntry) {
 				sumOfInventoryAssetValuePerTransactionCategory = sumOfInventoryAssetValuePerTransactionCategory.add
 						(inventoryAssetValuePerTransactionCategory);
@@ -3162,9 +3152,7 @@ public class InvoiceRestHelper {
 			BigDecimal inventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
 			BigDecimal totalAmount = BigDecimal.ZERO;
 			BigDecimal lineItemDiscount = BigDecimal.ZERO;
-			TransactionCategory purchaseCategory = null;
-			Map<TransactionCategory,BigDecimal> transactionCategoryTotalAmountMap = new HashMap<>();
-			for (InvoiceLineItem sortedLineItem : sortedItemList) {
+				for (InvoiceLineItem sortedLineItem : sortedItemList) {
 
 				BigDecimal amntWithoutVat = sortedLineItem.getUnitPrice()
 						.multiply(BigDecimal.valueOf(sortedLineItem.getQuantity()));
@@ -3201,13 +3189,8 @@ public class InvoiceRestHelper {
 
 						}
 					}
-
-					purchaseCategory = sortedLineItem.getTrnsactioncCategory() != null ? sortedLineItem.getTrnsactioncCategory()
-							: sortedLineItem.getProduct().getLineItemList().stream()
-							.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
-							.getTransactioncategory();
-					isEligibleForInventoryJournalEntry = true;
-				}
+						isEligibleForInventoryJournalEntry = true;
+					}
 			}if(isCustomerInvoice && isEligibleForInventoryJournalEntry) {
 				sumOfInventoryAssetValuePerTransactionCategory = sumOfInventoryAssetValuePerTransactionCategory.add
 						(inventoryAssetValuePerTransactionCategory);

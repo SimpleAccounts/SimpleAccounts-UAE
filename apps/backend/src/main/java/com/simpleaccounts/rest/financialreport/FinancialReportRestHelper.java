@@ -5,7 +5,6 @@ import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.DiscountType;
 import com.simpleaccounts.entity.CreditNoteLineItem;
 import com.simpleaccounts.entity.TransactionCategoryClosingBalance;
-import com.simpleaccounts.entity.VatReportFiling;
 import com.simpleaccounts.model.TrialBalanceResponseModel;
 import com.simpleaccounts.model.VatReportModel;
 import com.simpleaccounts.model.VatReportResponseModel;
@@ -84,13 +83,11 @@ public class FinancialReportRestHelper {
 			BigDecimal totalNonOperatingIncome = BigDecimal.ZERO;
 			BigDecimal totalNonOperatingExpense = BigDecimal.ZERO;
 
-			BigDecimal equityOffset = BigDecimal.ZERO;
 			BigDecimal openingBalanceOffsetAsset = BigDecimal.ZERO;
 			BigDecimal openingBalanceOffsetLiabilities = BigDecimal.ZERO;
 
 			BigDecimal totalBank = BigDecimal.ZERO;
 
-			BigDecimal retainedEarnings = BigDecimal.ZERO;
 			BigDecimal totalRetainedEarnings = BigDecimal.ZERO;
 
 			LocalDateTime startDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), CommonColumnConstants.DD_MM_YYYY);
@@ -159,10 +156,11 @@ public class FinancialReportRestHelper {
 						retainedEarningsIncome = retainedEarningsIncome.add(closingBalance);
 						closingBalance = BigDecimal.ZERO;
 					}
-					retainedEarnings = retainedEarningsIncome.subtract(retainedEarningsExpense);
-					totalEquities = totalEquities.add(retainedEarnings);
-					totalRetainedEarnings = totalRetainedEarnings.add(retainedEarnings);
-				}
+						BigDecimal retainedEarnings =
+								retainedEarningsIncome.subtract(retainedEarningsExpense);
+						totalEquities = totalEquities.add(retainedEarnings);
+						totalRetainedEarnings = totalRetainedEarnings.add(retainedEarnings);
+					}
 
 				switch (chartOfAccountCategoryCodeEnum) {
 					case CASH:
@@ -273,7 +271,7 @@ public class FinancialReportRestHelper {
 				balanceSheetResponseModel.getEquities().put("RETAINED_EARNINGS", totalRetainedEarnings);
 			}
 
-			equityOffset = openingBalanceOffsetLiabilities.subtract(openingBalanceOffsetAsset);
+			BigDecimal equityOffset = openingBalanceOffsetLiabilities.subtract(openingBalanceOffsetAsset);
 			if (equityOffset.longValue()<0) {
 				equityOffset = equityOffset.negate();
 				balanceSheetResponseModel.getCurrentAssets().put("OPENING_BALANCE_EQUITY_OFFSET", equityOffset);
@@ -395,12 +393,10 @@ public class FinancialReportRestHelper {
 
 			responseModel.setTotalNonOperatingIncome(totalNonOperatingIncome);
 			responseModel.setTotalNonOperatingExpense(totalNonOperatingExpense);
-			BigDecimal totalNonOperatingIncomeLoss = BigDecimal.ZERO;
-			if (totalNonOperatingExpense.longValue() < 0) {
-				totalNonOperatingIncomeLoss = totalNonOperatingIncome.add(totalNonOperatingExpense);
-			} else {
-				totalNonOperatingIncomeLoss = totalNonOperatingIncome.subtract(totalNonOperatingExpense);
-			}
+			BigDecimal totalNonOperatingIncomeLoss =
+					totalNonOperatingExpense.longValue() < 0
+							? totalNonOperatingIncome.add(totalNonOperatingExpense)
+							: totalNonOperatingIncome.subtract(totalNonOperatingExpense);
 			responseModel.setNonOperatingIncomeExpense(totalNonOperatingIncomeLoss);
 
 			BigDecimal netProfitLoss = totalOperatingIncome.subtract(totalNonOperatingIncome).subtract(totalCostOfGoodsSold)
@@ -740,13 +736,12 @@ public class FinancialReportRestHelper {
 		vatReportResponseModel.setTotalAmount(vatReportResponseModel.getTotalAmount().add(vatReportResponseModel.getExemptSupplies()));
 		vatReportResponseModel.setTotalValueOfDueTaxForThePeriod(vatReportResponseModel.getTotalVatAmount());
 
-		BigDecimal supplierVatTotal = BigDecimal.ZERO;
 		BigDecimal debitNoteSalesVat = BigDecimal.ZERO;
 		if(vatReportResponseModel.getDebitNoteSalesVat()!=null){
 			debitNoteSalesVat = vatReportResponseModel.getDebitNoteSalesVat();
 		}
 		if (vatReportResponseModel.getTotalVatAmountForExpense()!=null && vatReportResponseModel.getTotalVatAmountForSupplierInvoice()!=null) {
-			 supplierVatTotal = vatReportResponseModel.getTotalVatAmountForExpense()
+			BigDecimal supplierVatTotal = vatReportResponseModel.getTotalVatAmountForExpense()
 					.add(vatReportResponseModel.getTotalVatAmountForSupplierInvoice());
 			vatReportResponseModel.setStandardRatedExpensesVatAmount(supplierVatTotal.subtract(debitNoteSalesVat));
 		}
@@ -837,22 +832,17 @@ public class FinancialReportRestHelper {
 			BigDecimal totalNonOperatingIncome = BigDecimal.ZERO;
 			BigDecimal totalNonOperatingExpense = BigDecimal.ZERO;
 			BigDecimal netIncome = BigDecimal.ZERO;
-			BigDecimal closingBalance = BigDecimal.ZERO;
-			BigDecimal totalClosingBalance = BigDecimal.ZERO;
-			BigDecimal startingBalance = BigDecimal.ZERO;
 			BigDecimal grossCashInflow = BigDecimal.ZERO;
 			BigDecimal grossCashOutflow = BigDecimal.ZERO;
-			BigDecimal netCashChange = BigDecimal.ZERO;
-			BigDecimal endingBalance = BigDecimal.ZERO;
-			totalClosingBalance = transactionCategoryClosingBalanceService.sumOfTotalAmountClosingBalance(reportRequestModel,lastMonth);
+			BigDecimal totalClosingBalance =
+					transactionCategoryClosingBalanceService.sumOfTotalAmountClosingBalance(
+							reportRequestModel, lastMonth);
 
 			for (Map.Entry<Integer, TransactionCategoryClosingBalance> entry : transactionCategoryClosingBalanceMap.entrySet()) {
 				TransactionCategoryClosingBalance transactionCategoryClosingBalance = entry.getValue();
 				String transactionCategoryCode = transactionCategoryClosingBalance.getTransactionCategory().getChartOfAccount().getChartOfAccountCode();
 				String transactionCategoryName = transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryName();
-				 closingBalance = transactionCategoryClosingBalance.getClosingBalance();
-
-				LocalDateTime balanceDate = transactionCategoryClosingBalance.getClosingBalanceDate();
+				BigDecimal closingBalance = transactionCategoryClosingBalance.getClosingBalance();
 
 //
 //				//block to get sum of previous month closing balances
@@ -1001,13 +991,10 @@ public class FinancialReportRestHelper {
 
 			responseModel.setTotalNonOperatingIncome(totalNonOperatingIncome);
 			responseModel.setTotalNonOperatingExpense(totalNonOperatingExpense);
-			BigDecimal totalNonOperatingIncomeLoss = BigDecimal.ZERO;
-			if(totalNonOperatingExpense.longValue()<0)
-			{
-				totalNonOperatingIncomeLoss = totalNonOperatingIncome.add(totalNonOperatingExpense);
-			}
-			else
-				totalNonOperatingIncomeLoss = totalNonOperatingIncome.subtract(totalNonOperatingExpense);
+			BigDecimal totalNonOperatingIncomeLoss =
+					totalNonOperatingExpense.longValue() < 0
+							? totalNonOperatingIncome.add(totalNonOperatingExpense)
+							: totalNonOperatingIncome.subtract(totalNonOperatingExpense);
 			responseModel.setNonOperatingIncomeExpense(totalNonOperatingIncomeLoss);
 
 			BigDecimal netProfitLoss = totalOperatingIncome.subtract(totalNonOperatingIncome).subtract(totalCostOfGoodsSold)
@@ -1024,7 +1011,7 @@ public class FinancialReportRestHelper {
 			responseModel.setNetIncome(netIncome);
 
 			//block for netCash change
-			netCashChange = grossCashInflow.subtract(grossCashOutflow);
+			BigDecimal netCashChange = grossCashInflow.subtract(grossCashOutflow);
 			responseModel.setNetCashChange(netCashChange);
 
 			if (totalClosingBalance == null) {
@@ -1032,7 +1019,7 @@ public class FinancialReportRestHelper {
 			}
 
 			responseModel.setStartingBalance(totalClosingBalance);
-			endingBalance = totalClosingBalance.add(netCashChange);
+			BigDecimal endingBalance = totalClosingBalance.add(netCashChange);
 			responseModel.setEndingBalance(endingBalance);
 		}
 		return responseModel;
@@ -1041,7 +1028,7 @@ public class FinancialReportRestHelper {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate startDate = LocalDate.parse(reportRequestModel.getStartDate(), formatter);
 		LocalDate endDate = LocalDate.parse(reportRequestModel.getEndDate(), formatter);
-        VatReportFiling vatReportFiling = vatReportFilingRepository.getVatReportFilingByStartDateAndEndDate(startDate, endDate);
+        
 		List<CreditNoteLineItem> creditNoteLineItems = creditNoteLineItemRepository.findAllByDates(startDate,endDate);
 		BigDecimal dnDiscountVat1 = BigDecimal.ZERO;
 		BigDecimal dnDiscountVat2 = BigDecimal.ZERO;
@@ -1088,8 +1075,7 @@ public class FinancialReportRestHelper {
 				" FROM CreditNote i,CreditNoteLineItem  il WHERE i.status not in(2) AND i.type=13 and i.creditNoteId = il.creditNote.creditNoteId and il.vatCategory.id in (1) AND i.deleteFlag = false AND i.creditNoteDate between :startDate and :endDate",BigDecimal.class);
 		debitNote.setParameter("startDate",stDate);
 		debitNote.setParameter("endDate",edDate);
-		BigDecimal debitNoteSales = BigDecimal.ZERO;
-		debitNoteSales	= debitNote.getSingleResult();
+		BigDecimal debitNoteSales = debitNote.getSingleResult();
 		if(dnDiscountVat1!=null && debitNoteSales!=null ){
 			debitNoteSales = debitNoteSales.subtract(dnDiscountVat1);
 		}
@@ -1101,8 +1087,7 @@ public class FinancialReportRestHelper {
 				" FROM CreditNote i,CreditNoteLineItem  il WHERE i.status not in(2) AND i.type=13 and i.creditNoteId = il.creditNote.creditNoteId and il.vatCategory.id in (1) AND i.deleteFlag = false AND i.creditNoteDate between :startDate and :endDate",BigDecimal.class);
 		debitNoteVat.setParameter("startDate",stDate);
 		debitNoteVat.setParameter("endDate",edDate);
-		BigDecimal debitNoteSalesVat = BigDecimal.ZERO;
-		debitNoteSalesVat	= debitNoteVat.getSingleResult();
+		BigDecimal debitNoteSalesVat = debitNoteVat.getSingleResult();
 		if(debitNoteSalesVat!=null){
 			vatReportResponseModel.setDebitNoteSalesVat(debitNoteSalesVat);
 		}
