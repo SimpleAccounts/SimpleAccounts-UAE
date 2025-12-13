@@ -140,8 +140,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/ReceivableInvoiceDetail")
     public ResponseEntity<ReceivableInvoiceDetailResponseModel> getReceivableInvoiceDetail(ReportRequestModel requestModel,
                                                                                              HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
         ReceivableInvoiceDetailResponseModel receivableInvoiceDetailResponseModel = simpleAccountReportRestHelper.getreceivableInvoiceDetail(requestModel);
         try {
             if (receivableInvoiceDetailResponseModel == null) {
@@ -158,8 +156,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/PayableInvoiceDetail")
     public ResponseEntity<PayableInvoiceDetailResponseModel> getPayableInvoiceDetail(ReportRequestModel requestModel,
                                                                                            HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
         PayableInvoiceDetailResponseModel payableInvoiceDetailResponseModel = simpleAccountReportRestHelper.getPayableInvoiceDetail(requestModel);
         try {
             if (payableInvoiceDetailResponseModel == null) {
@@ -176,8 +172,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/creditNoteDetails")
     public ResponseEntity<CreditNoteDetailsResponseModel> getcreditNoteDetails(ReportRequestModel requestModel,
                                                                                   HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
         CreditNoteDetailsResponseModel creditNoteDetailsResponseModel = simpleAccountReportRestHelper.getcreditNoteDetails(requestModel);
         try {
             if (creditNoteDetailsResponseModel == null) {
@@ -194,8 +188,6 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/ExpenseDetails")
     public ResponseEntity<ExpenseDetailsResponseModel> getExpenseDetails(ReportRequestModel requestModel,
                                                                                HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
         ExpenseDetailsResponseModel expenseDetailsResponseModel = simpleAccountReportRestHelper.getExpenseDetails(requestModel);
         try {
             if (expenseDetailsResponseModel == null) {

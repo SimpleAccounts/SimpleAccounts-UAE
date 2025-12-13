@@ -144,7 +144,6 @@ public class TransactionImportRestHelper {
 						if (headerIndexPositionCounter == header - headerValue) {
 							processHeaderColumns(cSVRecord);
 
-							headerIndexPosition++;
 							if (isDataRepeated) {
 								break;
 							}
@@ -169,13 +168,8 @@ public class TransactionImportRestHelper {
 						try {
 							transaction.setDate("date");
 							// ... (rest of the code)
-							TemporalAccessor ta = DateTimeFormatter.ofPattern(dateFormat).parse(date);
 							DateFormat formatter = new SimpleDateFormat(dateFormat, Locale.US);
 							Date dateTranscation = (Date) formatter.parse(date);
-							LocalDateTime transactionDate = Instant.ofEpochMilli(dateTranscation.getTime())
-									.atZone(ZoneId.systemDefault()).toLocalDateTime();
-							DateFormat df = new SimpleDateFormat(dateFormat);
-							String reportDate = df.format(dateTranscation);
 							transaction.setDate("");
 							if (!drAmount.isEmpty()) {
 								transaction.setDebit("debit");
