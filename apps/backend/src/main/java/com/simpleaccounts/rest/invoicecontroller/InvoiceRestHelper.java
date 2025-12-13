@@ -1588,31 +1588,8 @@ public class InvoiceRestHelper {
 		}
 		return invoiceDataMap;
 	}
-	private void getTaxableAmount(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
-		if (invoice.getInvoiceLineItems() != null) {
-			BigDecimal taxableAmount=BigDecimal.ZERO;
-			for(InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()){
-				if (invoiceLineItem.getUnitPrice()!= null) {
-					if(invoiceLineItem.getVatCategory()!=null && invoiceLineItem.getVatCategory().getId()==1)
-						taxableAmount=taxableAmount.add( invoiceLineItem.getUnitPrice().setScale(2, RoundingMode.HALF_EVEN));
-				}
-			}
-			invoiceDataMap.put(value, taxableAmount.toString());
-		}
-	}
-	private void getTaxAmount(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
-		if (invoice.getInvoiceLineItems() != null) {
-			BigDecimal taxAmount=BigDecimal.ZERO;
-			for(InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()){
-				if (invoiceLineItem.getUnitPrice()!= null ) {
-					if(invoiceLineItem.getVatCategory()!=null && invoiceLineItem.getVatCategory().getId()==1)
-						taxAmount=taxAmount.add( invoiceLineItem.getVatAmount().setScale(2, RoundingMode.HALF_EVEN));
-				}
-			}
-			invoiceDataMap.put(value, taxAmount.toString());
 
-		}
-	}
+
 
 	private void getInvoiceLineItemExciseTax(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		int row=0;

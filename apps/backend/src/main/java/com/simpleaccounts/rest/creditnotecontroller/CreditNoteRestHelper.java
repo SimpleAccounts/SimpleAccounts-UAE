@@ -929,13 +929,7 @@ public class CreditNoteRestHelper {
         return creditNoteListModels;
     }
 
-    private void contact(Invoice invoice, InvoiceListModel model) {
-        if (invoice.getContact() != null) {
-            if (invoice.getContact().getFirstName() != null || invoice.getContact().getLastName() != null) {
-                model.setName(invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName());
-            }
-        }
-    }
+
 
     private List<CreditNote> getCreditNoteListForCustomer(Integer contact, Pageable paging,
                                                         PaginationResponseModel responseModel,Integer type ) {
