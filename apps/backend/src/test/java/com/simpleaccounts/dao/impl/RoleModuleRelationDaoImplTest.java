@@ -295,7 +295,7 @@ class RoleModuleRelationDaoImplTest {
 
         // Assert
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getSimpleAccountsModule().getModuleName()).isEqualTo("Only Module");
+        assertThat(result.get(0).getSimpleAccountsModule().getSimpleAccountsModuleName()).isEqualTo("Only Module");
     }
 
     @Test
@@ -369,8 +369,7 @@ class RoleModuleRelationDaoImplTest {
 
         SimpleAccountsModules module = new SimpleAccountsModules();
         module.setSimpleAccountsModuleId(moduleId);
-        module.setModuleName(moduleName);
-        module.setModuleCode("MOD" + moduleId);
+        module.setSimpleAccountsModuleName(moduleName);
         relation.setSimpleAccountsModule(module);
 
         return relation;

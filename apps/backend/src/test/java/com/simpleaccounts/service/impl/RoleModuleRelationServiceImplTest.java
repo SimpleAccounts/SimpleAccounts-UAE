@@ -157,7 +157,7 @@ class RoleModuleRelationServiceImplTest {
 
         // Assert
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getSimpleAccountsModule().getModuleName()).isEqualTo("Only Module");
+        assertThat(result.get(0).getSimpleAccountsModule().getSimpleAccountsModuleName()).isEqualTo("Only Module");
     }
 
     @Test
@@ -239,8 +239,8 @@ class RoleModuleRelationServiceImplTest {
         List<RoleModuleRelation> result = roleModuleRelationService.getListOfSimpleAccountsModulesForAllRoles();
 
         // Assert
-        assertThat(result.get(0).getSimpleAccountsModule().getModuleName()).isEqualTo("Contacts");
-        assertThat(result.get(1).getSimpleAccountsModule().getModuleName()).isEqualTo("Company Settings");
+        assertThat(result.get(0).getSimpleAccountsModule().getSimpleAccountsModuleName()).isEqualTo("Contacts");
+        assertThat(result.get(1).getSimpleAccountsModule().getSimpleAccountsModuleName()).isEqualTo("Company Settings");
     }
 
     private RoleModuleRelation createRoleModuleRelation(Integer id, Integer roleCode, Integer moduleId, String moduleName) {
@@ -254,8 +254,7 @@ class RoleModuleRelationServiceImplTest {
 
         SimpleAccountsModules module = new SimpleAccountsModules();
         module.setSimpleAccountsModuleId(moduleId);
-        module.setModuleName(moduleName);
-        module.setModuleCode("MOD" + moduleId);
+        module.setSimpleAccountsModuleName(moduleName);
         relation.setSimpleAccountsModule(module);
 
         return relation;

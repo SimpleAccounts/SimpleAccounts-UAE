@@ -272,8 +272,7 @@ class RoleModuleControllerTest {
     private SimpleAccountsModules createModule(Integer id, String name, String code) {
         SimpleAccountsModules module = new SimpleAccountsModules();
         module.setSimpleAccountsModuleId(id);
-        module.setModuleName(name);
-        module.setModuleCode(code);
+        module.setSimpleAccountsModuleName(name);
         return module;
     }
 

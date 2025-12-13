@@ -304,8 +304,8 @@ class RoleModuleDaoImplTest {
         List<SimpleAccountsModules> result = roleModuleDao.getListOfSimpleAccountsModules();
 
         // Assert
-        assertThat(result.get(0).getModuleName()).isEqualTo("Dashboard");
-        assertThat(result.get(1).getModuleName()).isEqualTo("Reports");
+        assertThat(result.get(0).getSimpleAccountsModuleName()).isEqualTo("Dashboard");
+        assertThat(result.get(1).getSimpleAccountsModuleName()).isEqualTo("Reports");
     }
 
     @Test
@@ -339,8 +339,7 @@ class RoleModuleDaoImplTest {
     private SimpleAccountsModules createModule(Integer id, String name, String code) {
         SimpleAccountsModules module = new SimpleAccountsModules();
         module.setSimpleAccountsModuleId(id);
-        module.setModuleName(name);
-        module.setModuleCode(code);
+        module.setSimpleAccountsModuleName(name);
         return module;
     }
 
