@@ -137,8 +137,7 @@ class BankTransactions extends React.Component {
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       this.props.detailBankAccountActions
         .getBankAccountByID(
-          this.props.location.state.bankAccountId ||
-          localStorage.getItem("bankId")
+          this.props.location.state.bankAccountId
         )
         .then((res) => {
           this.setState({
@@ -160,20 +159,6 @@ class BankTransactions extends React.Component {
         });
       this.toggle(0, "all");
       //.this.initializeData();
-      if (this.props.location.state !== undefined) {
-        localStorage.setItem(
-          "bankId",
-          localStorage.getItem("bankId") !==
-            this.props.location.state.bankAccountId
-            ? this.props.location.state.bankAccountId
-            : localStorage.getItem("bankId")
-        );
-      } else {
-        localStorage.setItem("bankId", localStorage.getItem("bankId"));
-        this.props.location.state = {};
-        this.props.location.state.bankAccountId =
-          localStorage.getItem("bankId");
-      }
       this.props.transactionsActions.getTransactionTypeList();
       this.initializeData();
     }
@@ -183,8 +168,7 @@ class BankTransactions extends React.Component {
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       this.props.detailBankAccountActions
         .getBankAccountByID(
-          this.props.location.state.bankAccountId ||
-          localStorage.getItem("bankId")
+          this.props.location.state.bankAccountId
         )
         .then((res) => {
           this.setState({
@@ -206,20 +190,6 @@ class BankTransactions extends React.Component {
         });
       this.toggle(0, "all");
       //.this.initializeData();
-      if (this.props.location.state !== undefined) {
-        localStorage.setItem(
-          "bankId",
-          localStorage.getItem("bankId") !==
-            this.props.location.state.bankAccountId
-            ? this.props.location.state.bankAccountId
-            : localStorage.getItem("bankId")
-        );
-      } else {
-        localStorage.setItem("bankId", localStorage.getItem("bankId"));
-        this.props.location.state = {};
-        this.props.location.state.bankAccountId =
-          localStorage.getItem("bankId");
-      }
       this.props.commonActions.getCompanyDetails().then((res) => {
         if (res.status === 200) {
           const isRegisteredVat = res.data.isRegisteredVat;
@@ -249,17 +219,11 @@ class BankTransactions extends React.Component {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage,
     };
-    if (
-      (this.props.location.state && this.props.location.state.bankAccountId) ||
-      localStorage.getItem("bankId")
-    ) {
+    if (this.props.location.state && this.props.location.state.bankAccountId) {
       const postData = {
         ...filterData,
         ...data,
-        id:
-          (this.props.location.state &&
-            this.props.location.state.bankAccountId) ||
-          localStorage.getItem("bankId"),
+        id: this.props.location.state.bankAccountId,
         transactionType: this.state.transactionType,
       };
       this.props.transactionsActions
