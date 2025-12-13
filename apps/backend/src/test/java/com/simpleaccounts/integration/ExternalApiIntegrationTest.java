@@ -322,8 +322,12 @@ class ExternalApiIntegrationTest {
         private boolean shouldReturnUnauthorized = false;
         private boolean shouldReturnRateLimit = false;
 
-        void start() { }
-        void stop() { }
+        void start() {
+            // Intentionally empty for mock server
+        }
+        void stop() {
+            // Intentionally empty for mock server
+        }
         String getBaseUrl() { return "http://localhost:8089"; }
 
         void stubExchangeRate(String from, String to, BigDecimal rate) {

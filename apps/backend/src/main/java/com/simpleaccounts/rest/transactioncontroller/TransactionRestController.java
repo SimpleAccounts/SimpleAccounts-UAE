@@ -34,7 +34,7 @@ import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.service.bankaccount.TransactionStatusService;
-import com.simpleaccounts.service.impl.TransactionCategoryClosingBalanceServiceImpl;
+
 import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.FileHelper;

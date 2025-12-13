@@ -12,7 +12,7 @@ import com.simpleaccounts.model.InvoiceReportRestModel;
 import com.simpleaccounts.model.TransactionReportRestModel;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
-import com.simpleaccounts.service.InvoiceService;
+
 import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
