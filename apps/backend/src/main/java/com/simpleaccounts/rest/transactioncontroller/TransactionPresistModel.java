@@ -45,7 +45,7 @@ public class TransactionPresistModel implements Serializable {
 	private String reference;
 	private String currencyName;
 	private String curruncySymbol;
-	//for CT
+
 	private CorporateTaxModel corporateTaxModel;
 
 	// EXPENSE
@@ -74,7 +74,6 @@ public class TransactionPresistModel implements Serializable {
 
 	private TransactionExplinationStatusEnum explinationStatusEnum;
 	
-	//for view 
 	private String transactionCategoryLabel;
 
 	private Boolean isValidForClosingBalance;

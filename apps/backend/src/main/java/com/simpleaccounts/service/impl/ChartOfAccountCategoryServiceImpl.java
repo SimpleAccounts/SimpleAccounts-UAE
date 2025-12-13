@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 
 import com.simpleaccounts.dao.ChartOfAccountCategoryDao;
@@ -31,13 +29,13 @@ public class ChartOfAccountCategoryServiceImpl extends ChartOfAccountCategorySer
 	}
 
 	@Override
-//	@Cacheable(cacheNames = "chartOfAccountCategoryCache", key = "#chartOfAccountCategoryId")
+
 	public ChartOfAccountCategory findByPK(Integer chartOfAccountCategoryId) {
 		return dao.findByPK(chartOfAccountCategoryId);
 	}
 
 	@Override
-//	@Cacheable(cacheNames = "chartOfAccountCategoryListCache", key = "'chartOfAccountCategoryList'")
+
     public List<ChartOfAccountCategory> findAll() {
 		return  dao.getChartOfAccountCategoryList();
 	}

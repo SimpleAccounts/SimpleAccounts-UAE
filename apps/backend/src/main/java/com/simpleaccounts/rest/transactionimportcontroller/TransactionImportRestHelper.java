@@ -294,12 +294,6 @@ public class TransactionImportRestHelper {
 
 						MathContext mc = new MathContext(4); // 2 precision
 
-////							if (dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()).equals("C")) {
-////								currentBalance = currentBalance.add(trnx.getTransactionAmount());
-////							} else {
-////								currentBalance = currentBalance.subtract(trnx.getTransactionAmount());
-////							}
-
 							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDbColumnName());
 								if (!data.isEmpty() && !data.equals("-")) {
@@ -325,7 +319,6 @@ public class TransactionImportRestHelper {
 								}
 							}
 
-					//	trnx.setCurrentBalance(currentBalance);
 						break;
 
 					case DESCRIPTION:
@@ -391,12 +384,6 @@ public class TransactionImportRestHelper {
 
 							MathContext mc = new MathContext(4); // 2 precision
 
-////							if (dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()).equals("C")) {
-////								currentBalance = currentBalance.add(trnx.getTransactionAmount());
-////							} else {
-////								currentBalance = currentBalance.subtract(trnx.getTransactionAmount());
-////							}
-
 							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDisplayName());
 								if (!data.equals("-")) {
@@ -422,7 +409,6 @@ public class TransactionImportRestHelper {
 								}
 							}
 
-							//	trnx.setCurrentBalance(currentBalance);
 							break;
 
 						case DESCRIPTION:

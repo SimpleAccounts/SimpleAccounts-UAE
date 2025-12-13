@@ -10,7 +10,6 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -25,13 +24,9 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
-
-	private static final String AND_CLAUSE = " and ";
-	private static final String WHERE_CLAUSE = " where ";
 
 	protected Class<ENTITY> entityClass;
 
@@ -166,7 +161,6 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 		}
 		return orders;
 	}
-
 
 	@Override
 	public ENTITY persist(ENTITY entity) {

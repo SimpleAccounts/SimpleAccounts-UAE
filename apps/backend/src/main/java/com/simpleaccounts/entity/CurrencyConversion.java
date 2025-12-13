@@ -19,7 +19,7 @@ import org.hibernate.annotations.ColumnDefault;
  * @author admin
  */
 @Entity
-//@Table(name = "CURRENCY_CONVERSION")
+
 @Table(name = "CONVERTED_CURRENCY")
 @Data
 
@@ -57,7 +57,7 @@ public class CurrencyConversion implements Serializable {
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "ORDER_SEQUENCE")
@@ -73,7 +73,7 @@ public class CurrencyConversion implements Serializable {
     private Integer lastUpdateBy;
 
     @Column(name = "LAST_UPDATE_DATE")
-   //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate = LocalDateTime.now();
 
     @Basic(optional = false)

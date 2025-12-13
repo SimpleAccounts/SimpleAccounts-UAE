@@ -342,12 +342,6 @@ public class PayrollRestHepler {
 
     //
 
-//
-//            }
-//
-//        }
-//
-//    }
     public void getUpdatedSalaryAllTemplate(EmployeePersistModel employeePersistModel, Employee employee,
                                             List<SalaryTemplatePersistModel> salaryTemplatePersistModels) {
         if (employeePersistModel.getSalaryTemplatesString() != null && !employeePersistModel.getSalaryTemplatesString().isEmpty()) {

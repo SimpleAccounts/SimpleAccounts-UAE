@@ -13,7 +13,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "COAC_TRANSACTION_CATEGORY")
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 @Data
 @NamedQueries({
 		@NamedQuery(name = "findCoacTransactionCategoryForTransctionCategortyId", query = "SELECT tc FROM CoacTransactionCategory tc where tc.transactionCategory.transactionCategoryId=:id ") })
@@ -35,7 +35,7 @@ public class CoacTransactionCategory implements Serializable {
 	@Column(name = "CREATED_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	@Basic(optional = false)
-	  //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
 	@Column(name = "LAST_UPDATED_BY")

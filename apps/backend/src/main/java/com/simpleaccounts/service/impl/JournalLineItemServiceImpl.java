@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.simpleaccounts.rest.financialreport.CreditDebitAggregator;
 import com.simpleaccounts.rest.financialreport.FinancialReportRequestModel;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import com.simpleaccounts.dao.Dao;

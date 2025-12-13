@@ -60,7 +60,7 @@ public class SupplierInvoicePayment {
 	@Column(name = "CREATED_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	@CreationTimestamp
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime createdDate;
 
 	@Column(name = "LAST_UPDATED_BY")
@@ -68,7 +68,7 @@ public class SupplierInvoicePayment {
 
 	@Column(name = "LAST_UPDATE_DATE")
 	@UpdateTimestamp
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime lastUpdateDate;
 
 	@OneToOne

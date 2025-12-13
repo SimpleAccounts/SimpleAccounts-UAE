@@ -13,7 +13,7 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Repository;
 
 import com.simpleaccounts.constant.dbfilter.DbFilter;

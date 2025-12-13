@@ -27,12 +27,12 @@ public class ReconcileStatus implements Serializable  {
 
     @Basic
     @Column(name = "RECONCILED_START_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime reconciledStartDate;
 
     @Basic
     @Column(name = "RECONCILED_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime reconciledDate;
 
     @Basic
@@ -56,14 +56,14 @@ public class ReconcileStatus implements Serializable  {
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-   //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "LAST_UPDATED_BY")
     private Integer lastUpdateBy;
 
     @Column(name = "LAST_UPDATE_DATE")
-   //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate = LocalDateTime.now();
 
     @Basic(optional = false)

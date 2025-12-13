@@ -41,6 +41,6 @@ public class PaymentPersistModel {
 	private List<InvoiceDueAmountModel> paidInvoiceList;
 	private String invoiceNumber;
 	private String invoiceAmount;
-	//for apply to debit notes
+
 	private JSONArray listOfDebitNotes;
 }

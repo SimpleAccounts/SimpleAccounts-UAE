@@ -42,7 +42,6 @@ class ExpenseWorkflowTest {
         void draftExpenseCanBeEdited() {
             expenseState.setAmount(new BigDecimal("100.00"));
             expenseState.setCategory("Travel");
-            expenseState.setDescription("Flight to Dubai");
 
             assertThat(expenseState.getAmount()).isEqualByComparingTo(new BigDecimal("100.00"));
             assertThat(expenseState.getCategory()).isEqualTo("Travel");
@@ -352,7 +351,6 @@ class ExpenseWorkflowTest {
         private ExpenseStatus status = ExpenseStatus.DRAFT;
         private BigDecimal amount;
         private String category;
-        private String description;
         private List<String> receipts = new ArrayList<>();
         private String submittedBy;
         private String reviewedBy;
@@ -361,7 +359,6 @@ class ExpenseWorkflowTest {
         private String policyViolationReason;
         private String journalEntryId;
         private String paymentReference;
-        private LocalDate paymentDate;
         private List<Approval> approvals = new ArrayList<>();
 
         ExpenseStatus getStatus() { return status; }
@@ -392,13 +389,6 @@ class ExpenseWorkflowTest {
                 throw new IllegalStateException("Expense is not editable");
             }
             this.category = category;
-        }
-
-        void setDescription(String description) {
-            if (!isEditable()) {
-                throw new IllegalStateException("Expense is not editable");
-            }
-            this.description = description;
         }
 
         void addReceipt(String receiptPath) {
@@ -483,7 +473,6 @@ class ExpenseWorkflowTest {
             }
             this.status = ExpenseStatus.REIMBURSED;
             this.paymentReference = paymentRef;
-            this.paymentDate = paymentDate;
             return true;
         }
 

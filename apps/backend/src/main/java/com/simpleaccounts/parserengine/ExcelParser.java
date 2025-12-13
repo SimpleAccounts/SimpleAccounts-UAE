@@ -215,7 +215,7 @@ public class ExcelParser implements TransactionFileParser {
 						if (row.getRowNum() > firstRowIndex) {
 							com.simpleaccounts.entity.bankaccount.Transaction trnx = new Transaction();
 							for (TransactionEnum transactionEnum : dataColIndexMap.keySet()) {
-								// switch statement
+
 							}
 							list.add(trnx);
 						}

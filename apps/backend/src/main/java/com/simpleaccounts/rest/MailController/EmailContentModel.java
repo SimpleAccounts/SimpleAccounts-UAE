@@ -27,7 +27,7 @@ public class EmailContentModel {
     String[] cc_emails;
     String[] bcc_emails;
     String message;
-    //for invoice posting
+
     private BigDecimal amount;
     private String amountInWords;
     private Boolean markAsSent = Boolean.FALSE;

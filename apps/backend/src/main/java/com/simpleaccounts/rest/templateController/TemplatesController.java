@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,7 +64,7 @@ public class TemplatesController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    //    SELECT m.TEMPLATE_ID,m.TEMPLATE_ENABLE  FROM `mail_theme_templates` m WHERE `TEMPLATE_ENABLE`=1 LIMIT 1;
+
     @LogRequest
     @ApiOperation(value = "All Templates for For Dropdown")
     @GetMapping(value = "/getTemplateDropdown")

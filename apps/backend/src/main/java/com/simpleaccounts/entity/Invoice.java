@@ -26,7 +26,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Data
 @Entity
 @Table(name = "INVOICE")
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 @NoArgsConstructor
 @AllArgsConstructor
 @NamedQueries({
@@ -49,9 +49,9 @@ import org.hibernate.annotations.ColumnDefault;
 				"i.placeOfSupplyId AS PLACE_OF_SUPPLY_ID FROM Invoice i, PlaceOfSupply p WHERE i.placeOfSupplyId = p.id " +
 				"and i.type=2 and i.totalVatAmount > 0 AND i.invoiceDate between :startDate AND :endDate GROUP By i.placeOfSupplyId "),
 		@NamedQuery(name = "getSumOfTotalAmountWithVatForRCM", query = "SELECT SUM(i.totalAmount) AS TOTAL_AMOUNT, SUM(i.totalVatAmount) AS TOTAL_VAT_AMOUNT FROM Invoice i WHERE i.status not in(2) AND i.type=1 AND i.isReverseChargeEnabled=True AND i.deleteFlag=false AND i.invoiceDate between :startDate and :endDate"),
-		//@NamedQuery(name = "suggestionUnpaidInvoices", query = "Select i from Invoice i where i.status in :status  and  i.contact.contactId = :id and  i.type =:type and (i.currency.currencyCode=:currency or 0=:currency) and i.deleteFlag = false  and i.createdBy = :userId  order by i.id desc "),
+
 		@NamedQuery(name = "suggestionUnpaidInvoices", query = "Select i from Invoice i where i.status in :status  and  i.contact.contactId = :id and  i.type =:type and i.currency.currencyCode in :currency  and i.deleteFlag = false  and i.createdBy = :userId  order by i.id desc "),
-		//@NamedQuery(name = "suggestionUnpaidInvoicesAdmin", query = "Select i from Invoice i where i.status in :status  and  i.contact.contactId = :id and  i.type =:type and (i.currency.currencyCode=:currency or 0=:currency) and i.deleteFlag = false order by i.id desc ")
+
 		@NamedQuery(name = "suggestionUnpaidInvoicesAdmin", query = "Select i from Invoice i where i.status in :status  and  i.contact.contactId = :id and  i.type =:type and (i.currency.currencyCode in :currency or 0 in :currency) and i.deleteFlag = false order by i.id desc ")
 })
 @NamedNativeQueries({
@@ -115,11 +115,11 @@ public class Invoice implements Serializable {
 	private String referenceNumber;
 
 	@Column(name = "INVOICE_DATE")
-//	//@Convert(converter = DateConverter.class)
+
 	private LocalDate invoiceDate;
 
 	@Column(name = "INVOICE_DUE_DATE")
-//	//@Convert(converter = DateConverter.class)
+
 	private LocalDate invoiceDueDate;
 
 	@Column(name = "NOTES")
@@ -156,14 +156,14 @@ public class Invoice implements Serializable {
 	@Column(name = "CREATED_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	@Basic(optional = false)
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime createdDate;
 
 	@Column(name = "LAST_UPDATED_BY")
 	private Integer lastUpdateBy;
 
 	@Column(name = "LAST_UPDATE_DATE")
-	//@Convert(converter = DateConverter.class)
+
 	private LocalDateTime lastUpdateDate;
 
 	@Column(name = "DELETE_FLAG")
@@ -312,7 +312,7 @@ public class Invoice implements Serializable {
 	private Boolean changeShippingAddress = false;
 
 	@Column(name = "EDIT_FLAG")
-//	@ColumnDefault(value = "1")
+
 	@Basic(optional = false)
 	private Boolean editFlag = Boolean.TRUE;
 

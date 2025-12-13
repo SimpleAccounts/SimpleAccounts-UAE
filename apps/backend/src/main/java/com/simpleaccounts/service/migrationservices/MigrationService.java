@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface MigrationService {
 
-	// for Zoho migration
 	List<DataMigrationRespModel> processTheMigratedData(String productName, String version, String fileLocation,
 			Integer userId, String migFromDate, HttpServletRequest request) throws IOException;
 

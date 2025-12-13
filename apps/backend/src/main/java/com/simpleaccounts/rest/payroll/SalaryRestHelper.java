@@ -25,7 +25,7 @@ import com.simpleaccounts.utils.MailUtility;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -144,7 +144,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
                     salary.setTotalAmount(salaryAsPerNoOfWorkingDays);
                     salaryService.persist(salary);
                     if (Objects.equals(salaryComponent.getSalaryStructure().getId(), PayrollEnumConstants.Deduction.getId())){
-                      //  salaryForjournalEntry = salaryForjournalEntry.subtract(BigDecimal.valueOf(totalSalaryForSingleDay * salaryComponent.getNoOfDays()));
+
                     }
                     else {
                         salaryForjournalEntry = salaryForjournalEntry.add(salaryAsPerNoOfWorkingDays);

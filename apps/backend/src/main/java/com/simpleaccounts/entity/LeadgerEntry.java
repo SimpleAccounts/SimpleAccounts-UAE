@@ -20,7 +20,7 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 @Entity
 @Table(name = "LEADGER_ENTRY")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-////@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1)
+
 public class LeadgerEntry implements Serializable {
 
     private static final long serialVersionUID = 848122185643690684L;

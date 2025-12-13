@@ -190,7 +190,6 @@ public class BankAccountRestHelper {
 		bankAccount.setSwiftCode(bankModel.getSwiftCode());
 		bankAccount.setVersionNumber(1);
 		if (bankModel.getOpeningDate()!= null) {
-//			//LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
 
 			bankAccount.setOpeningDate(bankModel.getOpeningDate());
 		}

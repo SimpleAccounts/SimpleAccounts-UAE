@@ -102,8 +102,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -265,25 +264,25 @@ public class ZohoMigrationService {
 								} else if (setterMethod.equalsIgnoreCase("setCountry")) {
 									Integer value = migrationUtil.getCountryIdByValue(val);
 									Country country = countryService.findByPK(value);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, country, "Object");
+									migrationUtil.setRecordIntoEntity(entity, setterMethod, country, TYPE_OBJECT);
 								} else if (setterMethod.equalsIgnoreCase("setState")) {
 									Integer value = migrationUtil.getStateIdByInputColumnValue(val);
 									State state = stateService.findByPK(value);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, state, "Object");
+									migrationUtil.setRecordIntoEntity(entity, setterMethod, state, TYPE_OBJECT);
 								} else if (setterMethod.equalsIgnoreCase("setContactType")) {
 									Integer value = migrationUtil.getContactType(val);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, value, "Object");
+									migrationUtil.setRecordIntoEntity(entity, setterMethod, value, TYPE_OBJECT);
 								} else if (setterMethod.equalsIgnoreCase("setPlaceOfSupplyId")) {
 									if (StringUtils.isEmpty(val))
 										continue;
 									PlaceOfSupply placeOfSupply = migrationUtil.getPlaceOfSupplyByValue(val);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, placeOfSupply, "Object");
+									migrationUtil.setRecordIntoEntity(entity, setterMethod, placeOfSupply, TYPE_OBJECT);
 								} else if (setterMethod.equalsIgnoreCase("setTaxTreatment")) {
 										if (StringUtils.isEmpty(val))
 											continue;
 										val = setTaxTreatmentValues(val);
 										TaxTreatment taxTreatment = migrationUtil.getTaxTreatmentByValue(val);
-										migrationUtil.setRecordIntoEntity(entity, setterMethod, taxTreatment, "Object");
+										migrationUtil.setRecordIntoEntity(entity, setterMethod, taxTreatment, TYPE_OBJECT);
 									} 
 								else {
 									// set into entity
@@ -1453,23 +1452,23 @@ public class ZohoMigrationService {
                 if (StringUtils.isEmpty(val))
                     continue;
                 ProductType value = migrationUtil.getProductType(val);
-                migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, "Object");
+                migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, TYPE_OBJECT);
             }
             else if (setterMethod.equalsIgnoreCase("setVatCategory")){
                 VatCategory vatCategory = migrationUtil.getVatCategoryByValue(val);
-                migrationUtil.setRecordIntoEntity(productEntity,setterMethod,vatCategory,"Object");
+                migrationUtil.setRecordIntoEntity(productEntity,setterMethod,vatCategory,TYPE_OBJECT);
             }
 
 	            else if(setterMethod.equalsIgnoreCase("setPriceType")){
 	                if (StringUtils.isEmpty(val))
 	                    continue;
 	                ProductPriceType value = migrationUtil.getProductPriceType(val, recordData);
-	                migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, "Object");
+	                migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, TYPE_OBJECT);
 	                if (productEntity instanceof ProductLineItem){
 	                    if (StringUtils.isEmpty(val))
 	                        continue;
                     TransactionCategory transactionCategory = migrationUtil.getTransactionCategory(val);
-                    migrationUtil.setRecordIntoEntity(productEntity, "setTransactioncategory", transactionCategory, "Object");
+                    migrationUtil.setRecordIntoEntity(productEntity, "setTransactioncategory", transactionCategory, TYPE_OBJECT);
                 }
             }
             else if (setterMethod.equalsIgnoreCase("setUnitPrice")){
@@ -1527,7 +1526,7 @@ public class ZohoMigrationService {
                     continue;
                 Currency currency = migrationUtil.getCurrencyIdByValue(val);
 
-                migrationUtil.setRecordIntoEntity(productEntity, setterMethod, currency, "Object");
+                                    migrationUtil.setRecordIntoEntity(productEntity, setterMethod, currency, TYPE_OBJECT);
             }
             else if (setterMethod.equalsIgnoreCase("setPlaceOfSupplyId")) {
 				if (StringUtils.isEmpty(val))

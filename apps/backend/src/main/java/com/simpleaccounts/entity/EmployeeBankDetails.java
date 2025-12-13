@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "EMPLOYEE_BANK_DETAILS")
 @Data
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 public class EmployeeBankDetails  implements Serializable {
 
     	@Id
@@ -62,7 +62,7 @@ public class EmployeeBankDetails  implements Serializable {
     @Basic(optional = false)
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Basic
@@ -71,7 +71,7 @@ public class EmployeeBankDetails  implements Serializable {
 
     @Basic
     @Column(name = "LAST_UPDATE_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate;
 
     @Column(name = "DELETE_FLAG")

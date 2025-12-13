@@ -21,7 +21,6 @@ public class ProductMigrationParser {
     public static String applicationMigrationXML = "ApplicationMigration.xml";
 
     private static ApplicationMigration applicationMigration = null;
-    private static boolean reload = Boolean.parseBoolean(System.getProperty("reload.prouct.migration","true"));;
 
     private static String applicationMigrationPackage = "com.simpleaccounts.migration.xml.bindings.applicationmigration";
     private static String ProductPackage = "com.simpleaccounts.migration.xml.bindings.product";

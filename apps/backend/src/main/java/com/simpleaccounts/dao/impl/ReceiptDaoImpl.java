@@ -13,7 +13,7 @@ import com.simpleaccounts.entity.JournalLineItem;
 import com.simpleaccounts.entity.Receipt;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;

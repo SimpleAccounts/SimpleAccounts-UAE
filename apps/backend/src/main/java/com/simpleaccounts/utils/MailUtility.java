@@ -1,6 +1,5 @@
 package com.simpleaccounts.utils;
 
-//import com.itextpdf.html2pdf.HtmlConverter;
 import lombok.RequiredArgsConstructor;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.simpleaccounts.constant.ConfigurationConstants;
@@ -124,6 +123,41 @@ public class MailUtility {
 	public static final String CONTACT_ADDRESS_LINE1 = "contactAddressLine1";
 	public static final String CONTACT_ADDRESS_LINE2 = "contactAddressLine2";
 
+	public static final String PLACEHOLDER_PRODUCT = "{product}";
+	public static final String PLACEHOLDER_QUANTITY = "{quantity}";
+	public static final String PLACEHOLDER_UNIT_TYPE = "{unitType}";
+	public static final String PLACEHOLDER_UNIT_PRICE = "{unitPrice}";
+	public static final String PLACEHOLDER_EXCISE_AMOUNT = "{exciseAmount}";
+	public static final String PLACEHOLDER_SENDER_NAME = "{senderName}";
+	public static final String PLACEHOLDER_COMPANY_NAME = "{companyName}";
+	public static final String PLACEHOLDER_SUB_TOTAL = "{subTotal}";
+	public static final String PLACEHOLDER_VAT_TYPE = "{vatType}";
+	public static final String PLACEHOLDER_TOTAL = "{total}";
+	public static final String PLACEHOLDER_DESCRIPTION = "{description}";
+	public static final String PLACEHOLDER_COMPANY_LOGO = "{companylogo}";
+	public static final String PLACEHOLDER_CURRENCY = "{currency}";
+	public static final String PLACEHOLDER_COMPANY_ADDRESS_LINE1 = "{companyAddressLine1}";
+	public static final String PLACEHOLDER_COMPANY_ADDRESS_LINE2 = "{companyAddressLine2}";
+	public static final String PLACEHOLDER_COMPANY_POST_ZIP_CODE = "{companyPostZipCode}";
+	public static final String PLACEHOLDER_COMPANY_COUNTRY_CODE = "{companyCountryCode}";
+	public static final String PLACEHOLDER_COMPANY_STATE_REGION = "{companyStateRegion}";
+	public static final String PLACEHOLDER_VAT_NUMBER = "{vatNumber}";
+	public static final String PLACEHOLDER_PHONE_NUMBER = "{phoneNumber}";
+	public static final String PLACEHOLDER_CONTACT_COUNTRY = "{contactCountry}";
+	public static final String PLACEHOLDER_CONTACT_STATE = "{contactState}";
+	public static final String PLACEHOLDER_POST_ZIP_CODE = "{postZipCode}";
+	public static final String PLACEHOLDER_VAT_REGISTRATION_NUMBER = "{vatRegistrationNumber}";
+	public static final String PLACEHOLDER_STATUS = "{status}";
+	public static final String PLACEHOLDER_MOBILE_NUMBER = "{mobileNumber}";
+	public static final String PLACEHOLDER_NOTES = "{notes}";
+	public static final String PLACEHOLDER_EXCISE_CATEGORY = "{exciseCategory}";
+	public static final String PLACEHOLDER_TOTAL_EXCISE_AMOUNT = "{totalExciseAmount}";
+	public static final String PLACEHOLDER_VAT_AMOUNT = "{vatAmount}";
+	public static final String PLACEHOLDER_CONTACT_ADDRESS_LINE1 = "{contactAddressLine1}";
+	public static final String PLACEHOLDER_CONTACT_ADDRESS_LINE2 = "{contactAddressLine2}";
+	public static final String PLACEHOLDER_TOTAL_NET = "{totalNet}";
+	public static final String PLACEHOLDER_SUPPLIER_NAME = "{supplierName}";
+
 	public void triggerEmailOnBackground(String subject, String body, MimeMultipart mimeMultipart, String fromEmailId,
 			String fromName, String[] toMailAddress, boolean isHtml) {
 		Thread t = new Thread(new Runnable() {
@@ -142,14 +176,14 @@ public class MailUtility {
 
 						byte[] bytes = writePdf(outputStream,body);
 
-						DataSource dataSource = new ByteArrayDataSource(bytes, "APPLICATION_PDF");
+						DataSource dataSource = new ByteArrayDataSource(bytes, APPLICATION_PDF);
 						DataSource dataSource1 = new ByteArrayDataSource(body.getBytes(),"application");
 
 						MimeBodyPart pdfBodyPart = new MimeBodyPart();
 						MimeBodyPart contentBodyPart = new MimeBodyPart();
 
 						pdfBodyPart.setDataHandler(new DataHandler(dataSource));
-						contentBodyPart.setContent(body,"TEXT_HTML");
+						contentBodyPart.setContent(body, TEXT_HTML);
 
 						pdfBodyPart.setFileName(INVOICE_REPORT);
 
@@ -199,13 +233,13 @@ public class MailUtility {
 
 						byte[] bytes = writePdf(outputStream,pdfBody);
 
-						DataSource dataSource = new ByteArrayDataSource(bytes, "APPLICATION_PDF");
+						DataSource dataSource = new ByteArrayDataSource(bytes, APPLICATION_PDF);
 
 						MimeBodyPart pdfBodyPart = new MimeBodyPart();
 						MimeBodyPart contentBodyPart = new MimeBodyPart();
 
 						pdfBodyPart.setDataHandler(new DataHandler(dataSource));
-						contentBodyPart.setContent(mailcontent,"TEXT_HTML");
+						contentBodyPart.setContent(mailcontent, TEXT_HTML);
 
 						if(subject.contains("CREDIT NOTE")) {
 							pdfBodyPart.setFileName(CREDIT_NOTE_REPORT);
@@ -373,56 +407,56 @@ public class MailUtility {
 		dataMap.put(INVOICE_AMOUNT, "{invoiceAmount}");
 		dataMap.put(CN_AMOUNT, "{CNAmount}");
 		dataMap.put(DUE_AMOUNT, "{dueAmount}");
-		dataMap.put(SENDER_NAME, "{senderName}");
-		dataMap.put(COMPANY_NAME, "{companyName}");
+		dataMap.put(SENDER_NAME, PLACEHOLDER_SENDER_NAME);
+		dataMap.put(COMPANY_NAME, PLACEHOLDER_COMPANY_NAME);
 		dataMap.put(PROJECT_NAME, "{projectName}");
 		dataMap.put(INVOICE_AMOUNT, "{invoiceAmount}");
 		dataMap.put(DUE_AMOUNT, "{dueAmount}");
-		dataMap.put(SUB_TOTAL, "{subTotal}");
+		dataMap.put(SUB_TOTAL, PLACEHOLDER_SUB_TOTAL);
 		dataMap.put(CN_SUB_TOTAL, "{CnsubTotal}");
-		dataMap.put(MOBILE_NUMBER, "{mobileNumber}");
+		dataMap.put(MOBILE_NUMBER, PLACEHOLDER_MOBILE_NUMBER);
 		dataMap.put(CONTACT_ADDRESS, "{contactAddress}");
-		dataMap.put(CONTACT_COUNTRY, "{contactCountry}");
-		dataMap.put(CONTACT_STATE, "{contactState}");
+		dataMap.put(CONTACT_COUNTRY, PLACEHOLDER_CONTACT_COUNTRY);
+		dataMap.put(CONTACT_STATE, PLACEHOLDER_CONTACT_STATE);
 		dataMap.put(CONTACT_CITY, "{contactCity}");
 		dataMap.put(INVOICE_DUE_PERIOD, "{invoiceDuePeriod}");
 		dataMap.put(INVOICE_VAT_AMOUNT, "{invoiceVatAmount}");
 		dataMap.put(CREDIT_NOTE_VAT_AMOUNT, "{CreditNoteVatAmount}");
-		dataMap.put(PRODUCT, "{product}");
-		dataMap.put(QUANTITY, "{quantity}");
+		dataMap.put(PRODUCT, PLACEHOLDER_PRODUCT);
+		dataMap.put(QUANTITY, PLACEHOLDER_QUANTITY);
 		dataMap.put(CN_QUANTITY, "{Cnquantity}");
-		dataMap.put(UNIT_TYPE, "{unitType}");
+		dataMap.put(UNIT_TYPE, PLACEHOLDER_UNIT_TYPE);
 		dataMap.put(CN_UNIT_TYPE, "{CnunitType}");
-		dataMap.put(UNIT_PRICE, "{unitPrice}");
+		dataMap.put(UNIT_PRICE, PLACEHOLDER_UNIT_PRICE);
 		dataMap.put(CN_UNIT_PRICE,"{cnUnitPrice}");
 		dataMap.put(DISCOUNT, "{discount}");
 		dataMap.put(CN_DISCOUNT,"{Cndiscount}");
 		dataMap.put(CREDIT_NOTE_DISCOUNT,"{CreditNoteDiscount}");
-		dataMap.put(EXCISE_AMOUNT, "{exciseAmount}");
+		dataMap.put(EXCISE_AMOUNT, PLACEHOLDER_EXCISE_AMOUNT);
 		dataMap.put(CN_EXCISE_AMOUNT, "{CnexciseAmount}");
-		dataMap.put(TOTAL, "{total}");
+		dataMap.put(TOTAL, PLACEHOLDER_TOTAL);
 		dataMap.put(CN_TOTAL, "{Cntotal}");
-		dataMap.put(TOTAL_NET, "{totalNet}");
-		dataMap.put(VAT_TYPE,"{vatType}");
+		dataMap.put(TOTAL_NET, PLACEHOLDER_TOTAL_NET);
+		dataMap.put(VAT_TYPE, PLACEHOLDER_VAT_TYPE);
 		dataMap.put(CN_VAT_TYPE,"{CnvatType}");
-		dataMap.put(DESCRIPTION,"{description}");
+		dataMap.put(DESCRIPTION, PLACEHOLDER_DESCRIPTION);
 		dataMap.put(CN_DESCRIPTION,"{cnDescription}");
-		dataMap.put(COMPANYLOGO,"{companylogo}");
-		dataMap.put(CURRENCY,"{currency}");
-		dataMap.put(COMPANY_ADDRESS_LINE1,"{companyAddressLine1}");
-		dataMap.put(COMPANY_ADDRESS_LINE2,"{companyAddressLine2}");
-		dataMap.put(COMPANY_POST_ZIP_CODE,"{companyPostZipCode}");
-		dataMap.put(COMPANY_COUNTRY_CODE,"{companyCountryCode}");
-		dataMap.put(COMPANY_STATE_REGION,"{companyStateRegion}");
-		dataMap.put(VAT_NUMBER,"{vatNumber}");
-		dataMap.put(COMPANY_MOBILE_NUMBER,"{phoneNumber}");
-		dataMap.put(VAT_REGISTRATION_NUMBER,"{vatRegistrationNumber}");
-		dataMap.put(STATUS,"{status}");
-		dataMap.put(NOTES,"{notes}");
-		dataMap.put(POST_ZIP_CODE,"{postZipCode}");
+		dataMap.put(COMPANYLOGO, PLACEHOLDER_COMPANY_LOGO);
+		dataMap.put(CURRENCY, PLACEHOLDER_CURRENCY);
+		dataMap.put(COMPANY_ADDRESS_LINE1, PLACEHOLDER_COMPANY_ADDRESS_LINE1);
+		dataMap.put(COMPANY_ADDRESS_LINE2, PLACEHOLDER_COMPANY_ADDRESS_LINE2);
+		dataMap.put(COMPANY_POST_ZIP_CODE, PLACEHOLDER_COMPANY_POST_ZIP_CODE);
+		dataMap.put(COMPANY_COUNTRY_CODE, PLACEHOLDER_COMPANY_COUNTRY_CODE);
+		dataMap.put(COMPANY_STATE_REGION, PLACEHOLDER_COMPANY_STATE_REGION);
+		dataMap.put(VAT_NUMBER, PLACEHOLDER_VAT_NUMBER);
+		dataMap.put(COMPANY_MOBILE_NUMBER, PLACEHOLDER_PHONE_NUMBER);
+		dataMap.put(VAT_REGISTRATION_NUMBER, PLACEHOLDER_VAT_REGISTRATION_NUMBER);
+		dataMap.put(STATUS, PLACEHOLDER_STATUS);
+		dataMap.put(NOTES, PLACEHOLDER_NOTES);
+		dataMap.put(POST_ZIP_CODE, PLACEHOLDER_POST_ZIP_CODE);
 		dataMap.put(VAT_ID,"{vatCategory}");
-		dataMap.put(EXCISE_TAX,"{exciseCategory}");
-		dataMap.put(TOTAL_EXCISE_AMOUNT,"{totalExciseAmount}");
+		dataMap.put(EXCISE_TAX, PLACEHOLDER_EXCISE_CATEGORY);
+		dataMap.put(TOTAL_EXCISE_AMOUNT, PLACEHOLDER_TOTAL_EXCISE_AMOUNT);
 		dataMap.put(CN_TOTAL_EXCISE_AMOUNT,"{CntotalExciseAmount}");
 		dataMap.put(INVOICE_LINEITEM_VAT_AMOUNT,"{invoiceLineItemVatAmount}");
 		dataMap.put(CN_VAT_AMOUNT,"{CnVatAmount}");
@@ -430,8 +464,8 @@ public class MailUtility {
 		dataMap.put(CN_LINEITEM_EXCISE_TAX,"{CnLineItemExciseTax}");
 		dataMap.put(TAXABLE_AMOUNT,"{taxableAmount}");
 		dataMap.put(TAX_AMOUNT,"{taxAmount}");
-		dataMap.put(CONTACT_ADDRESS_LINE1,"{contactAddressLine1}");
-		dataMap.put(CONTACT_ADDRESS_LINE2,"{contactAddressLine2}");
+		dataMap.put(CONTACT_ADDRESS_LINE1, PLACEHOLDER_CONTACT_ADDRESS_LINE1);
+		dataMap.put(CONTACT_ADDRESS_LINE2, PLACEHOLDER_CONTACT_ADDRESS_LINE2);
 
 		return dataMap;
 	}
@@ -504,44 +538,44 @@ public class MailUtility {
 		dataMap.put(RFQ_NO,"{rfqNumber}");
 		dataMap.put(RFQ_EXPIRY_DATE,"{rfqExpiryDate}");
 		dataMap.put(RFQ_RECEIVE_DATE,"{rfqReceiveDate}");
-		dataMap.put(SUPPLIER_NAME,"{supplierName}");
+		dataMap.put(SUPPLIER_NAME, PLACEHOLDER_SUPPLIER_NAME);
 		dataMap.put(RFQ_AMOUNT,"{rfqAmount}");
 		dataMap.put(RFQ_VAT_AMOUNT,"{rfqVatAmount}");
-		dataMap.put(PRODUCT, "{product}");
-		dataMap.put(QUANTITY, "{quantity}");
-		dataMap.put(UNIT_TYPE, "{unitType}");
-		dataMap.put(UNIT_PRICE, "{unitPrice}");
-		dataMap.put(EXCISE_AMOUNT, "{exciseAmount}");
-		dataMap.put(SENDER_NAME, "{senderName}");
+		dataMap.put(PRODUCT, PLACEHOLDER_PRODUCT);
+		dataMap.put(QUANTITY, PLACEHOLDER_QUANTITY);
+		dataMap.put(UNIT_TYPE, PLACEHOLDER_UNIT_TYPE);
+		dataMap.put(UNIT_PRICE, PLACEHOLDER_UNIT_PRICE);
+		dataMap.put(EXCISE_AMOUNT, PLACEHOLDER_EXCISE_AMOUNT);
+		dataMap.put(SENDER_NAME, PLACEHOLDER_SENDER_NAME);
 
-		dataMap.put(COMPANY_NAME, "{companyName}");
-		dataMap.put(SUB_TOTAL, "{subTotal}");
-		dataMap.put(VAT_TYPE,"{vatType}");
-		dataMap.put(TOTAL, "{total}");
-		dataMap.put(DESCRIPTION,"{description}");
-		dataMap.put(COMPANYLOGO,"{companylogo}");
-		dataMap.put(CURRENCY,"{currency}");
-		dataMap.put(COMPANY_ADDRESS_LINE1,"{companyAddressLine1}");
-		dataMap.put(COMPANY_ADDRESS_LINE2,"{companyAddressLine2}");
-		dataMap.put(COMPANY_POST_ZIP_CODE,"{companyPostZipCode}");
-		dataMap.put(COMPANY_COUNTRY_CODE,"{companyCountryCode}");
-		dataMap.put(COMPANY_STATE_REGION,"{companyStateRegion}");
-		dataMap.put(VAT_NUMBER,"{vatNumber}");
-		dataMap.put(COMPANY_MOBILE_NUMBER,"{phoneNumber}");
+		dataMap.put(COMPANY_NAME, PLACEHOLDER_COMPANY_NAME);
+		dataMap.put(SUB_TOTAL, PLACEHOLDER_SUB_TOTAL);
+		dataMap.put(VAT_TYPE, PLACEHOLDER_VAT_TYPE);
+		dataMap.put(TOTAL, PLACEHOLDER_TOTAL);
+		dataMap.put(DESCRIPTION, PLACEHOLDER_DESCRIPTION);
+		dataMap.put(COMPANYLOGO, PLACEHOLDER_COMPANY_LOGO);
+		dataMap.put(CURRENCY, PLACEHOLDER_CURRENCY);
+		dataMap.put(COMPANY_ADDRESS_LINE1, PLACEHOLDER_COMPANY_ADDRESS_LINE1);
+		dataMap.put(COMPANY_ADDRESS_LINE2, PLACEHOLDER_COMPANY_ADDRESS_LINE2);
+		dataMap.put(COMPANY_POST_ZIP_CODE, PLACEHOLDER_COMPANY_POST_ZIP_CODE);
+		dataMap.put(COMPANY_COUNTRY_CODE, PLACEHOLDER_COMPANY_COUNTRY_CODE);
+		dataMap.put(COMPANY_STATE_REGION, PLACEHOLDER_COMPANY_STATE_REGION);
+		dataMap.put(VAT_NUMBER, PLACEHOLDER_VAT_NUMBER);
+		dataMap.put(COMPANY_MOBILE_NUMBER, PLACEHOLDER_PHONE_NUMBER);
 
-		dataMap.put(CONTACT_COUNTRY, "{contactCountry}");
-		dataMap.put(CONTACT_STATE, "{contactState}");
-		dataMap.put(POST_ZIP_CODE,"{postZipCode}");
-		dataMap.put(VAT_REGISTRATION_NUMBER,"{vatRegistrationNumber}");
-		dataMap.put(STATUS,"{status}");
-		dataMap.put(MOBILE_NUMBER, "{mobileNumber}");
-		dataMap.put(NOTES,"{notes}");
-		dataMap.put(EXCISE_TAX,"{exciseCategory}");
-		dataMap.put(TOTAL_EXCISE_AMOUNT,"{totalExciseAmount}");
-		dataMap.put(TOTAL_NET,"{totalNet}");
-		dataMap.put(VAT_AMOUNT,"{vatAmount}");
-		dataMap.put(CONTACT_ADDRESS_LINE1,"{contactAddressLine1}");
-		dataMap.put(CONTACT_ADDRESS_LINE2,"{contactAddressLine2}");
+		dataMap.put(CONTACT_COUNTRY, PLACEHOLDER_CONTACT_COUNTRY);
+		dataMap.put(CONTACT_STATE, PLACEHOLDER_CONTACT_STATE);
+		dataMap.put(POST_ZIP_CODE, PLACEHOLDER_POST_ZIP_CODE);
+		dataMap.put(VAT_REGISTRATION_NUMBER, PLACEHOLDER_VAT_REGISTRATION_NUMBER);
+		dataMap.put(STATUS, PLACEHOLDER_STATUS);
+		dataMap.put(MOBILE_NUMBER, PLACEHOLDER_MOBILE_NUMBER);
+		dataMap.put(NOTES, PLACEHOLDER_NOTES);
+		dataMap.put(EXCISE_TAX, PLACEHOLDER_EXCISE_CATEGORY);
+		dataMap.put(TOTAL_EXCISE_AMOUNT, PLACEHOLDER_TOTAL_EXCISE_AMOUNT);
+		dataMap.put(TOTAL_NET, PLACEHOLDER_TOTAL_NET);
+		dataMap.put(VAT_AMOUNT, PLACEHOLDER_VAT_AMOUNT);
+		dataMap.put(CONTACT_ADDRESS_LINE1, PLACEHOLDER_CONTACT_ADDRESS_LINE1);
+		dataMap.put(CONTACT_ADDRESS_LINE2, PLACEHOLDER_CONTACT_ADDRESS_LINE2);
 		return dataMap;
 	}
 	public Map<String, String> getPoEmailParamMap() {
@@ -551,41 +585,41 @@ public class MailUtility {
 		dataMap.put(PO_RECEIVE_DATE,"{poReceiveDate}");
 		dataMap.put(PO_AMOUNT,"{poAmount}");
 		dataMap.put(PO_VAT_AMOUNT,"{poVatAmount}");
-		dataMap.put(PRODUCT, "{product}");
-		dataMap.put(UNIT_PRICE, "{unitPrice}");
-		dataMap.put(EXCISE_AMOUNT, "{exciseAmount}");
-		dataMap.put(QUANTITY, "{quantity}");
-		dataMap.put(UNIT_TYPE, "{unitType}");
-		dataMap.put(SENDER_NAME, "{senderName}");
-		dataMap.put(COMPANY_NAME, "{companyName}");
-		dataMap.put(SUPPLIER_NAME,"{supplierName}");
-		dataMap.put(SUB_TOTAL, "{subTotal}");
-		dataMap.put(VAT_TYPE,"{vatType}");
-		dataMap.put(TOTAL_NET, "{totalNet}");
-		dataMap.put(TOTAL, "{total}");
-		dataMap.put(DESCRIPTION,"{description}");
-		dataMap.put(COMPANYLOGO,"{companylogo}");
-		dataMap.put(CURRENCY,"{currency}");
-		dataMap.put(COMPANY_ADDRESS_LINE1,"{companyAddressLine1}");
-		dataMap.put(COMPANY_ADDRESS_LINE2,"{companyAddressLine2}");
-		dataMap.put(COMPANY_POST_ZIP_CODE,"{companyPostZipCode}");
-		dataMap.put(COMPANY_COUNTRY_CODE,"{companyCountryCode}");
-		dataMap.put(COMPANY_STATE_REGION,"{companyStateRegion}");
-		dataMap.put(VAT_NUMBER,"{vatNumber}");
-		dataMap.put(COMPANY_MOBILE_NUMBER,"{phoneNumber}");
+		dataMap.put(PRODUCT, PLACEHOLDER_PRODUCT);
+		dataMap.put(UNIT_PRICE, PLACEHOLDER_UNIT_PRICE);
+		dataMap.put(EXCISE_AMOUNT, PLACEHOLDER_EXCISE_AMOUNT);
+		dataMap.put(QUANTITY, PLACEHOLDER_QUANTITY);
+		dataMap.put(UNIT_TYPE, PLACEHOLDER_UNIT_TYPE);
+		dataMap.put(SENDER_NAME, PLACEHOLDER_SENDER_NAME);
+		dataMap.put(COMPANY_NAME, PLACEHOLDER_COMPANY_NAME);
+		dataMap.put(SUPPLIER_NAME, PLACEHOLDER_SUPPLIER_NAME);
+		dataMap.put(SUB_TOTAL, PLACEHOLDER_SUB_TOTAL);
+		dataMap.put(VAT_TYPE, PLACEHOLDER_VAT_TYPE);
+		dataMap.put(TOTAL_NET, PLACEHOLDER_TOTAL_NET);
+		dataMap.put(TOTAL, PLACEHOLDER_TOTAL);
+		dataMap.put(DESCRIPTION, PLACEHOLDER_DESCRIPTION);
+		dataMap.put(COMPANYLOGO, PLACEHOLDER_COMPANY_LOGO);
+		dataMap.put(CURRENCY, PLACEHOLDER_CURRENCY);
+		dataMap.put(COMPANY_ADDRESS_LINE1, PLACEHOLDER_COMPANY_ADDRESS_LINE1);
+		dataMap.put(COMPANY_ADDRESS_LINE2, PLACEHOLDER_COMPANY_ADDRESS_LINE2);
+		dataMap.put(COMPANY_POST_ZIP_CODE, PLACEHOLDER_COMPANY_POST_ZIP_CODE);
+		dataMap.put(COMPANY_COUNTRY_CODE, PLACEHOLDER_COMPANY_COUNTRY_CODE);
+		dataMap.put(COMPANY_STATE_REGION, PLACEHOLDER_COMPANY_STATE_REGION);
+		dataMap.put(VAT_NUMBER, PLACEHOLDER_VAT_NUMBER);
+		dataMap.put(COMPANY_MOBILE_NUMBER, PLACEHOLDER_PHONE_NUMBER);
 
-		dataMap.put(CONTACT_COUNTRY, "{contactCountry}");
-		dataMap.put(CONTACT_STATE, "{contactState}");
-		dataMap.put(POST_ZIP_CODE,"{postZipCode}");
-		dataMap.put(VAT_REGISTRATION_NUMBER,"{vatRegistrationNumber}");
-		dataMap.put(STATUS,"{status}");
-		dataMap.put(MOBILE_NUMBER, "{mobileNumber}");
-		dataMap.put(NOTES,"{notes}");
-		dataMap.put(EXCISE_TAX,"{exciseCategory}");
-		dataMap.put(TOTAL_EXCISE_AMOUNT,"{totalExciseAmount}");
-		dataMap.put(VAT_AMOUNT,"{vatAmount}");
-		dataMap.put(CONTACT_ADDRESS_LINE1,"{contactAddressLine1}");
-		dataMap.put(CONTACT_ADDRESS_LINE2,"{contactAddressLine2}");
+		dataMap.put(CONTACT_COUNTRY, PLACEHOLDER_CONTACT_COUNTRY);
+		dataMap.put(CONTACT_STATE, PLACEHOLDER_CONTACT_STATE);
+		dataMap.put(POST_ZIP_CODE, PLACEHOLDER_POST_ZIP_CODE);
+		dataMap.put(VAT_REGISTRATION_NUMBER, PLACEHOLDER_VAT_REGISTRATION_NUMBER);
+		dataMap.put(STATUS, PLACEHOLDER_STATUS);
+		dataMap.put(MOBILE_NUMBER, PLACEHOLDER_MOBILE_NUMBER);
+		dataMap.put(NOTES, PLACEHOLDER_NOTES);
+		dataMap.put(EXCISE_TAX, PLACEHOLDER_EXCISE_CATEGORY);
+		dataMap.put(TOTAL_EXCISE_AMOUNT, PLACEHOLDER_TOTAL_EXCISE_AMOUNT);
+		dataMap.put(VAT_AMOUNT, PLACEHOLDER_VAT_AMOUNT);
+		dataMap.put(CONTACT_ADDRESS_LINE1, PLACEHOLDER_CONTACT_ADDRESS_LINE1);
+		dataMap.put(CONTACT_ADDRESS_LINE2, PLACEHOLDER_CONTACT_ADDRESS_LINE2);
 		return dataMap;
 	}
 	public Map<String, String> getGRNEmailParamMap() {
@@ -593,36 +627,36 @@ public class MailUtility {
 
 		dataMap.put(GRN_REMARKS,"{grnRemarks}");
 		dataMap.put(GRN_RECEIVE_DATE,"{grnReceiveDate}");
-		dataMap.put(PRODUCT, "{product}");
+		dataMap.put(PRODUCT, PLACEHOLDER_PRODUCT);
 		dataMap.put(GRN_NUMBER,"{grnNumber}");
-		dataMap.put(DESCRIPTION,"{description}");
-		dataMap.put(QUANTITY, "{quantity}");
-		dataMap.put(UNIT_TYPE, "{unitType}");
-		dataMap.put(UNIT_PRICE, "{unitPrice}");
+		dataMap.put(DESCRIPTION, PLACEHOLDER_DESCRIPTION);
+		dataMap.put(QUANTITY, PLACEHOLDER_QUANTITY);
+		dataMap.put(UNIT_TYPE, PLACEHOLDER_UNIT_TYPE);
+		dataMap.put(UNIT_PRICE, PLACEHOLDER_UNIT_PRICE);
 		dataMap.put(SUPPLIER_NAME, "{supplierName}");
-		dataMap.put(COMPANY_NAME, "{companyName}");
-		dataMap.put(SUB_TOTAL, "{subTotal}");
-		dataMap.put(VAT_TYPE,"{vatType}");
-		dataMap.put(TOTAL, "{total}");
-		dataMap.put(TOTAL_NET,"{totalNet}");
-		dataMap.put(COMPANYLOGO,"{companylogo}");
-		dataMap.put(CURRENCY,"{currency}");
-		dataMap.put(COMPANY_ADDRESS_LINE1,"{companyAddressLine1}");
-		dataMap.put(COMPANY_ADDRESS_LINE2,"{companyAddressLine2}");
-		dataMap.put(COMPANY_POST_ZIP_CODE,"{companyPostZipCode}");
-		dataMap.put(COMPANY_COUNTRY_CODE,"{companyCountryCode}");
-		dataMap.put(COMPANY_STATE_REGION,"{companyStateRegion}");
-		dataMap.put(VAT_NUMBER,"{vatNumber}");
-		dataMap.put(COMPANY_MOBILE_NUMBER,"{phoneNumber}");
+		dataMap.put(COMPANY_NAME, PLACEHOLDER_COMPANY_NAME);
+		dataMap.put(SUB_TOTAL, PLACEHOLDER_SUB_TOTAL);
+		dataMap.put(VAT_TYPE, PLACEHOLDER_VAT_TYPE);
+		dataMap.put(TOTAL, PLACEHOLDER_TOTAL);
+		dataMap.put(TOTAL_NET, PLACEHOLDER_TOTAL_NET);
+		dataMap.put(COMPANYLOGO, PLACEHOLDER_COMPANY_LOGO);
+		dataMap.put(CURRENCY, PLACEHOLDER_CURRENCY);
+		dataMap.put(COMPANY_ADDRESS_LINE1, PLACEHOLDER_COMPANY_ADDRESS_LINE1);
+		dataMap.put(COMPANY_ADDRESS_LINE2, PLACEHOLDER_COMPANY_ADDRESS_LINE2);
+		dataMap.put(COMPANY_POST_ZIP_CODE, PLACEHOLDER_COMPANY_POST_ZIP_CODE);
+		dataMap.put(COMPANY_COUNTRY_CODE, PLACEHOLDER_COMPANY_COUNTRY_CODE);
+		dataMap.put(COMPANY_STATE_REGION, PLACEHOLDER_COMPANY_STATE_REGION);
+		dataMap.put(VAT_NUMBER, PLACEHOLDER_VAT_NUMBER);
+		dataMap.put(COMPANY_MOBILE_NUMBER, PLACEHOLDER_PHONE_NUMBER);
 
-		dataMap.put(CONTACT_COUNTRY, "{contactCountry}");
-		dataMap.put(CONTACT_STATE, "{contactState}");
-		dataMap.put(POST_ZIP_CODE,"{postZipCode}");
-		dataMap.put(VAT_REGISTRATION_NUMBER,"{vatRegistrationNumber}");
-		dataMap.put(STATUS,"{status}");
-		dataMap.put(MOBILE_NUMBER, "{mobileNumber}");
-		dataMap.put(CONTACT_ADDRESS_LINE1,"{contactAddressLine1}");
-		dataMap.put(CONTACT_ADDRESS_LINE2,"{contactAddressLine2}");
+		dataMap.put(CONTACT_COUNTRY, PLACEHOLDER_CONTACT_COUNTRY);
+		dataMap.put(CONTACT_STATE, PLACEHOLDER_CONTACT_STATE);
+		dataMap.put(POST_ZIP_CODE, PLACEHOLDER_POST_ZIP_CODE);
+		dataMap.put(VAT_REGISTRATION_NUMBER, PLACEHOLDER_VAT_REGISTRATION_NUMBER);
+		dataMap.put(STATUS, PLACEHOLDER_STATUS);
+		dataMap.put(MOBILE_NUMBER, PLACEHOLDER_MOBILE_NUMBER);
+		dataMap.put(CONTACT_ADDRESS_LINE1, PLACEHOLDER_CONTACT_ADDRESS_LINE1);
+		dataMap.put(CONTACT_ADDRESS_LINE2, PLACEHOLDER_CONTACT_ADDRESS_LINE2);
 		return dataMap;
 	}
 	public Map<String, String> getQuotationEmailParamMap() {
@@ -632,46 +666,46 @@ public class MailUtility {
 		dataMap.put(INVOICE_DISCOUNT, "{invoiceDiscount}");
 		dataMap.put(QUOTATION_CREATED_DATE,"{quotationcreatedDate}");
 		dataMap.put(QUOTATION_EXPIRATION_DATE,"{quotationExpiration}");
-		dataMap.put(SUPPLIER_NAME,"{supplierName}");
+		dataMap.put(SUPPLIER_NAME, PLACEHOLDER_SUPPLIER_NAME);
 		dataMap.put(QUOTATION_UNTAXED_AMOUNT,"untaxedAmount");
 		dataMap.put(QUOTATION_TOTAL_VAT_AMOUNT,"{totalVatAmount}");
-		dataMap.put(PRODUCT, "{product}");
-		dataMap.put(QUANTITY, "{quantity}");
-		dataMap.put(UNIT_TYPE, "{unitType}");
-		dataMap.put(UNIT_PRICE, "{unitPrice}");
-		dataMap.put(SENDER_NAME, "{senderName}");
-		dataMap.put(COMPANY_NAME, "{companyName}");
-		dataMap.put(SUB_TOTAL, "{subTotal}");
-		dataMap.put(VAT_TYPE,"{vatType}");
-		dataMap.put(TOTAL, "{total}");
-		dataMap.put(TOTAL_NET,"{totalNet}");
+		dataMap.put(PRODUCT, PLACEHOLDER_PRODUCT);
+		dataMap.put(QUANTITY, PLACEHOLDER_QUANTITY);
+		dataMap.put(UNIT_TYPE, PLACEHOLDER_UNIT_TYPE);
+		dataMap.put(UNIT_PRICE, PLACEHOLDER_UNIT_PRICE);
+		dataMap.put(SENDER_NAME, PLACEHOLDER_SENDER_NAME);
+		dataMap.put(COMPANY_NAME, PLACEHOLDER_COMPANY_NAME);
+		dataMap.put(SUB_TOTAL, PLACEHOLDER_SUB_TOTAL);
+		dataMap.put(VAT_TYPE, PLACEHOLDER_VAT_TYPE);
+		dataMap.put(TOTAL, PLACEHOLDER_TOTAL);
+		dataMap.put(TOTAL_NET, PLACEHOLDER_TOTAL_NET);
 		dataMap.put(CUSTOMER_NAME,"{customerName}");
 		dataMap.put(QUOTATION_PAYMENT_TERMS,"{paymentTerms}");
 		dataMap.put(QUOTATION_TERMS_AND_CONDITION,"{termsAndCondition}");
 		dataMap.put(QUOTATION_SUB_TOTAL,"{subTotal}");
-		dataMap.put(COMPANYLOGO,"{companylogo}");
-		dataMap.put(CURRENCY,"{currency}");
-		dataMap.put(COMPANY_ADDRESS_LINE1,"{companyAddressLine1}");
-		dataMap.put(COMPANY_ADDRESS_LINE2,"{companyAddressLine2}");
-		dataMap.put(COMPANY_POST_ZIP_CODE,"{companyPostZipCode}");
-		dataMap.put(COMPANY_COUNTRY_CODE,"{companyCountryCode}");
-		dataMap.put(COMPANY_STATE_REGION,"{companyStateRegion}");
-		dataMap.put(VAT_NUMBER,"{vatNumber}");
-		dataMap.put(COMPANY_MOBILE_NUMBER,"{phoneNumber}");
-		dataMap.put(CONTACT_COUNTRY, "{contactCountry}");
-		dataMap.put(CONTACT_STATE, "{contactState}");
-		dataMap.put(POST_ZIP_CODE,"{postZipCode}");
-		dataMap.put(VAT_REGISTRATION_NUMBER,"{vatRegistrationNumber}");
-		dataMap.put(MOBILE_NUMBER, "{mobileNumber}");
-		dataMap.put(CONTACT_ADDRESS_LINE1,"{contactAddressLine1}");
-		dataMap.put(CONTACT_ADDRESS_LINE2,"{contactAddressLine2}");
-		dataMap.put(STATUS,"{status}");
-		dataMap.put(NOTES,"{notes}");
-		dataMap.put(TOTAL_EXCISE_AMOUNT,"{totalExciseAmount}");
-		dataMap.put(VAT_AMOUNT,"{vatAmount}");
-		dataMap.put(DESCRIPTION,"{description}");
-		dataMap.put(EXCISE_TAX,"{exciseCategory}");
-		dataMap.put(EXCISE_AMOUNT, "{exciseAmount}");
+		dataMap.put(COMPANYLOGO, PLACEHOLDER_COMPANY_LOGO);
+		dataMap.put(CURRENCY, PLACEHOLDER_CURRENCY);
+		dataMap.put(COMPANY_ADDRESS_LINE1, PLACEHOLDER_COMPANY_ADDRESS_LINE1);
+		dataMap.put(COMPANY_ADDRESS_LINE2, PLACEHOLDER_COMPANY_ADDRESS_LINE2);
+		dataMap.put(COMPANY_POST_ZIP_CODE, PLACEHOLDER_COMPANY_POST_ZIP_CODE);
+		dataMap.put(COMPANY_COUNTRY_CODE, PLACEHOLDER_COMPANY_COUNTRY_CODE);
+		dataMap.put(COMPANY_STATE_REGION, PLACEHOLDER_COMPANY_STATE_REGION);
+		dataMap.put(VAT_NUMBER, PLACEHOLDER_VAT_NUMBER);
+		dataMap.put(COMPANY_MOBILE_NUMBER, PLACEHOLDER_PHONE_NUMBER);
+		dataMap.put(CONTACT_COUNTRY, PLACEHOLDER_CONTACT_COUNTRY);
+		dataMap.put(CONTACT_STATE, PLACEHOLDER_CONTACT_STATE);
+		dataMap.put(POST_ZIP_CODE, PLACEHOLDER_POST_ZIP_CODE);
+		dataMap.put(VAT_REGISTRATION_NUMBER, PLACEHOLDER_VAT_REGISTRATION_NUMBER);
+		dataMap.put(MOBILE_NUMBER, PLACEHOLDER_MOBILE_NUMBER);
+		dataMap.put(CONTACT_ADDRESS_LINE1, PLACEHOLDER_CONTACT_ADDRESS_LINE1);
+		dataMap.put(CONTACT_ADDRESS_LINE2, PLACEHOLDER_CONTACT_ADDRESS_LINE2);
+		dataMap.put(STATUS, PLACEHOLDER_STATUS);
+		dataMap.put(NOTES, PLACEHOLDER_NOTES);
+		dataMap.put(TOTAL_EXCISE_AMOUNT, PLACEHOLDER_TOTAL_EXCISE_AMOUNT);
+		dataMap.put(VAT_AMOUNT, PLACEHOLDER_VAT_AMOUNT);
+		dataMap.put(DESCRIPTION, PLACEHOLDER_DESCRIPTION);
+		dataMap.put(EXCISE_TAX, PLACEHOLDER_EXCISE_CATEGORY);
+		dataMap.put(EXCISE_AMOUNT, PLACEHOLDER_EXCISE_AMOUNT);
 
 		return dataMap;
 	}
@@ -698,7 +732,7 @@ public class MailUtility {
 					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 
 						MimeBodyPart contentBodyPart = new MimeBodyPart();
-						contentBodyPart.setContent(mailcontent,"TEXT_HTML");
+						contentBodyPart.setContent(mailcontent, TEXT_HTML);
 						mimeMultipart1.addBodyPart(contentBodyPart);
 						for(Map.Entry<String,byte[]> fileMeta :fileMetaData.entrySet()){
 							String fileName = fileMeta.getKey();
@@ -711,7 +745,7 @@ public class MailUtility {
 						//primary email
 						if(emailContentModel.getAttachPrimaryPdf().booleanValue()==Boolean.TRUE){
 							byte[] bytes = writePdf(outputStream,pdfBody);
-							DataSource dataSource = new ByteArrayDataSource(bytes, "APPLICATION_PDF");
+							DataSource dataSource = new ByteArrayDataSource(bytes, APPLICATION_PDF);
 							MimeBodyPart pdfBodyPart = new MimeBodyPart();
 							pdfBodyPart.setDataHandler(new DataHandler(dataSource));
 							if(subject.contains("Payslip"))

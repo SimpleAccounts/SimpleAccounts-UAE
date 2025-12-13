@@ -41,7 +41,7 @@ import java.time.LocalDateTime;
 
     @Basic
     @Column(name = "PAYMENT_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDate PaymentDate;
 
     @Column(name = "CREATED_BY")
@@ -52,14 +52,14 @@ import java.time.LocalDateTime;
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "LAST_UPDATED_BY")
     private Integer lastUpdatedBy;
 
     @Column(name = "LAST_UPDATE_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

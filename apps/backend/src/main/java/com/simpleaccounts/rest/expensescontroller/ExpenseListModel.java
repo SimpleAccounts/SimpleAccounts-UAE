@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class ExpenseListModel {
-	//if updated need to updaue in @link DatatableSortingFilterConstant 
+
 	private Integer expenseId;
 	private String expenseNumber;
 	private String payee;

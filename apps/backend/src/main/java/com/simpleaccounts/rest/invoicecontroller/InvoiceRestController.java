@@ -19,7 +19,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -181,7 +181,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 				filterDataMap.put(InvoiceFilterEnum.INVOICE_DATE, date);
 			}
 			if (filterModel.getInvoiceDueDate() != null && !filterModel.getInvoiceDueDate().isEmpty()) {
-//				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
 				LocalDate date = LocalDate.parse(filterModel.getInvoiceDueDate());
 
 				filterDataMap.put(InvoiceFilterEnum.INVOICE_DUE_DATE, date);
@@ -340,8 +340,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			log.info("In Update {}",requestModel.getInvoiceDueDate());
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-//
-//			}
 			Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);
 			if (requestModel.getAttachmentFile()!=null) {
 				MultipartFile file = requestModel.getAttachmentFile();
@@ -355,7 +353,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			invoice.setLastUpdateBy(userId);
 			invoice.setLastUpdateDate(LocalDateTime.now());
 			invoiceService.update(invoice, invoice.getId());
-			//invoiceService.deleteJournaForInvoice(invoice);
+
 			if (invoice.getStatus().equals(CommonStatusEnum.POST.getValue())) {
 				// persist updated journal
 				Journal journal = invoiceRestHelper.invoicePosting(new PostingRequestModel(invoice.getId()), userId);
@@ -468,7 +466,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 					overDueAmountDetails.setOverDueAmountMonthly(dueAmountResultSet.getThisMonthOverdue().floatValue());
 				}
 
-			//OverDueAmountDetailsModel overDueAmountDetails = invoiceService.getOverDueAmountDetails(type);
 			return new ResponseEntity<>(overDueAmountDetails, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
@@ -526,7 +523,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//			Currency currency = bankAccountService.getBankAccountById(bankId).getBankAccountCurrency();
+
 			List<Invoice> invoiceList = invoiceService.getSuggestionExplainedInvoices(amount, contactId,
 					ContactTypeEnum.SUPPLIER,currency, userId);
 			List<InviceSingleLevelDropdownModel> responseList = invoiceRestHelper.getDropDownModelList(invoiceList);
@@ -551,7 +548,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//			Currency currency = bankAccountService.getBankAccountById(bankId).getBankAccountCurrency();
+
 			List<Invoice> invoiceList = invoiceService.getSuggestionExplainedInvoices(amount, contactId,
 					ContactTypeEnum.CUSTOMER, currency,userId);
 			return new ResponseEntity<>(invoiceRestHelper.getDropDownModelList(invoiceList), HttpStatus.OK);
@@ -600,7 +597,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//			Currency currency = bankAccountService.getBankAccountById(bankId).getBankAccountCurrency();
+
 			List<Invoice> invoiceList = invoiceService.getSuggestionInvoices(amount, contactId,ContactTypeEnum.SUPPLIER,currency,userId);
 
 			List<InviceSingleLevelDropdownModel> responseList = invoiceRestHelper.getDropDownModelList(invoiceList);

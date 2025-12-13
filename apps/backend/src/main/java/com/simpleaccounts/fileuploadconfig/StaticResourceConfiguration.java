@@ -1,6 +1,5 @@
 package com.simpleaccounts.fileuploadconfig;
 
-
 import com.simpleaccounts.utils.OSValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

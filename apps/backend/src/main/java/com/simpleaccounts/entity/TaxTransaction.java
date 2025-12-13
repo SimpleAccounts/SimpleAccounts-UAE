@@ -57,7 +57,7 @@ public class TaxTransaction implements Serializable {
     @Basic(optional = false)
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "ORDER_SEQUENCE")
@@ -68,7 +68,7 @@ public class TaxTransaction implements Serializable {
     private Integer lastUpdateBy;
 
     @Column(name = "LAST_UPDATE_DATE")
-   //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate = LocalDateTime.now();
 
     @Column(name = "DELETE_FLAG")

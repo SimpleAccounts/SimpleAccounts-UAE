@@ -37,7 +37,6 @@ public class ReceiptRequestModel {
 	private String invoiceNumber;
 	private String invoiceAmount;
 
-	//for apply to credits
 	private JSONArray listOfCreditNotes;
 
 }

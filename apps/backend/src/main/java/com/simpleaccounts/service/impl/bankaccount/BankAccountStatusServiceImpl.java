@@ -1,6 +1,5 @@
 package com.simpleaccounts.service.impl.bankaccount;
 
-
 import com.simpleaccounts.dao.bankaccount.BankAccountStatusDao;
 import com.simpleaccounts.entity.bankaccount.BankAccountStatus;
 import com.simpleaccounts.service.BankAccountStatusService;

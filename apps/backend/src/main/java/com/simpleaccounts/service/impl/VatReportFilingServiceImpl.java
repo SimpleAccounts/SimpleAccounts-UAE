@@ -678,8 +678,6 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
    This method will revert the payment as well as journal entries back
     */
 
-//            //if (vatReportFiling.getBalanceDue().compareTo()){}
-
     @Override
     public List<VatPaymentHistoryModel> getVatPaymentRecordList() {
         String startDate =null;

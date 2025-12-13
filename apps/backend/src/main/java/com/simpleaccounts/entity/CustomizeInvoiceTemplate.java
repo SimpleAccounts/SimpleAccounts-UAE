@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "CUSTOMIZE_INVOICE_TEMPLATE")
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
 
 @NamedQueries({
         @NamedQuery(name = "allInvoicesPrefix", query = "select i from CustomizeInvoiceTemplate i where i.type = :type and i.deleteFlag = false "),
@@ -56,14 +55,14 @@ public class CustomizeInvoiceTemplate implements Serializable {
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-   //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "LAST_UPDATED_BY")
     private Integer lastUpdateBy;
 
     @Column(name = "LAST_UPDATE_DATE")
-   //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate = LocalDateTime.now();
 
     @Column(name = "VERSION_NUMBER")

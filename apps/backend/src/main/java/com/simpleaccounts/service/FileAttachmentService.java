@@ -43,7 +43,7 @@ public abstract class  FileAttachmentService extends SimpleAccountsService <Inte
     }
     public FileAttachment getFile(Integer fileId) {
         return fileAttachmentDao.findByPK(fileId);
-//                .orElseThrow(() -> new FileAttachmentNotFoundException("File not found with id " + fileId));
+
     }
 
     public FileAttachment storeExpenseFile(MultipartFile file, ExpenseModel expenseModel) throws IOException {

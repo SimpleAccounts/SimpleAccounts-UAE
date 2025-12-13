@@ -24,7 +24,7 @@ import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -82,7 +82,7 @@ public class ProductRestHelper {
 			product.setVatCategory(vatCategory);
 		}
 		product.setProductCode(productModel.getProductCode());
-		//for autogenerate product code
+
 		CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(9);
 		if (productModel.getProductID() == null){
 			String suffix = invoiceNumberUtil.fetchSuffixFromString(productModel.getProductCode());

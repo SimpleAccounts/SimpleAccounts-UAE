@@ -1,6 +1,5 @@
 package com.simpleaccounts.rest.dateformatcontroller;
 
-
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 import com.simpleaccounts.aop.LogRequest;

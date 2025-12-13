@@ -26,10 +26,6 @@ public class CurrencyExchangeImpl extends CurrencyExchangeService {
 //
 
 //
-//            JSONArray jsonRules = new JSONArray(responseString);
-//            // iterate over the rules
-
-//
 
     @Override
     protected CurrencyExchangeDao getDao() {

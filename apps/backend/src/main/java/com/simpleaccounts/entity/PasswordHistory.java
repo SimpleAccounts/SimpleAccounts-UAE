@@ -31,7 +31,7 @@ public class PasswordHistory {
     private Integer lastUpdatedBy;
 
     @Basic
-    //@Convert(converter = DateConverter.class)
+
     @Column(name = "LAST_UPDATE_DATE")
     private LocalDateTime lastUpdateDate;
 

@@ -44,7 +44,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -302,7 +302,7 @@ public class BankAccountController{
 			if (exchangeRate != null) {
 				openBigDecimal = openBigDecimal.multiply(exchangeRate.getExchangeRate());
 			}
-				//	if (bankAccount.getOpeningBalance().compareTo(BigDecimal.valueOf(bankModel.getActualOpeningBalance().longValue()))!= 0) {
+
 			List<JournalLineItem> bankAccJliList = journalLineItemRepository.findAllByReferenceIdAndReferenceType(
 					bankAccount.getTransactionCategory().getTransactionCategoryId(),
 					PostingReferenceTypeEnum.BANK_ACCOUNT);
@@ -374,7 +374,7 @@ public class BankAccountController{
 			journal.setJournalDate(LocalDate.now());
 			journal.setTransactionDate(LocalDate.now());
 			journalService.persist(journal);
-		//}
+
 			message = new SimpleAccountsMessage("0076",
 					MessageUtil.getMessage("bank.account.updated.successful.msg.0076"), false);
 			return new ResponseEntity<>(message,HttpStatus.OK);
@@ -384,7 +384,7 @@ public class BankAccountController{
 					MessageUtil.getMessage("update.unsuccessful.msg"), true);
 			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-//		return new ResponseEntity<>("Update Failure..",HttpStatus.INTERNAL_SERVER_ERROR);
+
 	}
 
 	private void updateTransactionCategory(TransactionCategory category, BankModel bankModel) {
@@ -551,7 +551,7 @@ public class BankAccountController{
 				{
 					transactionCategory.setDeleteFlag(Boolean.TRUE);
 					transactionCategoryService.update(transactionCategory);
-					//transactionCategoryService.delete(transactionCategory);
+
 				}
 
 				SimpleAccountsMessage message = null;
@@ -570,7 +570,7 @@ public class BankAccountController{
 					MessageUtil.getMessage(MSG_DELETE_UNSUCCESSFUL), true);
 			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-//		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
 	}
 
 	@LogRequest
