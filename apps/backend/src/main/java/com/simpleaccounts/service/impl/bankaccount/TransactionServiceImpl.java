@@ -107,7 +107,6 @@ public class TransactionServiceImpl extends TransactionService {
 						transaction.getBankAccount().getCurrentBalance().subtract(transaction.getTransactionAmount()));
 			}
 			super.persist(transaction, null, getActivity(transaction, "Created"));
-			BigDecimal balanceAmount = transaction.getCurrentBalance();
 
 		} else {
 			BigDecimal differenceAmount = transaction.getTransactionAmount();
@@ -137,32 +136,22 @@ public class TransactionServiceImpl extends TransactionService {
 			}
 			super.persist(transaction, null, getActivity(transaction, "Created"));
 
-			BigDecimal balance = transaction.getBankAccount().getCurrentBalance();
-			if (transaction.getDebitCreditFlag() == 'D') {
-				balance = balance.subtract(transaction.getTransactionAmount());
-			} else {
-				balance = balance.add(transaction.getTransactionAmount());
-			}
-
 		}
 	}
 
 	@Override
 	public Transaction update(Transaction transaction) {
 		Transaction currentTransaction = transactionDao.findByPK(transaction.getTransactionId());
-		BigDecimal differenceAmount = new BigDecimal(0);
-		BigDecimal balanceAmount = transaction.getBankAccount().getCurrentBalance();
+		BigDecimal differenceAmount;
 		if (Objects.equals(currentTransaction.getDebitCreditFlag(), transaction.getDebitCreditFlag())) {
 			differenceAmount = transaction.getTransactionAmount().subtract(currentTransaction.getTransactionAmount());
 		} else {
 			differenceAmount = transaction.getTransactionAmount().add(currentTransaction.getTransactionAmount());
 		}
-		if (differenceAmount.compareTo(new BigDecimal(0)) != 0) {
+		if (differenceAmount.compareTo(BigDecimal.ZERO) != 0) {
 			if (transaction.getDebitCreditFlag() == 'D') {
-				balanceAmount = balanceAmount.subtract(differenceAmount);
 				transaction.setCurrentBalance(transaction.getCurrentBalance().subtract(differenceAmount));
 			} else {
-				balanceAmount = balanceAmount.add(differenceAmount);
 				transaction.setCurrentBalance(transaction.getCurrentBalance().add(differenceAmount));
 			}
 			updateLatestTransaction(differenceAmount, transaction);

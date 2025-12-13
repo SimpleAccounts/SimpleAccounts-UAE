@@ -143,7 +143,6 @@ public class EmailService {
         MailThemeTemplates invoiceEmailBody = mailThemeTemplatesService.getMailThemeTemplate(moduleId);
         Map<String, String> map = invoiceRestHelper.getInvoiceData(invoice, userId);
         String content = "";
-        String htmlText = "";
         String htmlContent = "";
         String freeMakerHtmlContent = "";
         //FreeMaker
@@ -172,17 +171,7 @@ public class EmailService {
 //
 //
           try {
-            String emailBody=invoiceEmailBody.getPath();
-//
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX+emailBody).getURI()));
             byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource(CLASSPATH_PREFIX+ INVOICE_TEMPLATE).getURI()));
-//
-            String amountInWords= emailContentRequestModel.getAmountInWords();
-            String vatInWords= emailContentRequestModel.getTaxInWords();
-
-            htmlText = new String(bodyData, StandardCharsets.UTF_8)
-                    .replace(TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS, amountInWords)
-                    .replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS, vatInWords);
 
             htmlContent= new String(contentData, StandardCharsets.UTF_8)
                     .replace(TEMPLATE_PLACEHOLDER_CURRENCY,invoice.getCurrency().getCurrencyIsoCode());
@@ -235,7 +224,6 @@ public class EmailService {
         MailThemeTemplates creditNoteEmailBody = mailThemeTemplatesService.getMailThemeTemplate(moduleId);
         Map<String, String> map = invoiceRestHelper.getInvoiceData(invoice, userId);
         String content = "";
-        String htmlText = "";
         String htmlContent = "";
         String freeMakerHtmlContent = "";
         //FreeMaker
@@ -265,17 +253,7 @@ public class EmailService {
 //
 //
         try {
-            String emailBody=creditNoteEmailBody.getPath();
-//
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX+emailBody).getURI()));
             byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource(CLASSPATH_PREFIX+ CN_TEMPLATE).getURI()));
-//
-            String amountInWords= emailContentRequestModel.getAmountInWords();
-            String vatInWords= emailContentRequestModel.getTaxInWords();
-
-            htmlText = new String(bodyData, StandardCharsets.UTF_8)
-                    .replace(TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS, amountInWords)
-                    .replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS, vatInWords);
 
             htmlContent= new String(contentData, StandardCharsets.UTF_8)
                     .replace(TEMPLATE_PLACEHOLDER_CURRENCY,invoice.getCurrency().getCurrencyIsoCode());
@@ -322,7 +300,6 @@ public class EmailService {
         MailThemeTemplates quotationEmailBody = mailThemeTemplatesService.getMailThemeTemplate(moduleId);
         Map<String, String> map = poQuatationRestHelper.getQuotationData(quotation, userId);
         String content = "";
-        String htmlText = "";
         String htmlContent = "";
         String freeMakerHtmlContent = "";
 
@@ -356,17 +333,9 @@ public class EmailService {
         try {
             String emailBody = quotationEmailBody.getPath();
 
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + emailBody).getURI()));
             byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + QUOTATION_TEMPLATE).getURI()));
 
-            String amountInWords = emailContentRequestModel.getAmountInWords();
-            String vatInWords = emailContentRequestModel.getTaxInWords();
-
           Currency quotationCurrencyRelation = quotation.getCurrency();
-            htmlText = new String(bodyData, StandardCharsets.UTF_8)
-                    .replace("{amountInWords}", amountInWords)
-                    .replace("{vatInWords}", vatInWords);
-
             htmlContent = new String(contentData, StandardCharsets.UTF_8)
                     .replace(TEMPLATE_PLACEHOLDER_CURRENCY, quotationCurrencyRelation.getCurrencyIsoCode());
         } catch (IOException e) {
@@ -414,7 +383,6 @@ public class EmailService {
         MailThemeTemplates quotationEmailBody = mailThemeTemplatesService.getMailThemeTemplate(moduleId);
         Map<String, String> map = poQuatationRestHelper.getPOData(quotation, userId);
         String content = "";
-        String htmlText = "";
         String htmlContent = "";
         String freeMakerHtmlContent = "";
 
@@ -447,17 +415,9 @@ public class EmailService {
         try {
             String emailBody = quotationEmailBody.getPath();
 
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + emailBody).getURI()));
             byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + PURCHASE_ORDER_TEMPLATE).getURI()));
 
-            String amountInWords = emailContentRequestModel.getAmountInWords();
-            String vatInWords = emailContentRequestModel.getTaxInWords();
-
             Currency quotationCurrencyRelation = quotation.getCurrency();
-            htmlText = new String(bodyData, StandardCharsets.UTF_8)
-                    .replace("{amountInWords}", amountInWords)
-                    .replace("{vatInWords}", vatInWords);
-
             htmlContent = new String(contentData, StandardCharsets.UTF_8)
                     .replace(TEMPLATE_PLACEHOLDER_CURRENCY, quotationCurrencyRelation.getCurrencyIsoCode());
         } catch (IOException e) {

@@ -100,12 +100,11 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
 
             List<Integer> employeeListId = salaryPersistModel.getEmployeeListIds();
 
-            BigDecimal totalSalaryForSingleDay = BigDecimal.valueOf(Float.valueOf(0));
+            BigDecimal totalSalaryForSingleDay;
             BigDecimal salaryForjournalEntry = BigDecimal.ZERO;
             for (Integer employeeId : employeeListId) {
                 Employee employee = employeeService.findByPK(employeeId);
 
-                BigDecimal totSalaryForEmployeePerMonth = BigDecimal.ZERO;
                 Map<String, Object> param = new HashMap<>();
                 param.put("employeeId", employee);
                 List<EmployeeSalaryComponentRelation> employeeSalaryComponentList = employeeSalaryComponentRelationService.findByAttributes(param);
@@ -201,7 +200,6 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
             finalPayrolltransactionCategory.setDefaltFlag(DefaultTypeConstant.NO);
             finalPayrolltransactionCategory.setVersionNumber(1);
             transactionCategoryService.persist(finalPayrolltransactionCategory);
-            CoacTransactionCategory coacTransactionCategoryRelation = new CoacTransactionCategory();
             coacTransactionCategoryService.addCoacTransactionCategory(finalPayrolltransactionCategory.getChartOfAccount(),finalPayrolltransactionCategory);
 
             Map<String, Object> payrollCategoryParam = new HashMap<>();
@@ -210,7 +208,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
 
             List<Integer> employeeListId = salaryPersistModel.getEmployeeListIds();
 
-            BigDecimal totalSalaryForSingleDay = BigDecimal.valueOf(Float.valueOf(0));
+            BigDecimal totalSalaryForSingleDay;
             BigDecimal salaryForjournalEntry = BigDecimal.ZERO;
             for (Integer employeeId : employeeListId) {
                 Employee employee = employeeService.findByPK(employeeId);
@@ -375,8 +373,8 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
                      "\n" +
                      "</td> ";
          }
-         List<MoneyPaidToUserModel> moneyPaidToUserModelList = new ArrayList<>();
-         moneyPaidToUserModelList = salaryServiceImpl.getEmployeeTransactions(employeeId,startDate.replace("-","/"),endDate.replace("-","/"));
+         List<MoneyPaidToUserModel> moneyPaidToUserModelList =
+                 salaryServiceImpl.getEmployeeTransactions(employeeId, startDate.replace("-", "/"), endDate.replace("-", "/"));
          Integer count = 0;
          BigDecimal totalB = BigDecimal.ZERO;
          if(moneyPaidToUserModelList!=null){

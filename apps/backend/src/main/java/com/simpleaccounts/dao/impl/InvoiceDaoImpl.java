@@ -145,9 +145,9 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	}
 	@Override
 	public OverDueAmountDetailsModel getOverDueAmountDetails(Integer type) {
-		Float overDueAmountFloat = (float) 0;
-		Float overDueAmountWeeklyFloat = (float) 0;
-		Float overDueAmountMonthlyFloat = (float) 0;
+		Float overDueAmountFloat;
+		Float overDueAmountWeeklyFloat;
+		Float overDueAmountMonthlyFloat;
 		Date date = new Date();
 		if(type==2)
 		{
@@ -234,7 +234,6 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		BigDecimal overDueAmountMonthly = getTotalCustomerInvoiceAmountWeeklyMonthly(type, startDate,
 				endDate,transactionCategory,PostingReferenceTypeEnum.INVOICE);
 		Float overDueAmountFloat = (float) 0;
-		transactionCategory = transactionCategoryService.findByPK(2);
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("totalInvoiceReceiptAmountWeeklyMonthly", BigDecimal.class);
 		query.setParameter("type", type);
 		query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate) );
@@ -457,7 +456,14 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter(CommonColumnConstants.END_DATE,endDate);
 		query.setParameter(CommonColumnConstants.EDIT_FLAG,editFlag);
 		BigDecimal amountWithoutVat = query.getSingleResult();
-
+		if (amountWithoutVat == null) {
+			amountWithoutVat = BigDecimal.ZERO;
+		}
+		BigDecimal existingTotal = vatReportResponseModel.getReverseChargeProvisionsTotalAmount();
+		if (existingTotal == null) {
+			existingTotal = BigDecimal.ZERO;
+		}
+		vatReportResponseModel.setReverseChargeProvisionsTotalAmount(existingTotal.add(amountWithoutVat));
 	}
 	@Override
 	public void getSumOfTotalAmountWithVatForRCM(ReportRequestModel reportRequestModel, VatReportResponseModel vatReportResponseModel) {

@@ -147,7 +147,6 @@ public class DetailedGeneralLedgerRestHelper {
 			Map<Integer, List<JournalLineItem>> map = new HashMap<>();
 			Map<Integer, Expense> expenseMap = new HashMap<>();
 			Map<Integer, Transaction> transactionMap = new HashMap<>();
-			Map<Integer, BankAccount> bankAccountMap = new HashMap<>();
 			Map<Integer, Invoice> invoiceMap = new HashMap<>();
 			Map<Integer, Receipt> receiptMap = new HashMap<>();
 			Map<Integer, Payment> paymentMap = new HashMap<>();
@@ -266,8 +265,6 @@ public class DetailedGeneralLedgerRestHelper {
 							invoiceMap = findOrGetFromDbIn(invoiceMap, lineItem.getReferenceId());
 							Invoice invoice = invoiceMap.get(lineItem.getReferenceId());
 
-							BigDecimal amount = BigDecimal.ZERO;
-
 							model.setCreditAmount(lineItem.getCreditAmount());
 							model.setDebitAmount(lineItem.getDebitAmount());
 								if (lineItem.getCreditAmount().compareTo(BigDecimal.ZERO)>0){
@@ -299,7 +296,7 @@ public class DetailedGeneralLedgerRestHelper {
 
 							model.setReferenceNo(journal.getJournlReferencenNo());
 
-							 amount = BigDecimal.ZERO;
+							BigDecimal amount;
 							if (isDebit) {
 								model.setDebitAmount(lineItem.getDebitAmount());
 								model.setCreditAmount(lineItem.getCreditAmount());
@@ -480,9 +477,7 @@ public class DetailedGeneralLedgerRestHelper {
 		boolean isCredit = creditAmount.longValue() >= debitAmount.longValue() ;
 		DetailedGeneralLedgerReportListModel openingBalanceModel = new DetailedGeneralLedgerReportListModel();
 		DetailedGeneralLedgerReportListModel closingBalanceModel = new DetailedGeneralLedgerReportListModel();
-		DetailedGeneralLedgerReportListModel tempopeningBalanceModel = dataList.get(0);
 		openingBalanceModel.setDate("As on "+reportRequestModel.getStartDate());
-		BigDecimal openingBalance = transactionCategoryClosingBalance.getOpeningBalance();
 		if(transactionCategoryClosingBalance.getOpeningBalance().longValue()<=0) {
 			openingBalanceModel.setCreditAmount(transactionCategoryClosingBalance.getOpeningBalance().negate());
 

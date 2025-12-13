@@ -533,7 +533,7 @@ public class PayrollRestHepler {
 
     public EmployeeBankDetails getEmployeeBankDetailsEntity(EmployeePersistModel employeePersistModel, Employee employee, Integer userId) {
 
-        EmployeeBankDetails employeeBankDetails = new EmployeeBankDetails();
+        EmployeeBankDetails employeeBankDetails;
         Map<String, Object> param = new HashMap<>();
         param.put("employee", employee);
         List<EmployeeBankDetails> employeeBankDetailsList = employeeBankDetailsService.findByAttributes(param);
@@ -574,7 +574,7 @@ public class PayrollRestHepler {
 
     public Employment getEmploymentsEntity(EmployeePersistModel employeePersistModel, Employee employee, Integer userId) {
 
-        Employment employment = new Employment();
+        Employment employment;
         Map<String, Object> param = new HashMap<>();
         param.put("employee", employee);
         List<Employment> employmentList = employmentService.findByAttributes(param);
@@ -1461,7 +1461,6 @@ public class PayrollRestHepler {
                     finalPayrolltransactionCategory.setDefaltFlag(DefaultTypeConstant.NO);
                     finalPayrolltransactionCategory.setVersionNumber(1);
                     transactionCategoryService.persist(finalPayrolltransactionCategory);
-                    CoacTransactionCategory coacTransactionCategoryRelation = new CoacTransactionCategory();
                     coacTransactionCategoryService.addCoacTransactionCategory(finalPayrolltransactionCategory.getChartOfAccount(), finalPayrolltransactionCategory);
 
                     Map<String, Object> payrollCategoryParam = new HashMap<>();
@@ -1622,8 +1621,6 @@ public class PayrollRestHepler {
 
     public List<PayrollDropdownModel> getUnpaidPayrollList(List<Payroll> payrollList) {
 
-        List<SingleLevelDropDownModel> response  = new ArrayList<>();
-        String parentCategory = "";
         List<PayrollDropdownModel> dropDownModelList = new ArrayList<>();
         if(payrollList !=null && !payrollList.isEmpty()) {
             for (Payroll payroll : payrollList) {
@@ -1890,7 +1887,6 @@ public class PayrollRestHepler {
         }//else
 
         payroll.setStatus("Voided");
-        User user= userService.findByPK(payroll.getPayrollApprover());
         payroll.setComment(postingRequestModel.getComment()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         );
         sendVoidMail(payroll, Integer.valueOf(payroll.getGeneratedBy()),comment,request);
 
