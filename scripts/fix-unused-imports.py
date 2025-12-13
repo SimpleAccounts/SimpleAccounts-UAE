@@ -1,19 +1,111 @@
 #!/usr/bin/env python3
 """
 Script to identify and remove unused imports from Java files.
-This helps fix java:S6813 SonarQube issues.
+This helps address SonarQube unused-import issues (for example, java:S1128).
 """
 
 import re
 import os
 import sys
 
-_BLOCK_COMMENT_RE = re.compile(r"/\*[\s\S]*?\*/", re.MULTILINE)
-_LINE_COMMENT_RE = re.compile(r"//.*?$", re.MULTILINE)
-_STRING_RE = re.compile(r"\"(?:\\\\.|[^\"\\\\])*\"")
-_CHAR_RE = re.compile(r"'(?:\\\\.|[^'\\\\])'")
 _IMPORT_LINE_RE = re.compile(r'^\s*import\s+(static\s+)?([^;]+);\s*(?://.*)?$', re.MULTILINE)
 _PACKAGE_LINE_RE = re.compile(r'^\s*package\s+[^;]+;\s*$', re.MULTILINE)
+
+def strip_comments_and_literals(content):
+    """
+    Remove comments and mask string/char literals while preserving newlines.
+
+    This avoids false negatives when scanning for symbol usage (for example, comment markers
+    inside strings like "http://..." or quotes inside comments).
+    """
+    out = []
+    i = 0
+    state = "NORMAL"
+
+    while i < len(content):
+        ch = content[i]
+        nxt = content[i + 1] if i + 1 < len(content) else ""
+
+        if state == "NORMAL":
+            if ch == '"':
+                state = "STRING"
+                out.append('"')
+                i += 1
+                continue
+            if ch == "'":
+                state = "CHAR"
+                out.append("'")
+                i += 1
+                continue
+            if ch == "/" and nxt == "/":
+                state = "LINE_COMMENT"
+                out.append(" ")
+                out.append(" ")
+                i += 2
+                continue
+            if ch == "/" and nxt == "*":
+                state = "BLOCK_COMMENT"
+                out.append(" ")
+                out.append(" ")
+                i += 2
+                continue
+
+            out.append(ch)
+            i += 1
+            continue
+
+        if state == "STRING":
+            if ch == "\\" and nxt:
+                out.append(" ")
+                out.append(" ")
+                i += 2
+                continue
+            if ch == '"':
+                state = "NORMAL"
+                out.append('"')
+                i += 1
+                continue
+            out.append("\n" if ch == "\n" else " ")
+            i += 1
+            continue
+
+        if state == "CHAR":
+            if ch == "\\" and nxt:
+                out.append(" ")
+                out.append(" ")
+                i += 2
+                continue
+            if ch == "'":
+                state = "NORMAL"
+                out.append("'")
+                i += 1
+                continue
+            out.append("\n" if ch == "\n" else " ")
+            i += 1
+            continue
+
+        if state == "LINE_COMMENT":
+            if ch == "\n":
+                state = "NORMAL"
+                out.append("\n")
+                i += 1
+                continue
+            out.append(" ")
+            i += 1
+            continue
+
+        if state == "BLOCK_COMMENT":
+            if ch == "*" and nxt == "/":
+                state = "NORMAL"
+                out.append(" ")
+                out.append(" ")
+                i += 2
+                continue
+            out.append("\n" if ch == "\n" else " ")
+            i += 1
+            continue
+
+    return "".join(out)
 
 def find_java_files(root_dir):
     """Find all Java files in the directory."""
@@ -48,34 +140,14 @@ def normalize_imports(imports):
     """
     Normalize imports by:
     - removing exact duplicates
-    - removing explicit imports covered by a wildcard import from the same package
     - sorting for deterministic output
     """
-    wildcard_pkgs = set()
-    wildcard_static_pkgs = set()
-
-    for is_static, path in imports:
-        if path.endswith('.*'):
-            base = path[:-2]
-            if is_static:
-                wildcard_static_pkgs.add(base)
-            else:
-                wildcard_pkgs.add(base)
-
     seen = set()
     normalized = []
     for is_static, path in imports:
         key = (is_static, path)
         if key in seen:
             continue
-
-        # Drop explicit imports that are redundant due to a wildcard import.
-        if not path.endswith('.*'):
-            pkg = '.'.join(path.split('.')[:-1])
-            if is_static and pkg in wildcard_static_pkgs:
-                continue
-            if not is_static and pkg in wildcard_pkgs:
-                continue
 
         seen.add(key)
         normalized.append(key)
@@ -120,95 +192,70 @@ def extract_package(content):
     match = re.search(r'^package\s+([^;]+);', content, re.MULTILINE)
     return match.group(1) if match else None
 
-def is_import_used(import_stmt, content, package_name):
+def is_import_used(is_static, import_path, code_without_imports):
     """Check if an import is actually used in the code."""
-    # Remove 'static' keyword if present
-    import_path = import_stmt.replace('static ', '').strip()
-    
-    # Get the class name (last part after dot)
-    class_name = import_path.split('.')[-1]
-    
-    # Handle wildcard imports
-    if import_path.endswith('.*'):
-        # For wildcard imports, we can't easily determine usage
-        # So we'll be conservative and keep them
+    # Wildcards are hard to prove safe to remove; always keep them.
+    if import_path.endswith(".*"):
         return True
-    
-    # Check if class name appears in the code (but not in import statements)
-    # Remove import statements from content for checking
-    content_without_imports = re.sub(r'^\s*import\s+.*?;\s*(?://.*)?$', '', content, flags=re.MULTILINE)
 
-    # Remove comments and string/char literals to avoid false positives
-    # (SonarQube doesn't consider mentions in comments/strings as usage)
-    content_without_imports = _BLOCK_COMMENT_RE.sub('', content_without_imports)
-    content_without_imports = _LINE_COMMENT_RE.sub('', content_without_imports)
-    content_without_imports = _STRING_RE.sub('""', content_without_imports)
-    content_without_imports = _CHAR_RE.sub("''", content_without_imports)
-    
-    # Check for class name usage
-    # Make sure it's not part of a package name or another import
-    # If the symbol is only referenced as part of a fully-qualified name (".ClassName"),
-    # the import is still unused. So we require the occurrence not be immediately
-    # preceded by a dot.
-    pattern = r'(?<!\.)\b' + re.escape(class_name) + r'\b'
-    
-    # Special handling for common cases
-    if class_name in ['List', 'Map', 'Set', 'ArrayList', 'HashMap', 'HashSet']:
-        # These are commonly used, check more carefully
-        if re.search(pattern, content_without_imports):
-            return True
-    
-    # Check if it's used as a type, in method calls, etc.
-    if re.search(pattern, content_without_imports):
-        # Make sure it's not just in comments
-        lines = content_without_imports.split('\n')
-        for line in lines:
-            stripped = line.strip()
-            if stripped.startswith('//') or stripped.startswith('*'):
-                continue
-            if re.search(pattern, line):
-                return True
-    
-    return False
+    imported_symbol = import_path.split(".")[-1]
+
+    # If the symbol is only referenced as part of a fully-qualified name (".Symbol"),
+    # the import is still unused. Require the occurrence not be immediately preceded by a dot.
+    pattern = r"(?<!\.)\b" + re.escape(imported_symbol) + r"\b"
+    return bool(re.search(pattern, code_without_imports))
 
 def remove_unused_imports(file_path):
     """Remove unused imports from a Java file."""
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        
+
         original_content = content
-        package_name = extract_package(content)
+        lines = content.splitlines(True)
+
         raw_imports = parse_import_lines(content)
-        
         if not raw_imports:
             return False, 0
-        
-        normalized_imports = normalize_imports(raw_imports)
-        # Apply normalization (dedupe/redundant) first, then detect true unused.
-        content = rebuild_import_block(content, normalized_imports)
-        
-        remaining_imports = []
-        for is_static, path in normalized_imports:
-            # Keep wildcard imports (usage is hard to prove safely).
-            if path.endswith('.*'):
-                remaining_imports.append((is_static, path))
+
+        content_without_imports = "".join(
+            line for line in lines if not _IMPORT_LINE_RE.match(line)
+        )
+        code_without_imports = strip_comments_and_literals(content_without_imports)
+
+        kept_imports = set()
+        removed_count = 0
+        new_lines = []
+
+        for line in lines:
+            match = _IMPORT_LINE_RE.match(line)
+            if not match:
+                new_lines.append(line)
                 continue
-            stmt = f"static {path}" if is_static else path
-            if is_import_used(stmt, content, package_name):
-                remaining_imports.append((is_static, path))
-        
-        content = rebuild_import_block(content, remaining_imports)
-        
-        removed_count = len(raw_imports) - len(remaining_imports)
-        
+
+            is_static = bool(match.group(1))
+            path = match.group(2).strip()
+            key = (is_static, path)
+
+            if key in kept_imports:
+                removed_count += 1
+                continue
+
+            if is_import_used(is_static, path, code_without_imports):
+                kept_imports.add(key)
+                new_lines.append(line)
+                continue
+
+            removed_count += 1
+
+        content = "".join(new_lines)
         if content != original_content:
-            with open(file_path, 'w', encoding='utf-8') as f:
+            with open(file_path, "w", encoding="utf-8") as f:
                 f.write(content)
             return True, max(0, removed_count)
-        
+
         return False, 0
-    
+
     except Exception as e:
         print(f"Error processing {file_path}: {e}")
         return False, 0
