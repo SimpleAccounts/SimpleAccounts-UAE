@@ -191,7 +191,7 @@ public class TranscationCategoryHelper {
 		if (list != null && !list.isEmpty()) {
 			Map<Object, Object> chartOfAccountDropdownModelList = new HashMap<>();
 			Map<Integer, List<ChartOfAccount>> idTrnxCatListMap = new HashMap<>();
-			List<ChartOfAccount> categoryList = new ArrayList<>();
+			List<ChartOfAccount> categoryList;
 			for (ChartOfAccount trnxCat : list) {
 				getParentChartOfAccount(idTrnxCatListMap, trnxCat);
 			}
@@ -233,7 +233,7 @@ public class TranscationCategoryHelper {
 		List<SingleLevelDropDownModel>
 				modelList = new ArrayList<>();
 		Map<Integer, List<TransactionCategory>> idTrnxCatListMap = new HashMap<>();
-		List<TransactionCategory> transactionCategoryList = new ArrayList<>();
+		List<TransactionCategory> transactionCategoryList;
 		for (TransactionCategory trnxCat : transactionCatList) {
 
 			if (trnxCat.getChartOfAccount() != null) {
@@ -264,13 +264,10 @@ public class TranscationCategoryHelper {
 	public List<SingleLevelDropDownModel> getSingleLevelDropDownModelListForManualJournal(List<TransactionCategory> transactionCatList) {
 		List<SingleLevelDropDownModel> modelList = new ArrayList<>();
 		Map<Integer, List<TransactionCategory>> idTrnxCatListMap = new HashMap<>();
-		List<TransactionCategory> transactionCategoryList = new ArrayList<>();
+		List<TransactionCategory> transactionCategoryList;
 		transactionCatList = transactionCatList.stream().filter(transactionCategory ->
 				!transactionCategory.getTransactionCategoryCode().equals(TransactionCategoryCodeEnum.PETTY_CASH.getCode()))
 				.filter(transactionCategory ->  !transactionCategory.getChartOfAccount().getChartOfAccountCode().equals(ChartOfAccountCategoryCodeEnum.BANK.getCode())).collect(Collectors.toList());
-		Map<String,Object> map = new HashMap<>();
-		map.put("deleteFlag",Boolean.FALSE);
-	     List<EmployeeTransactionCategoryRelation> employeeTransactionCategoryRelationList = employeeTransactioncategoryService.findByAttributes(map);
 
 		for (TransactionCategory trnxCat : transactionCatList) {
 			if (trnxCat.getChartOfAccount() != null) {
@@ -300,8 +297,6 @@ public class TranscationCategoryHelper {
 	}
 
 	public List<DropdownModel> getEmployeeTransactionCategory(List<TransactionCategory> transactionCategoryList){
-		List<SingleLevelDropDownModel> response  = new ArrayList<>();
-		String parentCategory = "";
 		List<DropdownModel> dropDownModelList = new ArrayList<>();
 		for (TransactionCategory transactionCategory:transactionCategoryList){
 
@@ -312,7 +307,6 @@ public class TranscationCategoryHelper {
 			//added check for Inactive Employee TC's
 				if(!employeeTransactionCategoryRelationList.isEmpty()
 						&& Boolean.TRUE.equals(employeeTransactionCategoryRelationList.get(0).getEmployee().getIsActive())) {
-					parentCategory = transactionCategory.getChartOfAccount().getChartOfAccountName();
 					dropDownModelList.add(
 							new DropdownModel(transactionCategory.getTransactionCategoryId(), transactionCategory.getTransactionCategoryName()));
 			}//if

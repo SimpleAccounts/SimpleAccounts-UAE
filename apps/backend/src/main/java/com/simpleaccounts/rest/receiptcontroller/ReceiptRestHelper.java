@@ -250,7 +250,7 @@ public class ReceiptRestHelper {
 
 	public Journal receiptPosting(PostingRequestModel postingRequestModel, Integer userId,
 			TransactionCategory depositeToTransactionCategory,BigDecimal exchangeGainOrLoss,Integer id,Integer transactionId) {
-		List<JournalLineItem> journalLineItemList = new ArrayList<>();
+		List<JournalLineItem> journalLineItemList;
 		Map<String, Object> param = new HashMap<>();
 		param.put("referenceType", PostingReferenceTypeEnum.RECEIPT);
 		param.put("referenceId", postingRequestModel.getPostingRefId());
@@ -365,7 +365,7 @@ public class ReceiptRestHelper {
 	
 	public Journal paymentPosting(PostingRequestModel postingRequestModel, Integer userId,
 			TransactionCategory depositeToTransactionCategory,BigDecimal exchangeGainOrLoss,Integer id) {
-		List<JournalLineItem> journalLineItemList = new ArrayList<>();
+		List<JournalLineItem> journalLineItemList;
 
 		Map<String, Object> param = new HashMap<>();
 		param.put("referenceType", PostingReferenceTypeEnum.PAYMENT);
@@ -393,11 +393,9 @@ public class ReceiptRestHelper {
 		supplierMap.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
 		List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
 				.findByAttributes(supplierMap);
-		TransactionCategory transactionCategory;
 		if (contactTransactionCategoryRelations != null && !contactTransactionCategoryRelations.isEmpty()) {
 			ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryRelations.get(0);
 			journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
-			transactionCategory = contactTransactionCategoryRelation.getTransactionCategory();
 		}
 		journalLineItem1.setDebitAmount(postingRequestModel.getAmount());
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.PAYMENT);
@@ -405,7 +403,6 @@ public class ReceiptRestHelper {
 		journalLineItem1.setCreatedBy(userId);
 		journalLineItem1.setJournal(journal);
 		journalLineItemList.add(journalLineItem1);
-		BigDecimal	invoiceExchangeRate =  payment.getInvoice().getExchangeRate();
 		JournalLineItem journalLineItem2;
 		if (journal.getJournalLineItems() != null && journal.getJournalLineItems().size() > 1) {
 			journalLineItem2 = journalLineItemList.get(1);
@@ -422,7 +419,7 @@ public class ReceiptRestHelper {
 
 		if (exchangeGainOrLoss != null && exchangeGainOrLoss.compareTo(BigDecimal.ZERO) != 0) {
 			JournalLineItem journalLineItem = new JournalLineItem();
-				 transactionCategory = transactionCategoryService.findByPK(id);
+			TransactionCategory transactionCategory = transactionCategoryService.findByPK(id);
 			journalLineItem.setTransactionCategory(transactionCategory);
 			if (id.equals(79)){
 				journalLineItem.setDebitAmount(exchangeGainOrLoss);
@@ -459,7 +456,6 @@ public class ReceiptRestHelper {
 		supplierMap.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
 		List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
 				.findByAttributes(supplierMap);
-		TransactionCategory transactionCategory;
 		if (!id.equals(79)){
 			exchangeGainOrLoss = exchangeGainOrLoss.negate();
 		}
@@ -467,7 +463,6 @@ public class ReceiptRestHelper {
 		if (contactTransactionCategoryRelations != null && !contactTransactionCategoryRelations.isEmpty()) {
 			ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryRelations.get(0);
 			journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
-			transactionCategory = contactTransactionCategoryRelation.getTransactionCategory();
 		}
 			journalLineItem1.setDebitAmount(postingRequestModel.getAmount());
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.BANK_PAYMENT);
@@ -494,7 +489,7 @@ public class ReceiptRestHelper {
 
 		if (exchangeGainOrLoss != null && exchangeGainOrLoss.compareTo(BigDecimal.ZERO) != 0) {
 			JournalLineItem journalLineItem = new JournalLineItem();
-			transactionCategory = transactionCategoryService.findByPK(id);
+			TransactionCategory transactionCategory = transactionCategoryService.findByPK(id);
 			journalLineItem.setTransactionCategory(transactionCategory);
 			if (id.equals(79)){
 				journalLineItem.setDebitAmount(exchangeGainOrLoss);
@@ -528,7 +523,6 @@ public class ReceiptRestHelper {
 		supplierMap.put(JSON_KEY_DELETE_FLAG, Boolean.FALSE);
 		List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
 				.findByAttributes(supplierMap);
-		TransactionCategory transactionCategory;
 		if (!id.equals(79)) {
 			exchangeGainOrLoss = exchangeGainOrLoss.negate();
 		}
@@ -539,7 +533,6 @@ public class ReceiptRestHelper {
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 		if (contactTransactionCategoryRelations != null && !contactTransactionCategoryRelations.isEmpty()) {
 			journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
-			transactionCategory = contactTransactionCategoryRelation.getTransactionCategory();
 		}
 			journalLineItem1.setCreditAmount(postingRequestModel.getAmount());
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.BANK_RECEIPT);
@@ -565,7 +558,7 @@ public class ReceiptRestHelper {
 
 		if (exchangeGainOrLoss != null && exchangeGainOrLoss.compareTo(BigDecimal.ZERO) != 0) {
 			JournalLineItem journalLineItem = new JournalLineItem();
-			transactionCategory = transactionCategoryService.findByPK(id);
+			TransactionCategory transactionCategory = transactionCategoryService.findByPK(id);
 			journalLineItem.setTransactionCategory(transactionCategory);
 			if (id.equals(79)) {
 				journalLineItem.setCreditAmount(exchangeGainOrLoss);

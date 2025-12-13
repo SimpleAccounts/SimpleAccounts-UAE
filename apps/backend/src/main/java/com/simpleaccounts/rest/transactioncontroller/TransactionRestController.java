@@ -552,7 +552,7 @@ public class TransactionRestController {
 		corporateTaxPayment.setPaymentDate(trnx.getTransactionDate().toLocalDate());
 		corporateTaxPayment.setAmountPaid(trnx.getTransactionAmount());
 		corporateTaxPayment.setDepositToTransactionCategory((bankAccount.getTransactionCategory()));
-		BigDecimal ctReportFilingBalanceDue = BigDecimal.ZERO;
+		BigDecimal ctReportFilingBalanceDue;
 		CorporateTaxFiling corporateTaxFiling = corporateTaxFilingRepository.findById(corporateTaxModel.getId()).get();
 		if (corporateTaxFiling.getBalanceDue().compareTo(trnx.getTransactionAmount()) > 0){
 			ctReportFilingBalanceDue = corporateTaxFiling.getBalanceDue().subtract(trnx.getTransactionAmount());
@@ -657,7 +657,7 @@ public class TransactionRestController {
 		vatPayment.setAmount(trnx.getTransactionAmount());
 		vatPayment.setDepositToTransactionCategory((bankAccount.getTransactionCategory()));
 
-		BigDecimal vatReportFilingBalanceDue = BigDecimal.ZERO;
+		BigDecimal vatReportFilingBalanceDue;
 		VatReportFiling vatReportFiling = vatReportFilingRepository.findById(vatReportResponseListForBank.getId()).get();
 		if (vatReportFiling.getBalanceDue().compareTo(trnx.getTransactionAmount()) > 0){
 			vatReportFilingBalanceDue = vatReportFiling.getBalanceDue().subtract(trnx.getTransactionAmount());
@@ -812,7 +812,7 @@ public class TransactionRestController {
 //2.create new expenses
 		Expense expense =  createNewExpense(transactionPresistModel,userId);
 		//amnt check
-		BigDecimal transactionAmount = BigDecimal.ZERO; //for journal
+		BigDecimal transactionAmount; //for journal
 		if(trnx.getTransactionAmount().compareTo(payrollsTotalAmt) > 0)
 		{
 			expense.setExpenseAmount(payrollsTotalAmt);
@@ -1019,8 +1019,6 @@ public class TransactionRestController {
 		FileHelper.setRootPath(rootPath);
 		Transaction trnx = isValidTransactionToExplain(transactionPresistModel);
 		if(trnx!=null&&trnx.getTransactionExplinationStatusEnum()==TransactionExplinationStatusEnum.FULL) {
-			TransactionExplanation transactionExplanation =
-                    transactionExplanationRepository.findById(transactionPresistModel.getExplanationId()).get();
 			trnx = updateTransactionWithCommonFields(transactionPresistModel, userId, TransactionCreationMode.IMPORT, trnx);
 		}
 		else if(trnx==null) {
@@ -1261,8 +1259,7 @@ public class TransactionRestController {
 			BigDecimal newTransactionAmount =transactionPresistModel.getAmount();
 			BigDecimal currentBalance = trnx.getBankAccount().getCurrentBalance();
 
-			BigDecimal updateTransactionAmount = BigDecimal.ZERO;
-			updateTransactionAmount = newTransactionAmount.subtract(oldTransactionAmount);
+			BigDecimal updateTransactionAmount = newTransactionAmount.subtract(oldTransactionAmount);
 			if(trnx.getDebitCreditFlag() == 'C'){
 
 				currentBalance= currentBalance.subtract(oldTransactionAmount);
@@ -1483,13 +1480,12 @@ public class TransactionRestController {
 		List<TransactionExplinationLineItem> transactionExplinationLineItems = new ArrayList<>();
 		for (ExplainedInvoiceListModel explainParam : explainedInvoiceListModelList) {
 			TransactionExplinationLineItem transactionExplinationLineItem = new TransactionExplinationLineItem();
-			BigDecimal explainedAmount = BigDecimal.ZERO;
+			BigDecimal explainedAmount = explainParam.getExplainedAmount();
 			journalAmount = journalAmount.add(explainParam.getConvertedToBaseCurrencyAmount());
 			// Update invoice Payment status
 			Invoice invoiceEntity = invoiceService.findByPK(explainParam.getInvoiceId());
 			contactId = invoiceEntity.getContact().getContactId();
 			Contact contact = invoiceEntity.getContact();
-			explainedAmount =explainParam.getExplainedAmount();
 			if (explainParam.getPartiallyPaid().equals(Boolean.TRUE)){
 				invoiceEntity.setDueAmount(invoiceEntity.getDueAmount().subtract(explainParam.getNonConvertedInvoiceAmount()));
 				invoiceEntity.setStatus(CommonStatusEnum.PARTIALLY_PAID.getValue());
