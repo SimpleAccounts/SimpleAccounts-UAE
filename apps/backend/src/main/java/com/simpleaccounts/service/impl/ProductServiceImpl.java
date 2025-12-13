@@ -50,6 +50,9 @@ public class ProductServiceImpl extends ProductService {
 
     private void deleteFromCache(List<Integer> ids) {
         Cache productCache = cacheManager.getCache("productCache");
+        if (productCache == null) {
+            return;
+        }
         for (Integer id : ids ) {
             productCache.evict(id);
         }

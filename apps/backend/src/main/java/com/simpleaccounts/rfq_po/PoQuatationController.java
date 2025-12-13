@@ -465,22 +465,23 @@ PoQuatationController {
             SimpleAccountsMessage message = null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             PoQuatation poQuatation=poQuatationService.findByPK(id);
-            if (poQuatation!=null) {
-                Invoice invoice = poQuatationRestHelper.createSupplierInvoiceForGrn(poQuatation, userId);
-                invoiceService.persist(invoice);
-                PostingRequestModel postingRequestModel = new PostingRequestModel();
-                postingRequestModel.setPostingRefId(invoice.getId());
-                postingRequestModel.setPostingRefType("INVOICE");
-                postingRequestModel.setAmount(invoice.getTotalAmount());
-                Journal journal = null;
-                journal = invoiceRestHelper.invoicePosting(postingRequestModel, userId);
-                if (journal != null) {
-                    journalService.persist(journal);
-                }
-                invoice.setStatus(CommonStatusEnum.POST.getValue());
-                invoiceRestHelper.send(invoice,userId,new PostingRequestModel(),request);
-                invoiceService.persist(invoice);
+            if (poQuatation==null) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
+            Invoice invoice = poQuatationRestHelper.createSupplierInvoiceForGrn(poQuatation, userId);
+            invoiceService.persist(invoice);
+            PostingRequestModel postingRequestModel = new PostingRequestModel();
+            postingRequestModel.setPostingRefId(invoice.getId());
+            postingRequestModel.setPostingRefType("INVOICE");
+            postingRequestModel.setAmount(invoice.getTotalAmount());
+            Journal journal = null;
+            journal = invoiceRestHelper.invoicePosting(postingRequestModel, userId);
+            if (journal != null) {
+                journalService.persist(journal);
+            }
+            invoice.setStatus(CommonStatusEnum.POST.getValue());
+            invoiceRestHelper.send(invoice,userId,new PostingRequestModel(),request);
+            invoiceService.persist(invoice);
             poQuatation.setStatus(CommonStatusEnum.POST_GRN.getValue());
             poQuatationService.update(poQuatation);
 

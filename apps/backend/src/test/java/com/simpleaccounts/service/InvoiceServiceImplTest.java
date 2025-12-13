@@ -7,9 +7,17 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;
 import com.simpleaccounts.dao.InvoiceDao;
+import com.simpleaccounts.dao.JournalDao;
+import com.simpleaccounts.dao.JournalLineItemDao;
 import com.simpleaccounts.entity.Invoice;
+import com.simpleaccounts.entity.Journal;
+import com.simpleaccounts.entity.JournalLineItem;
 import com.simpleaccounts.repository.InvoiceRepository;
+import com.simpleaccounts.rest.PaginationModel;
+import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.financialreport.AmountDetailRequestModel;
 import com.simpleaccounts.rest.financialreport.VatReportFilingRepository;
 import com.simpleaccounts.rest.invoice.dto.InvoiceAmoutResultSet;
@@ -20,9 +28,12 @@ import com.simpleaccounts.utils.DateUtils;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -40,6 +51,10 @@ class InvoiceServiceImplTest {
     private InvoiceRepository invoiceRepository;
     @Mock
     private VatReportFilingRepository vatReportFilingRepository;
+    @Mock
+    private JournalDao journalDao;
+    @Mock
+    private JournalLineItemDao journalLineItemDao;
 
     @InjectMocks
     private InvoiceServiceImpl invoiceService;
@@ -149,6 +164,153 @@ class InvoiceServiceImplTest {
         assertThat(result).hasSize(1);
         verify(invoiceRepository).getZeroRatedSupplies(eq(start), eq(end), eq(Boolean.TRUE));
         verify(invoiceRepository, never()).geStanderdRatedInvoice(any(), any(), any());
+    }
+
+    @Test
+    void shouldHandleRegionalSuppliesCorrectly() {
+        // Covers cases 1 through 7
+        AmountDetailRequestModel request = buildAmountDetailRequest(1);
+        LocalDate start = LocalDate.of(2024, 1, 1);
+        LocalDate end = LocalDate.of(2024, 1, 31);
+
+        InvoiceAmoutResultSet amount = stubAmountResult(
+                4,
+                new BigDecimal("100.00"),
+                new BigDecimal("5.00"),
+                "INV-REG-001",
+                "2024-01-02",
+                "AED",
+                false
+        );
+
+        when(invoiceRepository.getAmountDetails(eq(1), eq(start), eq(end), eq(Boolean.TRUE)))
+                .thenReturn(Collections.singletonList(amount));
+
+        List<VatAmountDto> result = invoiceService.getAmountDetails(request);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getAmount()).isEqualByComparingTo("95.00");
+        verify(invoiceRepository).getAmountDetails(eq(1), eq(start), eq(end), eq(Boolean.TRUE));
+    }
+
+    @Test
+    void shouldHandleReverseChargeProvisions() {
+        // Case 8
+        AmountDetailRequestModel request = buildAmountDetailRequest(8);
+        LocalDate start = LocalDate.of(2024, 1, 1);
+        LocalDate end = LocalDate.of(2024, 1, 31);
+
+        InvoiceAmoutResultSet revChargeInvoice = stubAmountResult(
+                5,
+                new BigDecimal("300.00"),
+                new BigDecimal("15.00"),
+                "INV-REV-001",
+                "2024-01-15",
+                "AED",
+                false
+        );
+        InvoiceAmoutResultSet revChargeExpense = stubAmountResult(
+                6,
+                new BigDecimal("50.00"),
+                BigDecimal.ZERO,
+                "EXP-REV-001",
+                "2024-01-16",
+                "AED",
+                true
+        );
+
+        when(invoiceRepository.getReverseChargeProvisions(eq(start), eq(end), eq(Boolean.TRUE)))
+                .thenReturn(Collections.singletonList(revChargeInvoice));
+        when(invoiceRepository.getReverseChargeForExpense(eq(start), eq(end), eq(Boolean.TRUE)))
+                .thenReturn(Collections.singletonList(revChargeExpense));
+
+        List<VatAmountDto> result = invoiceService.getAmountDetails(request);
+
+        assertThat(result).hasSize(2);
+        // Invoice: 300 - 15 = 285
+        assertThat(result.get(0).getAmount()).isEqualByComparingTo("285.00");
+        // Expense: 50 (Exclusive Vat = true)
+        assertThat(result.get(1).getAmount()).isEqualByComparingTo("50.00");
+    }
+
+    @Test
+    void shouldHandleExemptSupplies() {
+        // Case 10
+        AmountDetailRequestModel request = buildAmountDetailRequest(10);
+        LocalDate start = LocalDate.of(2024, 1, 1);
+        LocalDate end = LocalDate.of(2024, 1, 31);
+
+        InvoiceAmoutResultSet exemptAmount = stubAmountResult(
+                7,
+                new BigDecimal("500.00"),
+                BigDecimal.ZERO,
+                "INV-EXEMPT",
+                "2024-01-20",
+                "AED",
+                false
+        );
+
+        when(invoiceRepository.getExemptSupplies(eq(start), eq(end), eq(Boolean.TRUE)))
+                .thenReturn(Collections.singletonList(exemptAmount));
+
+        List<VatAmountDto> result = invoiceService.getAmountDetails(request);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getAmount()).isEqualByComparingTo("500.00");
+    }
+
+    @Test
+    void shouldDeleteJournalForInvoiceWhenJournalLineItemExists() {
+        Invoice invoice = new Invoice();
+        invoice.setId(123);
+        
+        Journal journal = new Journal();
+        journal.setId(456);
+
+        JournalLineItem lineItem = new JournalLineItem();
+        lineItem.setJournal(journal);
+
+        when(journalLineItemDao.findByAttributes(any(Map.class)))
+                .thenReturn(Collections.singletonList(lineItem));
+
+        invoiceService.deleteJournaForInvoice(invoice);
+
+        ArgumentCaptor<Map<String, Object>> paramCaptor = ArgumentCaptor.forClass(Map.class);
+        verify(journalLineItemDao).findByAttributes(paramCaptor.capture());
+        
+        Map<String, Object> capturedParams = paramCaptor.getValue();
+        assertThat(capturedParams)
+                .containsEntry("referenceType", PostingReferenceTypeEnum.INVOICE)
+                .containsEntry("referenceId", 123)
+                .containsEntry("deleteFlag", false);
+
+        verify(journalDao).deleteByIds(Collections.singletonList(456));
+    }
+
+    @Test
+    void shouldNotDeleteJournalWhenNoLineItemsFound() {
+        Invoice invoice = new Invoice();
+        invoice.setId(123);
+
+        when(journalLineItemDao.findByAttributes(any(Map.class))).thenReturn(Collections.emptyList());
+
+        invoiceService.deleteJournaForInvoice(invoice);
+
+        verify(journalDao, never()).deleteByIds(any());
+    }
+
+    @Test
+    void shouldDelegateGetInvoiceListToDao() {
+        Map<InvoiceFilterEnum, Object> filterMap = new HashMap<>();
+        PaginationModel paginationModel = new PaginationModel();
+        PaginationResponseModel expectedResponse = new PaginationResponseModel();
+
+        when(supplierInvoiceDao.getInvoiceList(filterMap, paginationModel)).thenReturn(expectedResponse);
+
+        PaginationResponseModel result = invoiceService.getInvoiceList(filterMap, paginationModel);
+
+        assertThat(result).isSameAs(expectedResponse);
+        verify(supplierInvoiceDao).getInvoiceList(filterMap, paginationModel);
     }
 
     private InvoiceAmoutResultSet stubAmountResult(

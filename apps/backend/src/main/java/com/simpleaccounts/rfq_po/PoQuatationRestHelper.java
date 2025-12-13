@@ -365,7 +365,7 @@ public class PoQuatationRestHelper {
             if(model.getUnitType() != null)
                 poQuatationLineItem.setUnitType(model.getUnitType());
             if (model.getUnitTypeId() != null)
-                poQuatationLineItem.setUnitTypeId(unitTypesRepository.findById(model.getUnitTypeId()).get());
+                unitTypesRepository.findById(model.getUnitTypeId()).ifPresent(poQuatationLineItem::setUnitTypeId);
             poQuatationLineItem.setPoQuatation(poQuatation);
             listItems.add(poQuatationLineItem);
         }
@@ -1506,7 +1506,7 @@ public class PoQuatationRestHelper {
             logger.error(ERROR_PROCESSING_QUOTATION, e);
         }
 
-        if (htmlContent !="" && htmlContent !=null ){
+        if (htmlContent != null && !htmlContent.isEmpty()){
             content = mailUtility.create(map, htmlContent);
         }
         if (poEmailBody != null && poEmailBody.getTemplateSubject() != null) {
@@ -1787,7 +1787,7 @@ public class PoQuatationRestHelper {
             logger.error(ERROR_PROCESSING_QUOTATION, e);
         }
 
-        if (htmlContent !="" && htmlContent !=null ){
+        if (htmlContent != null && !htmlContent.isEmpty()){
             content = mailUtility.create(map, htmlContent);
         }
         if (grnEmailBody != null && grnEmailBody.getTemplateSubject() != null) {

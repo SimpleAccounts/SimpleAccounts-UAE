@@ -182,15 +182,18 @@ public class TransactionCategoryBalanceController {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);
-			TransactionCategoryBalance transactionCategoryBalance= null;
-			if (persistModel.getTransactionCategoryBalanceId() != null) {
-				transactionCategoryBalance = transactionCategoryBalanceService
-						.findByPK(persistModel.getTransactionCategoryBalanceId());
-			}
-			Journal journal = journalService.getJournalByReferenceId(transactionCategoryBalance.getTransactionCategory().getTransactionCategoryId());
-			if (journal != null) {
-				journalService.deleteAndUpdateByIds(Arrays.asList(journal.getId()),false);
-			}
+				TransactionCategoryBalance transactionCategoryBalance= null;
+				if (persistModel.getTransactionCategoryBalanceId() != null) {
+					transactionCategoryBalance = transactionCategoryBalanceService
+							.findByPK(persistModel.getTransactionCategoryBalanceId());
+				}
+				Journal journal = null;
+				if (transactionCategoryBalance != null && transactionCategoryBalance.getTransactionCategory() != null) {
+					journal = journalService.getJournalByReferenceId(transactionCategoryBalance.getTransactionCategory().getTransactionCategoryId());
+					if (journal != null) {
+						journalService.deleteAndUpdateByIds(Arrays.asList(journal.getId()),false);
+					}
+				}
 			TransactionCategory category = transactionCategoryService.findByPK(persistModel.getTransactionCategoryId());
 			TransactionCategory transactionCategory = transactionCategoryService
 					.findTransactionCategoryByTransactionCategoryCode(

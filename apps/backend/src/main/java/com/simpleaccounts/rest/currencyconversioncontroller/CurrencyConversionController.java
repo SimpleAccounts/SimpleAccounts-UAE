@@ -154,7 +154,7 @@ public class CurrencyConversionController{
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "Delete Currency by Currency Code", response = CurrencyConversion.class)
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Object> deleteCurrency(@RequestParam("id") int id,
+    public ResponseEntity<Object> deleteCurrency(@PathVariable("id") int id,
                                                    HttpServletRequest request) {
         try {
             SimpleAccountsMessage message = null;

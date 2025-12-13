@@ -114,6 +114,8 @@ public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements Salar
 
         for(EmployeeSalaryComponentRelation salary : esclist)
         {
+            employment = null;
+            employeeBankDetails = null;
             Map<String, Object> paramEmployee = new HashMap<>();
             paramEmployee.put(JSON_KEY_EMPLOYEE, salary.getEmployeeId().getId());
             List<Employment> employmentList = employmentService.findByAttributes(paramEmployee);
@@ -126,10 +128,10 @@ public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements Salar
             if (employeeBankDetailsList!=null && !employeeBankDetailsList.isEmpty()) {
                 employeeBankDetails = employeeBankDetailsList.get(0);
             }
-	            if (employment.getId()!=null&&!employmentList.isEmpty()&&!employeeBankDetailsList.isEmpty()&&employeeBankDetails.getId()!=null&&((salary.getMonthlyAmount()).compareTo(BigDecimal.ZERO)>0)&&((salary.getYearlyAmount()).compareTo(BigDecimal.ZERO)>0)
+	            if (employment != null && employment.getId()!=null&& employeeBankDetails != null && employeeBankDetails.getId()!=null&&((salary.getMonthlyAmount()).compareTo(BigDecimal.ZERO)>0)&&((salary.getYearlyAmount()).compareTo(BigDecimal.ZERO)>0)
 	                    && Boolean.TRUE.equals(salary.getEmployeeId().getIsActive())) {
-	                if (salaryPaidEmployeeList.contains(salary.getEmployeeId().getId()))
-	                    continue;
+		                if (salaryPaidEmployeeList.contains(salary.getEmployeeId().getId()))
+		                    continue;
                 SalaryPerMonthModel salaryPerMonthModel = salaryMap.get(salary.getEmployeeId().getId());
                 if (salaryPerMonthModel == null) {
                     salaryPerMonthModel = new SalaryPerMonthModel();

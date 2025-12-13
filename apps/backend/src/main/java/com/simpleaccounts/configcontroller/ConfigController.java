@@ -27,10 +27,10 @@ public class ConfigController{
 	public SimpleAccountsConfigModel getReleaseNumber()
 	{
 		SimpleAccountsConfigModel config = new SimpleAccountsConfigModel();
-		if (env.getProperty(ConfigurationConstants.SIMPLEACCOUNTS_RELEASE) != null && !env.getProperty(ConfigurationConstants.SIMPLEACCOUNTS_RELEASE).isEmpty()) {
-			config.setSimpleAccountsRelease(env.getProperty("SIMPLEACCOUNTS_RELEASE"));
-		}
-		else {
+		String release = env.getProperty(ConfigurationConstants.SIMPLEACCOUNTS_RELEASE);
+		if (release != null && !release.isEmpty()) {
+			config.setSimpleAccountsRelease(release);
+		} else {
 			config.setSimpleAccountsRelease("Unknown");
 		}
 

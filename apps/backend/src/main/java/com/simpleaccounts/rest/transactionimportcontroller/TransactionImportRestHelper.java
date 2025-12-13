@@ -179,17 +179,17 @@ public class TransactionImportRestHelper {
 									.atZone(ZoneId.systemDefault()).toLocalDateTime();
 							DateFormat df = new SimpleDateFormat(dateFormat);
 							String reportDate = df.format(dateTranscation);
-							transaction.setDate("");
-							if (!drAmount.isEmpty()) {
-								transaction.setDebit("debit");
-								new BigDecimal(Float.valueOf(drAmount));
-								transaction.setDebit("");
-							}
-							if (!crAmount.isEmpty()) {
-								transaction.setCredit("credit");
-								new BigDecimal(Float.valueOf(crAmount));
-								transaction.setCredit("");
-							}
+								transaction.setDate("");
+								if (!drAmount.isEmpty()) {
+									transaction.setDebit("debit");
+									new BigDecimal(drAmount);
+									transaction.setDebit("");
+								}
+								if (!crAmount.isEmpty()) {
+									transaction.setCredit("credit");
+									new BigDecimal(crAmount);
+									transaction.setCredit("");
+								}
 							transaction.setTransactionDate(date);
 							transaction.setDescription(description);
 							transaction.setDebit(drAmount);

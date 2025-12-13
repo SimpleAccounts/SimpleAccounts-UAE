@@ -174,13 +174,13 @@ public class ReconsilationRestHelper {
 										Integer transactionCategoryCode, int userId,
 										Transaction transaction, Expense expense) {
 
-		BigDecimal exchangeRate = BigDecimal.ONE;
-		if (transactionPresistModel.getExchangeRate().equals(null)){
-			 exchangeRate =  currencyExchangeService.getExchangeRate(transactionPresistModel.getCurrencyCode()).getExchangeRate();
-		}
-		else {
-			exchangeRate = transactionPresistModel.getExchangeRate();
-		}
+			BigDecimal exchangeRate = BigDecimal.ONE;
+			if (transactionPresistModel.getExchangeRate() == null){
+				 exchangeRate =  currencyExchangeService.getExchangeRate(transactionPresistModel.getCurrencyCode()).getExchangeRate();
+			}
+			else {
+				exchangeRate = transactionPresistModel.getExchangeRate();
+			}
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);

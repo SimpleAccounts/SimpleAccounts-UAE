@@ -129,6 +129,9 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
         vatReportFiling.setEndDate(getEndDateAsLocalDatetime(vatReportFilingRequestModel.getEndDate()).toLocalDate());
         vatReportFiling.setStatus(CommonStatusEnum.UN_FILED.getValue());
 
+        if (totalAmount == null) {
+            totalAmount = BigDecimal.ZERO;
+        }
         if (totalAmount.compareTo(BigDecimal.ZERO) < 0) {
             vatReportFiling.setTotalTaxReclaimable(totalAmount.negate());
             vatReportFiling.setBalanceDue(totalAmount.negate());
@@ -279,7 +282,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
         vatTaxAgency.setTaxAgencyNumber(fileTheVatReportRequestModel.getTaxAgencyNumber());
         vatTaxAgency.setTaxAgentApprovalNumber(fileTheVatReportRequestModel.getTaxAgentApprovalNumber());
         Optional<VatReportFiling> optional =  vatReportFilingRepository.findById(fileTheVatReportRequestModel.getVatReportFiling());
-        VatReportFiling vatReportFiling=optional.get();
+        VatReportFiling vatReportFiling=optional.orElseThrow();
         Instant instant = Instant.ofEpochMilli(fileTheVatReportRequestModel.getTaxFiledOn().getTime());
         LocalDateTime taxFiledOn = LocalDateTime.ofInstant(instant,
                 ZoneId.systemDefault());

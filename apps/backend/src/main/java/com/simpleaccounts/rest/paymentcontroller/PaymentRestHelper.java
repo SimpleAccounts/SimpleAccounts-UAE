@@ -233,12 +233,14 @@ public class PaymentRestHelper {
 		param.put("referenceId", postingRequestModel.getPostingRefId());
 		param.put("deleteFlag", false);
 		journalLineItemList = journalLineItemService.findByAttributes(param);
+		if (journalLineItemList == null) {
+			journalLineItemList = new ArrayList<>();
+		}
 
 		Journal journal = journalLineItemList != null && !journalLineItemList.isEmpty()
 				? journalLineItemList.get(0).getJournal()
 				: new Journal();
-		JournalLineItem journalLineItem1 = journal.getJournalLineItems() != null
-				&& !journal.getJournalLineItems().isEmpty() ? journalLineItemList.get(0) : new JournalLineItem();
+		JournalLineItem journalLineItem1 = journalLineItemList.size() > 0 ? journalLineItemList.get(0) : new JournalLineItem();
 
 		Payment payment = paymentService.findByPK(postingRequestModel.getPostingRefId());
 		Map<String, Object> map = new HashMap<>();
@@ -253,10 +255,11 @@ public class PaymentRestHelper {
 		journalLineItem1.setExchangeRate(invoiceExchangeRate);
 		journalLineItem1.setCreatedBy(userId);
 		journalLineItem1.setJournal(journal);
-		journalLineItemList.add(journalLineItem1);
+		if (journalLineItemList.isEmpty()) {
+			journalLineItemList.add(journalLineItem1);
+		}
 
-		JournalLineItem journalLineItem2 = journal.getJournalLineItems() != null
-				&& !journal.getJournalLineItems().isEmpty() ? journalLineItemList.get(1) : new JournalLineItem();
+		JournalLineItem journalLineItem2 = journalLineItemList.size() > 1 ? journalLineItemList.get(1) : new JournalLineItem();
 		journalLineItem2.setTransactionCategory(depositeToTransactionCategory);
 		journalLineItem2.setCreditAmount(postingRequestModel.getAmount().multiply(invoiceExchangeRate));
 		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.PAYMENT);
@@ -264,7 +267,9 @@ public class PaymentRestHelper {
 		journalLineItem2.setExchangeRate(invoiceExchangeRate);
 		journalLineItem2.setCreatedBy(userId);
 		journalLineItem2.setJournal(journal);
-		journalLineItemList.add(journalLineItem2);
+		if (journalLineItemList.size() < 2) {
+			journalLineItemList.add(journalLineItem2);
+		}
 
 		journal.setJournalLineItems(journalLineItemList);
 		journal.setCreatedBy(userId);

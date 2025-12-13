@@ -59,7 +59,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class PayrollRestHepler {
     private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
     private static final String ERROR_PROCESSING_PAYROLL = "Error processing payroll";
-    private static final String DATE_FORMAT_DD_MM_YYYY = "DATE_FORMAT_DD_MM_YYYY";
+    private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
     private final EmployeeBankDetailsService employeeBankDetailsService;
     private final RoleModuleRelationService roleModuleRelationService;
 
@@ -1674,8 +1674,8 @@ public class PayrollRestHepler {
         String fileString=new String();
         BigDecimal total=BigDecimal.ZERO;
 
-        for ( int id :ids){
-            Employee employee = employeeService.findByPK(id);
+	        for ( int id :ids){
+	            Employee employee = employeeService.findByPK(id);
             Map<String, Object> param = new HashMap<>();
             param.put("employee", employee);
             List<EmployeeBankDetails> employeeBankDetailsList = employeeBankDetailsService.findByAttributes(param);
@@ -1729,36 +1729,36 @@ public class PayrollRestHepler {
                     lop      = result.getLopDays();
                 }//salary end
 
-            BigDecimal INCOME_FIXED_COMPONENT=fixedComponent;
-            BigDecimal INCOME_VARIABLE_COMPONENT=variableComponent.subtract(deduction);
+	            BigDecimal INCOME_FIXED_COMPONENT=fixedComponent;
+	            BigDecimal INCOME_VARIABLE_COMPONENT=variableComponent.subtract(deduction);
 
-            total=total.add(INCOME_FIXED_COMPONENT.add(INCOME_VARIABLE_COMPONENT));
-            fileString=  fileString.concat("EDR," +
-                    (employment.getLabourCard()!=null?employment.getLabourCard():"-") + "," +
-                    (employment.getAgentId()!=null&& !employment.getAgentId().isEmpty()
-                            ?employment.getAgentId():"-") + "," +
-                    employeeBankDetails.getIban() + ","+
-                    startDate+ ","+
-                    endDate+ ","+
-                    noOfDays + "," +
-                    INCOME_FIXED_COMPONENT + "," +
-                    INCOME_VARIABLE_COMPONENT.setScale(2, RoundingMode.HALF_EVEN) + ","+
-                    lop+ "," +
-                    "\n");
+	            total=total.add(INCOME_FIXED_COMPONENT.add(INCOME_VARIABLE_COMPONENT));
+	            fileString=  fileString.concat("EDR," +
+	                    (employment != null && employment.getLabourCard()!=null?employment.getLabourCard():"-") + "," +
+	                    (employment != null && employment.getAgentId()!=null&& !employment.getAgentId().isEmpty()
+	                            ?employment.getAgentId():"-") + "," +
+	                    (employeeBankDetails != null && employeeBankDetails.getIban()!=null ? employeeBankDetails.getIban() : "-") + ","+
+	                    startDate+ ","+
+	                    endDate+ ","+
+	                    noOfDays + "," +
+	                    INCOME_FIXED_COMPONENT + "," +
+	                    INCOME_VARIABLE_COMPONENT.setScale(2, RoundingMode.HALF_EVEN) + ","+
+	                    lop+ "," +
+	                    "\n");
 
         }
 
         fileString= fileString.concat(
                 "SCR," +
                 company.getCompanyNumber() + "," +
-                company.getCompanyBankCode() + "," +
-                payroll.getPayrollDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "," +
-                payroll.getPayrollDate().format(DateTimeFormatter.ofPattern("HHmm")) + "," +
-                payroll.getPayrollDate().format(DateTimeFormatter.ofPattern("MMYYYY")) + "," +
-                payroll.getEmployeeCount() + "," +
-                total + "," +
-                "AED"+ "," +
-                "SimpleAccounts Software" +
+	                company.getCompanyBankCode() + "," +
+	                payroll.getPayrollDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "," +
+	                payroll.getPayrollDate().format(DateTimeFormatter.ofPattern("HHmm")) + "," +
+	                payroll.getPayrollDate().format(DateTimeFormatter.ofPattern("MMyyyy")) + "," +
+	                payroll.getEmployeeCount() + "," +
+	                total + "," +
+	                "AED"+ "," +
+	                "SimpleAccounts Software" +
                 "\n");
 
         String fileName=new String();
