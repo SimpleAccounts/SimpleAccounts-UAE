@@ -1,10 +1,9 @@
 package com.simpleaccounts.entity;
 
+import java.io.Serializable;
+import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
-
-import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * Created by adil on 2/13/2021.

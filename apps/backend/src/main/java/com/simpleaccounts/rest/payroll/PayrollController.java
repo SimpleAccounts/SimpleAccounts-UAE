@@ -3,8 +3,6 @@ package com.simpleaccounts.rest.payroll;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 import com.simpleaccounts.aop.LogRequest;
-import lombok.RequiredArgsConstructor;
-
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.JournalLineItemDao;
 import com.simpleaccounts.entity.*;
@@ -43,16 +41,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-
-import java.math.BigDecimal;
-
-import java.time.LocalDateTime;
-
-import java.util.*;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -1275,13 +1263,13 @@ public class PayrollController {
     @ApiOperation(value = "Delete Salary components")
     @DeleteMapping(value = "/deleteSalaryComponent")
 	    public ResponseEntity<Object> deleteSalaryComponent(@RequestParam(value = "id") Integer id,
-                                                HttpServletRequest request){
-        try {
-          SalaryComponent salaryComponent = salaryComponentRepository.findById(id).get();
-          if(salaryComponent!=null){
-              salaryComponent.setDeleteFlag(Boolean.TRUE);
-              salaryComponentRepository.save(salaryComponent);
-          }
+	                                                HttpServletRequest request){
+	        try {
+	          SalaryComponent salaryComponent = salaryComponentRepository.findById(id).orElse(null);
+	          if(salaryComponent!=null){
+	              salaryComponent.setDeleteFlag(Boolean.TRUE);
+	              salaryComponentRepository.save(salaryComponent);
+	          }
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

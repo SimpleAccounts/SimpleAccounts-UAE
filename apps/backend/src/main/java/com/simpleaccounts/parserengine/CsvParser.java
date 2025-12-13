@@ -7,7 +7,6 @@ import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingDetailModel;
 import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingPersistModel;
 import java.io.BufferedReader;
-import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -104,7 +103,7 @@ public class CsvParser implements TransactionFileParser {
 			int rowCount = 0;
 			while ((line = br.readLine()) != null) {
 
-				String[] splitList =	line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+				String[] splitList = splitCsvLinePreservingQuotes(line);
 				Map<String, String> dataMap = new LinkedHashMap<>();
 
 				if (rowCount > 0) {
@@ -205,6 +204,33 @@ public class CsvParser implements TransactionFileParser {
 			logger.error("Error = ", e);
 		}
 		return new HashMap<>();
+	}
+
+	private static String[] splitCsvLinePreservingQuotes(String line) {
+		List<String> fields = new ArrayList<>();
+		StringBuilder current = new StringBuilder();
+		boolean inQuotes = false;
+
+		for (int i = 0; i < line.length(); i++) {
+			char c = line.charAt(i);
+			if (c == '"') {
+				if (inQuotes && i + 1 < line.length() && line.charAt(i + 1) == '"') {
+					current.append('"').append('"');
+					i++;
+				} else {
+					inQuotes = !inQuotes;
+					current.append(c);
+				}
+			} else if (c == ',' && !inQuotes) {
+				fields.add(current.toString());
+				current.setLength(0);
+			} else {
+				current.append(c);
+			}
+		}
+
+		fields.add(current.toString());
+		return fields.toArray(new String[0]);
 	}
 
 	public Map<Integer, Set<Integer>> addErrorCellInRow(Map<Integer, Set<Integer>> map, Integer row, Integer cell) {

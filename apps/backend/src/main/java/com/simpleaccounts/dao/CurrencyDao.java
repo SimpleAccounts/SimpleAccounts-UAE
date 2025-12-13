@@ -5,7 +5,6 @@ import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.CurrencyConversion;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-
 import java.util.List;
 import java.util.Map;
 

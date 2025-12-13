@@ -6,7 +6,6 @@ import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditResponseModel;
 import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountResponseModel;
-
 import java.util.List;
 
 public abstract class SimpleAccountReportService {

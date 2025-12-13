@@ -1,14 +1,12 @@
 package com.simpleaccounts.dao.impl.bankaccount;
 
-import java.util.List;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.stereotype.Repository;
-
+import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.bankaccount.ChartOfAccountDao;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
-import com.simpleaccounts.dao.AbstractDao;
+import java.util.List;
 import javax.persistence.TypedQuery;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class ChartOfAccountDaoImpl extends AbstractDao<Integer, ChartOfAccount> implements ChartOfAccountDao {

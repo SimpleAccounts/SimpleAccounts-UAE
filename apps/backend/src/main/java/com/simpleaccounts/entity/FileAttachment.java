@@ -1,14 +1,13 @@
 package com.simpleaccounts.entity;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "FILE_ATTACHMENT")

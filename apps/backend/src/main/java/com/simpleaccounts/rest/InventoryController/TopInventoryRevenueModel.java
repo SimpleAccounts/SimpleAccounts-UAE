@@ -1,11 +1,9 @@
 package com.simpleaccounts.rest.InventoryController;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.Data;
 
 @Data
 public class TopInventoryRevenueModel {

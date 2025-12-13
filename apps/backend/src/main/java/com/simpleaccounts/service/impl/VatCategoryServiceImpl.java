@@ -1,16 +1,5 @@
 package com.simpleaccounts.service.impl;
 
-import java.util.ArrayList;
-import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
-
-import org.springframework.stereotype.Service;
-
 import com.simpleaccounts.constant.dbfilter.VatCategoryFilterEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.VatCategoryDao;
@@ -21,6 +10,13 @@ import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.VatCategoryService;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.stereotype.Service;
 
 @Service("vatCategoryService")
 
@@ -108,6 +104,9 @@ public class VatCategoryServiceImpl extends VatCategoryService {
 	}
 	private void deleteFromCache(List<Integer> ids) {
 		Cache vatCategoryCache = cacheManager.getCache("vatCategoryCache");
+		if (vatCategoryCache == null) {
+			return;
+		}
 		for (Integer id : ids ) {
 			vatCategoryCache.evict(id);
 		}

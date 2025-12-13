@@ -1,11 +1,10 @@
 package com.simpleaccounts.rest.currencyconversioncontroller;
 
 import com.simpleaccounts.entity.CurrencyConversion;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class CurrencyConversionHelper {

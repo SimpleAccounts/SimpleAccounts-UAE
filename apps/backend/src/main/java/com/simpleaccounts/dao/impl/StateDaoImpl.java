@@ -1,18 +1,15 @@
 package com.simpleaccounts.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.StateFilterEnum;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.StateDao;
 import com.simpleaccounts.entity.State;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import javax.persistence.TypedQuery;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class StateDaoImpl extends AbstractDao<Integer, State> implements StateDao {

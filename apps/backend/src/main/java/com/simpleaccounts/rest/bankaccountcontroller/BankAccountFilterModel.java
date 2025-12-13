@@ -1,9 +1,7 @@
 package com.simpleaccounts.rest.bankaccountcontroller;
 
-import java.util.Date;
-
 import com.simpleaccounts.rest.PaginationModel;
-
+import java.util.Date;
 import lombok.Data;
 
 @Data

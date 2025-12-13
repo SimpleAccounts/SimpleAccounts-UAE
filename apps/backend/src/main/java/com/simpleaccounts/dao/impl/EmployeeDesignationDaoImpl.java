@@ -4,16 +4,14 @@ import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.EmployeeDesignationDao;
 import com.simpleaccounts.entity.EmployeeDesignation;
-
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.TypedQuery;
+import org.springframework.stereotype.Repository;
 
 @Repository(value = "employeeDesignationDao")
 public class EmployeeDesignationDaoImpl extends AbstractDao<Integer, EmployeeDesignation> implements EmployeeDesignationDao

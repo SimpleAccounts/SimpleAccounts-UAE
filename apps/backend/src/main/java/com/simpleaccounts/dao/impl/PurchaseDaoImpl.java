@@ -1,16 +1,14 @@
 package com.simpleaccounts.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.PurchaseDao;
 import com.simpleaccounts.entity.Purchase;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.TypedQuery;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class PurchaseDaoImpl extends AbstractDao<Integer, Purchase> implements PurchaseDao {

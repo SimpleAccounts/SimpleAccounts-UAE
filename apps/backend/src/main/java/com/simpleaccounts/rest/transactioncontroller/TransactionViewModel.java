@@ -5,13 +5,11 @@
  */
 package com.simpleaccounts.rest.transactioncontroller;
 
+import com.simpleaccounts.constant.TransactionCreationMode;
+import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
-
-import com.simpleaccounts.constant.TransactionCreationMode;
-import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
-
 import lombok.Data;
 
 /**

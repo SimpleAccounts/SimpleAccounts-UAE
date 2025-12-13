@@ -4,11 +4,6 @@ import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.Expense;
 import java.util.List;
 
-        import java.util.List;
-
-        import com.simpleaccounts.entity.Expense;
-        import com.simpleaccounts.entity.TransactionExpenses;
-
 public abstract class TransactionExpensesPayrollService extends SimpleAccountsService<Integer, TransactionExpensesPayroll> {
 
     public abstract List<Expense> getMappedExpenses();

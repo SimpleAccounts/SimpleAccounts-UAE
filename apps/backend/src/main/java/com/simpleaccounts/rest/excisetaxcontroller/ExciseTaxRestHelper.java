@@ -1,7 +1,6 @@
 package com.simpleaccounts.rest.excisetaxcontroller;
 
 import com.simpleaccounts.entity.ExciseTax;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.repository.ExciseTaxRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

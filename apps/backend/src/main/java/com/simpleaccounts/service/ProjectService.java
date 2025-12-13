@@ -6,9 +6,7 @@ import com.simpleaccounts.entity.Project;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-
 import java.math.BigDecimal;
-
 import java.util.List;
 import java.util.Map;
 

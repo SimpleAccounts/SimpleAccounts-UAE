@@ -3,7 +3,6 @@ package com.simpleaccounts.rest.employeecontroller;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 import com.simpleaccounts.aop.LogRequest;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.dbfilter.EmployeeFilterEnum;
 import com.simpleaccounts.entity.*;
@@ -128,13 +127,13 @@ public class EmployeeController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Employee By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<Object> deleteEmployee(@RequestParam(value = "id") Integer id) {
-		try {
-			Employee employee = employeeRepository.findById(id).get();
-			if(employee!=null){
-				employee.setDeleteFlag(Boolean.TRUE);
-				employeeRepository.save(employee);
-			}
+		public ResponseEntity<Object> deleteEmployee(@RequestParam(value = "id") Integer id) {
+			try {
+				Employee employee = employeeRepository.findById(id).orElse(null);
+				if(employee!=null){
+					employee.setDeleteFlag(Boolean.TRUE);
+					employeeRepository.save(employee);
+				}
 			Employment employment = employmentRepository.findByemployeeId(id);
 			if(employment!=null){
 				employment.setDeleteFlag(Boolean.TRUE);
