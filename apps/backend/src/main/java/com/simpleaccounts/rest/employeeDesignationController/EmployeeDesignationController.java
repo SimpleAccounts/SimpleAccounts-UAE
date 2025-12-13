@@ -55,7 +55,6 @@ public class EmployeeDesignationController {
     {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
 
             EmployeeDesignation employeeDesignation = employeeDesignationRestHelper.getEmployeeDesignationEntity(employeeDesignationPersistModel);
 
@@ -75,7 +74,6 @@ public class EmployeeDesignationController {
     public ResponseEntity<String> updateEmployeeDesignation(@ModelAttribute EmployeeDesignationPersistModel employeeDesignationPersistModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
 
             EmployeeDesignation employeeDesignation = employeeDesignationRestHelper.getEmployeeDesignationEntity(employeeDesignationPersistModel);
 
@@ -166,7 +164,6 @@ public class EmployeeDesignationController {
     public ResponseEntity<PaginationResponseModel> getEmployeeDesignationList(PayRollFilterModel filterModel,
                                                                          HttpServletRequest request) {
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
         Map<Object, Object> filterDataMap = new HashMap<>();
         PaginationResponseModel paginationResponseModel = employeeDesignationService.getEmployeeDesignationList(filterDataMap, filterModel);
         if (paginationResponseModel != null) {

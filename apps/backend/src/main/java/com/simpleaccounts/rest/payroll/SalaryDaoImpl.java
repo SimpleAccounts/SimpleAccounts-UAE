@@ -42,7 +42,7 @@ public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements Salar
 
     public List getSalaryByEmployeeId(Employee employee,String salaryDate){
 
-        LocalDateTime dateForSalary =  dateFormatUtil.getDateStrAsLocalDateTime(salaryDate, CommonColumnConstants.DD_MM_YYYY);
+        dateFormatUtil.getDateStrAsLocalDateTime(salaryDate, CommonColumnConstants.DD_MM_YYYY);
         Query query= getEntityManager().createQuery(
                 "SELECT str.name,sc.description,s.totalAmount,s.employeeId.id,s.salaryDate ,s.noOfDays,s.id " +
                 "FROM Salary s,SalaryComponent sc,SalaryStructure str " +
@@ -221,9 +221,6 @@ public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements Salar
                 SalarySlipListtModel salarySlipListtModel = new SalarySlipListtModel();
                 LocalDateTime localDateTime = salary.getSalaryDate();
                 salarySlipListtModel.setSalaryDate(localDateTime.toLocalDate());
-                LocalDateTime date = salary.getSalaryDate();
-                String month = date.getMonth().toString();
-                Integer year = date.getYear();
 
                 Integer hyphenIndex = salary.getPayrollId().getPayPeriod().indexOf("-");
                 String dateString = salary.getPayrollId().getPayPeriod().substring(0, hyphenIndex);
