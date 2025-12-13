@@ -108,7 +108,9 @@ jobs:
           sudo keytool -import -trustcacerts -keystore $JAVA_HOME/lib/security/cacerts \
             -storepass changeit -noprompt -alias sonarqube -file /tmp/sonar.crt || true
 
-      - name: Run SonarQube Analysis
+      # Run SonarQube Analysis for Pull Requests
+      - name: Run SonarQube Analysis (PR)
+        if: github.event_name == 'pull_request'
         working-directory: apps/backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -119,6 +121,9 @@ jobs:
             -Dsonar.projectName="SimpleAccounts-UAE" \
             -Dsonar.host.url=${{ env.SONAR_HOST_URL }} \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} \
+            -Dsonar.pullrequest.branch=${{ github.head_ref }} \
+            -Dsonar.pullrequest.base=${{ github.base_ref }} \
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
             -Dsonar.javascript.lcov.reportPaths=../../apps/frontend/coverage/lcov.info \
             -Dsonar.scanner.skipJreProvisioning=true \
@@ -126,10 +131,65 @@ jobs:
             -Dsonar.scanner.arch=x64 \
             -Dsonar.scanner.truststorePath=${JAVA_HOME}/lib/security/cacerts \
             -Dsonar.scanner.truststorePassword=changeit \
-            -DskipTests=true \
-            || true
+            -Dsonar.qualitygate.wait=true \
+            -Dsonar.qualitygate.timeout=300 \
+            -DskipTests=true
 
-      - name: Quality Gate Status
+      # Run SonarQube Analysis for Branch pushes
+      - name: Run SonarQube Analysis (Branch)
+        if: github.event_name != 'pull_request'
+        working-directory: apps/backend
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ env.SONAR_HOST_URL }}
         run: |
-          echo "Quality Gate status available in SonarQube dashboard"
-          echo "Visit: https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io/dashboard?id=SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9"
+          mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9 \
+            -Dsonar.projectName="SimpleAccounts-UAE" \
+            -Dsonar.host.url=${{ env.SONAR_HOST_URL }} \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.branch.name=${{ github.ref_name }} \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+            -Dsonar.javascript.lcov.reportPaths=../../apps/frontend/coverage/lcov.info \
+            -Dsonar.scanner.skipJreProvisioning=true \
+            -Dsonar.scanner.os=linux \
+            -Dsonar.scanner.arch=x64 \
+            -Dsonar.scanner.truststorePath=${JAVA_HOME}/lib/security/cacerts \
+            -Dsonar.scanner.truststorePassword=changeit \
+            -Dsonar.qualitygate.wait=true \
+            -Dsonar.qualitygate.timeout=300 \
+            -DskipTests=true
+
+      # Check Quality Gate status - fails the workflow if quality gate fails
+      - name: Check Quality Gate Status
+        if: always()
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          echo "Checking Quality Gate status..."
+          sleep 15
+
+          PROJECT_KEY="SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9"
+
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            API_URL="${{ env.SONAR_HOST_URL }}/api/qualitygates/project_status?projectKey=${PROJECT_KEY}&pullRequest=${{ github.event.pull_request.number }}"
+            DASHBOARD_URL="${{ env.SONAR_HOST_URL }}/dashboard?id=${PROJECT_KEY}&pullRequest=${{ github.event.pull_request.number }}"
+          else
+            API_URL="${{ env.SONAR_HOST_URL }}/api/qualitygates/project_status?projectKey=${PROJECT_KEY}&branch=${{ github.ref_name }}"
+            DASHBOARD_URL="${{ env.SONAR_HOST_URL }}/dashboard?id=${PROJECT_KEY}&branch=${{ github.ref_name }}"
+          fi
+
+          RESPONSE=$(curl -s -u "$SONAR_TOKEN:" "$API_URL")
+          STATUS=$(echo "$RESPONSE" | jq -r '.projectStatus.status')
+
+          echo "Quality Gate Status: $STATUS"
+
+          if [ "$STATUS" != "OK" ]; then
+            echo "::error::Quality Gate FAILED! New issues were introduced."
+            echo "$RESPONSE" | jq -r '.projectStatus.conditions[] | select(.status != "OK") | "  - \(.metricKey): \(.actualValue) (threshold: \(.errorThreshold))"'
+            echo "Dashboard: $DASHBOARD_URL"
+            exit 1
+          fi
+
+          echo "::notice::Quality Gate PASSED!"
+          echo "Dashboard: $DASHBOARD_URL"
