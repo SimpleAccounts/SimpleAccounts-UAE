@@ -8,6 +8,7 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.model.SalaryPersistModel;
 import com.simpleaccounts.rest.employeecontroller.EmployeeController;
 import com.simpleaccounts.rest.employeecontroller.EmployeeListModel;
+import com.simpleaccounts.rest.payroll.model.MoneyPaidToUserModel;
 import com.simpleaccounts.rest.payroll.service.EmployeeSalaryComponentRelationService;
 import com.simpleaccounts.rest.payroll.service.Impl.SalaryServiceImpl;
 import com.simpleaccounts.rest.payroll.service.SalaryService;

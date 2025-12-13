@@ -213,7 +213,8 @@ public class InvoiceScannerService {
         }
 
         if (invoiceModel.getCurrencyCode() != null) {
-            Currency currency = currencyService.findByPK(invoiceModel.getCurrencyCode());
+            com.simpleaccounts.entity.Currency currency =
+                    currencyService.findByPK(invoiceModel.getCurrencyCode());
             invoice.setCurrency(currency);
         }
         lineItemString(userId, invoice, itemModels);
@@ -413,7 +414,7 @@ public class InvoiceScannerService {
                 }
                 Map<String, Object> param = new HashMap<>();
                 param.put(JSON_KEY_CURRENCY_ISO_CODE,json.get(0).get(JSON_KEY_AMOUNT_DUE).get(JSON_KEY_CURRENCY_CODE).textValue());
-                List<Currency> currencyList = currencyDao.findByAttributes(param);
+                List<com.simpleaccounts.entity.Currency> currencyList = currencyDao.findByAttributes(param);
                 if( currencyList != null && !currencyList.isEmpty()){
                     model.setCurrencyCode(currencyList.get(0).getCurrencyCode());
                 }

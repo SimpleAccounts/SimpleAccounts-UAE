@@ -27,15 +27,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ServerErrorException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 @Service
@@ -203,7 +207,8 @@ public class InvoiceRestHelper {
 		invoice.setInvoiceDueDate(invoiceDueDate);
 
 		if (invoiceModel.getCurrencyCode() != null) {
-			Currency currency = currencyService.findByPK(invoiceModel.getCurrencyCode());
+			com.simpleaccounts.entity.Currency currency =
+					currencyService.findByPK(invoiceModel.getCurrencyCode());
 			invoice.setCurrency(currency);
 		}
 		List<InvoiceLineItemModel> itemModels = new ArrayList<>();
@@ -925,7 +930,7 @@ public class InvoiceRestHelper {
 		MailThemeTemplates creditNoteEmailBody =(MailThemeTemplates) query.getSingleResult();
 		Map<String, String> map = null;
 		Contact contact = null;
-		Currency currency = null;
+		com.simpleaccounts.entity.Currency currency = null;
 		String message = null;
 		String contactName = null;
 		if(invoice!=null){
@@ -1998,7 +2003,7 @@ public class InvoiceRestHelper {
 
 	}private void getCNContactCurrencyExchange(Contact contact, Map<String, String> invoiceDataMap, String value) {
 		if (contact !=null && contact.getCurrency() != null  ) {
-			Currency currency = contact.getCurrency();
+			com.simpleaccounts.entity.Currency currency = contact.getCurrency();
 			CurrencyConversion currencyConversion = currencyConversionRepository.findByCurrencyCode(currency);
 			if(currencyConversion.getExchangeRate().compareTo(BigDecimal.ONE) > 0) {
 				invoiceDataMap.put(value, currencyConversion.getExchangeRate().setScale(2, RoundingMode.HALF_EVEN).toString());

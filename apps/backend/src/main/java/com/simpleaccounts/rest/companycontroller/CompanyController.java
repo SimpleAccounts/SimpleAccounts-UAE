@@ -284,7 +284,8 @@ public class CompanyController {
 			Company company = companyRestHelper.registerCompany(registrationModel);
 			currencyService.updateCurrencyProfile(company.getCurrencyCode().getCurrencyCode());
 			CurrencyConversion currencyConversion = new CurrencyConversion();
-			Currency currency = currencyService.findByPK(company.getCurrencyCode().getCurrencyCode());
+			com.simpleaccounts.entity.Currency currency =
+					currencyService.findByPK(company.getCurrencyCode().getCurrencyCode());
 			currencyConversion.setCurrencyCode(currency);
 			currencyConversion.setCurrencyCodeConvertedTo(currency);
 			currencyConversion.setExchangeRate(BigDecimal.ONE);
@@ -526,9 +527,9 @@ public class CompanyController {
 	@LogExecutionTime
 	@ApiOperation(value = "Get Currency List", response = List.class)
 	@GetMapping(value = "/getCurrency")
-	public ResponseEntity<List<Currency>> getCurrencies() {
+	public ResponseEntity<List<com.simpleaccounts.entity.Currency>> getCurrencies() {
 		try {
-			List<Currency> currencies = currencyService.getCurrenciesProfile();
+			List<com.simpleaccounts.entity.Currency> currencies = currencyService.getCurrenciesProfile();
 			if (currencies != null && !currencies.isEmpty()) {
 				return new ResponseEntity<>(currencies, HttpStatus.OK);
 			} else {
@@ -572,7 +573,7 @@ public class CompanyController {
 	@ApiOperation(value = "Get Company Currency")
 	@GetMapping(value = "/getCompanyCurrency")
 	public ResponseEntity<Object> getCurrencyConversionById() {
-		Currency companyCurrency = companyService.getCompanyCurrency();
+		com.simpleaccounts.entity.Currency companyCurrency = companyService.getCompanyCurrency();
 		if (companyCurrency != null) {
 
 			CurrencyConversionResponseModel currencyConversionResponseModel = new CurrencyConversionResponseModel();

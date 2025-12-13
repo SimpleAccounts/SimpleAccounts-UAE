@@ -41,7 +41,7 @@ public class SalaryServiceImpl extends SalaryService {
     public SalarySlipModel getSalaryByEmployeeId(Integer employeeId,String salaryDate){
 
         SalarySlipModel salarySlipModel = new SalarySlipModel();
-        Map<String ,List<SalaryComponent>> salarySlipMap = new LinkedHashMap<>();
+        Map<String, List<com.simpleaccounts.rest.payroll.SalaryComponent>> salarySlipMap = new LinkedHashMap<>();
         salarySlipModel.setSalarySlipResult(salarySlipMap);
         salarySlipModel.setDesignation(employeeService.findByPK(employeeId).getEmployeeDesignationId().getDesignationName());
         salarySlipModel.setEmployeename(employeeService.findByPK(employeeId).getFirstName() + " " + employeeService.findByPK(employeeId).getMiddleName() +  " " + employeeService.findByPK(employeeId).getLastName() );
@@ -89,14 +89,15 @@ public class SalaryServiceImpl extends SalaryService {
                     String formattedDate = salaryMonth.format(outputFormatter);
                     salarySlipModel.setSalaryMonth(formattedDate);
 
-                    List<SalaryComponent> salaryComponentList = salarySlipMap.get(salaryStructure);
+                    List<com.simpleaccounts.rest.payroll.SalaryComponent> salaryComponentList = salarySlipMap.get(salaryStructure);
                     if (salaryComponentList == null) {
                         salaryComponentList = new ArrayList<>();
                         salarySlipMap.put(salaryStructure, salaryComponentList);
 
                     }
 
-                    SalaryComponent salaryComponent = new SalaryComponent();
+                    com.simpleaccounts.rest.payroll.SalaryComponent salaryComponent =
+                            new com.simpleaccounts.rest.payroll.SalaryComponent();
                     salaryComponent.setSalaryDate(date);
                     salaryComponent.setComponentName((String) objectArray[1]);
                     salaryComponent.setComponentValue((BigDecimal) objectArray[2]);

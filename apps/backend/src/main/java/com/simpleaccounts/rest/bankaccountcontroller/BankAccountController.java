@@ -597,9 +597,9 @@ public class BankAccountController{
 
 	@LogRequest
 	@GetMapping(value = "/getcurrenncy")
-	public ResponseEntity<List<Currency>> getCurrency() {
+	public ResponseEntity<List<com.simpleaccounts.entity.Currency>> getCurrency() {
 		try {
-			List<Currency> currencies = currencyService.getCurrencies();
+			List<com.simpleaccounts.entity.Currency> currencies = currencyService.getCurrencies();
 			if (currencies != null && !currencies.isEmpty()) {
 				return new ResponseEntity<>(currencies, HttpStatus.OK);
 			} else {

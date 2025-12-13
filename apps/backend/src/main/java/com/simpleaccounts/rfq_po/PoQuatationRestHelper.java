@@ -122,7 +122,8 @@ public class PoQuatationRestHelper {
         poQuatation.setRfqExpiryDate(rfqExpDate);
         }
         if (requestModel.getCurrencyCode()!=null){
-            Currency currency= currencyService.findByPK(requestModel.getCurrencyCode());
+            com.simpleaccounts.entity.Currency currency =
+                    currencyService.findByPK(requestModel.getCurrencyCode());
             poQuatation.setCurrency(currency);
         }
         if (requestModel.getSupplierId() != null) {
@@ -198,7 +199,8 @@ public class PoQuatationRestHelper {
             poQuatation.setPoNumber(requestModel.getPoNumber());
         }
         if (requestModel.getCurrencyCode()!=null){
-            Currency currency = currencyService.findByPK(requestModel.getCurrencyCode());
+            com.simpleaccounts.entity.Currency currency =
+                    currencyService.findByPK(requestModel.getCurrencyCode());
             poQuatation.setCurrency(currency);
         }
         Integer poType =Integer.parseInt(requestModel.getType());
@@ -272,7 +274,8 @@ public class PoQuatationRestHelper {
             poQuatation.setReferenceNumber(poQuatationRequestModel.getSupplierReferenceNumber());
         }
         if (poQuatationRequestModel.getCurrencyCode()!=null){
-            Currency currency = currencyService.findByPK(poQuatationRequestModel.getCurrencyCode());
+            com.simpleaccounts.entity.Currency currency =
+                    currencyService.findByPK(poQuatationRequestModel.getCurrencyCode());
             poQuatation.setCurrency(currency);
         }
         Instant instant = Instant.ofEpochMilli(poQuatationRequestModel.getGrnReceiveDate().getTime());
@@ -2147,7 +2150,8 @@ public class PoQuatationRestHelper {
             poQuatationLineItemService.deleteByRfqId(requestModel.getId());
         }
         if (requestModel.getCurrencyCode()!=null){
-            Currency currency = currencyService.findByPK(requestModel.getCurrencyCode());
+            com.simpleaccounts.entity.Currency currency =
+                    currencyService.findByPK(requestModel.getCurrencyCode());
             poQuatation.setCurrency(currency);
         }
         if (requestModel.getPlaceOfSupplyId() !=null){

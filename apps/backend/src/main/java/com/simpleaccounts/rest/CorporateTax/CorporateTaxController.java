@@ -305,7 +305,6 @@ public class CorporateTaxController {
                                      @RequestParam(required = false) String order,
                                      @RequestParam(required = false) String sortingCol){
         try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             PaginationResponseModel responseModel = new PaginationResponseModel();
             corporateTaxService.getCorporateTaxList(responseModel,pageNo,pageSize,paginationDisable,order,sortingCol);
             return new ResponseEntity<>(responseModel,HttpStatus.OK);

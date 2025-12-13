@@ -638,7 +638,7 @@ public class PayrollController {
     @GetMapping(value = "/getSalaryComponentById")
     public ResponseEntity<SalaryComponentPersistModel> getSalaryComponentById(@RequestParam(value = "id") Integer id) {
         try {
-            SalaryComponent salaryComponent = salaryComponentService.findByPK(id);
+            com.simpleaccounts.entity.SalaryComponent salaryComponent = salaryComponentService.findByPK(id);
             if (salaryComponent == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
@@ -1263,7 +1263,7 @@ public class PayrollController {
 	    public ResponseEntity<Object> deleteSalaryComponent(@RequestParam(value = "id") Integer id,
                                                 HttpServletRequest request){
         try {
-          SalaryComponent salaryComponent = salaryComponentRepository.findById(id).get();
+          com.simpleaccounts.entity.SalaryComponent salaryComponent = salaryComponentRepository.findById(id).get();
           if(salaryComponent!=null){
               salaryComponent.setDeleteFlag(Boolean.TRUE);
               salaryComponentRepository.save(salaryComponent);
@@ -1278,11 +1278,12 @@ public class PayrollController {
                                                                      boolean paginationDisable, String sortOrder, String sortingCol){
         Pageable paging = getSalaryComponentPageableRequest(pageNo, pageSize, sortOrder, sortingCol);
         List<SalaryComponentPersistModel> salaryComponentPersistModelList = new ArrayList<>();
-        Page<SalaryComponent> salaryComponentPage = salaryComponentRepository.findByDeleteFlag(false,paging);
-        List<SalaryComponent> salaryComponentList = salaryComponentPage.getContent();
+        Page<com.simpleaccounts.entity.SalaryComponent> salaryComponentPage =
+                salaryComponentRepository.findByDeleteFlag(false, paging);
+        List<com.simpleaccounts.entity.SalaryComponent> salaryComponentList = salaryComponentPage.getContent();
         responseModel.setCount((int) salaryComponentPage.getTotalElements());
         if (!salaryComponentList.isEmpty()) {
-            for (SalaryComponent salaryComponent : salaryComponentList) {
+            for (com.simpleaccounts.entity.SalaryComponent salaryComponent : salaryComponentList) {
                 SalaryComponentPersistModel salaryComponentPersistModel = new SalaryComponentPersistModel();
                salaryComponentPersistModel.setId(salaryComponent.getId());
                if(salaryComponent.getDescription()!=null && !salaryComponent.getDescription().isEmpty()){

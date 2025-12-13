@@ -285,7 +285,8 @@ public class BankAccountRestHelper {
 
 	private void bankAccountCurrency(BankModel bankModel, BankAccount bankAccount) {
 		if (bankModel.getBankAccountCurrency() != null) {
-			Currency currency = currencyService.getCurrency(Integer.valueOf(bankModel.getBankAccountCurrency()));
+			com.simpleaccounts.entity.Currency currency =
+					currencyService.getCurrency(Integer.valueOf(bankModel.getBankAccountCurrency()));
 			bankAccount.setBankAccountCurrency(currency);
 		}
 	}

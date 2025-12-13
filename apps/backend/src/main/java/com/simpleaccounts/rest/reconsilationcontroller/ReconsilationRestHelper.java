@@ -126,8 +126,6 @@ public class ReconsilationRestHelper {
 
 		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
 
-		ChartOfAccount transactionType = transactionCategory.getChartOfAccount();
-
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 		journalLineItem1.setTransactionCategory(transaction.getExplainedTransactionCategory());
@@ -172,24 +170,13 @@ public class ReconsilationRestHelper {
 										Integer transactionCategoryCode, int userId,
 										Transaction transaction, Expense expense) {
 
-		BigDecimal exchangeRate = BigDecimal.ONE;
-		if (transactionPresistModel.getExchangeRate().equals(null)){
-			 exchangeRate =  currencyExchangeService.getExchangeRate(transactionPresistModel.getCurrencyCode()).getExchangeRate();
-		}
-		else {
-			exchangeRate = transactionPresistModel.getExchangeRate();
+		BigDecimal exchangeRate = transactionPresistModel.getExchangeRate();
+		if (exchangeRate == null) {
+			exchangeRate = currencyExchangeService.getExchangeRate(transactionPresistModel.getCurrencyCode()).getExchangeRate();
 		}
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
-
-		ChartOfAccount transactionType = transactionCategory.getChartOfAccount();
-
-		boolean isdebitFromBank = transactionType.getChartOfAccountId().equals(ChartOfAccountConstant.MONEY_IN)
-				|| (transactionType.getParentChartOfAccount() != null
-				&& transactionType.getParentChartOfAccount().getChartOfAccountId() != null
-				&& transactionType.getParentChartOfAccount().getChartOfAccountId()
-				.equals(ChartOfAccountConstant.MONEY_IN)) ? Boolean.TRUE : Boolean.FALSE;
 
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
@@ -220,11 +207,9 @@ public class ReconsilationRestHelper {
 		journalLineItem2.setJournal(journal);
 		journalLineItemList.add(journalLineItem2);
 		if (transactionPresistModel.getVatId()!=null) {
-			VatCategory vatCategory = expense.getVatCategory();
 			BigDecimal vatAmount = expense.getExpenseVatAmount();
-			BigDecimal actualDebitAmount=BigDecimal.ZERO;
 			if (expense.getExclusiveVat().equals(Boolean.FALSE && expense.getIsReverseChargeEnabled().equals(Boolean.FALSE))){
-				actualDebitAmount = expense.getExpenseAmount().subtract(expense.getExpenseVatAmount());
+				BigDecimal actualDebitAmount = expense.getExpenseAmount().subtract(expense.getExpenseVatAmount());
 				journalLineItem1.setDebitAmount(actualDebitAmount.multiply(exchangeRate));
 			}
 			else {
@@ -275,8 +260,6 @@ public class ReconsilationRestHelper {
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
-
-		ChartOfAccount transactionType = transactionCategory.getChartOfAccount();
 
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
@@ -381,8 +364,6 @@ public class ReconsilationRestHelper {
 	}
 	//Todo
 	public Journal invoiceReconsile(Integer userId, Transaction transaction,boolean isCustomerInvoice ) {
-		CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(transaction.getBankAccount()
-				.getBankAccountCurrency().getCurrencyCode());
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 		Journal journal = new Journal();
 		BigDecimal totalAmount = transaction.getTransactionAmount();
