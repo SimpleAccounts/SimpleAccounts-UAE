@@ -1,18 +1,16 @@
 package com.simpleaccounts.rest.payroll;
 
-import com.simpleaccounts.aop.LogRequest;
-import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
+import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.JournalLineItemDao;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.SalaryComponent;
-
 import com.simpleaccounts.model.EmployeeBankDetailsPersistModel;
 import com.simpleaccounts.model.EmploymentPersistModel;
 import com.simpleaccounts.repository.*;
 import com.simpleaccounts.rest.*;
-
 import com.simpleaccounts.rest.payroll.dto.PayrollEmployeeDto;
 import com.simpleaccounts.rest.payroll.model.GeneratePayrollPersistModel;
 import com.simpleaccounts.rest.payroll.model.PayrolRequestModel;
@@ -23,16 +21,18 @@ import com.simpleaccounts.rest.payroll.service.SalaryComponentService;
 import com.simpleaccounts.rest.payroll.service.SalaryRoleService;
 import com.simpleaccounts.rest.payroll.service.SalaryStructureService;
 import com.simpleaccounts.rest.payroll.service.SalaryTemplateService;
-
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiResponse;
-
+import io.swagger.annotations.ApiResponses;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,16 +41,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-
-import java.math.BigDecimal;
-
-import java.time.LocalDateTime;
-
-import java.util.*;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -71,13 +61,11 @@ public class PayrollController {
 
     private final PayrolService payrolService;
 
-    @Autowired
-    SalaryComponentService salaryComponentService;
+    private final SalaryComponentService salaryComponentService;
 
     private final UserService userService;
 
-    @Autowired
-    EmployeeBankDetailsService employeeBankDetailsService;
+    private final EmployeeBankDetailsService employeeBankDetailsService;
 
     private final PayrollRestHepler payrollRestHepler;
 
@@ -90,11 +78,9 @@ public class PayrollController {
     private final TransactionCategoryService transactionCategoryService;
     private final SalaryStructureService salaryStructureService;
 
-    @Autowired
-    PayrollRepository payrollRepository;
+    private final PayrollRepository payrollRepository;
 
-    @Autowired
-    protected JournalService journalService;
+    protected final JournalService journalService;
 
     private final JournalLineItemService journalLineItemService;
 
@@ -125,7 +111,7 @@ public class PayrollController {
 
             employeeBankDetailsService.persist(employeeBankDetails);
 
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -147,7 +133,7 @@ public class PayrollController {
             employeeBankDetails.setCreatedDate(LocalDateTime.now());
 
             employeeBankDetailsService.update(employeeBankDetails);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -165,10 +151,10 @@ public class PayrollController {
                 employeeBankDetails.setDeleteFlag(Boolean.TRUE);
                 employeeBankDetailsService.update(employeeBankDetails, employeeBankDetails.getId());
             }
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -181,7 +167,7 @@ public class PayrollController {
             if (employeeBankDetails == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity(payrollRestHepler.getModel(employeeBankDetails), HttpStatus.OK);
+                return new ResponseEntity<>(payrollRestHepler.getModel(employeeBankDetails), HttpStatus.OK);
             }
         } catch (Exception e) {
             logger.error(ERROR, e);
@@ -198,13 +184,13 @@ public class PayrollController {
     public ResponseEntity<String> saveEmployment(@ModelAttribute EmploymentPersistModel employmentPersistModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
+            userService.findByPK(userId);
 
             Employment employment = payrollRestHepler.getEmploymentEntity(employmentPersistModel);
 
             employmentService.persist(employment);
 
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -218,11 +204,11 @@ public class PayrollController {
     public ResponseEntity<String> updateEmployment(@ModelAttribute EmploymentPersistModel employmentPersistModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
+            userService.findByPK(userId);
             Employment employment = payrollRestHepler.getEmploymentEntity(employmentPersistModel);
 
             employmentService.update(employment);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -240,10 +226,10 @@ public class PayrollController {
                 employment.setDeleteFlag(Boolean.TRUE);
                 employmentService.update(employment, employment.getId());
             }
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -270,10 +256,10 @@ public class PayrollController {
     public ResponseEntity<String> saveSalaryRole(@ModelAttribute SalaryRolePersistModel salaryRolePersistModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
+            userService.findByPK(userId);
             SalaryRole salaryRole = payrollRestHepler.getSalaryRoleEntity(salaryRolePersistModel);
             salaryRoleService.persist(salaryRole);
-            return new ResponseEntity("Salary Role Saved Successfully ", HttpStatus.OK);
+            return new ResponseEntity<>("Salary Role Saved Successfully ", HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -287,12 +273,12 @@ public class PayrollController {
     public ResponseEntity<String> updateSalaryRole(@ModelAttribute SalaryRolePersistModel salaryRolePersistModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
+            userService.findByPK(userId);
 
             SalaryRole salaryRole = payrollRestHepler.getSalaryRoleEntity(salaryRolePersistModel);
 
             salaryRoleService.update(salaryRole);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -310,10 +296,10 @@ public class PayrollController {
                 salaryRole.setDeleteFlag(Boolean.TRUE);
                 salaryRoleService.update(salaryRole, salaryRole.getId());
             }
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -326,7 +312,7 @@ public class PayrollController {
             if (salaryRole == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity(payrollRestHepler.getSalaryRoleModel(salaryRole), HttpStatus.OK);
+                return new ResponseEntity<>(payrollRestHepler.getSalaryRoleModel(salaryRole), HttpStatus.OK);
             }
         } catch (Exception e) {
             logger.error(ERROR, e);
@@ -340,7 +326,7 @@ public class PayrollController {
     public ResponseEntity<PaginationResponseModel> getSalaryRoleList(PayRollFilterModel filterModel,
                                                                      HttpServletRequest request) {
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
+        userService.findByPK(userId);
         Map<Object, Object> filterDataMap = new HashMap<>();
         PaginationResponseModel paginationResponseModel = salaryRoleService.getSalaryRoleList(filterDataMap, filterModel);
         if (paginationResponseModel != null) {
@@ -356,7 +342,7 @@ public class PayrollController {
     public ResponseEntity<PaginationResponseModel> getSalaryStructureList(PayRollFilterModel filterModel,
                                                                           HttpServletRequest request) {
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
+        userService.findByPK(userId);
         Map<Object, Object> filterDataMap = new HashMap<>();
         PaginationResponseModel paginationResponseModel = salaryStructureService.getSalaryStructureList(filterDataMap, filterModel);
         if (paginationResponseModel != null) {
@@ -373,10 +359,10 @@ public class PayrollController {
     public ResponseEntity<String> saveSalaryStructure(@ModelAttribute SalaryStructurePersistModel salaryStructurePersistModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
+            userService.findByPK(userId);
             SalaryStructure salaryStructure = payrollRestHepler.getSalaryStructureEntity(salaryStructurePersistModel);
             salaryStructureService.persist(salaryStructure);
-            return new ResponseEntity("Salary Structure Saved Successfully ", HttpStatus.OK);
+            return new ResponseEntity<>("Salary Structure Saved Successfully ", HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -391,10 +377,10 @@ public class PayrollController {
                                                         HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
+            userService.findByPK(userId);
             SalaryStructure salaryStructure = payrollRestHepler.getSalaryStructureEntity(salaryStructurePersistModel);
             salaryStructureService.update(salaryStructure);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -410,7 +396,7 @@ public class PayrollController {
             if (salaryStructure == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity(payrollRestHepler.getSalaryStructureModel(salaryStructure), HttpStatus.OK);
+                return new ResponseEntity<>(payrollRestHepler.getSalaryStructureModel(salaryStructure), HttpStatus.OK);
             }
         } catch (Exception e) {
             logger.error(ERROR, e);
@@ -431,7 +417,7 @@ public class PayrollController {
     public ResponseEntity<PaginationResponseModel> getSalaryTemplateList(PayRollFilterModel filterModel,
                                                                          HttpServletRequest request) {
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
+        userService.findByPK(userId);
         Map<Object, Object> filterDataMap = new HashMap<>();
         PaginationResponseModel paginationResponseModel = salaryTemplateService.getSalaryTemplateList(filterDataMap, filterModel);
         if (paginationResponseModel != null) {
@@ -447,7 +433,7 @@ public class PayrollController {
     public ResponseEntity<PaginationResponseModel> getSalaryComponentList(PayRollFilterModel filterModel,
                                                                           HttpServletRequest request) {
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
+        userService.findByPK(userId);
         Map<Object, Object> filterDataMap = new HashMap<>();
         PaginationResponseModel paginationResponseModel = salaryComponentService.getSalaryComponentList(filterDataMap, filterModel);
         if (paginationResponseModel != null) {
@@ -467,11 +453,11 @@ public class PayrollController {
             param.put("salaryComponentId", salaryTemplatePersistModel.getSalaryComponentId());
             List<com.simpleaccounts.entity.SalaryTemplate> existingComponentId = salaryTemplateService.findByAttributes(param);
             if (existingComponentId != null && !existingComponentId.isEmpty()) {
-                return new ResponseEntity("existingComponentId Already exists.", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("existingComponentId Already exists.", HttpStatus.BAD_REQUEST);
             }
             List<SalaryTemplatePersistModel> salaryTemplatePersistModels = new ArrayList<>();
             payrollRestHepler.getSalaryAllTemplate(salaryTemplatePersistModel, salaryTemplatePersistModels);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -484,13 +470,9 @@ public class PayrollController {
     @PostMapping(value = "/updateSalaryTemplate")
     public ResponseEntity<String> updateSalaryTemplate(@ModelAttribute SalaryTemplatePersistModel salaryTemplatePersistModel, HttpServletRequest request) {
         try {
-            Map<String, Object> param = new HashMap<>();
-            param.put("salaryComponentId", salaryTemplatePersistModel.getSalaryComponentId());
-            List<com.simpleaccounts.entity.SalaryTemplate> existingComponentId = salaryTemplateService.findByAttributes(param);
-
             List<SalaryTemplatePersistModel> salaryTemplatePersistModels = new ArrayList<>();
             payrollRestHepler.getUpdatedSalaryAllTemplate(salaryTemplatePersistModel, salaryTemplatePersistModels);
-            return new ResponseEntity(MSG_UPDATED, HttpStatus.OK);
+            return new ResponseEntity<>(MSG_UPDATED, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -506,7 +488,7 @@ public class PayrollController {
             List<SalaryComponentPersistModel> salaryComponentPersistModels = new ArrayList<>();
             payrollRestHepler.saveAllSalaryComponent(salaryComponentPersistModel, salaryComponentPersistModels);
 
-            return new ResponseEntity(" Saved ", HttpStatus.OK);
+            return new ResponseEntity<>(" Saved ", HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -522,7 +504,7 @@ public class PayrollController {
 
             payrollRestHepler.deleteSalaryComponentRow(employeeId, componentId);
 
-            return new ResponseEntity("Deleted a component row", HttpStatus.OK);
+            return new ResponseEntity<>("Deleted a component row", HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>("Deleted a component row", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -538,7 +520,7 @@ public class PayrollController {
             List<SalaryComponentPersistModel> salaryComponentPersistModels = new ArrayList<>();
             payrollRestHepler.updateAllSalaryComponent(salaryComponentPersistModel, salaryComponentPersistModels);
 
-            return new ResponseEntity(MSG_UPDATED, HttpStatus.OK);
+            return new ResponseEntity<>(MSG_UPDATED, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -553,7 +535,7 @@ public class PayrollController {
         try {
 
             payrollRestHepler.updateSalaryComponentAsNoOfDays(id, noOfDays);
-            return new ResponseEntity(MSG_UPDATED, HttpStatus.OK);
+            return new ResponseEntity<>(MSG_UPDATED, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -574,7 +556,7 @@ public class PayrollController {
             if (employment == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity(payrollRestHepler.getEmploymentModel(employment), HttpStatus.OK);
+                return new ResponseEntity<>(payrollRestHepler.getEmploymentModel(employment), HttpStatus.OK);
             }
         } catch (Exception e) {
             logger.error(ERROR, e);
@@ -591,7 +573,7 @@ public class PayrollController {
             if (salaryTemplate == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity(payrollRestHepler.getSalaryTemplateModel(salaryTemplate), HttpStatus.OK);
+                return new ResponseEntity<>(payrollRestHepler.getSalaryTemplateModel(salaryTemplate), HttpStatus.OK);
             }
         } catch (Exception e) {
             logger.error(ERROR, e);
@@ -602,10 +584,10 @@ public class PayrollController {
     @LogRequest
     @ApiOperation(value = "Get Default Salary Templates")
     @GetMapping(value = "/getDefaultSalaryTemplates")
-    public ResponseEntity<SalaryTemplateModel> getSalaryTemplates() {
+    public ResponseEntity<DefaultSalaryTemplateModel> getSalaryTemplates() {
 
         try {
-            return new ResponseEntity(salaryTemplateService.getDefaultSalaryTemplates(), HttpStatus.OK);
+            return new ResponseEntity<>(salaryTemplateService.getDefaultSalaryTemplates(), HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -616,10 +598,10 @@ public class PayrollController {
     @LogRequest
     @ApiOperation(value = "Get Salary Component By employeeID")
     @GetMapping(value = "/getSalaryComponentByEmployeeId")
-    public ResponseEntity<EmployeeSalaryComponentRelationModel> getSalaryComponentByEmployeeId(@RequestParam(value = "id") Integer id) {
+    public ResponseEntity<DefaultEmployeeSalaryComponentRelationModel> getSalaryComponentByEmployeeId(@RequestParam(value = "id") Integer id) {
         try {
 
-            return new ResponseEntity(payrollRestHepler.getSalaryComponentByEmployeeId(id), HttpStatus.OK);
+            return new ResponseEntity<>(payrollRestHepler.getSalaryComponentByEmployeeId(id), HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -629,10 +611,10 @@ public class PayrollController {
     @LogRequest
     @ApiOperation(value = "Get Salary Detail By employeeID and NoOfDays")
     @GetMapping(value = "/getSalaryDetailByEmployeeIdNoOfDays")
-    public ResponseEntity<SalaryDeatilByEmployeeIdNoOfDaysModel> getSalaryDeatilByEmployeeIdNoOfDays(@RequestParam(value = "id") Integer id) {
+    public ResponseEntity<SalaryDeatilByEmployeeIdNoOfDaysResponseModel> getSalaryDeatilByEmployeeIdNoOfDays(@RequestParam(value = "id") Integer id) {
         try {
 
-            return new ResponseEntity(payrollRestHepler.getSalaryDeatilByEmployeeIdNoOfDays(id), HttpStatus.OK);
+            return new ResponseEntity<>(payrollRestHepler.getSalaryDeatilByEmployeeIdNoOfDays(id), HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -662,7 +644,7 @@ public class PayrollController {
             if (salaryComponent == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity(payrollRestHepler.getSalaryComponentModel(salaryComponent), HttpStatus.OK);
+                return new ResponseEntity<>(payrollRestHepler.getSalaryComponentModel(salaryComponent), HttpStatus.OK);
             }
         } catch (Exception e) {
             logger.error(ERROR, e);
@@ -670,24 +652,14 @@ public class PayrollController {
         }
     }
 
-//
-//            SalaryCalculationModel salaryCalculationModel = payrollRestHepler.getSalaryCalculations(designationId,grossSalary);
-//
-//            return new ResponseEntity(salaryCalculationModel, HttpStatus.OK);
-//
-
     @LogRequest
     @ApiOperation(value = "Get Unpaid Payroll list")
     @GetMapping(value = "/getUnpaidPayrollList")
-    public ResponseEntity<List<SingleLevelDropDownModel>> getUnpaidPayrollList(HttpServletRequest request) {
+    public ResponseEntity<List<PayrollDropdownModel>> getUnpaidPayrollList(HttpServletRequest request) {
         try {
-            List<PayrollDropdownModel> response = new ArrayList<>();
-
             List<Payroll> payrollList = payrollRestHepler.getPayrollList();
-
-            response = payrollRestHepler.getUnpaidPayrollList(payrollList);
-
-            return new ResponseEntity(response, HttpStatus.OK);
+            List<PayrollDropdownModel> response = payrollRestHepler.getUnpaidPayrollList(payrollList);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
         }
@@ -708,21 +680,19 @@ public class PayrollController {
         try {
             logger.info("PayrollController:: getPayrollList method started ");
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
-            List<Payroll> response = new ArrayList<Payroll>();
+            userService.findByPK(userId);
+            List<Payroll> response = payrollRestHepler.getPayrollList();
 
-            response = payrollRestHepler.getPayrollList();
-
-            List<PayrollListModel> payrollListModelList = new ArrayList<PayrollListModel>();
+            List<PayrollListModel> payrollListModelList = new ArrayList<>();
             for (Payroll res : response) {
                 PayrollListModel payrollListModel = new PayrollListModel();
 
                 User generatedByUser = userService.findByPK(Integer.parseInt(res.getGeneratedBy()));
-                String generatedByName = generatedByUser.getFirstName().toString() + " " + generatedByUser.getLastName().toString();
+                String generatedByName = generatedByUser.getFirstName() + " " + generatedByUser.getLastName();
                 String payrollApproverName = null;
                 if (res.getPayrollApprover() != null) {
                     User payrollApproverUser = userService.findByPK(res.getPayrollApprover());
-                    payrollApproverName = payrollApproverUser.getFirstName().toString() + " " + payrollApproverUser.getLastName().toString();
+                    payrollApproverName = payrollApproverUser.getFirstName() + " " + payrollApproverUser.getLastName();
                 }
                 payrollListModel.setId(res.getId());
                 payrollListModel.setPayrollDate(res.getPayrollDate().toString());
@@ -771,7 +741,7 @@ public class PayrollController {
                                                                   HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
+            userService.findByPK(userId);
             Map<PayrollFilterEnum, Object> filterDataMap = new EnumMap<>(PayrollFilterEnum.class);
 
             PaginationResponseModel responseModel = payrolService.getList(filterDataMap, filterModel);
@@ -805,11 +775,11 @@ public class PayrollController {
             PayrollListModel payrollListModel = new PayrollListModel();
 
             User generatedByUser = userService.findByPK(Integer.parseInt(response.getGeneratedBy()));
-            String generatedByName = generatedByUser.getFirstName().toString() + " " + generatedByUser.getLastName().toString();
+	            String generatedByName = generatedByUser.getFirstName() + " " + generatedByUser.getLastName();
             String payrollApproverName = null;
             if (response.getPayrollApprover() != null) {
                 User payrollApproverUser = userService.findByPK(response.getPayrollApprover());
-                payrollApproverName = payrollApproverUser.getFirstName().toString() + " " + payrollApproverUser.getLastName().toString();
+	                payrollApproverName = payrollApproverUser.getFirstName() + " " + payrollApproverUser.getLastName();
             }
             payrollListModel.setId(response.getId());
             payrollListModel.setPayrollDate(response.getPayrollDate().toString());
@@ -839,7 +809,7 @@ public class PayrollController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            return new ResponseEntity(payrollListModel, HttpStatus.OK);
+            return new ResponseEntity<>(payrollListModel, HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error("PayrollController:: Exception in getPayroll: ", e);
@@ -858,14 +828,14 @@ public class PayrollController {
     @ApiOperation(value = "Save a payroll", response = Payroll.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/createPayroll")
-    public ResponseEntity<String> createPayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
+    public ResponseEntity<Integer> createPayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             User user = userService.findByPK(userId);
 
             Payroll payroll = payrolService.createNewPayrol(user, payrolRequestModel, userId);
 
-            return new ResponseEntity(payroll.getId(), HttpStatus.OK);
+            return new ResponseEntity<>(payroll.getId(), HttpStatus.OK);
         } catch (Exception e) {
             logger.error("PayrollController:: Exception in /createPayroll:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -887,7 +857,7 @@ public class PayrollController {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             User user = userService.findByPK(userId);
             payrolService.savePayrollEmployeeRelation(payrollId, user, employeeListIds);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error("PayrollController:: Exception in /savePayrollEmployeeRelation:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -971,11 +941,9 @@ public class PayrollController {
     public ResponseEntity<String> generatePayroll(@ModelAttribute GeneratePayrollPersistModel generatePayrollPersistModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
-            List<GeneratePayrollPersistModel> generatePayrollPersistModels = new ArrayList<>();
-            //   payrollRestHepler.generatePayroll(generatePayrollPersistModel, generatePayrollPersistModels,user);
+            userService.findByPK(userId);
 
-            return new ResponseEntity(" Payroll generated ", HttpStatus.OK);
+            return new ResponseEntity<>(" Payroll generated ", HttpStatus.OK);
         } catch (Exception e) {
             logger.error("PayrollController:: Exception in /generatePayroll:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -992,7 +960,7 @@ public class PayrollController {
             User user = userService.findByPK(userId);
             payrollRestHepler.generatePayroll(user, payrolRequestModel.getPayrollId(),payrolRequestModel.getStartDate(),payrolRequestModel.getEndDate(),request,payrolRequestModel.getPayrollEmployeesIdsListToSendMail());
 
-            return new ResponseEntity(" Approved and Run ", HttpStatus.OK);
+            return new ResponseEntity<>(" Approved and Run ", HttpStatus.OK);
         } catch (Exception e) {
             logger.error("PayrollController:: Exception in /approveRunPayroll:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -1013,7 +981,7 @@ public class PayrollController {
     public ResponseEntity<String> voidJournalEntry(@RequestBody PostingRequestModel postingRequestModel, String comment , HttpServletRequest request) {
         try {
             payrollRestHepler.voidPayroll(postingRequestModel,comment,request);
-            return new ResponseEntity("Payroll Voided Successfully", HttpStatus.OK);
+            return new ResponseEntity<>("Payroll Voided Successfully", HttpStatus.OK);
         } catch (Exception e) {
             logger.error("PayrollController:: Exception in /voidJournalEntry:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -1032,7 +1000,7 @@ public class PayrollController {
 
             payrollRestHepler.convertPayrollToPaid(payEmpListIds, user);
 
-            return new ResponseEntity("", HttpStatus.OK);
+            return new ResponseEntity<>("", HttpStatus.OK);
         } catch (Exception e) {
             logger.error("PayrollController:: Exception in /convertPayrollToPaid:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -1093,9 +1061,9 @@ public class PayrollController {
     public ResponseEntity<String> changePayrollStatus(@RequestParam(value = "payrollId") Integer payrollId, @RequestParam(value = "approverId") Integer approverId, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
+            userService.findByPK(userId);
             payrollRestHepler.updatePayrollStatus(payrollId, approverId, request);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error("PayrollController:: Exception in /changePayrollStatus:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -1117,7 +1085,7 @@ public class PayrollController {
             User user = userService.findByPK(userId);
             payrollRestHepler.rejectPayroll(user, payrollId, comment,request);
 
-            return new ResponseEntity(" Reject payroll ", HttpStatus.OK);
+            return new ResponseEntity<>(" Reject payroll ", HttpStatus.OK);
         } catch (Exception e) {
             logger.error("PayrollController:: Exception in /rejectPayroll:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -1135,7 +1103,7 @@ public class PayrollController {
     @ApiOperation(value = "create And Submit Payroll", response = Payroll.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/createAndSubmitPayroll")
-    public ResponseEntity<String> createAndSubmitPayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
+    public ResponseEntity<Integer> createAndSubmitPayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             User user = userService.findByPK(userId);
@@ -1144,7 +1112,7 @@ public class PayrollController {
 
             payrollRestHepler.updatePayrollStatus(payroll.getId(), payroll.getPayrollApprover(), request);
 
-            return new ResponseEntity(payroll.getId(), HttpStatus.OK);
+            return new ResponseEntity<>(payroll.getId(), HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error("PayrollController:: Exception in /createAndSubmitPayroll:", e);
@@ -1163,14 +1131,14 @@ public class PayrollController {
     @ApiOperation(value = "Update a payroll", response = Payroll.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/updatePayroll")
-    public ResponseEntity<String> updatePayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
+    public ResponseEntity<Integer> updatePayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             User user = userService.findByPK(userId);
 
             Payroll payroll = payrolService.updatePayrol(user, payrolRequestModel, userId);
 
-            return new ResponseEntity(payroll.getId(), HttpStatus.OK);
+            return new ResponseEntity<>(payroll.getId(), HttpStatus.OK);
         } catch (Exception e) {
             logger.error("PayrollController:: Exception in /updatePayroll:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -1188,7 +1156,7 @@ public class PayrollController {
     @ApiOperation(value = "Update and Submit payroll", response = Payroll.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/updateAndSubmitPayroll")
-    public ResponseEntity<String> updateAndSubmitPayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
+    public ResponseEntity<Integer> updateAndSubmitPayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             User user = userService.findByPK(userId);
@@ -1196,7 +1164,7 @@ public class PayrollController {
             Payroll payroll = payrolService.updatePayrol(user, payrolRequestModel, userId);
             payrollRestHepler.updatePayrollStatus(payroll.getId(), payroll.getPayrollApprover(), request);
 
-            return new ResponseEntity(payroll.getId(), HttpStatus.OK);
+            return new ResponseEntity<>(payroll.getId(), HttpStatus.OK);
         } catch (Exception e) {
             logger.error("PayrollController:: Exception in /updateAndSubmitPayroll:", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -1236,7 +1204,6 @@ public class PayrollController {
 
     private List<PayrollEmployeeModel> getPayrollEmployeeList(Integer userId) {
         List<PayrollEmployeeModel> payrollEmployeeModelList = new ArrayList<>();
-        List<PayrollEmployee> payrollEmployeeList = new ArrayList<>();
         List<PayrollEmployee> payrollEmployees = payrollEmployeeRepository.findByDeleteFlag(false);
         if (payrollEmployees != null) {
             for (PayrollEmployee payrollEmployee : payrollEmployees) {
@@ -1277,15 +1244,15 @@ public class PayrollController {
     @ApiOperation(value = "Get Salary components")
     @GetMapping(value = "/getSalaryList")
 	    public ResponseEntity<Object> getSalaryComponent(@RequestParam(defaultValue = "0") int pageNo,
-                                                @RequestParam(defaultValue = "10") int pageSize,
-                                                @RequestParam(required = false, defaultValue = "true") boolean paginationDisable,
-                                                @RequestParam(required = false) String order,
-                                                @RequestParam(required = false) String sortingCol,
-                                                HttpServletRequest request){
+	                                                @RequestParam(defaultValue = "10") int pageSize,
+	                                                @RequestParam(required = false, defaultValue = "true") boolean paginationDisable,
+	                                                @RequestParam(required = false) String order,
+	                                                @RequestParam(required = false) String sortingCol,
+	                                                HttpServletRequest request){
         try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            jwtTokenUtil.getUserIdFromHttpRequest(request);
             PaginationResponseModel responseModel = new PaginationResponseModel();
-            List<SalaryComponentPersistModel> response = getListSalaryComponent(responseModel,pageNo,pageSize,paginationDisable,order,sortingCol);
+            getListSalaryComponent(responseModel,pageNo,pageSize,paginationDisable,order,sortingCol);
             return new ResponseEntity<>(responseModel, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -1312,12 +1279,11 @@ public class PayrollController {
     private List<SalaryComponentPersistModel> getListSalaryComponent(PaginationResponseModel responseModel,int pageNo, int pageSize,
                                                                      boolean paginationDisable, String sortOrder, String sortingCol){
         Pageable paging = getSalaryComponentPageableRequest(pageNo, pageSize, sortOrder, sortingCol);
-        List<SalaryComponent> salaryComponentList = new ArrayList<>();
         List<SalaryComponentPersistModel> salaryComponentPersistModelList = new ArrayList<>();
         Page<SalaryComponent> salaryComponentPage = salaryComponentRepository.findByDeleteFlag(false,paging);
-        salaryComponentList = salaryComponentPage.getContent();
+        List<SalaryComponent> salaryComponentList = salaryComponentPage.getContent();
         responseModel.setCount((int) salaryComponentPage.getTotalElements());
-        if (salaryComponentList != null && salaryComponentList.size() > 0) {
+        if (!salaryComponentList.isEmpty()) {
             for (SalaryComponent salaryComponent : salaryComponentList) {
                 SalaryComponentPersistModel salaryComponentPersistModel = new SalaryComponentPersistModel();
                salaryComponentPersistModel.setId(salaryComponent.getId());

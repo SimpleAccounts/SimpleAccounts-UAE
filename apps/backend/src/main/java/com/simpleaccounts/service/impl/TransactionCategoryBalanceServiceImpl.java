@@ -64,7 +64,7 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 				balance = new TransactionCategoryBalance();
 				balance.setTransactionCategory(category);
 				balance.setCreatedBy(lineItem.getCreatedBy());
-				balance.setOpeningBalance(lineItem.getCreditAmount()!=null && lineItem.getCreditAmount().compareTo(BigDecimal.ZERO)==1?lineItem.getCreditAmount():lineItem.getDebitAmount());
+					balance.setOpeningBalance(lineItem.getCreditAmount()!=null && lineItem.getCreditAmount().compareTo(BigDecimal.ZERO)>0?lineItem.getCreditAmount():lineItem.getDebitAmount());
 				balance.setEffectiveDate(dateUtils.get(lineItem.getJournal().getJournalDate().atStartOfDay()));
 			}
 
@@ -142,10 +142,10 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 				}
 			}
 			balance.setRunningBalance(runningBalance);
-			if(updateOpeningBalance&& runningBalance!=null && runningBalance.longValue()<0)
-				balance.setOpeningBalance(runningBalance.negate());
-			else if(updateOpeningBalance&& runningBalance!=null)
-				balance.setOpeningBalance(runningBalance);
+				if(Boolean.TRUE.equals(updateOpeningBalance)&& runningBalance!=null && runningBalance.longValue()<0)
+					balance.setOpeningBalance(runningBalance.negate());
+				else if(Boolean.TRUE.equals(updateOpeningBalance)&& runningBalance!=null)
+					balance.setOpeningBalance(runningBalance);
 			transactionCategoryBalanceDao.update(balance);
 			transactionCategoryClosingBalanceService.updateClosingBalance(lineItem);
 			return balance.getRunningBalance();

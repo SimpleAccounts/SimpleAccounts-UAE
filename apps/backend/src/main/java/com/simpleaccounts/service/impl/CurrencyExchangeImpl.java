@@ -1,25 +1,21 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.CurrencyExchangeDao;
-
 import com.simpleaccounts.entity.CurrencyConversion;
 import com.simpleaccounts.service.CurrencyExchangeService;
-
 import java.util.HashMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 @Service("currencyExchangeImpl")
+@RequiredArgsConstructor
 public class CurrencyExchangeImpl extends CurrencyExchangeService {
 	private final Logger logger = LoggerFactory.getLogger(CurrencyExchangeImpl.class);
     private static String accesskey = "c6267cc9e9bd2735a5a2637aa778d61a";
-    @Autowired
-    CurrencyExchangeDao currencyExchangeDao;
+    private final CurrencyExchangeDao currencyExchangeDao;
 
     HashMap<String, Integer> currencyIdMap = new HashMap<>();
 
@@ -29,8 +25,6 @@ public class CurrencyExchangeImpl extends CurrencyExchangeService {
 
 //
 
-//
-//            JSONArray jsonRules = new JSONArray(responseString);
 //            // iterate over the rules
 
 //
@@ -49,12 +43,8 @@ public class CurrencyExchangeImpl extends CurrencyExchangeService {
        return currencyExchangeDao.getCurrencyConversionList();
 }
     @Override
-    public  List<CurrencyConversion> getActiveCurrencyConversionList() {
-        return currencyExchangeDao.getActiveCurrencyConversionList();
-    }
-   /* @Override
-    public List<CurrencyConversion> getCompanyCurrency(){
-        return currencyExchangeDao.getCompanyCurrency();
-    }*/
+	    public  List<CurrencyConversion> getActiveCurrencyConversionList() {
+	        return currencyExchangeDao.getActiveCurrencyConversionList();
+	    }
 
-}
+	}

@@ -1,10 +1,11 @@
 package com.simpleaccounts.rest;
 
+
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.CommonColumnConstants;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.ExpenseStatusEnum;
+import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.helper.ExpenseRestHelper;
@@ -18,6 +19,11 @@ import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import io.swagger.annotations.ApiOperation;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,71 +33,75 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
-import com.simpleaccounts.security.JwtTokenUtil;
-import io.swagger.annotations.ApiOperation;
-
-import javax.servlet.http.HttpServletRequest;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 /**
  *
  * @author uday
  */
 @Slf4j
 public abstract class AbstractDoubleEntryRestController {
-
-	@Autowired
-	TransactionCategoryService abstractDoubleEntryTransactionCategoryService;
-
-	@Autowired
 	protected JournalService journalService;
 
-	@Autowired
 	private InvoiceService invoiceService;
 
-	@Autowired
 	private ExpenseService expenseService;
 
-	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
 	private InvoiceRestHelper invoiceRestHelper;
 
-	@Autowired
 	private ExpenseRestHelper expenseRestHelper;
 
-	@Autowired
 	private InventoryService inventoryService;
 
-	@Autowired
 	private CreditNoteRestHelper creditNoteRestHelper;
 
-	@Autowired
 	private CreditNoteRepository creditNoteRepository;
 
-	@Autowired
 	private InventoryHistoryService inventoryHistoryService;
 
-	@Autowired
 	private JournalLineItemRepository journalLineItemRepository;
 
-	@Autowired
 	private TransactionService transactionService;
 
-	@Autowired
 	private TransactionExpensesService transactionExpensesService;
 
-	@Autowired
 	private TransactionExpensesRepository transactionExpensesRepository;
 
-	@Autowired
 	private TransactionExplanationRepository transactionExplanationRepository;
+
+	@Autowired
+	void setDependencies(
+			JournalService journalService,
+			InvoiceService invoiceService,
+			ExpenseService expenseService,
+			JwtTokenUtil jwtTokenUtil,
+			InvoiceRestHelper invoiceRestHelper,
+			ExpenseRestHelper expenseRestHelper,
+			InventoryService inventoryService,
+			CreditNoteRestHelper creditNoteRestHelper,
+			CreditNoteRepository creditNoteRepository,
+			InventoryHistoryService inventoryHistoryService,
+			JournalLineItemRepository journalLineItemRepository,
+			TransactionService transactionService,
+			TransactionExpensesService transactionExpensesService,
+			TransactionExpensesRepository transactionExpensesRepository,
+			TransactionExplanationRepository transactionExplanationRepository) {
+		this.journalService = journalService;
+		this.invoiceService = invoiceService;
+		this.expenseService = expenseService;
+		this.jwtTokenUtil = jwtTokenUtil;
+		this.invoiceRestHelper = invoiceRestHelper;
+		this.expenseRestHelper = expenseRestHelper;
+		this.inventoryService = inventoryService;
+		this.creditNoteRestHelper = creditNoteRestHelper;
+		this.creditNoteRepository = creditNoteRepository;
+		this.inventoryHistoryService = inventoryHistoryService;
+		this.journalLineItemRepository = journalLineItemRepository;
+		this.transactionService = transactionService;
+		this.transactionExpensesService = transactionExpensesService;
+		this.transactionExpensesRepository = transactionExpensesRepository;
+		this.transactionExplanationRepository = transactionExplanationRepository;
+	}
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)

@@ -1,30 +1,26 @@
 package com.simpleaccounts.service.impl;
 
-import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import com.simpleaccounts.entity.VatReportFiling;
-import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.rest.financialreport.VatReportFilingRequestModel;
-import com.simpleaccounts.rest.taxescontroller.TaxesFilterEnum;
-import com.simpleaccounts.rest.taxescontroller.TaxesFilterModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.simpleaccounts.rest.financialreport.CreditDebitAggregator;
-import com.simpleaccounts.rest.financialreport.FinancialReportRequestModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.JournalLineItemDao;
 import com.simpleaccounts.entity.JournalLineItem;
+import com.simpleaccounts.entity.VatReportFiling;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.detailedgeneralledgerreport.ReportRequestModel;
+import com.simpleaccounts.rest.financialreport.CreditDebitAggregator;
+import com.simpleaccounts.rest.financialreport.FinancialReportRequestModel;
+import com.simpleaccounts.rest.financialreport.VatReportFilingRequestModel;
+import com.simpleaccounts.rest.taxescontroller.TaxesFilterEnum;
+import com.simpleaccounts.rest.taxescontroller.TaxesFilterModel;
 import com.simpleaccounts.service.JournalLineItemService;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 @Service("JournalLineItemService")
 @RequiredArgsConstructor

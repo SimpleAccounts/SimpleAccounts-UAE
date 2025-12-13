@@ -5,11 +5,11 @@
  */
 package com.simpleaccounts.rest.contactcontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.DefaultTypeConstant;
-
 import com.simpleaccounts.constant.dbfilter.ContactFilterEnum;
 import com.simpleaccounts.constant.dbfilter.ORDERBYENUM;
 import com.simpleaccounts.entity.Contact;
@@ -27,19 +27,16 @@ import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import com.simpleaccounts.utils.TransactionCategoryCreationHelper;
 import io.swagger.annotations.ApiOperation;
+import java.time.LocalDateTime;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.util.*;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  *

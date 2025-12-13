@@ -1,15 +1,12 @@
 package com.simpleaccounts;
 
-import javax.annotation.PostConstruct;
-
+import com.simpleaccounts.service.migrationservices.FileStorageProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
-
-import com.simpleaccounts.service.migrationservices.FileStorageProperties;
 
 @SpringBootApplication
 @EnableCaching
@@ -26,9 +23,5 @@ public class Application extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(Application.class);
-    }
-    @PostConstruct
-    public void init(){
-
     }
 }

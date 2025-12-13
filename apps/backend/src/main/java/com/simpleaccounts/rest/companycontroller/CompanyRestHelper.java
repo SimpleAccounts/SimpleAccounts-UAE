@@ -1,14 +1,6 @@
 package com.simpleaccounts.rest.companycontroller;
 
-import java.io.IOException;
-import lombok.RequiredArgsConstructor;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.repository.ExpenseRepository;
@@ -19,12 +11,18 @@ import com.simpleaccounts.rest.financialreport.VatReportFilingRepository;
 import com.simpleaccounts.rfq_po.PoQuatation;
 import com.simpleaccounts.rfq_po.PoQuatationRepository;
 import com.simpleaccounts.service.*;
+import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Component
 @RequiredArgsConstructor
@@ -42,8 +40,7 @@ public class CompanyRestHelper{
 
 	private final CurrencyService currencyService;
 
-	@Autowired
-	UserService userService;
+	private final UserService userService;
 
 	private final InvoiceRepository invoiceRepository;
 

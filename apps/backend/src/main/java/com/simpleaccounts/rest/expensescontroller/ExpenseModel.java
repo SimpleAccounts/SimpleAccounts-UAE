@@ -5,13 +5,12 @@
  */
 package com.simpleaccounts.rest.expensescontroller;
 
+import com.simpleaccounts.constant.PayMode;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.simpleaccounts.constant.PayMode;
 
 /**
  *
@@ -54,7 +53,7 @@ public class ExpenseModel {
 	private Integer bankAccountId;
 	private String transactionCategoryName;
 	private String vatCategoryName;
-//	private String expenseType;
+
 	private String expenseStatus;
 	private Integer taxTreatmentId;
 	private Integer placeOfSupplyId;

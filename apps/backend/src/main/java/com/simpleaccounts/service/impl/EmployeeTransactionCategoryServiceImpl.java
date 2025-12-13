@@ -1,13 +1,12 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.EmployeeTransactionCategoryDao;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeTransactionCategoryRelation;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.service.EmployeeTransactioncategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,8 +21,12 @@ public class EmployeeTransactionCategoryServiceImpl extends EmployeeTransactionc
     protected Dao<Integer, EmployeeTransactionCategoryRelation> getDao() {
         return employeeTransactionCategoryDao;
     }
-    // Empty method - implementation not required for this service
-    public  void addEmployeeTransactionCategory(Employee employee, TransactionCategory transactionCategory){
 
+    @Override
+    public void addEmployeeTransactionCategory(Employee employee, TransactionCategory transactionCategory) {
+        EmployeeTransactionCategoryRelation relation = new EmployeeTransactionCategoryRelation();
+        relation.setEmployee(employee);
+        relation.setTransactionCategory(transactionCategory);
+        persist(relation);
     }
 }

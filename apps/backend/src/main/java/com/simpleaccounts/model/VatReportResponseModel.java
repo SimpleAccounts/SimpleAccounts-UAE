@@ -1,9 +1,8 @@
 package com.simpleaccounts.model;
 
+import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -34,7 +33,7 @@ public class VatReportResponseModel {
     private BigDecimal exemptSupplies;
     private BigDecimal totalAmountWithVatForSupplierInvoice;
     private BigDecimal totalVatAmountForSupplierInvoice;
-   // private BigDecimal totalAmountWithoutVatForSupplierInvoice;
+
     private BigDecimal totalAmountForExpense;
     private BigDecimal totalVatAmountForExpense;
     private BigDecimal zeroRatedSupplies;

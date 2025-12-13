@@ -1,7 +1,19 @@
 package com.simpleaccounts.rest.transactionimportcontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
+import com.simpleaccounts.constant.TransactionCreationMode;
+import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
+import com.simpleaccounts.constant.TransactionStatusConstant;
+import com.simpleaccounts.criteria.enums.TransactionEnum;
+import com.simpleaccounts.dao.DateFormatDao;
+import com.simpleaccounts.dao.TransactionParsingSettingDao;
+import com.simpleaccounts.entity.bankaccount.BankAccount;
+import com.simpleaccounts.model.TransactionModel;
+import com.simpleaccounts.service.BankAccountService;
+import com.simpleaccounts.service.DateFormatService;
+import com.simpleaccounts.service.bankaccount.TransactionService;
 import java.io.BufferedReader;
-import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,7 +24,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
-
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
@@ -23,30 +34,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
-import com.simpleaccounts.service.DateFormatService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.simpleaccounts.constant.TransactionCreationMode;
-import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
-import com.simpleaccounts.constant.TransactionStatusConstant;
-import com.simpleaccounts.model.TransactionModel;
-import com.simpleaccounts.criteria.enums.TransactionEnum;
-import com.simpleaccounts.dao.DateFormatDao;
-import com.simpleaccounts.dao.TransactionParsingSettingDao;
-import com.simpleaccounts.entity.bankaccount.BankAccount;
-import com.simpleaccounts.service.BankAccountService;
-import com.simpleaccounts.service.bankaccount.TransactionService;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @Component
 @RequiredArgsConstructor
@@ -66,8 +62,8 @@ public class TransactionImportRestHelper {
 	private List<TransactionModel> transactionList = new ArrayList<>();
 	private boolean debitAmountBoolean = false;
 	private boolean creditAmountBoolean = false;
-	List<String> headerText = new ArrayList<String>();
-	List<String> headerTextData = new ArrayList<String>();
+	List<String> headerText = new ArrayList<>();
+	List<String> headerTextData = new ArrayList<>();
 	private boolean isDataRepeated = false;
 	private boolean tableChange = true;
 	Integer transcationDatePosition = -1;
@@ -297,12 +293,6 @@ public class TransactionImportRestHelper {
 
 						MathContext mc = new MathContext(4); // 2 precision
 
-////							if (dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()).equals("C")) {
-////								currentBalance = currentBalance.add(trnx.getTransactionAmount());
-////							} else {
-////								currentBalance = currentBalance.subtract(trnx.getTransactionAmount());
-////							}
-
 							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDbColumnName());
 								if (!data.isEmpty() && !data.equals("-")) {
@@ -310,7 +300,7 @@ public class TransactionImportRestHelper {
 									if (debitAmt.compareTo(BigDecimal.ZERO) > 0) {
 										trnx.setTransactionAmount(debitAmt);
 										trnx.setTransactionDueAmount(debitAmt);
-									//	currentBalance = currentBalance.subtract(trnx.getTransactionAmount());
+
 										trnx.setDebitCreditFlag('D');
 									}
 								}
@@ -322,13 +312,12 @@ public class TransactionImportRestHelper {
 									if (creditAmt.compareTo(BigDecimal.ZERO) > 0) {
 										trnx.setTransactionAmount(creditAmt);
 										trnx.setTransactionDueAmount(creditAmt);
-									//	currentBalance = currentBalance.add(trnx.getTransactionAmount());
+
 										trnx.setDebitCreditFlag('C');
 									}
 								}
 							}
 
-					//	trnx.setCurrentBalance(currentBalance);
 						break;
 
 					case DESCRIPTION:
@@ -394,12 +383,6 @@ public class TransactionImportRestHelper {
 
 							MathContext mc = new MathContext(4); // 2 precision
 
-////							if (dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()).equals("C")) {
-////								currentBalance = currentBalance.add(trnx.getTransactionAmount());
-////							} else {
-////								currentBalance = currentBalance.subtract(trnx.getTransactionAmount());
-////							}
-
 							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDisplayName());
 								if (!data.equals("-")) {
@@ -407,7 +390,7 @@ public class TransactionImportRestHelper {
 									if (debitAmt.compareTo(BigDecimal.ZERO) > 0) {
 										trnx.setTransactionAmount(debitAmt);
 										trnx.setTransactionDueAmount(debitAmt);
-										//	currentBalance = currentBalance.subtract(trnx.getTransactionAmount());
+
 										trnx.setDebitCreditFlag('D');
 									}
 								}
@@ -419,13 +402,12 @@ public class TransactionImportRestHelper {
 									if (creditAmt.compareTo(BigDecimal.ZERO) > 0) {
 										trnx.setTransactionAmount(creditAmt);
 										trnx.setTransactionDueAmount(creditAmt);
-										//	currentBalance = currentBalance.add(trnx.getTransactionAmount());
+
 										trnx.setDebitCreditFlag('C');
 									}
 								}
 							}
 
-							//	trnx.setCurrentBalance(currentBalance);
 							break;
 
 						case DESCRIPTION:

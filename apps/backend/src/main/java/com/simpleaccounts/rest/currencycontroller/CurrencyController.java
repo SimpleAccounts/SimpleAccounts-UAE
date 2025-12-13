@@ -5,27 +5,29 @@
  */
 package com.simpleaccounts.rest.currencycontroller;
 
-import java.time.LocalDateTime;
-import lombok.RequiredArgsConstructor;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.ErrorConstant;
 import com.simpleaccounts.entity.Contact;
+import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.Expense;
 import com.simpleaccounts.entity.Invoice;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
+import com.simpleaccounts.rest.currencycontroller.dto.CurrencyDTO;
+import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
+import io.swagger.annotations.ApiOperation;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,14 +39,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.simpleaccounts.entity.Currency;
-import com.simpleaccounts.rest.currencycontroller.dto.CurrencyDTO;
-import com.simpleaccounts.security.JwtTokenUtil;
-
-import io.swagger.annotations.ApiOperation;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -59,11 +53,9 @@ public class CurrencyController {
 
 	private final CurrencyService currencyService;
 
-	@Autowired
-	JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	UserService userServiceNew;
+	private final UserService userServiceNew;
 
 	private final InvoiceService invoiceService;
 
@@ -220,7 +212,7 @@ public class CurrencyController {
 				message = new SimpleAccountsMessage("0031",
 						MessageUtil.getMessage("currency.deleted.successful.msg.0031"), false);
 				return new ResponseEntity<>(message,HttpStatus.OK);
-//				return new ResponseEntity<>(currency, HttpStatus.OK);
+
 			} else {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
@@ -249,11 +241,10 @@ public class CurrencyController {
 		map.put("bankAccountCurrency",currency);
 		map.put("deleteFlag",Boolean.FALSE);
 		List<BankAccount> bankAccountList = bankAccountService.findByAttributes(map);
-		if (invoiceList.size()>0 || bankAccountList.size()>0 || expenseList.size()>0 || contactList.size()>0){
-			 response = 1;
-		}
+		if (!invoiceList.isEmpty() || !bankAccountList.isEmpty() || !expenseList.isEmpty() || !contactList.isEmpty()) {
+				 response = 1;
+			}
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 }
-

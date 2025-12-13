@@ -1,27 +1,14 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.*;
-import lombok.RequiredArgsConstructor;
+import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.Expense;
 import com.simpleaccounts.service.TransactionExpensesPayrollService;
-import com.simpleaccounts.service.TransactionExpensesService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
-
-        import java.util.ArrayList;
-        import java.util.List;
-
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.stereotype.Service;
-
-        import com.simpleaccounts.dao.Dao;
-        import com.simpleaccounts.dao.TransactionExpensesDao;
-        import com.simpleaccounts.entity.Expense;
-        import com.simpleaccounts.entity.TransactionExpenses;
-        import com.simpleaccounts.service.TransactionExpensesService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

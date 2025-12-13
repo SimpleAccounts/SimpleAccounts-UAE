@@ -1,7 +1,9 @@
 package com.simpleaccounts.rest.payroll;
 
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PAYSLIP_MAIL_TEMPLATE;
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PAYSLIP_TEMPLATE;
+
 import com.simpleaccounts.constant.DefaultTypeConstant;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.EmailConstant;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.entity.*;
@@ -12,7 +14,6 @@ import com.simpleaccounts.rest.employeecontroller.EmployeeListModel;
 import com.simpleaccounts.rest.payroll.model.MoneyPaidToUserModel;
 import com.simpleaccounts.rest.payroll.service.EmployeeSalaryComponentRelationService;
 import com.simpleaccounts.rest.payroll.service.Impl.SalaryServiceImpl;
-
 import com.simpleaccounts.rest.payroll.service.SalaryService;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
@@ -20,17 +21,6 @@ import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.EmailSender;
 import com.simpleaccounts.utils.MailUtility;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -44,9 +34,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PAYSLIP_MAIL_TEMPLATE;
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PAYSLIP_TEMPLATE;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -75,32 +71,21 @@ public class SalaryRestHelper {
 
     private final TransactionCategoryService transactionCategoryService;
 
-    @Autowired
-    CoacTransactionCategoryService coacTransactionCategoryService;
+    private final CoacTransactionCategoryService coacTransactionCategoryService;
 
-    @Autowired
-    BankAccountService bankAccountService;
+    private final BankAccountService bankAccountService;
 
-    @Autowired
-    EmployeeTransactioncategoryService employeeTransactioncategoryService ;
+    private final EmployeeTransactioncategoryService employeeTransactioncategoryService;
 
-    @Autowired
-    JournalLineItemService journalLineItemService;
+    private final JournalLineItemService journalLineItemService;
 
-    @Autowired
-    EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
-    @Autowired
-    ResourceLoader resourceLoader;
-    @Autowired
-    EmailSender emailSender;
-    @Autowired
-    EmaiLogsService emaiLogsService;
-    @Autowired
-    MailUtility mailUtility;
-    @Autowired
-    EmployeeController employeeController;
-    @Autowired
-    SalaryServiceImpl salaryServiceImpl;
+    private final EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
+    private final ResourceLoader resourceLoader;
+    private final EmailSender emailSender;
+    private final EmaiLogsService emaiLogsService;
+    private final MailUtility mailUtility;
+    private final EmployeeController employeeController;
+    private final SalaryServiceImpl salaryServiceImpl;
 
     @Transactional(rollbackFor = Exception.class)
     public String generateSalary(SalaryPersistModel salaryPersistModel ,  HttpServletRequest request) {
@@ -145,7 +130,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
                     salary.setTotalAmount(salaryAsPerNoOfWorkingDays);
                     salaryService.persist(salary);
                     if (Objects.equals(salaryComponent.getSalaryStructure().getId(), PayrollEnumConstants.Deduction.getId())){
-                      //  salaryForjournalEntry = salaryForjournalEntry.subtract(BigDecimal.valueOf(totalSalaryForSingleDay * salaryComponent.getNoOfDays()));
+
                     }
                     else {
                         salaryForjournalEntry = salaryForjournalEntry.add(salaryAsPerNoOfWorkingDays);

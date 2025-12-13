@@ -5,24 +5,30 @@
  */
 package com.simpleaccounts.rest.vatcontroller;
 
-import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
-import java.time.LocalDateTime;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
+import com.simpleaccounts.aop.LogRequest;
+import com.simpleaccounts.bank.model.DeleteModel;
+import com.simpleaccounts.constant.dbfilter.VatCategoryFilterEnum;
+import com.simpleaccounts.entity.User;
+import com.simpleaccounts.entity.VatCategory;
+import com.simpleaccounts.rest.PaginationResponseModel;
+import com.simpleaccounts.security.JwtTokenUtil;
+import com.simpleaccounts.service.ProductService;
+import com.simpleaccounts.service.UserService;
+import com.simpleaccounts.service.VatCategoryService;
+import com.simpleaccounts.utils.MessageUtil;
+import com.simpleaccounts.utils.SimpleAccountsMessage;
+import io.swagger.annotations.ApiOperation;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
-import com.simpleaccounts.entity.User;
-import com.simpleaccounts.service.ProductService;
-import com.simpleaccounts.service.UserService;
-import com.simpleaccounts.utils.MessageUtil;
-import com.simpleaccounts.utils.SimpleAccountsMessage;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,18 +39,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.bank.model.DeleteModel;
-import com.simpleaccounts.constant.dbfilter.VatCategoryFilterEnum;
-import com.simpleaccounts.entity.VatCategory;
-import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.security.JwtTokenUtil;
-import com.simpleaccounts.service.VatCategoryService;
-
-import io.swagger.annotations.ApiOperation;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  *

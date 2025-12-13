@@ -6,11 +6,10 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.DocumentTemplateDao;
 import com.simpleaccounts.entity.DocumentTemplate;
 import com.simpleaccounts.service.DocumentTemplateService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

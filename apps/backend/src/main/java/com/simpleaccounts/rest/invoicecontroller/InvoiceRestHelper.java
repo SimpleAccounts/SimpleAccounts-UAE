@@ -1,8 +1,26 @@
 package com.simpleaccounts.rest.invoicecontroller;
 
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simpleaccounts.constant.*;
+import com.simpleaccounts.dao.MailThemeTemplates;
+import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.Currency;
+import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+import com.simpleaccounts.helper.DateFormatHelper;
+import com.simpleaccounts.repository.UnitTypesRepository;
+import com.simpleaccounts.rest.InviceSingleLevelDropdownModel;
+import com.simpleaccounts.rest.PostingRequestModel;
+import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
+import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateResponseModel;
+import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateService;
+import com.simpleaccounts.service.*;
+import com.simpleaccounts.utils.*;
 import java.io.IOException;
 import java.math.BigDecimal;
-
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -11,42 +29,20 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import com.simpleaccounts.constant.*;
-import com.simpleaccounts.dao.MailThemeTemplates;
-import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.Currency;
-import com.simpleaccounts.helper.DateFormatHelper;
-import com.simpleaccounts.repository.UnitTypesRepository;
-import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
-import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateResponseModel;
-import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateService;
-import com.simpleaccounts.service.*;
-import com.simpleaccounts.utils.*;
-import lombok.extern.slf4j.Slf4j;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerErrorException;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.rest.InviceSingleLevelDropdownModel;
-import com.simpleaccounts.rest.PostingRequestModel;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.DatatypeConverter;
-
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 @Service
 @Slf4j
@@ -64,24 +60,17 @@ public class InvoiceRestHelper {
 	private static final String TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS = "{amountInWords}";
 	private static final String TEMPLATE_PLACEHOLDER_VAT_IN_WORDS = "{vatInWords}";
 	private static final String TEMPLATE_PLACEHOLDER_CURRENCY = "{currency}";
-	@Autowired
-	VatCategoryService vatCategoryService;
+	private final VatCategoryService vatCategoryService;
 
-	@Autowired
-	EntityManager entityManager;
-	@Autowired
-	ProjectService projectService;
+	private final EntityManager entityManager;
+	private final ProjectService projectService;
 
-	@Autowired
-	ResourceLoader	resourceLoader;
-	@Autowired
-	ContactService contactService;
+	private final ResourceLoader resourceLoader;
+	private final ContactService contactService;
 
-	@Autowired
-	CurrencyService currencyService;
+	private final CurrencyService currencyService;
 
-	@Autowired
-	InvoiceLineItemService invoiceLineItemService;
+	private final InvoiceLineItemService invoiceLineItemService;
 
 	private final InvoiceService invoiceService;
 
@@ -107,17 +96,13 @@ public class InvoiceRestHelper {
 
 	private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
-	@Autowired
-	InvoiceNumberUtil invoiceNumberUtil;
+	private final InvoiceNumberUtil invoiceNumberUtil;
 
-	@Autowired
-	InventoryService inventoryService;
+	private final InventoryService inventoryService;
 
-	@Autowired
-	InventoryHistoryService inventoryHistoryService;
+	private final InventoryHistoryService inventoryHistoryService;
 
-	@Autowired
-	ProductLineItemService productLineItemService;
+	private final ProductLineItemService productLineItemService;
 
 	private final CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
 
@@ -178,10 +163,10 @@ public class InvoiceRestHelper {
 			invoice.setIsReverseChargeEnabled(invoiceModel.getIsReverseChargeEnabled());
 		}
 		invoice.setReferenceNumber(invoiceModel.getReferenceNumber());
-		if(invoiceModel.getChangeShippingAddress()== true){
-			invoice.setChangeShippingAddress(invoiceModel.getChangeShippingAddress());
-			invoice.setShippingAddress(invoiceModel.getShippingAddress());
-			invoice.setShippingCountry(countryService.getCountry(invoiceModel.getShippingCountry()));
+			if(Boolean.TRUE.equals(invoiceModel.getChangeShippingAddress())){
+				invoice.setChangeShippingAddress(invoiceModel.getChangeShippingAddress());
+				invoice.setShippingAddress(invoiceModel.getShippingAddress());
+				invoice.setShippingCountry(countryService.getCountry(invoiceModel.getShippingCountry()));
 			invoice.setShippingState(stateService.findByPK(invoiceModel.getShippingState()));
 			invoice.setShippingCity(invoiceModel.getShippingCity());
 			invoice.setShippingPostZipCode(invoiceModel.getShippingPostZipCode());
@@ -267,8 +252,6 @@ public class InvoiceRestHelper {
 
 //
 
-//			//	invoiceDueDate=invoiceDueDate.withHour(0).withMinute(0).withSecond(0).withNano(0);seconds = 1631881535
-
 	public List<InvoiceLineItem>
 	getLineItems(List<InvoiceLineItemModel> itemModels, Invoice invoice, Integer userId) {
 		List<InvoiceLineItem> lineItems = new ArrayList<>();
@@ -307,7 +290,7 @@ public class InvoiceRestHelper {
 				lineItem.setInvoice(invoice);
 				if (model.getProductId() != null)
 					lineItem.setProduct(productService.findByPK(model.getProductId()));
-				Map<String, Object> attribute = new HashMap<String, Object>();
+				Map<String, Object> attribute = new HashMap<>();
 				attribute.put("product", lineItem.getProduct());
 				if (invoice.getType()==2) {
 					attribute.put("priceType", ProductPriceType.SALES);
@@ -376,21 +359,21 @@ public class InvoiceRestHelper {
 			inventoryHistory.setUnitSellingPrice(model.getUnitPrice().floatValue()*model.getInvoice().getExchangeRate().floatValue());
 			inventoryHistory.setSupplierId(inventory.getSupplierId());
 			inventoryHistoryService.update(inventoryHistory);
-			//	}
+
 			if(remainingQty==0)
 				break;
 		}
 	}
 	void handleSupplierInvoiceInventory(InvoiceLineItem model,Product product,Contact supplier,Integer userId){
-		Map<String, Object> attribute = new HashMap<String, Object>();
+		Map<String, Object> attribute = new HashMap<>();
 		attribute.put("productId", product);
 		attribute.put("supplierId",supplier);
 
 		List<Inventory> inventoryList = inventoryService.findByAttributes(attribute);
-		if (inventoryList!=null && inventoryList.size()>0) {
-			for (Inventory inventory : inventoryList) {
-				int stockOnHand = inventory.getStockOnHand();
-				int purchaseQuantity = inventory.getPurchaseQuantity();
+			if (inventoryList!=null && !inventoryList.isEmpty()) {
+				for (Inventory inventory : inventoryList) {
+					int stockOnHand = inventory.getStockOnHand();
+					int purchaseQuantity = inventory.getPurchaseQuantity();
 				inventory.setUnitCost(((stockOnHand*inventory.getUnitCost())+(model.getQuantity().floatValue()*
 						model.getUnitPrice().floatValue()))/(inventory.getStockOnHand().floatValue()+model.getQuantity().
 						floatValue()));
@@ -402,7 +385,7 @@ public class InvoiceRestHelper {
 				inventoryHistory.setInvoice(model.getInvoice());
 				inventoryHistory.setProductId(inventory.getProductId());
 				inventoryHistory.setUnitCost(model.getUnitPrice().floatValue());
-				//inventoryHistory.setUnitCost(((inventory.getStockOnHand().floatValue()*inventory.getUnitCost())+(model.getQuantity().floatValue()*model.getUnitPrice().floatValue()))/(inventory.getStockOnHand().floatValue()+model.getQuantity().floatValue()));
+
 				inventoryHistory.setQuantity(model.getQuantity().floatValue());
 				inventoryHistory.setUnitSellingPrice(model.getUnitPrice().floatValue()*model.getInvoice().getExchangeRate().floatValue());
 				inventoryHistory.setSupplierId(inventory.getSupplierId());
@@ -429,9 +412,9 @@ public class InvoiceRestHelper {
 
 			int reOrderLevel = model.getQuantity()/10;
 			inventory.setReorderLevel(reOrderLevel);
-//			inventory.setUnitTypeId(unitType);
+
 			inventory.setUnitCost((model.getUnitPrice().multiply(model.getInvoice().getExchangeRate())).floatValue());
-			//inventory.setUnitCost(((inventory.getStockOnHand().floatValue()*inventory.getUnitCost())+(model.getQuantity().floatValue()*model.getUnitPrice().floatValue()))/(inventory.getStockOnHand().floatValue()+model.getQuantity().floatValue()));
+
 			inventoryService.persist(inventory);
 			InventoryHistory inventoryHistory = new InventoryHistory();
 			inventoryHistory.setInventory(inventory);
@@ -511,7 +494,7 @@ public class InvoiceRestHelper {
 			requestModel.setTaxType(invoice.getTaxType());
 		}
 		if (invoice.getPlaceOfSupplyId() !=null){
-//			PlaceOfSupply placeOfSupply = placeOfSupplyService.findByPK(invoice.getPlaceOfSupplyId().getId());
+
 			requestModel.setPlaceOfSupplyId(invoice.getPlaceOfSupplyId().getId());
 		}
 		if (invoice.getCurrency() != null) {
@@ -684,7 +667,7 @@ public class InvoiceRestHelper {
 				InvoiceListModel model = new InvoiceListModel();
 				model.setId(invoice.getId());
 				contact(invoice, model);
-//				currency(invoice,model);
+
 				model.setCurrencyName(
 						invoice.getCurrency() != null ? invoice.getCurrency().getCurrencyName() : "-");
 				model.setCurrencySymbol(
@@ -721,9 +704,9 @@ public class InvoiceRestHelper {
 							totalCreditNoteAmount = totalCreditNoteAmount.add(creditNoteInvoiceRelation.getCreditNote().
 									getTotalAmount());
 					}
-					if (invoice.getTotalAmount().compareTo(totalCreditNoteAmount)==1){
-						model.setIsEligibleForCreditNote(true);
-					}
+						if (invoice.getTotalAmount().compareTo(totalCreditNoteAmount)>0){
+							model.setIsEligibleForCreditNote(true);
+						}
 					else {
 						model.setIsEligibleForCreditNote(false);
 					}
@@ -899,14 +882,14 @@ public class InvoiceRestHelper {
 	 */
 	public String getTaxableSummaryString(Invoice invoice,String body){
 		//TAX SUMMARY DETAILS ( 5%, 0%, Exepmt )
-		BigDecimal taxableAmount_5=BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-		BigDecimal taxAmount_5=BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		BigDecimal taxableAmount_5=BigDecimal.ZERO.setScale(2, RoundingMode.HALF_EVEN);
+		BigDecimal taxAmount_5=BigDecimal.ZERO.setScale(2, RoundingMode.HALF_EVEN);
 
-		BigDecimal taxableAmount_0=BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-		BigDecimal taxAmount_0=BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		BigDecimal taxableAmount_0=BigDecimal.ZERO.setScale(2, RoundingMode.HALF_EVEN);
+		BigDecimal taxAmount_0=BigDecimal.ZERO.setScale(2, RoundingMode.HALF_EVEN);
 
-		BigDecimal taxableAmount_E=BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-		BigDecimal taxAmount_E=BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		BigDecimal taxableAmount_E=BigDecimal.ZERO.setScale(2, RoundingMode.HALF_EVEN);
+		BigDecimal taxAmount_E=BigDecimal.ZERO.setScale(2, RoundingMode.HALF_EVEN);
 
 		if (invoice.getInvoiceLineItems() != null) {
 
@@ -914,16 +897,16 @@ public class InvoiceRestHelper {
 				if (invoiceLineItem.getUnitPrice()!= null) {
 
 					if(invoiceLineItem.getVatCategory()!=null && invoiceLineItem.getVatCategory().getId()==1) {
-						taxAmount_5 = taxAmount_5.add(invoiceLineItem.getVatAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN));
-						taxableAmount_5 = taxableAmount_5.add(invoiceLineItem.getSubTotal().subtract(invoiceLineItem.getVatAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						taxAmount_5 = taxAmount_5.add(invoiceLineItem.getVatAmount().setScale(2, RoundingMode.HALF_EVEN));
+						taxableAmount_5 = taxableAmount_5.add(invoiceLineItem.getSubTotal().subtract(invoiceLineItem.getVatAmount()).setScale(2, RoundingMode.HALF_EVEN));
 					}
 					if(invoiceLineItem.getVatCategory()!=null && invoiceLineItem.getVatCategory().getId()==2) {
-						taxAmount_0 = taxAmount_0.add(invoiceLineItem.getVatAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN));
-						taxableAmount_0 = taxableAmount_0.add(invoiceLineItem.getSubTotal().subtract(invoiceLineItem.getVatAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						taxAmount_0 = taxAmount_0.add(invoiceLineItem.getVatAmount().setScale(2, RoundingMode.HALF_EVEN));
+						taxableAmount_0 = taxableAmount_0.add(invoiceLineItem.getSubTotal().subtract(invoiceLineItem.getVatAmount()).setScale(2, RoundingMode.HALF_EVEN));
 					}
 					if(invoiceLineItem.getVatCategory()!=null && invoiceLineItem.getVatCategory().getId()==3) {
-						taxAmount_E = taxAmount_E.add(invoiceLineItem.getVatAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN));
-						taxableAmount_E = taxableAmount_E.add(invoiceLineItem.getSubTotal().subtract(invoiceLineItem.getVatAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						taxAmount_E = taxAmount_E.add(invoiceLineItem.getVatAmount().setScale(2, RoundingMode.HALF_EVEN));
+						taxableAmount_E = taxableAmount_E.add(invoiceLineItem.getSubTotal().subtract(invoiceLineItem.getVatAmount()).setScale(2, RoundingMode.HALF_EVEN));
 					}
 
 				}
@@ -1077,9 +1060,6 @@ public class InvoiceRestHelper {
 		}
 	}
 
-////		emailBody = emailBody.replace(productRow,productRowBuilder.toString());
-////		invoiceEmailBody.setValue(emailBodyBuilder.toString());
-
 	private String updateInvoiceLineItem(int size, MailThemeTemplates invoiceEmailBody) {
 
 		String productRow="<tr><td style=\"word-wrap: break-word; width: 25%;max-width:20px;\"><b>{product} </b><br> {description}</td><td style=\"text-align:center\">{quantity}</td><td style=\"text-align:center\">{unitType}</td><td style=\"text-align:right\">{unitPrice}</td><td style=\"text-align:right\">{discount}</td><td style=\"text-align:center\">{invoiceLineItemExciseTax}</td><td style=\"text-align:right\">{exciseAmount}</td><td style=\"text-align:center\">{vatType}</td><td style=\"text-align:right\">{invoiceLineItemVatAmount}</td><td style=\"text-align:right\">{subTotal}</td></tr>" ;
@@ -1099,11 +1079,7 @@ public class InvoiceRestHelper {
 					"</tr>");
 		}
 
-		/*for (int row=1;row<size;row++){
-			taxRowBuilder.append("<tr><td style=\"text-align:left\">{vatCategory"+ row +"}</td><td style=\"text-align:center\">{currency} {unitPrice"+ row +"}</td><td style=\"text-align:center\">{currency} {invoiceLineItemVatAmount"+ row +"}</td></tr>");
-		}*/
-
-		String htmlText="";
+			String htmlText="";
 
 		try {
 			byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX+invoiceEmailBody.getPath()).getURI()));
@@ -1225,7 +1201,7 @@ public class InvoiceRestHelper {
 					break;
 				case MailUtility.EXCHANGE_RATE:
 					if (invoice.getExchangeRate() != null && invoice.getExchangeRate().compareTo(BigDecimal.ONE) > 0) {
-						invoiceDataMap.put(value, invoice.getExchangeRate().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+						invoiceDataMap.put(value, invoice.getExchangeRate().setScale(2, RoundingMode.HALF_EVEN).toString());
 					} else {
 						invoiceDataMap.put(value, "---");
 					}
@@ -1298,7 +1274,7 @@ public class InvoiceRestHelper {
 					break;
 				case MailUtility.INVOICE_AMOUNT:
 					if (invoice.getTotalAmount() != null) {
-						invoiceDataMap.put(value, invoice.getTotalAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+						invoiceDataMap.put(value, invoice.getTotalAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 					} else {
 						invoiceDataMap.put(value, "---");
 					}
@@ -1313,7 +1289,7 @@ public class InvoiceRestHelper {
 				case MailUtility.CN_AMOUNT:
 					CreditNote creditNote = creditNoteRepository.findByInvoiceIdAndDeleteFlag(invoice.getId(),false);
 					if(creditNote!=null && creditNote.getTotalAmount()!=null){
-						invoiceDataMap.put(value, creditNote.getTotalAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+						invoiceDataMap.put(value, creditNote.getTotalAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 					} else {
 						invoiceDataMap.put(value, "---");
 					}
@@ -1348,7 +1324,7 @@ public class InvoiceRestHelper {
 
 				case MailUtility.DUE_AMOUNT:
 					if (invoice.getDueAmount() != null) {
-						invoiceDataMap.put(value, invoice.getDueAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+						invoiceDataMap.put(value, invoice.getDueAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 					} else {
 						invoiceDataMap.put(value, "---");
 					}
@@ -1621,7 +1597,7 @@ public class InvoiceRestHelper {
 			for(InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()){
 				if (invoiceLineItem.getUnitPrice()!= null) {
 					if(invoiceLineItem.getVatCategory()!=null && invoiceLineItem.getVatCategory().getId()==1)
-						taxableAmount=taxableAmount.add( invoiceLineItem.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						taxableAmount=taxableAmount.add( invoiceLineItem.getUnitPrice().setScale(2, RoundingMode.HALF_EVEN));
 				}
 			}
 			invoiceDataMap.put(value, taxableAmount.toString());
@@ -1634,7 +1610,7 @@ public class InvoiceRestHelper {
 			for(InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()){
 				if (invoiceLineItem.getUnitPrice()!= null ) {
 					if(invoiceLineItem.getVatCategory()!=null && invoiceLineItem.getVatCategory().getId()==1)
-						taxAmount=taxAmount.add( invoiceLineItem.getVatAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN));
+						taxAmount=taxAmount.add( invoiceLineItem.getVatAmount().setScale(2, RoundingMode.HALF_EVEN));
 				}
 			}
 			invoiceDataMap.put(value, taxAmount.toString());
@@ -1649,11 +1625,11 @@ public class InvoiceRestHelper {
 				if (invoiceLineItem.getExciseCategory()!= null) {
 					if (row==0){
 						row++;
-//						invoiceDataMap.put(value, invoiceLineItem.getUnitPrice().toString() );
+
 						invoiceDataMap.put(value, invoiceLineItem.getExciseCategory().getName());
 					}
 					else {
-//						invoiceDataMap.put("{unitPrice"+row+"}", invoiceLineItem.getUnitPrice().toString());
+
 						invoiceDataMap.put("{invoiceLineItemExciseTax"+row+"}", invoiceLineItem.getExciseCategory().getName());
 						row++;
 					}
@@ -1704,7 +1680,7 @@ public class InvoiceRestHelper {
 
 	private void getTotalExciseAmount(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		if (invoice.getTotalExciseAmount() != null) {
-			invoiceDataMap.put(value, invoice.getTotalExciseAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+			invoiceDataMap.put(value, invoice.getTotalExciseAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 		}
 		else{
 			invoiceDataMap.put(value, "---");
@@ -1713,7 +1689,7 @@ public class InvoiceRestHelper {
 	private void getCnTotalExciseAmount(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		CreditNote creditNote = creditNoteRepository.findByInvoiceIdAndDeleteFlag(invoice.getId(),false);
 		if (creditNote!=null && creditNote.getTotalExciseAmount() != null) {
-			invoiceDataMap.put(value, creditNote.getTotalExciseAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+			invoiceDataMap.put(value, creditNote.getTotalExciseAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 		}
 		else{
 			invoiceDataMap.put(value, "---");
@@ -1727,12 +1703,12 @@ public class InvoiceRestHelper {
 				if (invoiceLineItem.getVatAmount()!= null ) {
 					if (row==0){
 						row++;
-//						invoiceDataMap.put(value, invoiceLineItem.getUnitPrice().toString() );
-						invoiceDataMap.put(value, invoiceLineItem.getVatAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+
+						invoiceDataMap.put(value, invoiceLineItem.getVatAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 					}
 					else {
-//						invoiceDataMap.put("{unitPrice"+row+"}", invoiceLineItem.getUnitPrice().toString());
-						invoiceDataMap.put("{invoiceLineItemVatAmount"+row+"}", invoiceLineItem.getVatAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+
+						invoiceDataMap.put("{invoiceLineItemVatAmount"+row+"}", invoiceLineItem.getVatAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 						row++;
 					}
 
@@ -1750,10 +1726,10 @@ public class InvoiceRestHelper {
 				if (creditNoteLineItem.getVatAmount()!= null ) {
 					if (row==0){
 						row++;
-						invoiceDataMap.put(value, creditNoteLineItem.getVatAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+						invoiceDataMap.put(value, creditNoteLineItem.getVatAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 					}
 					else {
-						invoiceDataMap.put("{CnVatAmount"+row+"}", creditNoteLineItem.getVatAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+						invoiceDataMap.put("{CnVatAmount"+row+"}", creditNoteLineItem.getVatAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 						row++;
 					}
 
@@ -2061,7 +2037,7 @@ public class InvoiceRestHelper {
 			Currency currency = contact.getCurrency();
 			CurrencyConversion currencyConversion = currencyConversionRepository.findByCurrencyCode(currency);
 			if(currencyConversion.getExchangeRate().compareTo(BigDecimal.ONE) > 0) {
-				invoiceDataMap.put(value, currencyConversion.getExchangeRate().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+				invoiceDataMap.put(value, currencyConversion.getExchangeRate().setScale(2, RoundingMode.HALF_EVEN).toString());
 			}
 			else{
 				invoiceDataMap.put(value, "---");
@@ -2215,12 +2191,12 @@ public class InvoiceRestHelper {
 				if (invoiceLineItem.getUnitPrice()!= null) {
 					if (row==0){
 						row++;
-//						invoiceDataMap.put(value, invoiceLineItem.getUnitPrice().toString() );
-						invoiceDataMap.put(value, invoiceLineItem.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+
+						invoiceDataMap.put(value, invoiceLineItem.getUnitPrice().setScale(2, RoundingMode.HALF_EVEN).toString());
 					}
 					else {
-//						invoiceDataMap.put("{unitPrice"+row+"}", invoiceLineItem.getUnitPrice().toString());
-						invoiceDataMap.put("{unitPrice"+row+"}", invoiceLineItem.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+
+						invoiceDataMap.put("{unitPrice"+row+"}", invoiceLineItem.getUnitPrice().setScale(2, RoundingMode.HALF_EVEN).toString());
 						row++;
 					}
 
@@ -2239,10 +2215,10 @@ public class InvoiceRestHelper {
 				if (creditNoteLineItem.getUnitPrice()!= null) {
 					if (row==0){
 						row++;
-						invoiceDataMap.put(value, creditNoteLineItem.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+						invoiceDataMap.put(value, creditNoteLineItem.getUnitPrice().setScale(2, RoundingMode.HALF_EVEN).toString());
 					}
 					else {
-						invoiceDataMap.put("{cnUnitPrice"+row+"}", creditNoteLineItem.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+						invoiceDataMap.put("{cnUnitPrice"+row+"}", creditNoteLineItem.getUnitPrice().setScale(2, RoundingMode.HALF_EVEN).toString());
 						row++;
 					}
 
@@ -2264,14 +2240,14 @@ public class InvoiceRestHelper {
 					if (invoiceLineItem.getDiscount()!= null) {
 						if (row==0){
 							row++;
-//						invoiceDataMap.put(value, invoiceLineItem.getExciseAmount().toString() );
+
 							String percentagesymbol=invoiceLineItem.getDiscountType().equals(DiscountType.PERCENTAGE) ==true ?"%":"";
-							invoiceDataMap.put(value, invoiceLineItem.getDiscount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString() +percentagesymbol);
+							invoiceDataMap.put(value, invoiceLineItem.getDiscount().setScale(2, RoundingMode.HALF_EVEN).toString() +percentagesymbol);
 						}
 						else {
-//						invoiceDataMap.put("{getExciseAmount"+row+"}", invoiceLineItem.getExciseAmount().toString());
+
 							String percentagesymbol=invoiceLineItem.getDiscountType().equals(DiscountType.PERCENTAGE) ==true ?"%":"";
-							invoiceDataMap.put("{discount"+row+"}", invoiceLineItem.getDiscount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString()+percentagesymbol);
+							invoiceDataMap.put("{discount"+row+"}", invoiceLineItem.getDiscount().setScale(2, RoundingMode.HALF_EVEN).toString()+percentagesymbol);
 							row++;
 						}
 
@@ -2296,10 +2272,10 @@ public class InvoiceRestHelper {
 							if (row == 0) {
 								row++;
 								String percentagesymbol = creditNoteLineItem.getDiscountType().equals(DiscountType.PERCENTAGE) == true ? "%" : "";
-								invoiceDataMap.put(value, creditNoteLineItem.getDiscount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString() + percentagesymbol);
+								invoiceDataMap.put(value, creditNoteLineItem.getDiscount().setScale(2, RoundingMode.HALF_EVEN).toString() + percentagesymbol);
 							} else {
 								String percentagesymbol = creditNoteLineItem.getDiscountType().equals(DiscountType.PERCENTAGE) == true ? "%" : "";
-								invoiceDataMap.put("{Cndiscount" + row + "}", creditNoteLineItem.getDiscount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString() + percentagesymbol);
+								invoiceDataMap.put("{Cndiscount" + row + "}", creditNoteLineItem.getDiscount().setScale(2, RoundingMode.HALF_EVEN).toString() + percentagesymbol);
 								row++;
 							}
 
@@ -2320,12 +2296,12 @@ public class InvoiceRestHelper {
 				if (invoiceLineItem.getExciseAmount()!= null) {
 					if (row==0){
 						row++;
-//						invoiceDataMap.put(value, invoiceLineItem.getExciseAmount().toString() );
-						invoiceDataMap.put(value, invoiceLineItem.getExciseAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+
+						invoiceDataMap.put(value, invoiceLineItem.getExciseAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 					}
 					else {
-//						invoiceDataMap.put("{getExciseAmount"+row+"}", invoiceLineItem.getExciseAmount().toString());
-						invoiceDataMap.put("{exciseAmount"+row+"}", invoiceLineItem.getExciseAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+
+						invoiceDataMap.put("{exciseAmount"+row+"}", invoiceLineItem.getExciseAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 						row++;
 					}
 
@@ -2344,10 +2320,10 @@ public class InvoiceRestHelper {
 				if (creditNoteLineItem.getExciseAmount()!= null) {
 					if (row==0){
 						row++;
-						invoiceDataMap.put(value, creditNoteLineItem.getExciseAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+						invoiceDataMap.put(value, creditNoteLineItem.getExciseAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 					}
 					else {
-						invoiceDataMap.put("{CnexciseAmount"+row+"}", creditNoteLineItem.getExciseAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+						invoiceDataMap.put("{CnexciseAmount"+row+"}", creditNoteLineItem.getExciseAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 						row++;
 					}
 
@@ -2368,7 +2344,7 @@ public class InvoiceRestHelper {
 	}
 	private void getInvoiceVatAmount(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		if (invoice.getTotalVatAmount() != null) {
-			invoiceDataMap.put(value, invoice.getTotalVatAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+			invoiceDataMap.put(value, invoice.getTotalVatAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 		}
 		else{
 			invoiceDataMap.put(value, "---");
@@ -2377,7 +2353,7 @@ public class InvoiceRestHelper {
 	private void getCreditNoteVatAmount(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		CreditNote creditNote = creditNoteRepository.findByInvoiceIdAndDeleteFlag(invoice.getId(),false);
 		if (creditNote!=null && creditNote.getTotalVatAmount() != null) {
-			invoiceDataMap.put(value, creditNote.getTotalVatAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+			invoiceDataMap.put(value, creditNote.getTotalVatAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 		}
 		else{
 			invoiceDataMap.put(value, "---");
@@ -2429,7 +2405,7 @@ public class InvoiceRestHelper {
 	}
 	private void getTotal(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		if (invoice.getTotalAmount() != null) {
-			invoiceDataMap.put(value, invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+			invoiceDataMap.put(value, invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()).setScale(2, RoundingMode.HALF_EVEN).toString());
 		}
 		else{
 			invoiceDataMap.put(value, "---");
@@ -2438,7 +2414,7 @@ public class InvoiceRestHelper {
 	private void getCnTotal(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		CreditNote creditNote = creditNoteRepository.findByInvoiceIdAndDeleteFlag(invoice.getId(),false);
 		if (creditNote!=null && creditNote.getTotalAmount() != null) {
-			invoiceDataMap.put(value, creditNote.getTotalAmount().subtract(creditNote.getTotalAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+			invoiceDataMap.put(value, creditNote.getTotalAmount().subtract(creditNote.getTotalAmount()).setScale(2, RoundingMode.HALF_EVEN).toString());
 		}
 		else{
 			invoiceDataMap.put(value, "---");
@@ -2446,7 +2422,7 @@ public class InvoiceRestHelper {
 	}
 	private void getCreditNoteTotalAmount(CreditNote creditNote, Map<String, String> invoiceDataMap, String value) {
 		if (creditNote.getTotalAmount() != null) {
-			invoiceDataMap.put(value, creditNote.getTotalAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+			invoiceDataMap.put(value, creditNote.getTotalAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
 		}
 		else{
 			invoiceDataMap.put(value, "---");
@@ -2455,7 +2431,7 @@ public class InvoiceRestHelper {
 
 	private void getTotalNet(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		if (invoice.getTotalAmount() != null) {
-			invoiceDataMap.put(value, invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()).subtract(invoice.getTotalExciseAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+			invoiceDataMap.put(value, invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()).subtract(invoice.getTotalExciseAmount()).setScale(2, RoundingMode.HALF_EVEN).toString());
 		}
 		else{
 			invoiceDataMap.put(value, "---");
@@ -2471,10 +2447,10 @@ public class InvoiceRestHelper {
 				if (invoiceLineItem.getSubTotal() != null) {
 					if (row==0){
 						row++;
-						invoiceDataMap.put(value,  invoiceLineItem.getSubTotal().setScale(2, BigDecimal.ROUND_HALF_EVEN)+"" );
+						invoiceDataMap.put(value,  invoiceLineItem.getSubTotal().setScale(2, RoundingMode.HALF_EVEN)+"" );
 					}
 					else {
-						invoiceDataMap.put("{subTotal"+row+"}",  invoiceLineItem.getSubTotal().setScale(2, BigDecimal.ROUND_HALF_EVEN)+"");
+						invoiceDataMap.put("{subTotal"+row+"}",  invoiceLineItem.getSubTotal().setScale(2, RoundingMode.HALF_EVEN)+"");
 						row++;
 					}
 
@@ -2495,10 +2471,10 @@ public class InvoiceRestHelper {
 				if (creditNoteLineItem.getSubTotal() != null) {
 					if (row==0){
 						row++;
-						invoiceDataMap.put(value,  creditNoteLineItem.getSubTotal().setScale(2, BigDecimal.ROUND_HALF_EVEN)+"" );
+						invoiceDataMap.put(value,  creditNoteLineItem.getSubTotal().setScale(2, RoundingMode.HALF_EVEN)+"" );
 					}
 					else {
-						invoiceDataMap.put("{CnsubTotal"+row+"}",  creditNoteLineItem.getSubTotal().setScale(2, BigDecimal.ROUND_HALF_EVEN)+"");
+						invoiceDataMap.put("{CnsubTotal"+row+"}",  creditNoteLineItem.getSubTotal().setScale(2, RoundingMode.HALF_EVEN)+"");
 						row++;
 					}
 				}
@@ -2591,9 +2567,9 @@ public class InvoiceRestHelper {
 	}
 	private void getCreditNoteDate(CreditNote creditNote, Map<String, String> invoiceDataMap, String value) {
 		if (creditNote.getCreditNoteDate() != null) {
-//			Date date = Date.from(creditNote.getCreditNoteDate().toInstant());
+
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-			invoiceDataMap.put(value, creditNote.getCreditNoteDate().toLocalDate().format(formatter).toString());
+				invoiceDataMap.put(value, creditNote.getCreditNoteDate().toLocalDate().format(formatter));
 		}
 		else{
 			invoiceDataMap.put(value, "---");
@@ -2668,7 +2644,6 @@ public class InvoiceRestHelper {
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		Invoice invoice = invoiceService.findByPK(postingRequestModel.getPostingRefId());
-//		CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(invoice.getCurrency().getCurrencyCode());
 
 		boolean isCustomerInvoice = InvoiceTypeConstant.isCustomerInvoice(invoice.getType());
 
@@ -2681,13 +2656,12 @@ public class InvoiceRestHelper {
 		    map.put("deleteFlag",Boolean.FALSE);
 			ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryService.findByAttributes(map).get(0);
 		journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
-//		BigDecimal amountWithoutDiscount = invoice.getTotalAmount().subtract(invoice.getDiscount());
+
 		BigDecimal amountWithoutDiscount = invoice.getTotalAmount();
 		if (isCustomerInvoice)
-			//journalLineItem1.setDebitAmount(invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()));
 
 			journalLineItem1.setDebitAmount(amountWithoutDiscount.multiply(invoice.getExchangeRate()));
-//			journalLineItem1.setDebitAmount(invoice.getTotalAmount().divide(invoice.getExchangeRate(), 2, RoundingMode.HALF_UP));
+
 		else
 
 		if (invoice.getIsReverseChargeEnabled().equals(Boolean.TRUE)){
@@ -2712,8 +2686,8 @@ public class InvoiceRestHelper {
 		Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap = new HashMap<>();
 		Map<Integer, TransactionCategory> tnxcatMap = new HashMap<>();
 		customerInvoice(isCustomerInvoice, invoiceLineItemList, tnxcatIdInvLnItemMap, tnxcatMap,userId);
-		Boolean isEligibleForInventoryAssetJournalEntry = false;
-		Boolean isEligibleForInventoryJournalEntry = false;
+			boolean isEligibleForInventoryAssetJournalEntry = false;
+			boolean isEligibleForInventoryJournalEntry = false;
 		BigDecimal inventoryAssetValue = BigDecimal.ZERO;
 		BigDecimal sumOfInventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
 		for (Integer categoryId : tnxcatIdInvLnItemMap.keySet()) {
@@ -2742,9 +2716,9 @@ public class InvoiceRestHelper {
 				else {
 					totalAmount = totalAmount.add(amntWithoutVat);
 				}
-				if	(sortedLineItem.getProduct().getIsInventoryEnabled() !=null&&sortedLineItem.getProduct().getIsInventoryEnabled()  && isCustomerInvoice){
-					List<Inventory> inventoryList = inventoryService.getInventoryByProductId(sortedLineItem.getProduct().
-							getProductID());
+					if (Boolean.TRUE.equals(sortedLineItem.getProduct().getIsInventoryEnabled()) && isCustomerInvoice){
+						List<Inventory> inventoryList = inventoryService.getInventoryByProductId(sortedLineItem.getProduct().
+								getProductID());
 
 					if (sortedLineItem.getProduct().getAvgPurchaseCost()!=null) {
 						inventoryAssetValuePerTransactionCategory = inventoryAssetValuePerTransactionCategory.add(BigDecimal.
@@ -2759,7 +2733,7 @@ public class InvoiceRestHelper {
 
 						}
 					}
-					//		}
+
 					purchaseCategory = sortedLineItem.getTrnsactioncCategory() != null ? sortedLineItem.getTrnsactioncCategory()
 							: sortedLineItem.getProduct().getLineItemList().stream()
 							.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
@@ -2800,10 +2774,10 @@ public class InvoiceRestHelper {
 			journalLineItem.setTransactionCategory(tnxcatMap.get(categoryId));
 			totalAmount = totalAmount.add(lineItemDiscount);
 			if (isCustomerInvoice)
-				//journalLineItem.setCreditAmount(totalAmount.multiply(invoice.getExchangeRate()));
+
 				journalLineItem.setCreditAmount(totalAmount.multiply(invoice.getExchangeRate()));
 			else
-				//	journalLineItem.setDebitAmount(totalAmount.multiply(invoice.getExchangeRate()));
+
 				journalLineItem.setDebitAmount(totalAmount.multiply(invoice.getExchangeRate()));
 			journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
 			journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
@@ -2845,7 +2819,7 @@ public class InvoiceRestHelper {
 		}
 		if((invoice.getTotalVatAmount() != null) && (invoice.getTotalVatAmount().compareTo(BigDecimal.ZERO) != 0 ))
 		{
-		//	if (invoice.getTotalVatAmount().compareTo(BigDecimal.ZERO) > 0 ) {
+
 				JournalLineItem journalLineItem = new JournalLineItem();
 				TransactionCategory inputVatCategory = transactionCategoryService
 						.findTransactionCategoryByTransactionCategoryCode(
@@ -2854,7 +2828,7 @@ public class InvoiceRestHelper {
 				journalLineItem.setTransactionCategory(inputVatCategory);
 				if (isCustomerInvoice)
 					journalLineItem.setCreditAmount(invoice.getTotalVatAmount().multiply(invoice.getExchangeRate()));
-					//journalLineItem.setCreditAmount(invoice.getTotalVatAmount().divide(invoice.getExchangeRate(), 2, RoundingMode.HALF_UP));
+
 				else
 					journalLineItem.setDebitAmount(invoice.getTotalVatAmount().multiply(invoice.getExchangeRate()));
 				journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
@@ -2876,12 +2850,12 @@ public class InvoiceRestHelper {
 					reverseChargeJournalLineItem.setJournal(journal);
 					journalLineItemList.add(reverseChargeJournalLineItem);
 				}
-	//		}
+
 		}
-		if(invoice.getDiscount().compareTo(BigDecimal.ZERO) == 1 && invoice.getDiscount()!=null) {
-			JournalLineItem journalLineItem = new JournalLineItem();
-			if (invoice.getType()==2) {
-				journalLineItem.setDebitAmount(invoice.getDiscount().multiply(invoice.getExchangeRate()));
+			if (invoice.getDiscount() != null && invoice.getDiscount().compareTo(BigDecimal.ZERO) > 0) {
+				JournalLineItem journalLineItem = new JournalLineItem();
+				if (invoice.getType()==2) {
+					journalLineItem.setDebitAmount(invoice.getDiscount().multiply(invoice.getExchangeRate()));
 				journalLineItem.setTransactionCategory(transactionCategoryService
 						.findTransactionCategoryByTransactionCategoryCode(
 								TransactionCategoryCodeEnum.SALES_DISCOUNT.getCode()));
@@ -2911,7 +2885,7 @@ public class InvoiceRestHelper {
 				journalLineItem.setTransactionCategory(inputExciseCategory);
 				if (isCustomerInvoice)
 					journalLineItem.setCreditAmount(invoice.getTotalExciseAmount().multiply(invoice.getExchangeRate()));
-				//	journalLineItem.setCreditAmount(invoice.getTotalExciseAmount().divide(invoice.getExchangeRate(), 2, RoundingMode.HALF_UP));
+
 				else
 					journalLineItem.setDebitAmount(invoice.getTotalExciseAmount().multiply(invoice.getExchangeRate()));
 				journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
@@ -2946,10 +2920,10 @@ public class InvoiceRestHelper {
 		for (InvoiceLineItem lineItem : invoiceLineItemList) {
 
 			Product product=productService.findByPK(lineItem.getProduct().getProductID());
-			if(product.getIsInventoryEnabled() != null && product.getIsInventoryEnabled() )
-			{
-				if(lineItem.getInvoice().getType() ==2){
-					handleCustomerInvoiceInventory(lineItem,product,userId);
+				if(Boolean.TRUE.equals(product.getIsInventoryEnabled()))
+				{
+					if(lineItem.getInvoice().getType() ==2){
+						handleCustomerInvoiceInventory(lineItem,product,userId);
 				}
 				else {
 					handleSupplierInvoiceInventory(lineItem,product,lineItem.getInvoice().getContact(),userId);
@@ -2959,11 +2933,11 @@ public class InvoiceRestHelper {
 				category = lineItem.getProduct().getLineItemList().stream()
 						.filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().get()
 						.getTransactioncategory();
-			else if(lineItem.getProduct().getIsInventoryEnabled()!=null && lineItem.getProduct().getIsInventoryEnabled())
-			{
-				category = transactionCategoryService
-						.findTransactionCategoryByTransactionCategoryCode(
-								TransactionCategoryCodeEnum.INVENTORY_ASSET.getCode());
+				else if(Boolean.TRUE.equals(lineItem.getProduct().getIsInventoryEnabled()))
+				{
+					category = transactionCategoryService
+							.findTransactionCategoryByTransactionCategoryCode(
+									TransactionCategoryCodeEnum.INVENTORY_ASSET.getCode());
 			}
 			else {
 				category =  lineItem.getProduct().getLineItemList().stream()
@@ -3050,7 +3024,7 @@ public class InvoiceRestHelper {
 		return customizeInvoiceTemplateResponseModdelList;
 	}
 	public Boolean doesInvoiceNumberExist(String referenceNumber){
-		Map<String, Object> attribute = new HashMap<String, Object>();
+		Map<String, Object> attribute = new HashMap<>();
 		attribute.put("referenceNumber", referenceNumber);
 		attribute.put("deleteFlag",false);
 		List<Invoice> invoiceList = invoiceService.findByAttributes(attribute);
@@ -3187,7 +3161,6 @@ public class InvoiceRestHelper {
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		Invoice invoice = invoiceService.findByPK(postingRequestModel.getPostingRefId());
-//		CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(invoice.getCurrency().getCurrencyCode());
 
 		boolean isCustomerInvoice = InvoiceTypeConstant.isCustomerInvoice(invoice.getType());
 
@@ -3200,13 +3173,12 @@ public class InvoiceRestHelper {
 		map.put("deleteFlag",Boolean.FALSE);
 		ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryService.findByAttributes(map).get(0);
 		journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
-//		BigDecimal amountWithoutDiscount = invoice.getTotalAmount().subtract(invoice.getDiscount());
+
 		BigDecimal amountWithoutDiscount = invoice.getTotalAmount();
 		if (isCustomerInvoice)
-			//journalLineItem1.setDebitAmount(invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()));
 
 			journalLineItem1.setCreditAmount(amountWithoutDiscount.multiply(invoice.getExchangeRate()));
-//			journalLineItem1.setDebitAmount(invoice.getTotalAmount().divide(invoice.getExchangeRate(), 2, RoundingMode.HALF_UP));
+
 		else
 
 			if (invoice.getIsReverseChargeEnabled().equals(Boolean.TRUE)){
@@ -3231,8 +3203,8 @@ public class InvoiceRestHelper {
 		Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap = new HashMap<>();
 		Map<Integer, TransactionCategory> tnxcatMap = new HashMap<>();
 		reverseCustomerInvoice(isCustomerInvoice, invoiceLineItemList, tnxcatIdInvLnItemMap, tnxcatMap,userId);
-		Boolean isEligibleForInventoryAssetJournalEntry = false;
-		Boolean isEligibleForInventoryJournalEntry = false;
+			boolean isEligibleForInventoryAssetJournalEntry = false;
+			boolean isEligibleForInventoryJournalEntry = false;
 		BigDecimal inventoryAssetValue = BigDecimal.ZERO;
 		BigDecimal sumOfInventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
 		for (Integer categoryId : tnxcatIdInvLnItemMap.keySet()) {
@@ -3262,9 +3234,9 @@ public class InvoiceRestHelper {
 
 					totalAmount = totalAmount.add(amntWithoutVat);
 				}
-				if	(sortedLineItem.getProduct().getIsInventoryEnabled() !=null&&sortedLineItem.getProduct().getIsInventoryEnabled()  && isCustomerInvoice){
-					List<Inventory> inventoryList = inventoryService.getInventoryByProductId(sortedLineItem.getProduct().
-							getProductID());
+					if (Boolean.TRUE.equals(sortedLineItem.getProduct().getIsInventoryEnabled()) && isCustomerInvoice){
+						List<Inventory> inventoryList = inventoryService.getInventoryByProductId(sortedLineItem.getProduct().
+								getProductID());
 
 					if (sortedLineItem.getProduct().getAvgPurchaseCost()!=null) {
 						inventoryAssetValuePerTransactionCategory = inventoryAssetValuePerTransactionCategory.add(BigDecimal.
@@ -3279,7 +3251,7 @@ public class InvoiceRestHelper {
 
 						}
 					}
-					//		}
+
 					purchaseCategory = sortedLineItem.getTrnsactioncCategory() != null ? sortedLineItem.getTrnsactioncCategory()
 							: sortedLineItem.getProduct().getLineItemList().stream()
 							.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
@@ -3320,10 +3292,10 @@ public class InvoiceRestHelper {
 			journalLineItem.setTransactionCategory(tnxcatMap.get(categoryId));
 			totalAmount = totalAmount.add(lineItemDiscount);
 			if (isCustomerInvoice)
-				//journalLineItem.setCreditAmount(totalAmount.multiply(invoice.getExchangeRate()));
+
 				journalLineItem.setDebitAmount(totalAmount.multiply(invoice.getExchangeRate()));
 			else
-				//	journalLineItem.setDebitAmount(totalAmount.multiply(invoice.getExchangeRate()));
+
 				journalLineItem.setCreditAmount(totalAmount.multiply(invoice.getExchangeRate()));
 			journalLineItem.setReferenceType(PostingReferenceTypeEnum.REVERSE_INVOICE);
 			journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
@@ -3374,7 +3346,7 @@ public class InvoiceRestHelper {
 				journalLineItem.setTransactionCategory(inputVatCategory);
 				if (isCustomerInvoice)
 					journalLineItem.setDebitAmount(invoice.getTotalVatAmount().multiply(invoice.getExchangeRate()));
-					//journalLineItem.setCreditAmount(invoice.getTotalVatAmount().divide(invoice.getExchangeRate(), 2, RoundingMode.HALF_UP));
+
 				else
 					journalLineItem.setCreditAmount(invoice.getTotalVatAmount().multiply(invoice.getExchangeRate()));
 				journalLineItem.setReferenceType(PostingReferenceTypeEnum.REVERSE_INVOICE);
@@ -3399,10 +3371,10 @@ public class InvoiceRestHelper {
 				}
 			}
 		}
-		if(invoice.getDiscount().compareTo(BigDecimal.ZERO) == 1 && invoice.getDiscount()!=null) {
-			JournalLineItem journalLineItem = new JournalLineItem();
-			if (invoice.getType()==2) {
-				journalLineItem.setCreditAmount(invoice.getDiscount().multiply(invoice.getExchangeRate()));
+			if (invoice.getDiscount() != null && invoice.getDiscount().compareTo(BigDecimal.ZERO) > 0) {
+				JournalLineItem journalLineItem = new JournalLineItem();
+				if (invoice.getType()==2) {
+					journalLineItem.setCreditAmount(invoice.getDiscount().multiply(invoice.getExchangeRate()));
 				journalLineItem.setTransactionCategory(transactionCategoryService
 						.findTransactionCategoryByTransactionCategoryCode(
 								TransactionCategoryCodeEnum.SALES_DISCOUNT.getCode()));
@@ -3432,7 +3404,7 @@ public class InvoiceRestHelper {
 				journalLineItem.setTransactionCategory(inputExciseCategory);
 				if (isCustomerInvoice)
 					journalLineItem.setDebitAmount(invoice.getTotalExciseAmount().multiply(invoice.getExchangeRate()));
-					//	journalLineItem.setCreditAmount(invoice.getTotalExciseAmount().divide(invoice.getExchangeRate(), 2, RoundingMode.HALF_UP));
+
 				else
 					journalLineItem.setCreditAmount(invoice.getTotalExciseAmount().multiply(invoice.getExchangeRate()));
 				journalLineItem.setReferenceType(PostingReferenceTypeEnum.REVERSE_INVOICE);
@@ -3465,24 +3437,24 @@ public class InvoiceRestHelper {
 		for (InvoiceLineItem lineItem : invoiceLineItemList) {
 
 			Product product=productService.findByPK(lineItem.getProduct().getProductID());
-			if(product.getIsInventoryEnabled() != null && product.getIsInventoryEnabled() )
-			{
-				if(lineItem.getInvoice().getType() ==2){
-					//handleCustomerInvoiceInventory(lineItem,product,userId);
-				}
+				if(Boolean.TRUE.equals(product.getIsInventoryEnabled()))
+				{
+					if(lineItem.getInvoice().getType() ==2){
+
+					}
 				else {
-					//handleSupplierInvoiceInventory(lineItem,product,lineItem.getInvoice().getContact(),userId);
+
 				}
 			}
 			if (isCustomerInvoice)
 				category = lineItem.getProduct().getLineItemList().stream()
 						.filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().get()
 						.getTransactioncategory();
-			else if(lineItem.getProduct().getIsInventoryEnabled()!=null && lineItem.getProduct().getIsInventoryEnabled())
-			{
-				category = transactionCategoryService
-						.findTransactionCategoryByTransactionCategoryCode(
-								TransactionCategoryCodeEnum.INVENTORY_ASSET.getCode());
+				else if(Boolean.TRUE.equals(lineItem.getProduct().getIsInventoryEnabled()))
+				{
+					category = transactionCategoryService
+							.findTransactionCategoryByTransactionCategoryCode(
+									TransactionCategoryCodeEnum.INVENTORY_ASSET.getCode());
 			}
 			else {
 				category =  lineItem.getProduct().getLineItemList().stream()

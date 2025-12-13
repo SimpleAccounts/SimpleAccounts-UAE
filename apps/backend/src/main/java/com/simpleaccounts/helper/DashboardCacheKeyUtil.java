@@ -27,3 +27,4 @@ public final class DashboardCacheKeyUtil {
         return Math.min(Math.max(monthNo, 1), MAX_MONTHS);
     }
 }
+

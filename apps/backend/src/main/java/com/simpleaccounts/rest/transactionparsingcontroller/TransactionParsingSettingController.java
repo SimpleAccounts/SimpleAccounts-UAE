@@ -1,16 +1,28 @@
 package com.simpleaccounts.rest.transactionparsingcontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
+import com.simpleaccounts.aop.LogRequest;
+import com.simpleaccounts.constant.ExcellDelimiterEnum;
+import com.simpleaccounts.constant.dbfilter.TransactionParsingSettingFilterEnum;
+import com.simpleaccounts.criteria.enums.TransactionEnum;
+import com.simpleaccounts.entity.TransactionDataColMapping;
+import com.simpleaccounts.entity.TransactionParsingSetting;
+import com.simpleaccounts.parserengine.CsvParser;
+import com.simpleaccounts.parserengine.ExcelParser;
+import com.simpleaccounts.rest.EnumDropdownModel;
+import com.simpleaccounts.security.JwtTokenUtil;
+import com.simpleaccounts.service.TransactionParsingSettingService;
+import com.simpleaccounts.utils.FileHelper;
+import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
-import lombok.RequiredArgsConstructor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,23 +34,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.simpleaccounts.constant.dbfilter.TransactionParsingSettingFilterEnum;
-import com.simpleaccounts.criteria.enums.TransactionEnum;
-import com.simpleaccounts.entity.TransactionDataColMapping;
-import com.simpleaccounts.entity.TransactionParsingSetting;
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.constant.ExcellDelimiterEnum;
-import com.simpleaccounts.parserengine.CsvParser;
-import com.simpleaccounts.parserengine.ExcelParser;
-import com.simpleaccounts.rest.EnumDropdownModel;
-import com.simpleaccounts.security.JwtTokenUtil;
-import com.simpleaccounts.service.TransactionParsingSettingService;
-import com.simpleaccounts.utils.FileHelper;
-
-import io.swagger.annotations.ApiOperation;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping(value = "/rest/transactionParsing")
@@ -70,15 +65,18 @@ public class TransactionParsingSettingController {
 			dataMap = csvParser.parseSmaple(model);
 			break;
 
-		case "xlsx":
-		case "xlx":
-			case "xls":
-			dataMap = excelParser.parseSmaple(model);
-			break;
+			case "xlsx":
+			case "xlx":
+				case "xls":
+				dataMap = excelParser.parseSmaple(model);
+				break;
+			default:
+				// Unsupported file extension.
+				break;
 
-		}
-		if (dataMap == null) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			if (dataMap == null) {
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(dataMap, HttpStatus.OK);
 	}

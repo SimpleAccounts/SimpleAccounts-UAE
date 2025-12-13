@@ -40,9 +40,9 @@ public class ExcelUtil {
 				LOGGER.error("Error", e);
 			}
 
-			Map<Integer, String> indexHeaderMap = new HashMap<Integer, String>();
-			Map<Integer, List<String>> indexDateMap = new HashMap<Integer, List<String>>();
-			Map<String, List<String>> excelDateMap = new LinkedHashMap<String, List<String>>();
+				Map<Integer, String> indexHeaderMap = new HashMap<>();
+				Map<Integer, List<String>> indexDateMap = new HashMap<>();
+				Map<String, List<String>> excelDateMap = new LinkedHashMap<>();
 
 			// Creating a Workbook from an Excel file (.xls or .xlsx)
 			try (Workbook workbook = WorkbookFactory.create(file)) {
@@ -85,6 +85,6 @@ public class ExcelUtil {
 			}
 
 		}
-		return new HashMap<String, List<String>>();
+			return new HashMap<>();
 	}
 }

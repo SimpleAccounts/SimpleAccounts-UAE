@@ -1,7 +1,6 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.InventoryFilterEnum;
@@ -12,15 +11,14 @@ import com.simpleaccounts.entity.Product;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.productcontroller.InventoryListModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 /**
  * Created By Zain Khan On 24-02-2021

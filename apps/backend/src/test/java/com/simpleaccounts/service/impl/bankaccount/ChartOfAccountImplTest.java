@@ -1,11 +1,7 @@
 package com.simpleaccounts.service.impl.bankaccount;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,7 +18,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -74,9 +69,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.getChartOfAccountByCriteria(testCriteria);
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(1);
-        assertThat(result).containsExactly(testChartOfAccount);
+        assertThat(result).isNotNull().hasSize(1).containsExactly(testChartOfAccount);
         verify(chartOfAccountDao, times(1)).filter(any(ChartOfAccountFilter.class));
     }
 
@@ -86,8 +79,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.getChartOfAccountByCriteria(testCriteria);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
         verify(chartOfAccountDao, times(1)).filter(any(ChartOfAccountFilter.class));
     }
 
@@ -108,9 +100,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.getChartOfAccountByCriteria(testCriteria);
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(3);
-        assertThat(result).containsExactly(testChartOfAccount, account2, account3);
+        assertThat(result).isNotNull().hasSize(3).containsExactly(testChartOfAccount, account2, account3);
         verify(chartOfAccountDao, times(1)).filter(any(ChartOfAccountFilter.class));
     }
 
@@ -132,8 +122,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.getChartOfAccountByCriteria(testCriteria);
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(1);
+        assertThat(result).isNotNull().hasSize(1);
         verify(chartOfAccountDao, times(1)).filter(any(ChartOfAccountFilter.class));
     }
 
@@ -280,9 +269,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.findAll();
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
-        assertThat(result).containsExactly(testChartOfAccount, account2);
+        assertThat(result).isNotNull().hasSize(2).containsExactly(testChartOfAccount, account2);
         verify(chartOfAccountDao, times(1)).findAll();
     }
 
@@ -292,8 +279,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.findAll();
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
         verify(chartOfAccountDao, times(1)).findAll();
     }
 
@@ -304,8 +290,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.findAll();
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(1);
+        assertThat(result).isNotNull().hasSize(1);
         assertThat(result.get(0).getChartOfAccountId()).isEqualTo(1);
         verify(chartOfAccountDao, times(1)).findAll();
     }
@@ -324,8 +309,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.findAll();
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(100);
+        assertThat(result).isNotNull().hasSize(100);
         assertThat(result.get(0).getChartOfAccountId()).isEqualTo(1);
         assertThat(result.get(99).getChartOfAccountId()).isEqualTo(100);
         verify(chartOfAccountDao, times(1)).findAll();
@@ -340,8 +324,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.findByText("Test");
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(1);
+        assertThat(result).isNotNull().hasSize(1);
         assertThat(result.get(0).getChartOfAccountName()).contains("Test");
         verify(chartOfAccountDao, times(1)).findByText("Test");
     }
@@ -352,8 +335,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.findByText("NonExistent");
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
         verify(chartOfAccountDao, times(1)).findByText("NonExistent");
     }
 
@@ -392,8 +374,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.findByText("Test");
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(3);
+        assertThat(result).isNotNull().hasSize(3);
         verify(chartOfAccountDao, times(1)).findByText("Test");
     }
 
@@ -457,9 +438,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.findAllChild();
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
-        assertThat(result).containsExactly(child1, child2);
+        assertThat(result).isNotNull().hasSize(2).containsExactly(child1, child2);
         verify(chartOfAccountDao, times(1)).findAllChild();
     }
 
@@ -469,8 +448,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.findAllChild();
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
         verify(chartOfAccountDao, times(1)).findAllChild();
     }
 
@@ -490,8 +468,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.findAllChild();
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(1);
+        assertThat(result).isNotNull().hasSize(1);
         assertThat(result.get(0).getParentChartOfAccount()).isNotNull();
         verify(chartOfAccountDao, times(1)).findAllChild();
     }
@@ -510,8 +487,7 @@ class ChartOfAccountImplTest {
 
         List<ChartOfAccount> result = chartOfAccountService.findAllChild();
 
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(1);
+        assertThat(result).isNotNull().hasSize(1);
         assertThat(result.get(0).getParentChartOfAccount()).isNotNull();
         assertThat(result.get(0).getParentChartOfAccount().getChartOfAccountId()).isEqualTo(100);
         verify(chartOfAccountDao, times(1)).findAllChild();

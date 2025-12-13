@@ -1,20 +1,20 @@
 package com.simpleaccounts.service.impl;
 
+
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.RoleModuleDao;
 import com.simpleaccounts.entity.RoleModuleRelation;
 import com.simpleaccounts.entity.SimpleAccountsModules;
 import com.simpleaccounts.service.RoleModuleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service("roleModuleService")
+@RequiredArgsConstructor
 public class RoleModuleServiceImpl extends RoleModuleService {
 
-@Autowired
-RoleModuleDao roleModuleDao;
+private final RoleModuleDao roleModuleDao;
     @Override
     public List<SimpleAccountsModules> getListOfSimpleAccountsModules() {
       return   roleModuleDao.getListOfSimpleAccountsModules();

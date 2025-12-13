@@ -1,8 +1,13 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.*;
-import lombok.RequiredArgsConstructor;
+import com.simpleaccounts.constant.CommonColumnConstants;
+import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.User;
+import com.simpleaccounts.entity.VatRecordPaymentHistory;
+import com.simpleaccounts.entity.VatReportFiling;
+import com.simpleaccounts.entity.VatTaxAgency;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -10,12 +15,6 @@ import com.simpleaccounts.helper.DateFormatHelper;
 import com.simpleaccounts.repository.JournalLineItemRepository;
 import com.simpleaccounts.repository.TransactionExplanationRepository;
 import com.simpleaccounts.rest.PostingRequestModel;
-import com.simpleaccounts.constant.CommonColumnConstants;
-import com.simpleaccounts.constant.CommonStatusEnum;
-import com.simpleaccounts.entity.User;
-import com.simpleaccounts.entity.VatRecordPaymentHistory;
-import com.simpleaccounts.entity.VatReportFiling;
-import com.simpleaccounts.entity.VatTaxAgency;
 import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateService;
 import com.simpleaccounts.rest.financialreport.*;
 import com.simpleaccounts.service.*;
@@ -23,8 +22,6 @@ import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.InvoiceNumberUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -34,8 +31,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-	@Service
+@Service
 	@SuppressWarnings("java:S3973")
 	@RequiredArgsConstructor
 public class VatReportFilingServiceImpl implements VatReportFilingService {
@@ -105,8 +104,6 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
         BigDecimal totalOutputVatAmount = BigDecimal.ZERO;
         BigDecimal totalAmount = BigDecimal.ZERO;
 
-//       List<Object[]> totalInputVatAmountAndOutputVatAmountList=journalLineItemService.totalInputVatAmountAndOutputVatAmount(vatReportFilingRequestModel);
-
          totalInputVatAmount=journalLineItemService.totalInputVatAmount(vatReportFiling,vatReportFilingRequestModel,88) !=null?
                  journalLineItemService.totalInputVatAmount(vatReportFiling,vatReportFilingRequestModel,88)
                  :BigDecimal.ZERO;
@@ -126,8 +123,8 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
         vatReportFiling.setStartDate(getStartDateAsLocalDatetime(vatReportFilingRequestModel.getStartDate()).toLocalDate());
         vatReportFiling.setEndDate(getEndDateAsLocalDatetime(vatReportFilingRequestModel.getEndDate()).toLocalDate());
         vatReportFiling.setStatus(CommonStatusEnum.UN_FILED.getValue());
-//        vatReportFiling.setTaxFiledOn(LocalDateTime.now());
-        if (totalAmount.compareTo(BigDecimal.ZERO)==-1){
+
+        if (totalAmount.compareTo(BigDecimal.ZERO) < 0) {
             vatReportFiling.setTotalTaxReclaimable(totalAmount.negate());
             vatReportFiling.setBalanceDue(totalAmount.negate());
             vatReportFiling.setTotalTaxPayable(BigDecimal.ZERO);
@@ -172,7 +169,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
                  vatReportFilingRequestModel.setId(vatReportFiling.getId());
                  vatReportFilingRequestModel.setStartDate(startDate);
                  vatReportFilingRequestModel.setEndDate(endDate);
-                // processVatReport(vatReportFilingRequestModel,user);
+
              }
              VatReportResponseModel vatReportResponseModel = new VatReportResponseModel();
              vatReportResponseModel.setId(vatReportFiling.getId());
@@ -180,7 +177,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
              vatReportResponseModel.setFiledOn(vatReportFiling.getTaxFiledOn().atStartOfDay());
 
              vatReportResponseModel.setTaxReturns(startDate+"-"+endDate);
-             if (vatReportFiling.getTotalTaxPayable().compareTo(BigDecimal.ZERO)==1){
+             if (vatReportFiling.getTotalTaxPayable().compareTo(BigDecimal.ZERO) > 0) {
                  vatReportResponseModel.setBalanceDue(vatReportFiling.getBalanceDue());
              }
              vatReportResponseModel.setTotalTaxPayable(vatReportFiling.getTotalTaxPayable());
@@ -195,7 +192,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
              }
              vatReportResponseModel.setCreatedDate(vatReportFiling.getCreatedDate());
              List<VatTaxAgency> vatTaxAgencyList=vatTaxAgencyRepository.findVatTaxAgencyByVatReportFillingId(vatReportFiling.getId());
-             if(vatTaxAgencyList!=null&& !vatTaxAgencyList.isEmpty() && vatTaxAgencyList.size()!=0)
+             if (vatTaxAgencyList != null && !vatTaxAgencyList.isEmpty())
              {
                  vatReportResponseModel.setTaxAgencyId(vatTaxAgencyList.get(0).getId());
              }
@@ -209,7 +206,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
         String startDate = "";
         String endDate = "";
         List<VatReportResponseModel> vatReportResponseModels = new ArrayList<>();
-//        List<VatReportFiling> vatReportFilingList = vatReportFilingRepository.findAll();
+
         if (!vatReportFilingList.isEmpty()){
             for (VatReportFiling vatReportFiling:vatReportFilingList){
                 User user=userService.findByPK(vatReportFiling.getCreatedBy());
@@ -235,7 +232,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
                 vatReportResponseModel.setTaxReturns(startDate+"-"+endDate);
                 vatReportResponseModel.setStartDate(startDate);
                 vatReportResponseModel.setEndDate(endDate);
-                if (vatReportFiling.getTotalTaxPayable().compareTo(BigDecimal.ZERO)==1){
+                if (vatReportFiling.getTotalTaxPayable().compareTo(BigDecimal.ZERO) > 0) {
                     vatReportResponseModel.setBalanceDue(vatReportFiling.getBalanceDue());
                 }
                 vatReportResponseModel.setTotalTaxPayable(vatReportFiling.getTotalTaxPayable());
@@ -250,10 +247,10 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
                 }
                 vatReportResponseModel.setCreatedDate(vatReportFiling.getCreatedDate());
                 List<VatTaxAgency> vatTaxAgencyList=vatTaxAgencyRepository.findVatTaxAgencyByVatReportFillingId(vatReportFiling.getId());
-                if(vatTaxAgencyList!=null&& !vatTaxAgencyList.isEmpty() && vatTaxAgencyList.size()!=0)
-                {
-                    vatReportResponseModel.setTaxAgencyId(vatTaxAgencyList.get(0).getId());
-                }
+	                if (vatTaxAgencyList != null && !vatTaxAgencyList.isEmpty())
+	                {
+	                    vatReportResponseModel.setTaxAgencyId(vatTaxAgencyList.get(0).getId());
+	                }
                 vatReportResponseModels.add(vatReportResponseModel);
             }
         }
@@ -318,7 +315,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
                     .findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.INPUT_VAT.getCode());
 
             journalLineItem.setTransactionCategory(inputVatCategory);
-            if (totalInputVatAmount.compareTo(BigDecimal.ZERO)==1){
+            if (totalInputVatAmount.compareTo(BigDecimal.ZERO) > 0) {
                 journalLineItem.setCreditAmount(totalInputVatAmount);
             }
             else {
@@ -336,7 +333,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
             TransactionCategory inputVatCategory = transactionCategoryService
                     .findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.OUTPUT_VAT.getCode());
             journalLineItem1.setTransactionCategory(inputVatCategory);
-            if (totalOutputVatAmount.compareTo(BigDecimal.ZERO)==1){
+            if (totalOutputVatAmount.compareTo(BigDecimal.ZERO) > 0) {
                 journalLineItem1.setDebitAmount(totalOutputVatAmount);
             }
             else {
@@ -353,7 +350,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
         if(totalOutputVatAmount==null) totalOutputVatAmount=BigDecimal.ZERO;
         if(totalInputVatAmount==null) totalInputVatAmount=BigDecimal.ZERO;
 
-        if (totalOutputVatAmount.compareTo(totalInputVatAmount)==1){
+        if (totalOutputVatAmount.compareTo(totalInputVatAmount) > 0) {
             JournalLineItem journalLineItem1 = new JournalLineItem();
             TransactionCategory inputVatCategory = transactionCategoryService
                     .findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.GCC_VAT_PAYABLE.getCode());
@@ -366,7 +363,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
             journalLineItem1.setJournal(journal);
             journalLineItemList.add(journalLineItem1);
         }
-        if (totalInputVatAmount.compareTo(totalOutputVatAmount)==1){
+        if (totalInputVatAmount.compareTo(totalOutputVatAmount) > 0) {
             JournalLineItem journalLineItem1 = new JournalLineItem();
             TransactionCategory inputVatCategory = transactionCategoryService
                     .findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.GCC_VAT_PAYABLE.getCode());
@@ -394,16 +391,16 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
        VatReportFiling vatReportFiling = vatPayment.getVatReportFiling();
        if (vatReportFilingBalanceDue.compareTo(BigDecimal.ZERO)==0){
            vatReportFiling.setBalanceDue(vatReportFilingBalanceDue);
-           if (vatReportFiling.getTotalTaxReclaimable().compareTo(BigDecimal.ZERO)==1){
-               vatReportFiling.setStatus(CommonStatusEnum.CLAIMED.getValue());
-           }
+	       if (vatReportFiling.getTotalTaxReclaimable().compareTo(BigDecimal.ZERO) > 0) {
+	               vatReportFiling.setStatus(CommonStatusEnum.CLAIMED.getValue());
+	           }
            else
            vatReportFiling.setStatus(CommonStatusEnum.PAID.getValue());
        }
-      else if (vatReportFilingBalanceDue.compareTo(BigDecimal.ZERO)==1){
-           vatReportFiling.setBalanceDue(vatReportFilingBalanceDue);
-           vatReportFiling.setStatus(CommonStatusEnum.PARTIALLY_PAID.getValue());
-       }
+      else if (vatReportFilingBalanceDue.compareTo(BigDecimal.ZERO) > 0) {
+	           vatReportFiling.setBalanceDue(vatReportFilingBalanceDue);
+	           vatReportFiling.setStatus(CommonStatusEnum.PARTIALLY_PAID.getValue());
+	       }
 
        vatReportFilingRepository.save(vatReportFiling);
        createCashTransactionForVatPayment(vatPayment,recordVatPaymentRequestModel,userId);
@@ -471,7 +468,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
             param.put("transactionCategory", vatPayment.getDepositToTransactionCategory());
             param.put("deleteFlag", false);
             List<BankAccount> bankAccountList = bankAccountService.findByAttributes(param);
-            BankAccount bankAccount =  bankAccountList!= null && bankAccountList.size() > 0
+            BankAccount bankAccount =  bankAccountList!= null && !bankAccountList.isEmpty()
                     ? bankAccountList.get(0)
                     : null;
             Transaction transaction = new Transaction();
@@ -505,7 +502,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
         transactionExplanation.setTransaction(transaction);
         transactionExplanation.setPaidAmount(transaction.getTransactionAmount());
         transactionExplanation.setCurrentBalance(transaction.getCurrentBalance());
-        //transactionExplanation.setExplanationContact(receipt.getContact().getContactId());
+
         transactionExplanation.setExplainedTransactionCategory(transaction.getExplainedTransactionCategory());
         transactionExplanation.setExchangeGainOrLossAmount(BigDecimal.ZERO);
         transactionExplanationRepository.save(transactionExplanation);
@@ -593,7 +590,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
                newjournal.setCreatedBy(filedVatJliList.get(0).getJournal().getCreatedBy());
                newjournal.setPostingReferenceType(PostingReferenceTypeEnum.VAT_REPORT_UNFILED);
                newjournal.setDescription("Reverse Published Vat");
-               //newjournal.setJournlReferencenNo();
+
                newjournal.setJournalDate(LocalDate.now());
                newjournal.setTransactionDate(LocalDateTime.now().toLocalDate());
 
@@ -633,7 +630,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
            vatReportFilingRepository.save(vatReportFiling);
 
            List<VatTaxAgency> vatTaxAgencyList=vatTaxAgencyRepository.findVatTaxAgencyByVatReportFillingId(vatReportFiling.getId());
-           if(vatTaxAgencyList!=null&& !vatTaxAgencyList.isEmpty() && vatTaxAgencyList.size()!=0)
+           if (vatTaxAgencyList != null && !vatTaxAgencyList.isEmpty())
            {
                vatTaxAgencyRepository.deleteById(vatTaxAgencyList.get(0).getId());
            }
@@ -680,8 +677,6 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
    This method will revert the payment as well as journal entries back
     */
 
-//            //if (vatReportFiling.getBalanceDue().compareTo()){}
-
     @Override
     public List<VatPaymentHistoryModel> getVatPaymentRecordList() {
         String startDate =null;
@@ -689,7 +684,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
         List<VatPaymentHistoryModel> vatPaymentHistoryResponseModelList=new ArrayList<>();
         List<VatRecordPaymentHistory> vatRecordPaymentHistoryList=vatRecordPaymentHistoryRepository.findAll();
         List<VatRecordPaymentHistory> list= vatRecordPaymentHistoryList.stream().filter(vatRecordPaymentHistory -> vatRecordPaymentHistory.getDeleteFlag().equals(Boolean.FALSE)).collect(Collectors.toList());
-        if(vatRecordPaymentHistoryList !=null && vatRecordPaymentHistoryList.size()!=0)
+        if (vatRecordPaymentHistoryList != null && !vatRecordPaymentHistoryList.isEmpty())
             for (VatRecordPaymentHistory vatRecordPaymentHistory:
                     list ) {
                 VatPaymentHistoryModel vatPaymentHistoryModel=new VatPaymentHistoryModel();
@@ -720,9 +715,9 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
         String startDate =null;
         String endDate =null;
         List<VatPaymentHistoryModel> vatPaymentHistoryResponseModelList=new ArrayList<>();
-//        List<VatRecordPaymentHistory> vatRecordPaymentHistoryList=vatRecordPaymentHistoryRepository.findAll();
+
         List<VatRecordPaymentHistory> list= vatRecordPaymentHistoryList.stream().filter(vatRecordPaymentHistory -> vatRecordPaymentHistory.getDeleteFlag().equals(Boolean.FALSE)).collect(Collectors.toList());
-        if(vatRecordPaymentHistoryList !=null && vatRecordPaymentHistoryList.size()!=0)
+        if (vatRecordPaymentHistoryList != null && !vatRecordPaymentHistoryList.isEmpty())
             for (VatRecordPaymentHistory vatRecordPaymentHistory:
                     list ) {
                 VatPaymentHistoryModel vatPaymentHistoryModel=new VatPaymentHistoryModel();

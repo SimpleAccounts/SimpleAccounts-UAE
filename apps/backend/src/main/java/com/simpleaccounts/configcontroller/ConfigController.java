@@ -1,16 +1,13 @@
 package com.simpleaccounts.configcontroller;
 
 import com.simpleaccounts.aop.LogRequest;
+import com.simpleaccounts.constant.ConfigurationConstants;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.simpleaccounts.constant.ConfigurationConstants;
-
-import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/rest/config")

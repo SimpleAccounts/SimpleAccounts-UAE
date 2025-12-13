@@ -1,5 +1,7 @@
 package com.simpleaccounts.rfq_po;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.entity.*;
@@ -10,28 +12,21 @@ import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.FileHelper;
-
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
+import java.time.ZoneId;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-
-import java.time.ZoneId;
-import java.util.*;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  * Created By Zain Khan
@@ -367,7 +362,7 @@ PoQuatationController {
             PoQuatation parentPoQuatation=null;
             if (requestModel.getPoId()!=null){
                 parentPoQuatation=poQuatationService.findByPK(requestModel.getPoId());
-//                poQuatation=poQuatationRestHelper.getGrnEntityFromPo(poQuatation, userId);
+
             }
                 poQuatation = poQuatationRestHelper.getGoodsReceiveNotesEntity(requestModel, userId);
             if (parentPoQuatation!=null && parentPoQuatation.getPoNumber() != null) {
@@ -636,9 +631,9 @@ PoQuatationController {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-            if (postingRequestModel.getMarkAsSent().booleanValue()==Boolean.FALSE){
-                poQuatationRestHelper.sendQuotation(poQuatationService.findByPK(postingRequestModel.getPostingRefId()), userId,postingRequestModel,request);
-            }
+	            if (!Boolean.TRUE.equals(postingRequestModel.getMarkAsSent())){
+	                poQuatationRestHelper.sendQuotation(poQuatationService.findByPK(postingRequestModel.getPostingRefId()), userId,postingRequestModel,request);
+	            }
             PoQuatation poQuatation=poQuatationService.findByPK(postingRequestModel.getPostingRefId());
             if(poQuatation.getStatus() != 3){
                 poQuatation.setStatus(CommonStatusEnum.POST.getValue());
@@ -723,7 +718,7 @@ PoQuatationController {
                     break;
                 default:
             }
-           // poQuatation.setStatus(InvoiceStatusEnum.APPROVED.getValue());
+
             poQuatationService.update(poQuatation);
 
             message = new SimpleAccountsMessage("",

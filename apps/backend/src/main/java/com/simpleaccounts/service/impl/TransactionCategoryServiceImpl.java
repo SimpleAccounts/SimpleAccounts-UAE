@@ -2,18 +2,9 @@ package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.TransactionCategoryFilterEnum;
-
-import java.util.List;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.simpleaccounts.criteria.TransactionCategoryFilterNew;
 import com.simpleaccounts.criteria.bankaccount.TransactionCategoryCriteria;
+import com.simpleaccounts.dao.bankaccount.TransactionCategoryDao;
 import com.simpleaccounts.entity.Activity;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -22,9 +13,12 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.TransactionCategoryService;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import com.simpleaccounts.dao.bankaccount.TransactionCategoryDao;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("transactionCategoryService")
 @Transactional
@@ -32,9 +26,12 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 
 	private static final String TRANSACTION_CATEGORY = "TRANSACTION_CATEGORY";
 
-	@Autowired
-	@Qualifier(value = "transactionCategoryDao")
-	private TransactionCategoryDao dao;
+	private final TransactionCategoryDao dao;
+
+	public TransactionCategoryServiceImpl(
+			@Qualifier("transactionCategoryDao") TransactionCategoryDao dao) {
+		this.dao = dao;
+	}
 
 	@Override
 	public TransactionCategoryDao getDao() {

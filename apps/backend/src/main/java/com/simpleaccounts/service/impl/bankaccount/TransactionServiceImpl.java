@@ -1,27 +1,7 @@
 package com.simpleaccounts.service.impl.bankaccount;
 
-import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 import com.simpleaccounts.constant.TransactionCreationMode;
 import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
-import com.simpleaccounts.entity.bankaccount.ReconcileStatus;
-import com.simpleaccounts.service.BankAccountService;
-import com.simpleaccounts.service.bankaccount.ReconcileStatusService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.simpleaccounts.constant.dbfilter.TransactionFilterEnum;
 import com.simpleaccounts.criteria.bankaccount.TransactionCriteria;
 import com.simpleaccounts.criteria.bankaccount.TransactionFilter;
@@ -29,15 +9,32 @@ import com.simpleaccounts.dao.bankaccount.BankAccountDao;
 import com.simpleaccounts.dao.bankaccount.TransactionDao;
 import com.simpleaccounts.entity.Activity;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
+import com.simpleaccounts.entity.bankaccount.ReconcileStatus;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionView;
 import com.simpleaccounts.model.TransactionReportRestModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
+import com.simpleaccounts.service.BankAccountService;
+import com.simpleaccounts.service.bankaccount.ReconcileStatusService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.ChartUtil;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-	@Service("transactionService")
+@Service("transactionService")
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	@SuppressWarnings("java:S3973")
 	@RequiredArgsConstructor
@@ -111,7 +108,7 @@ public class TransactionServiceImpl extends TransactionService {
 			}
 			super.persist(transaction, null, getActivity(transaction, "Created"));
 			BigDecimal balanceAmount = transaction.getCurrentBalance();
-			//updateAccountBalance(balanceAmount, transaction);
+
 		} else {
 			BigDecimal differenceAmount = transaction.getTransactionAmount();
 			if (transaction.getDebitCreditFlag() == 'D') {
@@ -146,7 +143,7 @@ public class TransactionServiceImpl extends TransactionService {
 			} else {
 				balance = balance.add(transaction.getTransactionAmount());
 			}
-			//updateAccountBalance(balance, transaction);
+
 		}
 	}
 
@@ -169,7 +166,7 @@ public class TransactionServiceImpl extends TransactionService {
 				transaction.setCurrentBalance(transaction.getCurrentBalance().add(differenceAmount));
 			}
 			updateLatestTransaction(differenceAmount, transaction);
-			//updateAccountBalance(balanceAmount, transaction);
+
 		}
 		transaction = super.update(transaction, null, getActivity(transaction, "Updated"));
 		return transaction;
@@ -343,16 +340,16 @@ public class TransactionServiceImpl extends TransactionService {
 
 		try {
 			BankAccount bankAccount =null;
-			if(transactions!=null && transactions.size()>0)
-			bankAccount = bankAccountService.findByPK(transactions.get(0).getBankAccount().getBankAccountId());
+				if(transactions!=null && !transactions.isEmpty())
+				bankAccount = bankAccountService.findByPK(transactions.get(0).getBankAccount().getBankAccountId());
 			BigDecimal currentBalance = bankAccount.getCurrentBalance();
 			List<ReconcileStatus> reconcileStatusList = reconcileStatusService.getAllReconcileStatusListByBankAccountId(bankAccount.getBankAccountId());
 			LocalDateTime  lastReconcileDate= null;
-			if (reconcileStatusList!=null&&reconcileStatusList.size()>0)
-			{
-				ReconcileStatus reconcileStatus = reconcileStatusList.get(0);
-				lastReconcileDate =	reconcileStatus.getReconciledDate();
-			}
+				if (reconcileStatusList!=null&& !reconcileStatusList.isEmpty())
+				{
+					ReconcileStatus reconcileStatus = reconcileStatusList.get(0);
+					lastReconcileDate =	reconcileStatus.getReconciledDate();
+				}
 
 			int count = 0;
 			int totalCount = transactions.size();

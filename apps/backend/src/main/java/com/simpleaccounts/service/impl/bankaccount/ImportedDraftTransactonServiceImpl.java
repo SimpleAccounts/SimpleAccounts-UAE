@@ -1,18 +1,15 @@
 package com.simpleaccounts.service.impl.bankaccount;
 
-import java.util.List;
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.simpleaccounts.criteria.bankaccount.ImportedDraftTransactionCriteria;
 import com.simpleaccounts.criteria.bankaccount.ImportedDraftTransactionFilter;
 import com.simpleaccounts.dao.bankaccount.ImportedDraftTransactonDao;
 import com.simpleaccounts.entity.bankaccount.ImportedDraftTransaction;
 import com.simpleaccounts.service.bankaccount.ImportedDraftTransactonService;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("importedDraftTransactonService")
 @Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)

@@ -1,26 +1,21 @@
 package com.simpleaccounts.rest.taxescontroller;
 
 import com.simpleaccounts.entity.*;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.service.ExpenseService;
 import com.simpleaccounts.service.InvoiceService;
 import com.simpleaccounts.service.PaymentService;
 import com.simpleaccounts.service.ReceiptService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
-
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.DateUtils;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-
-import java.util.ArrayList;
-
-import java.util.List;
-	@Service
+@Service
 	@SuppressWarnings("java:S115")
 	@RequiredArgsConstructor
 public class TaxesRestHelper {
@@ -82,7 +77,7 @@ public class TaxesRestHelper {
                                             journalLineItem.getCreditAmount());
                             model.setTaxRegistrationNo(payment.getInvoice().getContact().getVatRegistrationNumber());
                             model.setInvoiceNumber(payment.getInvoice().getReferenceNumber());
-                           //model.setInvoiceDate(payment.getInvoice().getInvoiceDate());
+
                         }
                           break;
                     case RECEIPT:

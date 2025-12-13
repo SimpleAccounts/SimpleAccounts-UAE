@@ -1,7 +1,8 @@
 package com.simpleaccounts.rest.payroll;
 
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
+
 import com.fasterxml.jackson.core.type.TypeReference;
-import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.constant.EmailConstant;
@@ -18,7 +19,6 @@ import com.simpleaccounts.rest.employeecontroller.EmployeePersistModel;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
 import com.simpleaccounts.rest.payroll.dao.EmployeeSalaryComponentRelationDao;
 import com.simpleaccounts.rest.payroll.model.GeneratePayrollPersistModel;
-
 import com.simpleaccounts.rest.payroll.model.PayrolRequestModel;
 import com.simpleaccounts.rest.payroll.model.PayrollListModel;
 import com.simpleaccounts.rest.payroll.payrolService.PayrolService;
@@ -28,20 +28,10 @@ import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.EmailSender;
 import com.simpleaccounts.utils.InvoiceNumberUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -51,10 +41,18 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
-
-	@Component
+@Component
 	@SuppressWarnings({"java:S131", "java:S6809"})
 	@RequiredArgsConstructor
 public class PayrollRestHepler {
@@ -62,27 +60,20 @@ public class PayrollRestHepler {
     private static final String ERROR_PROCESSING_PAYROLL = "Error processing payroll";
     private static final String DATE_FORMAT_DD_MM_YYYY = "DATE_FORMAT_DD_MM_YYYY";
     private final EmployeeBankDetailsService employeeBankDetailsService;
-    @Autowired
-    RoleModuleRelationService roleModuleRelationService;
+    private final RoleModuleRelationService roleModuleRelationService;
 
-    @Autowired
-    CoacTransactionCategoryService coacTransactionCategoryService ;
-    @Autowired
-    ChartOfAccountService chartOfAccountService ;
-    @Autowired
-    JournalService journalService;
-    @Autowired
-    EmployeeTransactioncategoryService employeeTransactioncategoryService;
+    private final CoacTransactionCategoryService coacTransactionCategoryService;
+    private final ChartOfAccountService chartOfAccountService;
+    private final JournalService journalService;
+    private final EmployeeTransactioncategoryService employeeTransactioncategoryService;
     private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
-    @Autowired
-    InvoiceNumberUtil invoiceNumberUtil;
+    private final InvoiceNumberUtil invoiceNumberUtil;
     private final EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService;
 
     private final EmploymentService employmentService;
 
     private final TransactionCategoryService transactionCategoryService;
-    @Autowired
-    SalaryService salaryService;
+    private final SalaryService salaryService;
 
     private final SalaryRoleService salaryRoleService;
 
@@ -102,29 +93,22 @@ public class PayrollRestHepler {
 
     private final EmployeeParentRelationService employeeParentRelationService;
 
-    @Autowired
-    PayrollRepository payrollRepository;
+    private final PayrollRepository payrollRepository;
 
-    @Autowired
-    UserJpaRepository userJpaRepository;
+    private final UserJpaRepository userJpaRepository;
     private final CompanyService companyService;
 
-    @Autowired
-    SalaryRepository salaryRepository;
+    private final SalaryRepository salaryRepository;
 
-    @Autowired
-    ResourceLoader resourceLoader;
-    @Autowired
-    UserService userService;
-    @Autowired
-    EmailSender emailSender;
+    private final ResourceLoader resourceLoader;
+    private final UserService userService;
+    private final EmailSender emailSender;
     private final EmaiLogsService emaiLogsService;
     private final PayrolService payrolService;
 
     private final JournalLineItemRepository journalLineItemRepository;
 
-    @Autowired
-    SalaryController salaryController;
+    private final SalaryController salaryController;
     private final PayrollEmployeeRepository payrollEmployeeRepository;
     private final EmployeeSalaryComponentRelationRepository employeeSalaryComponentRelationRepository;
 
@@ -182,7 +166,6 @@ public class PayrollRestHepler {
 
     public EmployeeBankDetailsPersistModel getModel(EmployeeBankDetails employeeBankDetails) {
         EmployeeBankDetailsPersistModel employeeBankDetailsPersistModel = new EmployeeBankDetailsPersistModel();
-//            employeeBankDetails = employeeBankDetailsService.findByPK(employeeBankDetailsPersistModel.getId());
 
         employeeBankDetailsPersistModel.setId(employeeBankDetails.getId());
 
@@ -199,7 +182,6 @@ public class PayrollRestHepler {
         employeeBankDetailsPersistModel.setRoutingCode(employeeBankDetails.getRoutingCode());
 
         employeeBankDetailsPersistModel.setSwiftCode(employeeBankDetails.getSwiftCode());
-//        employeeBankDetailsPersistModel.setEmployee(employeeBankDetails.getEmployee());
 
         return employeeBankDetailsPersistModel;
     }
@@ -276,7 +258,6 @@ public class PayrollRestHepler {
 
     public EmployeeParentRelation getEmployeeParentRelationEntity(EmployeePersistModel employeePersistModel, Employee employee, Integer userId) throws IOException {
         EmployeeParentRelation employeeParentRelation = new EmployeeParentRelation();
-        // Employee employee= employeeService.findByPK(1);
 
         Employee parentId = employeeService.findByPK(employee.getParentId());
         Map<String, Object> param = new HashMap<>();
@@ -299,9 +280,9 @@ public class PayrollRestHepler {
             }
         } else {
             employeeParentRelation.setParentID(employeeService.findByPK(employeePersistModel.getParentId()));
-            // employeeParentRelation.setParentType(employeeParentRelation1.getParentType());
+
             employeeParentRelation.setChildID(employee);
-            // employeeParentRelation.setChildType(employeeParentRelation1.getChildType());
+
             employeeParentRelation.setCreatedBy(userId);
             employeeParentRelation.setCreatedDate(LocalDateTime.now());
             employeeParentRelation.setLastUpdatedBy(userId);
@@ -330,7 +311,7 @@ public class PayrollRestHepler {
 
         if (salaryStructurePersistModel.getId() != null) {
             salaryStructure = salaryStructureService.findByPK(salaryStructurePersistModel.getId());
-//            employment.setId(employmentPersistModel.getId() );
+
         }
         if (salaryStructurePersistModel.getName() != null) {
             salaryStructure.setName(salaryStructurePersistModel.getName());
@@ -360,12 +341,6 @@ public class PayrollRestHepler {
 
     //
 
-//
-//            }
-//
-//        }
-//
-//    }
     public void getUpdatedSalaryAllTemplate(EmployeePersistModel employeePersistModel, Employee employee,
                                             List<SalaryTemplatePersistModel> salaryTemplatePersistModels) {
         if (employeePersistModel.getSalaryTemplatesString() != null && !employeePersistModel.getSalaryTemplatesString().isEmpty()) {
@@ -714,7 +689,7 @@ public class PayrollRestHepler {
             }
 
             SalaryTemplate salaryTemplate = new SalaryTemplate();
-            //    salaryTemplate.setId(model1.getId());
+
             salaryTemplate.setSalaryComponentId(salaryComponentService.findByPK(model1.getSalaryComponentId()));
             salaryTemplates.add(salaryTemplate);
             salaryTemplateService.persist(salaryTemplate);
@@ -1080,8 +1055,6 @@ public class PayrollRestHepler {
 
             for (EmployeeSalaryComponentRelation object : employeeSalaryComponentRelationList) {
 
-                //  Object[] objectArray = (Object[])object;
-
                 String salaryStructure = object.getSalaryStructure().getName();
                 salaryStructure = salaryStructure.replace(' ', '_');
                 List<EmployeeSalaryComponentRelationModel> salaryTemplateList1 = salaryComponentMap.get(salaryStructure);
@@ -1090,7 +1063,7 @@ public class PayrollRestHepler {
                     salaryComponentMap.put(salaryStructure, salaryTemplateList1);
 
                 }
-                // List salaryTemplateList1 = new ArrayList<>();
+
                 EmployeeSalaryComponentRelationModel salaryComponentRelationModel = new EmployeeSalaryComponentRelationModel();
                 salaryComponentRelationModel.setDescription(object.getDescription());
                 if (object.getFormula() != null) {
@@ -1107,8 +1080,6 @@ public class PayrollRestHepler {
                 salaryComponentRelationModel.setMonthlyAmount(object.getMonthlyAmount());
                 salaryComponentRelationModel.setYearlyAmount(object.getYearlyAmount());
                 salaryTemplateList1.add(salaryComponentRelationModel);
-
-                //  salaryComponentMap.put(SalaryStructure,salaryTemplateList1);
 
             }
         }
@@ -1205,7 +1176,6 @@ public class PayrollRestHepler {
 
     public SalaryComponentPersistModel getSalaryComponentModel(SalaryComponent salaryComponent) {
         SalaryComponentPersistModel salaryComponentPersistModel = new SalaryComponentPersistModel();
-//      employeeBankDetails = employeeBankDetailsService.findByPK(employeeBankDetailsPersistModel.getId());
 
         salaryComponentPersistModel.setId(salaryComponent.getId());
         salaryComponentPersistModel.setDescription(salaryComponent.getDescription());
@@ -1233,7 +1203,7 @@ public class PayrollRestHepler {
         }
         List<EmployeeSalaryComponentRelation> employeeSalaryComponentRelationList =
                 employeeSalaryComponentRelationRepository.findBySalaryComponentIdAndDeleteFlag(salaryComponent.getId());
-        if(employeeSalaryComponentRelationList.size() > 0){
+        if(!employeeSalaryComponentRelationList.isEmpty()){
             salaryComponentPersistModel.setIsComponentDeletable(Boolean.FALSE);
         }
         else{
@@ -1350,7 +1320,7 @@ public class PayrollRestHepler {
                 salaryService.persist(salary);
             totalPayrollAmount = totalPayrollAmount.add(totalSalary);
         }
-//            empCount=generatePayrollPersistModels.size();
+
             empCount= payrolRequestModel.getEmployeeListIds().size();
             payroll.setStatus("Draft");
             payroll.setEmployeeCount(empCount);
@@ -1365,7 +1335,7 @@ public class PayrollRestHepler {
     payroll.setStatus("Submitted");
     payroll.setPayrollApprover(approverId);
     payrollRepository.save(payroll);
-//    if(payroll.getGeneratedBy().equals(payroll.getPayrollApprover())==false)
+
         sendApprovalMail(payroll,approverId,request);
 
     }
@@ -1385,7 +1355,7 @@ public class PayrollRestHepler {
             logger.error(ERROR_PROCESSING_PAYROLL, e);
         }
         User generatedByUser = userService.findByPK(Integer.parseInt(payroll.getGeneratedBy()));
-        String generatedByName =  generatedByUser.getFirstName().toString() +" " +generatedByUser.getLastName().toString();
+        String generatedByName =  generatedByUser.getFirstName() +" " +generatedByUser.getLastName();
         String temp1=htmlContent.replace("{generaterName}", generatedByName)
                 .replace("{approverName}", user.getFirstName()+" "+user.getLastName())
                 .replace("{payrollSubject}", payroll.getPayrollSubject())
@@ -1615,7 +1585,7 @@ public class PayrollRestHepler {
      * @return
      */
     public LocalDateTime dateConvertIntoLocalDataTime(String strDateTime) {
-//    	String time = "00:00:00";
+
     	DateTimeFormatter dtfInput = new DateTimeFormatterBuilder()
                 .parseCaseInsensitive()
                 .appendPattern("E MMM d uuuu H:m:s")
@@ -1649,11 +1619,11 @@ public class PayrollRestHepler {
         List<SingleLevelDropDownModel> response  = new ArrayList<>();
         String parentCategory = "";
         List<PayrollDropdownModel> dropDownModelList = new ArrayList<>();
-        if(payrollList !=null && payrollList.size()!=0) {
+        if(payrollList !=null && !payrollList.isEmpty()) {
             for (Payroll payroll : payrollList) {
                 if(payroll !=null && payroll.getStatus() !=null && payroll.getDueAmountPayroll()!=null)
                 {
-//                    parentCategory = payroll.getPayrollSubject();
+
                     if ((payroll.getStatus().equalsIgnoreCase("Approved")  ||
                          payroll.getStatus().equalsIgnoreCase("Partially Paid"))
                             &&
@@ -1772,7 +1742,7 @@ public class PayrollRestHepler {
                     endDate+ ","+
                     noOfDays + "," +
                     INCOME_FIXED_COMPONENT + "," +
-                    INCOME_VARIABLE_COMPONENT.setScale(2, BigDecimal.ROUND_HALF_EVEN) + ","+
+                    INCOME_VARIABLE_COMPONENT.setScale(2, RoundingMode.HALF_EVEN) + ","+
                     lop+ "," +
                     "\n");
 
@@ -1803,17 +1773,17 @@ public class PayrollRestHepler {
     }
 
     public List<PayrollListModel>  getListModel(Object data) {
-        List<PayrollListModel> payrollListModelList = new ArrayList<PayrollListModel>();
+        List<PayrollListModel> payrollListModelList = new ArrayList<>();
         for(Payroll res :(List<Payroll>) data)
         {
             PayrollListModel payrollListModel = new  PayrollListModel();
 
             User generatedByUser = userService.findByPK(Integer.parseInt(res.getGeneratedBy()));
-            String generatedByName =  generatedByUser.getFirstName().toString() +" " +generatedByUser.getLastName().toString();
+            String generatedByName =  generatedByUser.getFirstName() +" " +generatedByUser.getLastName();
             String payrollApproverName=null;
             if(res.getPayrollApprover()!=null) {
                 User payrollApproverUser = userService.findByPK(res.getPayrollApprover());
-                payrollApproverName = payrollApproverUser.getFirstName().toString() + " " + payrollApproverUser.getLastName().toString();
+                payrollApproverName = payrollApproverUser.getFirstName() + " " + payrollApproverUser.getLastName();
             }
             payrollListModel.setId(res.getId());
             payrollListModel.setPayrollDate(res.getPayrollDate().toString());
@@ -1867,7 +1837,7 @@ public class PayrollRestHepler {
                     .map(JournalLineItem :: getJournal)
                     .collect(Collectors.toList());
 
-            Set<Journal> set = new LinkedHashSet<Journal>(journalList);
+            Set<Journal> set = new LinkedHashSet<>(journalList);
             journalList.clear();
             journalList.addAll(set);
 
@@ -1959,7 +1929,7 @@ public class PayrollRestHepler {
             String sendMailTo = receiverList.get(i);
             String name = receiversName.get(i);
             String temp1 = htmlContent
-//                .replace("{employees}",employee.getFirstName()+ " "+ employee.getLastName())
+
                     .replace("{generaterName}", name)
                     .replace("{payrollSubject}", payroll.getPayrollSubject())
                     .replace("{Startdate}", payroll.getPayPeriod().replace("-", "  To  ").replace("/", "-"))

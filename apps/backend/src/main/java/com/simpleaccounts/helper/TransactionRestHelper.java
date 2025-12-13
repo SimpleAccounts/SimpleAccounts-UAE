@@ -1,27 +1,23 @@
 package com.simpleaccounts.helper;
 
-import com.simpleaccounts.model.TransactionViewRestModel;
-import com.simpleaccounts.model.TransactionRestModel;
-import com.simpleaccounts.model.BankAccountRestModel;
 import com.simpleaccounts.constant.TransactionCreationMode;
-
 import com.simpleaccounts.constant.TransactionStatusConstant;
-
 import com.simpleaccounts.entity.bankaccount.BankAccount;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.Date;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionView;
-
+import com.simpleaccounts.model.BankAccountRestModel;
+import com.simpleaccounts.model.TransactionRestModel;
+import com.simpleaccounts.model.TransactionViewRestModel;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-
 import org.springframework.stereotype.Component;
 
 @Component
@@ -43,7 +39,7 @@ public class TransactionRestHelper {
 		transaction.setChartOfAccount(model.getChartOfAccountId());
 		transaction.setReceiptNumber(model.getReceiptNumber());
 		transaction.setDebitCreditFlag(model.getDebitCreditFlag());
-		//transaction.setProject(model.getProject());
+
 		transaction.setExplainedTransactionCategory(model.getExplainedTransactionCategory());
 		transaction.setExplainedTransactionDescription(model.getExplainedTransactionDescription());
 		transaction
@@ -83,7 +79,7 @@ public class TransactionRestHelper {
 		transactionModel.setChartOfAccountId(entity.getChartOfAccount());
 		transactionModel.setReceiptNumber(entity.getReceiptNumber());
 		transactionModel.setDebitCreditFlag(entity.getDebitCreditFlag());
-//		transactionModel.setProject(entity.getProject());
+
 		transactionModel.setExplainedTransactionCategory(entity.getExplainedTransactionCategory());
 		transactionModel.setExplainedTransactionDescription(entity.getExplainedTransactionDescription());
 		transactionModel
@@ -147,7 +143,7 @@ public class TransactionRestHelper {
 				transaction.setChartOfAccount(model.getChartOfAccountId());
 				transaction.setReceiptNumber(model.getReceiptNumber());
 				transaction.setDebitCreditFlag(model.getDebitCreditFlag());
-//				transaction.setProject(model.getProject());
+
 				transaction.setExplainedTransactionCategory(model.getExplainedTransactionCategory());
 				transaction.setExplainedTransactionDescription(model.getExplainedTransactionDescription());
 				transaction.setExplainedTransactionAttachementDescription(
@@ -188,7 +184,7 @@ public class TransactionRestHelper {
 				transactionModel.setChartOfAccountId(transaction.getChartOfAccount());
 				transactionModel.setReceiptNumber(transaction.getReceiptNumber());
 				transactionModel.setDebitCreditFlag(transaction.getDebitCreditFlag());
-//				transactionModel.setProject(transaction.getProject());
+
 				transactionModel.setExplainedTransactionCategory(transaction.getExplainedTransactionCategory());
 				transactionModel.setExplainedTransactionDescription(transaction.getExplainedTransactionDescription());
 				transactionModel.setExplainedTransactionAttachementDescription(
@@ -220,7 +216,7 @@ public class TransactionRestHelper {
 		transactionView.setTransactionTypeName(transactionViewModel.getTransactionTypeName());
 		transactionView.setDebitCreditFlag(transactionViewModel.getDebitCreditFlag());
 		transactionView.setTransactionCategoryName(transactionViewModel.getTransactionCategoryName());
-//		transactionView.setExplanationStatusCode(transactionViewModel.getExplanationStatusCode());
+
 		transactionView.setExplanationStatusName(transactionViewModel.getExplanationStatusName());
 		transactionView.setBankAccountId(transactionViewModel.getBankAccountId());
 		transactionView.setCurrentBalance(transactionViewModel.getCurrentBalance());
@@ -245,7 +241,7 @@ public class TransactionRestHelper {
 		transactionViewModel.setTransactionTypeName(transactionView.getTransactionTypeName());
 		transactionViewModel.setDebitCreditFlag(transactionView.getDebitCreditFlag());
 		transactionViewModel.setTransactionCategoryName(transactionView.getTransactionCategoryName());
-//		transactionViewModel.setExplanationStatusCode(transactionView.getExplanationStatusCode());
+
 		transactionViewModel.setExplanationStatusName(transactionView.getExplanationStatusName());
 		transactionViewModel.setBankAccountId(transactionView.getBankAccountId());
 		transactionViewModel.setCurrentBalance(transactionView.getCurrentBalance());

@@ -1,12 +1,12 @@
 package com.simpleaccounts.integration;
 
+import com.simpleaccounts.entity.Mail;
+import com.simpleaccounts.entity.MailAttachment;
 import java.io.File;
 import java.util.List;
-
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
@@ -14,9 +14,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Component;
-
-import com.simpleaccounts.entity.Mail;
-import com.simpleaccounts.entity.MailAttachment;
 
 /**
  * Created by Utkarsh Bhavsar on 28/05/17.
@@ -107,7 +104,7 @@ public class MailIntegration {
 		}catch(Exception e){
 			logger.error("Error sending mail", e);
 		}
-		//javaMailSender.send(preparator);
+
 		logger.info("Email send to =" +mail );
 	}
 	public void sendHtmlMail(final Mail mail, List<MailAttachment> mailAttachmentList, JavaMailSender javaMailSender)

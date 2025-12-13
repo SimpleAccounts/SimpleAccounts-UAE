@@ -1,22 +1,19 @@
 package com.simpleaccounts.rest.transactionparsingcontroller;
 
-import java.util.ArrayList;
-import lombok.RequiredArgsConstructor;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.simpleaccounts.rest.transactionimportcontroller.TransactionImportRequestModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.simpleaccounts.constant.ExcellDelimiterEnum;
 import com.simpleaccounts.criteria.enums.TransactionEnum;
 import com.simpleaccounts.entity.TransactionDataColMapping;
 import com.simpleaccounts.entity.TransactionParsingSetting;
 import com.simpleaccounts.rest.EnumDropdownModel;
+import com.simpleaccounts.rest.transactionimportcontroller.TransactionImportRequestModel;
 import com.simpleaccounts.service.DateFormatService;
 import com.simpleaccounts.service.TransactionParsingSettingService;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
@@ -129,19 +126,18 @@ public class TransactionParsingSettingRestHelper {
 
 		TransactionParsingSettingDetailModel model = new TransactionParsingSettingDetailModel();
 
-//		model.setId(setting.getId());
 		if (setting.getDateFormatId() != null) {
 			model.setDateFormatId(setting.getDateFormatId());
 		}
 		model.setHeaderRowNo(setting.getHeaderRowNo());
 		model.setName(setting.getName());
-//		model.setTextQualifier(model.getSkipRows());
+
 		if(setting.getSkipRows()!= null){
 		model.setSkipRows(setting.getSkipRows());}
 		model.setDelimiter(setting.getDelimiter());
 		model.setOtherDilimiterStr(setting.getOtherDilimiterStr());
 		if (setting.getIndexMap() != null) {
-//			List<TransactionDataColMapping> mappinglist = new ArrayList<>();
+
 			Map<TransactionEnum, Integer> map = setting.getIndexMap();
 
 			for (TransactionEnum dbColEnum : setting.getIndexMap().keySet()) {

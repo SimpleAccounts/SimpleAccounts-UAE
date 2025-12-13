@@ -2,8 +2,6 @@ package com.simpleaccounts.model;
 
 import lombok.Data;
 
-import javax.persistence.*;
-
 @Data
 public class EmployeeDesignationListModel {
     private Integer id;

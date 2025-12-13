@@ -1,23 +1,22 @@
 package com.simpleaccounts.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.simpleaccounts.entity.Event;
 import com.simpleaccounts.service.EventService;
 import com.simpleaccounts.service.InvoiceService;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service("eventService")
+@RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 	
 	private List<Event> events = new ArrayList<>();
 	
-	@Autowired
-	InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 
 	@Override
 	public List<Event> getEvents(Date startDate, Date endDate) {

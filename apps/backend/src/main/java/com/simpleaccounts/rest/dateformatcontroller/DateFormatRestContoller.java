@@ -1,15 +1,23 @@
 package com.simpleaccounts.rest.dateformatcontroller;
 
+
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
+import com.simpleaccounts.aop.LogRequest;
+import com.simpleaccounts.bank.model.DeleteModel;
+import com.simpleaccounts.constant.dbfilter.DateFormatFilterEnum;
+import com.simpleaccounts.entity.DateFormat;
+import com.simpleaccounts.security.JwtTokenUtil;
+import com.simpleaccounts.service.DateFormatService;
+import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,31 +29,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.bank.model.DeleteModel;
-import com.simpleaccounts.constant.dbfilter.DateFormatFilterEnum;
-import com.simpleaccounts.entity.DateFormat;
-import com.simpleaccounts.security.JwtTokenUtil;
-import com.simpleaccounts.service.DateFormatService;
-
-import io.swagger.annotations.ApiOperation;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-
 @Controller
 @RequestMapping("/rest/dateFormat")
+@RequiredArgsConstructor
 public class DateFormatRestContoller {
 
 	private static final Logger logger = LoggerFactory.getLogger(DateFormatRestContoller.class);
 
-	@Autowired
-	private DateFormatService dateFormatService;
+	private final DateFormatService dateFormatService;
 
-	@Autowired
-	private DateFormatRestHelper dateFormatRestHelper;
+	private final DateFormatRestHelper dateFormatRestHelper;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
 	@LogRequest
 	@ApiOperation(value = "Get list of DateFormat")

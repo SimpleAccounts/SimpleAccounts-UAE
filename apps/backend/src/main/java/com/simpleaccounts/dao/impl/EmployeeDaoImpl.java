@@ -1,7 +1,6 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.EmployeeFilterEnum;
 import com.simpleaccounts.dao.AbstractDao;
@@ -12,10 +11,6 @@ import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +18,9 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Repository;
 
 /**
  * Created by Uday on 26/12/2019.
@@ -49,7 +45,7 @@ public class EmployeeDaoImpl extends AbstractDao<Integer, Employee> implements E
 			}
 		}
 		return dropdownObjectModelList;
-		//return getEntityManager().createNamedQuery("employeesForDropdown", DropdownModel.class).getResultList();
+
 	}
 
 	/**

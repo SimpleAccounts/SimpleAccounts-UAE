@@ -4,39 +4,11 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.DRAFT;
 import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.INVOICE_STATUS;
 
-import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
+import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.constant.DiscountType;
 import com.simpleaccounts.constant.InvoiceDuePeriodEnum;
-import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.constant.ProductPriceType;
 import com.simpleaccounts.constant.ProductType;
@@ -80,9 +52,31 @@ import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.service.VatCategoryService;
 import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
-
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+	import java.util.Date;
+	import java.util.HashMap;
+	import java.util.List;
+	import java.util.Map;
+	import java.util.Optional;
+	import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
@@ -139,18 +133,15 @@ public class SimpleAccountMigrationService {
 		Product product = parser.getAppVersionsToProductMap().get(productName + "_v" + version);
 		List<String> files = getFilesPresent(fileLocation);
 		
-		if(files != null)
-		{
-			for (Object file : files) {
-				List<Map<String, String>> mapList = migrationUtil
-						.parseCSVFile((String) fileLocation + File.separator + file);
-				List<Map<String, String>> itemsToRemove = new ArrayList<Map<String, String>>();
-				
-				if(mapList != null)
-				{
-					for (Map<String, String> mapRecord : mapList) {
+			if (files != null) {
+				for (String file : files) {
+					List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
+					List<Map<String, String>> itemsToRemove = new ArrayList<>();
+					
+					if(mapList != null)
+					{
+						for (Map<String, String> mapRecord : mapList) {
 						
-						// for Invoice
 						if (mapRecord.containsKey(SimpleAccountMigrationConstants.INVOICE_DATE)) {
 							Integer result = migrationUtil.compareDate(mapRecord.get(SimpleAccountMigrationConstants.INVOICE_DATE), migFromDate);
 							if (result != null) {
@@ -158,82 +149,48 @@ public class SimpleAccountMigrationService {
 							}
 						}
 						
-						/*
-				// for Bill
-				if (mapRecord.containsKey(BILL_DATE)) {
-					Integer result = migrationUtil.compareDate(mapRecord.get(BILL_DATE), migFromDate);
-					if (result != null) {
-						itemsToRemove = migrationUtil.filterMapRecord(mapList, mapRecord, result, itemsToRemove);
+						}
 					}
-				}
-
-				// for Exchange Rate
-				if (mapRecord.containsKey(DATE)) {
-					Integer result = migrationUtil.compareDate(mapRecord.get(DATE), migFromDate);
-					if (result != null) {
-						itemsToRemove = migrationUtil.filterMapRecord(mapList, mapRecord, result, itemsToRemove);
-					}
-				}
-
-				// for Expense Date
-				if (mapRecord.containsKey(EXPENSE_DATE)) {
-					Integer result = migrationUtil.compareDate(mapRecord.get(EXPENSE_DATE), migFromDate);
-					if (result != null) {
-						itemsToRemove = migrationUtil.filterMapRecord(mapList, mapRecord, result, itemsToRemove);
-					}
-				}
-
-				// for Purchase Order Date
-				if (mapRecord.containsKey(PURCHASE_ORDER_DATE)) {
-					Integer result = migrationUtil.compareDate(mapRecord.get(PURCHASE_ORDER_DATE), migFromDate);
-					if (result != null) {
-						itemsToRemove = migrationUtil.filterMapRecord(mapList, mapRecord, result, itemsToRemove);
-					}
-				}
+					mapList.removeAll(itemsToRemove);
 				
-						 */
-						
+					List<Product.TableList.Table> tableList = product.getTableList().getTable();
+					List<Product.TableList.Table> tables = migrationUtil.getTableName(tableList, file);
+					DataMigrationRespModel dataMigrationRespModel = new DataMigrationRespModel();
+					Company company = companyService.getCompany();
+					dataMigrationRespModel.setMigrationBeginningDate(company.getAccountStartDate().toString());
+					dataMigrationRespModel.setExecutionDate(LocalDateTime.now().toString());
+					dataMigrationRespModel.setFileName(file);
+					long recordCount;
+					Path path = Paths.get(fileLocation, file);
+					try (Stream<String> lines = Files.lines(path)) {
+						recordCount = lines.count() - 1;
 					}
-				}
-				mapList.removeAll(itemsToRemove);
-				
-				List<Product.TableList.Table> tableList = product.getTableList().getTable();
-				List<Product.TableList.Table> tables = migrationUtil.getTableName(tableList, (String) file);
-				DataMigrationRespModel dataMigrationRespModel = new DataMigrationRespModel();
-				Company company = companyService.getCompany();
-				dataMigrationRespModel.setMigrationBeginningDate(company.getAccountStartDate().toString());
-				dataMigrationRespModel.setExecutionDate(LocalDateTime.now().toString());
-				dataMigrationRespModel.setFileName((String) file);
-				long recordCount;
-				Path path = Paths.get(fileLocation, file.toString());
-				try (Stream<String> lines = Files.lines(path)) {
-					recordCount = lines.count() - 1;
-				}
-				dataMigrationRespModel.setRecordCount(recordCount);
-				dataMigrationRespModel.setRecordsMigrated((long) mapList.size());
-				dataMigrationRespModel.setRecordsRemoved((long) itemsToRemove.size());
-				list.add(dataMigrationRespModel);
-				if (isSpecialHandlingNeeded(productName, file.toString())) {
-					handleProductSpecificTables(tables, mapList, userId);
-					continue;
-				}
+					dataMigrationRespModel.setRecordCount(recordCount);
+					dataMigrationRespModel.setRecordsMigrated((long) mapList.size());
+					dataMigrationRespModel.setRecordsRemoved((long) itemsToRemove.size());
+					list.add(dataMigrationRespModel);
+					if (isSpecialHandlingNeeded(productName, file)) {
+						handleProductSpecificTables(tables, mapList, userId);
+						continue;
+					}
 				
 				if(tables != null) 
 				{
-					LOG.info("processTheMigratedData tables ==>{} ", tables);
-					for (Product.TableList.Table table : tables) {
-						// get service Object
-						SimpleAccountsService service = (SimpleAccountsService) migrationUtil.getService(table.getServiceName());
-						List<Product.TableList.Table.ColumnList.Column> columnList = table.getColumnList().getColumn();
-						// csv records
-						for (Map<String, String> record : mapList) {
-							Object entity = migrationUtil.getObject(table.getEntityName());
-							// iterate over all the columns and crate record and persist object to database
-							for (Product.TableList.Table.ColumnList.Column column : columnList) {
-								String val = record.get(column.getInputColumn());
-								LOG.info("processTheMigratedData tables ==>{} ", val);
-								if (StringUtils.isEmpty(val))
-									continue;
+						LOG.info("processTheMigratedData tables ==>{} ", tables);
+						for (Product.TableList.Table table : tables) {
+							// get service Object
+							SimpleAccountsService<Object, Object> service =
+									(SimpleAccountsService<Object, Object>) migrationUtil.getService(table.getServiceName());
+							List<Product.TableList.Table.ColumnList.Column> columnList = table.getColumnList().getColumn();
+							// csv records
+							for (Map<String, String> recordData : mapList) {
+								Object entity = migrationUtil.getObject(table.getEntityName());
+								// iterate over all the columns and crate record and persist object to database
+								for (Product.TableList.Table.ColumnList.Column column : columnList) {
+									String val = recordData.get(column.getInputColumn());
+									LOG.info("processTheMigratedData tables ==>{} ", val);
+									if (StringUtils.isEmpty(val))
+										continue;
 								String setterMethod = column.getSetterMethod();
 								if (setterMethod.equalsIgnoreCase("setCurrency")) {
 									Currency currency = migrationUtil.getCurrencyIdByValue(val);
@@ -260,14 +217,15 @@ public class SimpleAccountMigrationService {
 								}
 							}
 							migrationUtil.setDefaultSetterValues(entity, userId);
-							Optional<Product.TableList.Table> contactTable = tables.stream()
-									.filter(t -> t.getName().equalsIgnoreCase(SimpleAccountMigrationConstants.CONTACTS)).findFirst();
-							if (contactTable.isPresent()) {
-								// Check existing entry in db
-								boolean isContactExist = migrationUtil.contactExist((Contact) entity);
-								if (isContactExist) {
-									LOG.info("Contact Allready Present");
-								} else {
+								Optional<Product.TableList.Table> contactTable = tables.stream()
+										.filter(t -> t.getName().equalsIgnoreCase(SimpleAccountMigrationConstants.CONTACTS)).findFirst();
+								if (contactTable.isPresent()) {
+									// Check existing entry in db
+									Contact contact = (Contact) entity;
+									boolean isContactExist = migrationUtil.contactExist(contact);
+									if (isContactExist) {
+										LOG.info("Contact Allready Present");
+									} else {
 									// Add New Contact for Contact
 									service.persist(entity);
 									migrationUtil.createDependentEntities(entity, userId);
@@ -293,45 +251,39 @@ public class SimpleAccountMigrationService {
     * @param dir
     * @return
     */
-   public List<String> getFilesPresent(String dir) {
-       List<String> resultSet = new ArrayList<String>();
-       List<String> inputFiles = new ArrayList<String>();
+	   public List<String> getFilesPresent(String dir) {
+	       List<String> resultSet = new ArrayList<>();
+	       List<String> inputFiles = new ArrayList<>();
 
-       // get the predefined file order
-       List<String> fileOrder = getFileOrderList();
+	       // get the predefined file order
+	       List<String> fileOrder = getFileOrderList();
 
-       File[] f = new File(dir).listFiles();
-       if(f.length >0)
-       {
-    	   for (File files : f) {
-    		   String fileName = files.getName();
-    		   inputFiles.add(fileName);
-    	   }
-       }
+	       File[] files = new File(dir).listFiles();
+	       if (files == null || files.length == 0) {
+	           return resultSet;
+	       }
 
-       if(fileOrder != null) {
-    	   for (String fo : fileOrder) {
-    		   // check inputfile in file order list.
-    		   if (inputFiles.contains(fo)) {
-    			   resultSet.add(fo);
-    		   }
-    	   }
-       }
-       LOG.info("Input File in Order ==> {} ", resultSet);
-       Set obj = Stream.of(new File(dir).listFiles())
-               .filter(file -> !file.isDirectory())
-               .map(File::getName)
-               .collect(Collectors.toSet());
+	       for (File file : files) {
+	           inputFiles.add(file.getName());
+	       }
 
-       return resultSet;
-   }
+	       for (String fileName : fileOrder) {
+	           // check inputFile in file order list.
+	           if (inputFiles.contains(fileName)) {
+	               resultSet.add(fileName);
+	           }
+	       }
+	       LOG.info("Input File in Order ==> {} ", resultSet);
+
+	       return resultSet;
+	   }
 
    /**
     * This method gives the File Order 
     * @return
     */
    private List<String> getFileOrderList() {
-       //List<String> fileOrder = Arrays.asList("Contacts.csv", "Vendors.csv", "Product.csv", "Exchange_Rate.csv", "Invoice.csv", "Bill.csv", "Expense.csv", "Credit_Note.csv", "Purchase_Order.csv", "Chart_of_Accounts.csv");
+
 		List<String> fileOrder = Arrays.asList(SimpleAccountMigrationConstants.CONTACTS_CSV,
 				SimpleAccountMigrationConstants.VENDORS_CSV, SimpleAccountMigrationConstants.VENDORS_CSV,
 				SimpleAccountMigrationConstants.CURRENCY_EXCHANGE_RATE_CSV, SimpleAccountMigrationConstants.INVOICE_CSV,
@@ -346,7 +298,7 @@ public class SimpleAccountMigrationService {
 	 * To check that isSpecialHandling Needed
 	 */
 	protected boolean isSpecialHandlingNeeded(String productName, String file) {
-       if (StringUtils.equalsIgnoreCase(SimpleAccountMigrationConstants.SIMPLE__ACCOUNTS, productName) && (StringUtils.equalsIgnoreCase(file, SimpleAccountMigrationConstants.PRODUCT_CSV)) ||
+       if (StringUtils.equalsIgnoreCase(SimpleAccountMigrationConstants.SIMPLE_ACCOUNTS, productName) && (StringUtils.equalsIgnoreCase(file, SimpleAccountMigrationConstants.PRODUCT_CSV)) ||
                (StringUtils.equalsIgnoreCase(file, SimpleAccountMigrationConstants.INVOICE_CSV)) || (StringUtils.equalsIgnoreCase(file, SimpleAccountMigrationConstants.OPENING_BALANCES_CSV)) ||
                (StringUtils.equalsIgnoreCase(file, SimpleAccountMigrationConstants.CHART_OF_ACCOUNTS_CSV)) || (StringUtils.equalsIgnoreCase(file, SimpleAccountMigrationConstants.CURRENCY_EXCHANGE_RATE_CSV)) ||
                (StringUtils.equalsIgnoreCase(file, SimpleAccountMigrationConstants.CREDIT_NOTE_CSV)) ) {
@@ -370,15 +322,15 @@ public class SimpleAccountMigrationService {
 			createCustomerInvoice(tables, mapList, userId);
 		}
 		
-		table = tables.stream().filter(t -> t.getName().equalsIgnoreCase(SimpleAccountMigrationConstants.OPENING_BALANCES)).findFirst();
-		if (table.isPresent()) {
-			createOpeningBalance(tables, mapList, userId);
-		}
+			table = tables.stream().filter(t -> t.getName().equalsIgnoreCase(SimpleAccountMigrationConstants.OPENING_BALANCES)).findFirst();
+			if (table.isPresent()) {
+				createOpeningBalance(mapList, userId);
+			}
 		
-		table = tables.stream().filter(t -> t.getName().equalsIgnoreCase(SimpleAccountMigrationConstants.CHART_OF_ACCOUNTS)).findFirst();
-		if (table.isPresent()) {
-			createChartOfAccounts(tables, mapList, userId);
-		}
+			table = tables.stream().filter(t -> t.getName().equalsIgnoreCase(SimpleAccountMigrationConstants.CHART_OF_ACCOUNTS)).findFirst();
+			if (table.isPresent()) {
+				createChartOfAccounts(mapList, userId);
+			}
 		
 		table = tables.stream().filter(t -> t.getName().equalsIgnoreCase(SimpleAccountMigrationConstants.CURRENCY_EXCHANGE_RATE)).findFirst();
 		if (table.isPresent()) {
@@ -407,84 +359,41 @@ public class SimpleAccountMigrationService {
 		LOG.info("createProduct start");
 		Product.TableList.Table productTable = tables.get(0);
 		Product.TableList.Table productLineItemTable = tables.get(1);
-		//Product.TableList.Table inventoryTable = tables.get(2);
 
-		SimpleAccountsService productService = (SimpleAccountsService) migrationUtil.getService(productTable.getServiceName());
-		SimpleAccountsService productLineItemService = (SimpleAccountsService) migrationUtil.getService(productLineItemTable.getServiceName());
-		//SimpleAccountsService inventoryService = (SimpleAccountsService) migrationUtil.getService(inventoryTable.getServiceName());
+		SimpleAccountsService<Object, Object> productMigrationService =
+				(SimpleAccountsService<Object, Object>) migrationUtil.getService(productTable.getServiceName());
+		SimpleAccountsService<Object, Object> productLineItemMigrationService =
+				(SimpleAccountsService<Object, Object>) migrationUtil.getService(productLineItemTable.getServiceName());
 
 		List<Product.TableList.Table.ColumnList.Column> productTableColumnList = productTable.getColumnList().getColumn();
 		List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList = productLineItemTable.getColumnList().getColumn();
 
-		if(mapList != null) {
-			for (Map<String, String> record : mapList) {
-				Object productEntity = migrationUtil.getObject(productTable.getEntityName());
-				setColumnValue(productTableColumnList, record, productEntity);
-				Boolean isInventoryEnabled = migrationUtil.checkInventoryEnabled(record);
-				((com.simpleaccounts.entity.Product) productEntity).setIsInventoryEnabled(isInventoryEnabled);
-				((com.simpleaccounts.entity.Product) productEntity).setIsMigratedRecord(true);
-				((com.simpleaccounts.entity.Product) productEntity).setIsActive(true);
+		if (mapList != null) {
+			for (Map<String, String> recordData : mapList) {
+				com.simpleaccounts.entity.Product productEntity =
+						(com.simpleaccounts.entity.Product) migrationUtil.getObject(productTable.getEntityName());
+				setColumnValue(productTableColumnList, recordData, productEntity);
+				Boolean isInventoryEnabled = migrationUtil.checkInventoryEnabled(recordData);
+				productEntity.setIsInventoryEnabled(isInventoryEnabled);
+				productEntity.setIsMigratedRecord(true);
+				productEntity.setIsActive(true);
 				migrationUtil.setDefaultSetterValues(productEntity, userId);
-				productService.persist(productEntity);
+				productMigrationService.persist(productEntity);
 				
 				List<ProductLineItem> lineItem = new ArrayList<>();
-				ProductLineItem productLineItemEntitySales = null;
 				ProductLineItem productLineItemEntityPurchase = null;
 				
-				///String itemType = record.get("Item Type");
-				/*if (itemType.equalsIgnoreCase("Inventory") || itemType.equalsIgnoreCase("Sales")|| itemType.equalsIgnoreCase("Sales and Purchases")) {
-				productLineItemEntitySales = getExistingProductLineItemForSales(record,
-				productLineItemTable.getEntityName(), productLineItemTableColumnList, userId, productEntity,lineItem);
-				((ProductLineItem) productLineItemEntitySales).setProduct((com.simpleaccounts.entity.Product) productEntity);
-				((ProductLineItem) productLineItemEntitySales).setIsMigratedRecord(true);
-				productLineItemService.persist(productLineItemEntitySales);
-				lineItem.add(productLineItemEntitySales);
-
-			}
-			if (itemType.equalsIgnoreCase("Inventory") || itemType.equalsIgnoreCase("Purchases")|| itemType.equalsIgnoreCase("Sales and Purchases")) {
-				productLineItemEntityPurchase = getExistingProductLineItemForPurchase(record,productLineItemTable.getEntityName(), productLineItemTableColumnList, userId, productEntity,lineItem);
-				((ProductLineItem) productLineItemEntityPurchase).setProduct((com.simpleaccounts.entity.Product) productEntity);
-				((ProductLineItem) productLineItemEntityPurchase).setIsMigratedRecord(true);
-				productLineItemService.persist(productLineItemEntityPurchase);
-				lineItem.add(productLineItemEntityPurchase);
-			}
-			
-				 */
-				productLineItemEntityPurchase = getExistingProductLineItemForPurchase(record,productLineItemTable.getEntityName(), productLineItemTableColumnList, userId, productEntity,lineItem);
-				((ProductLineItem) productLineItemEntityPurchase).setProduct((com.simpleaccounts.entity.Product) productEntity);
-				((ProductLineItem) productLineItemEntityPurchase).setIsMigratedRecord(true);
-				productLineItemService.persist(productLineItemEntityPurchase);
-				lineItem.add(productLineItemEntityPurchase);
-				productService.persist(productEntity);
-				((com.simpleaccounts.entity.Product) productEntity).setLineItemList(lineItem);
-				
-				/*
-			if (isInventoryEnabled) {
-				
-				Object inventoryEntity = migrationUtil.getObject(inventoryTable.getEntityName());
-				setColumnValue(inventoryTableColumnList, record, inventoryEntity);
-				((Inventory) inventoryEntity).setProductId((com.simpleaccounts.entity.Product) productEntity);
-				Float unitCost = ((ProductLineItem) productLineItemEntityPurchase).getUnitPrice().floatValue();
-				Float unitSellingPrice = ((ProductLineItem) productLineItemEntitySales).getUnitPrice().floatValue();
-				((Inventory) inventoryEntity).setUnitCost(unitCost);
-				((Inventory) inventoryEntity).setUnitSellingPrice(unitSellingPrice);
-				migrationUtil.setDefaultSetterValues(inventoryEntity, userId);
-				((Inventory) inventoryEntity).setIsMigratedRecord(true);
-				if (((Inventory) inventoryEntity).getReorderLevel() == null) {
-					((Inventory) inventoryEntity).setReorderLevel(0);
+					productLineItemEntityPurchase = getExistingProductLineItemForPurchase(recordData,
+							productLineItemTable.getEntityName(), productLineItemTableColumnList, userId, productEntity);
+					productLineItemEntityPurchase.setProduct(productEntity);
+					productLineItemEntityPurchase.setIsMigratedRecord(true);
+					productLineItemMigrationService.persist(productLineItemEntityPurchase);
+					lineItem.add(productLineItemEntityPurchase);
+					productMigrationService.persist(productEntity);
+					productEntity.setLineItemList(lineItem);
 				}
-				if (((Inventory) inventoryEntity).getQuantitySold() == null) {
-					((Inventory) inventoryEntity).setQuantitySold(0);
-				}
-				if (((Inventory) inventoryEntity).getPurchaseQuantity() == null) {
-					((Inventory) inventoryEntity).setPurchaseQuantity(0);
-				}
-				inventoryService.persist(inventoryEntity);
-
-			}*/
 			}
 		}
-	}
 
 	private void createCustomerInvoice(List<Table> tables, List<Map<String, String>> mapList, Integer userId) {
 
@@ -492,22 +401,23 @@ public class SimpleAccountMigrationService {
         Product.TableList.Table invoiceTable = tables.get(0);
         Product.TableList.Table invoiceLineItemTable = tables.get(1);
 
-        SimpleAccountsService invoiceLineItemService = (SimpleAccountsService) migrationUtil.getService(invoiceLineItemTable.getServiceName());
+        SimpleAccountsService<Object, Object> invoiceLineItemMigrationService =
+        		(SimpleAccountsService<Object, Object>) migrationUtil.getService(invoiceLineItemTable.getServiceName());
 
         List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList = invoiceTable.getColumnList().getColumn();
         List<Product.TableList.Table.ColumnList.Column> invoiceLineItemTableColumnList = invoiceLineItemTable.getColumnList().getColumn();
-        if(mapList != null) {
-        	for (Map<String, String> record : mapList){
-        		Invoice invoiceEntity = getExistingInvoice(record,invoiceTable.getEntityName(),invoiceTableColumnList,userId);
-        		com.simpleaccounts.entity.Product productEntity = getExistingProduct(record);
-        		InvoiceLineItem invoiceLineItemEntity = getExistingInvoiceLineItem(record,invoiceLineItemTable.getEntityName(),
+        if (mapList != null) {
+        	for (Map<String, String> recordData : mapList){
+        		Invoice invoiceEntity = getExistingInvoice(recordData,invoiceTable.getEntityName(),invoiceTableColumnList,userId);
+        		com.simpleaccounts.entity.Product productEntity = getExistingProduct(recordData);
+        		InvoiceLineItem invoiceLineItemEntity = getExistingInvoiceLineItem(recordData,invoiceLineItemTable.getEntityName(),
         				invoiceLineItemTableColumnList,userId,invoiceEntity,productEntity);
-        		((InvoiceLineItem) invoiceLineItemEntity).setInvoice((com.simpleaccounts.entity.Invoice) invoiceEntity);
-        		((InvoiceLineItem) invoiceLineItemEntity).setIsMigratedRecord(true);
-        		((InvoiceLineItem) invoiceLineItemEntity).setProduct(productEntity);
-        		invoiceLineItemService.persist(invoiceLineItemEntity);
+        		invoiceLineItemEntity.setInvoice(invoiceEntity);
+        		invoiceLineItemEntity.setIsMigratedRecord(true);
+        		invoiceLineItemEntity.setProduct(productEntity);
+        		invoiceLineItemMigrationService.persist(invoiceLineItemEntity);
         		
-        		if(record.get(INVOICE_STATUS).equalsIgnoreCase(DRAFT))
+        		if (DRAFT.equalsIgnoreCase(recordData.get(INVOICE_STATUS)))
         		{
         			invoiceEntity.setStatus(CommonStatusEnum.PENDING.getValue());
         		}
@@ -548,41 +458,47 @@ public class SimpleAccountMigrationService {
 		 * @param mapList
 		 * @param userId
 		 */
-		private void createOpeningBalance(List<Table> tables, List<Map<String, String>> mapList, Integer userId) {
+		private void createOpeningBalance(List<Map<String, String>> mapList, Integer userId) {
 			LOG.info("createOpeningBalance start");
-			 for (Map<String, String> record : mapList) {
-				 BigDecimal Amount = new BigDecimal(record.get(SimpleAccountMigrationConstants.ACCOUNT));
-				 String transactionCategoryName =  record.get(SimpleAccountMigrationConstants.TRANSACTION_CATEGORY_NAME);
-				 String openingDate = record.get(SimpleAccountMigrationConstants.OPENING_DATE);
+			if (mapList == null) {
+				return;
+			}
+			 for (Map<String, String> recordData : mapList) {
+				 BigDecimal amount = new BigDecimal(recordData.get(SimpleAccountMigrationConstants.ACCOUNT));
+				 String transactionCategoryName =  recordData.get(SimpleAccountMigrationConstants.TRANSACTION_CATEGORY_NAME);
+				 String openingDate = recordData.get(SimpleAccountMigrationConstants.OPENING_DATE);
 				 Date effectiveDate = null;
 				 try {
 					 effectiveDate = new SimpleDateFormat("dd-MM-yyyy").parse(openingDate);
 				} catch (ParseException e) {
 					LOG.error(ERROR, e);
 				}
+				 if (effectiveDate == null) {
+					 continue;
+				 }
 				 LOG.info("effectiveDate {}", effectiveDate);
 				 Map<String, Object> param = new HashMap<>();
 				 param.put("transactionCategoryName", transactionCategoryName);
-			     List<TransactionCategory> categorys =   transactionCategoryService.findByAttributes(param);
-			    // TransactionCategory category = transactionCategoryService.findByPK(persistmodel.getTransactionCategoryId());
-			     for(TransactionCategory category : categorys) {
+			     List<TransactionCategory> categories = transactionCategoryService.findByAttributes(param);
+
+			     for(TransactionCategory category : categories) {
 			    	 boolean isDebit = getValidTransactionCategoryType(category);
 			    	 TransactionCategory transactionCategory = transactionCategoryService.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 			    	 List<JournalLineItem> journalLineItemList = new ArrayList<>();
 			    	 Journal journal = new Journal();
 			    	 JournalLineItem journalLineItem1 = new JournalLineItem();
 			    	 journalLineItem1.setTransactionCategory(category);
-			    	 boolean isNegative = Amount.longValue()<0;
+			    	 boolean isNegative = amount.signum() < 0;
 			    	 if (isDebit ) {
 			    		 if(!isNegative)
-			    			 journalLineItem1.setDebitAmount(Amount);
+			    			 journalLineItem1.setDebitAmount(amount);
 			    		 else
-			    			 journalLineItem1.setCreditAmount(Amount.negate());
+			    			 journalLineItem1.setCreditAmount(amount.negate());
 			    	 } else {
 			    		 if(!isNegative)
-			    			 journalLineItem1.setCreditAmount(Amount);
+			    			 journalLineItem1.setCreditAmount(amount);
 			    		 else
-			    			 journalLineItem1.setDebitAmount(Amount.negate());
+			    			 journalLineItem1.setDebitAmount(amount.negate());
 			    	 }
 			    	 journalLineItem1.setReferenceType(PostingReferenceTypeEnum.BALANCE_ADJUSTMENT);
 			    	 journalLineItem1.setReferenceId(category.getTransactionCategoryId());
@@ -594,14 +510,14 @@ public class SimpleAccountMigrationService {
 			    	 journalLineItem2.setTransactionCategory(transactionCategory);
 			    	 if (!isDebit) {
 			    		 if(!isNegative)
-			    			 journalLineItem2.setDebitAmount(Amount);
+			    			 journalLineItem2.setDebitAmount(amount);
 			    		 else
-			    			 journalLineItem2.setCreditAmount(Amount.negate());
+			    			 journalLineItem2.setCreditAmount(amount.negate());
 			    	 } else {
 			    		 if(!isNegative)
-			    			 journalLineItem2.setCreditAmount(Amount);
+			    			 journalLineItem2.setCreditAmount(amount);
 			    		 else
-			    			 journalLineItem2.setDebitAmount(Amount.negate());
+			    			 journalLineItem2.setDebitAmount(amount.negate());
 			    	 }
 			    	 journalLineItem2.setReferenceType(PostingReferenceTypeEnum.BALANCE_ADJUSTMENT);
 			    	 journalLineItem2.setReferenceId(transactionCategory.getTransactionCategoryId());
@@ -632,20 +548,20 @@ public class SimpleAccountMigrationService {
 		 * @param userId
 		 */
 		
-		private void createChartOfAccounts(List<Table> tables, List<Map<String, String>> mapList, Integer userId) {
+		private void createChartOfAccounts(List<Map<String, String>> mapList, Integer userId) {
 			LOG.info("createChartOfAccounts start");
+			if (mapList == null) {
+				return;
+			}
 	         User user = userService.findByPK(userId);
-	         for (Map<String, String> record : mapList) {
-	        	 String  ChartOfAccountName = record.get(SimpleAccountMigrationConstants.CHART_OF_ACCOUNT_NAME);
-	        	 String Type = record.get(SimpleAccountMigrationConstants.TYPE);
-	        	 Integer AccountCode  = Integer.parseInt(record.get(SimpleAccountMigrationConstants.ACCOUNT_CODE));
+	         for (Map<String, String> recordData : mapList) {
+	        	 String chartOfAccountName = recordData.get(SimpleAccountMigrationConstants.CHART_OF_ACCOUNT_NAME);
 	        	 TransactionCategoryBean transactionCategoryBean = new TransactionCategoryBean();
 	        	 
 	        	 transactionCategoryBean.setParentTransactionCategory(null);
 	        	 transactionCategoryBean.setTransactionCategoryId(null);
 	        	 transactionCategoryBean.setTransactionCategoryDescription(null);
-	        	 transactionCategoryBean.setTransactionCategoryName(null);
-	        	 transactionCategoryBean.setTransactionCategoryName(ChartOfAccountName);
+	        	 transactionCategoryBean.setTransactionCategoryName(chartOfAccountName);
 	        	 transactionCategoryBean.setVatCategory(null);
 	        	 transactionCategoryBean.setVersionNumber(null);
 
@@ -706,24 +622,30 @@ public class SimpleAccountMigrationService {
 		 * @param mapList
 		 * @param userId
 		 */
-		private void createCurrencyExchangeRate(List<Product.TableList.Table> tables, List<Map<String, String>> mapList,
-				Integer userId) {
-			Product.TableList.Table currencyConversionTable = tables.get(0);
-			List<Product.TableList.Table.ColumnList.Column> currencyConversionTableColumnList = currencyConversionTable.getColumnList().getColumn();
-	
-			SimpleAccountsService currencyConversionService = (SimpleAccountsService) migrationUtil.getService(currencyConversionTable.getServiceName());
-			for (Map<String, String> record : mapList) {
-				List<CurrencyConversion> currencyConversion = currencyExchangeService.getCurrencyConversionList();
-				//Object currencyConversionEntity = migrationUtil.getObject(currencyConversionTable.getEntityName());
-				CurrencyConversion currencyConversionEntity = (CurrencyConversion) migrationUtil.getObject(currencyConversionTable.getEntityName());
-				setColumnValue(currencyConversionTableColumnList, record, currencyConversionEntity);
-				((CurrencyConversion) currencyConversionEntity).setCurrencyCodeConvertedTo(currencyConversion.get(0).getCurrencyCodeConvertedTo());
-				currencyConversionEntity.setCreatedDate(LocalDateTime.now());
-				System.out.println("currencyConversionEntity => " + currencyConversionEntity);
-				currencyConversionService.persist(currencyConversionEntity);
-	
+			private void createCurrencyExchangeRate(List<Product.TableList.Table> tables, List<Map<String, String>> mapList,
+					Integer userId) {
+				Product.TableList.Table currencyConversionTable = tables.get(0);
+				List<Product.TableList.Table.ColumnList.Column> currencyConversionTableColumnList = currencyConversionTable.getColumnList().getColumn();
+				SimpleAccountsService<Object, Object> currencyConversionMigrationService =
+						(SimpleAccountsService<Object, Object>) migrationUtil.getService(
+								currencyConversionTable.getServiceName());
+				if (mapList == null) {
+					return;
+				}
+
+				List<CurrencyConversion> currencyConversions = currencyExchangeService.getCurrencyConversionList();
+				for (Map<String, String> recordData : mapList) {
+					CurrencyConversion currencyConversionEntity =
+							(CurrencyConversion) migrationUtil.getObject(currencyConversionTable.getEntityName());
+					setColumnValue(currencyConversionTableColumnList, recordData, currencyConversionEntity);
+					if (!currencyConversions.isEmpty()) {
+						currencyConversionEntity.setCurrencyCodeConvertedTo(
+								currencyConversions.get(0).getCurrencyCodeConvertedTo());
+					}
+					migrationUtil.setDefaultSetterValues(currencyConversionEntity, userId);
+					currencyConversionMigrationService.persist(currencyConversionEntity);
+				}
 			}
-		}
 	
 		 /**
 	     * This method will handle Credit Note
@@ -731,26 +653,31 @@ public class SimpleAccountMigrationService {
 	     * @param mapList
 	     * @param userId
 	     */
-	    private void createCreditNote(List<Product.TableList.Table> tables, List<Map<String, String>> mapList,Integer userId) {
-	        Product.TableList.Table invoiceTable = tables.get(0);
-	        Product.TableList.Table invoiceLineItemTable = tables.get(1);
-	        SimpleAccountsService invoiceService = (SimpleAccountsService) migrationUtil.getService(invoiceTable.getServiceName());
-	        SimpleAccountsService invoiceLineItemService = (SimpleAccountsService) migrationUtil.getService(invoiceLineItemTable.getServiceName());
-	
-	        List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList = invoiceTable.getColumnList().getColumn();
-	        List<Product.TableList.Table.ColumnList.Column> invoiceLineItemTableColumnList =
-	                invoiceLineItemTable.getColumnList().getColumn();
-	        for (Map<String, String> record : mapList){
-	            Invoice creditNoteEntity = getExistingCreditNote(record,invoiceTable.getEntityName(),invoiceTableColumnList, userId);
-	            Object invoiceLineItemEntity = migrationUtil.getObject(invoiceLineItemTable.getEntityName());
-	            setColumnValue(invoiceLineItemTableColumnList, record, invoiceLineItemEntity);
-	            migrationUtil.setDefaultSetterValues(invoiceLineItemEntity, userId);
-	            ((InvoiceLineItem) invoiceLineItemEntity).setInvoice((com.simpleaccounts.entity.Invoice) creditNoteEntity);
-	            com.simpleaccounts.entity.Product productEntity = getExistingProduct(record);
-	            ((InvoiceLineItem) invoiceLineItemEntity).setProduct(productEntity);
-	            invoiceLineItemService.persist(invoiceLineItemEntity);
-	        }
-	    }
+		    private void createCreditNote(List<Product.TableList.Table> tables, List<Map<String, String>> mapList,Integer userId) {
+		        Product.TableList.Table invoiceTable = tables.get(0);
+		        Product.TableList.Table invoiceLineItemTable = tables.get(1);
+		        SimpleAccountsService<Object, Object> invoiceLineItemMigrationService =
+		        		(SimpleAccountsService<Object, Object>) migrationUtil.getService(
+		        				invoiceLineItemTable.getServiceName());
+		
+		        List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList = invoiceTable.getColumnList().getColumn();
+		        List<Product.TableList.Table.ColumnList.Column> invoiceLineItemTableColumnList =
+		                invoiceLineItemTable.getColumnList().getColumn();
+		        if (mapList == null) {
+		        	return;
+		        }
+		        for (Map<String, String> recordData : mapList){
+		            Invoice creditNoteEntity = getExistingCreditNote(recordData,invoiceTable.getEntityName(),invoiceTableColumnList, userId);
+		            InvoiceLineItem invoiceLineItemEntity =
+		            		(InvoiceLineItem) migrationUtil.getObject(invoiceLineItemTable.getEntityName());
+		            setColumnValue(invoiceLineItemTableColumnList, recordData, invoiceLineItemEntity);
+		            migrationUtil.setDefaultSetterValues(invoiceLineItemEntity, userId);
+		            invoiceLineItemEntity.setInvoice(creditNoteEntity);
+		            com.simpleaccounts.entity.Product productEntity = getExistingProduct(recordData);
+		            invoiceLineItemEntity.setProduct(productEntity);
+		            invoiceLineItemMigrationService.persist(invoiceLineItemEntity);
+		        }
+		    }
     
 	    /**
 		 * This method is used for 
@@ -760,34 +687,34 @@ public class SimpleAccountMigrationService {
 		 * @param userId
 		 * @return
 		 */
-		private Invoice getExistingCreditNote(Map<String, String> record, String entityName,
-				List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList, Integer userId) {
-			Invoice invoice = null;
-			String invoiceNumber = record.get("Invoice Number");
-			Map<String, Object> param = new HashMap<>();
-			param.put("referenceNumber", invoiceNumber);
-			List<Invoice> invoiceList = invoiceService.findByAttributes(param);
+			private Invoice getExistingCreditNote(Map<String, String> recordData, String entityName,
+					List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList, Integer userId) {
+				Invoice invoice = null;
+				String invoiceNumber = recordData.get("Invoice Number");
+				Map<String, Object> param = new HashMap<>();
+				param.put("referenceNumber", invoiceNumber);
+				List<Invoice> invoiceList = invoiceService.findByAttributes(param);
 			if (!invoiceList.isEmpty()) {
 				return invoiceList.get(0);
 			} else {
 				invoice = (Invoice) migrationUtil.getObject(entityName);
-			}
-			invoice.setStatus(CommonStatusEnum.PENDING.getValue());
-			invoice.setDiscountType(DiscountType.FIXED);
-			setColumnValue(invoiceTableColumnList, record, invoice);
-			migrationUtil.setDefaultSetterValues(invoice, userId);
-			invoice.setType(7);
-			invoiceService.persist(invoice);
-			return invoice;
+				}
+				invoice.setStatus(CommonStatusEnum.PENDING.getValue());
+				invoice.setDiscountType(DiscountType.FIXED);
+				setColumnValue(invoiceTableColumnList, recordData, invoice);
+				migrationUtil.setDefaultSetterValues(invoice, userId);
+				invoice.setType(7);
+				invoiceService.persist(invoice);
+				return invoice;
 			
 		}
 
 	
 	
-	private void setColumnValue(List<Product.TableList.Table.ColumnList.Column> productTableColumnList, Map<String, String> record, Object productEntity) {
+	private void setColumnValue(List<Product.TableList.Table.ColumnList.Column> productTableColumnList, Map<String, String> recordData, Object productEntity) {
 		if(productTableColumnList != null) {
 			for (Product.TableList.Table.ColumnList.Column column : productTableColumnList) {
-				String val = record.get(column.getInputColumn());
+				String val = recordData.get(column.getInputColumn());
 				LOG.info("setColumnValue val {}", val);
 				String setterMethod = column.getSetterMethod();
 				if (setterMethod.equalsIgnoreCase("setProductType")){
@@ -804,7 +731,7 @@ public class SimpleAccountMigrationService {
 				else if(setterMethod.equalsIgnoreCase("setPriceType")){
 					if (StringUtils.isEmpty(val))
 						continue;
-					ProductPriceType value = migrationUtil.getProductPriceType(val,record);
+					ProductPriceType value = migrationUtil.getProductPriceType(val, recordData);
 					migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, TYPE_OBJECT);
 					if (productEntity instanceof ProductLineItem){
 						if (StringUtils.isEmpty(val))
@@ -857,7 +784,7 @@ public class SimpleAccountMigrationService {
 					if (StringUtils.isEmpty(val))
 						continue;
 					Currency currency = migrationUtil.getCurrencyIdByValue(val);
-//                        Currency currency = currencyService.findByPK(value);
+
 					migrationUtil.setRecordIntoEntity(productEntity, setterMethod, currency, TYPE_OBJECT);
 				}
 				else {
@@ -870,68 +797,38 @@ public class SimpleAccountMigrationService {
 			}
 		}
     }
-	
-	
-	 /**
-     * This method will use to get the ExistingProductLineItemForSales
-     * @param record
-     * @param entityName
-     * @param productLineItemTableColumnList
-     * @param userId
-     * @param productEntity
-     * @param lineItem
-     * @return
-     */
-	private ProductLineItem getExistingProductLineItemForSales(Map<String, String> record, String entityName,
-			List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList, Integer userId,
-			Object productEntity, List<ProductLineItem> lineItem) {
-		
-		LOG.info("getExistingProductLineItemForSales start ");
-		ProductLineItem productLineItem = null;
-
-		Map<String, Object> param = new HashMap<>();
-		param.put("product", productEntity);
-		param.put("priceType", ProductPriceType.SALES);
-		List<ProductLineItem> productLineItemList = productLineItemService.findByAttributes(param);
-		if (!productLineItemList.isEmpty()) {
-			return productLineItemList.get(0);
-		} else {
-			productLineItem = (ProductLineItem) migrationUtil.getObject(entityName);
-		}
-		setColumnValueForProductLineItemSales(productLineItemTableColumnList, record, productLineItem);
-		migrationUtil.setDefaultSetterValues(productLineItem, userId);
-		return productLineItem;
-	}
-	
-	private ProductLineItem getExistingProductLineItemForPurchase(Map<String, String> record, String entityName,
-			List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList, Integer userId,
-			Object productEntity, List<ProductLineItem> lineItem) {
-		ProductLineItem productLineItem = null;
-		Map<String, Object> param = new HashMap<>();
-		param.put("product", productEntity);
+			private ProductLineItem getExistingProductLineItemForPurchase(Map<String, String> recordData,
+					String entityName,
+					List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList,
+					Integer userId,
+					Object productEntity) {
+			ProductLineItem productLineItem = null;
+			Map<String, Object> param = new HashMap<>();
+			param.put("product", productEntity);
 		param.put("priceType", ProductPriceType.PURCHASE);
 		List<ProductLineItem> productLineItemList = productLineItemService.findByAttributes(param);
 		if (!productLineItemList.isEmpty()) {
 			return productLineItemList.get(0);
-		} else {
-			productLineItem = (ProductLineItem) migrationUtil.getObject(entityName);
+			} else {
+				productLineItem = (ProductLineItem) migrationUtil.getObject(entityName);
+			}
+			setColumnValueForProductLineItemPurchase(productLineItemTableColumnList, recordData, productLineItem);
+			migrationUtil.setDefaultSetterValues(productLineItem, userId);
+			LOG.info("getExistingProductLineItemForPurchase productLineItem {} ", productLineItem);
+			return productLineItem;
 		}
-		setColumnValueForProductLineItemPurchase(productLineItemTableColumnList, record, productLineItem, lineItem);
-		migrationUtil.setDefaultSetterValues(productLineItem, userId);
-		LOG.info("getExistingProductLineItemForSales productLineItem {} ", productLineItem);
-		return productLineItem;
-	}
-	
-	private void setColumnValueForProductLineItemPurchase(
-			List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList, Map<String, String> record,
-			ProductLineItem productLineItem, List<ProductLineItem> lineItem) {
-		LOG.info("setColumnValueForProductLineItemPurchase start");
-		if(productLineItemTableColumnList != null) {
-			for (Product.TableList.Table.ColumnList.Column column : productLineItemTableColumnList) {
-				String val = record.get(column.getInputColumn());
-				if (StringUtils.isEmpty(val))
-					continue;
-				String setterMethod = column.getSetterMethod();
+		
+		private void setColumnValueForProductLineItemPurchase(
+				List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList,
+				Map<String, String> recordData,
+				ProductLineItem productLineItem) {
+			LOG.info("setColumnValueForProductLineItemPurchase start");
+			if(productLineItemTableColumnList != null) {
+				for (Product.TableList.Table.ColumnList.Column column : productLineItemTableColumnList) {
+					String val = recordData.get(column.getInputColumn());
+					if (StringUtils.isEmpty(val))
+						continue;
+					String setterMethod = column.getSetterMethod();
 				if (setterMethod.equalsIgnoreCase("setPriceType")) {
 					ProductPriceType productPriceType = ProductPriceType.PURCHASE;
 					migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, productPriceType, TYPE_OBJECT);
@@ -956,50 +853,11 @@ public class SimpleAccountMigrationService {
 			}
 		}
 	}
-	
-	/**
-	 * 
-	 * @param productLineItemTableColumnList
-	 * @param record
-	 * @param productLineItem
-	 */
-	private void setColumnValueForProductLineItemSales(
-			List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList, Map<String, String> record,
-			ProductLineItem productLineItem) {
-		LOG.info("setColumnValueForProductLineItemSales start");
-		for (Product.TableList.Table.ColumnList.Column column : productLineItemTableColumnList) {
-			String val = record.get(column.getInputColumn());
-			LOG.info("setColumnValueForProductLineItemSales val {}", val);
-			if (StringUtils.isEmpty(val))
-				continue;
-			String setterMethod = column.getSetterMethod();
-			if (setterMethod.equalsIgnoreCase("setPriceType")) {
-				ProductPriceType productPriceType = ProductPriceType.SALES;
-				migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, productPriceType, TYPE_OBJECT);
-			} else if (setterMethod.equalsIgnoreCase("setTransactioncategory")) {
-				TransactionCategory transactionCategory = migrationUtil.getTransactionCategory(val);
-				migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, transactionCategory, TYPE_OBJECT);
-			} else if (setterMethod.equalsIgnoreCase("setUnitPrice")) {
-				
-				if(val.trim().contains(" "))
-                {
-                	String[] values = val.split(" ");
-                	migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, values[1], "BigDecimal");
-                }else {
-                	migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, val, "BigDecimal");
-                }
-			} else {
-				// set into entity
-				migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, val, column.getDataType());
-			}
-		}
-	}
-	
-	private Invoice getExistingInvoice(Map<String, String> record, String entityName,
+	private Invoice getExistingInvoice(Map<String, String> recordData, String entityName,
 			List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList, Integer userId) {
 		LOG.info("getExistingInvoice start");
 		Invoice invoice = null;
-		String invoiceNumber = record.get("Invoice Number");
+		String invoiceNumber = recordData.get("Invoice Number");
 		Map<String, Object> param = new HashMap<>();
 		param.put("referenceNumber", invoiceNumber);
 		List<Invoice> invoiceList = invoiceService.findByAttributes(param);
@@ -1008,10 +866,10 @@ public class SimpleAccountMigrationService {
 		} else {
 			invoice = (Invoice) migrationUtil.getObject(entityName);
 		}
-		setColumnValue(invoiceTableColumnList, record, invoice);
+		setColumnValue(invoiceTableColumnList, recordData, invoice);
 		migrationUtil.setDefaultSetterValues(invoice, userId);
 		invoice.setType(2);
-		// invoice.setStatus(2);
+
 		invoice.setIsMigratedRecord(true);
 		invoiceService.persist(invoice);
 		LOG.info("getExistingInvoice invoice {} ", invoice);
@@ -1023,18 +881,18 @@ public class SimpleAccountMigrationService {
 	 * @param record
 	 * @return
 	 */
-	 private com.simpleaccounts.entity.Product getExistingProduct(Map<String, String> record) {
-	        String productName =record.get("Item Name");
+	 private com.simpleaccounts.entity.Product getExistingProduct(Map<String, String> recordData) {
+	        String productName =recordData.get("Item Name");
 	        Map<String, Object> param = new HashMap<>();
 	        param.put("productName", productName);
-	       // param.put("priceType", ProductPriceType.BOTH) ;
+
 	        List<com.simpleaccounts.entity.Product> productList = productService.findByAttributes(param);
 	        for (com.simpleaccounts.entity.Product product:productList){
 	        	LOG.info("getExistingInvoice product {} ", product);
 	            return product;
 	        }
 	        return null;
-	       // com.simpleaccounts.entity.Product product = productService.getProductByProductNameAndProductPriceType(productName);
+
 	    }
 	 
 	 
@@ -1048,7 +906,7 @@ public class SimpleAccountMigrationService {
 	  * @param productEntity
 	  * @return
 	  */
-	private InvoiceLineItem getExistingInvoiceLineItem(Map<String, String> record, String entityName,
+	private InvoiceLineItem getExistingInvoiceLineItem(Map<String, String> recordData, String entityName,
 			List<Product.TableList.Table.ColumnList.Column> invoiceLineItemTableColumnList, Integer userId,
 			Invoice invoiceEntity, com.simpleaccounts.entity.Product productEntity) {
 		LOG.info("getExistingInvoiceLineItem start");
@@ -1062,7 +920,7 @@ public class SimpleAccountMigrationService {
 		} else {
 			invoiceLineItem = (InvoiceLineItem) migrationUtil.getObject(entityName);
 		}
-		setColumnValue(invoiceLineItemTableColumnList, record, invoiceLineItem);
+		setColumnValue(invoiceLineItemTableColumnList, recordData, invoiceLineItem);
 		migrationUtil.setDefaultSetterValues(invoiceLineItem, userId);
 		
 		LOG.info("getExistingInvoiceLineItem invoiceLineItem {} ", invoiceLineItem);

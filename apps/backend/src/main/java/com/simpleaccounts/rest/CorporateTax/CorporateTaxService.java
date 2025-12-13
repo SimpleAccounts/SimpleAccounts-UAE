@@ -1,7 +1,6 @@
 package com.simpleaccounts.rest.CorporateTax;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
@@ -17,17 +16,9 @@ import com.simpleaccounts.rest.PostingRequestModel;
 import com.simpleaccounts.rest.financialreport.FinancialReportRequestModel;
 import com.simpleaccounts.rest.financialreport.FinancialReportRestHelper;
 import com.simpleaccounts.rest.financialreport.ProfitAndLossResponseModel;
-
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.DateFormatUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -38,8 +29,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
-	@Service
+@Service
 	@SuppressWarnings({"java:S3973", "java:S115"})
 	@RequiredArgsConstructor
 public class CorporateTaxService {
@@ -175,18 +172,10 @@ public class CorporateTaxService {
         }
         responseModel.setData(paymentHistoryModelList);
         return paymentHistoryModelList;
-    }
-    private Pageable getCTPageableRequest(int pageNo, int pageSize, String sortOrder, String sortingCol) {
-        /*if(sortingCol !=null && !sortingCol.isEmpty())
-            if(sortOrder!=null && sortOrder.contains("desc")) {
-                return PageRequest.of(pageNo, pageSize, Sort.by(sortingCol).descending());
-            }
-            else {
-                return PageRequest.of(pageNo, pageSize, Sort.by(sortingCol).ascending());
-            }
-        }*/
-        return PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
-    }
+	    }
+	    private Pageable getCTPageableRequest(int pageNo, int pageSize, String sortOrder, String sortingCol) {
+	        return PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
+	    }
 
     public void createJournalForCT(CorporateTaxFiling corporateTaxFiling, Integer userId) {
         Journal journal = new Journal();
@@ -340,7 +329,7 @@ public class CorporateTaxService {
         transaction.setBankAccount(bankAccount);
         transaction.setTransactionAmount(corporateTaxPayment.getAmountPaid());
         transaction.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
-       // transaction.setTransactionDescription("Manual Transaction Created Against ReceiptNo "+vatPayment.getVatPaymentNo());
+
         transaction.setTransactionDueAmount(BigDecimal.ZERO);
         TransactionExplanation transactionExplanation = new TransactionExplanation();
             transaction.setCoaCategory(chartOfAccountCategoryService.findByPK(ChartOfAccountCategoryIdEnumConstant.MONEY_SPENT_OTHERS.getId()));

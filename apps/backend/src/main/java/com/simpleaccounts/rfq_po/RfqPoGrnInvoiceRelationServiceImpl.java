@@ -1,12 +1,10 @@
 package com.simpleaccounts.rfq_po;
 
 import com.simpleaccounts.dao.Dao;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service("rfqPoGrnInvoiceRelationService")
 @Transactional

@@ -1,34 +1,41 @@
 package com.simpleaccounts.rest.bankaccountcontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
+import com.simpleaccounts.aop.LogRequest;
+import com.simpleaccounts.bank.model.DeleteModel;
+import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
+import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
+import com.simpleaccounts.constant.dbfilter.BankAccounrFilterEnum;
+import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.Currency;
+import com.simpleaccounts.entity.bankaccount.*;
+import com.simpleaccounts.model.BankModel;
+import com.simpleaccounts.model.DashBoardBankDataModel;
+import com.simpleaccounts.repository.JournalLineItemRepository;
+import com.simpleaccounts.rest.PaginationResponseModel;
+import com.simpleaccounts.security.JwtTokenUtil;
+import com.simpleaccounts.service.*;
+import com.simpleaccounts.service.bankaccount.TransactionService;
+import com.simpleaccounts.utils.MessageUtil;
+import com.simpleaccounts.utils.SimpleAccountsMessage;
+import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import javax.servlet.http.HttpServletRequest;
-
-import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
-import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
-import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.Currency;
-import com.simpleaccounts.entity.bankaccount.*;
-import com.simpleaccounts.model.DashBoardBankDataModel;
-import com.simpleaccounts.repository.JournalLineItemRepository;
-import com.simpleaccounts.service.*;
-import com.simpleaccounts.utils.MessageUtil;
-import com.simpleaccounts.utils.SimpleAccountsMessage;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,18 +46,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.bank.model.DeleteModel;
-import com.simpleaccounts.constant.dbfilter.BankAccounrFilterEnum;
-import com.simpleaccounts.model.BankModel;
-import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.security.JwtTokenUtil;
-import com.simpleaccounts.service.bankaccount.TransactionService;
-
-import io.swagger.annotations.ApiOperation;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -68,8 +63,7 @@ public class BankAccountController{
 
 	private final BankAccountService bankAccountService;
 
-	@Autowired
-	protected JournalService journalService;
+	protected final JournalService journalService;
 
 	private final CoacTransactionCategoryService coacTransactionCategoryService;
 	private final TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
@@ -90,8 +84,7 @@ public class BankAccountController{
 
 	private final TransactionCategoryService transactionCategoryService;
 	private final ExpenseService expenseService;
-	@Autowired
-	JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
 	private final BankAccountRestHelper bankRestHelper;
 
@@ -203,9 +196,9 @@ public class BankAccountController{
 				journal.setJournalLineItems(journalLineItemList);
 				journal.setCreatedBy(userId);
 				journal.setPostingReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
-				//journal.setJournalDate(LocalDate.now());
+
 				journal.setJournalDate(bankModel.getOpeningDate().toLocalDate());
-				//journal.setTransactionDate(LocalDateTime.now());
+
 				journal.setTransactionDate(bankModel.getOpeningDate().toLocalDate());
 				journalService.persist(journal);
                 coacTransactionCategoryService.addCoacTransactionCategory(bankAccount.getTransactionCategory().getChartOfAccount(),
@@ -285,7 +278,7 @@ public class BankAccountController{
 			if (exchangeRate != null) {
 				openBigDecimal = openBigDecimal.multiply(exchangeRate.getExchangeRate());
 			}
-				//	if (bankAccount.getOpeningBalance().compareTo(BigDecimal.valueOf(bankModel.getActualOpeningBalance().longValue()))!= 0) {
+
 			List<JournalLineItem> bankAccJliList = journalLineItemRepository.findAllByReferenceIdAndReferenceType(
 					bankAccount.getTransactionCategory().getTransactionCategoryId(),
 					PostingReferenceTypeEnum.BANK_ACCOUNT);
@@ -296,11 +289,11 @@ public class BankAccountController{
 			for (JournalLineItem journalLineItem : bankAccJliList) {
 				JournalLineItem journalLineItem1 = new JournalLineItem();
 				journalLineItem1.setTransactionCategory(journalLineItem.getTransactionCategory());
-				if (journalLineItem.getDebitAmount() != null && journalLineItem.getDebitAmount().compareTo(BigDecimal.ZERO) == 1) {
-					journalLineItem1.setCreditAmount(journalLineItem.getDebitAmount());
-				} else {
-					journalLineItem1.setDebitAmount(journalLineItem.getCreditAmount());
-				}
+					if (journalLineItem.getDebitAmount() != null && journalLineItem.getDebitAmount().compareTo(BigDecimal.ZERO) > 0) {
+						journalLineItem1.setCreditAmount(journalLineItem.getDebitAmount());
+					} else {
+						journalLineItem1.setDebitAmount(journalLineItem.getCreditAmount());
+					}
 				journalLineItem1.setReferenceType(PostingReferenceTypeEnum.REVERSE_BANK_ACCOUNT);
 				journalLineItem1.setReferenceId(journalLineItem.getReferenceId());
 				journalLineItem1.setExchangeRate(journalLineItem.getExchangeRate());
@@ -357,7 +350,7 @@ public class BankAccountController{
 			journal.setJournalDate(LocalDate.now());
 			journal.setTransactionDate(LocalDate.now());
 			journalService.persist(journal);
-		//}
+
 			message = new SimpleAccountsMessage("0076",
 					MessageUtil.getMessage("bank.account.updated.successful.msg.0076"), false);
 			return new ResponseEntity<>(message,HttpStatus.OK);
@@ -367,7 +360,7 @@ public class BankAccountController{
 					MessageUtil.getMessage("update.unsuccessful.msg"), true);
 			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-//		return new ResponseEntity<>("Update Failure..",HttpStatus.INTERNAL_SERVER_ERROR);
+
 	}
 
 	private void updateTransactionCategory(TransactionCategory category, BankModel bankModel) {
@@ -444,11 +437,11 @@ public class BankAccountController{
 				for (JournalLineItem journalLineItem:bankJLIList){
 					JournalLineItem journalLineItem1 = new JournalLineItem();
 					journalLineItem1.setTransactionCategory(journalLineItem.getTransactionCategory());
-					if (journalLineItem.getDebitAmount()!=null && journalLineItem.getDebitAmount().compareTo(BigDecimal.ZERO)==1) {
-						journalLineItem1.setCreditAmount(journalLineItem.getDebitAmount());
-					} else {
-						journalLineItem1.setDebitAmount(journalLineItem.getCreditAmount());
-					}
+						if (journalLineItem.getDebitAmount()!=null && journalLineItem.getDebitAmount().compareTo(BigDecimal.ZERO)>0) {
+							journalLineItem1.setCreditAmount(journalLineItem.getDebitAmount());
+						} else {
+							journalLineItem1.setDebitAmount(journalLineItem.getCreditAmount());
+						}
 					journalLineItem1.setReferenceType(PostingReferenceTypeEnum.DELETE_BANK_ACCOUNT);
 					journalLineItem1.setReferenceId(journalLineItem.getReferenceId());
 					journalLineItem1.setExchangeRate(journalLineItem.getExchangeRate());
@@ -511,10 +504,9 @@ public class BankAccountController{
                 for(Expense expense : expenseList)
                 	expenseService.delete(expense);
 
-//////////////4				bankAccount.setLastUpdateDate(LocalDateTime.now());
 				bankAccount.setLastUpdatedBy(userId);
 				bankAccount.setDeleteFlag(true);
-				//bankAccountService.delete(bankAccount);
+
 				bankAccountService.update(bankAccount);
 				//delete coac category
 				List<CoacTransactionCategory> coacTransactionCategoryList = coacTransactionCategoryService
@@ -535,7 +527,7 @@ public class BankAccountController{
 				{
 					transactionCategory.setDeleteFlag(Boolean.TRUE);
 					transactionCategoryService.update(transactionCategory);
-					//transactionCategoryService.delete(transactionCategory);
+
 				}
 
 				SimpleAccountsMessage message = null;
@@ -554,7 +546,7 @@ public class BankAccountController{
 					MessageUtil.getMessage(MSG_DELETE_UNSUCCESSFUL), true);
 			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-//		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
 	}
 
 	@LogRequest

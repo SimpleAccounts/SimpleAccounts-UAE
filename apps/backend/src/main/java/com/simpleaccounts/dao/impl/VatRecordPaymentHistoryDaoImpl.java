@@ -1,36 +1,18 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.VatReportFilterEnum;
 import com.simpleaccounts.dao.*;
+import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-        import com.simpleaccounts.constant.DatatableSortingFilterConstant;
-        import com.simpleaccounts.constant.dbfilter.DbFilter;
-        import com.simpleaccounts.constant.dbfilter.ProductFilterEnum;
-        import com.simpleaccounts.constant.dbfilter.VatReportFilterEnum;
-        import com.simpleaccounts.dao.AbstractDao;
-
-        import com.simpleaccounts.rest.PaginationModel;
-        import com.simpleaccounts.rest.PaginationResponseModel;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.stereotype.Repository;
-        import org.springframework.transaction.annotation.Transactional;
-
-        import javax.persistence.Query;
-        import java.util.ArrayList;
-        import java.util.List;
-        import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @Repository
 

@@ -1,23 +1,18 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
-import lombok.RequiredArgsConstructor;
-
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.InventoryHistoryDao;
-
 import com.simpleaccounts.entity.InventoryHistory;
-
 import com.simpleaccounts.rest.InventoryController.InventoryRevenueModel;
 import com.simpleaccounts.rest.InventoryController.TopInventoryRevenueModel;
 import com.simpleaccounts.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
 import java.util.*;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
@@ -39,15 +34,15 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
         inventoryRevenueModel.setTotalRevenueMonthly(getTotalRevenue(startDate, endDate));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.LAST_3_MONTHS, TimeZone.getDefault(), date);
-//        endDate = DateUtils.getEndDate(DateUtils.Duration.LAST_3_MONTHS, TimeZone.getDefault(), date);
+
         inventoryRevenueModel.setTotalRevenueQuarterly(getTotalRevenue(startDate, endDate));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.LAST_6_MONTHS, TimeZone.getDefault(), date);
-//        endDate = DateUtils.getEndDate(DateUtils.Duration.LAST_6_MONTHS, TimeZone.getDefault(), date);
+
         inventoryRevenueModel.setTotalRevenueSixMonthly(getTotalRevenue(startDate, endDate));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.YEARLY, TimeZone.getDefault(), date);
-//        endDate = DateUtils.getEndDate(DateUtils.Duration.YEARLY, TimeZone.getDefault(), date);
+
         inventoryRevenueModel.setTotalRevenueYearly(getTotalRevenue(startDate, endDate));
 
         return inventoryRevenueModel;
@@ -80,15 +75,15 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
         inventoryRevenueModel.setTotalQtySoldMonthly(getTotalQtySold(startDate, endDate));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.LAST_3_MONTHS, TimeZone.getDefault(), date);
-//        endDate = DateUtils.getEndDate(DateUtils.Duration.LAST_3_MONTHS, TimeZone.getDefault(), date);
+
         inventoryRevenueModel.setTotalQtySoldQuarterly(getTotalQtySold(startDate, endDate));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.LAST_6_MONTHS, TimeZone.getDefault(), date);
-//        endDate = DateUtils.getEndDate(DateUtils.Duration.LAST_6_MONTHS, TimeZone.getDefault(), date);
+
         inventoryRevenueModel.setTotalQtySoldSixMonthly(getTotalQtySold(startDate, endDate));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.YEARLY, TimeZone.getDefault(), date);
-//        endDate = DateUtils.getEndDate(DateUtils.Duration.YEARLY, TimeZone.getDefault(), date);
+
         inventoryRevenueModel.setTotalQtySoldYearly(getTotalQtySold(startDate, endDate));
 
         return inventoryRevenueModel;
@@ -102,15 +97,15 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
         topInventoryRevenueModel.setTopSellingProductsMonthly(getTopSellingProducts(startDate, endDate,topInventoryRevenueModel.getTopSellingProductsMonthly()));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.LAST_3_MONTHS, TimeZone.getDefault(), date);
-//        endDate = DateUtils.getEndDate(DateUtils.Duration.LAST_3_MONTHS, TimeZone.getDefault(), date);
+
         topInventoryRevenueModel.setTopSellingProductsQuarterly(getTopSellingProducts(startDate, endDate,topInventoryRevenueModel.getTopSellingProductsQuarterly()));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.LAST_6_MONTHS, TimeZone.getDefault(), date);
-//        endDate = DateUtils.getEndDate(DateUtils.Duration.LAST_6_MONTHS, TimeZone.getDefault(), date);
+
         topInventoryRevenueModel.setTopSellingProductsSixMonthly(getTopSellingProducts(startDate, endDate,topInventoryRevenueModel.getTopSellingProductsSixMonthly()));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.YEARLY, TimeZone.getDefault(), date);
-//        endDate = DateUtils.getEndDate(DateUtils.Duration.YEARLY, TimeZone.getDefault(), date);
+
        topInventoryRevenueModel.setTopSellingProductsYearly(getTopSellingProducts(startDate, endDate,topInventoryRevenueModel.getTopSellingProductsYearly()));
 
         return topInventoryRevenueModel;
@@ -121,7 +116,7 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
         query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
         query.setMaxResults(5);
         List resultList =  query.getResultList();
-        if (resultList!=null  && resultList.size()>0){
+        if (resultList!=null  && !resultList.isEmpty()){
             for (Object object:resultList){
                 Object[] row = (Object[]) object;
                 String productName= (String) row[1];
@@ -141,15 +136,15 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
         topInventoryRevenueModel.setTotalProfitMonthly(getProfit(startDate, endDate,topInventoryRevenueModel.getTotalProfitMonthly()));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.LAST_3_MONTHS, TimeZone.getDefault(), date);
-//        endDate = DateUtils.getEndDate(DateUtils.Duration.LAST_3_MONTHS, TimeZone.getDefault(), date);
+
         topInventoryRevenueModel.setTotalProfitQuarterly(getProfit(startDate, endDate,topInventoryRevenueModel.getTotalProfitQuarterly()));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.LAST_6_MONTHS, TimeZone.getDefault(), date);
-//        endDate = DateUtils.getEndDate(DateUtils.Duration.LAST_6_MONTHS, TimeZone.getDefault(), date);
+
         topInventoryRevenueModel.setTotalProfitSixMonthly(getProfit(startDate, endDate,topInventoryRevenueModel.getTotalProfitSixMonthly()));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.YEARLY, TimeZone.getDefault(), date);
-//        endDate = DateUtils.getEndDate(DateUtils.Duration.YEARLY, TimeZone.getDefault(), date);
+
         topInventoryRevenueModel.setTotalProfitYearly(getProfit(startDate, endDate,topInventoryRevenueModel.getTotalProfitYearly()));
 
         return topInventoryRevenueModel;
@@ -160,7 +155,7 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
         query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
         query.setMaxResults(10);
         List resultList = query.getResultList();
-        if (resultList != null && resultList.size() > 0) {
+        if (resultList != null && !resultList.isEmpty()) {
             for (Object object : resultList) {
                 Object[] row = (Object[]) object;
                 String productName = (String) row[1];
@@ -180,15 +175,15 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
         topInventoryRevenueModel.setLowSellingProductsMonthly(getLowSellingProducts(startDate, endDate,topInventoryRevenueModel.getLowSellingProductsMonthly()));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.LAST_3_MONTHS, TimeZone.getDefault(), date);
-//        endDate = DateUtils.getEndDate(DateUtils.Duration.LAST_3_MONTHS, TimeZone.getDefault(), date);
+
         topInventoryRevenueModel.setLowSellingProductsQuarterly(getLowSellingProducts(startDate, endDate,topInventoryRevenueModel.getLowSellingProductsQuarterly()));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.LAST_6_MONTHS, TimeZone.getDefault(), date);
-//      /  endDate = DateUtils.getEndDate(DateUtils.Duration.LAST_6_MONTHS, TimeZone.getDefault(), date);
+
         topInventoryRevenueModel.setLowSellingProductsSixMonthly(getLowSellingProducts(startDate, endDate,topInventoryRevenueModel.getLowSellingProductsSixMonthly()));
 
         startDate = DateUtils.getStartDate(DateUtils.Duration.YEARLY, TimeZone.getDefault(), date);
-//        endDate = DateUtils.getEndDate(DateUtils.Duration.YEARLY, TimeZone.getDefault(), date);
+
         topInventoryRevenueModel.setLowSellingProductsYearly(getLowSellingProducts(startDate, endDate,topInventoryRevenueModel.getLowSellingProductsYearly()));
 
         return topInventoryRevenueModel;
@@ -199,7 +194,7 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
         query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
         query.setMaxResults(5);
         List resultList =  query.getResultList();
-        if (resultList!=null  && resultList.size()>0){
+        if (resultList!=null  && !resultList.isEmpty()){
             for (Object object:resultList){
                 Object[] row = (Object[]) object;
                 String productName= (String) row[1];

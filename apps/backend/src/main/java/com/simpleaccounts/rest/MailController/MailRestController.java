@@ -19,15 +19,13 @@ import com.simpleaccounts.service.MailThemeTemplatesService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RestController

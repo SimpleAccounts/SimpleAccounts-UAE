@@ -1,5 +1,7 @@
 package com.simpleaccounts.rest.MailController;
 
+import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
+
 import com.simpleaccounts.constant.ConfigurationConstants;
 import com.simpleaccounts.constant.EmailConstant;
 import com.simpleaccounts.dao.MailThemeTemplates;
@@ -18,19 +20,11 @@ import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.MailUtility;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -39,10 +33,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@RequiredArgsConstructor
 public class EmailService {
     private final Logger logger = LoggerFactory.getLogger(EmailService.class);
     private static final String ERROR_PROCESSING_EMAIL = "Error processing email";
@@ -65,38 +66,23 @@ public class EmailService {
     private static final String TEMPLATE_PLACEHOLDER_VAT_IN_WORDS = "{vatInWords}";
     private static final String TEMPLATE_PLACEHOLDER_CURRENCY = "{currency}";
 
-    @Autowired
-    ResourceLoader resourceLoader;
-    @Autowired
-    private EmaiLogsService emaiLogsService;
-    @Autowired
-    UserService userService;
+    private final ResourceLoader resourceLoader;
+    private final EmaiLogsService emaiLogsService;
+    private final UserService userService;
 
-    final freemarker.template.Configuration configuration;
+    private final freemarker.template.Configuration configuration;
 
-    @Autowired
-    private InvoiceRepository invoiceRepository;
+    private final InvoiceRepository invoiceRepository;
 
-    @Autowired
-    private PoQuatationRestHelper poQuatationRestHelper;
-    @Autowired
-    private MailUtility mailUtility;
-    @Autowired
-    private ConfigurationService configurationService;
+    private final PoQuatationRestHelper poQuatationRestHelper;
+    private final MailUtility mailUtility;
+    private final ConfigurationService configurationService;
 
-    @Autowired
-    private InvoiceRestHelper invoiceRestHelper;
+    private final InvoiceRestHelper invoiceRestHelper;
 
-    @Autowired
-    MailThemeTemplatesService mailThemeTemplatesService;
-    @Autowired
-    private PoQuatationRepository poQuatationRepository;
-    @Autowired
-    private CreditNoteRepository creditNoteRepository;
-
-    public EmailService(freemarker.template.Configuration configuration) {
-        this.configuration = configuration;
-    }
+    private final MailThemeTemplatesService mailThemeTemplatesService;
+    private final PoQuatationRepository poQuatationRepository;
+    private final CreditNoteRepository creditNoteRepository;
     public EmailContentModel getEmailContent(EmailContentRequestModel emailContentRequestModel, Integer userId) throws TemplateException, IOException {
         EmailContentModel emailContentModel = new EmailContentModel();
         Integer id = emailContentRequestModel.getId();
@@ -176,7 +162,7 @@ public class EmailService {
             model.put(MODEL_KEY_COMPANY_LOGO, image);
         }
         model.put(MODEL_KEY_CONTACT_NAME,getContactName(invoice));
-        model.put(MODEL_KEY_TOTAL_NET,invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+        model.put(MODEL_KEY_TOTAL_NET,invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()).setScale(2, RoundingMode.HALF_EVEN).toString());
         model.put("notes",getnotes(invoice));
         model.put("invoiceDiscount",getInvoiceDiscount(invoice));
         model.put(MODEL_KEY_TOTAL_TAX, getTotalTax(invoice));
@@ -268,7 +254,7 @@ public class EmailService {
             model.put(MODEL_KEY_COMPANY_LOGO, image);
         }
         model.put(MODEL_KEY_CONTACT_NAME,getContactName(invoice));
-        model.put(MODEL_KEY_TOTAL_NET,invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+        model.put(MODEL_KEY_TOTAL_NET,invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()).setScale(2, RoundingMode.HALF_EVEN).toString());
         model.put("notes",getnotes(invoice));
         model.put("invoiceDiscount",getInvoiceDiscount(invoice));
         model.put(MODEL_KEY_TOTAL_TAX, getTotalTax(invoice));
@@ -366,7 +352,7 @@ public class EmailService {
         model.put("referenceNumber", quotation.getReferenceNumber());
         model.put(MODEL_KEY_TOTAL_TAX, getTotalTax(quotation));
         model.put(MODEL_KEY_COMPANY_NAME, user.getCompany().getCompanyName());
-        model.put(MODEL_KEY_TOTAL_NET,quotation.getTotalAmount().subtract(quotation.getTotalVatAmount()).setScale(2, BigDecimal.ROUND_HALF_EVEN).toString());
+        model.put(MODEL_KEY_TOTAL_NET,quotation.getTotalAmount().subtract(quotation.getTotalVatAmount()).setScale(2, RoundingMode.HALF_EVEN).toString());
         freeMakerHtmlContent = getTemplateToHtmlString(model, fileName);
         logger.info(freeMakerHtmlContent);
         //End of FreeMaker
@@ -524,7 +510,7 @@ public class EmailService {
             throws IOException, TemplateException {
         String freeMakerHtmlContent;
         StringWriter stringWriter = new StringWriter();
-//        String path="MailTemplates/";
+
             configuration.setDirectoryForTemplateLoading(
                 new File(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX)
                         .getURI()).toUri()));

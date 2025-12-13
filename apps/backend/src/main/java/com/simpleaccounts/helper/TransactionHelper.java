@@ -6,7 +6,6 @@
 package com.simpleaccounts.helper;
 
 import com.simpleaccounts.constant.*;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -19,7 +18,6 @@ import com.simpleaccounts.rest.CorporateTax.CorporateTaxPayment;
 import com.simpleaccounts.rest.CorporateTax.Repositories.CorporateTaxPaymentRepository;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.ReconsileRequestLineItemModel;
-
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
 import com.simpleaccounts.rest.financialreport.VatPaymentRepository;
 import com.simpleaccounts.rest.transactioncontroller.TransactionPresistModel;
@@ -28,14 +26,13 @@ import com.simpleaccounts.rest.vatcontroller.VatReportResponseListForBank;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.TransactionStatusService;
 import com.simpleaccounts.utils.DateFormatUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 /**
  *
@@ -530,9 +527,9 @@ public class TransactionHelper {
 		Receipt receipt = new Receipt();
 		receipt.setContact(contact);
 		receipt.setAmount(totalAmt);
-		// receipt.setNotes(receiptRequestModel.getNotes());
+
 		receipt.setReceiptNo("1");
-		// receipt.setReferenceCode(receiptRequestModel.getReferenceCode());
+
 		receipt.setReceiptDate(LocalDateTime.now());
 		receipt.setPayMode(PayMode.BANK);
 		receipt.setDepositeToTransactionCategory(

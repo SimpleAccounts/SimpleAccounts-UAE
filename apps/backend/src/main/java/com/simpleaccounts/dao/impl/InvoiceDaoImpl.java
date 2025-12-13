@@ -1,50 +1,46 @@
 package com.simpleaccounts.dao.impl;
 
-import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Collections;
-import java.util.Map;
-import java.util.TimeZone;
-
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-
 import com.simpleaccounts.constant.*;
-import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.model.EarningDetailsModel;
-import com.simpleaccounts.model.VatReportModel;
-import com.simpleaccounts.model.VatReportResponseModel;
-import com.simpleaccounts.rest.InvoiceOverDueModel;
-import com.simpleaccounts.rest.detailedgeneralledgerreport.ReportRequestModel;
-import com.simpleaccounts.rest.financialreport.VatReportFilingRepository;
-import com.simpleaccounts.rest.financialreport.VatReportFilingRequestModel;
-import com.simpleaccounts.service.TransactionCategoryService;
-import com.simpleaccounts.service.UserService;
-import com.simpleaccounts.utils.DateFormatUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.InvoiceDao;
 import com.simpleaccounts.dao.JournalDao;
 import com.simpleaccounts.dao.JournalLineItemDao;
+import com.simpleaccounts.entity.*;
+import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+import com.simpleaccounts.model.EarningDetailsModel;
 import com.simpleaccounts.model.OverDueAmountDetailsModel;
+import com.simpleaccounts.model.VatReportModel;
+import com.simpleaccounts.model.VatReportResponseModel;
 import com.simpleaccounts.rest.DropdownModel;
+import com.simpleaccounts.rest.InvoiceOverDueModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
+import com.simpleaccounts.rest.detailedgeneralledgerreport.ReportRequestModel;
+import com.simpleaccounts.rest.financialreport.VatReportFilingRepository;
+import com.simpleaccounts.rest.financialreport.VatReportFilingRequestModel;
+import com.simpleaccounts.service.TransactionCategoryService;
+import com.simpleaccounts.service.UserService;
+import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.DateUtils;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
@@ -82,7 +78,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	}
 	@Override
 	public List<DropdownModel> getInvoicesForDropdown(Integer type) {
-		//return getEntityManager().createNamedQuery("invoiceForDropdown", DropdownModel.class).getResultList();
+
 		TypedQuery<DropdownModel> query = getEntityManager().createNamedQuery("invoiceForDropdown", DropdownModel.class);
 		query.setParameter("type", type);
 		return query.getResultList();
@@ -179,7 +175,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		queryOverDue.setParameter("type", type);
 		queryOverDue.setParameter(CommonColumnConstants.CURRENT_DATE, LocalDateTime.now().truncatedTo(ChronoUnit.DAYS));
 		queryOverDue.setParameter(CommonColumnConstants.REFERENCE_TYPE, PostingReferenceTypeEnum.INVOICE);
-		//queryOverDue.setParameter("transactionCategory", transactionCategoryService.findByPK(84));
+
 		queryOverDue.setMaxResults(1);
 		Float overDueAmountFloat = (float)0;
 		InvoiceOverDueModel invoiceOverDueModel = queryOverDue.getSingleResult();
@@ -202,7 +198,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		queryOverDue.setParameter("type", type);
 		queryOverDue.setParameter(CommonColumnConstants.CURRENT_DATE, LocalDateTime.now().truncatedTo(ChronoUnit.DAYS));
 		queryOverDue.setParameter(CommonColumnConstants.REFERENCE_TYPE, PostingReferenceTypeEnum.INVOICE);
-		//queryOverDue.setParameter("transactionCategory", transactionCategoryService.findByPK(84));
+
 		queryOverDue.setMaxResults(1);
 		Float overDueAmountFloat = (float)0;
 		InvoiceOverDueModel invoiceOverDueModel = queryOverDue.getSingleResult();
@@ -262,7 +258,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate));
 		query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
 		query.setParameter(CommonColumnConstants.REFERENCE_TYPE, referenceTypeEnum);
-		//query.setParameter("transactionCategory", transactionCategory);
+
 		query.setMaxResults(1);
 		InvoiceOverDueModel invoiceOverDueModel= query.getSingleResult();
      	return type==1?invoiceOverDueModel.getDebitAmount():invoiceOverDueModel.getCreditAmount();
@@ -275,7 +271,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter(CommonColumnConstants.START_DATE, dateUtil.get(startDate));
 		query.setParameter(CommonColumnConstants.END_DATE, dateUtil.get(endDate));
 		query.setParameter(CommonColumnConstants.REFERENCE_TYPE, referenceTypeEnum);
-		//query.setParameter("transactionCategory", transactionCategory);
+
 		query.setMaxResults(1);
 		InvoiceOverDueModel invoiceOverDueModel= query.getSingleResult();
 		return type==1?invoiceOverDueModel.getDebitAmount():invoiceOverDueModel.getCreditAmount();
@@ -461,7 +457,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter(CommonColumnConstants.END_DATE,endDate);
 		query.setParameter(CommonColumnConstants.EDIT_FLAG,editFlag);
 		BigDecimal amountWithoutVat = query.getSingleResult();
-//		vatReportResponseModel.setZeroRatedSupplies(amountWithoutVat);
+
 	}
 	@Override
 	public void getSumOfTotalAmountWithVatForRCM(ReportRequestModel reportRequestModel, VatReportResponseModel vatReportResponseModel) {

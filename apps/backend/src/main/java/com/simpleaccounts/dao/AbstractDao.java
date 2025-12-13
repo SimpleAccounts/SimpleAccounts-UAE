@@ -3,41 +3,33 @@ package com.simpleaccounts.dao;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.ORDERBYENUM;
 import com.simpleaccounts.rest.PaginationModel;
-
-import lombok.extern.slf4j.Slf4j;
-
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.FlushModeType;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
-
-	private static final String AND_CLAUSE = " and ";
-	private static final String WHERE_CLAUSE = " where ";
 
 	protected Class<ENTITY> entityClass;
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@Autowired
+	@PersistenceUnit
 	private EntityManagerFactory emf;
 
 	@SuppressWarnings("unchecked")

@@ -1,38 +1,33 @@
 package com.simpleaccounts.dao.impl.bankaccount;
 
 import com.simpleaccounts.constant.*;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.TransactionFilterEnum;
-import com.simpleaccounts.model.TransactionReportRestModel;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Query;
-import javax.persistence.TemporalType;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.bankaccount.TransactionDao;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionView;
+import com.simpleaccounts.model.TransactionReportRestModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.utils.CommonUtil;
 import com.simpleaccounts.utils.DateUtils;
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import javax.persistence.Query;
+import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
@@ -586,7 +581,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankId);
 		query.setParameter(CommonColumnConstants.END_DATE, reconcileDate);
 		List<Transaction> transactionList = query.getResultList();
-		return (transactionList!=null && transactionList.size()>0)?transactionList.get(0).getTransactionDate():null;
+		return (transactionList!=null && !transactionList.isEmpty())?transactionList.get(0).getTransactionDate():null;
 	}
 
 	public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId,
@@ -622,7 +617,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		query.setParameter("transactionAmount", transactionAmount);
 		query.setParameter("transactionDescription",transactionDescription);
 		List<Transaction> transactionList = query.getResultList();
-		return transactionList!=null && transactionList.size()>0;
+		return transactionList!=null && !transactionList.isEmpty();
 	}
     @Override
 	public Integer getExplainedTransactionCountByTransactionCategoryId(Integer transactionCategoryId){

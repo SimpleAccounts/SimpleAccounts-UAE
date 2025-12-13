@@ -9,7 +9,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.Purchase;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -61,9 +60,7 @@ class PurchaseDaoImplTest {
         List<Purchase> result = purchaseDao.getAllPurchase();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(5);
-        assertThat(result).isEqualTo(purchases);
+        assertThat(result).isNotNull().hasSize(5).isEqualTo(purchases);
     }
 
     @Test
@@ -79,8 +76,7 @@ class PurchaseDaoImplTest {
         List<Purchase> result = purchaseDao.getAllPurchase();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -122,8 +118,7 @@ class PurchaseDaoImplTest {
         Purchase result = purchaseDao.getClosestDuePurchaseByContactId(contactId);
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(purchases.get(0));
+        assertThat(result).isNotNull().isEqualTo(purchases.get(0));
     }
 
     @Test
@@ -206,9 +201,7 @@ class PurchaseDaoImplTest {
         List<Purchase> result = purchaseDao.getPurchaseListByDueAmount();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(5);
-        assertThat(result).isEqualTo(purchases);
+        assertThat(result).isNotNull().hasSize(5).isEqualTo(purchases);
     }
 
     @Test
@@ -226,8 +219,7 @@ class PurchaseDaoImplTest {
         List<Purchase> result = purchaseDao.getPurchaseListByDueAmount();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -245,8 +237,7 @@ class PurchaseDaoImplTest {
         List<Purchase> result = purchaseDao.getPurchaseListByDueAmount();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -531,8 +522,7 @@ class PurchaseDaoImplTest {
         Purchase result = purchaseDao.getClosestDuePurchaseByContactId(contactId);
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(purchases.get(0));
+        assertThat(result).isNotNull().isEqualTo(purchases.get(0));
     }
 
     private List<Purchase> createPurchaseList(int count) {

@@ -1,20 +1,23 @@
 package com.simpleaccounts.rest.Logincontroller;
 
-import java.time.LocalDateTime;
-import lombok.RequiredArgsConstructor;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.EmailLogs;
 import com.simpleaccounts.entity.PasswordHistory;
+import com.simpleaccounts.entity.User;
+import com.simpleaccounts.model.JwtRequest;
 import com.simpleaccounts.repository.PasswordHistoryRepository;
 import com.simpleaccounts.repository.UserJpaRepository;
 import com.simpleaccounts.rest.usercontroller.UserRestHelper;
 import com.simpleaccounts.service.EmaiLogsService;
+import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.annotations.ApiOperation;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,13 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.entity.User;
-import com.simpleaccounts.model.JwtRequest;
-import com.simpleaccounts.service.UserService;
-
-import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/public")
@@ -41,11 +37,9 @@ public class LoginRestController {
 
 	private final UserRestHelper userRestHelper;
 
-	@Autowired
-	PasswordHistoryRepository passwordHistoryRepository;
+	private final PasswordHistoryRepository passwordHistoryRepository;
 
-	@Autowired
-	UserJpaRepository userJpaRepository;
+	private final UserJpaRepository userJpaRepository;
 
 	@LogRequest
 	@ApiOperation(value = "forgotPassword")
@@ -58,11 +52,11 @@ public class LoginRestController {
 		if (userList == null || (userList != null && userList.isEmpty()))
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		for(User user :userList) {
-//		User user = userList.get(0);
-			if (user.getDeleteFlag() != true) {
-				userService.updateForgotPasswordToken(user, jwtRequest);
-				EmailLogs emailLogs = new EmailLogs();
-				emailLogs.setCreatedBy(user.getUserId());
+
+				if (!Boolean.TRUE.equals(user.getDeleteFlag())) {
+					userService.updateForgotPasswordToken(user, jwtRequest);
+					EmailLogs emailLogs = new EmailLogs();
+					emailLogs.setCreatedBy(user.getUserId());
                 emailLogs.setCreatedDate(LocalDateTime.now());
 				emailLogs.setEmailDate(LocalDateTime.now());
 				emailLogs.setEmailTo(user.getUserEmail());

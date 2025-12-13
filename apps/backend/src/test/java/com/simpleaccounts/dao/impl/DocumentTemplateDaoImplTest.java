@@ -3,11 +3,10 @@ package com.simpleaccounts.dao.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.lenient;
 
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.entity.DocumentTemplate;
@@ -169,8 +168,7 @@ class DocumentTemplateDaoImplTest {
 
     List<DocumentTemplate> results = documentTemplateDao.executeQuery(filters);
 
-    assertThat(results).isNotNull();
-    assertThat(results).hasSize(1);
+    assertThat(results).isNotNull().hasSize(1);
     assertThat(results.get(0)).isEqualTo(testDocumentTemplate);
   }
 
@@ -192,8 +190,7 @@ class DocumentTemplateDaoImplTest {
 
     List<DocumentTemplate> results = documentTemplateDao.executeQuery(filters, paginationModel);
 
-    assertThat(results).isNotNull();
-    assertThat(results).hasSize(1);
+    assertThat(results).isNotNull().hasSize(1);
     verify(typedQuery).setFirstResult(0);
     verify(typedQuery).setMaxResults(10);
   }
@@ -235,8 +232,7 @@ class DocumentTemplateDaoImplTest {
 
     List<DocumentTemplate> results = documentTemplateDao.executeNamedQuery(namedQuery);
 
-    assertThat(results).isNotNull();
-    assertThat(results).hasSize(1);
+    assertThat(results).isNotNull().hasSize(1);
     verify(entityManager).createNamedQuery(namedQuery, DocumentTemplate.class);
   }
 
@@ -251,8 +247,7 @@ class DocumentTemplateDaoImplTest {
 
     List<DocumentTemplate> results = documentTemplateDao.executeNamedQuery(namedQuery);
 
-    assertThat(results).isNotNull();
-    assertThat(results).hasSize(1);
+    assertThat(results).isNotNull().hasSize(1);
     assertThat(results.get(0).getName()).isEqualTo("Invoice Template");
   }
 
@@ -267,8 +262,7 @@ class DocumentTemplateDaoImplTest {
 
     List<DocumentTemplate> results = documentTemplateDao.executeNamedQuery(namedQuery);
 
-    assertThat(results).isNotNull();
-    assertThat(results).hasSize(1);
+    assertThat(results).isNotNull().hasSize(1);
     assertThat(results.get(0).getType()).isEqualTo(1);
   }
 
@@ -276,8 +270,7 @@ class DocumentTemplateDaoImplTest {
   @DisplayName("Should return entity manager instance")
   void getEntityManagerReturnsInstance() {
     EntityManager result = documentTemplateDao.getEntityManager();
-    assertThat(result).isNotNull();
-    assertThat(result).isEqualTo(entityManager);
+    assertThat(result).isNotNull().isEqualTo(entityManager);
   }
 
   @Test
@@ -286,8 +279,7 @@ class DocumentTemplateDaoImplTest {
     List<DocumentTemplate> expectedResults = Arrays.asList(testDocumentTemplate, createTestDocumentTemplate());
     when(typedQuery.getResultList()).thenReturn(expectedResults);
     List<DocumentTemplate> results = documentTemplateDao.dumpData();
-    assertThat(results).isNotNull();
-    assertThat(results).hasSize(2);
+    assertThat(results).isNotNull().hasSize(2);
   }
 
   @Test
@@ -297,8 +289,7 @@ class DocumentTemplateDaoImplTest {
     List<DocumentTemplate> expectedResults = Arrays.asList(testDocumentTemplate);
     when(typedQuery.getResultList()).thenReturn(expectedResults);
     List<DocumentTemplate> results = documentTemplateDao.executeQuery(emptyFilters);
-    assertThat(results).isNotNull();
-    assertThat(results).hasSize(1);
+    assertThat(results).isNotNull().hasSize(1);
   }
 
   @Test
@@ -312,8 +303,7 @@ class DocumentTemplateDaoImplTest {
 
     List<DocumentTemplate> results = documentTemplateDao.executeQuery(filters);
 
-    assertThat(results).isNotNull();
-    assertThat(results).hasSize(1);
+    assertThat(results).isNotNull().hasSize(1);
   }
 
   @Test

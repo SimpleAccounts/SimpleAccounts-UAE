@@ -21,36 +21,11 @@ import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstant
 import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.PURCHASE_ORDER_DATE;
 import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.VENDORS;
 
-import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.constant.DiscountType;
 import com.simpleaccounts.constant.InvoiceDuePeriodEnum;
-import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.PayMode;
 import com.simpleaccounts.constant.ProductPriceType;
 import com.simpleaccounts.constant.ProductType;
@@ -114,11 +89,31 @@ import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.service.VatCategoryService;
 import com.simpleaccounts.utils.FileHelper;
-
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-	@Component
+@Component
 	@Slf4j
 	@SuppressWarnings("java:S3973")
 	@RequiredArgsConstructor
@@ -184,10 +179,9 @@ public class ZohoMigrationService {
 			{
 	        	for (String file : files) {
 	        		List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
-	        		List<Map<String, String>> itemsToRemove = new ArrayList<Map<String, String>>();
+		        		List<Map<String, String>> itemsToRemove = new ArrayList<>();
 	        		for (Map<String, String> mapRecord : mapList) {
         			
-        			// for Invoice
         			if (mapRecord.containsKey(INVOICE_DATE)) {
         				Integer result = migrationUtil.compareDate(mapRecord.get(INVOICE_DATE), migFromDate);
         				if (result!=null) {
@@ -195,7 +189,6 @@ public class ZohoMigrationService {
         				}
         			}
         			
-        			// for Bill
         			if (mapRecord.containsKey(BILL_DATE)) {
         				Integer result = migrationUtil.compareDate(mapRecord.get(BILL_DATE), migFromDate);
         				if (result!=null) {
@@ -203,7 +196,6 @@ public class ZohoMigrationService {
         				}
         			}
         			
-        			// for Exchange Rate
         			if (mapRecord.containsKey(DATE)) {
         				Integer result = migrationUtil.compareDate(mapRecord.get(DATE), migFromDate);
         				if (result!=null) {
@@ -211,7 +203,6 @@ public class ZohoMigrationService {
         				}
         			}
         			
-        			// for Expense Date
         			if (mapRecord.containsKey(EXPENSE_DATE)) {
         				Integer result = migrationUtil.compareDate(mapRecord.get(EXPENSE_DATE), migFromDate);
         				if (result!=null) {
@@ -219,7 +210,6 @@ public class ZohoMigrationService {
         				}
         			}
         			
-        			// for Purchase Order Date
         			if (mapRecord.containsKey(PURCHASE_ORDER_DATE)) {
         				Integer result = migrationUtil.compareDate(mapRecord.get(PURCHASE_ORDER_DATE), migFromDate);
         				if (result!=null) {
@@ -254,19 +244,20 @@ public class ZohoMigrationService {
 	        		}
         		if(tables != null) 
 				{
-					LOG.info("processTheMigratedData tables ==>{} ", tables);
-					for (Product.TableList.Table table : tables) {
-						// get service Object
-						SimpleAccountsService service = (SimpleAccountsService) migrationUtil.getService(table.getServiceName());
-						List<Product.TableList.Table.ColumnList.Column> columnList = table.getColumnList().getColumn();
-						// csv records
-						for (Map<String, String> record : mapList) {
-							Object entity = migrationUtil.getObject(table.getEntityName());
-							// iterate over all the columns and crate record and persist object to database
-							for (Product.TableList.Table.ColumnList.Column column : columnList) {
-								String val = record.get(column.getInputColumn());
-								if (StringUtils.isEmpty(val))
-									continue;
+						LOG.info("processTheMigratedData tables ==>{} ", tables);
+						for (Product.TableList.Table table : tables) {
+							// get service Object
+							SimpleAccountsService<Object, Object> service = (SimpleAccountsService<Object, Object>) migrationUtil.getService(
+									table.getServiceName());
+							List<Product.TableList.Table.ColumnList.Column> columnList = table.getColumnList().getColumn();
+							// csv records
+							for (Map<String, String> recordData : mapList) {
+								Object entity = migrationUtil.getObject(table.getEntityName());
+								// iterate over all the columns and crate record and persist object to database
+								for (Product.TableList.Table.ColumnList.Column column : columnList) {
+									String val = recordData.get(column.getInputColumn());
+									if (StringUtils.isEmpty(val))
+										continue;
 								String setterMethod = column.getSetterMethod();
 								if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_CURRENCY)) {
 									Currency currency = migrationUtil.getCurrencyIdByValue(val);
@@ -421,12 +412,7 @@ public class ZohoMigrationService {
 	    		entity.setMobileNumber("971000000000");
 	    	}
 	    	
-	    	/*if(entity.getVatRegistrationNumber() == null)
-	    	{
-	    		entity.setVatRegistrationNumber("00");
-	    	}*/
-		
-	}
+		}
 
 		/**
 	      * This method returns list of files present under specified directory
@@ -434,38 +420,32 @@ public class ZohoMigrationService {
 	     * @param dir
 	     * @return
 	     */
-	    public List<String> getFilesPresent(String dir) {
-	        List<String> resultSet = new ArrayList<String>();
-	        List<String> inputFiles = new ArrayList<String>();
-	
-	        // get the predefined file order
-	        List<String> fileOrder = getFileOrderList();
-	
-	        File[] f = new File(dir).listFiles();
-	        if(f.length >0)
-	        {
-	     	   for (File files : f) {
-	     		   String fileName = files.getName();
-	     		   inputFiles.add(fileName);
-	     	   }
-	        }
+		    public List<String> getFilesPresent(String dir) {
+				List<String> resultSet = new ArrayList<>();
+				List<String> inputFiles = new ArrayList<>();
 
-	        if(fileOrder != null) {
-	     	   for (String fo : fileOrder) {
-	     		   // check inputfile in file order list.
-	     		   if (inputFiles.contains(fo)) {
-	     			   resultSet.add(fo);
-	     		   }
-	     	   }
-	        }
-	        LOG.info("Input File in Order ==> {} ", resultSet);
-	        Set obj = Stream.of(new File(dir).listFiles())
-	                .filter(file -> !file.isDirectory())
-	                .map(File::getName)
-	                .collect(Collectors.toSet());
-	
-	        return resultSet;
-	    }
+				// get the predefined file order
+				List<String> fileOrder = getFileOrderList();
+
+				File[] files = new File(dir).listFiles();
+				if (files == null || files.length == 0) {
+					return resultSet;
+				}
+
+				for (File file : files) {
+					inputFiles.add(file.getName());
+				}
+
+				for (String fileName : fileOrder) {
+					// check inputFile in file order list.
+					if (inputFiles.contains(fileName)) {
+						resultSet.add(fileName);
+					}
+				}
+
+				LOG.info("Input File in Order ==> {} ", resultSet);
+				return resultSet;
+			    }
 
 	    /**
 	     * This method gives the File Order 
@@ -549,23 +529,26 @@ public class ZohoMigrationService {
 	        Product.TableList.Table productLineItemTable = tables.get(1);
 	        Product.TableList.Table inventoryTable = tables.get(2);
 
-	        SimpleAccountsService productService = (SimpleAccountsService) migrationUtil.getService(productTable.getServiceName());
-	        SimpleAccountsService productLineItemService = (SimpleAccountsService) migrationUtil.getService(productLineItemTable.getServiceName());
-	        SimpleAccountsService inventoryService = (SimpleAccountsService) migrationUtil.getService(inventoryTable.getServiceName());
+	        SimpleAccountsService<Object, Object> productMigrationService =
+	                (SimpleAccountsService<Object, Object>) migrationUtil.getService(productTable.getServiceName());
+	        SimpleAccountsService<Object, Object> productLineItemMigrationService =
+	                (SimpleAccountsService<Object, Object>) migrationUtil.getService(productLineItemTable.getServiceName());
+	        SimpleAccountsService<Object, Object> inventoryMigrationService =
+	                (SimpleAccountsService<Object, Object>) migrationUtil.getService(inventoryTable.getServiceName());
 
 	        List<Product.TableList.Table.ColumnList.Column> productTableColumnList = productTable.getColumnList().getColumn();
 	        List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList = productLineItemTable.getColumnList().getColumn();
 	        List<Product.TableList.Table.ColumnList.Column> inventoryTableColumnList = inventoryTable.getColumnList().getColumn();
 	        // csv records
 	        if(mapList != null) {
-	        	for (Map<String, String> record : mapList){
+	        	for (Map<String, String> recordData : mapList){
 	        		
-	        		Boolean isProductExist = checkExistingProduct(record);
-	        		if(!isProductExist)
+	        		Boolean isProductExist = checkExistingProduct(recordData);
+	       		if(!Boolean.TRUE.equals(isProductExist))
 	        		{
 	        			Object productEntity = migrationUtil.getObject(productTable.getEntityName());
-	        			setColumnValue(productTableColumnList, record, productEntity);
-	        			Boolean isInventoryEnabled = migrationUtil.checkInventoryEnabled(record);
+	        			setColumnValue(productTableColumnList, recordData, productEntity);
+	        			Boolean isInventoryEnabled = migrationUtil.checkInventoryEnabled(recordData);
 	        			((com.simpleaccounts.entity.Product) productEntity).setIsInventoryEnabled(isInventoryEnabled);
 	        			((com.simpleaccounts.entity.Product) productEntity).setIsMigratedRecord(true);
 	        			((com.simpleaccounts.entity.Product) productEntity).setIsActive(true);
@@ -573,42 +556,42 @@ public class ZohoMigrationService {
 	        			((com.simpleaccounts.entity.Product) productEntity).setExciseAmount(BigDecimal.ZERO);
 	        			
 	        			migrationUtil.setDefaultSetterValues(productEntity, userId);
-	        			productService.persist(productEntity);
+	        			productMigrationService.persist(productEntity);
 	        			
 	        			List<ProductLineItem> lineItem = new ArrayList<>();
 	        			ProductLineItem productLineItemEntitySales = null;
 	        			ProductLineItem productLineItemEntityPurchase = null;
 
-	        			String itemType = record.get("Item Type");
+	        			String itemType = recordData.get("Item Type");
 	        			if (itemType.equalsIgnoreCase("Inventory")||itemType.equalsIgnoreCase("Sales")||
 	        					itemType.equalsIgnoreCase("Sales and Purchases")){
-	        				productLineItemEntitySales = getExistingProductLineItemForSales(record,productLineItemTable.
-	        						getEntityName(),productLineItemTableColumnList,userId,productEntity,lineItem);
+	        				productLineItemEntitySales = getExistingProductLineItemForSales(recordData,productLineItemTable.
+	        						getEntityName(),productLineItemTableColumnList,userId,productEntity);
 
-	        				((ProductLineItem) productLineItemEntitySales).setProduct((com.simpleaccounts.entity.Product) productEntity);
-	        				((ProductLineItem) productLineItemEntitySales).setIsMigratedRecord(true);
-	        				productLineItemService.persist(productLineItemEntitySales);
+	        				productLineItemEntitySales.setProduct((com.simpleaccounts.entity.Product) productEntity);
+	        				productLineItemEntitySales.setIsMigratedRecord(true);
+	        				productLineItemMigrationService.persist(productLineItemEntitySales);
 	        				lineItem.add(productLineItemEntitySales);
 	        				
 	        			}
 	        			if (itemType.equalsIgnoreCase("Inventory")||itemType.equalsIgnoreCase("Purchases")||
 	        					itemType.equalsIgnoreCase("Sales and Purchases")) {
-	        				productLineItemEntityPurchase = getExistingProductLineItemForPurchase(record, productLineItemTable.
+	        				productLineItemEntityPurchase = getExistingProductLineItemForPurchase(recordData, productLineItemTable.
 	        						getEntityName(), productLineItemTableColumnList, userId, productEntity,lineItem);
-	        				((ProductLineItem) productLineItemEntityPurchase).setProduct((com.simpleaccounts.entity.Product) productEntity);
-	        				((ProductLineItem) productLineItemEntityPurchase).setIsMigratedRecord(true);
-	        				productLineItemService.persist(productLineItemEntityPurchase);
+	        				productLineItemEntityPurchase.setProduct((com.simpleaccounts.entity.Product) productEntity);
+	        				productLineItemEntityPurchase.setIsMigratedRecord(true);
+	        				productLineItemMigrationService.persist(productLineItemEntityPurchase);
 
 	        				lineItem.add(productLineItemEntityPurchase);
 	        			}
-	        			productService.persist(productEntity);
+	        			productMigrationService.persist(productEntity);
 	        			((com.simpleaccounts.entity.Product) productEntity).setLineItemList(lineItem);
-	        			if (isInventoryEnabled){
+	        		if (Boolean.TRUE.equals(isInventoryEnabled)){
 	        				Object inventoryEntity = migrationUtil.getObject(inventoryTable.getEntityName());
-	        				setColumnValue(inventoryTableColumnList , record ,inventoryEntity);
+	        				setColumnValue(inventoryTableColumnList , recordData ,inventoryEntity);
 	        				((Inventory) inventoryEntity).setProductId((com.simpleaccounts.entity.Product) productEntity);
-	        				Float unitCost =   ((ProductLineItem) productLineItemEntityPurchase).getUnitPrice().floatValue();
-	        				Float unitSellingPrice = ((ProductLineItem) productLineItemEntitySales).getUnitPrice().floatValue();
+	        				Float unitCost = productLineItemEntityPurchase.getUnitPrice().floatValue();
+	        				Float unitSellingPrice = productLineItemEntitySales.getUnitPrice().floatValue();
 	        				((Inventory) inventoryEntity).setUnitCost(unitCost);
 	        				((Inventory) inventoryEntity).setUnitSellingPrice(unitSellingPrice);
 	        				migrationUtil.setDefaultSetterValues(inventoryEntity,userId);
@@ -622,13 +605,13 @@ public class ZohoMigrationService {
 	        				if (((Inventory) inventoryEntity).getPurchaseQuantity()==null){
 	        					((Inventory) inventoryEntity).setPurchaseQuantity(0);
 	        				}
-	        				inventoryService.persist(inventoryEntity);
+	        				inventoryMigrationService.persist(inventoryEntity);
 	        				
 	        			}
 	        		}
 	        		else {
 	        			LOG.info("Product Allready Present");
-	        			LOG.info("Product Exist ==> {} ",record.get("Item Name"));
+	        			LOG.info("Product Exist ==> {} ",recordData.get("Item Name"));
 	        		}
 	        		
 	        	}
@@ -641,20 +624,20 @@ public class ZohoMigrationService {
 	     * @param record
 	     * @return flag
 	     */
-		private Boolean checkExistingProduct(Map<String, String> record) {
+		private Boolean checkExistingProduct(Map<String, String> recordData) {
 			Boolean flag;
-			com.simpleaccounts.entity.Product productList = getExistingProduct(record);
-			com.simpleaccounts.entity.Product productListCode = getExistingProductCode(record);
+			com.simpleaccounts.entity.Product productList = getExistingProduct(recordData);
+			com.simpleaccounts.entity.Product productListCode = getExistingProductCode(recordData);
 			
 			LOG.info("productList ==> {} ",productList);
      
 			 if(productList != null || productListCode != null) {
-				// LOG.info("Product Name Exist ==> {} ",productList.getProductName());
+
 				 LOG.info("Product Name Exist ==> {} ",productList.getProductName()+" "+productList.getProductCode());
 				 flag = true;
 				 
 			 }else {
-				 LOG.info("Product Not Exist ==> {} ",record.get("Item Name")); 
+				 LOG.info("Product Not Exist ==> {} ",recordData.get("Item Name")); 
 				 flag = false;
 			 }
 			 
@@ -667,33 +650,33 @@ public class ZohoMigrationService {
 	     * @param userId
 	 * @param request 
 	     */
-	    private void createInvoice(List<Product.TableList.Table> tables, List<Map<String, String>> mapList, Integer userId, HttpServletRequest request) {
-	    	
-	    	LOG.info("createInvoice start");
-	        Product.TableList.Table invoiceTable = tables.get(0);
-	        Product.TableList.Table invoiceLineItemTable = tables.get(1);
+		    private void createInvoice(List<Product.TableList.Table> tables, List<Map<String, String>> mapList, Integer userId, HttpServletRequest request) {
+		    	
+		    	LOG.info("createInvoice start");
+		        Product.TableList.Table invoiceTable = tables.get(0);
+		        Product.TableList.Table invoiceLineItemTable = tables.get(1);
 
-	     //  SimpleAccountsService invoiceService = (SimpleAccountsService) getService(invoiceTable.getServiceName());
-	        SimpleAccountsService invoiceLineItemService = (SimpleAccountsService) migrationUtil.getService(invoiceLineItemTable.getServiceName());
+		        SimpleAccountsService<Object, Object> invoiceLineItemMigrationService =
+		                (SimpleAccountsService<Object, Object>) migrationUtil.getService(invoiceLineItemTable.getServiceName());
 
-	        List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList = invoiceTable.getColumnList().getColumn();
-	        List<Product.TableList.Table.ColumnList.Column> invoiceLineItemTableColumnList = invoiceLineItemTable.getColumnList().getColumn();
-	        if(mapList != null) {
-	        	for (Map<String, String> record : mapList){
-	        		Invoice invoiceEntity = getExistingInvoice(record,invoiceTable.getEntityName(),invoiceTableColumnList,userId);
-	        		com.simpleaccounts.entity.Product productEntity = getExistingProduct(record);
-	        		InvoiceLineItem invoiceLineItemEntity = getExistingInvoiceLineItem(record,invoiceLineItemTable.getEntityName(),
-	        				invoiceLineItemTableColumnList,userId,invoiceEntity,productEntity);
-	        		((InvoiceLineItem) invoiceLineItemEntity).setInvoice((com.simpleaccounts.entity.Invoice) invoiceEntity);
-	        		((InvoiceLineItem) invoiceLineItemEntity).setIsMigratedRecord(true);
-	        		((InvoiceLineItem) invoiceLineItemEntity).setProduct(productEntity);
-	        		((InvoiceLineItem) invoiceLineItemEntity).setDiscountType(DiscountType.FIXED);
-	        		invoiceLineItemService.persist(invoiceLineItemEntity);
+		        List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList = invoiceTable.getColumnList().getColumn();
+		        List<Product.TableList.Table.ColumnList.Column> invoiceLineItemTableColumnList = invoiceLineItemTable.getColumnList().getColumn();
+		        if(mapList != null) {
+		        	for (Map<String, String> recordData : mapList){
+		        		Invoice invoiceEntity = getExistingInvoice(recordData,invoiceTable.getEntityName(),invoiceTableColumnList,userId);
+		        		com.simpleaccounts.entity.Product productEntity = getExistingProduct(recordData);
+		        		InvoiceLineItem invoiceLineItemEntity = getExistingInvoiceLineItem(recordData,invoiceLineItemTable.getEntityName(),
+		        				invoiceLineItemTableColumnList,userId,invoiceEntity,productEntity);
+		        		invoiceLineItemEntity.setInvoice(invoiceEntity);
+		        		invoiceLineItemEntity.setIsMigratedRecord(true);
+		        		invoiceLineItemEntity.setProduct(productEntity);
+		        		invoiceLineItemEntity.setDiscountType(DiscountType.FIXED);
+		        		invoiceLineItemMigrationService.persist(invoiceLineItemEntity);
 
-	        		if(record.get(INVOICE_STATUS).equalsIgnoreCase(DRAFT))
-	        		{
-	        			invoiceEntity.setStatus(CommonStatusEnum.PENDING.getValue());
-	        		}
+		        		if(recordData.get(INVOICE_STATUS).equalsIgnoreCase(DRAFT))
+		        		{
+		        			invoiceEntity.setStatus(CommonStatusEnum.PENDING.getValue());
+		        		}
 	        		else {
 	        			invoiceEntity.setStatus(CommonStatusEnum.POST.getValue());
 	        		}
@@ -737,34 +720,33 @@ public class ZohoMigrationService {
 	        Product.TableList.Table invoiceTable = tables.get(0);
 	        Product.TableList.Table invoiceLineItemTable = tables.get(1);
 
-	       // SimpleAccountsService invoiceService = (SimpleAccountsService) getService(invoiceTable.getServiceName());
-	        SimpleAccountsService invoiceLineItemService = (SimpleAccountsService) migrationUtil.getService(invoiceLineItemTable.getServiceName());
+	        SimpleAccountsService<Object, Object> invoiceLineItemMigrationService =
+	                (SimpleAccountsService<Object, Object>) migrationUtil.getService(invoiceLineItemTable.getServiceName());
 
 	        List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList = invoiceTable.getColumnList().getColumn();
 	        List<Product.TableList.Table.ColumnList.Column> invoiceLineItemTableColumnList =
 	                invoiceLineItemTable.getColumnList().getColumn();
-	        for (Map<String, String> record : mapList){
-	            Invoice SupplierInvoiceEntity = getExistingSupplierInvoice(record,invoiceTable.getEntityName(),
+	        for (Map<String, String> recordData : mapList){
+	            Invoice supplierInvoiceEntity = getExistingSupplierInvoice(recordData,invoiceTable.getEntityName(),
 	                    invoiceTableColumnList,userId);
-	            com.simpleaccounts.entity.Product productEntity = getExistingProduct(record);
-	            ProductLineItem productLineItemEntity = addMissingFieldsForProductTypePurchase(productEntity,record);
-	            InvoiceLineItem supplierInvoiceLineItemEntity = getExistingInvoiceLineItem(record,
+	            com.simpleaccounts.entity.Product productEntity = getExistingProduct(recordData);
+	            addMissingFieldsForProductTypePurchase(productEntity, recordData);
+	            InvoiceLineItem supplierInvoiceLineItemEntity = getExistingInvoiceLineItem(recordData,
 	                    invoiceLineItemTable.getEntityName(),
-	                    invoiceLineItemTableColumnList,userId,SupplierInvoiceEntity,productEntity);
-	            ((InvoiceLineItem) supplierInvoiceLineItemEntity).setInvoice((com.simpleaccounts.entity.Invoice)
-	                    SupplierInvoiceEntity);
-	            ((InvoiceLineItem) supplierInvoiceLineItemEntity).setProduct(productEntity);
-	            ((InvoiceLineItem) supplierInvoiceLineItemEntity).setIsMigratedRecord(true);
-	            ((InvoiceLineItem) supplierInvoiceLineItemEntity).setDiscountType(DiscountType.FIXED);
-	            invoiceLineItemService.persist(supplierInvoiceLineItemEntity);
-	            if(record.get(BILLE_STATUS).equalsIgnoreCase(DRAFT))
+	                    invoiceLineItemTableColumnList,userId,supplierInvoiceEntity,productEntity);
+	            supplierInvoiceLineItemEntity.setInvoice(supplierInvoiceEntity);
+	            supplierInvoiceLineItemEntity.setProduct(productEntity);
+	            supplierInvoiceLineItemEntity.setIsMigratedRecord(true);
+	            supplierInvoiceLineItemEntity.setDiscountType(DiscountType.FIXED);
+	            invoiceLineItemMigrationService.persist(supplierInvoiceLineItemEntity);
+	            if(recordData.get(BILLE_STATUS).equalsIgnoreCase(DRAFT))
 	            {
-	            	SupplierInvoiceEntity.setStatus(CommonStatusEnum.PENDING.getValue());
+	            	supplierInvoiceEntity.setStatus(CommonStatusEnum.PENDING.getValue());
 	            }
 	            else {
-	            	SupplierInvoiceEntity.setStatus(CommonStatusEnum.POST.getValue());
+	            	supplierInvoiceEntity.setStatus(CommonStatusEnum.POST.getValue());
 	            }
-	            invoiceService.persist(SupplierInvoiceEntity);
+	            invoiceService.persist(supplierInvoiceEntity);
 	        }
 			Map<String,Object> map = new HashMap<>();
 			map.put("status", CommonStatusEnum.POST.getValue());
@@ -800,23 +782,23 @@ public class ZohoMigrationService {
 	        Product.TableList.Table invoiceTable = tables.get(0);
 	        Product.TableList.Table invoiceLineItemTable = tables.get(1);
 
-	        SimpleAccountsService invoiceService = (SimpleAccountsService) migrationUtil.getService(invoiceTable.getServiceName());
-	        SimpleAccountsService invoiceLineItemService = (SimpleAccountsService) migrationUtil.getService(invoiceLineItemTable.getServiceName());
+	        SimpleAccountsService<Object, Object> invoiceLineItemMigrationService =
+	                (SimpleAccountsService<Object, Object>) migrationUtil.getService(invoiceLineItemTable.getServiceName());
 
 	        List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList = invoiceTable.getColumnList().getColumn();
 	        List<Product.TableList.Table.ColumnList.Column> invoiceLineItemTableColumnList =
 	                invoiceLineItemTable.getColumnList().getColumn();
-	        for (Map<String, String> record : mapList){
-	            Invoice creditNoteEntity = getExistingCreditNote(record,invoiceTable.getEntityName(),invoiceTableColumnList,
+	        for (Map<String, String> recordData : mapList){
+	            Invoice creditNoteEntity = getExistingCreditNote(recordData,invoiceTable.getEntityName(),invoiceTableColumnList,
 	                    userId);
 
-	            Object invoiceLineItemEntity = migrationUtil.getObject(invoiceLineItemTable.getEntityName());
-	            setColumnValue(invoiceLineItemTableColumnList, record, invoiceLineItemEntity);
+	            InvoiceLineItem invoiceLineItemEntity = (InvoiceLineItem) migrationUtil.getObject(invoiceLineItemTable.getEntityName());
+	            setColumnValue(invoiceLineItemTableColumnList, recordData, invoiceLineItemEntity);
 	            migrationUtil.setDefaultSetterValues(invoiceLineItemEntity, userId);
-	            ((InvoiceLineItem) invoiceLineItemEntity).setInvoice((com.simpleaccounts.entity.Invoice) creditNoteEntity);
-	            com.simpleaccounts.entity.Product productEntity = getExistingProduct(record);
-	            ((InvoiceLineItem) invoiceLineItemEntity).setProduct(productEntity);
-	            invoiceLineItemService.persist(invoiceLineItemEntity);
+	            invoiceLineItemEntity.setInvoice(creditNoteEntity);
+	            com.simpleaccounts.entity.Product productEntity = getExistingProduct(recordData);
+	            invoiceLineItemEntity.setProduct(productEntity);
+	            invoiceLineItemMigrationService.persist(invoiceLineItemEntity);
 	        }
 	    }
 	    
@@ -831,25 +813,27 @@ public class ZohoMigrationService {
 			Product.TableList.Table poQuotationTable = tables.get(0);
 			Product.TableList.Table poQuotationLineItemTable = tables.get(1);
 	
-			SimpleAccountsService invoiceService = (SimpleAccountsService) migrationUtil.getService(poQuotationTable.getServiceName());
-			SimpleAccountsService poQuotationLineItemService = (SimpleAccountsService) migrationUtil.getService(
+			SimpleAccountsService<Object, Object> poQuotationMigrationService =
+			        (SimpleAccountsService<Object, Object>) migrationUtil.getService(poQuotationTable.getServiceName());
+			SimpleAccountsService<Object, Object> poQuotationLineItemMigrationService = (SimpleAccountsService<Object, Object>) migrationUtil.getService(
 					poQuotationLineItemTable.getServiceName());
 	
 			List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList = poQuotationTable.getColumnList()
 					.getColumn();
 			List<Product.TableList.Table.ColumnList.Column> invoiceLineItemTableColumnList = poQuotationLineItemTable
 					.getColumnList().getColumn();
-			for (Map<String, String> record : mapList) {
-				PoQuatation poQuotationEntity = getExistingPoQuotation(record, poQuotationTable.getEntityName(),
+			for (Map<String, String> recordData : mapList) {
+				PoQuatation poQuotationEntity = getExistingPoQuotation(recordData, poQuotationTable.getEntityName(),
 						invoiceTableColumnList, userId);
+				poQuotationMigrationService.persist(poQuotationEntity);
 	
 				Object poQuotationLineItemEntity = migrationUtil.getObject(poQuotationLineItemTable.getEntityName());
-				setColumnValue(invoiceLineItemTableColumnList, record, poQuotationLineItemEntity);
+				setColumnValue(invoiceLineItemTableColumnList, recordData, poQuotationLineItemEntity);
 				migrationUtil.setDefaultSetterValues(poQuotationLineItemEntity, userId);
-				((PoQuatationLineItem) poQuotationLineItemEntity).setPoQuatation((PoQuatation) poQuotationEntity);
-				com.simpleaccounts.entity.Product productEntity = getExistingProduct(record);
+				((PoQuatationLineItem) poQuotationLineItemEntity).setPoQuatation(poQuotationEntity);
+				com.simpleaccounts.entity.Product productEntity = getExistingProduct(recordData);
 				((PoQuatationLineItem) poQuotationLineItemEntity).setProduct(productEntity);
-				poQuotationLineItemService.persist(poQuotationLineItemEntity);
+				poQuotationLineItemMigrationService.persist(poQuotationLineItemEntity);
 			}
 		}
 		
@@ -861,10 +845,13 @@ public class ZohoMigrationService {
 	   	 * @param userId
 	   	 * @return
 	   	 */
-		public PoQuatation getExistingPoQuotation(Map<String, String> record, String entityName,
+		public PoQuatation getExistingPoQuotation(Map<String, String> recordData, String entityName,
 				List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList, Integer userId) {
-
-			return null;
+			PoQuatation poQuotationEntity = (PoQuatation) migrationUtil.getObject(entityName);
+			setColumnValue(invoiceTableColumnList, recordData, poQuotationEntity);
+			migrationUtil.setDefaultSetterValues(poQuotationEntity, userId);
+			poQuotationEntity.setIsMigratedRecord(Boolean.TRUE);
+			return poQuotationEntity;
 	}
 	    
 		/**
@@ -877,8 +864,8 @@ public class ZohoMigrationService {
 	        Product.TableList.Table expenseTable = tables.get(0);
 
 	        List<Product.TableList.Table.ColumnList.Column> expenseTableColumnList = expenseTable.getColumnList().getColumn();
-	        for (Map<String, String> record : mapList) {
-	            getExistingExpense(record, expenseTable.getEntityName(), expenseTableColumnList, userId);
+	        for (Map<String, String> recordData : mapList) {
+	            getExistingExpense(recordData, expenseTable.getEntityName(), expenseTableColumnList, userId);
 
 	        }
 
@@ -896,8 +883,8 @@ public class ZohoMigrationService {
 	
 			List<Product.TableList.Table.ColumnList.Column> expenseTableColumnList = contactTable.getColumnList()
 					.getColumn();
-			for (Map<String, String> record : mapList) {
-				getExistingContact(record, contactTable.getEntityName(), expenseTableColumnList, userId);
+			for (Map<String, String> recordData : mapList) {
+				getExistingContact(recordData, contactTable.getEntityName(), expenseTableColumnList, userId);
 			}
 		}
 		
@@ -914,20 +901,21 @@ public class ZohoMigrationService {
 			List<Product.TableList.Table.ColumnList.Column> currencyConversionTableColumnList = currencyConversionTable
 					.getColumnList().getColumn();
 	
-			SimpleAccountsService currencyConversionService = (SimpleAccountsService) migrationUtil.getService(
-					currencyConversionTable.getServiceName());
-			for (Map<String, String> record : mapList) {
+			SimpleAccountsService<Object, Object> currencyConversionMigrationService =
+			        (SimpleAccountsService<Object, Object>) migrationUtil.getService(currencyConversionTable.getServiceName());
+			for (Map<String, String> recordData : mapList) {
 
 				List<CurrencyConversion> currencyConversion = currencyExchangeService.getCurrencyConversionList();
 				Object currencyConversionEntity = migrationUtil.getObject(currencyConversionTable.getEntityName());
 	
-				setColumnValue(currencyConversionTableColumnList, record, currencyConversionEntity);
+				setColumnValue(currencyConversionTableColumnList, recordData, currencyConversionEntity);
 				((CurrencyConversion) currencyConversionEntity)
 						.setCurrencyCodeConvertedTo(currencyConversion.get(0).getCurrencyCodeConvertedTo());
+				migrationUtil.setDefaultSetterValues(currencyConversionEntity, userId);
 	
 				System.out.println("currencyConversionEntity => " + currencyConversionEntity);
 	
-				currencyConversionService.persist(currencyConversionEntity);
+				currencyConversionMigrationService.persist(currencyConversionEntity);
 	
 			}
 		}
@@ -943,13 +931,14 @@ public class ZohoMigrationService {
 	         
 	         List<Product.TableList.Table.ColumnList.Column> chartOfAccountCategoryTableColumnList = chartOfAccountCategoryTable.getColumnList().getColumn();
 	         
-	         SimpleAccountsService chartOfAccountCategoryService = (SimpleAccountsService) migrationUtil.getService(chartOfAccountCategoryTable.getServiceName());
-	         for (Map<String, String> record : mapList) {	
+	         SimpleAccountsService<Object, Object> chartOfAccountCategoryMigrationService =
+	                 (SimpleAccountsService<Object, Object>) migrationUtil.getService(chartOfAccountCategoryTable.getServiceName());
+	         for (Map<String, String> recordData : mapList) {	
 	         	
-	            // Object  chartOfAccountCategoryEntity = getObject(chartOfAccountCategoryTable.getEntityName());
 	             
 	             ChartOfAccountCategory  chartOfAccountCategoryEntity = (ChartOfAccountCategory) migrationUtil.getObject(chartOfAccountCategoryTable.getEntityName());
-	             setColumnValue(chartOfAccountCategoryTableColumnList, record, chartOfAccountCategoryEntity);
+	             setColumnValue(chartOfAccountCategoryTableColumnList, recordData, chartOfAccountCategoryEntity);
+	             migrationUtil.setDefaultSetterValues(chartOfAccountCategoryEntity, userId);
 	             
 	              log.info("chartOfAccountCategoryEntity => "+chartOfAccountCategoryEntity);
 	              
@@ -958,19 +947,19 @@ public class ZohoMigrationService {
 	              chartOfAccountCategoryEntity.setDefaltFlag('N');
 	              chartOfAccountCategoryEntity.setDeleteFlag(false);
 	             		
-	             chartOfAccountCategoryService.persist(chartOfAccountCategoryEntity);
+	             chartOfAccountCategoryMigrationService.persist(chartOfAccountCategoryEntity);
 
 	         }
 			
 		}
 		
 	    private ProductLineItem addMissingFieldsForProductTypePurchase(com.simpleaccounts.entity.Product productEntity,
-	                                                                   Map<String, String> record) {
-	             String getColumnValue = record.get("Account");
+	                                                                   Map<String, String> recordData) {
+	             String getColumnValue = recordData.get("Account");
 	             TransactionCategory transactionCategory = migrationUtil.getTransactionCategory(getColumnValue);
-	             String unitPrice = record.get("Rate");
-	           //  String[] value = unitPrice.split(" ");
-	        BigDecimal bigDecimal = new  BigDecimal ((String) unitPrice);
+	             String unitPrice = recordData.get("Rate");
+
+	        BigDecimal bigDecimal = new BigDecimal(unitPrice);
 
 	        Map<String, Object> param = new HashMap<>();
 	        param.put("product", productEntity);
@@ -996,9 +985,9 @@ public class ZohoMigrationService {
 	     * @param lineItem
 	     * @return
 	     */
-		private ProductLineItem getExistingProductLineItemForSales(Map<String, String> record, String entityName,
+		private ProductLineItem getExistingProductLineItemForSales(Map<String, String> recordData, String entityName,
 				List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList, Integer userId,
-				Object productEntity, List<ProductLineItem> lineItem) {
+				Object productEntity) {
 			ProductLineItem productLineItem = null;
 	
 			Map<String, Object> param = new HashMap<>();
@@ -1010,7 +999,7 @@ public class ZohoMigrationService {
 			} else {
 				productLineItem = (ProductLineItem) migrationUtil.getObject(entityName);
 			}
-			setColumnValueForProductLineItemSales(productLineItemTableColumnList, record, productLineItem);
+			setColumnValueForProductLineItemSales(productLineItemTableColumnList, recordData, productLineItem);
 			migrationUtil.setDefaultSetterValues(productLineItem, userId);
 			return productLineItem;
 		}
@@ -1020,9 +1009,9 @@ public class ZohoMigrationService {
 		 * @param record
 		 * @return
 		 */
-		 private com.simpleaccounts.entity.Product getExistingProduct(Map<String, String> record) {
-		        String productName =record.get("Item Name");
-		       // String productCode = record.get("Item ID");
+		 private com.simpleaccounts.entity.Product getExistingProduct(Map<String, String> recordData) {
+			        String productName =recordData.get("Item Name");
+
 		        Map<String, Object> param = new HashMap<>();
 		        param.put("productName", productName);
 
@@ -1031,7 +1020,7 @@ public class ZohoMigrationService {
 		            return product;
 		        }
 		        return null;
-		       // com.simpleaccounts.entity.Product product = productService.getProductByProductNameAndProductPriceType(productName);
+
 		    }
 		 
 		 /**
@@ -1039,13 +1028,13 @@ public class ZohoMigrationService {
 			 * @param record
 			 * @return
 			 */
-			 private com.simpleaccounts.entity.Product getExistingProductCode(Map<String, String> record) {
-			        String productCode = record.get("Item ID");
-			        Map<String, Object> param = new HashMap<>();
-			        param.put("productCode", productCode);
-			        List<com.simpleaccounts.entity.Product> productList = productService.findByAttributes(param);
-			        for (com.simpleaccounts.entity.Product product:productList){
-			            return product;
+				 private com.simpleaccounts.entity.Product getExistingProductCode(Map<String, String> recordData) {
+				        String productCode = recordData.get("Item ID");
+				        Map<String, Object> param = new HashMap<>();
+				        param.put("productCode", productCode);
+				        List<com.simpleaccounts.entity.Product> productList = productService.findByAttributes(param);
+				        for (com.simpleaccounts.entity.Product product:productList){
+				            return product;
 			        }
 			        return null;
 			    }
@@ -1061,42 +1050,42 @@ public class ZohoMigrationService {
 		  * @param productEntity
 		  * @return
 		  */
-		private InvoiceLineItem getExistingInvoiceLineItem(Map<String, String> record, String entityName,
-				List<Product.TableList.Table.ColumnList.Column> invoiceLineItemTableColumnList, Integer userId,
-				Invoice invoiceEntity, com.simpleaccounts.entity.Product productEntity) {
-			InvoiceLineItem invoiceLineItem = null;
-			Map<String, Object> param = new HashMap<>();
+			private InvoiceLineItem getExistingInvoiceLineItem(Map<String, String> recordData, String entityName,
+					List<Product.TableList.Table.ColumnList.Column> invoiceLineItemTableColumnList, Integer userId,
+					Invoice invoiceEntity, com.simpleaccounts.entity.Product productEntity) {
+				InvoiceLineItem invoiceLineItem = null;
+				Map<String, Object> param = new HashMap<>();
 			param.put("invoice", invoiceEntity);
 			param.put("product", productEntity);
 			List<InvoiceLineItem> invoiceLineItemLList = invoiceLineItemService.findByAttributes(param);
 			
 			if (!invoiceLineItemLList.isEmpty()) {
 				return invoiceLineItemLList.get(0);
-			} else {
-				invoiceLineItem = (InvoiceLineItem) migrationUtil.getObject(entityName);
+				} else {
+					invoiceLineItem = (InvoiceLineItem) migrationUtil.getObject(entityName);
+				}
+				setColumnValueForInvoiceLineItem(invoiceLineItemTableColumnList, recordData, invoiceLineItem);
+				migrationUtil.setDefaultSetterValues(invoiceLineItem, userId);
+				return invoiceLineItem;
 			}
-			setColumnValueForInvoiceLineItem(invoiceLineItemTableColumnList, record, invoiceLineItem);
-			migrationUtil.setDefaultSetterValues(invoiceLineItem, userId);
-			return invoiceLineItem;
-		}
 		
 		/*
 		 * 
 		 * 
 		 */
-		private Contact getExistingContact(Map<String, String> record, String entityName,
-				List<Product.TableList.Table.ColumnList.Column> expenseTableColumnList, Integer userId) {
-			Contact contact = null;
-			contact = (Contact) migrationUtil.getObject(entityName);
-			User user = userService.findByPK(userId);
-			setColoumnValueForSupplierContact(expenseTableColumnList, record, contact, user);
-			migrationUtil.setDefaultSetterValues(contact, userId);
-			contact.setContactType(1);
-			contact.setIsMigratedRecord(true);
-			contact.setIsActive(true);
+			private Contact getExistingContact(Map<String, String> recordData, String entityName,
+					List<Product.TableList.Table.ColumnList.Column> expenseTableColumnList, Integer userId) {
+				Contact contact = null;
+				contact = (Contact) migrationUtil.getObject(entityName);
+				User user = userService.findByPK(userId);
+				setColoumnValueForSupplierContact(expenseTableColumnList, recordData, contact, user);
+				migrationUtil.setDefaultSetterValues(contact, userId);
+				contact.setContactType(1);
+				contact.setIsMigratedRecord(true);
+				contact.setIsActive(true);
 			
-			//check whether the email id is coming 
-			checkEmaiID((Contact) contact);
+				//check whether the email id is coming 
+				checkEmaiID(contact);
 	
 	        // Check existing entry in db
 			boolean isContactExist = migrationUtil.contactExist(contact);
@@ -1165,16 +1154,16 @@ public class ZohoMigrationService {
 		 * @param userId
 		 * @return
 		 */
-		private Expense getExistingExpense(Map<String, String> record, String entityName,
-				List<Product.TableList.Table.ColumnList.Column> expenseTableColumnList, Integer userId) {
-			Expense expense = null;
-			expense = (Expense) migrationUtil.getObject(entityName);
-			User user = userService.findByPK(userId);
-			setColumnValueForExpense(expenseTableColumnList, record, expense, user);
-			migrationUtil.setDefaultSetterValues(expense, userId);
-			expense.setUserId(user);
-			expense.setPayee(user.getFirstName() + "" + user.getLastName());
-			expense.setStatus(1);
+			private Expense getExistingExpense(Map<String, String> recordData, String entityName,
+					List<Product.TableList.Table.ColumnList.Column> expenseTableColumnList, Integer userId) {
+				Expense expense = null;
+				expense = (Expense) migrationUtil.getObject(entityName);
+				User user = userService.findByPK(userId);
+				setColumnValueForExpense(expenseTableColumnList, recordData, expense, user);
+				migrationUtil.setDefaultSetterValues(expense, userId);
+				expense.setUserId(user);
+				expense.setPayee(user.getFirstName() + "" + user.getLastName());
+				expense.setStatus(1);
 			expenseService.persist(expense);
 			return expense;
 		}
@@ -1186,43 +1175,45 @@ public class ZohoMigrationService {
 		 * @param expense
 		 * @param user
 		 */
-		private void setColumnValueForExpense(List<Product.TableList.Table.ColumnList.Column> expenseTableColumnList,
-				Map<String, String> record, Expense expense, User user) {
-			for (Product.TableList.Table.ColumnList.Column column : expenseTableColumnList) {
-				String val = record.get(column.getInputColumn());
-				if (StringUtils.isEmpty(val))
-					continue;
-				String setterMethod = column.getSetterMethod();
-				if (setterMethod.equalsIgnoreCase("setPayMode")) {
+			private void setColumnValueForExpense(List<Product.TableList.Table.ColumnList.Column> expenseTableColumnList,
+					Map<String, String> recordData, Expense expense, User user) {
+				for (Product.TableList.Table.ColumnList.Column column : expenseTableColumnList) {
+					String val = recordData.get(column.getInputColumn());
+					if (StringUtils.isEmpty(val))
+						continue;
+					String setterMethod = column.getSetterMethod();
+					if (setterMethod.equalsIgnoreCase("setPayMode")) {
 					PayMode payMode = PayMode.CASH;
 					migrationUtil.setRecordIntoEntity(expense, setterMethod, payMode, "Object");
 				} else if (setterMethod.equalsIgnoreCase("setPayee")) {
 					migrationUtil.setRecordIntoEntity(expense, setterMethod, user.getFirstName() + "" + user.getLastName(), "String");
-				} else if (setterMethod.equalsIgnoreCase("setCurrency")) {
-					Currency currency = migrationUtil.getCurrencyIdByValue(val);
-					migrationUtil.setRecordIntoEntity(expense, setterMethod, currency, "Object");
-				} else if (setterMethod.equalsIgnoreCase("setTransactionCategory")) {
-					TransactionCategory transactionCategory = migrationUtil.getTransactionCategoryByName(val, record);
-					migrationUtil.setRecordIntoEntity(expense, setterMethod, transactionCategory, "Object");
-				} else if (setterMethod.equalsIgnoreCase("setVatCategory")) {
-					VatCategory vatCategory = migrationUtil.getVatCategoryByValue(val);
-					migrationUtil.setRecordIntoEntity(expense, setterMethod, vatCategory, "Object");
+					} else if (setterMethod.equalsIgnoreCase("setCurrency")) {
+						Currency currency = migrationUtil.getCurrencyIdByValue(val);
+						migrationUtil.setRecordIntoEntity(expense, setterMethod, currency, "Object");
+					} else if (setterMethod.equalsIgnoreCase("setTransactionCategory")) {
+						TransactionCategory transactionCategory =
+								migrationUtil.getTransactionCategoryByName(val, recordData);
+						migrationUtil.setRecordIntoEntity(expense, setterMethod, transactionCategory, "Object");
+					} else if (setterMethod.equalsIgnoreCase("setVatCategory")) {
+						VatCategory vatCategory = migrationUtil.getVatCategoryByValue(val);
+						migrationUtil.setRecordIntoEntity(expense, setterMethod, vatCategory, "Object");
 				} else {
 					migrationUtil.setRecordIntoEntity(expense, setterMethod, val, column.getDataType());
 				}
 			}
 		}
 
-		private void setColoumnValueForSupplierContact(
-				List<Product.TableList.Table.ColumnList.Column> expenseTableColumnList, Map<String, String> record,
-				Contact contact, User user) {
-			
-			for (Product.TableList.Table.ColumnList.Column column : expenseTableColumnList) {
-				String val = record.get(column.getInputColumn());
-				if (StringUtils.isEmpty(val))
-					continue;
-				String setterMethod = column.getSetterMethod();
-				if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_CURRENCY)) {
+			private void setColoumnValueForSupplierContact(
+					List<Product.TableList.Table.ColumnList.Column> expenseTableColumnList,
+					Map<String, String> recordData,
+					Contact contact, User user) {
+				
+				for (Product.TableList.Table.ColumnList.Column column : expenseTableColumnList) {
+					String val = recordData.get(column.getInputColumn());
+					if (StringUtils.isEmpty(val))
+						continue;
+					String setterMethod = column.getSetterMethod();
+					if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_CURRENCY)) {
 					Currency currency = migrationUtil.getCurrencyIdByValue(val);
 					migrationUtil.setRecordIntoEntity(contact, setterMethod, currency, TYPE_OBJECT);
 				} else if (setterMethod.equalsIgnoreCase("setCountry")) {
@@ -1260,25 +1251,25 @@ public class ZohoMigrationService {
 		 * @param userId
 		 * @return
 		 */
-		private Invoice getExistingCreditNote(Map<String, String> record, String entityName,
-				List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList, Integer userId) {
-			Invoice invoice = null;
-			String invoiceNumber = record.get("Invoice Number");
-			Map<String, Object> param = new HashMap<>();
-			param.put("referenceNumber", invoiceNumber);
-			List<Invoice> invoiceList = invoiceService.findByAttributes(param);
+			private Invoice getExistingCreditNote(Map<String, String> recordData, String entityName,
+					List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList, Integer userId) {
+				Invoice invoice = null;
+				String invoiceNumber = recordData.get("Invoice Number");
+				Map<String, Object> param = new HashMap<>();
+				param.put("referenceNumber", invoiceNumber);
+				List<Invoice> invoiceList = invoiceService.findByAttributes(param);
 			if (!invoiceList.isEmpty()) {
 				return invoiceList.get(0);
 			} else {
 				invoice = (Invoice) migrationUtil.getObject(entityName);
-			}
-			invoice.setStatus(CommonStatusEnum.PENDING.getValue());
-			invoice.setDiscountType(DiscountType.FIXED);
-			setColumnValue(invoiceTableColumnList, record, invoice);
-			migrationUtil.setDefaultSetterValues(invoice, userId);
-			invoice.setType(7);
-			invoiceService.persist(invoice);
-			return invoice;
+				}
+				invoice.setStatus(CommonStatusEnum.PENDING.getValue());
+				invoice.setDiscountType(DiscountType.FIXED);
+				setColumnValue(invoiceTableColumnList, recordData, invoice);
+				migrationUtil.setDefaultSetterValues(invoice, userId);
+				invoice.setType(7);
+				invoiceService.persist(invoice);
+				return invoice;
 			
 		}
 		
@@ -1290,77 +1281,79 @@ public class ZohoMigrationService {
 		 * @param userId
 		 * @return
 		 */
-		private Invoice getExistingSupplierInvoice(Map<String, String> record, String entityName,
-				List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList, Integer userId) {
-			Invoice invoice = null;
-			String invoiceNumber = record.get("Bill Number");
-			Map<String, Object> param = new HashMap<>();
-			param.put("referenceNumber", invoiceNumber);
-			List<Invoice> invoiceList = invoiceService.findByAttributes(param);
+			private Invoice getExistingSupplierInvoice(Map<String, String> recordData, String entityName,
+					List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList, Integer userId) {
+				Invoice invoice = null;
+				String invoiceNumber = recordData.get("Bill Number");
+				Map<String, Object> param = new HashMap<>();
+				param.put("referenceNumber", invoiceNumber);
+				List<Invoice> invoiceList = invoiceService.findByAttributes(param);
 			if (!invoiceList.isEmpty()) {
 				return invoiceList.get(0);
-			} else {
-				invoice = (Invoice) migrationUtil.getObject(entityName);
-			}
-			setColumnValue(invoiceTableColumnList, record, invoice);
-			migrationUtil.setDefaultSetterValues(invoice, userId);
-			invoice.setType(1);
-			invoice.setStatus(2);
+				} else {
+					invoice = (Invoice) migrationUtil.getObject(entityName);
+				}
+				setColumnValue(invoiceTableColumnList, recordData, invoice);
+				migrationUtil.setDefaultSetterValues(invoice, userId);
+				invoice.setType(1);
+				invoice.setStatus(2);
 			invoice.setIsMigratedRecord(true);
 			invoiceService.persist(invoice);
 			return invoice;
 			
 		}
 		
-		private Invoice getExistingInvoice(Map<String, String> record, String entityName,
-				List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList, Integer userId) {
-			Invoice invoice = null;
-			String invoiceNumber = record.get("Invoice Number");
-			Map<String, Object> param = new HashMap<>();
-			param.put("referenceNumber", invoiceNumber);
-			List<Invoice> invoiceList = invoiceService.findByAttributes(param);
+			private Invoice getExistingInvoice(Map<String, String> recordData, String entityName,
+					List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList, Integer userId) {
+				Invoice invoice = null;
+				String invoiceNumber = recordData.get("Invoice Number");
+				Map<String, Object> param = new HashMap<>();
+				param.put("referenceNumber", invoiceNumber);
+				List<Invoice> invoiceList = invoiceService.findByAttributes(param);
 			if (!invoiceList.isEmpty()) {
 				return invoiceList.get(0);
-			} else {
-				invoice = (Invoice) migrationUtil.getObject(entityName);
-			}
- 			setColumnValue(invoiceTableColumnList, record, invoice);
-			//setColoumnValueForInvoice(invoiceTableColumnList, record, invoice);
-			migrationUtil.setDefaultSetterValues(invoice, userId);
-			invoice.setType(2);
-			// invoice.setStatus(2);
+				} else {
+					invoice = (Invoice) migrationUtil.getObject(entityName);
+				}
+	 			setColumnValue(invoiceTableColumnList, recordData, invoice);
+
+				migrationUtil.setDefaultSetterValues(invoice, userId);
+				invoice.setType(2);
+
 			invoice.setIsMigratedRecord(true);
 			invoiceService.persist(invoice);
 			return invoice;
 		}
 		
-		private ProductLineItem getExistingProductLineItemForPurchase(Map<String, String> record, String entityName,
-				List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList, Integer userId,
-				Object productEntity, List<ProductLineItem> lineItem) {
-			ProductLineItem productLineItem = null;
-			Map<String, Object> param = new HashMap<>();
+			private ProductLineItem getExistingProductLineItemForPurchase(Map<String, String> recordData, String entityName,
+					List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList, Integer userId,
+					Object productEntity, List<ProductLineItem> lineItem) {
+				ProductLineItem productLineItem = null;
+				Map<String, Object> param = new HashMap<>();
 			param.put("product", productEntity);
 			param.put("priceType", ProductPriceType.PURCHASE);
 			List<ProductLineItem> productLineItemList = productLineItemService.findByAttributes(param);
 			if (!productLineItemList.isEmpty()) {
 				return productLineItemList.get(0);
-			} else {
-				productLineItem = (ProductLineItem) migrationUtil.getObject(entityName);
+				} else {
+					productLineItem = (ProductLineItem) migrationUtil.getObject(entityName);
+				}
+				setColumnValueForProductLineItemPurchase(
+						productLineItemTableColumnList, recordData, productLineItem, lineItem);
+				migrationUtil.setDefaultSetterValues(productLineItem, userId);
+				return productLineItem;
 			}
-			setColumnValueForProductLineItemPurchase(productLineItemTableColumnList, record, productLineItem, lineItem);
-			migrationUtil.setDefaultSetterValues(productLineItem, userId);
-			return productLineItem;
-		}
 		
-		private void setColumnValueForProductLineItemPurchase(
-				List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList, Map<String, String> record,
-				ProductLineItem productLineItem, List<ProductLineItem> lineItem) {
-			for (Product.TableList.Table.ColumnList.Column column : productLineItemTableColumnList) {
-				String val = record.get(column.getInputColumn());
-				if (StringUtils.isEmpty(val))
-					continue;
-				String setterMethod = column.getSetterMethod();
-				if (setterMethod.equalsIgnoreCase("setPriceType")) {
+			private void setColumnValueForProductLineItemPurchase(
+					List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList,
+					Map<String, String> recordData,
+					ProductLineItem productLineItem, List<ProductLineItem> lineItem) {
+				for (Product.TableList.Table.ColumnList.Column column : productLineItemTableColumnList) {
+					String val = recordData.get(column.getInputColumn());
+					if (StringUtils.isEmpty(val))
+						continue;
+					String setterMethod = column.getSetterMethod();
+					if (setterMethod.equalsIgnoreCase("setPriceType")) {
 					ProductPriceType productPriceType = ProductPriceType.PURCHASE;
 					migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, productPriceType, "Object");
 				} else if (setterMethod.equalsIgnoreCase("setTransactioncategory")) {
@@ -1382,15 +1375,16 @@ public class ZohoMigrationService {
 		 * @param record
 		 * @param productLineItem
 		 */
-		private void setColumnValueForInvoiceLineItem(
-				List<Product.TableList.Table.ColumnList.Column>invoiceLineItemTableColumnList, Map<String, String> record,
-				InvoiceLineItem invoiceLineItem) {
-			
-		for (Product.TableList.Table.ColumnList.Column column : invoiceLineItemTableColumnList) {
-			String val = record.get(column.getInputColumn());
-			if (StringUtils.isEmpty(val))
-				continue;
-			String setterMethod = column.getSetterMethod();
+			private void setColumnValueForInvoiceLineItem(
+					List<Product.TableList.Table.ColumnList.Column>invoiceLineItemTableColumnList,
+					Map<String, String> recordData,
+					InvoiceLineItem invoiceLineItem) {
+				
+			for (Product.TableList.Table.ColumnList.Column column : invoiceLineItemTableColumnList) {
+				String val = recordData.get(column.getInputColumn());
+				if (StringUtils.isEmpty(val))
+					continue;
+				String setterMethod = column.getSetterMethod();
 
 			if (setterMethod.equalsIgnoreCase("setPlaceOfSupplyId")) {
 				if (StringUtils.isEmpty(val))
@@ -1408,23 +1402,15 @@ public class ZohoMigrationService {
 					migrationUtil.setRecordIntoEntity(invoiceLineItem, "setTrnsactioncCategory", transactionCategory,
 							"Object");
 				}
-			} else if (StringUtils.equalsIgnoreCase(setterMethod, "setUnitPrice")) {
-				if (StringUtils.isEmpty(val))
-					continue;
-				migrationUtil.setRecordIntoEntity(invoiceLineItem, setterMethod, val, "BigDecimal");
-			}
-			/*
-			else if (setterMethod.equalsIgnoreCase("setDiscount")){
-                if (StringUtils.isEmpty(val))
-                    continue;
-                DiscountType value = migrationUtil.getDiscountType(val);
-                migrationUtil.setRecordIntoEntity(invoiceLineItem, setterMethod, value, "Object");
-            }
-            */
-			else {
-				// set into entity
-				migrationUtil.setRecordIntoEntity(invoiceLineItem, setterMethod, val, column.getDataType());
-			}
+				} else if (StringUtils.equalsIgnoreCase(setterMethod, "setUnitPrice")) {
+					if (StringUtils.isEmpty(val))
+						continue;
+					migrationUtil.setRecordIntoEntity(invoiceLineItem, setterMethod, val, "BigDecimal");
+				}
+				else {
+					// set into entity
+					migrationUtil.setRecordIntoEntity(invoiceLineItem, setterMethod, val, column.getDataType());
+				}
 		}
 		}
 		
@@ -1434,15 +1420,16 @@ public class ZohoMigrationService {
 		 * @param record
 		 * @param productLineItem
 		 */
-		private void setColumnValueForProductLineItemSales(
-				List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList, Map<String, String> record,
-				ProductLineItem productLineItem) {
-			for (Product.TableList.Table.ColumnList.Column column : productLineItemTableColumnList) {
-				String val = record.get(column.getInputColumn());
-				if (StringUtils.isEmpty(val))
-					continue;
-				String setterMethod = column.getSetterMethod();
-				if (setterMethod.equalsIgnoreCase("setPriceType")) {
+			private void setColumnValueForProductLineItemSales(
+					List<Product.TableList.Table.ColumnList.Column> productLineItemTableColumnList,
+					Map<String, String> recordData,
+					ProductLineItem productLineItem) {
+				for (Product.TableList.Table.ColumnList.Column column : productLineItemTableColumnList) {
+					String val = recordData.get(column.getInputColumn());
+					if (StringUtils.isEmpty(val))
+						continue;
+					String setterMethod = column.getSetterMethod();
+					if (setterMethod.equalsIgnoreCase("setPriceType")) {
 					ProductPriceType productPriceType = ProductPriceType.SALES;
 					migrationUtil.setRecordIntoEntity(productLineItem, setterMethod, productPriceType, "Object");
 				} else if (setterMethod.equalsIgnoreCase("setTransactioncategory")) {
@@ -1458,10 +1445,10 @@ public class ZohoMigrationService {
 			}
 		}
    
-    public void setColumnValue(List<Product.TableList.Table.ColumnList.Column> productTableColumnList, Map<String, String> record, Object productEntity) {
-        for (Product.TableList.Table.ColumnList.Column column : productTableColumnList) {
-            String val = record.get(column.getInputColumn());
-            String setterMethod = column.getSetterMethod();
+	    public void setColumnValue(List<Product.TableList.Table.ColumnList.Column> productTableColumnList, Map<String, String> recordData, Object productEntity) {
+	        for (Product.TableList.Table.ColumnList.Column column : productTableColumnList) {
+	            String val = recordData.get(column.getInputColumn());
+	            String setterMethod = column.getSetterMethod();
             if (setterMethod.equalsIgnoreCase("setProductType")){
                 if (StringUtils.isEmpty(val))
                     continue;
@@ -1473,14 +1460,14 @@ public class ZohoMigrationService {
                 migrationUtil.setRecordIntoEntity(productEntity,setterMethod,vatCategory,"Object");
             }
 
-            else if(setterMethod.equalsIgnoreCase("setPriceType")){
-                if (StringUtils.isEmpty(val))
-                    continue;
-                ProductPriceType value = migrationUtil.getProductPriceType(val,record);
-                migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, "Object");
-                if (productEntity instanceof ProductLineItem){
-                    if (StringUtils.isEmpty(val))
-                        continue;
+	            else if(setterMethod.equalsIgnoreCase("setPriceType")){
+	                if (StringUtils.isEmpty(val))
+	                    continue;
+	                ProductPriceType value = migrationUtil.getProductPriceType(val, recordData);
+	                migrationUtil.setRecordIntoEntity(productEntity, setterMethod, value, "Object");
+	                if (productEntity instanceof ProductLineItem){
+	                    if (StringUtils.isEmpty(val))
+	                        continue;
                     TransactionCategory transactionCategory = migrationUtil.getTransactionCategory(val);
                     migrationUtil.setRecordIntoEntity(productEntity, "setTransactioncategory", transactionCategory, "Object");
                 }
@@ -1539,7 +1526,7 @@ public class ZohoMigrationService {
                 if (StringUtils.isEmpty(val))
                     continue;
                 Currency currency = migrationUtil.getCurrencyIdByValue(val);
-//                        Currency currency = currencyService.findByPK(value);
+
                 migrationUtil.setRecordIntoEntity(productEntity, setterMethod, currency, "Object");
             }
             else if (setterMethod.equalsIgnoreCase("setPlaceOfSupplyId")) {
@@ -1567,50 +1554,39 @@ public class ZohoMigrationService {
      * @param id
      * @param userId
      */
-        private void deleteExistingContact(Integer id, Integer userId) {
-    	
-        String status = "Deleted Successfully";
-    	List<TransactionCategory> transactionCategoryList = new ArrayList<>();
-    	Contact contact = contactService.findByPK(id);
-    	contact.setLastUpdatedBy(userId);
-    	if (contact == null) {
-    	}
-    	
-	    Map<String,Object> tmap = new HashMap<>();
-		
-		if(contact.getOrganization() != null && !contact.getOrganization().isEmpty()){
-			tmap.put("transactionCategoryName",contact.getOrganization());
-			//tmap.put("transactionCategoryId",contact.getTransactionCategory().getTransactionCategoryId());
-		 transactionCategoryList =transactionCategoryService.findByAttributes(tmap);
-		}else {
-			tmap.put("transactionCategoryName", contact.getFirstName()+" "+contact.getLastName());
-		transactionCategoryList =transactionCategoryService.findByAttributes(tmap);
-		}
-		Map<String,Object> filterMap = new HashMap<>();
-		filterMap.put("contact",contact.getContactId());
-		//delete Contact Transaction Category Relation
-		List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService.findByAttributes(filterMap);
-		for(ContactTransactionCategoryRelation categoryRelation : contactTransactionCategoryRelations)
-		{
-			contactTransactionCategoryService.delete(categoryRelation);
-		}
-		contactService.delete(contact);
-		for(TransactionCategory transactionCategory : transactionCategoryList)
-		{
-			transactionCategoryService.delete(transactionCategory);
-		}
-		
-		//return  status;
-	}
-       
-		private CurrencyConversion getExchangeRate(Map<String, String> record, String entityName,
-				List<Column> currencyConversionTableColumnList, Integer userId) {
+	        private void deleteExistingContact(Integer id, Integer userId) {
+	        	Contact contact = contactService.findByPK(id);
+	        	if (contact == null) {
+	        		return;
+	        	}
+	        	contact.setLastUpdatedBy(userId);
+
+	        	Map<String, Object> transactionCategoryFilter = new HashMap<>();
+	        	if (StringUtils.isNotBlank(contact.getOrganization())) {
+	        		transactionCategoryFilter.put("transactionCategoryName", contact.getOrganization());
+	        	} else {
+	        		transactionCategoryFilter.put(
+	        				"transactionCategoryName", contact.getFirstName() + " " + contact.getLastName());
+	        	}
+	        	List<TransactionCategory> transactionCategoryList =
+	        			transactionCategoryService.findByAttributes(transactionCategoryFilter);
+
+	        	Map<String, Object> filterMap = new HashMap<>();
+	        	filterMap.put("contact", contact.getContactId());
+	        	// delete Contact Transaction Category Relation
+	        	List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations =
+	        			contactTransactionCategoryService.findByAttributes(filterMap);
+	        	for (ContactTransactionCategoryRelation categoryRelation : contactTransactionCategoryRelations) {
+	        		contactTransactionCategoryService.delete(categoryRelation);
+	        	}
+
+	        	contactService.delete(contact);
+	        	for (TransactionCategory transactionCategory : transactionCategoryList) {
+	        		transactionCategoryService.delete(transactionCategory);
+	        	}
+	        }
 			
-			return null;
-			
-		}	
-		
-		private void updateTransactionCategory(TransactionCategory contactCategory,Contact contact) {
+			private void updateTransactionCategory(TransactionCategory contactCategory,Contact contact) {
 			if(contact.getOrganization() != null && !contact.getOrganization().isEmpty()){
 				contactCategory.setTransactionCategoryName(contact.getOrganization());
 			}else {
@@ -1666,30 +1642,30 @@ public class ZohoMigrationService {
 		 * This method is use to get the List TransactionCategory
 		 * @return
 		 */
-		public TransactionCategoryListResponseModel getTransactionCategory() {
-	
-			TransactionCategoryListResponseModel transactionCategoryListResponseModel = new TransactionCategoryListResponseModel();
-			String fileLocation = FileHelper.getRootPath();
-			log.info("insideZohoMigration{}", fileLocation);
-			List<String> notExistList = new ArrayList<>();
-			List<TransactionCategoryModelForMigration> existList = new ArrayList<>();
-			List files = getFilesPresent(fileLocation);
-			for (Object file : files) {
-				log.info("fileName== {}", file);
-				List<String> tCategoryList = new ArrayList<>();
-				List<Map<String, String>> mapList = migrationUtil
-						.parseCSVFile((String) fileLocation + File.separator + file);
-	
-				Map<String, Object> attribute = new HashMap<String, Object>();
-				attribute.put("deleteFlag", false);
+			public TransactionCategoryListResponseModel getTransactionCategory() {
+		
+				TransactionCategoryListResponseModel transactionCategoryListResponseModel = new TransactionCategoryListResponseModel();
+				String fileLocation = FileHelper.getRootPath();
+				log.info("insideZohoMigration{}", fileLocation);
+				List<String> notExistList = new ArrayList<>();
+				List<TransactionCategoryModelForMigration> existList = new ArrayList<>();
+				List<String> files = getFilesPresent(fileLocation);
+				for (String file : files) {
+					log.info("fileName== {}", file);
+					List<String> tCategoryList = new ArrayList<>();
+					List<Map<String, String>> mapList = migrationUtil
+							.parseCSVFile(fileLocation + File.separator + file);
+		
+						Map<String, Object> attribute = new HashMap<>();
+					attribute.put("deleteFlag", false);
 	
 				// get the list of transactionCategory record
 				List<TransactionCategory> transactionCategoryList = transactionCategoryService.findByAttributes(attribute);
 	
-				// add the transactionCategoryName into List
-				for (TransactionCategory transactionCategory : transactionCategoryList) {
-					tCategoryList.add(transactionCategory.getTransactionCategoryName().toString());
-				}
+					// add the transactionCategoryName into List
+					for (TransactionCategory transactionCategory : transactionCategoryList) {
+						tCategoryList.add(transactionCategory.getTransactionCategoryName());
+					}
 				for (Map<String, String> mapRecord : mapList) {
 					if (file.equals("Invoice.csv") || file.equals("Bill.csv") || file.equals("Item.csv")) {
 						if (mapRecord.containsKey(ACCOUNT)) {
@@ -1714,24 +1690,24 @@ public class ZohoMigrationService {
 									}
 								}
 							}
-							if (tCategoryList.contains((mapRecord.get(ACCOUNT).toString()))) {
-								log.info("tCategory is exist == {}", mapRecord.get(ACCOUNT).toString());
-								if (existList.contains(transactionCategoryModelForMigration)) {
-									continue;
+								if (tCategoryList.contains(mapRecord.get(ACCOUNT))) {
+									log.info("tCategory is exist == {}", mapRecord.get(ACCOUNT));
+									if (existList.contains(transactionCategoryModelForMigration)) {
+										continue;
+									} else {
+										existList.add(transactionCategoryModelForMigration);
+									}
 								} else {
-									existList.add(transactionCategoryModelForMigration);
-								}
-							} else {
-								log.info("tCategory is not exist == {}", mapRecord.get(ACCOUNT).toString());
-								if (notExistList.contains(mapRecord.get(ACCOUNT))) {
-									continue;
-								} else {
-									notExistList.add(mapRecord.get(ACCOUNT));
+									log.info("tCategory is not exist == {}", mapRecord.get(ACCOUNT));
+									if (notExistList.contains(mapRecord.get(ACCOUNT))) {
+										continue;
+									} else {
+										notExistList.add(mapRecord.get(ACCOUNT));
 								}
 							}
 						}
 					}
-					// for Expense.csv file
+
 					if (file.equals("Expense.csv")) {
 						if (mapRecord.containsKey(EXPENSE_ACCOUNT)) {
 							Map<String, Object> map = new HashMap<>();
@@ -1754,19 +1730,19 @@ public class ZohoMigrationService {
 								}
 							}
 							if (mapRecord.containsKey(EXPENSE_ACCOUNT)) {
-								if (tCategoryList.contains((mapRecord.get(EXPENSE_ACCOUNT).toString()))) {
-									log.info("tCategory is exist == {}", mapRecord.get(EXPENSE_ACCOUNT).toString());
-									if (existList.contains(transactionCategoryModelForMigration)) {
-										continue;
+									if (tCategoryList.contains(mapRecord.get(EXPENSE_ACCOUNT))) {
+										log.info("tCategory is exist == {}", mapRecord.get(EXPENSE_ACCOUNT));
+										if (existList.contains(transactionCategoryModelForMigration)) {
+											continue;
+										} else {
+											existList.add(transactionCategoryModelForMigration);
+										}
 									} else {
-										existList.add(transactionCategoryModelForMigration);
-									}
-								} else {
-									log.info("tCategory is not exist == {}", mapRecord.get(EXPENSE_ACCOUNT).toString());
-									if (notExistList.contains(mapRecord.get(EXPENSE_ACCOUNT))) {
-										continue;
-									} else {
-										notExistList.add(mapRecord.get(EXPENSE_ACCOUNT));
+										log.info("tCategory is not exist == {}", mapRecord.get(EXPENSE_ACCOUNT));
+										if (notExistList.contains(mapRecord.get(EXPENSE_ACCOUNT))) {
+											continue;
+										} else {
+											notExistList.add(mapRecord.get(EXPENSE_ACCOUNT));
 									}
 								}
 							}
@@ -1785,18 +1761,18 @@ public class ZohoMigrationService {
 		 * @param fileName
 		 * @return The List of Item data taht comes in Item.csv
 		 */
-	    public List<ItemModel> getCsvFileDataForItem(String fileLocation,String fileName)
-	    {
-	    	//String fileLocation = basePath;
-			List files = getFilesPresent(fileLocation);
-			List<ItemModel> itemModelList = new ArrayList<>();
-			for (Object file : files) {
-				List<Map<String, String>> mapList = migrationUtil.parseCSVFile((String) fileLocation + File.separator + file);
-				
-				for (Map<String, String> mapRecord : mapList) {
-					if (file.equals("Item.csv")) {
+		    public List<ItemModel> getCsvFileDataForItem(String fileLocation,String fileName)
+		    {
+
+				List<String> files = getFilesPresent(fileLocation);
+				List<ItemModel> itemModelList = new ArrayList<>();
+				for (String file : files) {
+					List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
 					
-						ItemModel itemModel = new ItemModel();
+					for (Map<String, String> mapRecord : mapList) {
+						if (file.equals(fileName)) {
+						
+							ItemModel itemModel = new ItemModel();
 						
 						itemModel.setItemID(mapRecord.get("Item ID"));
 						itemModel.setItemName(mapRecord.get("Item Name"));
@@ -1827,15 +1803,15 @@ public class ZohoMigrationService {
 	     * @param fileName
 	     * @return
 	     */
-		public List<ContactsModel> getCsvFileDataForIContacts(String fileLocation,String fileName) {
-			//String fileLocation = basePath;
-			List files = getFilesPresent(fileLocation);
-			List<ContactsModel> contactsModelList = new ArrayList<>();
-			for (Object file : files) {
-				List<Map<String, String>> mapList = migrationUtil.parseCSVFile((String) fileLocation + File.separator + file);
-				
-				for (Map<String, String> mapRecord : mapList) {
-					if (file.equals("Contacts.csv")) {
+			public List<ContactsModel> getCsvFileDataForIContacts(String fileLocation,String fileName) {
+
+				List<String> files = getFilesPresent(fileLocation);
+				List<ContactsModel> contactsModelList = new ArrayList<>();
+				for (String file : files) {
+					List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
+					
+					for (Map<String, String> mapRecord : mapList) {
+						if (file.equals(fileName)) {
 					
 						ContactsModel contactsModel = new ContactsModel();
 						
@@ -1871,15 +1847,15 @@ public class ZohoMigrationService {
 	     * @param fileName
 	     * @return
 	     */
-		public List<VendorsModel> getCsvFileDataForIVendors(String fileLocation,String fileName) {
-			//String fileLocation = basePath;
-			List files = getFilesPresent(fileLocation);
-			List<VendorsModel> vendorsModelList = new ArrayList<>();
-			for (Object file : files) {
-				List<Map<String, String>> mapList = migrationUtil.parseCSVFile((String) fileLocation + File.separator + file);
-				
-				for (Map<String, String> mapRecord : mapList) {
-					if (file.equals("Vendors.csv")) {
+			public List<VendorsModel> getCsvFileDataForIVendors(String fileLocation,String fileName) {
+
+				List<String> files = getFilesPresent(fileLocation);
+				List<VendorsModel> vendorsModelList = new ArrayList<>();
+				for (String file : files) {
+					List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
+					
+					for (Map<String, String> mapRecord : mapList) {
+						if (file.equals(fileName)) {
 					
 						VendorsModel vendorsModel = new VendorsModel();
 							
@@ -1912,15 +1888,15 @@ public class ZohoMigrationService {
 		 * @param fileName
 		 * @return
 		 */
-		public List<InvoiceModel> getCsvFileDataForInvoice(String fileLocation,String fileName) {
-			//String fileLocation = basePath;
-			List files = getFilesPresent(fileLocation);
-			List<InvoiceModel> invoiceModelList = new ArrayList<>();
-			for (Object file : files) {
-				List<Map<String, String>> mapList = migrationUtil.parseCSVFile((String) fileLocation + File.separator + file);
-				
-				for (Map<String, String> mapRecord : mapList) {
-					if (file.equals("Invoice.csv")) {
+			public List<InvoiceModel> getCsvFileDataForInvoice(String fileLocation,String fileName) {
+
+				List<String> files = getFilesPresent(fileLocation);
+				List<InvoiceModel> invoiceModelList = new ArrayList<>();
+				for (String file : files) {
+					List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
+					
+					for (Map<String, String> mapRecord : mapList) {
+						if (file.equals(fileName)) {
 					
 						InvoiceModel invoiceModel = new InvoiceModel();
 							
@@ -1960,15 +1936,15 @@ public class ZohoMigrationService {
 		 * @param fileName
 		 * @return
 		 */
-		public List<BillModel> getCsvFileDataForBill(String fileLocation,String fileName) {
-			//String fileLocation = basePath;
-			List files = getFilesPresent(fileLocation);
-			List<BillModel> billModelList = new ArrayList<>();
-			for (Object file : files) {
-				List<Map<String, String>> mapList = migrationUtil.parseCSVFile((String) fileLocation + File.separator + file);
-				
-				for (Map<String, String> mapRecord : mapList) {
-					if (file.equals("Bill.csv")) {
+			public List<BillModel> getCsvFileDataForBill(String fileLocation,String fileName) {
+
+				List<String> files = getFilesPresent(fileLocation);
+				List<BillModel> billModelList = new ArrayList<>();
+				for (String file : files) {
+					List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
+					
+					for (Map<String, String> mapRecord : mapList) {
+						if (file.equals(fileName)) {
 					
 						BillModel billModel = new BillModel();
 						billModel.setDate(mapRecord.get("Bill Date"));
@@ -2004,16 +1980,15 @@ public class ZohoMigrationService {
 		 * @param fileName
 		 * @return
 		 */
-		public List<CreditNoteModel> getCsvFileDataForCreditNote(String fileLocation,String fileName) {
-			
-			//String fileLocation = basePath;
-			List files = getFilesPresent(fileLocation);
-			List<CreditNoteModel> creditNoteModelList = new ArrayList<>();
-			for (Object file : files) {
-				List<Map<String, String>> mapList = migrationUtil.parseCSVFile((String) fileLocation + File.separator + file);
-				
-				for (Map<String, String> mapRecord : mapList) {
-					if (file.equals("Credit_Note.csv")) {
+			public List<CreditNoteModel> getCsvFileDataForCreditNote(String fileLocation,String fileName) {
+
+				List<String> files = getFilesPresent(fileLocation);
+				List<CreditNoteModel> creditNoteModelList = new ArrayList<>();
+				for (String file : files) {
+					List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
+					
+					for (Map<String, String> mapRecord : mapList) {
+						if (file.equals(fileName)) {
 						CreditNoteModel creditNoteModel = new CreditNoteModel();
 						
 						creditNoteModel.setCreditNotesID(mapRecord.get("CreditNotes ID"));
@@ -2052,15 +2027,15 @@ public class ZohoMigrationService {
 		 * @param fileName
 		 * @return
 		 */
-		public List<ExpenseModel> getCsvFileDataForExpense(String fileLocation,String fileName) {
-			//String fileLocation = basePath;
-			List files = getFilesPresent(fileLocation);
-			List<ExpenseModel> ExpenseModelList = new ArrayList<>();
-			for (Object file : files) {
-				List<Map<String, String>> mapList = migrationUtil.parseCSVFile((String) fileLocation + File.separator + file);
-				
-				for (Map<String, String> mapRecord : mapList) {
-					if (file.equals("Expense.csv")) {
+			public List<ExpenseModel> getCsvFileDataForExpense(String fileLocation,String fileName) {
+
+				List<String> files = getFilesPresent(fileLocation);
+				List<ExpenseModel> ExpenseModelList = new ArrayList<>();
+				for (String file : files) {
+					List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
+					
+					for (Map<String, String> mapRecord : mapList) {
+						if (file.equals(fileName)) {
 						ExpenseModel expenseModel = new ExpenseModel();
 						
 						expenseModel.setExpenseDate(mapRecord.get("Expense Date"));
@@ -2084,15 +2059,15 @@ public class ZohoMigrationService {
 		 * @param fileName
 		 * @return
 		 */
-		public List<PurchaseOrderModel> getCsvFileDataForPurchaseOrder(String fileLocation,String fileName) {
-			//String fileLocation = basePath;
-			List files = getFilesPresent(fileLocation);
-			List<PurchaseOrderModel> purchaseOrderModellList = new ArrayList<>();
-			for (Object file : files) {
-				List<Map<String, String>> mapList = migrationUtil.parseCSVFile((String) fileLocation + File.separator + file);
-				
-				for (Map<String, String> mapRecord : mapList) {
-					if (file.equals("Purchase_Order.csv")) {
+			public List<PurchaseOrderModel> getCsvFileDataForPurchaseOrder(String fileLocation,String fileName) {
+
+				List<String> files = getFilesPresent(fileLocation);
+				List<PurchaseOrderModel> purchaseOrderModellList = new ArrayList<>();
+				for (String file : files) {
+					List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
+					
+					for (Map<String, String> mapRecord : mapList) {
+						if (file.equals(fileName)) {
 						PurchaseOrderModel purchaseOrderModel = new PurchaseOrderModel();
 						
 						purchaseOrderModel.setReferenceNo(mapRecord.get("Reference No"));
@@ -2118,15 +2093,15 @@ public class ZohoMigrationService {
 		 * @param fileName
 		 * @return
 		 */
-		public List<ChartOfAccountsModel> ChartOfAccounts(String fileLocation,String fileName) {
-		//	String fileLocation = basePath;
-			List files = getFilesPresent(fileLocation);
-			List<ChartOfAccountsModel> chartOfAccountsModelList = new ArrayList<>();
-			for (Object file : files) {
-				List<Map<String, String>> mapList = migrationUtil.parseCSVFile((String) fileLocation + File.separator + file);
-				
-				for (Map<String, String> mapRecord : mapList) {
-					if (file.equals("Chart_of_Accounts.csv")) {
+			public List<ChartOfAccountsModel> ChartOfAccounts(String fileLocation,String fileName) {
+
+				List<String> files = getFilesPresent(fileLocation);
+				List<ChartOfAccountsModel> chartOfAccountsModelList = new ArrayList<>();
+				for (String file : files) {
+					List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
+					
+					for (Map<String, String> mapRecord : mapList) {
+						if (file.equals(fileName)) {
 						ChartOfAccountsModel chartOfAccountsModel = new ChartOfAccountsModel();
 						
 						chartOfAccountsModel.setAccountName(mapRecord.get("Account Name"));
@@ -2146,15 +2121,15 @@ public class ZohoMigrationService {
 		 * @param fileName
 		 * @return
 		 */
-		public List<ExchangeRateModel> getCsvFileDataForExchangeRate(String fileLocation,String fileName) {
-			//String fileLocation = basePath;
-			List files = getFilesPresent(fileLocation);
-			List<ExchangeRateModel> exchangeRateModelList = new ArrayList<>();
-			for (Object file : files) {
-				List<Map<String, String>> mapList = migrationUtil.parseCSVFile((String) fileLocation + File.separator + file);
-				
-				for (Map<String, String> mapRecord : mapList) {
-					if (file.equals("Exchange_Rate.csv")) {
+			public List<ExchangeRateModel> getCsvFileDataForExchangeRate(String fileLocation,String fileName) {
+
+				List<String> files = getFilesPresent(fileLocation);
+				List<ExchangeRateModel> exchangeRateModelList = new ArrayList<>();
+				for (String file : files) {
+					List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
+					
+					for (Map<String, String> mapRecord : mapList) {
+						if (file.equals(fileName)) {
 						
 						ExchangeRateModel exchangeRateModel = new ExchangeRateModel();
 						
@@ -2169,43 +2144,46 @@ public class ZohoMigrationService {
 			return exchangeRateModelList;
 		}
 
-		public List<String>  getUploadedFilesNames(String migrationPath){
-            String fileLocation = basePath;
-            List<String> fileNames = new ArrayList<>();
-            //  List files = getFilesPresent(fileLocation);
-            File[] f = new File (migrationPath).listFiles();
-            for (File files : f) {
-                String fileName = files.getName();
-                fileNames.add(fileName);
-        }
-        return fileNames;
+			public List<String> getUploadedFilesNames(String migrationPath) {
+				List<String> fileNames = new ArrayList<>();
 
-    }
+				File[] files = new File(migrationPath).listFiles();
+				if (files == null) {
+					return fileNames;
+				}
+
+				for (File file : files) {
+					fileNames.add(file.getName());
+				}
+				return fileNames;
+			}
 		/**
 		 * @param listOfFileNames
 		 * @return
 		 */
-    public List<DataMigrationRespModel> deleteFiles(String migrationPath,UploadedFilesDeletionReqModel listOfFileNames){
-        String fileLocation = basePath;
-        List<String> deleteFiles = new ArrayList<>();
-        List<String> remainingFiles = new ArrayList<>();
-        List<String> fileNames = new ArrayList<>();
-        List<DataMigrationRespModel> resultList = new ArrayList<>();
-        File f = new File (fileLocation);
-        File[]  files = f.listFiles();
-		for (File file : files) {	
-			remainingFiles.add(file.getName());
-			for (String fileName : listOfFileNames.getFileNames()) {
+	    public List<DataMigrationRespModel> deleteFiles(String migrationPath,UploadedFilesDeletionReqModel listOfFileNames){
+	        String fileLocation = migrationPath;
+	        List<String> deletedFiles = new ArrayList<>();
+	        List<String> remainingFiles = new ArrayList<>();
+	        List<DataMigrationRespModel> resultList = new ArrayList<>();
+	        File f = new File (fileLocation);
+	        File[]  files = f.listFiles();
+	        if (files == null) {
+	        	return resultList;
+	        }
+			for (File file : files) {	
+				remainingFiles.add(file.getName());
+				for (String fileName : listOfFileNames.getFileNames()) {
 
-				if (file.getName().equals(fileName)) {
-					file.delete();
-					deleteFiles.add(file.getName());
+					if (file.getName().equals(fileName)) {
+						file.delete();
+						deletedFiles.add(file.getName());
+					}
 				}
 			}
-		}
-		remainingFiles.removeAll(deleteFiles);
-		// get the count of remaining files.
-		getCountOfRemsiningFiles(fileLocation, remainingFiles, resultList);
+			remainingFiles.removeAll(deletedFiles);
+			// get the count of remaining files.
+			getCountOfRemsiningFiles(fileLocation, remainingFiles, resultList);
 			
         return resultList;
     }
@@ -2237,33 +2215,34 @@ public class ZohoMigrationService {
 				resultList.add(dataMigrationRespModel);
 			}
 		}
-		public String rollBackMigratedData(String migrationPath){
-            String fileLocation = basePath;
-            File f = new File (migrationPath);
-            File[]  files = f.listFiles();
-            for (File file:files){
-                file.delete();
-            }
-		    return "Migrated Data Deleted Successfully";
-        }
+			public String rollBackMigratedData(String migrationPath){
+	            File f = new File (migrationPath);
+	            File[]  files = f.listFiles();
+	            if (files == null) {
+	            	return "Migrated Data Deleted Successfully";
+	            }
+	            for (File file:files){
+	                file.delete();
+	            }
+			    return "Migrated Data Deleted Successfully";
+	        }
 		
 		
 		
  /************************************************************************* MIGRATION SUMMARY ***************************************************************************/
 		
-	public List<DataMigrationRespModel> getMigrationSummary(String fileLocation, Integer userId, String migFromDate)
-			throws IOException {
-		List<DataMigrationRespModel> list = new ArrayList<>();
-		log.info("getSummaryFileLocation{}", fileLocation);
+		public List<DataMigrationRespModel> getMigrationSummary(String fileLocation, Integer userId, String migFromDate)
+				throws IOException {
+			List<DataMigrationRespModel> list = new ArrayList<>();
+			log.info("getSummaryFileLocation {} userId {}", fileLocation, userId);
 		List<String> files = getFilesPresent(fileLocation);
 		for (String file : files) {
 			List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
 
-			List<Map<String, String>> itemsToRemove = new ArrayList<Map<String, String>>();
+				List<Map<String, String>> itemsToRemove = new ArrayList<>();
 
 			for (Map<String, String> mapRecord : mapList) {
 
-				// for Invoice
 				if (mapRecord.containsKey(INVOICE_DATE)) {
 					Integer result = migrationUtil.compareDate(mapRecord.get(INVOICE_DATE), migFromDate);
 					if (result != null) {
@@ -2272,25 +2251,21 @@ public class ZohoMigrationService {
 
 				}
 
-				// for Bill
 				if (mapRecord.containsKey(BILL_DATE)) {
 					Integer result = migrationUtil.compareDate(mapRecord.get(BILL_DATE), migFromDate);
 					itemsToRemove = migrationUtil.filterMapRecord(mapList, mapRecord, result, itemsToRemove);
 				}
 
-				// for Exchange Rate
 				if (mapRecord.containsKey(DATE)) {
 					Integer result = migrationUtil.compareDate(mapRecord.get(DATE), migFromDate);
 					itemsToRemove = migrationUtil.filterMapRecord(mapList, mapRecord, result, itemsToRemove);
 				}
 
-				// for Expense Date
 				if (mapRecord.containsKey(EXPENSE_DATE)) {
 					Integer result = migrationUtil.compareDate(mapRecord.get(EXPENSE_DATE), migFromDate);
 					itemsToRemove = migrationUtil.filterMapRecord(mapList, mapRecord, result, itemsToRemove);
 				}
 
-				// for Purchase Order Date
 				if (mapRecord.containsKey(PURCHASE_ORDER_DATE)) {
 					Integer result = migrationUtil.compareDate(mapRecord.get(PURCHASE_ORDER_DATE), migFromDate);
 					itemsToRemove = migrationUtil.filterMapRecord(mapList, mapRecord, result, itemsToRemove);
@@ -2320,24 +2295,28 @@ public class ZohoMigrationService {
 	}		
 	
 	// Delete Files from uploaded folder.
-	public String deleteMigratedFiles(String migrationPath){
-        String fileLocation = basePath;
-        File f = new File (migrationPath);
-        File[]  files = f.listFiles();
-        for (File file:files){
-            file.delete();
-        }
-	    return "Migrated Data Deleted Successfully";
-    }
+		public String deleteMigratedFiles(String migrationPath){
+	        File f = new File (migrationPath);
+	        File[]  files = f.listFiles();
+	        if (files == null) {
+	        	return "Migrated Data Deleted Successfully";
+	        }
+	        for (File file:files){
+	            file.delete();
+	        }
+		    return "Migrated Data Deleted Successfully";
+	    }
 	
-	public void setColoumnValueForInvoice(
-			List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList, Map<String, String> record,Invoice invoice) {
-		
-		for (Product.TableList.Table.ColumnList.Column column : invoiceTableColumnList) {
-			String val = record.get(column.getInputColumn());
-			String setterMethod = column.getSetterMethod();
-			if (StringUtils.isEmpty(val))
-				continue;
+		public void setColoumnValueForInvoice(
+				List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList,
+				Map<String, String> recordData,
+				Invoice invoice) {
+			
+			for (Product.TableList.Table.ColumnList.Column column : invoiceTableColumnList) {
+				String val = recordData.get(column.getInputColumn());
+				String setterMethod = column.getSetterMethod();
+				if (StringUtils.isEmpty(val))
+					continue;
 	           if (setterMethod.equalsIgnoreCase("setVatCategory")){
 	                VatCategory vatCategory = migrationUtil.getVatCategory(val);
 	                migrationUtil.setRecordIntoEntity(invoice,setterMethod,vatCategory,"Object");
@@ -2357,10 +2336,10 @@ public class ZohoMigrationService {
 	            else if (setterMethod.equalsIgnoreCase("setTrnsactioncCategory")){
 	                if (StringUtils.isEmpty(val))
 	                    continue;
-	              //  if (invoice instanceof InvoiceLineItem){
+
 	                    TransactionCategory transactionCategory = migrationUtil.getTransactionCategory(val);
 	                    migrationUtil.setRecordIntoEntity(invoice, "setTrnsactioncCategory", transactionCategory, "Object");
-	              //  }
+
 	            }
 	           
 	            else if (StringUtils.equalsIgnoreCase(setterMethod,"setInvoiceLineItemUnitPrice")){

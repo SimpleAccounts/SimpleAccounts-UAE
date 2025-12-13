@@ -1,7 +1,6 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.TransactionCategoryClosingBalanceDao;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
@@ -15,15 +14,14 @@ import com.simpleaccounts.service.BankAccountService;
 import com.simpleaccounts.service.CurrencyExchangeService;
 import com.simpleaccounts.service.TransactionCategoryClosingBalanceService;
 import com.simpleaccounts.utils.DateFormatUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-	@Service
+@Service
 	@SuppressWarnings("java:S3973")
 	@RequiredArgsConstructor
 public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCategoryClosingBalanceService {
@@ -33,11 +31,9 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
 
     private final DateFormatUtil dateFormatUtil;
 
-    @Autowired
-    BankAccountService bankAccountService;
+    private final BankAccountService bankAccountService;
 
-    @Autowired
-    CurrencyExchangeService currencyExchangeService;
+    private final CurrencyExchangeService currencyExchangeService;
 
     @Override
     protected Dao<Integer, TransactionCategoryClosingBalance> getDao() {
@@ -81,11 +77,11 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             transaction.setCreatedBy(lineItem.getCreatedBy());
             transaction.setTransactionDate(journalDate);
             BigDecimal transactionAmount = isDebit ? lineItem.getDebitAmount():lineItem.getCreditAmount();
-           if(lineItem.getDeleteFlag()&&isDebit)
+           if(Boolean.TRUE.equals(lineItem.getDeleteFlag())&&isDebit)
            {
                transaction.setDebitCreditFlag('D');
            }
-           else if(lineItem.getDeleteFlag()&&!isDebit){
+           else if(Boolean.TRUE.equals(lineItem.getDeleteFlag())&&!isDebit){
                transaction.setDebitCreditFlag('C');
            }
             transaction.setExchangeRate(lineItem.getExchangeRate());
@@ -94,7 +90,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
     }
 
     public synchronized BigDecimal updateClosingBalance(Transaction transaction,TransactionCategory category) {
-        Boolean isBankTransaction = false;
+        boolean isBankTransaction = false;
         BigDecimal  bankTransactionAmount =BigDecimal.ZERO;
         List<TransactionCategoryClosingBalance> balanceList = new ArrayList<>();
         if ((category.getChartOfAccount().getChartOfAccountId()==7 || category.getChartOfAccount().getChartOfAccountId()==8 )
@@ -131,8 +127,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             if (balance == null) {
                 param = new HashMap<>();
                 param.put(JSON_KEY_TRANSACTION_CATEGORY, category);
-                TransactionCategoryClosingBalance lastBalance = transactionCategoryClosingBalanceDao.getClosingBalanceLessThanCurrentDate(transaction.getTransactionDate()
-                        ,category);//getLastElement(findByAttributes(param));
+	                TransactionCategoryClosingBalance lastBalance = transactionCategoryClosingBalanceDao.getClosingBalanceLessThanCurrentDate(transaction.getTransactionDate(), category);
                 if(lastBalance == null && balance != null) {
                     balance = new TransactionCategoryClosingBalance();
                     balance.setTransactionCategory(category);
@@ -155,7 +150,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
                     balanceList.add(balance);
                     List<TransactionCategoryClosingBalance> upperbalanceList = transactionCategoryClosingBalanceDao.
                             getClosingBalanceGreaterThanCurrentDate(balance.getClosingBalanceDate(),balance.getTransactionCategory());
-                    if(upperbalanceList.size() > 0) {
+                    if(!upperbalanceList.isEmpty()) {
                         balanceList.addAll(upperbalanceList);
                         isUpdateOpeningBalance = true;
                     }
@@ -172,7 +167,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
                     balanceList.add(balance);
                     List<TransactionCategoryClosingBalance> upperbalanceList = transactionCategoryClosingBalanceDao.
                             getClosingBalanceGreaterThanCurrentDate(balance.getClosingBalanceDate(),balance.getTransactionCategory());
-                    if(upperbalanceList.size() > 0) {
+                    if(!upperbalanceList.isEmpty()) {
                         balanceList.addAll(upperbalanceList);
                         isUpdateOpeningBalance = true;
                     }
@@ -183,7 +178,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
                 param = new HashMap<>();
                 param.put(JSON_KEY_TRANSACTION_CATEGORY, category);
                 closingBalance = balance.getClosingBalance();
-                TransactionCategoryClosingBalance lastBalance = transactionCategoryClosingBalanceDao.getLastClosingBalanceByDate(category); //getLastElement(findByAttributes(param));
+	                TransactionCategoryClosingBalance lastBalance = transactionCategoryClosingBalanceDao.getLastClosingBalanceByDate(category);
                 if(lastBalance!=null && lastBalance.getClosingBalance() != balance.getClosingBalance() &&
                 !(lastBalance.getClosingBalanceDate().isEqual(balance.getClosingBalanceDate())))
                 {

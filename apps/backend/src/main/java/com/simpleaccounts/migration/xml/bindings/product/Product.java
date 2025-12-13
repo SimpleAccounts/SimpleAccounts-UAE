@@ -249,7 +249,7 @@ public class Product {
          */
         public List<Product.TableList.Table> getTable() {
             if (table == null) {
-                table = new ArrayList<Product.TableList.Table>();
+                table = new ArrayList<>();
             }
             return this.table;
         }
@@ -496,7 +496,7 @@ public class Product {
                  */
                 public List<Product.TableList.Table.ColumnList.Column> getColumn() {
                     if (column == null) {
-                        column = new ArrayList<Product.TableList.Table.ColumnList.Column>();
+                        column = new ArrayList<>();
                     }
                     return this.column;
                 }

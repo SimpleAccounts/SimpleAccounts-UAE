@@ -1,28 +1,24 @@
 package com.simpleaccounts.utils;
 
-//import com.itextpdf.html2pdf.HtmlConverter;
-import lombok.RequiredArgsConstructor;
 import com.itextpdf.html2pdf.HtmlConverter;
+import com.simpleaccounts.constant.ConfigurationConstants;
 import com.simpleaccounts.entity.Configuration;
 import com.simpleaccounts.entity.Mail;
 import com.simpleaccounts.integration.MailIntegration;
 import com.simpleaccounts.rest.MailController.EmailContentModel;
 import com.simpleaccounts.service.ConfigurationService;
-import com.simpleaccounts.constant.ConfigurationConstants;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStream;
-
 import java.util.*;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
-
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -36,7 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 @RequiredArgsConstructor
 public class MailUtility {
-	private final static Logger LOGGER = LoggerFactory.getLogger(MailUtility.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MailUtility.class);
 
 	private final MailIntegration MailIntegration;
 
@@ -241,7 +237,7 @@ public class MailUtility {
 	public static byte[] writePdf(OutputStream outputStream,String body) throws Exception {
 		try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
 			HtmlConverter.convertToPdf(body, buffer);
-			//	byte[] pdfAsBytes = buffer.toByteArray();
+
 			return buffer.toByteArray();
 		}
 	}
@@ -354,7 +350,7 @@ public class MailUtility {
 
 	public Map<String, String> getInvoiceEmailParamMap() {
 
-		Map<String, String> dataMap = new HashMap<String, String>();
+		Map<String, String> dataMap = new HashMap<>();
 		dataMap.put(CN_PRODUCT,"{Cn_product}");
 		dataMap.put(CREDIT_NOTE_NUMBER,"{creditNoteNumber}");
 		dataMap.put(CREDIT_NOTE_CONTACT_NAME,"{CN_contactName}");
@@ -502,7 +498,7 @@ public class MailUtility {
 	public static final String VAT_AMOUNT = "vatAmount";
 
 	public Map<String, String> getRfqEmailParamMap() {
-		Map<String, String> dataMap = new HashMap<String, String>();
+		Map<String, String> dataMap = new HashMap<>();
 		dataMap.put(RFQ_NO,"{rfqNumber}");
 		dataMap.put(RFQ_EXPIRY_DATE,"{rfqExpiryDate}");
 		dataMap.put(RFQ_RECEIVE_DATE,"{rfqReceiveDate}");
@@ -515,7 +511,7 @@ public class MailUtility {
 		dataMap.put(UNIT_PRICE, "{unitPrice}");
 		dataMap.put(EXCISE_AMOUNT, "{exciseAmount}");
 		dataMap.put(SENDER_NAME, "{senderName}");
-		//dataMap.put(SUPPLIER_NAME,"{supplierName}");
+
 		dataMap.put(COMPANY_NAME, "{companyName}");
 		dataMap.put(SUB_TOTAL, "{subTotal}");
 		dataMap.put(VAT_TYPE,"{vatType}");
@@ -530,7 +526,7 @@ public class MailUtility {
 		dataMap.put(COMPANY_STATE_REGION,"{companyStateRegion}");
 		dataMap.put(VAT_NUMBER,"{vatNumber}");
 		dataMap.put(COMPANY_MOBILE_NUMBER,"{phoneNumber}");
-//		dataMap.put(CONTACT_ADDRESS, "{contactAddress}");
+
 		dataMap.put(CONTACT_COUNTRY, "{contactCountry}");
 		dataMap.put(CONTACT_STATE, "{contactState}");
 		dataMap.put(POST_ZIP_CODE,"{postZipCode}");
@@ -547,7 +543,7 @@ public class MailUtility {
 		return dataMap;
 	}
 	public Map<String, String> getPoEmailParamMap() {
-		Map<String, String> dataMap = new HashMap<String, String>();
+		Map<String, String> dataMap = new HashMap<>();
 		dataMap.put(PO_NO,"{poNumber}");
 		dataMap.put(PO_APPROVE_DATE,"{poApproveDate}");
 		dataMap.put(PO_RECEIVE_DATE,"{poReceiveDate}");
@@ -575,7 +571,7 @@ public class MailUtility {
 		dataMap.put(COMPANY_STATE_REGION,"{companyStateRegion}");
 		dataMap.put(VAT_NUMBER,"{vatNumber}");
 		dataMap.put(COMPANY_MOBILE_NUMBER,"{phoneNumber}");
-//		dataMap.put(CONTACT_ADDRESS, "{contactAddress}");
+
 		dataMap.put(CONTACT_COUNTRY, "{contactCountry}");
 		dataMap.put(CONTACT_STATE, "{contactState}");
 		dataMap.put(POST_ZIP_CODE,"{postZipCode}");
@@ -591,7 +587,7 @@ public class MailUtility {
 		return dataMap;
 	}
 	public Map<String, String> getGRNEmailParamMap() {
-		Map<String, String> dataMap = new HashMap<String, String>();
+		Map<String, String> dataMap = new HashMap<>();
 
 		dataMap.put(GRN_REMARKS,"{grnRemarks}");
 		dataMap.put(GRN_RECEIVE_DATE,"{grnReceiveDate}");
@@ -616,7 +612,7 @@ public class MailUtility {
 		dataMap.put(COMPANY_STATE_REGION,"{companyStateRegion}");
 		dataMap.put(VAT_NUMBER,"{vatNumber}");
 		dataMap.put(COMPANY_MOBILE_NUMBER,"{phoneNumber}");
-//		dataMap.put(CONTACT_ADDRESS, "{contactAddress}");
+
 		dataMap.put(CONTACT_COUNTRY, "{contactCountry}");
 		dataMap.put(CONTACT_STATE, "{contactState}");
 		dataMap.put(POST_ZIP_CODE,"{postZipCode}");
@@ -628,7 +624,7 @@ public class MailUtility {
 		return dataMap;
 	}
 	public Map<String, String> getQuotationEmailParamMap() {
-		Map<String, String> dataMap = new HashMap<String, String>();
+		Map<String, String> dataMap = new HashMap<>();
 		dataMap.put(QUOTATION_NO,"{QuotationNumber}");
 		dataMap.put(DISCOUNT, "{discount}");
 		dataMap.put(INVOICE_DISCOUNT, "{invoiceDiscount}");

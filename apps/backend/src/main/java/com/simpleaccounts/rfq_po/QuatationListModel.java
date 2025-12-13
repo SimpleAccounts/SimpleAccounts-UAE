@@ -1,8 +1,8 @@
 package com.simpleaccounts.rfq_po;
 
+import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -27,7 +27,7 @@ public class QuatationListModel {
     private Integer quantity;
     private String quotationCreatedDate;
     private BigDecimal unitPrice;
-//    private String taxes;
+
     private BigDecimal subTotal;
 
     private BigDecimal untaxedAmount;

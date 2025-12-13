@@ -106,3 +106,4 @@ class TransactionParsingSettingControllerTest {
         return model;
     }
 }
+

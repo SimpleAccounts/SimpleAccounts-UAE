@@ -1,7 +1,12 @@
 package com.simpleaccounts.parserengine;
 
+import com.simpleaccounts.criteria.enums.TransactionEnum;
+import com.simpleaccounts.dao.DateFormatDao;
+import com.simpleaccounts.entity.DateFormat;
+import com.simpleaccounts.entity.bankaccount.Transaction;
+import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingDetailModel;
+import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingPersistModel;
 import java.io.BufferedReader;
-import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,19 +22,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.simpleaccounts.criteria.enums.TransactionEnum;
-import com.simpleaccounts.dao.DateFormatDao;
-import com.simpleaccounts.entity.DateFormat;
-import com.simpleaccounts.entity.bankaccount.Transaction;
-import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingDetailModel;
-import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingPersistModel;
 
 @Component
 @RequiredArgsConstructor
@@ -106,7 +103,6 @@ public class CsvParser implements TransactionFileParser {
 			int rowCount = 0;
 			while ((line = br.readLine()) != null) {
 
-//				String[] splitList = line.split(cvsSplitBy);
 				String[] splitList =	line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 				Map<String, String> dataMap = new LinkedHashMap<>();
 
@@ -147,7 +143,7 @@ public class CsvParser implements TransactionFileParser {
 								} catch (Exception e) {
 
 									dataMap.put(displayName,"0");
-//									errorList.add(rowCount + "," + cellCount);
+
 								}
 							}
 
@@ -169,7 +165,6 @@ public class CsvParser implements TransactionFileParser {
 								} catch (Exception e) {
 									dataMap.put(displayName,"0");
 
-//									errorList.add(rowCount + "," + cellCount);
 								}
 							}
 							else

@@ -2,47 +2,12 @@ package com.simpleaccounts.rest.invoicecontroller;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.EnumMap;
-
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import com.simpleaccounts.repository.JournalLineItemRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.bank.model.DeleteModel;
+import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.ContactTypeEnum;
 import com.simpleaccounts.constant.FileTypeEnum;
-import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.dbfilter.InvoiceFilterEnum;
-
 import com.simpleaccounts.entity.Expense;
 import com.simpleaccounts.entity.FileAttachment;
 import com.simpleaccounts.entity.Invoice;
@@ -54,6 +19,7 @@ import com.simpleaccounts.helper.ExpenseRestHelper;
 import com.simpleaccounts.model.EarningDetailsModel;
 import com.simpleaccounts.model.OverDueAmountDetailsModel;
 import com.simpleaccounts.model.PlaceOfSupplyResponseModel;
+import com.simpleaccounts.repository.JournalLineItemRepository;
 import com.simpleaccounts.repository.QuotationInvoiceRepository;
 import com.simpleaccounts.rest.AbstractDoubleEntryRestController;
 import com.simpleaccounts.rest.DropdownModel;
@@ -79,12 +45,39 @@ import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -158,7 +151,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 				filterDataMap.put(InvoiceFilterEnum.INVOICE_DATE, date);
 			}
 			if (filterModel.getInvoiceDueDate() != null && !filterModel.getInvoiceDueDate().isEmpty()) {
-//				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
 				LocalDate date = LocalDate.parse(filterModel.getInvoiceDueDate());
 
 				filterDataMap.put(InvoiceFilterEnum.INVOICE_DUE_DATE, date);
@@ -260,11 +253,11 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			log.info("In Controller :{}",requestModel.getInvoiceDueDate());
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Boolean checkInvoiceNumber = invoiceRestHelper.doesInvoiceNumberExist(requestModel.getReferenceNumber());
-			if (checkInvoiceNumber){
-				SimpleAccountsMessage errorMessage = new SimpleAccountsMessage("0023",
-						MessageUtil.getMessage("invoicenumber.alreadyexists.0023"), true);
-				logger.info(errorMessage.getMessage());
-				return new  ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+				if (Boolean.TRUE.equals(checkInvoiceNumber)){
+					SimpleAccountsMessage errorMessage = new SimpleAccountsMessage("0023",
+							MessageUtil.getMessage("invoicenumber.alreadyexists.0023"), true);
+					logger.info(errorMessage.getMessage());
+					return new  ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
 
 			}
 			Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);
@@ -317,8 +310,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			log.info("In Update {}",requestModel.getInvoiceDueDate());
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-//
-//			}
 			Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);
 			if (requestModel.getAttachmentFile()!=null) {
 				MultipartFile file = requestModel.getAttachmentFile();
@@ -332,7 +323,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			invoice.setLastUpdateBy(userId);
 			invoice.setLastUpdateDate(LocalDateTime.now());
 			invoiceService.update(invoice, invoice.getId());
-			//invoiceService.deleteJournaForInvoice(invoice);
+
 			if (invoice.getStatus().equals(CommonStatusEnum.POST.getValue())) {
 				// persist updated journal
 				Journal journal = invoiceRestHelper.invoicePosting(new PostingRequestModel(invoice.getId()), userId);
@@ -445,7 +436,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 					overDueAmountDetails.setOverDueAmountMonthly(dueAmountResultSet.getThisMonthOverdue().floatValue());
 				}
 
-			//OverDueAmountDetailsModel overDueAmountDetails = invoiceService.getOverDueAmountDetails(type);
 			return new ResponseEntity<>(overDueAmountDetails, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
@@ -503,7 +493,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//			Currency currency = bankAccountService.getBankAccountById(bankId).getBankAccountCurrency();
+
 			List<Invoice> invoiceList = invoiceService.getSuggestionExplainedInvoices(amount, contactId,
 					ContactTypeEnum.SUPPLIER,currency, userId);
 			List<InviceSingleLevelDropdownModel> responseList = invoiceRestHelper.getDropDownModelList(invoiceList);
@@ -528,7 +518,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//			Currency currency = bankAccountService.getBankAccountById(bankId).getBankAccountCurrency();
+
 			List<Invoice> invoiceList = invoiceService.getSuggestionExplainedInvoices(amount, contactId,
 					ContactTypeEnum.CUSTOMER, currency,userId);
 			return new ResponseEntity<>(invoiceRestHelper.getDropDownModelList(invoiceList), HttpStatus.OK);
@@ -552,11 +542,11 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//			Currency currency = bankAccountService.getBankAccountById(bankId).getBankAccountCurrency();
+
 			List<Invoice> invoiceList = invoiceService.getSuggestionInvoices(amount, contactId,
 					ContactTypeEnum.CUSTOMER, currency,userId);
 			return new ResponseEntity<>(invoiceRestHelper.getDropDownModelList(invoiceList), HttpStatus.OK);
-//			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -577,7 +567,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//			Currency currency = bankAccountService.getBankAccountById(bankId).getBankAccountCurrency();
+
 			List<Invoice> invoiceList = invoiceService.getSuggestionInvoices(amount, contactId,ContactTypeEnum.SUPPLIER,currency,userId);
 
 			List<InviceSingleLevelDropdownModel> responseList = invoiceRestHelper.getDropDownModelList(invoiceList);

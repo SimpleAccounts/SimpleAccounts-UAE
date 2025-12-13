@@ -3,11 +3,10 @@ package com.simpleaccounts.dao.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.lenient;
 
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.entity.EmailLogs;
@@ -152,8 +151,7 @@ class EmailLogsDaoImplTest {
 
         List<EmailLogs> results = emailLogsDao.executeQuery(filters);
 
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
         assertThat(results.get(0)).isEqualTo(testEmailLog);
     }
 
@@ -177,8 +175,7 @@ class EmailLogsDaoImplTest {
 
         List<EmailLogs> results = emailLogsDao.executeQuery(filters, paginationModel);
 
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
         verify(typedQuery).setFirstResult(0);
         verify(typedQuery).setMaxResults(10);
     }
@@ -222,8 +219,7 @@ class EmailLogsDaoImplTest {
 
         List<EmailLogs> results = emailLogsDao.executeNamedQuery(namedQuery);
 
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
         verify(entityManager).createNamedQuery(namedQuery, EmailLogs.class);
     }
 
@@ -231,8 +227,7 @@ class EmailLogsDaoImplTest {
     @DisplayName("Should return entity manager instance")
     void getEntityManagerReturnsInstance() {
         EntityManager result = emailLogsDao.getEntityManager();
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(entityManager);
+        assertThat(result).isNotNull().isEqualTo(entityManager);
     }
 
     @Test
@@ -241,8 +236,7 @@ class EmailLogsDaoImplTest {
         List<EmailLogs> expectedResults = Arrays.asList(testEmailLog, createTestEmailLog());
         when(typedQuery.getResultList()).thenReturn(expectedResults);
         List<EmailLogs> results = emailLogsDao.dumpData();
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(2);
+        assertThat(results).isNotNull().hasSize(2);
     }
 
     @Test
@@ -252,8 +246,7 @@ class EmailLogsDaoImplTest {
         List<EmailLogs> expectedResults = Arrays.asList(testEmailLog);
         when(typedQuery.getResultList()).thenReturn(expectedResults);
         List<EmailLogs> results = emailLogsDao.executeQuery(emptyFilters);
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
     }
 
     @Test
@@ -277,8 +270,7 @@ class EmailLogsDaoImplTest {
         );
         when(typedQuery.getResultList()).thenReturn(Arrays.asList(testEmailLog));
         List<EmailLogs> results = emailLogsDao.executeQuery(filters);
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
     }
 
     @Test

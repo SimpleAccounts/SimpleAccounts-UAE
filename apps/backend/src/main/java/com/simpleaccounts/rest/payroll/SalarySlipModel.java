@@ -1,12 +1,11 @@
 package com.simpleaccounts.rest.payroll;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import lombok.Data;
 
 @Data
 public class SalarySlipModel {
@@ -20,7 +19,7 @@ public class SalarySlipModel {
     private String salaryMonth;
     private String employeename;
     private BigDecimal earnings = BigDecimal.ZERO ;
-  //  private BigDecimal grossSalary = BigDecimal.ZERO ;
+
     private BigDecimal deductions = BigDecimal.ZERO ;
     private BigDecimal netPay = BigDecimal.ZERO;
     private BigDecimal noOfDays;

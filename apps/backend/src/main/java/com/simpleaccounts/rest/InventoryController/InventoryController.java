@@ -1,7 +1,8 @@
 package com.simpleaccounts.rest.InventoryController;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.InventoryFilterEnum;
 import com.simpleaccounts.entity.Inventory;
 import com.simpleaccounts.entity.InventoryHistory;
@@ -18,35 +19,29 @@ import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
+import java.math.BigDecimal;
+import java.time.ZoneId;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
-import java.time.ZoneId;
-import java.util.*;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping(value = "/rest/inventory")
 @RequiredArgsConstructor
 public class InventoryController {
     private final Logger logger = LoggerFactory.getLogger(ProductRestController.class);
-    @Autowired
-    TransactionCategoryService transactionCategoryService;
-    @Autowired
-    InventoryService inventoryService;
+    private final TransactionCategoryService transactionCategoryService;
+    private final InventoryService inventoryService;
 
     private final ProductRestHelper productRestHelper;
 
-    @Autowired
-    TranscationCategoryHelper transcationCategoryHelper;
+    private final TranscationCategoryHelper transcationCategoryHelper;
 
     private final JwtTokenUtil jwtTokenUtil;
 
@@ -288,7 +283,7 @@ public class InventoryController {
         List<InventoryHistoryResponseModel> inventoryHistoryModelList =new  ArrayList<>();
         for (InventoryHistory result:resultList){
             InventoryHistoryResponseModel inventoryHistoryModel=new InventoryHistoryResponseModel();
-//            inventoryHistoryModel.setDate(result.getTransactionDate());
+
             if (result.getTransactionDate()!= null) {
                 ZoneId timeZone = ZoneId.systemDefault();
                 Date date = Date.from(result.getTransactionDate().atStartOfDay(timeZone).toInstant());

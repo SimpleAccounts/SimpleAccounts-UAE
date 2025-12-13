@@ -2,14 +2,12 @@ package com.simpleaccounts.entity;
 
 import com.simpleaccounts.constant.CommonConstant;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Type;
-
-import javax.persistence.*;
 
 @NamedQueries({
     @NamedQuery(name = "employeesForDropdown", query = "SELECT  new " + CommonConstant.DROPDOWN_MODEL_PACKAGE + "(c.id , CONCAT(c.firstName,' ', c.lastName)) "
@@ -39,7 +37,7 @@ import javax.persistence.*;
                 })
 })
 @Data
-//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+
 public class Employee implements Serializable {
 
     private static final long serialVersionUID = 6914121175305098995L;
@@ -65,7 +63,7 @@ public class Employee implements Serializable {
 
     @Column(name = "DATE_OF_BIRTH")
     @Basic(optional = false)
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime dob;
 
     @Basic
@@ -129,7 +127,7 @@ public class Employee implements Serializable {
     @Basic
     @Column(name = "EMERGENCY_CONTACT_RELATIONSHIP_2")
     private String  emergencyContactRelationship2;
-    //private Integer nationality;
+
     @Basic
     @Column(name = "UNIVERSITY")
     private  String university;
@@ -170,7 +168,7 @@ public class Employee implements Serializable {
     @Basic(optional = false)
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Basic
@@ -179,7 +177,7 @@ public class Employee implements Serializable {
 
     @Basic
     @Column(name = "LAST_UPDATE_DATE")
-    //@Convert(converter = DateConverter.class)
+
     private LocalDateTime lastUpdateDate;
 
     @Column(name = "DELETE_FLAG")

@@ -1,23 +1,22 @@
 package com.simpleaccounts.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.PurchaseDao;
 import com.simpleaccounts.entity.Purchase;
 import com.simpleaccounts.service.PurchaseService;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("purchaseService")
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+@RequiredArgsConstructor
 public class PurchaseServiceImpl extends PurchaseService {
 
-    @Autowired
-    public PurchaseDao purchaseDao;
+    public final PurchaseDao purchaseDao;
 
     @Override
     public List<Purchase> getAllPurchase() {

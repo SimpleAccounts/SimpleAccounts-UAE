@@ -30,10 +30,9 @@
 		<mockito.version>4.11.0</mockito.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
 		<bytebuddy.version>1.12.23</bytebuddy.version>
-
-		<!-- SonarQube Configuration (Self-hosted) -->
-		<sonar.host.url>https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io</sonar.host.url>
-	</properties>
+			<!-- SonarQube Configuration (Self-hosted) -->
+			<sonar.host.url>https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io</sonar.host.url>
+		</properties>
 
 	<dependencies>
 		<dependency>

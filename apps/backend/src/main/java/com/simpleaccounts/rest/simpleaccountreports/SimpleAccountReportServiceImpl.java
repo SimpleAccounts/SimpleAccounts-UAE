@@ -1,16 +1,14 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 
 import com.simpleaccounts.rest.simpleaccountreports.Aging.AgingListModel;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.rest.simpleaccountreports.Aging.AgingRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditResponseModel;
 import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountResponseModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

@@ -1,27 +1,25 @@
 package com.simpleaccounts.dao.impl;
 
+
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.CoacTransactionCategoryDao;
-import com.simpleaccounts.entity.CoaCoaCategory;
 import com.simpleaccounts.entity.CoacTransactionCategory;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.service.ChartOfAccountCategoryService;
 import com.simpleaccounts.service.TransactionCategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import javax.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
-import java.util.List;
-
 @Repository
+@RequiredArgsConstructor
 public class CoacTransactionCategoryDaoImpl extends AbstractDao<Integer, CoacTransactionCategory>  implements CoacTransactionCategoryDao  {
 
-    @Autowired
-    ChartOfAccountCategoryService chartOfAccountCategoryService;
+    private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
-    @Autowired
-    TransactionCategoryService transactionCategoryService;
+    private final TransactionCategoryService transactionCategoryService;
 
     public void addCoacTransactionCategory(ChartOfAccount chartOfAccountCategory, TransactionCategory transactionCategory){
 

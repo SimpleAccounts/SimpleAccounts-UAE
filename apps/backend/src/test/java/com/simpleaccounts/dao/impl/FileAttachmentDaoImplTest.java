@@ -4,11 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.lenient;
 
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.entity.FileAttachment;
@@ -156,8 +155,7 @@ class FileAttachmentDaoImplTest {
 
         List<FileAttachment> results = fileAttachmentDao.executeQuery(filters);
 
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
         assertThat(results.get(0)).isEqualTo(testFileAttachment);
     }
 
@@ -181,8 +179,7 @@ class FileAttachmentDaoImplTest {
 
         List<FileAttachment> results = fileAttachmentDao.executeQuery(filters, paginationModel);
 
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
         verify(typedQuery).setFirstResult(0);
         verify(typedQuery).setMaxResults(10);
     }
@@ -235,8 +232,7 @@ class FileAttachmentDaoImplTest {
     @DisplayName("Should return entity manager instance")
     void getEntityManagerReturnsInstance() {
         EntityManager result = fileAttachmentDao.getEntityManager();
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(entityManager);
+        assertThat(result).isNotNull().isEqualTo(entityManager);
     }
 
     @Test
@@ -245,8 +241,7 @@ class FileAttachmentDaoImplTest {
         List<FileAttachment> expectedResults = Arrays.asList(testFileAttachment, createTestFileAttachment());
         when(typedQuery.getResultList()).thenReturn(expectedResults);
         List<FileAttachment> results = fileAttachmentDao.dumpData();
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(2);
+        assertThat(results).isNotNull().hasSize(2);
     }
 
     @Test
@@ -256,8 +251,7 @@ class FileAttachmentDaoImplTest {
         List<FileAttachment> expectedResults = Arrays.asList(testFileAttachment);
         when(typedQuery.getResultList()).thenReturn(expectedResults);
         List<FileAttachment> results = fileAttachmentDao.executeQuery(emptyFilters);
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
     }
 
     @Test
@@ -281,8 +275,7 @@ class FileAttachmentDaoImplTest {
         );
         when(typedQuery.getResultList()).thenReturn(Arrays.asList(testFileAttachment));
         List<FileAttachment> results = fileAttachmentDao.executeQuery(filters);
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
     }
 
     @Test

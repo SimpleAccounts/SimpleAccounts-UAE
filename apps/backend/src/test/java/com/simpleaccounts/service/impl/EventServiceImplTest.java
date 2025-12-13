@@ -1,9 +1,6 @@
 package com.simpleaccounts.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.entity.Event;
 import com.simpleaccounts.service.InvoiceService;
@@ -56,48 +53,42 @@ class EventServiceImplTest {
     void shouldReturnEmptyListWhenGetEventsCalledWithDateRange() {
         List<Event> result = eventService.getEvents(startDate, endDate);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
     void shouldReturnEmptyListWhenGetEventsCalledWithNullStartDate() {
         List<Event> result = eventService.getEvents(null, endDate);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
     void shouldReturnEmptyListWhenGetEventsCalledWithNullEndDate() {
         List<Event> result = eventService.getEvents(startDate, null);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
     void shouldReturnEmptyListWhenGetEventsCalledWithBothDatesNull() {
         List<Event> result = eventService.getEvents(null, null);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
     void shouldReturnEmptyListWhenGetEventsCalledWithSameStartAndEndDate() {
         List<Event> result = eventService.getEvents(startDate, startDate);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
     void shouldReturnEmptyListWhenGetEventsCalledWithEndDateBeforeStartDate() {
         List<Event> result = eventService.getEvents(endDate, startDate);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -111,8 +102,7 @@ class EventServiceImplTest {
 
         List<Event> result = eventService.getEvents(futureStart, futureEnd);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -126,8 +116,7 @@ class EventServiceImplTest {
 
         List<Event> result = eventService.getEvents(pastStart, pastEnd);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -141,8 +130,7 @@ class EventServiceImplTest {
 
         List<Event> result = eventService.getEvents(dayStart, dayEnd);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -156,8 +144,7 @@ class EventServiceImplTest {
 
         List<Event> result = eventService.getEvents(longStart, longEnd);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     // ========== getEvents() Tests ==========
@@ -166,8 +153,7 @@ class EventServiceImplTest {
     void shouldReturnEmptyListWhenGetEventsCalledWithoutParameters() {
         List<Event> result = eventService.getEvents();
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -197,8 +183,7 @@ class EventServiceImplTest {
 
         result.add(testEvent);
 
-        assertThat(result).hasSize(1);
-        assertThat(result).contains(testEvent);
+        assertThat(result).hasSize(1).contains(testEvent);
     }
 
     @Test
@@ -219,10 +204,8 @@ class EventServiceImplTest {
         List<Event> result1 = eventService.getEvents(startDate, endDate);
         List<Event> result2 = eventService.getEvents(startDate, endDate);
 
-        assertThat(result1).isNotNull();
-        assertThat(result2).isNotNull();
-        assertThat(result1).isEmpty();
-        assertThat(result2).isEmpty();
+        assertThat(result1).isNotNull().isEmpty();
+        assertThat(result2).isNotNull().isEmpty();
     }
 
     @Test
@@ -235,16 +218,14 @@ class EventServiceImplTest {
 
         List<Event> result = eventService.getEvents(now, weekLater);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
     void shouldHandleMultipleConsecutiveCalls() {
         for (int i = 0; i < 10; i++) {
             List<Event> result = eventService.getEvents(startDate, endDate);
-            assertThat(result).isNotNull();
-            assertThat(result).isEmpty();
+            assertThat(result).isNotNull().isEmpty();
         }
     }
 
@@ -261,8 +242,7 @@ class EventServiceImplTest {
 
         List<Event> result = eventService.getEvents(veryOldStart, veryOldEnd);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -276,8 +256,7 @@ class EventServiceImplTest {
 
         List<Event> result = eventService.getEvents(veryFutureStart, veryFutureEnd);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -291,8 +270,7 @@ class EventServiceImplTest {
 
         List<Event> result = eventService.getEvents(leapStart, leapEnd);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -306,8 +284,7 @@ class EventServiceImplTest {
 
         List<Event> result = eventService.getEvents(monthEnd, monthStart);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -321,8 +298,7 @@ class EventServiceImplTest {
 
         List<Event> result = eventService.getEvents(yearEnd, yearStart);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -336,8 +312,7 @@ class EventServiceImplTest {
 
         List<Event> result = eventService.getEvents(midnight1, midnight2);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -353,8 +328,7 @@ class EventServiceImplTest {
 
         List<Event> result = eventService.getEvents(preciseStart, preciseEnd);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -371,8 +345,7 @@ class EventServiceImplTest {
 
         assertThat(results).hasSize(100);
         results.forEach(result -> {
-            assertThat(result).isNotNull();
-            assertThat(result).isEmpty();
+            assertThat(result).isNotNull().isEmpty();
         });
     }
 

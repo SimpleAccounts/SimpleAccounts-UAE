@@ -1,25 +1,31 @@
 package com.simpleaccounts.rest.journalcontroller;
 
-import java.time.LocalDate;
-import lombok.RequiredArgsConstructor;
-import java.time.LocalDateTime;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+import static com.simpleaccounts.constant.PostingReferenceTypeEnum.*;
 
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.simpleaccounts.aop.LogRequest;
+import com.simpleaccounts.bank.model.DeleteModel;
+import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+import com.simpleaccounts.constant.dbfilter.JournalFilterEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.repository.CustomerInvoiceReceiptRepository;
 import com.simpleaccounts.repository.JournalLineItemRepository;
 import com.simpleaccounts.repository.JournalRepository;
 import com.simpleaccounts.repository.SupplierInvoicePaymentRepository;
+import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
+import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
+import io.swagger.annotations.ApiOperation;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,18 +36,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.bank.model.DeleteModel;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
-import com.simpleaccounts.constant.dbfilter.JournalFilterEnum;
-import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.security.JwtTokenUtil;
-
-import io.swagger.annotations.ApiOperation;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-import static com.simpleaccounts.constant.PostingReferenceTypeEnum.*;
 
 /**
  *
@@ -98,7 +92,7 @@ public class JournalRestController {
 
 				filterDataMap.put(JournalFilterEnum.JOURNAL_DATE, date);
 			}
-			//filterDataMap.put(JournalFilterEnum.DELETE_FLAG, false);
+
 			PaginationResponseModel responseModel = journalService.getJornalList(filterDataMap, filterModel);
 			if (responseModel == null) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -131,7 +125,6 @@ public class JournalRestController {
 					MessageUtil.getMessage(MSG_DELETE_UNSUCCESSFUL), true);
 			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-//		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 
@@ -163,7 +156,6 @@ public class JournalRestController {
 					MessageUtil.getMessage(MSG_DELETE_UNSUCCESSFUL), true);
 			return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-//		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 

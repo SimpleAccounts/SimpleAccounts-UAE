@@ -5,13 +5,17 @@
  */
 package com.simpleaccounts.rest.taxtransactioncontroller;
 
+import com.simpleaccounts.aop.LogRequest;
+import com.simpleaccounts.constant.TaxTransactionStatusConstant;
+import com.simpleaccounts.entity.TaxTransaction;
+import com.simpleaccounts.rest.PaginationModel;
+import com.simpleaccounts.service.TaxTransactionService;
+import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,14 +24,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.constant.TaxTransactionStatusConstant;
-import com.simpleaccounts.entity.TaxTransaction;
-import com.simpleaccounts.rest.PaginationModel;
-import com.simpleaccounts.service.TaxTransactionService;
-
-import io.swagger.annotations.ApiOperation;
 
 /**
  *

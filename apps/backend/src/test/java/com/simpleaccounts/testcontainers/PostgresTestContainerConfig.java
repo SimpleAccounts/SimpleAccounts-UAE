@@ -45,14 +45,6 @@ public class PostgresTestContainerConfig implements BeforeAllCallback {
             return;
         }
 
-        // In a real implementation with Testcontainers:
-        // PostgreSQLContainer<?> container = new PostgreSQLContainer<>(POSTGRES_IMAGE)
-        //     .withDatabaseName(DATABASE_NAME)
-        //     .withUsername(USERNAME)
-        //     .withPassword(PASSWORD)
-        //     .withReuse(true);
-        // container.start();
-
         // For testing without Docker, use simulated values
         // These would be replaced by actual container values
         mappedPort = 5432;

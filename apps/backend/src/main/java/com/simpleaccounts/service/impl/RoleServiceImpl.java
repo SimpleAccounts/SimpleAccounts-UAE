@@ -1,12 +1,11 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.Dao;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.RoleDao;
 import com.simpleaccounts.entity.Role;
 import com.simpleaccounts.service.RoleService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

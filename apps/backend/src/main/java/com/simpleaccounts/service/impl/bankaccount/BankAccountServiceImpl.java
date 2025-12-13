@@ -1,16 +1,5 @@
 package com.simpleaccounts.service.impl.bankaccount;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.simpleaccounts.constant.dbfilter.BankAccounrFilterEnum;
 import com.simpleaccounts.dao.bankaccount.BankAccountDao;
 import com.simpleaccounts.entity.Activity;
@@ -22,6 +11,15 @@ import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.BankAccountService;
 import com.simpleaccounts.utils.DateFormatUtil;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("bankAccountService")
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -99,8 +97,8 @@ public class BankAccountServiceImpl extends BankAccountService {
 	@Override
 	public DashBoardBankDataModel getBankBalanceList(BankAccount bank, Map<Object, Number> inflow,
 			Map<Object, Number> outFlow) {
-		List<Number> number = new ArrayList<Number>();
-		List<String> months = new ArrayList<String>();
+		List<Number> number = new ArrayList<>();
+		List<String> months = new ArrayList<>();
 		for (Object key : inflow.keySet()) {
 			number.add((inflow.get(key).doubleValue() - outFlow.get(key).doubleValue()));
 			months.add((String) key);
@@ -124,7 +122,7 @@ public class BankAccountServiceImpl extends BankAccountService {
 
 	@Override
 	public List<BankDetails> getBankNameList() {
-		//return bankDetailsRepository.getBankNameList();
+
 			
 		return bankDetailsRepository.findAll();
 	}

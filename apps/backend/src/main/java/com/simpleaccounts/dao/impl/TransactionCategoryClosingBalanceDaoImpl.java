@@ -1,8 +1,8 @@
 package com.simpleaccounts.dao.impl;
 
-import com.simpleaccounts.constant.CommonColumnConstants;
-import lombok.RequiredArgsConstructor;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
+import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.TransactionCategoryBalanceFilterEnum;
 import com.simpleaccounts.dao.AbstractDao;
@@ -15,13 +15,6 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simpleaccounts.rest.financialreport.FinancialReportRequestModel;
 import com.simpleaccounts.utils.DateFormatUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,8 +22,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
@@ -229,7 +226,7 @@ public class TransactionCategoryClosingBalanceDaoImpl extends AbstractDao<Intege
             VatReportModel vatReportModel = new VatReportModel();
             vatReportModel.setTotalAmount((BigDecimal) row[0]);
             vatReportModel.setTotalVatAmount((BigDecimal) row[1]);
-            //PlaceOfSupply placeOfSupply = (PlaceOfSupply) row[2];
+
             vatReportModel.setPlaceOfSupplyId((Integer) row[2]);
             vatReportModel.setPlaceOfSupplyName((String) row[3]);
             vatReportModelList.add(vatReportModel);

@@ -1,13 +1,5 @@
 package com.simpleaccounts.dao.impl;
 
-import java.util.ArrayList;
-import lombok.RequiredArgsConstructor;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.ProductCategoryFilterEnum;
@@ -16,6 +8,11 @@ import com.simpleaccounts.dao.ProductCategoryDao;
 import com.simpleaccounts.entity.ProductCategory;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor

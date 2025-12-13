@@ -1,14 +1,13 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.entity.TaxTreatment;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.repository.TaxTreatmentRepository;
 import com.simpleaccounts.rest.contactcontroller.TaxtTreatmentdto;
 import com.simpleaccounts.service.TaxTreatmentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

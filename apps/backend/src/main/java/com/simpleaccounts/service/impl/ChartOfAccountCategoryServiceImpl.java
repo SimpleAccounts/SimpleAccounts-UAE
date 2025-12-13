@@ -1,18 +1,13 @@
 package com.simpleaccounts.service.impl;
 
-import java.util.List;
-import lombok.RequiredArgsConstructor;
-
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Service;
-
 import com.simpleaccounts.dao.ChartOfAccountCategoryDao;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.ChartOfAccountCategory;
 import com.simpleaccounts.service.ChartOfAccountCategoryService;
+import java.util.List;
+import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @Transactional

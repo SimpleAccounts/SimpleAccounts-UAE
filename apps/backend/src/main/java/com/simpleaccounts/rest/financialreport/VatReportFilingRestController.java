@@ -7,7 +7,6 @@ import com.simpleaccounts.entity.*;
 import com.simpleaccounts.model.VatReportRequestFilterModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.PostingRequestModel;
-
 import com.simpleaccounts.rest.vatcontroller.VatReportResponseListForBank;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
@@ -15,19 +14,17 @@ import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
-import lombok.RequiredArgsConstructor;
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController

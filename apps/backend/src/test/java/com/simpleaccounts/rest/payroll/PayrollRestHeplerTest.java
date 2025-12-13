@@ -5,7 +5,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.entity.SalaryRole;
-import com.simpleaccounts.rest.payroll.SalaryRolePersistModel;
 import com.simpleaccounts.rest.payroll.service.SalaryRoleService;
 import java.io.IOException;
 import java.time.LocalDateTime;

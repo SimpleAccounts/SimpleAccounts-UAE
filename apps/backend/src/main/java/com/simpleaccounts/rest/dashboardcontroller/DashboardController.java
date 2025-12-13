@@ -1,7 +1,8 @@
 package com.simpleaccounts.rest.dashboardcontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogExecutionTime;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
 import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
@@ -16,9 +17,14 @@ import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateFormatUtil;
 import io.swagger.annotations.ApiOperation;
+import java.math.BigDecimal;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,15 +32,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.math.BigDecimal;
-
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping("/rest/dashboardReport")
@@ -49,11 +46,9 @@ public class DashboardController {
 
 	private final FinancialReportRestHelper financialReportRestHelper;
 
-	@Autowired
-	TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
+	private final TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
-	@Autowired
-	TransactionCategoryService transactionCategoryService;
+	private final TransactionCategoryService transactionCategoryService;
 
 	private final DashboardRestHelper dashboardRestHelper;
 

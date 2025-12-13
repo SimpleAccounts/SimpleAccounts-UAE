@@ -1,28 +1,23 @@
 package com.simpleaccounts.dao.impl;
 
-import com.simpleaccounts.dao.AbstractDao;
-import lombok.RequiredArgsConstructor;
-import com.simpleaccounts.dao.UserDao;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.persistence.Query;
-
-import com.simpleaccounts.rest.DropdownModel;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.UserFilterEnum;
+import com.simpleaccounts.dao.AbstractDao;
+import com.simpleaccounts.dao.UserDao;
 import com.simpleaccounts.entity.User;
+import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository(value = "userDao")

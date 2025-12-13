@@ -5,26 +5,24 @@
  */
 package com.simpleaccounts.rest.usercontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.DefaultTypeConstant;
+import com.simpleaccounts.constant.EmailConstant;
+import com.simpleaccounts.constant.dbfilter.ORDERBYENUM;
+import com.simpleaccounts.constant.dbfilter.UserFilterEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.integration.MailIntegration;
 import com.simpleaccounts.repository.PasswordHistoryRepository;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
-import com.simpleaccounts.constant.EmailConstant;
-import com.simpleaccounts.constant.dbfilter.ORDERBYENUM;
-import com.simpleaccounts.constant.dbfilter.UserFilterEnum;
 import com.simpleaccounts.utils.*;
-
 import io.swagger.annotations.ApiOperation;
-
 import java.io.File;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -37,10 +35,9 @@ import java.util.Map;
 import java.util.Optional;
 import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
-
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -54,8 +51,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -216,7 +211,6 @@ public class UserController{
 							employeeUserRelationHelper.createUserForEmployee(employee, user);
 						}
 					}
-//					userService.newUserMail(user,selectedUser.getLoginUrl(),password);
 
 					userService.createPassword(user,selectedUser,creatingUser);
 					EmailLogs emailLogs = new EmailLogs();

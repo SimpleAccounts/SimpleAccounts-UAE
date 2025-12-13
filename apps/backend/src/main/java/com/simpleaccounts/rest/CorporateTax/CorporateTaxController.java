@@ -1,7 +1,8 @@
 package com.simpleaccounts.rest.CorporateTax;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.fasterxml.jackson.databind.JsonNode;
-import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.aop.LogExecutionTime;
 import com.simpleaccounts.aop.LogRequest;
@@ -9,17 +10,14 @@ import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.entity.Company;
 import com.simpleaccounts.entity.User;
-
 import com.simpleaccounts.rest.CorporateTax.Model.CorporateTaxDateModel;
 import com.simpleaccounts.rest.CorporateTax.Model.CorporateTaxPaymentModel;
 import com.simpleaccounts.rest.CorporateTax.Model.PaymentHistoryModel;
 import com.simpleaccounts.rest.CorporateTax.Repositories.CorporateTaxSettingRepository;
 import com.simpleaccounts.rest.PaginationResponseModel;
-
 import com.simpleaccounts.rest.financialreport.FinancialReportRequestModel;
 import com.simpleaccounts.rest.financialreport.FinancialReportRestHelper;
 import com.simpleaccounts.rest.financialreport.ProfitAndLossResponseModel;
-
 import com.simpleaccounts.rfq_po.PoQuatationController;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.CompanyService;
@@ -28,25 +26,22 @@ import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-
-	@RestController
+@RestController
 	@RequestMapping(value = "/rest/corporate/tax")
 	@SuppressWarnings("java:S3973")
 	@RequiredArgsConstructor
@@ -64,8 +59,7 @@ public class CorporateTaxController {
 
     private final CorporateTaxFilingRepository corporateTaxFilingRepository;
 
-    @Autowired
-     CorporateTaxService corporateTaxService;
+     private final CorporateTaxService corporateTaxService;
     private final Logger log = LoggerFactory.getLogger(PoQuatationController.class);
     DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -164,8 +158,8 @@ public class CorporateTaxController {
             corporateTaxFiling.setReportingForYear(corporateTaxModel.getReportingForYear());
             corporateTaxFiling.setReportingPeriod(corporateTaxModel.getReportingPeriod());
             FinancialReportRequestModel financialReportRequestModel = new FinancialReportRequestModel();
-            financialReportRequestModel.setStartDate(corporateTaxModel.getStartDate().toString());
-            financialReportRequestModel.setEndDate(corporateTaxModel.getEndDate().toString());
+            financialReportRequestModel.setStartDate(corporateTaxModel.getStartDate());
+            financialReportRequestModel.setEndDate(corporateTaxModel.getEndDate());
             ProfitAndLossResponseModel profitAndLossResponseModel = financialReportRestHelper.getProfitAndLossReport(financialReportRequestModel);
             if (profitAndLossResponseModel!=null){
                 corporateTaxFiling.setNetIncome(profitAndLossResponseModel.getOperatingProfit());

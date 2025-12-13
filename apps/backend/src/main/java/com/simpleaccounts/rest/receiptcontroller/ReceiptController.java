@@ -1,34 +1,40 @@
 package com.simpleaccounts.rest.receiptcontroller;
 
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-import lombok.RequiredArgsConstructor;
 
-import java.math.BigDecimal;
-
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.simpleaccounts.aop.LogRequest;
+import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.*;
+import com.simpleaccounts.constant.dbfilter.ReceiptFilterEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.repository.ReceiptCreditNoteRelationRepository;
 import com.simpleaccounts.repository.TransactionExplanationRepository;
+import com.simpleaccounts.rest.PaginationResponseModel;
+import com.simpleaccounts.rest.PostingRequestModel;
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
+import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.service.bankaccount.TransactionStatusService;
 import com.simpleaccounts.utils.DateFormatUtil;
+import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
+import io.swagger.annotations.ApiOperation;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,16 +46,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.bank.model.DeleteModel;
-import com.simpleaccounts.constant.dbfilter.ReceiptFilterEnum;
-import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.rest.PostingRequestModel;
-import com.simpleaccounts.security.JwtTokenUtil;
-import com.simpleaccounts.utils.FileHelper;
-import org.json.JSONObject;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * @author $@urabh : For Customer invoice
@@ -220,7 +216,7 @@ public class ReceiptController {
 				BankAccount bankAccount =  bankAccountList!= null && bankAccountList.size() > 0
 						? bankAccountList.get(0)
 						: null;
-			//	Transaction transaction = new Transaction();
+
 				transaction.setCreatedBy(receipt.getCreatedBy());
 				transaction.setTransactionDate(receipt.getReceiptDate());
 				transaction.setBankAccount(bankAccount);
@@ -284,11 +280,10 @@ public class ReceiptController {
 					JSONObject obj = (JSONObject) cnObject;
 					CreditNote creditNote = creditNoteRepository.findById(obj.getInt("value")).get();
 					ReceiptCreditNoteRelation receiptCreditNoteRelation = new ReceiptCreditNoteRelation();
-					if (receiptAmountAfterApplyingCredits.compareTo(creditNote.getDueAmount()) == 1 ||
-							receiptAmountAfterApplyingCredits.compareTo(creditNote.getDueAmount()) == 0) {
-						receiptAmountAfterApplyingCredits = receiptAmountAfterApplyingCredits.subtract(creditNote.getDueAmount());
-						receiptCreditNoteRelation.setAppliedCNAmount(creditNote.getDueAmount());
-						creditNote.setDueAmount(BigDecimal.ZERO);
+						if (receiptAmountAfterApplyingCredits.compareTo(creditNote.getDueAmount()) >= 0) {
+							receiptAmountAfterApplyingCredits = receiptAmountAfterApplyingCredits.subtract(creditNote.getDueAmount());
+							receiptCreditNoteRelation.setAppliedCNAmount(creditNote.getDueAmount());
+							creditNote.setDueAmount(BigDecimal.ZERO);
 						creditNote.setStatus(CommonStatusEnum.CLOSED.getValue());
 						creditNoteRepository.save(creditNote);
 					} else {
@@ -315,9 +310,9 @@ public class ReceiptController {
 				customerInvoiceReceipt.setReceipt(receipt);
 				customerInvoiceReceipt.setCreatedBy(userId);
 				Contact contact=contactService.findByPK(receiptRequestModel.getContactId());
-				contactService.sendInvoiceThankYouMail(contact,1,customerInvoiceReceipt.getCustomerInvoice().getReferenceNumber(),receiptRequestModel.getAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN).toString(),dateFormtUtil.getLocalDateTimeAsString(receipt.getReceiptDate(),"dd/MM/yyyy").replace("/","-"),customerInvoiceReceipt.getDueAmount(),request);
-				customerInvoiceReceiptService.persist(customerInvoiceReceipt);
-			}
+					contactService.sendInvoiceThankYouMail(contact,1,customerInvoiceReceipt.getCustomerInvoice().getReferenceNumber(),receiptRequestModel.getAmount().setScale(2, RoundingMode.HALF_EVEN).toString(),dateFormtUtil.getLocalDateTimeAsString(receipt.getReceiptDate(),"dd/MM/yyyy").replace("/","-"),customerInvoiceReceipt.getDueAmount(),request);
+					customerInvoiceReceiptService.persist(customerInvoiceReceipt);
+				}
 
 			// Post journal
 			Journal journal = receiptRestHelper.receiptPosting(

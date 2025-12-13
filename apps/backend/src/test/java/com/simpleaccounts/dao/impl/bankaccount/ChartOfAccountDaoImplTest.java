@@ -1,11 +1,8 @@
 package com.simpleaccounts.dao.impl.bankaccount;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -56,8 +53,7 @@ class ChartOfAccountDaoImplTest {
         ChartOfAccount result = chartOfAccountDao.updateOrCreateTransaction(chartOfAccount);
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(chartOfAccount);
+        assertThat(result).isNotNull().isEqualTo(chartOfAccount);
         verify(entityManager).merge(chartOfAccount);
     }
 
@@ -124,9 +120,7 @@ class ChartOfAccountDaoImplTest {
         List<ChartOfAccount> result = chartOfAccountDao.findAll();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(5);
-        assertThat(result).isEqualTo(expectedAccounts);
+        assertThat(result).isNotNull().hasSize(5).isEqualTo(expectedAccounts);
     }
 
     @Test
@@ -142,8 +136,7 @@ class ChartOfAccountDaoImplTest {
         List<ChartOfAccount> result = chartOfAccountDao.findAll();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -166,8 +159,7 @@ class ChartOfAccountDaoImplTest {
         List<ChartOfAccount> result = chartOfAccountDao.findByText(searchText);
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotNull().hasSize(2);
         verify(typedQuery).setParameter("searchToken", searchText);
     }
 
@@ -187,8 +179,7 @@ class ChartOfAccountDaoImplTest {
         List<ChartOfAccount> result = chartOfAccountDao.findByText(searchText);
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -205,8 +196,7 @@ class ChartOfAccountDaoImplTest {
         ChartOfAccount result = chartOfAccountDao.getDefaultChartOfAccount();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(accounts.get(0));
+        assertThat(result).isNotNull().isEqualTo(accounts.get(0));
     }
 
     @Test
@@ -255,9 +245,7 @@ class ChartOfAccountDaoImplTest {
         List<ChartOfAccount> result = chartOfAccountDao.findAllChild();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).hasSize(4);
-        assertThat(result).isEqualTo(childAccounts);
+        assertThat(result).isNotNull().hasSize(4).isEqualTo(childAccounts);
     }
 
     @Test
@@ -273,8 +261,7 @@ class ChartOfAccountDaoImplTest {
         List<ChartOfAccount> result = chartOfAccountDao.findAllChild();
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -325,8 +312,7 @@ class ChartOfAccountDaoImplTest {
         List<ChartOfAccount> result = chartOfAccountDao.findByText(searchText);
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEmpty();
+        assertThat(result).isNotNull().isEmpty();
     }
 
     @Test
@@ -474,8 +460,7 @@ class ChartOfAccountDaoImplTest {
         ChartOfAccount result = chartOfAccountDao.updateOrCreateTransaction(originalAccount);
 
         // Assert
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(updatedAccount);
+        assertThat(result).isNotNull().isEqualTo(updatedAccount);
     }
 
     @Test

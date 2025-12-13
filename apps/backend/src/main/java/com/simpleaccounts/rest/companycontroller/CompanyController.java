@@ -1,16 +1,13 @@
 package com.simpleaccounts.rest.companycontroller;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.simpleaccounts.aop.LogExecutionTime;
+import com.simpleaccounts.aop.LogRequest;
+import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.configcontroller.SimpleAccountsConfigModel;
 import com.simpleaccounts.constant.*;
+import com.simpleaccounts.constant.dbfilter.CompanyFilterEnum;
 import com.simpleaccounts.constant.dbfilter.StateFilterEnum;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.Currency;
@@ -24,11 +21,20 @@ import com.simpleaccounts.rest.bankaccountcontroller.BankAccountRestHelper;
 import com.simpleaccounts.rest.currencyconversioncontroller.CurrencyConversionResponseModel;
 import com.simpleaccounts.rest.usercontroller.UserModel;
 import com.simpleaccounts.rest.usercontroller.UserRestHelper;
+import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
-
 import com.simpleaccounts.utils.SimpleAccountsMessage;
+import io.swagger.annotations.ApiOperation;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,21 +48,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.simpleaccounts.aop.LogExecutionTime;
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.bank.model.DeleteModel;
-import com.simpleaccounts.constant.dbfilter.CompanyFilterEnum;
-import com.simpleaccounts.security.JwtTokenUtil;
-
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-
-	@Slf4j
+@Slf4j
 	@Component
 	@RequestMapping("/rest/company")
 	@SuppressWarnings("java:S131")
@@ -74,8 +68,7 @@ public class CompanyController {
 
 	private final TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	protected JournalService journalService;
+	protected final JournalService journalService;
 
 	private final CoacTransactionCategoryService coacTransactionCategoryService;
 
@@ -569,7 +562,7 @@ public class CompanyController {
 			}
 		} catch (Exception e) {
 			log.error(ERROR, e);
-			HealthCheckApiResponseModel response = new HealthCheckApiResponseModel(); //"Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR.value());
+				HealthCheckApiResponseModel response = new HealthCheckApiResponseModel();
 			response.setMessage("Internal Server Error");
 			response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);

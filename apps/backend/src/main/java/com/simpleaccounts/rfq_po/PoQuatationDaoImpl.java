@@ -1,22 +1,17 @@
 package com.simpleaccounts.rfq_po;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
-import lombok.RequiredArgsConstructor;
-
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.dao.AbstractDao;
-
 import com.simpleaccounts.rest.DropdownModel;
-
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @Repository(value = "poQuatationDao")
 @RequiredArgsConstructor
@@ -60,7 +55,7 @@ public class PoQuatationDaoImpl extends AbstractDao<Integer,PoQuatation> impleme
         return response;
     }
    public List<DropdownModel> getRfqPoForDropDown(Integer type){
-      // return getEntityManager().createNamedQuery("getRfqPoForDropDown", DropdownModel.class).getResultList();
+
        TypedQuery<PoQuatation> query = getEntityManager().createNamedQuery("getRfqPoForDropDown", PoQuatation.class);
        query.setParameter("type", type);
       List<PoQuatation> poQuatationList = query.getResultList();

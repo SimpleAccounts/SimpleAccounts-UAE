@@ -1,19 +1,16 @@
 package com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller;
 
 import com.simpleaccounts.dao.AbstractDao;
-
 import com.simpleaccounts.entity.CustomizeInvoiceTemplate;
-
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.TypedQuery;
 import java.util.List;
+import javax.persistence.TypedQuery;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class CustomizeInvoiceTemplateDaoImpl extends AbstractDao<Integer, CustomizeInvoiceTemplate> implements CustomizeInvoiceTemplateDao {
     @Override
     public CustomizeInvoiceTemplate getCustomizeInvoiceTemplate(Integer invoiceType) {
-//        return getEntityManager().createNamedQuery("allInvoicesPrefix", CustomizeInvoiceTemplate.class).getResultList();
+
             TypedQuery<CustomizeInvoiceTemplate> query = getEntityManager().createNamedQuery("allInvoicesPrefix", CustomizeInvoiceTemplate.class);
             query.setParameter("type", invoiceType);
             query.setMaxResults(1);

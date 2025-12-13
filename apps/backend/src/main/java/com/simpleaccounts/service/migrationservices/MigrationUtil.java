@@ -9,34 +9,6 @@ import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstant
 import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.VAT_0;
 import static com.simpleaccounts.service.migrationservices.ZohoMigrationConstants.VAT_5;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.simpleaccounts.constant.InvoiceDuePeriodEnum;
 import com.simpleaccounts.constant.ProductPriceType;
 import com.simpleaccounts.constant.ProductType;
@@ -68,11 +40,35 @@ import com.simpleaccounts.service.VatCategoryService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.TransactionCategoryCreationHelper;
-
-import lombok.extern.slf4j.Slf4j;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-	@Component
+@Component
 	@Slf4j
 	@SuppressWarnings("java:S131")
 	@RequiredArgsConstructor
@@ -383,7 +379,7 @@ public class MigrationUtil {
             method = entity.getClass().getMethod("setCreatedDate", dateParamTypes);
             method.invoke(entity, LocalDateTime.now());
         } catch (Exception e) {
-            //LOG.error("Error during migration", e);
+
             LOG.error(LOG_ERROR_PREFIX, e);
         }
 
@@ -597,20 +593,20 @@ public class MigrationUtil {
 	        if (!val.isEmpty()){
 	            switch (val){
 	                case VAT_5:
-	                    //val  ="VAT(5%)";
+
 	                	val = "TAX (5%)";
 	                    break;
 	                case VAT_0:
-	                   // val ="Zero VAT";
+
 	                    val ="TAX (0%)";
 	                    break;
 	                default:
 	            }
-	           // BigDecimal bigDecimal = new  BigDecimal ((String) val);
+
 	            if (val!=null) {
 	                Map<String, Object> param = new HashMap<>();
 	                param.put("name", val);
-	                //param.put("vat", val);
+
 	                List<VatCategory> vatCategoryList = vatCategoryService.findByAttributes(param);
 	                for (VatCategory vatCategory : vatCategoryList) {
 	                    return vatCategory;
@@ -685,16 +681,16 @@ public class MigrationUtil {
 				List<String> tCategoryList = new ArrayList<>();
 				List<Map<String, String>> mapList = parseCSVFile((String) fileLocation + File.separator + file);
 	
-				Map<String, Object> attribute = new HashMap<String, Object>();
+				Map<String, Object> attribute = new HashMap<>();
 				attribute.put("deleteFlag", false);
 	
 				// get the list of transactionCategory record
 				List<TransactionCategory> transactionCategoryList = transactionCategoryService.findByAttributes(attribute);
 	
 				// add the transactionCategoryName into List
-				for (TransactionCategory transactionCategory : transactionCategoryList) {
-					tCategoryList.add(transactionCategory.getTransactionCategoryName().toString());
-				}
+					for (TransactionCategory transactionCategory : transactionCategoryList) {
+						tCategoryList.add(transactionCategory.getTransactionCategoryName());
+					}
 				for (Map<String, String> mapRecord : mapList) {
 					if (file.equals("Invoice.csv") || file.equals("Bill.csv") || file.equals("Item.csv")) {
 						if (mapRecord.containsKey(ACCOUNT)) {
@@ -719,24 +715,24 @@ public class MigrationUtil {
 									}
 								}
 							}
-							if (tCategoryList.contains((mapRecord.get(ACCOUNT).toString()))) {
-								log.info("tCategory is exist == {}", mapRecord.get(ACCOUNT).toString());
-								if (existList.contains(transactionCategoryModelForMigration)) {
-									continue;
+								if (tCategoryList.contains(mapRecord.get(ACCOUNT))) {
+									log.info("tCategory is exist == {}", mapRecord.get(ACCOUNT));
+									if (existList.contains(transactionCategoryModelForMigration)) {
+										continue;
+									} else {
+										existList.add(transactionCategoryModelForMigration);
+									}
 								} else {
-									existList.add(transactionCategoryModelForMigration);
-								}
-							} else {
-								log.info("tCategory is not exist == {}", mapRecord.get(ACCOUNT).toString());
-								if (notExistList.contains(mapRecord.get(ACCOUNT))) {
-									continue;
-								} else {
-									notExistList.add(mapRecord.get(ACCOUNT));
+									log.info("tCategory is not exist == {}", mapRecord.get(ACCOUNT));
+									if (notExistList.contains(mapRecord.get(ACCOUNT))) {
+										continue;
+									} else {
+										notExistList.add(mapRecord.get(ACCOUNT));
 								}
 							}
 						}
 					}
-					// for Expense.csv file
+
 					if (file.equals("Expense.csv")) {
 						if (mapRecord.containsKey(EXPENSE_ACCOUNT)) {
 							Map<String, Object> map = new HashMap<>();
@@ -759,19 +755,19 @@ public class MigrationUtil {
 								}
 							}
 							if (mapRecord.containsKey(EXPENSE_ACCOUNT)) {
-								if (tCategoryList.contains((mapRecord.get(EXPENSE_ACCOUNT).toString()))) {
-									log.info("tCategory is exist == {}", mapRecord.get(EXPENSE_ACCOUNT).toString());
-									if (existList.contains(transactionCategoryModelForMigration)) {
-										continue;
+									if (tCategoryList.contains(mapRecord.get(EXPENSE_ACCOUNT))) {
+										log.info("tCategory is exist == {}", mapRecord.get(EXPENSE_ACCOUNT));
+										if (existList.contains(transactionCategoryModelForMigration)) {
+											continue;
+										} else {
+											existList.add(transactionCategoryModelForMigration);
+										}
 									} else {
-										existList.add(transactionCategoryModelForMigration);
-									}
-								} else {
-									log.info("tCategory is not exist == {}", mapRecord.get(EXPENSE_ACCOUNT).toString());
-									if (notExistList.contains(mapRecord.get(EXPENSE_ACCOUNT))) {
-										continue;
-									} else {
-										notExistList.add(mapRecord.get(EXPENSE_ACCOUNT));
+										log.info("tCategory is not exist == {}", mapRecord.get(EXPENSE_ACCOUNT));
+										if (notExistList.contains(mapRecord.get(EXPENSE_ACCOUNT))) {
+											continue;
+										} else {
+											notExistList.add(mapRecord.get(EXPENSE_ACCOUNT));
 									}
 								}
 							}
@@ -791,8 +787,8 @@ public class MigrationUtil {
 	     * @return
 	     */
 	    public List<String> getFilesPresent(String dir) {
-	        List<String> resultSet = new ArrayList<String>();
-	        List<String> inputFiles = new ArrayList<String>();
+	        List<String> resultSet = new ArrayList<>();
+	        List<String> inputFiles = new ArrayList<>();
 	
 	        // get the predefined file order
 	        List<String> fileOrder = getFileOrderList();
@@ -867,11 +863,11 @@ public class MigrationUtil {
 	        if (!val.isEmpty()){
 	            switch (val){
 	                case VAT_5:
-	                    //val  ="VAT(5%)";
+
 	                	val = "TAX (5%)";
 	                    break;
 	                case VAT_0:
-	                   // val ="Zero VAT";
+
 	                    val ="TAX (0%)";
 	                    break;
 	                default:

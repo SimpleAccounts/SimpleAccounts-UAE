@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -28,7 +27,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -42,14 +40,10 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SimpleCorsFilter implements Filter {
 
-    @Value("${cors.allowed.origins:*}")
-    private String allowedOriginsConfig;
+	    @Value("${cors.allowed.origins:*}")
+	    private String allowedOriginsConfig;
 
-    private Set<String> allowedOrigins;
-
-    // Empty constructor required for Spring filter initialization
-    public SimpleCorsFilter() {
-    }
+	    private Set<String> allowedOrigins;
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -95,9 +89,10 @@ public class SimpleCorsFilter implements Filter {
         return allowedOrigins.isEmpty() ? "*" : "";
     }
 
-    // Empty method required by Filter interface - no cleanup needed
-    @Override
-    public void destroy() {
-    }
+	    // Empty method required by Filter interface - no cleanup needed
+	    @Override
+	    public void destroy() {
+	        // No cleanup needed.
+	    }
 
-}
+	}

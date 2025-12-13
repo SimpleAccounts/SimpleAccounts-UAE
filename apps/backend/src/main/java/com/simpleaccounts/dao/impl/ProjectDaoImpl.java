@@ -1,24 +1,19 @@
 package com.simpleaccounts.dao.impl;
 
-import com.simpleaccounts.dao.ProjectDao;
-import lombok.RequiredArgsConstructor;
-import com.simpleaccounts.entity.Project;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.ProjectFilterEnum;
 import com.simpleaccounts.dao.AbstractDao;
+import com.simpleaccounts.dao.ProjectDao;
+import com.simpleaccounts.entity.Project;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**

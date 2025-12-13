@@ -1,10 +1,10 @@
 package com.simpleaccounts.rest.employeeDesignationController;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeDesignation;
-
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.model.EmployeeDesignationPersistModel;
 import com.simpleaccounts.repository.EmployeeRepository;
@@ -16,22 +16,18 @@ import com.simpleaccounts.service.EmployeeDesignationService;
 import com.simpleaccounts.service.EmployeeService;
 import com.simpleaccounts.service.UserService;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *

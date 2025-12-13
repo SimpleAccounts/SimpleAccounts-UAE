@@ -1,25 +1,23 @@
 package com.simpleaccounts.dao.impl;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.TemporalType;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.entity.Activity;
 import com.simpleaccounts.utils.ChartUtil;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import javax.persistence.TemporalType;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @Repository(value = "activityDao")
+@RequiredArgsConstructor
 public class ActivityDaoImpl extends AbstractDao<Integer, Activity> implements ActivityDao {
-	@Autowired
-	ChartUtil util;
+	private final ChartUtil util;
 	
 	@Override
 	public List<Activity> getLatestActivites(int maxActiviyCount) {

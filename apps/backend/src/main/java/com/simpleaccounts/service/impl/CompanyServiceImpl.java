@@ -6,22 +6,18 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.dbfilter.CompanyFilterEnum;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.CompanyDao;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.rest.DropdownModel;
-
 import com.simpleaccounts.service.*;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,8 +37,7 @@ public class CompanyServiceImpl extends CompanyService {
 
     private final TransactionCategoryService transactionCategoryService;
 
-    @Autowired
-    protected JournalService journalService;
+    protected final JournalService journalService;
 
     private final CoacTransactionCategoryService coacTransactionCategoryService;
 
@@ -111,14 +106,6 @@ public class CompanyServiceImpl extends CompanyService {
 
 //
 
-////            if (companyList!=null && !companyList.isEmpty()){
-////                throw new RuntimeException("Throwing exception for demoing Rollback!!!");
-////            }
-
-////        if (companyList!=null && !companyList.isEmpty()){
-////            throw new RuntimeException("Throwing exception for demoing Rollback!!!");
-////        }
-
 //
 
 //
@@ -129,22 +116,9 @@ public class CompanyServiceImpl extends CompanyService {
 //
 
 //
-////                    if (companyList!=null && !companyList.isEmpty()){
-////            throw new RuntimeException("Throwing exception for demoing Rollback!!!");
-////        }
 
 //
 
-//
-
-//
-
-////            if (companyList!=null && !companyList.isEmpty()){
-////                throw new RuntimeException("Throwing exception for demoing Rollback!!!");
-////            }
-
-////            return  "Company Registration Failed";
-//        }
 //
 
 }

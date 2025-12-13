@@ -1,35 +1,30 @@
 package com.simpleaccounts.rest.validationcontroller;
 
 import com.simpleaccounts.aop.LogRequest;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.repository.PayrollRepository;
 import com.simpleaccounts.repository.ProductRepository;
 import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
-
 import com.simpleaccounts.rest.payroll.service.SalaryComponentService;
 import com.simpleaccounts.rfq_po.PoQuatation;
 import com.simpleaccounts.rfq_po.PoQuatationService;
 import com.simpleaccounts.service.*;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import static org.springframework.util.StringUtils.isEmpty;
 
 @Component
 @RequestMapping("/rest/validation")
@@ -87,17 +82,16 @@ public class ValidationController {
             {
                 case 1: //Product validation
                     List<Product> productList = productRepository.findByProductNameAndDeleteFlagIgnoreCase(validationModel.getName(), false);
-                    if(productList!= null && productList.size()>0)
+                    if (productList != null && !productList.isEmpty())
                         return new ResponseEntity<>("Product Name Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Product name does not exists", HttpStatus.OK);
                 case 2: //Vat validation
                     Map<String, Object> param = new HashMap<>();
-                    param = new HashMap<>();
                     param.put("name", validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<VatCategory> vatList = vatCategoryService.findByAttributes(param);
-                    if(vatList!= null && vatList.size()>0)
+                    if (vatList != null && !vatList.isEmpty())
                         return new ResponseEntity<>("Vat name already exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Vat name does not exists", HttpStatus.OK);
@@ -106,7 +100,7 @@ public class ValidationController {
                     param.put(JSON_KEY_EMAIL, validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Contact> list = contactService.findByAttributes(param);
-                    if(list!= null && list.size()>0)
+                    if (list != null && !list.isEmpty())
                         return new ResponseEntity<>("Contact email already exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Contact email does not exists", HttpStatus.OK);
@@ -115,7 +109,7 @@ public class ValidationController {
                     param.put("transactionCategoryName",validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<TransactionCategory> transactionCategoryList = transactionCategoryService.findByAttributes(param);
-                    if(transactionCategoryList!= null && transactionCategoryList.size()>0)
+                    if (transactionCategoryList != null && !transactionCategoryList.isEmpty())
                         return new ResponseEntity<>("Chart Of Account already exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Chart Of Account does not exists", HttpStatus.OK);
@@ -124,7 +118,7 @@ public class ValidationController {
                     param.put(JSON_KEY_ACCOUNT_NUMBER,validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<BankAccount> bankAccountList = bankAccountService.findByAttributes(param);
-                    if(bankAccountList!= null && bankAccountList.size()>0 ){
+                    if (bankAccountList != null && !bankAccountList.isEmpty()) {
                             return new ResponseEntity<>("Bank Account Already Exists", HttpStatus.OK);
                          }
                     else
@@ -134,7 +128,7 @@ public class ValidationController {
                     param.put("referenceNumber",validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Invoice> invoiceList = invoiceService.findByAttributes(param);
-                    if(invoiceList!= null && invoiceList.size()>0)
+                    if (invoiceList != null && !invoiceList.isEmpty())
                         return new ResponseEntity<>("Invoice Number Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Invoice Number does not exists", HttpStatus.OK);
@@ -143,7 +137,7 @@ public class ValidationController {
                     param1.put("productCode",validationModel.getProductCode());
                     param1.put("deleteFlag", false);
                     List<Product> productList1 = productService.findByAttributes(param1);
-                    if(productList1!= null && productList1.size()>0)
+                    if (productList1 != null && !productList1.isEmpty())
                         return new ResponseEntity<>("Product Code Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Product code does not exists", HttpStatus.OK);
@@ -152,7 +146,7 @@ public class ValidationController {
                     param.put("roleName",validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Role> rolelist = roleService.findByAttributes(param);
-                    if(rolelist!= null && rolelist.size()>0)
+                    if (rolelist != null && !rolelist.isEmpty())
                         return new ResponseEntity<>("Role Name Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Role name does not exists", HttpStatus.OK);
@@ -161,7 +155,7 @@ public class ValidationController {
                     param.put("userEmail",validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<User> userList = userService.findByAttributes(param);
-                    if(userList!= null && userList.size()>0)
+                    if (userList != null && !userList.isEmpty())
                         return new ResponseEntity<>("User Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("User does not exists", HttpStatus.OK);
@@ -170,7 +164,7 @@ public class ValidationController {
                     param.put("currencyCode",validationModel.getCurrencyCode());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<CurrencyConversion> currencyConversions = currencyExchangeService.findByAttributes(param);
-                    if(currencyConversions!= null && currencyConversions.size()>0)
+                    if (currencyConversions != null && !currencyConversions.isEmpty())
                         return new ResponseEntity<>("Currency Conversions Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Currency Conversions does not exists", HttpStatus.OK);
@@ -179,7 +173,7 @@ public class ValidationController {
                     param.put("rfqNumber",validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<PoQuatation> poQuatationList = poQuatationService.findByAttributes(param);
-                    if(poQuatationList!= null && poQuatationList.size()>0)
+                    if (poQuatationList != null && !poQuatationList.isEmpty())
                         return new ResponseEntity<>("RFQ Number Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("rfqNumber does not exists", HttpStatus.OK);
@@ -188,7 +182,7 @@ public class ValidationController {
                     param.put("poNumber",validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<PoQuatation> poQuatationList1 = poQuatationService.findByAttributes(param);
-                    if(poQuatationList1!= null && poQuatationList1.size()>0)
+                    if (poQuatationList1 != null && !poQuatationList1.isEmpty())
                         return new ResponseEntity<>("Po Number Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("poNumber does not exists", HttpStatus.OK);
@@ -197,7 +191,7 @@ public class ValidationController {
                     param.put("grnNumber",validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<PoQuatation> poQuatationList2 = poQuatationService.findByAttributes(param);
-                    if(poQuatationList2!= null && poQuatationList2.size()>0)
+                    if (poQuatationList2 != null && !poQuatationList2.isEmpty())
                         return new ResponseEntity<>("GRN Number Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("grnNumber does not exists", HttpStatus.OK);
@@ -206,7 +200,7 @@ public class ValidationController {
                     param.put("QuotationNumber",validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<PoQuatation> poQuatationList3 = poQuatationService.findByAttributes(param);
-                    if(poQuatationList3!= null && poQuatationList3.size()>0)
+                    if (poQuatationList3 != null && !poQuatationList3.isEmpty())
                         return new ResponseEntity<>("Quotation Number Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("QuotationNumber does not exists", HttpStatus.OK);
@@ -215,7 +209,7 @@ public class ValidationController {
                     param.put("employeeCode",validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Employment> employeeList = employmentService.findByAttributes(param);
-                    if(employeeList!= null && employeeList.size()>0)
+                    if (employeeList != null && !employeeList.isEmpty())
                         return new ResponseEntity<>("Employee Code Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("employeeCode does not exists", HttpStatus.OK);
@@ -224,7 +218,7 @@ public class ValidationController {
                     param.put("transactionCategoryName",validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<TransactionCategory> coaList = transactionCategoryService.findByAttributes(param);
-                    if(coaList!= null && coaList.size()>0)
+                    if (coaList != null && !coaList.isEmpty())
                         return new ResponseEntity<>("Transaction Category Name Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("transaction Category Name does not exists", HttpStatus.OK);
@@ -233,7 +227,7 @@ public class ValidationController {
                     param.put(JSON_KEY_ACCOUNT_NUMBER,validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<BankAccount> bankAccountList1 = bankAccountService.findByAttributes(param);
-                    if(bankAccountList1!= null && bankAccountList1.size()>0 ){
+                    if (bankAccountList1 != null && !bankAccountList1.isEmpty()) {
                         if(!Objects.equals(validationModel.getCheckId(), bankAccountList1.get(0).getBankAccountId())){
                             return new ResponseEntity<>("Bank Account Already Exists", HttpStatus.OK);
                         }
@@ -247,7 +241,7 @@ public class ValidationController {
                     param.put("expenseNumber",validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Expense> espenseList = expenseService.findByAttributes(param);
-                    if(espenseList!= null && espenseList.size()>0)
+                    if (espenseList != null && !espenseList.isEmpty())
                         return new ResponseEntity<>("Expense Number Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Expense Number does not exists", HttpStatus.OK);
@@ -256,7 +250,7 @@ public class ValidationController {
                     param.put(JSON_KEY_ACCOUNT_NUMBER,validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<EmployeeBankDetails> employeeBankDetailsList = employeeBankDetailsService.findByAttributes(param);
-                    if(employeeBankDetailsList!= null && employeeBankDetailsList.size()>0)
+                    if (employeeBankDetailsList != null && !employeeBankDetailsList.isEmpty())
                         return new ResponseEntity<>("Account Number Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("accountNumber does not exists", HttpStatus.OK);
@@ -265,7 +259,7 @@ public class ValidationController {
                         param.put("journlReferencenNo",validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Journal> journalList = journalService.findByAttributes(param);
-                    if(journalList!= null && journalList.size()>0)
+                    if (journalList != null && !journalList.isEmpty())
                         return new ResponseEntity<>("Journal Reference Number Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Journal Reference Number does not exists", HttpStatus.OK);
@@ -275,7 +269,7 @@ public class ValidationController {
                     param.put("vatRegistrationNumber",validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Contact> contactList = contactService.findByAttributes(param);
-                    if(contactList!= null && contactList.size()>0)
+                    if (contactList != null && !contactList.isEmpty())
                         return new ResponseEntity<>("Tax Registration Number Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Tax Registration Number does not exists", HttpStatus.OK);
@@ -285,7 +279,7 @@ public class ValidationController {
                     param.put(JSON_KEY_EMAIL,validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Contact> contactList1 = contactService.findByAttributes(param);
-                    if(contactList1!= null && contactList1.size()>0)
+                    if (contactList1 != null && !contactList1.isEmpty())
                         return new ResponseEntity<>("Email Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Email does not exists", HttpStatus.OK);
@@ -294,7 +288,7 @@ public class ValidationController {
                     param.put("labourCard",validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Employment> employeelabourCardList = employmentService.findByAttributes(param);
-                    if(employeelabourCardList!= null && employeelabourCardList.size()>0)
+                    if (employeelabourCardList != null && !employeelabourCardList.isEmpty())
                         return new ResponseEntity<>("Labour Card Id Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Labour Card Id Does Not Exists", HttpStatus.OK);
@@ -303,7 +297,7 @@ public class ValidationController {
                     param.put(JSON_KEY_EMAIL, validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<Employee> employees = employeeService.findByAttributes(param);
-                    if(employees!= null && employees.size()>0)
+                    if (employees != null && !employees.isEmpty())
                         return new ResponseEntity<>("Employee email already exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Employee email does not exists", HttpStatus.OK);
@@ -313,7 +307,7 @@ public class ValidationController {
                         param.put("designationId", Integer.parseInt(validationModel.getName()));
                         param.put(JSON_KEY_DELETE_FLAG, false);
                         List<EmployeeDesignation> employeeDesignations = employeeDesignationService.findByAttributes(param);
-                        if (employeeDesignations != null && employeeDesignations.size() > 0)
+                        if (employeeDesignations != null && !employeeDesignations.isEmpty())
                             return new ResponseEntity<>("Designation ID already exists", HttpStatus.OK);
                         else
                             return new ResponseEntity<>("Designation ID does not exists", HttpStatus.OK);
@@ -325,7 +319,7 @@ public class ValidationController {
                         param.put("designationName", (validationModel.getName()));
                         param.put(JSON_KEY_DELETE_FLAG, false);
                         List<EmployeeDesignation> employeeDesignations = employeeDesignationNameService.findByAttributes(param);
-                        if (employeeDesignations != null && employeeDesignations.size() > 0)
+                        if (employeeDesignations != null && !employeeDesignations.isEmpty())
                             return new ResponseEntity<>("Designation name already exists", HttpStatus.OK);
                         else
                             return new ResponseEntity<>("Designation name does not exists", HttpStatus.OK);
@@ -333,16 +327,16 @@ public class ValidationController {
                     break;
                 case 27: //Payroll subject
                     List<Payroll> payrolls = payrollRepository.findAll();
-                    if (payrolls!=null && payrolls.size()>0)
+                    if (payrolls != null && !payrolls.isEmpty())
                         payrolls = payrolls.stream().filter(payroll -> payroll.getPayrollSubject().equals(validationModel.getName()))
                                 .filter(payroll -> payroll.getDeleteFlag().equals(Boolean.FALSE)).collect(Collectors.toList());
-                    if(payrolls!= null && payrolls.size()>0)
+                    if (payrolls != null && !payrolls.isEmpty())
                         return new ResponseEntity<>("Payroll Subject already exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Payroll Subject does not exists", HttpStatus.OK);
                 case 28://TCN number
                     List<CreditNote> creditNoteList = creditNoteRepository.findAllByCreditNoteNumber(validationModel.getName());
-                    if(creditNoteList!= null && creditNoteList.size()>0)
+                    if (creditNoteList != null && !creditNoteList.isEmpty())
                         return new ResponseEntity<>("Credit Note Number Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Credit Note Number does not exists", HttpStatus.OK);
@@ -351,7 +345,7 @@ public class ValidationController {
                     param.put("description", validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<SalaryComponent> salaryComponentList = salaryComponentService.findByAttributes(param);
-                    if(salaryComponentList!= null && salaryComponentList.size()>0)
+                    if (salaryComponentList != null && !salaryComponentList.isEmpty())
                         return new ResponseEntity<>("Description Name Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Description name does not exists", HttpStatus.OK);
@@ -360,7 +354,7 @@ public class ValidationController {
                     param.put("componentCode", validationModel.getName());
                     param.put(JSON_KEY_DELETE_FLAG, false);
                     List<SalaryComponent> salaryComponentList1 = salaryComponentService.findByAttributes(param);
-                    if(salaryComponentList1!= null && salaryComponentList1.size()>0)
+                    if (salaryComponentList1 != null && !salaryComponentList1.isEmpty())
                         return new ResponseEntity<>("Component ID Already Exists", HttpStatus.OK);
                     else
                         return new ResponseEntity<>("Component ID does not exists", HttpStatus.OK);

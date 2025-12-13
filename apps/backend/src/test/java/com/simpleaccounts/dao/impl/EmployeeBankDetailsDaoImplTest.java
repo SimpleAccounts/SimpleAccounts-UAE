@@ -3,11 +3,10 @@ package com.simpleaccounts.dao.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.lenient;
 
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.entity.EmployeeBankDetails;
@@ -157,8 +156,7 @@ class EmployeeBankDetailsDaoImplTest {
 
         List<EmployeeBankDetails> results = employeeBankDetailsDao.executeQuery(filters);
 
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
         assertThat(results.get(0)).isEqualTo(testEmployeeBankDetails);
     }
 
@@ -182,8 +180,7 @@ class EmployeeBankDetailsDaoImplTest {
 
         List<EmployeeBankDetails> results = employeeBankDetailsDao.executeQuery(filters, paginationModel);
 
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
         verify(typedQuery).setFirstResult(0);
         verify(typedQuery).setMaxResults(10);
     }
@@ -227,8 +224,7 @@ class EmployeeBankDetailsDaoImplTest {
 
         List<EmployeeBankDetails> results = employeeBankDetailsDao.executeNamedQuery(namedQuery);
 
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
         verify(entityManager).createNamedQuery(namedQuery, EmployeeBankDetails.class);
     }
 
@@ -236,8 +232,7 @@ class EmployeeBankDetailsDaoImplTest {
     @DisplayName("Should return entity manager instance")
     void getEntityManagerReturnsInstance() {
         EntityManager result = employeeBankDetailsDao.getEntityManager();
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(entityManager);
+        assertThat(result).isNotNull().isEqualTo(entityManager);
     }
 
     @Test
@@ -246,8 +241,7 @@ class EmployeeBankDetailsDaoImplTest {
         List<EmployeeBankDetails> expectedResults = Arrays.asList(testEmployeeBankDetails, createTestEmployeeBankDetails());
         when(typedQuery.getResultList()).thenReturn(expectedResults);
         List<EmployeeBankDetails> results = employeeBankDetailsDao.dumpData();
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(2);
+        assertThat(results).isNotNull().hasSize(2);
     }
 
     @Test
@@ -257,8 +251,7 @@ class EmployeeBankDetailsDaoImplTest {
         List<EmployeeBankDetails> expectedResults = Arrays.asList(testEmployeeBankDetails);
         when(typedQuery.getResultList()).thenReturn(expectedResults);
         List<EmployeeBankDetails> results = employeeBankDetailsDao.executeQuery(emptyFilters);
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
     }
 
     @Test
@@ -282,8 +275,7 @@ class EmployeeBankDetailsDaoImplTest {
         );
         when(typedQuery.getResultList()).thenReturn(Arrays.asList(testEmployeeBankDetails));
         List<EmployeeBankDetails> results = employeeBankDetailsDao.executeQuery(filters);
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
     }
 
     @Test
@@ -353,8 +345,7 @@ class EmployeeBankDetailsDaoImplTest {
         );
         when(typedQuery.getResultList()).thenReturn(Arrays.asList(testEmployeeBankDetails));
         List<EmployeeBankDetails> results = employeeBankDetailsDao.executeQuery(filters);
-        assertThat(results).isNotNull();
-        assertThat(results).hasSize(1);
+        assertThat(results).isNotNull().hasSize(1);
     }
 
     @Test

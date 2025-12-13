@@ -1,9 +1,8 @@
 package com.simpleaccounts.service.bankaccount;
 
-import java.util.List;
-
 import com.simpleaccounts.entity.TransactionStatus;
 import com.simpleaccounts.service.SimpleAccountsService;
+import java.util.List;
 
 public abstract class TransactionStatusService extends SimpleAccountsService<Integer, TransactionStatus> {
 
@@ -11,5 +10,4 @@ public abstract class TransactionStatusService extends SimpleAccountsService<Int
 
 	public abstract List<TransactionStatus> findAllTransactionStatuesByTrnxId(Integer transactionId);
 
-	//public abstract void deleteList(List<TransactionStatus> trnxStatusList);
 }

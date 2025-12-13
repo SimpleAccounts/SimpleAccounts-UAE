@@ -57,9 +57,7 @@ class CustomerInvoiceReceiptDaoImplTest {
     List<CustomerInvoiceReceipt> result = customerInvoiceReceiptDao.findAllForInvoice(invoiceId);
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).hasSize(3);
-    assertThat(result).isEqualTo(receipts);
+    assertThat(result).isNotNull().hasSize(3).isEqualTo(receipts);
   }
 
   @Test
@@ -76,8 +74,7 @@ class CustomerInvoiceReceiptDaoImplTest {
     List<CustomerInvoiceReceipt> result = customerInvoiceReceiptDao.findAllForInvoice(invoiceId);
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).isEmpty();
+    assertThat(result).isNotNull().isEmpty();
   }
 
   @Test
@@ -126,8 +123,7 @@ class CustomerInvoiceReceiptDaoImplTest {
     List<CustomerInvoiceReceipt> result = customerInvoiceReceiptDao.findAllForInvoice(null);
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).isEmpty();
+    assertThat(result).isNotNull().isEmpty();
   }
 
   @Test
@@ -164,9 +160,7 @@ class CustomerInvoiceReceiptDaoImplTest {
     List<CustomerInvoiceReceipt> result = customerInvoiceReceiptDao.findForReceipt(receiptId);
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).hasSize(2);
-    assertThat(result).isEqualTo(receipts);
+    assertThat(result).isNotNull().hasSize(2).isEqualTo(receipts);
   }
 
   @Test
@@ -183,8 +177,7 @@ class CustomerInvoiceReceiptDaoImplTest {
     List<CustomerInvoiceReceipt> result = customerInvoiceReceiptDao.findForReceipt(receiptId);
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).isEmpty();
+    assertThat(result).isNotNull().isEmpty();
   }
 
   @Test
@@ -233,8 +226,7 @@ class CustomerInvoiceReceiptDaoImplTest {
     List<CustomerInvoiceReceipt> result = customerInvoiceReceiptDao.findForReceipt(null);
 
     // Assert
-    assertThat(result).isNotNull();
-    assertThat(result).isEmpty();
+    assertThat(result).isNotNull().isEmpty();
   }
 
   @Test
