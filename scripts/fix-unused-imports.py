@@ -8,6 +8,13 @@ import re
 import os
 import sys
 
+_BLOCK_COMMENT_RE = re.compile(r"/\*[\s\S]*?\*/", re.MULTILINE)
+_LINE_COMMENT_RE = re.compile(r"//.*?$", re.MULTILINE)
+_STRING_RE = re.compile(r"\"(?:\\\\.|[^\"\\\\])*\"")
+_CHAR_RE = re.compile(r"'(?:\\\\.|[^'\\\\])'")
+_IMPORT_LINE_RE = re.compile(r'^\s*import\s+(static\s+)?([^;]+);\s*(?://.*)?$', re.MULTILINE)
+_PACKAGE_LINE_RE = re.compile(r'^\s*package\s+[^;]+;\s*$', re.MULTILINE)
+
 def find_java_files(root_dir):
     """Find all Java files in the directory."""
     java_files = []
@@ -28,9 +35,89 @@ def extract_imports(content):
         imports.append(match.group(1).strip())
     return imports
 
+def parse_import_lines(content):
+    """Parse import lines into (is_static, path) tuples, including duplicates."""
+    imports = []
+    for match in _IMPORT_LINE_RE.finditer(content):
+        is_static = bool(match.group(1))
+        path = match.group(2).strip()
+        imports.append((is_static, path))
+    return imports
+
+def normalize_imports(imports):
+    """
+    Normalize imports by:
+    - removing exact duplicates
+    - removing explicit imports covered by a wildcard import from the same package
+    - sorting for deterministic output
+    """
+    wildcard_pkgs = set()
+    wildcard_static_pkgs = set()
+
+    for is_static, path in imports:
+        if path.endswith('.*'):
+            base = path[:-2]
+            if is_static:
+                wildcard_static_pkgs.add(base)
+            else:
+                wildcard_pkgs.add(base)
+
+    seen = set()
+    normalized = []
+    for is_static, path in imports:
+        key = (is_static, path)
+        if key in seen:
+            continue
+
+        # Drop explicit imports that are redundant due to a wildcard import.
+        if not path.endswith('.*'):
+            pkg = '.'.join(path.split('.')[:-1])
+            if is_static and pkg in wildcard_static_pkgs:
+                continue
+            if not is_static and pkg in wildcard_pkgs:
+                continue
+
+        seen.add(key)
+        normalized.append(key)
+
+    # Non-static imports first, then static; sort within each group.
+    normalized.sort(key=lambda t: (1 if t[0] else 0, t[1]))
+    return normalized
+
+def rebuild_import_block(content, imports):
+    """Rebuild the import block right after the package declaration."""
+    # Remove all existing import lines.
+    content_wo_imports = _IMPORT_LINE_RE.sub('', content)
+    lines = content_wo_imports.splitlines(True)
+
+    insert_at = 0
+    for i, line in enumerate(lines):
+        if _PACKAGE_LINE_RE.match(line):
+            insert_at = i + 1
+            break
+
+    # Remove blank lines immediately following the package statement (we'll re-add cleanly).
+    while insert_at < len(lines) and lines[insert_at].strip() == '':
+        del lines[insert_at]
+
+    import_lines = []
+    if imports:
+        import_lines.append('\n')
+        for is_static, path in imports:
+            if is_static:
+                import_lines.append(f'import static {path};\n')
+            else:
+                import_lines.append(f'import {path};\n')
+        import_lines.append('\n')
+
+    lines[insert_at:insert_at] = import_lines
+    rebuilt = ''.join(lines)
+    rebuilt = re.sub(r'\n\n\n+', '\n\n', rebuilt)
+    return rebuilt
+
 def extract_package(content):
     """Extract package name."""
-    match = re.search(r'^package\s+([^;]+);', re.MULTILINE)
+    match = re.search(r'^package\s+([^;]+);', content, re.MULTILINE)
     return match.group(1) if match else None
 
 def is_import_used(import_stmt, content, package_name):
@@ -49,11 +136,21 @@ def is_import_used(import_stmt, content, package_name):
     
     # Check if class name appears in the code (but not in import statements)
     # Remove import statements from content for checking
-    content_without_imports = re.sub(r'^import\s+.*?;', '', content, flags=re.MULTILINE)
+    content_without_imports = re.sub(r'^\s*import\s+.*?;\s*(?://.*)?$', '', content, flags=re.MULTILINE)
+
+    # Remove comments and string/char literals to avoid false positives
+    # (SonarQube doesn't consider mentions in comments/strings as usage)
+    content_without_imports = _BLOCK_COMMENT_RE.sub('', content_without_imports)
+    content_without_imports = _LINE_COMMENT_RE.sub('', content_without_imports)
+    content_without_imports = _STRING_RE.sub('""', content_without_imports)
+    content_without_imports = _CHAR_RE.sub("''", content_without_imports)
     
     # Check for class name usage
     # Make sure it's not part of a package name or another import
-    pattern = r'\b' + re.escape(class_name) + r'\b'
+    # If the symbol is only referenced as part of a fully-qualified name (".ClassName"),
+    # the import is still unused. So we require the occurrence not be immediately
+    # preceded by a dot.
+    pattern = r'(?<!\.)\b' + re.escape(class_name) + r'\b'
     
     # Special handling for common cases
     if class_name in ['List', 'Map', 'Set', 'ArrayList', 'HashMap', 'HashSet']:
@@ -82,32 +179,33 @@ def remove_unused_imports(file_path):
         
         original_content = content
         package_name = extract_package(content)
-        imports = extract_imports(content)
+        raw_imports = parse_import_lines(content)
         
-        if not imports:
+        if not raw_imports:
             return False, 0
         
-        unused_imports = []
-        for imp in imports:
-            if not is_import_used(imp, content, package_name):
-                unused_imports.append(imp)
+        normalized_imports = normalize_imports(raw_imports)
+        # Apply normalization (dedupe/redundant) first, then detect true unused.
+        content = rebuild_import_block(content, normalized_imports)
         
-        if not unused_imports:
-            return False, 0
+        remaining_imports = []
+        for is_static, path in normalized_imports:
+            # Keep wildcard imports (usage is hard to prove safely).
+            if path.endswith('.*'):
+                remaining_imports.append((is_static, path))
+                continue
+            stmt = f"static {path}" if is_static else path
+            if is_import_used(stmt, content, package_name):
+                remaining_imports.append((is_static, path))
         
-        # Remove unused imports
-        for imp in unused_imports:
-            # Match the exact import line
-            pattern = r'^import\s+(?:static\s+)?' + re.escape(imp) + r'\s*;?\s*$'
-            content = re.sub(pattern, '', content, flags=re.MULTILINE)
+        content = rebuild_import_block(content, remaining_imports)
         
-        # Clean up multiple blank lines
-        content = re.sub(r'\n\n\n+', '\n\n', content)
+        removed_count = len(raw_imports) - len(remaining_imports)
         
         if content != original_content:
             with open(file_path, 'w', encoding='utf-8') as f:
                 f.write(content)
-            return True, len(unused_imports)
+            return True, max(0, removed_count)
         
         return False, 0
     
