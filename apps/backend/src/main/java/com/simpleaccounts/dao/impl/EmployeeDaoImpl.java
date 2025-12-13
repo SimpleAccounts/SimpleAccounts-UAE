@@ -19,7 +19,6 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 

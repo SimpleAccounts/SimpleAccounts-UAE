@@ -23,15 +23,8 @@ import org.springframework.stereotype.Repository;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.JournalLineItemDao;
 import com.simpleaccounts.entity.JournalLineItem;
-import com.simpleaccounts.entity.VatReportFiling;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.detailedgeneralledgerreport.ReportRequestModel;
-import com.simpleaccounts.rest.financialreport.CreditDebitAggregator;
-import com.simpleaccounts.rest.financialreport.FinancialReportRequestModel;
-import com.simpleaccounts.rest.financialreport.VatReportFilingRequestModel;
-import com.simpleaccounts.rest.taxescontroller.TaxesFilterEnum;
-import com.simpleaccounts.rest.taxescontroller.TaxesFilterModel;
 import com.simpleaccounts.utils.DateFormatUtil;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -44,10 +37,6 @@ import javax.persistence.ParameterMode;
 import javax.persistence.Query;
 import javax.persistence.StoredProcedureQuery;
 import javax.persistence.TypedQuery;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository

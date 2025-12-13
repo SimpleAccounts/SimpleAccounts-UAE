@@ -8,12 +8,8 @@ import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
-import com.simpleaccounts.dao.AbstractDao;
-import com.simpleaccounts.dao.CurrencyExchangeDao;
 
-import com.simpleaccounts.entity.CurrencyConversion;
 
-import javax.persistence.TypedQuery;
 
 @Repository
 public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConversion> implements CurrencyExchangeDao {

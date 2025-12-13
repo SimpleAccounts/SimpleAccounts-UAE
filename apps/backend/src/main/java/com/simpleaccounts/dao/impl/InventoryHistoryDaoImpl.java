@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.util.*;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 @Repository

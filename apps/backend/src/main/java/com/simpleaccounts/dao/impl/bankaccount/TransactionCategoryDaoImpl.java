@@ -22,16 +22,6 @@ import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.service.TransactionCategoryService;
-import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.persistence.TypedQuery;
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository(value = "transactionCategoryDao")
 @RequiredArgsConstructor
