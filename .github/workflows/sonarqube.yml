@@ -108,6 +108,7 @@ jobs:
           sudo keytool -import -trustcacerts -keystore $JAVA_HOME/lib/security/cacerts \
             -storepass changeit -noprompt -alias sonarqube -file /tmp/sonar.crt || true
 
+      # Run SonarQube Analysis (Community Edition - no branch/PR support)
       - name: Run SonarQube Analysis
         working-directory: apps/backend
         env:
@@ -126,10 +127,35 @@ jobs:
             -Dsonar.scanner.arch=x64 \
             -Dsonar.scanner.truststorePath=${JAVA_HOME}/lib/security/cacerts \
             -Dsonar.scanner.truststorePassword=changeit \
-            -DskipTests=true \
-            || true
+            -Dsonar.qualitygate.wait=true \
+            -Dsonar.qualitygate.timeout=300 \
+            -DskipTests=true
 
-      - name: Quality Gate Status
+      # Check Quality Gate status - fails the workflow if quality gate fails
+      - name: Check Quality Gate Status
+        if: always()
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          echo "Quality Gate status available in SonarQube dashboard"
-          echo "Visit: https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io/dashboard?id=SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9"
+          echo "Checking Quality Gate status..."
+          sleep 15
+
+          PROJECT_KEY="SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9"
+          API_URL="${{ env.SONAR_HOST_URL }}/api/qualitygates/project_status?projectKey=${PROJECT_KEY}"
+          DASHBOARD_URL="${{ env.SONAR_HOST_URL }}/dashboard?id=${PROJECT_KEY}"
+
+          RESPONSE=$(curl -s -u "$SONAR_TOKEN:" "$API_URL")
+          STATUS=$(echo "$RESPONSE" | jq -r '.projectStatus.status')
+
+          echo "Quality Gate Status: $STATUS"
+          echo "Dashboard: $DASHBOARD_URL"
+
+          if [ "$STATUS" != "OK" ]; then
+            echo ""
+            echo "::error::Quality Gate FAILED!"
+            echo "Failed conditions:"
+            echo "$RESPONSE" | jq -r '.projectStatus.conditions[] | select(.status != "OK") | "  - \(.metricKey): \(.actualValue) (threshold: \(.errorThreshold))"'
+            exit 1
+          fi
+
+          echo "::notice::Quality Gate PASSED!"
