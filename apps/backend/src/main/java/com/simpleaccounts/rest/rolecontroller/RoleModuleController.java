@@ -56,7 +56,7 @@ public class RoleModuleController {
 	@ApiOperation(value = "Get Module List")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<Object> getModuleList(HttpServletRequest request){
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+        jwtTokenUtil.getUserIdFromHttpRequest(request);
         List<ModuleResponseModel> response  = new ArrayList<>();
         List<SimpleAccountsModules> modulesList=roleModuleService.getListOfSimpleAccountsModules();
         if (modulesList != null) {
@@ -127,7 +127,7 @@ public class RoleModuleController {
                                          HttpServletRequest request) {
     Role role = null;
         try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            jwtTokenUtil.getUserIdFromHttpRequest(request);
             role = roleModuleRestHelper.getEntity(roleRequestModel,request);
             roleService.update(role);
             List<Integer> roleModuleIdList = roleRequestModel.getModuleListIds();

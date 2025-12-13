@@ -22,7 +22,6 @@ public class InventoryHistoryDaoImpl extends AbstractDao<Integer, InventoryHisto
        TypedQuery<InventoryHistory> query = getEntityManager().createNamedQuery(
                "getHistoryByInventoryId", InventoryHistory.class);
        query.setParameter("inventoryId", invoiceId);
-       List<InventoryHistory> result= query.getResultList();
        return query.getSingleResult();
    }
     public InventoryRevenueModel getTotalRevenueForInventory(){

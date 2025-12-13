@@ -58,7 +58,7 @@ public class TransactionCategoryBalanceController {
 									   HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			User user = userServiceNew.findByPK(userId);
+			java.util.Objects.requireNonNull(userServiceNew.findByPK(userId));
 			List<TransactioncategoryBalancePersistModel> list=persistmodelList.getPersistModelList();
 			for(TransactioncategoryBalancePersistModel persistmodel: list){
 				TransactionCategory category = transactionCategoryService.findByPK(persistmodel.getTransactionCategoryId());
@@ -170,7 +170,7 @@ public class TransactionCategoryBalanceController {
 										 HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			User user = userServiceNew.findByPK(userId);
+			java.util.Objects.requireNonNull(userServiceNew.findByPK(userId));
 			TransactionCategoryBalance transactionCategoryBalance= null;
 			if (persistModel.getTransactionCategoryBalanceId() != null) {
 				transactionCategoryBalance = transactionCategoryBalanceService

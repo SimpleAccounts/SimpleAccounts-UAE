@@ -137,10 +137,9 @@ public class InventoryDaoImpl extends AbstractDao<Integer, Inventory> implements
     public BigDecimal getTotalInventoryValue(){
         Query query = getEntityManager().createQuery("SELECT SUM(i.stockOnHand*i.productId.avgPurchaseCost) FROM Inventory i");
        Object querySingleResult = query.getSingleResult();
-       BigDecimal result = BigDecimal.ZERO;
-       result = (BigDecimal) querySingleResult;
-       if(result!=null)
-          return result ;
+       BigDecimal result = (BigDecimal) querySingleResult;
+       if (result != null)
+          return result;
        return BigDecimal.ZERO;
     }
     public Integer getTotalInventoryCountForContact(int contactId){

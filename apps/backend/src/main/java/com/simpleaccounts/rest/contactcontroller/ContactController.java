@@ -187,8 +187,6 @@ public class ContactController {
 					MessageUtil.getMessage("create.unsuccessful.msg"), true);
 				return new ResponseEntity<>( message ,HttpStatus.INTERNAL_SERVER_ERROR);
 			}else {
-				message = new SimpleAccountsMessage("0024",
-						MessageUtil.getMessage("contact.created.successful.msg.0024"), false);
 				return new ResponseEntity<>(contactHelper.getModel(contact) ,HttpStatus.OK);
 			}
 		} catch (Exception e) {
@@ -275,7 +273,7 @@ public class ContactController {
 		try {
 		SimpleAccountsMessage message= null;
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		List<TransactionCategory> transactionCategoryList = new ArrayList<>();
+		List<TransactionCategory> transactionCategoryList;
 		Contact contact = contactService.findByPK(id);
 
 		contact.setDeleteFlag(true);

@@ -223,7 +223,7 @@ public abstract class AbstractDoubleEntryRestController {
 			}
 		}
 		else if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.CREDIT_NOTE.name())){
-			journal = creditNoteRestHelper.reverseCreditNotePosting(postingRequestModel, userId);
+			journal = creditNoteRestHelper.reverseCreditNotePosting(postingRequestModel);
 			if (journal != null) {
 				journalService.persist(journal);
 				creditNoteRestHelper.creditNoteReverseInventoryHandling(postingRequestModel,userId);
@@ -260,7 +260,7 @@ public abstract class AbstractDoubleEntryRestController {
 				journalService.update(journal1);
 
 			}
-			journal = creditNoteRestHelper.reverseDebitNotePosting(postingRequestModel, userId);
+			journal = creditNoteRestHelper.reverseDebitNotePosting(postingRequestModel);
 			if (journal != null) {
 				journalService.persist(journal);
 				creditNoteRestHelper.creditNoteReverseInventoryHandling(postingRequestModel,userId);

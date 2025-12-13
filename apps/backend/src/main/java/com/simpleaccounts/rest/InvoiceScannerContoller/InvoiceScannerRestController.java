@@ -124,7 +124,6 @@ public class InvoiceScannerRestController {
                 poQuatationService.update(quatation);
 
             }
-            Company company = new Company();
             SimpleAccountsMessage message = null;
             message = new SimpleAccountsMessage("0045",
                     MessageUtil.getMessage("invoice.created.successful.msg.0045"), false);

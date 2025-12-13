@@ -299,9 +299,7 @@ public class DataListController {
 	@GetMapping(value = "/exciseTax")
 	public ResponseEntity< List<ExciseTaxModel> > getExciseTax() {
 		try {
-			List<ExciseTax> response = new ArrayList<>();
-
-			response = exciseTaxRestHelper.getExciseTaxList();
+			List<ExciseTax> response = exciseTaxRestHelper.getExciseTaxList();
 
 			List<ExciseTaxModel> exciseTaxModelList = new ArrayList<>();
 			for(ExciseTax exciseTax : response)

@@ -28,7 +28,6 @@ class ReverseChargeTest {
             BigDecimal importValue = new BigDecimal("10000.00");
 
             // Seller invoices without VAT (zero-rated export from their country)
-            BigDecimal sellerInvoiceAmount = importValue;
             BigDecimal sellerVat = BigDecimal.ZERO;
 
             // Buyer self-accounts for VAT (reverse charge)

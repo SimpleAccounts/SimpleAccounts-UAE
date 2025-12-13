@@ -157,17 +157,16 @@ public class ReceiptController {
 	@DeleteMapping(value = "/deletes")
 		public ResponseEntity<Object> deleteReceipts(@RequestBody DeleteModel ids) {
 		try {
-			SimpleAccountsMessage message=null;
 			receiptService.deleteByIds(ids.getIds());
-			message = new SimpleAccountsMessage("0048",
+			SimpleAccountsMessage message = new SimpleAccountsMessage("0048",
 					MessageUtil.getMessage("receipt.deleted.successful.msg.0048"), false);
+			return new ResponseEntity<>(message, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
+			SimpleAccountsMessage message = new SimpleAccountsMessage("",
+					MessageUtil.getMessage("delete.unsuccessful.msg"), true);
+			return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		SimpleAccountsMessage message= null;
-		message = new SimpleAccountsMessage("",
-				MessageUtil.getMessage("delete.unsuccessful.msg"), true);
-		return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@LogRequest

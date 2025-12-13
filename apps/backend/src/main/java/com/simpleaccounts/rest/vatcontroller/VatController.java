@@ -65,7 +65,7 @@ public class VatController{
 	public ResponseEntity<PaginationResponseModel> getVatList(VatCategoryRequestFilterModel filterModel,
 															  HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userService.findByPK(userId);
+		java.util.Objects.requireNonNull(userService.findByPK(userId));
 
 		Map<VatCategoryFilterEnum, Object> filterDataMap = new EnumMap<>(VatCategoryFilterEnum.class);
 

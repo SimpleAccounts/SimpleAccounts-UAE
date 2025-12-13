@@ -74,9 +74,9 @@ public class CreditNoteRestController {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(httpServletRequest);
             PaginationResponseModel responseModel = new PaginationResponseModel();
-           User user = userService.findByPK(userId);
-            creditNoteRestHelper.getListModel(responseModel,contact,amount,pageNo,pageSize,paginationDisable,
-                    order,sortingCol,userId,type);
+            java.util.Objects.requireNonNull(userService.findByPK(userId));
+            creditNoteRestHelper.getListModel(
+                    responseModel, contact, amount, pageNo, pageSize, order, sortingCol, type);
             return new ResponseEntity<>(responseModel, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);

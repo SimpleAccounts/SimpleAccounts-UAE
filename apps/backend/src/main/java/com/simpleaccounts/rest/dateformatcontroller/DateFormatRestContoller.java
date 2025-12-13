@@ -107,9 +107,12 @@ public class DateFormatRestContoller {
 	@ApiOperation(value = "Update DateFormat")
 	@PostMapping(value = "/update")
 	public ResponseEntity< DateFormatResponseModel> update(DateFormatRequestModel dateFormatRequestModel, HttpServletRequest request) {
-		DateFormat dateFormat = dateFormatService.findByPK(dateFormatRequestModel.getId());
+		DateFormat existingDateFormat = dateFormatService.findByPK(dateFormatRequestModel.getId());
+		if (existingDateFormat == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		dateFormat = dateFormatRestHelper.getEntity(dateFormatRequestModel);
+		DateFormat dateFormat = dateFormatRestHelper.getEntity(dateFormatRequestModel);
 		dateFormat.setLastUpdatedBy(userId);
 		dateFormat.setLastUpdateDate(LocalDateTime.now());
 		dateFormat = dateFormatService.update(dateFormat);

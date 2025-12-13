@@ -454,7 +454,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
                  .replace("{startDate}",salarySlipModel.getPayPeriod().substring(0, Math.min(salarySlipModel.getPayPeriod().length(), 10)).replace("/", "-"))
                  .replace("{endDate}",salarySlipModel.getPayPeriod().substring(Math.max(salarySlipModel.getPayPeriod().length() - 10, 0)).replace("/", "-"));
 
-        mailUtility.triggerEmailOnBackground2("Payslip", mail,pdf, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+        mailUtility.triggerEmailOnBackground2("Payslip", mail, pdf, EmailConstant.ADMIN_SUPPORT_EMAIL,
                 EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{employee.getEmail()},
                 true);
 

@@ -89,7 +89,6 @@ public class LoginRestController {
 				for (PasswordHistory passwordHistory:passwordHistoryList){
 					boolean passwordExist = passwordEncoder.matches(resetPasswordModel.getPassword(), passwordHistory.getPassword());
 					if (passwordExist){
-						message= null;
 						message = new SimpleAccountsMessage("",
 								MessageUtil.getMessage("resetPassword.AlreadyExist.msg.0090"), true);
 						return new ResponseEntity<>( message,HttpStatus.NOT_ACCEPTABLE);

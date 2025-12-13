@@ -369,12 +369,11 @@ public class ReconsilationController {
 	@GetMapping(value = "/getChildrenTransactionCategoryList")
 	public ResponseEntity<List<SingleLevelDropDownModel>> getlistEmployeeTransactionCategory(Integer id){
 		try {
-			List<DropdownModel> response = new ArrayList<>();
 			Map<String, Object> param = new HashMap<>();
 			param.put("parentTransactionCategory", id);
 			List<TransactionCategory> transactionCategoryList =
 					transactionCategoryService.findByAttributes(param);
-			response = transcationCategoryHelper.getEmployeeTransactionCategory(transactionCategoryList);
+			List<DropdownModel> response = transcationCategoryHelper.getEmployeeTransactionCategory(transactionCategoryList);
 			return new ResponseEntity(response, HttpStatus.OK);
 		}
 		catch (Exception e) {
@@ -388,9 +387,8 @@ public class ReconsilationController {
 	public ResponseEntity<List<SingleLevelDropDownModel>> getCOACList(){
 
 		try {
-			List<DropdownModel> response = new ArrayList<>();
 			List<ChartOfAccountCategory> chartOfAccountCategory = chartOfAccountCategoryService.findAll();
-			response = transcationCategoryHelper.getCOACList(chartOfAccountCategory);
+			List<DropdownModel> response = transcationCategoryHelper.getCOACList(chartOfAccountCategory);
 			return new ResponseEntity(response, HttpStatus.OK);
 		}
 		catch (Exception e) {

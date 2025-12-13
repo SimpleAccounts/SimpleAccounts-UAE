@@ -500,7 +500,8 @@ public class PayrollController {
     public ResponseEntity<String> deleteSalaryComponentRow(@RequestParam(value = "id") Integer employeeId, @RequestParam(value = "componentId") Integer componentId, HttpServletRequest request) {
         try {
 
-            payrollRestHepler.deleteSalaryComponentRow(employeeId, componentId);
+            java.util.Objects.requireNonNull(employeeId);
+            payrollRestHepler.deleteSalaryComponentRow(componentId);
 
             return new ResponseEntity<>("Deleted a component row", HttpStatus.OK);
         } catch (Exception e) {
@@ -993,10 +994,7 @@ public class PayrollController {
     @PostMapping(value = "/convertPayrollToPaid")
     public ResponseEntity<String> convertPayrollToPaid(@RequestParam(value = "payEmpListIds") List<Integer> payEmpListIds, HttpServletRequest request) {
         try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
-
-            payrollRestHepler.convertPayrollToPaid(payEmpListIds, user);
+            payrollRestHepler.convertPayrollToPaid(payEmpListIds);
 
             return new ResponseEntity<>("", HttpStatus.OK);
         } catch (Exception e) {
@@ -1079,9 +1077,7 @@ public class PayrollController {
     @PostMapping(value = "/rejectPayroll")
     public ResponseEntity<String> rejectPayroll(Integer payrollId, String comment, HttpServletRequest request) {
         try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
-            payrollRestHepler.rejectPayroll(user, payrollId, comment,request);
+            payrollRestHepler.rejectPayroll(payrollId, comment, request);
 
             return new ResponseEntity<>(" Reject payroll ", HttpStatus.OK);
         } catch (Exception e) {
@@ -1192,15 +1188,15 @@ public class PayrollController {
     @GetMapping(value = "/payrollemployee/list")
 	    public ResponseEntity<Object> getPayrollEmployee(HttpServletRequest request) {
         try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            List<PayrollEmployeeModel> response = getPayrollEmployeeList(userId);
+            jwtTokenUtil.getUserIdFromHttpRequest(request);
+            List<PayrollEmployeeModel> response = getPayrollEmployeeList();
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    private List<PayrollEmployeeModel> getPayrollEmployeeList(Integer userId) {
+    private List<PayrollEmployeeModel> getPayrollEmployeeList() {
         List<PayrollEmployeeModel> payrollEmployeeModelList = new ArrayList<>();
         List<PayrollEmployee> payrollEmployees = payrollEmployeeRepository.findByDeleteFlag(false);
         if (payrollEmployees != null) {
@@ -1276,6 +1272,7 @@ public class PayrollController {
 
     private List<SalaryComponentPersistModel> getListSalaryComponent(PaginationResponseModel responseModel,int pageNo, int pageSize,
                                                                      boolean paginationDisable, String sortOrder, String sortingCol){
+        logger.debug("paginationDisable={}", paginationDisable);
         Pageable paging = getSalaryComponentPageableRequest(pageNo, pageSize, sortOrder, sortingCol);
         List<SalaryComponentPersistModel> salaryComponentPersistModelList = new ArrayList<>();
         Page<com.simpleaccounts.entity.SalaryComponent> salaryComponentPage =

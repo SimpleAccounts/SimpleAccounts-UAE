@@ -61,7 +61,7 @@ public class TransactionReportRestController {
 	@GetMapping(value = "/getFinancialPeriods")
 	public ResponseEntity<List<FinancialPeriodRestModel>> completeFinancialPeriods() {
 		try {
-			return new ResponseEntity(FinancialPeriodHolderRest.getFinancialPeriodList(), HttpStatus.OK);
+			return new ResponseEntity<>(FinancialPeriodHolderRest.getFinancialPeriodList(), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -74,7 +74,7 @@ public class TransactionReportRestController {
 	public ResponseEntity<List<ChartOfAccount>> transactionTypes(){
 		try {
 			List<ChartOfAccount> transactionTypeList = transactionTypeService.findAllChild();
-			return new ResponseEntity(transactionTypeList, HttpStatus.OK);
+			return new ResponseEntity<>(transactionTypeList, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -102,9 +102,9 @@ public class TransactionReportRestController {
 					}
 				}
 				transactionCategoryList.removeAll(transactionCategoryParentList);
-				return new ResponseEntity(transactionCategoryList, HttpStatus.OK);
+				return new ResponseEntity<>(transactionCategoryList, HttpStatus.OK);
 			}
-			return new ResponseEntity(transactionCategoryList, HttpStatus.OK);
+			return new ResponseEntity<>(transactionCategoryList, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -114,7 +114,7 @@ public class TransactionReportRestController {
 	@LogRequest
 	@ApiOperation(value = "Get Account Balance Report")
 	@PostMapping(value = "/accountBalanceReport")
-	public ResponseEntity<List<TransactionRestModel>> view(
+	public ResponseEntity<List<TransactionReportRestModel>> view(
 			@RequestParam(value = "transactionTypeCode", required = false) Integer transactionTypeCode,
 			@RequestParam(value = "transactionCategoryId", required = false) Integer transactionCategoryId,
 			@RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM.dd.yyyy") Date startDate,
@@ -125,7 +125,7 @@ public class TransactionReportRestController {
 		try {
 			List<TransactionReportRestModel> transactionRestModels = transactionService.getTransactionsReport(
 					transactionTypeCode, transactionCategoryId, startDate, endDate, accountId, pageNo, pageSize);
-			return new ResponseEntity(transactionRestModels, HttpStatus.OK);
+			return new ResponseEntity<>(transactionRestModels, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -146,13 +146,10 @@ public class TransactionReportRestController {
 			@RequestParam(value = "pageSize", required = false) Integer pageSize) {
 		try {
 			if (invoiceStartDate != null && invoiceEndDate == null) {
-				invoiceDueEndDate = invoiceStartDate;
 			}
 			if (invoiceDueStartDate != null && invoiceDueEndDate == null) {
-				invoiceDueEndDate = invoiceStartDate;
 			}
-			return new ResponseEntity(
-					HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -79,7 +79,6 @@ public class SalaryServiceImpl extends SalaryService {
                     LocalDateTime date = (LocalDateTime) objectArray[4];
                     salarySlipModel.setPayDate(date.toLocalDate());
                     salarySlipModel.setPayPeriod(salary.getPayrollId().getPayPeriod());
-                    Integer year = date.getYear();
 
                     Integer hyphenIndex = salary.getPayrollId().getPayPeriod().indexOf("-");
                     String dateString = salary.getPayrollId().getPayPeriod().substring(0, hyphenIndex);

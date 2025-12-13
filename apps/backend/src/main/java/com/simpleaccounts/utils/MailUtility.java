@@ -156,7 +156,7 @@ public class MailUtility {
 	public static final String PLACEHOLDER_TOTAL_NET = "{totalNet}";
 	public static final String PLACEHOLDER_SUPPLIER_NAME = "{supplierName}";
 
-	public void triggerEmailOnBackground(String subject, String body, MimeMultipart mimeMultipart, String fromEmailId,
+	public void triggerEmailOnBackground(String subject, String body, String fromEmailId,
 			String fromName, String[] toMailAddress, boolean isHtml) {
 		Thread t = new Thread(new Runnable() {
 			@Override
@@ -170,12 +170,10 @@ public class MailUtility {
 					mail.setBody(body);
 
 					MimeMultipart mimeMultipart1=new MimeMultipart();
-					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-
-						byte[] bytes = writePdf(outputStream,body);
+					try {
+						byte[] bytes = writePdf(body);
 
 						DataSource dataSource = new ByteArrayDataSource(bytes, APPLICATION_PDF);
-						DataSource dataSource1 = new ByteArrayDataSource(body.getBytes(),"application");
 
 						MimeBodyPart pdfBodyPart = new MimeBodyPart();
 						MimeBodyPart contentBodyPart = new MimeBodyPart();
@@ -213,7 +211,7 @@ public class MailUtility {
 	 * @param toMailAddress
 	 * @param isHtml
 	 */
-	public void triggerEmailOnBackground2(String subject, String mailcontent,String pdfBody, MimeMultipart mimeMultipart, String fromEmailId,
+	public void triggerEmailOnBackground2(String subject, String mailcontent,String pdfBody, String fromEmailId,
 										 String fromName, String[] toMailAddress, boolean isHtml) {
 		Thread t = new Thread(new Runnable() {
 			@Override
@@ -227,9 +225,8 @@ public class MailUtility {
 					mail.setBody(pdfBody);
 
 					MimeMultipart mimeMultipart1=new MimeMultipart();
-					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-
-						byte[] bytes = writePdf(outputStream,pdfBody);
+					try {
+						byte[] bytes = writePdf(pdfBody);
 
 						DataSource dataSource = new ByteArrayDataSource(bytes, APPLICATION_PDF);
 
@@ -268,7 +265,7 @@ public class MailUtility {
 		});
 		t.start();
 	}
-	public static byte[] writePdf(OutputStream outputStream,String body) throws Exception {
+	public static byte[] writePdf(String body) throws Exception {
 		try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
 			HtmlConverter.convertToPdf(body, buffer);
 
@@ -727,7 +724,7 @@ public class MailUtility {
 					mail.setSubject(subject);
 					mail.setBody(mailcontent);
 					MimeMultipart mimeMultipart1=new MimeMultipart();
-					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+					try {
 
 						MimeBodyPart contentBodyPart = new MimeBodyPart();
 						contentBodyPart.setContent(mailcontent, TEXT_HTML);
@@ -742,7 +739,7 @@ public class MailUtility {
 						}
 						//primary email
 						if(emailContentModel.getAttachPrimaryPdf().booleanValue()==Boolean.TRUE){
-							byte[] bytes = writePdf(outputStream,pdfBody);
+							byte[] bytes = writePdf(pdfBody);
 							DataSource dataSource = new ByteArrayDataSource(bytes, APPLICATION_PDF);
 							MimeBodyPart pdfBodyPart = new MimeBodyPart();
 							pdfBodyPart.setDataHandler(new DataHandler(dataSource));

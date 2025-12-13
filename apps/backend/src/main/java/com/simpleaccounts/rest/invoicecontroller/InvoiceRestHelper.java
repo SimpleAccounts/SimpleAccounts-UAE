@@ -849,7 +849,7 @@ public class InvoiceRestHelper {
 				.replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS, vatInWords);
 
 		if (invoice.getContact() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-			mailUtility.triggerEmailOnBackground2(subject, content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+			mailUtility.triggerEmailOnBackground2(subject, content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
 					EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{invoice.getContact().getBillingEmail()},
 					true);
 			EmailLogs emailLogs = new EmailLogs();
@@ -1032,7 +1032,7 @@ public class InvoiceRestHelper {
 		}
 
 		if (contact!= null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-			mailUtility.triggerEmailOnBackground2(subject, content,body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+			mailUtility.triggerEmailOnBackground2(subject, content,body, EmailConstant.ADMIN_SUPPORT_EMAIL,
 					EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[] { contact.getBillingEmail() },
 					true);
 			EmailLogs emailLogs = new EmailLogs();

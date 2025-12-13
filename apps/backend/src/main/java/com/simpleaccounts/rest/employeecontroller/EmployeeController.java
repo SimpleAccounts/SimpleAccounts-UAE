@@ -248,8 +248,6 @@ public class EmployeeController {
 			transactionCategoryCreationHelper.createTransactionCategoryForEmployee(employee);
 			employeeHelper.createDefaultSalaryComponentListForThisEmployee(employee);
 
-			message = new SimpleAccountsMessage("0071",
-					MessageUtil.getMessage("employee.created.successful.msg.0071"), false);
 			return new ResponseEntity<>(employee.getId().toString(),HttpStatus.OK);
 		} catch (Exception e) {
 			SimpleAccountsMessage message = null;

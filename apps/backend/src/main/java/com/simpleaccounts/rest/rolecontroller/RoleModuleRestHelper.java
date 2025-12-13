@@ -33,7 +33,7 @@ public class RoleModuleRestHelper {
 
         if (roleRequestModel!= null) {
 
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            jwtTokenUtil.getUserIdFromHttpRequest(request);
             Role role = roleService.findByPK(roleRequestModel.getRoleID());
             if (roleRequestModel.getIsActive()!=null){
                 role.setIsActive(roleRequestModel.getIsActive());

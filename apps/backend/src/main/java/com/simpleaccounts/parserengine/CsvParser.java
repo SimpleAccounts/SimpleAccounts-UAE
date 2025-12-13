@@ -87,7 +87,6 @@ public class CsvParser implements TransactionFileParser {
 
 	public Map<String, Object> parseImportData(TransactionParsingSettingDetailModel model, InputStream inputStream) {
 		String line = "";
-		String cvsSplitBy = ",";
 
 		List<Map<String, String>> list = new LinkedList<>();
 		List<String> errorList = new ArrayList<>();

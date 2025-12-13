@@ -339,8 +339,7 @@ public class TransactionRestController {
 				{  // Supplier Invoices
 					updateTransactionForSupplierInvoices(trnx,transactionPresistModel);
 					// JOURNAL LINE ITEM FOR normal transaction
-					List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
-					reconsileSupplierInvoices(userId, trnx, itemModels,transactionPresistModel,request);
+					reconsileSupplierInvoices(userId, trnx, transactionPresistModel, request);
 				}
 				break;
 			case MONEY_PAID_TO_USER:
@@ -453,8 +452,7 @@ public class TransactionRestController {
 			case SALES:
 				// Customer Invoices
 				updateTransactionForCustomerInvoices(trnx,transactionPresistModel);
-				List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
-				reconsileCustomerInvoices(userId, trnx, itemModels, transactionPresistModel,request);
+				reconsileCustomerInvoices(userId, trnx, transactionPresistModel, request);
 				break;
 			case VAT_PAYMENT:
 			case VAT_CLAIM:
@@ -609,12 +607,12 @@ public class TransactionRestController {
 		// Post journal
 		Journal journal =  corporateTaxPaymentPosting(
 				new PostingRequestModel(corporateTaxPayment.getId(), corporateTaxPayment.getAmountPaid()), trnx.getCreatedBy(),
-				corporateTaxPayment.getDepositToTransactionCategory(),transactionPresistModel.getExchangeRate());
+				corporateTaxPayment.getDepositToTransactionCategory());
 		journalService.persist(journal);
 	}
 
 	private Journal corporateTaxPaymentPosting(PostingRequestModel postingRequestModel, Integer userId,
-                                               TransactionCategory depositeToTransactionCategory,BigDecimal exchangeRate) {
+                                               TransactionCategory depositeToTransactionCategory) {
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
@@ -1045,8 +1043,7 @@ public class TransactionRestController {
 				} else {  // Supplier Invoices
 					updateTransactionForSupplierInvoices(trnx,transactionPresistModel);
 					// JOURNAL LINE ITEM FOR normal transaction
-					List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
-					reconsileSupplierInvoices(userId, trnx, itemModels, transactionPresistModel,request);
+					reconsileSupplierInvoices(userId, trnx, transactionPresistModel, request);
 				}
 				break;
 			case MONEY_PAID_TO_USER:
@@ -1162,8 +1159,7 @@ public class TransactionRestController {
 				// Customer Invoices
 				updateTransactionForCustomerInvoices(trnx,transactionPresistModel);
 				// JOURNAL LINE ITEM FOR normal transaction
-				List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
-				reconsileCustomerInvoices(userId, trnx, itemModels, transactionPresistModel,request);
+				reconsileCustomerInvoices(userId, trnx, transactionPresistModel, request);
 				break;
 			case VAT_PAYMENT:
 			case VAT_CLAIM:
@@ -1301,9 +1297,7 @@ public class TransactionRestController {
 				if (transactionExpensesList != null && !transactionExpensesList.isEmpty())
 				{
 					if(transactionPresistModel.getExpenseCategory() == 34) {
-						List<TransactionExpensesPayroll> transactionExpensesPayrollList = transactionExpensesPayrollService
-								.findAllForTransactionExpenses(trnx.getTransactionId());
-						unExplainPayrollExpenses(transactionExpensesPayrollList,trnx,transactionExpensesList,transactionExplanation);
+						unExplainPayrollExpenses(trnx, transactionExpensesList, transactionExplanation);
 					} else {
 						unExplainExpenses(transactionExpensesList,trnx,transactionExplanation);
 					}
@@ -1449,7 +1443,7 @@ public class TransactionRestController {
 	 * @param trnx
 	 * @param itemModels
 	 */
-	private void reconsileCustomerInvoices(Integer userId, Transaction trnx, List<ReconsileRequestLineItemModel> itemModels,
+	private void reconsileCustomerInvoices(Integer userId, Transaction trnx,
 										   TransactionPresistModel transactionPresistModel,HttpServletRequest request) {
 		List<ExplainedInvoiceListModel> explainedInvoiceListModelList = getExplainedInvoiceListModel(transactionPresistModel);
 		TransactionExplanation transactionExplanation = new TransactionExplanation();
@@ -1558,7 +1552,7 @@ public class TransactionRestController {
 	 * @param trnx
 	 * @param itemModels
 	 */
-	private void reconsileSupplierInvoices(Integer userId, Transaction trnx, List<ReconsileRequestLineItemModel> itemModels,
+	private void reconsileSupplierInvoices(Integer userId, Transaction trnx,
 										   TransactionPresistModel transactionPresistModel, HttpServletRequest request) {
 		List<ExplainedInvoiceListModel> explainedInvoiceListModelList = getExplainedInvoiceListModel(transactionPresistModel);
 		TransactionExplanation transactionExplanation = new TransactionExplanation();
@@ -1813,13 +1807,13 @@ public class TransactionRestController {
 	 */
 	private void unExplainExpenses( List<TransactionExpenses> transactionExpensesList, Transaction transaction,TransactionExplanation transactionExplanation) {
 		//delete existing expense
-		List<Integer> expenseIdList = deleteExpense(transactionExpensesList,transaction);
+		List<Integer> expenseIdList = deleteExpense(transactionExpensesList);
 		if (!expenseIdList.isEmpty()) {
 			clearAndUpdateTransaction(transaction,transactionExplanation);
 		}
 	}
 
-	private List<Integer> deleteExpense( List<TransactionExpenses> transactionExpensesList,Transaction transaction) {
+	private List<Integer> deleteExpense(List<TransactionExpenses> transactionExpensesList) {
 		List<Integer> expenseIdList = new ArrayList<>();
 		for(TransactionExpenses transactionExpenses : transactionExpensesList)
 		{
@@ -1836,8 +1830,10 @@ public class TransactionRestController {
 		}
 		return expenseIdList;
 	}
-	private void unExplainPayrollExpenses( List<TransactionExpensesPayroll> transactionExpensesList,Transaction transaction,
-                                           List<TransactionExpenses> transactionExpensesList1,TransactionExplanation transactionExplanation) {
+	private void unExplainPayrollExpenses(
+			Transaction transaction,
+			List<TransactionExpenses> transactionExpensesList1,
+			TransactionExplanation transactionExplanation) {
 
 		List<TransactionExplinationLineItem> transactionExplinationLineItemList =
                 transactionExplanationLineItemRepository.getTransactionExplinationLineItemsByTransactionExplanation(transactionExplanation);
@@ -2342,9 +2338,6 @@ public class TransactionRestController {
 					if (transactionPresistModel.getExpenseCategory() != null
                             && transactionPresistModel.getExpenseCategory() == 34) {
 
-						List<TransactionExpensesPayroll> transactionExpensesPayrollList = transactionExpensesPayrollService
-								.findAllForTransactionExpenses(trnx.getTransactionId());
-
 						for (TransactionExplinationLineItem transactionExpensesPayroll:transactionExplinationLineItems){
 							//Create Reverse Journal Entries For Explained Payroll
 							Journal journal = transactionExpensesPayroll.getJournal();
@@ -2379,7 +2372,7 @@ public class TransactionRestController {
                             newjournal.setJournalLineItems(newReverseJournalLineItemList);
                             journalService.persist(newjournal);
 						}
-						unExplainPayrollExpenses(transactionExpensesPayrollList,trnx,transactionExpensesList,transactionExplanation);
+						unExplainPayrollExpenses(trnx, transactionExpensesList, transactionExplanation);
 					} else {
 						unExplainExpenses(transactionExpensesList,trnx,transactionExplanation);
 					}

@@ -96,7 +96,6 @@ public class TransactionImportController{
 	public ResponseEntity<Object> downloadSimpleFile() {
 		ClassLoader classLoader = getClass().getClassLoader();
 		File file = new File(classLoader.getResource("excel-file/SampleTransaction1.csv").getFile());
-		String filepath = file.getAbsolutePath();
 		String content = null;
 		try {
 			content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
@@ -229,12 +228,13 @@ public class TransactionImportController{
 	@LogRequest
 	@ApiOperation(value = "parse file and return data according template")
 	@PostMapping("/parse")
-	public ResponseEntity<Map> parseTransaction(@RequestBody MultipartFile file, @RequestParam(value = "id") Long id) throws IOException {
+	public ResponseEntity<Map<?, ?>> parseTransaction(@RequestBody MultipartFile file, @RequestParam(value = "id") Long id)
+			throws IOException {
 
 		TransactionParsingSetting parsingSetting = transactionParsingSettingService.findByPK(id);
 		TransactionParsingSettingDetailModel model = transactionParsingSettingRestHelper.getModel(parsingSetting);
 
-		Map dataMap = null;
+		Map<?, ?> dataMap = null;
 
 		switch (fileHelper.getFileExtension(file.getOriginalFilename())) {
 
@@ -258,14 +258,15 @@ public class TransactionImportController{
 	@LogRequest
 	@ApiOperation(value = "Write file and return file")
 	@PostMapping("/parseFile")
-	public  ResponseEntity<Map> makeFile(@ModelAttribute TransactionImportRequestModel transactionImportRequestModel) throws IOException {
+	public ResponseEntity<Map<?, ?>> makeFile(@ModelAttribute TransactionImportRequestModel transactionImportRequestModel)
+			throws IOException {
 
 		TransactionParsingSetting parsingSetting = transactionParsingSettingService.findByPK(transactionImportRequestModel.getId().longValue());
 		TransactionParsingSettingDetailModel model = transactionParsingSettingRestHelper.getModel(parsingSetting);
 
 		String filename = "sample.csv";
 		InputStream inputStream = fileHelper.writeFile(transactionImportRequestModel.getData(),filename);
-		Map dataMap = null;
+		Map<?, ?> dataMap = null;
 
 		dataMap = csvParser.parseImportData(model, inputStream);
 
@@ -278,13 +279,14 @@ public class TransactionImportController{
 	@LogRequest
 	@ApiOperation(value = "Write file and return file")
 	@PostMapping("/parseFileWithoutTemplate")
-	public  ResponseEntity<Map> makeFile2(@RequestBody TransactionImportRequestModel transactionImportRequestModel) throws IOException {
+	public ResponseEntity<Map<?, ?>> makeFile2(@RequestBody TransactionImportRequestModel transactionImportRequestModel)
+			throws IOException {
 
 		TransactionParsingSettingDetailModel model = transactionParsingSettingRestHelper.getModel2(transactionImportRequestModel);
 
 		String filename = "sample.csv";
 		InputStream inputStream = fileHelper.writeFile(transactionImportRequestModel.getData(),filename);
-		Map dataMap = null;
+		Map<?, ?> dataMap = null;
 
 		dataMap = csvParser.parseImportData(model, inputStream);
 

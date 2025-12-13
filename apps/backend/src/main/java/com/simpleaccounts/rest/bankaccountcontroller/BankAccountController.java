@@ -99,7 +99,7 @@ public class BankAccountController{
 	public ResponseEntity<PaginationResponseModel> getBankAccountList(BankAccountFilterModel filterModel,
 																	  HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userService.findByPK(userId);
+		java.util.Objects.requireNonNull(userService.findByPK(userId));
 
 		Map<BankAccounrFilterEnum, Object> filterDataMap = new EnumMap<>(BankAccounrFilterEnum.class);
 
@@ -653,7 +653,7 @@ public class BankAccountController{
 	@GetMapping(value = "/getBankNameList")
 	public ResponseEntity<Object> getBankNameList(HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userService.findByPK(userId);
+		java.util.Objects.requireNonNull(userService.findByPK(userId));
 		 try {
 			 
 	            List<BankDetails> bankNameDetailsList = bankAccountService.getBankNameList();

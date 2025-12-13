@@ -153,11 +153,11 @@ public class PoQuatationRestHelper {
             poQuatation.setNotes(requestModel.getNotes());
         }
         List<PoQuatationLineItemRequestModel> itemModels = new ArrayList<>();
-        lineItemString(requestModel, userId, poQuatation, itemModels);
+        lineItemString(requestModel, poQuatation, itemModels);
 
         return poQuatation;
     }
-    private void lineItemString(PoQuatationRequestModel requestModel, Integer userId, PoQuatation poQuatation,
+    private void lineItemString(PoQuatationRequestModel requestModel, PoQuatation poQuatation,
                                 List<PoQuatationLineItemRequestModel> itemModels) {
         if (requestModel.getLineItemsString() != null && !requestModel.getLineItemsString().isEmpty()) {
             ObjectMapper mapper = new ObjectMapper();
@@ -245,7 +245,7 @@ public class PoQuatationRestHelper {
         }
         poQuatation.setStatus(poQuatation.getId() == null ? CommonStatusEnum.PENDING.getValue() : poQuatation.getStatus());
         List<PoQuatationLineItemRequestModel> itemModels = new ArrayList<>();
-        lineItemString(requestModel, userId, poQuatation, itemModels);
+        lineItemString(requestModel, poQuatation, itemModels);
 
         return poQuatation;
     }
@@ -296,7 +296,7 @@ public class PoQuatationRestHelper {
         poQuatation.setTotalVatAmount(poQuatationRequestModel.getTotalVatAmount());
         poQuatation.setTotalExciseAmount(poQuatationRequestModel.getTotalExciseAmount());
         List<PoQuatationLineItemRequestModel> itemModels = new ArrayList<>();
-        lineItemString(poQuatationRequestModel, userId, poQuatation, itemModels);
+        lineItemString(poQuatationRequestModel, poQuatation, itemModels);
         return poQuatation;
     }
     public List<PoQuatationLineItem> getLineItems(List<PoQuatationLineItemRequestModel> modelList, PoQuatation poQuatation) {
@@ -431,7 +431,7 @@ public class PoQuatationRestHelper {
         }
 
         if (poQuatation.getSupplierId() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-            mailUtility.triggerEmailOnBackground2(subject,content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+            mailUtility.triggerEmailOnBackground2(subject,content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
                     EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{poQuatation.getSupplierId().getBillingEmail()},
                     true);
             User user = userService.findByPK(userId);
@@ -1521,7 +1521,7 @@ public class PoQuatationRestHelper {
         }
 
         if (poQuatation.getSupplierId() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-            mailUtility.triggerEmailOnBackground2(subject,content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+            mailUtility.triggerEmailOnBackground2(subject,content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
                     EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{poQuatation.getSupplierId().getBillingEmail()},
                     true);
             User user = userService.findByPK(userId);
@@ -1803,7 +1803,7 @@ public class PoQuatationRestHelper {
         }
 
         if (poQuatation.getSupplierId() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-            mailUtility.triggerEmailOnBackground2(subject,content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+            mailUtility.triggerEmailOnBackground2(subject,content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
                     EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{poQuatation.getSupplierId().getBillingEmail()},
                     true);
             User user = userService.findByPK(userId);
@@ -2072,7 +2072,7 @@ public class PoQuatationRestHelper {
         poQuatation.setPoQuatationLineItems(itemModels);
         return poQuatation;
     }
-    public Invoice createSupplierInvoiceForGrn(PoQuatation poQuatation, Integer userId) {
+    public Invoice createSupplierInvoiceForGrn(PoQuatation poQuatation) {
         Invoice supplierInvoice= new Invoice();
         supplierInvoice.setType(1);
         String nxtInvoiceNo = customizeInvoiceTemplateService.getLastInvoice(1);
@@ -2210,7 +2210,7 @@ public class PoQuatationRestHelper {
         }
         poQuatation.setStatus(poQuatation.getId() == null ? CommonStatusEnum.PENDING.getValue() : poQuatation.getStatus());
         List<PoQuatationLineItemRequestModel> itemModels = new ArrayList<>();
-        lineItemString(requestModel, userId, poQuatation, itemModels);
+        lineItemString(requestModel, poQuatation, itemModels);
         return poQuatation;
     }
     public PoQuatationRequestModel getQuotationModel(PoQuatation quotation) {
@@ -2426,7 +2426,7 @@ public class PoQuatationRestHelper {
         }
 
      if (poQuatation.getSupplierId() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-        mailUtility.triggerEmailOnBackground2(subject,content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+        mailUtility.triggerEmailOnBackground2(subject,content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
                 EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{poQuatation.getSupplierId().getBillingEmail()},
                 true);
         User user = userService.findByPK(userId);

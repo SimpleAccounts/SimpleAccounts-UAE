@@ -36,8 +36,7 @@ public class ProductMigrationParser {
     }
 
     private ProductMigrationParser() {
-
-                boolean loaded = init();
+        init();
 
     }
 

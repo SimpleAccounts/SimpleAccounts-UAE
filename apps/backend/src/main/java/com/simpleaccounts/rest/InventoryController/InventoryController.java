@@ -55,7 +55,7 @@ public class InventoryController {
     public ResponseEntity<PaginationResponseModel> getInventoryProductList(InventoryRequestFilterModel filterModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
+            java.util.Objects.requireNonNull(userService.findByPK(userId));
             Map<InventoryFilterEnum, Object> filterDataMap = new EnumMap<>(InventoryFilterEnum.class);
             filterDataMap.put(InventoryFilterEnum.PURCHASE_ORDER, filterModel.getQuantityOrdered());
             filterDataMap.put(InventoryFilterEnum.STOCK_IN_HAND, filterModel.getStockInHand());

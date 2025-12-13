@@ -531,7 +531,7 @@ public class PayrollRestHepler {
         return paginationResponseModel;
     }
 
-    public EmployeeBankDetails getEmployeeBankDetailsEntity(EmployeePersistModel employeePersistModel, Employee employee, Integer userId) {
+    public EmployeeBankDetails getEmployeeBankDetailsEntity(EmployeePersistModel employeePersistModel, Employee employee) {
 
         EmployeeBankDetails employeeBankDetails;
         Map<String, Object> param = new HashMap<>();
@@ -572,7 +572,7 @@ public class PayrollRestHepler {
         return employeeBankDetails;
     }
 
-    public Employment getEmploymentsEntity(EmployeePersistModel employeePersistModel, Employee employee, Integer userId) {
+    public Employment getEmploymentsEntity(EmployeePersistModel employeePersistModel, Employee employee) {
 
         Employment employment;
         Map<String, Object> param = new HashMap<>();
@@ -1175,7 +1175,7 @@ public class PayrollRestHepler {
         }
     }
 
-    public void deleteSalaryComponentRow(Integer employeeId, Integer componentId) {
+    public void deleteSalaryComponentRow(Integer componentId) {
 
         employeeSalaryComponentRelationService.delete(employeeSalaryComponentRelationService.findByPK(componentId));
 
@@ -1517,7 +1517,7 @@ public class PayrollRestHepler {
         }
     }
 
-    public void rejectPayroll(User user, Integer payrollId,String comment,HttpServletRequest request) {
+    public void rejectPayroll(Integer payrollId, String comment, HttpServletRequest request) {
 
         Payroll payroll = payrollRepository.findById(payrollId);
         payroll.setStatus("Rejected");
@@ -1641,7 +1641,7 @@ public class PayrollRestHepler {
 
     }
 
-    public void convertPayrollToPaid(List<Integer> payEmpListIds, User user) {
+    public void convertPayrollToPaid(List<Integer> payEmpListIds) {
 
         for(Integer payrollId:payEmpListIds) {
 
@@ -1888,12 +1888,12 @@ public class PayrollRestHepler {
 
         payroll.setStatus("Voided");
         payroll.setComment(postingRequestModel.getComment()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         );
-        sendVoidMail(payroll, Integer.valueOf(payroll.getGeneratedBy()),comment,request);
+        sendVoidMail(payroll, Integer.valueOf(payroll.getGeneratedBy()), request);
 
         payrollRepository.save(payroll);
     }
 
-    public boolean sendVoidMail( Payroll payroll,Integer generatorId ,String comment,HttpServletRequest request) {
+    public boolean sendVoidMail(Payroll payroll, Integer generatorId, HttpServletRequest request) {
         User user = userService.findByPK(generatorId);
         String image = "";
         if (user.getCompany() != null && user.getCompany().getCompanyLogo() != null) {

@@ -457,7 +457,7 @@ PoQuatationController {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             PoQuatation poQuatation=poQuatationService.findByPK(id);
             if (poQuatation!=null) {
-                Invoice invoice = poQuatationRestHelper.createSupplierInvoiceForGrn(poQuatation, userId);
+                Invoice invoice = poQuatationRestHelper.createSupplierInvoiceForGrn(poQuatation);
                 invoiceService.persist(invoice);
                 PostingRequestModel postingRequestModel = new PostingRequestModel();
                 postingRequestModel.setPostingRefId(invoice.getId());
@@ -661,7 +661,7 @@ PoQuatationController {
     public ResponseEntity<Object> changeStatus(@RequestParam(value = "id") Integer id,@RequestParam(value = "status")String status, HttpServletRequest request) {
         try {
             SimpleAccountsMessage message = null;
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            jwtTokenUtil.getUserIdFromHttpRequest(request);
 
             PoQuatation poQuatation = poQuatationService.findByPK(id);
             /**

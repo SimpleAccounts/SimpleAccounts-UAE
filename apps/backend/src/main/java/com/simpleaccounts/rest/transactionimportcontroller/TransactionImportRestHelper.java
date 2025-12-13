@@ -169,7 +169,7 @@ public class TransactionImportRestHelper {
 							transaction.setDate("date");
 							// ... (rest of the code)
 							DateFormat formatter = new SimpleDateFormat(dateFormat, Locale.US);
-							Date dateTranscation = (Date) formatter.parse(date);
+							formatter.parse(date);
 							transaction.setDate("");
 							if (!drAmount.isEmpty()) {
 								transaction.setDebit("debit");

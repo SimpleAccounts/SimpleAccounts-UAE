@@ -505,7 +505,7 @@ class FinancialReportingTest {
 
         KpiMetrics calculateKpis(LocalDate startDate, LocalDate endDate) {
             ProfitLossReport pl = generateProfitLoss(startDate, endDate);
-            BalanceSheet bs = generateBalanceSheet(endDate);
+            generateBalanceSheet(endDate);
 
             long days = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
 

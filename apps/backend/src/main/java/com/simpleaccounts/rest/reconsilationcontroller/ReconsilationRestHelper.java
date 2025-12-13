@@ -121,6 +121,7 @@ public class ReconsilationRestHelper {
 //Todo
 	public Journal getByTransactionType(Integer transactionCategoryCode, BigDecimal amount, int userId,
 										Transaction transaction, boolean isdebitFromBank, BigDecimal exchangeRate) {
+		logger.debug("getByTransactionType tcCode={}, amount={}", transactionCategoryCode, amount);
 
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
@@ -167,6 +168,7 @@ public class ReconsilationRestHelper {
 	public Journal getByTransactionType(@ModelAttribute TransactionPresistModel transactionPresistModel,
 										Integer transactionCategoryCode, int userId,
 										Transaction transaction, Expense expense) {
+		logger.debug("getByTransactionType (expense) tcCode={}", transactionCategoryCode);
 
 		BigDecimal exchangeRate = transactionPresistModel.getExchangeRate();
 		if (exchangeRate == null) {
@@ -251,6 +253,7 @@ public class ReconsilationRestHelper {
 	public Journal getByTransactionTypeForPayroll(@ModelAttribute TransactionPresistModel transactionPresistModel,
 										Integer transactionCategoryCode, int userId,
 										Transaction transaction, Expense expense,BigDecimal amount) {
+		logger.debug("getByTransactionTypeForPayroll tcCode={}", transactionCategoryCode);
 
 		BigDecimal exchangeRate = transactionPresistModel.getExchangeRate();
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();

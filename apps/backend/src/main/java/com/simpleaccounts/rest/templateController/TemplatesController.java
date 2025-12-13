@@ -43,7 +43,7 @@ public class TemplatesController {
     @PostMapping(value = "/updateMailTemplateTheme")
     public ResponseEntity<String> update(@RequestParam(value = "templateId") Integer templateId, HttpServletRequest request) {
         try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            jwtTokenUtil.getUserIdFromHttpRequest(request);
             mailThemeTemplatesService.updateMailTheme(templateId);
 
 //

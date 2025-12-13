@@ -110,8 +110,6 @@ public class ContactServiceImpl extends ContactService {
     //CSI
     @Override
     public boolean sendInvoiceThankYouMail(Contact contact, Integer invoiceType, String number, String amount, String date, BigDecimal dueAmount, HttpServletRequest request) {
-        long millis=System.currentTimeMillis();
-
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         User user=userService.findByPK(userId);
         String image="";

@@ -54,13 +54,13 @@ public class EmployeeDesignationController {
     public ResponseEntity<String> saveEmployeeDesignation(@ModelAttribute EmployeeDesignationPersistModel employeeDesignationPersistModel, HttpServletRequest request)
     {
         try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            jwtTokenUtil.getUserIdFromHttpRequest(request);
 
             EmployeeDesignation employeeDesignation = employeeDesignationRestHelper.getEmployeeDesignationEntity(employeeDesignationPersistModel);
 
             employeeDesignationService.persist(employeeDesignation);
 
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -73,12 +73,12 @@ public class EmployeeDesignationController {
     @PostMapping(value = "/updateEmployeeDesignation")
     public ResponseEntity<String> updateEmployeeDesignation(@ModelAttribute EmployeeDesignationPersistModel employeeDesignationPersistModel, HttpServletRequest request) {
         try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            jwtTokenUtil.getUserIdFromHttpRequest(request);
 
             EmployeeDesignation employeeDesignation = employeeDesignationRestHelper.getEmployeeDesignationEntity(employeeDesignationPersistModel);
 
             employeeDesignationService.update(employeeDesignation);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -110,18 +110,18 @@ public class EmployeeDesignationController {
             if (employeeDesignation != null && employeeList.size()==0) {
                 employeeDesignation.setDeleteFlag(Boolean.TRUE);
                 employeeDesignationService.update(employeeDesignation, employeeDesignation.getId());
-                return new ResponseEntity(HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.OK);
             }else
             /**
              * “already exists http status code”
              *  The appropriate status code for "Already Exists" would be
              * '409 Conflict'
              */
-                return new ResponseEntity(HttpStatus.CONFLICT);
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
 
         } catch (Exception e) {
             logger.error(ERROR, e);
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -134,7 +134,9 @@ public class EmployeeDesignationController {
             if (employeeDesignation == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity(employeeDesignationRestHelper.getEmployeeDesignationModel(employeeDesignation), HttpStatus.OK);
+                return new ResponseEntity<>(
+                        employeeDesignationRestHelper.getEmployeeDesignationModel(employeeDesignation),
+                        HttpStatus.OK);
             }
         } catch (Exception e) {
             logger.error(ERROR, e);
@@ -163,7 +165,7 @@ public class EmployeeDesignationController {
     @GetMapping(value = "/EmployeeDesignationList")
     public ResponseEntity<PaginationResponseModel> getEmployeeDesignationList(PayRollFilterModel filterModel,
                                                                          HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+        jwtTokenUtil.getUserIdFromHttpRequest(request);
         Map<Object, Object> filterDataMap = new HashMap<>();
         PaginationResponseModel paginationResponseModel = employeeDesignationService.getEmployeeDesignationList(filterDataMap, filterModel);
         if (paginationResponseModel != null) {

@@ -100,7 +100,7 @@ public class EmailService {
         }
         return null;
     }
-    public void sendCustomizedEmail(EmailContentModel emailContentModel, Integer userId, HttpServletRequest request) {
+    public void sendCustomizedEmail(EmailContentModel emailContentModel) {
         //To save the uploaded file in
         List<MultipartFile> files = emailContentModel.getAttachmentFiles();
 
@@ -331,8 +331,6 @@ public class EmailService {
         //End of FreeMaker
 
         try {
-            String emailBody = quotationEmailBody.getPath();
-
             byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + QUOTATION_TEMPLATE).getURI()));
 
           Currency quotationCurrencyRelation = quotation.getCurrency();
@@ -413,8 +411,6 @@ public class EmailService {
         //End of FreeMaker
 
         try {
-            String emailBody = quotationEmailBody.getPath();
-
             byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + PURCHASE_ORDER_TEMPLATE).getURI()));
 
             Currency quotationCurrencyRelation = quotation.getCurrency();
@@ -518,7 +514,7 @@ public class EmailService {
         }
         return null;
     }
-    public String updateInvoiceLineItem(int size, MailThemeTemplates invoiceEmailBody, EmailContentRequestModel postingRequestModel)  {
+    public String updateInvoiceLineItem(int size, MailThemeTemplates invoiceEmailBody)  {
         StringBuilder productRowBuilder = new StringBuilder();
         String productRowTemplate = PRODUCT_ROW_TEMPLATE;
 
@@ -555,7 +551,7 @@ public class EmailService {
 
         return emailBodyBuilder.toString();
     }
-    public String updateCreditNoteLineItem(int size, MailThemeTemplates invoiceEmailBody, EmailContentRequestModel postingRequestModel)  {
+    public String updateCreditNoteLineItem(int size, MailThemeTemplates invoiceEmailBody)  {
         StringBuilder productRowBuilder = new StringBuilder();
         String productRowTemplate = PRODUCT_ROW_TEMPLATE;
 
@@ -642,7 +638,7 @@ public class EmailService {
         }
         return null;
     }
-    public String updatePoQuotationLineItem(int size, MailThemeTemplates invoiceEmailBody, EmailContentRequestModel postingRequestModel)  {
+    public String updatePoQuotationLineItem(int size, MailThemeTemplates invoiceEmailBody)  {
         StringBuilder productRowBuilder = new StringBuilder();
         String productRowTemplate = PRODUCT_ROW_TEMPLATE;
 

@@ -153,7 +153,7 @@ public class CurrencyConversionController{
             SimpleAccountsMessage message = null;
             CurrencyConversion currencyConversion = currencyExchangeService.findByPK(id);
             if (currencyConversion != null) {
-                Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+                jwtTokenUtil.getUserIdFromHttpRequest(request);
                 currencyConversion.setCreatedDate(LocalDateTime.now());
                 currencyConversion.setDeleteFlag(true);
                 currencyExchangeService.update(currencyConversion);

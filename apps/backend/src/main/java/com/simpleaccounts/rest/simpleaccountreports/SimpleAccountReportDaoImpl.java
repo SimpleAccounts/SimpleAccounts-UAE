@@ -249,6 +249,7 @@ public class SimpleAccountReportDaoImpl extends AbstractDao<Integer, SalesByCust
     }
 
     public ResponseModelStatementOfAccounts getStatementOfAccounts(ReportRequestModel requestModel,Integer contactId){
+        LOGGER.debug("getStatementOfAccounts requestModel={}", requestModel);
 
         ResponseModelStatementOfAccounts responseModelStatementOfAccounts = new ResponseModelStatementOfAccounts();
         List<StatementOfAccountsModel> statementOfAccountsModelList = new ArrayList<>();
@@ -396,6 +397,7 @@ public class SimpleAccountReportDaoImpl extends AbstractDao<Integer, SalesByCust
     }
 
     public ResponseModelStatementOfAccounts getsupplierStatementOfAccounts(ReportRequestModel requestModel,Integer contactId){
+        LOGGER.debug("getsupplierStatementOfAccounts requestModel={}", requestModel);
 
         ResponseModelStatementOfAccounts responseModelStatementOfAccounts = new ResponseModelStatementOfAccounts();
         List<StatementOfAccountsModel> statementOfAccountsModelList = new ArrayList<>();
@@ -1307,12 +1309,10 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
     @Override
     public FtaAuditResponseModel getFtaAuditReport(FtaAuditRequestModel requestModel) {
         FtaAuditResponseModel fta_response = new FtaAuditResponseModel();
-        Integer lineNo = 1;
         BigDecimal purchaseTotal = new BigDecimal(0);
         BigDecimal supplyTotal = new BigDecimal(0);
         BigDecimal supplierVATTotal = new BigDecimal(0);
         BigDecimal customerVATTotal = new BigDecimal(0);
-        BigDecimal TransactionCountTotal = new BigDecimal(0);
         BigDecimal TotalDebit = new BigDecimal(0);
         BigDecimal TotalCredit =  new BigDecimal(0);
         List<SupplierSupplyListingResponseModel> supplierSupplyListingRes = new LinkedList<>();
@@ -1533,7 +1533,6 @@ public InvoiceDetailsResponseModel getInvoiceDetails(ReportRequestModel requestM
         BigDecimal supplyTotal = new BigDecimal(0);
         BigDecimal supplierExciseTotal = new BigDecimal(0);
         BigDecimal customerExciseTotal = new BigDecimal(0);
-        BigDecimal TransactionCountTotal = new BigDecimal(0);
         BigDecimal TotalDebit = new BigDecimal(0);
         BigDecimal TotalCredit =  new BigDecimal(0);
         List<SupplierSupplyListingResponseModel> supplierSupplyListingRes = new LinkedList<>();

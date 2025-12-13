@@ -51,7 +51,7 @@ public class ReportsConfigurationRestController {
     public ResponseEntity<Object> update(@RequestBody ReportsConfigurationModel model, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
+            java.util.Objects.requireNonNull(userService.findByPK(userId));
             ReportsConfiguration reportsConfiguration = new ReportsConfiguration();
             if(model.getId()!=null){
                 reportsConfiguration = reportsColumnConfigurationRepository.findById(model.getId()).get();
@@ -63,7 +63,7 @@ public class ReportsConfigurationRestController {
                 ObjectMapper objectMapper = new ObjectMapper();
                 String jsonString = objectMapper.writeValueAsString(model.getColumnNames());
                 if(jsonString!=null){
-                    reportsConfiguration.setColumnNames(jsonString = model.getColumnNames().replace("\\", ""));
+                    reportsConfiguration.setColumnNames(model.getColumnNames().replace("\\", ""));
                 }
             }
             reportsConfiguration.setLastUpdatedBy(userId);

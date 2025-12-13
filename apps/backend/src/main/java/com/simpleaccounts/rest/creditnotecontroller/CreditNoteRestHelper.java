@@ -559,7 +559,7 @@ public class CreditNoteRestHelper {
             Product product = productService.findByPK(lineItem.getProduct().getProductID());
             if (Boolean.TRUE.equals(product.getIsInventoryEnabled())) {
                 if (lineItem.getCreditNote().getType() == 7) {
-                    handleCreditNoteInventory(lineItem, product, userId);
+                    handleCreditNoteInventory(lineItem);
                 } else {
                     handleDebitNoteInventory(lineItem, product, lineItem.getCreditNote().getContact(), userId);
                 }
@@ -586,7 +586,7 @@ public class CreditNoteRestHelper {
         }
     }
 
-    private void handleCreditNoteInventory(CreditNoteLineItem model, Product product, Integer userId) {
+    private void handleCreditNoteInventory(CreditNoteLineItem model) {
         Map<String, Object> relationMap = new HashMap<>();
         relationMap.put(JSON_KEY_CREDIT_NOTE, model.getCreditNote());
         CreditNoteInvoiceRelation creditNoteInvoiceRelation = creditNoteInvoiceRelationService.findByAttributes(relationMap).get(0);
@@ -862,10 +862,10 @@ public class CreditNoteRestHelper {
         return PageRequest.of(pageNo, pageSize,Sort.by("createdDate").descending());
     }
 
-    public List<CreditNoteListModel> getListModel(PaginationResponseModel responseModel, Integer contact,BigDecimal amount,
-                                                  int pageNo, int pageSize, boolean paginationDisable,
-                                                  String sortOrder, String sortingCol,Integer userId,Integer type) {
-        Pageable paging = getCreditNotePageableRequest(pageNo, pageSize, sortOrder, sortingCol);
+    public List<CreditNoteListModel> getListModel(PaginationResponseModel responseModel, Integer contact, BigDecimal amount,
+                                                  int pageNo, int pageSize, String sortOrder, String sortingCol,
+                                                  Integer type) {
+        Pageable paging = getCreditNotePageableRequest(pageNo, pageSize);
         List<CreditNoteListModel> creditNoteListModels = new ArrayList<>();
         List<CreditNote> creditNoteList;
         Pageable pageable =  getTCNPageableRequest(pageNo, pageSize, sortOrder,sortingCol);
@@ -932,7 +932,7 @@ public class CreditNoteRestHelper {
         responseModel.setCount((int)page.getTotalElements());
         return page.getContent();
     }
-    private Pageable getCreditNotePageableRequest(int pageNo, int pageSize, String sortOrder, String sortingCol) {
+    private Pageable getCreditNotePageableRequest(int pageNo, int pageSize) {
         return PageRequest.of(pageNo, pageSize,Sort.by("created_date").descending());
     }
 
@@ -1006,7 +1006,7 @@ public class CreditNoteRestHelper {
     }
 
     public Journal refundPosting(PostingRequestModel postingRequestModel, Integer userId,
-                                 TransactionCategory depositToTransactionCategory, Boolean isCNWithoutProduct, Integer contactId,Date paymentDate) {
+                                 TransactionCategory depositToTransactionCategory, Date paymentDate) {
         List<JournalLineItem> journalLineItemList = new ArrayList<>();
         CreditNote creditNote = null;
         creditNote = creditNoteRepository.findById(postingRequestModel.getPostingRefId()).get();
@@ -1345,7 +1345,7 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         // Post journal
         Journal journal = refundPosting(
                 new PostingRequestModel(requestModel.getCreditNoteId(), requestModel.getAmountReceived()), userId,
-                transactionCategory, requestModel.getIsCreatedWithoutInvoice(), requestModel.getContactId(),requestModel.getPaymentDate());
+                transactionCategory, requestModel.getPaymentDate());
         journalService.persist(journal);
 
         if (requestModel.getAmountReceived().compareTo(creditNote.getDueAmount())==0){
@@ -1533,7 +1533,7 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
             // Post journal
             Journal journal = refundPosting(
                     new PostingRequestModel(requestModel.getCreditNoteId(), requestModel.getAmountReceived()), userId,
-                    transactionCategory, requestModel.getIsCNWithoutProduct(), requestModel.getContactId(),requestModel.getPaymentDate());
+                    transactionCategory, requestModel.getPaymentDate());
             journalService.persist(journal);
             CreditNote creditNote = creditNoteRepository.findById(requestModel.getCreditNoteId()).get();
             if (requestModel.getAmountReceived().compareTo(creditNote.getDueAmount())==0){
@@ -1709,7 +1709,7 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         return requestModel;
     }
 
-    public Journal reverseCreditNotePosting(PostingRequestModel postingRequestModel, Integer userId) {
+    public Journal reverseCreditNotePosting(PostingRequestModel postingRequestModel) {
         //Create Reverse Journal Entries For Posted  Credit Note
         Journal newjournal = null;
         List<JournalLineItem> creditNoteJLIList = journalLineItemRepository.findAllByReferenceIdAndReferenceType
@@ -1760,7 +1760,7 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         return newjournal;
     }
 
-    public Journal reverseDebitNotePosting(PostingRequestModel postingRequestModel, Integer userId) {
+    public Journal reverseDebitNotePosting(PostingRequestModel postingRequestModel) {
         //Create Reverse Journal Entries For Posted  Credit Note
         Journal newjournal = null;
         List<JournalLineItem> creditNoteJLIList = journalLineItemRepository.findAllByReferenceIdAndReferenceType

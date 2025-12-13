@@ -121,7 +121,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             param.put("closingBalanceDate", transaction.getTransactionDate());
 
             TransactionCategoryClosingBalance balance = getFirstElement(findByAttributes(param));
-            BigDecimal closingBalance = BigDecimal.ZERO;
+            BigDecimal closingBalance;
             BigDecimal bankClosingBalance =BigDecimal.ZERO;
             BigDecimal bankOpeningBalance = BigDecimal.ZERO;
             if (balance == null) {
@@ -177,7 +177,6 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             {
                 param = new HashMap<>();
                 param.put(JSON_KEY_TRANSACTION_CATEGORY, category);
-                closingBalance = balance.getClosingBalance();
 	                TransactionCategoryClosingBalance lastBalance = transactionCategoryClosingBalanceDao.getLastClosingBalanceByDate(category);
                 if(lastBalance!=null && lastBalance.getClosingBalance() != balance.getClosingBalance() &&
                 !(lastBalance.getClosingBalanceDate().isEqual(balance.getClosingBalanceDate())))

@@ -175,7 +175,6 @@ public class UserController{
 	public ResponseEntity<String> save(@ModelAttribute UserModel selectedUser, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			boolean isEmailPresent = false;
 			boolean isUserNew = true;
 			User creatingUser = userService.findByPK(userId);
 			String password = selectedUser.getPassword();
@@ -186,50 +185,47 @@ public class UserController{
 			if (isUserNew) {
 				Optional<User> userOptional = userService.getUserByEmail(selectedUser.getEmail());
 				if (userOptional.isPresent()) {
-					isEmailPresent = true;
 					return new ResponseEntity<>("Email Id already Exist", HttpStatus.FORBIDDEN);
 				}
 			}
-			if (!isEmailPresent) {
 
-				if (password != null && !password.trim().isEmpty()) {
-					BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-					String encodedPassword = passwordEncoder.encode(password);
-					selectedUser.setPassword(encodedPassword);
-				}
-				User user = userRestHelper.getEntity(selectedUser);
-				user.setCompany(creatingUser.getCompany());
-				user.setCreatedBy(creatingUser.getUserId());
-				user.setLastUpdatedBy(creatingUser.getUserId());
-				if (user.getUserId() == null) {
-					userService.persist(user);
-					if (selectedUser.getEmployeeId()!=null) {
-						Employee employee = null;
-						if (selectedUser.getEmployeeId() != null) {
-							employee = employeeService.findByPK(selectedUser.getEmployeeId());
-							employeeUserRelationHelper.createUserForEmployee(employee, user);
-						}
+			if (password != null && !password.trim().isEmpty()) {
+				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+				String encodedPassword = passwordEncoder.encode(password);
+				selectedUser.setPassword(encodedPassword);
+			}
+			User user = userRestHelper.getEntity(selectedUser);
+			user.setCompany(creatingUser.getCompany());
+			user.setCreatedBy(creatingUser.getUserId());
+			user.setLastUpdatedBy(creatingUser.getUserId());
+			if (user.getUserId() == null) {
+				userService.persist(user);
+				if (selectedUser.getEmployeeId()!=null) {
+					Employee employee = null;
+					if (selectedUser.getEmployeeId() != null) {
+						employee = employeeService.findByPK(selectedUser.getEmployeeId());
+						employeeUserRelationHelper.createUserForEmployee(employee, user);
 					}
-
-					userService.createPassword(user,selectedUser,creatingUser);
-					EmailLogs emailLogs = new EmailLogs();
-					emailLogs.setEmailDate(LocalDateTime.now());
-					emailLogs.setEmailTo(selectedUser.getEmail());
-					emailLogs.setEmailFrom(creatingUser.getUserEmail());
-					String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
-							.replacePath(null)
-							.build()
-							.toUriString();
-					System.out.println(baseUrl);
-					emailLogs.setModuleName("USER");
-					emailLogs.setBaseUrl(baseUrl);
-					emaiLogsService.persist(emailLogs);
-
-					return new ResponseEntity<>("User Profile saved successfully", HttpStatus.OK);
-				} else {
-					userService.update(user, user.getUserId());
-					return new ResponseEntity<>("User Profile updated successfully", HttpStatus.OK);
 				}
+
+				userService.createPassword(user,selectedUser,creatingUser);
+				EmailLogs emailLogs = new EmailLogs();
+				emailLogs.setEmailDate(LocalDateTime.now());
+				emailLogs.setEmailTo(selectedUser.getEmail());
+				emailLogs.setEmailFrom(creatingUser.getUserEmail());
+				String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
+						.replacePath(null)
+						.build()
+						.toUriString();
+				System.out.println(baseUrl);
+				emailLogs.setModuleName("USER");
+				emailLogs.setBaseUrl(baseUrl);
+				emaiLogsService.persist(emailLogs);
+
+				return new ResponseEntity<>("User Profile saved successfully", HttpStatus.OK);
+			} else {
+				userService.update(user, user.getUserId());
+				return new ResponseEntity<>("User Profile updated successfully", HttpStatus.OK);
 			}
 		} catch (Exception ex) {
 			logger.error(ERROR, ex);
@@ -405,7 +401,7 @@ public class UserController{
 
 		try {
 			SimpleAccountsMessage message= null;
-			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userService.getUserPassword(userModel.getId());
 			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			String encodedPassword = passwordEncoder.encode(userModel.getCurrentPassword());

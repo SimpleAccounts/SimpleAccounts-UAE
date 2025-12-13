@@ -60,12 +60,7 @@ public class MigrationServiceImpl implements MigrationService {
 	@Override
 	public List<DataMigrationRespModel> getMigrationSummary(String fileLocation, Integer userId, String migFromDate)
 			throws IOException {
-
-		List<DataMigrationRespModel> migrationSummaryList =  new ArrayList<>();
-		
-		migrationSummaryList = zohoMigrationService.getMigrationSummary(fileLocation, userId, migFromDate);
-				
-		return migrationSummaryList;
+		return zohoMigrationService.getMigrationSummary(fileLocation, userId, migFromDate);
 	}
 
 	@Override

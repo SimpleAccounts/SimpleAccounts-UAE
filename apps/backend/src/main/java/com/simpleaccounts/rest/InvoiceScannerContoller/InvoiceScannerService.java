@@ -372,7 +372,7 @@ public class InvoiceScannerService {
             VatCategory vatCategory = vatCategoryService.findByPK(model.getVatCategoryId());
             expenseBuilder.vatCategory(vatCategory);
             BigDecimal vatPercent =  vatCategory.getVat();
-            BigDecimal vatAmount = BigDecimal.ZERO;
+            BigDecimal vatAmount;
             if (Boolean.TRUE.equals(model.getExclusiveVat())){
                 vatAmount = calculateVatAmount(vatPercent,model.getExpenseAmount());
             }

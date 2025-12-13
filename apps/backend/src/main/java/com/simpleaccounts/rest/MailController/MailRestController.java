@@ -70,10 +70,9 @@ public class MailRestController {
     public ResponseEntity<Object> sendMail(@ModelAttribute EmailContentModel emailContentModel, HttpServletRequest request) {
         try {
             //auth
-            SimpleAccountsMessage message = null;
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             //service call
-            emailService.sendCustomizedEmail(emailContentModel, userId,request);
+            emailService.sendCustomizedEmail(emailContentModel);
             Integer type = emailContentModel.getType();
             Journal journal = null;
             switch (type)
