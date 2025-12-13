@@ -172,6 +172,10 @@ public class ZohoMigrationService {
         List<DataMigrationRespModel> list = new ArrayList<>();
         ProductMigrationParser parser = ProductMigrationParser.getInstance();
         Product product = parser.getAppVersionsToProductMap().get(productName + "_v" + version);
+        if (product == null) {
+            LOG.error("Product configuration not found for: {} version: {}", productName, version);
+            return list;
+        }
 	        List<String> files = getFilesPresent(fileLocation);
 	        
 	        if(files != null)
