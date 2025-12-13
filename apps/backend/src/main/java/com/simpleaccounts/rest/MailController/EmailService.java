@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
@@ -141,7 +142,12 @@ public class EmailService {
         String subject = "";
         String body = "";
         User user = userService.findByPK(userId);
-        Invoice invoice = invoiceRepository.findById(id).get();
+        Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
+        if (!optionalInvoice.isPresent()) {
+            logger.error("Invoice not found for id: {}", id);
+            return null;
+        }
+        Invoice invoice = optionalInvoice.get();
         MailThemeTemplates invoiceEmailBody = mailThemeTemplatesService.getMailThemeTemplate(moduleId);
         Map<String, String> map = invoiceRestHelper.getInvoiceData(invoice, userId);
         String content = "";
@@ -231,8 +237,18 @@ public class EmailService {
         String subject = "";
         String body = "";
         User user = userService.findByPK(userId);
-        CreditNote creditNote = creditNoteRepository.findById(id).get();
-        Invoice invoice = invoiceRepository.findById(creditNote.getInvoiceId()).get();
+        Optional<CreditNote> optionalCreditNote = creditNoteRepository.findById(id);
+        if (!optionalCreditNote.isPresent()) {
+            logger.error("CreditNote not found for id: {}", id);
+            return null;
+        }
+        CreditNote creditNote = optionalCreditNote.get();
+        Optional<Invoice> optionalInvoice = invoiceRepository.findById(creditNote.getInvoiceId());
+        if (!optionalInvoice.isPresent()) {
+            logger.error("Invoice not found for CreditNote id: {}", id);
+            return null;
+        }
+        Invoice invoice = optionalInvoice.get();
         MailThemeTemplates creditNoteEmailBody = mailThemeTemplatesService.getMailThemeTemplate(moduleId);
         Map<String, String> map = invoiceRestHelper.getInvoiceData(invoice, userId);
         String content = "";
@@ -323,7 +339,12 @@ public class EmailService {
         String subject = "";
         String body = "";
         User user = userService.findByPK(userId);
-        PoQuatation quotation = poQuatationRepository.findById(id).get();
+        Optional<PoQuatation> optionalQuotation = poQuatationRepository.findById(id);
+        if (!optionalQuotation.isPresent()) {
+            logger.error("Quotation not found for id: {}", id);
+            return null;
+        }
+        PoQuatation quotation = optionalQuotation.get();
         MailThemeTemplates quotationEmailBody = mailThemeTemplatesService.getMailThemeTemplate(moduleId);
         Map<String, String> map = poQuatationRestHelper.getQuotationData(quotation, userId);
         String content = "";
@@ -418,7 +439,12 @@ public class EmailService {
         String subject = "";
         String body = "";
         User user = userService.findByPK(userId);
-        PoQuatation quotation = poQuatationRepository.findById(id).get();
+        Optional<PoQuatation> optionalQuotation = poQuatationRepository.findById(id);
+        if (!optionalQuotation.isPresent()) {
+            logger.error("Purchase Order not found for id: {}", id);
+            return null;
+        }
+        PoQuatation quotation = optionalQuotation.get();
         MailThemeTemplates quotationEmailBody = mailThemeTemplatesService.getMailThemeTemplate(moduleId);
         Map<String, String> map = poQuatationRestHelper.getPOData(quotation, userId);
         String content = "";
