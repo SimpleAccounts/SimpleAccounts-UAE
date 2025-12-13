@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.dao.CompanyTypeDao;
+import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.CompanyType;
 import com.simpleaccounts.exceptions.ServiceException;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ class CompanyTypeServiceImplTest {
     @DisplayName("Should return DAO instance")
     void getDao_shouldReturnDaoInstance_whenCalled() {
         // Act
-        var result = companyTypeService.getDao();
+        Dao<Integer, CompanyType> result = companyTypeService.getDao();
 
         // Assert
         assertThat(result).isNotNull();
@@ -202,7 +203,7 @@ class CompanyTypeServiceImplTest {
     @DisplayName("Should return DAO of correct type")
     void getDaoReturnsCorrectType() {
         // Act
-        var result = companyTypeService.getDao();
+        Dao<Integer, CompanyType> result = companyTypeService.getDao();
 
         // Assert
         assertThat(result).isInstanceOf(CompanyTypeDao.class);

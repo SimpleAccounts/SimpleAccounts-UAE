@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.RoleModuleDao;
 import com.simpleaccounts.entity.Role;
 import com.simpleaccounts.entity.RoleModuleRelation;
@@ -33,7 +34,7 @@ class RoleModuleServiceImplTest {
     @DisplayName("Should return DAO instance")
     void getDaoReturnsRoleModuleDao() {
         // Act
-        var result = roleModuleService.getDao();
+        Dao<Integer, SimpleAccountsModules> result = roleModuleService.getDao();
 
         // Assert
         assertThat(result).isNotNull();
@@ -208,7 +209,7 @@ class RoleModuleServiceImplTest {
     @DisplayName("Should return DAO of correct type")
     void getDaoReturnsCorrectType() {
         // Act
-        var result = roleModuleService.getDao();
+        Dao<Integer, SimpleAccountsModules> result = roleModuleService.getDao();
 
         // Assert
         assertThat(result).isInstanceOf(RoleModuleDao.class);
@@ -262,4 +263,3 @@ class RoleModuleServiceImplTest {
         return relations;
     }
 }
-

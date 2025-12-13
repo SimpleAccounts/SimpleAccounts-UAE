@@ -138,7 +138,6 @@ class CompanyControllerTest {
         Company company = createCompany(1, "Test Company");
         user.setCompany(company);
         CompanyModel companyModel = new CompanyModel();
-        companyModel.setCompanyId(1);
         companyModel.setCompanyName("Test Company");
 
         when(jwtTokenUtil.getUserIdFromHttpRequest(any()))
@@ -329,7 +328,6 @@ class CompanyControllerTest {
     void getByIdReturnsCompany() throws Exception {
         Company company = createCompany(1, "Test Company");
         CompanyModel model = new CompanyModel();
-        model.setCompanyId(1);
         model.setCompanyName("Test Company");
 
         when(companyService.findByPK(1))
@@ -398,7 +396,7 @@ class CompanyControllerTest {
         Country country = new Country();
         country.setCountryCode(code);
         country.setCountryName(name);
-        country.setCountryIsoCode(isoCode);
+        country.setIsoAlpha3Code(isoCode);
         return country;
     }
 

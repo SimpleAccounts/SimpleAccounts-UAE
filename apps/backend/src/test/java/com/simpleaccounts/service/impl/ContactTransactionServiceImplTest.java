@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.dao.ContactTransactionCategoryRelationDao;
+import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.ContactTransactionCategoryRelation;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
@@ -30,7 +31,7 @@ class ContactTransactionServiceImplTest {
     @DisplayName("Should return DAO instance")
     void getDao_shouldReturnDaoInstance_whenCalled() {
         // Act
-        var result = contactTransactionService.getDao();
+        Dao<Integer, ContactTransactionCategoryRelation> result = contactTransactionService.getDao();
 
         // Assert
         assertThat(result).isNotNull();
@@ -119,7 +120,7 @@ class ContactTransactionServiceImplTest {
     @DisplayName("Should verify DAO is the correct type")
     void getDao_shouldReturnCorrectType_whenCalled() {
         // Act
-        var result = contactTransactionService.getDao();
+        Dao<Integer, ContactTransactionCategoryRelation> result = contactTransactionService.getDao();
 
         // Assert
         assertThat(result).isInstanceOf(ContactTransactionCategoryRelationDao.class);
