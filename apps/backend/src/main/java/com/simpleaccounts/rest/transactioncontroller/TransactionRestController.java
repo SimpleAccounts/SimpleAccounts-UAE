@@ -556,7 +556,7 @@ public class TransactionRestController {
 		corporateTaxPayment.setAmountPaid(trnx.getTransactionAmount());
 		corporateTaxPayment.setDepositToTransactionCategory((bankAccount.getTransactionCategory()));
 		BigDecimal ctReportFilingBalanceDue = BigDecimal.ZERO;
-		CorporateTaxFiling corporateTaxFiling = corporateTaxFilingRepository.findById(corporateTaxModel.getId()).get();
+		CorporateTaxFiling corporateTaxFiling = corporateTaxFilingRepository.findById(corporateTaxModel.getId()).orElseThrow();
 		if (corporateTaxFiling.getBalanceDue().compareTo(trnx.getTransactionAmount()) > 0){
 			ctReportFilingBalanceDue = corporateTaxFiling.getBalanceDue().subtract(trnx.getTransactionAmount());
 		}
@@ -623,7 +623,7 @@ public class TransactionRestController {
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 		JournalLineItem journalLineItem2 = new JournalLineItem();
 		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
-		CorporateTaxPayment corporateTaxPayment=corporateTaxPaymentRepository.findById(postingRequestModel.getPostingRefId()).get();
+		CorporateTaxPayment corporateTaxPayment=corporateTaxPaymentRepository.findById(postingRequestModel.getPostingRefId()).orElseThrow();
 		TransactionCategory transactionCategory = transactionCategoryService.
 				findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.CORPORATION_TAX.getCode());
 		journalLineItem1.setTransactionCategory(depositeToTransactionCategory);
@@ -661,7 +661,7 @@ public class TransactionRestController {
 		vatPayment.setDepositToTransactionCategory((bankAccount.getTransactionCategory()));
 
 		BigDecimal vatReportFilingBalanceDue = BigDecimal.ZERO;
-		VatReportFiling vatReportFiling = vatReportFilingRepository.findById(vatReportResponseListForBank.getId()).get();
+		VatReportFiling vatReportFiling = vatReportFilingRepository.findById(vatReportResponseListForBank.getId()).orElseThrow();
 		if (vatReportFiling.getBalanceDue().compareTo(trnx.getTransactionAmount()) > 0){
 			vatReportFilingBalanceDue = vatReportFiling.getBalanceDue().subtract(trnx.getTransactionAmount());
 		}
@@ -750,7 +750,7 @@ public class TransactionRestController {
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 		JournalLineItem journalLineItem2 = new JournalLineItem();
 		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
-		VatPayment vatPayment=vatPaymentRepository.findById(postingRequestModel.getPostingRefId()).get();
+		VatPayment vatPayment=vatPaymentRepository.findById(postingRequestModel.getPostingRefId()).orElseThrow();
 		TransactionCategory transactionCategory = transactionCategoryService.
 				findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.GCC_VAT_PAYABLE.getCode());
 		journalLineItem1.setTransactionCategory(transactionCategory);
@@ -1023,7 +1023,7 @@ public class TransactionRestController {
 		Transaction trnx = isValidTransactionToExplain(transactionPresistModel);
 		if(trnx!=null&&trnx.getTransactionExplinationStatusEnum()==TransactionExplinationStatusEnum.FULL) {
 			TransactionExplanation transactionExplanation =
-                    transactionExplanationRepository.findById(transactionPresistModel.getExplanationId()).get();
+                    transactionExplanationRepository.findById(transactionPresistModel.getExplanationId()).orElseThrow();
 			trnx = updateTransactionWithCommonFields(transactionPresistModel, userId, TransactionCreationMode.IMPORT, trnx);
 		}
 		else if(trnx==null) {
@@ -2289,7 +2289,7 @@ public class TransactionRestController {
 												  HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		Transaction trnx = isValidTransactionToExplain(transactionPresistModel);
-		TransactionExplanation transactionExplanation = transactionExplanationRepository.findById(transactionPresistModel.getExplanationId()).get();
+		TransactionExplanation transactionExplanation = transactionExplanationRepository.findById(transactionPresistModel.getExplanationId()).orElseThrow();
 		int chartOfAccountCategory = transactionExplanation.getCoaCategory().getChartOfAccountCategoryId();
 		switch(ChartOfAccountCategoryIdEnumConstant.get(chartOfAccountCategory))
 		{
@@ -2298,7 +2298,7 @@ public class TransactionRestController {
 				List<TransactionExpenses> transactionExpensesList = transactionExpensesService
 						.findAllForTransactionExpenses(trnx.getTransactionId());
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				transactionExplanation = transactionExplanationRepository.findById(transactionPresistModel.getExplanationId()).get();
+				transactionExplanation = transactionExplanationRepository.findById(transactionPresistModel.getExplanationId()).orElseThrow();
 				List<TransactionExplinationLineItem> transactionExplinationLineItems = transactionExplanationLineItemRepository.
 						getTransactionExplinationLineItemsByTransactionExplanation(transactionExplanation);
 				for (TransactionExplinationLineItem transactionExplinationLineItem:transactionExplinationLineItems){
@@ -2464,7 +2464,7 @@ public class TransactionRestController {
                                 supplierInvoicePaymentService.update(supplierInvoiceReceipt);
                             }
                         } else {
-                            CreditNote creditNote = creditNoteRepository.findById(transactionExplinationLineItem.getReferenceId()).get();
+                            CreditNote creditNote = creditNoteRepository.findById(transactionExplinationLineItem.getReferenceId()).orElseThrow();
                             PostingReferenceTypeEnum postingReferenceTypeEnum = null;
                             List<JournalLineItem> cnJLIList = null;
                             cnJLIList = journalLineItemRepository.findAllByReferenceIdAndReferenceTypeAndAmount(
@@ -2533,7 +2533,7 @@ public class TransactionRestController {
 			case MONEY_RECEIVED_OTHERS:
                 VatPayment vatPayment = vatPaymentRepository.getVatPaymentByTransactionId(trnx.getTransactionId());
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				transactionExplanation = transactionExplanationRepository.findById(transactionPresistModel.getExplanationId()).get();
+					transactionExplanation = transactionExplanationRepository.findById(transactionPresistModel.getExplanationId()).orElseThrow();
 				transactionExplinationLineItems = transactionExplanationLineItemRepository.
 						getTransactionExplinationLineItemsByTransactionExplanation(transactionExplanation);
 				for (TransactionExplinationLineItem transactionExplinationLineItem:transactionExplinationLineItems){
@@ -2727,7 +2727,7 @@ public class TransactionRestController {
 			//-----------------------------------------------------Sales Chart of Account Category-----------------------------------------
 			case SALES:
 				// Customer Invoices
-				transactionExplanation = transactionExplanationRepository.findById(transactionPresistModel.getExplanationId()).get();
+				transactionExplanation = transactionExplanationRepository.findById(transactionPresistModel.getExplanationId()).orElseThrow();
 				transactionExplinationLineItems = transactionExplanationLineItemRepository.
 						getTransactionExplinationLineItemsByTransactionExplanation(transactionExplanation);
 				for (TransactionExplinationLineItem transactionExplinationLineItem:transactionExplinationLineItems){
@@ -2808,7 +2808,7 @@ public class TransactionRestController {
                             invoiceService.update(invoice);
                         }
                     } else {
-                        CreditNote creditNote = creditNoteRepository.findById(transactionExplinationLineItem.getReferenceId()).get();
+                        CreditNote creditNote = creditNoteRepository.findById(transactionExplinationLineItem.getReferenceId()).orElseThrow();
                         PostingReferenceTypeEnum postingReferenceTypeEnum = null;
                         List<JournalLineItem> cnJLIList = null;
                         cnJLIList = journalLineItemRepository.findAllByReferenceIdAndReferenceTypeAndAmount(

@@ -294,14 +294,14 @@ public class CorporateTaxService {
         if (corporateTaxPaymentModel.getDepositToTransactionCategoryId()!=null){
             corporateTaxPayment.setDepositToTransactionCategory(transactionCategoryService.findByPK
                     (corporateTaxPaymentModel.getDepositToTransactionCategoryId()));
-        }
-        if (corporateTaxPaymentModel.getTransactionId()!=null){
-            corporateTaxPayment.setTransaction(transactionService.findByPK
-                    (corporateTaxPaymentModel.getTransactionId()));
-        }
-        if (corporateTaxPaymentModel.getCorporateTaxFilingId()!=null){
-            corporateTaxPayment.setCorporateTaxFiling(corporateTaxFilingRepository.findById(corporateTaxPaymentModel.getCorporateTaxFilingId()).get());
-        }
+	        }
+	        if (corporateTaxPaymentModel.getTransactionId()!=null){
+	            corporateTaxPayment.setTransaction(transactionService.findByPK
+	                    (corporateTaxPaymentModel.getTransactionId()));
+	        }
+	        if (corporateTaxPaymentModel.getCorporateTaxFilingId()!=null){
+	            corporateTaxPayment.setCorporateTaxFiling(corporateTaxFilingRepository.findById(corporateTaxPaymentModel.getCorporateTaxFilingId()).orElseThrow());
+	        }
         if (corporateTaxPaymentModel.getReferenceNumber()!=null){
             corporateTaxPayment.setReferenceNumber(corporateTaxPaymentModel.getReferenceNumber());
         }
@@ -361,12 +361,12 @@ public class CorporateTaxService {
     }
 
     private Journal corporateTaxPaymentPosting(PostingRequestModel postingRequestModel, Integer userId, TransactionCategory depositeToTransactionCategory) {
-        List<JournalLineItem> journalLineItemList = new ArrayList<>();
-        Journal journal = new Journal();
-        JournalLineItem journalLineItem1 = new JournalLineItem();
-        JournalLineItem journalLineItem2 = new JournalLineItem();
-        journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
-        CorporateTaxPayment corporateTaxPayment=corporateTaxPaymentRepository.findById(postingRequestModel.getPostingRefId()).get();
+	        List<JournalLineItem> journalLineItemList = new ArrayList<>();
+	        Journal journal = new Journal();
+	        JournalLineItem journalLineItem1 = new JournalLineItem();
+	        JournalLineItem journalLineItem2 = new JournalLineItem();
+	        journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
+	        CorporateTaxPayment corporateTaxPayment=corporateTaxPaymentRepository.findById(postingRequestModel.getPostingRefId()).orElseThrow();
         TransactionCategory transactionCategory = transactionCategoryService.
                 findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.CORPORATION_TAX.getCode());
         journalLineItem1.setTransactionCategory(depositeToTransactionCategory);

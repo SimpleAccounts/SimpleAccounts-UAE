@@ -5,16 +5,9 @@
  */
 package com.simpleaccounts.rest.currencycontroller;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.ErrorConstant;
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.Expense;
@@ -22,7 +15,12 @@ import com.simpleaccounts.entity.Invoice;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.rest.currencycontroller.dto.CurrencyDTO;
 import com.simpleaccounts.security.JwtTokenUtil;
-import com.simpleaccounts.service.*;
+import com.simpleaccounts.service.BankAccountService;
+import com.simpleaccounts.service.ContactService;
+import com.simpleaccounts.service.CurrencyService;
+import com.simpleaccounts.service.ExpenseService;
+import com.simpleaccounts.service.InvoiceService;
+import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
@@ -34,26 +32,18 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.simpleaccounts.entity.Currency;
-import com.simpleaccounts.rest.currencycontroller.dto.CurrencyDTO;
-import com.simpleaccounts.security.JwtTokenUtil;
-
-import io.swagger.annotations.ApiOperation;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -135,7 +125,7 @@ public class CurrencyController {
 	@LogRequest
 	@ApiOperation(value = "Get Currency by Currency Code", response = Currency.class)
 	@GetMapping("/{currencyCode}")
-	public ResponseEntity<Currency> getCurrency(@RequestParam("currencyCode") Integer currencyCode) {
+	public ResponseEntity<Currency> getCurrency(@PathVariable("currencyCode") Integer currencyCode) {
 		try {
 			Currency currency = currencyService.findByPK(currencyCode);
 			if (currency != null) {
@@ -183,7 +173,7 @@ public class CurrencyController {
 	@ApiOperation(value = "Update Currency by Currency Code", response = Currency.class)
 	@PutMapping(value = "/{currencyCode}")
 	public ResponseEntity<Object> editCurrency(@RequestBody CurrencyDTO currencyDTO,
-			@RequestParam("currencyCode") Integer currencyCode, HttpServletRequest request) {
+			@PathVariable("currencyCode") Integer currencyCode, HttpServletRequest request) {
 		try {
 			Currency existingCurrency = currencyService.findByPK(currencyCode);
 
@@ -213,7 +203,7 @@ public class CurrencyController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Currency by Currency Code", response = Currency.class)
 	@DeleteMapping(value = "/{currencyCode}")
-	public ResponseEntity<Object> deleteCurrency(@RequestParam("currencyCode") Integer currencyCode,
+	public ResponseEntity<Object> deleteCurrency(@PathVariable("currencyCode") Integer currencyCode,
 			HttpServletRequest request) {
 		try {
 			SimpleAccountsMessage message = null;

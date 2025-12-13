@@ -115,7 +115,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
 
             List<Integer> employeeListId = salaryPersistModel.getEmployeeListIds();
 
-            BigDecimal totalSalaryForSingleDay = BigDecimal.valueOf(Float.valueOf(0));
+	            BigDecimal totalSalaryForSingleDay = BigDecimal.ZERO;
             BigDecimal salaryForjournalEntry = BigDecimal.ZERO;
             for (Integer employeeId : employeeListId) {
                 Employee employee = employeeService.findByPK(employeeId);
@@ -225,7 +225,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
 
             List<Integer> employeeListId = salaryPersistModel.getEmployeeListIds();
 
-            BigDecimal totalSalaryForSingleDay = BigDecimal.valueOf(Float.valueOf(0));
+	            BigDecimal totalSalaryForSingleDay = BigDecimal.ZERO;
             BigDecimal salaryForjournalEntry = BigDecimal.ZERO;
             for (Integer employeeId : employeeListId) {
                 Employee employee = employeeService.findByPK(employeeId);

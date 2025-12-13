@@ -149,7 +149,7 @@ public class UserRestHelper {
 		}
 		return null;
 	}
-	public SimpleAccountsMessage saveUserCredential(User user, String encodedPassword, SimpleAccountsMessage message) {
+	public SimpleAccountsMessage saveUserCredential(User user, String encodedPassword) {
 		UserCredential existingUser = userCredentialRepository.findUserCredentialByUser(user);
 		if (existingUser!=null){
 
@@ -176,7 +176,7 @@ public class UserRestHelper {
 			userCredential.setPassword(encodedPassword);
 			userCredentialRepository.save(userCredential);
 		}
-		message = new SimpleAccountsMessage("0088",
+		SimpleAccountsMessage message = new SimpleAccountsMessage("0088",
 				MessageUtil.getMessage("resetPassword.created.successful.msg.0088"), false);
 		return message;
 	}

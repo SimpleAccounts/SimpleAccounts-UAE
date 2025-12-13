@@ -193,7 +193,7 @@ public class EmailService {
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_EMAIL, e);
         }
-        if (htmlContent !="" && htmlContent !=null ){
+        if (htmlContent != null && !htmlContent.isEmpty()){
             content = mailUtility.create(map, htmlContent);
         }
         if (invoiceEmailBody != null && invoiceEmailBody.getTemplateSubject() != null) {
@@ -295,7 +295,7 @@ public class EmailService {
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_EMAIL, e);
         }
-        if (htmlContent !="" && htmlContent !=null ){
+        if (htmlContent != null && !htmlContent.isEmpty()){
             content = mailUtility.create(map, htmlContent);
         }
         if (creditNoteEmailBody != null && creditNoteEmailBody.getTemplateSubject() != null) {
@@ -394,7 +394,7 @@ public class EmailService {
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_EMAIL, e);
         }
-        if (htmlContent != "" && htmlContent != null) {
+        if (htmlContent != null && !htmlContent.isEmpty()) {
             content = mailUtility.create(map, htmlContent);
         }
         if (quotationEmailBody != null && quotationEmailBody.getTemplateSubject() != null) {
@@ -493,7 +493,7 @@ public class EmailService {
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_EMAIL, e);
         }
-        if (htmlContent != "" && htmlContent != null) {
+        if (htmlContent != null && !htmlContent.isEmpty()) {
             content = mailUtility.create(map, htmlContent);
         }
         if (quotationEmailBody != null && quotationEmailBody.getTemplateSubject() != null) {

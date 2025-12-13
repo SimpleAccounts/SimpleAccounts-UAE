@@ -1275,13 +1275,13 @@ public class PayrollController {
     @ApiOperation(value = "Delete Salary components")
     @DeleteMapping(value = "/deleteSalaryComponent")
 	    public ResponseEntity<Object> deleteSalaryComponent(@RequestParam(value = "id") Integer id,
-                                                HttpServletRequest request){
-        try {
-          SalaryComponent salaryComponent = salaryComponentRepository.findById(id).get();
-          if(salaryComponent!=null){
-              salaryComponent.setDeleteFlag(Boolean.TRUE);
-              salaryComponentRepository.save(salaryComponent);
-          }
+	                                                HttpServletRequest request){
+	        try {
+	          SalaryComponent salaryComponent = salaryComponentRepository.findById(id).orElse(null);
+	          if(salaryComponent!=null){
+	              salaryComponent.setDeleteFlag(Boolean.TRUE);
+	              salaryComponentRepository.save(salaryComponent);
+	          }
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

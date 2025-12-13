@@ -78,6 +78,9 @@ public class ProductCategoryServiceImpl extends ProductCategoryService {
 
 	private void deleteFromCache(List<Integer> ids) {
 		Cache productCache = cacheManager.getCache("productCategoryCache");
+		if (productCache == null) {
+			return;
+		}
 		for (Integer id : ids ) {
 			productCache.evict(id);
 		}

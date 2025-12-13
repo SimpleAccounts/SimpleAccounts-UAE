@@ -88,11 +88,8 @@ public class DetailedGeneralLedgerRestHelper {
 	public Map<Integer, CreditNote> findOrGetFromDbCn(Map<Integer, CreditNote> creditNoteMap, Integer id) {
 
 		if (!creditNoteMap.containsKey(id)) {
-			try {
-				CreditNote creditNote = creditNoteRepository.findById(id).get();
-				creditNoteMap.put(creditNote.getCreditNoteId(), creditNote);
-			}catch (NoSuchElementException  e){
-			}
+			creditNoteRepository.findById(id)
+					.ifPresent(creditNote -> creditNoteMap.put(creditNote.getCreditNoteId(), creditNote));
 		}
 		return creditNoteMap;
 	}
