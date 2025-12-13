@@ -1,9 +1,8 @@
 package com.simpleaccounts.rest.creditnotecontroller;
 
 import com.simpleaccounts.rest.PaginationModel;
-import lombok.Data;
-
 import java.math.BigDecimal;
+import lombok.Data;
 
 /**
  * Created By Zain Khan

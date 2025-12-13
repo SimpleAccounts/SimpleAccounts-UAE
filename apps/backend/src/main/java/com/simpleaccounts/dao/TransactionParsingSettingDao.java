@@ -1,10 +1,9 @@
 package com.simpleaccounts.dao;
 
-import java.util.List;
-import java.util.Map;
-
 import com.simpleaccounts.constant.dbfilter.TransactionParsingSettingFilterEnum;
 import com.simpleaccounts.entity.TransactionParsingSetting;
+import java.util.List;
+import java.util.Map;
 
 public interface TransactionParsingSettingDao extends Dao<Long, TransactionParsingSetting>{
 

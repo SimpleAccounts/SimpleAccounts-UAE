@@ -1,14 +1,13 @@
 package com.simpleaccounts.contract;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.*;
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.util.*;
-import java.util.regex.Pattern;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Contract Tests for API endpoints.

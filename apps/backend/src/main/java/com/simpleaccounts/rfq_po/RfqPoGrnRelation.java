@@ -1,10 +1,9 @@
 package com.simpleaccounts.rfq_po;
 
+import java.time.LocalDateTime;
+import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Data
 @Entity

@@ -1,13 +1,12 @@
 package com.simpleaccounts.utils;
 
+import java.util.Locale;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
-
-import java.util.Locale;
 
 @Component
 @Slf4j

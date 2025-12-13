@@ -6,12 +6,11 @@ import com.simpleaccounts.entity.SalaryTemplate;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.payroll.SalaryTemplateDao;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.Query;
+import org.springframework.stereotype.Repository;
 
 @Repository(value = "salaryTemplateDao")
 public class SalaryTemplateDaoImpl extends AbstractDao<Integer, SalaryTemplate> implements SalaryTemplateDao

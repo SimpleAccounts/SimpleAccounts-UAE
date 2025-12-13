@@ -1,7 +1,6 @@
 package com.simpleaccounts.dao.impl;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.VatReportFilterEnum;
 import com.simpleaccounts.dao.*;
@@ -12,9 +11,7 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 @Repository

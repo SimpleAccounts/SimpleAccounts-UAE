@@ -1,9 +1,8 @@
 package com.simpleaccounts.rest.simpleaccountreports.soa;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import lombok.Data;
 
 /**
  * Created by Suraj Rahade on Dec 2020

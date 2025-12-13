@@ -1,16 +1,13 @@
 package com.simpleaccounts.entity;
 
+import com.simpleaccounts.entity.bankaccount.Transaction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 import javax.persistence.*;
-
-import com.simpleaccounts.entity.bankaccount.Transaction;
+import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import lombok.Data;
 
 /**
  * @author S@urabh : Middle table between Customer invoice and receipt to

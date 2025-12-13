@@ -8,7 +8,6 @@ import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.contactcontroller.ContactRequestFilterModel;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

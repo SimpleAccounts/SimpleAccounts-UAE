@@ -1,9 +1,8 @@
 package com.simpleaccounts.model;
 
+import java.util.List;
 import lombok.Data;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Data
 @Component

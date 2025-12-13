@@ -4,7 +4,6 @@ import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PA
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PAYSLIP_TEMPLATE;
 
 import com.simpleaccounts.constant.DefaultTypeConstant;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.EmailConstant;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.entity.*;
@@ -22,17 +21,6 @@ import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.EmailSender;
 import com.simpleaccounts.utils.MailUtility;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -55,8 +43,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PAYSLIP_MAIL_TEMPLATE;
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.PAYSLIP_TEMPLATE;
 
 @Component
 @RequiredArgsConstructor
@@ -115,12 +101,10 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
 
             List<Integer> employeeListId = salaryPersistModel.getEmployeeListIds();
 
-	            BigDecimal totalSalaryForSingleDay = BigDecimal.ZERO;
             BigDecimal salaryForjournalEntry = BigDecimal.ZERO;
             for (Integer employeeId : employeeListId) {
                 Employee employee = employeeService.findByPK(employeeId);
 
-                BigDecimal totSalaryForEmployeePerMonth = BigDecimal.ZERO;
                 Map<String, Object> param = new HashMap<>();
                 param.put("employeeId", employee);
                 List<EmployeeSalaryComponentRelation> employeeSalaryComponentList = employeeSalaryComponentRelationService.findByAttributes(param);
@@ -130,7 +114,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
 
                     noOfDays = salaryComponent.getNoOfDays();
                     BigDecimal totalSalaryPerMonth = salaryComponent.getMonthlyAmount();
-                    totalSalaryForSingleDay = totalSalaryPerMonth.divide(salaryComponent.getNoOfDays());
+                    BigDecimal totalSalaryForSingleDay = totalSalaryPerMonth.divide(salaryComponent.getNoOfDays());
                     BigDecimal salaryAsPerNoOfWorkingDays = totalSalaryForSingleDay.multiply(salaryComponent.getNoOfDays());
 
                     Salary salary = new Salary();
@@ -143,10 +127,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
                     salary.setSalaryDate(dateFormatUtil.getDateStrAsLocalDateTime(salaryPersistModel.getSalaryDate(), DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY));
                     salary.setTotalAmount(salaryAsPerNoOfWorkingDays);
                     salaryService.persist(salary);
-                    if (Objects.equals(salaryComponent.getSalaryStructure().getId(), PayrollEnumConstants.Deduction.getId())){
-
-                    }
-                    else {
+                    if (!Objects.equals(salaryComponent.getSalaryStructure().getId(), PayrollEnumConstants.Deduction.getId())){
                         salaryForjournalEntry = salaryForjournalEntry.add(salaryAsPerNoOfWorkingDays);
                     }
 
@@ -216,7 +197,6 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
             finalPayrolltransactionCategory.setDefaltFlag(DefaultTypeConstant.NO);
             finalPayrolltransactionCategory.setVersionNumber(1);
             transactionCategoryService.persist(finalPayrolltransactionCategory);
-            CoacTransactionCategory coacTransactionCategoryRelation = new CoacTransactionCategory();
             coacTransactionCategoryService.addCoacTransactionCategory(finalPayrolltransactionCategory.getChartOfAccount(),finalPayrolltransactionCategory);
 
             Map<String, Object> payrollCategoryParam = new HashMap<>();
@@ -225,7 +205,6 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
 
             List<Integer> employeeListId = salaryPersistModel.getEmployeeListIds();
 
-	            BigDecimal totalSalaryForSingleDay = BigDecimal.ZERO;
             BigDecimal salaryForjournalEntry = BigDecimal.ZERO;
             for (Integer employeeId : employeeListId) {
                 Employee employee = employeeService.findByPK(employeeId);
@@ -239,7 +218,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
 
                     noOfDays= salaryComponent.getNoOfDays();
                     BigDecimal totalSalaryPerMonth = salaryComponent.getMonthlyAmount();
-                    totalSalaryForSingleDay = totalSalaryPerMonth.divide(salaryComponent.getNoOfDays());
+                    BigDecimal totalSalaryForSingleDay = totalSalaryPerMonth.divide(salaryComponent.getNoOfDays());
                     BigDecimal salaryAsPerNoOfWorkingDays = totalSalaryForSingleDay.multiply(salaryComponent.getNoOfDays());
 
                     Salary salary = new Salary();
@@ -253,7 +232,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
                     salary.setTotalAmount(salaryAsPerNoOfWorkingDays);
                     salaryService.persist(salary);
                     if (Objects.equals(salaryComponent.getSalaryStructure().getId(), PayrollEnumConstants.Deduction.getId())){
-                        salaryForjournalEntry = salaryForjournalEntry.subtract(totalSalaryForSingleDay.multiply(salaryComponent.getNoOfDays()));
+                        salaryForjournalEntry = salaryForjournalEntry.subtract(salaryAsPerNoOfWorkingDays);
                     }
                     else {
                     salaryForjournalEntry = salaryForjournalEntry.add(salaryAsPerNoOfWorkingDays);
@@ -390,8 +369,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
                      "\n" +
                      "</td> ";
          }
-         List<MoneyPaidToUserModel> moneyPaidToUserModelList = new ArrayList<>();
-         moneyPaidToUserModelList = salaryServiceImpl.getEmployeeTransactions(employeeId,startDate.replace("-","/"),endDate.replace("-","/"));
+         List<MoneyPaidToUserModel> moneyPaidToUserModelList = salaryServiceImpl.getEmployeeTransactions(employeeId,startDate.replace("-","/"),endDate.replace("-","/"));
          Integer count = 0;
          BigDecimal totalB = BigDecimal.ZERO;
          if(moneyPaidToUserModelList!=null){

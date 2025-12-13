@@ -3,11 +3,9 @@ package com.simpleaccounts.utils;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayOutputStream;
-
-import org.junit.Test;
-
 import com.itextpdf.html2pdf.HtmlConverter;
+import java.io.ByteArrayOutputStream;
+import org.junit.Test;
 
 /**
  * Tests for PDF generation using iText html2pdf.

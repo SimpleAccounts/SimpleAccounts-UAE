@@ -1,8 +1,7 @@
 package com.simpleaccounts.dao;
 
-import java.util.List;
-
 import com.simpleaccounts.entity.CustomerInvoiceReceipt;
+import java.util.List;
 
 public interface CustomerInvoiceReceiptDao extends Dao<Integer, CustomerInvoiceReceipt> {
 

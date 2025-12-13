@@ -6,7 +6,6 @@
 package com.simpleaccounts.helper;
 
 import com.simpleaccounts.constant.*;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;

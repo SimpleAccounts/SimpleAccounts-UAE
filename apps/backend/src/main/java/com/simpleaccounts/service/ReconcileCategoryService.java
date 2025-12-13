@@ -1,8 +1,7 @@
 package com.simpleaccounts.service;
 
-import java.util.List;
-
 import com.simpleaccounts.entity.bankaccount.ReconcileCategory;
+import java.util.List;
 
 public abstract class ReconcileCategoryService extends SimpleAccountsService<Integer, ReconcileCategory> {
 

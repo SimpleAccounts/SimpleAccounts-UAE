@@ -1,16 +1,12 @@
 package com.simpleaccounts.entity;
 
+import com.simpleaccounts.constant.ExcellDelimiterEnum;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import javax.persistence.*;
-
-import org.hibernate.annotations.ColumnDefault;
-
-import com.simpleaccounts.constant.ExcellDelimiterEnum;
-
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "TRANSACTION_PARSING_SETTING")

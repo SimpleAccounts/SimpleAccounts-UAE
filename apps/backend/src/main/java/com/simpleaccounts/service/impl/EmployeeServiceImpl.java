@@ -3,7 +3,6 @@ package com.simpleaccounts.service.impl;
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.EmailConstant;
 import com.simpleaccounts.constant.dbfilter.EmployeeFilterEnum;
 import com.simpleaccounts.dao.Dao;
@@ -31,17 +30,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by Suraj Rahade on 24/04/2021.

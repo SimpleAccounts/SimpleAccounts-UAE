@@ -48,16 +48,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.simpleaccounts.aop.LogExecutionTime;
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.bank.model.DeleteModel;
-import com.simpleaccounts.constant.dbfilter.CompanyFilterEnum;
-import com.simpleaccounts.security.JwtTokenUtil;
-
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Slf4j

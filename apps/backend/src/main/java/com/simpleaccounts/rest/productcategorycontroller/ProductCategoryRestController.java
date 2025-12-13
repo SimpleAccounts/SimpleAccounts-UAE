@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,18 +29,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.bank.model.DeleteModel;
-import com.simpleaccounts.constant.dbfilter.ProductCategoryFilterEnum;
-import com.simpleaccounts.entity.ProductCategory;
-import com.simpleaccounts.entity.User;
-import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.security.JwtTokenUtil;
-import com.simpleaccounts.service.ProductCategoryService;
-import com.simpleaccounts.service.UserService;
-
-import io.swagger.annotations.ApiOperation;
 
 /**
  *

@@ -1,10 +1,10 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.TitleDao;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.Title;
 import com.simpleaccounts.service.TitleService;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**

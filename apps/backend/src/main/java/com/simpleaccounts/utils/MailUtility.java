@@ -1,6 +1,5 @@
 package com.simpleaccounts.utils;
 
-import lombok.RequiredArgsConstructor;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.simpleaccounts.constant.ConfigurationConstants;
 import com.simpleaccounts.entity.Configuration;
@@ -24,7 +23,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *

@@ -23,7 +23,6 @@ import freemarker.template.TemplateException;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -42,7 +41,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 @Service
 @RequiredArgsConstructor
@@ -105,7 +103,6 @@ public class EmailService {
     }
     public void sendCustomizedEmail(EmailContentModel emailContentModel, Integer userId, HttpServletRequest request) {
         //To save the uploaded file in
-        List<FileAttachment> fileAttachments=new ArrayList<>();
         List<MultipartFile> files = emailContentModel.getAttachmentFiles();
 
         List<File> fileNames = new ArrayList<>();
@@ -137,7 +134,6 @@ public class EmailService {
     private EmailContentModel getInvoiceContent(Integer id, Integer moduleId, int userId,
                                                        EmailContentRequestModel emailContentRequestModel, EmailContentModel emailContentModel) throws TemplateException, IOException {
         String subject = "";
-        String body = "";
         User user = userService.findByPK(userId);
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
         if (!optionalInvoice.isPresent()) {
@@ -148,7 +144,6 @@ public class EmailService {
         MailThemeTemplates invoiceEmailBody = mailThemeTemplatesService.getMailThemeTemplate(moduleId);
         Map<String, String> map = invoiceRestHelper.getInvoiceData(invoice, userId);
         String content = "";
-        String htmlText = "";
         String htmlContent = "";
         String freeMakerHtmlContent = "";
         //FreeMaker
@@ -177,17 +172,7 @@ public class EmailService {
 //
 //
           try {
-            String emailBody=invoiceEmailBody.getPath();
-//
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX+emailBody).getURI()));
-            byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource(CLASSPATH_PREFIX+ INVOICE_TEMPLATE).getURI()));
-//
-            String amountInWords= emailContentRequestModel.getAmountInWords();
-            String vatInWords= emailContentRequestModel.getTaxInWords();
-
-            htmlText = new String(bodyData, StandardCharsets.UTF_8);
-            htmlText =htmlText.replace(TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS,amountInWords).replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS,vatInWords);
-
+            byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX+ INVOICE_TEMPLATE).getURI()));
             htmlContent= new String(contentData, StandardCharsets.UTF_8)
                     .replace(TEMPLATE_PLACEHOLDER_CURRENCY,invoice.getCurrency().getCurrencyIsoCode());
         } catch (IOException e) {
@@ -198,15 +183,6 @@ public class EmailService {
         }
         if (invoiceEmailBody != null && invoiceEmailBody.getTemplateSubject() != null) {
             subject = mailUtility.create(map, invoiceEmailBody.getTemplateSubject());
-        }
-        if (invoiceEmailBody != null && !htmlText.isEmpty()) {
-            if (invoice.getInvoiceLineItems().size()>1){
-                body = mailUtility.create(map,updateInvoiceLineItem(invoice.getInvoiceLineItems().size()
-                        ,invoiceEmailBody,emailContentRequestModel));
-            }
-            else {
-                body = mailUtility.create(map,htmlText);
-            }
         }
         Configuration fromEmailConfiguration = configurationService.getConfigurationByName(ConfigurationConstants.FROM_EMAIL_ADDRESS);
         Configuration configuration = configurationService.getConfigurationByName(ConfigurationConstants.LOGGED_IN_USER_FLAG);
@@ -232,7 +208,6 @@ public class EmailService {
     private EmailContentModel getCreditNoteContent(Integer id, Integer moduleId, int userId,
                                                 EmailContentRequestModel emailContentRequestModel, EmailContentModel emailContentModel) throws TemplateException, IOException {
         String subject = "";
-        String body = "";
         User user = userService.findByPK(userId);
         Optional<CreditNote> optionalCreditNote = creditNoteRepository.findById(id);
         if (!optionalCreditNote.isPresent()) {
@@ -249,7 +224,6 @@ public class EmailService {
         MailThemeTemplates creditNoteEmailBody = mailThemeTemplatesService.getMailThemeTemplate(moduleId);
         Map<String, String> map = invoiceRestHelper.getInvoiceData(invoice, userId);
         String content = "";
-        String htmlText = "";
         String htmlContent = "";
         String freeMakerHtmlContent = "";
         //FreeMaker
@@ -279,17 +253,7 @@ public class EmailService {
 //
 //
         try {
-            String emailBody=creditNoteEmailBody.getPath();
-//
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX+emailBody).getURI()));
             byte[] contentData = Files.readAllBytes(Paths.get(  resourceLoader.getResource(CLASSPATH_PREFIX+ CN_TEMPLATE).getURI()));
-//
-            String amountInWords= emailContentRequestModel.getAmountInWords();
-            String vatInWords= emailContentRequestModel.getTaxInWords();
-
-            htmlText = new String(bodyData, StandardCharsets.UTF_8);
-            htmlText =htmlText.replace(TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS,amountInWords).replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS,vatInWords);
-
             htmlContent= new String(contentData, StandardCharsets.UTF_8)
                     .replace(TEMPLATE_PLACEHOLDER_CURRENCY,invoice.getCurrency().getCurrencyIsoCode());
         } catch (IOException e) {
@@ -300,15 +264,6 @@ public class EmailService {
         }
         if (creditNoteEmailBody != null && creditNoteEmailBody.getTemplateSubject() != null) {
             subject = mailUtility.create(map, creditNoteEmailBody.getTemplateSubject());
-        }
-        if (creditNoteEmailBody != null && !htmlText.isEmpty()) {
-            if (invoice.getInvoiceLineItems().size()>1){
-                body = mailUtility.create(map,updateInvoiceLineItem(invoice.getInvoiceLineItems().size()
-                        ,creditNoteEmailBody,emailContentRequestModel));
-            }
-            else {
-                body = mailUtility.create(map,htmlText);
-            }
         }
         Configuration fromEmailConfiguration = configurationService.getConfigurationByName(ConfigurationConstants.FROM_EMAIL_ADDRESS);
         Configuration configuration = configurationService.getConfigurationByName(ConfigurationConstants.LOGGED_IN_USER_FLAG);
@@ -334,7 +289,6 @@ public class EmailService {
     private EmailContentModel getQuotationContent(Integer id, Integer moduleId, int userId,
                                                    EmailContentRequestModel emailContentRequestModel, EmailContentModel emailContentModel) throws TemplateException, IOException {
         String subject = "";
-        String body = "";
         User user = userService.findByPK(userId);
         Optional<PoQuatation> optionalQuotation = poQuatationRepository.findById(id);
         if (!optionalQuotation.isPresent()) {
@@ -345,7 +299,6 @@ public class EmailService {
         MailThemeTemplates quotationEmailBody = mailThemeTemplatesService.getMailThemeTemplate(moduleId);
         Map<String, String> map = poQuatationRestHelper.getQuotationData(quotation, userId);
         String content = "";
-        String htmlText = "";
         String htmlContent = "";
         String freeMakerHtmlContent = "";
 
@@ -377,17 +330,8 @@ public class EmailService {
         //End of FreeMaker
 
         try {
-            String emailBody = quotationEmailBody.getPath();
-
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + emailBody).getURI()));
             byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + QUOTATION_TEMPLATE).getURI()));
-
-            String amountInWords = emailContentRequestModel.getAmountInWords();
-            String vatInWords = emailContentRequestModel.getTaxInWords();
-
-          Currency quotationCurrencyRelation = quotation.getCurrency();
-            htmlText = new String(bodyData, StandardCharsets.UTF_8);
-            htmlText = htmlText.replace("{amountInWords}", amountInWords).replace("{vatInWords}", vatInWords);
+            Currency quotationCurrencyRelation = quotation.getCurrency();
 
             htmlContent = new String(contentData, StandardCharsets.UTF_8)
                     .replace(TEMPLATE_PLACEHOLDER_CURRENCY, quotationCurrencyRelation.getCurrencyIsoCode());
@@ -399,14 +343,6 @@ public class EmailService {
         }
         if (quotationEmailBody != null && quotationEmailBody.getTemplateSubject() != null) {
             subject = mailUtility.create(map, quotationEmailBody.getTemplateSubject());
-        }
-        if (quotationEmailBody != null && !htmlText.isEmpty()) {
-            if (quotation.getPoQuatationLineItems().size() > 1) {
-                body = mailUtility.create(map, updatePoQuotationLineItem(quotation.getPoQuatationLineItems().size()
-                        , quotationEmailBody, emailContentRequestModel));
-            } else {
-                body = mailUtility.create(map, htmlText);
-            }
         }
 
         Configuration fromEmailConfiguration = configurationService.getConfigurationByName(ConfigurationConstants.FROM_EMAIL_ADDRESS);
@@ -434,7 +370,6 @@ public class EmailService {
     private EmailContentModel getPurchaseOrderContent(Integer id, Integer moduleId, int userId,
                                                   EmailContentRequestModel emailContentRequestModel, EmailContentModel emailContentModel) throws TemplateException, IOException {
         String subject = "";
-        String body = "";
         User user = userService.findByPK(userId);
         Optional<PoQuatation> optionalQuotation = poQuatationRepository.findById(id);
         if (!optionalQuotation.isPresent()) {
@@ -445,7 +380,6 @@ public class EmailService {
         MailThemeTemplates quotationEmailBody = mailThemeTemplatesService.getMailThemeTemplate(moduleId);
         Map<String, String> map = poQuatationRestHelper.getPOData(quotation, userId);
         String content = "";
-        String htmlText = "";
         String htmlContent = "";
         String freeMakerHtmlContent = "";
 
@@ -476,17 +410,8 @@ public class EmailService {
         //End of FreeMaker
 
         try {
-            String emailBody = quotationEmailBody.getPath();
-
-            byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + emailBody).getURI()));
             byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource(CLASSPATH_PREFIX + PURCHASE_ORDER_TEMPLATE).getURI()));
-
-            String amountInWords = emailContentRequestModel.getAmountInWords();
-            String vatInWords = emailContentRequestModel.getTaxInWords();
-
             Currency quotationCurrencyRelation = quotation.getCurrency();
-            htmlText = new String(bodyData, StandardCharsets.UTF_8);
-            htmlText = htmlText.replace("{amountInWords}", amountInWords).replace("{vatInWords}", vatInWords);
 
             htmlContent = new String(contentData, StandardCharsets.UTF_8)
                     .replace(TEMPLATE_PLACEHOLDER_CURRENCY, quotationCurrencyRelation.getCurrencyIsoCode());
@@ -498,14 +423,6 @@ public class EmailService {
         }
         if (quotationEmailBody != null && quotationEmailBody.getTemplateSubject() != null) {
             subject = mailUtility.create(map, quotationEmailBody.getTemplateSubject());
-        }
-        if (quotationEmailBody != null && !htmlText.isEmpty()) {
-            if (quotation.getPoQuatationLineItems().size() > 1) {
-                body = mailUtility.create(map, updatePoQuotationLineItem(quotation.getPoQuatationLineItems().size()
-                        , quotationEmailBody, emailContentRequestModel));
-            } else {
-                body = mailUtility.create(map, htmlText);
-            }
         }
 
         Configuration fromEmailConfiguration = configurationService.getConfigurationByName(ConfigurationConstants.FROM_EMAIL_ADDRESS);

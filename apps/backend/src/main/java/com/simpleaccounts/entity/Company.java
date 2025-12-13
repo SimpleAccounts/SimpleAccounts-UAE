@@ -1,15 +1,11 @@
 package com.simpleaccounts.entity;
 
 import com.simpleaccounts.constant.CommonConstant;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
-import lombok.Data;
-
-import javax.persistence.*;
-
 import java.time.LocalDateTime;
-
+import javax.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Type;
 

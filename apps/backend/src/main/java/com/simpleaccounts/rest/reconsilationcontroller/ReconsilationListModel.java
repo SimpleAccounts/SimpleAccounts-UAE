@@ -1,7 +1,6 @@
 package com.simpleaccounts.rest.reconsilationcontroller;
 
 import java.math.BigDecimal;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

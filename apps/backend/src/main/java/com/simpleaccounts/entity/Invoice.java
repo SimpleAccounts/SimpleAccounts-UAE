@@ -1,23 +1,17 @@
 package com.simpleaccounts.entity;
 
 import com.simpleaccounts.constant.CommonConstant;
-
 import com.simpleaccounts.constant.DiscountType;
 import com.simpleaccounts.constant.InvoiceDuePeriodEnum;
-
 import java.io.Serializable;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
-
+import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 /**

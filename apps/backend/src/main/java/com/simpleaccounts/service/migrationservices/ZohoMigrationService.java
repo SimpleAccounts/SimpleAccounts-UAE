@@ -52,7 +52,6 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.migration.ProductMigrationParser;
 import com.simpleaccounts.migration.xml.bindings.product.Product;
 import com.simpleaccounts.migration.xml.bindings.product.Product.TableList.Table;
-import com.simpleaccounts.migration.xml.bindings.product.Product.TableList.Table.ColumnList.Column;
 import com.simpleaccounts.rest.PostingRequestModel;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
 import com.simpleaccounts.rest.migration.model.BillModel;
@@ -102,7 +101,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

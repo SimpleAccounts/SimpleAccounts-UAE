@@ -1,13 +1,11 @@
 package com.simpleaccounts.rest.usercontroller;
 
-import org.springframework.web.multipart.MultipartFile;
-
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder

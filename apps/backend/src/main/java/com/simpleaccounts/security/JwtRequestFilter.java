@@ -2,8 +2,6 @@ package com.simpleaccounts.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import java.io.IOException;
-import lombok.RequiredArgsConstructor;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,8 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import io.jsonwebtoken.ExpiredJwtException;
 
 @Component
 @RequiredArgsConstructor

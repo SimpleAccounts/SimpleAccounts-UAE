@@ -2,17 +2,13 @@ package com.simpleaccounts.entity;
 
 import com.simpleaccounts.constant.CommonConstant;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
+import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 import javax.persistence.*;
-
-import org.hibernate.annotations.ColumnDefault;
-
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 /**
  * Created by saurabhg.

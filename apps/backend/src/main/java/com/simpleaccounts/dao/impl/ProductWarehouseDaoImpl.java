@@ -1,13 +1,12 @@
 package com.simpleaccounts.dao.impl;
 
-import org.springframework.stereotype.Repository;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.ProductWarehouseDao;
 import com.simpleaccounts.entity.ProductWarehouse;
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.TypedQuery;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductWarehouseDaoImpl extends AbstractDao<Integer, ProductWarehouse> implements ProductWarehouseDao {

@@ -1,7 +1,6 @@
 package com.simpleaccounts.rest.expensescontroller;
 
 import com.simpleaccounts.rest.PaginationModel;
-
 import lombok.Data;
 
 @Data

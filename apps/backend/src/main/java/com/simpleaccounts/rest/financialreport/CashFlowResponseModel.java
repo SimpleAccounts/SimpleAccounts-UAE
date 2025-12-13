@@ -3,7 +3,6 @@ package com.simpleaccounts.rest.financialreport;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-
 import lombok.Data;
 
 @Data

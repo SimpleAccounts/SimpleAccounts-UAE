@@ -8,7 +8,6 @@ package com.simpleaccounts.rest.usercontroller;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 import com.simpleaccounts.aop.LogRequest;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.constant.EmailConstant;

@@ -5,11 +5,7 @@ import com.simpleaccounts.dao.CurrencyExchangeDao;
 import com.simpleaccounts.entity.CurrencyConversion;
 import java.util.List;
 import javax.persistence.TypedQuery;
-
 import org.springframework.stereotype.Repository;
-
-
-
 
 @Repository
 public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConversion> implements CurrencyExchangeDao {
