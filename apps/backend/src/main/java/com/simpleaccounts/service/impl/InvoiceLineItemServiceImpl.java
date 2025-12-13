@@ -6,8 +6,6 @@ import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.InvoiceLineItemDao;
 import com.simpleaccounts.entity.InvoiceLineItem;
 import com.simpleaccounts.service.InvoiceLineItemService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service("InvoiceLineItemService")
 @RequiredArgsConstructor

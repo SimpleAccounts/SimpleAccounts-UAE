@@ -11,7 +11,6 @@ import com.simpleaccounts.dao.SearchViewDao;
 import com.simpleaccounts.entity.SearchView;
 import com.simpleaccounts.service.SearchViewService;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

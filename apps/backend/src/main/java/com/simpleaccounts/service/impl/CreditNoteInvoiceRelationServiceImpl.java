@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.CreditNoteInvoiceRelation;
 import com.simpleaccounts.service.CreditNoteInvoiceRelationService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service("creditNoteInvoiceRelationService")

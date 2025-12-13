@@ -9,7 +9,6 @@ import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.VatReportService;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 @Service("VatReportService")

@@ -32,8 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.simpleaccounts.utils.DateFormatUtil;
-import com.simpleaccounts.utils.EmailSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,12 +42,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by Suraj Rahade on 24/04/2021.

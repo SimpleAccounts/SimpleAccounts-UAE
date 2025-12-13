@@ -7,7 +7,6 @@ import com.simpleaccounts.rest.contactcontroller.TaxtTreatmentdto;
 import com.simpleaccounts.service.TaxTreatmentService;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
