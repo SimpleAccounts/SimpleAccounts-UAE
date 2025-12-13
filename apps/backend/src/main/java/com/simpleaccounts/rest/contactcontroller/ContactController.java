@@ -184,18 +184,16 @@ public class ContactController {
 			contactService.persist(contact);
 			transactionCategoryCreationHelper.createTransactionCategoryForContact(contact);
 			ContactListModel contactListModel = contactHelper.getModel(contact);
-			if(contactListModel == null){
-				message = new SimpleAccountsMessage("",
-					MessageUtil.getMessage("create.unsuccessful.msg"), true);
-				return new ResponseEntity<>( message ,HttpStatus.INTERNAL_SERVER_ERROR);
-			}else {
-				message = new SimpleAccountsMessage("0024",
-						MessageUtil.getMessage("contact.created.successful.msg.0024"), false);
-				return new ResponseEntity<>(contactHelper.getModel(contact) ,HttpStatus.OK);
-			}
-		} catch (Exception e) {
-			logger.error(ERROR, e);
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+				if(contactListModel == null){
+					message = new SimpleAccountsMessage("",
+						MessageUtil.getMessage("create.unsuccessful.msg"), true);
+					return new ResponseEntity<>( message ,HttpStatus.INTERNAL_SERVER_ERROR);
+				}else {
+					return new ResponseEntity<>(contactHelper.getModel(contact) ,HttpStatus.OK);
+				}
+			} catch (Exception e) {
+				logger.error(ERROR, e);
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -281,11 +279,11 @@ public class ContactController {
 	@Transactional(rollbackFor = Exception.class)
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
-		try {
-		SimpleAccountsMessage message= null;
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		List<TransactionCategory> transactionCategoryList = new ArrayList<>();
-		Contact contact = contactService.findByPK(id);
+			try {
+			SimpleAccountsMessage message= null;
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			List<TransactionCategory> transactionCategoryList;
+			Contact contact = contactService.findByPK(id);
 
 		contact.setDeleteFlag(true);
 		contact.setLastUpdatedBy(userId);

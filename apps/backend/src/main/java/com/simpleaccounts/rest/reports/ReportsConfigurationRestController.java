@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.ReportsConfiguration;
-import com.simpleaccounts.entity.User;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -48,29 +47,25 @@ public class ReportsConfigurationRestController {
 
     @LogRequest
     @ApiOperation(value = "Update Report Columns Configuration")
-    @PostMapping(value = "/update")
-    public ResponseEntity<Object> update(@RequestBody ReportsConfigurationModel model, HttpServletRequest request) {
-	        try {
-	            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-	            User user = userService.findByPK(userId);
-	            ReportsConfiguration reportsConfiguration = new ReportsConfiguration();
-	            if(model.getId()!=null){
-	                reportsConfiguration = reportsColumnConfigurationRepository.findById(model.getId()).orElse(new ReportsConfiguration());
-	            }
+	    @PostMapping(value = "/update")
+	    public ResponseEntity<Object> update(@RequestBody ReportsConfigurationModel model, HttpServletRequest request) {
+		        try {
+		            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+		            userService.findByPK(userId);
+		            ReportsConfiguration reportsConfiguration = new ReportsConfiguration();
+		            if(model.getId()!=null){
+		                reportsConfiguration = reportsColumnConfigurationRepository.findById(model.getId()).orElse(new ReportsConfiguration());
+		            }
             if(model.getReportName()!=null && !model.getReportName().isEmpty()){
                 reportsConfiguration.setReportName(model.getReportName());
-            }
-            if(model.getColumnNames()!=null && !model.getColumnNames().isEmpty()){
-                ObjectMapper objectMapper = new ObjectMapper();
-                String jsonString = objectMapper.writeValueAsString(model.getColumnNames());
-                if(jsonString!=null){
-                    reportsConfiguration.setColumnNames(jsonString = model.getColumnNames().replace("\\", ""));
-                }
-            }
-            reportsConfiguration.setLastUpdatedBy(userId);
-            reportsConfiguration.setLastUpdateDate(LocalDateTime.now());
-            reportsColumnConfigurationRepository.save(reportsConfiguration);
-            return new ResponseEntity<>(HttpStatus.OK);
+	            }
+	            if(model.getColumnNames()!=null && !model.getColumnNames().isEmpty()){
+	                reportsConfiguration.setColumnNames(model.getColumnNames().replace("\\", ""));
+	            }
+	            reportsConfiguration.setLastUpdatedBy(userId);
+	            reportsConfiguration.setLastUpdateDate(LocalDateTime.now());
+	            reportsColumnConfigurationRepository.save(reportsConfiguration);
+	            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             log.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -5,7 +5,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeDesignation;
-import com.simpleaccounts.entity.User;
 import com.simpleaccounts.model.EmployeeDesignationPersistModel;
 import com.simpleaccounts.repository.EmployeeRepository;
 import com.simpleaccounts.rest.DropdownObjectModel;
@@ -54,13 +53,13 @@ public class EmployeeDesignationController {
     @PostMapping(value = "/saveEmployeeDesignation")
     public ResponseEntity<String> saveEmployeeDesignation(@ModelAttribute EmployeeDesignationPersistModel employeeDesignationPersistModel, HttpServletRequest request)
     {
-        try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
+	        try {
+	            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+	            userService.findByPK(userId);
 
-            EmployeeDesignation employeeDesignation = employeeDesignationRestHelper.getEmployeeDesignationEntity(employeeDesignationPersistModel);
+	            EmployeeDesignation employeeDesignation = employeeDesignationRestHelper.getEmployeeDesignationEntity(employeeDesignationPersistModel);
 
-            employeeDesignationService.persist(employeeDesignation);
+	            employeeDesignationService.persist(employeeDesignation);
 
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
@@ -74,13 +73,13 @@ public class EmployeeDesignationController {
     @ApiOperation(value = "Update EmployeeDesignation", response = EmployeeDesignation.class)
     @PostMapping(value = "/updateEmployeeDesignation")
     public ResponseEntity<String> updateEmployeeDesignation(@ModelAttribute EmployeeDesignationPersistModel employeeDesignationPersistModel, HttpServletRequest request) {
-        try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
+	        try {
+	            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+	            userService.findByPK(userId);
 
-            EmployeeDesignation employeeDesignation = employeeDesignationRestHelper.getEmployeeDesignationEntity(employeeDesignationPersistModel);
+	            EmployeeDesignation employeeDesignation = employeeDesignationRestHelper.getEmployeeDesignationEntity(employeeDesignationPersistModel);
 
-            employeeDesignationService.update(employeeDesignation);
+	            employeeDesignationService.update(employeeDesignation);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
@@ -165,13 +164,13 @@ public class EmployeeDesignationController {
     @ApiOperation(value = "Get Employee Designation list", response = List.class)
     @GetMapping(value = "/EmployeeDesignationList")
     public ResponseEntity<PaginationResponseModel> getEmployeeDesignationList(PayRollFilterModel filterModel,
-                                                                         HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
-        Map<Object, Object> filterDataMap = new HashMap<>();
-        PaginationResponseModel paginationResponseModel = employeeDesignationService.getEmployeeDesignationList(filterDataMap, filterModel);
-        if (paginationResponseModel != null) {
-            return new ResponseEntity<>(employeeDesignationRestHelper.getEmployeeDesignationListModel(paginationResponseModel), HttpStatus.OK);
+	                                                                         HttpServletRequest request) {
+	        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+	        userService.findByPK(userId);
+	        Map<Object, Object> filterDataMap = new HashMap<>();
+	        PaginationResponseModel paginationResponseModel = employeeDesignationService.getEmployeeDesignationList(filterDataMap, filterModel);
+	        if (paginationResponseModel != null) {
+	            return new ResponseEntity<>(employeeDesignationRestHelper.getEmployeeDesignationListModel(paginationResponseModel), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

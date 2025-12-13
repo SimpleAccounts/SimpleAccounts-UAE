@@ -98,12 +98,12 @@ public class BankAccountController{
 	@LogRequest
 	@ApiOperation(value = "Get All Bank Accounts", response = List.class)
 	@GetMapping(value = "/list")
-	public ResponseEntity<PaginationResponseModel> getBankAccountList(BankAccountFilterModel filterModel,
-																	  HttpServletRequest request) {
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userService.findByPK(userId);
+		public ResponseEntity<PaginationResponseModel> getBankAccountList(BankAccountFilterModel filterModel,
+																		  HttpServletRequest request) {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			userService.findByPK(userId);
 
-		Map<BankAccounrFilterEnum, Object> filterDataMap = new EnumMap<>(BankAccounrFilterEnum.class);
+			Map<BankAccounrFilterEnum, Object> filterDataMap = new EnumMap<>(BankAccounrFilterEnum.class);
 
 		filterDataMap.put(BankAccounrFilterEnum.BANK_ACCOUNT_NAME, filterModel.getBankAccountName());
 		filterDataMap.put(BankAccounrFilterEnum.BANK_BNAME, filterModel.getBankName());
@@ -668,12 +668,12 @@ public class BankAccountController{
 	@LogRequest
 	@ApiOperation(value = "Get All Bank List", response = List.class)
 	@GetMapping(value = "/getBankNameList")
-	public ResponseEntity<Object> getBankNameList(HttpServletRequest request) {
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userService.findByPK(userId);
-		 try {
-			 
-	            List<BankDetails> bankNameDetailsList = bankAccountService.getBankNameList();
+		public ResponseEntity<Object> getBankNameList(HttpServletRequest request) {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			userService.findByPK(userId);
+			 try {
+				 
+		            List<BankDetails> bankNameDetailsList = bankAccountService.getBankNameList();
 	            
 	            return new ResponseEntity<>(bankNameDetailsList,HttpStatus.OK);
 	        }catch (Exception e){

@@ -116,15 +116,15 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
                     : Boolean.FALSE;
             BigDecimal transactionAmount = transaction.getTransactionAmount()!=null?transaction.getTransactionAmount():BigDecimal.ZERO;
 
-            Map<String, Object> param = new HashMap<>();
-            param.put(JSON_KEY_TRANSACTION_CATEGORY, category);
-            param.put("closingBalanceDate", transaction.getTransactionDate());
+	            Map<String, Object> param = new HashMap<>();
+	            param.put(JSON_KEY_TRANSACTION_CATEGORY, category);
+	            param.put("closingBalanceDate", transaction.getTransactionDate());
 
-            TransactionCategoryClosingBalance balance = getFirstElement(findByAttributes(param));
-            BigDecimal closingBalance = BigDecimal.ZERO;
-            BigDecimal bankClosingBalance =BigDecimal.ZERO;
-            BigDecimal bankOpeningBalance = BigDecimal.ZERO;
-            if (balance == null) {
+	            TransactionCategoryClosingBalance balance = getFirstElement(findByAttributes(param));
+	            BigDecimal closingBalance;
+	            BigDecimal bankClosingBalance =BigDecimal.ZERO;
+	            BigDecimal bankOpeningBalance = BigDecimal.ZERO;
+	            if (balance == null) {
                 param = new HashMap<>();
                 param.put(JSON_KEY_TRANSACTION_CATEGORY, category);
 	                TransactionCategoryClosingBalance lastBalance = transactionCategoryClosingBalanceDao.getClosingBalanceLessThanCurrentDate(transaction.getTransactionDate(), category);
@@ -173,15 +173,14 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
                     }
                 }
             }
-            else
-            {
-                param = new HashMap<>();
-                param.put(JSON_KEY_TRANSACTION_CATEGORY, category);
-                closingBalance = balance.getClosingBalance();
-	                TransactionCategoryClosingBalance lastBalance = transactionCategoryClosingBalanceDao.getLastClosingBalanceByDate(category);
-                if(lastBalance!=null && lastBalance.getClosingBalance() != balance.getClosingBalance() &&
-                !(lastBalance.getClosingBalanceDate().isEqual(balance.getClosingBalanceDate())))
-                {
+	            else
+	            {
+	                param = new HashMap<>();
+	                param.put(JSON_KEY_TRANSACTION_CATEGORY, category);
+		                TransactionCategoryClosingBalance lastBalance = transactionCategoryClosingBalanceDao.getLastClosingBalanceByDate(category);
+	                if(lastBalance!=null && lastBalance.getClosingBalance() != balance.getClosingBalance() &&
+	                !(lastBalance.getClosingBalanceDate().isEqual(balance.getClosingBalanceDate())))
+	                {
                     isUpdateOpeningBalance = true;
                     balanceList = transactionCategoryClosingBalanceDao.
                             getClosingBalanceForTimeRange(balance.getClosingBalanceDate(),lastBalance.getClosingBalanceDate()

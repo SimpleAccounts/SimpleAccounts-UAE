@@ -144,18 +144,17 @@ public class CorporateTaxService {
     }
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
     public List<PaymentHistoryModel> getCtPaymentHistory(PaginationResponseModel responseModel,
-                                                       int pageNo, int pageSize, boolean paginationDisable,
-                                                       String sortOrder, String sortingCol, Integer userId) {
-        User user = userService.findByPK(userId);
-        List<PaymentHistoryModel> paymentHistoryModelList = new ArrayList<>();
-        List<CorporateTaxPaymentHistory> corporateTaxPaymentHistoryList = new ArrayList<>();
-        Pageable pageable =  getCTPageableRequest(pageNo, pageSize, sortOrder,sortingCol);
-        Page<CorporateTaxPaymentHistory> corporateTaxPaymentHistoryPage = corporateTaxPaymentHistoryRepository.findAll(pageable);
-        corporateTaxPaymentHistoryList = corporateTaxPaymentHistoryPage.getContent();
-        responseModel.setCount((int)corporateTaxPaymentHistoryPage.getTotalElements());
-        if(corporateTaxPaymentHistoryList != null && ! corporateTaxPaymentHistoryList.isEmpty()){
-            for(CorporateTaxPaymentHistory corporateTaxPaymentHistory:corporateTaxPaymentHistoryList){
-                PaymentHistoryModel paymentHistoryModel= new PaymentHistoryModel();
+	                                                       int pageNo, int pageSize, boolean paginationDisable,
+	                                                       String sortOrder, String sortingCol, Integer userId) {
+	        userService.findByPK(userId);
+	        List<PaymentHistoryModel> paymentHistoryModelList = new ArrayList<>();
+	        Pageable pageable =  getCTPageableRequest(pageNo, pageSize, sortOrder,sortingCol);
+	        Page<CorporateTaxPaymentHistory> corporateTaxPaymentHistoryPage = corporateTaxPaymentHistoryRepository.findAll(pageable);
+	        List<CorporateTaxPaymentHistory> corporateTaxPaymentHistoryList = corporateTaxPaymentHistoryPage.getContent();
+	        responseModel.setCount((int)corporateTaxPaymentHistoryPage.getTotalElements());
+	        if(corporateTaxPaymentHistoryList != null && ! corporateTaxPaymentHistoryList.isEmpty()){
+	            for(CorporateTaxPaymentHistory corporateTaxPaymentHistory:corporateTaxPaymentHistoryList){
+	                PaymentHistoryModel paymentHistoryModel= new PaymentHistoryModel();
                 if(corporateTaxPaymentHistory.getId()!= null)
                     paymentHistoryModel.setId(corporateTaxPaymentHistory.getId());
                 if(corporateTaxPaymentHistory.getStartDate() != null && corporateTaxPaymentHistory.getEndDate() != null)
