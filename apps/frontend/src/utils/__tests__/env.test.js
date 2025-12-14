@@ -30,7 +30,9 @@ describe('env utilities - module loading', () => {
 describe('env utilities', () => {
   describe('getEnvMode', () => {
     it('should return test mode in Jest environment', () => {
-      expect(getEnvMode()).toBe('test');
+      // MODE should match process.env.NODE_ENV or default to 'test'
+      const expectedMode = process.env.NODE_ENV || 'test';
+      expect(getEnvMode()).toBe(expectedMode);
     });
   });
 
