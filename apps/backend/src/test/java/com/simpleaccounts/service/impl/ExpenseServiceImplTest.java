@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.constant.CommonStatusEnum;
 import com.simpleaccounts.constant.dbfilter.ExpenseFIlterEnum;
+import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.CompanyDao;
 import com.simpleaccounts.dao.ExpenseDao;
 import com.simpleaccounts.dao.ProjectDao;
@@ -55,6 +56,9 @@ class ExpenseServiceImplTest {
 
     @Mock
     private TransactionExpensesService transactionExpensesService;
+
+    @Mock
+    private ActivityDao activityDao;
 
     @InjectMocks
     private ExpenseServiceImpl expenseService;

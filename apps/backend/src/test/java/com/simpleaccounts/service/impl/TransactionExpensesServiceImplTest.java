@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
+import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.TransactionExpensesDao;
 import com.simpleaccounts.entity.Expense;
 import com.simpleaccounts.entity.TransactionExpenses;
@@ -28,8 +30,18 @@ class TransactionExpensesServiceImplTest {
     @Mock
     private TransactionExpensesDao transactionExpensesDao;
 
+    @Mock
+    private ActivityDao activityDao;
+
     @InjectMocks
     private TransactionExpensesServiceImpl transactionExpensesService;
+
+    private Expense createExpense(Integer id, BigDecimal amount) {
+        Expense expense = new Expense();
+        expense.setExpenseId(id);
+        expense.setExpenseAmount(amount);
+        return expense;
+    }
 
     @Nested
     @DisplayName("getMappedExpenses Tests")
@@ -226,10 +238,11 @@ class TransactionExpensesServiceImplTest {
     class UpdateTests {
 
         @Test
-        @DisplayName("Should update existing transaction expense")
-        void updateTransactionExpenseUpdates() {
+        @DisplayName("Should update existing transaction expenses")
+        void updateTransactionExpensesUpdates() {
             // Arrange
             TransactionExpenses te = createTransactionExpenses(1);
+            te.setRemainingToExplain(new BigDecimal("25.00"));
 
             when(transactionExpensesDao.update(te)).thenReturn(te);
 
@@ -238,6 +251,7 @@ class TransactionExpensesServiceImplTest {
 
             // Assert
             assertThat(result).isNotNull();
+            assertThat(result.getRemainingToExplain()).isEqualTo(new BigDecimal("25.00"));
             verify(transactionExpensesDao).update(te);
         }
     }
@@ -247,8 +261,8 @@ class TransactionExpensesServiceImplTest {
     class DeleteTests {
 
         @Test
-        @DisplayName("Should delete transaction expense")
-        void deleteTransactionExpenseDeletes() {
+        @DisplayName("Should delete transaction expenses")
+        void deleteTransactionExpensesDeletes() {
             // Arrange
             TransactionExpenses te = createTransactionExpenses(1);
 
@@ -257,28 +271,6 @@ class TransactionExpensesServiceImplTest {
 
             // Assert
             verify(transactionExpensesDao).delete(te);
-        }
-    }
-
-    @Nested
-    @DisplayName("findAll Tests")
-    class FindAllTests {
-
-        @Test
-        @DisplayName("Should return all transaction expenses")
-        void findAllReturnsTransactionExpenses() {
-            // Arrange
-            List<TransactionExpenses> expectedList = createTransactionExpensesList(5);
-
-            when(transactionExpensesDao.dumpData())
-                .thenReturn(expectedList);
-
-            // Act
-            List<TransactionExpenses> result = transactionExpensesService.findAll();
-
-            // Assert
-            assertThat(result).isNotNull().hasSize(5);
-            verify(transactionExpensesDao).dumpData();
         }
     }
 
@@ -305,22 +297,10 @@ class TransactionExpensesServiceImplTest {
     private TransactionExpenses createTransactionExpenses(Integer id) {
         TransactionExpenses te = new TransactionExpenses();
         te.setId(id);
-        te.setExpense(createExpense(id, new BigDecimal(100 * (id != null ? id : 1))));
-        te.setDeleteFlag(false);
+        te.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
+        te.setRemainingToExplain(BigDecimal.ZERO);
         te.setCreatedBy(1);
         te.setCreatedDate(LocalDateTime.now());
         return te;
-    }
-
-    private Expense createExpense(Integer id, BigDecimal amount) {
-        Expense expense = new Expense();
-        expense.setExpenseId(id);
-        expense.setExpenseAmount(amount);
-        expense.setExpenseNumber("EXP-" + id);
-        expense.setExpenseDate(LocalDate.now());
-        expense.setDeleteFlag(false);
-        expense.setCreatedBy(1);
-        expense.setCreatedDate(LocalDateTime.now());
-        return expense;
     }
 }

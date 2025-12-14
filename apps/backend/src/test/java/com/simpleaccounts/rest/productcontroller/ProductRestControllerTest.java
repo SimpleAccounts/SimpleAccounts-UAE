@@ -13,7 +13,6 @@ import com.simpleaccounts.entity.Product;
 import com.simpleaccounts.entity.ProductCategory;
 import com.simpleaccounts.entity.ProductWarehouse;
 import com.simpleaccounts.entity.VatCategory;
-import com.simpleaccounts.helper.ProductRestControllerHelper;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.ProductCategoryService;
@@ -65,7 +64,7 @@ class ProductRestControllerTest {
     private JwtTokenUtil jwtTokenUtil;
 
     @Mock
-    private ProductRestControllerHelper productRestControllerHelper;
+    private ProductRestHelper productRestHelper;
 
     @InjectMocks
     private ProductRestController productRestController;
@@ -84,12 +83,13 @@ class ProductRestControllerTest {
         @DisplayName("Should return product list successfully")
         void getProductsReturnsProductList() throws Exception {
             // Arrange
-            List<ProductModel> productModels = createProductModelList(5);
-            PaginationResponseModel response = new PaginationResponseModel(5, productModels);
+            List<Product> products = createProductList(5);
+            PaginationResponseModel response = new PaginationResponseModel(5, products);
+            ProductListModel listModel = new ProductListModel();
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
             when(productService.getProductList(any(), any())).thenReturn(response);
-            when(productRestControllerHelper.getModelList(any())).thenReturn(productModels);
+            when(productRestHelper.getListModel(any(Product.class))).thenReturn(listModel);
 
             // Act & Assert
             mockMvc.perform(get("/rest/product/getList"))
@@ -118,10 +118,10 @@ class ProductRestControllerTest {
         void getProductByIdReturnsProduct() throws Exception {
             // Arrange
             Product product = createProduct(1, "Test Product", "PROD001");
-            ProductModel productModel = createProductModel(1, "Test Product", "PROD001");
+            ProductRequestModel productModel = createProductRequestModel(1, "Test Product", "PROD001");
 
             when(productService.findByPK(1)).thenReturn(product);
-            when(productRestControllerHelper.getModel(product)).thenReturn(productModel);
+            when(productRestHelper.getRequestModel(product)).thenReturn(productModel);
 
             // Act & Assert
             mockMvc.perform(get("/rest/product/getById")
@@ -295,18 +295,26 @@ class ProductRestControllerTest {
         }
     }
 
-    private List<ProductModel> createProductModelList(int count) {
-        List<ProductModel> models = new ArrayList<>();
+    private List<ProductListModel> createProductModelList(int count) {
+        List<ProductListModel> models = new ArrayList<>();
         for (int i = 1; i <= count; i++) {
             models.add(createProductModel(i, "Product " + i, "PROD00" + i));
         }
         return models;
     }
 
-    private ProductModel createProductModel(Integer id, String name, String code) {
-        ProductModel model = new ProductModel();
-        model.setProductId(id);
+    private ProductRequestModel createProductRequestModel(Integer id, String name, String code) {
+        ProductRequestModel model = new ProductRequestModel();
+        model.setProductID(id);
         model.setProductName(name);
+        model.setProductCode(code);
+        return model;
+    }
+
+    private ProductListModel createProductModel(Integer id, String name, String code) {
+        ProductListModel model = new ProductListModel();
+        model.setId(id);
+        model.setName(name);
         model.setProductCode(code);
         return model;
     }
@@ -322,6 +330,14 @@ class ProductRestControllerTest {
         product.setCreatedDate(LocalDateTime.now());
         product.setLineItemList(new ArrayList<>());
         return product;
+    }
+    
+    private List<Product> createProductList(int count) {
+        List<Product> products = new ArrayList<>();
+        for (int i = 1; i <= count; i++) {
+            products.add(createProduct(i, "Product " + i, "PROD00" + i));
+        }
+        return products;
     }
 
     private List<ProductCategory> createCategoryList(int count) {
@@ -342,7 +358,7 @@ class ProductRestControllerTest {
         for (int i = 1; i <= count; i++) {
             VatCategory vatCategory = new VatCategory();
             vatCategory.setId(i);
-            vatCategory.setVatCategoryName("VAT " + (5 * i) + "%");
+            vatCategory.setName("VAT " + (5 * i) + "%");
             vatCategory.setVat(new BigDecimal(5 * i));
             vatCategory.setDeleteFlag(false);
             categories.add(vatCategory);
@@ -354,9 +370,8 @@ class ProductRestControllerTest {
         List<ProductWarehouse> warehouses = new ArrayList<>();
         for (int i = 1; i <= count; i++) {
             ProductWarehouse warehouse = new ProductWarehouse();
-            warehouse.setProductWarehouseId(i);
+            warehouse.setWarehouseId(i);
             warehouse.setWarehouseName("Warehouse " + i);
-            warehouse.setWarehouseCode("WH00" + i);
             warehouse.setDeleteFlag(false);
             warehouses.add(warehouse);
         }

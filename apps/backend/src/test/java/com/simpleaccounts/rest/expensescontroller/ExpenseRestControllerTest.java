@@ -94,7 +94,7 @@ class ExpenseRestControllerTest {
             // Arrange
             User user = createUser(1, "John", "Doe");
             List<Expense> expenses = createExpenseList(5);
-            List<ExpenseModel> expenseModels = createExpenseModelList(5);
+            List<ExpenseListModel> expenseModels = createExpenseListModelList(5);
             PaginationResponseModel response = new PaginationResponseModel(5, expenses);
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
@@ -128,7 +128,7 @@ class ExpenseRestControllerTest {
             // Arrange
             User user = createUser(1, "John", "Doe");
             List<Expense> expenses = createExpenseList(3);
-            List<ExpenseModel> expenseModels = createExpenseModelList(3);
+            List<ExpenseListModel> expenseModels = createExpenseListModelList(3);
             PaginationResponseModel response = new PaginationResponseModel(3, expenses);
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
@@ -268,7 +268,7 @@ class ExpenseRestControllerTest {
             adminUser.setRole(adminRole);
 
             List<Expense> expenses = createExpenseList(5);
-            List<ExpenseModel> expenseModels = createExpenseModelList(5);
+            List<ExpenseListModel> expenseModels = createExpenseListModelList(5);
             PaginationResponseModel response = new PaginationResponseModel(5, expenses);
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
@@ -291,7 +291,7 @@ class ExpenseRestControllerTest {
             regularUser.setRole(userRole);
 
             List<Expense> expenses = createExpenseList(3);
-            List<ExpenseModel> expenseModels = createExpenseModelList(3);
+            List<ExpenseListModel> expenseModels = createExpenseListModelList(3);
             PaginationResponseModel response = new PaginationResponseModel(3, expenses);
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(2);
@@ -352,12 +352,20 @@ class ExpenseRestControllerTest {
         return expense;
     }
 
-    private List<ExpenseModel> createExpenseModelList(int count) {
-        List<ExpenseModel> models = new ArrayList<>();
+    private List<ExpenseListModel> createExpenseListModelList(int count) {
+        List<ExpenseListModel> models = new ArrayList<>();
         for (int i = 1; i <= count; i++) {
-            models.add(createExpenseModel(i, new BigDecimal(100 * i)));
+            models.add(createExpenseListModel(i, new BigDecimal(100 * i)));
         }
         return models;
+    }
+
+    private ExpenseListModel createExpenseListModel(Integer id, BigDecimal amount) {
+        ExpenseListModel model = new ExpenseListModel();
+        model.setExpenseId(id);
+        model.setExpenseAmount(amount);
+        model.setExpenseNumber("EXP-" + id);
+        return model;
     }
 
     private ExpenseModel createExpenseModel(Integer id, BigDecimal amount) {

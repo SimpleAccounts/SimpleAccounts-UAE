@@ -131,11 +131,11 @@ class ProductDaoImplTest {
             Product product = createProduct(1, "Product 1", "PROD001");
 
             ProductLineItem lineItem1 = new ProductLineItem();
-            lineItem1.setProductLineItemId(1);
+            lineItem1.setId(1);
             lineItem1.setDeleteFlag(false);
 
             ProductLineItem lineItem2 = new ProductLineItem();
-            lineItem2.setProductLineItemId(2);
+            lineItem2.setId(2);
             lineItem2.setDeleteFlag(false);
 
             product.setLineItemList(Arrays.asList(lineItem1, lineItem2));

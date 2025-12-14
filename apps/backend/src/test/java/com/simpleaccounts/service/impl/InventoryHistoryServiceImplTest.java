@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.InventoryHistoryDao;
 import com.simpleaccounts.entity.Inventory;
 import com.simpleaccounts.entity.InventoryHistory;
+import com.simpleaccounts.entity.Product;
 import com.simpleaccounts.rest.InventoryController.InventoryRevenueModel;
 import com.simpleaccounts.rest.InventoryController.TopInventoryRevenueModel;
 import java.math.BigDecimal;
@@ -31,6 +33,9 @@ class InventoryHistoryServiceImplTest {
     @Mock
     private InventoryHistoryDao inventoryHistoryDao;
 
+    @Mock
+    private ActivityDao activityDao;
+
     @InjectMocks
     private InventoryHistoryServiceImpl inventoryHistoryService;
 
@@ -43,7 +48,7 @@ class InventoryHistoryServiceImplTest {
         void getHistoryByInventoryIdReturnsHistory() {
             // Arrange
             Integer inventoryId = 1;
-            InventoryHistory expectedHistory = createInventoryHistory(1, 100, 50.0f);
+            InventoryHistory expectedHistory = createInventoryHistory(1, 100.0f, 50.0f);
 
             when(inventoryHistoryDao.getHistoryByInventoryId(inventoryId))
                 .thenReturn(expectedHistory);
@@ -53,7 +58,7 @@ class InventoryHistoryServiceImplTest {
 
             // Assert
             assertThat(result).isNotNull();
-            assertThat(result.getQuantity()).isEqualTo(100);
+            assertThat(result.getQuantity()).isEqualTo(100.0f);
             verify(inventoryHistoryDao).getHistoryByInventoryId(inventoryId);
         }
 
@@ -252,7 +257,7 @@ class InventoryHistoryServiceImplTest {
         void findByPKReturnsHistory() {
             // Arrange
             Integer historyId = 1;
-            InventoryHistory expectedHistory = createInventoryHistory(historyId, 100, 50.0f);
+            InventoryHistory expectedHistory = createInventoryHistory(historyId, 100.0f, 50.0f);
 
             when(inventoryHistoryDao.findByPK(historyId))
                 .thenReturn(expectedHistory);
@@ -291,7 +296,7 @@ class InventoryHistoryServiceImplTest {
         @DisplayName("Should persist new inventory history")
         void persistHistorySaves() {
             // Arrange
-            InventoryHistory history = createInventoryHistory(null, 50, 25.0f);
+            InventoryHistory history = createInventoryHistory(null, 50.0f, 25.0f);
 
             // Act
             inventoryHistoryService.persist(history);
@@ -309,7 +314,7 @@ class InventoryHistoryServiceImplTest {
         @DisplayName("Should update existing inventory history")
         void updateHistoryUpdates() {
             // Arrange
-            InventoryHistory history = createInventoryHistory(1, 75, 35.0f);
+            InventoryHistory history = createInventoryHistory(1, 75.0f, 35.0f);
 
             when(inventoryHistoryDao.update(history)).thenReturn(history);
 
@@ -318,7 +323,7 @@ class InventoryHistoryServiceImplTest {
 
             // Assert
             assertThat(result).isNotNull();
-            assertThat(result.getQuantity()).isEqualTo(75);
+            assertThat(result.getQuantity()).isEqualTo(75.0f);
             verify(inventoryHistoryDao).update(history);
         }
     }
@@ -326,12 +331,12 @@ class InventoryHistoryServiceImplTest {
     private List<InventoryHistory> createInventoryHistoryList(int count) {
         List<InventoryHistory> histories = new ArrayList<>();
         for (int i = 1; i <= count; i++) {
-            histories.add(createInventoryHistory(i, 10 * i, 5.0f * i));
+            histories.add(createInventoryHistory(i, 10.0f * i, 5.0f * i));
         }
         return histories;
     }
 
-    private InventoryHistory createInventoryHistory(Integer id, Integer quantity, Float unitCost) {
+    private InventoryHistory createInventoryHistory(Integer id, Float quantity, Float unitCost) {
         InventoryHistory history = new InventoryHistory();
         history.setInventoryHistoryId(id);
         history.setQuantity(quantity);

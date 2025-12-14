@@ -40,7 +40,7 @@ class ProductCategoryRestControllerTest {
     private JwtTokenUtil jwtTokenUtil;
 
     @Mock
-    private ProductCategoryRestControllerHelper productCategoryRestControllerHelper;
+    private ProductCategoryRestHelper productCategoryRestHelper;
 
     @InjectMocks
     private ProductCategoryRestController productCategoryRestController;
@@ -59,12 +59,12 @@ class ProductCategoryRestControllerTest {
         @DisplayName("Should return category list successfully")
         void getProductCategoryListReturnsCategories() throws Exception {
             // Arrange
-            List<ProductCategoryModel> categoryModels = createCategoryModelList(5);
+            List<ProductCategoryListModel> categoryModels = createCategoryModelList(5);
             PaginationResponseModel response = new PaginationResponseModel(5, categoryModels);
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
             when(productCategoryService.getProductCategoryList(any(), any())).thenReturn(response);
-            when(productCategoryRestControllerHelper.getModelList(any())).thenReturn(categoryModels);
+            when(productCategoryRestHelper.getListModel(any())).thenReturn(categoryModels);
 
             // Act & Assert
             mockMvc.perform(get("/rest/productcategory/getList"))
@@ -91,7 +91,7 @@ class ProductCategoryRestControllerTest {
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
             when(productCategoryService.getProductCategoryList(any(), any())).thenReturn(response);
-            when(productCategoryRestControllerHelper.getModelList(any())).thenReturn(new ArrayList<>());
+            when(productCategoryRestHelper.getListModel(any())).thenReturn(new ArrayList<>());
 
             // Act & Assert
             mockMvc.perform(get("/rest/productcategory/getList"))
@@ -108,10 +108,10 @@ class ProductCategoryRestControllerTest {
         void getProductCategoryByIdReturnsCategory() throws Exception {
             // Arrange
             ProductCategory category = createCategory(1, "Electronics", "ELEC001");
-            ProductCategoryModel categoryModel = createCategoryModel(1, "Electronics", "ELEC001");
+            ProductCategoryListModel categoryModel = createCategoryModel(1, "Electronics", "ELEC001");
 
             when(productCategoryService.findByPK(1)).thenReturn(category);
-            when(productCategoryRestControllerHelper.getModel(category)).thenReturn(categoryModel);
+            when(productCategoryRestHelper.getRequestModel(category)).thenReturn(categoryModel);
 
             // Act & Assert
             mockMvc.perform(get("/rest/productcategory/getById")
@@ -173,12 +173,12 @@ class ProductCategoryRestControllerTest {
         @DisplayName("Should handle pagination parameters correctly")
         void handlesPaginationParameters() throws Exception {
             // Arrange
-            List<ProductCategoryModel> categoryModels = createCategoryModelList(10);
+            List<ProductCategoryListModel> categoryModels = createCategoryModelList(10);
             PaginationResponseModel response = new PaginationResponseModel(10, categoryModels);
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
             when(productCategoryService.getProductCategoryList(any(), any())).thenReturn(response);
-            when(productCategoryRestControllerHelper.getModelList(any())).thenReturn(categoryModels);
+            when(productCategoryRestHelper.getListModel(any())).thenReturn(categoryModels);
 
             // Act & Assert
             mockMvc.perform(get("/rest/productcategory/getList")
@@ -190,16 +190,16 @@ class ProductCategoryRestControllerTest {
         }
     }
 
-    private List<ProductCategoryModel> createCategoryModelList(int count) {
-        List<ProductCategoryModel> models = new ArrayList<>();
+    private List<ProductCategoryListModel> createCategoryModelList(int count) {
+        List<ProductCategoryListModel> models = new ArrayList<>();
         for (int i = 1; i <= count; i++) {
             models.add(createCategoryModel(i, "Category " + i, "CAT00" + i));
         }
         return models;
     }
 
-    private ProductCategoryModel createCategoryModel(Integer id, String name, String code) {
-        ProductCategoryModel model = new ProductCategoryModel();
+    private ProductCategoryListModel createCategoryModel(Integer id, String name, String code) {
+        ProductCategoryListModel model = new ProductCategoryListModel();
         model.setId(id);
         model.setProductCategoryName(name);
         model.setProductCategoryCode(code);

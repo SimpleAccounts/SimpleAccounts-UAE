@@ -382,7 +382,7 @@ class PurchaseRestControllerTest {
         List<TransactionCategory> categories = new ArrayList<>();
         for (int i = 1; i <= count; i++) {
             TransactionCategory category = new TransactionCategory();
-            category.setTransactionCategoryCode(i);
+            category.setTransactionCategoryCode(String.valueOf(i));
             category.setTransactionCategoryName("Category " + i);
             category.setDeleteFlag(false);
             categories.add(category);
@@ -408,8 +408,6 @@ class PurchaseRestControllerTest {
             Project project = new Project();
             project.setProjectId(i);
             project.setProjectName("Project " + i);
-            project.setProjectCode("PROJ00" + i);
-            project.setActive(true);
             projects.add(project);
         }
         return projects;
@@ -420,7 +418,7 @@ class PurchaseRestControllerTest {
         for (int i = 1; i <= count; i++) {
             VatCategory vatCategory = new VatCategory();
             vatCategory.setId(i);
-            vatCategory.setVatCategoryName("VAT " + (5 * i) + "%");
+            vatCategory.setName("VAT " + (5 * i) + "%");
             vatCategory.setVat(new BigDecimal(5 * i));
             vatCategory.setDeleteFlag(false);
             categories.add(vatCategory);

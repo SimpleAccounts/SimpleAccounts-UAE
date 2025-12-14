@@ -74,7 +74,7 @@ class InventoryHistoryDaoImplTest {
         void getHistoryByInventoryIdReturnsHistory() {
             // Arrange
             Integer inventoryId = 1;
-            InventoryHistory expectedHistory = createInventoryHistory(1, 100, 50.0f);
+            InventoryHistory expectedHistory = createInventoryHistory(1, 100.0f, 50.0f);
             List<InventoryHistory> historyList = new ArrayList<>();
             historyList.add(expectedHistory);
 
@@ -157,7 +157,7 @@ class InventoryHistoryDaoImplTest {
         void findByPKReturnsHistory() {
             // Arrange
             Integer historyId = 1;
-            InventoryHistory expectedHistory = createInventoryHistory(historyId, 100, 50.0f);
+            InventoryHistory expectedHistory = createInventoryHistory(historyId, 100.0f, 50.0f);
 
             when(entityManager.find(InventoryHistory.class, historyId))
                 .thenReturn(expectedHistory);
@@ -195,7 +195,7 @@ class InventoryHistoryDaoImplTest {
         @DisplayName("Should persist new inventory history")
         void persistHistoryPersistsNewHistory() {
             // Arrange
-            InventoryHistory history = createInventoryHistory(null, 50, 25.0f);
+            InventoryHistory history = createInventoryHistory(null, 50.0f, 25.0f);
 
             // Act
             entityManager.persist(history);
@@ -213,7 +213,7 @@ class InventoryHistoryDaoImplTest {
         @DisplayName("Should update existing inventory history")
         void updateHistoryMergesExistingHistory() {
             // Arrange
-            InventoryHistory history = createInventoryHistory(1, 75, 35.0f);
+            InventoryHistory history = createInventoryHistory(1, 75.0f, 35.0f);
             when(entityManager.merge(history)).thenReturn(history);
 
             // Act
@@ -233,7 +233,7 @@ class InventoryHistoryDaoImplTest {
         @DisplayName("Should delete inventory history")
         void deleteHistoryRemovesHistory() {
             // Arrange
-            InventoryHistory history = createInventoryHistory(1, 100, 50.0f);
+            InventoryHistory history = createInventoryHistory(1, 100.0f, 50.0f);
             when(entityManager.contains(history)).thenReturn(true);
 
             // Act
@@ -252,7 +252,7 @@ class InventoryHistoryDaoImplTest {
         @DisplayName("Should handle inventory history with all fields populated")
         void handleHistoryWithAllFields() {
             // Arrange
-            InventoryHistory history = createInventoryHistory(1, 100, 50.0f);
+            InventoryHistory history = createInventoryHistory(1, 100.0f, 50.0f);
             history.setUnitSellingPrice(75.0f);
             history.setTransactionDate(LocalDate.now());
 
@@ -264,7 +264,7 @@ class InventoryHistoryDaoImplTest {
 
             // Assert
             assertThat(result).isNotNull();
-            assertThat(result.getQuantity()).isEqualTo(100);
+            assertThat(result.getQuantity()).isEqualTo(100.0f);
             assertThat(result.getUnitCost()).isEqualTo(50.0f);
             assertThat(result.getUnitSellingPrice()).isEqualTo(75.0f);
         }
@@ -273,7 +273,7 @@ class InventoryHistoryDaoImplTest {
         @DisplayName("Should handle inventory history with inventory reference")
         void handleHistoryWithInventoryReference() {
             // Arrange
-            InventoryHistory history = createInventoryHistory(1, 100, 50.0f);
+            InventoryHistory history = createInventoryHistory(1, 100.0f, 50.0f);
 
             Inventory inventory = new Inventory();
             inventory.setInventoryID(10);
@@ -296,7 +296,7 @@ class InventoryHistoryDaoImplTest {
         @DisplayName("Should handle inventory history with product reference")
         void handleHistoryWithProductReference() {
             // Arrange
-            InventoryHistory history = createInventoryHistory(1, 100, 50.0f);
+            InventoryHistory history = createInventoryHistory(1, 100.0f, 50.0f);
 
             Product product = new Product();
             product.setProductID(5);
@@ -319,12 +319,12 @@ class InventoryHistoryDaoImplTest {
     private List<InventoryHistory> createInventoryHistoryList(int count) {
         List<InventoryHistory> histories = new ArrayList<>();
         for (int i = 1; i <= count; i++) {
-            histories.add(createInventoryHistory(i, 10 * i, 5.0f * i));
+            histories.add(createInventoryHistory(i, 10.0f * i, 5.0f * i));
         }
         return histories;
     }
 
-    private InventoryHistory createInventoryHistory(Integer id, Integer quantity, Float unitCost) {
+    private InventoryHistory createInventoryHistory(Integer id, Float quantity, Float unitCost) {
         InventoryHistory history = new InventoryHistory();
         history.setInventoryHistoryId(id);
         history.setQuantity(quantity);

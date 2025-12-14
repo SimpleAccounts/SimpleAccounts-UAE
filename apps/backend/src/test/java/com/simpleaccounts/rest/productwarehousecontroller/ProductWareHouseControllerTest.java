@@ -97,7 +97,7 @@ class ProductWareHouseControllerTest {
         @DisplayName("Should return warehouse by ID")
         void getWarehouseByIdReturnsWarehouse() throws Exception {
             // Arrange
-            ProductWarehouse warehouse = createWarehouse(1, "Main Warehouse", "MAIN");
+            ProductWarehouse warehouse = createWarehouse(1, "Main Warehouse");
 
             when(productWarehouseService.findByPK(1)).thenReturn(warehouse);
 
@@ -128,7 +128,7 @@ class ProductWareHouseControllerTest {
         @DisplayName("Should save new warehouse successfully")
         void saveWarehouseSucceeds() throws Exception {
             // Arrange
-            ProductWarehouseModel model = createWarehouseModel("New Warehouse", "NEW001");
+            ProductWareHousePersistModel model = createWarehouseModel("New Warehouse");
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
 
@@ -150,10 +150,10 @@ class ProductWareHouseControllerTest {
         @DisplayName("Should update warehouse successfully")
         void updateWarehouseSucceeds() throws Exception {
             // Arrange
-            ProductWarehouseModel model = createWarehouseModel("Updated Warehouse", "UPD001");
-            model.setProductWarehouseId(1);
+            ProductWareHousePersistModel model = createWarehouseModel("Updated Warehouse");
+            model.setWarehouseId(1);
 
-            ProductWarehouse existingWarehouse = createWarehouse(1, "Old Warehouse", "OLD");
+            ProductWarehouse existingWarehouse = createWarehouse(1, "Old Warehouse");
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
             when(productWarehouseService.findByPK(1)).thenReturn(existingWarehouse);
@@ -171,8 +171,8 @@ class ProductWareHouseControllerTest {
         @DisplayName("Should return not found when updating non-existent warehouse")
         void updateWarehouseReturnsNotFound() throws Exception {
             // Arrange
-            ProductWarehouseModel model = createWarehouseModel("Updated Warehouse", "UPD001");
-            model.setProductWarehouseId(999);
+            ProductWareHousePersistModel model = createWarehouseModel("Updated Warehouse");
+            model.setWarehouseId(999);
 
             when(productWarehouseService.findByPK(999)).thenReturn(null);
 
@@ -192,7 +192,7 @@ class ProductWareHouseControllerTest {
         @DisplayName("Should delete warehouse successfully")
         void deleteWarehouseSucceeds() throws Exception {
             // Arrange
-            ProductWarehouse warehouse = createWarehouse(1, "Test Warehouse", "TEST");
+            ProductWarehouse warehouse = createWarehouse(1, "Test Warehouse");
 
             when(productWarehouseService.findByPK(1)).thenReturn(warehouse);
 
@@ -217,54 +217,27 @@ class ProductWareHouseControllerTest {
         }
     }
 
-    @Nested
-    @DisplayName("Warehouse Entity Tests")
-    class WarehouseEntityTests {
-
-        @Test
-        @DisplayName("Should handle warehouse with all fields")
-        void handleWarehouseWithAllFields() throws Exception {
-            // Arrange
-            ProductWarehouse warehouse = createWarehouse(1, "Full Warehouse", "FULL");
-            warehouse.setWarehouseDescription("Full description");
-            warehouse.setWarehouseAddress("123 Test Street");
-
-            when(productWarehouseService.findByPK(1)).thenReturn(warehouse);
-
-            // Act & Assert
-            mockMvc.perform(get("/rest/productwarehouse/getById")
-                            .param("productWarehouseId", "1"))
-                    .andExpect(status().isOk());
-        }
-    }
-
     private List<ProductWarehouse> createWarehouseList(int count) {
         List<ProductWarehouse> warehouses = new ArrayList<>();
         for (int i = 1; i <= count; i++) {
-            warehouses.add(createWarehouse(i, "Warehouse " + i, "WH00" + i));
+            warehouses.add(createWarehouse(i, "Warehouse " + i));
         }
         return warehouses;
     }
 
-    private ProductWarehouse createWarehouse(Integer id, String name, String code) {
+    private ProductWarehouse createWarehouse(Integer id, String name) {
         ProductWarehouse warehouse = new ProductWarehouse();
-        warehouse.setProductWarehouseId(id);
+        warehouse.setWarehouseId(id);
         warehouse.setWarehouseName(name);
-        warehouse.setWarehouseCode(code);
-        warehouse.setWarehouseDescription("Description for " + name);
-        warehouse.setWarehouseAddress("Address for " + name);
         warehouse.setDeleteFlag(false);
         warehouse.setCreatedBy(1);
         warehouse.setCreatedDate(LocalDateTime.now());
         return warehouse;
     }
 
-    private ProductWarehouseModel createWarehouseModel(String name, String code) {
-        ProductWarehouseModel model = new ProductWarehouseModel();
+    private ProductWareHousePersistModel createWarehouseModel(String name) {
+        ProductWareHousePersistModel model = new ProductWareHousePersistModel();
         model.setWarehouseName(name);
-        model.setWarehouseCode(code);
-        model.setWarehouseDescription("Description for " + name);
-        model.setWarehouseAddress("Address for " + name);
         return model;
     }
 }

@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.constant.ProductPriceType;
+import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.ProductLineItemDao;
 import com.simpleaccounts.entity.Product;
 import com.simpleaccounts.entity.ProductLineItem;
@@ -28,6 +29,9 @@ class ProductLineItemServiceImplTest {
     @Mock
     private ProductLineItemDao productLineItemDao;
 
+    @Mock
+    private ActivityDao activityDao;
+
     @InjectMocks
     private ProductLineItemServiceImpl productLineItemService;
 
@@ -50,7 +54,7 @@ class ProductLineItemServiceImplTest {
 
             // Assert
             assertThat(result).isNotNull();
-            assertThat(result.getProductLineItemId()).isEqualTo(lineItemId);
+            assertThat(result.getId()).isEqualTo(lineItemId);
             assertThat(result.getUnitPrice()).isEqualTo(new BigDecimal("100.00"));
             verify(productLineItemDao).findByPK(lineItemId);
         }
@@ -131,42 +135,6 @@ class ProductLineItemServiceImplTest {
     }
 
     @Nested
-    @DisplayName("findAll Tests")
-    class FindAllTests {
-
-        @Test
-        @DisplayName("Should return all line items")
-        void findAllReturnsLineItems() {
-            // Arrange
-            List<ProductLineItem> expectedLineItems = createLineItemList(5);
-
-            when(productLineItemDao.dumpData())
-                .thenReturn(expectedLineItems);
-
-            // Act
-            List<ProductLineItem> result = productLineItemService.findAll();
-
-            // Assert
-            assertThat(result).isNotNull().hasSize(5);
-            verify(productLineItemDao).dumpData();
-        }
-
-        @Test
-        @DisplayName("Should return empty list when no line items exist")
-        void findAllReturnsEmptyList() {
-            // Arrange
-            when(productLineItemDao.dumpData())
-                .thenReturn(new ArrayList<>());
-
-            // Act
-            List<ProductLineItem> result = productLineItemService.findAll();
-
-            // Assert
-            assertThat(result).isNotNull().isEmpty();
-        }
-    }
-
-    @Nested
     @DisplayName("getDao Tests")
     class GetDaoTests {
 
@@ -242,7 +210,7 @@ class ProductLineItemServiceImplTest {
 
     private ProductLineItem createLineItem(Integer id, BigDecimal unitPrice, String description) {
         ProductLineItem lineItem = new ProductLineItem();
-        lineItem.setProductLineItemId(id);
+        lineItem.setId(id);
         lineItem.setUnitPrice(unitPrice);
         lineItem.setDescription(description);
         lineItem.setPriceType(ProductPriceType.SALES);

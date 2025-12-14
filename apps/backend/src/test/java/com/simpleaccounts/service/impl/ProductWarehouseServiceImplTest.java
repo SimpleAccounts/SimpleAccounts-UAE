@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.ProductWarehouseDao;
 import com.simpleaccounts.entity.ProductWarehouse;
 import java.time.LocalDateTime;
@@ -23,6 +24,9 @@ class ProductWarehouseServiceImplTest {
 
     @Mock
     private ProductWarehouseDao productWarehouseDao;
+
+    @Mock
+    private ActivityDao activityDao;
 
     @InjectMocks
     private ProductWarehouseServiceImpl productWarehouseService;
@@ -86,7 +90,7 @@ class ProductWarehouseServiceImplTest {
         void findByPKReturnsWarehouse() {
             // Arrange
             Integer warehouseId = 1;
-            ProductWarehouse expectedWarehouse = createWarehouse(warehouseId, "Main Warehouse", "MAIN");
+            ProductWarehouse expectedWarehouse = createWarehouse(warehouseId, "Main Warehouse");
 
             when(productWarehouseDao.findByPK(warehouseId))
                 .thenReturn(expectedWarehouse);
@@ -96,7 +100,7 @@ class ProductWarehouseServiceImplTest {
 
             // Assert
             assertThat(result).isNotNull();
-            assertThat(result.getProductWarehouseId()).isEqualTo(warehouseId);
+            assertThat(result.getWarehouseId()).isEqualTo(warehouseId);
             assertThat(result.getWarehouseName()).isEqualTo("Main Warehouse");
             verify(productWarehouseDao).findByPK(warehouseId);
         }
@@ -126,7 +130,7 @@ class ProductWarehouseServiceImplTest {
         @DisplayName("Should persist new warehouse")
         void persistWarehouseSaves() {
             // Arrange
-            ProductWarehouse warehouse = createWarehouse(null, "New Warehouse", "NEW");
+            ProductWarehouse warehouse = createWarehouse(null, "New Warehouse");
 
             // Act
             productWarehouseService.persist(warehouse);
@@ -144,7 +148,7 @@ class ProductWarehouseServiceImplTest {
         @DisplayName("Should update existing warehouse")
         void updateWarehouseUpdates() {
             // Arrange
-            ProductWarehouse warehouse = createWarehouse(1, "Updated Warehouse", "UPD");
+            ProductWarehouse warehouse = createWarehouse(1, "Updated Warehouse");
 
             when(productWarehouseDao.update(warehouse)).thenReturn(warehouse);
 
@@ -166,35 +170,13 @@ class ProductWarehouseServiceImplTest {
         @DisplayName("Should delete warehouse")
         void deleteWarehouseDeletes() {
             // Arrange
-            ProductWarehouse warehouse = createWarehouse(1, "Warehouse to Delete", "DEL");
+            ProductWarehouse warehouse = createWarehouse(1, "Warehouse to Delete");
 
             // Act
             productWarehouseService.delete(warehouse);
 
             // Assert
             verify(productWarehouseDao).delete(warehouse);
-        }
-    }
-
-    @Nested
-    @DisplayName("findAll Tests")
-    class FindAllTests {
-
-        @Test
-        @DisplayName("Should return all warehouses from dumpData")
-        void findAllReturnsWarehouses() {
-            // Arrange
-            List<ProductWarehouse> expectedWarehouses = createWarehouseList(5);
-
-            when(productWarehouseDao.dumpData())
-                .thenReturn(expectedWarehouses);
-
-            // Act
-            List<ProductWarehouse> result = productWarehouseService.findAll();
-
-            // Assert
-            assertThat(result).isNotNull().hasSize(5);
-            verify(productWarehouseDao).dumpData();
         }
     }
 
@@ -215,29 +197,10 @@ class ProductWarehouseServiceImplTest {
     class WarehouseEntityValidationTests {
 
         @Test
-        @DisplayName("Should handle warehouse with all fields populated")
-        void handleWarehouseWithAllFields() {
-            // Arrange
-            ProductWarehouse warehouse = createWarehouse(1, "Full Warehouse", "FULL");
-            warehouse.setWarehouseDescription("Full description");
-            warehouse.setWarehouseAddress("123 Test Street");
-
-            when(productWarehouseDao.findByPK(1)).thenReturn(warehouse);
-
-            // Act
-            ProductWarehouse result = productWarehouseService.findByPK(1);
-
-            // Assert
-            assertThat(result).isNotNull();
-            assertThat(result.getWarehouseDescription()).isEqualTo("Full description");
-            assertThat(result.getWarehouseAddress()).isEqualTo("123 Test Street");
-        }
-
-        @Test
         @DisplayName("Should handle warehouse with deleteFlag set")
         void handleWarehouseWithDeleteFlag() {
             // Arrange
-            ProductWarehouse warehouse = createWarehouse(1, "Deleted Warehouse", "DEL");
+            ProductWarehouse warehouse = createWarehouse(1, "Deleted Warehouse");
             warehouse.setDeleteFlag(true);
 
             when(productWarehouseDao.findByPK(1)).thenReturn(warehouse);
@@ -254,18 +217,15 @@ class ProductWarehouseServiceImplTest {
     private List<ProductWarehouse> createWarehouseList(int count) {
         List<ProductWarehouse> warehouses = new ArrayList<>();
         for (int i = 1; i <= count; i++) {
-            warehouses.add(createWarehouse(i, "Warehouse " + i, "WH00" + i));
+            warehouses.add(createWarehouse(i, "Warehouse " + i));
         }
         return warehouses;
     }
 
-    private ProductWarehouse createWarehouse(Integer id, String name, String code) {
+    private ProductWarehouse createWarehouse(Integer id, String name) {
         ProductWarehouse warehouse = new ProductWarehouse();
-        warehouse.setProductWarehouseId(id);
+        warehouse.setWarehouseId(id);
         warehouse.setWarehouseName(name);
-        warehouse.setWarehouseCode(code);
-        warehouse.setWarehouseDescription("Description for " + name);
-        warehouse.setWarehouseAddress("Address for " + name);
         warehouse.setDeleteFlag(false);
         warehouse.setCreatedBy(1);
         warehouse.setCreatedDate(LocalDateTime.now());

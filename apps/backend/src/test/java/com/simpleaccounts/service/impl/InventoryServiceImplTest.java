@@ -61,7 +61,7 @@ class InventoryServiceImplTest {
             // Assert
             assertThat(result).isNotNull();
             assertThat(result.getCount()).isEqualTo(5);
-            assertThat(result.getData()).hasSize(5);
+            assertThat((List<?>) result.getData()).hasSize(5);
             verify(inventoryDao).getInventoryList(filterMap, paginationModel);
         }
 

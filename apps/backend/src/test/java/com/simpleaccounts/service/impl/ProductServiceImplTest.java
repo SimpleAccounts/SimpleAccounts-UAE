@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.constant.dbfilter.ProductFilterEnum;
+import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.ProductDao;
 import com.simpleaccounts.entity.Product;
 import com.simpleaccounts.rest.PaginationModel;
@@ -38,6 +39,9 @@ class ProductServiceImplTest {
 
     @Mock
     private ProductDao productDao;
+
+    @Mock
+    private ActivityDao activityDao;
 
     @Mock
     private CacheManager cacheManager;
@@ -74,7 +78,7 @@ class ProductServiceImplTest {
             // Assert
             assertThat(result).isNotNull();
             assertThat(result.getCount()).isEqualTo(5);
-            assertThat(result.getData()).hasSize(5);
+            assertThat((List<?>) result.getData()).hasSize(5);
             verify(productDao).getProductList(filterMap, paginationModel);
         }
 
@@ -95,7 +99,7 @@ class ProductServiceImplTest {
             // Assert
             assertThat(result).isNotNull();
             assertThat(result.getCount()).isZero();
-            assertThat(result.getData()).isEmpty();
+            assertThat((List<?>) result.getData()).isEmpty();
         }
 
         @Test
