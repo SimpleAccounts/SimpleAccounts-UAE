@@ -77,9 +77,6 @@ class ProductDaoImplTest {
             paginationModel.setPageSize(10);
             paginationModel.setSortingCol("productName");
 
-            when(dataTableUtil.getColName(anyString(), anyString()))
-                .thenReturn("productName");
-
             // Act & Assert - Just verify the DAO doesn't throw
             assertThat(productDao).isNotNull();
         }

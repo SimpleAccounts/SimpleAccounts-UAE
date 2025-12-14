@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -9,12 +10,14 @@ import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.TransactionExpensesDao;
 import com.simpleaccounts.entity.Expense;
 import com.simpleaccounts.entity.TransactionExpenses;
+import com.simpleaccounts.exceptions.ServiceException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,6 +25,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("TransactionExpensesServiceImpl Unit Tests")
@@ -35,6 +39,11 @@ class TransactionExpensesServiceImplTest {
 
     @InjectMocks
     private TransactionExpensesServiceImpl transactionExpensesService;
+
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(transactionExpensesService, "activityDao", activityDao);
+    }
 
     private Expense createExpense(Integer id, BigDecimal amount) {
         Expense expense = new Expense();
@@ -199,7 +208,7 @@ class TransactionExpensesServiceImplTest {
         }
 
         @Test
-        @DisplayName("Should return null when transaction expense not found")
+        @DisplayName("Should throw when transaction expense not found")
         void findByPKReturnsNullWhenNotFound() {
             // Arrange
             Integer id = 999;
@@ -208,10 +217,11 @@ class TransactionExpensesServiceImplTest {
                 .thenReturn(null);
 
             // Act
-            TransactionExpenses result = transactionExpensesService.findByPK(id);
+            assertThatThrownBy(() -> transactionExpensesService.findByPK(id))
+                .isInstanceOf(ServiceException.class);
 
             // Assert
-            assertThat(result).isNull();
+            verify(transactionExpensesDao).findByPK(id);
         }
     }
 
@@ -296,7 +306,9 @@ class TransactionExpensesServiceImplTest {
 
     private TransactionExpenses createTransactionExpenses(Integer id) {
         TransactionExpenses te = new TransactionExpenses();
-        te.setId(id);
+        if (id != null) {
+            te.setId(id);
+        }
         te.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
         te.setRemainingToExplain(BigDecimal.ZERO);
         te.setCreatedBy(1);

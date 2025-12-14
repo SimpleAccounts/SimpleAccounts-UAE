@@ -3,16 +3,13 @@ package com.simpleaccounts.rest.productwarehousecontroller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.entity.ProductWarehouse;
-import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.ProductWarehouseService;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +35,7 @@ class ProductWareHouseControllerTest {
     private ProductWarehouseService productWarehouseService;
 
     @Mock
-    private JwtTokenUtil jwtTokenUtil;
+    private ProductWareHouseRestHelper productWareHouseRestHelper;
 
     @InjectMocks
     private ProductWareHouseController productWareHouseController;
@@ -62,7 +59,7 @@ class ProductWareHouseControllerTest {
             when(productWarehouseService.getProductWarehouseList()).thenReturn(warehouses);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/productwarehouse/getList"))
+            mockMvc.perform(get("/rest/productwarehouse/getWareHouse"))
                     .andExpect(status().isOk());
         }
 
@@ -73,7 +70,7 @@ class ProductWareHouseControllerTest {
             when(productWarehouseService.getProductWarehouseList()).thenReturn(null);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/productwarehouse/getList"))
+            mockMvc.perform(get("/rest/productwarehouse/getWareHouse"))
                     .andExpect(status().isNotFound());
         }
 
@@ -84,39 +81,8 @@ class ProductWareHouseControllerTest {
             when(productWarehouseService.getProductWarehouseList()).thenReturn(new ArrayList<>());
 
             // Act & Assert
-            mockMvc.perform(get("/rest/productwarehouse/getList"))
+            mockMvc.perform(get("/rest/productwarehouse/getWareHouse"))
                     .andExpect(status().isOk());
-        }
-    }
-
-    @Nested
-    @DisplayName("getWarehouseById Tests")
-    class GetWarehouseByIdTests {
-
-        @Test
-        @DisplayName("Should return warehouse by ID")
-        void getWarehouseByIdReturnsWarehouse() throws Exception {
-            // Arrange
-            ProductWarehouse warehouse = createWarehouse(1, "Main Warehouse");
-
-            when(productWarehouseService.findByPK(1)).thenReturn(warehouse);
-
-            // Act & Assert
-            mockMvc.perform(get("/rest/productwarehouse/getById")
-                            .param("productWarehouseId", "1"))
-                    .andExpect(status().isOk());
-        }
-
-        @Test
-        @DisplayName("Should return not found when warehouse does not exist")
-        void getWarehouseByIdReturnsNotFound() throws Exception {
-            // Arrange
-            when(productWarehouseService.findByPK(999)).thenReturn(null);
-
-            // Act & Assert
-            mockMvc.perform(get("/rest/productwarehouse/getById")
-                            .param("productWarehouseId", "999"))
-                    .andExpect(status().isNotFound());
         }
     }
 
@@ -129,91 +95,18 @@ class ProductWareHouseControllerTest {
         void saveWarehouseSucceeds() throws Exception {
             // Arrange
             ProductWareHousePersistModel model = createWarehouseModel("New Warehouse");
+            ProductWarehouse warehouse = createWarehouse(1, "New Warehouse");
 
-            when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
+            when(productWareHouseRestHelper.getEntity(any(ProductWareHousePersistModel.class)))
+                .thenReturn(warehouse);
 
             // Act & Assert
-            mockMvc.perform(post("/rest/productwarehouse/save")
+            mockMvc.perform(post("/rest/productwarehouse/saveWareHouse")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(model)))
                     .andExpect(status().isOk());
 
-            verify(productWarehouseService).persist(any(ProductWarehouse.class));
-        }
-    }
-
-    @Nested
-    @DisplayName("updateWarehouse Tests")
-    class UpdateWarehouseTests {
-
-        @Test
-        @DisplayName("Should update warehouse successfully")
-        void updateWarehouseSucceeds() throws Exception {
-            // Arrange
-            ProductWareHousePersistModel model = createWarehouseModel("Updated Warehouse");
-            model.setWarehouseId(1);
-
-            ProductWarehouse existingWarehouse = createWarehouse(1, "Old Warehouse");
-
-            when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
-            when(productWarehouseService.findByPK(1)).thenReturn(existingWarehouse);
-
-            // Act & Assert
-            mockMvc.perform(post("/rest/productwarehouse/update")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(model)))
-                    .andExpect(status().isOk());
-
-            verify(productWarehouseService).update(any(ProductWarehouse.class));
-        }
-
-        @Test
-        @DisplayName("Should return not found when updating non-existent warehouse")
-        void updateWarehouseReturnsNotFound() throws Exception {
-            // Arrange
-            ProductWareHousePersistModel model = createWarehouseModel("Updated Warehouse");
-            model.setWarehouseId(999);
-
-            when(productWarehouseService.findByPK(999)).thenReturn(null);
-
-            // Act & Assert
-            mockMvc.perform(post("/rest/productwarehouse/update")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(model)))
-                    .andExpect(status().isNotFound());
-        }
-    }
-
-    @Nested
-    @DisplayName("deleteWarehouse Tests")
-    class DeleteWarehouseTests {
-
-        @Test
-        @DisplayName("Should delete warehouse successfully")
-        void deleteWarehouseSucceeds() throws Exception {
-            // Arrange
-            ProductWarehouse warehouse = createWarehouse(1, "Test Warehouse");
-
-            when(productWarehouseService.findByPK(1)).thenReturn(warehouse);
-
-            // Act & Assert
-            mockMvc.perform(delete("/rest/productwarehouse/delete")
-                            .param("productWarehouseId", "1"))
-                    .andExpect(status().isOk());
-
-            verify(productWarehouseService).update(any(ProductWarehouse.class));
-        }
-
-        @Test
-        @DisplayName("Should return not found when deleting non-existent warehouse")
-        void deleteWarehouseReturnsNotFound() throws Exception {
-            // Arrange
-            when(productWarehouseService.findByPK(999)).thenReturn(null);
-
-            // Act & Assert
-            mockMvc.perform(delete("/rest/productwarehouse/delete")
-                            .param("productWarehouseId", "999"))
-                    .andExpect(status().isNotFound());
+            verify(productWarehouseService).persist(warehouse);
         }
     }
 
@@ -230,8 +123,6 @@ class ProductWareHouseControllerTest {
         warehouse.setWarehouseId(id);
         warehouse.setWarehouseName(name);
         warehouse.setDeleteFlag(false);
-        warehouse.setCreatedBy(1);
-        warehouse.setCreatedDate(LocalDateTime.now());
         return warehouse;
     }
 

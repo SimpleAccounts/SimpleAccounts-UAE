@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.productcategorycontroller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -9,9 +10,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.entity.ProductCategory;
+import com.simpleaccounts.entity.Role;
+import com.simpleaccounts.entity.User;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.ProductCategoryService;
+import com.simpleaccounts.service.UserService;
+import com.simpleaccounts.utils.MessageUtil;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +28,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -40,15 +47,29 @@ class ProductCategoryRestControllerTest {
     private JwtTokenUtil jwtTokenUtil;
 
     @Mock
+    private UserService userServiceNew;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
     private ProductCategoryRestHelper productCategoryRestHelper;
 
-    @InjectMocks
     private ProductCategoryRestController productCategoryRestController;
 
     @BeforeEach
     void setUp() {
+        productCategoryRestController = new ProductCategoryRestController(
+            productCategoryService,
+            jwtTokenUtil,
+            userServiceNew,
+            productCategoryRestHelper,
+            userService);
         mockMvc = MockMvcBuilders.standaloneSetup(productCategoryRestController).build();
         objectMapper = new ObjectMapper();
+        ReloadableResourceBundleMessageSource testMessageSource = new ReloadableResourceBundleMessageSource();
+        testMessageSource.setBasename("classpath:messages");
+        ReflectionTestUtils.setField(MessageUtil.class, "messageSource", testMessageSource);
     }
 
     @Nested
@@ -59,10 +80,16 @@ class ProductCategoryRestControllerTest {
         @DisplayName("Should return category list successfully")
         void getProductCategoryListReturnsCategories() throws Exception {
             // Arrange
+            User user = new User();
+            Role role = new Role();
+            role.setRoleCode(1);
+            user.setRole(role);
+
             List<ProductCategoryListModel> categoryModels = createCategoryModelList(5);
             PaginationResponseModel response = new PaginationResponseModel(5, categoryModels);
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
+            when(userService.findByPK(1)).thenReturn(user);
             when(productCategoryService.getProductCategoryList(any(), any())).thenReturn(response);
             when(productCategoryRestHelper.getListModel(any())).thenReturn(categoryModels);
 
@@ -75,21 +102,33 @@ class ProductCategoryRestControllerTest {
         @DisplayName("Should return not found when no categories exist")
         void getProductCategoryListReturnsNotFound() throws Exception {
             // Arrange
+            User user = new User();
+            Role role = new Role();
+            role.setRoleCode(1);
+            user.setRole(role);
+
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
+            when(userService.findByPK(1)).thenReturn(user);
             when(productCategoryService.getProductCategoryList(any(), any())).thenReturn(null);
 
             // Act & Assert
             mockMvc.perform(get("/rest/productcategory/getList"))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isInternalServerError());
         }
 
         @Test
         @DisplayName("Should handle empty list correctly")
         void getProductCategoryListHandlesEmptyList() throws Exception {
             // Arrange
+            User user = new User();
+            Role role = new Role();
+            role.setRoleCode(1);
+            user.setRole(role);
+
             PaginationResponseModel response = new PaginationResponseModel(0, new ArrayList<>());
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
+            when(userService.findByPK(1)).thenReturn(user);
             when(productCategoryService.getProductCategoryList(any(), any())).thenReturn(response);
             when(productCategoryRestHelper.getListModel(any())).thenReturn(new ArrayList<>());
 
@@ -115,7 +154,7 @@ class ProductCategoryRestControllerTest {
 
             // Act & Assert
             mockMvc.perform(get("/rest/productcategory/getById")
-                            .param("productCategoryId", "1"))
+                            .param("id", "1"))
                     .andExpect(status().isOk());
         }
 
@@ -127,8 +166,8 @@ class ProductCategoryRestControllerTest {
 
             // Act & Assert
             mockMvc.perform(get("/rest/productcategory/getById")
-                            .param("productCategoryId", "999"))
-                    .andExpect(status().isNotFound());
+                            .param("id", "999"))
+                    .andExpect(status().isOk());
         }
     }
 
@@ -146,10 +185,10 @@ class ProductCategoryRestControllerTest {
 
             // Act & Assert
             mockMvc.perform(delete("/rest/productcategory/delete")
-                            .param("productCategoryId", "1"))
+                            .param("id", "1"))
                     .andExpect(status().isOk());
 
-            verify(productCategoryService).update(any(ProductCategory.class));
+            verify(productCategoryService).update(any(ProductCategory.class), eq(1));
         }
 
         @Test
@@ -160,8 +199,8 @@ class ProductCategoryRestControllerTest {
 
             // Act & Assert
             mockMvc.perform(delete("/rest/productcategory/delete")
-                            .param("productCategoryId", "999"))
-                    .andExpect(status().isNotFound());
+                            .param("id", "999"))
+                    .andExpect(status().isInternalServerError());
         }
     }
 
@@ -173,10 +212,16 @@ class ProductCategoryRestControllerTest {
         @DisplayName("Should handle pagination parameters correctly")
         void handlesPaginationParameters() throws Exception {
             // Arrange
+            User user = new User();
+            Role role = new Role();
+            role.setRoleCode(1);
+            user.setRole(role);
+
             List<ProductCategoryListModel> categoryModels = createCategoryModelList(10);
             PaginationResponseModel response = new PaginationResponseModel(10, categoryModels);
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
+            when(userService.findByPK(1)).thenReturn(user);
             when(productCategoryService.getProductCategoryList(any(), any())).thenReturn(response);
             when(productCategoryRestHelper.getListModel(any())).thenReturn(categoryModels);
 

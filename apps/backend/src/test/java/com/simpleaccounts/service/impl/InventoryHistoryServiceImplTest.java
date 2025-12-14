@@ -1,6 +1,7 @@
 package com.simpleaccounts.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -9,6 +10,7 @@ import com.simpleaccounts.dao.InventoryHistoryDao;
 import com.simpleaccounts.entity.Inventory;
 import com.simpleaccounts.entity.InventoryHistory;
 import com.simpleaccounts.entity.Product;
+import com.simpleaccounts.exceptions.ServiceException;
 import com.simpleaccounts.rest.InventoryController.InventoryRevenueModel;
 import com.simpleaccounts.rest.InventoryController.TopInventoryRevenueModel;
 import java.math.BigDecimal;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,6 +28,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("InventoryHistoryServiceImpl Unit Tests")
@@ -38,6 +42,11 @@ class InventoryHistoryServiceImplTest {
 
     @InjectMocks
     private InventoryHistoryServiceImpl inventoryHistoryService;
+
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(inventoryHistoryService, "activityDao", activityDao);
+    }
 
     @Nested
     @DisplayName("getHistoryByInventoryId Tests")
@@ -272,7 +281,7 @@ class InventoryHistoryServiceImplTest {
         }
 
         @Test
-        @DisplayName("Should return null when history not found")
+        @DisplayName("Should throw when history not found")
         void findByPKReturnsNullWhenNotFound() {
             // Arrange
             Integer historyId = 999;
@@ -281,10 +290,11 @@ class InventoryHistoryServiceImplTest {
                 .thenReturn(null);
 
             // Act
-            InventoryHistory result = inventoryHistoryService.findByPK(historyId);
+            assertThatThrownBy(() -> inventoryHistoryService.findByPK(historyId))
+                .isInstanceOf(ServiceException.class);
 
             // Assert
-            assertThat(result).isNull();
+            verify(inventoryHistoryDao).findByPK(historyId);
         }
     }
 

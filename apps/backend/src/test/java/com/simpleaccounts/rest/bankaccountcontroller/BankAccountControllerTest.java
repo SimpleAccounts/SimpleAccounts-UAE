@@ -64,6 +64,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import com.simpleaccounts.utils.OSValidator;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BankAccountController.class)
@@ -131,6 +132,8 @@ class BankAccountControllerTest {
 
     @BeforeEach
     void setUp() {
+        ReflectionTestUtils.setField(MessageUtil.class, "messageSource", null);
+
         testCategory = new TransactionCategory();
         testCategory.setTransactionCategoryId(1);
         testCategory.setTransactionCategoryName("Test Category");

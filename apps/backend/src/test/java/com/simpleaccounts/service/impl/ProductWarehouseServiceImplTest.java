@@ -1,15 +1,18 @@
 package com.simpleaccounts.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.ProductWarehouseDao;
 import com.simpleaccounts.entity.ProductWarehouse;
+import com.simpleaccounts.exceptions.ServiceException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ProductWarehouseServiceImpl Unit Tests")
@@ -30,6 +34,11 @@ class ProductWarehouseServiceImplTest {
 
     @InjectMocks
     private ProductWarehouseServiceImpl productWarehouseService;
+
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(productWarehouseService, "activityDao", activityDao);
+    }
 
     @Nested
     @DisplayName("getProductWarehouseList Tests")
@@ -106,7 +115,7 @@ class ProductWarehouseServiceImplTest {
         }
 
         @Test
-        @DisplayName("Should return null when warehouse not found")
+        @DisplayName("Should throw when warehouse not found")
         void findByPKReturnsNullWhenNotFound() {
             // Arrange
             Integer warehouseId = 999;
@@ -115,10 +124,11 @@ class ProductWarehouseServiceImplTest {
                 .thenReturn(null);
 
             // Act
-            ProductWarehouse result = productWarehouseService.findByPK(warehouseId);
+            assertThatThrownBy(() -> productWarehouseService.findByPK(warehouseId))
+                .isInstanceOf(ServiceException.class);
 
             // Assert
-            assertThat(result).isNull();
+            verify(productWarehouseDao).findByPK(warehouseId);
         }
     }
 

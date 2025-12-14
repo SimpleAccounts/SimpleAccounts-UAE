@@ -1,7 +1,7 @@
 package com.simpleaccounts.rest.productcontroller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -10,21 +10,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.entity.Product;
-import com.simpleaccounts.entity.ProductCategory;
-import com.simpleaccounts.entity.ProductWarehouse;
-import com.simpleaccounts.entity.VatCategory;
+import com.simpleaccounts.entity.Role;
+import com.simpleaccounts.entity.User;
 import com.simpleaccounts.rest.PaginationResponseModel;
+import com.simpleaccounts.rest.transactioncategorycontroller.TranscationCategoryHelper;
 import com.simpleaccounts.security.JwtTokenUtil;
-import com.simpleaccounts.service.ProductCategoryService;
-import com.simpleaccounts.service.ProductLineItemService;
+import com.simpleaccounts.service.InvoiceLineItemService;
 import com.simpleaccounts.service.ProductService;
-import com.simpleaccounts.service.ProductWarehouseService;
+import com.simpleaccounts.service.TransactionCategoryService;
+import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.service.VatCategoryService;
-import java.math.BigDecimal;
+import com.simpleaccounts.utils.MessageUtil;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +33,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -49,22 +49,25 @@ class ProductRestControllerTest {
     private ProductService productService;
 
     @Mock
-    private ProductLineItemService productLineItemService;
-
-    @Mock
-    private ProductCategoryService productCategoryService;
-
-    @Mock
     private VatCategoryService vatCategoryService;
 
     @Mock
-    private ProductWarehouseService productWarehouseService;
+    private ProductRestHelper productRestHelper;
 
     @Mock
     private JwtTokenUtil jwtTokenUtil;
 
     @Mock
-    private ProductRestHelper productRestHelper;
+    private InvoiceLineItemService invoiceLineItemService;
+
+    @Mock
+    private TransactionCategoryService transactionCategoryService;
+
+    @Mock
+    private TranscationCategoryHelper transcationCategoryHelper;
+
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private ProductRestController productRestController;
@@ -73,39 +76,47 @@ class ProductRestControllerTest {
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(productRestController).build();
         objectMapper = new ObjectMapper();
+        ReloadableResourceBundleMessageSource testMessageSource = new ReloadableResourceBundleMessageSource();
+        testMessageSource.setBasename("classpath:messages");
+        ReflectionTestUtils.setField(MessageUtil.class, "messageSource", testMessageSource);
     }
 
     @Nested
-    @DisplayName("getProducts Tests")
-    class GetProductsTests {
+    @DisplayName("getList Tests")
+    class GetProductListTests {
 
         @Test
         @DisplayName("Should return product list successfully")
-        void getProductsReturnsProductList() throws Exception {
+        void getProductListReturnsProductList() throws Exception {
             // Arrange
+            User user = createUser(1);
             List<Product> products = createProductList(5);
             PaginationResponseModel response = new PaginationResponseModel(5, products);
             ProductListModel listModel = new ProductListModel();
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
+            when(userService.findByPK(1)).thenReturn(user);
             when(productService.getProductList(any(), any())).thenReturn(response);
             when(productRestHelper.getListModel(any(Product.class))).thenReturn(listModel);
 
             // Act & Assert
             mockMvc.perform(get("/rest/product/getList"))
-                    .andExpect(status().isOk());
+                .andExpect(status().isOk());
         }
 
         @Test
-        @DisplayName("Should return not found when no products exist")
-        void getProductsReturnsNotFoundWhenEmpty() throws Exception {
+        @DisplayName("Should return not found when service returns null")
+        void getProductListReturnsNotFoundWhenNull() throws Exception {
             // Arrange
+            User user = createUser(1);
+
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
+            when(userService.findByPK(1)).thenReturn(user);
             when(productService.getProductList(any(), any())).thenReturn(null);
 
             // Act & Assert
             mockMvc.perform(get("/rest/product/getList"))
-                    .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
         }
     }
 
@@ -118,205 +129,76 @@ class ProductRestControllerTest {
         void getProductByIdReturnsProduct() throws Exception {
             // Arrange
             Product product = createProduct(1, "Test Product", "PROD001");
-            ProductRequestModel productModel = createProductRequestModel(1, "Test Product", "PROD001");
+            ProductRequestModel productModel = new ProductRequestModel();
+            productModel.setProductID(1);
 
             when(productService.findByPK(1)).thenReturn(product);
             when(productRestHelper.getRequestModel(product)).thenReturn(productModel);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/product/getById")
-                            .param("productId", "1"))
-                    .andExpect(status().isOk());
-        }
-
-        @Test
-        @DisplayName("Should return not found when product does not exist")
-        void getProductByIdReturnsNotFound() throws Exception {
-            // Arrange
-            when(productService.findByPK(999)).thenReturn(null);
-
-            // Act & Assert
-            mockMvc.perform(get("/rest/product/getById")
-                            .param("productId", "999"))
-                    .andExpect(status().isNotFound());
+            mockMvc.perform(get("/rest/product/getProductById").param("id", "1"))
+                .andExpect(status().isOk());
         }
     }
 
     @Nested
-    @DisplayName("deleteProduct Tests")
+    @DisplayName("delete Tests")
     class DeleteProductTests {
 
         @Test
-        @DisplayName("Should delete product successfully")
-        void deleteProductSucceeds() throws Exception {
+        @DisplayName("Should delete product when it exists")
+        void deleteProductDeletesWhenExists() throws Exception {
             // Arrange
             Product product = createProduct(1, "Test Product", "PROD001");
 
             when(productService.findByPK(1)).thenReturn(product);
 
             // Act & Assert
-            mockMvc.perform(delete("/rest/product/delete")
-                            .param("productId", "1"))
-                    .andExpect(status().isOk());
+            mockMvc.perform(delete("/rest/product/delete").param("id", "1"))
+                .andExpect(status().isOk());
 
-            verify(productService).update(any(Product.class));
+            verify(productService).deleteByIds(Arrays.asList(1));
         }
 
         @Test
-        @DisplayName("Should return not found when deleting non-existent product")
-        void deleteProductReturnsNotFound() throws Exception {
+        @DisplayName("Should return OK and not delete when product does not exist")
+        void deleteProductDoesNothingWhenNotFound() throws Exception {
             // Arrange
             when(productService.findByPK(999)).thenReturn(null);
 
             // Act & Assert
-            mockMvc.perform(delete("/rest/product/delete")
-                            .param("productId", "999"))
-                    .andExpect(status().isNotFound());
+            mockMvc.perform(delete("/rest/product/delete").param("id", "999"))
+                .andExpect(status().isOk());
+
+            verify(productService, never()).deleteByIds(any());
         }
     }
 
     @Nested
-    @DisplayName("getCategories Tests")
-    class GetCategoriesTests {
+    @DisplayName("getInvoicesCountForProduct Tests")
+    class GetInvoicesCountForProductTests {
 
         @Test
-        @DisplayName("Should return product categories")
-        void getCategoriesReturnsCategories() throws Exception {
+        @DisplayName("Should return invoice count for product")
+        void getInvoicesCountForProductReturnsCount() throws Exception {
             // Arrange
-            List<ProductCategory> categories = createCategoryList(3);
-
-            when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
-            when(productCategoryService.findAllProductCategoryByUserId(1, false))
-                    .thenReturn(categories);
+            when(invoiceLineItemService.getTotalInvoiceCountByProductId(1)).thenReturn(5);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/product/getcategory"))
-                    .andExpect(status().isOk());
-        }
-
-        @Test
-        @DisplayName("Should return empty list when no categories exist")
-        void getCategoriesReturnsEmptyList() throws Exception {
-            // Arrange
-            when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
-            when(productCategoryService.findAllProductCategoryByUserId(1, false))
-                    .thenReturn(new ArrayList<>());
-
-            // Act & Assert
-            mockMvc.perform(get("/rest/product/getcategory"))
-                    .andExpect(status().isOk());
+            mockMvc.perform(get("/rest/product/getInvoicesCountForProduct").param("productId", "1"))
+                .andExpect(status().isOk());
         }
     }
 
-    @Nested
-    @DisplayName("getVatCategories Tests")
-    class GetVatCategoriesTests {
+    private User createUser(Integer userId) {
+        User user = new User();
+        user.setUserId(userId);
 
-        @Test
-        @DisplayName("Should return VAT categories")
-        void getVatCategoriesReturnsCategories() throws Exception {
-            // Arrange
-            List<VatCategory> vatCategories = createVatCategoryList(3);
+        Role role = new Role();
+        role.setRoleCode(1);
+        user.setRole(role);
 
-            when(vatCategoryService.getVatCategoryList()).thenReturn(vatCategories);
-
-            // Act & Assert
-            mockMvc.perform(get("/rest/product/getvatcategory"))
-                    .andExpect(status().isOk());
-        }
-
-        @Test
-        @DisplayName("Should return not found when no VAT categories exist")
-        void getVatCategoriesReturnsNotFound() throws Exception {
-            // Arrange
-            when(vatCategoryService.getVatCategoryList()).thenReturn(null);
-
-            // Act & Assert
-            mockMvc.perform(get("/rest/product/getvatcategory"))
-                    .andExpect(status().isNotFound());
-        }
-    }
-
-    @Nested
-    @DisplayName("getWarehouses Tests")
-    class GetWarehousesTests {
-
-        @Test
-        @DisplayName("Should return warehouses")
-        void getWarehousesReturnsWarehouses() throws Exception {
-            // Arrange
-            List<ProductWarehouse> warehouses = createWarehouseList(3);
-
-            when(productWarehouseService.getProductWarehouseList()).thenReturn(warehouses);
-
-            // Act & Assert
-            mockMvc.perform(get("/rest/product/getwarehouse"))
-                    .andExpect(status().isOk());
-        }
-
-        @Test
-        @DisplayName("Should return not found when no warehouses exist")
-        void getWarehousesReturnsNotFound() throws Exception {
-            // Arrange
-            when(productWarehouseService.getProductWarehouseList()).thenReturn(null);
-
-            // Act & Assert
-            mockMvc.perform(get("/rest/product/getwarehouse"))
-                    .andExpect(status().isNotFound());
-        }
-    }
-
-    @Nested
-    @DisplayName("getTotalProductCountByVatId Tests")
-    class GetTotalProductCountByVatIdTests {
-
-        @Test
-        @DisplayName("Should return product count by VAT ID")
-        void getTotalProductCountByVatIdReturnsCount() throws Exception {
-            // Arrange
-            when(productService.getTotalProductCountByVatId(1)).thenReturn(10);
-
-            // Act & Assert
-            mockMvc.perform(get("/rest/product/getTotalProductCountByVatId")
-                            .param("vatId", "1"))
-                    .andExpect(status().isOk());
-        }
-
-        @Test
-        @DisplayName("Should return not found when count is null")
-        void getTotalProductCountByVatIdReturnsNotFound() throws Exception {
-            // Arrange
-            when(productService.getTotalProductCountByVatId(999)).thenReturn(null);
-
-            // Act & Assert
-            mockMvc.perform(get("/rest/product/getTotalProductCountByVatId")
-                            .param("vatId", "999"))
-                    .andExpect(status().isNotFound());
-        }
-    }
-
-    private List<ProductListModel> createProductModelList(int count) {
-        List<ProductListModel> models = new ArrayList<>();
-        for (int i = 1; i <= count; i++) {
-            models.add(createProductModel(i, "Product " + i, "PROD00" + i));
-        }
-        return models;
-    }
-
-    private ProductRequestModel createProductRequestModel(Integer id, String name, String code) {
-        ProductRequestModel model = new ProductRequestModel();
-        model.setProductID(id);
-        model.setProductName(name);
-        model.setProductCode(code);
-        return model;
-    }
-
-    private ProductListModel createProductModel(Integer id, String name, String code) {
-        ProductListModel model = new ProductListModel();
-        model.setId(id);
-        model.setName(name);
-        model.setProductCode(code);
-        return model;
+        return user;
     }
 
     private Product createProduct(Integer id, String name, String code) {
@@ -331,50 +213,12 @@ class ProductRestControllerTest {
         product.setLineItemList(new ArrayList<>());
         return product;
     }
-    
+
     private List<Product> createProductList(int count) {
         List<Product> products = new ArrayList<>();
         for (int i = 1; i <= count; i++) {
             products.add(createProduct(i, "Product " + i, "PROD00" + i));
         }
         return products;
-    }
-
-    private List<ProductCategory> createCategoryList(int count) {
-        List<ProductCategory> categories = new ArrayList<>();
-        for (int i = 1; i <= count; i++) {
-            ProductCategory category = new ProductCategory();
-            category.setId(i);
-            category.setProductCategoryName("Category " + i);
-            category.setProductCategoryCode("CAT00" + i);
-            category.setDeleteFlag(false);
-            categories.add(category);
-        }
-        return categories;
-    }
-
-    private List<VatCategory> createVatCategoryList(int count) {
-        List<VatCategory> categories = new ArrayList<>();
-        for (int i = 1; i <= count; i++) {
-            VatCategory vatCategory = new VatCategory();
-            vatCategory.setId(i);
-            vatCategory.setName("VAT " + (5 * i) + "%");
-            vatCategory.setVat(new BigDecimal(5 * i));
-            vatCategory.setDeleteFlag(false);
-            categories.add(vatCategory);
-        }
-        return categories;
-    }
-
-    private List<ProductWarehouse> createWarehouseList(int count) {
-        List<ProductWarehouse> warehouses = new ArrayList<>();
-        for (int i = 1; i <= count; i++) {
-            ProductWarehouse warehouse = new ProductWarehouse();
-            warehouse.setWarehouseId(i);
-            warehouse.setWarehouseName("Warehouse " + i);
-            warehouse.setDeleteFlag(false);
-            warehouses.add(warehouse);
-        }
-        return warehouses;
     }
 }

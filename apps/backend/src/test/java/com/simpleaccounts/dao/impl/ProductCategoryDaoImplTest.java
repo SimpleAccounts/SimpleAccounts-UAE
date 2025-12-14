@@ -70,9 +70,6 @@ class ProductCategoryDaoImplTest {
             paginationModel.setPageSize(10);
             paginationModel.setSortingCol("productCategoryName");
 
-            when(dataTableUtil.getColName(anyString(), anyString()))
-                .thenReturn("productCategoryName");
-
             // Act & Assert - Just verify the DAO doesn't throw
             assertThat(productCategoryDao).isNotNull();
         }

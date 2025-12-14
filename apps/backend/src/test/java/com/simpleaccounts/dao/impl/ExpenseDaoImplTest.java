@@ -321,9 +321,6 @@ class ExpenseDaoImplTest {
             paginationModel.setPageSize(10);
             paginationModel.setSortingCol("expenseDate");
 
-            when(dataTableUtil.getColName(anyString(), anyString()))
-                .thenReturn("expenseDate");
-
             // Act & Assert - Just verify the DAO doesn't throw
             assertThat(expenseDao).isNotNull();
         }

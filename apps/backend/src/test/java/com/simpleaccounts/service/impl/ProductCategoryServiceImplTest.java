@@ -31,6 +31,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ProductCategoryServiceImpl Unit Tests")
@@ -50,6 +51,11 @@ class ProductCategoryServiceImplTest {
 
     @InjectMocks
     private ProductCategoryServiceImpl productCategoryService;
+
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(productCategoryService, "activityDao", activityDao);
+    }
 
     @Nested
     @DisplayName("findAllProductCategoryByUserId Tests")

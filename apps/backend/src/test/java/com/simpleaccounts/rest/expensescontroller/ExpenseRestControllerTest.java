@@ -24,6 +24,7 @@ import com.simpleaccounts.service.FileAttachmentService;
 import com.simpleaccounts.service.TransactionCategoryBalanceService;
 import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.service.UserService;
+import com.simpleaccounts.utils.MessageUtil;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,6 +39,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -82,6 +85,9 @@ class ExpenseRestControllerTest {
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(expenseRestController).build();
         objectMapper = new ObjectMapper();
+        ReloadableResourceBundleMessageSource testMessageSource = new ReloadableResourceBundleMessageSource();
+        testMessageSource.setBasename("classpath:messages");
+        ReflectionTestUtils.setField(MessageUtil.class, "messageSource", testMessageSource);
     }
 
     @Nested

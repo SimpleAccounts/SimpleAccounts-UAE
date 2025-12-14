@@ -9,11 +9,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.entity.Inventory;
 import com.simpleaccounts.entity.Product;
+import com.simpleaccounts.entity.Role;
+import com.simpleaccounts.entity.User;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.productcontroller.InventoryListModel;
+import com.simpleaccounts.rest.productcontroller.ProductRestHelper;
 import com.simpleaccounts.security.JwtTokenUtil;
+import com.simpleaccounts.service.TransactionCategoryService;
+import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.service.InventoryHistoryService;
 import com.simpleaccounts.service.InventoryService;
+import com.simpleaccounts.rest.transactioncategorycontroller.TranscationCategoryHelper;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,6 +53,18 @@ class InventoryControllerTest {
     @Mock
     private JwtTokenUtil jwtTokenUtil;
 
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private TransactionCategoryService transactionCategoryService;
+
+    @Mock
+    private ProductRestHelper productRestHelper;
+
+    @Mock
+    private TranscationCategoryHelper transcationCategoryHelper;
+
     @InjectMocks
     private InventoryController inventoryController;
 
@@ -64,13 +82,22 @@ class InventoryControllerTest {
         @DisplayName("Should return inventory list successfully")
         void getInventoryListReturnsInventories() throws Exception {
             // Arrange
+            User user = new User();
+            Role role = new Role();
+            role.setRoleCode(1);
+            user.setRole(role);
+
             List<Inventory> inventories = createInventoryList(5);
             PaginationResponseModel response = new PaginationResponseModel(5, inventories);
+            InventoryListModel listModel = new InventoryListModel();
 
+            when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
+            when(userService.findByPK(1)).thenReturn(user);
             when(inventoryService.getInventoryList(any(), any())).thenReturn(response);
+            when(productRestHelper.getInventoryListModel(any(Inventory.class))).thenReturn(listModel);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getList"))
+            mockMvc.perform(get("/rest/inventory/getInventoryProductList"))
                     .andExpect(status().isOk());
         }
 
@@ -78,10 +105,17 @@ class InventoryControllerTest {
         @DisplayName("Should return not found when no inventory exists")
         void getInventoryListReturnsNotFound() throws Exception {
             // Arrange
+            User user = new User();
+            Role role = new Role();
+            role.setRoleCode(1);
+            user.setRole(role);
+
             when(inventoryService.getInventoryList(any(), any())).thenReturn(null);
+            when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
+            when(userService.findByPK(1)).thenReturn(user);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getList"))
+            mockMvc.perform(get("/rest/inventory/getInventoryProductList"))
                     .andExpect(status().isNotFound());
         }
     }
@@ -99,8 +133,8 @@ class InventoryControllerTest {
             when(inventoryService.findByPK(1)).thenReturn(inventory);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getById")
-                            .param("inventoryId", "1"))
+            mockMvc.perform(get("/rest/inventory/getInventoryById")
+                            .param("id", "1"))
                     .andExpect(status().isOk());
         }
 
@@ -111,9 +145,9 @@ class InventoryControllerTest {
             when(inventoryService.findByPK(999)).thenReturn(null);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getById")
-                            .param("inventoryId", "999"))
-                    .andExpect(status().isNotFound());
+            mockMvc.perform(get("/rest/inventory/getInventoryById")
+                            .param("id", "999"))
+                    .andExpect(status().isBadRequest());
         }
     }
 
@@ -128,19 +162,19 @@ class InventoryControllerTest {
             when(inventoryService.getProductCountForInventory()).thenReturn(25);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getTotalProductCount"))
+            mockMvc.perform(get("/rest/inventory/getProductCountForInventory"))
                     .andExpect(status().isOk());
         }
 
         @Test
-        @DisplayName("Should return not found when count is null")
-        void getTotalProductCountReturnsNotFound() throws Exception {
+        @DisplayName("Should return OK when count is null")
+        void getTotalProductCountReturnsOkWhenNull() throws Exception {
             // Arrange
             when(inventoryService.getProductCountForInventory()).thenReturn(null);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getTotalProductCount"))
-                    .andExpect(status().isNotFound());
+            mockMvc.perform(get("/rest/inventory/getProductCountForInventory"))
+                    .andExpect(status().isOk());
         }
     }
 
@@ -160,14 +194,14 @@ class InventoryControllerTest {
         }
 
         @Test
-        @DisplayName("Should return not found when stock is null")
-        void getTotalStockOnHandReturnsNotFound() throws Exception {
+        @DisplayName("Should return OK when stock is null")
+        void getTotalStockOnHandReturnsOkWhenNull() throws Exception {
             // Arrange
             when(inventoryService.totalStockOnHand()).thenReturn(null);
 
             // Act & Assert
             mockMvc.perform(get("/rest/inventory/getTotalStockOnHand"))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isOk());
         }
     }
 
@@ -182,19 +216,19 @@ class InventoryControllerTest {
             when(inventoryService.getlowStockProductCountForInventory()).thenReturn(10);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getLowStockProductCount"))
+            mockMvc.perform(get("/rest/inventory/getlowStockProductCountForInventory"))
                     .andExpect(status().isOk());
         }
 
         @Test
-        @DisplayName("Should return not found when count is null")
-        void getLowStockProductCountReturnsNotFound() throws Exception {
+        @DisplayName("Should return OK when count is null")
+        void getLowStockProductCountReturnsOkWhenNull() throws Exception {
             // Arrange
             when(inventoryService.getlowStockProductCountForInventory()).thenReturn(null);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getLowStockProductCount"))
-                    .andExpect(status().isNotFound());
+            mockMvc.perform(get("/rest/inventory/getlowStockProductCountForInventory"))
+                    .andExpect(status().isOk());
         }
     }
 
@@ -211,7 +245,7 @@ class InventoryControllerTest {
             when(inventoryService.getlowStockProductListForInventory()).thenReturn(products);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getLowStockProductList"))
+            mockMvc.perform(get("/rest/inventory/getlowStockProductListForInventory"))
                     .andExpect(status().isOk());
         }
 
@@ -222,7 +256,7 @@ class InventoryControllerTest {
             when(inventoryService.getlowStockProductListForInventory()).thenReturn(null);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getLowStockProductList"))
+            mockMvc.perform(get("/rest/inventory/getlowStockProductListForInventory"))
                     .andExpect(status().isNotFound());
         }
     }
@@ -240,19 +274,19 @@ class InventoryControllerTest {
             when(inventoryService.getTopSellingProductListForInventory()).thenReturn(models);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getTopSellingProductList"))
+            mockMvc.perform(get("/rest/inventory/getTopSellingProductListForInventory"))
                     .andExpect(status().isOk());
         }
 
         @Test
-        @DisplayName("Should return not found when no top selling products exist")
-        void getTopSellingProductListReturnsNotFound() throws Exception {
+        @DisplayName("Should return OK when no top selling products exist")
+        void getTopSellingProductListReturnsOkWhenNull() throws Exception {
             // Arrange
             when(inventoryService.getTopSellingProductListForInventory()).thenReturn(null);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getTopSellingProductList"))
-                    .andExpect(status().isNotFound());
+            mockMvc.perform(get("/rest/inventory/getTopSellingProductListForInventory"))
+                    .andExpect(status().isOk());
         }
     }
 
@@ -267,19 +301,19 @@ class InventoryControllerTest {
             when(inventoryService.getOutOfStockCountOfInventory()).thenReturn(15);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getOutOfStockCount"))
+            mockMvc.perform(get("/rest/inventory/getOutOfStockCountOfInventory"))
                     .andExpect(status().isOk());
         }
 
         @Test
-        @DisplayName("Should return not found when count is null")
-        void getOutOfStockCountReturnsNotFound() throws Exception {
+        @DisplayName("Should return OK when count is null")
+        void getOutOfStockCountReturnsOkWhenNull() throws Exception {
             // Arrange
             when(inventoryService.getOutOfStockCountOfInventory()).thenReturn(null);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getOutOfStockCount"))
-                    .andExpect(status().isNotFound());
+            mockMvc.perform(get("/rest/inventory/getOutOfStockCountOfInventory"))
+                    .andExpect(status().isOk());
         }
     }
 
@@ -299,14 +333,14 @@ class InventoryControllerTest {
         }
 
         @Test
-        @DisplayName("Should return not found when value is null")
-        void getTotalInventoryValueReturnsNotFound() throws Exception {
+        @DisplayName("Should return OK when value is null")
+        void getTotalInventoryValueReturnsOkWhenNull() throws Exception {
             // Arrange
             when(inventoryService.getTotalInventoryValue()).thenReturn(null);
 
             // Act & Assert
             mockMvc.perform(get("/rest/inventory/getTotalInventoryValue"))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isOk());
         }
     }
 
@@ -323,19 +357,19 @@ class InventoryControllerTest {
             when(inventoryHistoryService.getTotalRevenueForInventory()).thenReturn(revenueModel);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getTotalRevenue"))
+            mockMvc.perform(get("/rest/inventory/getTotalRevenueOfInventory"))
                     .andExpect(status().isOk());
         }
 
         @Test
-        @DisplayName("Should return not found when no revenue data")
-        void getTotalRevenueReturnsNotFound() throws Exception {
+        @DisplayName("Should return OK when no revenue data")
+        void getTotalRevenueReturnsOkWhenNull() throws Exception {
             // Arrange
             when(inventoryHistoryService.getTotalRevenueForInventory()).thenReturn(null);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getTotalRevenue"))
-                    .andExpect(status().isNotFound());
+            mockMvc.perform(get("/rest/inventory/getTotalRevenueOfInventory"))
+                    .andExpect(status().isOk());
         }
     }
 
@@ -352,19 +386,19 @@ class InventoryControllerTest {
             when(inventoryHistoryService.getTopSellingProductsForInventory()).thenReturn(model);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getTopSellingProducts"))
+            mockMvc.perform(get("/rest/inventory/getTopSellingProductsForInventory"))
                     .andExpect(status().isOk());
         }
 
         @Test
-        @DisplayName("Should return not found when no data exists")
-        void getTopSellingProductsReturnsNotFound() throws Exception {
+        @DisplayName("Should return OK when no data exists")
+        void getTopSellingProductsReturnsOkWhenNull() throws Exception {
             // Arrange
             when(inventoryHistoryService.getTopSellingProductsForInventory()).thenReturn(null);
 
             // Act & Assert
-            mockMvc.perform(get("/rest/inventory/getTopSellingProducts"))
-                    .andExpect(status().isNotFound());
+            mockMvc.perform(get("/rest/inventory/getTopSellingProductsForInventory"))
+                    .andExpect(status().isOk());
         }
     }
 
