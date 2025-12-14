@@ -11,7 +11,7 @@
 // Helper to get import.meta.env safely (works in both Vite and Jest)
 // NOTE: We cannot use import.meta directly because Jest will try to parse it and fail
 // Solution: Check for Jest mock first, then use a Vite-specific global that we'll inject
-const getMetaEnv = () => {
+function getMetaEnv() {
   // In Jest tests (mocked via globalThis.import) - check this first
   if (typeof globalThis !== 'undefined' && globalThis.import && globalThis.import.meta && globalThis.import.meta.env) {
     return globalThis.import.meta.env;
@@ -30,13 +30,14 @@ const getMetaEnv = () => {
     SSR: false,
     BASE_URL: '/',
   };
-};
+}
 
 /**
  * Get the current environment mode
  * @returns {string} 'development' | 'production' | 'test'
  */
 export const getEnvMode = () => {
+  // eslint-disable-next-line no-undef
   return getMetaEnv().MODE || 'development';
 };
 
@@ -63,6 +64,7 @@ export const isDevelopment = () => {
  * @returns {string}
  */
 export const getBaseUrl = () => {
+  // eslint-disable-next-line no-undef
   return getMetaEnv().BASE_URL || '/';
 };
 
@@ -75,6 +77,7 @@ export const getBaseUrl = () => {
  */
 export const getEnvVar = (key, defaultValue = '') => {
   const fullKey = key.startsWith('VITE_') ? key : `VITE_${key}`;
+  // eslint-disable-next-line no-undef
   const env = getMetaEnv();
   return env[fullKey] || defaultValue;
 };
@@ -84,6 +87,7 @@ export const getEnvVar = (key, defaultValue = '') => {
  * @returns {Record<string, string>}
  */
 export const getAllEnvVars = () => {
+  // eslint-disable-next-line no-undef
   return getMetaEnv();
 };
 
@@ -91,6 +95,7 @@ export const getAllEnvVars = () => {
  * Environment variable accessor object
  * Provides a clean API for common environment variables
  */
+// eslint-disable-next-line no-undef
 const metaEnv = getMetaEnv();
 export const env = {
   // Mode
