@@ -5,11 +5,10 @@
  */
 package com.simpleaccounts.rest.contactcontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.bank.model.DeleteModel;
-import com.simpleaccounts.constant.DefaultTypeConstant;
-import lombok.RequiredArgsConstructor;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import com.simpleaccounts.constant.dbfilter.ContactFilterEnum;
 import com.simpleaccounts.constant.dbfilter.ORDERBYENUM;
 import com.simpleaccounts.entity.Contact;
@@ -33,17 +32,10 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.util.*;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -169,16 +161,17 @@ public class ContactController {
 	public ResponseEntity<Object> save(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-		try {
-			SimpleAccountsMessage message = null;
-			Map<String, Object> vatRegistrationNumberParam = new HashMap<>();
-			if(contactPersistModel.getVatRegistrationNumber() != "") {
-				vatRegistrationNumberParam.put("vatRegistrationNumber", contactPersistModel.getVatRegistrationNumber());
-				vatRegistrationNumberParam.put(JSON_KEY_DELETE_FLAG, Boolean.FALSE);
-				List<Contact> existingContactvatRegistrationNumber = contactService.findByAttributes(vatRegistrationNumberParam);
-				if (existingContactvatRegistrationNumber != null && !existingContactvatRegistrationNumber.isEmpty()) {
-					message = new SimpleAccountsMessage("0087",
-							MessageUtil.getMessage("trn.alreadyexists.0087"), true);
+			try {
+				SimpleAccountsMessage message = null;
+				Map<String, Object> vatRegistrationNumberParam = new HashMap<>();
+				String vatRegistrationNumber = contactPersistModel.getVatRegistrationNumber();
+				if(vatRegistrationNumber != null && !vatRegistrationNumber.isEmpty()) {
+					vatRegistrationNumberParam.put("vatRegistrationNumber", vatRegistrationNumber);
+					vatRegistrationNumberParam.put(JSON_KEY_DELETE_FLAG, Boolean.FALSE);
+					List<Contact> existingContactvatRegistrationNumber = contactService.findByAttributes(vatRegistrationNumberParam);
+					if (existingContactvatRegistrationNumber != null && !existingContactvatRegistrationNumber.isEmpty()) {
+						message = new SimpleAccountsMessage("0087",
+								MessageUtil.getMessage("trn.alreadyexists.0087"), true);
 					logger.info(message.getMessage());
 					return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
 				}
@@ -225,26 +218,27 @@ public class ContactController {
 			HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-		try {
-			SimpleAccountsMessage message = null;
-			Map<String, Object> vatRegistrationNumberparam = new HashMap<>();
-			if(contactPersistModel.getVatRegistrationNumber() != ""){
-			vatRegistrationNumberparam.put("vatRegistrationNumber", contactPersistModel.getVatRegistrationNumber());
-			vatRegistrationNumberparam.put("deleteFlag", Boolean.FALSE);
-			List<Contact> existingContactvatRegistrationNumber = contactService.findByAttributes(vatRegistrationNumberparam);
-			if (existingContactvatRegistrationNumber != null && !existingContactvatRegistrationNumber.isEmpty()
-					&& (existingContactvatRegistrationNumber.get(0).getVatRegistrationNumber().equals(contactPersistModel.getVatRegistrationNumber()))) {
-				for (Contact contact : existingContactvatRegistrationNumber) {
-					if (contact.getContactId().equals(contactPersistModel.getContactId())) {
-						break;
+			try {
+				SimpleAccountsMessage message = null;
+				Map<String, Object> vatRegistrationNumberparam = new HashMap<>();
+				String vatRegistrationNumber = contactPersistModel.getVatRegistrationNumber();
+				if(vatRegistrationNumber != null && !vatRegistrationNumber.isEmpty()){
+					vatRegistrationNumberparam.put("vatRegistrationNumber", vatRegistrationNumber);
+					vatRegistrationNumberparam.put("deleteFlag", Boolean.FALSE);
+					List<Contact> existingContactvatRegistrationNumber = contactService.findByAttributes(vatRegistrationNumberparam);
+					if (existingContactvatRegistrationNumber != null && !existingContactvatRegistrationNumber.isEmpty()
+							&& (existingContactvatRegistrationNumber.get(0).getVatRegistrationNumber().equals(vatRegistrationNumber))) {
+						boolean hasDuplicate = existingContactvatRegistrationNumber.stream()
+								.anyMatch(contact -> !contact.getContactId().equals(contactPersistModel.getContactId()));
+						if (hasDuplicate) {
+							message = new SimpleAccountsMessage("0087",
+									MessageUtil.getMessage("trn.alreadyexists.0087"), true);
+							logger.info(message.getMessage());
+							return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+						}
 					}
-					message = new SimpleAccountsMessage("0087",
-							MessageUtil.getMessage("trn.alreadyexists.0087"), true);
-					logger.info(message.getMessage());
-					return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
 				}
-			}}
-			Map<String, Object> supplierMap = new HashMap<>();
+				Map<String, Object> supplierMap = new HashMap<>();
 			supplierMap.put("contact", contactPersistModel.getContactId());
 			supplierMap.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
 			List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService

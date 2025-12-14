@@ -3,12 +3,9 @@ package com.simpleaccounts.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
-
 import javax.persistence.*;
-
-import org.hibernate.annotations.ColumnDefault;
-
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 @NamedQueries({
 

@@ -1,17 +1,13 @@
 package com.simpleaccounts.entity;
 
+import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.*;
-
+import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-
-import lombok.Data;
 
 @Entity
 @Table(name = "TRANSACTION_CATEGORY_BALANCE")

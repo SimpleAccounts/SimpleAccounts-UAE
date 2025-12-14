@@ -15,7 +15,6 @@ import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import java.io.IOException;
-import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -149,7 +148,7 @@ public class UserRestHelper {
 		}
 		return null;
 	}
-	public SimpleAccountsMessage saveUserCredential(User user, String encodedPassword, SimpleAccountsMessage message) {
+	public SimpleAccountsMessage saveUserCredential(User user, String encodedPassword) {
 		UserCredential existingUser = userCredentialRepository.findUserCredentialByUser(user);
 		if (existingUser!=null){
 
@@ -176,7 +175,7 @@ public class UserRestHelper {
 			userCredential.setPassword(encodedPassword);
 			userCredentialRepository.save(userCredential);
 		}
-		message = new SimpleAccountsMessage("0088",
+		SimpleAccountsMessage message = new SimpleAccountsMessage("0088",
 				MessageUtil.getMessage("resetPassword.created.successful.msg.0088"), false);
 		return message;
 	}

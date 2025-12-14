@@ -1,9 +1,8 @@
 package com.simpleaccounts.rest.employeecontroller;
 
+import com.simpleaccounts.rest.payroll.SalaryTemplatePersistModel;
 import java.math.BigDecimal;
 import java.util.List;
-
-import com.simpleaccounts.rest.payroll.SalaryTemplatePersistModel;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -16,7 +16,6 @@ import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simpleaccounts.rest.financialreport.VatReportFilingRequestModel;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;

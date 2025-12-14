@@ -1,16 +1,12 @@
 package com.simpleaccounts.rest.journalcontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+import static com.simpleaccounts.constant.PostingReferenceTypeEnum.*;
+
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
 import com.simpleaccounts.constant.dbfilter.JournalFilterEnum;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import javax.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-import static com.simpleaccounts.constant.PostingReferenceTypeEnum.*;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.repository.CustomerInvoiceReceiptRepository;
 import com.simpleaccounts.repository.JournalLineItemRepository;
@@ -30,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,18 +36,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.bank.model.DeleteModel;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
-import com.simpleaccounts.constant.dbfilter.JournalFilterEnum;
-import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.security.JwtTokenUtil;
-
-import io.swagger.annotations.ApiOperation;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-import static com.simpleaccounts.constant.PostingReferenceTypeEnum.*;
 
 /**
  *

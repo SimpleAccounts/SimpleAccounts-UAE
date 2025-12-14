@@ -1,8 +1,8 @@
 package com.simpleaccounts.rest.datalistcontroller;
 
-import com.simpleaccounts.aop.LogRequest;
-import lombok.RequiredArgsConstructor;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
+import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.constant.dbfilter.*;
 import com.simpleaccounts.entity.*;
@@ -33,15 +33,9 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -322,10 +316,10 @@ public class DataListController {
 				exciseTaxModelList.add(exciseTaxModel);
 			}
 
-			if (exciseTaxModelList == null) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-			return new ResponseEntity<>(exciseTaxModelList, HttpStatus.OK);
+				if (exciseTaxModelList.isEmpty()) {
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				}
+				return new ResponseEntity<>(exciseTaxModelList, HttpStatus.OK);
 
 		} catch (Exception e) {
 			logger.error(ERROR, e);
@@ -627,12 +621,12 @@ public class DataListController {
 												  @RequestParam(value = "defaultTermsAndConditions") String defaultTermsAndConditions,
 												  HttpServletRequest request)
 	{
-		try {
-			Integer defaultNoteId=1;
-			NotesSettings notesSettings = notesSettingsRepository.findById(defaultNoteId).get();
-			notesSettings.setDefaultNotes(defaultNote);
-			notesSettings.setDefaultFootNotes(defaultFootNote);
-			notesSettings.setDefaultTermsAndConditions(defaultTermsAndConditions);
+			try {
+				Integer defaultNoteId=1;
+				NotesSettings notesSettings = notesSettingsRepository.findById(defaultNoteId).orElseThrow();
+				notesSettings.setDefaultNotes(defaultNote);
+				notesSettings.setDefaultFootNotes(defaultFootNote);
+				notesSettings.setDefaultTermsAndConditions(defaultTermsAndConditions);
 			notesSettingsRepository.save(notesSettings);
 			return new ResponseEntity<>(notesSettings,HttpStatus.OK);
 		}catch (Exception e){

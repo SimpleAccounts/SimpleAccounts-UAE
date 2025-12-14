@@ -22,14 +22,10 @@ import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RestController
@@ -82,10 +78,10 @@ public class MailRestController {
             Journal journal = null;
             switch (type)
             {
-                case 1: // Invoice
-                    if(emailContentModel.getSendAgain().equals(Boolean.FALSE)) {
-                        Invoice invoice = invoiceRepository.findById(emailContentModel.getId()).get();
-                        PostingRequestModel postingRequestModel = new PostingRequestModel();
+	                case 1: // Invoice
+	                    if(emailContentModel.getSendAgain().equals(Boolean.FALSE)) {
+	                        Invoice invoice = invoiceRepository.findById(emailContentModel.getId()).orElseThrow();
+	                        PostingRequestModel postingRequestModel = new PostingRequestModel();
                         postingRequestModel.setPostingRefId(emailContentModel.getPostingRefId());
                         postingRequestModel.setPostingRefType(emailContentModel.getPostingRefType());
                         postingRequestModel.setAmount(emailContentModel.getAmount());
@@ -102,10 +98,10 @@ public class MailRestController {
                     }
                     break;
 
-                case 7://Credit Note
-                    if(emailContentModel.getSendAgain().equals(Boolean.FALSE)) {
-                        CreditNote creditNote = creditNoteRepository.findById(emailContentModel.getId()).get();
-                        PostingRequestModel postingRequestModel1 = new PostingRequestModel();
+	                case 7://Credit Note
+	                    if(emailContentModel.getSendAgain().equals(Boolean.FALSE)) {
+	                        CreditNote creditNote = creditNoteRepository.findById(emailContentModel.getId()).orElseThrow();
+	                        PostingRequestModel postingRequestModel1 = new PostingRequestModel();
                         postingRequestModel1.setPostingRefId(emailContentModel.getPostingRefId());
                         postingRequestModel1.setSendAgain(emailContentModel.getSendAgain());
                         if(creditNote.getIsCNWithoutProduct().equals(Boolean.TRUE)) {
@@ -120,20 +116,20 @@ public class MailRestController {
                     }
                     break;
 
-                case 6://Quotation
-                    if(emailContentModel.getSendAgain().equals(Boolean.FALSE)) {
-                        PoQuatation quatation = poQuatationRepository.findById(emailContentModel.getId()).get();
-                        quatation.setStatus(CommonStatusEnum.POST.getValue());
-                        poQuatationRepository.save(quatation);
-                    }
-                    break;
+	                case 6://Quotation
+	                    if(emailContentModel.getSendAgain().equals(Boolean.FALSE)) {
+	                        PoQuatation quatation = poQuatationRepository.findById(emailContentModel.getId()).orElseThrow();
+	                        quatation.setStatus(CommonStatusEnum.POST.getValue());
+	                        poQuatationRepository.save(quatation);
+	                    }
+	                    break;
 
-                case 4:// Purchase Order
-                    if(emailContentModel.getSendAgain().equals(Boolean.FALSE)) {
-                        PoQuatation Poquatation = poQuatationRepository.findById(emailContentModel.getId()).get();
-                        Poquatation.setStatus(CommonStatusEnum.POST.getValue());
-                        poQuatationRepository.save(Poquatation);
-                    }
+	                case 4:// Purchase Order
+	                    if(emailContentModel.getSendAgain().equals(Boolean.FALSE)) {
+	                        PoQuatation Poquatation = poQuatationRepository.findById(emailContentModel.getId()).orElseThrow();
+	                        Poquatation.setStatus(CommonStatusEnum.POST.getValue());
+	                        poQuatationRepository.save(Poquatation);
+	                    }
                     break;
                 default:
                     break;

@@ -1,22 +1,20 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.constant.dbfilter.ProductFilterEnum;
-import lombok.RequiredArgsConstructor;
-
-import java.util.Collections;
-import java.util.List;
-
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.dao.ProductDao;
 import com.simpleaccounts.entity.Product;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.ProductService;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 
 @Service("ProductService")
 @RequiredArgsConstructor
@@ -50,6 +48,9 @@ public class ProductServiceImpl extends ProductService {
 
     private void deleteFromCache(List<Integer> ids) {
         Cache productCache = cacheManager.getCache("productCache");
+        if (productCache == null) {
+            return;
+        }
         for (Integer id : ids ) {
             productCache.evict(id);
         }

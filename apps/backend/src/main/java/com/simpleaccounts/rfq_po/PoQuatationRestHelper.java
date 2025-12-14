@@ -3,7 +3,6 @@ package com.simpleaccounts.rfq_po;
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.dao.MailThemeTemplates;
@@ -38,7 +37,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 @Component
 @RequiredArgsConstructor
@@ -365,7 +363,7 @@ public class PoQuatationRestHelper {
             if(model.getUnitType() != null)
                 poQuatationLineItem.setUnitType(model.getUnitType());
             if (model.getUnitTypeId() != null)
-                poQuatationLineItem.setUnitTypeId(unitTypesRepository.findById(model.getUnitTypeId()).get());
+                unitTypesRepository.findById(model.getUnitTypeId()).ifPresent(poQuatationLineItem::setUnitTypeId);
             poQuatationLineItem.setPoQuatation(poQuatation);
             listItems.add(poQuatationLineItem);
         }
@@ -1506,7 +1504,7 @@ public class PoQuatationRestHelper {
             logger.error(ERROR_PROCESSING_QUOTATION, e);
         }
 
-        if (htmlContent !="" && htmlContent !=null ){
+        if (htmlContent != null && !htmlContent.isEmpty()){
             content = mailUtility.create(map, htmlContent);
         }
         if (poEmailBody != null && poEmailBody.getTemplateSubject() != null) {
@@ -1787,7 +1785,7 @@ public class PoQuatationRestHelper {
             logger.error(ERROR_PROCESSING_QUOTATION, e);
         }
 
-        if (htmlContent !="" && htmlContent !=null ){
+        if (htmlContent != null && !htmlContent.isEmpty()){
             content = mailUtility.create(map, htmlContent);
         }
         if (grnEmailBody != null && grnEmailBody.getTemplateSubject() != null) {

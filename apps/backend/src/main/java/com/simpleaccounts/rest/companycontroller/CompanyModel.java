@@ -2,10 +2,8 @@ package com.simpleaccounts.rest.companycontroller;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class CompanyModel {

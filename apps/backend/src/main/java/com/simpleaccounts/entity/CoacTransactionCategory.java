@@ -1,15 +1,12 @@
 package com.simpleaccounts.entity;
 
-import javax.persistence.*;
-
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-
-import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import javax.persistence.*;
+import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "COAC_TRANSACTION_CATEGORY")

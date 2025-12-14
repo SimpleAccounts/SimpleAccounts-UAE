@@ -3,14 +3,10 @@ package com.simpleaccounts.dao;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.ORDERBYENUM;
 import com.simpleaccounts.rest.PaginationModel;
-
-import lombok.extern.slf4j.Slf4j;
-
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
