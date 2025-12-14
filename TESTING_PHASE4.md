@@ -17,8 +17,8 @@ cd apps/frontend
 # Clean any previous builds
 rm -rf dist build
 
-# Run Vite build
-npm run build:vite
+# Run Vite build (npm run build now uses Vite by default in Phase 5)
+npm run build
 ```
 
 ### Expected Results:
@@ -65,10 +65,10 @@ cat dist/index.html | grep -E "(assets|\.js|\.css)"
 cd apps/frontend
 
 # Build first (if not already done)
-npm run build:vite
+npm run build
 
 # Preview the production build
-npm run preview:vite
+npm run preview
 ```
 
 ### Expected Results:
@@ -151,7 +151,7 @@ npm run frontend:build
 
 ### Expected Results:
 - ✅ Script executes successfully
-- ✅ Uses Vite build (`build:vite`)
+- ✅ Uses Vite build (`npm run build` - Vite is now default in Phase 5)
 - ✅ Creates `apps/frontend/dist/` directory
 
 ## Test 7: Build Performance Comparison (Optional)
@@ -248,7 +248,7 @@ find dist/ -name "*.map" | wc -l  # Should be 0
 ### Issue: Build fails with memory error
 **Solution:** Increase Node memory limit
 ```bash
-NODE_OPTIONS=--max-old-space-size=4096 npm run build:vite
+NODE_OPTIONS=--max-old-space-size=4096 npm run build
 ```
 
 ### Issue: Docker build fails
@@ -279,8 +279,8 @@ cd apps/frontend
 echo "1. Cleaning previous builds..."
 rm -rf dist build
 
-echo "2. Running Vite build..."
-npm run build:vite
+echo "2. Running Vite build (npm run build now uses Vite by default)..."
+npm run build
 
 echo "3. Verifying dist/ directory..."
 if [ ! -d "dist" ]; then
@@ -300,9 +300,9 @@ if [ ! -d "dist/assets" ]; then
   exit 1
 fi
 
-echo "6. Verifying CRA build still works..."
+echo "6. Verifying CRA build still works (using build:cra fallback)..."
 rm -rf dist
-npm run build
+npm run build:cra
 
 if [ ! -d "build" ]; then
   echo "❌ ERROR: build/ directory not found (CRA build failed)"

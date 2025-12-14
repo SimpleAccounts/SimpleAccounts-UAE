@@ -9,8 +9,8 @@ cd apps/frontend
 echo "1. Cleaning previous builds..."
 rm -rf dist build
 
-echo "2. Running Vite build..."
-npm run build:vite
+echo "2. Running Vite build (npm run build now uses Vite by default)..."
+npm run build
 
 echo "3. Verifying dist/ directory..."
 if [ ! -d "dist" ]; then
@@ -30,9 +30,9 @@ if [ ! -d "dist/assets" ]; then
   exit 1
 fi
 
-echo "6. Verifying CRA build still works..."
+echo "6. Verifying CRA build still works (using build:cra fallback)..."
 rm -rf dist
-npm run build
+npm run build:cra
 
 if [ ! -d "build" ]; then
   echo "❌ ERROR: build/ directory not found (CRA build failed)"
