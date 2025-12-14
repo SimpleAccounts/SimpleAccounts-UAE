@@ -20,7 +20,7 @@ public class PageableBuilderUtil {
 	
 	public static Pageable getPageable(int pageSize,int page) {
 		// Limit lower bound
-		pageSize = pageSize < 1 ? DEFAULT_MIN_PAGE_SIZE : pageSize;
+		pageSize = pageSize < DEFAULT_MIN_PAGE_SIZE ? DEFAULT_MIN_PAGE_SIZE : pageSize;
 		// Limit upper bound
 		pageSize = pageSize > DEFAULT_MAX_PAGE_SIZE ? DEFAULT_MAX_PAGE_SIZE : pageSize;
 		// Default if necessary and default configured
@@ -32,13 +32,13 @@ public class PageableBuilderUtil {
 		int page = request.getPage() > 0 ? request.getPage() : 0;
 		int pageSize = request.getSize() > 0 ? request.getSize() : 10;
 		// Limit lower bound
-		pageSize = pageSize < 1 ? DEFAULT_MIN_PAGE_SIZE : pageSize;
-		Sort sort = null;
-		if (request.getSortStr() != null) {
-			sort = getSortArgument(request.getSortStr());
+		pageSize = pageSize < DEFAULT_MIN_PAGE_SIZE ? DEFAULT_MIN_PAGE_SIZE : pageSize;
+		Sort sort = Sort.unsorted();
+		if (StringUtils.hasText(request.getSortStr())) {
+			Sort parsedSort = getSortArgument(request.getSortStr());
+			sort = parsedSort == null ? Sort.unsorted() : parsedSort;
 		}
 		// Default if necessary and default configured
-		sort = sort == null  ? null : sort;
 		return new PageRequest(page, pageSize, sort);
 
 	}

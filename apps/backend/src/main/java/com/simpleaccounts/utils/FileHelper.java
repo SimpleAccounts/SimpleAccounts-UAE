@@ -201,13 +201,10 @@ public class FileHelper {
 	}
 
 	public String convertFilePthToUrl(String filePath) {
-		String url = filePath;
-
-		if (filePath.contains(File.separator)) {
-			url = url.replace("\\", "/");
+		if (filePath == null) {
+			return null;
 		}
-
-		return url;
+		return filePath.replace("\\", "/");
 	}
 	/**
 	 * Save the uploaded folder under basePath
