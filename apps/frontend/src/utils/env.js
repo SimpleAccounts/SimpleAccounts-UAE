@@ -13,8 +13,15 @@
 // Solution: Check for Jest mock first, then use a Vite-specific global that we'll inject
 function getMetaEnv() {
   // In Jest tests (mocked via globalThis.import) - check this first
-  if (typeof globalThis !== 'undefined' && globalThis.import && globalThis.import.meta && globalThis.import.meta.env) {
-    return globalThis.import.meta.env;
+  // eslint-disable-next-line no-undef
+  if (typeof globalThis !== 'undefined') {
+    // eslint-disable-next-line no-undef
+    const globalImport = globalThis.import;
+    // eslint-disable-next-line no-undef
+    if (globalImport && globalImport.meta && globalImport.meta.env) {
+      // eslint-disable-next-line no-undef
+      return globalImport.meta.env;
+    }
   }
   // In Vite runtime - check for a global that Vite will inject
   // We use window.__VITE_ENV__ which will be set by Vite at build time
