@@ -157,7 +157,7 @@ class OpenApiContractTest {
             user.put("name", "Admin");
 
             Map<String, Object> response = new HashMap<>();
-            response.put("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...");
+            response.put("token", "token");
             response.put("expiresIn", 3600);
             response.put("user", user);
 
@@ -169,7 +169,7 @@ class OpenApiContractTest {
         @Test
         @DisplayName("Token should be valid JWT format")
         void shouldReturnValidJwtFormat() {
-            String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U";
+            String token = "a.b.c";
 
             assertThat(token).matches("^[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+$");
         }

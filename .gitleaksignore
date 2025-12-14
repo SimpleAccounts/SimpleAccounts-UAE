@@ -1,0 +1,16 @@
+# Known historical leaks in the develop→master release range.
+#
+# The related credentials have been rotated/removed; develop is branch-protected
+# (no force-push), so we ignore the historical findings to keep PR checks green.
+c6d4a657f1c1e8ace3766fb7a859c3377bc28c71:.github/workflows/sonarqube.yml:curl-auth-user:157
+b2344c39a2b459c052491fbc7b3bda31f2e89923:.github/workflows/sonarqube.yml:curl-auth-user:147
+38ae132d653f90775205d02dfbac314b79bfa97e:scripts/analyze-sonarqube-issues.py:generic-api-key:13
+38ae132d653f90775205d02dfbac314b79bfa97e:scripts/fetch-sonarqube-issues.sh:generic-api-key:5
+38ae132d653f90775205d02dfbac314b79bfa97e:scripts/fetch-sonarqube-issues.sh:curl-auth-user:16
+38ae132d653f90775205d02dfbac314b79bfa97e:scripts/fetch-sonarqube-issues.sh:curl-auth-user:30
+38ae132d653f90775205d02dfbac314b79bfa97e:scripts/fetch-high-priority-issues.py:generic-api-key:13
+b99a813268c7503f2d72d66f1fef0a0e6e241771:apps/backend/src/test/java/com/simpleaccounts/contract/OpenApiContractTest.java:jwt:182
+b99a813268c7503f2d72d66f1fef0a0e6e241771:apps/backend/src/test/java/com/simpleaccounts/contract/OpenApiContractTest.java:generic-api-key:170
+b99a813268c7503f2d72d66f1fef0a0e6e241771:apps/backend/src/test/java/com/simpleaccounts/service/impl/UserServiceImplTest.java:generic-api-key:419
+b99a813268c7503f2d72d66f1fef0a0e6e241771:apps/backend/src/test/java/com/simpleaccounts/service/impl/UserServiceImplTest.java:generic-api-key:447
+77a7afbfa5eadc5abef047cdd91e74b666331a8c:apps/backend/src/test/java/com/simpleaccounts/integration/ExternalApiIntegrationTest.java:generic-api-key:286
