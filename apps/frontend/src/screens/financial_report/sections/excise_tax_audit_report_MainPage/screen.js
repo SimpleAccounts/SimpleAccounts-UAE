@@ -1,6 +1,6 @@
-import React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Button,
   Col,
@@ -13,31 +13,31 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from "reactstrap";
-import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
-import { AuthActions, CommonActions } from "services/global";
-import "react-toastify/dist/ReactToastify.css";
-import "react-datepicker/dist/react-datepicker.css";
-import "./style.scss";
-import * as FTAreport from "./actions";
-import { isDate, upperFirst } from "lodash-es";
-import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import moment from "moment";
-import download from "downloadjs";
-import { ConfirmDeleteModal, Currency } from "components";
-import { data } from "../../../Language/index";
-import LocalizedStrings from "react-localization";
-import GenerateFTAExcisereport from "./sections/generateExciseTaxAudit";
-import VatSettingModal from "./sections/vatSettingModal";
+} from 'reactstrap';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { AuthActions, CommonActions } from 'services/global';
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-datepicker/dist/react-datepicker.css';
+import './style.scss';
+import * as FTAreport from './actions';
+import { isDate, upperFirst } from 'lodash-es';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+import moment from 'moment';
+import download from 'downloadjs';
+import { ConfirmDeleteModal, Currency } from 'components';
+import { data } from '../../../Language/index';
+import LocalizedStrings from 'react-localization';
+import GenerateFTAExcisereport from './sections/generateExciseTaxAudit';
+import VatSettingModal from './sections/vatSettingModal';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     version: state.common.version,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     authActions: bindActionCreators(AuthActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch),
@@ -50,10 +50,10 @@ class ExciseTaxAuditReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      language: window["localStorage"].getItem("language"),
+      language: window['localStorage'].getItem('language'),
       initValue: {},
       loading: false,
-      fileName: "",
+      fileName: '',
       actionButtons: {},
       openGenerateModal: false,
       disabled: false,
@@ -61,11 +61,11 @@ class ExciseTaxAuditReport extends React.Component {
       openModal: false,
       openVatSettingModal: false,
       openFileTaxRetrunModal: false,
-      coaName: "",
+      coaName: '',
       ftaAuditReporttDataList: [],
       paginationPageSize: 10,
       dialog: false,
-      current_report_id: "",
+      current_report_id: '',
       deleteModal: false,
     };
     this.options = {
@@ -74,20 +74,20 @@ class ExciseTaxAuditReport extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
-      sortName: "",
-      sortOrder: "",
+      sortName: '',
+      sortOrder: '',
       onSortChange: this.sortColumn,
     };
   }
-  onPageSizeChanged = (newPageSize) => {
-    var value = document.getElementById("page-size").value;
+  onPageSizeChanged = newPageSize => {
+    var value = document.getElementById('page-size').value;
     this.gridApi.paginationSetPageSize(Number(value));
   };
-  onGridReady = (params) => {
+  onGridReady = params => {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
   };
-  onSizePerPageList = (sizePerPage) => {
+  onSizePerPageList = sizePerPage => {
     if (this.options.sizePerPage !== sizePerPage) {
       this.options.sizePerPage = sizePerPage;
       this.getInitialData();
@@ -110,28 +110,26 @@ class ExciseTaxAuditReport extends React.Component {
     this.getInitialData();
   };
 
-  markItUnfiled = (row) => {
+  markItUnfiled = row => {
     const postingRequestModel = {
       postingRefId: row.id,
-      postingRefType: "PUBLISH",
+      postingRefType: 'PUBLISH',
     };
     this.props.ftaReport
       .markItUnfiled(postingRequestModel)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           this.props.commonActions.tostifyAlert(
-            "success",
-            res.data && res.data.message
-              ? res.data.message
-              : " VAT UnFiled Successfully"
+            'success',
+            res.data && res.data.message ? res.data.message : ' VAT UnFiled Successfully'
           );
           this.getInitialData();
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.props.commonActions.tostifyAlert(
-          "error",
-          err && err.data ? err.data.message : "Something Went Wrong"
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong'
         );
       });
   };
@@ -143,51 +141,49 @@ class ExciseTaxAuditReport extends React.Component {
       pageSize: this.options.sizePerPage,
     };
     const sortingData = {
-      order: this.options.sortOrder ? this.options.sortOrder : "",
-      sortingCol: this.options.sortName ? this.options.sortName : "",
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : '',
     };
     const postData = { ...filterData, ...paginationData, ...sortingData };
     this.props.ftaReport
       .getVatReportList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           let arrayList = {};
           arrayList.count = res.data.count;
 
           if (res.data?.data?.length > 0)
-            arrayList.data = res.data?.data.filter(
-              (row) => row.status != "UnFiled"
-            );
+            arrayList.data = res.data?.data.filter(row => row.status != 'UnFiled');
           this.setState({ ftaAuditReporttDataList: arrayList }); // comment for dummy
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.props.commonActions.tostifyAlert(
-          "error",
-          err && err.data ? err.data.message : "Something Went Wrong"
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong'
         );
       });
   };
 
   sortColumn = (sortName, sortOrder) => {
-		this.options.sortName = sortName;
-		this.options.sortOrder = sortOrder;
-		this.getInitialData();
-	};
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.getInitialData();
+  };
 
-  export = (filename) => {
+  export = filename => {
     this.props.ftaReport
       .downloadcsv(filename)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
-          const blob = new Blob([res.data], { type: "application/csv" });
+          const blob = new Blob([res.data], { type: 'application/csv' });
           download(blob, filename);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.props.commonActions.tostifyAlert(
-          "error",
-          err && err.data ? err.data.message : "Something Went Wrong"
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong'
         );
       });
   };
@@ -197,25 +193,25 @@ class ExciseTaxAuditReport extends React.Component {
     });
   };
 
-  closeModal = (res) => {
+  closeModal = res => {
     this.setState({ openModal: false });
   };
-  closeVatSettingModal = (res) => {
+  closeVatSettingModal = res => {
     this.setState({ openVatSettingModal: false });
   };
 
-  closeFileTaxRetrunModal = (res) => {
+  closeFileTaxRetrunModal = res => {
     this.setState({ openFileTaxRetrunModal: false });
   };
-  closeDeleteModal = (res) => {
+  closeDeleteModal = res => {
     this.setState({ deleteModal: false });
   };
 
-  showHeader = (s) => {
-    return upperFirst(s.replace(/([a-z])([A-Z])/g, "$1 $2"));
+  showHeader = s => {
+    return upperFirst(s.replace(/([a-z])([A-Z])/g, '$1 $2'));
   };
-  toggleActionButton = (index) => {
-    console.log(index, this.state.actionButtons, " this.state.actionButtons");
+  toggleActionButton = index => {
+    console.log(index, this.state.actionButtons, ' this.state.actionButtons');
     let temp = Object.assign({}, this.state.actionButtons);
     if (temp[parseInt(index, 10)]) {
       temp[parseInt(index, 10)] = false;
@@ -225,7 +221,7 @@ class ExciseTaxAuditReport extends React.Component {
     this.setState({
       actionButtons: temp,
     });
-    console.log(index, this.state.actionButtons, " this.state.actionButtons");
+    console.log(index, this.state.actionButtons, ' this.state.actionButtons');
   };
 
   getActionButtons = (cell, params) => {
@@ -251,19 +247,14 @@ class ExciseTaxAuditReport extends React.Component {
           <DropdownItem
             onClick={() => {
               this.setState({ current_report_id: params.id });
-              let dateArr = params.taxReturns
-                ? params.taxReturns.split("-")
-                : [];
-              this.props.history.push(
-                "/admin/report/exciseTaxAuditReports/view",
-                {
-                  startDate: dateArr[0],
-                  endDate: dateArr[1],
-                  userId: params.userId,
-                  companyId: 1,
-                  taxAgencyId: params.taxAgencyId,
-                }
-              );
+              let dateArr = params.taxReturns ? params.taxReturns.split('-') : [];
+              this.props.history.push('/admin/report/exciseTaxAuditReports/view', {
+                startDate: dateArr[0],
+                endDate: dateArr[1],
+                userId: params.userId,
+                companyId: 1,
+                taxAgencyId: params.taxAgencyId,
+              });
             }}
           >
             <i className="fas fa-eye" /> View
@@ -330,33 +321,25 @@ class ExciseTaxAuditReport extends React.Component {
 
   // }
 
-  renderStatus = (params) => {
+  renderStatus = params => {
     return (
       <>
-        {params.value === "UnFiled" ? (
+        {params.value === 'UnFiled' ? (
           <label className="badge label-draft"> {params.value}</label>
         ) : (
-          ""
+          ''
         )}
-        {params.value === "Filed" ? (
-          <label className="badge label-due"> {params.value}</label>
-        ) : (
-          ""
-        )}
-        {params.value === "Partially Paid" ? (
+        {params.value === 'Filed' ? <label className="badge label-due"> {params.value}</label> : ''}
+        {params.value === 'Partially Paid' ? (
           <label className="badge label-PartiallyPaid"> {params.value}</label>
         ) : (
-          ""
+          ''
         )}
-        {params.value === "Paid" ? (
-          <label className="badge label-paid"> {params.value}</label>
-        ) : (
-          ""
-        )}
-        {params.value === "Reclaimed" ? (
+        {params.value === 'Paid' ? <label className="badge label-paid"> {params.value}</label> : ''}
+        {params.value === 'Reclaimed' ? (
           <label className="badge label-sent"> {params.value}</label>
         ) : (
-          ""
+          ''
         )}
       </>
     );
@@ -369,7 +352,7 @@ class ExciseTaxAuditReport extends React.Component {
           <Currency value={amount} currencySymbol={params.currency} />
         </>
       );
-    else return "---";
+    else return '---';
   };
   renderBalanceAmount = (amount, params) => {
     if (amount != null) {
@@ -378,17 +361,16 @@ class ExciseTaxAuditReport extends React.Component {
           <Currency value={amount} currencySymbol={params.currency} />
         </label>
       );
-    } else return "---";
+    } else return '---';
   };
 
-  delete = (id) => {
+  delete = id => {
     const message1 = (
       <text>
         <b>Delete VAT Report File ?</b>
       </text>
     );
-    const message =
-      "This VAT report file will be deleted permanently and cannot be recovered. ";
+    const message = 'This VAT report file will be deleted permanently and cannot be recovered. ';
 
     this.setState({
       dialog: (
@@ -403,16 +385,14 @@ class ExciseTaxAuditReport extends React.Component {
     });
   };
 
-  remove = (current_report_id) => {
+  remove = current_report_id => {
     this.props.ftaReport
       .deleteReportById(current_report_id)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           this.props.commonActions.tostifyAlert(
-            "success",
-            res.data && res.data.message
-              ? res.data.message
-              : "VAT Report File Deleted Successfully"
+            'success',
+            res.data && res.data.message ? res.data.message : 'VAT Report File Deleted Successfully'
           );
           this.setState({
             dialog: null,
@@ -420,12 +400,10 @@ class ExciseTaxAuditReport extends React.Component {
           this.getInitialData();
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.props.commonActions.tostifyAlert(
-          "error",
-          err?.data
-            ? err?.data?.message
-            : "VAT Report File Deleted Unsuccessfully"
+          'error',
+          err?.data ? err?.data?.message : 'VAT Report File Deleted Unsuccessfully'
         );
         this.setState({
           dialog: null,
@@ -441,25 +419,24 @@ class ExciseTaxAuditReport extends React.Component {
 
   renderDate = (cell, row) => {
     return cell
-      ? moment(cell).format("DD-MM-YYYY")
+      ? moment(cell).format('DD-MM-YYYY')
       : // .format('LL')
-        "-";
+        '-';
   };
 
   renderEnd = (cell, row) => {
-    let dateArr = cell ? cell.split("-") : [];
+    let dateArr = cell ? cell.split('-') : [];
 
-    return <>{dateArr[1].replaceAll("/", "-")}</>;
+    return <>{dateArr[1].replaceAll('/', '-')}</>;
   };
   renderStartDate = (cell, row) => {
-    let dateArr = cell ? cell.split("-") : [];
+    let dateArr = cell ? cell.split('-') : [];
 
-    return <>{dateArr[0].replaceAll("/", "-")}</>;
+    return <>{dateArr[0].replaceAll('/', '-')}</>;
   };
   render() {
     strings.setLanguage(this.state.language);
-    var { ftaAuditReporttDataList, csvFileNamesData, dialog, options } =
-      this.state;
+    var { ftaAuditReporttDataList, csvFileNamesData, dialog, options } = this.state;
 
     return (
       <div className="import-bank-statement-screen">
@@ -476,15 +453,15 @@ class ExciseTaxAuditReport extends React.Component {
                 <Col lg={12}>
                   <div
                     className="h4 mb-0 d-flex align-items-center"
-                    style={{ justifyContent: "space-between" }}
+                    style={{ justifyContent: 'space-between' }}
                   >
                     <div>
                       <p
                         className="mb-0"
                         style={{
-                          cursor: "pointer",
-                          fontSize: "1.3rem",
-                          paddingLeft: "15px",
+                          cursor: 'pointer',
+                          fontSize: '1.3rem',
+                          paddingLeft: '15px',
                         }}
                       >
                         {strings.Excise_Tax_Audit_Report}
@@ -494,10 +471,10 @@ class ExciseTaxAuditReport extends React.Component {
                       <Button
                         className="mr-2 btn btn-danger"
                         onClick={() => {
-                          this.props.history.push("/admin/report/reports-page");
+                          this.props.history.push('/admin/report/reports-page');
                         }}
                         style={{
-                          cursor: "pointer",
+                          cursor: 'pointer',
                         }}
                       >
                         <span>X</span>
@@ -665,7 +642,7 @@ class ExciseTaxAuditReport extends React.Component {
                   }}
                 >
                   <TableHeaderColumn
-                    tdStyle={{ whiteSpace: "normal" }}
+                    tdStyle={{ whiteSpace: 'normal' }}
                     width="23%"
                     isKey
                     dataField="startDate"
@@ -714,7 +691,7 @@ class ExciseTaxAuditReport extends React.Component {
         </div>
         <VatSettingModal
           openModal={this.state.openVatSettingModal}
-          closeModal={(e) => {
+          closeModal={e => {
             this.closeVatSettingModal(e);
             this.getInitialData();
           }}
@@ -724,7 +701,4 @@ class ExciseTaxAuditReport extends React.Component {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ExciseTaxAuditReport);
+export default connect(mapStateToProps, mapDispatchToProps)(ExciseTaxAuditReport);
