@@ -78,6 +78,9 @@ class LogIn extends React.Component {
 				this.props.history.push('/register');
 			}
 			this.setState({ companyCount: response.data }, () => { });
+		}).catch((err) => {
+			// If API fails (e.g., database not set up), show register button
+			this.setState({ companyCount: 0 }, () => { });
 		});
 		this.props.authActions.getUserSubscription().then((res) => {
 			let message = null;

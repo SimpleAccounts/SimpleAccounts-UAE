@@ -39,4 +39,5 @@ RUN chmod +x env.sh
 RUN apk add --no-cache bash
 
 # Start Nginx server
-CMD ["/bin/bash", "-c", "/usr/share/nginx/html/env.sh && nginx -g \"daemon off;\""]
+# Create .env file from environment variables if it doesn't exist, then run env.sh
+CMD ["/bin/bash", "-c", "if [ ! -f /usr/share/nginx/html/.env ]; then echo \"SIMPLEACCOUNTS_HOST=$SIMPLEACCOUNTS_HOST\" > /usr/share/nginx/html/.env && echo \"SIMPLEACCOUNTS_RELEASE=$SIMPLEACCOUNTS_RELEASE\" >> /usr/share/nginx/html/.env && echo \"SIMPLE_SERVICES_HOST=$SIMPLE_SERVICES_HOST\" >> /usr/share/nginx/html/.env && echo \"SIMPLE_SERVICES_GET_SUBSCRIPTION_KEY=$SIMPLE_SERVICES_GET_SUBSCRIPTION_KEY\" >> /usr/share/nginx/html/.env; fi && /usr/share/nginx/html/env.sh && nginx -g \"daemon off;\""]

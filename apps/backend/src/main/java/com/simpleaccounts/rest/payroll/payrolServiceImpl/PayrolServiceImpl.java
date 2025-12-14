@@ -1,5 +1,6 @@
 package com.simpleaccounts.rest.payroll.payrolServiceImpl;
 
+import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.*;
@@ -23,14 +24,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.TextStyle;
 import java.util.*;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service
 	@SuppressWarnings("java:S3973")
-	@RequiredArgsConstructor
 public class PayrolServiceImpl extends PayrolService {
     private static final Logger logger = LoggerFactory.getLogger(PayrolServiceImpl.class);
     private final PayrollRepository payrollRepository;
@@ -46,6 +46,29 @@ public class PayrolServiceImpl extends PayrolService {
 	private final DateFormatUtil dateFormatUtil;
 
 	private final PayrollDao payrollDao;
+
+    public PayrolServiceImpl(
+            PayrollRepository payrollRepository,
+            PayrolEmployeeRepository payrolEmployeeRepository,
+            EmployeeService employeeService,
+            UserJpaRepository userJpaRepository,
+            @Lazy PayrollRestHepler payrollRestHepler,
+            EmployeeSalaryComponentRelationRepository EmpSalaryCompRelRepository,
+            SalaryService salaryService,
+            SalaryRepository salaryRepository,
+            DateFormatUtil dateFormatUtil,
+            PayrollDao payrollDao) {
+        this.payrollRepository = payrollRepository;
+        this.payrolEmployeeRepository = payrolEmployeeRepository;
+        this.employeeService = employeeService;
+        this.userJpaRepository = userJpaRepository;
+        this.payrollRestHepler = payrollRestHepler;
+        this.EmpSalaryCompRelRepository = EmpSalaryCompRelRepository;
+        this.salaryService = salaryService;
+        this.salaryRepository = salaryRepository;
+        this.dateFormatUtil = dateFormatUtil;
+        this.payrollDao = payrollDao;
+    }
 
     private static final String APPROVER = "Payroll Approver";
     private static final String ADMIN = "Admin";

@@ -16,14 +16,12 @@ import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.persistence.TypedQuery;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository(value = "transactionCategoryDao")
-@RequiredArgsConstructor
 public class TransactionCategoryDaoImpl extends AbstractDao<Integer, TransactionCategory>
 		implements TransactionCategoryDao {
 
@@ -31,8 +29,16 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 
 	private final ChartOfAccountService chartOfAccountService;
 
-	@Lazy
 	private final TransactionCategoryService transactionCategoryService;
+
+	public TransactionCategoryDaoImpl(
+			DatatableSortingFilterConstant dataTableUtil,
+			ChartOfAccountService chartOfAccountService,
+			@Lazy TransactionCategoryService transactionCategoryService) {
+		this.dataTableUtil = dataTableUtil;
+		this.chartOfAccountService = chartOfAccountService;
+		this.transactionCategoryService = transactionCategoryService;
+	}
 	@Override
 	public TransactionCategory getDefaultTransactionCategory() {
 		List<TransactionCategory> transactionCategories = findAllTransactionCategory();

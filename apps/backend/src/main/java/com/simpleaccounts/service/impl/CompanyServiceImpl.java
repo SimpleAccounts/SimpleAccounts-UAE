@@ -15,9 +15,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("companyService")
 @Transactional
-@RequiredArgsConstructor
 public class CompanyServiceImpl extends CompanyService {
 
     private final Logger logger = LoggerFactory.getLogger(CompanyServiceImpl.class);
@@ -58,6 +57,37 @@ public class CompanyServiceImpl extends CompanyService {
     private final CurrencyExchangeService currencyExchangeService;
 
     private final BankAccountTypeService bankAccountTypeService;
+
+    public CompanyServiceImpl(
+            CompanyDao companyDao,
+            BankAccountService bankAccountService,
+            TransactionCategoryService transactionCategoryService,
+            JournalService journalService,
+            CoacTransactionCategoryService coacTransactionCategoryService,
+            BankAccountStatusService bankAccountStatusService,
+            @Lazy CompanyService companyService,
+            CurrencyService currencyService,
+            CompanyTypeService companyTypeService,
+            IndustryTypeService industryTypeService,
+            RoleService roleService,
+            UserService userService,
+            CurrencyExchangeService currencyExchangeService,
+            BankAccountTypeService bankAccountTypeService) {
+        this.companyDao = companyDao;
+        this.bankAccountService = bankAccountService;
+        this.transactionCategoryService = transactionCategoryService;
+        this.journalService = journalService;
+        this.coacTransactionCategoryService = coacTransactionCategoryService;
+        this.bankAccountStatusService = bankAccountStatusService;
+        this.companyService = companyService;
+        this.currencyService = currencyService;
+        this.companyTypeService = companyTypeService;
+        this.industryTypeService = industryTypeService;
+        this.roleService = roleService;
+        this.userService = userService;
+        this.currencyExchangeService = currencyExchangeService;
+        this.bankAccountTypeService = bankAccountTypeService;
+    }
 
     @Override
     protected Dao<Integer, Company> getDao() {
