@@ -89,15 +89,15 @@ public class VatReportFilingRestController {
 	@LogRequest
 	@ApiOperation(value = "Get Vat Report Filing List For Bank")
 	@GetMapping(value = "/getVatReportListForBank")
-	public ResponseEntity<Object> getVatReportListForBank(Integer id) {
-        try {
-            List<VatReportResponseListForBank> vatReportResponseListForBanks = new ArrayList<>();
-            List<VatReportFiling> vatReportFilingListForPaymentOrClaim = new ArrayList<>();
-            List<VatReportFiling> vatReportFilingList = vatReportFilingRepository.findAll();
-            if (id.equals(1)){
-                vatReportFilingListForPaymentOrClaim = vatReportFilingList.stream().filter(vatReportFiling -> vatReportFiling.getIsVatReclaimable().equals(Boolean.FALSE)
-                        && vatReportFiling.getDeleteFlag().equals(Boolean.FALSE) && (vatReportFiling.getStatus().equals(11) || vatReportFiling.getStatus().equals(5))).collect(Collectors.toList());
-            }
+		public ResponseEntity<Object> getVatReportListForBank(Integer id) {
+	        try {
+	            List<VatReportResponseListForBank> vatReportResponseListForBanks = new ArrayList<>();
+	            List<VatReportFiling> vatReportFilingListForPaymentOrClaim;
+	            List<VatReportFiling> vatReportFilingList = vatReportFilingRepository.findAll();
+	            if (id.equals(1)){
+	                vatReportFilingListForPaymentOrClaim = vatReportFilingList.stream().filter(vatReportFiling -> vatReportFiling.getIsVatReclaimable().equals(Boolean.FALSE)
+	                        && vatReportFiling.getDeleteFlag().equals(Boolean.FALSE) && (vatReportFiling.getStatus().equals(11) || vatReportFiling.getStatus().equals(5))).collect(Collectors.toList());
+	            }
             else {
                 vatReportFilingListForPaymentOrClaim = vatReportFilingList.stream().filter(vatReportFiling -> vatReportFiling.getIsVatReclaimable().equals(Boolean.TRUE)
                         && vatReportFiling.getDeleteFlag().equals(Boolean.FALSE) && (vatReportFiling.getStatus().equals(11) || vatReportFiling.getStatus().equals(5))).collect(Collectors.toList());
@@ -225,14 +225,14 @@ public class VatReportFilingRestController {
     @PostMapping(value = "/recordVatPayment")
     public ResponseEntity<Object> recordVatPayment(RecordVatPaymentRequestModel recordVatPaymentRequestModel,HttpServletRequest
             request){
-        try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            VatPayment vatPayment = vatReportFilingService.recordVatPayment(recordVatPaymentRequestModel,userId);
-            return new ResponseEntity<>("message",HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>("message",HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+	        try {
+	            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+	            vatReportFilingService.recordVatPayment(recordVatPaymentRequestModel,userId);
+	            return new ResponseEntity<>("message",HttpStatus.OK);
+	        }catch (Exception e){
+	            return new ResponseEntity<>("message",HttpStatus.INTERNAL_SERVER_ERROR);
+	        }
+	    }
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)

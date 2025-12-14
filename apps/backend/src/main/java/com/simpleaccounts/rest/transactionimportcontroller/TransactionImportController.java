@@ -29,8 +29,6 @@ import io.swagger.annotations.ApiOperation;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -96,15 +94,14 @@ public class TransactionImportController{
 	@GetMapping(value = "/downloadcsv")
 	public ResponseEntity<Object> downloadSimpleFile() {
 		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("excel-file/SampleTransaction1.csv").getFile());
-		String filepath = file.getAbsolutePath();
-		String content = null;
-		Path path = Paths.get(filepath);
-		try {
-			content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+			File file = new File(classLoader.getResource("excel-file/SampleTransaction1.csv").getFile());
+			String filepath = file.getAbsolutePath();
+			String content = null;
+			try {
+				content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
-		} catch (IOException e ) {
-			logger.error("Error importing transactions", e);
+			} catch (IOException e ) {
+				logger.error("Error importing transactions", e);
 		}
 		return ResponseEntity.ok()
 				.contentType(MediaType.parseMediaType("application/octet-stream"))
@@ -264,13 +261,12 @@ public class TransactionImportController{
 
 		TransactionParsingSetting parsingSetting = transactionParsingSettingService.findByPK(transactionImportRequestModel.getId().longValue());
 		TransactionParsingSettingDetailModel model = transactionParsingSettingRestHelper.getModel(parsingSetting);
-
-		String filename = "sample.csv";
-		InputStream inputStream = fileHelper.writeFile(transactionImportRequestModel.getData(),filename);
-		File file = new File(filename);
-		Map dataMap = null;
-
-		dataMap = csvParser.parseImportData(model, inputStream);
+	
+			String filename = "sample.csv";
+			InputStream inputStream = fileHelper.writeFile(transactionImportRequestModel.getData(),filename);
+			Map dataMap = null;
+	
+			dataMap = csvParser.parseImportData(model, inputStream);
 
 		if (dataMap == null) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -284,13 +280,12 @@ public class TransactionImportController{
 	public  ResponseEntity<Map> makeFile2(@RequestBody TransactionImportRequestModel transactionImportRequestModel) throws IOException {
 
 		TransactionParsingSettingDetailModel model = transactionParsingSettingRestHelper.getModel2(transactionImportRequestModel);
-
-		String filename = "sample.csv";
-		InputStream inputStream = fileHelper.writeFile(transactionImportRequestModel.getData(),filename);
-		File file = new File(filename);
-		Map dataMap = null;
-
-		dataMap = csvParser.parseImportData(model, inputStream);
+	
+			String filename = "sample.csv";
+			InputStream inputStream = fileHelper.writeFile(transactionImportRequestModel.getData(),filename);
+			Map dataMap = null;
+	
+			dataMap = csvParser.parseImportData(model, inputStream);
 
 		if (dataMap == null) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
