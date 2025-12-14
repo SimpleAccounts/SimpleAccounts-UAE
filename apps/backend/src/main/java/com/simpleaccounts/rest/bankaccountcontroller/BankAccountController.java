@@ -58,6 +58,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BankAccountController{
 
 	private static final String MSG_DELETE_UNSUCCESSFUL = "delete.unsuccessful.msg";
+	private static final String MSG_TRANSACTION_CATEGORY_MISSING = "Transaction Category is missing";
 
 	private  final Logger logger = LoggerFactory.getLogger(BankAccountController.class);
 
@@ -150,15 +151,15 @@ public class BankAccountController{
 				}
 				bankAccountService.persist(bankAccount);
                 if (bankAccount.getTransactionCategory() == null) {
-                    return new ResponseEntity<>("Transaction Category is missing", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(MSG_TRANSACTION_CATEGORY_MISSING, HttpStatus.BAD_REQUEST);
                 }
 					TransactionCategory category = transactionCategoryService.findByPK(bankAccount.getTransactionCategory().getTransactionCategoryId());
 					if (category == null) {
-						return new ResponseEntity<>("Transaction Category is missing", HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>(MSG_TRANSACTION_CATEGORY_MISSING, HttpStatus.BAD_REQUEST);
 					}
 					TransactionCategory transactionCategory = getValidTransactionCategory(category);
 					if (transactionCategory == null) {
-						return new ResponseEntity<>("Transaction Category is missing", HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>(MSG_TRANSACTION_CATEGORY_MISSING, HttpStatus.BAD_REQUEST);
 					}
 					boolean isDebit=false;
 					if(StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
@@ -275,14 +276,14 @@ public class BankAccountController{
 			bankAccountService.update(bankAccount);
 			TransactionCategory category = transactionCategoryService.findByPK(bankAccount.getTransactionCategory().getTransactionCategoryId());
 			if (category == null) {
-				return new ResponseEntity<>("Transaction Category is missing", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(MSG_TRANSACTION_CATEGORY_MISSING, HttpStatus.BAD_REQUEST);
 			}
 			category.setTransactionCategoryName(bankModel.getBankName() + "-" + bankModel.getBankAccountName());
 			category.setTransactionCategoryDescription(bankModel.getBankName() + "-" + bankModel.getBankAccountName());
 			transactionCategoryService.update(category);
 			TransactionCategory transactionCategory = getValidTransactionCategory(category);
 			if (transactionCategory == null) {
-				return new ResponseEntity<>("Transaction Category is missing", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(MSG_TRANSACTION_CATEGORY_MISSING, HttpStatus.BAD_REQUEST);
 			}
 			updateTransactionCategory(category, bankModel);
 			boolean isDebit = false;

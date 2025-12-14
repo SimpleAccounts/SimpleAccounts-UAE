@@ -4,13 +4,18 @@ Fetch and analyze all open SonarQube issues for SimpleAccounts-UAE project.
 """
 
 import json
+import os
 import requests
 from collections import defaultdict
 from urllib.parse import urlencode
 
 # Configuration
-SONARQUBE_URL = "https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io"
-SONARQUBE_TOKEN = "squ_a9dfb5e603c5ced7c6bb3133cce0b3cfdaf3c514"
+SONARQUBE_URL = os.environ.get(
+    "SONARQUBE_URL", "https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io"
+)
+SONARQUBE_TOKEN = os.environ.get("SONARQUBE_TOKEN")
+if not SONARQUBE_TOKEN:
+    raise RuntimeError("SONARQUBE_TOKEN environment variable is required")
 PROJECT_KEY = "SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9"
 PAGE_SIZE = 500
 

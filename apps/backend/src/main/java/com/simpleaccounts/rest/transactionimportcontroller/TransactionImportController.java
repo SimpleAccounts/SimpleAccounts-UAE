@@ -228,23 +228,24 @@ public class TransactionImportController{
 	@LogRequest
 	@ApiOperation(value = "parse file and return data according template")
 	@PostMapping("/parse")
-	public ResponseEntity<Map> parseTransaction(@RequestBody MultipartFile file, @RequestParam(value = "id") Long id) throws IOException {
+	@SuppressWarnings("unchecked")
+	public ResponseEntity<Map<String, Object>> parseTransaction(@RequestBody MultipartFile file, @RequestParam(value = "id") Long id) throws IOException {
 
 		TransactionParsingSetting parsingSetting = transactionParsingSettingService.findByPK(id);
 		TransactionParsingSettingDetailModel model = transactionParsingSettingRestHelper.getModel(parsingSetting);
 
-		Map dataMap = null;
+		Map<String, Object> dataMap = null;
 
 		switch (fileHelper.getFileExtension(file.getOriginalFilename())) {
 
 			case "csv":
-				dataMap = csvParser.parseImportData(model, file.getInputStream());
+				dataMap = (Map<String, Object>) csvParser.parseImportData(model, file.getInputStream());
 				break;
 
 			case "xlsx":
 			case "xlx":
 			case "xls":
-				dataMap = excelParser.parseImportData(model, file);
+				dataMap = (Map<String, Object>) excelParser.parseImportData(model, file);
 				break;
 			default:
 		}
@@ -257,16 +258,17 @@ public class TransactionImportController{
 	@LogRequest
 	@ApiOperation(value = "Write file and return file")
 	@PostMapping("/parseFile")
-	public  ResponseEntity<Map> makeFile(@ModelAttribute TransactionImportRequestModel transactionImportRequestModel) throws IOException {
+	@SuppressWarnings("unchecked")
+	public ResponseEntity<Map<String, Object>> makeFile(@ModelAttribute TransactionImportRequestModel transactionImportRequestModel) throws IOException {
 
 		TransactionParsingSetting parsingSetting = transactionParsingSettingService.findByPK(transactionImportRequestModel.getId().longValue());
 		TransactionParsingSettingDetailModel model = transactionParsingSettingRestHelper.getModel(parsingSetting);
 	
 			String filename = "sample.csv";
 			InputStream inputStream = fileHelper.writeFile(transactionImportRequestModel.getData(),filename);
-			Map dataMap = null;
+			Map<String, Object> dataMap = null;
 	
-			dataMap = csvParser.parseImportData(model, inputStream);
+			dataMap = (Map<String, Object>) csvParser.parseImportData(model, inputStream);
 
 		if (dataMap == null) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -277,15 +279,16 @@ public class TransactionImportController{
 	@LogRequest
 	@ApiOperation(value = "Write file and return file")
 	@PostMapping("/parseFileWithoutTemplate")
-	public  ResponseEntity<Map> makeFile2(@RequestBody TransactionImportRequestModel transactionImportRequestModel) throws IOException {
+	@SuppressWarnings("unchecked")
+	public ResponseEntity<Map<String, Object>> makeFile2(@RequestBody TransactionImportRequestModel transactionImportRequestModel) throws IOException {
 
 		TransactionParsingSettingDetailModel model = transactionParsingSettingRestHelper.getModel2(transactionImportRequestModel);
 	
 			String filename = "sample.csv";
 			InputStream inputStream = fileHelper.writeFile(transactionImportRequestModel.getData(),filename);
-			Map dataMap = null;
+			Map<String, Object> dataMap = null;
 	
-			dataMap = csvParser.parseImportData(model, inputStream);
+			dataMap = (Map<String, Object>) csvParser.parseImportData(model, inputStream);
 
 		if (dataMap == null) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -3,7 +3,6 @@ package com.simpleaccounts.service.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.dao.ContactTransactionCategoryRelationDao;
 import com.simpleaccounts.dao.Dao;

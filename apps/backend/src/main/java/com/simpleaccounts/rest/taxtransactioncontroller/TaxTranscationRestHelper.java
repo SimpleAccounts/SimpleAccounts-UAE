@@ -67,12 +67,11 @@ public class TaxTranscationRestHelper {
 			debitList = getDebitTransactionList(transactionList);
 
 		}
-		return calculateTaxPerMonth(startDate, endDate, creditList, debitList);
+		return calculateTaxPerMonth(startDate, endDate);
 
 	}
 
-		public List<TaxTransaction> calculateTaxPerMonth(Date startDate, Date endDate,
-				List<Transaction> creditTransactionList, List<Transaction> debitTransactionList) {
+	public List<TaxTransaction> calculateTaxPerMonth(Date startDate, Date endDate) {
 			List<TaxTransaction> taxTransactionList = new ArrayList<>();
 
 			TaxTransaction taxTransaction = new TaxTransaction();
@@ -148,7 +147,7 @@ public class TaxTranscationRestHelper {
 		return new Date();
 	}
 
-	public BigDecimal getVatFromTransaction(Transaction transaction) {
+	public BigDecimal getVatFromTransaction() {
 
 		BigDecimal totalVat = BigDecimal.ZERO;
 

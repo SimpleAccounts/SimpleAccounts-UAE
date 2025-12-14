@@ -27,7 +27,7 @@ public class CustomizeInvoiceTemplateController {
     @LogRequest
     @ApiOperation(value = "Get Invoice Prefix List")
     @GetMapping(value = "/getListForInvoicePrefixAndSuffix")
-    public ResponseEntity getListForInvoicePrefix(@RequestParam(value = "invoiceType") Integer invoiceType){
+    public ResponseEntity<Object> getListForInvoicePrefix(@RequestParam(value = "invoiceType") Integer invoiceType){
 
         CustomizeInvoiceTemplate customizeInvoiceTemplate=customizeInvoiceTemplateService.getCustomizeInvoiceTemplate(invoiceType);
         if (customizeInvoiceTemplate!=null){
@@ -35,10 +35,10 @@ public class CustomizeInvoiceTemplateController {
             customizeInvoiceTemplateResponseModel.setInvoiceType(customizeInvoiceTemplate.getType());
             customizeInvoiceTemplateResponseModel.setInvoiceId(customizeInvoiceTemplate.getId());
             customizeInvoiceTemplateResponseModel.setInvoiceNo(customizeInvoiceTemplate.getPrefix()+customizeInvoiceTemplate.getSuffix());
-            return new ResponseEntity (customizeInvoiceTemplateResponseModel, HttpStatus.OK);
+            return new ResponseEntity<>(customizeInvoiceTemplateResponseModel, HttpStatus.OK);
         }
 
-        return new ResponseEntity ("No result found for id-"+invoiceType, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("No result found for id-" + invoiceType, HttpStatus.NO_CONTENT);
 
     }
 

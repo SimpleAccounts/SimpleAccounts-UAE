@@ -182,9 +182,9 @@ public class PurchaseRestController {
 
 	@LogRequest
 	@GetMapping(value = "/claimants")
-	public ResponseEntity getClaimants() {
+	public ResponseEntity<Object> getClaimants() {
 		try {
-			return new ResponseEntity(userServiceNew.executeNamedQuery("findAllUsers"), HttpStatus.OK);
+			return new ResponseEntity<>(userServiceNew.executeNamedQuery("findAllUsers"), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -255,7 +255,7 @@ public class PurchaseRestController {
 
 	@LogRequest
 	@GetMapping(value = "/getexchangerate")
-	public ResponseEntity exchangeRate(@RequestParam("currencyCode") Integer currencyCode,
+	public ResponseEntity<String> exchangeRate(@RequestParam("currencyCode") Integer currencyCode,
 			@RequestParam("userId") Integer userId) {
 		try {
 			String exchangeRateString = "";
@@ -270,10 +270,10 @@ public class PurchaseRestController {
 							+ " " + company.getCurrencyCode().getCurrencyIsoCode();
 
 			}
-			return new ResponseEntity(exchangeRateString, HttpStatus.OK);
+			return new ResponseEntity<>(exchangeRateString, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
