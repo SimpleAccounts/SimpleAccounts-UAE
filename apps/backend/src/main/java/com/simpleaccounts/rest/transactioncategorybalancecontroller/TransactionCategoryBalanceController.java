@@ -54,15 +54,15 @@ public class TransactionCategoryBalanceController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Save")
 	@PostMapping(value = "/save")
-	public ResponseEntity<Object> save(@ModelAttribute ListOfTCBPModel persistmodelList,
-									   HttpServletRequest request) {
-		try {
-			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			User user = userServiceNew.findByPK(userId);
-			List<TransactioncategoryBalancePersistModel> list=persistmodelList.getPersistModelList();
-			for(TransactioncategoryBalancePersistModel persistmodel: list){
-				TransactionCategory category = transactionCategoryService.findByPK(persistmodel.getTransactionCategoryId());
-				boolean isDebit = getValidTransactionCategoryType(category);
+		public ResponseEntity<Object> save(@ModelAttribute ListOfTCBPModel persistmodelList,
+										   HttpServletRequest request) {
+			try {
+				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+				userServiceNew.findByPK(userId);
+				List<TransactioncategoryBalancePersistModel> list=persistmodelList.getPersistModelList();
+				for(TransactioncategoryBalancePersistModel persistmodel: list){
+					TransactionCategory category = transactionCategoryService.findByPK(persistmodel.getTransactionCategoryId());
+					boolean isDebit = getValidTransactionCategoryType(category);
 				TransactionCategory transactionCategory = transactionCategoryService
 						.findTransactionCategoryByTransactionCategoryCode(
 								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
@@ -166,16 +166,16 @@ public class TransactionCategoryBalanceController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "/Update")
 	@PostMapping(value = "update")
-	public ResponseEntity<Object> update(@RequestBody TransactioncategoryBalancePersistModel persistModel,
-										 HttpServletRequest request) {
-		try {
-			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			User user = userServiceNew.findByPK(userId);
-				TransactionCategoryBalance transactionCategoryBalance= null;
-				if (persistModel.getTransactionCategoryBalanceId() != null) {
-					transactionCategoryBalance = transactionCategoryBalanceService
-							.findByPK(persistModel.getTransactionCategoryBalanceId());
-				}
+		public ResponseEntity<Object> update(@RequestBody TransactioncategoryBalancePersistModel persistModel,
+											 HttpServletRequest request) {
+			try {
+				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+				userServiceNew.findByPK(userId);
+					TransactionCategoryBalance transactionCategoryBalance= null;
+					if (persistModel.getTransactionCategoryBalanceId() != null) {
+						transactionCategoryBalance = transactionCategoryBalanceService
+								.findByPK(persistModel.getTransactionCategoryBalanceId());
+					}
 				Journal journal = null;
 				if (transactionCategoryBalance != null && transactionCategoryBalance.getTransactionCategory() != null) {
 					journal = journalService.getJournalByReferenceId(transactionCategoryBalance.getTransactionCategory().getTransactionCategoryId());

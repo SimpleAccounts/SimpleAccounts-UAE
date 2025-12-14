@@ -11,7 +11,6 @@ import com.simpleaccounts.service.bankaccount.TransactionService;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,28 +71,19 @@ public class TaxTranscationRestHelper {
 
 	}
 
-	public List<TaxTransaction> calculateTaxPerMonth(Date startDate, Date endDate,
-			List<Transaction> creditTransactionList, List<Transaction> debitTransactionList) {
-		List<TaxTransaction> taxTransactionList = new ArrayList<>();
+		public List<TaxTransaction> calculateTaxPerMonth(Date startDate, Date endDate,
+				List<Transaction> creditTransactionList, List<Transaction> debitTransactionList) {
+			List<TaxTransaction> taxTransactionList = new ArrayList<>();
 
-		TaxTransaction taxTransaction = new TaxTransaction();
+			TaxTransaction taxTransaction = new TaxTransaction();
 
-		taxTransaction.setStartDate(startDate);
+			taxTransaction.setStartDate(startDate);
 
-		taxTransaction.setEndDate(endDate);
-		for (Transaction transaction : creditTransactionList) {
-			Date transDate = Date.from(transaction.getTransactionDate().atZone(ZoneId.systemDefault()).toInstant());
+			taxTransaction.setEndDate(endDate);
 
-			}
-		for (Transaction transaction : debitTransactionList) {
-			Date transactionDate = Date
-					.from(transaction.getTransactionDate().atZone(ZoneId.systemDefault()).toInstant());
+			taxTransaction.setVatIn(vatIn);
 
-			}
-
-		taxTransaction.setVatIn(vatIn);
-
-		taxTransaction.setVatOut(vatOut);
+			taxTransaction.setVatOut(vatOut);
 
 		taxTransaction.setStatus(TaxTransactionStatusConstant.OPEN);
 
@@ -161,7 +151,6 @@ public class TaxTranscationRestHelper {
 	public BigDecimal getVatFromTransaction(Transaction transaction) {
 
 		BigDecimal totalVat = BigDecimal.ZERO;
-		BigDecimal vatPercent = BigDecimal.ZERO;
 
 		return totalVat;
 	}

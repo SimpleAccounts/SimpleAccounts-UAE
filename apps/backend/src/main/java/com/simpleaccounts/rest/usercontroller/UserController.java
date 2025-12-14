@@ -174,24 +174,21 @@ public class UserController{
 	@ApiOperation(value = "Save New User")
 	@PostMapping(value = "/save")
 	public ResponseEntity<String> save(@ModelAttribute UserModel selectedUser, HttpServletRequest request) {
-		try {
-			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			boolean isEmailPresent = false;
-			boolean isUserNew = true;
-			User creatingUser = userService.findByPK(userId);
-			String password = selectedUser.getPassword();
+			try {
+				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+				boolean isUserNew = true;
+				User creatingUser = userService.findByPK(userId);
+				String password = selectedUser.getPassword();
 			if (selectedUser.getId() != null) {
 				User user = userService.getUserEmail(selectedUser.getEmail());
 				isUserNew = user == null || !user.getUserId().equals(selectedUser.getId());
 			}
-			if (isUserNew) {
-				Optional<User> userOptional = userService.getUserByEmail(selectedUser.getEmail());
-				if (userOptional.isPresent()) {
-					isEmailPresent = true;
-					return new ResponseEntity<>("Email Id already Exist", HttpStatus.FORBIDDEN);
+				if (isUserNew) {
+					Optional<User> userOptional = userService.getUserByEmail(selectedUser.getEmail());
+					if (userOptional.isPresent()) {
+						return new ResponseEntity<>("Email Id already Exist", HttpStatus.FORBIDDEN);
+					}
 				}
-			}
-			if (!isEmailPresent) {
 
 				if (password != null && !password.trim().isEmpty()) {
 					BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -231,10 +228,9 @@ public class UserController{
 					userService.update(user, user.getUserId());
 					return new ResponseEntity<>("User Profile updated successfully", HttpStatus.OK);
 				}
+			} catch (Exception ex) {
+				logger.error(ERROR, ex);
 			}
-		} catch (Exception ex) {
-			logger.error(ERROR, ex);
-		}
 		logger.info(LOG_NO_DATA_FOUND);
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -404,12 +400,12 @@ public class UserController{
 	@PostMapping(value = "/resetNewpassword")
 	public ResponseEntity<Object> resetNewPassword(@ModelAttribute UserModel userModel, HttpServletRequest request) {
 
-		try {
-			SimpleAccountsMessage message= null;
-			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			User user = userService.getUserPassword(userModel.getId());
-			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-			String encodedPassword = passwordEncoder.encode(userModel.getCurrentPassword());
+			try {
+				SimpleAccountsMessage message= null;
+				jwtTokenUtil.getUserIdFromHttpRequest(request);
+				User user = userService.getUserPassword(userModel.getId());
+				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+				String encodedPassword = passwordEncoder.encode(userModel.getCurrentPassword());
 			boolean match = passwordEncoder.matches(userModel.getCurrentPassword(), user.getPassword());
 			if(match == true){
 					List<PasswordHistory> passwordHistoryList = passwordHistoryRepository.findPasswordHistoriesByUser(user);

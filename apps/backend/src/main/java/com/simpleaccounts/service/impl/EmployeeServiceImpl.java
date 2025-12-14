@@ -1,6 +1,5 @@
 package com.simpleaccounts.service.impl;
 
-import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.THANK_YOU_TEMPLATE;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.EmailConstant;
@@ -20,11 +19,7 @@ import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.EmailSender;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -124,13 +119,13 @@ public class EmployeeServiceImpl extends EmployeeService {
 
               if(employment.getDateOfJoining().isBefore(startDate)==true || employment.getDateOfJoining().isEqual(startDate)==true)
               {
-                    PayrollEmployeeDto payrollEmployeeDto = new PayrollEmployeeDto();
+	                    PayrollEmployeeDto payrollEmployeeDto = new PayrollEmployeeDto();
 
-                    BigDecimal grossPay = BigDecimal.ZERO;
-                    BigDecimal deduction = BigDecimal.ZERO;
-                    BigDecimal netPay = BigDecimal.ZERO;
-                    BigDecimal LopDay = BigDecimal.valueOf(0);
-                    BigDecimal NoOfDays = BigDecimal.valueOf(0);
+	                    BigDecimal grossPay = BigDecimal.ZERO;
+	                    BigDecimal deduction = BigDecimal.ZERO;
+	                    BigDecimal netPay;
+	                    BigDecimal LopDay = BigDecimal.valueOf(0);
+	                    BigDecimal NoOfDays = BigDecimal.valueOf(0);
 
                     List<EmployeeSalaryComponentRelation> empSalComRel = EmpSalaryCompRelRepository.findByemployeeId(payrollEmp.getEmpId());
 
@@ -163,30 +158,20 @@ public class EmployeeServiceImpl extends EmployeeService {
         return PayrollEmployeeDtoList;
     }
 
-    @Override
-    public boolean sendInvitationMail(Employee employee, HttpServletRequest request) {
-        long millis=System.currentTimeMillis();
-
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user=userService.findByPK(userId);
-        String image="";
-        if (user.getCompany() != null  && user.getCompany().getCompanyLogo() != null) {
+	    @Override
+	    public boolean sendInvitationMail(Employee employee, HttpServletRequest request) {
+	        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+	        User user=userService.findByPK(userId);
+	        String image="";
+	        if (user.getCompany() != null  && user.getCompany().getCompanyLogo() != null) {
             image = " data:image/jpg;base64," + DatatypeConverter.printBase64Binary(
                     user.getCompany().getCompanyLogo()) ;
-
-        }
-        String htmlContent="";
-        try {
-            byte[] contentData = Files.readAllBytes(Paths.get(resourceLoader.getResource("classpath:"+THANK_YOU_TEMPLATE).getURI()));
-            htmlContent= new String(contentData, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            logger.error("Error processing employee service", e);
-        }
-
-        try {
-            emailSender.send(employee.getEmail(), "Welcome To SimpleAccounts",
-                    emailSender.invitationmailBody.replace("{name}", employee.getFirstName()+" "+employee.getLastName())
-                            .replace("{companylogo}",image),
+	
+	        }
+	        try {
+	            emailSender.send(employee.getEmail(), "Welcome To SimpleAccounts",
+	                    emailSender.invitationmailBody.replace("{name}", employee.getFirstName()+" "+employee.getLastName())
+	                            .replace("{companylogo}",image),
                     EmailConstant.ADMIN_SUPPORT_EMAIL,
                     EmailConstant.ADMIN_EMAIL_SENDER_NAME, true);
         } catch (MessagingException e) {

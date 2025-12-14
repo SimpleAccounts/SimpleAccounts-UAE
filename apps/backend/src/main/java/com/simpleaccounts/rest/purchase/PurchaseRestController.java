@@ -71,36 +71,15 @@ public class PurchaseRestController {
 
 	@LogRequest
 	@GetMapping(value = "/populatepurchases")
-	public ResponseEntity<List<PurchaseRestModel>> populatePurchases() {
-		List<PurchaseRestModel> purchaseModels = new ArrayList<>();
-		try {
-			int totalPurchases = 0;
-			int totalPaid = 0;
-			int totalPartiallyPaid = 0;
-			int totalUnPaid = 0;
-			if (purchaseService.getAllPurchase() != null) {
-				for (Purchase purchase : purchaseService.getAllPurchase()) {
-					if (purchase.getStatus() != null) {
-
-						switch (purchase.getStatus()) {
-							case InvoicePurchaseStatusConstant.PAID:
-								totalPaid++;
-								break;
-							case InvoicePurchaseStatusConstant.PARTIALPAID:
-								totalPartiallyPaid++;
-								break;
-							case InvoicePurchaseStatusConstant.UNPAID:
-								totalUnPaid++;
-								break;
-							default:
-								break;
-							}
+		public ResponseEntity<List<PurchaseRestModel>> populatePurchases() {
+			List<PurchaseRestModel> purchaseModels = new ArrayList<>();
+			try {
+				if (purchaseService.getAllPurchase() != null) {
+					for (Purchase purchase : purchaseService.getAllPurchase()) {
+						PurchaseRestModel model = purchaseControllerRestHelper.getPurchaseModel(purchase);
+						purchaseModels.add(model);
 					}
-					totalPurchases++;
-					PurchaseRestModel model = purchaseControllerRestHelper.getPurchaseModel(purchase);
-					purchaseModels.add(model);
 				}
-			}
 			return new ResponseEntity<>(purchaseModels, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
