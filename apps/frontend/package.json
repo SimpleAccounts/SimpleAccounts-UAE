@@ -112,11 +112,13 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^14.0.0",
     "@types/redux-mock-store": "^1.5.0",
+    "@vitejs/plugin-react": "^4.7.0",
     "msw": "^2.12.4",
     "mutationobserver-shim": "^0.3.3",
     "redux-mock-store": "^1.5.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
+    "vite": "^5.4.21",
     "web-streams-polyfill": "^4.2.0"
   },
   "scripts": {
@@ -129,7 +131,10 @@
     "test:frontend:e2e:headed": "playwright test --headed",
     "test:frontend:e2e:smoke": "bash -lc 'set -a; source .env.e2e; set +a; npm run -s test:frontend:e2e'",
     "test:debug": "react-scripts --inspect-brk test --runInBand",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev:vite": "NODE_OPTIONS=--max-old-space-size=4096 vite",
+    "build:vite": "NODE_OPTIONS=--max-old-space-size=4096 vite build",
+    "preview:vite": "vite preview"
   },
   "eslintConfig": {
     "extends": "react-app"

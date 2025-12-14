@@ -27,7 +27,7 @@ import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 import * as PurchaseOrderDetailsAction from '../../../purchase_order/screens/detail/actions'
-import { SupplierModal } from '../../../supplier_invoice/sections/index';
+import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 import { TextareaAutosize } from '@material-ui/core';
 import * as PurchaseOrderAction from '../../../purchase_order/actions'

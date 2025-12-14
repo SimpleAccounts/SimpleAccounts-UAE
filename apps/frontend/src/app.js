@@ -8,7 +8,7 @@ import { mainRoutes } from 'routes'
 import { configureStore } from 'services'
 import { Loading } from 'components'
 
-import 'app.scss'
+import './app.scss'
 
 const hist = createBrowserHistory()
 const store = configureStore()

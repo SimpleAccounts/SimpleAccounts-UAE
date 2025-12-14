@@ -3,14 +3,14 @@
 
 // Import styles with default layout.
 // If you are going to use dark layout please comment next line
-@import '~@coreui/coreui-pro/scss/coreui.scss';
+@import '@coreui/coreui-pro/scss/coreui.scss';
 
 // Import styles with dark layout
 // If you want to use dark layout uncomment next line
-//@import "~@coreui/coreui-pro/scss/themes/dark/coreui-dark.scss";
+//@import "@coreui/coreui-pro/scss/themes/dark/coreui-dark.scss";
 
 // Temp fix for reactstrap
-@import '~@coreui/coreui-pro/scss/_dropdown-menu-right.scss';
+@import '@coreui/coreui-pro/scss/_dropdown-menu-right.scss';
 
 // If you want to add something do it here
 @import 'custom';
@@ -23,7 +23,7 @@
 
 // Spinkit
 $spinkit-spinner-color: $body-color;
-@import '~spinkit/scss/spinkit.scss';
+@import 'spinkit/scss/spinkit.scss';
 
 .card-header {
 	color: #2064d8 !important;

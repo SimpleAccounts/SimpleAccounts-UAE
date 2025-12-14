@@ -24,7 +24,7 @@ import * as RequestForQuotationCreateAction from './actions'
 import * as RequestForQuotationAction from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import { SupplierModal } from '../../../supplier_invoice/sections/index';
+import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 import { TextareaAutosize } from '@material-ui/core';
 import 'react-datepicker/dist/react-datepicker.css';

@@ -7,7 +7,7 @@
 - `deploy/`, `docs/`, `scripts/`, `k6/`: deployment recipes, product docs, helper scripts, and load tests.
 
 ## Setup, Build, and Run
-Prereqs: Node 18+, npm 9+, Java 11+, Maven (or `./mvnw`).
+Prereqs: Node 20+, npm 9+, Java 11+, Maven (or `./mvnw`).
 Common commands from repo root:
 - `npm install` – install workspace dependencies.
 - `npm run frontend` – start the React dev server on localhost.

@@ -29,7 +29,7 @@ SimpleAccounts-UAE/
 
 ## Prerequisites
 
-- **Node.js** >= 18.x
+- **Node.js** >= 20.x
 - **npm** >= 9.x
 - **Java** 11 (OpenJDK or Oracle JDK)
 - **Maven** 3.6+ (or use included mvnw wrapper)
