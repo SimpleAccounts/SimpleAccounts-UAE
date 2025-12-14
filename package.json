@@ -35,7 +35,7 @@
   ],
   "scripts": {
     "frontend": "cd apps/frontend && npm run start",
-    "frontend:build": "cd apps/frontend && rm -rf node_modules && npm install --legacy-peer-deps && CI=false npm run build",
+    "frontend:build": "cd apps/frontend && rm -rf node_modules && npm install --legacy-peer-deps && npm run build:vite",
     "backend:build": "cd apps/backend && ./mvnw clean package",
     "backend:run": "cd apps/backend && ./run.sh",
     "test": "npm run test --workspaces --if-present",

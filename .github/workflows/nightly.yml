@@ -22,7 +22,7 @@ env:
   NODE_OPTIONS: --openssl-legacy-provider
   SPRING_PROFILES_ACTIVE: test
   JAVA_VERSION: '11'
-  NODE_VERSION: '18.x'
+  NODE_VERSION: '20.x'
 
 jobs:
   # Stage 1: Unit Tests (quick validation)
