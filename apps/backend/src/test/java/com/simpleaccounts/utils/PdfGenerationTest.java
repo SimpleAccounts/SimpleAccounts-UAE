@@ -91,7 +91,7 @@ public class PdfGenerationTest {
         assertTrue("PDF should have content", pdfBytes.length > 0);
     }
 
-    @Test(expected = com.itextpdf.kernel.PdfException.class)
+    @Test(expected = com.itextpdf.kernel.exceptions.PdfException.class)
     public void testEmptyHtml() throws Exception {
         // iText throws PdfException for empty HTML body (no pages generated)
         String html = "<html><body></body></html>";

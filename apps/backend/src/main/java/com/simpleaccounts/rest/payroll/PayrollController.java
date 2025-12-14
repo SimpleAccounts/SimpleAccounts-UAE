@@ -635,7 +635,6 @@ public class PayrollController {
      * @return Payroll List
      */
     @LogRequest
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping(value = "/getPayrollList")
     public ResponseEntity<List<PayrollListModel>> getPayrollList(HttpServletRequest request) {
         try {
@@ -723,7 +722,6 @@ public class PayrollController {
      * @return Payroll
      */
     @LogRequest
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping(value = "/getPayroll")
     public ResponseEntity<PayrollListModel> getPayroll(@RequestParam(value = "id") Integer id) {
         try {
@@ -784,7 +782,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/createPayroll")
     public ResponseEntity<Integer> createPayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
         try {
@@ -807,7 +804,6 @@ public class PayrollController {
      */
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/savePayrollEmployeeRelation ")
     public ResponseEntity<String> createPayrollEmployeeRelation(@RequestParam(value = "payrollId") Integer payrollId, @RequestParam(value = "employeeListIds") List<Integer> employeeListIds, HttpServletRequest request) {
         try {
@@ -828,7 +824,6 @@ public class PayrollController {
      * @return Payroll
      */
     @LogRequest
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping(value = "/getAproverUsers")
     public ResponseEntity<List<UserDto>> getAproverUsers(HttpServletRequest request) {
         try {
@@ -850,7 +845,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @DeleteMapping(value = "/removeEmployee")
     public ResponseEntity<List<PayrollEmployee>> removeEmployee(@RequestParam(value = "payEmpListIds") List<Integer> payEmpListIds) {
         try {
@@ -868,7 +862,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping(value = "/getAllPayrollEmployee")
     public ResponseEntity<List<PayrollEmployeeDto>> getAllPayrollEmployee(@RequestParam(value = "payrollid") Integer payrollid, @RequestParam(value = "payrollDate") String payrollDate, HttpServletRequest request) {
         try {
@@ -889,7 +882,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/generatePayroll")
     public ResponseEntity<String> generatePayroll(@ModelAttribute GeneratePayrollPersistModel generatePayrollPersistModel, HttpServletRequest request) {
         try {
@@ -904,7 +896,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/approveRunPayroll")
     public ResponseEntity<String> approveRunPayroll(PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
         try {
@@ -941,7 +932,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/convertPayrollToPaid")
     public ResponseEntity<String> convertPayrollToPaid(@RequestParam(value = "payEmpListIds") List<Integer> payEmpListIds, HttpServletRequest request) {
         try {
@@ -964,7 +954,6 @@ public class PayrollController {
      */
 
     @LogRequest
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping(value = "/getUserAndRole")
     public ResponseEntity<List<DropdownModel>> getUserAndRole(HttpServletRequest request) {
         try {
@@ -977,7 +966,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping(value = "/getAllPayrollEmployeeForApprover")
     public ResponseEntity<List<PayrollEmployeeDto>> getAllPayrollEmployeeForApprover(@RequestParam(value = "payrollid") Integer payrollid, HttpServletRequest request) {
         try {
@@ -1003,7 +991,6 @@ public class PayrollController {
      * @param payrollId,List<Integer> employeeListIds
      */
     @LogRequest
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/changePayrollStatus ")
     public ResponseEntity<String> changePayrollStatus(@RequestParam(value = "payrollId") Integer payrollId, @RequestParam(value = "approverId") Integer approverId, HttpServletRequest request) {
         try {
@@ -1023,7 +1010,6 @@ public class PayrollController {
      * @param payrollId
      */
     @LogRequest
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/rejectPayroll")
     public ResponseEntity<String> rejectPayroll(Integer payrollId, String comment, HttpServletRequest request) {
         try {
@@ -1046,7 +1032,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/createAndSubmitPayroll")
     public ResponseEntity<Integer> createAndSubmitPayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
         try {
@@ -1073,7 +1058,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/updatePayroll")
     public ResponseEntity<Integer> updatePayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
         try {
@@ -1097,7 +1081,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/updateAndSubmitPayroll")
     public ResponseEntity<Integer> updateAndSubmitPayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
         try {

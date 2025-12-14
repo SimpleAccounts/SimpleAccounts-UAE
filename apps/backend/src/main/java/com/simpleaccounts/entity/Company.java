@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Type;
 
 /**
  * Created by mohsinh on 2/26/2017.
@@ -57,7 +56,6 @@ public class Company implements Serializable {
 
     @Basic
     @Lob
-    @Type(type = "org.hibernate.type.ImageType")
     @Column(name = "COMPANY_LOGO")
     private byte[] companyLogo;
 

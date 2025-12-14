@@ -306,7 +306,6 @@ public class EmployeeController {
 		return new ResponseEntity<>(employeeService.getEmployeesNotInUserForDropdown(), HttpStatus.OK);
 	}
 	@LogRequest
-	@ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
 	@GetMapping(value = "/getAllActiveCompleteEmployee")
 	public ResponseEntity<List<PayrollEmployeeDto>> getAllActiveCompleteEmployee(@RequestParam(value = "payrollDate") String payrollDate) {
 		try {

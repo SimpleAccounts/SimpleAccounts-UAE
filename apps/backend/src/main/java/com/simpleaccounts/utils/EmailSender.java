@@ -51,7 +51,7 @@ public class EmailSender {
 			prop.put("mail.smtp.ssl.checkserveridentity", "true");
 
 		Session session;
-		session = Session.getInstance(prop, new javax.mail.Authenticator() {
+		session = Session.getInstance(prop, new jakarta.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(username, password);
 			}

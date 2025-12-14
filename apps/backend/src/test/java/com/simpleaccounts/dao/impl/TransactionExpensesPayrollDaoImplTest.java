@@ -21,8 +21,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
+import jakarta.persistence.criteria.Join;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,12 +40,6 @@ class TransactionExpensesPayrollDaoImplTest {
 
     @Mock
     private EntityManager entityManager;
-
-    @Mock
-    private Session session;
-
-    @Mock
-    private Criteria criteria;
 
     @Mock
     private TypedQuery<TransactionExpensesPayroll> typedQuery;
@@ -99,8 +92,6 @@ class TransactionExpensesPayrollDaoImplTest {
         lenient().when(countCriteriaQuery.from(TransactionExpensesPayroll.class)).thenReturn(root);
         lenient().when(entityManager.createQuery(countCriteriaQuery)).thenReturn(countQuery);
         lenient().when(countQuery.getSingleResult()).thenReturn(0L);
-
-        lenient().when(entityManager.getDelegate()).thenReturn(session);
     }
 
     @Test

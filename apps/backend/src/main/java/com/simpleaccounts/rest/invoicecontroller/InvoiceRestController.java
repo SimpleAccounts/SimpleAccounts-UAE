@@ -670,7 +670,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
      * @return 
      */
     @LogRequest
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping(value = "/getAmountDetails")
     public ResponseEntity<List<VatAmountDto>> getAmountDetails(AmountDetailRequestModel amountDetailRequestModel, HttpServletRequest request) {
 		try {

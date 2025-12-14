@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Type;
 
 @NamedQueries({
     @NamedQuery(name = "employeesForDropdown", query = "SELECT  new " + CommonConstant.DROPDOWN_MODEL_PACKAGE + "(c.id , CONCAT(c.firstName,' ', c.lastName)) "
@@ -76,7 +75,6 @@ public class Employee implements Serializable {
 
     @Basic
     @Lob
-    @Type(type = "org.hibernate.type.ImageType")
     @Column(name = "PROFILE_IMAGE")
     private byte[] profileImageBinary;
 
