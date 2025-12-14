@@ -18,7 +18,6 @@ import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.EnumMap;

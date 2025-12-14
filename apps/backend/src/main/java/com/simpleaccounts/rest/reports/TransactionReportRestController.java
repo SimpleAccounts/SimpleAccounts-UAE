@@ -16,7 +16,6 @@ import com.simpleaccounts.model.TransactionReportRestModel;
 import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
-import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

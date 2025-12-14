@@ -24,7 +24,6 @@ import com.simpleaccounts.rest.usercontroller.UserRestHelper;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;

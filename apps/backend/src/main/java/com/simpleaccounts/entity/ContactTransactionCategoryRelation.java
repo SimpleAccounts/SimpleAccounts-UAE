@@ -49,11 +49,11 @@ public class ContactTransactionCategoryRelation {
     private Boolean deleteFlag = Boolean.FALSE;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_USER_CONTACT_TRANX_CAT_RELATION_TRANX_CAT_ID_TRANX_CAT"))
+    @JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_USER_CONTACT_TRANX_CAT_RELATION_TRANX_CAT_ID_TRANX_CAT"))
     private TransactionCategory transactionCategory;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "CONTACT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_USER_CONTACT_TRANX_CATEGORY_RELATION_CONTACT_ID_CONTACT"))
+    @JoinColumn(name = "CONTACT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_USER_CONTACT_TRANX_CATEGORY_RELATION_CONTACT_ID_CONTACT"))
     private Contact contact;
 
     @Column(name = "CONTACT_TYPE")

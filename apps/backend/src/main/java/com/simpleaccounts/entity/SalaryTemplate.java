@@ -25,7 +25,7 @@ public class SalaryTemplate implements Serializable {
     private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SALARY_COMPONENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_SALARY_TEMPLATE_SALARY_COMPONENT_ID_SALARY_COMPONENT"))
+    @JoinColumn(name = "SALARY_COMPONENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_SALARY_TEMPLATE_SALARY_COMPONENT_ID_SALARY_COMPONENT"))
     private SalaryComponent salaryComponentId;
 
     @Column(name = "IS_ACTIVE")
@@ -39,7 +39,7 @@ public class SalaryTemplate implements Serializable {
     private Boolean isEditable = Boolean.FALSE;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SALARY_ROLE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_SALARY_TEMPLATE_SALARY_ROLE_ID_SALARY_ROLE"))
+    @JoinColumn(name = "SALARY_ROLE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_SALARY_TEMPLATE_SALARY_ROLE_ID_SALARY_ROLE"))
     private SalaryRole salaryRoleId;
 
     @Column(name = "ORDER_SEQUENCE")

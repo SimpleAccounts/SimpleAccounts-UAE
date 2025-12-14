@@ -23,12 +23,12 @@ public class VatPayment implements Serializable {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "VAT_REPORT_FILING_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_VAT_PAYMENT_VAT_REPORT_FILING_ID_VAT_REPORT_FILING"))
+    @JoinColumn(name = "VAT_REPORT_FILING_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_VAT_PAYMENT_VAT_REPORT_FILING_ID_VAT_REPORT_FILING"))
     @JsonManagedReference
     private VatReportFiling vatReportFiling;
 
     @OneToOne
-    @JoinColumn(name = "TRANSACTION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_VAT_PAYMENT_TRANSACTION_ID_TRANSACTION"))
+    @JoinColumn(name = "TRANSACTION_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_VAT_PAYMENT_TRANSACTION_ID_TRANSACTION"))
     private Transaction transaction;
 
     @Basic
@@ -77,7 +77,7 @@ public class VatPayment implements Serializable {
     private String notes;
 
     @ManyToOne
-    @JoinColumn(name = "DEPOSIT_TO_TRANSACTION_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_VAT_PAYMENT_DEPOSIT_TO_TRAX_CATEGORY_ID_TRAX_CATEGORY"))
+    @JoinColumn(name = "DEPOSIT_TO_TRANSACTION_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_VAT_PAYMENT_DEPOSIT_TO_TRAX_CATEGORY_ID_TRAX_CATEGORY"))
     private TransactionCategory depositToTransactionCategory;
 
     @Basic

@@ -10,7 +10,6 @@ import com.simpleaccounts.rest.payroll.service.SalaryTemplateService;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.EmploymentService;
 import com.simpleaccounts.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

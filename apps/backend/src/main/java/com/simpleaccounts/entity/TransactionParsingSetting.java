@@ -49,7 +49,7 @@ public class TransactionParsingSetting implements Serializable {
 	private String textQualifier;
 
 	@OneToOne
-	@JoinColumn(name = "DATE_FORMAT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_PARSING_SETTING_DATE_FORMAT_ID_DATE_FORMAT"))
+	@JoinColumn(name = "DATE_FORMAT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_PARSING_SETTING_DATE_FORMAT_ID_DATE_FORMAT"))
 	private DateFormat dateFormat;
 
 	@Column(name = "CREATED_BY")
@@ -77,7 +77,7 @@ public class TransactionParsingSetting implements Serializable {
 	private Boolean deleteFlag = Boolean.FALSE;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "TRANSACTION_PARSING_SETTING_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANX_PARS_SETTING_TRANX_DATA_COL_MAP_ID_TRANX_DATA_COL_MAP"))
+	@JoinColumn(name = "TRANSACTION_PARSING_SETTING_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANX_PARS_SETTING_TRANX_DATA_COL_MAP_ID_TRANX_DATA_COL_MAP"))
 	private List<TransactionDataColMapping> transactionDataColMapping;
 
 	@Column(name = "VERSION_NUMBER")

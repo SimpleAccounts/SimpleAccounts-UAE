@@ -4,7 +4,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.CustomizeInvoiceTemplate;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

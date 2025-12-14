@@ -18,7 +18,6 @@ import com.simpleaccounts.service.JournalService;
 import com.simpleaccounts.service.MailThemeTemplatesService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

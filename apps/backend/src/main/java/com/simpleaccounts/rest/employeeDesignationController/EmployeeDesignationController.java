@@ -14,7 +14,6 @@ import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.EmployeeDesignationService;
 import com.simpleaccounts.service.EmployeeService;
 import com.simpleaccounts.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

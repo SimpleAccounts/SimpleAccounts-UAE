@@ -35,7 +35,7 @@ public class UserCredential {
     private LocalDateTime lastUpdateDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "USER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_USER_CREDENTIAL_USER_ID_USER"))
+    @JoinColumn(name = "USER_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_USER_CREDENTIAL_USER_ID_USER"))
     private User user;
 
     @Basic(optional = false)

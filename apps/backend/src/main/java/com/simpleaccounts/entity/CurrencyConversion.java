@@ -36,11 +36,11 @@ public class CurrencyConversion implements Serializable {
     private Integer currencyConversionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_CONVERTED_CURRENCY_CURRENCY_CODE_CURRENCY"))
+    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CONVERTED_CURRENCY_CURRENCY_CODE_CURRENCY"))
     private Currency currencyCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_CODE_CONVERTED_TO",foreignKey = @javax.persistence.ForeignKey(name = "FK_CONVERTED_CURRENCY_CURRENCY_CODE_CONVERTED_TO_CURRENCY"))
+    @JoinColumn(name = "CURRENCY_CODE_CONVERTED_TO",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CONVERTED_CURRENCY_CURRENCY_CODE_CONVERTED_TO_CURRENCY"))
     private Currency currencyCodeConvertedTo;
 
     @Basic

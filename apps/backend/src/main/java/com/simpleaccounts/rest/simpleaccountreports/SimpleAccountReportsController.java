@@ -11,7 +11,6 @@ import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountReques
 import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountResponseModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

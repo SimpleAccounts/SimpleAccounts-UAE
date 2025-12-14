@@ -19,7 +19,6 @@ import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.service.VatCategoryService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.EnumMap;

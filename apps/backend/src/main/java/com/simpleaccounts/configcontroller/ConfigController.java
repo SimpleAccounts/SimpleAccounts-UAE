@@ -2,7 +2,6 @@ package com.simpleaccounts.configcontroller;
 
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.ConfigurationConstants;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;

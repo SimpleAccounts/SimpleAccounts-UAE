@@ -46,7 +46,7 @@ public class ChartOfAccountCategory implements Serializable {
 	private String chartOfAccountCategoryDescription;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PARENT_CHART_OF_ACCOUNT_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_COA_CAT_PARENT_COA_CAT_ID_COA_CAT"))
+	@JoinColumn(name = "PARENT_CHART_OF_ACCOUNT_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_COA_CAT_PARENT_COA_CAT_ID_COA_CAT"))
 	private ChartOfAccountCategory parentChartOfAccount;
 
 	@Column(name = "CHART_OF_ACCOUNT_CATEGORY_CODE")

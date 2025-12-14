@@ -14,7 +14,6 @@ import com.simpleaccounts.rest.EnumDropdownModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.TransactionParsingSettingService;
 import com.simpleaccounts.utils.FileHelper;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;

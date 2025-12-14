@@ -78,7 +78,7 @@ public class Country implements Serializable {
     private Integer versionNumber = 1;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_CURRENCY_CODE_CURRENCY"))
+    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CURRENCY_CODE_CURRENCY"))
     private Currency currencyCode;
 
     @Transient

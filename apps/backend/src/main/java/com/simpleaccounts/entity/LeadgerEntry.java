@@ -35,7 +35,7 @@ public class LeadgerEntry implements Serializable {
 
     @Nullable
     @ManyToOne
-    @JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_LEADGER_ENTRY_TRANSACTION_CATEGORY_CODE_TRANSACTION_CATEGORY"))
+    @JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_LEADGER_ENTRY_TRANSACTION_CATEGORY_CODE_TRANSACTION_CATEGORY"))
     private TransactionCategory transactionCategory;
 
     @Column(name = "note")

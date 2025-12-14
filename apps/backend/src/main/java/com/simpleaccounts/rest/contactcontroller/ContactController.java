@@ -25,7 +25,6 @@ import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import com.simpleaccounts.utils.TransactionCategoryCreationHelper;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.*;
 import jakarta.servlet.http.HttpServletRequest;

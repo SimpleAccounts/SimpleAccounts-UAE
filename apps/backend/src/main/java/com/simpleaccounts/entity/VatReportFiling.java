@@ -28,7 +28,7 @@ public class VatReportFiling implements Serializable {
 
     @Basic
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_VAT_REPORT_FILING_USER_ID_USER"))
+    @JoinColumn(name = "USER_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_VAT_REPORT_FILING_USER_ID_USER"))
     private User userId;
 
     @Column(name = "CREATED_BY")

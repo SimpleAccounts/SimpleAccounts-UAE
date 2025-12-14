@@ -56,7 +56,7 @@ public class Transaction implements Serializable {
 
 	@Basic
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "TRANSACTION_TYPE_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_TRANSACTION_TYPE_CODE_TRANSACTION_TYPE"))
+	@JoinColumn(name = "TRANSACTION_TYPE_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_TRANSACTION_TYPE_CODE_TRANSACTION_TYPE"))
 	private ChartOfAccount chartOfAccount;
 
 	@Basic
@@ -68,7 +68,7 @@ public class Transaction implements Serializable {
 	private Character debitCreditFlag;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EXPLAINED_TRANSACTION_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANX_EXPLAINED_TRANX_CATEGORY_CODE_TRANX_CATEGORY"))
+	@JoinColumn(name = "EXPLAINED_TRANSACTION_CATEGORY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANX_EXPLAINED_TRANX_CATEGORY_CODE_TRANX_CATEGORY"))
 	private TransactionCategory explainedTransactionCategory;
 
 	@Basic
@@ -94,7 +94,7 @@ public class Transaction implements Serializable {
 
 	@Basic
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "BANK_ACCOUNT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_BANK_ACCOUNT_TRANSACTION_BANK_ACCOUNT_ID_BANK_ACCOUNT"))
+	@JoinColumn(name = "BANK_ACCOUNT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_BANK_ACCOUNT_TRANSACTION_BANK_ACCOUNT_ID_BANK_ACCOUNT"))
 	private BankAccount bankAccount;
 
 	@Basic(optional = false)
@@ -103,26 +103,26 @@ public class Transaction implements Serializable {
 	private BigDecimal currentBalance;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EXPLANATION_BANK_ACCOUNT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_BANK_ACCOUNT_ID_BANK_ACCOUNT"))
+	@JoinColumn(name = "EXPLANATION_BANK_ACCOUNT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_BANK_ACCOUNT_ID_BANK_ACCOUNT"))
 	private BankAccount explinationBankAccount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EXPLANATION_VENDOR_CONTACT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_VENDOR_CONTACT_ID_CONTACT"))
+	@JoinColumn(name = "EXPLANATION_VENDOR_CONTACT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_VENDOR_CONTACT_ID_CONTACT"))
 	private Contact explinationVendor;
 
 	@Basic
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EXPLANATION_CUSTOMER_CONTACT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_CUSTOMER_CONTACT_ID_CONTACT"))
+	@JoinColumn(name = "EXPLANATION_CUSTOMER_CONTACT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_CUSTOMER_CONTACT_ID_CONTACT"))
 	private Contact explinationCustomer;
 
 	@Basic
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EXPLANATION_EMPLOYEE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_EMPLOYEE_ID_EMPLOYEE"))
+	@JoinColumn(name = "EXPLANATION_EMPLOYEE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_EMPLOYEE_ID_EMPLOYEE"))
 	private Employee explinationEmployee;
 
 	@Basic
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EXPLANATION_USER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_USER_ID_SA_USER"))
+	@JoinColumn(name = "EXPLANATION_USER_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_USER_ID_SA_USER"))
 	private User explainationUser;
 
 	@Basic
@@ -168,7 +168,7 @@ public class Transaction implements Serializable {
 //
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PARENT_TRANSACTION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_PARENT_TRANSACTION_ID_TRANSACTION"))
+	@JoinColumn(name = "PARENT_TRANSACTION_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_PARENT_TRANSACTION_ID_TRANSACTION"))
 	private Transaction parentTransaction;
 
 	@JsonIgnore
@@ -176,18 +176,18 @@ public class Transaction implements Serializable {
 	private Collection<Transaction> childTransactionList;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "VAT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_VAT_ID_VAT"))
+	@JoinColumn(name = "VAT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_VAT_ID_VAT"))
 	private VatCategory vatCategory;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "COA_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_COA_CATEGORY_ID_COA_CATEGORY"))
+	@JoinColumn(name = "COA_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_COA_CATEGORY_ID_COA_CATEGORY"))
 	private ChartOfAccountCategory coaCategory;
 
 	@Column(name = "REFERENCE_STR")
 	private String referenceStr;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "FILE_ATTACHMENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_FILE_ATTACHMENT_ID_FILE_ATTACHMENT"))
+	@JoinColumn(name = "FILE_ATTACHMENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_FILE_ATTACHMENT_ID_FILE_ATTACHMENT"))
 	private FileAttachment fileAttachment;
 
 	@Column(name = "ORDER_SEQUENCE")

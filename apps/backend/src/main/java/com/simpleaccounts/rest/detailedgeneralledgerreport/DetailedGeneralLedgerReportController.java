@@ -9,7 +9,6 @@ import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.TransactionCategoryClosingBalanceService;
 import com.simpleaccounts.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import java.util.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

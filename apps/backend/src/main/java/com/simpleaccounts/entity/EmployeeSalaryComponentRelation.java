@@ -22,15 +22,15 @@ public class EmployeeSalaryComponentRelation implements Serializable {
     private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EMPLOYEE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMPLOYEE_SALARY_COMPONENT_RELATION_EMPLOYEE_ID_EMPLOYEE"))
+    @JoinColumn(name = "EMPLOYEE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMPLOYEE_SALARY_COMPONENT_RELATION_EMPLOYEE_ID_EMPLOYEE"))
     private Employee employeeId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SALARY_COMPONENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMP_SALARY_COMP_RELATION_SALARY_COMP_ID_SALARY_COMP"))
+    @JoinColumn(name = "SALARY_COMPONENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMP_SALARY_COMP_RELATION_SALARY_COMP_ID_SALARY_COMP"))
     private SalaryComponent salaryComponentId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SALARY_STRUCTURE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMP_SALARY_COMP_RELATION_SALARY_STRUCT_ID_SALARY_STRUCT"))
+    @JoinColumn(name = "SALARY_STRUCTURE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMP_SALARY_COMP_RELATION_SALARY_STRUCT_ID_SALARY_STRUCT"))
     private SalaryStructure salaryStructure;
 
     @Basic

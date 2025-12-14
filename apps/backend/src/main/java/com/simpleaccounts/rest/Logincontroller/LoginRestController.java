@@ -12,7 +12,6 @@ import com.simpleaccounts.service.EmaiLogsService;
 import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;

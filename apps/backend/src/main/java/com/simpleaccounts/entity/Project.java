@@ -48,18 +48,18 @@ public class Project implements Serializable {
     private String contractPoNumber;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "CONTACT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PROJECT_CONTACT_ID_CONTACT"))
+    @JoinColumn(name = "CONTACT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PROJECT_CONTACT_ID_CONTACT"))
     private Contact contact;
 
     @Column(name = "VAT_REGISTRATION_NUMBER")
     private String vatRegistrationNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "LANGUAGE_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_PROJECT_LANGUAGE_CODE_LANGUAGE"))
+    @JoinColumn(name = "LANGUAGE_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PROJECT_LANGUAGE_CODE_LANGUAGE"))
     private Language invoiceLanguageCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_PROJECT_CURRENCY_CODE_CURRENCY"))
+    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PROJECT_CURRENCY_CODE_CURRENCY"))
     private Currency currency;
 
     @Column(name = "CREATED_BY")

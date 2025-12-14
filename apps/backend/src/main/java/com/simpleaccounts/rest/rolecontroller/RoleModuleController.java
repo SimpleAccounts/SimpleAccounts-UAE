@@ -10,7 +10,6 @@ import com.simpleaccounts.service.RoleModuleRelationService;
 import com.simpleaccounts.service.RoleModuleService;
 import com.simpleaccounts.service.RoleService;
 import com.simpleaccounts.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.*;
 import jakarta.servlet.http.HttpServletRequest;

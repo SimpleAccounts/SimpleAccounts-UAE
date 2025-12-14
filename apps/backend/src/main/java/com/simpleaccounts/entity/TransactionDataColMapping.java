@@ -28,7 +28,7 @@ public class TransactionDataColMapping implements Serializable{
 	private Integer fileColIndex;
 
 	@OneToOne
-	@JoinColumn(name = "DATE_FORMAT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_DATA_COL_MAPPING_DATE_FORMAT_ID_DATE_FORMAT"))
+	@JoinColumn(name = "DATE_FORMAT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_DATA_COL_MAPPING_DATE_FORMAT_ID_DATE_FORMAT"))
 	private DateFormat dateFormat;
 
 	@Column(name = "CREATED_BY")
@@ -56,7 +56,7 @@ public class TransactionDataColMapping implements Serializable{
 	private Boolean deleteFlag = Boolean.FALSE;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "TRANSACTION_PARSING_SETTING_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANX_DATA_COL_MAP_TRANX_PARS_SET_TRANX_PARS_SET_ID"))
+	@JoinColumn(name = "TRANSACTION_PARSING_SETTING_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANX_DATA_COL_MAP_TRANX_PARS_SET_TRANX_PARS_SET_ID"))
 	private TransactionParsingSetting transactionParsingSettingId;
 
 	@Column(name = "VERSION_NUMBER")

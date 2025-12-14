@@ -7,7 +7,6 @@ import com.simpleaccounts.model.TrialBalanceResponseModel;
 import com.simpleaccounts.model.VatReportResponseModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

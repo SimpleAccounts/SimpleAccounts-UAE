@@ -35,26 +35,26 @@ public class Payment implements Serializable {
 	private Integer paymentId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "SUPPLIER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PAYMENT_SUPPLIER_ID_SUPPLIER"))
+	@JoinColumn(name = "SUPPLIER_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PAYMENT_SUPPLIER_ID_SUPPLIER"))
 	private Contact supplier;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_PAYMENT_CURRENCY_CODE_CURRENCY"))
+	@JoinColumn(name = "CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PAYMENT_CURRENCY_CODE_CURRENCY"))
 	@JsonManagedReference
 	private Currency currency;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PROJECT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PAYMENT_PROJECT_ID_PROJECT"))
+	@JoinColumn(name = "PROJECT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PAYMENT_PROJECT_ID_PROJECT"))
 	@JsonManagedReference
 	private Project project;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "BANK_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PAYMENT_BANK_ID_BANK"))
+	@JoinColumn(name = "BANK_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PAYMENT_BANK_ID_BANK"))
 	@JsonManagedReference
 	private BankAccount bankAccount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "INVOICE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PAYMENT_INVOICE_ID_INVOICE"))
+	@JoinColumn(name = "INVOICE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PAYMENT_INVOICE_ID_INVOICE"))
 	@JsonManagedReference
 	private Invoice invoice;
 
@@ -112,7 +112,7 @@ public class Payment implements Serializable {
 	private PayMode payMode;
 
 	@ManyToOne
-	@JoinColumn(name = "DEPOSIT_TO_TRANSACTION_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PAYMENT_DEPOSIT_TO_TRANX_CAT_ID_TRANX_CAT"))
+	@JoinColumn(name = "DEPOSIT_TO_TRANSACTION_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PAYMENT_DEPOSIT_TO_TRANX_CAT_ID_TRANX_CAT"))
 	private TransactionCategory depositeToTransactionCategory;
 
 	@Basic

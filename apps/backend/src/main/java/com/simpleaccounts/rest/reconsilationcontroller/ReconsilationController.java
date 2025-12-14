@@ -25,7 +25,6 @@ import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.ReconcileStatusService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.service.impl.TransactionCategoryClosingBalanceServiceImpl;
-import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;

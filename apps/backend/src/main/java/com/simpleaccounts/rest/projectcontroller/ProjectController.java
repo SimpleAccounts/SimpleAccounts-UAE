@@ -15,7 +15,6 @@ import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.ProjectService;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;

@@ -85,11 +85,11 @@ public class Employee implements Serializable {
     private String permanentAddress;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COUNTRY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMPLOYEE_COUNTRY_CODE_COUNTRY"))
+    @JoinColumn(name = "COUNTRY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMPLOYEE_COUNTRY_CODE_COUNTRY"))
     private Country country;
 
     @OneToOne
-    @JoinColumn(name = "STATE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMPLOYEE_STATE_ID_STATE"))
+    @JoinColumn(name = "STATE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMPLOYEE_STATE_ID_STATE"))
     private State state;
 
     @Basic
@@ -186,15 +186,15 @@ public class Employee implements Serializable {
     private Boolean deleteFlag = Boolean.FALSE;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EMPLOYEE_DESIGNATION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMPLOYEE_EMPLOYEE_DESIGNATION_ID_EMPLOYEE_DESIGNATION"))
+    @JoinColumn(name = "EMPLOYEE_DESIGNATION_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMPLOYEE_EMPLOYEE_DESIGNATION_ID_EMPLOYEE_DESIGNATION"))
     private EmployeeDesignation employeeDesignationId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SALARY_ROLE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMPLOYEE_SALARY_ROLE_ID_SALARY_ROLE"))
+    @JoinColumn(name = "SALARY_ROLE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMPLOYEE_SALARY_ROLE_ID_SALARY_ROLE"))
     private SalaryRole salaryRoleId;
 
     @OneToOne
-    @JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMPLOYEE_TRANSACTION_CATEGORY_CODE_TRANSACTION_CATEGORY"))
+    @JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMPLOYEE_TRANSACTION_CATEGORY_CODE_TRANSACTION_CATEGORY"))
     private TransactionCategory transactionCategory;
 
     @Column(name = "VERSION_NUMBER")

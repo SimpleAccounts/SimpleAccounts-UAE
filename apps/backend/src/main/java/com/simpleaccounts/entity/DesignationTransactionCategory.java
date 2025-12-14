@@ -48,11 +48,11 @@ public class DesignationTransactionCategory {
     private Boolean deleteFlag = Boolean.FALSE;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_DESIG_TRANX_CAT_TRANSX_CAT_ID_TRANX_CAT"))
+    @JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_DESIG_TRANX_CAT_TRANSX_CAT_ID_TRANX_CAT"))
     private TransactionCategory transactionCategory;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "DESIGNATION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_DESIG_TRANX_CAT_DESIG_ID_DESIG"))
+    @JoinColumn(name = "DESIGNATION_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_DESIG_TRANX_CAT_DESIG_ID_DESIG"))
     private EmployeeDesignation designation;
 
     @Column(name = "VERSION_NUMBER")

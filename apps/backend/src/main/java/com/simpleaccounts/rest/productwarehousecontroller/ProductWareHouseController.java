@@ -8,7 +8,6 @@ package com.simpleaccounts.rest.productwarehousecontroller;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.ProductWarehouse;
 import com.simpleaccounts.service.ProductWarehouseService;
-import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

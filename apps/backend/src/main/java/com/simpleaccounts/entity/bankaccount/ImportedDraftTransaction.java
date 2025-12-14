@@ -40,7 +40,7 @@ public class ImportedDraftTransaction implements Serializable {
 
     @Basic
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BANK_ACCOUNT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_IMPORTED_DRAFT_TRANSACTON_BANK_ACCOUNT_ID_BANK_ACCOUNT"))
+    @JoinColumn(name = "BANK_ACCOUNT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_IMPORTED_DRAFT_TRANSACTON_BANK_ACCOUNT_ID_BANK_ACCOUNT"))
     private BankAccount bankAccount;
 
     @Column(name = "CREATED_BY")

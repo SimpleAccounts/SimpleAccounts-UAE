@@ -135,7 +135,7 @@ public class Invoice implements Serializable {
 	private String contactPoNumber;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_CURRENCY_CODE_CURRENCY"))
+	@JoinColumn(name = "CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_CURRENCY_CODE_CURRENCY"))
 	private Currency currency;
 
 	@Basic
@@ -177,15 +177,15 @@ public class Invoice implements Serializable {
 	private Integer versionNumber = 1;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CONTACT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_CONTACT_ID_CONTACT"))
+	@JoinColumn(name = "CONTACT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_CONTACT_ID_CONTACT"))
 	private Contact contact;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PROJECT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_PROJECT_ID_PROJECT"))
+	@JoinColumn(name = "PROJECT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_PROJECT_ID_PROJECT"))
 	private Project project;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "DOCUMENT_TEMPLATE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_DOCUMENT_TEMPLATE_ID_DOCUMENT_TEMPLATE"))
+	@JoinColumn(name = "DOCUMENT_TEMPLATE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_DOCUMENT_TEMPLATE_ID_DOCUMENT_TEMPLATE"))
 	private DocumentTemplate documentTemplate;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "invoice")
@@ -201,7 +201,7 @@ public class Invoice implements Serializable {
 	private BigDecimal totalVatAmount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PLACE_OF_SUPPLY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_PLACE_OF_SUPPLY_ID_PLACE_OF_SUPPLY"))
+	@JoinColumn(name = "PLACE_OF_SUPPLY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_PLACE_OF_SUPPLY_ID_PLACE_OF_SUPPLY"))
 	private PlaceOfSupply placeOfSupplyId;
 
 	/**
@@ -220,7 +220,7 @@ public class Invoice implements Serializable {
 	private String receiptAttachmentPath;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "FILE_ATTACHMENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_FILE_ATTACHMENT_ID_FILE_ATTACHMENT"))
+	@JoinColumn(name = "FILE_ATTACHMENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_FILE_ATTACHMENT_ID_FILE_ATTACHMENT"))
 	private FileAttachment AttachmentFileName;
 
 	@Basic
@@ -277,11 +277,11 @@ public class Invoice implements Serializable {
 	private String shippingAddress;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "SHIPPING_COUNTRY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_SHIPPING_COUNTRY_CODE_COUNTRY"))
+	@JoinColumn(name = "SHIPPING_COUNTRY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_SHIPPING_COUNTRY_CODE_COUNTRY"))
 	private Country shippingCountry;
 
 	@OneToOne
-	@JoinColumn(name = "SHIPPING_STATE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_SHIPPING_STATE_ID_STATE"))
+	@JoinColumn(name = "SHIPPING_STATE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_SHIPPING_STATE_ID_STATE"))
 	private State shippingState;
 
 	@Basic

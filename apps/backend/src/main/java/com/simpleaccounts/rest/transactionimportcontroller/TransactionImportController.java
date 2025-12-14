@@ -25,7 +25,6 @@ import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.FileHelper;
-import io.swagger.annotations.ApiOperation;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;

@@ -37,20 +37,20 @@ public class Product implements Serializable {
 	private String productDescription;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PRODUCT_VAT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PRODUCT_PRODUCT_VAT_ID_PRODUCT_VAT"))
+	@JoinColumn(name = "PRODUCT_VAT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PRODUCT_PRODUCT_VAT_ID_PRODUCT_VAT"))
 	private VatCategory vatCategory;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PRODUCT_EXCISE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PRODUCT_PRODUCT_EXCISE_IDPRODUCT_EXCISE"))
+	@JoinColumn(name = "PRODUCT_EXCISE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PRODUCT_PRODUCT_EXCISE_IDPRODUCT_EXCISE"))
 	private ExciseTax exciseTax;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PRODUCT_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PRODUCT_PRODUCT_CATEGORY_ID_PRODUCT_CATEGORY"))
+	@JoinColumn(name = "PRODUCT_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PRODUCT_PRODUCT_CATEGORY_ID_PRODUCT_CATEGORY"))
 	private ProductCategory productCategory;
 
 	@Basic
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PRODUCT_WAREHOUSE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PRODUCT_PRODUCT_WAREHOUSE_ID_PRODUCT_WAREHOUSE"))
+	@JoinColumn(name = "PRODUCT_WAREHOUSE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PRODUCT_PRODUCT_WAREHOUSE_ID_PRODUCT_WAREHOUSE"))
 	private ProductWarehouse productWarehouse;
 
 	@Basic
@@ -140,7 +140,7 @@ public class Product implements Serializable {
 
 	@Basic
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "UNIT_TYPE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PRODUCT_UNIT_TYPE_ID_UNIT_TYPE"))
+	@JoinColumn(name = "UNIT_TYPE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PRODUCT_UNIT_TYPE_ID_UNIT_TYPE"))
 	private UnitType unitType;
 
 	@Column(name = "ORDER_SEQUENCE")

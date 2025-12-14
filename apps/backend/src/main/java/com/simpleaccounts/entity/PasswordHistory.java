@@ -35,7 +35,7 @@ public class PasswordHistory {
     private LocalDateTime lastUpdateDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "USER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PASSWORD_HISTORY_USER_USER_ID"))
+    @JoinColumn(name = "USER_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PASSWORD_HISTORY_USER_USER_ID"))
     private User user;
 
     @Basic(optional = false)

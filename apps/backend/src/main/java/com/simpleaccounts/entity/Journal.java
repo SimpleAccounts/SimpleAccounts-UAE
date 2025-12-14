@@ -48,7 +48,7 @@ public class Journal implements Serializable {
 	private String description;
 
 	@OneToOne
-	@JoinColumn(name = "CURRENCY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_JOURNAL_CURRENCY_ID_CURRENCY"))
+	@JoinColumn(name = "CURRENCY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_JOURNAL_CURRENCY_ID_CURRENCY"))
 	private Currency currency;
 
 	@Basic

@@ -49,7 +49,7 @@ public class User implements Serializable {
 	private LocalDateTime dateOfBirth;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "COMPANY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_SA_USER_COMPANY_ID_COMPANY"))
+	@JoinColumn(name = "COMPANY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_SA_USER_COMPANY_ID_COMPANY"))
 	private Company company;
 
 	@Column(name = "CREATED_BY")
@@ -87,7 +87,7 @@ public class User implements Serializable {
 	private Integer versionNumber = 1;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "ROLE_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_SA_USER_ROLE_CODE_ROLE"))
+	@JoinColumn(name = "ROLE_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_SA_USER_ROLE_CODE_ROLE"))
 	private Role role;
 
 	@Column(name = "USER_PASSWORD")
@@ -100,7 +100,7 @@ public class User implements Serializable {
 	private byte[] profileImageBinary;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "EMPLOYEE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_SA_USER_EMPLOYEE_ID_EMPLOYEE"))
+	@JoinColumn(name = "EMPLOYEE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_SA_USER_EMPLOYEE_ID_EMPLOYEE"))
 	private Contact employeeId;
 
 	@Column(name = "FORGOT_PASS_TOKEN", length = 4000)
@@ -113,7 +113,7 @@ public class User implements Serializable {
 	private LocalDateTime forgotPasswordTokenExpiryDate;
 
 	@OneToOne
-	@JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_SA_USER_TRANSACTION_CATEGORY_CODE_TRANSACTION_CATEGORY"))
+	@JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_SA_USER_TRANSACTION_CATEGORY_CODE_TRANSACTION_CATEGORY"))
 	private TransactionCategory transactionCategory;
 
 	@Column(name = "IS_DESIGNATION_ENABLED")

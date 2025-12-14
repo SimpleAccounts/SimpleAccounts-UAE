@@ -15,11 +15,11 @@ public class GRN_SUPPLIER_INVOICE_RELATION {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GRN_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_GRN_SUPPLIER_INVOICE_RELATION_GRN_ID_GRN"))
+    @JoinColumn(name = "GRN_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_GRN_SUPPLIER_INVOICE_RELATION_GRN_ID_GRN"))
     private PoQuatation grnID;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "INVOICE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_GRN_SUPPLIER_INVOICE_RELATION_INVOICE_ID_INVOICE"))
+    @JoinColumn(name = "INVOICE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_GRN_SUPPLIER_INVOICE_RELATION_INVOICE_ID_INVOICE"))
     private Invoice invoiceID;
 
     @Column(name = "DELETE_FLAG")

@@ -6,7 +6,6 @@ import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.rest.vatcontroller.VatController;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.MailThemeTemplatesService;
-import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.EntityManager;

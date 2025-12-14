@@ -31,11 +31,11 @@ public class Inventory implements Serializable{
     private Integer inventoryID;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PRODUCT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVENTORY_PRODUCT_ID_PRODUCT"))
+    @JoinColumn(name = "PRODUCT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVENTORY_PRODUCT_ID_PRODUCT"))
     private Product productId ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SUPPLIER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVENTORY_SUPPLIER_ID_SUPPLIER"))
+    @JoinColumn(name = "SUPPLIER_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVENTORY_SUPPLIER_ID_SUPPLIER"))
     private Contact supplierId ;
 
     @Basic
@@ -43,7 +43,7 @@ public class Inventory implements Serializable{
     private Integer   purchaseQuantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UNIT_TYPE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVENTORY_UNIT_TYPE_ID_UNIT_TYPE"))
+    @JoinColumn(name = "UNIT_TYPE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVENTORY_UNIT_TYPE_ID_UNIT_TYPE"))
     private UnitType unitTypeId;
 
     @Basic

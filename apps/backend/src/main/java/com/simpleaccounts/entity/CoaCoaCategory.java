@@ -48,11 +48,11 @@ public class CoaCoaCategory implements Serializable{
 	private Boolean deleteFlag = Boolean.FALSE;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CHART_OF_ACCOUNT_ID ",foreignKey = @javax.persistence.ForeignKey(name = "FK_COA_COA_CAT_COA_ID_COA"))
+	@JoinColumn(name = "CHART_OF_ACCOUNT_ID ",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_COA_COA_CAT_COA_ID_COA"))
 	private ChartOfAccount chartOfAccount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CHART_OF_ACCOUNT_CATEGORY_ID ",foreignKey = @javax.persistence.ForeignKey(name = "FK_COA_COA_CAT_COA_CAT_ID_COA_CAT"))
+	@JoinColumn(name = "CHART_OF_ACCOUNT_CATEGORY_ID ",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_COA_COA_CAT_COA_CAT_ID_COA_CAT"))
 	private ChartOfAccountCategory chartOfAccountCategory;
 
 	@Column(name = "VERSION_NUMBER")

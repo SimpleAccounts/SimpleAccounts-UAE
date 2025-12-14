@@ -19,7 +19,6 @@ import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.service.bankaccount.TransactionStatusService;
 import com.simpleaccounts.utils.DateFormatUtil;
-import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;

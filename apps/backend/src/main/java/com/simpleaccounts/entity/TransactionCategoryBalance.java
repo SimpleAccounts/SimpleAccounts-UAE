@@ -21,7 +21,7 @@ public class TransactionCategoryBalance {
 	private Integer id;
 
 	@OneToOne
-	@JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANX_CAT_BALANCE_TRANX_CAT_ID_TRANX_CAT"))
+	@JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANX_CAT_BALANCE_TRANX_CAT_ID_TRANX_CAT"))
 	@Basic(optional = false)
 	private TransactionCategory transactionCategory;
 

@@ -24,7 +24,6 @@ import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -28,7 +28,7 @@ public class State implements Serializable {
 	private String stateName;
 
 	@OneToOne
-	@JoinColumn(name = "COUNTRY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_STATE_COUNTRY_ID_COUNTRY"))
+	@JoinColumn(name = "COUNTRY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_STATE_COUNTRY_ID_COUNTRY"))
 	private Country country;
 
 	@Column(name = "DEFAULT_FLAG")

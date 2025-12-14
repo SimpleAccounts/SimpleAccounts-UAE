@@ -17,7 +17,7 @@ public class RfqPoGrnRelation {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PARENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_RFQ_PO_GRN_RELATION_PARENT_ID_RFQ_PO_GRN"))
+    @JoinColumn(name = "PARENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_RFQ_PO_GRN_RELATION_PARENT_ID_RFQ_PO_GRN"))
     private PoQuatation parentID;
 
     @Column(name = "PARENT_TYPE")
@@ -25,7 +25,7 @@ public class RfqPoGrnRelation {
     private Integer parentType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CHILD_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_RFQ_PO_GRN_RELATION_CHILD_ID_RFQ_PO_GRN"))
+    @JoinColumn(name = "CHILD_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_RFQ_PO_GRN_RELATION_CHILD_ID_RFQ_PO_GRN"))
     private PoQuatation childID;
 
     @Column(name = "CHILD_TYPE")

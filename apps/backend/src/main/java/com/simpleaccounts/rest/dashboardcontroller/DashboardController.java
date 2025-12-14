@@ -16,7 +16,6 @@ import com.simpleaccounts.service.TransactionCategoryClosingBalanceService;
 import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateFormatUtil;
-import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;

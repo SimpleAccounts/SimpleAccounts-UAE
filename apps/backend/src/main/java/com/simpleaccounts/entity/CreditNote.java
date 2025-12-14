@@ -55,11 +55,11 @@ public class CreditNote implements Serializable {
     private BigDecimal totalVatAmount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "VAT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CREDIT_NOTE_VAT_ID_VAT"))
+    @JoinColumn(name = "VAT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CREDIT_NOTE_VAT_ID_VAT"))
     private VatCategory vatCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_CREDIT_NOTE_CURRENCY_CODE_CURRENCY"))
+    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CREDIT_NOTE_CURRENCY_CODE_CURRENCY"))
     private Currency currency;
 
     @Basic
@@ -74,7 +74,7 @@ public class CreditNote implements Serializable {
     private Integer type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CONTACT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CREDIT_NOTE_CONTACT_ID_CONTACT"))
+    @JoinColumn(name = "CONTACT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CREDIT_NOTE_CONTACT_ID_CONTACT"))
     private Contact contact;
 
     @Column(name = "DUE_AMOUNT")

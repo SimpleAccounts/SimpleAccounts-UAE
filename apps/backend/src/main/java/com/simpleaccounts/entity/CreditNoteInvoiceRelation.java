@@ -44,11 +44,11 @@ public class CreditNoteInvoiceRelation {
     @Basic(optional = false)
     private Boolean deleteFlag = Boolean.FALSE;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CREDIT_NOTE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CREDIT_NOTE_ID_CREDIT_NOTE"))
+    @JoinColumn(name = "CREDIT_NOTE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CREDIT_NOTE_ID_CREDIT_NOTE"))
     private CreditNote creditNote;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "INVOICE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_ID_INVOICE"))
+    @JoinColumn(name = "INVOICE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_ID_INVOICE"))
     private Invoice invoice;
 
     @Column(name = "VERSION_NUMBER")

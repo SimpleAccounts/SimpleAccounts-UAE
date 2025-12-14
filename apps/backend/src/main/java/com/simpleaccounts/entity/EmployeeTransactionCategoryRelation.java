@@ -21,11 +21,11 @@ public class EmployeeTransactionCategoryRelation {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMP_SALARY_COM_RELATION_TRANX_CAT_ID_TRANX_CAT"))
+    @JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMP_SALARY_COM_RELATION_TRANX_CAT_ID_TRANX_CAT"))
     private TransactionCategory transactionCategory;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "EMPLOYEE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMP_TRANX_CAT_RELATION_EMP_ID_EMP"))
+    @JoinColumn(name = "EMPLOYEE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMP_TRANX_CAT_RELATION_EMP_ID_EMP"))
     private Employee employee;
 
     @Column(name = "ORDER_SEQUENCE")

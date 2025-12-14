@@ -26,7 +26,6 @@ import com.simpleaccounts.service.migrationservices.MigrationService;
 import com.simpleaccounts.service.migrationservices.SimpleAccountMigrationService;
 import com.simpleaccounts.service.migrationservices.ZohoMigrationService;
 import com.simpleaccounts.utils.FileHelper;
-import io.swagger.annotations.ApiOperation;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

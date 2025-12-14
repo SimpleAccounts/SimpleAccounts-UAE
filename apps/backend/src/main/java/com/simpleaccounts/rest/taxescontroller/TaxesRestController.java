@@ -8,7 +8,6 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.JournalLineItemService;
 import com.simpleaccounts.service.TransactionCategoryService;
-import io.swagger.annotations.ApiOperation;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;

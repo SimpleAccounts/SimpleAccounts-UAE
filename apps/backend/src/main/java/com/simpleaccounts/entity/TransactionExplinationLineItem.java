@@ -24,7 +24,7 @@ public class TransactionExplinationLineItem {
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "TRANSACTION_EXPLANATION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANX_EXP_LINE_ITEM_TRANX_EXP_ID_TRANX_EXPL"))
+	@JoinColumn(name = "TRANSACTION_EXPLANATION_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANX_EXP_LINE_ITEM_TRANX_EXP_ID_TRANX_EXPL"))
 	private TransactionExplanation transactionExplanation;
 
 	@Column(name = "REFERENCE_ID")
@@ -82,7 +82,7 @@ public class TransactionExplinationLineItem {
 	private Boolean partiallyPaid = Boolean.FALSE;
 
 	@ManyToOne
-	@JoinColumn(name = "JOURNAL_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLINATION_LINE_ITEM_JOURNAL_ID_JOURNAL"))
+	@JoinColumn(name = "JOURNAL_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLINATION_LINE_ITEM_JOURNAL_ID_JOURNAL"))
 	private Journal journal;
 
 }

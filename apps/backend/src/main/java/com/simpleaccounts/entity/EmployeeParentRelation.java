@@ -28,7 +28,7 @@ public class EmployeeParentRelation {
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PARENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMPLOYEE_PARENT_RELATION_PARENT_ID_EMPLOYEE"))
+    @JoinColumn(name = "PARENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMPLOYEE_PARENT_RELATION_PARENT_ID_EMPLOYEE"))
     private Employee parentID;
 
     @Column(name = "PARENT_TYPE")
@@ -36,7 +36,7 @@ public class EmployeeParentRelation {
     private Integer parentType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CHILD_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMPLOYEE_PARENT_RELATION_CHILD_ID_EMPLOYEE"))
+    @JoinColumn(name = "CHILD_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMPLOYEE_PARENT_RELATION_CHILD_ID_EMPLOYEE"))
     private Employee childID;
 
     @Column(name = "CHILD_TYPE")

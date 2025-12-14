@@ -48,15 +48,15 @@ public class TransactionCategory implements Serializable {
 	private String transactionCategoryCode;
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "CHART_OF_ACCOUNT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_CATEGORY_CHART_OF_ACCOUNT_ID_CHART_OF_ACCOUNT"))
+	@JoinColumn(name = "CHART_OF_ACCOUNT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_CATEGORY_CHART_OF_ACCOUNT_ID_CHART_OF_ACCOUNT"))
 	private ChartOfAccount chartOfAccount;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PARENT_TRANSACTION_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANX_CATEGORY_PARENT_TRANX_CATEGORY_CODE_TRANX_CATEGORY"))
+	@JoinColumn(name = "PARENT_TRANSACTION_CATEGORY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANX_CATEGORY_PARENT_TRANX_CATEGORY_CODE_TRANX_CATEGORY"))
 	private TransactionCategory parentTransactionCategory;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "VAT_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_CATEGORY_VAT_CATEGORY_CODE_VAT_CATEGORY"))
+	@JoinColumn(name = "VAT_CATEGORY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_CATEGORY_VAT_CATEGORY_CODE_VAT_CATEGORY"))
 	private VatCategory vatCategory;
 
 	@Column(name = "DEFAULT_FLAG")

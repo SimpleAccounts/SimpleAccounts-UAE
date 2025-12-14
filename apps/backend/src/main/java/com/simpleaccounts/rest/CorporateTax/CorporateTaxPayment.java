@@ -23,12 +23,12 @@ public class CorporateTaxPayment implements Serializable {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CORPORATE_TAX_FILING_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CORPORATE_TAX_PAYMENT_CORPORATE_TAX_FILING_ID_CORPORATE_TAX_FILING"))
+    @JoinColumn(name = "CORPORATE_TAX_FILING_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CORPORATE_TAX_PAYMENT_CORPORATE_TAX_FILING_ID_CORPORATE_TAX_FILING"))
     @JsonManagedReference
     private CorporateTaxFiling corporateTaxFiling;
 
     @OneToOne
-    @JoinColumn(name = "TRANSACTION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CORPORATE_TAX_PAYMENT_TRANSACTION_ID_TRANSACTION"))
+    @JoinColumn(name = "TRANSACTION_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CORPORATE_TAX_PAYMENT_TRANSACTION_ID_TRANSACTION"))
     private Transaction transaction;
 
     @Basic
@@ -79,7 +79,7 @@ public class CorporateTaxPayment implements Serializable {
     private Boolean deleteFlag = Boolean.FALSE;
 
     @ManyToOne
-    @JoinColumn(name = "DEPOSIT_TO_TRANSACTION_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CORPORATE_TAX_PAYMENT_DEPOSIT_TO_TRAX_CATEGORY_ID_TRAX_CATEGORY"))
+    @JoinColumn(name = "DEPOSIT_TO_TRANSACTION_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CORPORATE_TAX_PAYMENT_DEPOSIT_TO_TRAX_CATEGORY_ID_TRAX_CATEGORY"))
     private TransactionCategory depositToTransactionCategory;
 
     @PrePersist

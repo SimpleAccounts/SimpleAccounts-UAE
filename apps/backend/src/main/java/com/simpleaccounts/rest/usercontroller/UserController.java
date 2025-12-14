@@ -22,7 +22,6 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.*;
-import io.swagger.annotations.ApiOperation;
 import java.io.File;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;

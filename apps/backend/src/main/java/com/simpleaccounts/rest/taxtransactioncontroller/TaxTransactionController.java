@@ -10,7 +10,6 @@ import com.simpleaccounts.constant.TaxTransactionStatusConstant;
 import com.simpleaccounts.entity.TaxTransaction;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.service.TaxTransactionService;
-import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;

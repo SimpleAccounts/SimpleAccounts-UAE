@@ -40,7 +40,6 @@ import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.InvoiceNumberUtil;
-import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;

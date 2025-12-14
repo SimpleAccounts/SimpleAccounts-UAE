@@ -37,11 +37,11 @@ public class BankAccount implements Serializable {
 	private String bankAccountName;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "BANK_ACCOUNT_CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_BANK_ACC_BANK_ACC_CURR_CODE_BANK_ACC_CURR"))
+	@JoinColumn(name = "BANK_ACCOUNT_CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_BANK_ACC_BANK_ACC_CURR_CODE_BANK_ACC_CURR"))
 	private Currency bankAccountCurrency;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "BANK_ACCOUNT_STATUS_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_BANK_ACC_BANK_ACC_STATUS_CODE_BANK_ACC_STATUS"))
+	@JoinColumn(name = "BANK_ACCOUNT_STATUS_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_BANK_ACC_BANK_ACC_STATUS_CODE_BANK_ACC_STATUS"))
 	private BankAccountStatus bankAccountStatus;
 
 	@Basic(optional = false)
@@ -84,7 +84,7 @@ public class BankAccount implements Serializable {
 	private Integer bankFeedStatusCode;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "BANK_COUNTRY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_BANK_ACC_BANK_CNT_CODE_BANK_CNT"))
+	@JoinColumn(name = "BANK_COUNTRY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_BANK_ACC_BANK_CNT_CODE_BANK_CNT"))
 	private Country bankCountry;
 
 	@Column(name = "CREATED_BY")
@@ -107,7 +107,7 @@ public class BankAccount implements Serializable {
 
 	//need to remove
 	@OneToOne
-	@JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_BANK_ACCOUNT_TRANSACTION_CATEGORY_CODE_TRANSACTION_CATEGORY"))
+	@JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_BANK_ACCOUNT_TRANSACTION_CATEGORY_CODE_TRANSACTION_CATEGORY"))
 	private TransactionCategory transactionCategory;
 
 	@Basic
@@ -127,7 +127,7 @@ public class BankAccount implements Serializable {
 	private Integer versionNumber = 1;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "BANK_ACCOUNT_TYPE_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_BANK_ACCOUNT_BANK_ACCOUNT_TYPE_CODE_BANK_ACCOUNT_TYPE"))
+	@JoinColumn(name = "BANK_ACCOUNT_TYPE_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_BANK_ACCOUNT_BANK_ACCOUNT_TYPE_CODE_BANK_ACCOUNT_TYPE"))
 	private BankAccountType bankAccountType;
 
 	@PrePersist

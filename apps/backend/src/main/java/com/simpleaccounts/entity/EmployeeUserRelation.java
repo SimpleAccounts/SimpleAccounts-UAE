@@ -22,11 +22,11 @@ public class EmployeeUserRelation {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMPLOYEE_USER_RELATION_USER_ID_SA_USER"))
+    @JoinColumn(name = "USER_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMPLOYEE_USER_RELATION_USER_ID_SA_USER"))
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "EMPLOYEE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMPLOYEE_USER_RELATION_EMPLOYEE_ID_EMPLOYEE"))
+    @JoinColumn(name = "EMPLOYEE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMPLOYEE_USER_RELATION_EMPLOYEE_ID_EMPLOYEE"))
     private Employee employee;
 
     @Column(name = "ORDER_SEQUENCE")

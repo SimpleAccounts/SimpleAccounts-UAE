@@ -8,7 +8,6 @@ import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.ReportsConfiguration;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

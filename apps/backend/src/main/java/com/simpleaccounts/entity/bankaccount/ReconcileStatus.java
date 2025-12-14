@@ -21,7 +21,7 @@ public class ReconcileStatus implements Serializable  {
 
     @Basic
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BANK_ACCOUNT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_RECONCILE_STATUS_BANK_ACCOUNT_ID_BANK_ACCOUNT"))
+    @JoinColumn(name = "BANK_ACCOUNT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_RECONCILE_STATUS_BANK_ACCOUNT_ID_BANK_ACCOUNT"))
     private BankAccount bankAccount;
 
     @Basic

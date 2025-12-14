@@ -59,7 +59,7 @@ public class PoQuatation {
     private Boolean deleteFlag = Boolean.FALSE;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SUPPLIER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PO_QUATATION_SUPPLIER_ID_SUPPLIER"))
+    @JoinColumn(name = "SUPPLIER_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PO_QUATATION_SUPPLIER_ID_SUPPLIER"))
     private Contact supplierId ;
 
     @Column(name = "RFQ_NUMBER")
@@ -106,7 +106,7 @@ public class PoQuatation {
     private String QuotationNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CUSTOMER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PO_QUATATION_CUSTOMER_ID_CUSTOMER"))
+    @JoinColumn(name = "CUSTOMER_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PO_QUATATION_CUSTOMER_ID_CUSTOMER"))
     private Contact customer;
 
     @Column(name="QUOTATION_EXPIRATION_DATE")
@@ -138,14 +138,14 @@ public class PoQuatation {
     private Collection<PoQuatationLineItem> poQuatationLineItems;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FILE_ATTACHMENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PO_QUATATION_FILE_ATTACHMENT_ID_FILE_ATTACHMENT"))
+    @JoinColumn(name = "FILE_ATTACHMENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PO_QUATATION_FILE_ATTACHMENT_ID_FILE_ATTACHMENT"))
     private FileAttachment AttachmentFileName;
 
     @Column(name = "REFERENCE_NUMBER")
     private String referenceNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_PO_QUATATION_CURRENCY_CODE_CURRENCY"))
+    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PO_QUATATION_CURRENCY_CODE_CURRENCY"))
     private Currency currency;
 
     @Basic(optional = false)
@@ -154,7 +154,7 @@ public class PoQuatation {
     private Boolean isMigratedRecord = Boolean.FALSE;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PLACE_OF_SUPPLY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PO_QUATATION_PLACE_OF_SUPPLY_ID_PLACE_OF_SUPPLY"))
+    @JoinColumn(name = "PLACE_OF_SUPPLY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PO_QUATATION_PLACE_OF_SUPPLY_ID_PLACE_OF_SUPPLY"))
     private PlaceOfSupply placeOfSupplyId;
 
     @Column(name = "DISCOUNT")

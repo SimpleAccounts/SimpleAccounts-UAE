@@ -80,7 +80,7 @@ public class EmployeeBankDetails  implements Serializable {
     private Boolean deleteFlag = Boolean.FALSE;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EMPLOYEE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMPLOYEE_BANK_DETAILS_EMPLOYEE_ID_EMPLOYEE"))
+    @JoinColumn(name = "EMPLOYEE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMPLOYEE_BANK_DETAILS_EMPLOYEE_ID_EMPLOYEE"))
     private Employee employee;
 
     @Column(name = "VERSION_NUMBER")
