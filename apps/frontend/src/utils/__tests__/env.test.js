@@ -34,6 +34,19 @@ describe('env utilities', () => {
       const expectedMode = process.env.NODE_ENV || 'test';
       expect(getEnvMode()).toBe(expectedMode);
     });
+
+    it('should handle missing MODE with fallback', () => {
+      // Test the fallback path when MODE is undefined
+      const originalMODE = globalThis.import.meta.env.MODE;
+      delete globalThis.import.meta.env.MODE;
+      
+      // Should fall back to 'development' when MODE is missing
+      const mode = getEnvMode();
+      expect(mode).toBe('development');
+      
+      // Restore
+      globalThis.import.meta.env.MODE = originalMODE;
+    });
   });
 
   describe('isProduction', () => {
@@ -53,11 +66,28 @@ describe('env utilities', () => {
     it('should return default base URL', () => {
       expect(getBaseUrl()).toBe('/');
     });
+
+    it('should handle missing BASE_URL with fallback', () => {
+      // Test the fallback path when BASE_URL is undefined
+      const originalBASE_URL = globalThis.import.meta.env.BASE_URL;
+      delete globalThis.import.meta.env.BASE_URL;
+      
+      // Should fall back to '/' when BASE_URL is missing
+      const baseUrl = getBaseUrl();
+      expect(baseUrl).toBe('/');
+      
+      // Restore
+      globalThis.import.meta.env.BASE_URL = originalBASE_URL;
+    });
   });
 
   describe('getEnvVar', () => {
     it('should return default value when variable is not set', () => {
       expect(getEnvVar('NON_EXISTENT_VAR', 'default')).toBe('default');
+    });
+
+    it('should return empty string when no default is provided', () => {
+      expect(getEnvVar('NON_EXISTENT_VAR')).toBe('');
     });
 
     it('should handle VITE_ prefixed variables', () => {
@@ -78,6 +108,25 @@ describe('env utilities', () => {
         delete process.env.VITE_TEST_VAR;
       }
       delete globalThis.import.meta.env.VITE_TEST_VAR;
+    });
+  });
+
+  describe('getAllEnvVars', () => {
+    it('should return all environment variables', () => {
+      const allVars = getAllEnvVars();
+      expect(allVars).toBeDefined();
+      expect(typeof allVars).toBe('object');
+      expect(allVars).toHaveProperty('MODE');
+      expect(allVars).toHaveProperty('DEV');
+      expect(allVars).toHaveProperty('PROD');
+    });
+  });
+
+  describe('getAllEnvVars - additional coverage', () => {
+    it('should include SSR and BASE_URL properties', () => {
+      const allVars = getAllEnvVars();
+      expect(allVars).toHaveProperty('SSR');
+      expect(allVars).toHaveProperty('BASE_URL');
     });
   });
 
