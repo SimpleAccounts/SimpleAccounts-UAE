@@ -17,6 +17,8 @@ concurrency:
 env:
   NODE_OPTIONS: --openssl-legacy-provider
   SPRING_PROFILES_ACTIVE: test
+  # Stabilize date/time tests across runners (Windows runner timezone can differ from Ubuntu).
+  JAVA_TOOL_OPTIONS: -Duser.timezone=UTC
 
 permissions:
   contents: read
