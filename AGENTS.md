@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Project Structure
-- `apps/frontend/`: React frontend. Source in `src/`, static assets in `public/`, Playwright e2e in `e2e/`, build output in `build/`.
+- `apps/frontend/`: React frontend. Source in `src/`, static assets in `public/`, Playwright e2e in `e2e/`, build output in `dist/` (Vite) or `build/` (CRA fallback).
 - `apps/backend/`: Spring Boot backend (WAR). Code in `src/main/java/com/simpleaccounts`, config/resources in `src/main/resources`, tests in `src/test/java`.
 - `apps/agents/`: Optional Node-based agents; each agent lives in its own subfolder with a `package.json`.
 - `deploy/`, `docs/`, `scripts/`, `k6/`: deployment recipes, product docs, helper scripts, and load tests.
