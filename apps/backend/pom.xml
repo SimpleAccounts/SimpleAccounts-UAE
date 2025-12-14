@@ -14,22 +14,22 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.0.RELEASE</version>
+		<version>3.4.0</version>
 		<relativePath />
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>11</java.version>
+		<java.version>21</java.version>
 		<aspectj.version>1.9.25</aspectj.version>
 		<frontend-maven-plugin.version>1.9.1</frontend-maven-plugin.version>
 		<node.version>v12.16.3</node.version>
 		<yarn.version>v1.22.4</yarn.version>
 		<junit.jupiter.version>5.10.2</junit.jupiter.version>
 		<junit.platform.version>1.10.2</junit.platform.version>
-		<mockito.version>4.11.0</mockito.version>
-		<testcontainers.version>1.17.6</testcontainers.version>
-		<bytebuddy.version>1.12.23</bytebuddy.version>
+		<mockito.version>5.14.2</mockito.version>
+		<testcontainers.version>1.20.4</testcontainers.version>
+		<bytebuddy.version>1.14.18</bytebuddy.version>
 			<!-- SonarQube Configuration (Self-hosted) -->
 			<sonar.host.url>https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io</sonar.host.url>
 		</properties>
@@ -75,10 +75,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
 		</dependency>
-		<!-- ehcache dependency. -->
+		<!-- ehcache3 dependency for Spring Boot 3 -->
 		<dependency>
-			<groupId>net.sf.ehcache</groupId>
+			<groupId>org.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
+			<classifier>jakarta</classifier>
+		</dependency>
+		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
 		</dependency>
 
 		<dependency>
@@ -90,8 +95,8 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -103,10 +108,23 @@
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- JJWT 0.12.6 - JWT library (split into api, impl, jackson) -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt</artifactId>
-			<version>0.9.1</version>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.12.6</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.12.6</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.12.6</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -123,33 +141,16 @@
 			<artifactId>lombok</artifactId>
 			<version>1.18.34</version>
 		</dependency>
+		<!-- Apache HttpClient 5.x -->
 		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5.14</version>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>commons-codec</groupId>
-					<artifactId>commons-codec</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>org.apache.httpcomponents.client5</groupId>
+			<artifactId>httpclient5</artifactId>
+			<version>5.4.1</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>javax.mail-api</artifactId>
-			<version>1.6.2</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail -->
+		<!-- Spring Boot Mail Starter (includes Jakarta Mail) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
-			<version>2.1.8.RELEASE</version>
 		</dependency>
 
 		<dependency>
@@ -164,16 +165,21 @@
 			<version>3.18.0</version>
 		</dependency>
 
-		<!-- Springfox 2.10.0 (patched swagger-ui) is compatible with Spring Boot 2.0.x -->
+		<!-- Jakarta JAXB (XML Binding) for Spring Boot 3 -->
 		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.10.0</version>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.10.0</version>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+		</dependency>
+
+		<!-- SpringDoc OpenAPI for Spring Boot 3 (replaces Springfox) -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.7.0</version>
 		</dependency>
 
 		<dependency>
@@ -254,24 +260,21 @@
 			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- read excel -->
+		<!-- Apache POI 5.3.0 for Excel processing -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>3.17</version>
+			<version>5.3.0</version>
 		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>3.17</version>
+			<version>5.3.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-collections4</artifactId>
-			<version>4.1</version>
+			<version>4.5.0-M2</version>
 		</dependency>
 		<!-- read excel -->
 		<!-- https://mvnrepository.com/artifact/org.liquibase/liquibase-core -->
@@ -280,25 +283,22 @@
 			<artifactId>liquibase-core</artifactId>
 			<version>5.0.1</version>
 		</dependency>
+		<!-- iText 8.x for PDF generation (iText 7 successor) -->
 		<dependency>
 			<groupId>com.itextpdf</groupId>
-			<artifactId>kernel</artifactId>
-			<version>7.1.12</version>
+			<artifactId>itext-core</artifactId>
+			<version>8.0.5</version>
+			<type>pom</type>
 		</dependency>
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>html2pdf</artifactId>
-			<version>3.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.itextpdf</groupId>
-			<artifactId>itextpdf</artifactId>
-			<version>5.5.13.4</version>
+			<version>5.0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.janino</groupId>
 			<artifactId>janino</artifactId>
-			<version>2.7.8</version>
+			<version>3.1.12</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -326,8 +326,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.13.0</version>
 				<configuration>
-					<source>11</source>
-					<target>11</target>
+					<source>21</source>
+					<target>21</target>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
@@ -345,7 +345,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.2</version>
+				<version>3.5.2</version>
 				<configuration>
 					<argLine>${surefireArgLine}</argLine>
 					<useSystemClassLoader>false</useSystemClassLoader>
@@ -530,7 +530,7 @@
 					<plugin>
 						<groupId>org.owasp</groupId>
 						<artifactId>dependency-check-maven</artifactId>
-						<version>7.4.4</version>
+						<version>11.1.1</version>
 						<configuration>
 							<failBuildOnCVSS>7</failBuildOnCVSS>
 							<formats>

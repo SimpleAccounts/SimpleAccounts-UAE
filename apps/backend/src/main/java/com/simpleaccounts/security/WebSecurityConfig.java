@@ -1,26 +1,30 @@
 package com.simpleaccounts.security;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
+/**
+ * Spring Security 6 Configuration
+ */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
@@ -28,51 +32,58 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final JwtRequestFilter jwtRequestFilter;
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-
-		auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
-	}
-
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
 	@Bean
-	@Override
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		return super.authenticationManagerBean();
+	public AuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		authProvider.setUserDetailsService(customUserDetailsService);
+		authProvider.setPasswordEncoder(passwordEncoder());
+		return authProvider;
 	}
 
-	@Override
-	protected void configure(HttpSecurity httpSecurity) throws Exception {
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+		return authConfig.getAuthenticationManager();
+	}
 
-		httpSecurity
-				.csrf()
-				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-				.ignoringAntMatchers("/rest/**", "/public/**", "/auth/**")
-				.and()
-				// dont authenticate this particular request
-				.authorizeRequests().// all other requests need to be authenticated
-			//antMatchers("/config/getreleasenumber").permitAll().
-					antMatchers("/auth/**").permitAll().
-					antMatchers("/rest/company/register").permitAll().
-				antMatchers("/rest/company/getHealthCheck").permitAll().
-				antMatchers("/rest/company/getTimeZoneList").permitAll().
-				antMatchers("/rest/company/getCompanyCount").permitAll().
-				antMatchers("/rest/company/getCurrency").permitAll().
-				antMatchers("/rest/company/getCountry").permitAll().
-				antMatchers("/rest/company/getState").permitAll().
-				antMatchers("/rest/company/getCompanyType").permitAll().
-				antMatchers("/public/**").permitAll().
-				antMatchers("/rest/company/getSimpleAccountsreleasenumber").permitAll().
-				antMatchers("/rest/**").authenticated().and().
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http
+			.csrf(AbstractHttpConfigurer::disable)
+			.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/auth/**").permitAll()
+				.requestMatchers("/rest/company/register").permitAll()
+				.requestMatchers("/rest/company/getHealthCheck").permitAll()
+				.requestMatchers("/rest/company/getTimeZoneList").permitAll()
+				.requestMatchers("/rest/company/getCompanyCount").permitAll()
+				.requestMatchers("/rest/company/getCurrency").permitAll()
+				.requestMatchers("/rest/company/getCountry").permitAll()
+				.requestMatchers("/rest/company/getState").permitAll()
+				.requestMatchers("/rest/company/getCompanyType").permitAll()
+				.requestMatchers("/public/**").permitAll()
+				.requestMatchers("/rest/company/getSimpleAccountsreleasenumber").permitAll()
+				// SpringDoc OpenAPI endpoints
+				.requestMatchers("/swagger-ui/**").permitAll()
+				.requestMatchers("/swagger-ui.html").permitAll()
+				.requestMatchers("/v3/api-docs/**").permitAll()
+				.requestMatchers("/swagger-resources/**").permitAll()
+				.requestMatchers("/webjars/**").permitAll()
+				.requestMatchers("/rest/**").authenticated()
+				.anyRequest().permitAll()
+			)
+			.exceptionHandling(ex -> ex
+				.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+			)
+			.sessionManagement(session -> session
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			)
+			.authenticationProvider(authenticationProvider())
+			.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
-				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-					.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-		// Add a filter to validate the tokens with every request
-		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+		return http.build();
 	}
 }

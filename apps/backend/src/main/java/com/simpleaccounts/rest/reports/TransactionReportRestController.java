@@ -57,7 +57,6 @@ public class TransactionReportRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get All Financial Periods")
 	@GetMapping(value = "/getFinancialPeriods")
 	public ResponseEntity<List<FinancialPeriodRestModel>> completeFinancialPeriods() {
 		try {
@@ -69,7 +68,6 @@ public class TransactionReportRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get All Transaction Type")
 	@GetMapping(value = "/getTransactionTypes")
 	public ResponseEntity<List<ChartOfAccount>> transactionTypes(){
 		try {
@@ -82,7 +80,6 @@ public class TransactionReportRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get All Transaction Category")
 	@GetMapping(value = "/getTransactionCategories")
 	public ResponseEntity<List<TransactionCategory>> transactionCategories(
 			@RequestParam("chartOfAccountId") Integer chartOfAccountId){
@@ -112,7 +109,6 @@ public class TransactionReportRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Account Balance Report")
 	@PostMapping(value = "/accountBalanceReport")
 	public ResponseEntity<List<TransactionReportRestModel>> view(
 			@RequestParam(value = "transactionTypeCode", required = false) Integer transactionTypeCode,
@@ -133,7 +129,6 @@ public class TransactionReportRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Customet Invoice Report")
 	@PostMapping(value = "/customerInvoiceReport")
 	public ResponseEntity<List<InvoiceReportRestModel>> view(
 			@RequestParam(value = "refNumber", required = false) String refNumber,

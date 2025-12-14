@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +61,6 @@ public class VatController{
 	private final UserService userService;
 
 	@LogRequest
-	@ApiOperation(value = "Get Vat Category List")
 	@GetMapping(value = "getList")
 	public ResponseEntity<PaginationResponseModel> getVatList(VatCategoryRequestFilterModel filterModel,
 															  HttpServletRequest request) {
@@ -90,7 +89,6 @@ public class VatController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "delete Vat Category by Id")
 	@DeleteMapping(value = "/delete")
 		public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id) {
 		SimpleAccountsMessage message= null;
@@ -109,7 +107,6 @@ public class VatController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Vat Category in Bulk")
 	@DeleteMapping(value = "/deletes")
 		public ResponseEntity<Object> deletes(@RequestBody DeleteModel ids) {
 		try {
@@ -128,7 +125,6 @@ public class VatController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Vat Category By ID")
 	@GetMapping(value = "/getById")
 	public ResponseEntity<VatCategoryModel > getById(@RequestParam(value = "id") Integer id) {
 		VatCategory vatCategory = vatCategoryService.findByPK(id);
@@ -142,7 +138,6 @@ public class VatController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Add New Vat Category")
 	@PostMapping(value = "/save")
 		public ResponseEntity<Object> save(@RequestBody VatCategoryRequestModel vatCatRequestModel, HttpServletRequest request) {
 		SimpleAccountsMessage message= null;
@@ -168,7 +163,6 @@ public class VatController{
 	
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update Vat Category")
 	@PostMapping(value = "/update")
 		public ResponseEntity<Object> update(@RequestBody VatCategoryRequestModel vatCatRequestModel, HttpServletRequest request) {
 		try {
@@ -189,7 +183,6 @@ public class VatController{
 	}
 	
 	@LogRequest
-	@ApiOperation(value = "Get Product Count For Vat ")
 	@GetMapping(value = "/getProductCountsForVat")
 	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int vatId){
 		Integer response = productService.getTotalProductCountByVatId(vatId);

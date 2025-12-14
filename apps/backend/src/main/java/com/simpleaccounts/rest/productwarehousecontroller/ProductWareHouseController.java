@@ -34,7 +34,6 @@ public class ProductWareHouseController{
 	private final ProductWarehouseService productWarehouseService;
 
 	@LogRequest
-	@ApiOperation(value = "get Ware House List")
 	@GetMapping(value = "/getWareHouse")
 	public ResponseEntity<List<ProductWarehouse>> getProductWarehouse() {
 		List<ProductWarehouse> productWarehouseList = productWarehouseService.getProductWarehouseList();
@@ -46,7 +45,6 @@ public class ProductWareHouseController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Save Ware House")
 	@PostMapping(value = "/saveWareHouse")
 	public ResponseEntity<String> createNewWarehouse(@RequestBody ProductWareHousePersistModel productWarehouseModel) {
 

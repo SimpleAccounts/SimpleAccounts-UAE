@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,6 @@ public class TransactionParsingSettingController {
 	private final FileHelper fileHelper;
 
 	@LogRequest
-	@ApiOperation("Parse excel file for Data")
 	@PostMapping(value = "/parse")
 	public ResponseEntity<List<Map<String, String>>> getDateFormat(@ModelAttribute TransactionParsingSettingPersistModel model) {
 
@@ -82,14 +81,12 @@ public class TransactionParsingSettingController {
 	}
 
 	@LogRequest
-	@ApiOperation("Get databse column enum list")
 	@GetMapping(value = "/dbColEnum/list")
 	public ResponseEntity<List<EnumDropdownModel>> getDateFormatList() {
 		return new ResponseEntity<>(TransactionEnum.getDropdownList(), HttpStatus.OK);
 	}
 
 	@LogRequest
-	@ApiOperation("Get delimiter enum list")
 	@GetMapping(value = "/delimiter/list")
 	public ResponseEntity<List<EnumDropdownModel>> getDelimiterList() {
 		return new ResponseEntity<>(ExcellDelimiterEnum.getDropdownList(), HttpStatus.OK);
@@ -97,7 +94,6 @@ public class TransactionParsingSettingController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation("Save  new Transaction Parsing setting")
 	@PostMapping(value = "/save")
 	public ResponseEntity<Map<String, Object>> save(@RequestBody TransactionParsingSettingPersistModel persistModel,
 			HttpServletRequest request) {
@@ -124,7 +120,6 @@ public class TransactionParsingSettingController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation("Update  Transaction Parsing setting")
 	@PostMapping(value = "/update")
 	public ResponseEntity<String> update(@RequestBody TransactionParsingSettingPersistModel persistModel,
 			HttpServletRequest request) {
@@ -147,7 +142,6 @@ public class TransactionParsingSettingController {
 	}
 
 	@LogRequest
-	@ApiOperation("Getlist")
 	@GetMapping(value = "/list")
 	public ResponseEntity<List<TransactionParsingSettingListModel>> getTransactionParserSettigList(HttpServletRequest request) {
 		try {
@@ -169,7 +163,6 @@ public class TransactionParsingSettingController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete By ID")
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<String> delete(@RequestParam(value = "id") Long id) {
 		TransactionParsingSetting transactionParsingSetting = transactionParsingSettingService.findByPK(id);
@@ -181,7 +174,6 @@ public class TransactionParsingSettingController {
 	}
 
 	@LogRequest
-	@ApiOperation("Get by Id")
 	@GetMapping(value = "/getById")
 	public ResponseEntity<TransactionParsingSettingDetailModel> getDateFormatList(@RequestParam(value = "id") Long id) {
 		try {
@@ -199,7 +191,6 @@ public class TransactionParsingSettingController {
 	}
 
 	@LogRequest
-	@ApiOperation("Getlist")
 	@GetMapping(value = "/selectModelList")
 	public ResponseEntity<List<EnumDropdownModel>> getTransactionParserSettigSelectModelList(HttpServletRequest request) {
 		try {

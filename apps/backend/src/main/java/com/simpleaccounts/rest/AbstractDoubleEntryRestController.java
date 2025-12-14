@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -104,7 +104,6 @@ public abstract class AbstractDoubleEntryRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Post Journal Entry")
 	@PostMapping(value = "/posting")
 	public ResponseEntity<String> posting(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
 		String validationCheck = "";
@@ -146,7 +145,6 @@ public abstract class AbstractDoubleEntryRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "UndoPost Journal Entry")
 	@PostMapping(value = "/undoPosting")
 	public ResponseEntity<String> undoPosting(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
 

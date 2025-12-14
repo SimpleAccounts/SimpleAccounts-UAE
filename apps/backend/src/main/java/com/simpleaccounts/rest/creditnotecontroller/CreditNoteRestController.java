@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -59,7 +59,6 @@ public class CreditNoteRestController {
     private final InvoiceRestHelper invoiceRestHelper;
 
     @LogRequest
-    @ApiOperation(value = "Get Credit Note List")
     @GetMapping(value = "/getList")
     public ResponseEntity<PaginationResponseModel> getList(CreditNoteRequestFilterModel creditNoteRequestFilterModel,
                                                            @RequestParam(required = false) Integer contact,
@@ -87,7 +86,6 @@ public class CreditNoteRestController {
 
     @LogRequest
     @PostMapping(value = "/save")
-    @ApiOperation(value = "Add New Credit Note")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Object> save(@ModelAttribute CreditNoteRequestModel creditNoteRequestModel,
                                   HttpServletRequest request) {
@@ -122,7 +120,6 @@ public class CreditNoteRestController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update Credit Note")
     @PostMapping(value = "/update")
     public ResponseEntity<Object> update(@ModelAttribute CreditNoteRequestModel requestModel,
                                     HttpServletRequest request) {
@@ -168,7 +165,6 @@ public class CreditNoteRestController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Credit Note By ID")
     @GetMapping(value = "/getCreditNoteById")
     public ResponseEntity<CreditNoteRequestModel> getInvoiceById(@RequestParam(value = "id") Integer id,
                                              @RequestParam(value = "isCNWithoutProduct") Boolean isCNWithoutProduct) {
@@ -194,7 +190,6 @@ public class CreditNoteRestController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Post Journal Entry For Credit Note")
     @PostMapping(value = "/creditNotePosting")
     public ResponseEntity<Object> posting(@RequestBody PostingRequestModel postingRequestModel,
                                                     HttpServletRequest request) {
@@ -224,7 +219,6 @@ public class CreditNoteRestController {
      * @return
      */
     @LogRequest
-    @ApiOperation(value = "Add New Refund")
     @PostMapping(value = "/recordPaymentCNWithoutInvoice")
     public ResponseEntity<Object> recordPaymentCNWithoutInvoice(@ModelAttribute RecordPaymentAgainstCNWithoutInvoice requestModel,
                                                            HttpServletRequest request) {
@@ -239,7 +233,6 @@ public class CreditNoteRestController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Add New Refund")
     @PostMapping(value = "/refund")
     public ResponseEntity<Object> save(@ModelAttribute RecordPaymentForCN requestModel,
                                   HttpServletRequest request) {
@@ -257,7 +250,6 @@ public class CreditNoteRestController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Apply To Invoice")
     @PostMapping(value = "/applyToInvoice")
     public ResponseEntity<Object> save(
             @ModelAttribute RefundAgainstInvoicesRequestModel refundAgainstInvoicesRequestModel,
@@ -283,7 +275,6 @@ public class CreditNoteRestController {
      * @return
      */
     @LogRequest
-    @ApiOperation(value = "Get List Of Invoice By Credit Note")
     @GetMapping(value = "/getInvoiceByCreditNoteId")
     public ResponseEntity<List<CreditNoteRequestModel>> getInvoiceByCreditNoteId(
             @RequestParam(value = "id") Integer id) {
@@ -298,7 +289,6 @@ public class CreditNoteRestController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Delete Credit Note By ID")
     @PostMapping(value = "/delete")
     public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id) {
 
@@ -339,7 +329,6 @@ public class CreditNoteRestController {
             return null;
     }
     @LogRequest
-    @ApiOperation(value = "Get Credit Note By Invoice Id")
     @GetMapping(value = "/getCreditNoteByInvoiceId")
     public ResponseEntity<CreditNoteRequestModel> getInvoiceById(@RequestParam(value = "id") Integer id) {
         try {
@@ -351,7 +340,6 @@ public class CreditNoteRestController {
         }
     }
     @LogRequest
-    @ApiOperation(value = "Get List Of Invoice By Credit Note")
     @GetMapping(value = "/getAppliedInvoicesByCreditNoteId")
     public ResponseEntity<List<AppliedInvoiceCreditNote>> getAppliedInvoicesByCreditNoteId(
             @RequestParam(value = "id") Integer id) {

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +58,6 @@ public class ValidationController {
     private final ProductRepository productRepository;
 
     @LogRequest
-    @ApiOperation(value = "Validate entries before adding to the system")
     @GetMapping(value = "/validate")
     public ResponseEntity<String> validate(@ModelAttribute ValidationModel validationModel, HttpServletRequest request) {
         if (validationModel.getModuleType() == null) {

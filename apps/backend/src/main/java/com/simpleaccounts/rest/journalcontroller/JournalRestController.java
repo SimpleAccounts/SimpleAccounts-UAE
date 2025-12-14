@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +74,6 @@ public class JournalRestController {
 	private final ExpenseService expenseService;
 
 	@LogRequest
-	@ApiOperation(value = "Get Journal List")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getList(JournalRequestFilterModel filterModel, HttpServletRequest request) {
 		try {
@@ -109,7 +108,6 @@ public class JournalRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Journal By ID")
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<Object> deleteJournal(@RequestParam(value = "id") Integer id) {
 		try {
@@ -139,7 +137,6 @@ public class JournalRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Journal in Bulk")
 	@DeleteMapping(value = "/deletes")
 	public ResponseEntity<Object> deleteJournals(@RequestBody DeleteModel ids) {
 		try {
@@ -160,7 +157,6 @@ public class JournalRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Journal By ID")
 	@GetMapping(value = "/getById")
 	public ResponseEntity<JournalModel> getInvoiceById(@RequestParam(value = "id") Integer id) {
 		Journal journal = journalService.findByPK(id);
@@ -173,7 +169,6 @@ public class JournalRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Add New Journal Invoice")
 	@PostMapping(value = "/save")
 	public ResponseEntity<Object> save(@RequestBody JournalRequestModel journalRequestModel, HttpServletRequest request) {
 		try {
@@ -208,7 +203,6 @@ public class JournalRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update Journal")
 	@PostMapping(value = "/update")
 	public ResponseEntity<Object> update(@RequestBody JournalRequestModel jouralRequestModel, HttpServletRequest request) {
 		try {
@@ -239,7 +233,6 @@ public class JournalRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Journals By Invoice ID")
 	@GetMapping(value = "/getJournalsByInvoiceId")
 	public ResponseEntity<Object> getJournalsByInvoiceId(@RequestParam(value = "id") Integer id,@RequestParam(value = "type") Integer type) {
 		List<Journal> journalList = new ArrayList<>();

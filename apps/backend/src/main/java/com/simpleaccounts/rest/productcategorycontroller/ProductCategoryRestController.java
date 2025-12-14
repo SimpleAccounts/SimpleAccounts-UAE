@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,6 @@ public class ProductCategoryRestController {
 	private final UserService userService;
 
 	@LogRequest
-	@ApiOperation(value = "Get All Product Categories for the Loggedin User and the Master data")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getAllProductCategory(ProductCategoryFilterModel filterModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -74,7 +73,6 @@ public class ProductCategoryRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Product Category By ID")
 	@GetMapping(value = "/getById")
 	public ResponseEntity<ProductCategoryListModel> getProductCategoryById(@RequestParam("id") Integer id) {
 		ProductCategory productCategory = productCategoryService.findByPK(id);
@@ -83,7 +81,6 @@ public class ProductCategoryRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Product Category")
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<Object> deleteTransactionCategory(@RequestParam("id") Integer id) {
 		SimpleAccountsMessage message= null;
@@ -101,7 +98,6 @@ public class ProductCategoryRestController {
 	
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Product Category In Bulk")
 	@DeleteMapping(value = "/deletes")
 	public ResponseEntity<Object> deleteTransactionCategories(@RequestBody DeleteModel ids) {
 		try {
@@ -121,7 +117,6 @@ public class ProductCategoryRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Add New Product Category")
 	@PostMapping(value = "/save")
 	public ResponseEntity<Object> save(@RequestBody ProductCategoryListModel productCategoryModel, HttpServletRequest request) {
 		try {
@@ -145,7 +140,6 @@ public class ProductCategoryRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update Product Category")
 	@PostMapping(value = "/update")
 	public ResponseEntity<Object> update(@RequestBody ProductCategoryListModel productCategoryModel,
 			HttpServletRequest request) {

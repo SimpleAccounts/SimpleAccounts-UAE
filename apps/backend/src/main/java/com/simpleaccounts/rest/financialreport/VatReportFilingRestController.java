@@ -18,7 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -47,7 +47,6 @@ public class VatReportFilingRestController {
     private final VatReportFilingRepository vatReportFilingRepository;
 
     @LogRequest
-    @ApiOperation(value = "Get Vat Report Filing List")
     @GetMapping(value = "/getVatReportFilingList")
     public ResponseEntity<PaginationResponseModel> getList(VatReportRequestFilterModel filterModel, HttpServletRequest request) {
         try {
@@ -68,7 +67,6 @@ public class VatReportFilingRestController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Vat Report Filing List")
     @GetMapping(value = "/getVatPaymentHistoryList")
     public ResponseEntity<PaginationResponseModel> getVatPaymentRecordList(VatReportRequestFilterModel filterModel, HttpServletRequest request) {
         try {
@@ -87,7 +85,6 @@ public class VatReportFilingRestController {
     }
 
 	@LogRequest
-	@ApiOperation(value = "Get Vat Report Filing List For Bank")
 	@GetMapping(value = "/getVatReportListForBank")
 		public ResponseEntity<Object> getVatReportListForBank(Integer id) {
 	        try {
@@ -123,7 +120,6 @@ public class VatReportFilingRestController {
 
     @LogRequest
     @Transactional
-    @ApiOperation(value = "Generate Vat Report")
     @PostMapping(value = "/generateVatReport")
     public ResponseEntity<Object> generateVatReport(@RequestBody VatReportFilingRequestModel vatReportFilingRequestModel,
                                                HttpServletRequest httpServletRequest){
@@ -182,7 +178,6 @@ public class VatReportFilingRestController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "File Vat Report")
     @PostMapping(value = "/fileVatReport")
     public ResponseEntity<Object> fileReport(@ModelAttribute FileTheVatReportRequestModel fileTheVatReportRequestModel,HttpServletRequest request ){
         try {
@@ -204,7 +199,6 @@ public class VatReportFilingRestController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Undo Filed Vat Report")
     @PostMapping(value = "/undoFiledVatReport")
     public ResponseEntity<Object> undoFiledVatReport(@RequestBody PostingRequestModel postingRequestModel,HttpServletRequest request){
         try {
@@ -221,7 +215,6 @@ public class VatReportFilingRestController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Record Vat Payment")
     @PostMapping(value = "/recordVatPayment")
     public ResponseEntity<Object> recordVatPayment(RecordVatPaymentRequestModel recordVatPaymentRequestModel,HttpServletRequest
             request){
@@ -236,7 +229,6 @@ public class VatReportFilingRestController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Delete Vat Report By ID")
     @DeleteMapping(value = "/delete")
     public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id) {
         try {

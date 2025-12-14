@@ -42,7 +42,6 @@ public class LoginRestController {
 	private final UserJpaRepository userJpaRepository;
 
 	@LogRequest
-	@ApiOperation(value = "forgotPassword")
 	@PostMapping(value = "/forgotPassword")
 	public ResponseEntity<String> forgotPassword(@RequestBody JwtRequest jwtRequest) {
 
@@ -71,7 +70,6 @@ public class LoginRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "resetPassword")
 	@PostMapping(value = "/resetPassword")
 	public ResponseEntity<Object> resetPassword(@RequestBody ResetPasswordModel resetPasswordModel) {
 		try{

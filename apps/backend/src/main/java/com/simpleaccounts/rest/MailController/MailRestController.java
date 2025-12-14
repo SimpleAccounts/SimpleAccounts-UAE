@@ -19,7 +19,7 @@ import com.simpleaccounts.service.MailThemeTemplatesService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -49,7 +49,6 @@ public class MailRestController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "New Request For Invoice")
     @PostMapping(value = "/emailContent/getById")
     public ResponseEntity<Object> getEmailContentById(
             @RequestBody EmailContentRequestModel emailContentRequestModel, HttpServletRequest request) {
@@ -65,7 +64,6 @@ public class MailRestController {
         }
     }
     @LogRequest
-    @ApiOperation("Send mail for otc modules")
         @PostMapping(value = "/send/mail")
     public ResponseEntity<Object> sendMail(@ModelAttribute EmailContentModel emailContentModel, HttpServletRequest request) {
         try {

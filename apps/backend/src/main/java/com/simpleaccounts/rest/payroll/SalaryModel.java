@@ -4,7 +4,7 @@ import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.SalaryTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data

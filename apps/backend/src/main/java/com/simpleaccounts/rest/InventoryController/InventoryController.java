@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,6 @@ public class InventoryController {
 
     
     @LogRequest
-    @ApiOperation(value = "Get Inventory Product List")
     @GetMapping(value = "/getInventoryProductList")
     public ResponseEntity<PaginationResponseModel> getInventoryProductList(InventoryRequestFilterModel filterModel, HttpServletRequest request) {
         try {
@@ -82,7 +81,6 @@ public class InventoryController {
 
     
     @LogRequest
-    @ApiOperation(value = "Get Product By ID")
     @GetMapping(value = "/getInventoryByProductId")
     public ResponseEntity<List<InventoryListModel>> getProductById(@RequestParam(value = "id") Integer id) {
         try {
@@ -126,7 +124,6 @@ public class InventoryController {
     }
     
     @LogRequest
-    @ApiOperation(value = "Get Product By ID")
     @GetMapping(value = "/getInventoryById")
     public ResponseEntity<ProductRequestModel> getInventoryById(@RequestParam(value = "id") Integer id) {
         try {
@@ -143,7 +140,6 @@ public class InventoryController {
     
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update Inventory")
     @PostMapping(value = "/update")
 	public ResponseEntity<Object> update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
         try {
@@ -164,7 +160,6 @@ public class InventoryController {
     }
     
     @LogRequest
-    @ApiOperation(value = "Get Product Count For Inventory")
     @GetMapping(value = "/getProductCountForInventory")
     public ResponseEntity<Integer> getProductCountForInventory(){
         Integer response = inventoryService.getProductCountForInventory();
@@ -172,7 +167,6 @@ public class InventoryController {
     }
     
     @LogRequest
-    @ApiOperation(value = "Get Total Stock On Hand ")
     @GetMapping(value = "/getTotalStockOnHand")
     public ResponseEntity<Integer> getTotalStockOnHand(){
         Integer response = inventoryService.totalStockOnHand();
@@ -180,7 +174,6 @@ public class InventoryController {
     }
     
     @LogRequest
-    @ApiOperation(value = "Get Low Stock Product Count For Inventory")
     @GetMapping(value = "/getlowStockProductCountForInventory")
     public ResponseEntity<Integer> getlowStockProductCountForInventory(){
         Integer response = inventoryService.getlowStockProductCountForInventory();
@@ -188,7 +181,6 @@ public class InventoryController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Low Stock Product List For Inventory")
     @GetMapping(value = "/getlowStockProductListForInventory")
     public ResponseEntity<List<InventoryListModel>> getlowStockProductListForInventory(){
         List<Product> response = inventoryService.getlowStockProductListForInventory();
@@ -206,7 +198,6 @@ public class InventoryController {
     }
     
     @LogRequest
-    @ApiOperation(value = "Get Top Selling Product List For Inventory")
     @GetMapping(value = "/getTopSellingProductListForInventory")
     public ResponseEntity<List<InventoryListModel>> getTopSellingProductListForInventory(){
         List<InventoryListModel> response = inventoryService.getTopSellingProductListForInventory();
@@ -214,7 +205,6 @@ public class InventoryController {
     }
     
     @LogRequest
-    @ApiOperation(value = "Get Out Of Stock Product From Inventory ")
     @GetMapping(value = "/getOutOfStockCountOfInventory")
     public ResponseEntity<Integer> getOutOfStockCountOfInventory(){
         Integer response = inventoryService.getOutOfStockCountOfInventory();
@@ -222,7 +212,6 @@ public class InventoryController {
     }
     
     @LogRequest
-    @ApiOperation(value = "Get Total Inventory Value ")
     @GetMapping(value = "/getTotalInventoryValue")
     public ResponseEntity<BigDecimal> getTotalInventoryValue(){
         BigDecimal response = inventoryService.getTotalInventoryValue();
@@ -230,7 +219,6 @@ public class InventoryController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Total Revenue Of Inventory ")
     @GetMapping(value = "/getTotalRevenueOfInventory")
     public ResponseEntity<InventoryRevenueModel> getTotalRevenueForInventory(){
         InventoryRevenueModel response= inventoryHistoryService.getTotalRevenueForInventory();
@@ -238,7 +226,6 @@ public class InventoryController {
     }
     
     @LogRequest
-    @ApiOperation(value = "Get Total Quantity Sold For Inventory ")
     @GetMapping(value = "/getTotalQuantitySoldForInventory")
     public ResponseEntity<InventoryRevenueModel> getTotalQuantitySoldForInventory(){
         InventoryRevenueModel response= inventoryHistoryService.getTotalQuantitySoldForInventory();
@@ -246,7 +233,6 @@ public class InventoryController {
     }
     
     @LogRequest
-    @ApiOperation(value = "Get Top Selling Products For Inventory ")
     @GetMapping(value = "/getTopSellingProductsForInventory")
     public ResponseEntity<TopInventoryRevenueModel> getTopSellingProductsForInventory(){
         TopInventoryRevenueModel response= inventoryHistoryService.getTopSellingProductsForInventory();
@@ -254,7 +240,6 @@ public class InventoryController {
     }
     
     @LogRequest
-    @ApiOperation(value = "Get Top Profit Generating Products For Inventory ")
     @GetMapping(value = "/getTopProfitGeneratingProductsForInventory")
     public ResponseEntity<TopInventoryRevenueModel> getTopProfitGeneratingProductsForInventory(){
         TopInventoryRevenueModel response= inventoryHistoryService.getTopProfitGeneratingProductsForInventory();
@@ -262,7 +247,6 @@ public class InventoryController {
     }
     
     @LogRequest
-    @ApiOperation(value = "Get Low Selling Products For Inventory ")
     @GetMapping(value = "/getLowSellingProductsForInventory")
     public ResponseEntity<TopInventoryRevenueModel> getLowSellingProductsForInventory(){
         TopInventoryRevenueModel response= inventoryHistoryService.getLowSellingProductsForInventory();
@@ -270,7 +254,6 @@ public class InventoryController {
     }
     
     @LogRequest
-    @ApiOperation("Get Inventory History By ProductId And SupplierId")
     @GetMapping(value = "/getInventoryHistoryByProductIdAndSupplierId")
     public ResponseEntity<List<InventoryHistoryResponseModel>> getInventoryHistoryByProductIdAndSupplierId(Integer productId,Integer supplierId){
         List<InventoryHistory> resultList=inventoryHistoryService.getHistory(productId,supplierId);

@@ -120,7 +120,6 @@ public class DashboardController {
 
 @LogExecutionTime
 @LogRequest
-@ApiOperation(value = "Get Profit and Loss Report")
 @Cacheable(cacheNames = "dashboardProfitLoss", key = "T(com.simpleaccounts.helper.DashboardCacheKeyUtil).profitLossKey(#monthNo)")
 @GetMapping(value = "/profitandloss")
 public ResponseEntity<Object> getDashboardProfitAndLoss(@RequestParam(required = false) Integer monthNo) {

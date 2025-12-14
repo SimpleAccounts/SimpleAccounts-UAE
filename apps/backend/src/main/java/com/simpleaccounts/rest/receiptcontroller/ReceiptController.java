@@ -30,7 +30,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -92,7 +92,6 @@ public class ReceiptController {
 	private final TransactionExplanationRepository transactionExplanationRepository;
 
 	@LogRequest
-	@ApiOperation(value = "Get receipt List")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getList(ReceiptRequestFilterModel filterModel, HttpServletRequest request) {
 		try {
@@ -131,7 +130,6 @@ public class ReceiptController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Receipt By ID")
 	@DeleteMapping(value = "/delete")
 		public ResponseEntity<Object> deleteReceipt(@RequestParam(value = "id") Integer id) {
 		try {
@@ -154,7 +152,6 @@ public class ReceiptController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Receipt in Bulk")
 	@DeleteMapping(value = "/deletes")
 		public ResponseEntity<Object> deleteReceipts(@RequestBody DeleteModel ids) {
 		try {
@@ -172,7 +169,6 @@ public class ReceiptController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Receipt By ID")
 	@GetMapping(value = "/getReceiptById")
 	public ResponseEntity<ReceiptRequestModel> getReceiptById(@RequestParam(value = "id") Integer id) {
 		try {
@@ -190,7 +186,6 @@ public class ReceiptController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Add New Receipt")
 	@PostMapping(value = "/save")
 		public ResponseEntity<Object> save(@ModelAttribute ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
 		try {
@@ -335,7 +330,6 @@ public class ReceiptController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update Receipt")
 	@PostMapping(value = "/update")
 	public ResponseEntity<Object> update(@ModelAttribute ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
 		try {
@@ -372,7 +366,6 @@ public class ReceiptController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Next Receipt No")
 	@GetMapping(value = "/getNextReceiptNo")
 	public ResponseEntity<Integer> getNextReceiptNo(@RequestParam("id") Integer invoiceId) {
 		try {

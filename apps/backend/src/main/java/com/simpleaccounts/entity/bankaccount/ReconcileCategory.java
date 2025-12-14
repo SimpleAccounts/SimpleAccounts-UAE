@@ -1,7 +1,7 @@
 package com.simpleaccounts.entity.bankaccount;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

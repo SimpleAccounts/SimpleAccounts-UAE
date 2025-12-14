@@ -13,7 +13,7 @@ import com.simpleaccounts.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,6 @@ public class RoleModuleController {
     private final UserService userService;
 
     @LogRequest
-    @ApiOperation(value = "Get Module List")
     @GetMapping(value = "/getListForAllRoles")
     public ResponseEntity<Object> getModuleList(){
 
@@ -54,7 +53,6 @@ public class RoleModuleController {
     }
 
 	@LogRequest
-	@ApiOperation(value = "Get Module List")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<Object> getModuleList(HttpServletRequest request){
         jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -68,7 +66,6 @@ public class RoleModuleController {
       }
 
     @LogRequest
-    @ApiOperation(value = "Get Module List By RoleCode")
     @GetMapping(value = "/getModuleListByRoleCode")
     public ResponseEntity<Object> getModuleListByRoleCode(@RequestParam int roleCode){
         List<ModuleResponseModel> response  = new ArrayList<>();
@@ -82,7 +79,6 @@ public class RoleModuleController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Add New User Role")
     @PostMapping(value = "/save")
     public ResponseEntity<String> save(@RequestBody RoleRequestModel roleRequestModel,
                                        HttpServletRequest request) {
@@ -122,7 +118,6 @@ public class RoleModuleController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update Role")
     @PostMapping(value = "/update")
 	public ResponseEntity<String> update(@RequestBody RoleRequestModel roleRequestModel,
 	                                         HttpServletRequest request) {
@@ -170,7 +165,6 @@ public class RoleModuleController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Delete Role")
     @DeleteMapping(value = "/delete")
     public ResponseEntity<String> deleteUser(@RequestParam(value = "roleCode") Integer roleCode) {
         Role role = roleService.findByPK(roleCode);
@@ -191,7 +185,6 @@ public class RoleModuleController {
         }
     }
     @LogRequest
-    @ApiOperation(value = "Get Users Count For Role")
     @GetMapping(value = "/getUsersCountForRole")
     public ResponseEntity<Integer> getUsersCountForRole(@RequestParam int roleId){
 

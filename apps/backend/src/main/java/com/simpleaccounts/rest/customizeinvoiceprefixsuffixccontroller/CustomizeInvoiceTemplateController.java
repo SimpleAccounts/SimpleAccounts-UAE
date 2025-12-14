@@ -25,7 +25,6 @@ public class CustomizeInvoiceTemplateController {
     private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
     @LogRequest
-    @ApiOperation(value = "Get Invoice Prefix List")
     @GetMapping(value = "/getListForInvoicePrefixAndSuffix")
     public ResponseEntity<Object> getListForInvoicePrefix(@RequestParam(value = "invoiceType") Integer invoiceType){
 
@@ -43,7 +42,6 @@ public class CustomizeInvoiceTemplateController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Next invoice No")
     @GetMapping(value = "/getNextInvoiceNo")
     public ResponseEntity<String> getNextInvoiceNo(@RequestParam(value = "invoiceType") Integer invoiceType) {
         try {

@@ -55,7 +55,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -123,7 +123,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	private final JournalLineItemRepository journalLineItemRepository;
 
 	@LogRequest
-	@ApiOperation(value = "Get Invoice List")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getInvoiceList(InvoiceRequestFilterModel filterModel,
 			HttpServletRequest request) {
@@ -186,7 +185,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Invoice By ID")
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id) {
 		Invoice invoice = invoiceService.findByPK(id);
@@ -210,7 +208,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Invoices in Bulk")
 	@DeleteMapping(value = "/deletes")
 	public ResponseEntity<Object> delete(@RequestBody DeleteModel ids) {
 		try {
@@ -229,7 +226,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Invoice By ID")
 	@GetMapping(value = "/getInvoiceById")
 	public ResponseEntity<InvoiceRequestModel> getInvoiceById(@RequestParam(value = "id") Integer id) {
 		Invoice invoice = invoiceService.findByPK(id);
@@ -242,7 +238,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Add New Invoice")
 	@PostMapping(value = "/save")
 	public ResponseEntity<Object> save(@ModelAttribute InvoiceRequestModel requestModel, HttpServletRequest request) {
 		try {
@@ -299,7 +294,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update Invoice")
 	@PostMapping(value = "/update")
 	public ResponseEntity<Object> update(@ModelAttribute InvoiceRequestModel requestModel, HttpServletRequest request) {
 		try {
@@ -341,7 +335,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Next invoice No")
 	@GetMapping(value = "/getNextInvoiceNo")
 	public ResponseEntity<Integer> getNextInvoiceNo(@RequestParam(value = "invoiceType") Integer invoiceType) {
 		try {
@@ -358,7 +351,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 	@LogRequest
 	@Cacheable(cacheNames = "dashboardInvoiceChart", key = "#monthCount")
-	@ApiOperation(value = "Get chart data")
 	@GetMapping(value = "/getChartData")
 	public ResponseEntity<Object> getChartData(@RequestParam int monthCount) {
 		try {
@@ -383,7 +375,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	 * @return
 	 */
 	@LogRequest
-	@ApiOperation(value = "Send Invoice")
 	@PostMapping(value = "/send")
 	public ResponseEntity<Object> update(@RequestParam("id") Integer id, HttpServletRequest request) {
 		try {
@@ -410,7 +401,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	 * @return Response entity
 	 */
 	@LogRequest
-	@ApiOperation(value = "Get Overdue Amount Details")
 	@GetMapping(value = "/getOverDueAmountDetails")
 	public ResponseEntity<OverDueAmountDetailsModel> getOverDueAmountDetails(HttpServletRequest request) {
 		try {
@@ -444,7 +434,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	}
 	
 	@LogRequest
-	@ApiOperation(value = "Get Total Earnings Amount Details")
 	@GetMapping(value = "/getTotalEarningsAmountDetails")
 	public ResponseEntity<EarningDetailsModel> getTotalEarningsAmountDetails(HttpServletRequest request) {
 		try {
@@ -463,7 +452,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	 * @return list InvoiceDueAmountModel datalist
 	 */
 	@LogRequest
-	@ApiOperation(value = "Get Overdue Amount Details")
 	@GetMapping(value = "/getDueInvoices")
 	public ResponseEntity<List<InvoiceDueAmountModel>> getDueInvoiceForContact(@RequestParam("id") Integer contactId,
 			@RequestParam("type") ContactTypeEnum type,HttpServletRequest request) {
@@ -486,7 +474,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	 * @return List<InvoiceDueAmountModel> InvoiceDueAmountModel data list
 	 */
 	@LogRequest
-	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
 	@GetMapping(value = "/getSuggestionExplainedForVend")
 	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionExplainedForVend(
 			@RequestParam("amount") BigDecimal amount, @RequestParam("currency") Integer currency, @RequestParam("id") Integer contactId,
@@ -511,7 +498,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	 * @return List<InvoiceDueAmountModel> InvoiceDueAmountModel data list
 	 */
 	@LogRequest
-	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
 	@GetMapping(value = "/getSuggestionExplainedForCust")
 	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionExplainedForCust(
 			@RequestParam("amount") BigDecimal amount, @RequestParam("currency") Integer currency,@RequestParam("id") Integer contactId,
@@ -535,7 +521,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	 * @return List<InvoiceDueAmountModel> InvoiceDueAmountModel data list
 	 */
 	@LogRequest
-	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
 	@GetMapping(value = "/getSuggestionInvoicesFotCust")
 	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionUnpaidInvoicesForCustomer(
 			@RequestParam("amount") BigDecimal amount, @RequestParam("currency") Integer currency, @RequestParam("id") Integer contactId,
@@ -560,7 +545,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	 * @return List<InvoiceDueAmountModel> InvoiceDueAmountModel data list
 	 */
 	@LogRequest
-	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
 	@GetMapping(value = "/getSuggestionInvoicesFotVend")
 	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionUnpaidInvoicesForVendor(
 			@RequestParam("amount") BigDecimal amount, @RequestParam("id") Integer contactId, @RequestParam("currency") Integer currency,
@@ -585,7 +569,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	 * @return List<InvoiceDueAmountModel> InvoiceDueAmountModel data list
 	 */
 	@LogRequest
-	@ApiOperation(value = "Get Suggestion ofUnpaid Expenses for transaction explination")
 	@GetMapping(value = "/getSuggestionExpenses")
 	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionExpenses(
 			@RequestParam("amount") BigDecimal amount,
@@ -602,7 +585,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Invoices Count For receipt")
 	@GetMapping(value = "/getCustomerInvoicesCountForDelete")
 	public ResponseEntity<Integer> getCustomerInvoicesCountForDelete(@RequestParam int invoiceId){
 		try {
@@ -616,7 +598,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Invoices Count For receipt")
 	@GetMapping(value = "/getSupplierInvoicesCountForDelete")
 	public ResponseEntity<Integer> getSupInvoicesCountForDelete(@RequestParam int invoiceId){
 		try {
@@ -692,7 +673,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
      * @return 
      */
     @LogRequest
-    @ApiOperation(value = "GetAmountDetails ", notes = "Getting Amount Details")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping(value = "/getAmountDetails")
     public ResponseEntity<List<VatAmountDto>> getAmountDetails(AmountDetailRequestModel amountDetailRequestModel, HttpServletRequest request) {

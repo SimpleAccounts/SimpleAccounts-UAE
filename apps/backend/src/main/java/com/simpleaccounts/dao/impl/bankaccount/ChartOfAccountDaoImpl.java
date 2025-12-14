@@ -4,7 +4,7 @@ import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.bankaccount.ChartOfAccountDao;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import java.util.List;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.TypedQuery;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 

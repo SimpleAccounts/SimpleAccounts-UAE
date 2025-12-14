@@ -25,7 +25,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -85,7 +85,6 @@ public class PaymentController {
 	private final TransactionExplanationRepository transactionExplanationRepository;
 
 	@LogRequest
-	@ApiOperation(value = "Get All Payments")
 	@GetMapping(value = "/getlist")
 	public ResponseEntity<PaginationResponseModel> getPaymentList(PaymentRequestFilterModel filterModel,
 			HttpServletRequest request) {
@@ -131,7 +130,6 @@ public class PaymentController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Payment By Id")
 	@GetMapping(value = "/getpaymentbyid")
 	public ResponseEntity<PaymentPersistModel> getPaymentById(@RequestParam("paymentId") Integer paymentId) {
 		try {
@@ -148,7 +146,6 @@ public class PaymentController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Save a Payment")
 	@PostMapping(value = "/save")
 	public ResponseEntity<String> save(@ModelAttribute PaymentPersistModel paymentModel, HttpServletRequest request) {
 		try {
@@ -281,7 +278,6 @@ public class PaymentController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update Payment")
 	@PostMapping(value = "/update")
 	public ResponseEntity<String> update(@ModelAttribute PaymentPersistModel paymentModel, HttpServletRequest request) {
 		try {
@@ -309,7 +305,6 @@ public class PaymentController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Payment")
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<String> deletePayment(@RequestParam(value = "id") Integer id) {
 		Payment payment = paymentService.findByPK(id);
@@ -328,7 +323,6 @@ public class PaymentController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Multiple Payments")
 	@DeleteMapping(value = "/deletes")
 	public ResponseEntity<String> deleteExpenses(@RequestBody DeleteModel expenseIds) {
 		try {

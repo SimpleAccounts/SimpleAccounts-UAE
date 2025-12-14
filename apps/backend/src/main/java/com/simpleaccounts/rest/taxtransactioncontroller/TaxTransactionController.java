@@ -39,7 +39,6 @@ public class TaxTransactionController{
 	private final  TaxTranscationRestHelper taxTranscationRestHelper;
 
 	@LogRequest
-	@ApiOperation(value = "Get Open Tax Transaction List")
 	@GetMapping(value = "/getOpenTaxTransaction")
 	public ResponseEntity<List<TaxTransaction>> getOpenTaxTranscation(PaginationModel paginationModel) {
 		List<TaxTransaction> taxTransactionList = taxTransactionService.getOpenTaxTransactionList();
@@ -58,7 +57,6 @@ public class TaxTransactionController{
 
 	
 	@LogRequest
-	@ApiOperation(value = "Get Close Tax Transcation List")
 	@GetMapping(value = "/getCloseTaxTranscation")
 	public ResponseEntity<List<TaxTransaction>> getCloseTaxTranscation() {
 		List<TaxTransaction> taxTransactionList = taxTransactionService.getClosedTaxTransactionList();
@@ -72,7 +70,6 @@ public class TaxTransactionController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Save Tax Transaction")
 	@PostMapping(value = "/saveTaxTransaction")
 	public ResponseEntity<String> save(@RequestParam(value = "id") Integer id) {
 		TaxTransaction taxTransaction = taxTransactionService.findByPK(id);

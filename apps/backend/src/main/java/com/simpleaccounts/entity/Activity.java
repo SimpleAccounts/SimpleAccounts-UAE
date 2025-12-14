@@ -2,7 +2,7 @@ package com.simpleaccounts.entity;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 

@@ -8,7 +8,7 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.service.ChartOfAccountCategoryService;
 import com.simpleaccounts.service.TransactionCategoryService;
 import java.util.List;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.TypedQuery;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 

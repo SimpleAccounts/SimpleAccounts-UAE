@@ -4,7 +4,7 @@ import com.simpleaccounts.constant.ExcellDelimiterEnum;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 

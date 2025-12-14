@@ -33,8 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.mail.internet.MimeMultipart;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.mail.internet.MimeMultipart;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +95,6 @@ public class UserController{
 	private final PasswordHistoryRepository passwordHistoryRepository;
 
 	@LogRequest
-	@ApiOperation(value = "Get User List")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getUserList(UserRequestFilterModel filterModel) {
 		try {
@@ -133,7 +132,6 @@ public class UserController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete User")
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<String> deleteUser(@RequestParam(value = "id") Integer id) {
 		User user = userService.findByPK(id);
@@ -156,7 +154,6 @@ public class UserController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete User In Bulks")
 	@DeleteMapping(value = "/deletes")
 	public ResponseEntity<String> deleteUsers(@RequestBody DeleteModel ids) {
 		try {
@@ -171,7 +168,6 @@ public class UserController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Save New User")
 	@PostMapping(value = "/save")
 	public ResponseEntity<String> save(@ModelAttribute UserModel selectedUser, HttpServletRequest request) {
 			try {
@@ -256,7 +252,6 @@ public class UserController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update User")
 	@PostMapping(value = "/update")
 	public ResponseEntity<String> update(@ModelAttribute UserModel userModel, HttpServletRequest request) {
 		User user = null;
@@ -287,7 +282,6 @@ public class UserController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get UserBy Id")
 	@GetMapping(value = "/getById")
 	public ResponseEntity<UserModel> getById(@RequestParam(value = "id") Integer id) {
 		try {
@@ -303,7 +297,6 @@ public class UserController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Role List")
 	@GetMapping(value = "/getrole")
 	public ResponseEntity<List<Role>> comoleteRole() {
 		List<Role> roles = roleService.getRoles();
@@ -316,7 +309,6 @@ public class UserController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Current User")
 	@GetMapping(value = "/current")
 	public ResponseEntity<User> currentUser(HttpServletRequest request) {
 		try {
@@ -378,7 +370,6 @@ public class UserController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get test mail")
 	@GetMapping(value = "/getTestmail")
 	public ResponseEntity<String> getTestmail(@RequestParam(value = "id") Integer id) {
 		try {
@@ -396,7 +387,6 @@ public class UserController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Reset new password")
 	@PostMapping(value = "/resetNewpassword")
 	public ResponseEntity<Object> resetNewPassword(@ModelAttribute UserModel userModel, HttpServletRequest request) {
 
@@ -446,7 +436,6 @@ public class UserController{
 	 * @return
 	 */
 	@LogRequest
-	@ApiOperation(value = "User Invite Password Email")
 	@GetMapping(value = "/getUserInviteEmail")
 	public ResponseEntity<Object> getUserInviteEmail(@RequestParam(value = "userId") Integer userId ,@RequestParam(value = "loginUrl")  String loginUrl , HttpServletRequest request){
 		try {

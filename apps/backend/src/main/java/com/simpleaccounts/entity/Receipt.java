@@ -4,7 +4,7 @@ import com.simpleaccounts.constant.PayMode;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 

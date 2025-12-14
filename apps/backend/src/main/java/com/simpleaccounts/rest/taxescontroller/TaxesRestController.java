@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,6 @@ public class TaxesRestController {
     private final TaxesRestHelper taxesRestHelper;
 
     @LogRequest
-    @ApiOperation(value = "Get Vat Transation list")
     @GetMapping(value = "/getVatTransationList")
     public ResponseEntity<PaginationResponseModel> getVatTransactionList (TaxesFilterModel filterModel, HttpServletRequest request) {
         try {

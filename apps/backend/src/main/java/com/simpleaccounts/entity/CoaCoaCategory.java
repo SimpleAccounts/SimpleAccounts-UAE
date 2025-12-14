@@ -4,7 +4,7 @@ import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;

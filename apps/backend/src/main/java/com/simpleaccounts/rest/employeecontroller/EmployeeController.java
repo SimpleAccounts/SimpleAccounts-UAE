@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.time.LocalDateTime;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +74,6 @@ public class EmployeeController {
 	private final EmployeeBankDetailsRepository employeeBankDetailsRepository;
 
 	@LogRequest
-	@ApiOperation(value = "Get Employee List")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getEmployeeList(EmployeeRequestFilterModel filterModel){
 
@@ -99,7 +98,6 @@ public class EmployeeController {
 
 	}
 	@LogRequest
-	@ApiOperation(value = "Get Employee List")
 	@GetMapping(value = "/getListForActiveEmployees")
 	public ResponseEntity<PaginationResponseModel> getEmployeeList1(EmployeeRequestFilterModel filterModel){
 
@@ -125,7 +123,6 @@ public class EmployeeController {
 	}
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Employee By ID")
 	@DeleteMapping(value = "/delete")
 		public ResponseEntity<Object> deleteEmployee(@RequestParam(value = "id") Integer id) {
 			try {
@@ -166,7 +163,6 @@ public class EmployeeController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Employee in Bulk")
 	@DeleteMapping(value = "/deletes")
 	public ResponseEntity<Void> deleteProducts(@RequestBody DeleteModel ids) {
 		try {
@@ -179,7 +175,6 @@ public class EmployeeController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Employee By ID")
 	@GetMapping(value = "/getById")
 	public ResponseEntity<EmployeeListModel> getEmployeeById(@RequestParam(value = "id") Integer id) {
 		try {
@@ -218,7 +213,6 @@ public class EmployeeController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Save new Employee")
 	@PostMapping(value = "/save")
 	public ResponseEntity<Object> save(@ModelAttribute EmployeePersistModel employeePersistModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -262,7 +256,6 @@ public class EmployeeController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update Employee")
 	@PostMapping(value = "/update")
 	public ResponseEntity<Object> update(@ModelAttribute EmployeePersistModel employeePersistModel, HttpServletRequest request) {
 		try {
@@ -311,13 +304,11 @@ public class EmployeeController {
 	 * @return
 	 */
 	@LogRequest
-	@ApiOperation(value = "get Employees DropdownModel ",response = SalaryRole.class)
 	@GetMapping(value = "/getEmployeesNotInUserForDropdown")
 	public ResponseEntity<List<DropdownObjectModel>> getEmployeesNotInUserForDropdown() {
 		return new ResponseEntity<>(employeeService.getEmployeesNotInUserForDropdown(), HttpStatus.OK);
 	}
 	@LogRequest
-	@ApiOperation(value = "getAllActiveCompleteEmployee", notes = "Getting getAllEmployeeforpayroll ")
 	@ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
 	@GetMapping(value = "/getAllActiveCompleteEmployee")
 	public ResponseEntity<List<PayrollEmployeeDto>> getAllActiveCompleteEmployee(@RequestParam(value = "payrollDate") String payrollDate) {
@@ -347,7 +338,6 @@ public class EmployeeController {
 	 * @return
 	 */
 	@LogRequest
-	@ApiOperation(value = "Employee Invite Email")
 	@GetMapping(value = "/getEmployeeInviteEmail")
 	public ResponseEntity<Object> getEmployeeInviteEmail(@RequestParam(value = "id") Integer employeeId , HttpServletRequest request){
 		try {

@@ -20,7 +20,7 @@ import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +61,6 @@ public class ProductRestController {
 	private final UserService userService;
 
 	@LogRequest
-	@ApiOperation(value = "Get Product List")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getProductList(ProductRequestFilterModel filterModel, HttpServletRequest request) {
 		try {
@@ -111,7 +110,6 @@ public class ProductRestController {
 	
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Product By ID")
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<Object> deleteProduct(@RequestParam(value = "id") Integer id) {
 		try {
@@ -132,7 +130,6 @@ public class ProductRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Product in Bulk")
 	@DeleteMapping(value = "/deletes")
 	public ResponseEntity<Object> deleteProducts(@RequestBody DeleteModel ids) {
 		try {
@@ -151,7 +148,6 @@ public class ProductRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Product By ID")
 	@GetMapping(value = "/getProductById")
 	public ResponseEntity<ProductRequestModel> getProductById(@RequestParam(value = "id") Integer id) {
 		try {
@@ -165,7 +161,6 @@ public class ProductRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Add New Product")
 	@PostMapping(value = "/save")
 	public ResponseEntity<Object> save(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
 		try {
@@ -200,7 +195,6 @@ public class ProductRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update Product")
 	@PostMapping(value = "/update")
 	public ResponseEntity<Object> update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
 		try {
@@ -230,7 +224,6 @@ public class ProductRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Invoices Count For Product")
 	@GetMapping(value = "/getInvoicesCountForProduct")
 	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int productId){
 		Integer response = invoiceLineItemService.getTotalInvoiceCountByProductId(productId);
@@ -238,7 +231,6 @@ public class ProductRestController {
 	}
 	
 	@LogRequest
-	@ApiOperation(value = "Get Transaction category For Product")
 	@GetMapping(value = "/getTransactionCategoryListForSalesProduct")
 	public ResponseEntity<Object> getTransactionCategoryListForProduct(){
 		List<SingleLevelDropDownModel> response  = new ArrayList<>();
@@ -251,7 +243,6 @@ public class ProductRestController {
 	}
 	
 	@LogRequest
-	@ApiOperation(value = "Get Transaction category For Product")
 	@GetMapping(value = "/getTransactionCategoryListForPurchaseProduct")
 	public ResponseEntity<Object> getTransactionCategoryListForPurchaseProduct(){
 		List<SingleLevelDropDownModel> response  = new ArrayList<>();
@@ -263,7 +254,6 @@ public class ProductRestController {
 	}
 	
 	@LogRequest
-	@ApiOperation(value = "Get Transaction category For Inventory")
 	@GetMapping(value = "/getTransactionCategoryListForInventory")
 	public ResponseEntity<Object> getTransactionCategoryListForInventory(){
 		List<DropdownModel> response  = new ArrayList<>();

@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +49,6 @@ public class EmployeeDesignationController {
     private final EmployeeRepository employeeRepository;
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Save a Employee Designation",response = EmployeeDesignation.class)
     @PostMapping(value = "/saveEmployeeDesignation")
     public ResponseEntity<String> saveEmployeeDesignation(@ModelAttribute EmployeeDesignationPersistModel employeeDesignationPersistModel, HttpServletRequest request)
     {
@@ -70,7 +69,6 @@ public class EmployeeDesignationController {
     
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update EmployeeDesignation", response = EmployeeDesignation.class)
     @PostMapping(value = "/updateEmployeeDesignation")
     public ResponseEntity<String> updateEmployeeDesignation(@ModelAttribute EmployeeDesignationPersistModel employeeDesignationPersistModel, HttpServletRequest request) {
 	        try {
@@ -96,7 +94,6 @@ public class EmployeeDesignationController {
      */
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Delete EmployeeDesignation By ID")
     @DeleteMapping(value = "/deleteEmployeeDesignation")
     public ResponseEntity<String> deleteEmployeeDesignation(@RequestParam(value = "id") Integer id) {
         try {
@@ -127,7 +124,6 @@ public class EmployeeDesignationController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get EmployeeDesignation By ID")
     @GetMapping(value = "/getEmployeeDesignationById")
     public ResponseEntity<EmployeeDesignationPersistModel> getEmployeeDesignationById(@RequestParam(value = "id") Integer id) {
         try {
@@ -144,7 +140,6 @@ public class EmployeeDesignationController {
     }
 
     @LogRequest
-    @ApiOperation(value = "get Employee Designation DropdownModel ",response = EmployeeDesignation.class)
     @GetMapping(value = "/getEmployeeDesignationForDropdown")
     public ResponseEntity<List<DropdownObjectModel>> getEmployeeDesignationForDropdown()
     {
@@ -152,7 +147,6 @@ public class EmployeeDesignationController {
     }
 
     @LogRequest
-    @ApiOperation(value = "get Parent Employee Designation DropdownModel ",response = EmployeeDesignation.class)
     @GetMapping(value = "/getParentEmployeeDesignationForDropdown")
     public ResponseEntity<List<DropdownObjectModel>> getParentEmployeeDesignationForDropdown()
     {
@@ -160,7 +154,6 @@ public class EmployeeDesignationController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Employee Designation list", response = List.class)
     @GetMapping(value = "/EmployeeDesignationList")
     public ResponseEntity<PaginationResponseModel> getEmployeeDesignationList(PayRollFilterModel filterModel,
 	                                                                         HttpServletRequest request) {

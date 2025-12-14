@@ -4,7 +4,7 @@ import com.simpleaccounts.entity.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

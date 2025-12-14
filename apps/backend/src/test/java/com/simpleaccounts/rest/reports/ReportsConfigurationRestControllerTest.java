@@ -13,7 +13,7 @@ import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.UserService;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

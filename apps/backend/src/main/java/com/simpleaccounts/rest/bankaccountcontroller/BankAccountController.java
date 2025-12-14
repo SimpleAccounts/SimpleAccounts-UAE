@@ -28,7 +28,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -97,7 +97,6 @@ public class BankAccountController{
 	private final JournalLineItemRepository journalLineItemRepository;
 
 	@LogRequest
-	@ApiOperation(value = "Get All Bank Accounts", response = List.class)
 	@GetMapping(value = "/list")
 		public ResponseEntity<PaginationResponseModel> getBankAccountList(BankAccountFilterModel filterModel,
 																		  HttpServletRequest request) {
@@ -135,7 +134,6 @@ public class BankAccountController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Add New Bank Account", response = BankAccount.class)
 	@PostMapping("/save")
 	public ResponseEntity<Object> saveBankAccount(@RequestBody BankModel bankModel, HttpServletRequest request) {
 		SimpleAccountsMessage message = null;
@@ -261,7 +259,6 @@ public class BankAccountController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update Bank Account", response = BankAccount.class)
 	@PutMapping("/{bankAccountId}")
 	public ResponseEntity<Object> updateBankAccount(@PathVariable("bankAccountId") Integer bankAccountId, BankModel bankModel,HttpServletRequest request) {
 		try {
@@ -391,7 +388,6 @@ public class BankAccountController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get All Bank Account Types")
 	@GetMapping(value = "/getaccounttype")
 	public ResponseEntity<List<BankAccountType> > getBankAccontType() {
 		List<BankAccountType> bankAccountTypes = bankAccountTypeService.getBankAccountTypeList();
@@ -403,7 +399,6 @@ public class BankAccountController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get All Bank Account Status")
 	@GetMapping(value = "/getbankaccountstatus")
 	public ResponseEntity<List<BankAccountStatus>> getBankAccountStatus() {
 		List<BankAccountStatus> bankAccountStatuses = bankAccountStatusService.getBankAccountStatuses();
@@ -435,7 +430,6 @@ public class BankAccountController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete the Bank Account", response = BankAccount.class)
 	@DeleteMapping(value = "/{bankAccountId}")
 	public ResponseEntity<Object> deleteBankAccount(@PathVariable("bankAccountId") Integer bankAccountId,
 			HttpServletRequest request) {
@@ -570,7 +564,6 @@ public class BankAccountController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Bank Account by Bank Account ID", response = BankAccount.class)
 	@GetMapping(value = "/getbyid")
 		public ResponseEntity<BankModel> getById(@RequestParam("id") Integer id) {
 			try {
@@ -594,7 +587,6 @@ public class BankAccountController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Bank Accounts")
 	@DeleteMapping(value = "/multiple")
 	public ResponseEntity<Object> deleteBankAccounts(@RequestBody DeleteModel ids) {
 		try {
@@ -667,7 +659,6 @@ public class BankAccountController{
 	
 	
 	@LogRequest
-	@ApiOperation(value = "Get All Bank List", response = List.class)
 	@GetMapping(value = "/getBankNameList")
 		public ResponseEntity<Object> getBankNameList(HttpServletRequest request) {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);

@@ -52,7 +52,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -252,7 +252,6 @@ public class TransactionRestController {
 		this.creditNoteRepository = creditNoteRepository;
 	}
 	@LogRequest
-	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
 	public ResponseEntity<PaginationResponseModel> getAllTransaction(TransactionRequestFilterModel filterModel) {
 
@@ -308,7 +307,6 @@ public class TransactionRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Add New Transaction", response = Transaction.class)
 	@PostMapping(value = "/save")
 	public ResponseEntity<String> saveTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
 												  HttpServletRequest request) throws IOException {
@@ -1002,7 +1000,6 @@ public class TransactionRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "update Transaction", response = Transaction.class)
 	@PostMapping(value = "/update")
 	public ResponseEntity<String> updateTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
 													HttpServletRequest request) throws IOException {
@@ -2186,7 +2183,6 @@ public class TransactionRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Transaction By ID")
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<String> deleteTransaction(@RequestParam(value = "id") Integer id) {
 		Transaction trnx = transactionService.findByPK(id);
@@ -2200,7 +2196,6 @@ public class TransactionRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Transaction in Bulk")
 	@DeleteMapping(value = "/deletes")
 	public ResponseEntity<String> deleteTransactions(@RequestBody DeleteModel ids) {
 		try {
@@ -2214,7 +2209,6 @@ public class TransactionRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update Transaction Status")
 	@PostMapping(value = "/changestatus")
 	public ResponseEntity<String> updateTransactions(@RequestBody DeleteModel ids) {
 		try {
@@ -2227,7 +2221,6 @@ public class TransactionRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Transaction By ID")
 	@GetMapping(value = "/getById")
 	public ResponseEntity<List<TransactionPresistModel>> getInvoiceById(@RequestParam(value = "id") Integer id) {
 		Transaction trnx = transactionService.findByPK(id);
@@ -2261,7 +2254,6 @@ public class TransactionRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Explained Transaction Count")
 	@GetMapping(value = "/getExplainedTransactionCount")
 	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int bankAccountId){
 		Integer response = transactionService.getTotalExplainedTransactionCountByBankAccountId(bankAccountId);
@@ -2270,7 +2262,6 @@ public class TransactionRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Un explain Transaction", response = Transaction.class)
 	@PostMapping(value = "/unexplain")
 		public ResponseEntity<Object> unExplainTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
 												  HttpServletRequest request) {
@@ -2855,7 +2846,6 @@ public class TransactionRestController {
 		return new ResponseEntity<>("Transaction Un Explained Successfully", HttpStatus.OK);
 	}
 	@LogRequest
-	@ApiOperation(value = "Get first created transaction date")
 	@GetMapping(value = "/getTransactionDate")
 		public ResponseEntity<Object> getFirstTransactionDate() {
 		Transaction transaction = transactionRepository.getFirstRecord();

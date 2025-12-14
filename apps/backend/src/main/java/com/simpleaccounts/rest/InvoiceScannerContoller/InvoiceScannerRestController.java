@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -76,7 +76,6 @@ public class InvoiceScannerRestController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Add New Invoice")
     @PostMapping(value = "/invoiceScan/save")
     public ResponseEntity<Object> save(@RequestBody String jsonString , HttpServletRequest request) {
         try {
@@ -139,7 +138,6 @@ public class InvoiceScannerRestController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Add New Expense")
     @PostMapping(value = "/expenseScan/save")
     public ResponseEntity<Object> saveExpense(HttpServletRequest request) {
 

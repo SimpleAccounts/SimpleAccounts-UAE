@@ -17,7 +17,6 @@ public class ConfigController{
 	private final Environment env;
 
 	@LogRequest
-	@ApiOperation(value = "Get Release Number")
 	@GetMapping(value = "/getreleasenumber")
 	public SimpleAccountsConfigModel getReleaseNumber()
 	{
