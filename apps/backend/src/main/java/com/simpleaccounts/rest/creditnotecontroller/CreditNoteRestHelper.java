@@ -284,6 +284,21 @@ public class CreditNoteRestHelper {
         return lineItems;
     }
 
+	    private static final class CreditNoteCategoryTotals {
+	        private final BigDecimal totalAmount;
+	        private final BigDecimal inventoryAssetValue;
+	        private final boolean eligibleForInventoryJournalEntry;
+
+	        private CreditNoteCategoryTotals(
+	                BigDecimal totalAmount,
+	                BigDecimal inventoryAssetValue,
+	                boolean eligibleForInventoryJournalEntry) {
+	            this.totalAmount = totalAmount;
+	            this.inventoryAssetValue = inventoryAssetValue;
+	            this.eligibleForInventoryJournalEntry = eligibleForInventoryJournalEntry;
+	        }
+	    }
+
 	    public Journal creditNotePosting(PostingRequestModel postingRequestModel, Integer userId) {
 	        List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
@@ -336,91 +351,22 @@ public class CreditNoteRestHelper {
         boolean isEligibleForInventoryJournalEntry = false;
         for (Integer categoryId : tnxCatIdCnLnItemMap.keySet()) {
             List<CreditNoteLineItem> sortedItemList = tnxCatIdCnLnItemMap.get(categoryId);
-            BigDecimal totalAmount = BigDecimal.ZERO;
-            BigDecimal lineItemDiscount = BigDecimal.ZERO;
-            BigDecimal inventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
-            for (CreditNoteLineItem sortedLineItem : sortedItemList) {
-                BigDecimal amntWithoutVat = sortedLineItem.getUnitPrice()
-                        .multiply(BigDecimal.valueOf(sortedLineItem.getQuantity()));
-                if (sortedLineItem.getDiscountType().equals(DiscountType.FIXED) && sortedLineItem.getDiscount()!=null){
-                    amntWithoutVat = amntWithoutVat.subtract(sortedLineItem.getDiscount());
-                    totalAmount = totalAmount.add(amntWithoutVat);
-                    lineItemDiscount = lineItemDiscount.add(sortedLineItem.getDiscount());
-                }
-                else if (sortedLineItem.getDiscountType().equals(DiscountType.PERCENTAGE) && sortedLineItem.getDiscount()!=null){
-
-                    BigDecimal discountedAmount = amntWithoutVat.multiply(sortedLineItem.getDiscount()).divide(BigDecimal.valueOf(100));
-                    amntWithoutVat = amntWithoutVat.subtract(discountedAmount);
-                    totalAmount = totalAmount.add(amntWithoutVat);
-                    lineItemDiscount = lineItemDiscount.add(discountedAmount);
-                }
-                else {
-                    totalAmount = totalAmount.add(amntWithoutVat);
-                }
-                if (Boolean.TRUE.equals(sortedLineItem.getProduct().getIsInventoryEnabled()) && isCreditNote){
-                    List<Inventory> inventoryList = inventoryService.getInventoryByProductId(sortedLineItem.getProduct().
-                            getProductID());
-                    if (sortedLineItem.getProduct().getAvgPurchaseCost()!=null) {
-                        inventoryAssetValuePerTransactionCategory = inventoryAssetValuePerTransactionCategory.add(BigDecimal.
-                                valueOf(sortedLineItem.getQuantity()).multiply(BigDecimal.valueOf
-                                        (sortedLineItem.getProduct().getAvgPurchaseCost().floatValue())));
-                    }
-                    else {
-                        for (Inventory inventory : inventoryList) {
-                            inventoryAssetValuePerTransactionCategory = inventoryAssetValuePerTransactionCategory.add(BigDecimal.
-                                    valueOf(sortedLineItem.getQuantity()).multiply(BigDecimal.valueOf
-                                            (inventory.getUnitCost())));
-
-                        }
-                    }
-                    isEligibleForInventoryJournalEntry = true;
-                }
-            }if(isCreditNote && isEligibleForInventoryJournalEntry) {
-                sumOfInventoryAssetValuePerTransactionCategory = sumOfInventoryAssetValuePerTransactionCategory.add
-                        (inventoryAssetValuePerTransactionCategory);
+            CreditNoteCategoryTotals totals = computeCategoryTotals(creditNote, isCreditNote, sortedItemList);
+            if (isCreditNote && totals.eligibleForInventoryJournalEntry) {
+                isEligibleForInventoryJournalEntry = true;
+                sumOfInventoryAssetValuePerTransactionCategory =
+                        sumOfInventoryAssetValuePerTransactionCategory.add(totals.inventoryAssetValue);
             }
-            //This list contains ILI which consist of excise Tax included in product price group by Transaction Category Id
-            List<CreditNoteLineItem> inclusiveExciseLineItems = sortedItemList.stream().
-                    filter(creditNoteLineItem -> creditNoteLineItem.
-                            getProduct().getExciseStatus()!=null && creditNoteLineItem.
-                            getProduct().getExciseStatus().equals(Boolean.TRUE)).filter(creditNoteLineItem ->
-                            creditNoteLineItem.getCreditNote().getTaxType()!=null && creditNoteLineItem.getCreditNote().getTaxType().equals(Boolean.TRUE)).filter
-                            (creditNoteLineItem -> creditNoteLineItem.getTransactionCategory()
-                                    .getTransactionCategoryId().equals(categoryId)).collect(Collectors.toList());
-            if (!inclusiveExciseLineItems.isEmpty()){
-                for (CreditNoteLineItem invoiceLineItem:inclusiveExciseLineItems){
-                    totalAmount = totalAmount.subtract(invoiceLineItem.getExciseAmount());
-                }
-            }
-            //To handle inclusive vat journal entry
-            if (creditNote.getTaxType().equals(Boolean.TRUE)){
-                List<CreditNoteLineItem> inclusiveVatLineItems = sortedItemList.stream().filter(invoiceLineItem ->
-                                invoiceLineItem.getCreditNote().getTaxType()!=null && invoiceLineItem.getCreditNote().getTaxType().equals(Boolean.TRUE)).
-                        filter(invoiceLineItem -> invoiceLineItem.getTransactionCategory()
-                                .getTransactionCategoryId().equals(categoryId)).collect(Collectors.toList());
-                if (!inclusiveVatLineItems.isEmpty()){
-                    for (CreditNoteLineItem invoiceLineItem:inclusiveVatLineItems){
-                        totalAmount = totalAmount.subtract(invoiceLineItem.getVatAmount());
-                    }
-                }
-            }
-            JournalLineItem journalLineItem = new JournalLineItem();
-            journalLineItem.setTransactionCategory(tnxCatMap.get(categoryId));
-            totalAmount = totalAmount.add(lineItemDiscount);
-            if (isCreditNote){
-                journalLineItem.setReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
-                journalLineItem.setDebitAmount(totalAmount.multiply(creditNote.getExchangeRate()));
-            }
-            else{
-                journalLineItem.setCreditAmount(totalAmount.multiply(creditNote.getExchangeRate()));
-                journalLineItem.setReferenceType(PostingReferenceTypeEnum.DEBIT_NOTE);
-            }
-            journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
-            journalLineItem.setExchangeRate(creditNote.getExchangeRate());
-            journalLineItem.setCreatedBy(userId);
-            journalLineItem.setJournal(journal);
+            JournalLineItem journalLineItem =
+                    buildCategoryJournalLineItem(
+                            postingRequestModel,
+                            userId,
+                            creditNote,
+                            isCreditNote,
+                            journal,
+                            tnxCatMap.get(categoryId),
+                            totals.totalAmount);
             journalLineItemList.add(journalLineItem);
-
         }
         if (isCreditNote && isEligibleForInventoryJournalEntry) {
             JournalLineItem journalLineItem = new JournalLineItem();
@@ -550,6 +496,103 @@ public class CreditNoteRestHelper {
             creditNote.setStatus(CommonStatusEnum.OPEN.getValue());
         creditNoteRepository.save(creditNote);
         return journal;
+    }
+
+    private CreditNoteCategoryTotals computeCategoryTotals(
+            CreditNote creditNote, boolean isCreditNote, List<CreditNoteLineItem> sortedItemList) {
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        BigDecimal lineItemDiscount = BigDecimal.ZERO;
+        BigDecimal inventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
+        boolean eligibleForInventoryJournalEntry = false;
+
+        for (CreditNoteLineItem sortedLineItem : sortedItemList) {
+            BigDecimal amountWithoutVat =
+                    sortedLineItem.getUnitPrice().multiply(BigDecimal.valueOf(sortedLineItem.getQuantity()));
+
+            if (sortedLineItem.getDiscountType().equals(DiscountType.FIXED) && sortedLineItem.getDiscount() != null) {
+                amountWithoutVat = amountWithoutVat.subtract(sortedLineItem.getDiscount());
+                lineItemDiscount = lineItemDiscount.add(sortedLineItem.getDiscount());
+            } else if (sortedLineItem.getDiscountType().equals(DiscountType.PERCENTAGE)
+                    && sortedLineItem.getDiscount() != null) {
+                BigDecimal discountedAmount =
+                        amountWithoutVat
+                                .multiply(sortedLineItem.getDiscount())
+                                .divide(BigDecimal.valueOf(100));
+                amountWithoutVat = amountWithoutVat.subtract(discountedAmount);
+                lineItemDiscount = lineItemDiscount.add(discountedAmount);
+            }
+
+            totalAmount = totalAmount.add(amountWithoutVat);
+
+            if (isCreditNote && Boolean.TRUE.equals(sortedLineItem.getProduct().getIsInventoryEnabled())) {
+                inventoryAssetValuePerTransactionCategory =
+                        inventoryAssetValuePerTransactionCategory.add(
+                                computeInventoryAssetValue(sortedLineItem));
+                eligibleForInventoryJournalEntry = true;
+            }
+        }
+
+        // Excise is included in product price when TaxType = TRUE (inclusive).
+        for (CreditNoteLineItem lineItem : sortedItemList) {
+            if (lineItem.getProduct().getExciseStatus() != null
+                    && Boolean.TRUE.equals(lineItem.getProduct().getExciseStatus())
+                    && lineItem.getCreditNote().getTaxType() != null
+                    && Boolean.TRUE.equals(lineItem.getCreditNote().getTaxType())) {
+                totalAmount = totalAmount.subtract(lineItem.getExciseAmount());
+            }
+        }
+
+        // VAT is included in product price when TaxType = TRUE (inclusive).
+        if (Boolean.TRUE.equals(creditNote.getTaxType())) {
+            for (CreditNoteLineItem lineItem : sortedItemList) {
+                if (lineItem.getCreditNote().getTaxType() != null
+                        && Boolean.TRUE.equals(lineItem.getCreditNote().getTaxType())) {
+                    totalAmount = totalAmount.subtract(lineItem.getVatAmount());
+                }
+            }
+        }
+
+        totalAmount = totalAmount.add(lineItemDiscount);
+        return new CreditNoteCategoryTotals(totalAmount, inventoryAssetValuePerTransactionCategory, eligibleForInventoryJournalEntry);
+    }
+
+    private BigDecimal computeInventoryAssetValue(CreditNoteLineItem lineItem) {
+        if (lineItem.getProduct().getAvgPurchaseCost() != null) {
+            return BigDecimal.valueOf(lineItem.getQuantity())
+                    .multiply(BigDecimal.valueOf(lineItem.getProduct().getAvgPurchaseCost().floatValue()));
+        }
+        BigDecimal inventoryAssetValue = BigDecimal.ZERO;
+        List<Inventory> inventoryList = inventoryService.getInventoryByProductId(lineItem.getProduct().getProductID());
+        for (Inventory inventory : inventoryList) {
+            inventoryAssetValue =
+                    inventoryAssetValue.add(
+                            BigDecimal.valueOf(lineItem.getQuantity()).multiply(BigDecimal.valueOf(inventory.getUnitCost())));
+        }
+        return inventoryAssetValue;
+    }
+
+    private JournalLineItem buildCategoryJournalLineItem(
+            PostingRequestModel postingRequestModel,
+            Integer userId,
+            CreditNote creditNote,
+            boolean isCreditNote,
+            Journal journal,
+            TransactionCategory transactionCategory,
+            BigDecimal totalAmount) {
+        JournalLineItem journalLineItem = new JournalLineItem();
+        journalLineItem.setTransactionCategory(transactionCategory);
+        if (isCreditNote) {
+            journalLineItem.setReferenceType(PostingReferenceTypeEnum.CREDIT_NOTE);
+            journalLineItem.setDebitAmount(totalAmount.multiply(creditNote.getExchangeRate()));
+        } else {
+            journalLineItem.setReferenceType(PostingReferenceTypeEnum.DEBIT_NOTE);
+            journalLineItem.setCreditAmount(totalAmount.multiply(creditNote.getExchangeRate()));
+        }
+        journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
+        journalLineItem.setExchangeRate(creditNote.getExchangeRate());
+        journalLineItem.setCreatedBy(userId);
+        journalLineItem.setJournal(journal);
+        return journalLineItem;
     }
 
     private void creditNote(boolean isCustomerInvoice, List<CreditNoteLineItem> creditNoteLineItemList,
@@ -1272,7 +1315,7 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         TransactionCategory transactionCategory = transactionCategoryService.findByPK(requestModel.getDepositTo());
         if (transactionCategory != null)
             param.put("transactionCategory", transactionCategory);
-        param.put("deleteFlag", false);
+        param.put(JSON_KEY_DELETE_FLAG, false);
         List<BankAccount> bankAccountList = bankAccountService.findByAttributes(param);
         BankAccount bankAccount = bankAccountList != null && !bankAccountList.isEmpty() ? bankAccountList.get(0)
                 : null;
@@ -1493,7 +1536,7 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
             TransactionCategory transactionCategory = transactionCategoryService.findByPK(requestModel.getDepositeTo());
             if (transactionCategory != null)
                 param.put("transactionCategory", transactionCategory);
-            param.put("deleteFlag", false);
+            param.put(JSON_KEY_DELETE_FLAG, false);
             List<BankAccount> bankAccountList = bankAccountService.findByAttributes(param);
             BankAccount bankAccount = bankAccountList != null && !bankAccountList.isEmpty() ? bankAccountList.get(0)
                     : null;
