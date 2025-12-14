@@ -98,8 +98,9 @@ describe('env utilities', () => {
       const expectedMode = process.env.NODE_ENV || 'test';
       expect(env.mode).toBe(expectedMode);
       
-      // isProduction should be false when not in production
-      expect(env.isProduction).toBe(expectedMode !== 'production');
+      // isProduction should be false when not in production mode
+      // isProduction checks if mode === 'production', so it should be false for 'test'
+      expect(env.isProduction).toBe(expectedMode === 'production');
       
       // baseUrl should default to '/'
       expect(env.baseUrl).toBe('/');
