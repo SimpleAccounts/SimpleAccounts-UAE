@@ -6,6 +6,17 @@ import path from 'path';
 export default defineConfig({
   plugins: [
     {
+      name: 'inject-vite-env',
+      transformIndexHtml(html) {
+        // Inject import.meta.env into window for env.js utility
+        // This allows accessing Vite env vars without Jest parse errors
+        return html.replace(
+          '<head>',
+          `<head><script>if(typeof window!=='undefined'){window.__VITE_ENV__=import.meta.env;}</script>`
+        );
+      },
+    },
+    {
       name: 'treat-js-files-as-jsx',
       enforce: 'pre', // Run before other plugins
       async transform(code, id) {
