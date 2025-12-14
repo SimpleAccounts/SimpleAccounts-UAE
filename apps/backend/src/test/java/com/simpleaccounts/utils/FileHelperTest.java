@@ -39,7 +39,7 @@ class FileHelperTest {
 
     @BeforeEach
     void setUp() {
-        fileHelper = new FileHelper("resources/migrationuploadedfiles/");
+        fileHelper = new FileHelper();
     }
 
     @AfterEach

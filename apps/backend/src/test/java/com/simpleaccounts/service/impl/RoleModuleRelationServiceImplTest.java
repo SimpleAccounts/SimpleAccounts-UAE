@@ -175,11 +175,11 @@ class RoleModuleRelationServiceImplTest {
             .thenReturn(relations);
 
         // Act
-        List<RoleModuleRelation> result = roleModuleRelationService.getRoleModuleRelationByRoleCode(roleCode);
+	        List<RoleModuleRelation> result = roleModuleRelationService.getRoleModuleRelationByRoleCode(roleCode);
 
-        // Assert
-        assertThat(result).allMatch(r -> r.getRole().getRoleCode().equals(roleCode));
-    }
+	        // Assert
+	        assertThat(result).hasSize(relations.size()).allMatch(r -> r.getRole().getRoleCode().equals(roleCode));
+	    }
 
     @Test
     @DisplayName("Should handle large number of module relations")
