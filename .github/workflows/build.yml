@@ -32,10 +32,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Use Node.js 18.x
+      - name: Use Node.js 20.x
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 18.x
+          node-version: 20.x
 
       - name: Cache dependencies
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
@@ -138,10 +138,10 @@ jobs:
             apps/frontend/node_modules
           key: ${{ runner.os }}-frontend-${{ hashFiles('package-lock.json', 'apps/frontend/package-lock.json') }}
 
-      - name: Use Node.js 18.x
+      - name: Use Node.js 20.x
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 18.x
+          node-version: 20.x
 
       - name: Install root dependencies
         run: npm ci --legacy-peer-deps
@@ -186,10 +186,10 @@ jobs:
             apps/frontend/node_modules
           key: ${{ runner.os }}-frontend-${{ hashFiles('package-lock.json', 'apps/frontend/package-lock.json') }}
 
-      - name: Use Node.js 18.x
+      - name: Use Node.js 20.x
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 18.x
+          node-version: 20.x
 
       - name: Install root dependencies
         run: npm ci --legacy-peer-deps
@@ -198,17 +198,17 @@ jobs:
         working-directory: apps/frontend
         run: npm ci --legacy-peer-deps
 
-      - name: Build frontend
+      - name: Build frontend with Vite
         working-directory: apps/frontend
-        run: CI=false npm run build
+        run: npm run build:vite
         env:
-          NODE_OPTIONS: --openssl-legacy-provider
+          NODE_OPTIONS: --max-old-space-size=4096
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: frontend-build
-          path: apps/frontend/build
+          path: apps/frontend/dist
           retention-days: 7
 
   build-backend:
@@ -255,10 +255,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-      - name: Use Node.js 18.x
+      - name: Use Node.js 20.x
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 18.x
+          node-version: 20.x
 
       - name: Install dependencies
         run: |

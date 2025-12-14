@@ -65,9 +65,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - node: '18.x'
-            experimental: false
           - node: '20.x'
+            experimental: false
+          - node: '18.x'
             experimental: true
 
     steps:
