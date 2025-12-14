@@ -199,7 +199,7 @@ jobs:
           API_URL="$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=${PROJECT_KEY}"
           DASHBOARD_URL="$SONAR_HOST_URL/dashboard?id=${PROJECT_KEY}"
 
-          RESPONSE=$(curl -sS -u "$SONAR_TOKEN:" "$API_URL")
+          RESPONSE=$(curl -sS -u "$SONAR_TOKEN:" "$API_URL") #gitleaks:allow
           STATUS=$(echo "$RESPONSE" | jq -r '.projectStatus.status // empty')
 
           echo "Quality Gate Status: $STATUS"

@@ -8,8 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.entity.Inventory;
 import com.simpleaccounts.entity.Product;
-import com.simpleaccounts.entity.Role;
-import com.simpleaccounts.entity.User;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.productcontroller.InventoryListModel;
 import com.simpleaccounts.rest.productcontroller.ProductRestHelper;
@@ -81,17 +79,10 @@ class InventoryControllerTest {
         @DisplayName("Should return inventory list successfully")
         void getInventoryListReturnsInventories() throws Exception {
             // Arrange
-            User user = new User();
-            Role role = new Role();
-            role.setRoleCode(1);
-            user.setRole(role);
-
             List<Inventory> inventories = createInventoryList(5);
             PaginationResponseModel response = new PaginationResponseModel(5, inventories);
             InventoryListModel listModel = new InventoryListModel();
 
-            when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
-            when(userService.findByPK(1)).thenReturn(user);
             when(inventoryService.getInventoryList(any(), any())).thenReturn(response);
             when(productRestHelper.getInventoryListModel(any(Inventory.class))).thenReturn(listModel);
 
@@ -104,14 +95,7 @@ class InventoryControllerTest {
         @DisplayName("Should return not found when no inventory exists")
         void getInventoryListReturnsNotFound() throws Exception {
             // Arrange
-            User user = new User();
-            Role role = new Role();
-            role.setRoleCode(1);
-            user.setRole(role);
-
             when(inventoryService.getInventoryList(any(), any())).thenReturn(null);
-            when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
-            when(userService.findByPK(1)).thenReturn(user);
 
             // Act & Assert
             mockMvc.perform(get("/rest/inventory/getInventoryProductList"))

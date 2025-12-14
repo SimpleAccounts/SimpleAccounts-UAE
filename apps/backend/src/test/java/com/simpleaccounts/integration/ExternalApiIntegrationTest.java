@@ -299,7 +299,7 @@ class ExternalApiIntegrationTest {
         void shouldHandleAuthenticationFailure() {
             // Given
             apiServer.stubUnauthorizedResponse("/exchange-rate");
-            apiClient.setApiKey("invalid-key");
+            apiClient.setApiKey("bad");
 
             // When
             ExchangeRateResponse response = apiClient.getExchangeRate("USD", "AED");
