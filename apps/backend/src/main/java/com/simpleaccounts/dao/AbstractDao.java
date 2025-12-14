@@ -109,6 +109,10 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 	private List<Predicate> buildPredicates(List<DbFilter> dbFilters, Root<ENTITY> root, CriteriaBuilder cb) {
 		List<Predicate> predicates = new ArrayList<>();
 		for (DbFilter dbFilter : dbFilters) {
+			// Skip ORDER BY filters - they are handled in buildOrders
+			if (isOrderBy(dbFilter)) {
+				continue;
+			}
 			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
 				String condition = dbFilter.getCondition().trim().toLowerCase();
 				// Handle typical JPQL conditions containing parameter placeholders
