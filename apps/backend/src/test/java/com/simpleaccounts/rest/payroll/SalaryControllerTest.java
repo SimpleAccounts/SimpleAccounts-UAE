@@ -13,11 +13,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.simpleaccounts.entity.Company;
 import com.simpleaccounts.entity.Employee;
-import com.simpleaccounts.entity.Salary;
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.model.SalaryPersistModel;
+import com.simpleaccounts.rest.payroll.model.MoneyPaidToUserModel;
 import com.simpleaccounts.rest.payroll.service.Impl.SalaryServiceImpl;
-import com.simpleaccounts.rest.payroll.service.SalaryService;
+import com.simpleaccounts.rest.payroll.service.IncompleteEmployeeProfileModel;
 import com.simpleaccounts.rest.payroll.service.SalaryTemplateService;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.EmploymentService;
@@ -62,9 +62,6 @@ class SalaryControllerTest {
     private SalaryTemplateService salaryTemplateService;
 
     @Mock
-    private SalaryService salaryService;
-
-    @Mock
     private SalaryServiceImpl salaryServiceImpl;
 
     @InjectMocks
@@ -72,21 +69,19 @@ class SalaryControllerTest {
 
     private User testUser;
     private Employee testEmployee;
-    private Salary testSalary;
 
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(salaryController).build();
         testUser = createTestUser(1, "Admin", "User", "admin@test.com");
         testEmployee = createTestEmployee(1, "John", "Doe", "john@test.com");
-        testSalary = createTestSalary(1, testEmployee, BigDecimal.valueOf(5000));
     }
 
     @Test
     @DisplayName("Should return salary per month list")
     void getSalaryPerMonthListReturnsList() throws Exception {
         SalaryListPerMonthResponseModel response = new SalaryListPerMonthResponseModel();
-        response.setSalaryPerMonthListModels(Collections.emptyList());
+        response.setResultSalaryPerMonthList(Collections.emptyList());
 
         when(salaryRestHelper.getSalaryPerMonthList(any())).thenReturn(response);
 
@@ -100,7 +95,7 @@ class SalaryControllerTest {
     @DisplayName("Should return incomplete employee list")
     void getIncompleteEmployeeListReturnsList() throws Exception {
         IncompleteEmployeeResponseModel response = new IncompleteEmployeeResponseModel();
-        response.setIncompleteEmployees(Collections.emptyList());
+        response.setIncompleteEmployeeList(Collections.emptyList());
 
         when(salaryRestHelper.getIncompleteEmployeeList()).thenReturn(response);
 
@@ -123,9 +118,9 @@ class SalaryControllerTest {
     @Test
     @DisplayName("Should get salaries by employee ID")
     void getSalariesByEmployeeIdReturnsSalaries() throws Exception {
-        SalarySlipModel salarySlipModel = createSalarySlipModel(1, "John Doe", BigDecimal.valueOf(5000));
+        SalarySlipModel salarySlipModel = createSalarySlipModel("John Doe", BigDecimal.valueOf(5000));
 
-        when(salaryService.getSalaryByEmployeeId(1, "01-01-2024")).thenReturn(salarySlipModel);
+        when(salaryServiceImpl.getSalaryByEmployeeId(1, "01-01-2024")).thenReturn(salarySlipModel);
 
         mockMvc.perform(get("/rest/Salary/getSalariesByEmployeeId")
                 .param("id", "1")
@@ -137,9 +132,9 @@ class SalaryControllerTest {
     @Test
     @DisplayName("Should get salaries and send email when sendMail is true")
     void getSalariesByEmployeeIdSendsEmail() throws Exception {
-        SalarySlipModel salarySlipModel = createSalarySlipModel(1, "John Doe", BigDecimal.valueOf(5000));
+        SalarySlipModel salarySlipModel = createSalarySlipModel("John Doe", BigDecimal.valueOf(5000));
 
-        when(salaryService.getSalaryByEmployeeId(1, "01-01-2024")).thenReturn(salarySlipModel);
+        when(salaryServiceImpl.getSalaryByEmployeeId(1, "01-01-2024")).thenReturn(salarySlipModel);
         doNothing().when(salaryRestHelper).sendPayslipEmail(any(), anyInt(), anyString(), anyString(), any());
 
         mockMvc.perform(get("/rest/Salary/getSalariesByEmployeeId")
@@ -156,7 +151,7 @@ class SalaryControllerTest {
     @Test
     @DisplayName("Should get employee transaction categories")
     void getEmployeeTcReturnsList() throws Exception {
-        List<Object> transactions = Arrays.asList("Transaction1", "Transaction2");
+        List<MoneyPaidToUserModel> transactions = Arrays.asList(new MoneyPaidToUserModel(), new MoneyPaidToUserModel());
 
         when(salaryServiceImpl.getEmployeeTransactions(1, "01-01-2024", "31-01-2024")).thenReturn(transactions);
 
@@ -183,7 +178,7 @@ class SalaryControllerTest {
     @DisplayName("Should get salary slip list")
     void getSalarySlipListReturnsList() throws Exception {
         SalarySlipListtResponseModel response = new SalarySlipListtResponseModel();
-        response.setSalarySlipList(Collections.emptyList());
+        response.setResultSalarySlipList(Collections.emptyList());
 
         when(salaryRestHelper.getSalarySlipList(1)).thenReturn(response);
 
@@ -210,7 +205,7 @@ class SalaryControllerTest {
     @DisplayName("Should handle empty salary per month list")
     void getSalaryPerMonthListHandlesEmpty() throws Exception {
         SalaryListPerMonthResponseModel response = new SalaryListPerMonthResponseModel();
-        response.setSalaryPerMonthListModels(Collections.emptyList());
+        response.setResultSalaryPerMonthList(Collections.emptyList());
 
         when(salaryRestHelper.getSalaryPerMonthList(any())).thenReturn(response);
 
@@ -222,11 +217,11 @@ class SalaryControllerTest {
     @DisplayName("Should handle incomplete employee list with multiple employees")
     void getIncompleteEmployeeListHandlesMultiple() throws Exception {
         IncompleteEmployeeResponseModel response = new IncompleteEmployeeResponseModel();
-        List<IncompleteEmployeeModel> employees = Arrays.asList(
-            createIncompleteEmployeeModel(1, "John", "Missing bank details"),
-            createIncompleteEmployeeModel(2, "Jane", "Missing salary components")
+        List<IncompleteEmployeeProfileModel> employees = Arrays.asList(
+            createIncompleteEmployeeModel(1, "John"),
+            createIncompleteEmployeeModel(2, "Jane")
         );
-        response.setIncompleteEmployees(employees);
+        response.setIncompleteEmployeeList(employees);
 
         when(salaryRestHelper.getIncompleteEmployeeList()).thenReturn(response);
 
@@ -262,31 +257,19 @@ class SalaryControllerTest {
         return employee;
     }
 
-    private Salary createTestSalary(Integer id, Employee employee, BigDecimal amount) {
-        Salary salary = new Salary();
-        salary.setId(id);
-        salary.setEmployee(employee);
-        salary.setNetSalary(amount);
-        salary.setGrossSalary(amount);
-        salary.setDeleteFlag(false);
-        return salary;
-    }
-
-    private SalarySlipModel createSalarySlipModel(Integer id, String employeeName, BigDecimal netSalary) {
+    private SalarySlipModel createSalarySlipModel(String employeeName, BigDecimal netPay) {
         SalarySlipModel model = new SalarySlipModel();
-        model.setEmployeeId(id);
-        model.setEmployeeName(employeeName);
-        model.setNetSalary(netSalary);
-        model.setGrossSalary(netSalary.add(BigDecimal.valueOf(500)));
-        model.setTotalDeductions(BigDecimal.valueOf(500));
+        model.setEmployeename(employeeName);
+        model.setNetPay(netPay);
+        model.setEarnings(netPay.add(BigDecimal.valueOf(500)));
+        model.setDeductions(BigDecimal.valueOf(500));
         return model;
     }
 
-    private IncompleteEmployeeModel createIncompleteEmployeeModel(Integer id, String name, String reason) {
-        IncompleteEmployeeModel model = new IncompleteEmployeeModel();
-        model.setEmployeeId(id);
+    private IncompleteEmployeeProfileModel createIncompleteEmployeeModel(Integer id, String name) {
+        IncompleteEmployeeProfileModel model = new IncompleteEmployeeProfileModel();
+        model.setEmployeeId(String.valueOf(id));
         model.setEmployeeName(name);
-        model.setReason(reason);
         return model;
     }
 }

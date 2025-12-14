@@ -1,14 +1,17 @@
 package com.simpleaccounts.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.EmployeeTransactionCategoryDao;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeTransactionCategoryRelation;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
+import com.simpleaccounts.exceptions.ServiceException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,6 +38,9 @@ class EmployeeTransactionCategoryServiceImplTest {
     @Mock
     private EmployeeTransactionCategoryDao employeeTransactionCategoryDao;
 
+    @Mock
+    private ActivityDao activityDao;
+
     @InjectMocks
     private EmployeeTransactionCategoryServiceImpl employeeTransactionCategoryService;
 
@@ -44,7 +50,7 @@ class EmployeeTransactionCategoryServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(employeeTransactionCategoryService, "dao", employeeTransactionCategoryDao);
+        ReflectionTestUtils.setField(employeeTransactionCategoryService, "activityDao", activityDao);
         testEmployee = createTestEmployee(1, "John", "Doe");
         testTransactionCategory = createTestTransactionCategory(1, "Salary Expense");
         testRelation = createTestRelation(1, testEmployee, testTransactionCategory);
@@ -79,13 +85,12 @@ class EmployeeTransactionCategoryServiceImplTest {
 
     @Test
     @DisplayName("Should return null when relation not found")
-    void findByPKReturnsNullWhenNotFound() {
+    void findByPKThrowsExceptionWhenNotFound() {
         Integer id = 999;
         when(employeeTransactionCategoryDao.findByPK(id)).thenReturn(null);
 
-        EmployeeTransactionCategoryRelation result = employeeTransactionCategoryService.findByPK(id);
-
-        assertThat(result).isNull();
+        assertThatThrownBy(() -> employeeTransactionCategoryService.findByPK(id))
+            .isInstanceOf(ServiceException.class);
         verify(employeeTransactionCategoryDao).findByPK(id);
     }
 
@@ -109,7 +114,7 @@ class EmployeeTransactionCategoryServiceImplTest {
         EmployeeTransactionCategoryRelation result = employeeTransactionCategoryService.update(testRelation);
 
         assertThat(result).isNotNull();
-        assertThat(result.getTransactionCategory().getCategoryName()).isEqualTo("Bonus Expense");
+        assertThat(result.getTransactionCategory().getTransactionCategoryName()).isEqualTo("Bonus Expense");
         verify(employeeTransactionCategoryDao).update(testRelation);
     }
 
@@ -176,7 +181,7 @@ class EmployeeTransactionCategoryServiceImplTest {
         List<EmployeeTransactionCategoryRelation> result = employeeTransactionCategoryService.findByAttributes(attributes);
 
         assertThat(result).isNotNull().hasSize(2);
-        assertThat(result).extracting(r -> r.getTransactionCategory().getCategoryName())
+        assertThat(result).extracting(r -> r.getTransactionCategory().getTransactionCategoryName())
             .containsExactlyInAnyOrder("Salary Expense", "Bonus Expense");
     }
 
@@ -193,7 +198,7 @@ class EmployeeTransactionCategoryServiceImplTest {
     private TransactionCategory createTestTransactionCategory(Integer id, String categoryName) {
         TransactionCategory category = new TransactionCategory();
         category.setTransactionCategoryId(id);
-        category.setCategoryName(categoryName);
+        category.setTransactionCategoryName(categoryName);
         category.setDeleteFlag(false);
         return category;
     }

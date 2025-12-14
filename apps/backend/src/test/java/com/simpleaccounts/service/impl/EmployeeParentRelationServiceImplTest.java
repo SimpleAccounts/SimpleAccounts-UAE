@@ -1,12 +1,15 @@
 package com.simpleaccounts.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.EmployeeParentRelationDao;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeParentRelation;
+import com.simpleaccounts.exceptions.ServiceException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,6 +36,9 @@ class EmployeeParentRelationServiceImplTest {
     @Mock
     private EmployeeParentRelationDao employeeParentRelationDao;
 
+    @Mock
+    private ActivityDao activityDao;
+
     @InjectMocks
     private EmployeeParentRelationServiceImpl employeeParentRelationService;
 
@@ -42,7 +48,7 @@ class EmployeeParentRelationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(employeeParentRelationService, "dao", employeeParentRelationDao);
+        ReflectionTestUtils.setField(employeeParentRelationService, "activityDao", activityDao);
         parentEmployee = createTestEmployee(1, "Manager", "One", "manager@test.com");
         childEmployee = createTestEmployee(2, "Developer", "Two", "developer@test.com");
         testRelation = createTestRelation(1, parentEmployee, childEmployee);
@@ -84,13 +90,12 @@ class EmployeeParentRelationServiceImplTest {
 
     @Test
     @DisplayName("Should return null when relation not found")
-    void findByPKReturnsNullWhenNotFound() {
+    void findByPKThrowsExceptionWhenNotFound() {
         Integer id = 999;
         when(employeeParentRelationDao.findByPK(id)).thenReturn(null);
 
-        EmployeeParentRelation result = employeeParentRelationService.findByPK(id);
-
-        assertThat(result).isNull();
+        assertThatThrownBy(() -> employeeParentRelationService.findByPK(id))
+            .isInstanceOf(ServiceException.class);
         verify(employeeParentRelationDao).findByPK(id);
     }
 

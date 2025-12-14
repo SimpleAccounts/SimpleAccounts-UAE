@@ -1,13 +1,16 @@
 package com.simpleaccounts.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.TransactionExpensesPayrollDao;
 import com.simpleaccounts.entity.Expense;
 import com.simpleaccounts.entity.TransactionExpensesPayroll;
 import com.simpleaccounts.entity.bankaccount.Transaction;
+import com.simpleaccounts.exceptions.ServiceException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -32,6 +35,9 @@ class TransactionExpensesPayrollServiceImplTest {
     @Mock
     private TransactionExpensesPayrollDao transactionExpensesPayrollDao;
 
+    @Mock
+    private ActivityDao activityDao;
+
     @InjectMocks
     private TransactionExpensesPayrollServiceImpl transactionExpensesPayrollService;
 
@@ -41,7 +47,7 @@ class TransactionExpensesPayrollServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(transactionExpensesPayrollService, "dao", transactionExpensesPayrollDao);
+        ReflectionTestUtils.setField(transactionExpensesPayrollService, "activityDao", activityDao);
         testExpense = createTestExpense(1, "Salary Expense", BigDecimal.valueOf(5000));
         testTransaction = createTestTransaction(1, "TXN001", BigDecimal.valueOf(5000));
         testTransactionExpenses = createTestTransactionExpensesPayroll(1, testExpense, testTransaction);
@@ -131,13 +137,12 @@ class TransactionExpensesPayrollServiceImplTest {
 
     @Test
     @DisplayName("Should return null when not found by primary key")
-    void findByPKReturnsNullWhenNotFound() {
+    void findByPKThrowsExceptionWhenNotFound() {
         Integer id = 999;
         when(transactionExpensesPayrollDao.findByPK(id)).thenReturn(null);
 
-        TransactionExpensesPayroll result = transactionExpensesPayrollService.findByPK(id);
-
-        assertThat(result).isNull();
+        assertThatThrownBy(() -> transactionExpensesPayrollService.findByPK(id))
+            .isInstanceOf(ServiceException.class);
         verify(transactionExpensesPayrollDao).findByPK(id);
     }
 
@@ -219,15 +224,17 @@ class TransactionExpensesPayrollServiceImplTest {
     private Transaction createTestTransaction(Integer id, String transactionRef, BigDecimal amount) {
         Transaction transaction = new Transaction();
         transaction.setTransactionId(id);
-        transaction.setReferenceNumber(transactionRef);
-        transaction.setAmount(amount);
+        transaction.setReferenceStr(transactionRef);
+        transaction.setTransactionAmount(amount);
         transaction.setDeleteFlag(false);
         return transaction;
     }
 
     private TransactionExpensesPayroll createTestTransactionExpensesPayroll(Integer id, Expense expense, Transaction transaction) {
         TransactionExpensesPayroll trExpenses = new TransactionExpensesPayroll();
-        trExpenses.setId(id);
+        if (id != null) {
+            trExpenses.setId(id);
+        }
         trExpenses.setExpense(expense);
         trExpenses.setTransaction(transaction);
         return trExpenses;

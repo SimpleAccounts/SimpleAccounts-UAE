@@ -1,12 +1,15 @@
 package com.simpleaccounts.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.EmployeeBankDetailsDao;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeBankDetails;
+import com.simpleaccounts.exceptions.ServiceException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,6 +35,9 @@ class EmployeeBankDetailsServiceImplTest {
     @Mock
     private EmployeeBankDetailsDao employeeBankDetailsDao;
 
+    @Mock
+    private ActivityDao activityDao;
+
     @InjectMocks
     private EmployeeBankDetailsServiceImpl employeeBankDetailsService;
 
@@ -40,7 +46,7 @@ class EmployeeBankDetailsServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(employeeBankDetailsService, "dao", employeeBankDetailsDao);
+        ReflectionTestUtils.setField(employeeBankDetailsService, "activityDao", activityDao);
         testEmployee = createTestEmployee(1, "John", "Doe");
         testBankDetails = createTestBankDetails(1, "John Doe", "1234567890", "AE070331234567890123456");
         testBankDetails.setEmployee(testEmployee);
@@ -63,13 +69,12 @@ class EmployeeBankDetailsServiceImplTest {
 
     @Test
     @DisplayName("Should return null when bank details not found")
-    void findByPKReturnsNullWhenNotFound() {
+    void findByPKThrowsExceptionWhenNotFound() {
         Integer id = 999;
         when(employeeBankDetailsDao.findByPK(id)).thenReturn(null);
 
-        EmployeeBankDetails result = employeeBankDetailsService.findByPK(id);
-
-        assertThat(result).isNull();
+        assertThatThrownBy(() -> employeeBankDetailsService.findByPK(id))
+            .isInstanceOf(ServiceException.class);
         verify(employeeBankDetailsDao).findByPK(id);
     }
 
@@ -101,13 +106,13 @@ class EmployeeBankDetailsServiceImplTest {
     void updateWithIdModifiesExistingBankDetails() {
         Integer id = 1;
         testBankDetails.setAccountNumber("5555555555");
-        when(employeeBankDetailsDao.update(testBankDetails, id)).thenReturn(testBankDetails);
+        when(employeeBankDetailsDao.update(testBankDetails)).thenReturn(testBankDetails);
 
         EmployeeBankDetails result = employeeBankDetailsService.update(testBankDetails, id);
 
         assertThat(result).isNotNull();
         assertThat(result.getAccountNumber()).isEqualTo("5555555555");
-        verify(employeeBankDetailsDao).update(testBankDetails, id);
+        verify(employeeBankDetailsDao).update(testBankDetails);
     }
 
     @Test

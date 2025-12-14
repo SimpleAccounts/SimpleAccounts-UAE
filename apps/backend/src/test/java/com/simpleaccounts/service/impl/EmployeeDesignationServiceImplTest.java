@@ -1,12 +1,15 @@
 package com.simpleaccounts.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.EmployeeDesignationDao;
 import com.simpleaccounts.entity.EmployeeDesignation;
+import com.simpleaccounts.exceptions.ServiceException;
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
@@ -35,6 +38,9 @@ class EmployeeDesignationServiceImplTest {
     @Mock
     private EmployeeDesignationDao employeeDesignationDao;
 
+    @Mock
+    private ActivityDao activityDao;
+
     @InjectMocks
     private EmployeeDesignationServiceImpl employeeDesignationService;
 
@@ -42,7 +48,7 @@ class EmployeeDesignationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(employeeDesignationService, "dao", employeeDesignationDao);
+        ReflectionTestUtils.setField(employeeDesignationService, "activityDao", activityDao);
         testDesignation = createTestDesignation(1, "Manager", null);
     }
 
@@ -197,13 +203,11 @@ class EmployeeDesignationServiceImplTest {
 
     @Test
     @DisplayName("Should return null when designation not found by primary key")
-    void findByPKReturnsNullWhenNotFound() {
+    void findByPKThrowsExceptionWhenNotFound() {
         Integer id = 999;
         when(employeeDesignationDao.findByPK(id)).thenReturn(null);
 
-        EmployeeDesignation result = employeeDesignationService.findByPK(id);
-
-        assertThat(result).isNull();
+        assertThatThrownBy(() -> employeeDesignationService.findByPK(id)).isInstanceOf(ServiceException.class);
         verify(employeeDesignationDao).findByPK(id);
     }
 

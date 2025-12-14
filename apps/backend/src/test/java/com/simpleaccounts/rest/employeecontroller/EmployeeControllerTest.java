@@ -15,13 +15,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeBankDetails;
+import com.simpleaccounts.entity.EmployeeBankDetailsRepository;
 import com.simpleaccounts.entity.Employment;
 import com.simpleaccounts.entity.EmployeeParentRelation;
 import com.simpleaccounts.entity.User;
-import com.simpleaccounts.repository.EmployeeBankDetailsRepository;
 import com.simpleaccounts.repository.EmployeeRepository;
 import com.simpleaccounts.repository.EmployeeSalaryComponentRelationRepository;
-import com.simpleaccounts.repository.EmploymentRepository;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
@@ -33,6 +32,7 @@ import com.simpleaccounts.service.EmployeeBankDetailsService;
 import com.simpleaccounts.service.EmployeeParentRelationService;
 import com.simpleaccounts.service.EmployeeService;
 import com.simpleaccounts.service.EmploymentService;
+import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.TransactionCategoryCreationHelper;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -41,6 +41,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,9 +53,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -113,6 +117,14 @@ class EmployeeControllerTest {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(employeeController).build();
+
+        ApplicationContext applicationContext = org.mockito.Mockito.mock(ApplicationContext.class);
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setUseCodeAsDefaultMessage(true);
+        when(applicationContext.getBean(ReloadableResourceBundleMessageSource.class)).thenReturn(messageSource);
+        new MessageUtil().setApplicationContext(applicationContext);
+        ReflectionTestUtils.setField(MessageUtil.class, "messageSource", messageSource);
+
         testEmployee = createTestEmployee(1, "John", "Doe", "john@test.com");
         testUser = createTestUser(1, "Admin", "User", "admin@test.com");
         testEmployment = createTestEmployment(1, testEmployee);
@@ -279,7 +291,7 @@ class EmployeeControllerTest {
         doNothing().when(employeeService).persist(any());
         when(employeeService.sendInvitationMail(any(), any())).thenReturn(true);
         doNothing().when(transactionCategoryCreationHelper).createTransactionCategoryForEmployee(any());
-        doNothing().when(employeeHelper).createDefaultSalaryComponentListForThisEmployee(any());
+        when(employeeHelper.createDefaultSalaryComponentListForThisEmployee(any())).thenReturn(Collections.emptyList());
 
         mockMvc.perform(post("/rest/employee/save")
                 .param("firstName", "John")

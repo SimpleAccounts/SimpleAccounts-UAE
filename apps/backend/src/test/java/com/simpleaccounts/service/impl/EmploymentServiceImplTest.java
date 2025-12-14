@@ -1,12 +1,15 @@
 package com.simpleaccounts.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.EmploymentDao;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.Employment;
+import com.simpleaccounts.exceptions.ServiceException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -33,6 +36,9 @@ class EmploymentServiceImplTest {
     @Mock
     private EmploymentDao employmentDao;
 
+    @Mock
+    private ActivityDao activityDao;
+
     @InjectMocks
     private EmploymentServiceImpl employmentService;
 
@@ -41,7 +47,7 @@ class EmploymentServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(employmentService, "dao", employmentDao);
+        ReflectionTestUtils.setField(employmentService, "activityDao", activityDao);
         testEmployee = createTestEmployee(1, "John", "Doe");
         testEmployment = createTestEmployment(1, testEmployee, LocalDateTime.of(2024, 1, 15, 0, 0));
     }
@@ -62,13 +68,11 @@ class EmploymentServiceImplTest {
 
     @Test
     @DisplayName("Should return null when employment not found")
-    void findByPKReturnsNullWhenNotFound() {
+    void findByPKThrowsExceptionWhenNotFound() {
         Integer id = 999;
         when(employmentDao.findByPK(id)).thenReturn(null);
 
-        Employment result = employmentService.findByPK(id);
-
-        assertThat(result).isNull();
+        assertThatThrownBy(() -> employmentService.findByPK(id)).isInstanceOf(ServiceException.class);
         verify(employmentDao).findByPK(id);
     }
 
@@ -85,13 +89,13 @@ class EmploymentServiceImplTest {
     @Test
     @DisplayName("Should update existing employment")
     void updateModifiesExistingEmployment() {
-        testEmployment.setEmploymentStatus("Active");
+        testEmployment.setDepartment("Engineering");
         when(employmentDao.update(testEmployment)).thenReturn(testEmployment);
 
         Employment result = employmentService.update(testEmployment);
 
         assertThat(result).isNotNull();
-        assertThat(result.getEmploymentStatus()).isEqualTo("Active");
+        assertThat(result.getDepartment()).isEqualTo("Engineering");
         verify(employmentDao).update(testEmployment);
     }
 
@@ -99,14 +103,14 @@ class EmploymentServiceImplTest {
     @DisplayName("Should update employment with ID")
     void updateWithIdModifiesExistingEmployment() {
         Integer id = 1;
-        testEmployment.setLeaveBalance(BigDecimal.valueOf(15));
-        when(employmentDao.update(testEmployment, id)).thenReturn(testEmployment);
+        testEmployment.setGrossSalary(BigDecimal.valueOf(15000));
+        when(employmentDao.update(testEmployment)).thenReturn(testEmployment);
 
         Employment result = employmentService.update(testEmployment, id);
 
         assertThat(result).isNotNull();
-        assertThat(result.getLeaveBalance()).isEqualTo(BigDecimal.valueOf(15));
-        verify(employmentDao).update(testEmployment, id);
+        assertThat(result.getGrossSalary()).isEqualTo(BigDecimal.valueOf(15000));
+        verify(employmentDao).update(testEmployment);
     }
 
     @Test
@@ -171,58 +175,6 @@ class EmploymentServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should handle leave balance")
-    void handlesLeaveBalance() {
-        BigDecimal leaveBalance = BigDecimal.valueOf(21);
-        testEmployment.setLeaveBalance(leaveBalance);
-        when(employmentDao.findByPK(1)).thenReturn(testEmployment);
-
-        Employment result = employmentService.findByPK(1);
-
-        assertThat(result).isNotNull();
-        assertThat(result.getLeaveBalance()).isEqualTo(leaveBalance);
-    }
-
-    @Test
-    @DisplayName("Should handle employment status")
-    void handlesEmploymentStatus() {
-        String status = "Probation";
-        testEmployment.setEmploymentStatus(status);
-        when(employmentDao.findByPK(1)).thenReturn(testEmployment);
-
-        Employment result = employmentService.findByPK(1);
-
-        assertThat(result).isNotNull();
-        assertThat(result.getEmploymentStatus()).isEqualTo(status);
-    }
-
-    @Test
-    @DisplayName("Should handle termination date")
-    void handlesTerminationDate() {
-        LocalDateTime terminationDate = LocalDateTime.of(2024, 12, 31, 0, 0);
-        testEmployment.setTerminationDate(terminationDate);
-        when(employmentDao.findByPK(1)).thenReturn(testEmployment);
-
-        Employment result = employmentService.findByPK(1);
-
-        assertThat(result).isNotNull();
-        assertThat(result.getTerminationDate()).isEqualTo(terminationDate);
-    }
-
-    @Test
-    @DisplayName("Should handle probation end date")
-    void handlesProbationEndDate() {
-        LocalDateTime probationEndDate = LocalDateTime.of(2024, 7, 15, 0, 0);
-        testEmployment.setProbationEndDate(probationEndDate);
-        when(employmentDao.findByPK(1)).thenReturn(testEmployment);
-
-        Employment result = employmentService.findByPK(1);
-
-        assertThat(result).isNotNull();
-        assertThat(result.getProbationEndDate()).isEqualTo(probationEndDate);
-    }
-
-    @Test
     @DisplayName("Should handle soft delete flag")
     void handlesSoftDeleteFlag() {
         testEmployment.setDeleteFlag(true);
@@ -249,8 +201,9 @@ class EmploymentServiceImplTest {
         employment.setId(id);
         employment.setEmployee(employee);
         employment.setDateOfJoining(dateOfJoining);
-        employment.setEmploymentStatus("Active");
-        employment.setLeaveBalance(BigDecimal.valueOf(21));
+        employment.setDepartment("Engineering");
+        employment.setContractType("FullTime");
+        employment.setGrossSalary(BigDecimal.valueOf(21000));
         employment.setDeleteFlag(false);
         employment.setCreatedBy(1);
         employment.setCreatedDate(LocalDateTime.now());

@@ -300,15 +300,17 @@ class TransactionExpensesPayrollDaoImplTest {
     private Transaction createTestTransaction(Integer id, String transactionRef, BigDecimal amount) {
         Transaction transaction = new Transaction();
         transaction.setTransactionId(id);
-        transaction.setReferenceNumber(transactionRef);
-        transaction.setAmount(amount);
+        transaction.setReferenceStr(transactionRef);
+        transaction.setTransactionAmount(amount);
         transaction.setDeleteFlag(false);
         return transaction;
     }
 
     private TransactionExpensesPayroll createTestTransactionExpensesPayroll(Integer id, Expense expense, Transaction transaction) {
         TransactionExpensesPayroll trExpenses = new TransactionExpensesPayroll();
-        trExpenses.setId(id);
+        if (id != null) {
+            trExpenses.setId(id);
+        }
         trExpenses.setExpense(expense);
         trExpenses.setTransaction(transaction);
         return trExpenses;

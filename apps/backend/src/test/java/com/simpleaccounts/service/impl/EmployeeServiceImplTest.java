@@ -54,7 +54,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -102,7 +101,6 @@ class EmployeeServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(employeeService, "dao", employeeDao);
         testEmployee = createTestEmployee(1, "John", "Doe", "john@test.com");
         testUser = createTestUser(1, "Admin", "User", "admin@test.com");
     }
@@ -378,12 +376,12 @@ class EmployeeServiceImplTest {
         return user;
     }
 
-    private PayrollEmployeeResultSet createPayrollEmployeeResultSet(Integer id, Integer empId, String firstName, String lastName, String empCode) {
-        return new PayrollEmployeeResultSet() {
-            @Override
-            public Integer getId() {
-                return id;
-            }
+	    private PayrollEmployeeResultSet createPayrollEmployeeResultSet(Integer id, Integer empId, String firstName, String lastName, String empCode) {
+	        return new PayrollEmployeeResultSet() {
+	            @Override
+	            public Integer getId() {
+	                return id;
+	            }
 
             @Override
             public Integer getEmpId() {
@@ -400,12 +398,22 @@ class EmployeeServiceImplTest {
                 return lastName;
             }
 
-            @Override
-            public String getEmpCode() {
-                return empCode;
-            }
-        };
-    }
+	            @Override
+	            public String getEmpCode() {
+	                return empCode;
+	            }
+
+	            @Override
+	            public BigDecimal getLopDays() {
+	                return BigDecimal.ZERO;
+	            }
+
+	            @Override
+	            public BigDecimal getNoOfDays() {
+	                return BigDecimal.ZERO;
+	            }
+	        };
+	    }
 
     private Employment createEmployment(Integer id, LocalDateTime dateOfJoining) {
         Employment employment = new Employment();

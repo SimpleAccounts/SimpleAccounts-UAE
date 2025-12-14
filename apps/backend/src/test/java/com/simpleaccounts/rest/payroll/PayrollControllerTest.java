@@ -18,6 +18,7 @@ import com.simpleaccounts.entity.Employment;
 import com.simpleaccounts.entity.Payroll;
 import com.simpleaccounts.entity.PayrollEmployee;
 import com.simpleaccounts.entity.SalaryComponent;
+import com.simpleaccounts.entity.SalaryComponentRepository;
 import com.simpleaccounts.entity.SalaryRole;
 import com.simpleaccounts.entity.SalaryStructure;
 import com.simpleaccounts.entity.SalaryTemplate;
@@ -28,12 +29,11 @@ import com.simpleaccounts.repository.JournalLineItemRepository;
 import com.simpleaccounts.repository.PayrollEmployeeRepository;
 import com.simpleaccounts.repository.PayrollRepository;
 import com.simpleaccounts.repository.PayrolEmployeeRepository;
-import com.simpleaccounts.repository.SalaryComponentRepository;
 import com.simpleaccounts.repository.SalaryRepository;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.rest.UserDto;
+import com.simpleaccounts.rest.PayrollDropdownModel;
 import com.simpleaccounts.rest.payroll.dto.PayrollEmployeeDto;
 import com.simpleaccounts.rest.payroll.model.PayrollListModel;
 import com.simpleaccounts.rest.payroll.payrolService.PayrolService;
@@ -504,7 +504,7 @@ class PayrollControllerTest {
     private SalaryStructure createTestSalaryStructure(Integer id, String name) {
         SalaryStructure structure = new SalaryStructure();
         structure.setId(id);
-        structure.setStructureName(name);
+        structure.setName(name);
         structure.setDeleteFlag(false);
         return structure;
     }
@@ -513,7 +513,7 @@ class PayrollControllerTest {
         SalaryComponent component = new SalaryComponent();
         component.setId(id);
         component.setComponentCode(code);
-        component.setFlatAmount(amount);
+        component.setFlatAmount(amount == null ? null : amount.toPlainString());
         component.setDeleteFlag(false);
         return component;
     }
@@ -536,9 +536,6 @@ class PayrollControllerTest {
     }
 
     private UserDto createUserDto(Integer id, String name) {
-        UserDto dto = new UserDto();
-        dto.setUserId(id);
-        dto.setFullName(name);
-        return dto;
+        return new UserDto(id, name);
     }
 }

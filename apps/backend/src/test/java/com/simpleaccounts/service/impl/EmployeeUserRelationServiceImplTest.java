@@ -1,14 +1,17 @@
 package com.simpleaccounts.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.EmployeeUserRelationDao;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeUserRelation;
 import com.simpleaccounts.entity.User;
+import com.simpleaccounts.exceptions.ServiceException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,6 +38,9 @@ class EmployeeUserRelationServiceImplTest {
     @Mock
     private EmployeeUserRelationDao employeeUserRelationDao;
 
+    @Mock
+    private ActivityDao activityDao;
+
     @InjectMocks
     private EmployeeUserRelationServiceImpl employeeUserRelationService;
 
@@ -44,7 +50,7 @@ class EmployeeUserRelationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(employeeUserRelationService, "dao", employeeUserRelationDao);
+        ReflectionTestUtils.setField(employeeUserRelationService, "activityDao", activityDao);
         testEmployee = createTestEmployee(1, "John", "Doe", "john@test.com");
         testUser = createTestUser(1, "John", "Doe", "john@test.com");
         testRelation = createTestRelation(1, testEmployee, testUser);
@@ -80,13 +86,12 @@ class EmployeeUserRelationServiceImplTest {
 
     @Test
     @DisplayName("Should return null when relation not found")
-    void findByPKReturnsNullWhenNotFound() {
+    void findByPKThrowsExceptionWhenNotFound() {
         Integer id = 999;
         when(employeeUserRelationDao.findByPK(id)).thenReturn(null);
 
-        EmployeeUserRelation result = employeeUserRelationService.findByPK(id);
-
-        assertThat(result).isNull();
+        assertThatThrownBy(() -> employeeUserRelationService.findByPK(id))
+            .isInstanceOf(ServiceException.class);
         verify(employeeUserRelationDao).findByPK(id);
     }
 
