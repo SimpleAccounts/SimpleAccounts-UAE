@@ -20,14 +20,12 @@ import javax.activation.FileDataSource;
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
+	import javax.mail.internet.MimeMultipart;
+	import lombok.Getter;
+	import lombok.Setter;
+	import lombok.extern.slf4j.Slf4j;
+	import org.springframework.stereotype.Component;
+	import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -35,11 +33,9 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class FileHelper {
 
-	 @Value("resources/migrationuploadedfiles/")
-	private final String basePath;
+	private final String basePath = "resources/migrationuploadedfiles/";
 
 	@Getter @Setter
 	public static String rootPath;
