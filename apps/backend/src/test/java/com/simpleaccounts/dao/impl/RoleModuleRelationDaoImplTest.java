@@ -268,11 +268,11 @@ class RoleModuleRelationDaoImplTest {
             .thenReturn(relations);
 
         // Act
-        List<RoleModuleRelation> result = roleModuleRelationDao.getRoleModuleRelationByRoleCode(roleCode);
+	        List<RoleModuleRelation> result = roleModuleRelationDao.getRoleModuleRelationByRoleCode(roleCode);
 
-        // Assert
-        assertThat(result).allMatch(r -> r.getRole().getRoleCode().equals(roleCode));
-    }
+	        // Assert
+	        assertThat(result).hasSize(relations.size()).allMatch(r -> r.getRole().getRoleCode().equals(roleCode));
+	    }
 
     @Test
     @DisplayName("Should return single relation when role has one module")
