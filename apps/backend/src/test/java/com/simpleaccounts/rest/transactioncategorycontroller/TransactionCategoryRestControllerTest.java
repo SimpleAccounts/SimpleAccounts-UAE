@@ -45,6 +45,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
@@ -95,6 +96,8 @@ class TransactionCategoryRestControllerTest {
 
     @BeforeEach
     void setUp() {
+        ReflectionTestUtils.setField(MessageUtil.class, "messageSource", null);
+
         testChartOfAccount = new ChartOfAccount();
         testChartOfAccount.setChartOfAccountId(1);
         testChartOfAccount.setChartOfAccountName("Test COA");

@@ -22,7 +22,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * Note: These tests simulate repository behavior without actual Spring Data JPA.
  * In production, these would extend @DataJpaTest with @Testcontainers.
  */
-@ExtendWith(PostgresTestContainerConfig.class)
 class RepositoryIntegrationTest {
 
     private InMemoryInvoiceRepository invoiceRepository;
