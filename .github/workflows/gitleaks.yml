@@ -1,0 +1,68 @@
+# Secret scanning (Gitleaks)
+# Runs on PRs/pushes to catch newly introduced secrets without requiring any paid action license.
+
+name: Gitleaks
+
+on:
+  pull_request:
+    branches: ['develop', 'master']
+  push:
+    branches: ['develop', 'master']
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  gitleaks:
+    name: Gitleaks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Install gitleaks
+        run: |
+          set -euo pipefail
+
+          VERSION="8.30.0"
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz" \
+            -o /tmp/gitleaks.tar.gz
+          tar -xzf /tmp/gitleaks.tar.gz -C /tmp
+          sudo install -m 0755 /tmp/gitleaks /usr/local/bin/gitleaks
+
+          gitleaks version
+
+      - name: Run gitleaks (commit range)
+        run: |
+          set -euo pipefail
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+            LOG_OPTS="${BASE_SHA}..${HEAD_SHA}"
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            BEFORE_SHA="${{ github.event.before }}"
+            HEAD_SHA="${{ github.sha }}"
+
+            # On some events the "before" SHA can be all zeros (e.g. first push).
+            if echo "$BEFORE_SHA" | grep -Eq '^0{40}$'; then
+              LOG_OPTS="${HEAD_SHA}"
+            else
+              LOG_OPTS="${BEFORE_SHA}..${HEAD_SHA}"
+            fi
+          else
+            # Manual runs: scan the full history.
+            LOG_OPTS="--all"
+          fi
+
+          echo "Scanning with git log opts: ${LOG_OPTS}"
+          gitleaks detect --redact --verbose --log-opts="${LOG_OPTS}"

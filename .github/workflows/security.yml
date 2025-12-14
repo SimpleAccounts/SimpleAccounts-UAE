@@ -5,16 +5,23 @@ name: Security Scan
 
 on:
   push:
-    branches: [ "develop", "master" ]
+    branches: ['develop', 'master']
   pull_request:
-    branches: [ "develop", "master" ]
+    branches: ['develop', 'master']
   schedule:
-    - cron: '0 6 * * 1'  # Every Monday at 6 AM
+    - cron: '0 6 * * 1' # Every Monday at 6 AM
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   codeql:
     name: CodeQL Analysis
     runs-on: ubuntu-latest
+    timeout-minutes: 60
+    # Skip fork PRs: CodeQL upload requires elevated permissions not granted to forks.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     permissions:
       security-events: write
       actions: read
@@ -24,48 +31,52 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'java', 'javascript' ]
+        language: ['java', 'javascript']
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v4
-      with:
-        languages: ${{ matrix.language }}
-        queries: +security-extended,security-and-quality
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@1b168cd39490f61582a9beae412bb7057a6b2c4e # v4
+        with:
+          languages: ${{ matrix.language }}
+          queries: +security-extended,security-and-quality
 
-    - name: Set up JDK 11
-      if: matrix.language == 'java'
-      uses: actions/setup-java@v4
-      with:
-        java-version: '11'
-        distribution: 'temurin'
+      - name: Set up JDK 11
+        if: matrix.language == 'java'
+        uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9 # v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
 
-    - name: Build Java
-      if: matrix.language == 'java'
-      working-directory: apps/backend
-      run: mvn clean compile -DskipTests
+      - name: Build Java
+        if: matrix.language == 'java'
+        working-directory: apps/backend
+        run: mvn clean compile -DskipTests
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v4
-      with:
-        category: "/language:${{ matrix.language }}"
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@1b168cd39490f61582a9beae412bb7057a6b2c4e # v4
+        with:
+          category: '/language:${{ matrix.language }}'
 
   dependency-review:
     name: Dependency Review
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-    - name: Dependency Review
-      uses: actions/dependency-review-action@v4
-      with:
-        fail-on-severity: high
-        deny-licenses: GPL-3.0, AGPL-3.0
-        # jszip is dual-licensed (MIT OR GPL-3.0) - we use it under MIT license
-        # itextpdf AGPL-3.0 is a pre-existing dependency used for PDF generation
-        allow-dependencies-licenses: pkg:npm/jszip, pkg:maven/com.itextpdf/itextpdf
+      - name: Dependency Review
+        uses: actions/dependency-review-action@3c4e3dcb1aa7874d2c16be7d79418e9b7efd6261 # v4
+        with:
+          fail-on-severity: high
+          deny-licenses: GPL-3.0, AGPL-3.0
+          # jszip is dual-licensed (MIT OR GPL-3.0) - we use it under MIT license
+          # itextpdf AGPL-3.0 is a pre-existing dependency used for PDF generation
+          allow-dependencies-licenses: pkg:npm/jszip, pkg:maven/com.itextpdf/itextpdf

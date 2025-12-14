@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.simpleaccounts.entity.Role;
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.service.UserService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,9 +32,12 @@ class CustomUserDetailsServiceTest {
 
     private User testUser;
     private Role testRole;
+    private String originalUserTimezone;
 
     @BeforeEach
     void setUp() {
+        originalUserTimezone = System.getProperty("simpleaccounts.user.timezone");
+
         testRole = new Role();
         testRole.setRoleCode(1);
         testRole.setRoleName("ADMIN");
@@ -47,6 +51,15 @@ class CustomUserDetailsServiceTest {
         testUser.setRole(testRole);
         testUser.setIsActive(true);
         testUser.setDeleteFlag(false);
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (originalUserTimezone == null) {
+            System.clearProperty("simpleaccounts.user.timezone");
+        } else {
+            System.setProperty("simpleaccounts.user.timezone", originalUserTimezone);
+        }
     }
 
     // ========== Successful User Load Tests ==========
