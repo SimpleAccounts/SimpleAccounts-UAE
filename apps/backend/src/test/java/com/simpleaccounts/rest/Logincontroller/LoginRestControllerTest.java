@@ -77,7 +77,7 @@ class LoginRestControllerTest {
         attributes.put("userEmail", "test@example.com");
 
         when(userService.findByAttributes(any())).thenReturn(Collections.singletonList(testUser));
-        doNothing().when(userService).updateForgotPasswordToken(any(), any());
+        when(userService.updateForgotPasswordToken(any(), any())).thenReturn(true);
 
         mockMvc.perform(post("/public/forgotPassword")
                 .contentType(MediaType.APPLICATION_JSON)

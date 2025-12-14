@@ -110,9 +110,9 @@ class TemplatesControllerTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(3))
                 .andExpect(jsonPath("$[0].templateId").value(1))
-                .andExpect(jsonPath("$[0].templateEnable").value(true))
+                .andExpect(jsonPath("$[0].enable").value(true))
                 .andExpect(jsonPath("$[1].templateId").value(2))
-                .andExpect(jsonPath("$[1].templateEnable").value(false));
+                .andExpect(jsonPath("$[1].enable").value(false));
     }
 
     @Test
@@ -161,8 +161,8 @@ class TemplatesControllerTest {
 
         mockMvc.perform(get("/rest/templates/getTemplateDropdown"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].templateEnable").value(false))
-                .andExpect(jsonPath("$[1].templateEnable").value(false));
+                .andExpect(jsonPath("$[0].enable").value(false))
+                .andExpect(jsonPath("$[1].enable").value(false));
     }
 
     // ========== Integration Tests ==========
