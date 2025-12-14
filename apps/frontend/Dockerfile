@@ -15,7 +15,7 @@ COPY . .
 
 # Build the React app with Vite (increase Node memory limit for large builds)
 ENV NODE_OPTIONS="--max-old-space-size=4096"
-RUN npm run build:vite
+RUN npm run build
 
 # ------------------------------------------------------
 # Production Build - Nginx

@@ -30,31 +30,36 @@ In this folder, you have to save the all global functions.
 
 ## Available Scripts
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-In the project directory, you can run:
+This project uses [Vite](https://vitejs.dev/) as the primary build tool for fast development and optimized production builds.
 
 ### `npm start`
 
-Runs the app in the development mode.<br />
+Runs the app in development mode using Vite.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
+The page will reload automatically when you make edits (Hot Module Replacement).<br />
 You will also see any lint errors in the console.
+
+**Note:** For CRA compatibility, use `npm run start:cra`
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.<br />
+Launches the test runner in interactive watch mode (using Jest via react-scripts).<br />
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Builds the app for production using Vite to the `dist` folder.<br />
+The build is optimized for production with code splitting, tree-shaking, and minification.
 
-The build is minified and the filenames include the hashes.<br />
+The build is minified and the filenames include content hashes for optimal caching.<br />
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**Note:** For CRA compatibility, use `npm run build:cra` (outputs to `build/` folder)
+
+### `npm run preview`
+
+Preview the production build locally using Vite's preview server.
 
 ### `npm run eject`
 
@@ -72,28 +77,20 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+## Troubleshooting
 
-### Analyzing the Bundle Size
+### Build Issues
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+If you encounter build issues:
+1. Clear node_modules and reinstall: `rm -rf node_modules package-lock.json && npm install`
+2. Clear build cache: `rm -rf dist build .vite`
+3. Check Node.js version: Requires Node 20+ (`node --version`)
 
-### Making a Progressive Web App
+### Legacy CRA Build
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+If you need to use the CRA build system:
+- Use `npm run build:cra` instead of `npm run build`
+- CRA outputs to `build/` directory, Vite outputs to `dist/`
 
 ### Add GitPod

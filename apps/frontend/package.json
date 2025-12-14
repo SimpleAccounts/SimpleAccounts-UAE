@@ -122,8 +122,9 @@
     "web-streams-polyfill": "^4.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "NODE_OPTIONS=--max-old-space-size=4096 vite",
+    "build": "NODE_OPTIONS=--max-old-space-size=4096 vite build",
+    "preview": "vite preview",
     "test": "react-scripts test",
     "test:cov": "npm test -- --coverage --watchAll=false",
     "test:frontend:unit": "react-scripts test --watchAll=false",
@@ -131,10 +132,9 @@
     "test:frontend:e2e:headed": "playwright test --headed",
     "test:frontend:e2e:smoke": "bash -lc 'set -a; source .env.e2e; set +a; npm run -s test:frontend:e2e'",
     "test:debug": "react-scripts --inspect-brk test --runInBand",
-    "eject": "react-scripts eject",
-    "dev:vite": "NODE_OPTIONS=--max-old-space-size=4096 vite",
-    "build:vite": "NODE_OPTIONS=--max-old-space-size=4096 vite build",
-    "preview:vite": "vite preview"
+    "start:cra": "react-scripts start",
+    "build:cra": "react-scripts build",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"

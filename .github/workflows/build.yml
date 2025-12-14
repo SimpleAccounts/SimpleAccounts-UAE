@@ -200,7 +200,7 @@ jobs:
 
       - name: Build frontend with Vite
         working-directory: apps/frontend
-        run: npm run build:vite
+        run: npm run build
         env:
           NODE_OPTIONS: --max-old-space-size=4096
 
