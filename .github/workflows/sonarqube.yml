@@ -112,14 +112,19 @@ jobs:
       - name: Run SonarQube Analysis
         working-directory: apps/backend
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN || secrets.SONARQUBE_TOKEN }}
           SONAR_HOST_URL: ${{ env.SONAR_HOST_URL }}
         run: |
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo "::warning::SONAR_TOKEN is not set (configure repo secret SONAR_TOKEN or SONARQUBE_TOKEN); skipping SonarQube analysis."
+            exit 0
+          fi
+
           mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
             -Dsonar.projectKey=SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9 \
             -Dsonar.projectName="SimpleAccounts-UAE" \
             -Dsonar.host.url=${{ env.SONAR_HOST_URL }} \
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.token=$SONAR_TOKEN \
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
             -Dsonar.javascript.lcov.reportPaths=../../apps/frontend/coverage/lcov.info \
             -Dsonar.scanner.skipJreProvisioning=true \
@@ -135,20 +140,32 @@ jobs:
       - name: Check Quality Gate Status
         if: always()
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN || secrets.SONARQUBE_TOKEN }}
         run: |
           echo "Checking Quality Gate status..."
           sleep 15
+
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo "::warning::SONAR_TOKEN is not set (configure repo secret SONAR_TOKEN or SONARQUBE_TOKEN); skipping Quality Gate check."
+            exit 0
+          fi
 
           PROJECT_KEY="SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9"
           API_URL="${{ env.SONAR_HOST_URL }}/api/qualitygates/project_status?projectKey=${PROJECT_KEY}"
           DASHBOARD_URL="${{ env.SONAR_HOST_URL }}/dashboard?id=${PROJECT_KEY}"
 
-          RESPONSE=$(curl -s -u "$SONAR_TOKEN:" "$API_URL")
-          STATUS=$(echo "$RESPONSE" | jq -r '.projectStatus.status')
+          RESPONSE=$(curl -sS -u "$SONAR_TOKEN:" "$API_URL")
+          STATUS=$(echo "$RESPONSE" | jq -r '.projectStatus.status // empty')
 
           echo "Quality Gate Status: $STATUS"
           echo "Dashboard: $DASHBOARD_URL"
+
+          if [ -z "$STATUS" ]; then
+            echo ""
+            echo "::error::Unable to determine Quality Gate status from SonarQube response."
+            echo "$RESPONSE"
+            exit 1
+          fi
 
           if [ "$STATUS" != "OK" ]; then
             echo ""
