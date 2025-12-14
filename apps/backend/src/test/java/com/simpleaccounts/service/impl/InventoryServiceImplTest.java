@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.constant.dbfilter.InventoryFilterEnum;
 import com.simpleaccounts.dao.InventoryDao;
-import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.Inventory;
 import com.simpleaccounts.entity.Product;
 import com.simpleaccounts.rest.PaginationModel;

@@ -10,17 +10,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
-import com.simpleaccounts.constant.dbfilter.VatCategoryFilterEnum;
 import com.simpleaccounts.entity.VatCategory;
-import com.simpleaccounts.rest.PaginationModel;
-import com.simpleaccounts.rest.PaginationResponseModel;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;

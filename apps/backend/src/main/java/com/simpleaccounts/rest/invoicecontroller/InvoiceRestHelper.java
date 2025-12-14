@@ -57,6 +57,7 @@ public class InvoiceRestHelper {
 	private static final String ERROR_PROCESSING_INVOICE = "Error processing invoice";
 	private static final String CLASSPATH_PREFIX = "classpath:";
 	private static final String JSON_KEY_INVOICE = "invoice";
+	private static final String JSON_KEY_DELETE_FLAG = "deleteFlag";
 	private static final String TEMPLATE_PLACEHOLDER_AMOUNT_IN_WORDS = "{amountInWords}";
 	private static final String TEMPLATE_PLACEHOLDER_VAT_IN_WORDS = "{vatInWords}";
 	private static final String TEMPLATE_PLACEHOLDER_CURRENCY = "{currency}";
@@ -852,7 +853,7 @@ public class InvoiceRestHelper {
 				.replace(TEMPLATE_PLACEHOLDER_VAT_IN_WORDS, vatInWords);
 
 		if (invoice.getContact() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-			mailUtility.triggerEmailOnBackground2(subject, content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+			mailUtility.triggerEmailOnBackground2(subject, content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
 					EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{invoice.getContact().getBillingEmail()},
 					true);
 			EmailLogs emailLogs = new EmailLogs();
@@ -1035,7 +1036,7 @@ public class InvoiceRestHelper {
 		}
 
 		if (contact!= null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-			mailUtility.triggerEmailOnBackground2(subject, content,body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+			mailUtility.triggerEmailOnBackground2(subject, content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
 					EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[] { contact.getBillingEmail() },
 					true);
 			EmailLogs emailLogs = new EmailLogs();
@@ -1138,305 +1139,395 @@ public class InvoiceRestHelper {
 		User user = userService.findByPK(userId);
 		for (String key : map.keySet()) {
 			String value = map.get(key);
-			switch (key) {
-				case MailUtility.INVOICE_NAME:
-					if (user.getCompany().getIsRegisteredVat().equals(Boolean.TRUE)) {
-						invoiceDataMap.put(value,"Tax Invoice");
-					} else {
-						invoiceDataMap.put(value, "Invoice");
-					}
-					break;
-				case MailUtility.INVOICE_REFEREBCE_NO:
-					getReferenceNumber(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_REFERENCE_NO:
-					getCNNumber(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.INVOICE_DATE:
-					getInvoiceDate(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.INVOICE_DUE_DATE:
-					getInvoiceDueDate(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.INVOICE_DISCOUNT:
-					getDiscount(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.SUB_TOTAL:
-					getsubtotal(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_SUB_TOTAL:
-					getCnsubtotal(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CONTRACT_PO_NUMBER:
-					getContactPoNumber(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CONTACT_NAME:
-					getContact(invoice, invoiceDataMap, value);
-					break;
-
-				case MailUtility.CONTACT_ADDRESS_LINE1:
-					getContactAddress1(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CONTACT_ADDRESS_LINE2:
-					getContactAddress2(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CONTACT_COUNTRY:
-					getContactCountry(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CONTACT_STATE:
-					getContactState(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.MOBILE_NUMBER:
-					getMobileNumber(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CONTACT_CITY:
-					getContactCity(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CONTACT_EMAIL:
-					getContactEmail(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.EXCHANGE_RATE:
-					if (invoice.getExchangeRate() != null && invoice.getExchangeRate().compareTo(BigDecimal.ONE) > 0) {
-						invoiceDataMap.put(value, invoice.getExchangeRate().setScale(2, RoundingMode.HALF_EVEN).toString());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.PRODUCT:
-					getProduct(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_PRODUCT:
-					getCnProduct(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.UNIT_PRICE:
-					getUnitPrice(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_UNIT_PRICE:
-					getCnUnitPrice(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.UNIT_TYPE:
-					getUnitType(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_UNIT_TYPE:
-					getCnUnitType(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.DISCOUNT:
-					getDiscount(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_DISCOUNT:
-					getCnDiscount(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CREDIT_NOTE_DISCOUNT:
-					getCnDiscount(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.EXCISE_AMOUNT:
-					getExciseAmount(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_EXCISE_AMOUNT:
-					getCnExciseAmount(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CREDIT_NOTE_NUMBER:
-					getCreditNote(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.INVOICE_DUE_PERIOD:
-					getInvoiceDuePeriod(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.INVOICE_VAT_AMOUNT:
-					getInvoiceVatAmount(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CREDIT_NOTE_VAT_AMOUNT:
-					getCreditNoteVatAmount(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.QUANTITY:
-					getQuantity(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_QUANTITY:
-					getCnQuantity(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.TOTAL:
-					getTotal(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_TOTAL:
-					getCnTotal(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.TOTAL_NET:
-					getTotalNet(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.PROJECT_NAME:
-					getProject(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CURRENCY:
-					invoiceDataMap.put(value, invoice.getCurrency().getCurrencyIsoCode());
-					break;
-				case MailUtility.INVOICE_AMOUNT:
-					if (invoice.getTotalAmount() != null) {
-						invoiceDataMap.put(value, invoice.getTotalAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.INVOICE_LABEL:
-					if (user.getCompany().getIsRegisteredVat().equals(Boolean.TRUE)) {
-						invoiceDataMap.put(value,"Tax Invoice");
-					} else {
-						invoiceDataMap.put(value, "Customer Invoice");
-					}
-					break;
-				case MailUtility.CN_AMOUNT:
-					CreditNote creditNote = creditNoteRepository.findByInvoiceIdAndDeleteFlag(invoice.getId(),false);
-					if(creditNote!=null && creditNote.getTotalAmount()!=null){
-						invoiceDataMap.put(value, creditNote.getTotalAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.SENDER_NAME:
-					invoiceDataMap.put(value, user.getUserEmail());
-					break;
-				case MailUtility.COMPANY_NAME:
-					if (user.getCompany() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyName());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANYLOGO:
-					if (user.getCompany() != null && user.getCompany().getCompanyLogo() != null) {
-						String image = " data:image/jpg;base64," + DatatypeConverter.printBase64Binary(
-								user.getCompany().getCompanyLogo()) ;
-						invoiceDataMap.put(value, image);
-					} else {
-						invoiceDataMap.put(value, "");
-					}
-					break;
-				case MailUtility.VAT_TYPE:
-					if (MailUtility.VAT_TYPE != null)
-						getVat(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_VAT_TYPE:
-					if (MailUtility.CN_VAT_TYPE != null)
-						getCNVat(invoice, invoiceDataMap, value);
-					break;
-
-				case MailUtility.DUE_AMOUNT:
-					if (invoice.getDueAmount() != null) {
-						invoiceDataMap.put(value, invoice.getDueAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.DESCRIPTION:
-					getDescription(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_DESCRIPTION:
-					getCnDescription(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.COMPANY_ADDRESS_LINE1:
-					if (user.getCompany() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyAddressLine1());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANY_ADDRESS_LINE2:
-					if (user.getCompany() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyAddressLine2());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANY_POST_ZIP_CODE:
-					if (user.getCompany().getCompanyPoBoxNumber() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyPoBoxNumber());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANY_COUNTRY_CODE:
-					if (user.getCompany() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyCountryCode().getCountryName());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANY_STATE_REGION:
-					if (user.getCompany() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyStateCode().getStateName());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANY_CITY:
-					if (user.getCompany().getCompanyCity() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyCity());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANY_REGISTRATION_NO:
-					if (user.getCompany().getCompanyRegistrationNumber() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyRegistrationNumber());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.VAT_NUMBER:
-					if (user.getCompany() != null) {
-						invoiceDataMap.put(value, user.getCompany().getVatNumber());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANY_MOBILE_NUMBER:
-					if (user.getCompany() != null && user.getCompany().getPhoneNumber() != null) {
-						String[] numbers=user.getCompany().getPhoneNumber().split(",");
-						String mobileNumber="";
-						if(numbers.length!=0){
-							if(numbers[0]!=null)
-								mobileNumber=mobileNumber.concat(numbers[0]);
-						}
-						invoiceDataMap.put(value,mobileNumber );
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.POST_ZIP_CODE:
-					getPostZipCode(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.VAT_REGISTRATION_NUMBER:
-					getVatRegistrationNumber(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.STATUS:
-					getStatus(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.NOTES:
-					getNotes(invoice, invoiceDataMap, value);
-					break;
-
-				case MailUtility.INVOICE_LINEITEM_EXCISE_TAX:
-					if (MailUtility.INVOICE_LINEITEM_EXCISE_TAX != null)
-						getInvoiceLineItemExciseTax(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_LINEITEM_EXCISE_TAX:
-					if (MailUtility.CN_LINEITEM_EXCISE_TAX != null)
-						getCNLineItemExciseTax(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.TOTAL_EXCISE_AMOUNT:
-					getTotalExciseAmount(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_TOTAL_EXCISE_AMOUNT:
-					getCnTotalExciseAmount(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.INVOICE_LINEITEM_VAT_AMOUNT:
-					getInvoiceLineItemVatAmount(invoice, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_VAT_AMOUNT:
-					getCnLineItemVatAmount(invoice, invoiceDataMap, value);
-					break;
-				default:
-			}
+			populateInvoiceEmailData(key, value, invoice, user, invoiceDataMap);
 		}
 		return invoiceDataMap;
+	}
+
+	private void populateInvoiceEmailData(
+			String key, String value, Invoice invoice, User user, Map<String, String> invoiceDataMap) {
+		if (populateInvoiceTypeAndIdentityFields(key, value, invoice, user, invoiceDataMap)) {
+			return;
+		}
+		if (populateInvoiceDateAndStatusFields(key, value, invoice, invoiceDataMap)) {
+			return;
+		}
+		if (populateInvoiceContactFields(key, value, invoice, invoiceDataMap)) {
+			return;
+		}
+		if (populateInvoiceLineItemFields(key, value, invoice, invoiceDataMap)) {
+			return;
+		}
+		if (populateCreditNoteLineItemFields(key, value, invoice, invoiceDataMap)) {
+			return;
+		}
+		if (populateInvoiceTotalsAndCurrencyFields(key, value, invoice, invoiceDataMap)) {
+			return;
+		}
+		if (populateCompanyFields(key, value, user, invoiceDataMap)) {
+			return;
+		}
+		populateInvoiceMiscFields(key, value, invoice, invoiceDataMap);
+	}
+
+	private boolean populateInvoiceTypeAndIdentityFields(
+			String key, String value, Invoice invoice, User user, Map<String, String> invoiceDataMap) {
+		switch (key) {
+			case MailUtility.INVOICE_NAME:
+				if (Boolean.TRUE.equals(user.getCompany().getIsRegisteredVat())) {
+					invoiceDataMap.put(value, "Tax Invoice");
+				} else {
+					invoiceDataMap.put(value, "Invoice");
+				}
+				return true;
+			case MailUtility.INVOICE_LABEL:
+				if (Boolean.TRUE.equals(user.getCompany().getIsRegisteredVat())) {
+					invoiceDataMap.put(value, "Tax Invoice");
+				} else {
+					invoiceDataMap.put(value, "Customer Invoice");
+				}
+				return true;
+			case MailUtility.INVOICE_REFEREBCE_NO:
+				getReferenceNumber(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CN_REFERENCE_NO:
+				getCNNumber(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CREDIT_NOTE_NUMBER:
+				getCreditNote(invoice, invoiceDataMap, value);
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	private boolean populateInvoiceDateAndStatusFields(
+			String key, String value, Invoice invoice, Map<String, String> invoiceDataMap) {
+		switch (key) {
+			case MailUtility.INVOICE_DATE:
+				getInvoiceDate(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.INVOICE_DUE_DATE:
+				getInvoiceDueDate(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.INVOICE_DUE_PERIOD:
+				getInvoiceDuePeriod(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.STATUS:
+				getStatus(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.NOTES:
+				getNotes(invoice, invoiceDataMap, value);
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	private boolean populateInvoiceContactFields(
+			String key, String value, Invoice invoice, Map<String, String> invoiceDataMap) {
+		switch (key) {
+			case MailUtility.CONTRACT_PO_NUMBER:
+				getContactPoNumber(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CONTACT_NAME:
+				getContact(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CONTACT_ADDRESS_LINE1:
+				getContactAddress1(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CONTACT_ADDRESS_LINE2:
+				getContactAddress2(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CONTACT_COUNTRY:
+				getContactCountry(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CONTACT_STATE:
+				getContactState(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.MOBILE_NUMBER:
+				getMobileNumber(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CONTACT_CITY:
+				getContactCity(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CONTACT_EMAIL:
+				getContactEmail(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.POST_ZIP_CODE:
+				getPostZipCode(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.VAT_REGISTRATION_NUMBER:
+				getVatRegistrationNumber(invoice, invoiceDataMap, value);
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	private boolean populateInvoiceLineItemFields(
+			String key, String value, Invoice invoice, Map<String, String> invoiceDataMap) {
+		switch (key) {
+			case MailUtility.PRODUCT:
+				getProduct(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.UNIT_PRICE:
+				getUnitPrice(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.UNIT_TYPE:
+				getUnitType(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.DISCOUNT:
+				getDiscount(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.EXCISE_AMOUNT:
+				getExciseAmount(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.VAT_TYPE:
+				if (MailUtility.VAT_TYPE != null) {
+					getVat(invoice, invoiceDataMap, value);
+				}
+				return true;
+			case MailUtility.QUANTITY:
+				getQuantity(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.DESCRIPTION:
+				getDescription(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.INVOICE_LINEITEM_EXCISE_TAX:
+				if (MailUtility.INVOICE_LINEITEM_EXCISE_TAX != null) {
+					getInvoiceLineItemExciseTax(invoice, invoiceDataMap, value);
+				}
+				return true;
+			case MailUtility.INVOICE_LINEITEM_VAT_AMOUNT:
+				getInvoiceLineItemVatAmount(invoice, invoiceDataMap, value);
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	private boolean populateCreditNoteLineItemFields(
+			String key, String value, Invoice invoice, Map<String, String> invoiceDataMap) {
+		switch (key) {
+			case MailUtility.CN_PRODUCT:
+				getCnProduct(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CN_UNIT_PRICE:
+				getCnUnitPrice(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CN_UNIT_TYPE:
+				getCnUnitType(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CN_DISCOUNT:
+			case MailUtility.CREDIT_NOTE_DISCOUNT:
+				getCnDiscount(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CN_EXCISE_AMOUNT:
+				getCnExciseAmount(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CN_VAT_TYPE:
+				if (MailUtility.CN_VAT_TYPE != null) {
+					getCNVat(invoice, invoiceDataMap, value);
+				}
+				return true;
+			case MailUtility.CN_QUANTITY:
+				getCnQuantity(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CN_DESCRIPTION:
+				getCnDescription(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CN_LINEITEM_EXCISE_TAX:
+				if (MailUtility.CN_LINEITEM_EXCISE_TAX != null) {
+					getCNLineItemExciseTax(invoice, invoiceDataMap, value);
+				}
+				return true;
+			case MailUtility.CN_VAT_AMOUNT:
+				getCnLineItemVatAmount(invoice, invoiceDataMap, value);
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	private boolean populateInvoiceTotalsAndCurrencyFields(
+			String key, String value, Invoice invoice, Map<String, String> invoiceDataMap) {
+		switch (key) {
+			case MailUtility.INVOICE_DISCOUNT:
+				getDiscount(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.SUB_TOTAL:
+				getsubtotal(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CN_SUB_TOTAL:
+				getCnsubtotal(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.TOTAL:
+				getTotal(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CN_TOTAL:
+				getCnTotal(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.TOTAL_NET:
+				getTotalNet(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CURRENCY:
+				invoiceDataMap.put(value, invoice.getCurrency().getCurrencyIsoCode());
+				return true;
+			case MailUtility.INVOICE_AMOUNT:
+				if (invoice.getTotalAmount() != null) {
+					invoiceDataMap.put(
+							value, invoice.getTotalAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
+				} else {
+					invoiceDataMap.put(value, "---");
+				}
+				return true;
+			case MailUtility.DUE_AMOUNT:
+				if (invoice.getDueAmount() != null) {
+					invoiceDataMap.put(value, invoice.getDueAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
+				} else {
+					invoiceDataMap.put(value, "---");
+				}
+				return true;
+			case MailUtility.INVOICE_VAT_AMOUNT:
+				getInvoiceVatAmount(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CREDIT_NOTE_VAT_AMOUNT:
+				getCreditNoteVatAmount(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.TOTAL_EXCISE_AMOUNT:
+				getTotalExciseAmount(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CN_TOTAL_EXCISE_AMOUNT:
+				getCnTotalExciseAmount(invoice, invoiceDataMap, value);
+				return true;
+			case MailUtility.CN_AMOUNT:
+				CreditNote creditNote = creditNoteRepository.findByInvoiceIdAndDeleteFlag(invoice.getId(), false);
+				if (creditNote != null && creditNote.getTotalAmount() != null) {
+					invoiceDataMap.put(
+							value, creditNote.getTotalAmount().setScale(2, RoundingMode.HALF_EVEN).toString());
+				} else {
+					invoiceDataMap.put(value, "---");
+				}
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	private boolean populateCompanyFields(String key, String value, User user, Map<String, String> invoiceDataMap) {
+		switch (key) {
+			case MailUtility.SENDER_NAME:
+				invoiceDataMap.put(value, user.getUserEmail());
+				return true;
+			case MailUtility.COMPANY_NAME:
+				if (user.getCompany() != null) {
+					invoiceDataMap.put(value, user.getCompany().getCompanyName());
+				} else {
+					invoiceDataMap.put(value, "---");
+				}
+				return true;
+			case MailUtility.COMPANYLOGO:
+				if (user.getCompany() != null && user.getCompany().getCompanyLogo() != null) {
+					String image =
+							" data:image/jpg;base64,"
+									+ DatatypeConverter.printBase64Binary(user.getCompany().getCompanyLogo());
+					invoiceDataMap.put(value, image);
+				} else {
+					invoiceDataMap.put(value, "");
+				}
+				return true;
+			case MailUtility.COMPANY_ADDRESS_LINE1:
+				if (user.getCompany() != null) {
+					invoiceDataMap.put(value, user.getCompany().getCompanyAddressLine1());
+				} else {
+					invoiceDataMap.put(value, "---");
+				}
+				return true;
+			case MailUtility.COMPANY_ADDRESS_LINE2:
+				if (user.getCompany() != null) {
+					invoiceDataMap.put(value, user.getCompany().getCompanyAddressLine2());
+				} else {
+					invoiceDataMap.put(value, "---");
+				}
+				return true;
+			case MailUtility.COMPANY_POST_ZIP_CODE:
+				if (user.getCompany().getCompanyPoBoxNumber() != null) {
+					invoiceDataMap.put(value, user.getCompany().getCompanyPoBoxNumber());
+				} else {
+					invoiceDataMap.put(value, "---");
+				}
+				return true;
+			case MailUtility.COMPANY_COUNTRY_CODE:
+				if (user.getCompany() != null) {
+					invoiceDataMap.put(value, user.getCompany().getCompanyCountryCode().getCountryName());
+				} else {
+					invoiceDataMap.put(value, "---");
+				}
+				return true;
+			case MailUtility.COMPANY_STATE_REGION:
+				if (user.getCompany() != null) {
+					invoiceDataMap.put(value, user.getCompany().getCompanyStateCode().getStateName());
+				} else {
+					invoiceDataMap.put(value, "---");
+				}
+				return true;
+			case MailUtility.COMPANY_CITY:
+				if (user.getCompany().getCompanyCity() != null) {
+					invoiceDataMap.put(value, user.getCompany().getCompanyCity());
+				} else {
+					invoiceDataMap.put(value, "---");
+				}
+				return true;
+			case MailUtility.COMPANY_REGISTRATION_NO:
+				if (user.getCompany().getCompanyRegistrationNumber() != null) {
+					invoiceDataMap.put(value, user.getCompany().getCompanyRegistrationNumber());
+				} else {
+					invoiceDataMap.put(value, "---");
+				}
+				return true;
+			case MailUtility.VAT_NUMBER:
+				if (user.getCompany() != null) {
+					invoiceDataMap.put(value, user.getCompany().getVatNumber());
+				} else {
+					invoiceDataMap.put(value, "---");
+				}
+				return true;
+			case MailUtility.COMPANY_MOBILE_NUMBER:
+				if (user.getCompany() != null && user.getCompany().getPhoneNumber() != null) {
+					String[] numbers = user.getCompany().getPhoneNumber().split(",");
+					String mobileNumber = "";
+					if (numbers.length != 0) {
+						if (numbers[0] != null) {
+							mobileNumber = mobileNumber.concat(numbers[0]);
+						}
+					}
+					invoiceDataMap.put(value, mobileNumber);
+				} else {
+					invoiceDataMap.put(value, "---");
+				}
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	private void populateInvoiceMiscFields(
+			String key, String value, Invoice invoice, Map<String, String> invoiceDataMap) {
+		switch (key) {
+			case MailUtility.EXCHANGE_RATE:
+				if (invoice.getExchangeRate() != null && invoice.getExchangeRate().compareTo(BigDecimal.ONE) > 0) {
+					invoiceDataMap.put(
+							value, invoice.getExchangeRate().setScale(2, RoundingMode.HALF_EVEN).toString());
+				} else {
+					invoiceDataMap.put(value, "---");
+				}
+				break;
+			case MailUtility.PROJECT_NAME:
+				getProject(invoice, invoiceDataMap, value);
+				break;
+			default:
+		}
 	}
 	private Map<String, String> getCNData(Contact contact, Integer userId,CreditNote creditNote) {
 		Map<String, String> map = mailUtility.getInvoiceEmailParamMap();
@@ -1444,147 +1535,93 @@ public class InvoiceRestHelper {
 		User user = userService.findByPK(userId);
 		for (String key : map.keySet()) {
 			String value = map.get(key);
-			switch (key) {
-				case MailUtility.INVOICE_REFEREBCE_NO:
-					getCNNumber(creditNote, invoiceDataMap, value);
-					break;
-				case MailUtility.CN_REFERENCE_NO:
-					getReferenceNumber(creditNote, invoiceDataMap, value);
-					break;
-				case MailUtility.INVOICE_DATE:
-					getCreditNoteDate(creditNote, invoiceDataMap, value);
-					break;
-				case MailUtility.CONTRACT_PO_NUMBER:
-					getCnContactPoNumber(contact, invoiceDataMap, value);
-					break;
-				case MailUtility.CONTACT_NAME:
-					getContact(contact, invoiceDataMap, value);
-					break;
-				case MailUtility.CONTACT_ADDRESS_LINE1:
-					getCNContactAddress1(contact, invoiceDataMap, value);
-					break;
-				case MailUtility.CONTACT_COUNTRY:
-					getCNContactCountry(contact, invoiceDataMap, value);
-					break;
-				case MailUtility.CONTACT_STATE:
-					getCNContactState(contact, invoiceDataMap, value);
-					break;
-				case MailUtility.MOBILE_NUMBER:
-					getMobileNumber(contact, invoiceDataMap, value);
-					break;
-				case MailUtility.CONTACT_CITY:
-					getCNContactCity(contact, invoiceDataMap, value);
-					break;
-				case MailUtility.CONTACT_EMAIL:
-					getCNContactEmail(contact, invoiceDataMap, value);
-					break;
-				case MailUtility.EXCHANGE_RATE:
-					getCNContactCurrencyExchange(contact, invoiceDataMap, value);
-					break;
-				case MailUtility.TOTAL:
-					getCreditNoteTotalAmount(creditNote, invoiceDataMap, value);
-					break;
-					case MailUtility.SENDER_NAME:
-					invoiceDataMap.put(value, user.getUserEmail());
-					break;
-				case MailUtility.COMPANY_NAME:
-					if (user.getCompany() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyName());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANYLOGO:
-					if (user.getCompany() != null && user.getCompany().getCompanyLogo() != null) {
-						String image = " data:image/jpg;base64," + DatatypeConverter.printBase64Binary(
-								user.getCompany().getCompanyLogo()) ;
-						invoiceDataMap.put(value, image);
-					} else {
-						invoiceDataMap.put(value, "");
-					}
-					break;
-				case MailUtility.COMPANY_ADDRESS_LINE1:
-					if (user.getCompany() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyAddressLine1());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANY_ADDRESS_LINE2:
-					if (user.getCompany() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyAddressLine2());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANY_POST_ZIP_CODE:
-					if (user.getCompany().getCompanyPoBoxNumber() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyPoBoxNumber());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANY_COUNTRY_CODE:
-					if (user.getCompany() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyCountryCode().getCountryName());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANY_STATE_REGION:
-					if (user.getCompany() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyStateCode().getStateName());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANY_CITY:
-					if (user.getCompany().getCompanyCity() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyCity());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANY_REGISTRATION_NO:
-					if (user.getCompany().getCompanyRegistrationNumber() != null) {
-						invoiceDataMap.put(value, user.getCompany().getCompanyRegistrationNumber());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.VAT_NUMBER:
-					if (user.getCompany() != null) {
-						invoiceDataMap.put(value, user.getCompany().getVatNumber());
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.COMPANY_MOBILE_NUMBER:
-					if (user.getCompany() != null && user.getCompany().getPhoneNumber() != null) {
-						String[] numbers=user.getCompany().getPhoneNumber().split(",");
-						String mobileNumber="";
-						if(numbers.length!=0){
-							if(numbers[0]!=null)
-								mobileNumber=mobileNumber.concat(numbers[0]);
-						}
-						invoiceDataMap.put(value,mobileNumber );
-					} else {
-						invoiceDataMap.put(value, "---");
-					}
-					break;
-				case MailUtility.POST_ZIP_CODE:
-					getPostZipCode(contact, invoiceDataMap, value);
-					break;
-				case MailUtility.VAT_REGISTRATION_NUMBER:
-					getVatRegistrationNumber(contact, invoiceDataMap, value);
-					break;
-				case MailUtility.NOTES:
-					getCNNotes(creditNote, invoiceDataMap, value);
-					break;
-				default:
-			}
+			populateCreditNoteEmailData(key, value, contact, creditNote, user, invoiceDataMap);
 		}
 		return invoiceDataMap;
+	}
+
+	private void populateCreditNoteEmailData(
+			String key,
+			String value,
+			Contact contact,
+			CreditNote creditNote,
+			User user,
+			Map<String, String> invoiceDataMap) {
+		if (populateCreditNoteIdentityFields(key, value, creditNote, invoiceDataMap)) {
+			return;
+		}
+		if (populateCreditNoteContactFields(key, value, contact, invoiceDataMap)) {
+			return;
+		}
+		if (populateCompanyFields(key, value, user, invoiceDataMap)) {
+			return;
+		}
+		if (MailUtility.NOTES.equals(key)) {
+			getCNNotes(creditNote, invoiceDataMap, value);
+			return;
+		}
+		if (MailUtility.EXCHANGE_RATE.equals(key)) {
+			getCNContactCurrencyExchange(contact, invoiceDataMap, value);
+			return;
+		}
+		if (MailUtility.TOTAL.equals(key)) {
+			getCreditNoteTotalAmount(creditNote, invoiceDataMap, value);
+		}
+	}
+
+	private boolean populateCreditNoteIdentityFields(
+			String key, String value, CreditNote creditNote, Map<String, String> invoiceDataMap) {
+		switch (key) {
+			case MailUtility.INVOICE_REFEREBCE_NO:
+				getCNNumber(creditNote, invoiceDataMap, value);
+				return true;
+			case MailUtility.CN_REFERENCE_NO:
+				getReferenceNumber(creditNote, invoiceDataMap, value);
+				return true;
+			case MailUtility.INVOICE_DATE:
+				getCreditNoteDate(creditNote, invoiceDataMap, value);
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	private boolean populateCreditNoteContactFields(
+			String key, String value, Contact contact, Map<String, String> invoiceDataMap) {
+		switch (key) {
+			case MailUtility.CONTRACT_PO_NUMBER:
+				getCnContactPoNumber(contact, invoiceDataMap, value);
+				return true;
+			case MailUtility.CONTACT_NAME:
+				getContact(contact, invoiceDataMap, value);
+				return true;
+			case MailUtility.CONTACT_ADDRESS_LINE1:
+				getCNContactAddress1(contact, invoiceDataMap, value);
+				return true;
+			case MailUtility.CONTACT_COUNTRY:
+				getCNContactCountry(contact, invoiceDataMap, value);
+				return true;
+			case MailUtility.CONTACT_STATE:
+				getCNContactState(contact, invoiceDataMap, value);
+				return true;
+			case MailUtility.MOBILE_NUMBER:
+				getMobileNumber(contact, invoiceDataMap, value);
+				return true;
+			case MailUtility.CONTACT_CITY:
+				getCNContactCity(contact, invoiceDataMap, value);
+				return true;
+			case MailUtility.CONTACT_EMAIL:
+				getCNContactEmail(contact, invoiceDataMap, value);
+				return true;
+			case MailUtility.POST_ZIP_CODE:
+				getPostZipCode(contact, invoiceDataMap, value);
+				return true;
+			case MailUtility.VAT_REGISTRATION_NUMBER:
+				getVatRegistrationNumber(contact, invoiceDataMap, value);
+				return true;
+			default:
+				return false;
+		}
 	}
 
 
@@ -2518,8 +2555,8 @@ public class InvoiceRestHelper {
 	private void getCreditNoteDate(CreditNote creditNote, Map<String, String> invoiceDataMap, String value) {
 		if (creditNote.getCreditNoteDate() != null) {
 
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-				invoiceDataMap.put(value, creditNote.getCreditNoteDate().toLocalDate().format(formatter));
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
+			invoiceDataMap.put(value, creditNote.getCreditNoteDate().toLocalDate().format(formatter));
 		}
 		else{
 			invoiceDataMap.put(value, "---");
@@ -2588,6 +2625,123 @@ public class InvoiceRestHelper {
 		return statusLabel;
 	}
 	//TODO
+
+	private static final class InvoiceCategoryTotals {
+		private final BigDecimal totalAmount;
+		private final BigDecimal inventoryAssetValue;
+		private final boolean eligibleForInventoryJournalEntry;
+
+		private InvoiceCategoryTotals(
+				BigDecimal totalAmount, BigDecimal inventoryAssetValue, boolean eligibleForInventoryJournalEntry) {
+			this.totalAmount = totalAmount;
+			this.inventoryAssetValue = inventoryAssetValue;
+			this.eligibleForInventoryJournalEntry = eligibleForInventoryJournalEntry;
+		}
+	}
+
+	private InvoiceCategoryTotals computeInvoiceCategoryTotals(
+			Invoice invoice, boolean isCustomerInvoice, List<InvoiceLineItem> sortedItemList) {
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		BigDecimal lineItemDiscount = BigDecimal.ZERO;
+		BigDecimal inventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
+		boolean eligibleForInventoryJournalEntry = false;
+
+		for (InvoiceLineItem sortedLineItem : sortedItemList) {
+			BigDecimal amountWithoutVat =
+					sortedLineItem.getUnitPrice().multiply(BigDecimal.valueOf(sortedLineItem.getQuantity()));
+
+			if (sortedLineItem.getDiscountType().equals(DiscountType.FIXED) && sortedLineItem.getDiscount() != null) {
+				amountWithoutVat = amountWithoutVat.subtract(sortedLineItem.getDiscount());
+				lineItemDiscount = lineItemDiscount.add(sortedLineItem.getDiscount());
+			} else if (sortedLineItem.getDiscountType().equals(DiscountType.PERCENTAGE)
+					&& sortedLineItem.getDiscount() != null) {
+				BigDecimal discountedAmount =
+						amountWithoutVat.multiply(sortedLineItem.getDiscount()).divide(BigDecimal.valueOf(100));
+				amountWithoutVat = amountWithoutVat.subtract(discountedAmount);
+				lineItemDiscount = lineItemDiscount.add(discountedAmount);
+			}
+
+			totalAmount = totalAmount.add(amountWithoutVat);
+
+			if (isCustomerInvoice && Boolean.TRUE.equals(sortedLineItem.getProduct().getIsInventoryEnabled())) {
+				inventoryAssetValuePerTransactionCategory =
+						inventoryAssetValuePerTransactionCategory.add(computeInventoryAssetValue(sortedLineItem));
+				eligibleForInventoryJournalEntry = true;
+			}
+		}
+
+		// Excise is included in product price when TaxType = TRUE (inclusive).
+		for (InvoiceLineItem invoiceLineItem : sortedItemList) {
+			if (invoiceLineItem.getProduct().getExciseStatus() != null
+					&& Boolean.TRUE.equals(invoiceLineItem.getProduct().getExciseStatus())
+					&& invoiceLineItem.getInvoice().getTaxType() != null
+					&& Boolean.TRUE.equals(invoiceLineItem.getInvoice().getTaxType())) {
+				totalAmount = totalAmount.subtract(invoiceLineItem.getExciseAmount());
+			}
+		}
+
+		// VAT is included in product price when TaxType = TRUE (inclusive).
+		if (Boolean.TRUE.equals(invoice.getTaxType())) {
+			for (InvoiceLineItem invoiceLineItem : sortedItemList) {
+				if (invoiceLineItem.getInvoice().getTaxType() != null
+						&& Boolean.TRUE.equals(invoiceLineItem.getInvoice().getTaxType())) {
+					totalAmount = totalAmount.subtract(invoiceLineItem.getVatAmount());
+				}
+			}
+		}
+
+		totalAmount = totalAmount.add(lineItemDiscount);
+		return new InvoiceCategoryTotals(totalAmount, inventoryAssetValuePerTransactionCategory, eligibleForInventoryJournalEntry);
+	}
+
+	private BigDecimal computeInventoryAssetValue(InvoiceLineItem lineItem) {
+		if (lineItem.getProduct().getAvgPurchaseCost() != null) {
+			return BigDecimal.valueOf(lineItem.getQuantity())
+					.multiply(BigDecimal.valueOf(lineItem.getProduct().getAvgPurchaseCost().floatValue()));
+		}
+		BigDecimal inventoryAssetValue = BigDecimal.ZERO;
+		List<Inventory> inventoryList = inventoryService.getInventoryByProductId(lineItem.getProduct().getProductID());
+		for (Inventory inventory : inventoryList) {
+			inventoryAssetValue =
+					inventoryAssetValue.add(
+							BigDecimal.valueOf(lineItem.getQuantity()).multiply(BigDecimal.valueOf(inventory.getUnitCost())));
+		}
+		return inventoryAssetValue;
+	}
+
+	private JournalLineItem buildInvoiceCategoryJournalLineItem(
+			PostingRequestModel postingRequestModel,
+			Integer userId,
+			Invoice invoice,
+			boolean isCustomerInvoice,
+			boolean isReverseEntry,
+			Journal journal,
+			PostingReferenceTypeEnum referenceType,
+			TransactionCategory transactionCategory,
+			BigDecimal totalAmount) {
+		JournalLineItem journalLineItem = new JournalLineItem();
+		journalLineItem.setTransactionCategory(transactionCategory);
+		if (isReverseEntry) {
+			if (isCustomerInvoice) {
+				journalLineItem.setDebitAmount(totalAmount.multiply(invoice.getExchangeRate()));
+			} else {
+				journalLineItem.setCreditAmount(totalAmount.multiply(invoice.getExchangeRate()));
+			}
+		} else {
+			if (isCustomerInvoice) {
+				journalLineItem.setCreditAmount(totalAmount.multiply(invoice.getExchangeRate()));
+			} else {
+				journalLineItem.setDebitAmount(totalAmount.multiply(invoice.getExchangeRate()));
+			}
+		}
+		journalLineItem.setReferenceType(referenceType);
+		journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
+		journalLineItem.setExchangeRate(invoice.getExchangeRate());
+		journalLineItem.setCreatedBy(userId);
+		journalLineItem.setJournal(journal);
+		return journalLineItem;
+	}
+
 	@Transactional(rollbackFor = Exception.class)
 	public Journal invoicePosting(PostingRequestModel postingRequestModel, Integer userId) {
 
@@ -2603,7 +2757,7 @@ public class InvoiceRestHelper {
 			Map<String, Object> map = new HashMap<>();
 			map.put("contact",invoice.getContact());
 			map.put("contactType", invoice.getType());
-		    map.put("deleteFlag",Boolean.FALSE);
+		    map.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
 			ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryService.findByAttributes(map).get(0);
 		journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
 
@@ -2630,7 +2784,7 @@ public class InvoiceRestHelper {
 
 		Map<String, Object> param = new HashMap<>();
 		param.put(JSON_KEY_INVOICE, invoice);
-		param.put("deleteFlag", false);
+		param.put(JSON_KEY_DELETE_FLAG, false);
 
 		List<InvoiceLineItem> invoiceLineItemList = invoiceLineItemService.findByAttributes(param);
 		Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap = new HashMap<>();
@@ -2642,91 +2796,23 @@ public class InvoiceRestHelper {
 		BigDecimal sumOfInventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
 		for (Integer categoryId : tnxcatIdInvLnItemMap.keySet()) {
 			List<InvoiceLineItem> sortedItemList = tnxcatIdInvLnItemMap.get(categoryId);
-			BigDecimal inventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
-			BigDecimal totalAmount = BigDecimal.ZERO;
-			BigDecimal lineItemDiscount = BigDecimal.ZERO;
-				for (InvoiceLineItem sortedLineItem : sortedItemList) {
-
-				BigDecimal amntWithoutVat = sortedLineItem.getUnitPrice()
-						.multiply(BigDecimal.valueOf(sortedLineItem.getQuantity()));
-				if (sortedLineItem.getDiscountType().equals(DiscountType.FIXED) && sortedLineItem.getDiscount()!=null){
-					amntWithoutVat = amntWithoutVat.subtract(sortedLineItem.getDiscount());
-					totalAmount = totalAmount.add(amntWithoutVat);
-					lineItemDiscount = lineItemDiscount.add(sortedLineItem.getDiscount());
-				}
-				else if (sortedLineItem.getDiscountType().equals(DiscountType.PERCENTAGE) && sortedLineItem.getDiscount()!=null){
-
-					BigDecimal discountedAmount = amntWithoutVat.multiply(sortedLineItem.getDiscount()).divide(BigDecimal.valueOf(100));
-					amntWithoutVat = amntWithoutVat.subtract(discountedAmount);
-					totalAmount = totalAmount.add(amntWithoutVat);
-					lineItemDiscount = lineItemDiscount.add(discountedAmount);
-				}
-				else {
-					totalAmount = totalAmount.add(amntWithoutVat);
-				}
-					if (Boolean.TRUE.equals(sortedLineItem.getProduct().getIsInventoryEnabled()) && isCustomerInvoice){
-						List<Inventory> inventoryList = inventoryService.getInventoryByProductId(sortedLineItem.getProduct().
-								getProductID());
-
-					if (sortedLineItem.getProduct().getAvgPurchaseCost()!=null) {
-						inventoryAssetValuePerTransactionCategory = inventoryAssetValuePerTransactionCategory.add(BigDecimal.
-								valueOf(sortedLineItem.getQuantity()).multiply(BigDecimal.valueOf
-										(sortedLineItem.getProduct().getAvgPurchaseCost().floatValue())));
-					}
-					else {
-						for (Inventory inventory : inventoryList) {
-							inventoryAssetValuePerTransactionCategory = inventoryAssetValuePerTransactionCategory.add(BigDecimal.
-									valueOf(sortedLineItem.getQuantity()).multiply(BigDecimal.valueOf
-											(inventory.getUnitCost())));
-
-						}
-					}
-						isEligibleForInventoryJournalEntry = true;
-					}
-			}if(isCustomerInvoice && isEligibleForInventoryJournalEntry) {
-				sumOfInventoryAssetValuePerTransactionCategory = sumOfInventoryAssetValuePerTransactionCategory.add
-						(inventoryAssetValuePerTransactionCategory);
-
+			InvoiceCategoryTotals totals = computeInvoiceCategoryTotals(invoice, isCustomerInvoice, sortedItemList);
+			if (isCustomerInvoice && totals.eligibleForInventoryJournalEntry) {
+				isEligibleForInventoryJournalEntry = true;
+				sumOfInventoryAssetValuePerTransactionCategory =
+						sumOfInventoryAssetValuePerTransactionCategory.add(totals.inventoryAssetValue);
 			}
-			//This list contains ILI which consist of excise Tax included in product price group by Transaction Category Id
-			List<InvoiceLineItem> inclusiveExciseLineItems = sortedItemList.stream().
-					filter(invoiceLineItem -> invoiceLineItem.
-							getProduct().getExciseStatus()!=null && invoiceLineItem.
-							getProduct().getExciseStatus().equals(Boolean.TRUE)).filter(invoiceLineItem ->
-							invoiceLineItem.getInvoice().getTaxType()!=null && invoiceLineItem.getInvoice().getTaxType().equals(Boolean.TRUE)).filter
-							(invoiceLineItem -> invoiceLineItem.getTrnsactioncCategory()
-									.getTransactionCategoryId().equals(categoryId)).collect(Collectors.toList());
-			if (!inclusiveExciseLineItems.isEmpty()){
-				for (InvoiceLineItem invoiceLineItem:inclusiveExciseLineItems){
-					totalAmount = totalAmount.subtract(invoiceLineItem.getExciseAmount());
-				}
-			}
-			//To handle inclusive vat journal entry
-			if (invoice.getTaxType().equals(Boolean.TRUE)){
-				List<InvoiceLineItem> inclusiveVatLineItems = sortedItemList.stream().filter(invoiceLineItem ->
-								invoiceLineItem.getInvoice().getTaxType()!=null && invoiceLineItem.getInvoice().getTaxType().equals(Boolean.TRUE)).
-						filter(invoiceLineItem -> invoiceLineItem.getTrnsactioncCategory()
-								.getTransactionCategoryId().equals(categoryId)).collect(Collectors.toList());
-				if (!inclusiveVatLineItems.isEmpty()){
-					for (InvoiceLineItem invoiceLineItem:inclusiveVatLineItems){
-						totalAmount = totalAmount.subtract(invoiceLineItem.getVatAmount());
-					}
-				}
-			}
-			JournalLineItem journalLineItem = new JournalLineItem();
-			journalLineItem.setTransactionCategory(tnxcatMap.get(categoryId));
-			totalAmount = totalAmount.add(lineItemDiscount);
-			if (isCustomerInvoice)
-
-				journalLineItem.setCreditAmount(totalAmount.multiply(invoice.getExchangeRate()));
-			else
-
-				journalLineItem.setDebitAmount(totalAmount.multiply(invoice.getExchangeRate()));
-			journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
-			journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
-			journalLineItem.setExchangeRate(invoice.getExchangeRate());
-			journalLineItem.setCreatedBy(userId);
-			journalLineItem.setJournal(journal);
+			JournalLineItem journalLineItem =
+					buildInvoiceCategoryJournalLineItem(
+							postingRequestModel,
+							userId,
+							invoice,
+							isCustomerInvoice,
+							false,
+							journal,
+							PostingReferenceTypeEnum.INVOICE,
+							tnxcatMap.get(categoryId),
+							totals.totalAmount);
 			journalLineItemList.add(journalLineItem);
 
 		}
@@ -2968,7 +3054,7 @@ public class InvoiceRestHelper {
 	public Boolean doesInvoiceNumberExist(String referenceNumber){
 		Map<String, Object> attribute = new HashMap<>();
 		attribute.put("referenceNumber", referenceNumber);
-		attribute.put("deleteFlag",false);
+			attribute.put(JSON_KEY_DELETE_FLAG,false);
 		List<Invoice> invoiceList = invoiceService.findByAttributes(attribute);
 		if (invoiceList.isEmpty()){
 			return false;
@@ -3112,7 +3198,7 @@ public class InvoiceRestHelper {
 		Map<String, Object> map = new HashMap<>();
 		map.put("contact",invoice.getContact());
 		map.put("contactType", invoice.getType());
-		map.put("deleteFlag",Boolean.FALSE);
+		map.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
 		ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryService.findByAttributes(map).get(0);
 		journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
 
@@ -3139,7 +3225,7 @@ public class InvoiceRestHelper {
 
 		Map<String, Object> param = new HashMap<>();
 		param.put(JSON_KEY_INVOICE, invoice);
-		param.put("deleteFlag", false);
+		param.put(JSON_KEY_DELETE_FLAG, false);
 
 		List<InvoiceLineItem> invoiceLineItemList = invoiceLineItemService.findByAttributes(param);
 		Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap = new HashMap<>();
@@ -3151,92 +3237,23 @@ public class InvoiceRestHelper {
 		BigDecimal sumOfInventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
 		for (Integer categoryId : tnxcatIdInvLnItemMap.keySet()) {
 			List<InvoiceLineItem> sortedItemList = tnxcatIdInvLnItemMap.get(categoryId);
-			BigDecimal inventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
-			BigDecimal totalAmount = BigDecimal.ZERO;
-			BigDecimal lineItemDiscount = BigDecimal.ZERO;
-				for (InvoiceLineItem sortedLineItem : sortedItemList) {
-
-				BigDecimal amntWithoutVat = sortedLineItem.getUnitPrice()
-						.multiply(BigDecimal.valueOf(sortedLineItem.getQuantity()));
-				if (sortedLineItem.getDiscountType().equals(DiscountType.FIXED) && sortedLineItem.getDiscount()!=null){
-					amntWithoutVat = amntWithoutVat.subtract(sortedLineItem.getDiscount());
-					totalAmount = totalAmount.add(amntWithoutVat);
-					lineItemDiscount = lineItemDiscount.add(sortedLineItem.getDiscount());
-				}
-				else if (sortedLineItem.getDiscountType().equals(DiscountType.PERCENTAGE) && sortedLineItem.getDiscount()!=null){
-
-					BigDecimal discountedAmount = amntWithoutVat.multiply(sortedLineItem.getDiscount()).divide(BigDecimal.valueOf(100));
-					amntWithoutVat = amntWithoutVat.subtract(discountedAmount);
-					totalAmount = totalAmount.add(amntWithoutVat);
-					lineItemDiscount = lineItemDiscount.add(discountedAmount);
-				}
-				else {
-
-					totalAmount = totalAmount.add(amntWithoutVat);
-				}
-					if (Boolean.TRUE.equals(sortedLineItem.getProduct().getIsInventoryEnabled()) && isCustomerInvoice){
-						List<Inventory> inventoryList = inventoryService.getInventoryByProductId(sortedLineItem.getProduct().
-								getProductID());
-
-					if (sortedLineItem.getProduct().getAvgPurchaseCost()!=null) {
-						inventoryAssetValuePerTransactionCategory = inventoryAssetValuePerTransactionCategory.add(BigDecimal.
-								valueOf(sortedLineItem.getQuantity()).multiply(BigDecimal.valueOf
-										(sortedLineItem.getProduct().getAvgPurchaseCost().floatValue())));
-					}
-					else {
-						for (Inventory inventory : inventoryList) {
-							inventoryAssetValuePerTransactionCategory = inventoryAssetValuePerTransactionCategory.add(BigDecimal.
-									valueOf(sortedLineItem.getQuantity()).multiply(BigDecimal.valueOf
-											(inventory.getUnitCost())));
-
-						}
-					}
-						isEligibleForInventoryJournalEntry = true;
-					}
-			}if(isCustomerInvoice && isEligibleForInventoryJournalEntry) {
-				sumOfInventoryAssetValuePerTransactionCategory = sumOfInventoryAssetValuePerTransactionCategory.add
-						(inventoryAssetValuePerTransactionCategory);
-
+			InvoiceCategoryTotals totals = computeInvoiceCategoryTotals(invoice, isCustomerInvoice, sortedItemList);
+			if (isCustomerInvoice && totals.eligibleForInventoryJournalEntry) {
+				isEligibleForInventoryJournalEntry = true;
+				sumOfInventoryAssetValuePerTransactionCategory =
+						sumOfInventoryAssetValuePerTransactionCategory.add(totals.inventoryAssetValue);
 			}
-			//This list contains ILI which consist of excise Tax included in product price group by Transaction Category Id
-			List<InvoiceLineItem> inclusiveExciseLineItems = sortedItemList.stream().
-					filter(invoiceLineItem -> invoiceLineItem.
-							getProduct().getExciseStatus()!=null && invoiceLineItem.
-							getProduct().getExciseStatus().equals(Boolean.TRUE)).filter(invoiceLineItem ->
-							invoiceLineItem.getInvoice().getTaxType()!=null && invoiceLineItem.getInvoice().getTaxType().equals(Boolean.TRUE)).filter
-							(invoiceLineItem -> invoiceLineItem.getTrnsactioncCategory()
-									.getTransactionCategoryId().equals(categoryId)).collect(Collectors.toList());
-			if (!inclusiveExciseLineItems.isEmpty()){
-				for (InvoiceLineItem invoiceLineItem:inclusiveExciseLineItems){
-					totalAmount = totalAmount.subtract(invoiceLineItem.getExciseAmount());
-				}
-			}
-			//To handle inclusive vat journal entry
-			if (invoice.getTaxType().equals(Boolean.TRUE)){
-				List<InvoiceLineItem> inclusiveVatLineItems = sortedItemList.stream().filter(invoiceLineItem ->
-								invoiceLineItem.getInvoice().getTaxType()!=null && invoiceLineItem.getInvoice().getTaxType().equals(Boolean.TRUE)).
-						filter(invoiceLineItem -> invoiceLineItem.getTrnsactioncCategory()
-								.getTransactionCategoryId().equals(categoryId)).collect(Collectors.toList());
-				if (!inclusiveVatLineItems.isEmpty()){
-					for (InvoiceLineItem invoiceLineItem:inclusiveVatLineItems){
-						totalAmount = totalAmount.subtract(invoiceLineItem.getVatAmount());
-					}
-				}
-			}
-			JournalLineItem journalLineItem = new JournalLineItem();
-			journalLineItem.setTransactionCategory(tnxcatMap.get(categoryId));
-			totalAmount = totalAmount.add(lineItemDiscount);
-			if (isCustomerInvoice)
-
-				journalLineItem.setDebitAmount(totalAmount.multiply(invoice.getExchangeRate()));
-			else
-
-				journalLineItem.setCreditAmount(totalAmount.multiply(invoice.getExchangeRate()));
-			journalLineItem.setReferenceType(PostingReferenceTypeEnum.REVERSE_INVOICE);
-			journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
-			journalLineItem.setExchangeRate(invoice.getExchangeRate());
-			journalLineItem.setCreatedBy(userId);
-			journalLineItem.setJournal(journal);
+			JournalLineItem journalLineItem =
+					buildInvoiceCategoryJournalLineItem(
+							postingRequestModel,
+							userId,
+							invoice,
+							isCustomerInvoice,
+							true,
+							journal,
+							PostingReferenceTypeEnum.REVERSE_INVOICE,
+							tnxcatMap.get(categoryId),
+							totals.totalAmount);
 			journalLineItemList.add(journalLineItem);
 
 		}

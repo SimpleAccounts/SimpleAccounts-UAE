@@ -1,7 +1,6 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,8 +11,6 @@ import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditResponseModel;
 import com.simpleaccounts.rest.simpleaccountreports.soa.StatementOfAccountResponseModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.UserService;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

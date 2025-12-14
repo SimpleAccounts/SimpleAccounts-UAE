@@ -1,7 +1,6 @@
 package com.simpleaccounts.rest.transactionimportcontroller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -9,13 +8,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.simpleaccounts.entity.TransactionParsingSetting;
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.parserengine.CsvParser;
 import com.simpleaccounts.parserengine.ExcelParser;
-import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingDetailModel;
 import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingRestHelper;
 import com.simpleaccounts.security.CustomUserDetailsService;
 import com.simpleaccounts.security.JwtTokenUtil;
@@ -23,11 +20,9 @@ import com.simpleaccounts.service.BankAccountService;
 import com.simpleaccounts.service.TransactionParsingSettingService;
 import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
-import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.OSValidator;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

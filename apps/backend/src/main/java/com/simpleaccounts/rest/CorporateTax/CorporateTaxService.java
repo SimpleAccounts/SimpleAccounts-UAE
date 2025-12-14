@@ -73,7 +73,9 @@ public class CorporateTaxService {
                                                        String sortOrder, String sortingCol) {
         List<CorporateTaxModel> corporateTaxModelList = new ArrayList<>();
         List<CorporateTaxFiling> corporateTaxFilingList;
-        Pageable pageable =  getCTPageableRequest(pageNo, pageSize, sortOrder,sortingCol);
+        Pageable pageable = paginationDisable
+                ? Pageable.unpaged()
+                : getCTPageableRequest(pageNo, pageSize, sortOrder, sortingCol);
         Page<CorporateTaxFiling> corporateTaxFilingPage = corporateTaxFilingRepository.findByDeleteFlag( false,pageable);
         corporateTaxFilingList = corporateTaxFilingPage.getContent();
         responseModel.setCount((int)corporateTaxFilingPage.getTotalElements());
@@ -148,7 +150,9 @@ public class CorporateTaxService {
 	                                                       String sortOrder, String sortingCol, Integer userId) {
 	        userService.findByPK(userId);
 	        List<PaymentHistoryModel> paymentHistoryModelList = new ArrayList<>();
-	        Pageable pageable =  getCTPageableRequest(pageNo, pageSize, sortOrder,sortingCol);
+	        Pageable pageable = paginationDisable
+	                ? Pageable.unpaged()
+	                : getCTPageableRequest(pageNo, pageSize, sortOrder, sortingCol);
 	        Page<CorporateTaxPaymentHistory> corporateTaxPaymentHistoryPage = corporateTaxPaymentHistoryRepository.findAll(pageable);
 	        List<CorporateTaxPaymentHistory> corporateTaxPaymentHistoryList = corporateTaxPaymentHistoryPage.getContent();
 	        responseModel.setCount((int)corporateTaxPaymentHistoryPage.getTotalElements());
@@ -172,7 +176,10 @@ public class CorporateTaxService {
         return paymentHistoryModelList;
 	    }
 	    private Pageable getCTPageableRequest(int pageNo, int pageSize, String sortOrder, String sortingCol) {
-	        return PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
+	        String sortBy = (sortingCol == null || sortingCol.trim().isEmpty()) ? "createdDate" : sortingCol;
+	        Sort.Direction direction =
+	                "asc".equalsIgnoreCase(sortOrder) ? Sort.Direction.ASC : Sort.Direction.DESC;
+	        return PageRequest.of(pageNo, pageSize, Sort.by(direction, sortBy));
 	    }
 
     public void createJournalForCT(CorporateTaxFiling corporateTaxFiling, Integer userId) {

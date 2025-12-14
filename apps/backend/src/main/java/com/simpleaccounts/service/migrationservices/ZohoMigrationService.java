@@ -118,7 +118,39 @@ public class ZohoMigrationService {
 	
 	private static final String SETTER_METHOD_SET_CURRENCY = "setCurrency";
 	private static final String SETTER_METHOD_SET_CURRENCY_CODE = "setCurrencyCode";
+	private static final String SETTER_METHOD_SET_COUNTRY = "setCountry";
+	private static final String SETTER_METHOD_SET_STATE = "setState";
+	private static final String SETTER_METHOD_SET_CONTACT_TYPE = "setContactType";
+	private static final String SETTER_METHOD_SET_PLACE_OF_SUPPLY_ID = "setPlaceOfSupplyId";
+	private static final String SETTER_METHOD_SET_TAX_TREATMENT = "setTaxTreatment";
 	private static final String TYPE_OBJECT = "Object";
+	private static final List<String> MIGRATION_DATE_KEYS =
+			Arrays.asList(INVOICE_DATE, BILL_DATE, DATE, EXPENSE_DATE, PURCHASE_ORDER_DATE);
+
+	private static final String PRODUCT_ZOHO = "zoho";
+	private static final String FILE_CONTACTS_CSV = "Contacts.csv";
+	private static final String FILE_VENDORS_CSV = "Vendors.csv";
+	private static final String FILE_ITEM_CSV = "Item.csv";
+	private static final String FILE_EXCHANGE_RATE_CSV = "Exchange_Rate.csv";
+	private static final String FILE_INVOICE_CSV = "Invoice.csv";
+	private static final String FILE_BILL_CSV = "Bill.csv";
+	private static final String FILE_EXPENSE_CSV = "Expense.csv";
+	private static final String FILE_CREDIT_NOTE_CSV = "Credit_Note.csv";
+	private static final String FILE_PURCHASE_ORDER_CSV = "Purchase_Order.csv";
+	private static final String FILE_CHART_OF_ACCOUNTS_CSV = "Chart_of_Accounts.csv";
+
+	private static final List<String> FILE_ORDER =
+			Arrays.asList(
+					FILE_CONTACTS_CSV,
+					FILE_VENDORS_CSV,
+					FILE_ITEM_CSV,
+					FILE_EXCHANGE_RATE_CSV,
+					FILE_INVOICE_CSV,
+					FILE_BILL_CSV,
+					FILE_EXPENSE_CSV,
+					FILE_CREDIT_NOTE_CSV,
+					FILE_PURCHASE_ORDER_CSV,
+					FILE_CHART_OF_ACCOUNTS_CSV);
 	
     private final Logger LOG = LoggerFactory.getLogger(ZohoMigrationService.class);
 	
@@ -180,46 +212,8 @@ public class ZohoMigrationService {
 			{
 	        	for (String file : files) {
 	        		List<Map<String, String>> mapList = migrationUtil.parseCSVFile(fileLocation + File.separator + file);
-		        		List<Map<String, String>> itemsToRemove = new ArrayList<>();
-	        		for (Map<String, String> mapRecord : mapList) {
-        			
-        			if (mapRecord.containsKey(INVOICE_DATE)) {
-        				Integer result = migrationUtil.compareDate(mapRecord.get(INVOICE_DATE), migFromDate);
-        				if (result!=null) {
-        					itemsToRemove = migrationUtil.filterMapRecord(mapList, mapRecord, result, itemsToRemove);
-        				}
-        			}
-        			
-        			if (mapRecord.containsKey(BILL_DATE)) {
-        				Integer result = migrationUtil.compareDate(mapRecord.get(BILL_DATE), migFromDate);
-        				if (result!=null) {
-        					itemsToRemove = migrationUtil.filterMapRecord(mapList, mapRecord, result, itemsToRemove);
-        				}
-        			}
-        			
-        			if (mapRecord.containsKey(DATE)) {
-        				Integer result = migrationUtil.compareDate(mapRecord.get(DATE), migFromDate);
-        				if (result!=null) {
-        					itemsToRemove = migrationUtil.filterMapRecord(mapList, mapRecord, result, itemsToRemove);
-        				}
-        			}
-        			
-        			if (mapRecord.containsKey(EXPENSE_DATE)) {
-        				Integer result = migrationUtil.compareDate(mapRecord.get(EXPENSE_DATE), migFromDate);
-        				if (result!=null) {
-        					itemsToRemove = migrationUtil.filterMapRecord(mapList, mapRecord, result, itemsToRemove);
-        				}
-        			}
-        			
-        			if (mapRecord.containsKey(PURCHASE_ORDER_DATE)) {
-        				Integer result = migrationUtil.compareDate(mapRecord.get(PURCHASE_ORDER_DATE), migFromDate);
-        				if (result!=null) {
-        					itemsToRemove = migrationUtil.filterMapRecord(mapList, mapRecord, result, itemsToRemove);
-        				}
-        			}
-        			
-        		}
-        		mapList.removeAll(itemsToRemove);
+	        		List<Map<String, String>> itemsToRemove =
+							filterMapRecordsByMigrationFromDate(mapList, migFromDate);
         		
 	        		List<Product.TableList.Table> tableList = product.getTableList().getTable();
 	        		List<Product.TableList.Table> tables = migrationUtil.getTableName(tableList, file);
@@ -260,35 +254,11 @@ public class ZohoMigrationService {
 									if (StringUtils.isEmpty(val))
 										continue;
 								String setterMethod = column.getSetterMethod();
-								if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_CURRENCY)) {
-									Currency currency = migrationUtil.getCurrencyIdByValue(val);
-									                                    migrationUtil.setRecordIntoEntity(entity, setterMethod, currency, TYPE_OBJECT);								} else if (setterMethod.equalsIgnoreCase("setCountry")) {
-									Integer value = migrationUtil.getCountryIdByValue(val);
-									Country country = countryService.findByPK(value);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, country, TYPE_OBJECT);
-								} else if (setterMethod.equalsIgnoreCase("setState")) {
-									Integer value = migrationUtil.getStateIdByInputColumnValue(val);
-									State state = stateService.findByPK(value);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, state, TYPE_OBJECT);
-								} else if (setterMethod.equalsIgnoreCase("setContactType")) {
-									Integer value = migrationUtil.getContactType(val);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, value, TYPE_OBJECT);
-								} else if (setterMethod.equalsIgnoreCase("setPlaceOfSupplyId")) {
-									if (StringUtils.isEmpty(val))
-										continue;
-									PlaceOfSupply placeOfSupply = migrationUtil.getPlaceOfSupplyByValue(val);
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, placeOfSupply, TYPE_OBJECT);
-								} else if (setterMethod.equalsIgnoreCase("setTaxTreatment")) {
-										if (StringUtils.isEmpty(val))
-											continue;
-										val = setTaxTreatmentValues(val);
-										TaxTreatment taxTreatment = migrationUtil.getTaxTreatmentByValue(val);
-										migrationUtil.setRecordIntoEntity(entity, setterMethod, taxTreatment, TYPE_OBJECT);
-									} 
-								else {
-									// set into entity
-									migrationUtil.setRecordIntoEntity(entity, setterMethod, val, column.getDataType());
+								if (setSpecialColumnValue(entity, setterMethod, val)) {
+									continue;
 								}
+								// set into entity
+								migrationUtil.setRecordIntoEntity(entity, setterMethod, val, column.getDataType());
 							}
 							migrationUtil.setDefaultSetterValues(entity, userId);
 							Optional<Product.TableList.Table> contactTable = tables.stream().filter(t -> t.getName().equalsIgnoreCase(CONTACTS)).findFirst();
@@ -322,6 +292,73 @@ public class ZohoMigrationService {
 		}
         return list;
     }
+
+	private List<Map<String, String>> filterMapRecordsByMigrationFromDate(
+			List<Map<String, String>> mapList, String migFromDate) {
+		List<Map<String, String>> itemsToRemove = new ArrayList<>();
+		if (mapList == null || mapList.isEmpty() || StringUtils.isEmpty(migFromDate)) {
+			return itemsToRemove;
+		}
+		for (Map<String, String> mapRecord : mapList) {
+			for (String dateKey : MIGRATION_DATE_KEYS) {
+				if (!mapRecord.containsKey(dateKey)) {
+					continue;
+				}
+				Integer result = migrationUtil.compareDate(mapRecord.get(dateKey), migFromDate);
+				if (result != null) {
+					itemsToRemove = migrationUtil.filterMapRecord(mapList, mapRecord, result, itemsToRemove);
+				}
+			}
+		}
+		mapList.removeAll(itemsToRemove);
+		return itemsToRemove;
+	}
+
+	private boolean setSpecialColumnValue(Object entity, String setterMethod, String val) {
+		if (setterMethod == null) {
+			return false;
+		}
+		if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_CURRENCY)) {
+			Currency currency = migrationUtil.getCurrencyIdByValue(val);
+			migrationUtil.setRecordIntoEntity(entity, setterMethod, currency, TYPE_OBJECT);
+			return true;
+		}
+		if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_COUNTRY)) {
+			Integer value = migrationUtil.getCountryIdByValue(val);
+			Country country = countryService.findByPK(value);
+			migrationUtil.setRecordIntoEntity(entity, setterMethod, country, TYPE_OBJECT);
+			return true;
+		}
+		if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_STATE)) {
+			Integer value = migrationUtil.getStateIdByInputColumnValue(val);
+			State state = stateService.findByPK(value);
+			migrationUtil.setRecordIntoEntity(entity, setterMethod, state, TYPE_OBJECT);
+			return true;
+		}
+		if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_CONTACT_TYPE)) {
+			Integer value = migrationUtil.getContactType(val);
+			migrationUtil.setRecordIntoEntity(entity, setterMethod, value, TYPE_OBJECT);
+			return true;
+		}
+		if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_PLACE_OF_SUPPLY_ID)) {
+			if (StringUtils.isEmpty(val)) {
+				return true;
+			}
+			PlaceOfSupply placeOfSupply = migrationUtil.getPlaceOfSupplyByValue(val);
+			migrationUtil.setRecordIntoEntity(entity, setterMethod, placeOfSupply, TYPE_OBJECT);
+			return true;
+		}
+		if (setterMethod.equalsIgnoreCase(SETTER_METHOD_SET_TAX_TREATMENT)) {
+			if (StringUtils.isEmpty(val)) {
+				return true;
+			}
+			String normalized = setTaxTreatmentValues(val);
+			TaxTreatment taxTreatment = migrationUtil.getTaxTreatmentByValue(normalized);
+			migrationUtil.setRecordIntoEntity(entity, setterMethod, taxTreatment, TYPE_OBJECT);
+			return true;
+		}
+		return false;
+	}
 
 	private String setTaxTreatmentValues(String val) {
 		if(val.equalsIgnoreCase("vat_registered")) {
@@ -452,8 +489,7 @@ public class ZohoMigrationService {
 	     * @return
 	     */
 	    private List<String> getFileOrderList() {
-	        List<String> fileOrder = Arrays.asList("Contacts.csv", "Vendors.csv", "Item.csv", "Exchange_Rate.csv", "Invoice.csv", "Bill.csv", "Expense.csv", "Credit_Note.csv", "Purchase_Order.csv", "Chart_of_Accounts.csv");
-	        return fileOrder;
+	        return FILE_ORDER;
 	    }
 	    
 	    /**
@@ -507,15 +543,7 @@ public class ZohoMigrationService {
 		 * To check that isSpecialHandling Needed
 		 */
 		protected boolean isSpecialHandlingNeeded(String productName, String file) {
-	        if (StringUtils.equalsIgnoreCase("zoho", productName) && (StringUtils.equalsIgnoreCase(file, "Item.csv")) ||
-	                StringUtils.equalsIgnoreCase(file, "Invoice.csv") ||
-	                StringUtils.equalsIgnoreCase(file, "Bill.csv") || StringUtils.equalsIgnoreCase(file, "Credit_Note.csv") ||
-	                StringUtils.equalsIgnoreCase(file, "Purchase_Order.csv") || StringUtils.equalsIgnoreCase(file, "Expense.csv")
-	                || StringUtils.equalsIgnoreCase(file, "Vendors.csv") || StringUtils.equalsIgnoreCase(file, "Exchange_Rate.csv")
-	                || StringUtils.equalsIgnoreCase(file, "Chart_of_Accounts.csv")) {
-	            return true;
-	        } else
-	            return false;
+	        return StringUtils.equalsIgnoreCase(PRODUCT_ZOHO, productName) && FILE_ORDER.contains(file);
 	    }
     
 	    /**

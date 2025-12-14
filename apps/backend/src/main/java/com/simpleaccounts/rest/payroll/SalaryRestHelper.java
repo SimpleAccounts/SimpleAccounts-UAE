@@ -39,13 +39,13 @@ import javax.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-@RequiredArgsConstructor
 public class SalaryRestHelper {
     private final Logger logger = LoggerFactory.getLogger(SalaryRestHelper.class);
     private static final String PAYROLL_LIABILITY = "PAYROLL_LIABILITY";
@@ -86,6 +86,47 @@ public class SalaryRestHelper {
     private final MailUtility mailUtility;
     private final EmployeeController employeeController;
     private final SalaryServiceImpl salaryServiceImpl;
+
+    public SalaryRestHelper(
+            JwtTokenUtil jwtTokenUtil,
+            EmployeeService employeeService,
+            JournalService journalService,
+            UserService userService,
+            SalaryService salaryService,
+            DateFormatUtil dateFormatUtil,
+            ChartOfAccountService chartOfAccountService,
+            TransactionCategoryService transactionCategoryService,
+            CoacTransactionCategoryService coacTransactionCategoryService,
+            BankAccountService bankAccountService,
+            EmployeeTransactioncategoryService employeeTransactioncategoryService,
+            JournalLineItemService journalLineItemService,
+            EmployeeSalaryComponentRelationService employeeSalaryComponentRelationService,
+            ResourceLoader resourceLoader,
+            EmailSender emailSender,
+            EmaiLogsService emaiLogsService,
+            MailUtility mailUtility,
+            @Lazy EmployeeController employeeController,
+            SalaryServiceImpl salaryServiceImpl) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.employeeService = employeeService;
+        this.journalService = journalService;
+        this.userService = userService;
+        this.salaryService = salaryService;
+        this.dateFormatUtil = dateFormatUtil;
+        this.chartOfAccountService = chartOfAccountService;
+        this.transactionCategoryService = transactionCategoryService;
+        this.coacTransactionCategoryService = coacTransactionCategoryService;
+        this.bankAccountService = bankAccountService;
+        this.employeeTransactioncategoryService = employeeTransactioncategoryService;
+        this.journalLineItemService = journalLineItemService;
+        this.employeeSalaryComponentRelationService = employeeSalaryComponentRelationService;
+        this.resourceLoader = resourceLoader;
+        this.emailSender = emailSender;
+        this.emaiLogsService = emaiLogsService;
+        this.mailUtility = mailUtility;
+        this.employeeController = employeeController;
+        this.salaryServiceImpl = salaryServiceImpl;
+    }
 
     @Transactional(rollbackFor = Exception.class)
     public String generateSalary(SalaryPersistModel salaryPersistModel ,  HttpServletRequest request) {
@@ -449,7 +490,7 @@ CategoryParam.put("transactionCategoryName", PAYROLL_LIABILITY);
                  .replace("{startDate}",salarySlipModel.getPayPeriod().substring(0, Math.min(salarySlipModel.getPayPeriod().length(), 10)).replace("/", "-"))
                  .replace("{endDate}",salarySlipModel.getPayPeriod().substring(Math.max(salarySlipModel.getPayPeriod().length() - 10, 0)).replace("/", "-"));
 
-        mailUtility.triggerEmailOnBackground2("Payslip", mail,pdf, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+        mailUtility.triggerEmailOnBackground2("Payslip", mail, pdf, EmailConstant.ADMIN_SUPPORT_EMAIL,
                 EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{employee.getEmail()},
                 true);
 

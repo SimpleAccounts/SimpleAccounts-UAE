@@ -14,8 +14,6 @@ import com.simpleaccounts.constant.dbfilter.ProductFilterEnum;
 import com.simpleaccounts.entity.Product;
 import com.simpleaccounts.entity.ProductLineItem;
 import com.simpleaccounts.rest.PaginationModel;
-import com.simpleaccounts.rest.PaginationResponseModel;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;

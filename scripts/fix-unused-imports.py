@@ -111,8 +111,8 @@ def find_java_files(root_dir):
     """Find all Java files in the directory."""
     java_files = []
     for root, dirs, files in os.walk(root_dir):
-        # Skip test directories and build directories
-        if 'test' in root or 'target' in root or 'build' in root:
+        # Skip build output directories (but do not skip tests; Sonar reports there too).
+        if 'target' in root or 'build' in root:
             continue
         for file in files:
             if file.endswith('.java'):

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # SonarQube API Configuration
-SONARQUBE_URL="https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io"
-SONARQUBE_TOKEN="squ_a9dfb5e603c5ced7c6bb3133cce0b3cfdaf3c514"
+SONARQUBE_URL="${SONARQUBE_URL:-https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io}"
+SONARQUBE_TOKEN="${SONARQUBE_TOKEN:?SONARQUBE_TOKEN is required (export it in your environment)}"
 PROJECT_KEY="SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9"
 
 # Output file

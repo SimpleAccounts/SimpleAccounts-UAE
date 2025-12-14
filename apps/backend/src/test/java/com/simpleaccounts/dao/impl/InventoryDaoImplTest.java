@@ -1,7 +1,6 @@
 package com.simpleaccounts.dao.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -10,12 +9,9 @@ import static org.mockito.Mockito.when;
 import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.InventoryFilterEnum;
-import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.Inventory;
 import com.simpleaccounts.entity.Product;
 import com.simpleaccounts.rest.PaginationModel;
-import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.rest.productcontroller.InventoryListModel;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

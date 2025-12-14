@@ -27,7 +27,6 @@ import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.OSValidator;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

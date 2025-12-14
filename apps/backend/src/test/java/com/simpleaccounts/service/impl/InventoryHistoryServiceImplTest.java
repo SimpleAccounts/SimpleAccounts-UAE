@@ -9,7 +9,6 @@ import com.simpleaccounts.dao.ActivityDao;
 import com.simpleaccounts.dao.InventoryHistoryDao;
 import com.simpleaccounts.entity.Inventory;
 import com.simpleaccounts.entity.InventoryHistory;
-import com.simpleaccounts.entity.Product;
 import com.simpleaccounts.exceptions.ServiceException;
 import com.simpleaccounts.rest.InventoryController.InventoryRevenueModel;
 import com.simpleaccounts.rest.InventoryController.TopInventoryRevenueModel;

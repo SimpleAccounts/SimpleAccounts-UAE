@@ -168,14 +168,14 @@ public class EmployeeController {
 	@Transactional(rollbackFor = Exception.class)
 	@ApiOperation(value = "Delete Employee in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deleteProducts(@RequestBody DeleteModel ids) {
+	public ResponseEntity<Void> deleteProducts(@RequestBody DeleteModel ids) {
 		try {
 			employeeService.deleteByIds(ids.getIds());
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@LogRequest

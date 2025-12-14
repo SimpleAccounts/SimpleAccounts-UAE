@@ -282,13 +282,13 @@ public class TransactionCategoryRestController{
 	@LogRequest
 	@ApiOperation(value = "Get Transaction category For Product")
 	@GetMapping(value = "/getTransactionCategoryListForManualJornal")
-	public ResponseEntity getTransactionCategoryListManualJornal(){
+	public ResponseEntity<List<SingleLevelDropDownModel>> getTransactionCategoryListManualJornal(){
 		List<SingleLevelDropDownModel> response  = new ArrayList<>();
 		List<TransactionCategory> transactionCategoryList = transactionCategoryService.getTransactionCategoryListManualJornal();
 		if (transactionCategoryList!=null){
 			response = transcationCategoryHelper.getSingleLevelDropDownModelListForManualJournal(transactionCategoryList);
 		}
 
-		return new ResponseEntity (response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

@@ -2,7 +2,6 @@ package com.simpleaccounts.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,7 +11,6 @@ import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.EmployeeTransactionCategoryRelation;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.exceptions.ServiceException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;

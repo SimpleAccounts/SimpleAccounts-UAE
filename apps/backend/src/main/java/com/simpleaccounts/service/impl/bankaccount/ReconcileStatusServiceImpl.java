@@ -12,18 +12,24 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service("reconcileStatusService")
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-@RequiredArgsConstructor
 public class ReconcileStatusServiceImpl extends ReconcileStatusService  {
 
     private final ReconcileStatusDao reconcilestatusDao;
     private final TransactionServiceImpl transactionService;
+
+    public ReconcileStatusServiceImpl(
+            ReconcileStatusDao reconcilestatusDao,
+            @Lazy TransactionServiceImpl transactionService) {
+        this.reconcilestatusDao = reconcilestatusDao;
+        this.transactionService = transactionService;
+    }
 
     @Override
     public  List<ReconcileStatus> getAllReconcileStatusListByBankAccountId(Integer bankAccountId){
