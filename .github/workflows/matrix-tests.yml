@@ -1,0 +1,88 @@
+# Additional matrix testing for broader compatibility coverage.
+# This workflow is intentionally separate from the main CI so failures can be evaluated before making them required.
+
+name: Matrix Tests
+
+on:
+  pull_request:
+    branches: ['develop', 'master']
+  push:
+    branches: ['develop', 'master']
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_OPTIONS: --openssl-legacy-provider
+  SPRING_PROFILES_ACTIVE: test
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend Tests (Matrix)
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            java: '11'
+            experimental: false
+          - os: windows-latest
+            java: '11'
+            experimental: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9 # v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run backend tests
+        working-directory: apps/backend
+        run: mvn -B -ntp test -Dspring.profiles.active=test
+
+  frontend:
+    name: Frontend Unit Tests (Matrix)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - node: '18.x'
+            experimental: false
+          - node: '20.x'
+            experimental: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install dependencies
+        run: |
+          npm ci --legacy-peer-deps
+          cd apps/frontend && npm ci --legacy-peer-deps
+
+      - name: Run frontend unit tests
+        working-directory: apps/frontend
+        run: npm test -- --watchAll=false
+        env:
+          CI: true

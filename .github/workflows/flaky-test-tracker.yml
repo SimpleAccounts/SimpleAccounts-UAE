@@ -21,10 +21,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Download Test Results
-        uses: dawidd6/action-download-artifact@v11
+        uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5 # v11
         with:
           workflow: nightly.yml
           name: unit-test-results
@@ -32,7 +32,7 @@ jobs:
         continue-on-error: true
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '18.x'
 
@@ -168,7 +168,7 @@ jobs:
 
       - name: Create Issue for High Flaky Rate
         if: failure()
-        uses: actions/github-script@v8
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           script: |
             const title = `[Flaky Tests] High flakiness detected - ${new Date().toISOString().split('T')[0]}`;
@@ -213,7 +213,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload Flaky Test Registry
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
           name: flaky-test-registry
