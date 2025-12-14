@@ -140,8 +140,6 @@
     "extends": "react-app"
   },
   "jest": {
-    "testEnvironment": "jsdom",
-    "roots": ["<rootDir>/src"],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",
       "!**/*index.js",
