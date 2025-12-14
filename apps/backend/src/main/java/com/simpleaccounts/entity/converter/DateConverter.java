@@ -1,13 +1,11 @@
 package com.simpleaccounts.entity.converter;
 
-import lombok.extern.slf4j.Slf4j;
-
 import com.simpleaccounts.aop.LogRequest;
-
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by Utkarsh Bhavsar on 03/04/17.

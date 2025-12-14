@@ -3,7 +3,6 @@ package com.simpleaccounts.rest.creditnotecontroller;
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.REFUND_CD_TEMPLATE;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.entity.*;
@@ -19,7 +18,6 @@ import com.simpleaccounts.rest.PostingRequestModel;
 import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateService;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceDueAmountModel;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceLineItemModel;
-import com.simpleaccounts.rest.invoicecontroller.InvoiceListModel;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
 import com.simpleaccounts.rest.receiptcontroller.ReceiptRequestModel;
 import com.simpleaccounts.security.JwtTokenUtil;
@@ -251,15 +249,15 @@ public class CreditNoteRestHelper {
                 lineItem.setDeleteFlag(false);
                 lineItem.setQuantity(model.getQuantity());
                 lineItem.setDescription(model.getDescription());
-                lineItem.setUnitPrice(model.getUnitPrice());
-                lineItem.setSubTotal(model.getSubTotal());
-                if(model.getUnitType()!=null)
-                    lineItem.setUnitType(model.getUnitType());
-                if(model.getUnitTypeId()!=null)
-                    lineItem.setUnitTypeId(unitTypesRepository.findById(model.getUnitTypeId()).get());
-                if (model.getVatCategoryId() != null)
-                    lineItem.setVatCategory(vatCategoryService.findByPK(Integer.parseInt(model.getVatCategoryId())));
-                lineItem.setCreditNote(creditNote);
+	                lineItem.setUnitPrice(model.getUnitPrice());
+	                lineItem.setSubTotal(model.getSubTotal());
+	                if(model.getUnitType()!=null)
+	                    lineItem.setUnitType(model.getUnitType());
+	                if(model.getUnitTypeId()!=null)
+	                    unitTypesRepository.findById(model.getUnitTypeId()).ifPresent(lineItem::setUnitTypeId);
+	                if (model.getVatCategoryId() != null)
+	                    lineItem.setVatCategory(vatCategoryService.findByPK(Integer.parseInt(model.getVatCategoryId())));
+	                lineItem.setCreditNote(creditNote);
                 if (model.getExciseTaxId() != null) {
                     lineItem.setExciseCategory(exciseTaxService.getExciseTax(model.getExciseTaxId()));
                 }
@@ -286,11 +284,11 @@ public class CreditNoteRestHelper {
         return lineItems;
     }
 
-    public Journal creditNotePosting(PostingRequestModel postingRequestModel, Integer userId) {
-        List<JournalLineItem> journalLineItemList = new ArrayList<>();
+	    public Journal creditNotePosting(PostingRequestModel postingRequestModel, Integer userId) {
+	        List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
-        CreditNote creditNote = creditNoteRepository.findById(postingRequestModel.getPostingRefId()).get();
-        boolean isCreditNote = InvoiceTypeConstant.isCustomerCreditNote(creditNote.getType());
+	        CreditNote creditNote = creditNoteRepository.findById(postingRequestModel.getPostingRefId()).orElseThrow();
+	        boolean isCreditNote = InvoiceTypeConstant.isCustomerCreditNote(creditNote.getType());
 
         Journal journal = new Journal();
         JournalLineItem journalLineItem1 = new JournalLineItem();
@@ -341,7 +339,6 @@ public class CreditNoteRestHelper {
             BigDecimal totalAmount = BigDecimal.ZERO;
             BigDecimal lineItemDiscount = BigDecimal.ZERO;
             BigDecimal inventoryAssetValuePerTransactionCategory = BigDecimal.ZERO;
-            TransactionCategory purchaseCategory = null;
             for (CreditNoteLineItem sortedLineItem : sortedItemList) {
                 BigDecimal amntWithoutVat = sortedLineItem.getUnitPrice()
                         .multiply(BigDecimal.valueOf(sortedLineItem.getQuantity()));
@@ -376,10 +373,6 @@ public class CreditNoteRestHelper {
 
                         }
                     }
-                    purchaseCategory = sortedLineItem.getTransactionCategory() != null ? sortedLineItem.getTransactionCategory()
-                            : sortedLineItem.getProduct().getLineItemList().stream()
-                            .filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
-                            .getTransactioncategory();
                     isEligibleForInventoryJournalEntry = true;
                 }
             }if(isCreditNote && isEligibleForInventoryJournalEntry) {
@@ -571,14 +564,14 @@ public class CreditNoteRestHelper {
                 } else {
                     handleDebitNoteInventory(lineItem, product, lineItem.getCreditNote().getContact(), userId);
                 }
-            }
-            if (isCustomerInvoice)
-                category = lineItem.getProduct().getLineItemList().stream()
-                        .filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().get()
-                        .getTransactioncategory();
-            else if (Boolean.TRUE.equals(lineItem.getProduct().getIsInventoryEnabled())) {
-                category = transactionCategoryService
-                        .findTransactionCategoryByTransactionCategoryCode(
+	            }
+	            if (isCustomerInvoice)
+	                category = lineItem.getProduct().getLineItemList().stream()
+	                        .filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().orElseThrow()
+	                        .getTransactioncategory();
+	            else if (Boolean.TRUE.equals(lineItem.getProduct().getIsInventoryEnabled())) {
+	                category = transactionCategoryService
+	                        .findTransactionCategoryByTransactionCategoryCode(
                                 TransactionCategoryCodeEnum.INVENTORY_ASSET.getCode());
             } else {
                 category = lineItem.getTransactionCategory();
@@ -701,7 +694,6 @@ public class CreditNoteRestHelper {
         }
 
         if (creditNote.getCreditNoteDate() != null) {
-            ZoneId timeZone = ZoneId.systemDefault();
             Date date = Date.from(creditNote.getCreditNoteDate().toInstant());
             requestModel.setCreditNoteDate(date);
         }
@@ -876,7 +868,7 @@ public class CreditNoteRestHelper {
                                                   String sortOrder, String sortingCol,Integer userId,Integer type) {
         Pageable paging = getCreditNotePageableRequest(pageNo, pageSize, sortOrder, sortingCol);
         List<CreditNoteListModel> creditNoteListModels = new ArrayList<>();
-        List<CreditNote> creditNoteList = new ArrayList<>();
+        List<CreditNote> creditNoteList;
         Pageable pageable =  getTCNPageableRequest(pageNo, pageSize, sortOrder,sortingCol);
         if(contact!=null){
             creditNoteList = getCreditNoteListForCustomer(contact,paging,responseModel,type);
@@ -933,19 +925,15 @@ public class CreditNoteRestHelper {
 
     private List<CreditNote> getCreditNoteListForCustomer(Integer contact, Pageable paging,
                                                         PaginationResponseModel responseModel,Integer type ) {
-        List<CreditNote> creditNoteList = new ArrayList<>();
-        Page<CreditNote> page = creditNoteRepository.findAllByContact(contact,type,paging);
-        creditNoteList = page.getContent();
-        responseModel.setCount((int)page.getTotalElements());
-        return creditNoteList;
+        Page<CreditNote> page = creditNoteRepository.findAllByContact(contact, type, paging);
+        responseModel.setCount((int) page.getTotalElements());
+        return page.getContent();
     }
     private List<CreditNote> getCreditNoteListByAmount(BigDecimal amount, Pageable paging,
                                                           PaginationResponseModel responseModel,Integer type ) {
-        List<CreditNote> creditNoteList = new ArrayList<>();
-        Page<CreditNote> page = creditNoteRepository.findAllByTotalAmount(amount,type,paging);
-        creditNoteList = page.getContent();
-        responseModel.setCount((int)page.getTotalElements());
-        return creditNoteList;
+        Page<CreditNote> page = creditNoteRepository.findAllByTotalAmount(amount, type, paging);
+        responseModel.setCount((int) page.getTotalElements());
+        return page.getContent();
     }
     private Pageable getCreditNotePageableRequest(int pageNo, int pageSize, String sortOrder, String sortingCol) {
         return PageRequest.of(pageNo, pageSize,Sort.by("created_date").descending());
@@ -1020,12 +1008,12 @@ public class CreditNoteRestHelper {
         return receipt;
     }
 
-    public Journal refundPosting(PostingRequestModel postingRequestModel, Integer userId,
-                                 TransactionCategory depositToTransactionCategory, Boolean isCNWithoutProduct, Integer contactId,Date paymentDate) {
-        List<JournalLineItem> journalLineItemList = new ArrayList<>();
-        CreditNote creditNote = null;
-        creditNote = creditNoteRepository.findById(postingRequestModel.getPostingRefId()).get();
-        boolean isCreditNote = InvoiceTypeConstant.isCustomerCreditNote(creditNote.getType());
+	    public Journal refundPosting(PostingRequestModel postingRequestModel, Integer userId,
+	                                 TransactionCategory depositToTransactionCategory, Boolean isCNWithoutProduct, Integer contactId,Date paymentDate) {
+	        List<JournalLineItem> journalLineItemList = new ArrayList<>();
+	        CreditNote creditNote = null;
+	        creditNote = creditNoteRepository.findById(postingRequestModel.getPostingRefId()).orElseThrow();
+	        boolean isCreditNote = InvoiceTypeConstant.isCustomerCreditNote(creditNote.getType());
 
         Journal journal = new Journal();
         JournalLineItem journalLineItem1 = new JournalLineItem();
@@ -1323,8 +1311,8 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         }
         bankAccount.setCurrentBalance(currentBalance);
         bankAccountService.update(bankAccount);
-        CreditNote creditNote = creditNoteRepository.findById(requestModel.getCreditNoteId()).get();
-        TransactionExplanation transactionExplanation = new TransactionExplanation();
+	        CreditNote creditNote = creditNoteRepository.findById(requestModel.getCreditNoteId()).orElseThrow();
+	        TransactionExplanation transactionExplanation = new TransactionExplanation();
         transactionExplanation.setCreatedBy(userId);
         transactionExplanation.setCreatedDate(LocalDateTime.now());
         transactionExplanation.setTransaction(transaction);
@@ -1378,17 +1366,15 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
                     dateFormtUtil.getDateAsString(requestModel.getPaymentDate(), DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY).replace("/", "-"), request);
         }
     }
-    message = new SimpleAccountsMessage("0082",
-                        MessageUtil.getMessage("refund.created.successful.msg.0082"), false);
-    return message;
-}
+	    return new SimpleAccountsMessage("0082",
+	                        MessageUtil.getMessage("refund.created.successful.msg.0082"), false);
+	}
 
     public String applyToInvoice(RefundAgainstInvoicesRequestModel refundAgainstInvoicesRequestModel, Integer userId, HttpServletRequest request) {
-        BigDecimal totalInvoiceAmount = BigDecimal.ZERO;
-        for (Integer invoiceId : refundAgainstInvoicesRequestModel.getInvoiceIds()) {
-            CreditNote creditNote = new CreditNote();
-            creditNote = creditNoteRepository.findById(refundAgainstInvoicesRequestModel.getCreditNoteId()).get();
-            Invoice invoice = invoiceService.findByPK(invoiceId);
+		        BigDecimal totalInvoiceAmount = BigDecimal.ZERO;
+		        for (Integer invoiceId : refundAgainstInvoicesRequestModel.getInvoiceIds()) {
+		            CreditNote creditNote = creditNoteRepository.findById(refundAgainstInvoicesRequestModel.getCreditNoteId()).orElseThrow();
+		            Invoice invoice = invoiceService.findByPK(invoiceId);
             CreditNoteInvoiceRelation creditDebitNoteInvoiceRelation = new CreditNoteInvoiceRelation();
             creditDebitNoteInvoiceRelation.setCreatedBy(userId);
             creditDebitNoteInvoiceRelation.setCreatedDate(LocalDateTime.now());
@@ -1418,20 +1404,19 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
                 invoice.setStatus(CommonStatusEnum.PAID.getValue());
                 creditNote.setDueAmount(BigDecimal.ZERO);
                 creditNote.setStatus(CommonStatusEnum.CLOSED.getValue());
-            }
-            invoiceService.update(invoice);
-            totalInvoiceAmount.add(invoice.getDueAmount());
-            creditNoteRepository.save(creditNote);
-            PostingRequestModel postingRequestModel = new PostingRequestModel();
-            contactService.sendInvoiceThankYouMail(invoice.getContact(),1,invoice.getReferenceNumber(),invoice.getTotalAmount().subtract(invoice.getDueAmount()).setScale(2, RoundingMode.HALF_EVEN).toString(),dateFormtUtil.getLocalDateTimeAsString(LocalDateTime.now(),DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY).replace("/","-"), invoice.getDueAmount(), request);
-        }
+	            }
+	            invoiceService.update(invoice);
+		            totalInvoiceAmount = totalInvoiceAmount.add(invoice.getDueAmount());
+		            creditNoteRepository.save(creditNote);
+	            contactService.sendInvoiceThankYouMail(invoice.getContact(),1,invoice.getReferenceNumber(),invoice.getTotalAmount().subtract(invoice.getDueAmount()).setScale(2, RoundingMode.HALF_EVEN).toString(),dateFormtUtil.getLocalDateTimeAsString(LocalDateTime.now(),DATE_FORMAT_DD_SLASH_MM_SLASH_YYYY).replace("/","-"), invoice.getDueAmount(), request);
+	        }
 
         return "Credit Note Applied Against Invoice";
     }
 
-    public List<CreditNoteRequestModel> getInvoicesByCreditNoteId(Integer id) {
-        CreditNote creditNote = creditNoteRepository.findById(id).get();
-        List<CreditNoteRequestModel> creditNoteRequestModelList = new ArrayList<>();
+	    public List<CreditNoteRequestModel> getInvoicesByCreditNoteId(Integer id) {
+	        CreditNote creditNote = creditNoteRepository.findById(id).orElseThrow();
+	        List<CreditNoteRequestModel> creditNoteRequestModelList = new ArrayList<>();
         CreditNoteRequestModel creditNoteRequestModel = new CreditNoteRequestModel();
         if(creditNote.getInvoiceId()!=null){
             Invoice invoice = invoiceService.findByPK(creditNote.getInvoiceId());
@@ -1440,7 +1425,6 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
             creditNoteRequestModel.setTotalAmount(invoice.getTotalAmount());
             creditNoteRequestModel.setTotalVatAmount(invoice.getTotalVatAmount());
             if (creditNote.getCreditNoteDate() != null) {
-                ZoneId timeZone = ZoneId.systemDefault();
                 Date date = Date.from(creditNote.getCreditNoteDate().toInstant());
                 creditNoteRequestModel.setCreditNoteDate(date);
             }
@@ -1456,12 +1440,12 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         }
         return creditNoteRequestModelList;
     }
-    public List<AppliedInvoiceCreditNote> getAppliedInvoicesByCreditNoteId(Integer id) {
+	    public List<AppliedInvoiceCreditNote> getAppliedInvoicesByCreditNoteId(Integer id) {
         Map<String, Object> param = new HashMap<>();
         param.put(JSON_KEY_CREDIT_NOTE, id);
         List<CreditNoteInvoiceRelation> creditNoteInvoiceRelationList = creditNoteInvoiceRelationService
                 .findByAttributes(param);
-        CreditNote creditNote = creditNoteRepository.findById(id).get();
+	        CreditNote creditNote = creditNoteRepository.findById(id).orElseThrow();
         String type = null;
         if(creditNote.getType()==7){
             type = "CREDIT_NOTE";
@@ -1603,11 +1587,10 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
     public CreditNoteRequestModel getRequestModelforCNWithoutProduct(CreditNote creditNote) {
         CreditNoteRequestModel requestModel = new CreditNoteRequestModel();
         requestModel.setCreditNoteId(creditNote.getCreditNoteId());
-        if (creditNote.getCreditNoteDate() != null) {
-            ZoneId timeZone = ZoneId.systemDefault();
-            Date date = Date.from(creditNote.getCreditNoteDate().toInstant());
-            requestModel.setCreditNoteDate(date);
-        }
+	        if (creditNote.getCreditNoteDate() != null) {
+	            Date date = Date.from(creditNote.getCreditNoteDate().toInstant());
+	            requestModel.setCreditNoteDate(date);
+	        }
         if (creditNote.getPlaceOfSupplyId()!=null){
             requestModel.setPlaceOfSupplyId(creditNote.getPlaceOfSupplyId());
         }
@@ -1684,11 +1667,10 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         CreditNoteRequestModel requestModel = new CreditNoteRequestModel();
         if(creditNote!=null) {
             requestModel.setCreditNoteId(creditNote.getCreditNoteId());
-            if (creditNote.getCreditNoteDate() != null) {
-                ZoneId timeZone = ZoneId.systemDefault();
-                Date date = Date.from(creditNote.getCreditNoteDate().toInstant());
-                requestModel.setCreditNoteDate(date);
-            }
+	        if (creditNote.getCreditNoteDate() != null) {
+	            Date date = Date.from(creditNote.getCreditNoteDate().toInstant());
+	            requestModel.setCreditNoteDate(date);
+	        }
             requestModel.setCreditNoteNumber(creditNote.getCreditNoteNumber());
             if (creditNote.getContact() != null) {
                 requestModel.setContactId(creditNote.getContact().getContactId());
@@ -1831,9 +1813,9 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         return newjournal;
     }
 
-    public void creditNoteReverseInventoryHandling(PostingRequestModel postingRequestModel, Integer userId){
-        CreditNote creditNote = creditNoteRepository.findById(postingRequestModel.getPostingRefId()).get();
-        List<CreditNoteLineItem> creditNoteLineItemList = creditNote.getCreditNoteLineItems().stream().collect(Collectors.toList());
+	    public void creditNoteReverseInventoryHandling(PostingRequestModel postingRequestModel, Integer userId){
+	        CreditNote creditNote = creditNoteRepository.findById(postingRequestModel.getPostingRefId()).orElseThrow();
+	        List<CreditNoteLineItem> creditNoteLineItemList = creditNote.getCreditNoteLineItems().stream().collect(Collectors.toList());
         for (CreditNoteLineItem creditNoteLineItem:creditNoteLineItemList){
             Product product=productService.findByPK(creditNoteLineItem.getProduct().getProductID());
             if(product.getIsInventoryEnabled() != null && product.getIsInventoryEnabled() )
@@ -1886,8 +1868,6 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         }
     }
     public void sendCNRefundMail(Contact contact, Integer invoiceType,String number, String amount, String date, HttpServletRequest request) {
-        long millis=System.currentTimeMillis();
-
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         User user=userService.findByPK(userId);
         String image="";
@@ -1969,8 +1949,8 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public CreditNote createOrUpdateCreditNote (CreditNoteRequestModel creditNoteRequestModel, Integer userId) {
-        CreditNote creditNote = new CreditNote();
+		    public CreditNote createOrUpdateCreditNote (CreditNoteRequestModel creditNoteRequestModel, Integer userId) {
+        CreditNote creditNote;
         if (Boolean.TRUE.equals(creditNoteRequestModel.getIsCreatedWithoutInvoice())) {
             creditNote = createCNWithoutInvoice(creditNoteRequestModel, userId);
             if (creditNote != null) {
@@ -1981,15 +1961,15 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
             creditNote.setCurrency(companyService.getCompanyCurrency());
             creditNoteRepository.saveAndFlush(creditNote);
         }
-        if (Boolean.TRUE.equals(creditNoteRequestModel.getCnCreatedOnPaidInvoice())) {
-            creditNote.setCnCreatedOnPaidInvoice(creditNoteRequestModel.getCnCreatedOnPaidInvoice());
-            Invoice invoice = invoiceService.findByPK(creditNoteRequestModel.getInvoiceId());
-            if (invoice != null) {
-                invoice.setCnCreatedOnPaidInvoice(creditNoteRequestModel.getCnCreatedOnPaidInvoice());
-            }
-        }
-        return creditNote;
-    }
+	        if (creditNote != null && Boolean.TRUE.equals(creditNoteRequestModel.getCnCreatedOnPaidInvoice())) {
+	            creditNote.setCnCreatedOnPaidInvoice(creditNoteRequestModel.getCnCreatedOnPaidInvoice());
+	            Invoice invoice = invoiceService.findByPK(creditNoteRequestModel.getInvoiceId());
+	            if (invoice != null) {
+	                invoice.setCnCreatedOnPaidInvoice(creditNoteRequestModel.getCnCreatedOnPaidInvoice());
+	            }
+	        }
+	        return creditNote;
+	    }
 
     public void processInvoiceRelation(CreditNoteRequestModel creditNoteRequestModel, CreditNote creditNote, Integer userId) {
         Invoice invoice = invoiceService.findByPK(creditNoteRequestModel.getInvoiceId());

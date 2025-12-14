@@ -1,11 +1,6 @@
 package com.simpleaccounts.rest.Logincontroller;
 
 import com.simpleaccounts.aop.LogRequest;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.EmailLogs;
 import com.simpleaccounts.entity.PasswordHistory;
 import com.simpleaccounts.entity.User;
@@ -104,11 +99,11 @@ public class LoginRestController {
 			user.setPassword(encodedPassword);
 			user.setForgotPasswordToken(null);
 			user.setForgotPasswordTokenExpiryDate(null);
-			userService.persist(user);
-			//maintain user credential and password history
-			message = userRestHelper.saveUserCredential(user, encodedPassword, message);
-			return new ResponseEntity<>(message,HttpStatus.OK);
-		} catch (Exception e) {
+				userService.persist(user);
+				//maintain user credential and password history
+				message = userRestHelper.saveUserCredential(user, encodedPassword);
+				return new ResponseEntity<>(message,HttpStatus.OK);
+			} catch (Exception e) {
 			SimpleAccountsMessage message= null;
 			message = new SimpleAccountsMessage("",
 					MessageUtil.getMessage("resetPassword.created.UnSuccessful.msg.0089"), true);

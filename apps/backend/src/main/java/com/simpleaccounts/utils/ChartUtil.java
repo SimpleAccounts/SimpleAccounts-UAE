@@ -6,7 +6,6 @@ import com.simpleaccounts.model.ChartData;
 import com.simpleaccounts.model.DashboardInvoiceDataModel;
 import com.simpleaccounts.service.report.model.BankAccountTransactionReportModel;
 import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;

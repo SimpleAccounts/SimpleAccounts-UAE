@@ -1,9 +1,8 @@
 package com.simpleaccounts.service;
 
-import java.util.List;
-
 import com.simpleaccounts.entity.Expense;
 import com.simpleaccounts.entity.TransactionExpenses;
+import java.util.List;
 
 public abstract class TransactionExpensesService extends SimpleAccountsService<Integer, TransactionExpenses> {
 

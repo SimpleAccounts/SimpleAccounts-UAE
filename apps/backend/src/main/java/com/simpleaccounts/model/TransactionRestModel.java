@@ -1,18 +1,18 @@
 package com.simpleaccounts.model;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Date;
-import lombok.Getter;
-import lombok.Setter;
 import com.simpleaccounts.entity.Project;
+import com.simpleaccounts.entity.TransactionStatus;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
+import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.entity.TransactionStatus;
-import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

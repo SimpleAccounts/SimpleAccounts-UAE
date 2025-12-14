@@ -1,8 +1,7 @@
 package com.simpleaccounts.dao;
 
-import java.util.List;
-
 import com.simpleaccounts.entity.Title;
+import java.util.List;
 
 /**
  * Created by mohsin on 3/12/2017.

@@ -1,8 +1,7 @@
 package com.simpleaccounts.dao;
 
-import java.util.List;
-
 import com.simpleaccounts.entity.bankaccount.ReconcileCategory;
+import java.util.List;
 
 public interface ReconcileCategoryDao extends Dao<Integer, ReconcileCategory> {
 

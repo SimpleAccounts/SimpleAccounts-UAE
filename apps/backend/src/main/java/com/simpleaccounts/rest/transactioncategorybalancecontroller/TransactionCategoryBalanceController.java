@@ -1,15 +1,5 @@
 package com.simpleaccounts.rest.transactioncategorybalancecontroller;
 
-import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
@@ -36,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -182,15 +171,18 @@ public class TransactionCategoryBalanceController {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);
-			TransactionCategoryBalance transactionCategoryBalance= null;
-			if (persistModel.getTransactionCategoryBalanceId() != null) {
-				transactionCategoryBalance = transactionCategoryBalanceService
-						.findByPK(persistModel.getTransactionCategoryBalanceId());
-			}
-			Journal journal = journalService.getJournalByReferenceId(transactionCategoryBalance.getTransactionCategory().getTransactionCategoryId());
-			if (journal != null) {
-				journalService.deleteAndUpdateByIds(Arrays.asList(journal.getId()),false);
-			}
+				TransactionCategoryBalance transactionCategoryBalance= null;
+				if (persistModel.getTransactionCategoryBalanceId() != null) {
+					transactionCategoryBalance = transactionCategoryBalanceService
+							.findByPK(persistModel.getTransactionCategoryBalanceId());
+				}
+				Journal journal = null;
+				if (transactionCategoryBalance != null && transactionCategoryBalance.getTransactionCategory() != null) {
+					journal = journalService.getJournalByReferenceId(transactionCategoryBalance.getTransactionCategory().getTransactionCategoryId());
+					if (journal != null) {
+						journalService.deleteAndUpdateByIds(Arrays.asList(journal.getId()),false);
+					}
+				}
 			TransactionCategory category = transactionCategoryService.findByPK(persistModel.getTransactionCategoryId());
 			TransactionCategory transactionCategory = transactionCategoryService
 					.findTransactionCategoryByTransactionCategoryCode(

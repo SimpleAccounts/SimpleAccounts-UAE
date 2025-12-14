@@ -4,7 +4,6 @@ import com.simpleaccounts.entity.EmployeeDesignation;
 import com.simpleaccounts.model.EmployeeDesignationListModel;
 import com.simpleaccounts.model.EmployeeDesignationPersistModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.service.EmployeeDesignationService;
 import java.io.IOException;
 import java.util.ArrayList;

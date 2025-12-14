@@ -9,9 +9,8 @@ import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.Project;
 import com.simpleaccounts.entity.User;
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
-
+import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

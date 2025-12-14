@@ -2,7 +2,6 @@ package com.simpleaccounts.rest.projectcontroller;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 import lombok.Data;
 
 @Data

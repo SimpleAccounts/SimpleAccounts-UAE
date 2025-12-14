@@ -1,9 +1,8 @@
 package com.simpleaccounts.dao.bankaccount;
 
-import java.util.List;
-
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.TransactionStatus;
+import java.util.List;
 
 public interface TransactionStatusDao extends Dao<Integer, TransactionStatus> {
 

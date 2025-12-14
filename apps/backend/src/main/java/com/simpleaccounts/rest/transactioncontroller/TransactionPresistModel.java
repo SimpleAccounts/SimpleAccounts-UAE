@@ -12,16 +12,15 @@ import com.simpleaccounts.rest.CorporateTax.CorporateTaxModel;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.ReconsileRequestLineItemModel;
 import com.simpleaccounts.rest.vatcontroller.VatReportResponseListForBank;
-import lombok.Data;
-import org.json.JSONArray;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import lombok.Data;
+import org.json.JSONArray;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *

@@ -1,7 +1,6 @@
 package com.simpleaccounts.dao.impl.bankaccount;
 
 import com.simpleaccounts.constant.*;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.constant.dbfilter.TransactionFilterEnum;
 import com.simpleaccounts.dao.AbstractDao;
@@ -25,6 +24,7 @@ import java.util.Map;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

@@ -52,7 +52,6 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.migration.ProductMigrationParser;
 import com.simpleaccounts.migration.xml.bindings.product.Product;
 import com.simpleaccounts.migration.xml.bindings.product.Product.TableList.Table;
-import com.simpleaccounts.migration.xml.bindings.product.Product.TableList.Table.ColumnList.Column;
 import com.simpleaccounts.rest.PostingRequestModel;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
 import com.simpleaccounts.rest.migration.model.BillModel;
@@ -102,7 +101,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -631,15 +629,15 @@ public class ZohoMigrationService {
 			com.simpleaccounts.entity.Product productList = getExistingProduct(recordData);
 			com.simpleaccounts.entity.Product productListCode = getExistingProductCode(recordData);
 			
-			LOG.info("productList ==> {} ",productList);
-     
-			 if(productList != null || productListCode != null) {
-
-				 LOG.info("Product Name Exist ==> {} ",productList.getProductName()+" "+productList.getProductCode());
-				 flag = true;
-				 
-			 }else {
-				 LOG.info("Product Not Exist ==> {} ",recordData.get("Item Name")); 
+			     LOG.info("productList ==> {} ",productList);
+	     
+				 if(productList != null || productListCode != null) {
+					 com.simpleaccounts.entity.Product existingProduct = productList != null ? productList : productListCode;
+					 LOG.info("Product Name Exist ==> {} ",existingProduct.getProductName()+" "+existingProduct.getProductCode());
+					 flag = true;
+					 
+				 }else {
+					 LOG.info("Product Not Exist ==> {} ",recordData.get("Item Name")); 
 				 flag = false;
 			 }
 			 
@@ -967,13 +965,14 @@ public class ZohoMigrationService {
 	        param.put("product", productEntity);
 	        param.put("priceType", ProductPriceType.PURCHASE);
 	        List<ProductLineItem> productLineItemList = productLineItemService.findByAttributes(param);
-	        for (ProductLineItem productLineItem:productLineItemList){
-	            productLineItem.setTransactioncategory(transactionCategory);
-	            productLineItem.setUnitPrice(bigDecimal);
-	            productLineItemService.persist(productLineItem);
-	            return productLineItem;
+	        if (productLineItemList == null || productLineItemList.isEmpty()) {
+	            return null;
 	        }
-	        return null;
+	        ProductLineItem productLineItem = productLineItemList.get(0);
+	        productLineItem.setTransactioncategory(transactionCategory);
+	        productLineItem.setUnitPrice(bigDecimal);
+	        productLineItemService.persist(productLineItem);
+	        return productLineItem;
 	    }
     
 	    
@@ -1017,13 +1016,13 @@ public class ZohoMigrationService {
 		        Map<String, Object> param = new HashMap<>();
 		        param.put("productName", productName);
 
-		        List<com.simpleaccounts.entity.Product> productList = productService.findByAttributes(param);
-		        for (com.simpleaccounts.entity.Product product:productList){
-		            return product;
-		        }
-		        return null;
+			        List<com.simpleaccounts.entity.Product> productList = productService.findByAttributes(param);
+			        if (productList == null || productList.isEmpty()) {
+			            return null;
+			        }
+				        return productList.get(0);
 
-		    }
+			    }
 		 
 		 /**
 			 * This method is use to get ExistingProductCode
@@ -1032,14 +1031,14 @@ public class ZohoMigrationService {
 			 */
 				 private com.simpleaccounts.entity.Product getExistingProductCode(Map<String, String> recordData) {
 				        String productCode = recordData.get("Item ID");
-				        Map<String, Object> param = new HashMap<>();
-				        param.put("productCode", productCode);
-				        List<com.simpleaccounts.entity.Product> productList = productService.findByAttributes(param);
-				        for (com.simpleaccounts.entity.Product product:productList){
-				            return product;
-			        }
-			        return null;
-			    }
+					        Map<String, Object> param = new HashMap<>();
+					        param.put("productCode", productCode);
+					        List<com.simpleaccounts.entity.Product> productList = productService.findByAttributes(param);
+					        if (productList == null || productList.isEmpty()) {
+					            return null;
+					        }
+						        return productList.get(0);
+					    }
 		 
 		 
 		 /**
@@ -2175,12 +2174,16 @@ public class ZohoMigrationService {
 				remainingFiles.add(file.getName());
 				for (String fileName : listOfFileNames.getFileNames()) {
 
-					if (file.getName().equals(fileName)) {
-						file.delete();
-						deletedFiles.add(file.getName());
+						if (file.getName().equals(fileName)) {
+							boolean deleted = file.delete();
+							if (deleted) {
+								deletedFiles.add(file.getName());
+							} else {
+								LOG.warn("Failed to delete file {}", file.getAbsolutePath());
+							}
+						}
 					}
 				}
-			}
 			remainingFiles.removeAll(deletedFiles);
 			// get the count of remaining files.
 			getCountOfRemsiningFiles(fileLocation, remainingFiles, resultList);
@@ -2221,11 +2224,13 @@ public class ZohoMigrationService {
 	            if (files == null) {
 	            	return "Migrated Data Deleted Successfully";
 	            }
-	            for (File file:files){
-	                file.delete();
-	            }
+		        for (File file:files){
+		                if (!file.delete()) {
+		                	LOG.warn("Failed to delete file {}", file.getAbsolutePath());
+		                }
+		            }
 			    return "Migrated Data Deleted Successfully";
-	        }
+		        }
 		
 		
 		
@@ -2301,11 +2306,13 @@ public class ZohoMigrationService {
 	        if (files == null) {
 	        	return "Migrated Data Deleted Successfully";
 	        }
-	        for (File file:files){
-	            file.delete();
-	        }
-		    return "Migrated Data Deleted Successfully";
-	    }
+		        for (File file:files){
+		            if (!file.delete()) {
+		            	LOG.warn("Failed to delete file {}", file.getAbsolutePath());
+		            }
+		        }
+			    return "Migrated Data Deleted Successfully";
+		    }
 	
 		public void setColoumnValueForInvoice(
 				List<Product.TableList.Table.ColumnList.Column> invoiceTableColumnList,

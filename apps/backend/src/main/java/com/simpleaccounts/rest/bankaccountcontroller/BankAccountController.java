@@ -1,5 +1,7 @@
 package com.simpleaccounts.rest.bankaccountcontroller;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.bank.model.DeleteModel;
 import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
@@ -20,31 +22,17 @@ import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
-import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
-import com.simpleaccounts.constant.PostingReferenceTypeEnum;
-import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
-import com.simpleaccounts.entity.*;
-import com.simpleaccounts.entity.Currency;
-import com.simpleaccounts.entity.bankaccount.*;
-import com.simpleaccounts.model.DashBoardBankDataModel;
-import com.simpleaccounts.repository.JournalLineItemRepository;
-import com.simpleaccounts.service.*;
-import com.simpleaccounts.utils.MessageUtil;
-import com.simpleaccounts.utils.SimpleAccountsMessage;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,18 +46,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.bank.model.DeleteModel;
-import com.simpleaccounts.constant.dbfilter.BankAccounrFilterEnum;
-import com.simpleaccounts.model.BankModel;
-import com.simpleaccounts.rest.PaginationResponseModel;
-import com.simpleaccounts.security.JwtTokenUtil;
-import com.simpleaccounts.service.bankaccount.TransactionService;
-
-import io.swagger.annotations.ApiOperation;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -176,19 +152,27 @@ public class BankAccountController{
                 if (bankAccount.getTransactionCategory() == null) {
                     return new ResponseEntity<>("Transaction Category is missing", HttpStatus.BAD_REQUEST);
                 }
-				TransactionCategory category = transactionCategoryService.findByPK(bankAccount.getTransactionCategory().getTransactionCategoryId());
-				TransactionCategory transactionCategory = getValidTransactionCategory(category);
-				boolean isDebit=false;
-				if(StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
-						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())){
-					isDebit=true;
-				}
-				BigDecimal openBigDecimal = bankModel.getOpeningBalance();
-				CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(bankModel.getBankAccountCurrency());
-				if(exchangeRate!=null)
-				{
-					openBigDecimal = openBigDecimal.multiply(exchangeRate.getExchangeRate());
-				}
+					TransactionCategory category = transactionCategoryService.findByPK(bankAccount.getTransactionCategory().getTransactionCategoryId());
+					if (category == null) {
+						return new ResponseEntity<>("Transaction Category is missing", HttpStatus.BAD_REQUEST);
+					}
+					TransactionCategory transactionCategory = getValidTransactionCategory(category);
+					if (transactionCategory == null) {
+						return new ResponseEntity<>("Transaction Category is missing", HttpStatus.BAD_REQUEST);
+					}
+					boolean isDebit=false;
+					if(StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
+							TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())){
+						isDebit=true;
+					}
+					BigDecimal openBigDecimal = bankModel.getOpeningBalance();
+					CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(bankModel.getBankAccountCurrency());
+					BigDecimal exchangeRateValue = BigDecimal.ONE;
+					if(exchangeRate!=null && exchangeRate.getExchangeRate() != null)
+					{
+						exchangeRateValue = exchangeRate.getExchangeRate();
+						openBigDecimal = openBigDecimal.multiply(exchangeRateValue);
+					}
 				List<JournalLineItem> journalLineItemList = new ArrayList<>();
 				Journal journal = new Journal();
 				JournalLineItem journalLineItem1 = new JournalLineItem();
@@ -198,12 +182,12 @@ public class BankAccountController{
 				} else {
 					journalLineItem1.setCreditAmount(openBigDecimal);
 				}
-				journalLineItem1.setReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
-				journalLineItem1.setReferenceId(category.getTransactionCategoryId());
-				journalLineItem1.setExchangeRate(exchangeRate.getExchangeRate());
-				journalLineItem1.setCreatedBy(userId);
-				journalLineItem1.setJournal(journal);
-				journalLineItemList.add(journalLineItem1);
+					journalLineItem1.setReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
+					journalLineItem1.setReferenceId(category.getTransactionCategoryId());
+					journalLineItem1.setExchangeRate(exchangeRateValue);
+					journalLineItem1.setCreatedBy(userId);
+					journalLineItem1.setJournal(journal);
+					journalLineItemList.add(journalLineItem1);
 
 				JournalLineItem journalLineItem2 = new JournalLineItem();
 				journalLineItem2.setTransactionCategory(transactionCategory);
@@ -213,12 +197,12 @@ public class BankAccountController{
 				} else {
 					journalLineItem2.setCreditAmount(openBigDecimal);
 				}
-				journalLineItem2.setReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
-				journalLineItem2.setReferenceId(category.getTransactionCategoryId());
-				journalLineItem2.setExchangeRate(exchangeRate.getExchangeRate());
-				journalLineItem2.setCreatedBy(userId);
-				journalLineItem2.setJournal(journal);
-				journalLineItemList.add(journalLineItem2);
+					journalLineItem2.setReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
+					journalLineItem2.setReferenceId(category.getTransactionCategoryId());
+					journalLineItem2.setExchangeRate(exchangeRateValue);
+					journalLineItem2.setCreatedBy(userId);
+					journalLineItem2.setJournal(journal);
+					journalLineItemList.add(journalLineItem2);
 
 				journal.setJournalLineItems(journalLineItemList);
 				journal.setCreatedBy(userId);
@@ -290,10 +274,16 @@ public class BankAccountController{
 			bankAccount.setLastUpdatedBy(user.getUserId());
 			bankAccountService.update(bankAccount);
 			TransactionCategory category = transactionCategoryService.findByPK(bankAccount.getTransactionCategory().getTransactionCategoryId());
+			if (category == null) {
+				return new ResponseEntity<>("Transaction Category is missing", HttpStatus.BAD_REQUEST);
+			}
 			category.setTransactionCategoryName(bankModel.getBankName() + "-" + bankModel.getBankAccountName());
 			category.setTransactionCategoryDescription(bankModel.getBankName() + "-" + bankModel.getBankAccountName());
 			transactionCategoryService.update(category);
 			TransactionCategory transactionCategory = getValidTransactionCategory(category);
+			if (transactionCategory == null) {
+				return new ResponseEntity<>("Transaction Category is missing", HttpStatus.BAD_REQUEST);
+			}
 			updateTransactionCategory(category, bankModel);
 			boolean isDebit = false;
 			if (StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
@@ -302,8 +292,10 @@ public class BankAccountController{
 			}
 			BigDecimal openBigDecimal = bankModel.getOpeningBalance();
 			CurrencyConversion exchangeRate = currencyExchangeService.getExchangeRate(bankModel.getBankAccountCurrency());
-			if (exchangeRate != null) {
-				openBigDecimal = openBigDecimal.multiply(exchangeRate.getExchangeRate());
+			BigDecimal exchangeRateValue = BigDecimal.ONE;
+			if (exchangeRate != null && exchangeRate.getExchangeRate() != null) {
+				exchangeRateValue = exchangeRate.getExchangeRate();
+				openBigDecimal = openBigDecimal.multiply(exchangeRateValue);
 			}
 
 			List<JournalLineItem> bankAccJliList = journalLineItemRepository.findAllByReferenceIdAndReferenceType(
@@ -353,7 +345,7 @@ public class BankAccountController{
 			journalLineItem1.setReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
 			journalLineItem1.setReferenceId(category.getTransactionCategoryId());
 			journalLineItem1.setCreatedBy(userId);
-			journalLineItem1.setExchangeRate(exchangeRate.getExchangeRate());
+			journalLineItem1.setExchangeRate(exchangeRateValue);
 			journalLineItem1.setJournal(journal);
 			journalLineItemList.add(journalLineItem1);
 
@@ -367,7 +359,7 @@ public class BankAccountController{
 			journalLineItem2.setReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
 			journalLineItem2.setReferenceId(category.getTransactionCategoryId());
 			journalLineItem2.setCreatedBy(userId);
-			journalLineItem2.setExchangeRate(exchangeRate.getExchangeRate());
+			journalLineItem2.setExchangeRate(exchangeRateValue);
 			journalLineItem2.setJournal(journal);
 			journalLineItemList.add(journalLineItem2);
 
@@ -579,22 +571,21 @@ public class BankAccountController{
 	@LogRequest
 	@ApiOperation(value = "Get Bank Account by Bank Account ID", response = BankAccount.class)
 	@GetMapping(value = "/getbyid")
-	public ResponseEntity<BankModel> getById(@RequestParam("id") Integer id) {
-		try {
-			BankAccount bankAccount = bankAccountService.findByPK(id);
-			TransactionCategoryClosingBalance closingBalance = transactionCategoryClosingBalanceService.
-					getLastClosingBalanceByDate(bankAccount.getTransactionCategory());
-			BankModel bankModel = bankAccountRestHelper.getModel(bankAccount);
-			if (closingBalance!=null && closingBalance.getClosingBalance()!=null) {
-				bankModel.setClosingBalance(closingBalance.getBankAccountClosingBalance());
-			}
+		public ResponseEntity<BankModel> getById(@RequestParam("id") Integer id) {
+			try {
+				BankAccount bankAccount = bankAccountService.findByPK(id);
+				if (bankAccount == null) {
+					return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+				}
+				TransactionCategoryClosingBalance closingBalance = transactionCategoryClosingBalanceService.
+						getLastClosingBalanceByDate(bankAccount.getTransactionCategory());
+				BankModel bankModel = bankAccountRestHelper.getModel(bankAccount);
+				if (closingBalance!=null && closingBalance.getClosingBalance()!=null) {
+					bankModel.setClosingBalance(closingBalance.getBankAccountClosingBalance());
+				}
 
-			if (bankAccount == null) {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-			}
-
-			return new ResponseEntity<>( bankModel, HttpStatus.OK);
-		} catch (Exception e) {
+				return new ResponseEntity<>( bankModel, HttpStatus.OK);
+			} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

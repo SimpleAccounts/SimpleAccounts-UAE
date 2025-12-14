@@ -2,10 +2,9 @@ package com.simpleaccounts.invoice.model;
 
 import com.simpleaccounts.entity.Product;
 import com.simpleaccounts.entity.VatCategory;
+import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.math.BigDecimal;
 
 /**
  * @author hiren

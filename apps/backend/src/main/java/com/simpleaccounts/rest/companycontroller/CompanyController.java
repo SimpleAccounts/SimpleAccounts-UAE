@@ -48,16 +48,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.simpleaccounts.aop.LogExecutionTime;
-import com.simpleaccounts.aop.LogRequest;
-import com.simpleaccounts.bank.model.DeleteModel;
-import com.simpleaccounts.constant.dbfilter.CompanyFilterEnum;
-import com.simpleaccounts.security.JwtTokenUtil;
-
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Slf4j
@@ -291,7 +281,7 @@ public class CompanyController {
 			user.setForgotPasswordTokenExpiryDate(null);
 			userService.persist(user);
 			//maintain user credential and password history
-			userRestHelper.saveUserCredential(user, encodedPassword, message);
+			userRestHelper.saveUserCredential(user, encodedPassword);
 
 			Company company = companyRestHelper.registerCompany(registrationModel);
 			currencyService.updateCurrencyProfile(company.getCurrencyCode().getCurrencyCode());
@@ -457,23 +447,11 @@ public class CompanyController {
 		if (chartOfAccountCategoryCodeEnum == null)
 			return null;
 		switch (chartOfAccountCategoryCodeEnum) {
-		case BANK:
-		case CASH:
-			return transactionCategoryService.findTransactionCategoryByTransactionCategoryCode(
-					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
-		case ACCOUNTS_RECEIVABLE:
-		case CURRENT_ASSET:
-		case FIXED_ASSET:
-		case OTHER_CURRENT_ASSET:
-		case STOCK:
-		case ACCOUNTS_PAYABLE:
-		case OTHER_CURRENT_LIABILITIES:
-		case OTHER_LIABILITY:
-		case INCOME:
-		case ADMIN_EXPENSE:
-		case COST_OF_GOODS_SOLD:
-		case OTHER_EXPENSE:
 		case EQUITY:
+		case OTHER_LIABILITY:
+		case OTHER_CURRENT_LIABILITIES:
+			return transactionCategoryService.findTransactionCategoryByTransactionCategoryCode(
+					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode());
 		default:
 			return transactionCategoryService.findTransactionCategoryByTransactionCategoryCode(
 					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
@@ -686,10 +664,10 @@ public class CompanyController {
 	{
 
 		SimpleAccountsConfigModel config = new SimpleAccountsConfigModel();
-		if (env.getProperty(ConfigurationConstants.SIMPLEACCOUNTS_RELEASE) != null && !env.getProperty(ConfigurationConstants.SIMPLEACCOUNTS_RELEASE).isEmpty()) {
-			config.setSimpleAccountsRelease(env.getProperty("SIMPLEACCOUNTS_RELEASE"));
-		}
-		else {
+		String release = env.getProperty(ConfigurationConstants.SIMPLEACCOUNTS_RELEASE);
+		if (release != null && !release.isEmpty()) {
+			config.setSimpleAccountsRelease(release);
+		} else {
 			config.setSimpleAccountsRelease("Unknown");
 		}
 		return new ResponseEntity<>(config, HttpStatus.OK);
