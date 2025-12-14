@@ -1,9 +1,31 @@
 /**
  * Tests for environment variable utilities
  * Verifies that import.meta.env mocking works correctly in Jest
+ * 
+ * IMPORTANT: This test verifies that getMetaEnv() is defined and accessible,
+ * preventing ReferenceError when importing the module.
  */
 
-import { getEnvMode, isProduction, isDevelopment, getBaseUrl, getEnvVar, env } from '../env';
+import { getEnvMode, isProduction, isDevelopment, getBaseUrl, getEnvVar, getAllEnvVars, env } from '../env';
+
+describe('env utilities - module loading', () => {
+  it('should load without ReferenceError', () => {
+    // This test verifies that getMetaEnv() is defined and the module loads correctly
+    expect(() => {
+      require('../env');
+    }).not.toThrow();
+  });
+
+  it('should export all expected functions', () => {
+    expect(typeof getEnvMode).toBe('function');
+    expect(typeof isProduction).toBe('function');
+    expect(typeof isDevelopment).toBe('function');
+    expect(typeof getBaseUrl).toBe('function');
+    expect(typeof getEnvVar).toBe('function');
+    expect(typeof getAllEnvVars).toBe('function');
+    expect(typeof env).toBe('object');
+  });
+});
 
 describe('env utilities', () => {
   describe('getEnvMode', () => {
