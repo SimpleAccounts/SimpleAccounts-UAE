@@ -113,11 +113,10 @@ class HorizontalBalanceSheet extends React.Component {
 				otherLiabilities: {},
 				otherCurrentLiabilities: {
 					'Employee Reimbursements': 7750,
+					},
+					equities: {},
+					totalCash: 0,
 				},
-				equities: {},
-				totalCash: 0,
-				totalBank: 0,
-			},
 		};
 		this.columnHeader = [
 			{ label: strings1.Account, value: 'Account', sort: true, class: '' },
