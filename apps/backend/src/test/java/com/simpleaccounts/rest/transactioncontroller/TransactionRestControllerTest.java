@@ -2,6 +2,7 @@ package com.simpleaccounts.rest.transactioncontroller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -11,23 +12,51 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.simpleaccounts.entity.User;
+import com.simpleaccounts.entity.TransactionExplanation;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.helper.DateFormatHelper;
 import com.simpleaccounts.helper.TransactionHelper;
+import com.simpleaccounts.repository.JournalLineItemRepository;
+import com.simpleaccounts.repository.PayrollRepository;
+import com.simpleaccounts.repository.TransactionExplanationLineItemRepository;
+import com.simpleaccounts.repository.TransactionExplanationRepository;
 import com.simpleaccounts.repository.TransactionRepository;
 import com.simpleaccounts.rest.PaginationResponseModel;
+import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRepository;
+import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateService;
+import com.simpleaccounts.rest.financialreport.VatPaymentRepository;
+import com.simpleaccounts.rest.financialreport.VatRecordPaymentHistoryRepository;
+import com.simpleaccounts.rest.financialreport.VatReportFilingRepository;
+import com.simpleaccounts.rest.receiptcontroller.ReceiptRestHelper;
 import com.simpleaccounts.rest.reconsilationcontroller.ReconsilationRestHelper;
+import com.simpleaccounts.rest.transactioncontroller.TransactionPresistModel;
+import com.simpleaccounts.rest.CorporateTax.CorporateTaxFilingRepository;
+import com.simpleaccounts.rest.CorporateTax.Repositories.CorporateTaxPaymentHistoryRepository;
+import com.simpleaccounts.rest.CorporateTax.Repositories.CorporateTaxPaymentRepository;
 import com.simpleaccounts.security.CustomUserDetailsService;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.BankAccountService;
+import com.simpleaccounts.service.ChartOfAccountCategoryService;
+import com.simpleaccounts.service.ContactService;
+import com.simpleaccounts.service.ContactTransactionCategoryService;
+import com.simpleaccounts.service.CurrencyService;
+import com.simpleaccounts.service.CustomerInvoiceReceiptService;
+import com.simpleaccounts.service.ExpenseService;
+import com.simpleaccounts.service.FileAttachmentService;
+import com.simpleaccounts.service.InvoiceService;
 import com.simpleaccounts.service.JournalService;
+import com.simpleaccounts.service.PaymentService;
+import com.simpleaccounts.service.ReceiptService;
+import com.simpleaccounts.service.SupplierInvoicePaymentService;
 import com.simpleaccounts.service.TransactionCategoryBalanceService;
 import com.simpleaccounts.service.TransactionCategoryClosingBalanceService;
 import com.simpleaccounts.service.TransactionCategoryService;
+import com.simpleaccounts.service.TransactionExpensesPayrollService;
+import com.simpleaccounts.service.TransactionExpensesService;
 import com.simpleaccounts.service.UserService;
+import com.simpleaccounts.service.VatCategoryService;
 import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.service.bankaccount.TransactionStatusService;
@@ -35,6 +64,7 @@ import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.InvoiceNumberUtil;
+import com.simpleaccounts.utils.OSValidator;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -92,6 +122,12 @@ class TransactionRestControllerTest {
     @MockBean
     private JournalService journalService;
     @MockBean
+    private ChartOfAccountCategoryService chartOfAccountCategoryService;
+    @MockBean
+    private VatCategoryService vatCategoryService;
+    @MockBean
+    private ContactService contactService;
+    @MockBean
     private TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
     @MockBean
     private TransactionCategoryBalanceService transactionCategoryBalanceService;
@@ -100,55 +136,63 @@ class TransactionRestControllerTest {
     @MockBean
     private UserService userService;
     @MockBean
+    private InvoiceService invoiceService;
+    @MockBean
+    private ReceiptService receiptService;
+    @MockBean
+    private CustomerInvoiceReceiptService customerInvoiceReceiptService;
+    @MockBean
+    private ReceiptRestHelper receiptRestHelper;
+    @MockBean
+    private ExpenseService expenseService;
+    @MockBean
+    private TransactionExpensesService transactionExpensesService;
+    @MockBean
+    private TransactionExpensesPayrollService transactionExpensesPayrollService;
+    @MockBean
+    private PaymentService paymentService;
+    @MockBean
+    private SupplierInvoicePaymentService supplierInvoicePaymentService;
+    @MockBean
+    private CurrencyService currencyService;
+    @MockBean
+    private FileAttachmentService fileAttachmentService;
+    @MockBean
+    private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+    @MockBean
+    private PayrollRepository payrollRepository;
+    @MockBean
     private DateFormatUtil dateFormatUtil;
     @MockBean
     private FileHelper fileHelper;
     @MockBean
     private InvoiceNumberUtil invoiceNumberUtil;
     @MockBean
+    private OSValidator osValidator;
+    @MockBean
+    private VatPaymentRepository vatPaymentRepository;
+    @MockBean
+    private VatRecordPaymentHistoryRepository vatRecordPaymentHistoryRepository;
+    @MockBean
+    private VatReportFilingRepository vatReportFilingRepository;
+    @MockBean
+    private JournalLineItemRepository journalLineItemRepository;
+    @MockBean
+    private TransactionExplanationRepository transactionExplanationRepository;
+    @MockBean
+    private TransactionExplanationLineItemRepository transactionExplanationLineItemRepository;
+    @MockBean
+    private ContactTransactionCategoryService contactTransactionCategoryService;
+    @MockBean
+    private CorporateTaxFilingRepository corporateTaxFilingRepository;
+    @MockBean
+    private CorporateTaxPaymentRepository corporateTaxPaymentRepository;
+    @MockBean
+    private CorporateTaxPaymentHistoryRepository corporateTaxPaymentHistoryRepository;
+    @MockBean
+    private CreditNoteRepository creditNoteRepository;
+    @MockBean
     private CustomUserDetailsService customUserDetailsService;
-
-    // Adding MockBeans for all repositories and services referenced
-    @MockBean(name = "customizeInvoiceTemplateService")
-    private Object customizeInvoiceTemplateService;
-    @MockBean(name = "vatPaymentRepository")
-    private Object vatPaymentRepository;
-    @MockBean(name = "vatRecordPaymentHistoryRepository")
-    private Object vatRecordPaymentHistoryRepository;
-    @MockBean(name = "vatReportFilingRepository")
-    private Object vatReportFilingRepository;
-    @MockBean(name = "receiptRestHelper")
-    private Object receiptRestHelper;
-    @MockBean(name = "creditNoteRepository")
-    private Object creditNoteRepository;
-    @MockBean(name = "corporateTaxPaymentHistoryRepository")
-    private Object corporateTaxPaymentHistoryRepository;
-    @MockBean(name = "corporateTaxPaymentRepository")
-    private Object corporateTaxPaymentRepository;
-    @MockBean(name = "invoiceRepository")
-    private Object invoiceRepository;
-    @MockBean(name = "expenseRepository")
-    private Object expenseRepository;
-    @MockBean(name = "invoiceService")
-    private Object invoiceService;
-    @MockBean(name = "expenseService")
-    private Object expenseService;
-    @MockBean(name = "currencyExchangeService")
-    private Object currencyExchangeService;
-    @MockBean(name = "debitNoteRepository")
-    private Object debitNoteRepository;
-    @MockBean(name = "debitNoteService")
-    private Object debitNoteService;
-    @MockBean(name = "creditNoteService")
-    private Object creditNoteService;
-    @MockBean(name = "journalLineItemRepository")
-    private Object journalLineItemRepository;
-    @MockBean(name = "receiptService")
-    private Object receiptService;
-    @MockBean(name = "receiptRepository")
-    private Object receiptRepository;
-    @MockBean(name = "coacTransactionCategoryService")
-    private Object coacTransactionCategoryService;
 
     @TestConfiguration
     static class TestConfig {
@@ -161,7 +205,6 @@ class TransactionRestControllerTest {
     private BankAccount testBankAccount;
     private Transaction testTransaction;
     private TransactionCategory testCategory;
-    private User testUser;
 
     @BeforeEach
     void setUp() {
@@ -182,10 +225,6 @@ class TransactionRestControllerTest {
         testTransaction.setDebitCreditFlag('C');
         testTransaction.setTransactionDate(LocalDateTime.now());
         testTransaction.setDeleteFlag(false);
-
-        testUser = new User();
-        testUser.setUserId(1);
-        testUser.setUserName("testuser");
     }
 
     @Nested
@@ -197,7 +236,7 @@ class TransactionRestControllerTest {
         void shouldReturnPaginatedTransactionList() throws Exception {
             PaginationResponseModel responseModel = new PaginationResponseModel(1, new HashMap<>());
             when(transactionService.getAllTransactionList(any(), any())).thenReturn(responseModel);
-            when(transactionHelper.getListModel(any())).thenReturn(Collections.emptyList());
+            when(transactionHelper.getModelList(any())).thenReturn(Collections.emptyList());
 
             mockMvc.perform(get("/rest/transaction/list")
                             .param("bankId", "1"))
@@ -217,37 +256,42 @@ class TransactionRestControllerTest {
     }
 
     @Nested
-    @DisplayName("GET /rest/transaction/getbyid Tests")
+    @DisplayName("GET /rest/transaction/getById Tests")
     class GetByIdTests {
 
         @Test
         @DisplayName("Should return transaction by id")
         void shouldReturnTransactionById() throws Exception {
-            TransactionRestModel model = new TransactionRestModel();
+            TransactionPresistModel model = new TransactionPresistModel();
             model.setTransactionId(1);
 
             when(transactionService.findByPK(1)).thenReturn(testTransaction);
-            when(transactionHelper.getModel(testTransaction)).thenReturn(model);
+            when(transactionExplanationRepository.getTransactionExplanationsByTransaction(testTransaction))
+                    .thenReturn(Collections.emptyList());
+            when(transactionHelper.getModel(any(Transaction.class), anyList()))
+                    .thenReturn(Collections.singletonList(model));
 
-            mockMvc.perform(get("/rest/transaction/getbyid")
+            mockMvc.perform(get("/rest/transaction/getById")
                             .param("id", "1"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.transactionId").value(1));
+                    .andExpect(jsonPath("$[0].transactionId").value(1));
         }
 
         @Test
         @DisplayName("Should return error when transaction not found")
         void shouldReturnErrorWhenNotFound() throws Exception {
             when(transactionService.findByPK(999)).thenReturn(null);
+            when(transactionExplanationRepository.getTransactionExplanationsByTransaction(any(Transaction.class)))
+                    .thenReturn(Collections.emptyList());
 
-            mockMvc.perform(get("/rest/transaction/getbyid")
+            mockMvc.perform(get("/rest/transaction/getById")
                             .param("id", "999"))
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isNotFound());
         }
     }
 
     @Nested
-    @DisplayName("GET /rest/transaction/getcashflowdata Tests")
+    @DisplayName("GET /rest/transaction/getCashFlow Tests")
     class GetCashFlowDataTests {
 
         @Test
@@ -264,49 +308,25 @@ class TransactionRestControllerTest {
             when(transactionService.getCashInData(any(), any())).thenReturn(cashInData);
             when(transactionService.getCashOutData(any(), any())).thenReturn(cashOutData);
 
-            mockMvc.perform(get("/rest/transaction/getcashflowdata")
-                            .param("monthNo", "6")
-                            .param("bankId", "1"))
+            mockMvc.perform(get("/rest/transaction/getCashFlow")
+                            .param("monthNo", "6"))
                     .andExpect(status().isOk());
         }
     }
 
     @Nested
-    @DisplayName("GET /rest/transaction/getchildtransactions Tests")
-    class GetChildTransactionsTests {
+    @DisplayName("GET /rest/transaction/getExplainedTransactionCount Tests")
+    class GetExplainedTransactionCountTests {
 
         @Test
-        @DisplayName("Should return child transactions")
-        void shouldReturnChildTransactions() throws Exception {
-            List<Transaction> childTransactions = Collections.singletonList(testTransaction);
-            when(transactionService.getChildTransactionListByParentId(1)).thenReturn(childTransactions);
-            when(transactionHelper.getListModel(childTransactions)).thenReturn(Collections.emptyList());
-
-            mockMvc.perform(get("/rest/transaction/getchildtransactions")
-                            .param("parentId", "1"))
-                    .andExpect(status().isOk());
-        }
-    }
-
-    @Nested
-    @DisplayName("GET /rest/transaction/gettransactioncountbybank Tests")
-    class GetTransactionCountByBankTests {
-
-        @Test
-        @DisplayName("Should return transaction counts")
-        void shouldReturnTransactionCounts() throws Exception {
+        @DisplayName("Should return explained transaction count")
+        void shouldReturnExplainedTransactionCount() throws Exception {
             when(transactionService.getTotalExplainedTransactionCountByBankAccountId(1)).thenReturn(5);
-            when(transactionService.getTotalUnexplainedTransactionCountByBankAccountId(1)).thenReturn(3);
-            when(transactionService.getTotalPartiallyExplainedTransactionCountByBankAccountId(1)).thenReturn(2);
-            when(transactionService.getTotalAllTransactionCountByBankAccountId(1)).thenReturn(10);
 
-            mockMvc.perform(get("/rest/transaction/gettransactioncountbybank")
-                            .param("bankId", "1"))
+            mockMvc.perform(get("/rest/transaction/getExplainedTransactionCount")
+                            .param("bankAccountId", "1"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.explainedCount").value(5))
-                    .andExpect(jsonPath("$.unexplainedCount").value(3))
-                    .andExpect(jsonPath("$.partialCount").value(2))
-                    .andExpect(jsonPath("$.total").value(10));
+                    .andExpect(jsonPath("$").value(5));
         }
     }
 
@@ -325,22 +345,6 @@ class TransactionRestControllerTest {
                     .andExpect(status().isOk());
 
             verify(transactionService).deleteByIds(any());
-        }
-    }
-
-    @Nested
-    @DisplayName("GET /rest/transaction/getcurrentbalance Tests")
-    class GetCurrentBalanceTests {
-
-        @Test
-        @DisplayName("Should return current balance for bank")
-        void shouldReturnCurrentBalanceForBank() throws Exception {
-            when(transactionService.getCurrentBalanceByBankId(1)).thenReturn(new BigDecimal("1500.00"));
-
-            mockMvc.perform(get("/rest/transaction/getcurrentbalance")
-                            .param("bankId", "1"))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$").value(1500.00));
         }
     }
 }

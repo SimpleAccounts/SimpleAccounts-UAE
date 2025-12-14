@@ -2,20 +2,16 @@ package com.simpleaccounts.dao.impl.bankaccount;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.simpleaccounts.constant.dbfilter.BankAccounrFilterEnum;
+import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import com.simpleaccounts.rest.PaginationModel;
-import com.simpleaccounts.rest.PaginationResponseModel;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.EnumMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +30,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
         "spring.jpa.hibernate.ddl-auto=create-drop",
         "spring.liquibase.enabled=false"
 })
-@Import(BankAccountDaoImpl.class)
+@Import({BankAccountDaoImpl.class, DatatableSortingFilterConstant.class})
 @DisplayName("BankAccountDaoImpl Tests")
 class BankAccountDaoImplTest {
 
@@ -53,100 +49,80 @@ class BankAccountDaoImplTest {
         bankAccount2 = persistBankAccount("Secondary Account", "BANK002", "Other Bank", BigDecimal.valueOf(2000));
     }
 
-    @Nested
-    @DisplayName("getBankAccountById Tests")
-    class GetBankAccountByIdTests {
+    @Test
+    @DisplayName("Should return bank account by id")
+    void shouldReturnBankAccountById() {
+        BankAccount result = bankAccountDao.getBankAccountById(bankAccount1.getBankAccountId());
 
-        @Test
-        @DisplayName("Should return bank account by id")
-        void shouldReturnBankAccountById() {
-            BankAccount result = bankAccountDao.getBankAccountById(bankAccount1.getBankAccountId());
-
-            assertThat(result).isNotNull();
-            assertThat(result.getBankAccountName()).isEqualTo("Primary Account");
-            assertThat(result.getAccountNumber()).isEqualTo("BANK001");
-        }
-
-        @Test
-        @DisplayName("Should return null when bank account not found")
-        void shouldReturnNullWhenNotFound() {
-            BankAccount result = bankAccountDao.getBankAccountById(99999);
-
-            assertThat(result).isNull();
-        }
+        assertThat(result).isNotNull();
+        assertThat(result.getBankAccountName()).isEqualTo("Primary Account");
+        assertThat(result.getAccountNumber()).isEqualTo("BANK001");
     }
 
-    @Nested
-    @DisplayName("getBankAccountByUser Tests")
-    class GetBankAccountByUserTests {
+    @Test
+    @DisplayName("Should return null when bank account not found")
+    void shouldReturnNullWhenNotFound() {
+        BankAccount result = bankAccountDao.getBankAccountById(99999);
 
-        @Test
-        @DisplayName("Should return bank accounts for user")
-        void shouldReturnBankAccountsForUser() {
-            List<BankAccount> result = bankAccountDao.getBankAccountByUser(1);
-
-            assertThat(result).isNotNull().hasSize(2);
-        }
-
-        @Test
-        @DisplayName("Should return empty list when user has no accounts")
-        void shouldReturnEmptyListWhenNoAccounts() {
-            List<BankAccount> result = bankAccountDao.getBankAccountByUser(999);
-
-            assertThat(result).isNotNull().isEmpty();
-        }
+        assertThat(result).isNull();
     }
 
-    @Nested
-    @DisplayName("deleteByIds Tests")
-    class DeleteByIdsTests {
+    @Test
+    @DisplayName("Should return bank accounts for user")
+    void shouldReturnBankAccountsForUser() {
+        List<BankAccount> result = bankAccountDao.getBankAccountByUser(1);
 
-        @Test
-        @DisplayName("Should soft delete bank accounts by ids")
-        void shouldSoftDeleteBankAccountsByIds() {
-            List<Integer> ids = List.of(bankAccount1.getBankAccountId());
-
-            bankAccountDao.deleteByIds(ids);
-
-            entityManager.flush();
-            entityManager.clear();
-
-            BankAccount deleted = bankAccountDao.findByPK(bankAccount1.getBankAccountId());
-            assertThat(deleted.getDeleteFlag()).isTrue();
-        }
-
-        @Test
-        @DisplayName("Should handle empty list of ids")
-        void shouldHandleEmptyIdList() {
-            bankAccountDao.deleteByIds(List.of());
-
-            BankAccount notDeleted = bankAccountDao.findByPK(bankAccount1.getBankAccountId());
-            assertThat(notDeleted.getDeleteFlag()).isFalse();
-        }
-
-        @Test
-        @DisplayName("Should handle null list of ids")
-        void shouldHandleNullIdList() {
-            bankAccountDao.deleteByIds(null);
-
-            BankAccount notDeleted = bankAccountDao.findByPK(bankAccount1.getBankAccountId());
-            assertThat(notDeleted.getDeleteFlag()).isFalse();
-        }
+        assertThat(result).isNotNull().hasSize(2);
     }
 
-    @Nested
-    @DisplayName("Multiple Bank Account Tests")
-    class MultipleBankAccountTests {
+    @Test
+    @DisplayName("Should return empty list when user has no accounts")
+    void shouldReturnEmptyListWhenNoAccounts() {
+        List<BankAccount> result = bankAccountDao.getBankAccountByUser(999);
 
-        @Test
-        @DisplayName("Should return correct account when multiple exist")
-        void shouldReturnCorrectAccountWhenMultipleExist() {
-            BankAccount result1 = bankAccountDao.getBankAccountById(bankAccount1.getBankAccountId());
-            BankAccount result2 = bankAccountDao.getBankAccountById(bankAccount2.getBankAccountId());
+        assertThat(result).isNotNull().isEmpty();
+    }
 
-            assertThat(result1.getBankAccountName()).isEqualTo("Primary Account");
-            assertThat(result2.getBankAccountName()).isEqualTo("Secondary Account");
-        }
+    @Test
+    @DisplayName("Should soft delete bank accounts by ids")
+    void shouldSoftDeleteBankAccountsByIds() {
+        List<Integer> ids = Collections.singletonList(bankAccount1.getBankAccountId());
+
+        bankAccountDao.deleteByIds(ids);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        BankAccount deleted = bankAccountDao.findByPK(bankAccount1.getBankAccountId());
+        assertThat(deleted.getDeleteFlag()).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should handle empty list of ids")
+    void shouldHandleEmptyIdList() {
+        bankAccountDao.deleteByIds(Collections.emptyList());
+
+        BankAccount notDeleted = bankAccountDao.findByPK(bankAccount1.getBankAccountId());
+        assertThat(notDeleted.getDeleteFlag()).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should handle null list of ids")
+    void shouldHandleNullIdList() {
+        bankAccountDao.deleteByIds(null);
+
+        BankAccount notDeleted = bankAccountDao.findByPK(bankAccount1.getBankAccountId());
+        assertThat(notDeleted.getDeleteFlag()).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should return correct account when multiple exist")
+    void shouldReturnCorrectAccountWhenMultipleExist() {
+        BankAccount result1 = bankAccountDao.getBankAccountById(bankAccount1.getBankAccountId());
+        BankAccount result2 = bankAccountDao.getBankAccountById(bankAccount2.getBankAccountId());
+
+        assertThat(result1.getBankAccountName()).isEqualTo("Primary Account");
+        assertThat(result2.getBankAccountName()).isEqualTo("Secondary Account");
     }
 
     private BankAccount persistBankAccount(String name, String accountNumber, String bankName, BigDecimal balance) {

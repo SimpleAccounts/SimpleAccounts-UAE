@@ -19,6 +19,7 @@ import com.simpleaccounts.service.TransactionCategoryClosingBalanceService;
 import com.simpleaccounts.utils.DateUtils;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumMap;
@@ -62,18 +63,18 @@ class TransactionCategoryBalanceServiceImplTest {
         testCategory.setTransactionCategoryName("Test Category");
 
         testJournal = new Journal();
-        testJournal.setJournalId(1);
+        testJournal.setId(1);
         testJournal.setJournalDate(LocalDate.now());
 
         testLineItem = new JournalLineItem();
-        testLineItem.setJournalLineItemId(1);
+        testLineItem.setId(1);
         testLineItem.setTransactionCategory(testCategory);
         testLineItem.setJournal(testJournal);
         testLineItem.setCreatedBy(1);
         testLineItem.setDeleteFlag(false);
 
         testBalance = new TransactionCategoryBalance();
-        testBalance.setTransactionCategoryBalanceId(1);
+        testBalance.setId(1);
         testBalance.setTransactionCategory(testCategory);
         testBalance.setRunningBalance(new BigDecimal("1000.00"));
         testBalance.setOpeningBalance(new BigDecimal("500.00"));
@@ -166,7 +167,7 @@ class TransactionCategoryBalanceServiceImplTest {
 
             when(transactionCategoryBalanceDao.findByAttributes(anyMap()))
                     .thenReturn(Collections.emptyList());
-            when(dateUtils.get(any())).thenReturn(new Date());
+            when(dateUtils.get(any(LocalDateTime.class))).thenReturn(new Date());
 
             BigDecimal result = transactionCategoryBalanceService.updateRunningBalance(testLineItem);
 

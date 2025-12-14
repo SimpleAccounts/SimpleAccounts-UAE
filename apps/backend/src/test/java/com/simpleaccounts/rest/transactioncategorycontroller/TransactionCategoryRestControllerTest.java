@@ -17,6 +17,7 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.repository.TransactionExpensesRepository;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.SingleLevelDropDownModel;
+import com.simpleaccounts.config.MessageConfiguration;
 import com.simpleaccounts.security.CustomUserDetailsService;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.CoacTransactionCategoryService;
@@ -24,6 +25,8 @@ import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
+import com.simpleaccounts.utils.MessageUtil;
+import com.simpleaccounts.utils.OSValidator;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,6 +41,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -46,6 +50,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(TransactionCategoryRestController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@Import({MessageConfiguration.class, MessageUtil.class})
 @DisplayName("TransactionCategoryRestController Tests")
 class TransactionCategoryRestControllerTest {
 
@@ -70,11 +75,11 @@ class TransactionCategoryRestControllerTest {
     @MockBean
     private TransactionService transactionService;
     @MockBean
-    private UserService userService;
-    @MockBean
     private TransactionExpensesRepository transactionExpensesRepository;
     @MockBean
     private CustomUserDetailsService customUserDetailsService;
+    @MockBean
+    private OSValidator osValidator;
 
     @TestConfiguration
     static class TestConfig {
@@ -103,7 +108,9 @@ class TransactionCategoryRestControllerTest {
 
         testUser = new User();
         testUser.setUserId(1);
-        testUser.setUserName("testuser");
+        testUser.setFirstName("Test");
+        testUser.setLastName("User");
+        testUser.setUserEmail("testuser@example.com");
     }
 
     @Nested
@@ -240,7 +247,7 @@ class TransactionCategoryRestControllerTest {
             mockMvc.perform(delete("/rest/transactioncategory/deleteTransactionCategory")
                             .param("id", "1"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.code").value("0068"));
+                    .andExpect(jsonPath("$.isErrorMessage").value(false));
 
             verify(transactionCategoryService).update(any(), anyInt());
         }
@@ -269,7 +276,7 @@ class TransactionCategoryRestControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.code").value("0068"));
+                    .andExpect(jsonPath("$.isErrorMessage").value(false));
 
             verify(transactionCategoryService).deleteByIds(any());
         }
@@ -294,7 +301,7 @@ class TransactionCategoryRestControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(bean)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.code").value("0069"));
+                    .andExpect(jsonPath("$.isErrorMessage").value(false));
 
             verify(transactionCategoryService).persist(any());
         }
@@ -320,7 +327,7 @@ class TransactionCategoryRestControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(bean)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.code").value("0070"));
+                    .andExpect(jsonPath("$.isErrorMessage").value(false));
 
             verify(transactionCategoryService).update(any());
         }
@@ -370,7 +377,7 @@ class TransactionCategoryRestControllerTest {
         @Test
         @DisplayName("Should return 1 for bank category")
         void shouldReturn1ForBankCategory() throws Exception {
-            testChartOfAccount.setChartOfAccountCode("BANK");
+            testChartOfAccount.setChartOfAccountCode("01-02");
             when(transactionCategoryService.findByPK(1)).thenReturn(testCategory);
 
             mockMvc.perform(get("/rest/transactioncategory/getExplainedTransactionCountForTransactionCategory")
@@ -389,8 +396,8 @@ class TransactionCategoryRestControllerTest {
         void shouldReturnCategoriesForManualJournal() throws Exception {
             List<TransactionCategory> categories = Collections.singletonList(testCategory);
             SingleLevelDropDownModel dropDownModel = new SingleLevelDropDownModel();
-            dropDownModel.setValue(1);
             dropDownModel.setLabel("Test Category");
+            dropDownModel.setOptions(Collections.emptyList());
 
             when(transactionCategoryService.getTransactionCategoryListManualJornal()).thenReturn(categories);
             when(transcationCategoryHelper.getSingleLevelDropDownModelListForManualJournal(categories))

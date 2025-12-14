@@ -77,7 +77,6 @@ class CompanyControllerTest {
     @Mock private BankAccountTypeService bankAccountTypeService;
     @Mock private UserRestHelper userRestHelper;
     @Mock private BankAccountRestHelper bankRestHelper;
-    @Mock private UserService userServiceNew;
     @Mock private Environment env;
 
     @InjectMocks

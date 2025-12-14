@@ -34,7 +34,7 @@ class ReconcileCategoryServiceImplTest {
     @BeforeEach
     void setUp() {
         testCategory = new ReconcileCategory();
-        testCategory.setReconcileCategoryId(1);
+        testCategory.setId(1);
         testCategory.setReconcileCategoryName("Test Category");
         testCategory.setReconcileCategoryCode("TEST_CODE");
     }
@@ -85,7 +85,7 @@ class ReconcileCategoryServiceImplTest {
         void shouldReturnMultipleCategoriesForSameType() {
             String typeCode = "INCOME";
             ReconcileCategory category2 = new ReconcileCategory();
-            category2.setReconcileCategoryId(2);
+            category2.setId(2);
             category2.setReconcileCategoryName("Second Category");
             category2.setReconcileCategoryCode("INCOME");
 

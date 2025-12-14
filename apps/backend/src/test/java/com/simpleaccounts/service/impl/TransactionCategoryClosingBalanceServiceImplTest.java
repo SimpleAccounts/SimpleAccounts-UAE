@@ -70,7 +70,7 @@ class TransactionCategoryClosingBalanceServiceImplTest {
         testCategory.setChartOfAccount(testChartOfAccount);
 
         testClosingBalance = new TransactionCategoryClosingBalance();
-        testClosingBalance.setTransactionCategoryClosingBalanceId(1);
+        testClosingBalance.setId(1);
         testClosingBalance.setTransactionCategory(testCategory);
         testClosingBalance.setClosingBalance(new BigDecimal("1000.00"));
         testClosingBalance.setBankAccountClosingBalance(new BigDecimal("1000.00"));
@@ -213,7 +213,8 @@ class TransactionCategoryClosingBalanceServiceImplTest {
             lineItem.setDeleteFlag(false);
             lineItem.setExchangeRate(BigDecimal.ONE);
 
-            when(closingBalanceService.findByAttributes(anyMap())).thenReturn(Collections.singletonList(testClosingBalance));
+            when(transactionCategoryClosingBalanceDao.findByAttributes(anyMap()))
+                    .thenReturn(Collections.singletonList(testClosingBalance));
             when(transactionCategoryClosingBalanceDao.getLastClosingBalanceByDate(testCategory))
                     .thenReturn(testClosingBalance);
 
@@ -242,7 +243,7 @@ class TransactionCategoryClosingBalanceServiceImplTest {
             testTransaction.setDebitCreditFlag('C');
             testTransaction.setTransactionAmount(new BigDecimal("100.00"));
 
-            when(closingBalanceService.findByAttributes(anyMap()))
+            when(transactionCategoryClosingBalanceDao.findByAttributes(anyMap()))
                     .thenReturn(Collections.singletonList(testClosingBalance));
             when(transactionCategoryClosingBalanceDao.getLastClosingBalanceByDate(testCategory))
                     .thenReturn(testClosingBalance);
@@ -259,7 +260,7 @@ class TransactionCategoryClosingBalanceServiceImplTest {
             testTransaction.setDebitCreditFlag('D');
             testTransaction.setTransactionAmount(new BigDecimal("200.00"));
 
-            when(closingBalanceService.findByAttributes(anyMap()))
+            when(transactionCategoryClosingBalanceDao.findByAttributes(anyMap()))
                     .thenReturn(Collections.singletonList(testClosingBalance));
             when(transactionCategoryClosingBalanceDao.getLastClosingBalanceByDate(testCategory))
                     .thenReturn(testClosingBalance);

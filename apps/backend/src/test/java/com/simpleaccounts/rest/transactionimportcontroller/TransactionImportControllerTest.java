@@ -25,6 +25,7 @@ import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.FileHelper;
+import com.simpleaccounts.utils.OSValidator;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
@@ -78,6 +79,8 @@ class TransactionImportControllerTest {
     private JwtTokenUtil jwtTokenUtil;
     @MockBean
     private CustomUserDetailsService customUserDetailsService;
+    @MockBean
+    private OSValidator osValidator;
 
     @TestConfiguration
     static class TestConfig {
@@ -99,7 +102,9 @@ class TransactionImportControllerTest {
 
         testUser = new User();
         testUser.setUserId(1);
-        testUser.setUserName("testuser");
+        testUser.setFirstName("Test");
+        testUser.setLastName("User");
+        testUser.setUserEmail("testuser@example.com");
     }
 
     @Nested

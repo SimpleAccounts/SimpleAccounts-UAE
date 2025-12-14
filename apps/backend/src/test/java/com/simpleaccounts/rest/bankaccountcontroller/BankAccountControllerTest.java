@@ -24,6 +24,7 @@ import com.simpleaccounts.model.BankModel;
 import com.simpleaccounts.model.DashBoardBankDataModel;
 import com.simpleaccounts.repository.JournalLineItemRepository;
 import com.simpleaccounts.rest.PaginationResponseModel;
+import com.simpleaccounts.config.MessageConfiguration;
 import com.simpleaccounts.security.CustomUserDetailsService;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.BankAccountService;
@@ -40,6 +41,7 @@ import com.simpleaccounts.service.TransactionCategoryClosingBalanceService;
 import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
+import com.simpleaccounts.utils.MessageUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,14 +58,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import com.simpleaccounts.utils.OSValidator;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BankAccountController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@Import({MessageConfiguration.class, MessageUtil.class})
 @DisplayName("BankAccountController Tests")
 class BankAccountControllerTest {
 
@@ -86,8 +91,6 @@ class BankAccountControllerTest {
     @MockBean
     private BankAccountStatusService bankAccountStatusService;
     @MockBean
-    private UserService userServiceNew;
-    @MockBean
     private CurrencyService currencyService;
     @MockBean
     private BankAccountTypeService bankAccountTypeService;
@@ -107,6 +110,8 @@ class BankAccountControllerTest {
     private CurrencyExchangeService currencyExchangeService;
     @MockBean
     private UserService userService;
+    @MockBean
+    private OSValidator osValidator;
     @MockBean
     private JournalLineItemRepository journalLineItemRepository;
     @MockBean
@@ -139,7 +144,9 @@ class BankAccountControllerTest {
 
         testUser = new User();
         testUser.setUserId(1);
-        testUser.setUserName("testuser");
+        testUser.setFirstName("Test");
+        testUser.setLastName("User");
+        testUser.setUserEmail("testuser@example.com");
     }
 
     @Nested
@@ -222,14 +229,14 @@ class BankAccountControllerTest {
         @DisplayName("Should return bank account types")
         void shouldReturnBankAccountTypes() throws Exception {
             BankAccountType accountType = new BankAccountType();
-            accountType.setBankAccountTypeName("Checking");
+            accountType.setName("Checking");
             List<BankAccountType> types = Collections.singletonList(accountType);
 
             when(bankAccountTypeService.getBankAccountTypeList()).thenReturn(types);
 
             mockMvc.perform(get("/rest/bank/getaccounttype"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$[0].bankAccountTypeName").value("Checking"));
+                    .andExpect(jsonPath("$[0].name").value("Checking"));
         }
 
         @Test
@@ -381,14 +388,14 @@ class BankAccountControllerTest {
         @DisplayName("Should return currencies")
         void shouldReturnCurrencies() throws Exception {
             Currency currency = new Currency();
-            currency.setCurrencyCode("AED");
+            currency.setCurrencyIsoCode("AED");
             List<Currency> currencies = Collections.singletonList(currency);
 
             when(currencyService.getCurrencies()).thenReturn(currencies);
 
             mockMvc.perform(get("/rest/bank/getcurrenncy"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$[0].currencyCode").value("AED"));
+                    .andExpect(jsonPath("$[0].currencyIsoCode").value("AED"));
         }
 
         @Test
@@ -414,7 +421,7 @@ class BankAccountControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.code").value("0074"));
+                    .andExpect(jsonPath("$.isErrorMessage").value(false));
 
             verify(bankAccountService).deleteByIds(any());
         }
