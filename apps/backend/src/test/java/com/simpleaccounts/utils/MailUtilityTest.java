@@ -1,8 +1,6 @@
 package com.simpleaccounts.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.constant.ConfigurationConstants;
 import com.simpleaccounts.entity.Configuration;
@@ -22,7 +20,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
-import org.springframework.mail.javamail.JavaMailSender;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("MailUtility Tests")
@@ -246,7 +243,7 @@ class MailUtilityTest {
         @DisplayName("Should return default config when configuration list is null")
         void shouldReturnDefaultConfigWhenConfigListIsNull() {
             // when
-            MailUtility.MailConfigurationModel result = MailUtility.getEMailConfigurationList(null);
+            MailConfigurationModel result = MailUtility.getEMailConfigurationList(null);
 
             // then
             assertThat(result).isNotNull();
@@ -256,7 +253,7 @@ class MailUtilityTest {
         @DisplayName("Should return default config when configuration list is empty")
         void shouldReturnDefaultConfigWhenConfigListIsEmpty() {
             // when
-            MailUtility.MailConfigurationModel result = MailUtility.getEMailConfigurationList(new ArrayList<>());
+            MailConfigurationModel result = MailUtility.getEMailConfigurationList(new ArrayList<>());
 
             // then
             assertThat(result).isNotNull();
@@ -269,7 +266,7 @@ class MailUtilityTest {
             List<Configuration> configs = createCompleteConfigurationList();
 
             // when
-            MailUtility.MailConfigurationModel result = MailUtility.getEMailConfigurationList(configs);
+            MailConfigurationModel result = MailUtility.getEMailConfigurationList(configs);
 
             // then
             assertThat(result).isNotNull();
@@ -289,7 +286,7 @@ class MailUtilityTest {
             configs.add(createConfig(ConfigurationConstants.MAIL_PORT, "587"));
 
             // when
-            MailUtility.MailConfigurationModel result = MailUtility.getEMailConfigurationList(configs);
+            MailConfigurationModel result = MailUtility.getEMailConfigurationList(configs);
 
             // then
             assertThat(result).isNotNull();
@@ -384,7 +381,7 @@ class MailUtilityTest {
         @DisplayName("Should get default email configuration")
         void shouldGetDefaultEmailConfiguration() {
             // when
-            MailUtility.MailConfigurationModel result = MailUtility.getDefaultEmailConfigurationList();
+            MailConfigurationModel result = MailUtility.getDefaultEmailConfigurationList();
 
             // then
             assertThat(result).isNotNull();

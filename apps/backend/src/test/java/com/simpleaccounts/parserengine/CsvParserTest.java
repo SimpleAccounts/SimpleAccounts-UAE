@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import com.simpleaccounts.criteria.enums.TransactionEnum;
 import com.simpleaccounts.dao.DateFormatDao;
 import com.simpleaccounts.entity.DateFormat;
+import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingDetailModel;
 import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingPersistModel;
 import java.io.ByteArrayInputStream;
@@ -23,9 +24,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
@@ -265,7 +263,7 @@ class CsvParserTest {
             MultipartFile file = mock(MultipartFile.class);
 
             // when
-            var result = csvParser.getModelListFromFile(model, file, 1);
+            List<Transaction> result = csvParser.getModelListFromFile(model, file, 1);
 
             // then
             assertThat(result).isEmpty();

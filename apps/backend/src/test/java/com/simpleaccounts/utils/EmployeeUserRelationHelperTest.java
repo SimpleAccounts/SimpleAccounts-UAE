@@ -98,8 +98,8 @@ class EmployeeUserRelationHelperTest {
             // given
             Employee employee = createEmployee();
             User user = createUser();
-            user.setId(456);
-            user.setUsername("johndoe");
+            user.setUserId(456);
+            user.setUserEmail("johndoe@example.com");
 
             // when
             helper.createUserForEmployee(employee, user);
@@ -109,8 +109,8 @@ class EmployeeUserRelationHelperTest {
             verify(employeeUserRelationService).persist(captor.capture());
 
             User capturedUser = captor.getValue().getUser();
-            assertThat(capturedUser.getId()).isEqualTo(456);
-            assertThat(capturedUser.getUsername()).isEqualTo("johndoe");
+            assertThat(capturedUser.getUserId()).isEqualTo(456);
+            assertThat(capturedUser.getUserEmail()).isEqualTo("johndoe@example.com");
         }
 
         private Employee createEmployee() {
@@ -123,8 +123,8 @@ class EmployeeUserRelationHelperTest {
 
         private User createUser() {
             User user = new User();
-            user.setId(1);
-            user.setUsername("testuser");
+            user.setUserId(1);
+            user.setUserEmail("testuser@example.com");
             return user;
         }
     }

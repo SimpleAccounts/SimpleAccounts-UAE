@@ -3,13 +3,13 @@ package com.simpleaccounts.utils;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-
 import org.springframework.stereotype.Component;
 
 /**
@@ -236,8 +236,10 @@ public class DateUtils {
 	}
 
 	public int diff(Date startDate, Date endDate) {
-		long diff = startDate.getTime() - endDate.getTime();
-		int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
-		return diffDays;
+		LocalDate start = Instant.ofEpochMilli(startDate.getTime())
+				.atZone(ZoneId.systemDefault())
+				.toLocalDate();
+		LocalDate end = Instant.ofEpochMilli(endDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+		return (int) ChronoUnit.DAYS.between(end, start);
 	}
 }

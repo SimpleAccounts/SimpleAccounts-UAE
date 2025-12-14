@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.constant.FileTypeEnum;
+import com.simpleaccounts.rest.migrationcontroller.DataMigrationRespModel;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -326,7 +328,7 @@ class FileHelperTest {
         @DisplayName("Should return empty list for null files array")
         void shouldReturnEmptyListForNullFilesArray() {
             // when
-            var result = fileHelper.saveMultiFile(tempDir.toString(), null);
+            List<DataMigrationRespModel> result = fileHelper.saveMultiFile(tempDir.toString(), null);
 
             // then
             assertThat(result).isEmpty();
@@ -336,7 +338,7 @@ class FileHelperTest {
         @DisplayName("Should return empty list for empty files array")
         void shouldReturnEmptyListForEmptyFilesArray() {
             // when
-            var result = fileHelper.saveMultiFile(tempDir.toString(), new MultipartFile[0]);
+            List<DataMigrationRespModel> result = fileHelper.saveMultiFile(tempDir.toString(), new MultipartFile[0]);
 
             // then
             assertThat(result).isEmpty();
@@ -350,7 +352,8 @@ class FileHelperTest {
             when(mockFile.getOriginalFilename()).thenReturn(null);
 
             // when
-            var result = fileHelper.saveMultiFile(tempDir.toString(), new MultipartFile[]{mockFile});
+            List<DataMigrationRespModel> result =
+                    fileHelper.saveMultiFile(tempDir.toString(), new MultipartFile[] {mockFile});
 
             // then
             assertThat(result).isEmpty();
@@ -364,7 +367,8 @@ class FileHelperTest {
             when(mockFile.getOriginalFilename()).thenReturn("");
 
             // when
-            var result = fileHelper.saveMultiFile(tempDir.toString(), new MultipartFile[]{mockFile});
+            List<DataMigrationRespModel> result =
+                    fileHelper.saveMultiFile(tempDir.toString(), new MultipartFile[] {mockFile});
 
             // then
             assertThat(result).isEmpty();
@@ -378,7 +382,8 @@ class FileHelperTest {
             when(mockFile.getOriginalFilename()).thenReturn(".hidden");
 
             // when
-            var result = fileHelper.saveMultiFile(tempDir.toString(), new MultipartFile[]{mockFile});
+            List<DataMigrationRespModel> result =
+                    fileHelper.saveMultiFile(tempDir.toString(), new MultipartFile[] {mockFile});
 
             // then
             assertThat(result).isEmpty();
@@ -392,7 +397,8 @@ class FileHelperTest {
             when(mockFile.getOriginalFilename()).thenReturn("../etc/passwd");
 
             // when
-            var result = fileHelper.saveMultiFile(tempDir.toString(), new MultipartFile[]{mockFile});
+            List<DataMigrationRespModel> result =
+                    fileHelper.saveMultiFile(tempDir.toString(), new MultipartFile[] {mockFile});
 
             // then
             assertThat(result).isEmpty();
@@ -407,7 +413,8 @@ class FileHelperTest {
             when(mockFile.getOriginalFilename()).thenReturn(null);
 
             // when - should not throw
-            var result = fileHelper.saveMultiFile(folderPathWithSlash, new MultipartFile[]{mockFile});
+            List<DataMigrationRespModel> result =
+                    fileHelper.saveMultiFile(folderPathWithSlash, new MultipartFile[] {mockFile});
 
             // then
             assertThat(result).isEmpty();
@@ -451,7 +458,8 @@ class FileHelperTest {
             when(mockFile.getOriginalFilename()).thenReturn(maliciousPath);
 
             // when
-            var result = fileHelper.saveMultiFile(tempDir.toString(), new MultipartFile[]{mockFile});
+            List<DataMigrationRespModel> result =
+                    fileHelper.saveMultiFile(tempDir.toString(), new MultipartFile[] {mockFile});
 
             // then
             assertThat(result).isEmpty();

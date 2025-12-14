@@ -1,12 +1,12 @@
 package com.simpleaccounts.parserengine;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.criteria.enums.TransactionEnum;
 import com.simpleaccounts.dao.DateFormatDao;
 import com.simpleaccounts.entity.DateFormat;
+import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingDetailModel;
 import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingPersistModel;
 import java.io.ByteArrayInputStream;
@@ -30,7 +30,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ExcelParser Tests")
@@ -244,7 +243,7 @@ class ExcelParserTest {
             TransactionParsingSettingDetailModel model = buildModel();
 
             // when
-            var result = excelParser.getModelListFromFile(model, null, 1);
+            List<Transaction> result = excelParser.getModelListFromFile(model, null, 1);
 
             // then
             assertThat(result).isNull();
@@ -261,7 +260,7 @@ class ExcelParserTest {
             });
 
             // when
-            var result = excelParser.getModelListFromFile(model, file, 1);
+            List<Transaction> result = excelParser.getModelListFromFile(model, file, 1);
 
             // then
             assertThat(result).isNotNull();
