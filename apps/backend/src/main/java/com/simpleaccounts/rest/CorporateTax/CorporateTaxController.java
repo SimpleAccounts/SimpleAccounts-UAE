@@ -46,6 +46,8 @@ import org.springframework.web.bind.annotation.*;
 	@SuppressWarnings("java:S3973")
 	@RequiredArgsConstructor
 public class CorporateTaxController {
+    private static final String MSG_CORPORATE_TAX_FILING_NOT_FOUND = "Corporate Tax Filing not found";
+
     private final JwtTokenUtil jwtTokenUtil;
 
     private final CompanyService companyService;
@@ -200,7 +202,7 @@ public class CorporateTaxController {
         try {
             Optional<CorporateTaxFiling> optionalFiling = corporateTaxFilingRepository.findById(id);
             if (!optionalFiling.isPresent()) {
-                return new ResponseEntity<>("Corporate Tax Filing not found", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(MSG_CORPORATE_TAX_FILING_NOT_FOUND, HttpStatus.NOT_FOUND);
             }
             CorporateTaxFiling corporateTaxFiling = optionalFiling.get();
 
@@ -223,7 +225,7 @@ public class CorporateTaxController {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             Optional<CorporateTaxFiling> optionalFiling = corporateTaxFilingRepository.findById(corporateTaxModel.getId());
             if (!optionalFiling.isPresent()) {
-                return new ResponseEntity<>("Corporate Tax Filing not found", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(MSG_CORPORATE_TAX_FILING_NOT_FOUND, HttpStatus.NOT_FOUND);
             }
             CorporateTaxFiling corporateTaxFiling = optionalFiling.get();
             LocalDateTime filedOn = dateFormatUtil.getDateStrAsLocalDateTime(corporateTaxModel.getTaxFiledOn(),
@@ -264,7 +266,7 @@ public class CorporateTaxController {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             Optional<CorporateTaxFiling> optionalFiling = corporateTaxFilingRepository.findById(corporateTaxModel.getId());
             if (!optionalFiling.isPresent()) {
-                return new ResponseEntity<>("Corporate Tax Filing not found", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(MSG_CORPORATE_TAX_FILING_NOT_FOUND, HttpStatus.NOT_FOUND);
             }
             CorporateTaxFiling corporateTaxFiling = optionalFiling.get();
             corporateTaxFiling.setTaxFiledOn(null);
@@ -339,7 +341,7 @@ public class CorporateTaxController {
             SimpleAccountsMessage message= null;
             Optional<CorporateTaxFiling> optionalFiling = corporateTaxFilingRepository.findById(id);
             if (!optionalFiling.isPresent()) {
-                return new ResponseEntity<>("Corporate Tax Filing not found", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(MSG_CORPORATE_TAX_FILING_NOT_FOUND, HttpStatus.NOT_FOUND);
             }
             CorporateTaxFiling corporateTaxFiling = optionalFiling.get();
             corporateTaxFiling.setDeleteFlag(Boolean.TRUE);

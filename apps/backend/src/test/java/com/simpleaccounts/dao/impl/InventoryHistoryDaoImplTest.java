@@ -1,26 +1,19 @@
 package com.simpleaccounts.dao.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.simpleaccounts.dao.InventoryHistoryDao;
 import com.simpleaccounts.entity.Inventory;
 import com.simpleaccounts.entity.InventoryHistory;
 import com.simpleaccounts.entity.Product;
-import com.simpleaccounts.rest.InventoryController.InventoryRevenueModel;
-import com.simpleaccounts.rest.InventoryController.TopInventoryRevenueModel;
 import com.simpleaccounts.utils.DateUtils;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;

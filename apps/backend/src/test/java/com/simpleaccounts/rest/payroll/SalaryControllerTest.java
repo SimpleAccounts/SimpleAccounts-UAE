@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.simpleaccounts.entity.Company;
 import com.simpleaccounts.entity.Employee;
 import com.simpleaccounts.entity.User;
-import com.simpleaccounts.model.SalaryPersistModel;
 import com.simpleaccounts.rest.payroll.model.MoneyPaidToUserModel;
 import com.simpleaccounts.rest.payroll.service.Impl.SalaryServiceImpl;
 import com.simpleaccounts.rest.payroll.service.IncompleteEmployeeProfileModel;

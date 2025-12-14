@@ -33,6 +33,7 @@ public class ValidationController {
     private static final String JSON_KEY_DELETE_FLAG = "deleteFlag";
     private static final String JSON_KEY_EMAIL = "email";
     private static final String JSON_KEY_ACCOUNT_NUMBER = "accountNumber";
+    private static final String MSG_BAD_REQUEST = "Bad request";
 
     private final ProductService productService;
     private final SalaryComponentService salaryComponentService;
@@ -61,7 +62,7 @@ public class ValidationController {
     @GetMapping(value = "/validate")
     public ResponseEntity<String> validate(@ModelAttribute ValidationModel validationModel, HttpServletRequest request) {
         if (validationModel.getModuleType() == null) {
-            return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(MSG_BAD_REQUEST, HttpStatus.BAD_REQUEST);
         }
 
         switch (validationModel.getModuleType()) {
@@ -103,7 +104,7 @@ public class ValidationController {
             case 30:
                 return validateHR(validationModel);
             default:
-                return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(MSG_BAD_REQUEST, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -117,7 +118,7 @@ public class ValidationController {
         } else {
             Map<String, Object> param1 = new HashMap<>();
             param1.put("productCode", validationModel.getProductCode());
-            param1.put("deleteFlag", false);
+            param1.put(JSON_KEY_DELETE_FLAG, false);
             List<Product> productList1 = productService.findByAttributes(param1);
             if (productList1 != null && !productList1.isEmpty())
                 return new ResponseEntity<>("Product Code Already Exists", HttpStatus.OK);
@@ -283,7 +284,7 @@ public class ValidationController {
                 else
                     return new ResponseEntity<>("Credit Note Number does not exists", HttpStatus.OK);
             default:
-                return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(MSG_BAD_REQUEST, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -387,8 +388,8 @@ public class ValidationController {
                 else
                     return new ResponseEntity<>("Component ID does not exists", HttpStatus.OK);
             default:
-                return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(MSG_BAD_REQUEST, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(MSG_BAD_REQUEST, HttpStatus.BAD_REQUEST);
     }
 }

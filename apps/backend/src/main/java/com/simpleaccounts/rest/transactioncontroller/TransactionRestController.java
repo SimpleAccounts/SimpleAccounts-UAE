@@ -371,9 +371,8 @@ public class TransactionRestController {
 				transactionExplanation.setExplanationLineItems(transactionExplinationLineItems);
 				transactionExplanationRepository.save(transactionExplanation);
 				//////////////////////////////////////////////////////////////////////////////////////////////
-				Journal journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getEmployeeId()!=null
-								? transactionPresistModel.getEmployeeId():transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getAmount(), userId, trnx,false,transactionPresistModel.getExchangeRate());
+				Journal journal = reconsilationRestHelper.getByTransactionType(
+						userId, trnx, false, transactionPresistModel.getExchangeRate());
 				journal.setJournalDate(trnx.getTransactionDate().toLocalDate());
 				journalService.persist(journal);
 				break;
@@ -414,8 +413,8 @@ public class TransactionRestController {
 					trnx.setExplainedTransactionDescription("Transferred to " + explainedTransactionCategory.getTransactionCategoryName()
 							+"TRANSACTION_ID_SEPARATOR" + explainedTransactionCategory.getTransactionCategoryId());
 				}
-				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank,transactionPresistModel.getExchangeRate());
+				journal = reconsilationRestHelper.getByTransactionType(
+						userId, trnx, isdebitFromBank, transactionPresistModel.getExchangeRate());
 				journal.setJournalDate(trnx.getTransactionDate().toLocalDate());
 				journalService.persist(journal);
 				break;
@@ -445,8 +444,8 @@ public class TransactionRestController {
 				transactionExplanation.setExplanationLineItems(transactionExplinationLineItems);
 				transactionExplanationRepository.save(transactionExplanation);
 				//////////////////////////////////////////////////////////////////////////////////////////////
-				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getAmount(), userId, trnx, false,transactionPresistModel.getExchangeRate());
+				journal = reconsilationRestHelper.getByTransactionType(
+						userId, trnx, false, transactionPresistModel.getExchangeRate());
 				journal.setJournalDate(trnx.getTransactionDate().toLocalDate());
 				journalService.persist(journal);
 				break;
@@ -497,8 +496,8 @@ public class TransactionRestController {
 					trnx.setExplainedTransactionCategory(transactionCategory);
 					trnx.setExplainedTransactionDescription("Transferred from " + explainedTransactionCategory.getTransactionCategoryName()
 							+ "TRANSACTION_ID_SEPARATOR" + explainedTransactionCategory.getTransactionCategoryId());
-				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank,transactionPresistModel.getExchangeRate());
+				journal = reconsilationRestHelper.getByTransactionType(
+						userId, trnx, isdebitFromBank, transactionPresistModel.getExchangeRate());
 				journal.setJournalDate(trnx.getTransactionDate().toLocalDate());
 				journalService.persist(journal);
 				break;
@@ -532,8 +531,8 @@ public class TransactionRestController {
 				transactionExplanation.setExplanationLineItems(transactionExplinationLineItems);
 				transactionExplanationRepository.save(transactionExplanation);
 				//////////////////////////////////////////////////////////////////////////////////////////////
-				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getAmount(), userId, trnx, true,transactionPresistModel.getExchangeRate());
+				journal = reconsilationRestHelper.getByTransactionType(
+						userId, trnx, true, transactionPresistModel.getExchangeRate());
 				journal.setJournalDate(trnx.getTransactionDate().toLocalDate());
 				journalService.persist(journal);
 				break;
@@ -838,8 +837,8 @@ public class TransactionRestController {
 		// explain transaction
 		updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
 
-		journal = reconsilationRestHelper.getByTransactionTypeForPayroll(transactionPresistModel,transactionCategoryId
-				, userId, trnx,expense,transactionAmount);
+		journal = reconsilationRestHelper.getByTransactionTypeForPayroll(
+				transactionPresistModel, userId, trnx, expense, transactionAmount);
 		journal.setJournalDate(trnx.getTransactionDate().toLocalDate());
 		journalService.persist(journal);
 
@@ -1073,8 +1072,8 @@ public class TransactionRestController {
 				transactionExplanationRepository.save(transactionExplanation);
 
 				//////////////////////////////////////////////////////////////////////////////////////////////
-				Journal journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getEmployeeId(),
-						transactionPresistModel.getDueAmount(), userId, trnx, false,transactionPresistModel.getExchangeRate());
+				Journal journal = reconsilationRestHelper.getByTransactionType(
+						userId, trnx, false, transactionPresistModel.getExchangeRate());
 				journal.setJournalDate(LocalDate.now());
 				journalService.persist(journal);
 				break;
@@ -1117,8 +1116,8 @@ public class TransactionRestController {
 					trnx.setExplainedTransactionDescription("Transferred to " + explainedTransactionCategory.getTransactionCategoryName()
 							+ "TRANSACTION_ID_SEPARATOR" + explainedTransactionCategory.getTransactionCategoryId());
 				}
-				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getDueAmount(), userId, trnx, isdebitFromBank,transactionPresistModel.getExchangeRate());
+				journal = reconsilationRestHelper.getByTransactionType(
+						userId, trnx, isdebitFromBank, transactionPresistModel.getExchangeRate());
 				journal.setJournalDate(LocalDate.now());
 				journalService.persist(journal);
 				break;
@@ -1148,8 +1147,8 @@ public class TransactionRestController {
 				transactionExplanation.setExplanationLineItems(transactionExplinationLineItems);
 				transactionExplanationRepository.save(transactionExplanation);
 				//////////////////////////////////////////////////////////////////////////////////////////////
-				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getDueAmount(), userId, trnx, false,transactionPresistModel.getExchangeRate());
+				journal = reconsilationRestHelper.getByTransactionType(
+						userId, trnx, false, transactionPresistModel.getExchangeRate());
 				journal.setJournalDate(LocalDate.now());
 				journalService.persist(journal);
 				break;
@@ -1205,8 +1204,8 @@ public class TransactionRestController {
 					trnx.setExplainedTransactionDescription("Transferred from " + explainedTransactionCategory.getTransactionCategoryName()
 							+ "TRANSACTION_ID_SEPARATOR" + explainedTransactionCategory.getTransactionCategoryId());
 				}
-				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getDueAmount(), userId, trnx, isdebitFromBank,transactionPresistModel.getExchangeRate());
+				journal = reconsilationRestHelper.getByTransactionType(
+						userId, trnx, isdebitFromBank, transactionPresistModel.getExchangeRate());
 				journal.setJournalDate(LocalDate.now());
 				journalService.persist(journal);
 
@@ -1241,8 +1240,8 @@ public class TransactionRestController {
 				transactionExplanation.setExplanationLineItems(transactionExplinationLineItems);
 				transactionExplanationRepository.save(transactionExplanation);
 				//////////////////////////////////////////////////////////////////////////////////////////////
-				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getAmount(), userId, trnx, true,transactionPresistModel.getExchangeRate());
+				journal = reconsilationRestHelper.getByTransactionType(
+						userId, trnx, true, transactionPresistModel.getExchangeRate());
 				journal.setJournalDate(LocalDate.now());
 				journalService.persist(journal);
 				break;
@@ -1768,8 +1767,7 @@ public class TransactionRestController {
 		// explain transaction
 		updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
 
-		journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel,transactionCategoryId
-				, userId, trnx,expense);
+		journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel, userId, trnx, expense);
 		journal.setDescription("Expense");
 		if (expense.getExpenseNumber()!=null){
 			journal.setJournlReferencenNo(expense.getExpenseNumber());

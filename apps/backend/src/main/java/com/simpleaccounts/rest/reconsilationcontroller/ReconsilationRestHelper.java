@@ -82,7 +82,7 @@ public class ReconsilationRestHelper {
 	}
 
 	public Journal get(ChartOfAccountCategoryIdEnumConstant chartOfAccountCategoryIdEnumConstant,
-			Integer transactionCategoryCode, BigDecimal amount, int userId, Transaction transaction) {
+			int userId, Transaction transaction) {
 
 		Journal journal = null;
 		switch (chartOfAccountCategoryIdEnumConstant) {
@@ -112,15 +112,15 @@ public class ReconsilationRestHelper {
 		case CORPORATE_TAX_PAYMENT:
 		case DEFAULT:
 		default:
-			journal = getByTransactionType(transactionCategoryCode, amount, userId, transaction, false,transaction.getExchangeRate());
+			journal = getByTransactionType(userId, transaction, false, transaction.getExchangeRate());
 			break;
 		}
 		return journal;
 
 	}
 //Todo
-	public Journal getByTransactionType(Integer transactionCategoryCode, BigDecimal amount, int userId,
-										Transaction transaction, boolean isdebitFromBank, BigDecimal exchangeRate) {
+	public Journal getByTransactionType(int userId, Transaction transaction, boolean isdebitFromBank,
+			BigDecimal exchangeRate) {
 
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
@@ -165,8 +165,7 @@ public class ReconsilationRestHelper {
 	}
 //Todo
 	public Journal getByTransactionType(@ModelAttribute TransactionPresistModel transactionPresistModel,
-										Integer transactionCategoryCode, int userId,
-										Transaction transaction, Expense expense) {
+			int userId, Transaction transaction, Expense expense) {
 
 				BigDecimal exchangeRate;
 				if (transactionPresistModel.getExchangeRate() == null){
@@ -252,8 +251,7 @@ public class ReconsilationRestHelper {
 	}
 	//Todo
 	public Journal getByTransactionTypeForPayroll(@ModelAttribute TransactionPresistModel transactionPresistModel,
-										Integer transactionCategoryCode, int userId,
-										Transaction transaction, Expense expense,BigDecimal amount) {
+			int userId, Transaction transaction, Expense expense, BigDecimal amount) {
 
 		BigDecimal exchangeRate = transactionPresistModel.getExchangeRate();
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();

@@ -12,7 +12,6 @@ import com.simpleaccounts.entity.TransactionExpensesPayroll;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.exceptions.ServiceException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

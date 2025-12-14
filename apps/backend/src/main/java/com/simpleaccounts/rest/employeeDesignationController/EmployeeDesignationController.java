@@ -61,7 +61,7 @@ public class EmployeeDesignationController {
 
 	            employeeDesignationService.persist(employeeDesignation);
 
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -80,7 +80,7 @@ public class EmployeeDesignationController {
 	            EmployeeDesignation employeeDesignation = employeeDesignationRestHelper.getEmployeeDesignationEntity(employeeDesignationPersistModel);
 
 	            employeeDesignationService.update(employeeDesignation);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -112,18 +112,17 @@ public class EmployeeDesignationController {
             if (employeeDesignation != null && employeeList.size()==0) {
                 employeeDesignation.setDeleteFlag(Boolean.TRUE);
                 employeeDesignationService.update(employeeDesignation, employeeDesignation.getId());
-                return new ResponseEntity(HttpStatus.OK);
-            }else
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
             /**
              * “already exists http status code”
-             *  The appropriate status code for "Already Exists" would be
-             * '409 Conflict'
+             * The appropriate status code for "Already Exists" would be '409 Conflict'
              */
-                return new ResponseEntity(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
 
         } catch (Exception e) {
             logger.error(ERROR, e);
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -136,7 +135,7 @@ public class EmployeeDesignationController {
             if (employeeDesignation == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity(employeeDesignationRestHelper.getEmployeeDesignationModel(employeeDesignation), HttpStatus.OK);
+                return new ResponseEntity<>(employeeDesignationRestHelper.getEmployeeDesignationModel(employeeDesignation), HttpStatus.OK);
             }
         } catch (Exception e) {
             logger.error(ERROR, e);

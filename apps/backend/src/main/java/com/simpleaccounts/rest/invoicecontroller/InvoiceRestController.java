@@ -257,7 +257,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 					SimpleAccountsMessage errorMessage = new SimpleAccountsMessage("0023",
 							MessageUtil.getMessage("invoicenumber.alreadyexists.0023"), true);
 					logger.info(errorMessage.getMessage());
-					return new  ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 
 			}
 			Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);

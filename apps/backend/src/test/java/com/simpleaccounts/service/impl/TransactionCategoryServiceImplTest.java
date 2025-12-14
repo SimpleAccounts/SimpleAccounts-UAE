@@ -1,13 +1,10 @@
 package com.simpleaccounts.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.simpleaccounts.constant.dbfilter.TransactionCategoryFilterEnum;
-import com.simpleaccounts.criteria.bankaccount.TransactionCategoryCriteria;
 import com.simpleaccounts.dao.bankaccount.TransactionCategoryDao;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;

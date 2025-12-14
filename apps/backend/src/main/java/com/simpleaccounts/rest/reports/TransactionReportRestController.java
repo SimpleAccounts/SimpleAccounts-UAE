@@ -62,7 +62,7 @@ public class TransactionReportRestController {
 	@GetMapping(value = "/getFinancialPeriods")
 	public ResponseEntity<List<FinancialPeriodRestModel>> completeFinancialPeriods() {
 		try {
-			return new ResponseEntity(FinancialPeriodHolderRest.getFinancialPeriodList(), HttpStatus.OK);
+			return new ResponseEntity<>(FinancialPeriodHolderRest.getFinancialPeriodList(), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -75,7 +75,7 @@ public class TransactionReportRestController {
 	public ResponseEntity<List<ChartOfAccount>> transactionTypes(){
 		try {
 			List<ChartOfAccount> transactionTypeList = transactionTypeService.findAllChild();
-			return new ResponseEntity(transactionTypeList, HttpStatus.OK);
+			return new ResponseEntity<>(transactionTypeList, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -103,9 +103,9 @@ public class TransactionReportRestController {
 					}
 				}
 				transactionCategoryList.removeAll(transactionCategoryParentList);
-				return new ResponseEntity(transactionCategoryList, HttpStatus.OK);
+				return new ResponseEntity<>(transactionCategoryList, HttpStatus.OK);
 			}
-			return new ResponseEntity(transactionCategoryList, HttpStatus.OK);
+			return new ResponseEntity<>(transactionCategoryList, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -126,7 +126,7 @@ public class TransactionReportRestController {
 		try {
 			List<TransactionReportRestModel> transactionRestModels = transactionService.getTransactionsReport(
 					transactionTypeCode, transactionCategoryId, startDate, endDate, accountId, pageNo, pageSize);
-			return new ResponseEntity(transactionRestModels, HttpStatus.OK);
+			return new ResponseEntity<>(transactionRestModels, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -152,8 +152,7 @@ public class TransactionReportRestController {
 			if (invoiceDueStartDate != null && invoiceDueEndDate == null) {
 				invoiceDueEndDate = invoiceStartDate;
 			}
-			return new ResponseEntity(
-					HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

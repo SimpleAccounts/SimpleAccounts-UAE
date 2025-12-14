@@ -430,7 +430,7 @@ public class PoQuatationRestHelper {
         }
 
         if (poQuatation.getSupplierId() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-            mailUtility.triggerEmailOnBackground2(subject,content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+            mailUtility.triggerEmailOnBackground2(subject, content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
                     EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{poQuatation.getSupplierId().getBillingEmail()},
                     true);
             User user = userService.findByPK(userId);
@@ -1520,7 +1520,7 @@ public class PoQuatationRestHelper {
         }
 
         if (poQuatation.getSupplierId() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-            mailUtility.triggerEmailOnBackground2(subject,content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+            mailUtility.triggerEmailOnBackground2(subject, content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
                     EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{poQuatation.getSupplierId().getBillingEmail()},
                     true);
             User user = userService.findByPK(userId);
@@ -1802,7 +1802,7 @@ public class PoQuatationRestHelper {
         }
 
         if (poQuatation.getSupplierId() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-            mailUtility.triggerEmailOnBackground2(subject,content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+            mailUtility.triggerEmailOnBackground2(subject, content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
                     EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{poQuatation.getSupplierId().getBillingEmail()},
                     true);
             User user = userService.findByPK(userId);
@@ -2424,7 +2424,7 @@ public class PoQuatationRestHelper {
         }
 
      if (poQuatation.getSupplierId() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
-        mailUtility.triggerEmailOnBackground2(subject,content, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+        mailUtility.triggerEmailOnBackground2(subject, content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
                 EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{poQuatation.getSupplierId().getBillingEmail()},
                 true);
         User user = userService.findByPK(userId);

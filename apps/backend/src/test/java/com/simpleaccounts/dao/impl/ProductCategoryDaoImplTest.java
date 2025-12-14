@@ -2,7 +2,6 @@ package com.simpleaccounts.dao.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -12,7 +11,6 @@ import com.simpleaccounts.constant.DatatableSortingFilterConstant;
 import com.simpleaccounts.constant.dbfilter.ProductCategoryFilterEnum;
 import com.simpleaccounts.entity.ProductCategory;
 import com.simpleaccounts.rest.PaginationModel;
-import com.simpleaccounts.rest.PaginationResponseModel;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;

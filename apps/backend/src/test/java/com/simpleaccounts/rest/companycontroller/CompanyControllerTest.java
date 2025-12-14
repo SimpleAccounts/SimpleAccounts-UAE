@@ -1,7 +1,6 @@
 package com.simpleaccounts.rest.companycontroller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -10,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.simpleaccounts.entity.Company;
 import com.simpleaccounts.entity.Country;
 import com.simpleaccounts.entity.Currency;
-import com.simpleaccounts.entity.Role;
 import com.simpleaccounts.entity.State;
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.repository.CompanyTypeRepository;
