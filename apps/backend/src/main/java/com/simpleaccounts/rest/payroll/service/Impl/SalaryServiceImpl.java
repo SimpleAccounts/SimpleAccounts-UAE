@@ -17,27 +17,43 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service("salaryService")
 	@Transactional
 	@SuppressWarnings("java:S131")
-	@RequiredArgsConstructor
 public class SalaryServiceImpl extends SalaryService {
 
     private final SalaryDao salaryDao;
     private final EmployeeService employeeService;
     private final EmploymentService employmentService;
     private final SalaryService salaryService;
+    private final DateFormatUtil dateFormatUtil;
+    private final EmployeeTransactionCategoryRelationRepository employeeTransactionCategoryRelationRepository;
+    private final JournalLineItemRepository journalLineItemRepository;
+
+    public SalaryServiceImpl(
+            SalaryDao salaryDao,
+            EmployeeService employeeService,
+            EmploymentService employmentService,
+            @Lazy SalaryService salaryService,
+            DateFormatUtil dateFormatUtil,
+            EmployeeTransactionCategoryRelationRepository employeeTransactionCategoryRelationRepository,
+            JournalLineItemRepository journalLineItemRepository) {
+        this.salaryDao = salaryDao;
+        this.employeeService = employeeService;
+        this.employmentService = employmentService;
+        this.salaryService = salaryService;
+        this.dateFormatUtil = dateFormatUtil;
+        this.employeeTransactionCategoryRelationRepository = employeeTransactionCategoryRelationRepository;
+        this.journalLineItemRepository = journalLineItemRepository;
+    }
     @Override
     protected Dao<Integer, Salary> getDao() {
         return this.salaryDao;
     }
-    private final DateFormatUtil dateFormatUtil;
-    private final EmployeeTransactionCategoryRelationRepository employeeTransactionCategoryRelationRepository;
-    private final JournalLineItemRepository journalLineItemRepository;
 
     public SalarySlipModel getSalaryByEmployeeId(Integer employeeId,String salaryDate){
 

@@ -9,16 +9,22 @@ import com.simpleaccounts.service.ChartOfAccountCategoryService;
 import com.simpleaccounts.service.TransactionCategoryService;
 import java.util.List;
 import javax.persistence.TypedQuery;
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@RequiredArgsConstructor
 public class CoacTransactionCategoryDaoImpl extends AbstractDao<Integer, CoacTransactionCategory>  implements CoacTransactionCategoryDao  {
 
     private final ChartOfAccountCategoryService chartOfAccountCategoryService;
 
     private final TransactionCategoryService transactionCategoryService;
+
+    public CoacTransactionCategoryDaoImpl(
+            ChartOfAccountCategoryService chartOfAccountCategoryService,
+            @Lazy TransactionCategoryService transactionCategoryService) {
+        this.chartOfAccountCategoryService = chartOfAccountCategoryService;
+        this.transactionCategoryService = transactionCategoryService;
+    }
 
     public void addCoacTransactionCategory(ChartOfAccount chartOfAccountCategory, TransactionCategory transactionCategory){
 
