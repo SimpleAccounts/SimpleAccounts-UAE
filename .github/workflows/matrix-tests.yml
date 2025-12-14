@@ -51,7 +51,8 @@ jobs:
 
       - name: Run backend tests
         working-directory: apps/backend
-        run: mvn -B -ntp test -Dspring.profiles.active=test
+        # Use env SPRING_PROFILES_ACTIVE for cross-platform compatibility (PowerShell can split -D args).
+        run: mvn -B -ntp test
 
   frontend:
     name: Frontend Unit Tests (Matrix)
