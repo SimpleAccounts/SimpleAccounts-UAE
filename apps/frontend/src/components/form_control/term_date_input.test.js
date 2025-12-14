@@ -7,21 +7,28 @@ window.localStorage.setItem('language', 'en');
 
 jest.mock('react-select', () => ({
   __esModule: true,
-  default: ({ options, value, onChange, ...rest }) => (
-    <select
-      data-testid="term-select"
-      value={value?.value ?? ''}
-      onChange={(event) => onChange({ value: event.target.value })}
-      {...rest}
-    >
-      <option value="">--</option>
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
-  ),
+  default: ({ options, value, onChange, isDisabled, ...rest }) => {
+    // Filter out non-DOM props to avoid React warnings
+    const domProps = { ...rest };
+    delete domProps.isDisabled; // Remove isDisabled as it's not a valid DOM attribute
+    
+    return (
+      <select
+        data-testid="term-select"
+        value={value?.value ?? ''}
+        onChange={(event) => onChange({ value: event.target.value })}
+        disabled={isDisabled} // Use standard disabled attribute
+        {...domProps}
+      >
+        <option value="">--</option>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    );
+  },
 }));
 
 jest.mock('react-datepicker', () => ({
