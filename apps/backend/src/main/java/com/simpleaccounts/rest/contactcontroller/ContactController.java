@@ -329,9 +329,8 @@ public class ContactController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param ids
-	 * @param request
 	 * @return
 	 */
 	@LogRequest
@@ -364,13 +363,12 @@ public class ContactController {
 	@GetMapping(value = "/getInvoicesCountForContact")
 	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int contactId) {
 		try {
-			Integer totalCount =0;
+			int totalCount = 0;
 			totalCount = totalCount + invoiceService.getTotalInvoiceCountByContactId(contactId);
-			totalCount = totalCount +poQuatationService.getTotalPoQuotationCountForContact(contactId);
-			totalCount = totalCount +inventoryService.getTotalInventoryCountForContact(contactId);
-			Integer response = totalCount;
+			totalCount = totalCount + poQuatationService.getTotalPoQuotationCountForContact(contactId);
+			totalCount = totalCount + inventoryService.getTotalInventoryCountForContact(contactId);
 
-			return new ResponseEntity<>(response, HttpStatus.OK);
+			return new ResponseEntity<>(totalCount, HttpStatus.OK);
 		}catch (Exception e){
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

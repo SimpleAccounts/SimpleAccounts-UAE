@@ -1052,7 +1052,7 @@ public class CreditNoteRestHelper {
     }
 
 	    public Journal refundPosting(PostingRequestModel postingRequestModel, Integer userId,
-	                                 TransactionCategory depositToTransactionCategory, Boolean isCNWithoutProduct, Integer contactId,Date paymentDate) {
+	                                 TransactionCategory depositToTransactionCategory, Date paymentDate) {
 	        List<JournalLineItem> journalLineItemList = new ArrayList<>();
 	        CreditNote creditNote = null;
 	        creditNote = creditNoteRepository.findById(postingRequestModel.getPostingRefId()).orElseThrow();
@@ -1391,7 +1391,7 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
         // Post journal
         Journal journal = refundPosting(
                 new PostingRequestModel(requestModel.getCreditNoteId(), requestModel.getAmountReceived()), userId,
-                transactionCategory, requestModel.getIsCreatedWithoutInvoice(), requestModel.getContactId(),requestModel.getPaymentDate());
+                transactionCategory, requestModel.getPaymentDate());
         journalService.persist(journal);
 
         if (requestModel.getAmountReceived().compareTo(creditNote.getDueAmount())==0){
@@ -1578,7 +1578,7 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
             // Post journal
             Journal journal = refundPosting(
                     new PostingRequestModel(requestModel.getCreditNoteId(), requestModel.getAmountReceived()), userId,
-                    transactionCategory, requestModel.getIsCNWithoutProduct(), requestModel.getContactId(),requestModel.getPaymentDate());
+                    transactionCategory, requestModel.getPaymentDate());
             journalService.persist(journal);
             CreditNote creditNote = creditNoteRepository.findById(requestModel.getCreditNoteId()).get();
             if (requestModel.getAmountReceived().compareTo(creditNote.getDueAmount())==0){

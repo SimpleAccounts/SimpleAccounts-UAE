@@ -1,6 +1,7 @@
 {
   "name": "simpleaccounts-uae",
   "version": "1.0.0",
+  "private": true,
   "description": "Open-source accounting software for UAE businesses with VAT compliance, invoicing, payroll, and financial reporting",
   "homepage": "https://github.com/SimpleAccounts/SimpleAccounts-UAE#readme",
   "repository": {

@@ -55,8 +55,6 @@ public class InventoryController {
     @GetMapping(value = "/getInventoryProductList")
     public ResponseEntity<PaginationResponseModel> getInventoryProductList(InventoryRequestFilterModel filterModel, HttpServletRequest request) {
         try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
             Map<InventoryFilterEnum, Object> filterDataMap = new EnumMap<>(InventoryFilterEnum.class);
             filterDataMap.put(InventoryFilterEnum.PURCHASE_ORDER, filterModel.getQuantityOrdered());
             filterDataMap.put(InventoryFilterEnum.STOCK_IN_HAND, filterModel.getStockInHand());
@@ -197,16 +195,12 @@ public class InventoryController {
         List<InventoryListModel> inventoryListModel = new ArrayList<>();
         if (response == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            if (response != null) {
-
-                for (Product inventory : response) {
-                    InventoryListModel inventoryListModel1=new InventoryListModel();
-                    inventoryListModel1.setProductName(inventory.getProductName());
-                    inventoryListModel1.setProductCode(inventory.getProductCode());
-                    inventoryListModel.add(inventoryListModel1);
-                }
-            }
+        }
+        for (Product inventory : response) {
+            InventoryListModel inventoryListModel1 = new InventoryListModel();
+            inventoryListModel1.setProductName(inventory.getProductName());
+            inventoryListModel1.setProductCode(inventory.getProductCode());
+            inventoryListModel.add(inventoryListModel1);
         }
         return new ResponseEntity<>(inventoryListModel, HttpStatus.OK);
     }

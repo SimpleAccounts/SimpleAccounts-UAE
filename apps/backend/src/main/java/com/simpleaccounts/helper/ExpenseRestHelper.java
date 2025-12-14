@@ -301,8 +301,12 @@ public class ExpenseRestHelper {
 		if (expense.getBankAccount() != null || expense.getPayMode() == PayMode.CASH) {
 			return CommonColumnConstants.COMPANY_EXPENSE;
 		}
-		TransactionCategory transactionCategory = transactionCategoryService.findByPK(Integer.parseInt(expense.getPayee()));
-		return transactionCategory.getTransactionCategoryName();
+		try {
+			TransactionCategory transactionCategory = transactionCategoryService.findByPK(Integer.parseInt(expense.getPayee()));
+			return transactionCategory.getTransactionCategoryName();
+		} catch (NumberFormatException e) {
+			return CommonColumnConstants.COMPANY_EXPENSE;
+		}
 	}
 
 	private BigDecimal calculateActualVatAmount(BigDecimal vatPercent, BigDecimal expenseAmount) {
@@ -382,8 +386,12 @@ public class ExpenseRestHelper {
 		} else if (entity.getPayMode() == PayMode.CASH && entity.getPayee().equals(CommonColumnConstants.COMPANY_EXPENSE)) {
 			expenseModel.setPayee(CommonColumnConstants.COMPANY_EXPENSE);
 		} else {
-			TransactionCategory transactionCategory = transactionCategoryService.findByPK(Integer.parseInt(entity.getPayee()));
-			expenseModel.setPayee(transactionCategory.getTransactionCategoryName());
+			try {
+				TransactionCategory transactionCategory = transactionCategoryService.findByPK(Integer.parseInt(entity.getPayee()));
+				expenseModel.setPayee(transactionCategory.getTransactionCategoryName());
+			} catch (NumberFormatException e) {
+				expenseModel.setPayee(entity.getPayee());
+			}
 		}
 	}
 
@@ -485,8 +493,12 @@ public class ExpenseRestHelper {
 			if (expense.getPayee().equalsIgnoreCase(CommonColumnConstants.COMPANY_EXPENSE)) {
 				expenseModel.setPayee(CommonColumnConstants.COMPANY_EXPENSE);
 			} else {
-				TransactionCategory payeeTransactionCategory = transactionCategoryService.findByPK(Integer.parseInt(expense.getPayee()));
-				expenseModel.setPayee(payeeTransactionCategory.getTransactionCategoryName());
+				try {
+					TransactionCategory payeeTransactionCategory = transactionCategoryService.findByPK(Integer.parseInt(expense.getPayee()));
+					expenseModel.setPayee(payeeTransactionCategory.getTransactionCategoryName());
+				} catch (NumberFormatException e) {
+					expenseModel.setPayee(expense.getPayee());
+				}
 			}
 		}
 	}
@@ -574,8 +586,12 @@ public class ExpenseRestHelper {
 
 	private void setReverseTransactionCategory(JournalLineItem journalLineItem, Expense expense) {
 		if (expense.getPayMode() == null) {
-			TransactionCategory transactionCategory = transactionCategoryService.findByPK(Integer.parseInt(expense.getPayee()));
-			journalLineItem.setTransactionCategory(transactionCategory);
+			try {
+				TransactionCategory transactionCategory = transactionCategoryService.findByPK(Integer.parseInt(expense.getPayee()));
+				journalLineItem.setTransactionCategory(transactionCategory);
+			} catch (NumberFormatException e) {
+				// Invalid payee format, skip setting transaction category
+			}
 			return;
 		}
 		switch (expense.getPayMode()) {
@@ -672,8 +688,12 @@ public class ExpenseRestHelper {
 	private void setTransactionCategoryForExpense(JournalLineItem journalLineItem, Expense expense,
 			PostingRequestModel postingRequestModel, Integer userId) {
 		if (expense.getPayMode() == null) {
-			TransactionCategory transactionCategory = transactionCategoryService.findByPK(Integer.parseInt(expense.getPayee()));
-			journalLineItem.setTransactionCategory(transactionCategory);
+			try {
+				TransactionCategory transactionCategory = transactionCategoryService.findByPK(Integer.parseInt(expense.getPayee()));
+				journalLineItem.setTransactionCategory(transactionCategory);
+			} catch (NumberFormatException e) {
+				// Invalid payee format, skip setting transaction category
+			}
 			return;
 		}
 		switch (expense.getPayMode()) {

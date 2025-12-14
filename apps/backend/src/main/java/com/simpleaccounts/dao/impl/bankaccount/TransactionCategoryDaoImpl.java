@@ -187,7 +187,12 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		trnxCatCode = arr.length > 0 ? arr[arr.length - 1] : "0";
 
 		// considered valid no
-		Integer d = Integer.valueOf(trnxCatCode);
+		Integer d;
+		try {
+			d = Integer.valueOf(trnxCatCode);
+		} catch (NumberFormatException e) {
+			d = 0;
+		}
 
 		return chartOfAccountCode + "-" + String.format("%03d", (d + 1));
 	}

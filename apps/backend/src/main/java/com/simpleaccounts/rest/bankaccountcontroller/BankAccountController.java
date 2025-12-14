@@ -162,7 +162,7 @@ public class BankAccountController{
 						return new ResponseEntity<>(MSG_TRANSACTION_CATEGORY_MISSING, HttpStatus.BAD_REQUEST);
 					}
 					boolean isDebit=false;
-					if(StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
+					if(transactionCategory.getTransactionCategoryCode().equalsIgnoreCase(
 							TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())){
 						isDebit=true;
 					}
@@ -287,7 +287,7 @@ public class BankAccountController{
 			}
 			updateTransactionCategory(category, bankModel);
 			boolean isDebit = false;
-			if (StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
+			if (transactionCategory.getTransactionCategoryCode().equalsIgnoreCase(
 					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())) {
 				isDebit = true;
 			}

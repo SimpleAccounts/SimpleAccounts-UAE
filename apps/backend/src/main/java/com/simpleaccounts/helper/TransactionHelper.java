@@ -221,7 +221,11 @@ public class TransactionHelper {
 	private void setBankTransferFields(TransactionPresistModel model, Transaction transaction, TransactionExplanation transactionExplanation) {
 		model.setTransactionCategoryLabel(transactionExplanation.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountName());
 		String description = transaction.getExplainedTransactionDescription();
-		model.setTransactionCategoryId(Integer.parseInt(description.substring(description.indexOf("=") + 1)));
+		try {
+			model.setTransactionCategoryId(Integer.parseInt(description.substring(description.indexOf("=") + 1)));
+		} catch (NumberFormatException e) {
+			model.setTransactionCategoryId(null);
+		}
 		description = description.substring(0, description.indexOf(":"));
 		model.setDescription(description);
 		model.setExpenseCategory(null);

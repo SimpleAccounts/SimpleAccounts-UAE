@@ -198,7 +198,7 @@ public class CorporateTaxController {
     @LogExecutionTime
     @ApiOperation(value = "View Corporate Tax settings")
     @GetMapping(value = "/viewct")
-    public ResponseEntity<Object> viewct(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
+    public ResponseEntity<Object> viewct(@RequestParam(value = "id") Integer id) {
         try {
             Optional<CorporateTaxFiling> optionalFiling = corporateTaxFilingRepository.findById(id);
             if (!optionalFiling.isPresent()) {
@@ -299,8 +299,7 @@ public class CorporateTaxController {
     @LogRequest
     @ApiOperation(value = "Corporate tax list")
     @GetMapping(value = "/Corporate/list")
-    public ResponseEntity<Object> getList(HttpServletRequest request,
-                                     @RequestParam(defaultValue = "0") int pageNo,
+    public ResponseEntity<Object> getList(@RequestParam(defaultValue = "0") int pageNo,
                                      @RequestParam(defaultValue = "10") int pageSize,
                                      @RequestParam(required = false, defaultValue = "true") boolean paginationDisable,
                                          @RequestParam(required = false) String order,

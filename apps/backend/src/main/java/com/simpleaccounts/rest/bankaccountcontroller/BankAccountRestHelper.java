@@ -79,9 +79,9 @@ public class BankAccountRestHelper {
 					model.setTransactionCount(res);
 				model.setName(acc.getBankName());
 				List<ReconcileStatus> reconcileStatusList = reconcileStatusService.getAllReconcileStatusListByBankAccountId(acc.getBankAccountId());
-					if (reconcileStatusList.isEmpty()){
-						model.setClosingBalance(BigDecimal.ZERO);
-					}
+				if(reconcileStatusList == null || reconcileStatusList.isEmpty()){
+					model.setClosingBalance(BigDecimal.ZERO);
+				}
 				if(reconcileStatusList != null && !reconcileStatusList.isEmpty())
 				{
 					ReconcileStatus reconcileStatus = reconcileStatusList.get(0);
