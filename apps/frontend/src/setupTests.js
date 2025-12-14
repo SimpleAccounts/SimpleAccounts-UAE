@@ -44,6 +44,33 @@ window._env_ = {
   SIMPLEACCOUNTS_HOST: 'http://localhost:8080',
 };
 
+// Mock Vite's import.meta.env for tests
+// Vite uses import.meta.env instead of process.env
+// Jest doesn't support import.meta, so we need to mock it globally
+// This will be used by our env.js utility module
+Object.defineProperty(globalThis, 'import', {
+  value: {
+    meta: {
+      env: {
+        MODE: process.env.NODE_ENV || 'test',
+        DEV: process.env.NODE_ENV !== 'production',
+        PROD: process.env.NODE_ENV === 'production',
+        SSR: false,
+        BASE_URL: '/',
+        // Add any VITE_ prefixed variables from process.env
+        ...Object.keys(process.env)
+          .filter(key => key.startsWith('VITE_'))
+          .reduce((acc, key) => {
+            acc[key] = process.env[key];
+            return acc;
+          }, {}),
+      },
+    },
+  },
+  writable: true,
+  configurable: true,
+});
+
 // Mock localStorage with default language for react-localization
 const localStorageMock = {
   store: { language: 'en' },
