@@ -5,6 +5,8 @@
  */
 package com.simpleaccounts.utils;
 
+import com.simpleaccounts.constant.FileTypeEnum;
+import com.simpleaccounts.rest.migrationcontroller.DataMigrationRespModel;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,7 +14,6 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Stream;
-
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -20,19 +21,13 @@ import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
-
-import com.simpleaccounts.rest.migrationcontroller.DataMigrationRespModel;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.simpleaccounts.constant.FileTypeEnum;
 
 /**
  *
@@ -132,14 +127,17 @@ public class FileHelper {
 			Path resolvedFilePath = storageRoot.resolve(entry.getValue()).normalize();
 			if (!resolvedFilePath.startsWith(storageRoot)) {
 				throw new IOException("Invalid file path");
+				}
+				File file = resolvedFilePath.toFile();
+				if (!file.exists()) {
+					boolean created = file.createNewFile();
+					if (!created && !file.exists()) {
+						throw new IOException("Failed to create file");
+					}
+				}
+				multipartFile.transferTo(file);
+				filePath = entry.getValue();
 			}
-			File file = resolvedFilePath.toFile();
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-			multipartFile.transferTo(file);
-			filePath = entry.getValue();
-		}
 		return filePath;
 	}
 	public InputStream writeFile(String data,String fileName) throws IOException {
@@ -160,14 +158,14 @@ public class FileHelper {
 		}
 	}
 
-	public Map<String, String> getFileName(MultipartFile multipartFile, FileTypeEnum fileTypeEnum) {
-		Map<String, String> map = new HashMap<>();
-		if (multipartFile.getOriginalFilename() != null) {
-			String dateString = new SimpleDateFormat("yyyyMMdd").format(new Date());
-			String fileExtension = multipartFile.getOriginalFilename()
-					.substring(multipartFile.getOriginalFilename().lastIndexOf('.') + 1);
-			UUID uuid = UUID.randomUUID();
-			String fileName = uuid.toString() + "." + fileExtension;
+		public Map<String, String> getFileName(MultipartFile multipartFile, FileTypeEnum fileTypeEnum) {
+			Map<String, String> map = new HashMap<>();
+			String originalFilename = multipartFile.getOriginalFilename();
+			if (originalFilename != null) {
+				String dateString = new SimpleDateFormat("yyyyMMdd").format(new Date());
+				String fileExtension = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
+				UUID uuid = UUID.randomUUID();
+				String fileName = uuid.toString() + "." + fileExtension;
 			switch (fileTypeEnum) {
 			case EXPENSE:
 				map.put(dateString + File.separator, dateString + File.separator + "ex-" + fileName);

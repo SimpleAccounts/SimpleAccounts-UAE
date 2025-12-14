@@ -1,8 +1,5 @@
 package com.simpleaccounts.rest.payroll.payrolServiceImpl;
 
-import com.simpleaccounts.constant.CommonColumnConstants;
-import lombok.RequiredArgsConstructor;
-
 import com.simpleaccounts.constant.dbfilter.PayrollFilterEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.*;
@@ -20,11 +17,6 @@ import com.simpleaccounts.rest.payroll.payrolService.PayrolService;
 import com.simpleaccounts.rest.payroll.service.SalaryService;
 import com.simpleaccounts.service.EmployeeService;
 import com.simpleaccounts.utils.DateFormatUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -183,8 +175,6 @@ public class PayrolServiceImpl extends PayrolService {
 	public List<PayrollEmployeeDto> getAllPayrollEmployee(Integer payrollId, String payrollDate) {
 		List<Integer> empList =  new ArrayList<>();
 		List<PayrollEmployeeDto> PayrollEmployeeDtoList =  new ArrayList<>();
-		LocalDateTime startDate = dateFormatUtil.getDateStrAsLocalDateTime(payrollDate,
-				CommonColumnConstants.DD_MM_YYYY);
 		List <PayrollEmployeeResultSet> payrollEmployeeResultSet  = payrolEmployeeRepository.findPayEmployee(payrollId, TYPE);
 		
 		if (payrollEmployeeResultSet != null) {
@@ -193,7 +183,7 @@ public class PayrolServiceImpl extends PayrolService {
 				PayrollEmployeeDto payrollEmployeeDto = new PayrollEmployeeDto();
 				BigDecimal grossPay = BigDecimal.ZERO;
 				BigDecimal  deduction = BigDecimal.ZERO;
-				BigDecimal  netPay = BigDecimal.ZERO;
+				BigDecimal  netPay;
 				
 				List<EmployeeSalaryComponentRelation>  empSalComRel =  EmpSalaryCompRelRepository.findByemployeeId(payrollEmp.getEmpId());
 
@@ -232,7 +222,7 @@ public class PayrolServiceImpl extends PayrolService {
 				PayrollEmployeeDto payrollEmployeeDto = new PayrollEmployeeDto();
 				BigDecimal grossPay = BigDecimal.ZERO;
 				BigDecimal deduction =BigDecimal.ZERO;
-				BigDecimal  netPay = BigDecimal.ZERO;
+				BigDecimal  netPay;
 				BigDecimal LopDay = BigDecimal.valueOf(0);
 				BigDecimal NoOfDays = BigDecimal.valueOf(0);
 				List<EmployeeSalaryComponentRelation>  empSalComRel =  EmpSalaryCompRelRepository.findByemployeeId(payrollEmp.getEmpId());
@@ -273,14 +263,13 @@ public class PayrolServiceImpl extends PayrolService {
 		List<PayrollEmployeeDto> PayrollEmployeeDtoList = new ArrayList<>();
 
 		List <PayrollEmployeeResultSet> payrollEmployeeResultSet = payrolEmployeeRepository.findPayEmployee(payrollId, TYPE);
-		int perDaySalary=0;
 		if (payrollEmployeeResultSet != null) {
 			for(PayrollEmployeeResultSet payrollEmp : payrollEmployeeResultSet) {
 
 				PayrollEmployeeDto payrollEmployeeDto = new PayrollEmployeeDto();
 				BigDecimal grossPay = BigDecimal.ZERO;
 				BigDecimal deduction =  BigDecimal.ZERO;
-				BigDecimal netPay =  BigDecimal.ZERO;
+				BigDecimal netPay;
 
 				List<Salary> salaryList = salaryRepository.findByPayrollEmployeeId(payrollId,payrollEmp.getEmpId());
 				if (salaryList != null)

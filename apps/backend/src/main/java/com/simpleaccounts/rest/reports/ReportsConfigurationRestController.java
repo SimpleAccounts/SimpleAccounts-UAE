@@ -3,7 +3,6 @@ package com.simpleaccounts.rest.reports;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.ReportsConfiguration;
@@ -19,10 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping("/rest/reportsconfiguration")
@@ -37,14 +32,14 @@ public class ReportsConfigurationRestController {
     @LogRequest
     @ApiOperation(value = "Get Report columns By ID")
     @GetMapping(value = "/getById")
-    public ResponseEntity<Object> getReportConfigurationById(@RequestParam("id") Integer id) {
-        JsonNode rootNode = null;
-        try {
-            ReportsConfiguration reportsConfiguration = reportsColumnConfigurationRepository.findById(id).get();
-            if (reportsConfiguration != null) {
-                ObjectMapper mapper = new ObjectMapper();
-                rootNode = mapper.readTree(reportsConfiguration.getColumnNames());
-            }
+	    public ResponseEntity<Object> getReportConfigurationById(@RequestParam("id") Integer id) {
+	        JsonNode rootNode = null;
+	        try {
+	            ReportsConfiguration reportsConfiguration = reportsColumnConfigurationRepository.findById(id).orElse(null);
+	            if (reportsConfiguration != null) {
+	                ObjectMapper mapper = new ObjectMapper();
+	                rootNode = mapper.readTree(reportsConfiguration.getColumnNames());
+	            }
         } catch (Exception e) {
 
         }
@@ -55,13 +50,13 @@ public class ReportsConfigurationRestController {
     @ApiOperation(value = "Update Report Columns Configuration")
     @PostMapping(value = "/update")
     public ResponseEntity<Object> update(@RequestBody ReportsConfigurationModel model, HttpServletRequest request) {
-        try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User user = userService.findByPK(userId);
-            ReportsConfiguration reportsConfiguration = new ReportsConfiguration();
-            if(model.getId()!=null){
-                reportsConfiguration = reportsColumnConfigurationRepository.findById(model.getId()).get();
-            }
+	        try {
+	            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+	            User user = userService.findByPK(userId);
+	            ReportsConfiguration reportsConfiguration = new ReportsConfiguration();
+	            if(model.getId()!=null){
+	                reportsConfiguration = reportsColumnConfigurationRepository.findById(model.getId()).orElse(new ReportsConfiguration());
+	            }
             if(model.getReportName()!=null && !model.getReportName().isEmpty()){
                 reportsConfiguration.setReportName(model.getReportName());
             }

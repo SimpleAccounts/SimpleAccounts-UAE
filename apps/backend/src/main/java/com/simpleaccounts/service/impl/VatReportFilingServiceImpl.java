@@ -3,7 +3,6 @@ package com.simpleaccounts.service.impl;
 import com.simpleaccounts.constant.*;
 import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.CommonStatusEnum;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.entity.VatRecordPaymentHistory;
@@ -32,6 +31,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -104,21 +104,21 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
                 customizeInvoiceTemplateService.persist(template);
             }
         }
-        BigDecimal totalVatPayable = BigDecimal.ZERO;
-        BigDecimal totalInputVatAmount = BigDecimal.ZERO;
-        BigDecimal totalOutputVatAmount = BigDecimal.ZERO;
-        BigDecimal totalAmount = BigDecimal.ZERO;
+        BigDecimal totalInputVatAmount =
+                journalLineItemService.totalInputVatAmount(
+                        vatReportFiling, vatReportFilingRequestModel, 88);
+        if (totalInputVatAmount == null) {
+            totalInputVatAmount = BigDecimal.ZERO;
+        }
 
-         totalInputVatAmount=journalLineItemService.totalInputVatAmount(vatReportFiling,vatReportFilingRequestModel,88) !=null?
-                 journalLineItemService.totalInputVatAmount(vatReportFiling,vatReportFilingRequestModel,88)
-                 :BigDecimal.ZERO;
-         totalOutputVatAmount=journalLineItemService.totalOutputVatAmount(vatReportFiling,vatReportFilingRequestModel,94) !=null?
-        journalLineItemService.totalOutputVatAmount(vatReportFiling,vatReportFilingRequestModel,94)
-                 :BigDecimal.ZERO;
+        BigDecimal totalOutputVatAmount =
+                journalLineItemService.totalOutputVatAmount(
+                        vatReportFiling, vatReportFilingRequestModel, 94);
+        if (totalOutputVatAmount == null) {
+            totalOutputVatAmount = BigDecimal.ZERO;
+        }
 
-         if (totalInputVatAmount!=null && totalOutputVatAmount !=null){
-             totalAmount = totalOutputVatAmount.subtract(totalInputVatAmount);
-         }
+        BigDecimal totalAmount = totalOutputVatAmount.subtract(totalInputVatAmount);
         vatReportFiling.setCreatedBy(user.getUserId());
         vatReportFiling.setUserId(user);
         vatReportFiling.setCreatedDate(LocalDateTime.now());
@@ -279,7 +279,7 @@ public class VatReportFilingServiceImpl implements VatReportFilingService {
         vatTaxAgency.setTaxAgencyNumber(fileTheVatReportRequestModel.getTaxAgencyNumber());
         vatTaxAgency.setTaxAgentApprovalNumber(fileTheVatReportRequestModel.getTaxAgentApprovalNumber());
         Optional<VatReportFiling> optional =  vatReportFilingRepository.findById(fileTheVatReportRequestModel.getVatReportFiling());
-        VatReportFiling vatReportFiling=optional.get();
+        VatReportFiling vatReportFiling=optional.orElseThrow();
         Instant instant = Instant.ofEpochMilli(fileTheVatReportRequestModel.getTaxFiledOn().getTime());
         LocalDateTime taxFiledOn = LocalDateTime.ofInstant(instant,
                 ZoneId.systemDefault());

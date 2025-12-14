@@ -1,7 +1,6 @@
 package com.simpleaccounts.rest.payroll;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.impl.TransactionCategoryClosingBalanceDaoImpl;
 import com.simpleaccounts.entity.*;
@@ -17,11 +16,6 @@ import com.simpleaccounts.utils.DateFormatUtil;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import javax.persistence.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Repository;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import javax.persistence.Query;
@@ -114,6 +108,8 @@ public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements Salar
 
         for(EmployeeSalaryComponentRelation salary : esclist)
         {
+            employment = null;
+            employeeBankDetails = null;
             Map<String, Object> paramEmployee = new HashMap<>();
             paramEmployee.put(JSON_KEY_EMPLOYEE, salary.getEmployeeId().getId());
             List<Employment> employmentList = employmentService.findByAttributes(paramEmployee);
@@ -126,10 +122,10 @@ public class SalaryDaoImpl extends AbstractDao<Integer, Salary> implements Salar
             if (employeeBankDetailsList!=null && !employeeBankDetailsList.isEmpty()) {
                 employeeBankDetails = employeeBankDetailsList.get(0);
             }
-	            if (employment.getId()!=null&&!employmentList.isEmpty()&&!employeeBankDetailsList.isEmpty()&&employeeBankDetails.getId()!=null&&((salary.getMonthlyAmount()).compareTo(BigDecimal.ZERO)>0)&&((salary.getYearlyAmount()).compareTo(BigDecimal.ZERO)>0)
+	            if (employment != null && employment.getId()!=null&& employeeBankDetails != null && employeeBankDetails.getId()!=null&&((salary.getMonthlyAmount()).compareTo(BigDecimal.ZERO)>0)&&((salary.getYearlyAmount()).compareTo(BigDecimal.ZERO)>0)
 	                    && Boolean.TRUE.equals(salary.getEmployeeId().getIsActive())) {
-	                if (salaryPaidEmployeeList.contains(salary.getEmployeeId().getId()))
-	                    continue;
+		                if (salaryPaidEmployeeList.contains(salary.getEmployeeId().getId()))
+		                    continue;
                 SalaryPerMonthModel salaryPerMonthModel = salaryMap.get(salary.getEmployeeId().getId());
                 if (salaryPerMonthModel == null) {
                     salaryPerMonthModel = new SalaryPerMonthModel();

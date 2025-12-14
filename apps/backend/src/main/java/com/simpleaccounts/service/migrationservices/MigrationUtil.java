@@ -288,10 +288,10 @@ public class MigrationUtil {
         Map<String, Object> param = new HashMap<>();
         param.put("currencyIsoCode", val);
         List<Currency> currencyList = currencyService.findByAttributes(param);
-        for (Currency currency : currencyList) {
-            return currency;
+        if (currencyList == null || currencyList.isEmpty()) {
+            return null;
         }
-        return null;
+        return currencyList.get(0);
     }
     
     Integer getStateIdByInputColumnValue(String val) {
@@ -320,10 +320,10 @@ public class MigrationUtil {
         Map<String, Object> param = new HashMap<>();
         param.put("placeOfSupply", val);
         List<PlaceOfSupply> placeOfSupplyList = placeOfSupplyService.findByAttributes(param);
-        for (PlaceOfSupply placeOfSupply : placeOfSupplyList) {
-            return placeOfSupply;
+        if (placeOfSupplyList == null || placeOfSupplyList.isEmpty()) {
+            return null;
         }
-        return null;
+        return placeOfSupplyList.get(0);
     }
     
     /**
@@ -457,10 +457,10 @@ public class MigrationUtil {
         Map<String, Object> param = new HashMap<>();
         param.put(JSON_KEY_TRANSACTION_CATEGORY_NAME, transactionCategoryName);
         List<TransactionCategory> transactionCategoryList = transactionCategoryService.findByAttributes(param);
-        for (TransactionCategory transactionCategory:transactionCategoryList){
-            return transactionCategory;
-        }
+        if (transactionCategoryList == null || transactionCategoryList.isEmpty()) {
             return null;
+        }
+        return transactionCategoryList.get(0);
     }
     
     /**
@@ -587,10 +587,10 @@ public class MigrationUtil {
 	 * @param val
 	 * @return
 	 */
-	 public VatCategory getVatCategoryByValue(String val) {
-	        if (!val.isEmpty()){
-	            switch (val){
-	                case VAT_5:
+		 public VatCategory getVatCategoryByValue(String val) {
+		        if (!val.isEmpty()){
+		            switch (val){
+		                case VAT_5:
 
 	                	val = "TAX (5%)";
 	                    break;
@@ -601,34 +601,34 @@ public class MigrationUtil {
 	                default:
 	            }
 
-	            if (val!=null) {
-	                Map<String, Object> param = new HashMap<>();
-	                param.put("name", val);
+		            if (val!=null) {
+		                Map<String, Object> param = new HashMap<>();
+		                param.put("name", val);
 
-	                List<VatCategory> vatCategoryList = vatCategoryService.findByAttributes(param);
-	                for (VatCategory vatCategory : vatCategoryList) {
-	                    return vatCategory;
-	                }
-	            }
-	        }
-	            VatCategory vatCategory = vatCategoryService.findByPK(2);
-	            return vatCategory;
-	    }
+		                List<VatCategory> vatCategoryList = vatCategoryService.findByAttributes(param);
+		                if (vatCategoryList != null && !vatCategoryList.isEmpty()) {
+		                    return vatCategoryList.get(0);
+		                }
+		            }
+		        }
+		            VatCategory vatCategory = vatCategoryService.findByPK(2);
+		            return vatCategory;
+		    }
 	 
 	 /**
 	  * 
 	  * @param val
 	  * @return
 	  */
-	 public Contact getContactByValue(String val) {
-	        Map<String, Object> param = new HashMap<>();
-	        param.put("firstName", val);
-	        List<Contact> contactList = contactService.findByAttributes(param);
-	       for (Contact Contact:contactList){
-	           return Contact;
-	       }
-	        return null;
-	    }
+		 public Contact getContactByValue(String val) {
+		        Map<String, Object> param = new HashMap<>();
+		        param.put("firstName", val);
+		        List<Contact> contactList = contactService.findByAttributes(param);
+		        if (contactList == null || contactList.isEmpty()) {
+		            return null;
+		        }
+		        return contactList.get(0);
+		    }
 	 
 	 
 	 /**
@@ -853,9 +853,9 @@ public class MigrationUtil {
 	 * @param val
 	 * @return
 	 */
-	 public VatCategory getVatCategory(String val) {
-	        if (!val.isEmpty()){
-	            switch (val){
+		 public VatCategory getVatCategory(String val) {
+		        if (!val.isEmpty()){
+		            switch (val){
 	                case VAT_5:
 
 	                	val = "TAX (5%)";
@@ -866,31 +866,30 @@ public class MigrationUtil {
 	                    break;
 	                default:
 	            }
-	            if (val!=null) {
-	                Map<String, Object> param = new HashMap<>();
-	                param.put("name", val);
-	                List<VatCategory> vatCategoryList = vatCategoryService.findByAttributes(param);
-	                VatCategory vatCategoryResult = new VatCategory();
-	                for (VatCategory vatCategory : vatCategoryList) {
-	                	
-	                	vatCategoryResult.setId(vatCategory.getId());
-	                	vatCategoryResult.setName(vatCategory.getName());
-	                	vatCategoryResult.setVat(vatCategory.getVat());
-	                	vatCategoryResult.setDefaultFlag(vatCategory.getDefaultFlag());
-	                	vatCategoryResult.setOrderSequence(vatCategory.getOrderSequence());
-	                	vatCategoryResult.setCreatedBy(vatCategory.getCreatedBy());
-	                	vatCategoryResult.setCreatedDate(vatCategory.getCreatedDate());
-	                	vatCategoryResult.setLastUpdateBy(vatCategory.getLastUpdateBy());
-	                	vatCategoryResult.setLastUpdateDate(vatCategory.getLastUpdateDate());
-	                	vatCategoryResult.setDeleteFlag(vatCategory.getDeleteFlag());
-	                	vatCategoryResult.setVersionNumber(vatCategory.getVersionNumber());
-	                	vatCategoryResult.setVatLabel(vatCategory.getVatLabel());
-	                	
-	                    return vatCategoryResult;
-	                }
-	            }
-	        }
-	            VatCategory vatCategory = vatCategoryService.findByPK(2);
-	            return vatCategory;
-	    }	
+		            if (val!=null) {
+		                Map<String, Object> param = new HashMap<>();
+		                param.put("name", val);
+		                List<VatCategory> vatCategoryList = vatCategoryService.findByAttributes(param);
+		                if (vatCategoryList != null && !vatCategoryList.isEmpty()) {
+		                    VatCategory vatCategory = vatCategoryList.get(0);
+		                    VatCategory vatCategoryResult = new VatCategory();
+		                    vatCategoryResult.setId(vatCategory.getId());
+		                    vatCategoryResult.setName(vatCategory.getName());
+		                    vatCategoryResult.setVat(vatCategory.getVat());
+		                    vatCategoryResult.setDefaultFlag(vatCategory.getDefaultFlag());
+		                    vatCategoryResult.setOrderSequence(vatCategory.getOrderSequence());
+		                    vatCategoryResult.setCreatedBy(vatCategory.getCreatedBy());
+		                    vatCategoryResult.setCreatedDate(vatCategory.getCreatedDate());
+		                    vatCategoryResult.setLastUpdateBy(vatCategory.getLastUpdateBy());
+		                    vatCategoryResult.setLastUpdateDate(vatCategory.getLastUpdateDate());
+		                    vatCategoryResult.setDeleteFlag(vatCategory.getDeleteFlag());
+		                    vatCategoryResult.setVersionNumber(vatCategory.getVersionNumber());
+		                    vatCategoryResult.setVatLabel(vatCategory.getVatLabel());
+		                    return vatCategoryResult;
+		                }
+		            }
+		        }
+		            VatCategory vatCategory = vatCategoryService.findByPK(2);
+		            return vatCategory;
+		    }	
 }

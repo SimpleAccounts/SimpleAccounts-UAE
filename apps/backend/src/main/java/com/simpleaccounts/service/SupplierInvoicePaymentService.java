@@ -1,8 +1,7 @@
 package com.simpleaccounts.service;
 
-import java.util.List;
-
 import com.simpleaccounts.entity.SupplierInvoicePayment;
+import java.util.List;
 
 public abstract class SupplierInvoicePaymentService extends SimpleAccountsService<Integer, SupplierInvoicePayment> {
 

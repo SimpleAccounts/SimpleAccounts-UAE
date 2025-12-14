@@ -1,19 +1,18 @@
 package com.simpleaccounts.migration;
 
+import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
 import com.simpleaccounts.migration.xml.bindings.applicationmigration.ApplicationMigration;
 import com.simpleaccounts.migration.xml.bindings.product.Product;
 import com.simpleaccounts.utils.FileHelper;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ProductMigrationParser {

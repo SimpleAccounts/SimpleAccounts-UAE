@@ -1,13 +1,13 @@
 package com.simpleaccounts.service.impl;
 
 import com.simpleaccounts.dao.CoacTransactionCategoryDao;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.CoacTransactionCategory;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.service.CoacTransactionCategoryService;
 import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service

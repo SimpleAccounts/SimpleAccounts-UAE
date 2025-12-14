@@ -1,16 +1,14 @@
 package com.simpleaccounts.dao.impl;
 
-import org.springframework.stereotype.Repository;
 import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.dao.AbstractDao;
-import com.simpleaccounts.entity.InvoiceLineItem;
 import com.simpleaccounts.dao.InvoiceLineItemDao;
+import com.simpleaccounts.entity.InvoiceLineItem;
+import java.util.List;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Repository
 public class InvoiceLineItemDaoImpl extends AbstractDao<Integer, InvoiceLineItem> implements InvoiceLineItemDao {

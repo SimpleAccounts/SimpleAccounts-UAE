@@ -1,11 +1,10 @@
 package com.simpleaccounts.criteria.bankaccount;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import com.simpleaccounts.criteria.AbstractCriteria;
 import com.simpleaccounts.criteria.SortOrder;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

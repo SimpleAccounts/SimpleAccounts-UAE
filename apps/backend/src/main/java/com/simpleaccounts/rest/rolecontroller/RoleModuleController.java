@@ -1,7 +1,8 @@
 package com.simpleaccounts.rest.rolecontroller;
 
-import com.simpleaccounts.aop.LogRequest;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
+import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.model.RoleRequestModel;
 import com.simpleaccounts.security.JwtTokenUtil;
@@ -16,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;

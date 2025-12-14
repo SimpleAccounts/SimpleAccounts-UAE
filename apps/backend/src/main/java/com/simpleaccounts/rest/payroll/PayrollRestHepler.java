@@ -3,7 +3,6 @@ package com.simpleaccounts.rest.payroll;
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.constant.EmailConstant;
@@ -59,7 +58,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class PayrollRestHepler {
     private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
     private static final String ERROR_PROCESSING_PAYROLL = "Error processing payroll";
-    private static final String DATE_FORMAT_DD_MM_YYYY = "DATE_FORMAT_DD_MM_YYYY";
+    private static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
     private final EmployeeBankDetailsService employeeBankDetailsService;
     private final RoleModuleRelationService roleModuleRelationService;
 
@@ -534,11 +533,10 @@ public class PayrollRestHepler {
 
     public EmployeeBankDetails getEmployeeBankDetailsEntity(EmployeePersistModel employeePersistModel, Employee employee, Integer userId) {
 
-        EmployeeBankDetails employeeBankDetails = new EmployeeBankDetails();
         Map<String, Object> param = new HashMap<>();
         param.put("employee", employee);
         List<EmployeeBankDetails> employeeBankDetailsList = employeeBankDetailsService.findByAttributes(param);
-        employeeBankDetails = employeeBankDetailsList.get(0);
+        EmployeeBankDetails employeeBankDetails = employeeBankDetailsList.get(0);
 
         for (EmployeeBankDetails employeeBankDetail : employeeBankDetailsList) {
 
@@ -575,11 +573,10 @@ public class PayrollRestHepler {
 
     public Employment getEmploymentsEntity(EmployeePersistModel employeePersistModel, Employee employee, Integer userId) {
 
-        Employment employment = new Employment();
         Map<String, Object> param = new HashMap<>();
         param.put("employee", employee);
         List<Employment> employmentList = employmentService.findByAttributes(param);
-        employment = employmentList.get(0);
+        Employment employment = employmentList.get(0);
 
         if (employeePersistModel.getDepartment() != null) {
             employment.setDepartment(employeePersistModel.getDepartment());
@@ -1455,7 +1452,6 @@ public class PayrollRestHepler {
                     finalPayrolltransactionCategory.setDefaltFlag(DefaultTypeConstant.NO);
                     finalPayrolltransactionCategory.setVersionNumber(1);
                     transactionCategoryService.persist(finalPayrolltransactionCategory);
-                    CoacTransactionCategory coacTransactionCategoryRelation = new CoacTransactionCategory();
                     coacTransactionCategoryService.addCoacTransactionCategory(finalPayrolltransactionCategory.getChartOfAccount(), finalPayrolltransactionCategory);
 
                     Map<String, Object> payrollCategoryParam = new HashMap<>();
@@ -1616,8 +1612,6 @@ public class PayrollRestHepler {
 
     public List<PayrollDropdownModel> getUnpaidPayrollList(List<Payroll> payrollList) {
 
-        List<SingleLevelDropDownModel> response  = new ArrayList<>();
-        String parentCategory = "";
         List<PayrollDropdownModel> dropDownModelList = new ArrayList<>();
         if(payrollList !=null && !payrollList.isEmpty()) {
             for (Payroll payroll : payrollList) {
@@ -1674,8 +1668,8 @@ public class PayrollRestHepler {
         String fileString=new String();
         BigDecimal total=BigDecimal.ZERO;
 
-        for ( int id :ids){
-            Employee employee = employeeService.findByPK(id);
+	        for ( int id :ids){
+	            Employee employee = employeeService.findByPK(id);
             Map<String, Object> param = new HashMap<>();
             param.put("employee", employee);
             List<EmployeeBankDetails> employeeBankDetailsList = employeeBankDetailsService.findByAttributes(param);
@@ -1729,36 +1723,36 @@ public class PayrollRestHepler {
                     lop      = result.getLopDays();
                 }//salary end
 
-            BigDecimal INCOME_FIXED_COMPONENT=fixedComponent;
-            BigDecimal INCOME_VARIABLE_COMPONENT=variableComponent.subtract(deduction);
+	            BigDecimal INCOME_FIXED_COMPONENT=fixedComponent;
+	            BigDecimal INCOME_VARIABLE_COMPONENT=variableComponent.subtract(deduction);
 
-            total=total.add(INCOME_FIXED_COMPONENT.add(INCOME_VARIABLE_COMPONENT));
-            fileString=  fileString.concat("EDR," +
-                    (employment.getLabourCard()!=null?employment.getLabourCard():"-") + "," +
-                    (employment.getAgentId()!=null&& !employment.getAgentId().isEmpty()
-                            ?employment.getAgentId():"-") + "," +
-                    employeeBankDetails.getIban() + ","+
-                    startDate+ ","+
-                    endDate+ ","+
-                    noOfDays + "," +
-                    INCOME_FIXED_COMPONENT + "," +
-                    INCOME_VARIABLE_COMPONENT.setScale(2, RoundingMode.HALF_EVEN) + ","+
-                    lop+ "," +
-                    "\n");
+	            total=total.add(INCOME_FIXED_COMPONENT.add(INCOME_VARIABLE_COMPONENT));
+	            fileString=  fileString.concat("EDR," +
+	                    (employment != null && employment.getLabourCard()!=null?employment.getLabourCard():"-") + "," +
+	                    (employment != null && employment.getAgentId()!=null&& !employment.getAgentId().isEmpty()
+	                            ?employment.getAgentId():"-") + "," +
+	                    (employeeBankDetails != null && employeeBankDetails.getIban()!=null ? employeeBankDetails.getIban() : "-") + ","+
+	                    startDate+ ","+
+	                    endDate+ ","+
+	                    noOfDays + "," +
+	                    INCOME_FIXED_COMPONENT + "," +
+	                    INCOME_VARIABLE_COMPONENT.setScale(2, RoundingMode.HALF_EVEN) + ","+
+	                    lop+ "," +
+	                    "\n");
 
         }
 
         fileString= fileString.concat(
                 "SCR," +
                 company.getCompanyNumber() + "," +
-                company.getCompanyBankCode() + "," +
-                payroll.getPayrollDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "," +
-                payroll.getPayrollDate().format(DateTimeFormatter.ofPattern("HHmm")) + "," +
-                payroll.getPayrollDate().format(DateTimeFormatter.ofPattern("MMYYYY")) + "," +
-                payroll.getEmployeeCount() + "," +
-                total + "," +
-                "AED"+ "," +
-                "SimpleAccounts Software" +
+	                company.getCompanyBankCode() + "," +
+	                payroll.getPayrollDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "," +
+	                payroll.getPayrollDate().format(DateTimeFormatter.ofPattern("HHmm")) + "," +
+	                payroll.getPayrollDate().format(DateTimeFormatter.ofPattern("MMyyyy")) + "," +
+	                payroll.getEmployeeCount() + "," +
+	                total + "," +
+	                "AED"+ "," +
+	                "SimpleAccounts Software" +
                 "\n");
 
         String fileName=new String();
@@ -1884,7 +1878,6 @@ public class PayrollRestHepler {
         }//else
 
         payroll.setStatus("Voided");
-        User user= userService.findByPK(payroll.getPayrollApprover());
         payroll.setComment(postingRequestModel.getComment()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         );
         sendVoidMail(payroll, Integer.valueOf(payroll.getGeneratedBy()),comment,request);
 

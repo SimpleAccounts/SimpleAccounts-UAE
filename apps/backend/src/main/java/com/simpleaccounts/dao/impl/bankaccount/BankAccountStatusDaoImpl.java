@@ -1,14 +1,11 @@
 package com.simpleaccounts.dao.impl.bankaccount;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.springframework.stereotype.Repository;
-
 import com.simpleaccounts.dao.bankaccount.BankAccountStatusDao;
 import com.simpleaccounts.entity.bankaccount.BankAccountStatus;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class BankAccountStatusDaoImpl implements BankAccountStatusDao {

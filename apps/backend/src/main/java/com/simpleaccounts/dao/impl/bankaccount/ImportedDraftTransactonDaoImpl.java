@@ -1,11 +1,10 @@
 package com.simpleaccounts.dao.impl.bankaccount;
 
+import com.simpleaccounts.dao.AbstractDao;
+import com.simpleaccounts.dao.bankaccount.ImportedDraftTransactonDao;
+import com.simpleaccounts.entity.bankaccount.ImportedDraftTransaction;
 import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
-
-import com.simpleaccounts.dao.bankaccount.ImportedDraftTransactonDao;
-import com.simpleaccounts.dao.AbstractDao;
-import com.simpleaccounts.entity.bankaccount.ImportedDraftTransaction;
 
 @Repository
 public class ImportedDraftTransactonDaoImpl extends AbstractDao<Integer, ImportedDraftTransaction> implements ImportedDraftTransactonDao {

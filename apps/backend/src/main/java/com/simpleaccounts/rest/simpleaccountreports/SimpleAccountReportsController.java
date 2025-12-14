@@ -1,11 +1,8 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 
-import com.simpleaccounts.aop.LogRequest;
-
-import com.simpleaccounts.entity.User;
-
-import lombok.RequiredArgsConstructor;
 import static com.simpleaccounts.constant.ErrorConstant.ERROR;
+
+import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.rest.simpleaccountreports.Aging.AgingListModel;
 import com.simpleaccounts.rest.simpleaccountreports.Aging.AgingRequestModel;
 import com.simpleaccounts.rest.simpleaccountreports.FTA.FtaAuditRequestModel;
@@ -19,15 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import static com.simpleaccounts.constant.ErrorConstant.ERROR;
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/rest/simpleaccountReports")
@@ -146,8 +140,7 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/ReceivableInvoiceDetail")
     public ResponseEntity<ReceivableInvoiceDetailResponseModel> getReceivableInvoiceDetail(ReportRequestModel requestModel,
                                                                                              HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
+        userService.findByPK(jwtTokenUtil.getUserIdFromHttpRequest(request));
         ReceivableInvoiceDetailResponseModel receivableInvoiceDetailResponseModel = simpleAccountReportRestHelper.getreceivableInvoiceDetail(requestModel);
         try {
             if (receivableInvoiceDetailResponseModel == null) {
@@ -164,8 +157,7 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/PayableInvoiceDetail")
     public ResponseEntity<PayableInvoiceDetailResponseModel> getPayableInvoiceDetail(ReportRequestModel requestModel,
                                                                                            HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
+        userService.findByPK(jwtTokenUtil.getUserIdFromHttpRequest(request));
         PayableInvoiceDetailResponseModel payableInvoiceDetailResponseModel = simpleAccountReportRestHelper.getPayableInvoiceDetail(requestModel);
         try {
             if (payableInvoiceDetailResponseModel == null) {
@@ -182,8 +174,7 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/creditNoteDetails")
     public ResponseEntity<CreditNoteDetailsResponseModel> getcreditNoteDetails(ReportRequestModel requestModel,
                                                                                   HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
+        userService.findByPK(jwtTokenUtil.getUserIdFromHttpRequest(request));
         CreditNoteDetailsResponseModel creditNoteDetailsResponseModel = simpleAccountReportRestHelper.getcreditNoteDetails(requestModel);
         try {
             if (creditNoteDetailsResponseModel == null) {
@@ -200,8 +191,7 @@ public class SimpleAccountReportsController {
     @GetMapping(value = "/ExpenseDetails")
     public ResponseEntity<ExpenseDetailsResponseModel> getExpenseDetails(ReportRequestModel requestModel,
                                                                                HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        User user = userService.findByPK(userId);
+        userService.findByPK(jwtTokenUtil.getUserIdFromHttpRequest(request));
         ExpenseDetailsResponseModel expenseDetailsResponseModel = simpleAccountReportRestHelper.getExpenseDetails(requestModel);
         try {
             if (expenseDetailsResponseModel == null) {

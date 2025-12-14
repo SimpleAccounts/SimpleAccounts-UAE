@@ -1,14 +1,12 @@
 package com.simpleaccounts.service.impl;
 
-import java.util.List;
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.stereotype.Service;
-
 import com.simpleaccounts.dao.CustomerInvoiceReceiptDao;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.CustomerInvoiceReceipt;
 import com.simpleaccounts.service.CustomerInvoiceReceiptService;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

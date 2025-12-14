@@ -1,6 +1,5 @@
 package com.simpleaccounts.utils;
 
-import lombok.RequiredArgsConstructor;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.simpleaccounts.constant.ConfigurationConstants;
 import com.simpleaccounts.entity.Configuration;
@@ -24,7 +23,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -406,13 +404,10 @@ public class MailUtility {
 		dataMap.put(PROJECT_NAME, "{projectName}");
 		dataMap.put(INVOICE_AMOUNT, "{invoiceAmount}");
 		dataMap.put(CN_AMOUNT, "{CNAmount}");
-		dataMap.put(DUE_AMOUNT, "{dueAmount}");
-		dataMap.put(SENDER_NAME, PLACEHOLDER_SENDER_NAME);
-		dataMap.put(COMPANY_NAME, PLACEHOLDER_COMPANY_NAME);
-		dataMap.put(PROJECT_NAME, "{projectName}");
-		dataMap.put(INVOICE_AMOUNT, "{invoiceAmount}");
-		dataMap.put(DUE_AMOUNT, "{dueAmount}");
-		dataMap.put(SUB_TOTAL, PLACEHOLDER_SUB_TOTAL);
+			dataMap.put(DUE_AMOUNT, "{dueAmount}");
+			dataMap.put(SENDER_NAME, PLACEHOLDER_SENDER_NAME);
+			dataMap.put(COMPANY_NAME, PLACEHOLDER_COMPANY_NAME);
+			dataMap.put(SUB_TOTAL, PLACEHOLDER_SUB_TOTAL);
 		dataMap.put(CN_SUB_TOTAL, "{CnsubTotal}");
 		dataMap.put(MOBILE_NUMBER, PLACEHOLDER_MOBILE_NUMBER);
 		dataMap.put(CONTACT_ADDRESS, "{contactAddress}");

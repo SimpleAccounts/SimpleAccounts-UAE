@@ -1,14 +1,13 @@
 package com.simpleaccounts.dao.bankaccount;
 
-import java.util.List;
-import java.util.Map;
-
 import com.simpleaccounts.constant.dbfilter.TransactionCategoryFilterEnum;
 import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
+import java.util.List;
+import java.util.Map;
 
 public interface TransactionCategoryDao extends Dao<Integer, TransactionCategory> {
 

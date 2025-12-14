@@ -1,9 +1,8 @@
 package com.simpleaccounts.rest.payroll;
 
+import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 /**
  *
