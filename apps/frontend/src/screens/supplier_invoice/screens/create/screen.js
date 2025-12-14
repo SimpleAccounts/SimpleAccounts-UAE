@@ -676,13 +676,13 @@ class CreateSupplierInvoice extends React.Component {
 							isSelected: true,
 							contactId: res.data.supplierId,
 							rfqId: rfqId,
-							poId: rfqId,
-							initValue: {
-								rfqExpiryDate: res.data.rfqExpiryDate
-									? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
-									: '',
-								rfqExpiryDate: res.data.rfqExpiryDate
-									? res.data.rfqExpiryDate
+								poId: rfqId,
+								initValue: {
+									rfqExpiryDateFormatted: res.data.rfqExpiryDate
+										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+										: '',
+									rfqExpiryDate: res.data.rfqExpiryDate
+										? res.data.rfqExpiryDate
 									: '',
 								contactId: res.data.supplierId ? res.data.supplierId : '',
 								quotationNumber: res.data.quotationNumber
@@ -790,13 +790,13 @@ class CreateSupplierInvoice extends React.Component {
 							taxType: res.data.taxType
 								? true
 								: false,
-							poId: poId,
-							initValue: {
-								rfqExpiryDate: res.data.rfqExpiryDate
-									? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
-									: '',
-								rfqExpiryDate: res.data.rfqExpiryDate
-									? res.data.rfqExpiryDate
+								poId: poId,
+								initValue: {
+									rfqExpiryDateFormatted: res.data.rfqExpiryDate
+										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+										: '',
+									rfqExpiryDate: res.data.rfqExpiryDate
+										? res.data.rfqExpiryDate
 									: '',
 								contactId: res.data.supplierId
 									? res.data.supplierId
