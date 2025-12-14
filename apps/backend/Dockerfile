@@ -1,7 +1,7 @@
 # ------------------------------------------------------
 # Build Stage - Maven build
 # ------------------------------------------------------
-FROM maven:3.8-openjdk-8 AS builder
+FROM maven:3.8-openjdk-11 AS builder
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
@@ -10,7 +10,7 @@ RUN mvn clean package -DskipTests -q
 # ------------------------------------------------------
 # Runtime Stage - Tomcat
 # ------------------------------------------------------
-FROM eclipse-temurin:8-jdk-jammy
+FROM eclipse-temurin:11-jdk-jammy
 
 ENV JAVA_OPTS -Xms512m  -Xmx512m
 ENV CATALINA_HOME /usr/local/tomcat

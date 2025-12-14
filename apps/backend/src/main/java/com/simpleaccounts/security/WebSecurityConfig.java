@@ -51,11 +51,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity
 				.csrf()
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-				.ignoringAntMatchers("/rest/**", "/public/**")
+				.ignoringAntMatchers("/rest/**", "/public/**", "/auth/**")
 				.and()
 				// dont authenticate this particular request
 				.authorizeRequests().// all other requests need to be authenticated
 			//antMatchers("/config/getreleasenumber").permitAll().
+					antMatchers("/auth/**").permitAll().
 					antMatchers("/rest/company/register").permitAll().
 				antMatchers("/rest/company/getHealthCheck").permitAll().
 				antMatchers("/rest/company/getTimeZoneList").permitAll().
