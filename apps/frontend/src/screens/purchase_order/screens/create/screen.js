@@ -26,9 +26,8 @@ import * as PurchaseOrderAction from '../../actions';
 import * as RequestForQuotationDetailsAction from '../../../request_for_quotation/screens/detail/actions'
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import { SupplierModal } from '../../../supplier_invoice/sections/index';
 import { LeavePage, Loader } from 'components';
-//import { SupplierModal } from '../../sections';
+import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
