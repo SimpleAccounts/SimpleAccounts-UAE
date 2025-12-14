@@ -10,13 +10,17 @@
 
 // Helper to get import.meta.env safely (works in both Vite and Jest)
 const getMetaEnv = () => {
-  // In Vite runtime
-  if (typeof import !== 'undefined' && import.meta && import.meta.env) {
-    return import.meta.env;
-  }
-  // In Jest tests (mocked via globalThis.import)
+  // In Jest tests (mocked via globalThis.import) - check this first
   if (typeof globalThis !== 'undefined' && globalThis.import && globalThis.import.meta && globalThis.import.meta.env) {
     return globalThis.import.meta.env;
+  }
+  // In Vite runtime - import.meta is available as a special object
+  // We can't use typeof import (syntax error), so we access it directly
+  // In Jest, this will be undefined, so we fall back to default values
+  // eslint-disable-next-line no-undef
+  if (import.meta && import.meta.env) {
+    // eslint-disable-next-line no-undef
+    return import.meta.env;
   }
   // Fallback
   return {
