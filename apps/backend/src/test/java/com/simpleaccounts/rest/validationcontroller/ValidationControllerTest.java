@@ -351,9 +351,11 @@ class ValidationControllerTest {
 
     @Test
     void shouldValidateCurrencyCode() throws Exception {
-        CurrencyConversion currency = new CurrencyConversion();
-        currency.setCurrencyCode("USD");
-        when(currencyExchangeService.findByAttributes(any())).thenReturn(Collections.singletonList(currency));
+        CurrencyConversion conversion = new CurrencyConversion();
+        com.simpleaccounts.entity.Currency currency = new com.simpleaccounts.entity.Currency();
+        currency.setCurrencyCode(1);
+        conversion.setCurrencyCode(currency);
+        when(currencyExchangeService.findByAttributes(any())).thenReturn(Collections.singletonList(conversion));
 
         mockMvc.perform(get("/rest/validation/validate")
                 .param("moduleType", "10")

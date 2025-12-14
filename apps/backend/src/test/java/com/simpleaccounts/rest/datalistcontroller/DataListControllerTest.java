@@ -82,11 +82,11 @@ class DataListControllerTest {
     @Test
     void shouldGetCountryListSuccessfully() throws Exception {
         Country country1 = new Country();
-        country1.setId(1);
+        country1.setCountryCode(1);
         country1.setCountryName("United Arab Emirates");
 
         Country country2 = new Country();
-        country2.setId(2);
+        country2.setCountryCode(2);
         country2.setCountryName("Saudi Arabia");
 
         when(countryService.getCountries()).thenReturn(Arrays.asList(country1, country2));
@@ -226,7 +226,7 @@ class DataListControllerTest {
     @Test
     void shouldGetStateListSuccessfully() throws Exception {
         Country country = new Country();
-        country.setId(1);
+        country.setCountryCode(1);
 
         State state1 = new State();
         state1.setId(1);
@@ -249,7 +249,7 @@ class DataListControllerTest {
     @Test
     void shouldReturnNotFoundWhenNoStates() throws Exception {
         Country country = new Country();
-        country.setId(1);
+        country.setCountryCode(1);
 
         when(countryService.getCountry(1)).thenReturn(country);
         when(stateService.getstateList(any())).thenReturn(Collections.emptyList());
