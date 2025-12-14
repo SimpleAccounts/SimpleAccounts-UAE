@@ -261,17 +261,19 @@ public class InvoiceRestHelper {
 				lineItem.setCreatedBy(userId);
 				lineItem.setCreatedDate(LocalDateTime.now());
 				lineItem.setDeleteFlag(false);
-				lineItem.setQuantity(model.getQuantity());
-				lineItem.setDescription(model.getDescription());
-				lineItem.setUnitPrice(model.getUnitPrice());
-				lineItem.setSubTotal(model.getSubTotal());
-				if(model.getUnitType()!=null)
-					lineItem.setUnitType(model.getUnitType());
-				if(model.getUnitTypeId()!=null)
-					lineItem.setUnitTypeId(unitTypesRepository.findById(model.getUnitTypeId()).get());
-				if (model.getExciseTaxId()!=null){
-					lineItem.setExciseCategory(exciseTaxService.getExciseTax(model.getExciseTaxId()));
-				}
+					lineItem.setQuantity(model.getQuantity());
+					lineItem.setDescription(model.getDescription());
+					lineItem.setUnitPrice(model.getUnitPrice());
+					lineItem.setSubTotal(model.getSubTotal());
+					if(model.getUnitType()!=null)
+						lineItem.setUnitType(model.getUnitType());
+					if(model.getUnitTypeId()!=null)
+						lineItem.setUnitTypeId(unitTypesRepository.findById(model.getUnitTypeId())
+								.orElseThrow(() -> new IllegalArgumentException(
+										"Invalid unitTypeId: " + model.getUnitTypeId())));
+					if (model.getExciseTaxId()!=null){
+						lineItem.setExciseCategory(exciseTaxService.getExciseTax(model.getExciseTaxId()));
+					}
 				if (model.getExciseAmount()!=null){
 					lineItem.setExciseAmount(model.getExciseAmount());
 				}

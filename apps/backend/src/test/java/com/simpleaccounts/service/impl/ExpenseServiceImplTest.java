@@ -220,23 +220,25 @@ class ExpenseServiceImplTest {
 
         @Test
         @DisplayName("Should set credit flag to false for all expenses")
-        void getExpensesForReportSetsCreditFlagFalse() {
-            // Arrange
-            Date startDate = new Date();
-            Date endDate = new Date();
-            List<Object[]> rows = new ArrayList<>();
-            List<BankAccountTransactionReportModel> models = createReportModels(2);
+	        void getExpensesForReportSetsCreditFlagFalse() {
+	            // Arrange
+	            Date startDate = new Date();
+	            Date endDate = new Date();
+	            List<Object[]> rows = new ArrayList<>();
+	            List<BankAccountTransactionReportModel> models = createReportModels(2);
 
             when(expenseDao.getExpenses(startDate, endDate)).thenReturn(rows);
             when(util.convertToTransactionReportModel(rows)).thenReturn(models);
 
             // Act
-            List<BankAccountTransactionReportModel> result = expenseService.getExpensesForReport(startDate, endDate);
+	            List<BankAccountTransactionReportModel> result = expenseService.getExpensesForReport(startDate, endDate);
 
-            // Assert
-            assertThat(result).allSatisfy(model -> assertThat(model.isCredit()).isFalse());
-        }
-    }
+	            // Assert
+	            assertThat(result)
+	                .hasSize(models.size())
+	                .allSatisfy(model -> assertThat(model.isCredit()).isFalse());
+	        }
+	    }
 
     @Nested
     @DisplayName("deleteByIds Tests")
