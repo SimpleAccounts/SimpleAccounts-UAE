@@ -2,12 +2,6 @@ package com.simpleaccounts.rest.detailedgeneralledgerreport;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
 import com.simpleaccounts.constant.PostingReferenceTypeEnum;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.BankAccount;
 import com.simpleaccounts.entity.bankaccount.Transaction;
@@ -147,13 +141,12 @@ public class DetailedGeneralLedgerRestHelper {
 		List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getList(reportRequestModel);
 	    if (itemList != null && !itemList.isEmpty()) {
 			Map<Integer,TransactionCategoryClosingBalance> transactionCategoryClosingBalanceMap = processTransactionCategoryClosingBalance(closingBalanceList);
-			Map<Integer, List<JournalLineItem>> map = new HashMap<>();
-			Map<Integer, Expense> expenseMap = new HashMap<>();
-			Map<Integer, Transaction> transactionMap = new HashMap<>();
-			Map<Integer, BankAccount> bankAccountMap = new HashMap<>();
-			Map<Integer, Invoice> invoiceMap = new HashMap<>();
-			Map<Integer, Receipt> receiptMap = new HashMap<>();
-			Map<Integer, Payment> paymentMap = new HashMap<>();
+				Map<Integer, List<JournalLineItem>> map = new HashMap<>();
+				Map<Integer, Expense> expenseMap = new HashMap<>();
+				Map<Integer, Transaction> transactionMap = new HashMap<>();
+				Map<Integer, Invoice> invoiceMap = new HashMap<>();
+				Map<Integer, Receipt> receiptMap = new HashMap<>();
+				Map<Integer, Payment> paymentMap = new HashMap<>();
 			Map<Integer, CreditNote> creditNoteMap = new HashMap<>();
 			for (JournalLineItem item : itemList) {
 				if (item.getTransactionCategory() != null) {
@@ -269,8 +262,6 @@ public class DetailedGeneralLedgerRestHelper {
 							invoiceMap = findOrGetFromDbIn(invoiceMap, lineItem.getReferenceId());
 							Invoice invoice = invoiceMap.get(lineItem.getReferenceId());
 
-							BigDecimal amount = BigDecimal.ZERO;
-
 							model.setCreditAmount(lineItem.getCreditAmount());
 							model.setDebitAmount(lineItem.getDebitAmount());
 								if (lineItem.getCreditAmount().compareTo(BigDecimal.ZERO)>0){
@@ -296,17 +287,17 @@ public class DetailedGeneralLedgerRestHelper {
 						case CREDIT_NOTE:
 						case REVERSE_CREDIT_NOTE:
 						case DEBIT_NOTE:
-						case REVERSE_DEBIT_NOTE:
-							creditNoteMap = findOrGetFromDbCn(creditNoteMap, lineItem.getReferenceId());
-							CreditNote creditNote = creditNoteMap.get(lineItem.getReferenceId());
+							case REVERSE_DEBIT_NOTE:
+								creditNoteMap = findOrGetFromDbCn(creditNoteMap, lineItem.getReferenceId());
+								CreditNote creditNote = creditNoteMap.get(lineItem.getReferenceId());
 
-							model.setReferenceNo(journal.getJournlReferencenNo());
+								model.setReferenceNo(journal.getJournlReferencenNo());
 
-							 amount = BigDecimal.ZERO;
-							if (isDebit) {
-								model.setDebitAmount(lineItem.getDebitAmount());
-								model.setCreditAmount(lineItem.getCreditAmount());
-								amount = lineItem.getCreditAmount();
+								BigDecimal amount;
+								if (isDebit) {
+									model.setDebitAmount(lineItem.getDebitAmount());
+									model.setCreditAmount(lineItem.getCreditAmount());
+									amount = lineItem.getCreditAmount();
 							} else {
 								model.setCreditAmount(lineItem.getCreditAmount());
 								model.setDebitAmount(lineItem.getDebitAmount());
@@ -480,16 +471,14 @@ public class DetailedGeneralLedgerRestHelper {
 			creditAmount = creditAmount.add(model.getCreditAmount()!=null?model.getCreditAmount():BigDecimal.ZERO);
 			debitAmount = debitAmount.add(model.getDebitAmount()!=null?model.getDebitAmount():BigDecimal.ZERO);
 		}
-		boolean isCredit = creditAmount.longValue() >= debitAmount.longValue() ;
-		DetailedGeneralLedgerReportListModel openingBalanceModel = new DetailedGeneralLedgerReportListModel();
-		DetailedGeneralLedgerReportListModel closingBalanceModel = new DetailedGeneralLedgerReportListModel();
-		DetailedGeneralLedgerReportListModel tempopeningBalanceModel = dataList.get(0);
-		openingBalanceModel.setDate("As on "+reportRequestModel.getStartDate());
-		BigDecimal openingBalance = transactionCategoryClosingBalance.getOpeningBalance();
-		if(transactionCategoryClosingBalance.getOpeningBalance().longValue()<=0) {
-			openingBalanceModel.setCreditAmount(transactionCategoryClosingBalance.getOpeningBalance().negate());
+			boolean isCredit = creditAmount.longValue() >= debitAmount.longValue() ;
+			DetailedGeneralLedgerReportListModel openingBalanceModel = new DetailedGeneralLedgerReportListModel();
+			DetailedGeneralLedgerReportListModel closingBalanceModel = new DetailedGeneralLedgerReportListModel();
+			openingBalanceModel.setDate("As on "+reportRequestModel.getStartDate());
+			if(transactionCategoryClosingBalance.getOpeningBalance().longValue()<=0) {
+				openingBalanceModel.setCreditAmount(transactionCategoryClosingBalance.getOpeningBalance().negate());
 
-		}else {
+			}else {
 
 			openingBalanceModel.setDebitAmount(transactionCategoryClosingBalance.getOpeningBalance());
 		}openingBalanceModel.setAmount(transactionCategoryClosingBalance.getOpeningBalance());

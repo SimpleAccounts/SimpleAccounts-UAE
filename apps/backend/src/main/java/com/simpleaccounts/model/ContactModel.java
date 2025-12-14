@@ -1,9 +1,8 @@
 package com.simpleaccounts.model;
 
 import com.simpleaccounts.entity.Currency;
-import java.io.Serializable;
-
 import com.simpleaccounts.entity.TaxTreatment;
+import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
 

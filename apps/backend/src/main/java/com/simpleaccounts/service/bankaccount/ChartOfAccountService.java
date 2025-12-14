@@ -1,10 +1,9 @@
 package com.simpleaccounts.service.bankaccount;
 
-import java.util.List;
-
 import com.simpleaccounts.criteria.bankaccount.ChartOfAccountCriteria;
 import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.service.SimpleAccountsService;
+import java.util.List;
 
 public abstract class ChartOfAccountService extends SimpleAccountsService<Integer, ChartOfAccount> {
 

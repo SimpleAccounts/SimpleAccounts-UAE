@@ -1,15 +1,12 @@
 package com.simpleaccounts.dao.impl;
 
+import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.CountryDao;
 import com.simpleaccounts.entity.Country;
-
 import java.util.List;
-
+import javax.persistence.TypedQuery;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
-import com.simpleaccounts.dao.AbstractDao;
-
-import javax.persistence.TypedQuery;
 
 /**
  * Created by mohsinh on 3/10/2017.

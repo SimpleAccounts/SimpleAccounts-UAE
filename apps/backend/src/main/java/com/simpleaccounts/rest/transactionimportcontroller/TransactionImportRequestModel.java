@@ -2,9 +2,8 @@ package com.simpleaccounts.rest.transactionimportcontroller;
 
 import com.simpleaccounts.constant.ExcellDelimiterEnum;
 import com.simpleaccounts.criteria.enums.TransactionEnum;
-import lombok.Data;
-
 import java.util.Map;
+import lombok.Data;
 
 @Data
 public class TransactionImportRequestModel {

@@ -1,8 +1,7 @@
 package com.simpleaccounts.rest.simpleaccountreports;
 
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class PurchaseByProductResponseModel {

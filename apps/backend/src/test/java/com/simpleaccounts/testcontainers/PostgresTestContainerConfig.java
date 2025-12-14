@@ -1,5 +1,6 @@
 package com.simpleaccounts.testcontainers;
 
+import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
@@ -20,7 +21,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * - org.testcontainers:postgresql
  * - org.testcontainers:junit-jupiter
  */
-public class PostgresTestContainerConfig implements BeforeAllCallback {
+public class PostgresTestContainerConfig implements BeforeAllCallback, AfterAllCallback {
 
     // Static container - shared across all tests
     private static final String DATABASE_NAME = "simpleaccounts_test";
@@ -37,6 +38,15 @@ public class PostgresTestContainerConfig implements BeforeAllCallback {
         if (!containerStarted) {
             startContainer();
         }
+    }
+
+    @Override
+    public void afterAll(ExtensionContext context) throws Exception {
+        // Clear system properties to avoid polluting other tests
+        System.clearProperty("spring.datasource.url");
+        System.clearProperty("spring.datasource.username");
+        System.clearProperty("spring.datasource.password");
+        System.clearProperty("spring.jpa.hibernate.ddl-auto");
     }
 
     private static synchronized void startContainer() {

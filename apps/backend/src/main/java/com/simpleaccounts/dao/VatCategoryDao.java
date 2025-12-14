@@ -9,7 +9,6 @@ import com.simpleaccounts.constant.dbfilter.VatCategoryFilterEnum;
 import com.simpleaccounts.entity.VatCategory;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
-
 import java.util.List;
 import java.util.Map;
 

@@ -3,15 +3,14 @@ package com.simpleaccounts.security;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.simpleaccounts.entity.User;
+import com.simpleaccounts.service.UserService;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
-
-import com.simpleaccounts.entity.User;
-import com.simpleaccounts.service.UserService;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
+import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +18,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import javax.servlet.http.HttpServletRequest;
 
 @ExtendWith(MockitoExtension.class)
 class JwtTokenUtilTest {

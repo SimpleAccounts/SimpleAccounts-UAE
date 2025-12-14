@@ -6,7 +6,6 @@
 package com.simpleaccounts.rest.reports;
 
 import com.simpleaccounts.model.FinancialPeriodRestModel;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
