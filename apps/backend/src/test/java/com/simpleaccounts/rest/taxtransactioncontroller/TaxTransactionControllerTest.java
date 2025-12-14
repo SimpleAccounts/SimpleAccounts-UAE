@@ -2,13 +2,13 @@ package com.simpleaccounts.rest.taxtransactioncontroller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.simpleaccounts.constant.TaxTransactionStatusConstant;
 import com.simpleaccounts.entity.TaxTransaction;
 import com.simpleaccounts.service.TaxTransactionService;
 import java.math.BigDecimal;
@@ -56,7 +56,8 @@ class TaxTransactionControllerTest {
         @DisplayName("Should return open tax transactions with OK status")
         void getOpenTaxTransactionReturnsOkStatus() throws Exception {
             // Arrange
-            List<TaxTransaction> transactions = createTaxTransactionList(3, "OPEN");
+            List<TaxTransaction> transactions =
+                createTaxTransactionList(3, TaxTransactionStatusConstant.OPEN);
             when(taxTransactionService.getOpenTaxTransactionList()).thenReturn(transactions);
             when(taxTranscationRestHelper.getStartDate()).thenReturn(new Date());
             when(taxTranscationRestHelper.getEndDate()).thenReturn(new Date());
@@ -86,7 +87,8 @@ class TaxTransactionControllerTest {
         void getOpenTaxTransactionCreatesNewWhenNotExists() throws Exception {
             // Arrange
             List<TaxTransaction> transactions = new ArrayList<>();
-            List<TaxTransaction> newTransactions = createTaxTransactionList(1, "OPEN");
+            List<TaxTransaction> newTransactions =
+                createTaxTransactionList(1, TaxTransactionStatusConstant.OPEN);
 
             when(taxTransactionService.getOpenTaxTransactionList()).thenReturn(transactions);
             when(taxTranscationRestHelper.getStartDate()).thenReturn(new Date());
@@ -108,7 +110,8 @@ class TaxTransactionControllerTest {
         @DisplayName("Should return closed tax transactions with OK status")
         void getCloseTaxTransactionReturnsOkStatus() throws Exception {
             // Arrange
-            List<TaxTransaction> transactions = createTaxTransactionList(5, "CLOSE");
+            List<TaxTransaction> transactions =
+                createTaxTransactionList(5, TaxTransactionStatusConstant.CLOSE);
             when(taxTransactionService.getClosedTaxTransactionList()).thenReturn(transactions);
 
             // Act & Assert
@@ -136,14 +139,13 @@ class TaxTransactionControllerTest {
         @DisplayName("Should save tax transaction successfully")
         void saveReturnsOkStatus() throws Exception {
             // Arrange
-            TaxTransaction transaction = createTaxTransaction(1, "OPEN");
+            TaxTransaction transaction = createTaxTransaction(1, TaxTransactionStatusConstant.OPEN);
             transaction.setVatIn(BigDecimal.valueOf(1000));
             transaction.setVatOut(BigDecimal.valueOf(800));
             transaction.setDueAmount(BigDecimal.valueOf(200));
             transaction.setPaidAmount(BigDecimal.valueOf(200));
 
             when(taxTransactionService.findByPK(1)).thenReturn(transaction);
-            doNothing().when(taxTransactionService).persist(any());
 
             // Act & Assert
             mockMvc.perform(post("/rest/taxtransaction/saveTaxTransaction")
@@ -155,14 +157,13 @@ class TaxTransactionControllerTest {
         @DisplayName("Should create new transaction for partial payment")
         void saveCreatesNewTransactionForPartialPayment() throws Exception {
             // Arrange
-            TaxTransaction transaction = createTaxTransaction(1, "OPEN");
+            TaxTransaction transaction = createTaxTransaction(1, TaxTransactionStatusConstant.OPEN);
             transaction.setVatIn(BigDecimal.valueOf(1000));
             transaction.setVatOut(BigDecimal.valueOf(800));
             transaction.setDueAmount(BigDecimal.valueOf(200));
             transaction.setPaidAmount(BigDecimal.valueOf(100)); // Partial payment
 
             when(taxTransactionService.findByPK(1)).thenReturn(transaction);
-            doNothing().when(taxTransactionService).persist(any());
 
             // Act & Assert
             mockMvc.perform(post("/rest/taxtransaction/saveTaxTransaction")
@@ -171,7 +172,7 @@ class TaxTransactionControllerTest {
         }
     }
 
-    private List<TaxTransaction> createTaxTransactionList(int count, String status) {
+    private List<TaxTransaction> createTaxTransactionList(int count, Integer status) {
         List<TaxTransaction> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             list.add(createTaxTransaction(i + 1, status));
@@ -179,7 +180,7 @@ class TaxTransactionControllerTest {
         return list;
     }
 
-    private TaxTransaction createTaxTransaction(Integer id, String status) {
+    private TaxTransaction createTaxTransaction(Integer id, Integer status) {
         TaxTransaction transaction = new TaxTransaction();
         transaction.setTaxTransactionId(id);
         transaction.setStatus(status);

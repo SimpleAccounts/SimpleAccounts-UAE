@@ -6,7 +6,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.simpleaccounts.constant.ChartOfAccountCategoryCodeEnum;
+import com.simpleaccounts.constant.TransactionCategoryCodeEnum;
 import com.simpleaccounts.entity.TransactionCategoryClosingBalance;
+import com.simpleaccounts.entity.bankaccount.ChartOfAccount;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.helper.DashboardRestHelper;
 import com.simpleaccounts.rest.financialreport.FinancialReportRestHelper;
@@ -15,7 +18,7 @@ import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateFormatUtil;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -203,7 +206,7 @@ class DashboardControllerTest {
         TransactionCategoryClosingBalance balance = new TransactionCategoryClosingBalance();
         balance.setId(id);
         balance.setClosingBalance(BigDecimal.valueOf(1000 * id));
-        balance.setClosingBalanceDate(LocalDate.now());
+        balance.setClosingBalanceDate(LocalDateTime.now());
         balance.setTransactionCategory(createTransactionCategory(id));
         return balance;
     }
@@ -211,9 +214,23 @@ class DashboardControllerTest {
     private TransactionCategory createTransactionCategory(Integer id) {
         TransactionCategory category = new TransactionCategory();
         category.setTransactionCategoryId(id);
-        category.setTransactionCategoryName("Category " + id);
-        category.setTransactionCategoryCode("CAT" + id);
+        if (id == 1) {
+            category.setTransactionCategoryName("Input VAT");
+            category.setTransactionCategoryCode(TransactionCategoryCodeEnum.INPUT_VAT.getCode());
+            category.setChartOfAccount(createChartOfAccount(ChartOfAccountCategoryCodeEnum.OTHER_CURRENT_ASSET.getCode()));
+        } else {
+            category.setTransactionCategoryName("Output VAT");
+            category.setTransactionCategoryCode(TransactionCategoryCodeEnum.OUTPUT_VAT.getCode());
+            category.setChartOfAccount(
+                createChartOfAccount(ChartOfAccountCategoryCodeEnum.OTHER_CURRENT_LIABILITIES.getCode()));
+        }
         return category;
+    }
+
+    private ChartOfAccount createChartOfAccount(String code) {
+        ChartOfAccount chartOfAccount = new ChartOfAccount();
+        chartOfAccount.setChartOfAccountCode(code);
+        return chartOfAccount;
     }
 
     private List<DateRequestModel> createDateRequestModelList(int count) {

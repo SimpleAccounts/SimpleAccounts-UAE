@@ -54,7 +54,7 @@ public class DashboardController {
 
 	@LogRequest
 	@GetMapping(value = "/getVatReport")
-	public ResponseEntity<Object> getVatReport(@RequestParam Integer monthNo) {
+	public ResponseEntity<Object> getVatReport(@RequestParam(required = false) Integer monthNo) {
 
 		try {
 			Date startDate = null;
@@ -346,4 +346,3 @@ private static final class ProfitLossTotal {
 	}
 }
 }
-

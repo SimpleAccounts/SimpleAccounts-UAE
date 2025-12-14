@@ -2,6 +2,7 @@ package com.simpleaccounts.rest.financialreport;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -190,7 +191,7 @@ class VatReportFilingRestControllerTest {
             User user = createTestUser();
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
             when(userService.findByPK(1)).thenReturn(user);
-            when(dateFormatUtil.getDateStrAsLocalDateTime(any(), any()))
+            when(dateFormatUtil.getDateStrAsLocalDateTime(anyString(), anyString()))
                 .thenReturn(LocalDateTime.of(2024, 1, 1, 0, 0));
             when(vatReportFilingRepository.findAll()).thenReturn(new ArrayList<>());
             when(vatReportFilingService.processVatReport(any(), any())).thenReturn(true);

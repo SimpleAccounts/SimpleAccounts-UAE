@@ -199,7 +199,7 @@ class TaxTransactionDaoImplTest {
         }
     }
 
-    private List<TaxTransaction> createTaxTransactionList(int count, String status) {
+    private List<TaxTransaction> createTaxTransactionList(int count, Integer status) {
         List<TaxTransaction> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             list.add(createTaxTransaction(i + 1, status));
@@ -207,7 +207,7 @@ class TaxTransactionDaoImplTest {
         return list;
     }
 
-    private TaxTransaction createTaxTransaction(Integer id, String status) {
+    private TaxTransaction createTaxTransaction(Integer id, Integer status) {
         TaxTransaction transaction = new TaxTransaction();
         transaction.setTaxTransactionId(id);
         transaction.setStatus(status);

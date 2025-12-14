@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.simpleaccounts.constant.TaxTransactionStatusConstant;
 import com.simpleaccounts.dao.TaxTransactionDao;
 import com.simpleaccounts.entity.TaxTransaction;
 import java.math.BigDecimal;
@@ -37,7 +38,8 @@ class TaxTransactionServiceImplTest {
         @DisplayName("Should return closed tax transaction list")
         void getClosedTaxTransactionListReturnsList() {
             // Arrange
-            List<TaxTransaction> expectedList = createTaxTransactionList(3, "CLOSE");
+            List<TaxTransaction> expectedList =
+                createTaxTransactionList(3, TaxTransactionStatusConstant.CLOSE);
             when(taxTransactionDao.getClosedTaxTransactionList()).thenReturn(expectedList);
 
             // Act
@@ -84,7 +86,8 @@ class TaxTransactionServiceImplTest {
         @DisplayName("Should return open tax transaction list")
         void getOpenTaxTransactionListReturnsList() {
             // Arrange
-            List<TaxTransaction> expectedList = createTaxTransactionList(5, "OPEN");
+            List<TaxTransaction> expectedList =
+                createTaxTransactionList(5, TaxTransactionStatusConstant.OPEN);
             when(taxTransactionDao.getOpenTaxTransactionList()).thenReturn(expectedList);
 
             // Act
@@ -135,7 +138,7 @@ class TaxTransactionServiceImplTest {
         }
     }
 
-    private List<TaxTransaction> createTaxTransactionList(int count, String status) {
+    private List<TaxTransaction> createTaxTransactionList(int count, Integer status) {
         List<TaxTransaction> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             list.add(createTaxTransaction(i + 1, status));
@@ -143,7 +146,7 @@ class TaxTransactionServiceImplTest {
         return list;
     }
 
-    private TaxTransaction createTaxTransaction(Integer id, String status) {
+    private TaxTransaction createTaxTransaction(Integer id, Integer status) {
         TaxTransaction taxTransaction = new TaxTransaction();
         taxTransaction.setTaxTransactionId(id);
         taxTransaction.setStatus(status);

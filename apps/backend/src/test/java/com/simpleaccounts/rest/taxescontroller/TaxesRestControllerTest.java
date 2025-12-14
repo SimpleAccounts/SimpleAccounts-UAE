@@ -62,7 +62,7 @@ class TaxesRestControllerTest {
             TransactionCategory outputVat = createTransactionCategory(94, "Output VAT");
             List<Object> dataList = new ArrayList<>();
             PaginationResponseModel response = new PaginationResponseModel(0, dataList);
-            List<TaxesListModel> modelList = new ArrayList<>();
+            List<VatListModel> modelList = new ArrayList<>();
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
             when(transactionCategoryService.findByPK(88)).thenReturn(inputVat);
@@ -100,7 +100,7 @@ class TaxesRestControllerTest {
             TransactionCategory outputVat = createTransactionCategory(94, "Output VAT");
             List<Object> dataList = new ArrayList<>();
             PaginationResponseModel response = new PaginationResponseModel(0, dataList);
-            List<TaxesListModel> modelList = new ArrayList<>();
+            List<VatListModel> modelList = new ArrayList<>();
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
             when(transactionCategoryService.findByPK(88)).thenReturn(inputVat);
@@ -122,7 +122,7 @@ class TaxesRestControllerTest {
             TransactionCategory outputVat = createTransactionCategory(94, "Output VAT");
             List<Object> dataList = new ArrayList<>();
             PaginationResponseModel response = new PaginationResponseModel(0, dataList);
-            List<TaxesListModel> modelList = new ArrayList<>();
+            List<VatListModel> modelList = new ArrayList<>();
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
             when(transactionCategoryService.findByPK(88)).thenReturn(inputVat);

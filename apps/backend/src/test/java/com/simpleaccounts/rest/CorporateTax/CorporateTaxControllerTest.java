@@ -1,7 +1,7 @@
 package com.simpleaccounts.rest.CorporateTax;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -179,7 +179,7 @@ class CorporateTaxControllerTest {
             profitLossModel.setOperatingProfit(BigDecimal.valueOf(500000));
 
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
-            when(dateFormatUtil.getDateStrAsLocalDateTime(any(), any()))
+            when(dateFormatUtil.getDateStrAsLocalDateTime(anyString(), anyString()))
                 .thenReturn(LocalDateTime.of(2024, 1, 1, 0, 0));
             when(financialReportRestHelper.getProfitAndLossReport(any())).thenReturn(profitLossModel);
             when(corporateTaxFilingRepository.save(any())).thenReturn(new CorporateTaxFiling());
@@ -203,7 +203,6 @@ class CorporateTaxControllerTest {
             CorporateTaxFiling filing = createCorporateTaxFiling(1);
             filing.setViewCtReport("{\"key\": \"value\"}");
 
-            when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
             when(corporateTaxFilingRepository.findById(1)).thenReturn(Optional.of(filing));
 
             // Act & Assert
@@ -216,7 +215,6 @@ class CorporateTaxControllerTest {
         @DisplayName("Should return NOT_FOUND when filing not found")
         void viewCtReturnsNotFoundWhenFilingMissing() throws Exception {
             // Arrange
-            when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
             when(corporateTaxFilingRepository.findById(999)).thenReturn(Optional.empty());
 
             // Act & Assert
@@ -234,8 +232,6 @@ class CorporateTaxControllerTest {
         @DisplayName("Should return corporate tax list with OK status")
         void getListReturnsOkStatus() throws Exception {
             // Arrange
-            when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
-
             // Act & Assert
             mockMvc.perform(get("/rest/corporate/tax/Corporate/list"))
                 .andExpect(status().isOk());
@@ -251,8 +247,6 @@ class CorporateTaxControllerTest {
         void getPaymentHistoryListReturnsOkStatus() throws Exception {
             // Arrange
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
-            when(corporateTaxService.getCtPaymentHistory(any(), anyInt(), anyInt(), any(), any(), any(), anyInt()))
-                .thenReturn(new ArrayList<>());
 
             // Act & Assert
             mockMvc.perform(get("/rest/corporate/tax/payment/history"))

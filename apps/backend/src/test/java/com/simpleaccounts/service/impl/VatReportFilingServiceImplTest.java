@@ -3,6 +3,7 @@ package com.simpleaccounts.service.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -11,10 +12,14 @@ import static org.mockito.Mockito.when;
 import com.simpleaccounts.entity.Company;
 import com.simpleaccounts.entity.Currency;
 import com.simpleaccounts.entity.User;
+import com.simpleaccounts.entity.VatPayment;
 import com.simpleaccounts.entity.VatRecordPaymentHistory;
 import com.simpleaccounts.entity.VatReportFiling;
 import com.simpleaccounts.entity.VatTaxAgency;
 import com.simpleaccounts.helper.DateFormatHelper;
+import com.simpleaccounts.rest.financialreport.VatRecordPaymentHistoryRepository;
+import com.simpleaccounts.rest.financialreport.VatReportFilingRepository;
+import com.simpleaccounts.rest.financialreport.VatTaxAgencyRepository;
 import com.simpleaccounts.rest.financialreport.VatPaymentHistoryModel;
 import com.simpleaccounts.rest.financialreport.VatReportFilingRequestModel;
 import com.simpleaccounts.rest.financialreport.VatReportResponseModel;
@@ -23,6 +28,8 @@ import com.simpleaccounts.service.JournalLineItemService;
 import com.simpleaccounts.service.JournalService;
 import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.DateFormatUtil;
+import com.simpleaccounts.utils.InvoiceNumberUtil;
+import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -53,10 +60,13 @@ class VatReportFilingServiceImplTest {
     private VatReportFilingRepository vatReportFilingRepository;
 
     @Mock
-    private DateFormatUtil dateFormatUtil;
+    private CompanyService companyService;
 
     @Mock
-    private CompanyService companyService;
+    private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+
+    @Mock
+    private InvoiceNumberUtil invoiceNumberUtil;
 
     @Mock
     private VatTaxAgencyRepository vatTaxAgencyRepository;
@@ -210,7 +220,7 @@ class VatReportFilingServiceImplTest {
             requestModel.setStartDate("01/01/2024");
             requestModel.setEndDate("31/03/2024");
 
-            when(dateUtils.getDateStrAsLocalDateTime(any(), any()))
+            when(dateUtils.getDateStrAsLocalDateTime(anyString(), anyString()))
                 .thenReturn(LocalDateTime.of(2024, 1, 1, 0, 0));
             when(journalLineItemService.totalInputVatAmount(any(), any(), anyInt()))
                 .thenReturn(BigDecimal.valueOf(1000));
@@ -255,7 +265,7 @@ class VatReportFilingServiceImplTest {
 
             VatReportFiling existingFiling = createVatReportFiling(1);
             when(vatReportFilingRepository.findById(1)).thenReturn(Optional.of(existingFiling));
-            when(dateUtils.getDateStrAsLocalDateTime(any(), any()))
+            when(dateUtils.getDateStrAsLocalDateTime(anyString(), anyString()))
                 .thenReturn(LocalDateTime.of(2024, 1, 1, 0, 0));
             when(journalLineItemService.totalInputVatAmount(any(), any(), anyInt()))
                 .thenReturn(BigDecimal.valueOf(500));
@@ -360,7 +370,7 @@ class VatReportFilingServiceImplTest {
 
     private Currency createTestCurrency() {
         Currency currency = new Currency();
-        currency.setCurrencyId(1);
+        currency.setCurrencyCode(1);
         currency.setCurrencyIsoCode("AED");
         return currency;
     }
@@ -406,6 +416,12 @@ class VatReportFilingServiceImplTest {
         history.setStartDate(LocalDateTime.now().minusMonths(3));
         history.setEndDate(LocalDateTime.now());
         history.setDateOfFiling(LocalDateTime.now());
+        VatReportFiling filing = new VatReportFiling();
+        filing.setId(1);
+        filing.setVatNumber("VAT-1");
+        VatPayment vatPayment = new VatPayment();
+        vatPayment.setVatReportFiling(filing);
+        history.setVatPayment(vatPayment);
         return history;
     }
 }
