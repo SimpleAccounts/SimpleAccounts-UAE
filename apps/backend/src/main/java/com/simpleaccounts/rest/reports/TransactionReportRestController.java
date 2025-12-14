@@ -13,7 +13,6 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.model.FinancialPeriodRestModel;
 import com.simpleaccounts.model.InvoiceReportRestModel;
 import com.simpleaccounts.model.TransactionReportRestModel;
-import com.simpleaccounts.model.TransactionRestModel;
 import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
@@ -115,7 +114,7 @@ public class TransactionReportRestController {
 	@LogRequest
 	@ApiOperation(value = "Get Account Balance Report")
 	@PostMapping(value = "/accountBalanceReport")
-	public ResponseEntity<List<TransactionRestModel>> view(
+	public ResponseEntity<List<TransactionReportRestModel>> view(
 			@RequestParam(value = "transactionTypeCode", required = false) Integer transactionTypeCode,
 			@RequestParam(value = "transactionCategoryId", required = false) Integer transactionCategoryId,
 			@RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM.dd.yyyy") Date startDate,
