@@ -7,17 +7,48 @@ import json
 import os
 import requests
 from collections import defaultdict
+from pathlib import Path
 from urllib.parse import urlencode
 
 # Configuration
-SONARQUBE_URL = os.environ.get(
-    "SONARQUBE_URL", "https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io"
+DEFAULT_SONARQUBE_URL = (
+    "https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io"
 )
-SONARQUBE_TOKEN = os.environ.get("SONARQUBE_TOKEN")
-if not SONARQUBE_TOKEN:
-    raise RuntimeError("SONARQUBE_TOKEN environment variable is required")
-PROJECT_KEY = "SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9"
+DEFAULT_PROJECT_KEY = "SimpleAccounts_SimpleAccounts-UAE_f0046086-4810-411a-9ca7-6017268b2eb9"
 PAGE_SIZE = 500
+DEFAULT_VERIFY_SSL = True
+
+
+def load_mcp_env():
+    """Load gitignored `.mcp.env` into process env if present (no overrides)."""
+    mcp_env_path = Path(__file__).resolve().parent.parent / ".mcp.env"
+    if not mcp_env_path.is_file():
+        return
+
+    for line in mcp_env_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        os.environ.setdefault(key, value)
+
+
+load_mcp_env()
+
+SONARQUBE_URL = (
+    os.getenv("SONARQUBE_URL") or os.getenv("SONAR_HOST_URL") or DEFAULT_SONARQUBE_URL
+).rstrip("/")
+SONARQUBE_TOKEN = os.getenv("SONAR_TOKEN") or os.getenv("SONARQUBE_TOKEN")
+PROJECT_KEY = os.getenv("SONAR_PROJECT_KEY") or DEFAULT_PROJECT_KEY
+
+VERIFY_SSL = os.getenv("SONARQUBE_VERIFY_SSL")
+if VERIFY_SSL is None:
+    VERIFY_SSL = DEFAULT_VERIFY_SSL
+else:
+    VERIFY_SSL = VERIFY_SSL.strip().lower() not in {"0", "false", "no"}
 
 def fetch_issues_by_severity(severities):
     """Fetch issues filtered by severity."""
@@ -37,7 +68,9 @@ def fetch_issues_by_severity(severities):
         }
         
         url = f"{SONARQUBE_URL}/api/issues/search?{urlencode(params)}"
-        response = requests.get(url, auth=(SONARQUBE_TOKEN, ''), verify=False)
+        response = requests.get(
+            url, auth=(SONARQUBE_TOKEN, ""), verify=VERIFY_SSL, timeout=30
+        )
         response.raise_for_status()
         
         data = response.json()
@@ -117,7 +150,15 @@ def print_summary(issues, severity, stats):
 def main():
     """Main function."""
     import urllib3
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+    if not VERIFY_SSL:
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+    if not SONARQUBE_TOKEN:
+        raise SystemExit(
+            "ERROR: missing SonarQube token; set SONAR_TOKEN (preferred) or "
+            "SONARQUBE_TOKEN (or configure it in .mcp.env)."
+        )
     
     severities = ['BLOCKER', 'CRITICAL', 'MAJOR']
     
