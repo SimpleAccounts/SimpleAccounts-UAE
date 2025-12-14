@@ -1,7 +1,6 @@
 package com.simpleaccounts.rest.employeecontroller;
 
 import com.simpleaccounts.constant.CommonColumnConstants;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.*;
 import com.simpleaccounts.repository.PayrolEmployeeRepository;
 import com.simpleaccounts.rest.payroll.service.EmployeeSalaryComponentRelationService;

@@ -6,7 +6,6 @@
 package com.simpleaccounts.rest;
 
 import com.simpleaccounts.constant.DatatableSortingFilterConstant;
-
 import lombok.Data;
 
 /**

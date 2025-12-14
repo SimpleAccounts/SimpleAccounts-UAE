@@ -1,13 +1,11 @@
 package com.simpleaccounts.parserengine;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingDetailModel;
 import com.simpleaccounts.rest.transactionparsingcontroller.TransactionParsingSettingPersistModel;
+import java.util.List;
+import java.util.Map;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface TransactionFileParser {
 

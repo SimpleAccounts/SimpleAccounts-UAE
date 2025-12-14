@@ -1,10 +1,9 @@
 package com.simpleaccounts.entity;
-import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.*;
+import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity(name = "NOTES_SETTINGS")
 @Table(name = "NOTES_SETTINGS")

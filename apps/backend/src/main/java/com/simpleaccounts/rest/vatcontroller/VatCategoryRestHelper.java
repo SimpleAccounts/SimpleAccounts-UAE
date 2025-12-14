@@ -5,7 +5,6 @@ import com.simpleaccounts.entity.VatCategory;
 import com.simpleaccounts.service.CompanyService;
 import com.simpleaccounts.service.VatCategoryService;
 import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

@@ -7,12 +7,11 @@ import com.simpleaccounts.rest.DropdownObjectModel;
 import com.simpleaccounts.rest.PaginationModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.rest.payroll.SalaryStructureDao;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.TypedQuery;
+import org.springframework.stereotype.Repository;
 
 @Repository(value = "salaryStructureDao")
 public class SalaryStructureDaoImpl extends AbstractDao<Integer, SalaryStructure> implements SalaryStructureDao

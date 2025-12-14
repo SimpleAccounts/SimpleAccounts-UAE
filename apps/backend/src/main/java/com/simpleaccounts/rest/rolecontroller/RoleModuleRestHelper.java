@@ -13,11 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Component;
+
 @Component
 @RequiredArgsConstructor
 public class RoleModuleRestHelper {

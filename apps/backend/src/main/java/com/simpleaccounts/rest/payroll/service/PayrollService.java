@@ -1,8 +1,7 @@
 package com.simpleaccounts.rest.payroll.service;
 
-import java.util.List;
-
 import com.simpleaccounts.entity.Payroll;
+import java.util.List;
 
 public interface PayrollService {
 	

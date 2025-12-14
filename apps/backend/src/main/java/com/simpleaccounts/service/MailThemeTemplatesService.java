@@ -1,7 +1,6 @@
 package com.simpleaccounts.service;
 
 import com.simpleaccounts.dao.MailThemeTemplates;
-
 import org.springframework.stereotype.Service;
 
 /**

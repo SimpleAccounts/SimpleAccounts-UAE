@@ -1,10 +1,9 @@
 package com.simpleaccounts.rest.creditnotecontroller;
 
 import com.simpleaccounts.constant.PayMode;
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.util.Date;
+import lombok.Data;
 
 @Data
 public class RecordPaymentForCN {

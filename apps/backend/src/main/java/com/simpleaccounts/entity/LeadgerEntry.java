@@ -1,17 +1,12 @@
 package com.simpleaccounts.entity;
 
+import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import java.io.Serializable;
-
-import lombok.Data;
-
-import javax.persistence.*;
-
 import java.util.Date;
-
+import javax.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.lang.Nullable;
-
-import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 
 /**
  * Created by Uday

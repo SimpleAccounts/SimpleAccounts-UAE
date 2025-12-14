@@ -3,13 +3,12 @@ package com.simpleaccounts.dao.impl;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.TransactionExpensesPayrollDao;
 import com.simpleaccounts.entity.TransactionExpensesPayroll;
+import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class TransactionExpensesPayrollDaoImpl extends AbstractDao<Integer, TransactionExpensesPayroll>

@@ -1,11 +1,6 @@
 package com.simpleaccounts.rest.Logincontroller;
 
 import com.simpleaccounts.aop.LogRequest;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import com.simpleaccounts.entity.EmailLogs;
 import com.simpleaccounts.entity.PasswordHistory;
 import com.simpleaccounts.entity.User;

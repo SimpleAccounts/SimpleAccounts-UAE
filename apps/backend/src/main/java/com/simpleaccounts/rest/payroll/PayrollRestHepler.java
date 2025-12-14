@@ -3,7 +3,6 @@ package com.simpleaccounts.rest.payroll;
 import static com.simpleaccounts.rest.invoicecontroller.HtmlTemplateConstants.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpleaccounts.constant.DefaultTypeConstant;
 import com.simpleaccounts.constant.EmailConstant;
@@ -534,11 +533,10 @@ public class PayrollRestHepler {
 
     public EmployeeBankDetails getEmployeeBankDetailsEntity(EmployeePersistModel employeePersistModel, Employee employee, Integer userId) {
 
-        EmployeeBankDetails employeeBankDetails = new EmployeeBankDetails();
         Map<String, Object> param = new HashMap<>();
         param.put("employee", employee);
         List<EmployeeBankDetails> employeeBankDetailsList = employeeBankDetailsService.findByAttributes(param);
-        employeeBankDetails = employeeBankDetailsList.get(0);
+        EmployeeBankDetails employeeBankDetails = employeeBankDetailsList.get(0);
 
         for (EmployeeBankDetails employeeBankDetail : employeeBankDetailsList) {
 
@@ -575,11 +573,10 @@ public class PayrollRestHepler {
 
     public Employment getEmploymentsEntity(EmployeePersistModel employeePersistModel, Employee employee, Integer userId) {
 
-        Employment employment = new Employment();
         Map<String, Object> param = new HashMap<>();
         param.put("employee", employee);
         List<Employment> employmentList = employmentService.findByAttributes(param);
-        employment = employmentList.get(0);
+        Employment employment = employmentList.get(0);
 
         if (employeePersistModel.getDepartment() != null) {
             employment.setDepartment(employeePersistModel.getDepartment());
@@ -1455,7 +1452,6 @@ public class PayrollRestHepler {
                     finalPayrolltransactionCategory.setDefaltFlag(DefaultTypeConstant.NO);
                     finalPayrolltransactionCategory.setVersionNumber(1);
                     transactionCategoryService.persist(finalPayrolltransactionCategory);
-                    CoacTransactionCategory coacTransactionCategoryRelation = new CoacTransactionCategory();
                     coacTransactionCategoryService.addCoacTransactionCategory(finalPayrolltransactionCategory.getChartOfAccount(), finalPayrolltransactionCategory);
 
                     Map<String, Object> payrollCategoryParam = new HashMap<>();
@@ -1616,8 +1612,6 @@ public class PayrollRestHepler {
 
     public List<PayrollDropdownModel> getUnpaidPayrollList(List<Payroll> payrollList) {
 
-        List<SingleLevelDropDownModel> response  = new ArrayList<>();
-        String parentCategory = "";
         List<PayrollDropdownModel> dropDownModelList = new ArrayList<>();
         if(payrollList !=null && !payrollList.isEmpty()) {
             for (Payroll payroll : payrollList) {
@@ -1884,7 +1878,6 @@ public class PayrollRestHepler {
         }//else
 
         payroll.setStatus("Voided");
-        User user= userService.findByPK(payroll.getPayrollApprover());
         payroll.setComment(postingRequestModel.getComment()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         );
         sendVoidMail(payroll, Integer.valueOf(payroll.getGeneratedBy()),comment,request);
 
