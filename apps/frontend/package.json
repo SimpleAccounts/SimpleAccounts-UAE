@@ -118,7 +118,7 @@
     "redux-mock-store": "^1.5.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
-    "vite": "^5.4.21",
+    "vite": "^7.2.7",
     "web-streams-polyfill": "^4.2.0"
   },
   "scripts": {
