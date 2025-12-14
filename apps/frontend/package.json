@@ -140,6 +140,8 @@
     "extends": "react-app"
   },
   "jest": {
+    "testEnvironment": "jsdom",
+    "roots": ["<rootDir>/src"],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",
       "!**/*index.js",
@@ -163,6 +165,20 @@
       "json-summary"
     ],
     "moduleNameMapper": {
+      // Path aliases matching Vite config and jsconfig.json
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "^assets/(.*)$": "<rootDir>/src/assets/$1",
+      "^components/(.*)$": "<rootDir>/src/components/$1",
+      "^constants/(.*)$": "<rootDir>/src/constants/$1",
+      "^layouts/(.*)$": "<rootDir>/src/layouts/$1",
+      "^routes/(.*)$": "<rootDir>/src/routes/$1",
+      "^screens/(.*)$": "<rootDir>/src/screens/$1",
+      "^services/(.*)$": "<rootDir>/src/services/$1",
+      "^utils/(.*)$": "<rootDir>/src/utils/$1",
+      "^app$": "<rootDir>/src/app",
+      "^serviceWorker$": "<rootDir>/src/serviceWorker",
+      "^polyfill$": "<rootDir>/src/polyfill",
+      // Legacy mappings
       "^lodash-es$": "lodash",
       "\\.(css|less|scss|sass)$": "<rootDir>/src/__mocks__/styleMock.js",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/__mocks__/fileMock.js"
