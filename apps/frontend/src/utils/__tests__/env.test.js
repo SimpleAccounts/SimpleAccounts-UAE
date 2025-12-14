@@ -91,11 +91,25 @@ describe('env utilities', () => {
     });
 
     it('should have correct values in test environment', () => {
-      expect(env.mode).toBe('test');
-      expect(env.isProduction).toBe(false);
+      // MODE should be 'test' in Jest environment
+      // (setupTests.js sets it to process.env.NODE_ENV || 'test')
+      const expectedMode = process.env.NODE_ENV || 'test';
+      expect(env.mode).toBe(expectedMode);
+      
+      // isProduction should be false when not in production
+      expect(env.isProduction).toBe(expectedMode !== 'production');
+      
+      // baseUrl should default to '/'
       expect(env.baseUrl).toBe('/');
-      expect(env.dev).toBe(true); // DEV is true when not production
-      expect(env.prod).toBe(false);
+      
+      // DEV is true when NODE_ENV is not 'production'
+      const expectedDev = process.env.NODE_ENV !== 'production';
+      expect(env.dev).toBe(expectedDev);
+      
+      // PROD is true only when NODE_ENV is 'production'
+      expect(env.prod).toBe(process.env.NODE_ENV === 'production');
+      
+      // SSR should always be false in browser environment
       expect(env.ssr).toBe(false);
     });
   });
