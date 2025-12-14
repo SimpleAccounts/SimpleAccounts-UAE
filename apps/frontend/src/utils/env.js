@@ -4,14 +4,36 @@
  * Vite uses import.meta.env instead of process.env
  * This module provides a consistent interface for accessing environment variables
  * with fallbacks and type safety.
+ * 
+ * In Jest tests, import.meta is mocked via setupTests.js
  */
+
+// Helper to get import.meta.env safely (works in both Vite and Jest)
+const getMetaEnv = () => {
+  // In Vite runtime
+  if (typeof import !== 'undefined' && import.meta && import.meta.env) {
+    return import.meta.env;
+  }
+  // In Jest tests (mocked via globalThis.import)
+  if (typeof globalThis !== 'undefined' && globalThis.import && globalThis.import.meta && globalThis.import.meta.env) {
+    return globalThis.import.meta.env;
+  }
+  // Fallback
+  return {
+    MODE: 'development',
+    DEV: true,
+    PROD: false,
+    SSR: false,
+    BASE_URL: '/',
+  };
+};
 
 /**
  * Get the current environment mode
  * @returns {string} 'development' | 'production' | 'test'
  */
 export const getEnvMode = () => {
-  return import.meta.env.MODE || 'development';
+  return getMetaEnv().MODE || 'development';
 };
 
 /**
