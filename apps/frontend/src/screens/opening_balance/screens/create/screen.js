@@ -16,7 +16,7 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import _ from 'lodash';
 import { Loader ,LeavePage} from 'components';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { AuthActions,CommonActions } from 'services/global';
 import * as OpeningBalanceActions from '../../actions';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -142,7 +142,7 @@ class CreateOpeningBalance extends React.Component {
 		// };
 		let formData =new FormData()
 			formData.append(`persistModelList[${0}].transactionCategoryId`, data.transactionCategoryId.value);
-		    formData.append(`persistModelList[${0}].effectiveDate`, moment(data.effectiveDate));
+		    formData.append(`persistModelList[${0}].effectiveDate`, dayjs(data.effectiveDate));
 			formData.append(`persistModelList[${0}].openingBalance`, data.openingBalance);
 		
 			this.setState({ loading:true, disableLeavePage:true,loadingMsg:"Creating New Opening Balance..."});

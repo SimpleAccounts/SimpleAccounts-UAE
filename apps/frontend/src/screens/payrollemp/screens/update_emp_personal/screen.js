@@ -28,7 +28,7 @@ import LocalizedStrings from 'react-localization';
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import { selectOptionsFactory } from 'utils'
-import moment from 'moment'
+import dayjs from '@/utils/date'
 import { DesignationModal } from 'screens/payrollemp/sections';
 import * as DesignationActions from '../../../designation/actions'
 import { upperFirst } from 'lodash-es';
@@ -180,7 +180,7 @@ class UpdateEmployeePersonal extends React.Component {
                                 ? res.data.dob
                                 : '',
                             dateOfJoining: res.data.dateOfJoining
-                                ? moment(res.data.dateOfJoining, 'DD-MM-YYYY').toDate()
+                                ? dayjs(res.data.dateOfJoining, 'DD-MM-YYYY').toDate()
                                 : '',
                             gender: res.data.gender ? res.data.gender : '',
                             employeeCode:
@@ -443,7 +443,7 @@ class UpdateEmployeePersonal extends React.Component {
             'email',
             email !== null ? email : '',
         );
-        formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
+        formData.append('dob', dob ? dayjs(dob).format('DD-MM-YYYY') : '');
         formData.append('gender', gender);
 
         // formData.append('bloodGroup', bloodGroup);
@@ -532,7 +532,7 @@ class UpdateEmployeePersonal extends React.Component {
                     formData1.append('id', current_employee_id);
                     formData1.append('employee', current_employee_id);
                     formData1.append("employeeCode", employeeCode != null ? employeeCode : "");
-                    formData1.append('dateOfJoining', dateOfJoining ? moment(dateOfJoining).format('DD-MM-YYYY') : '');
+                    formData1.append('dateOfJoining', dateOfJoining ? dayjs(dateOfJoining).format('DD-MM-YYYY') : '');
                     this.props.detailEmployeePersonalAction
                     .updateEmployment(formData1).then(() => {
                         this.props.history.push('/admin/master/employee/viewEmployee',
@@ -554,7 +554,7 @@ class UpdateEmployeePersonal extends React.Component {
         })
     }
     underAge = (birthday) => {
-        birthday=moment(birthday).format('DD-MM-YYYY')
+        birthday=dayjs(birthday).format('DD-MM-YYYY')
         let dateArray = birthday.split("-")
         let birthdate = dateArray[1] + "/" + dateArray[0] + "/" + dateArray[2]
         // set current day on 01:00:00 hours GMT+0100 (CET)
@@ -572,9 +572,9 @@ class UpdateEmployeePersonal extends React.Component {
         if (dob && dob != "") {
             let date = dob.split("-")
             let d = date[1] + "/" + date[0] + "/" + date[2]
-            // console.log(new Date(moment(props.values.dob,'DD-MM-YYYY').format('MM-DD-YYYY')));
+            // console.log(new Date(dayjs(props.values.dob,'DD-MM-YYYY').format('MM-DD-YYYY')));
             return new Date(d);
-            // return new Date(moment(props.values.dob,'DD-MM-YYYY').format('MM-DD-YYYY'));
+            // return new Date(dayjs(props.values.dob,'DD-MM-YYYY').format('MM-DD-YYYY'));
         }
         else
             return new Date()
@@ -1012,12 +1012,12 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             placeholderText={strings.Select + strings.DateOfBirth}
                                                                                             showMonthDropdown
                                                                                             showYearDropdown
-                                                                                            maxDate={moment().subtract(18, "years").toDate()}
+                                                                                            maxDate={dayjs().subtract(18, "years").toDate()}
                                                                                             autoComplete={"off"}
                                                                                             dateFormat="dd-MM-yyyy"
                                                                                             dropdownMode="select"
-                                                                                            selected={this.selectedDate(moment(props.values.dob).format('DD-MM-YYYY'))}
-                                                                                            value={moment(props.values.dob,'DD-MM-YYYY').toDate()}
+                                                                                            selected={this.selectedDate(dayjs(props.values.dob).format('DD-MM-YYYY'))}
+                                                                                            value={dayjs(props.values.dob,'DD-MM-YYYY').toDate()}
                                                                                             onChange={(value) => {
                                                                                                 if (value) {
                                                                                                     props.handleChange("dob")(value)

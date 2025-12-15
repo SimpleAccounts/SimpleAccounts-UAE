@@ -15,7 +15,7 @@ import {
 } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';
 import { ExcelExport as XLSX } from 'utils';
@@ -58,8 +58,8 @@ class InvoiceDetails extends React.Component {
 			dropdownOpen: false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate: dayjs().startOf('month').format('DD/MM/YYYY'),
+				endDate: dayjs().endOf('month').format('DD/MM/YYYY'),
 			
 			},
 			csvData: [],
@@ -79,8 +79,8 @@ class InvoiceDetails extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD/MM/YYYY'),
-					endDate: moment(value.endDate).format('DD/MM/YYYY'),
+					startDate: dayjs(value.startDate).format('DD/MM/YYYY'),
+					endDate: dayjs(value.endDate).format('DD/MM/YYYY'),
 				},
 				loading: true,
 				view: !this.state.view,
@@ -171,10 +171,10 @@ class InvoiceDetails extends React.Component {
 		this.pdfExportComponent.save();
 	};
 	renderinvoiceDate = (cell, rows) => {
-		return moment(rows.creditNoteDate).format('DD-MM-YYYY');
+		return dayjs(rows.creditNoteDate).format('DD-MM-YYYY');
 	};
 	renderinvoiceDueDate = (cell, rows) => {
-		return moment(rows.invoiceDueDate).format('DD-MM-YYYY');
+		return dayjs(rows.invoiceDueDate).format('DD-MM-YYYY');
 	};
 	renderbalance = (cell, row, extraData) => {
 		return row.balance === 0 ? (
@@ -405,10 +405,10 @@ class InvoiceDetails extends React.Component {
 																	</td>
 																	<td style={{ textAlign: 'center pull-left'}}>{item.customerName}</td>
 																	<td style={{ textAlign: 'center'}}>{item.invoiceDate ? (
-																		moment(item.invoiceDate).format('DD-MM-YYYY')
+																		dayjs(item.invoiceDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
 																		<td style={{ textAlign: 'center'}}>{item.invoiceDueDate ? (
-																		moment(item.invoiceDueDate).format('DD-MM-YYYY')
+																		dayjs(item.invoiceDueDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
 																	<td style={{ textAlign: 'center pull-left' }}>{item.status}</td>
 																	<td style={{ textAlign: 'right' }}>

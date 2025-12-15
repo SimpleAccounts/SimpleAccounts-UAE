@@ -5,7 +5,7 @@ import { Button, FormGroup, Form, ButtonGroup } from 'reactstrap';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import * as ProductActions from '../../../product/actions';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 // import 'react-select/dist/react-select.css'
@@ -48,9 +48,9 @@ class InventorySummary extends React.Component {
       dropdownOpen: false,
       view: false,
       initValue: {
-        startDate: moment().startOf('month').format('DD/MM/YYYY'),
-        // endDate: moment().endOf('month').format('DD/MM/YYYY'),
-        endDate: moment().local().format('DD-MM-YYYY'),
+        startDate: dayjs().startOf('month').format('DD/MM/YYYY'),
+        // endDate: dayjs().endOf('month').format('DD/MM/YYYY'),
+        endDate: dayjs().local().format('DD-MM-YYYY'),
       },
       openModal: false,
       csvData: [],
@@ -88,7 +88,7 @@ class InventorySummary extends React.Component {
     this.setState(
       {
         initValue: {
-          endDate: moment(value.endDate).format('DD/MM/YYYY'),
+          endDate: dayjs(value.endDate).format('DD/MM/YYYY'),
         },
         loading: true,
         view: !this.state.view,

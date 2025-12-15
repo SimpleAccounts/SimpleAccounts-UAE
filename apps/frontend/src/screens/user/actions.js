@@ -1,6 +1,6 @@
 import { USER } from 'constants/types';
 import { authApi } from 'utils';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 export const getUserList = (obj) => {
 	// const value = (obj.active)  ? obj.active : true
@@ -15,7 +15,7 @@ export const getUserList = (obj) => {
 
 	let url = `/rest/user/getList?name=${name}&roleId=${roleId}&active=${active}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 	if (obj.dob) {
-		let date = moment(obj.dob).format('DD-MM-YYYY');
+		let date = dayjs(obj.dob).format('DD-MM-YYYY');
 		url = url + `&dob=${date}`;
 	}
 	return (dispatch) => {

@@ -12,7 +12,7 @@ import * as VatreportAction from './actions';
 import logo from 'assets/images/brand/logo.png';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import * as FinancialReportActions from '../../../../actions';
 import { AgGridReact } from 'ag-grid-react';
 import { Currency } from 'components';
@@ -188,7 +188,7 @@ class SubReports extends React.Component {
 
   renderDate = (cell, row) => {
     return cell
-      ? moment(cell).format('DD-MM-YYYY')
+      ? dayjs(cell).format('DD-MM-YYYY')
       : // .format('LL')
         '-';
   };
@@ -249,8 +249,8 @@ class SubReports extends React.Component {
   renderTaxReturns = (cell, row) => {
     let dateArr = cell ? cell.split(' ') : [];
 
-    let startDate = moment(dateArr[0]).format('DD-MM-YYYY');
-    let endDate = moment(dateArr[1]).format('DD-MM-YYYY');
+    let startDate = dayjs(dateArr[0]).format('DD-MM-YYYY');
+    let endDate = dayjs(dateArr[1]).format('DD-MM-YYYY');
 
     return <>{dateArr[0].replaceAll('/', '-')}</>;
   };

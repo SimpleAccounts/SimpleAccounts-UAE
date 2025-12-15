@@ -28,7 +28,7 @@ import { EditorState } from 'draft-js';
 import { selectOptionsFactory } from 'utils';
 import DatePicker from 'react-datepicker';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { bindActionCreators } from 'redux';
 import { CommonActions } from 'services/global';
 
@@ -148,7 +148,7 @@ class InventoryHistoryModal extends React.Component {
 		});
 	}
 	renderDate = (cell, rows) => {
-		return moment(rows.date).format('DD/MM/YYYY');
+		return dayjs(rows.date).format('DD/MM/YYYY');
 	};
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();

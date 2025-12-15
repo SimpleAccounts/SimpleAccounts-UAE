@@ -34,7 +34,7 @@ import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { TextareaAutosize } from '@material-ui/core';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -218,7 +218,7 @@ class DetailRequestForQuotation extends React.Component {
 								current_rfq_id: this.props.location.state.id,
 								initValue: {
 									rfqReceiveDate: res.data.rfqReceiveDate
-										? moment(res.data.rfqReceiveDate).format('DD-MM-YYYY')
+										? dayjs(res.data.rfqReceiveDate).format('DD-MM-YYYY')
 										: '',
 										rfqReceiveDate1: res.data.rfqReceiveDate
 										? res.data.rfqReceiveDate
@@ -227,7 +227,7 @@ class DetailRequestForQuotation extends React.Component {
 										? res.data.receiptNumber
 										: '',
 										rfqExpiryDate: res.data.rfqExpiryDate
-										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+										? dayjs(res.data.rfqExpiryDate).format('DD-MM-YYYY')
 										: '',
 										rfqExpiryDate1: res.data.rfqExpiryDate
 										?  res.data.rfqExpiryDate
@@ -252,10 +252,10 @@ class DetailRequestForQuotation extends React.Component {
 										taxType : res.data.taxType ? true : false,
 								},
 										rfqExpiryDateNoChange: res.data.rfqExpiryDate
-										?  moment(res.data.rfqExpiryDate)
+										?  dayjs(res.data.rfqExpiryDate)
 										: '',
 										rfqReceiveDateNoChange: res.data.rfqReceiveDate
-										? moment(res.data.rfqReceiveDate)
+										? dayjs(res.data.rfqReceiveDate)
 										: '',	
 										rfqReceiveDate: res.data.rfqReceiveDate
 										? res.data.rfqReceiveDate
@@ -1383,7 +1383,7 @@ class DetailRequestForQuotation extends React.Component {
 			: props.values.rfqReceiveDate1
 		if (values1 ) {
 			this.setState({
-				rfqReceiveDate: moment(values1),
+				rfqReceiveDate: dayjs(values1),
 			});
 			props.setFieldValue('rfqReceiveDate1', values1, true);
 		}
@@ -1398,7 +1398,7 @@ setDate1= (props, value) => {
 	if ( values2) {
 
 		this.setState({
-			rfqExpiryDate: moment(values2),
+			rfqExpiryDate: dayjs(values2),
 		});
 		props.setFieldValue('rfqExpiryDate1', values2, true);
 	
@@ -1604,7 +1604,7 @@ setDate1= (props, value) => {
 															         errors.placeOfSupplyId ='Place of supply is required';
 													}
 
-													if(values.rfqReceiveDate && values.rfqExpiryDate && (new Date(moment(values.rfqReceiveDate1).format('MM DD YYYY')) > new Date(moment(values.rfqExpiryDate1).format('MM DD YYYY')))){
+													if(values.rfqReceiveDate && values.rfqExpiryDate && (new Date(dayjs(values.rfqReceiveDate1).format('MM DD YYYY')) > new Date(dayjs(values.rfqExpiryDate1).format('MM DD YYYY')))){
 														errors.rfqExpiryDate='Expiry date should be later than the issue date';
 														errors.rfqReceiveDate='Issue date should be earlier than the expiration date';
 													}

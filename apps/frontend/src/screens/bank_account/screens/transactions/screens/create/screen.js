@@ -18,7 +18,7 @@ import DatePicker from "react-datepicker";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import { CommonActions } from "services/global";
-import moment from "moment";
+import dayjs from '@/utils/date';
 import * as transactionCreateActions from "./actions";
 import * as transactionActions from "../../actions";
 import * as detailBankAccountActions from "../../../detail/actions";
@@ -185,10 +185,10 @@ class CreateBankTransaction extends React.Component {
           this.setState(
             {
               date: res.openingDate
-                ? moment(res.openingDate).format("MM/DD/YYYY")
+                ? dayjs(res.openingDate).format("MM/DD/YYYY")
                 : "",
               reconciledDate: res.lastReconcileDate
-                ? moment(res.lastReconcileDate).format("MM/DD/YYYY")
+                ? dayjs(res.lastReconcileDate).format("MM/DD/YYYY")
                 : "",
               bankCurrency: res.bankAccountCurrency ? res : "",
             },
@@ -230,7 +230,7 @@ class CreateBankTransaction extends React.Component {
           let list = [];
           res.data = res.data && res.data.data.length > 0 ? res.data.data.filter(obj => obj.status === 'Filed') : [];
           res.data && res.data.length > 0 && res.data.map((obj, index) => {
-            var label = moment(obj.startDate).format('DD-MM-YYYY') + ' To ' + moment(obj.endDate).format('DD-MM-YYYY')
+            var label = dayjs(obj.startDate).format('DD-MM-YYYY') + ' To ' + dayjs(obj.endDate).format('DD-MM-YYYY')
             var value = index;
             list.push({ 'label': label, 'value': value })
           })
@@ -1222,7 +1222,7 @@ class CreateBankTransaction extends React.Component {
                             );
 
                             if (
-                              moment(values.transactionDate).diff(
+                              dayjs(values.transactionDate).diff(
                                 new Date(info.taxFiledOn),
                                 "seconds"
                               ) < 0
@@ -1232,7 +1232,7 @@ class CreateBankTransaction extends React.Component {
                             }
                           }
 
-                          const date = moment(values.transactionDate).format(
+                          const date = dayjs(values.transactionDate).format(
                             "MM/DD/YYYY"
                           );
                           const date1 = new Date(date);
@@ -1386,8 +1386,8 @@ class CreateBankTransaction extends React.Component {
                               errors.transactionAmount = `Enter Amount`;
                             }
                             values.invoiceIdList.map((i1) => {
-                              const transactionDate = moment(values.transactionDate);
-                              const invoiceDate = moment(i1.invoiceDate);
+                              const transactionDate = dayjs(values.transactionDate);
+                              const invoiceDate = dayjs(i1.invoiceDate);
 
                               console.log(transactionDate.format("MM/DD/YYYY") + '-' + invoiceDate.format("MM/DD/YYYY"));
                               
@@ -1420,8 +1420,8 @@ class CreateBankTransaction extends React.Component {
                           }
                           if (values.transactionDate) {
                             this.state.selectedPayrollListBank.forEach((payrollItem) => {
-                              const payrollDate = moment(payrollItem.runDate).startOf('day');
-                              const transactionDate = moment(values.transactionDate).startOf('day');
+                              const payrollDate = dayjs(payrollItem.runDate).startOf('day');
+                              const transactionDate = dayjs(values.transactionDate).startOf('day');
 
                               if (transactionDate.isBefore(payrollDate)) {
                                 errors.transactionDate = "Transaction Date cannot be earlier than the payroll approval date.";
@@ -2680,7 +2680,7 @@ class CreateBankTransaction extends React.Component {
                                               disabled
                                               id="1"
                                               name="1"
-                                              value={moment(
+                                              value={dayjs(
                                                 i.invoiceDate
                                               ).format("DD-MM-YYYY")}
                                             />

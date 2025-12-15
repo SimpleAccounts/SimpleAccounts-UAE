@@ -33,7 +33,7 @@ import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { TextareaAutosize } from '@material-ui/core';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -192,7 +192,7 @@ class DetailGoodsReceivedNote extends React.Component {
 								current_grn_id: this.props.location.state.id,
 								initValue: {
 									grnReceiveDate: res.data.grnReceiveDate
-										? moment(res.data.grnReceiveDate).format('DD-MM-YYYY')
+										? dayjs(res.data.grnReceiveDate).format('DD-MM-YYYY')
 										: '',
 										grnReceiveDate1: res.data.grnReceiveDate
 										? res.data.grnReceiveDate
@@ -219,7 +219,7 @@ class DetailGoodsReceivedNote extends React.Component {
 								},
 								poNumber : res.data.poNumber ? res.data.poNumber : '',
 								grnReceiveDateNotChanged: res.data.grnReceiveDate
-										? moment(res.data.grnReceiveDate)
+										? dayjs(res.data.grnReceiveDate)
 										: '',
 								grnReceiveDate: res.data.grnReceiveDate
 										? res.data.grnReceiveDate
@@ -1203,7 +1203,7 @@ min="0"
 			: props.values.grnReceiveDate1
 		if (values1 ) {
 			this.setState({
-				grnReceiveDate: moment(values1),
+				grnReceiveDate: dayjs(values1),
 			});
 			props.setFieldValue('grnReceiveDate1', values1, true);
 		}

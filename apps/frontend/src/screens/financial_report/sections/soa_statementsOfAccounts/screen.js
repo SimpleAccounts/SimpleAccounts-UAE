@@ -27,7 +27,7 @@ import { Formik } from 'formik';
 
 
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';
 import { ExcelExport as XLSX } from 'utils';
@@ -112,8 +112,8 @@ class SOAReport extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD/MM/YYYY'),
-					endDate: moment(value.endDate).format('DD/MM/YYYY'),
+					startDate: dayjs(value.startDate).format('DD/MM/YYYY'),
+					endDate: dayjs(value.endDate).format('DD/MM/YYYY'),
 				},
 				customerName:this.state.contactId && this.state.contactId.label ? this.state.contactId.label:'',
 			},
@@ -210,13 +210,13 @@ this.props.financialReportActions
 		this.pdfExportComponent.save();
 	};
 	renderinvoiceDate = (cell, rows) => {
-		return moment(rows.invoiceDate).format('DD-MM-YYYY');
+		return dayjs(rows.invoiceDate).format('DD-MM-YYYY');
 	};
 	renderDate = (cell, rows) => {
 		if(rows.invoiceNumber=="Total Balance Due")		
 		return ("")
 		else
-		return moment(rows.date).format('DD-MM-YYYY');
+		return dayjs(rows.date).format('DD-MM-YYYY');
 	};
 	renderbalance = (cell, row, extraData) => {
 		return row.balance === 0 ? (
@@ -431,7 +431,7 @@ this.props.financialReportActions
 													showYearDropdown
 													autoComplete="off"
 													// maxDate={new Date()}
-													value={props.values.startDate!="" ?moment(props.values.startDate).format("DD-MM-YYYY"):""}
+													value={props.values.startDate!="" ?dayjs(props.values.startDate).format("DD-MM-YYYY"):""}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
 											
@@ -453,7 +453,7 @@ this.props.financialReportActions
 													placeholderText="To"
 													showMonthDropdown
 													showYearDropdown
-													value={props.values.endDate!="" ?moment(props.values.endDate).format("DD-MM-YYYY"):""}
+													value={props.values.endDate!="" ?dayjs(props.values.endDate).format("DD-MM-YYYY"):""}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
 						

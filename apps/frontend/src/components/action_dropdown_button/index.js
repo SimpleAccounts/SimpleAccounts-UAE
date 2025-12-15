@@ -9,7 +9,6 @@ import {
     DropdownItem,
 } from 'reactstrap';
 import { bindActionCreators } from 'redux';
-import moment from 'moment';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { data } from 'screens/Language/index'

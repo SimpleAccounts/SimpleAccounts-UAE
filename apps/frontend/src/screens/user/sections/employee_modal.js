@@ -20,7 +20,7 @@ import * as Yup from 'yup';
 
 import { toast } from 'react-toastify';
  
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 
 class EmployeeModal extends React.Component {
@@ -114,7 +114,7 @@ class EmployeeModal extends React.Component {
 		// 	lastName: data.lastName,
 		// 	middleName: data.middleName,
 		// 	email: data.email,
-		// 	dob: moment(data.dob, 'DD-MM-YYYY').toDate(),
+		// 	dob: dayjs(data.dob, 'DD-MM-YYYY').toDate(),
 		// }
 		this.props
 			.createEmployee(formData)

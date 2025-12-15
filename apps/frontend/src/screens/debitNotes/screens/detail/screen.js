@@ -36,7 +36,7 @@ import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory, renderList } from 'utils';
 
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import Switch from "react-switch";
 import API_ROOT_URL from '../../../../constants/config';
 import { data } from '../../../Language/index'
@@ -935,7 +935,7 @@ class DetailDebitNote extends React.Component {
 		formData.append('isCreatedWIWP', this.state.isDNWIWithoutProduct);
 		formData.append('creditNoteNumber', debitNoteNumber ? debitNoteNumber : '',);
 		formData.append('email', email ? email : '',);
-		formData.append('creditNoteDate', invoiceDate ? moment(invoiceDate) : new Date());
+		formData.append('creditNoteDate', invoiceDate ? dayjs(invoiceDate) : new Date());
 		formData.append('referenceNo', referenceNumber !== null ? referenceNumber : '',);
 		formData.append('exchangeRate', exchangeRate ? exchangeRate : 1);
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '',);
@@ -1055,7 +1055,7 @@ class DetailDebitNote extends React.Component {
 							value: response.data.contactId,
 						}
 						this.setState({
-							receiptDate: response.data.receiptDate ? new Date(moment(response.data.receiptDate, 'YYYY-MM-DD').format()) : new Date(),
+							receiptDate: response.data.receiptDate ? new Date(dayjs(response.data.receiptDate, 'YYYY-MM-DD').format()) : new Date(),
 							option: custmerName,
 							isReverseChargeEnabled: response.data.isReverseChargeEnabled,
 							data: response.data.invoiceLineItems ? response.data.invoiceLineItems : [],
@@ -1390,7 +1390,7 @@ class DetailDebitNote extends React.Component {
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
-																				// value={moment(props.values.invoiceDate).format('DD-MM-YYYY')}
+																				// value={dayjs(props.values.invoiceDate).format('DD-MM-YYYY')}
 																				minDate={this.state.receiptDate}
 																				selected={props.values.invoiceDate}
 																				onChange={(value) => {

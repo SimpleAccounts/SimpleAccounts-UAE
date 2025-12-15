@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardBody, Table } from 'reactstrap';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../../Language/index'
@@ -209,9 +209,9 @@ class RFQTemplate extends Component {
 							<div className="mb-1 ml-2"><b>{strings.QuotationNo}:</b> {QuotationData.quotationNumber}</div>
 							{QuotationData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo}: </b>{QuotationData.receiptNumber}</div>)}
 							<div className="mb-1 ml-2"><b>{strings.Created_Date}: </b>{' '}
-								{moment(QuotationData.quotationdate).format('DD-MM-YYYY')}</div>
+								{dayjs(QuotationData.quotationdate).format('DD-MM-YYYY')}</div>
 							<div className="mb-1 ml-2"><b>{strings.ExpirationDate }: </b>
-								{moment(QuotationData.quotaionExpiration).format('DD-MM-YYYY')}</div>
+								{dayjs(QuotationData.quotaionExpiration).format('DD-MM-YYYY')}</div>
 							<div className=" ml-2"><b>{strings.Status}: </b>{this.renderQuotationStatus(QuotationData.status)}</div>
 							{/* <div className="mb-1 ml-2"><b>{strings.Exchangerate}: </b>{QuotationData.exchangeRate}</div><br /><br/> */}
 							</div>
@@ -223,7 +223,7 @@ class RFQTemplate extends Component {
 								style={{textAlign: 'center'}}
 								className={'mt-3 mb-2'}
 								>	{strings.ExpirationDate }:{' '}
-								{moment(QuotationData.quotaionExpiration).format(
+								{dayjs(QuotationData.quotaionExpiration).format(
 									'DD MMM YYYY',
 								)}
 								</h6>
@@ -247,7 +247,7 @@ class RFQTemplate extends Component {
 								style={{textAlign: 'center'}}
 								className={'mt-3 mb-2'}
 								>	<b>{strings.Created_Date} : </b>{' '}
-								{moment(QuotationData.createdDate).format(
+								{dayjs(QuotationData.createdDate).format(
 									'DD MMM YYYY',
 								)}
 								</h6>
@@ -263,7 +263,7 @@ class RFQTemplate extends Component {
 								style={{textAlign: 'center'}}
 								className={'mt-3 mb-2'}
 								><b>{strings.ExpirationDate } : </b>{' '}
-								{moment(QuotationData.quotaionExpiration).format(
+								{dayjs(QuotationData.quotaionExpiration).format(
 									'DD MMM YYYY',
 								)}
 								</h6>

@@ -22,7 +22,7 @@ import Select from 'react-select';
 import { LeavePage, Loader, ImageUploader } from 'components';
 import { selectOptionsFactory, cryptoService, selectCurrencyFactory, api,} from 'utils';
 import DatePicker from 'react-datepicker';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import * as ProfileActions from './actions';
@@ -253,7 +253,7 @@ class Profile extends React.Component {
 								confirmPassword:'',
 								currentPassword:'',
 								dob: res.data.dob
-									? moment(res.data.dob, 'DD-MM-YYYY').toDate()
+									? dayjs(res.data.dob, 'DD-MM-YYYY').toDate()
 									: '',
 								active: res.data.active ? res.data.active : '',
 								// confirmPassword: '',
@@ -310,7 +310,7 @@ class Profile extends React.Component {
 		formData.append('firstName', firstName ? firstName : '');
 		formData.append('lastName', lastName ? lastName : '');
 		formData.append('email', email ? email : '');
-		formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
+		formData.append('dob', dob ? dayjs(dob).format('DD-MM-YYYY') : '');
 		formData.append('active', this.state.selectedStatus);
 		formData.append('timeZone', timezone ? timezone : '');
 		formData.append('roleId', roleId ? roleId : '');
@@ -540,7 +540,7 @@ class Profile extends React.Component {
 	// 				var dates = [];
 	// 				let len= res.data.data.length;
 	// 				for (let i = 0; i < len; i++) {
-	// 					dates.push(new Date( moment(res.data.data[i].transactionDate, 'DD MM YYYY').toDate()));
+	// 					dates.push(new Date( dayjs(res.data.data[i].transactionDate, 'DD MM YYYY').toDate()));
 	// 				  }
 	// 				const maxDate = new Date(
 	// 					Math.min(
@@ -672,8 +672,12 @@ class Profile extends React.Component {
 		formData.append('isRegisteredVat', isRegisteredVat ? isRegisteredVat : 0);
 
 		
-		if(vatRegistrationDate && vatRegistrationDate!="Invalid date")
-		formData.append('vatRegistrationDate',vatRegistrationDate !== null ? moment(vatRegistrationDate) : '',);
+		if(vatRegistrationDate && vatRegistrationDate !== "Invalid date") {
+			const formattedDate = dayjs(vatRegistrationDate);
+			if (formattedDate.isValid()) {
+				formData.append('vatRegistrationDate', formattedDate.format('YYYY-MM-DD'));
+			}
+		}
 		formData.append('fax', fax ? fax : '');
 		formData.append('telephoneNumber', telephoneNumber ? telephoneNumber : '');
 		formData.append('currencyCode', currencyCode ? currencyCode : '');
@@ -1006,12 +1010,12 @@ class Profile extends React.Component {
 																								dateFormat="dd-MM-yyyy"
 																								dropdownMode="select"
 																								placeholderText={strings.Select+strings.DateOfBirth}
-																								maxDate={moment().subtract(18, "years").toDate()}
+																								maxDate={dayjs().subtract(18, "years").toDate()}
 																								autoComplete="off"
 																								// selected={props.values.dob}
 																								value={
 																									props.values.dob
-																										? moment(
+																										? dayjs(
 																											props.values.dob,
 																										).format('DD-MM-YYYY')
 																										: ''
@@ -2442,10 +2446,10 @@ class Profile extends React.Component {
 																								dropdownMode="select"
 																								minDate={new Date("01/01/2018")}
 																								//maxDate={this.state.transaction_first_date}
-																								// value={props.values.vatRegistrationDate ?moment(
+																								// value={props.values.vatRegistrationDate ?dayjs(
 																								// 	props.values.vatRegistrationDate,
 																								// ).format('DD-MM-YYYY'):""}
-																								selected={props.values.vatRegistrationDate ? new Date (moment(props.values.vatRegistrationDate).format('MM DD YYYY')) : ""}
+																								selected={props.values.vatRegistrationDate ? new Date (dayjs(props.values.vatRegistrationDate).format('MM DD YYYY')) : ""}
 																								onChange={(value) => {
 																									props.handleChange('vatRegistrationDate')(value);
 																								}}

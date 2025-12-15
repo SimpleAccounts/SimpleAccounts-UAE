@@ -1,6 +1,6 @@
 import { EXPENSE } from 'constants/types';
 import { authApi } from 'utils';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 export const getExpenseList = (obj) => {
 	let payee = obj.payee ? obj.payee.value : '';
@@ -17,7 +17,7 @@ export const getExpenseList = (obj) => {
 	return (dispatch) => {
 		let param = `/rest/expense/getList?payee=${payee}&transactionCategoryId=${transactionCategoryId}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 		if (expenseDate) {
-			let date = moment(expenseDate).format('YYYY-MM-DD');
+			let date = dayjs(expenseDate).format('YYYY-MM-DD');
 			param = param + `&expenseDate=${date}`;
 		}
 		let data = {

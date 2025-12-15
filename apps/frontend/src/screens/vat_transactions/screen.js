@@ -16,7 +16,7 @@ import {
 
 import Select from 'react-select';
 import { DateRangePicker2, Currency } from 'components';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import * as VatTransactionActions from './actions';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -124,13 +124,13 @@ const tempdata = [
 ];
 
 const ranges = {
-	'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-	'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-	'This Week': [moment().startOf('week'), moment().endOf('week')],
-	'This Month': [moment().startOf('month'), moment().endOf('month')],
+	'Last 7 Days': [dayjs().subtract(6, 'days'), dayjs()],
+	'Last 30 Days': [dayjs().subtract(29, 'days'), dayjs()],
+	'This Week': [dayjs().startOf('week'), dayjs().endOf('week')],
+	'This Month': [dayjs().startOf('month'), dayjs().endOf('month')],
 	'Last Month': [
-		moment().subtract(1, 'month').startOf('month'),
-		moment().subtract(1, 'month').endOf('month'),
+		dayjs().subtract(1, 'month').startOf('month'),
+		dayjs().subtract(1, 'month').endOf('month'),
 	],
 };
 
@@ -285,8 +285,8 @@ class VatTransactions extends React.Component {
 	};
 	renderDate = (cell, row) => {
 		return typeof row['effectiveDate'] === 'string'
-		? moment(row['effectiveDate'], 'DD-MM-YYYY').format('DD-MM-YYYY')
-		: moment(row['effectiveDate']).format('DD-MM-YYYY');
+		? dayjs(row['effectiveDate'], 'DD-MM-YYYY').format('DD-MM-YYYY')
+		: dayjs(row['effectiveDate']).format('DD-MM-YYYY');
 	};
 
 	render() {
@@ -296,7 +296,7 @@ class VatTransactions extends React.Component {
 		// 		? this.props.vat_transaction_list.data.map((data) => ({
 		// 				id: data.id,
 		// 				amount: data.amount,
-		// 				date: data.date ? moment(data.date).format('DD-MM-YYYY') : '',
+		// 				date: data.date ? dayjs(data.date).format('DD-MM-YYYY') : '',
 		// 				referenceType: data.referenceType,
 		// 				vatAmount: data.vatAmount,
 		// 				vatType: data.vatType,

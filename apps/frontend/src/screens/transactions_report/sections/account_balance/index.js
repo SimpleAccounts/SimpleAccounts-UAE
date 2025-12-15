@@ -13,7 +13,7 @@ import {
 
 import Select from 'react-select';
 import { DateRangePicker2, Currency } from 'components';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 
@@ -65,13 +65,13 @@ const customStyles = {
 // ]
 
 const ranges = {
-	'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-	'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-	'This Week': [moment().startOf('week'), moment().endOf('week')],
-	'This Month': [moment().startOf('month'), moment().endOf('month')],
+	'Last 7 Days': [dayjs().subtract(6, 'days'), dayjs()],
+	'Last 30 Days': [dayjs().subtract(29, 'days'), dayjs()],
+	'This Week': [dayjs().startOf('week'), dayjs().endOf('week')],
+	'This Month': [dayjs().startOf('month'), dayjs().endOf('month')],
 	'Last Month': [
-		moment().subtract(1, 'month').startOf('month'),
-		moment().subtract(1, 'month').endOf('month'),
+		dayjs().subtract(1, 'month').startOf('month'),
+		dayjs().subtract(1, 'month').endOf('month'),
 	],
 };
 
@@ -95,8 +95,8 @@ class AccountBalances extends React.Component {
 				endDate: '',
 			},
 			initValue: {
-				startDate: moment().startOf('month').format('DD-MM-YYYY'),
-				endDate: moment().endOf('month').format('DD-MM-YYYY'),
+				startDate: dayjs().startOf('month').format('DD-MM-YYYY'),
+				endDate: dayjs().endOf('month').format('DD-MM-YYYY'),
 			},
 		};
 	}
@@ -138,11 +138,11 @@ class AccountBalances extends React.Component {
 					: '',
 			startDate:
 				this.state.filterData.startDate !== ''
-					? moment(this.state.filterData.startDate).format('DD-MM-YYYY')
+					? dayjs(this.state.filterData.startDate).format('DD-MM-YYYY')
 					: '',
 			endDate:
 				this.state.filterData.endDate !== ''
-					? moment(this.state.filterData.endDate).format('DD-MM-YYYY')
+					? dayjs(this.state.filterData.endDate).format('DD-MM-YYYY')
 					: '',
 		};
 		this.props.accountBalanceData.getAccountBalanceReport(postObj);
@@ -173,7 +173,7 @@ class AccountBalances extends React.Component {
 					transactionDescription: account.transactionDescription,
 					transactionCategory: account.transactionCategory,
 					transactionAmount: account.transactionAmount,
-					transactionDate: moment(account.transactionDate).format('DD-MM-YYYY'),
+					transactionDate: dayjs(account.transactionDate).format('DD-MM-YYYY'),
 					transactionId: account.transactionId,
 			  }))
 			: '';

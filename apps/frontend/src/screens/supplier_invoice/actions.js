@@ -1,6 +1,6 @@
 import { SUPPLIER_INVOICE } from 'constants/types';
 import { authApi } from 'utils';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 export const getSupplierInvoiceList = (postObj) => {
 	let supplierId = postObj.supplierId ? postObj.supplierId.value : '';
@@ -21,11 +21,11 @@ export const getSupplierInvoiceList = (postObj) => {
 	return (dispatch) => {
 		let param = `/rest/invoice/getList?contact=${supplierId}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 		if (invoiceDate) {
-			let date = moment(invoiceDate).format('YYYY-MM-DD');
+			let date = dayjs(invoiceDate).format('YYYY-MM-DD');
 			param = param + `&invoiceDate=${date}`;
 		}
 		if (invoiceDueDate) {
-			let date = moment(invoiceDueDate).format('YYYY-MM-DD');
+			let date = dayjs(invoiceDueDate).format('YYYY-MM-DD');
 			param = param + `&invoiceDueDate=${date}`;
 		}
 		let data = {

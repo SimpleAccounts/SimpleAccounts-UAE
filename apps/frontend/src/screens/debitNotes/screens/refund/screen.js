@@ -25,7 +25,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
@@ -77,7 +77,7 @@ class DebitNoteRefund extends React.Component {
 				attachmentFile: '',
 				receiptNumber: this.props.location.state.id.creditNoteNumber ? this.props.location.state.id.creditNoteNumber : '',
 				invoiceNumber: this.props.location.state.id.invNumber ? this.props.location.state.id.invNumber : '',
-				debitNoteDate: this.props.location.state.id.creditNoteDate ? new Date(moment(this.props.location.state.id.creditNoteDate,'DD-MM-YYYY').format()) : '',
+				debitNoteDate: this.props.location.state.id.creditNoteDate ? new Date(dayjs(this.props.location.state.id.creditNoteDate,'DD-MM-YYYY').format()) : '',
 			},
 			amount: this.props.location.state.id.dueAmount,
 			invoiceId: this.props.location.state.id.id,
@@ -156,7 +156,7 @@ class DebitNoteRefund extends React.Component {
 			formData.append(
 				'paymentDate',
 				typeof paymentDate === 'string'
-					? moment(paymentDate, 'DD/MM/YYYY').toDate()
+					? dayjs(paymentDate, 'DD/MM/YYYY').toDate()
 					: paymentDate,
 			);
 			this.setState({ loading: true, loadingMsg: "Credit Refunding..." });
@@ -190,7 +190,7 @@ class DebitNoteRefund extends React.Component {
 			formData.append(
 				'paymentDate',
 				typeof paymentDate === 'string'
-					? moment(paymentDate, 'DD/MM/YYYY').toDate()
+					? dayjs(paymentDate, 'DD/MM/YYYY').toDate()
 					: paymentDate,
 			);
 			formData.append('payMode', payMode !== null ? payMode.value : '');

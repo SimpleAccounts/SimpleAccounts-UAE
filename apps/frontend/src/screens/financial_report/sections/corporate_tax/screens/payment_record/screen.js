@@ -20,7 +20,7 @@ import * as Yup from 'yup';
 import * as CTReportActions from '../../actions';
 import { Loader, LeavePage } from 'components';
 import { CommonActions } from 'services/global';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { data } from '../../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -125,7 +125,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 			referenceNumber,
 		} = data;
 		const postData={
-			paymentDate: paymentDate ? moment(paymentDate).format('DD/MM/YYYY') : '',
+			paymentDate: paymentDate ? dayjs(paymentDate).format('DD/MM/YYYY') : '',
 			amountPaid:amountPaid !== null ? parseFloat(amountPaid) : '',
 			refereNumber:referenceNumber !== null ? referenceNumber : '',
 			depositToTransactionCategoryId: paidThrough !== null ? paidThrough.value : '',
@@ -134,8 +134,8 @@ class CorporateTaxPaymentRecord extends React.Component {
 		}
 
 		// let formData = new FormData();
-		// //formData.append('paymentDate', typeof paymentDate === 'string' ? moment(paymentDate, 'DD-MM-YYYY').toDate() : paymentDate,);
-		// formData.append('paymentDate', moment(paymentDate, 'DD-MM-YYYY'));
+		// //formData.append('paymentDate', typeof paymentDate === 'string' ? dayjs(paymentDate, 'DD-MM-YYYY').toDate() : paymentDate,);
+		// formData.append('paymentDate', dayjs(paymentDate, 'DD-MM-YYYY'));
 		// formData.append('amountPaid', amountPaid !== null ? amountPaid : '');
 		// formData.append('totalAmount', totalAmount !== null ? totalAmount : 0);
 		// formData.append('notes', notes !== null ? notes : '');

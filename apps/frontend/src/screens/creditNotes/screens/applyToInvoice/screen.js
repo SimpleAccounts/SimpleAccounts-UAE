@@ -25,7 +25,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { L } from 'react-ladda/dist/constants';
@@ -228,7 +228,7 @@ class ApplyToInvoice extends React.Component {
 		}
 	};
 	renderDate = (cell, rows) => {
-		return moment(rows.date).format('DD-MM-YYYY');
+		return dayjs(rows.date).format('DD-MM-YYYY');
 	};
 	renderCredittaken = (cell, row, extraData) => {
 		return (

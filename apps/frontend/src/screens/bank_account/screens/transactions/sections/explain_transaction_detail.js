@@ -24,7 +24,7 @@ import * as detailBankAccountActions from "./../../detail/actions";
 import { CommonActions } from "services/global";
 import "./style.scss";
 import { Loader, ConfirmDeleteModal } from "components";
-import moment from "moment";
+import dayjs from '@/utils/date';
 import { selectOptionsFactory, selectCurrencyFactory } from "utils";
 import { data } from "../../../../Language/index";
 import LocalizedStrings from "react-localization";
@@ -826,7 +826,7 @@ class ExplainTrasactionDetail extends React.Component {
       this.state.explanationId ? this.state.explanationId : ""
     );
     formData.append("bankId ", this.props.bankId ? this.props.bankId : "");
-    formData.append("date", moment(transactionDate));
+    formData.append("date", dayjs(transactionDate));
     formData.append("exchangeRate", exchangeRate ? exchangeRate : 1);
 
     if (
@@ -1096,7 +1096,7 @@ class ExplainTrasactionDetail extends React.Component {
     let formData = new FormData();
     for (var key in this.state.unexplainValue) {
       formData.append(key, this.state.unexplainValue[key]);
-      formData.set("date", moment(this.state.unexplainValue["date"]));
+      formData.set("date", dayjs(this.state.unexplainValue["date"]));
       formData.set(
         "explainParamListStr",
         JSON.stringify(this.state.unexplainValue["explainParamList"])
@@ -1945,7 +1945,7 @@ class ExplainTrasactionDetail extends React.Component {
                                       showYearDropdown
                                       dateFormat="DD-MM-YYYY"
                                       dropdownMode="select"
-                                      value={moment(props.values.transactionDate).format("DD-MM-YYYY")}
+                                      value={dayjs(props.values.transactionDate).format("DD-MM-YYYY")}
                                         onChange={(value) =>
                                           props.handleChange("transactionDate")(value)
                                         }
@@ -3376,7 +3376,7 @@ class ExplainTrasactionDetail extends React.Component {
                                                 disabled
                                                 id="1"
                                                 name="1"
-                                                value={moment(
+                                                value={dayjs(
                                                   i.invoiceDate
                                                 ).format("DD-MM-YYYY")}
                                               />

@@ -34,7 +34,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -203,13 +203,13 @@ class DetailPurchaseOrder extends React.Component {
 								current_po_id: this.props.location.state.id,
 								initValue: {
 									poApproveDate: res.data.poApproveDate
-										? moment(res.data.poApproveDate).format('DD-MM-YYYY')
+										? dayjs(res.data.poApproveDate).format('DD-MM-YYYY')
 										: '',
 										poApproveDate1: res.data.poApproveDate
 										? res.data.poApproveDate
 										: '',
 										poReceiveDate: res.data.poReceiveDate
-										? moment(res.data.poReceiveDate).format('DD-MM-YYYY')
+										? dayjs(res.data.poReceiveDate).format('DD-MM-YYYY')
 										: '',
 										poReceiveDate1: res.data.poReceiveDate
 										? res.data.poReceiveDate
@@ -240,10 +240,10 @@ class DetailPurchaseOrder extends React.Component {
 								},
 								discountEnabled : res.data.discount > 0 ? true : false,
 								poApproveDateNotChanged : res.data.poApproveDate
-								? moment(res.data.poApproveDate)
+								? dayjs(res.data.poApproveDate)
 								: '',
 								poReceiveDateNotChanged: res.data.poReceiveDate
-								? moment(res.data.poReceiveDate)
+								? dayjs(res.data.poReceiveDate)
 								: '',
 								poApproveDate: res.data.poApproveDate
 								? res.data.poApproveDate
@@ -1556,7 +1556,7 @@ class DetailPurchaseOrder extends React.Component {
 		const values1 = value ? value : '';
 		if (values1 ) {
 			this.setState({
-				poApproveDate: moment(values1),
+				poApproveDate: dayjs(values1),
 			});
 			props.setFieldValue('poApproveDate1', values1, true);
 		 }
@@ -1770,7 +1770,7 @@ class DetailPurchaseOrder extends React.Component {
 																   ) 
 															         errors.placeOfSupplyId ='Place of supply is required';
 													}
-													if(values.poApproveDate && values.poReceiveDate && (new Date(moment(values.poApproveDate1).format('MM DD YYYY')) > new Date(moment(values.poReceiveDate1).format('MM DD YYYY')))){
+													if(values.poApproveDate && values.poReceiveDate && (new Date(dayjs(values.poApproveDate1).format('MM DD YYYY')) > new Date(dayjs(values.poReceiveDate1).format('MM DD YYYY')))){
 														errors.poReceiveDate='Expiry date should be later than the issue date';
 														errors.poApproveDate='Issue date should be earlier than the expiration date';
 													}

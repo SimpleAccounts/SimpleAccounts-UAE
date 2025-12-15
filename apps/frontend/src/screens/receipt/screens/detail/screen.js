@@ -17,7 +17,7 @@ import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import moment from 'moment'
+import dayjs from '@/utils/date'
 import { CommonActions } from 'services/global'
 import { selectOptionsFactory } from 'utils'
 import * as ReceiptActions from '../../actions';
@@ -261,7 +261,7 @@ class DetailReceipt extends React.Component {
                                         dateFormat="dd-MM-yyyy"
                                         dropdownMode="select"
                                         placeholderText={strings.ReceiptDate}
-                                        value={props.values.receiptDate ? moment(props.values.receiptDate).format('DD-MM-YYYY') : ''}
+                                        value={props.values.receiptDate ? dayjs(props.values.receiptDate).format('DD-MM-YYYY') : ''}
                                         onChange={(value) => {
                                           props.handleChange("receiptDate")(value)
                                         }}

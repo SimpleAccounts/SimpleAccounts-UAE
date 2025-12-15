@@ -31,7 +31,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
 import { data } from "../../../Language/index";
 import LocalizedStrings from "react-localization";
-import moment from "moment";
+import dayjs from '@/utils/date';
 import "react-dates/initialize";
 import { DateRangePicker } from "react-dates";
 import "react-dates/lib/css/_datepicker.css";
@@ -96,8 +96,8 @@ class CreatePayrollList extends React.Component {
       payrollSubject: "",
       payrollApprover: "",
       payrollDate: new Date(),
-      startDate: moment(new Date(date.getFullYear(), date.getMonth(), 1)),
-      endDate: moment(new Date(date.getFullYear(), date.getMonth() + 1, 0)),
+      startDate: dayjs(new Date(date.getFullYear(), date.getMonth(), 1)),
+      endDate: dayjs(new Date(date.getFullYear(), date.getMonth() + 1, 0)),
       // startDate: '',
       // endDate: '',
       payPeriod: "",
@@ -140,7 +140,7 @@ class CreatePayrollList extends React.Component {
     // let payroll_id = params.get('payroll_id');
   };
   calculatePayperioad = (startDate, endDate) => {
-    let month = moment(startDate).format("MMMM");
+    let month = dayjs(startDate).format("MMMM");
     // let diffDays=	Math.abs(parseInt((this.state.startDate - this.state.endDate) / (1000 * 60 * 60 * 24), 10))+1
     const diffTime = Math.abs(startDate - endDate);
     let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
@@ -216,9 +216,9 @@ class CreatePayrollList extends React.Component {
       Math.abs(parseInt((startDate - endDate) / (1000 * 60 * 60 * 24), 10)) + 1;
 
     let string =
-      moment(this.state.startDate).format("DD/MM/YYYY") +
+      dayjs(this.state.startDate).format("DD/MM/YYYY") +
       "-" +
-      moment(this.state.endDate).format("DD/MM/YYYY");
+      dayjs(this.state.endDate).format("DD/MM/YYYY");
     this.setState({ payPeriod: string });
     const formData = new FormData();
     if (payrollSubject === undefined) {
@@ -312,7 +312,7 @@ class CreatePayrollList extends React.Component {
     const temp = val[val.length - 1] === "Receipt" ? 1 : val[val.length - 1];
     const values = value
       ? value
-      : moment(props.values.payrollDate, "DD-MM-YYYY").toDate();
+      : dayjs(props.values.payrollDate, "DD-MM-YYYY").toDate();
   };
 
   getAllPayrollEmployee2 = () => {
@@ -353,9 +353,9 @@ class CreatePayrollList extends React.Component {
         //maintaining new state
         let date = startDate ? startDate : this.state.startDate;
         endDate = endDate ? endDate : this.state.endDate;
-        let month = moment(date).format("MMMM");
+        let month = dayjs(date).format("MMMM");
         this.props.createPayrollActions
-          .getAllPayrollEmployee(moment(date).format("DD/MM/YYYY"))
+          .getAllPayrollEmployee(dayjs(date).format("DD/MM/YYYY"))
           .then((res) => {
             if (res.status === 200) {
               this.setState(
@@ -398,20 +398,20 @@ class CreatePayrollList extends React.Component {
                     if (empList && empList?.length > 0) {
                       let flag = true;
                       empList.map((obj) => {
-                        let payStartDate = moment(
-                          moment(
+                        let payStartDate = dayjs(
+                          dayjs(
                             obj.payPeriod.split("-")[0].replaceAll("/", "-"),
                             "DD-MM-YYYY"
                           ).toDate()
                         );
-                        let payEndDate = moment(
-                          moment(
+                        let payEndDate = dayjs(
+                          dayjs(
                             obj.payPeriod.split("-")[1].replaceAll("/", "-"),
                             "DD-MM-YYYY"
                           ).toDate()
                         );
-                        let startDate = moment(date);
-                        endDate = moment(endDate);
+                        let startDate = dayjs(date);
+                        endDate = dayjs(endDate);
                         if (
                           (startDate.isBefore(payEndDate) &&
                             startDate.isAfter(payStartDate)) ||
@@ -938,9 +938,9 @@ class CreatePayrollList extends React.Component {
                                 // {
                                 // 	errors.selectedRows = 'At least selection of one employee  is required for create payroll';
                                 // }
-                                // let DOJ = this.state.selectedRows1.map((i) => moment(i.joiningDate).format('DD-MM-YYYY'))
+                                // let DOJ = this.state.selectedRows1.map((i) => dayjs(i.joiningDate).format('DD-MM-YYYY'))
                                 // DOJ.forEach((dateString) => {
-                                // 	let mStart = moment(this.state.startDate).format('DD-MM-YYYY')
+                                // 	let mStart = dayjs(this.state.startDate).format('DD-MM-YYYY')
                                 // 	if (mStart < dateString) {
                                 // 		errors.startDate = 'Pay-Period should start after the date of joining';
                                 // 	}
@@ -1067,7 +1067,7 @@ class CreatePayrollList extends React.Component {
                                             }
                                             isOutsideRange={
                                               () => null
-                                              // day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
+                                              // day => isInclusivelyBeforeDay(day, dayjs(new Date(today.getFullYear(), today.getMonth(),0)))
                                             }
                                             onDatesChange={
                                               this.handleDateChange

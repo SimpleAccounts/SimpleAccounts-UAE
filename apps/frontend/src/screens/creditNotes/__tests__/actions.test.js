@@ -8,15 +8,20 @@ jest.mock('utils', () => ({
 	authApi: jest.fn(),
 }));
 
-jest.mock('moment', () => {
-	const actualMoment = jest.requireActual('moment');
-	const mockMoment = (...args) => {
-		const m = actualMoment(...args);
-		m.format = jest.fn(() => '20-08-2024');
-		return m;
+jest.mock('@/utils/date', () => {
+	const actualDayjs = jest.requireActual('@/utils/date').default;
+	const mockDayjs = (...args) => {
+		const d = actualDayjs(...args);
+		d.format = jest.fn((format) => {
+			// Return actual format if format string provided, otherwise return mock
+			if (format) {
+				return actualDayjs(...args).format(format);
+			}
+			return '25-09-2024';
+		});
+		return d;
 	};
-	mockMoment.format = actualMoment.format;
-	return mockMoment;
+	return mockDayjs;
 });
 
 const middlewares = [thunk];

@@ -22,7 +22,7 @@ import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import { CSVLink } from 'react-csv';
 
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -278,7 +278,7 @@ class User extends React.Component {
 
 	renderDate = (cell, row) => {
 		return row['dob'] !== null
-			? moment(row['dob'], 'DD-MM-YYYY').format('DD-MM-YYYY')
+			? dayjs(row['dob'], 'DD-MM-YYYY').format('DD-MM-YYYY')
 			: '';
 	};
 

@@ -18,7 +18,7 @@ import _ from 'lodash';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import DatePicker from 'react-datepicker';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { Loader, ConfirmDeleteModal ,LeavePage} from 'components';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { CommonActions } from 'services/global';
@@ -164,7 +164,7 @@ class DetailBankAccount extends React.Component {
 									account_is_for: res.personalCorporateAccountInd
 										? res.personalCorporateAccountInd
 										: '',
-									openingDate: moment(res.openingDate).format('DD-MM-YYYY'),
+									openingDate: dayjs(res.openingDate).format('DD-MM-YYYY'),
 									transactionCount: res.transactionCount,
 								},
 							});
@@ -600,7 +600,7 @@ class DetailBankAccount extends React.Component {
 
 																	onChange={(value) => {
 																		props.handleChange('openingDate')(
-																			moment(value).format('DD-M-/YYYY'),
+																			dayjs(value).format('DD-M-/YYYY'),
 																		);
 																	
 																	}}

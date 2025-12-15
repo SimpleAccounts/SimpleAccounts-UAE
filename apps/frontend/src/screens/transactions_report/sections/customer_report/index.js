@@ -16,7 +16,7 @@ import Select from 'react-select';
 import * as customerReportData from '../../actions';
 
 import { DateRangePicker2 } from 'components';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 
@@ -41,13 +41,13 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const ranges = {
-	'This Week': [moment().startOf('week'), moment().endOf('week')],
-	'This Month': [moment().startOf('month'), moment().endOf('month')],
-	'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-	'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+	'This Week': [dayjs().startOf('week'), dayjs().endOf('week')],
+	'This Month': [dayjs().startOf('month'), dayjs().endOf('month')],
+	'Last 7 Days': [dayjs().subtract(6, 'days'), dayjs()],
+	'Last 30 Days': [dayjs().subtract(29, 'days'), dayjs()],
 	'Last Month': [
-		moment().subtract(1, 'month').startOf('month'),
-		moment().subtract(1, 'month').endOf('month'),
+		dayjs().subtract(1, 'month').startOf('month'),
+		dayjs().subtract(1, 'month').endOf('month'),
 	],
 };
 
@@ -106,8 +106,8 @@ class CustomerReport extends React.Component {
 	};
 
 	handleChange = (e, picker) => {
-		let startingDate = picker ? moment(picker.startDate._d).format('L') : '';
-		let endingDate = picker ? moment(picker.endDate._d).format('L') : '';
+		let startingDate = picker ? dayjs(picker.startDate._d).format('L') : '';
+		let endingDate = picker ? dayjs(picker.endDate._d).format('L') : '';
 		this.setState({ startDate: startingDate, endDate: endingDate });
 	};
 
@@ -116,8 +116,8 @@ class CustomerReport extends React.Component {
 			? this.props.customer_invoice_report.map((customer) => ({
 					status: customer.status,
 					referenceNumber: customer.refNumber,
-					date: moment(customer.invoiceDate).format('L'),
-					dueDate: moment(customer.invoiceDueDate).format('L'),
+					date: dayjs(customer.invoiceDate).format('L'),
+					dueDate: dayjs(customer.invoiceDueDate).format('L'),
 					contactName: customer.contactName,
 					numberOfItems: customer.noOfItem,
 					totalCost: customer.totalCost,

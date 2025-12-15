@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardBody, Table } from 'reactstrap';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../../Language/index'
@@ -88,7 +88,7 @@ class ExpenseTemplate extends Component {
 								>
 									<h2 className="mb-1 ml-2"><h1><b>{strings.Expense}</b></h1></h2>	
 									{/* <div className="mb-1 ml-2" style={{fontSize:"22px"}}><b> {expenseData.payee} </b></div> */}
-									<div className="mb-1 ml-2"><h4><b>{strings.ExpenseDate}</b>: {moment(expenseData.expenseDate ).format('DD-MM-YYYY')}</h4>
+									<div className="mb-1 ml-2"><h4><b>{strings.ExpenseDate}</b>: {dayjs(expenseData.expenseDate ).format('DD-MM-YYYY')}</h4>
 									</div> 
 								</div>
 							</div>	
@@ -154,7 +154,7 @@ class ExpenseTemplate extends Component {
 								</tr> */}
 								<tr>
 									<td className="ml-3" style={{width:'245px'}}><b>{strings.PostedDate}</b>: </td> 
-									<td>{expenseData.expenseStatus === "Posted" ? moment(expenseData.lastUpdateDate).format('DD-MM-YYYY') :"-"}</td>
+									<td>{expenseData.expenseStatus === "Posted" ? dayjs(expenseData.lastUpdateDate).format('DD-MM-YYYY') :"-"}</td>
 								</tr> 
 							</tbody>
 						</Table>

@@ -3,7 +3,7 @@ import {
   // api,
   authApi,
 } from "utils";
-import moment from "moment";
+import dayjs from '@/utils/date';
 
 export const getTransactionList = (obj) => {
   let id = obj.id ? obj.id : "";
@@ -16,7 +16,7 @@ export const getTransactionList = (obj) => {
 
   let param = `/rest/transaction/list?bankId=${id}&transactionType=${transactionType}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`;
   if (transactionDate !== "") {
-    let date = moment(transactionDate).format("DD-MM-YYYY");
+    let date = dayjs(transactionDate).format("DD-MM-YYYY");
     param = param + `&transactionDate=${date}`;
   }
   return (dispatch) => {

@@ -19,7 +19,7 @@ import './style.scss';
 import { RFQTemplate } from './sections';
 import * as RequestForQuotationViewAction from '../../../request_for_quotation/screens/view/actions'
 import { Card, CardBody, Table } from 'reactstrap';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -277,11 +277,11 @@ class ViewPurchaseOrder extends React.Component {
 							<td>{item.grnNumber}</td>
 							<td>{item.supplierName}</td>
 							<td>{item.status}</td>
-							<td>{moment(item.grnReceiveDate).format(
+							<td>{dayjs(item.grnReceiveDate).format(
 				'DD MMM YYYY',
 			)}
 			</td>
-				{/* <td>{moment(item.poReceiveDate).format(
+				{/* <td>{dayjs(item.poReceiveDate).format(
 				'DD MMM YYYY',
 			)}</td> */}
 							{/* <td align="right">{POData.currencyIsoCode+" "+item.totalAmount}</td> */}

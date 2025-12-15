@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardBody, Row, Col, Table } from 'reactstrap';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { Currency } from 'components';
@@ -321,7 +321,7 @@ class InvoiceTemplate extends Component {
 								<tbody>
 									<tr>
 										<td>{invoiceData.creditNoteNumber}</td>
-										<td>{' '}{moment(invoiceData.creditNoteDate).format('DD-MM-YYYY',)}</td>
+										<td>{' '}{dayjs(invoiceData.creditNoteDate).format('DD-MM-YYYY',)}</td>
 										<td>{invoiceData.status ? invoiceData.status === 'Partially Paid' ? 'Partially Credited' : invoiceData.status : ''}</td>
 										{invoiceData.referenceNo && <td>{invoiceData.referenceNo}</td>}
 										{isCNWithoutProduct && <td style={{ textAlign: 'right' }}>
@@ -357,7 +357,7 @@ class InvoiceTemplate extends Component {
 												<td  style={{backgroundColor:'#e3e3e3' ,width:'104px'  }}>Invoice Date</td>
 												<td style={{ width:'143px'  }}>
 													{' '}
-													{moment(invoiceData.invoiceDate).format(
+													{dayjs(invoiceData.invoiceDate).format(
 														'DD MMM YYYY',
 													)}
 												</td>
@@ -369,7 +369,7 @@ class InvoiceTemplate extends Component {
 											<tr style={{ textAlign: 'right' }}>
 												<td style={{width:'104px' ,backgroundColor:'#e3e3e3' }}>Due Date</td>
 												<td style={{ width:'143px'  }}>
-													{moment(invoiceData.invoiceDueDate).format(
+													{dayjs(invoiceData.invoiceDueDate).format(
 														'DD MMM YYYY',
 													)}
 												</td>

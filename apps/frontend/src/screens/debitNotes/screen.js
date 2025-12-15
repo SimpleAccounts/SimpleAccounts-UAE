@@ -29,7 +29,7 @@ import './style.scss';
 import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { upperCase } from 'lodash';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
@@ -328,7 +328,7 @@ class DebitNotes extends React.Component {
 		return row.invoiceDueDate ? row.invoiceDueDate : '';
 	};
 	debitNoteDate = (cell, row) => {
-		return row.creditNoteDate ? moment(row.creditNoteDate).format('DD-MM-YYYY') : '';
+		return row.creditNoteDate ? dayjs(row.creditNoteDate).format('DD-MM-YYYY') : '';
 	};
 	renderDueAmount = (cell, row, extraData) => {
 		return row.dueAmount === 0 ? row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode + " " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });

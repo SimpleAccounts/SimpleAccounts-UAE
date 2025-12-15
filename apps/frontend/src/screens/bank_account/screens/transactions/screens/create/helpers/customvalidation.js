@@ -1,4 +1,4 @@
-import moment from "moment";
+import dayjs from '@/utils/date';
 import * as Yup from "yup";
 export const createTransValidation = (values) => {
   let errors = {};
@@ -19,7 +19,7 @@ export const createTransValidation = (values) => {
     );
 
     if (
-      moment(values.transactionDate).diff(
+      dayjs(values.transactionDate).diff(
         new Date(info.taxFiledOn),
         "seconds"
       ) < 0
@@ -29,7 +29,7 @@ export const createTransValidation = (values) => {
     }
   }
 
-  const date = moment(values.transactionDate).format("MM/DD/YYYY");
+  const date = dayjs(values.transactionDate).format("MM/DD/YYYY");
   const date1 = new Date(date);
   const date2 = new Date(this.state.date);
 

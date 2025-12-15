@@ -23,7 +23,7 @@ import * as UserCreateActions from './actions';
 import * as SalaryTemplateActions from '../../../salaryTemplate/actions'
 import { CommonActions, AuthActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import './style.scss';
@@ -172,12 +172,12 @@ class CreateUser extends React.Component {
 		formData.append('lastName', lastName ? lastName : '');
 		formData.append('email', email ? email : '');
 		formData.append('userPhotoChange', this.state.userPhotoChange);
-		formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
+		formData.append('dob', dob ? dayjs(dob).format('DD-MM-YYYY') : '');
 		// formData.append(
 		// 	'dob',
 		// 	dob
-		// 		? moment(
-		// 				moment(dob).format('DD-MM-YYYY'),
+		// 		? dayjs(
+		// 				dayjs(dob).format('DD-MM-YYYY'),
 		// 				'DD-MM-YYYY',
 		// 		  ).toDate()
 		// 		: null,
@@ -550,7 +550,7 @@ class CreateUser extends React.Component {
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				placeholderText={strings.Enter+strings.DateOfBirth}
-																				maxDate={moment().subtract(18, "years").toDate()}
+																				maxDate={dayjs().subtract(18, "years").toDate()}
 																				selected={props.values.dob}
 																				//value={props.values.dob}
 																				onChange={(value) => {

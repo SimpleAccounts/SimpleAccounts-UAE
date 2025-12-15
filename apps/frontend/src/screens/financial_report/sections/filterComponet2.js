@@ -14,7 +14,7 @@ import Select from "react-select";
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
 import { Formik } from "formik";
-import moment from "moment";
+import dayjs from '@/utils/date';
 import { DropdownLists } from "utils";
 import "./style.scss";
 import { data } from "../../Language/index";
@@ -41,8 +41,8 @@ class FilterComponent2 extends Component {
     this.state = {
       language: window["localStorage"].getItem("language"),
       initValue: {
-        startDate: moment().startOf("month").format("YYYY-MM-DD hh:mm"),
-        endDate: moment().endOf("month").format("YYYY-MM-DD hh:mm"),
+        startDate: dayjs().startOf("month").format("YYYY-MM-DD hh:mm"),
+        endDate: dayjs().endOf("month").format("YYYY-MM-DD hh:mm"),
         contactId: "",
       },
     };
@@ -93,11 +93,11 @@ class FilterComponent2 extends Component {
                           autoComplete="off"
                           maxDate={
                             props.values.endDate
-                              ? moment(props.values.endDate).toDate()
+                              ? dayjs(props.values.endDate).toDate()
                               : null
                           }
                           //maxDate={new Date()}
-                          value={moment(props.values.startDate).format(
+                          value={dayjs(props.values.startDate).format(
                             "DD-MM-YYYY"
                           )}
                           dropdownMode="select"
@@ -105,7 +105,7 @@ class FilterComponent2 extends Component {
                           onChange={(value) => {
                             props.setFieldValue(
                               "startDate",
-                              moment(value).format("YYYY-MM-DD hh:mm")
+                              dayjs(value).format("YYYY-MM-DD hh:mm")
                             );
                           }}
                         />
@@ -121,13 +121,13 @@ class FilterComponent2 extends Component {
                           autoComplete="off"
                           minDate={
                             props.values.startDate
-                              ? moment(props.values.startDate).toDate()
+                              ? dayjs(props.values.startDate).toDate()
                               : null
                           }
                           placeholderText="From"
                           showMonthDropdown
                           showYearDropdown
-                          value={moment(props.values.endDate).format(
+                          value={dayjs(props.values.endDate).format(
                             "DD-MM-YYYY"
                           )}
                           dropdownMode="select"
@@ -135,7 +135,7 @@ class FilterComponent2 extends Component {
                           onChange={(value) => {
                             props.setFieldValue(
                               "endDate",
-                              moment(value).format("YYYY-MM-DD hh:mm")
+                              dayjs(value).format("YYYY-MM-DD hh:mm")
                             );
                           }}
                         />

@@ -37,7 +37,7 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 
 import DatePicker from 'react-datepicker';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 import { toast } from 'react-toastify';
 import { data } from '../../../../../Language/index';
@@ -142,7 +142,7 @@ class GenerateAuditFile extends React.Component {
 
   renderDate = (cell, row) => {
     return cell
-      ? moment(cell)
+      ? dayjs(cell)
           // .format('DD-MM-YYYY')
           .format('LL')
       : '-';
@@ -159,8 +159,8 @@ class GenerateAuditFile extends React.Component {
   renderTaxReturns = (cell, row) => {
     let dateArr = cell ? cell.split(' ') : [];
 
-    let startDate = moment(dateArr[0]).format('DD/MM/YYYY');
-    let endDate = moment(dateArr[1]).format('DD/MM/YYYY');
+    let startDate = dayjs(dateArr[0]).format('DD/MM/YYYY');
+    let endDate = dayjs(dateArr[1]).format('DD/MM/YYYY');
 
     return <>{dateArr[0]}</>;
   };
@@ -488,15 +488,15 @@ class GenerateAuditFile extends React.Component {
                                 autoComplete="off"
                                 minDate={new Date('01-01-2018')}
                                 // maxDate={firstdayoflastmonth.setMonth(firstdayoflastmonth.getMonth()-1)}
-                                value={moment(props.values.startDate).format('DD-MM-YYYY')}
+                                value={dayjs(props.values.startDate).format('DD-MM-YYYY')}
                                 dropdownMode="select"
                                 dateFormat="dd-MM-yyyy"
                                 // onChange={(value) => {
                                 // 	props.handleChange('startDate')(value);
-                                // 	if (moment(value).isBefore(props.values.startDate)) {
+                                // 	if (dayjs(value).isBefore(props.values.startDate)) {
                                 // 		props.setFieldValue(
                                 // 			'startDate',
-                                // 			moment(value).add(1, 'M'),
+                                // 			dayjs(value).add(1, 'M'),
                                 // 		);
                                 // 	}
                                 // }}
@@ -526,7 +526,7 @@ class GenerateAuditFile extends React.Component {
                                 placeholderText="From"
                                 showMonthDropdown
                                 showYearDropdown
-                                value={moment(props.values.endDate).format('DD-MM-YYYY')}
+                                value={dayjs(props.values.endDate).format('DD-MM-YYYY')}
                                 dropdownMode="select"
                                 dateFormat="dd-MM-yyyy"
                                 onChange={value => {

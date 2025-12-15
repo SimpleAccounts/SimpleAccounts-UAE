@@ -19,7 +19,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory } from 'utils';
 import * as JournalActions from '../../actions';
@@ -986,7 +986,7 @@ min="0"
 																			autoComplete="off"
 																			value={
 																				props.values.journalDate
-																					? moment(
+																					? dayjs(
 																							props.values.journalDate,
 																					  ).format('DD-MM-YYYY')
 																					: ''

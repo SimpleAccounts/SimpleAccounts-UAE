@@ -16,7 +16,7 @@ import LocalizedStrings from 'react-localization';
 import { Currency, InvoiceViewJournalEntries } from 'components';
 import ActionButtons from 'components/view_actions_buttons';
 import { StatusActionList } from 'utils';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
@@ -326,7 +326,7 @@ class ViewCustomerInvoice extends React.Component {
 									}}>
 										<td className="center">{1}</td>
 										<td style={{color:'blue'}}>{creditNoteDataList.creditNoteNumber}</td>
-										<td>{creditNoteDataList.creditNoteDate ? moment(creditNoteDataList.creditNoteDate).format('DD-MM-YYYY') : ''}</td>
+										<td>{creditNoteDataList.creditNoteDate ? dayjs(creditNoteDataList.creditNoteDate).format('DD-MM-YYYY') : ''}</td>
 										<td align="right">{creditNoteDataList?.status}</td>
 										<td align="right">
 											{creditNoteDataList.totalAmount ? <Currency

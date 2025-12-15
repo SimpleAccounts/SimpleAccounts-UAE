@@ -8,13 +8,13 @@ jest.mock('utils', () => ({
   authApi: jest.fn(),
 }));
 
-jest.mock('moment', () => {
-  const actualMoment = jest.requireActual('moment');
+jest.mock('@/utils/date', () => {
+  const actualDayjs = jest.requireActual('@/utils/date').default;
   return (date) => {
     if (date) {
-      return actualMoment(date);
+      return actualDayjs(date);
     }
-    return actualMoment('2024-12-01');
+    return actualDayjs('2024-12-01');
   };
 });
 

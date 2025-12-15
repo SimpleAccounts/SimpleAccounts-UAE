@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardBody, Table } from 'reactstrap';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../../Language/index'
@@ -215,9 +215,9 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 									<div className="mb-1 ml-2"><b>{strings.PONo}: </b> # {POData.poNumber}</div>
 									{POData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo}: </b>{POData.receiptNumber}</div>)}
 									<div className="mb-1 ml-2"><b>{strings.Approve+" "+strings.Date }: </b>{' '}
-										{moment(POData.poApproveDate).format('DD MMM YYYY')}</div>
+										{dayjs(POData.poApproveDate).format('DD MMM YYYY')}</div>
 									<div className="mb-1 ml-2"><b>{strings.ReceiveDate }: </b>
-										{moment(POData.poReceiveDate).format('DD MMM YYYY')}</div>
+										{dayjs(POData.poReceiveDate).format('DD MMM YYYY')}</div>
 									<div className="mb-1 ml-2"><b>{strings.Status}: </b>{this.renderRFQStatus(status)}</div>
 
 								</div>

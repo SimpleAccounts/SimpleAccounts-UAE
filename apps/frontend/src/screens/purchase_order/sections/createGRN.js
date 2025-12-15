@@ -23,7 +23,7 @@ import { EditorState } from 'draft-js';
 import { selectOptionsFactory } from 'utils';
 import DatePicker from 'react-datepicker';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import * as RequestForQuotationDetailsAction from '../screens/detail/actions';
 import { bindActionCreators } from 'redux';
 import * as RequestForQuotationAction from '../screens/detail/actions';

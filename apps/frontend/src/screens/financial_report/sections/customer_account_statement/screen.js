@@ -12,7 +12,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-import moment from "moment";
+import dayjs from '@/utils/date';
 import { PDFExport } from "@progress/kendo-react-pdf";
 import { ExcelExport as XLSX } from 'utils';
 import { Loader } from "components";
@@ -52,7 +52,7 @@ class CustomerAccountStatement extends React.Component {
       dropdownOpen: false,
       view: false,
       initValue: {
-        endDate: moment().format("DD/MM/YYYY"),
+        endDate: dayjs().format("DD/MM/YYYY"),
         contactId: "",
       },
       csvData: [],
@@ -71,8 +71,8 @@ class CustomerAccountStatement extends React.Component {
     this.setState(
       {
         initValue: {
-          startDate: moment(value.startDate).format("DD/MM/YYYY"),
-          endDate: moment(value.endDate).format("DD/MM/YYYY"),
+          startDate: dayjs(value.startDate).format("DD/MM/YYYY"),
+          endDate: dayjs(value.endDate).format("DD/MM/YYYY"),
           contactId: value.contactId,
         },
         loading: true,
@@ -278,7 +278,7 @@ class CustomerAccountStatement extends React.Component {
 									}}
 									handleCancel={() => {
 										if (customPeriod === 'asOn') {
-										const currentDate = moment();
+										const currentDate = dayjs();
 										this.setState(prevState => ({
 										initValue: {
 										...prevState.initValue,

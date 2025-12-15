@@ -36,11 +36,11 @@ import * as DetailProductActions from './actions';
 import { CommonActions } from 'services/global';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import moment from 'moment'
+import dayjs from '@/utils/date'
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 function dateFormat(value, row, index) {
-	return moment(value).format('DD-MM-YYYY');
+	return dayjs(value).format('DD-MM-YYYY');
 }
 
 const mapStateToProps = (state) => {
@@ -303,7 +303,7 @@ class InventoryHistory extends React.Component {
 	};
 
 	renderDate = (cell, rows) => {
-		return moment(rows.date).format('DD-MM-YYYY');
+		return dayjs(rows.date).format('DD-MM-YYYY');
 	};
 	getInventoryById = (data) => {
 		this.getInventoryId();

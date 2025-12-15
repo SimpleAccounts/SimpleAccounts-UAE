@@ -20,7 +20,7 @@ import { selectOptionsFactory } from 'utils';
 import { Formik, Field } from 'formik';
 import DatePicker from 'react-datepicker';
 import * as Yup from 'yup';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import API_ROOT_URL from '../../../../constants/config';
 import 'react-datepicker/dist/react-datepicker.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -242,7 +242,7 @@ class CreatePayment extends React.Component {
 		formData.append(
 			'paymentDate',
 			typeof paymentDate === 'string'
-				? moment(paymentDate, 'DD-MM-YYYY').toDate()
+				? dayjs(paymentDate, 'DD-MM-YYYY').toDate()
 				: paymentDate,
 		);
 		formData.append('amount', amount !== null ? amount : '');
@@ -346,7 +346,7 @@ min="0" value="0.00" />;
 	};
 
 	date = (cell, rows, props) => {
-		return <div>{moment.utc(rows.date).format('DD-MM-YYYY')}</div>;
+		return <div>{dayjs.utc(rows.date).format('DD-MM-YYYY')}</div>;
 	};
 
 	renderAmount = (cell, rows, props) => {
@@ -556,7 +556,7 @@ min="0" value="0.00" />;
 																					selected={props.values.paymentDate}
 																					onChange={(value) => {
 																						props.handleChange('paymentDate')(
-																							moment(value).format(
+																							dayjs(value).format(
 																								'DD-MM-YYYY',
 																							),
 																						);

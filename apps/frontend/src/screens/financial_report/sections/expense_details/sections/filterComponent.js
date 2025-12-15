@@ -14,7 +14,7 @@ import DatePicker from "react-datepicker"
 
 import { Formik } from "formik"
 import Select from "react-select"
-import moment from 'moment'
+import dayjs from '@/utils/date'
 
 import { selectOptionsFactory } from "utils";
 import './style.scss'
@@ -39,8 +39,8 @@ class FilterComponent extends Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			initValue: {
-				startDate: new Date(moment().startOf('month').format('YYYY-MM-DD hh:mm')),
-				endDate: new Date(moment().endOf('month').format('YYYY-MM-DD hh:mm')),
+				startDate: new Date(dayjs().startOf('month').format('YYYY-MM-DD hh:mm')),
+				endDate: new Date(dayjs().endOf('month').format('YYYY-MM-DD hh:mm')),
 			}
 		}
 

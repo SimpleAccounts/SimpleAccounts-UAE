@@ -23,7 +23,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { CommonActions } from 'services/global';
 import * as PaymentActions from './actions';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -226,7 +226,7 @@ class Payment extends React.Component {
 
 	renderDate = (cell, rows) => {
 		return rows['paymentDate'] !== null
-			? moment(rows['paymentDate']).format('DD-MM-YYYY')
+			? dayjs(rows['paymentDate']).format('DD-MM-YYYY')
 			: '';
 	};
 

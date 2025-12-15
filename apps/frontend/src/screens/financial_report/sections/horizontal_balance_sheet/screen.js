@@ -16,7 +16,7 @@ import {
 } from 'reactstrap';
 
 import { DateRangePicker2 } from 'components';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -72,8 +72,8 @@ class HorizontalBalanceSheet extends React.Component {
 			hideExportOptions:false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().format('DD/MM/YYYY'),
+				startDate: dayjs().startOf('month').format('DD/MM/YYYY'),
+				endDate: dayjs().format('DD/MM/YYYY'),
 				reportBasis: 'ACCRUAL',
 				chartOfAccountId: '',
 			},
@@ -129,8 +129,8 @@ class HorizontalBalanceSheet extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD/MM/YYYY'),
-					endDate: moment(value.endDate).format('DD/MM/YYYY'),
+					startDate: dayjs(value.startDate).format('DD/MM/YYYY'),
+					endDate: dayjs(value.endDate).format('DD/MM/YYYY'),
 				},
 				loading: true,
 				view: !this.state.view,
@@ -352,7 +352,7 @@ class HorizontalBalanceSheet extends React.Component {
 									}}
 									handleCancel={() => {
 										if (customPeriod === 'asOn') {
-										const currentDate = moment();
+										const currentDate = dayjs();
 										this.setState(prevState => ({
 										initValue: {
 										...prevState.initValue,

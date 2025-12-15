@@ -18,7 +18,7 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { RFQTemplate } from './sections';
 import { Card, CardBody, Table } from 'reactstrap';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { StringStream } from 'codemirror';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -259,10 +259,10 @@ class ViewRequestForQuotation extends React.Component {
 												<td>{item.poNumber}</td>
 												<td>{item.supplierName}</td>
 												<td>{item.status}</td>
-												<td>{moment(item.poApproveDate).format(
+												<td>{dayjs(item.poApproveDate).format(
 									'DD MMM YYYY',
 								)}</td>
-									<td>{moment(item.poReceiveDate).format(
+									<td>{dayjs(item.poReceiveDate).format(
 									'DD MMM YYYY',
 								)}</td>
 												<td align="right">AED {item.totalAmount}</td>

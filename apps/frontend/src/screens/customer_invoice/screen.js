@@ -32,7 +32,7 @@ import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import './style.scss';
 import { CreateCreditNoteModal } from './sections';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { upperCase } from 'lodash';
 import config from 'constants/config';
 

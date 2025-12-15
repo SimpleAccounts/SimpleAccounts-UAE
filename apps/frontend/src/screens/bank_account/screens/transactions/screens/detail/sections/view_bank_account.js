@@ -15,7 +15,7 @@ import {
 
 
 // import './style.scss'
-import  moment  from 'moment'
+import dayjs from '@/utils/date'
 import API_ROOT_URL from '../../../../../../../constants/config'
 
 
@@ -67,7 +67,7 @@ class ViewBankAccount extends React.Component {
                       <Col lg={4}>
                         <FormGroup className="mb-3">
                           <Label className="label" htmlFor="currency">Transaction Date </Label>
-                          <p>{moment(transactionDate).format('DD/MM/YYYY')}</p> 
+                          <p>{dayjs(transactionDate).format('DD/MM/YYYY')}</p> 
                         </FormGroup>
                       </Col>
                       <Col lg={4}>

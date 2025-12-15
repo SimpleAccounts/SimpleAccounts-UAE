@@ -26,7 +26,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
 import { data } from 'screens/Language/index'
 import LocalizedStrings from 'react-localization';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import download from 'downloadjs';
 import { toast } from 'react-toastify';
 import Currency from 'components/currency';
@@ -114,7 +114,7 @@ class PayrollApproverScreen extends React.Component {
 					payPeriod: payPeriodString,
 					payrollApprover: res.data.payrollApprover ? res.data.payrollApprover : '',
 					payrollDate: res.data.payrollDate
-						? moment(res.data.payrollDate).format('DD-MM-YYYY')
+						? dayjs(res.data.payrollDate).format('DD-MM-YYYY')
 						: '',
 					payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
 					runDate: res.data.runDate ? res.data.runDate : '',
@@ -601,7 +601,7 @@ class PayrollApproverScreen extends React.Component {
 																						value={this.state.payrollDate}
 																						onChange={(value) => {
 																							props.handleChange('payrollDate')(
-																								moment(value).format('DD-MM-YYYY'),
+																								dayjs(value).format('DD-MM-YYYY'),
 																							);
 																						}}
 																						className={`form-control ${props.errors.payrollDate &&

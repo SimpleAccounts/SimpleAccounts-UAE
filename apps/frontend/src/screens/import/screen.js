@@ -36,7 +36,7 @@ import { isDate, upperFirst } from 'lodash-es';
 import styled from 'styled-components';
 import { ChartOfAccountsModal } from './modal';
 
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { Date } from 'core-js';
 import download from 'downloadjs';
 import { align } from '@progress/kendo-drawing';
@@ -300,7 +300,7 @@ class Import extends React.Component {
 		const formData = new FormData()
 		this.state.listOfExist4.forEach((data, index) => {
 			formData.append(`persistModelList[${index}].transactionCategoryId`, data.transactionId);
-		    formData.append(`persistModelList[${index}].effectiveDate`, moment(data.effectiveDate));
+		    formData.append(`persistModelList[${index}].effectiveDate`, dayjs(data.effectiveDate));
 			formData.append(`persistModelList[${index}].openingBalance`, data.openingBalance);
 		});
 		// formData.append('persistModelList',JSON.stringify(listObject))

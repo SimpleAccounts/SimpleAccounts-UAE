@@ -26,7 +26,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { LeavePage, Loader} from 'components';
@@ -201,7 +201,7 @@ class CreateReceipt extends React.Component {
 		formData.append(
 			'receiptDate',
 			typeof receiptDate === 'string'
-				? moment(receiptDate, 'DD-MM-YYYY').toDate()
+				? dayjs(receiptDate, 'DD-MM-YYYY').toDate()
 				: receiptDate,
 		);
 		formData.append('amount', amount !== null ? amount : '');
@@ -294,7 +294,7 @@ class CreateReceipt extends React.Component {
 	};
 
 	date = (cell, rows, props) => {
-		return <div>{moment.utc(rows.date).format('DD-MM-YYYY')}</div>;
+		return <div>{dayjs.utc(rows.date).format('DD-MM-YYYY')}</div>;
 	};
 
 	renderAmount = (cell, rows, props) => {

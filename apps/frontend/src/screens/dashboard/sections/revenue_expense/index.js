@@ -12,7 +12,7 @@ import {
 	Button,
 } from 'reactstrap';
 // import { DateRangePicker2 } from 'components'
-// import moment from 'moment'
+// import dayjs from '@/utils/date'
 import './style.scss';
 
 const expenseOption = {
@@ -32,13 +32,13 @@ const expenseOption = {
 };
 
 // const ranges =  {
-//   'Today': [moment(), moment()],
-//   'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-//   'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-//   'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-//   'This Week': [moment().startOf('week'), moment().endOf('week')],
-//   'This Month': [moment().startOf('month'), moment().endOf('month')],
-//   'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+//   'Today': [dayjs(), dayjs()],
+//   'Yesterday': [dayjs().subtract(1, 'days'), dayjs().subtract(1, 'days')],
+//   'Last 7 Days': [dayjs().subtract(6, 'days'), dayjs()],
+//   'Last 30 Days': [dayjs().subtract(29, 'days'), dayjs()],
+//   'This Week': [dayjs().startOf('week'), dayjs().endOf('week')],
+//   'This Month': [dayjs().startOf('month'), dayjs().endOf('month')],
+//   'Last Month': [dayjs().subtract(1, 'month').startOf('month'), dayjs().subtract(1, 'month').endOf('month')],
 // }
 
 class RevenueAndExpense extends Component {

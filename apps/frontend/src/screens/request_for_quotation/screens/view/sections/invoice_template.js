@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardBody, Table } from 'reactstrap';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../../Language/index'
@@ -193,9 +193,9 @@ class RFQTemplate extends Component {
 									<div className="mb-1 ml-2"><b>{strings.RFQNUMBER}: </b> # {RFQData.rfqNumber} </div>
 									{RFQData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNumber}: </b>{RFQData.receiptNumber}</div>)}
 									<div className="mb-1 ml-2"><b>{strings.RFQDate}: </b>{' '}
-										{moment(RFQData.RFQDATE).format('DD MMM YYYY')}</div>
+										{dayjs(RFQData.RFQDATE).format('DD MMM YYYY')}</div>
 									<div className="mb-1 ml-2"><b>{strings.ExpiryDate}: </b>
-										{moment(RFQData.rfqExpiryDate).format('DD MMM YYYY')}</div>
+										{dayjs(RFQData.rfqExpiryDate).format('DD MMM YYYY')}</div>
 									<div className="mb-1 ml-2"><b>{strings.Status}: </b>{this.renderRFQStatus(RFQData.status)}</div><br />
 										
 									<br />

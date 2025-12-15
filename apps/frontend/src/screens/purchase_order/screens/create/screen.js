@@ -37,7 +37,7 @@ import './style.scss';
 import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 const mapStateToProps = (state) => {
 	return {
@@ -631,13 +631,13 @@ class CreatePurchaseOrder extends React.Component {
 								current_po_id: this.props.location.state.id,
 								initValue: {
 									poApproveDate: res.data.poApproveDate
-										? moment(res.data.poApproveDate).format('DD-MM-YYYY')
+										? dayjs(res.data.poApproveDate).format('DD-MM-YYYY')
 										: '',
 										poApproveDate1: res.data.poApproveDate
 										? res.data.poApproveDate
 										: '',
 										poReceiveDate: res.data.poReceiveDate
-										? moment(res.data.poReceiveDate).format('DD-MM-YYYY')
+										? dayjs(res.data.poReceiveDate).format('DD-MM-YYYY')
 										: '',
 										poReceiveDate1: res.data.poReceiveDate
 										? res.data.poReceiveDate
@@ -665,10 +665,10 @@ class CreatePurchaseOrder extends React.Component {
 								
 								},
 								poApproveDateNotChanged : res.data.poApproveDate
-								? moment(res.data.poApproveDate)
+								? dayjs(res.data.poApproveDate)
 								: '',
 								poReceiveDateNotChanged: res.data.poReceiveDate
-								? moment(res.data.poReceiveDate)
+								? dayjs(res.data.poReceiveDate)
 								: '',
 								poApproveDate: res.data.poApproveDate
 								? res.data.poApproveDate
@@ -1320,9 +1320,9 @@ class CreatePurchaseOrder extends React.Component {
 	// 	const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 	// 	const values = value
 	// 		? value
-	// 		: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
+	// 		: dayjs(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 	// 	if (temp && values) {
-	// 		const date = moment(values)
+	// 		const date = dayjs(values)
 	// 			.add(temp - 1, 'days')
 	// 			.format('DD-MM-YYYY');
 	// 		props.setFieldValue('invoiceDueDate', date, true);

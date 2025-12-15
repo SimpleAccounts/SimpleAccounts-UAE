@@ -35,7 +35,7 @@ import './style.scss';
 import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 const mapStateToProps = (state) => {
 	return {
@@ -625,13 +625,13 @@ class CreateRequestForQuotation extends React.Component {
 								parentId: this.props.location.state.id,
 								initValue: {
 									rfqReceiveDate: res.data.rfqReceiveDate
-										? moment(res.data.rfqReceiveDate).format('DD-MM-YYYY')
+										? dayjs(res.data.rfqReceiveDate).format('DD-MM-YYYY')
 										: '',
 									rfqReceiveDate1: res.data.rfqReceiveDate
 										? res.data.rfqReceiveDate
 										: '',
 									rfqExpiryDate: res.data.rfqExpiryDate
-										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+										? dayjs(res.data.rfqExpiryDate).format('DD-MM-YYYY')
 										: '',
 									rfqExpiryDate1: res.data.rfqExpiryDate
 										?  res.data.rfqExpiryDate
@@ -657,10 +657,10 @@ class CreateRequestForQuotation extends React.Component {
 									receiptAttachmentDescription: res.data.receiptAttachmentDescription? res.data.receiptAttachmentDescription : '',
 								},
 										rfqExpiryDateNoChange: res.data.rfqExpiryDate
-										?  moment(res.data.rfqExpiryDate)
+										?  dayjs(res.data.rfqExpiryDate)
 										: '',
 										rfqReceiveDateNoChange: res.data.rfqReceiveDate
-										? moment(res.data.rfqReceiveDate)
+										? dayjs(res.data.rfqReceiveDate)
 										: '',
 										rfqReceiveDate: res.data.rfqReceiveDate
 										? res.data.rfqReceiveDate
@@ -1235,9 +1235,9 @@ class CreateRequestForQuotation extends React.Component {
 	// 	const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 	// 	const values = value
 	// 		? value
-	// 		: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
+	// 		: dayjs(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 	// 	if (temp && values) {
-	// 		const date = moment(values)
+	// 		const date = dayjs(values)
 	// 			.add(temp - 1, 'days')
 	// 			.format('DD-MM-YYYY');
 	// 		props.setFieldValue('invoiceDueDate', date, true);

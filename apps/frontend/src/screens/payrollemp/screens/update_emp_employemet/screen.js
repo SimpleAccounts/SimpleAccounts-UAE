@@ -24,7 +24,7 @@ import * as CreatePayrollEmployeeActions from '../create/actions'
 import { Formik } from 'formik';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';  
-import moment from 'moment'
+import dayjs from '@/utils/date'
 
 const mapStateToProps = (state) => {
     return ({
@@ -89,7 +89,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                     ? res.data.salaryRoleId
                                     : '',
                             dateOfJoining: res.data.dateOfJoining
-                                ? moment(res.data.dateOfJoining, 'DD-MM-YYYY').toDate()
+                                ? dayjs(res.data.dateOfJoining, 'DD-MM-YYYY').toDate()
                                 : '',
 
                             labourCard:
@@ -101,7 +101,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                     ? res.data.passportNumber
                                     : '',
                             passportExpiryDate: res.data.passportExpiryDate
-                                ? moment(res.data.passportExpiryDate, 'DD-MM-YYYY').toDate()
+                                ? dayjs(res.data.passportExpiryDate, 'DD-MM-YYYY').toDate()
                                 : '',
 
                             visaNumber:
@@ -109,7 +109,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                     ? res.data.visaNumber
                                     : '',
                             visaExpiryDate: res.data.visaExpiryDate
-                                ? moment(res.data.visaExpiryDate, 'DD-MM-YYYY').toDate()
+                                ? dayjs(res.data.visaExpiryDate, 'DD-MM-YYYY').toDate()
                                 : '',
 
 
@@ -178,9 +178,9 @@ class UpdateEmployeeEmployment extends React.Component {
             'visaNumber',
             visaNumber !== null ? visaNumber : '',
         );
-        formData.append('dateOfJoining', dateOfJoining ? moment(dateOfJoining).format('DD-MM-YYYY') : '');
-        formData.append('passportExpiryDate', passportExpiryDate ? moment(passportExpiryDate).format('DD-MM-YYYY') : '');
-        formData.append('visaExpiryDate', visaExpiryDate ? moment(visaExpiryDate).format('DD-MM-YYYY') : '');
+        formData.append('dateOfJoining', dateOfJoining ? dayjs(dateOfJoining).format('DD-MM-YYYY') : '');
+        formData.append('passportExpiryDate', passportExpiryDate ? dayjs(passportExpiryDate).format('DD-MM-YYYY') : '');
+        formData.append('visaExpiryDate', visaExpiryDate ? dayjs(visaExpiryDate).format('DD-MM-YYYY') : '');
     
         this.setState({ loading:true, loadingMsg:"Updating Employee ..."});
         this.props.detailEmployeeEmployementAction.updateEmployment(formData).then((res) => {

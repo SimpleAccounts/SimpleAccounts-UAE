@@ -16,7 +16,7 @@ import { CommonActions } from 'services/global';
 import { Loader, Currency} from 'components';
 import * as OpeningBalanceActions from './actions';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import Select from 'react-select';
 import { selectOptionsFactory } from 'utils';
 import {data}  from '../Language/index'
@@ -354,8 +354,8 @@ class OpeningBalance extends React.Component {
 				effectiveDate:
 					typeof row.effectiveDate === 'string'
 						? row.effectiveDate
-						: moment(
-								moment(row.effectiveDate).format('DD-MM-YYYY'),
+						: dayjs(
+								dayjs(row.effectiveDate).format('DD-MM-YYYY'),
 								'DD-MM-YYYY',
 						  ).toDate(),
 			};
@@ -419,8 +419,8 @@ class OpeningBalance extends React.Component {
 	};
 	renderDate = (cell, row) => {
 		return typeof row['effectiveDate'] === 'string'
-		? moment(row['effectiveDate'], 'DD-MM-YYYY').format('DD-MM-YYYY')
-		: moment(row['effectiveDate']).format('DD-MM-YYYY');
+		? dayjs(row['effectiveDate'], 'DD-MM-YYYY').format('DD-MM-YYYY')
+		: dayjs(row['effectiveDate']).format('DD-MM-YYYY');
 	};
 	// renderDate = (cell, row) => {
 	// 	return (
@@ -435,8 +435,8 @@ class OpeningBalance extends React.Component {
 	// 			showYearDropdown
 	// 			value={
 	// 				typeof row['effectiveDate'] === 'string'
-	// 					? moment(row['effectiveDate'], 'DD-MM-YYYY').format('DD-MM-YYYY')
-	// 					: moment(row['effectiveDate']).format('DD-MM-YYYY')
+	// 					? dayjs(row['effectiveDate'], 'DD-MM-YYYY').format('DD-MM-YYYY')
+	// 					: dayjs(row['effectiveDate']).format('DD-MM-YYYY')
 	// 			}
 	// 			dropdownMode="select"
 	// 			dateFormat="dd-MM-yyyy"

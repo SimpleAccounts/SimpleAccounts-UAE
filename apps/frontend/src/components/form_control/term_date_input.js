@@ -10,7 +10,7 @@ import Select from 'react-select';
 import { data } from 'screens/Language/index'
 import LocalizedStrings from 'react-localization';
 import { selectOptionsFactory } from 'utils';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -27,7 +27,7 @@ function setDate(term, invoiceDate) {
     const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
     const values = invoiceDate;
     if (temp && values) {
-        const date1 = moment(values).add(temp, 'days').toDate();
+        const date1 = dayjs(values).add(temp, 'days').toDate();
         return date1;
     }
     return '';

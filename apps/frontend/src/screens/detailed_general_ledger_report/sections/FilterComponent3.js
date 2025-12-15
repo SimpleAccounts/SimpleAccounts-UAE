@@ -16,7 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Formik } from 'formik';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import Select from 'react-select';
 import './style.scss';
 import { data } from '../../Language/index';
@@ -42,8 +42,8 @@ class FilterComponent3 extends Component {
         this.state = {
             language: window['localStorage'].getItem('language'),
             initValue: {
-                startDate: moment().startOf('month').format('YYYY-MM-DD hh:mm'),
-                endDate: moment().endOf('month').format('YYYY-MM-DD hh:mm'),
+                startDate: dayjs().startOf('month').format('YYYY-MM-DD hh:mm'),
+                endDate: dayjs().endOf('month').format('YYYY-MM-DD hh:mm'),
                 reportBasis: 'ACCRUAL',
 				chartOfAccountId: ''
             },
@@ -77,7 +77,7 @@ class FilterComponent3 extends Component {
     
 
     getDateRange = (selectedOption, props) => {
-        const currentDate = moment().startOf('day');
+        const currentDate = dayjs().startOf('day');
         let startDate, endDate;
         let showStartDate = false;
         let showEndDate = false;
@@ -163,8 +163,8 @@ class FilterComponent3 extends Component {
                 this.props.hideExportOptionsFunctionality(false);
                 break;
             case 'customRange':
-                startDate = moment().startOf('month').toDate();
-                endDate = moment().endOf('month').toDate();
+                startDate = dayjs().startOf('month').toDate();
+                endDate = dayjs().endOf('month').toDate();
                 showStartDate = true;
                 showEndDate = true;
                 showRunReport = true;
@@ -172,7 +172,7 @@ class FilterComponent3 extends Component {
                 this.props.hideExportOptionsFunctionality(true);
                 break;
             case 'asOn':
-                startDate = moment().startOf('year').toDate();
+                startDate = dayjs().startOf('year').toDate();
                 endDate = currentDate.clone().toDate();
                 showStartDate = false;
                 showEndDate = true;
@@ -262,7 +262,7 @@ class FilterComponent3 extends Component {
                                             showMonthDropdown
                                             showYearDropdown
                                             autoComplete="off"
-                                            value={moment(props.values.startDate).format('DD-MM-YYYY')}
+                                            value={dayjs(props.values.startDate).format('DD-MM-YYYY')}
                                             dropdownMode="select"
                                             dateFormat="dd-MM-yyyy"
                                             maxDate={props.values.endDate}
@@ -287,7 +287,7 @@ class FilterComponent3 extends Component {
                                             placeholderText="To"
                                             showMonthDropdown
                                             showYearDropdown
-                                            value={moment(props.values.endDate).format('DD-MM-YYYY')}
+                                            value={dayjs(props.values.endDate).format('DD-MM-YYYY')}
                                             dropdownMode="select"
                                             dateFormat="dd-MM-yyyy"
                                             minDate={props.values.startDate}
@@ -389,7 +389,7 @@ class FilterComponent3 extends Component {
                                             className="btn-square"
                                             style={{ marginTop: '15px' }}
                                             onClick={() => {
-                                                const currentDate = moment();
+                                                const currentDate = dayjs();
                                                 props.handleChange('endDate')(currentDate.toDate());
                                                 this.props.handleCancel();
                                                 this.setState({

@@ -18,7 +18,7 @@ import { Formik } from "formik";
 import Select from "react-select";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
-import moment from "moment";
+import dayjs from '@/utils/date';
 import { bindActionCreators } from "redux";
 import { CommonActions } from "services/global";
 import { toast } from "react-toastify";
@@ -79,8 +79,8 @@ class CTReport extends React.Component {
     setDates = (value) => {
         //value = '01-1-2024'
         const startDate = new Date(value);
-        const endDate = new Date(moment(startDate).add(12, 'month').subtract(1, "days"));
-        const dueDate = new Date(moment(endDate).add(9, 'month'))
+        const endDate = new Date(dayjs(startDate).add(12, 'month').subtract(1, "days"));
+        const dueDate = new Date(dayjs(endDate).add(9, 'month'))
         this.setState({
             startDate: startDate,
             endDate: endDate,
@@ -98,15 +98,15 @@ class CTReport extends React.Component {
         const data = this.state;
         const formData = new FormData();
         const postData = {
-            startDate: moment(data.startDate).format('DD/MM/YYYY'),
-            endDate: moment(data.endDate).format('DD/MM/YYYY'),
-            dueDate: moment(data.dueDate).format('DD/MM/YYYY'),
+            startDate: dayjs(data.startDate).format('DD/MM/YYYY'),
+            endDate: dayjs(data.endDate).format('DD/MM/YYYY'),
+            dueDate: dayjs(data.dueDate).format('DD/MM/YYYY'),
             reportingPeriod: 'Yearly',
             reportingForYear: data.ctReprtFor.label,
         };
-        formData.append('startDate', moment(data.startDate).format('DD/MM/YYYY'))
-        formData.append('endDate', moment(data.endDate).format('DD/MM/YYYY'))
-        formData.append('dueDate', moment(data.dueDate).format('DD/MM/YYYY'))
+        formData.append('startDate', dayjs(data.startDate).format('DD/MM/YYYY'))
+        formData.append('endDate', dayjs(data.endDate).format('DD/MM/YYYY'))
+        formData.append('dueDate', dayjs(data.dueDate).format('DD/MM/YYYY'))
         formData.append('reportingPeriod', 'Yearly')
         formData.append('reportingForYear', data.ctReprtFor.label)
 

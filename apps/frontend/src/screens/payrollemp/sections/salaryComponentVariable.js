@@ -23,7 +23,7 @@ import Select from 'react-select'
 import { toast } from 'react-toastify';
  
 import IconButton from '@material-ui/core/IconButton';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import {data}  from '../../Language/index'
 import LocalizedStrings from 'react-localization';
 

@@ -17,7 +17,7 @@ import { data } from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import '../style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { Currency } from 'components';
 
 const mapStateToProps = (state) => {
@@ -299,11 +299,11 @@ class PaySlipModal extends React.Component {
 
 																{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{selectedData.email ? selectedData.email : ('-')}</Col></Row>				 */}
 
-																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.DateOfJoining}</Col><Col className='mt-2 mb-2'>: &nbsp;{selectedData.dateOfJoining !== '' ? moment(selectedData.dateOfJoining).format("DD-MM-YYYY") : ('-')}</Col>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.DateOfJoining}</Col><Col className='mt-2 mb-2'>: &nbsp;{selectedData.dateOfJoining !== '' ? dayjs(selectedData.dateOfJoining).format("DD-MM-YYYY") : ('-')}</Col>
 																</Row>
 																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayPeriod} </Col><Col className='mt-2 mb-2'>: &nbsp;{selectedData.payPeriod !== '' ? this.renderPayperiod(selectedData.payPeriod) : ('-')}</Col>
 																</Row>
-																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayDate} </Col><Col className='mt-2 mb-2'>: &nbsp;{selectedData.payDate !== '' ? moment(selectedData.payDate).format("DD-MM-YYYY") : ('-')}</Col>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayDate} </Col><Col className='mt-2 mb-2'>: &nbsp;{selectedData.payDate !== '' ? dayjs(selectedData.payDate).format("DD-MM-YYYY") : ('-')}</Col>
 																</Row>
 																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.LOPDays} </Col><Col className='mt-2 mb-2'>: &nbsp;{selectedData.lopDays !== '' ? selectedData.lopDays : ('-')}</Col>
 																</Row>
@@ -531,7 +531,7 @@ class PaySlipModal extends React.Component {
 																		item.amount === 0 ? "" :
 																			<tr key={index}>
 																				<td className='text-center'>{index + 1}</td>
-																				<td>{moment(item.transactionDate).format('DD-MM-YYYY')}</td>
+																				<td>{dayjs(item.transactionDate).format('DD-MM-YYYY')}</td>
 																				<td>{item.transactionType}</td>
 																				<td>{item.category ? item.category.split('-')[0] : ''}</td>
 																				<td className='text-right'><Currency

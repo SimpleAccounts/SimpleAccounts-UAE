@@ -31,7 +31,7 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { TextField } from '@material-ui/core';
 
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
@@ -919,7 +919,7 @@ class CreateDebitNote extends React.Component {
 		formData.append('isCreatedWIWP', this.state.isDNWIWithoutProduct);
 		formData.append('creditNoteNumber', debitNoteNumber ? debitNoteNumber : '',);
 		formData.append('email', email ? email : '',);
-		formData.append('creditNoteDate', debitNoteDate ? moment(debitNoteDate, 'DD-MM-YYYY').toDate() : null,);
+		formData.append('creditNoteDate', debitNoteDate ? dayjs(debitNoteDate, 'DD-MM-YYYY').toDate() : null,);
 		formData.append('referenceNo', referenceNumber !== null ? referenceNumber : '',);
 		formData.append('exchangeRate', exchangeRate ? exchangeRate : 1);
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '',);
@@ -1065,7 +1065,7 @@ class CreateDebitNote extends React.Component {
 							label: response.data.organisationName === '' ? response.data.name : response.data.organisationName,
 							value: response.data.contactId,
 						}
-						const date = response.data.receiptDate ? new Date(moment(response.data.receiptDate, 'YYYY-MM-DD').format()) : new Date();
+						const date = response.data.receiptDate ? new Date(dayjs(response.data.receiptDate, 'YYYY-MM-DD').format()) : new Date();
 						this.setState({
 							receiptDate: date,
 							option: custmerName,

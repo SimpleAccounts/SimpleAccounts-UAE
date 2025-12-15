@@ -23,7 +23,7 @@ import * as FTAreport from './actions';
 import { isDate, upperFirst } from 'lodash-es';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import download from 'downloadjs';
 import { ConfirmDeleteModal, Currency } from 'components';
 import { data } from '../../../Language/index';
@@ -419,7 +419,7 @@ class ExciseTaxAuditReport extends React.Component {
 
   renderDate = (cell, row) => {
     return cell
-      ? moment(cell).format('DD-MM-YYYY')
+      ? dayjs(cell).format('DD-MM-YYYY')
       : // .format('LL')
         '-';
   };
