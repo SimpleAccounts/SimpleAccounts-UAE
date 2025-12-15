@@ -5,7 +5,7 @@
     "@coreui/coreui-plugin-chartjs-custom-tooltips": "^1.3.1",
     "@coreui/coreui-pro": "^2.1.14",
     "@coreui/icons": "0.3.0",
-    "@coreui/react": "^2.5.1",
+    "@coreui/react": "^5.9.2",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@material-ui/core": "^4.11.0",
