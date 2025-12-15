@@ -46,10 +46,18 @@ jobs:
 
       - name: Determine whether to run SonarQube
         id: sonar
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN || secrets.SONARQUBE_TOKEN }}
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]; then
             echo "run=false" >> "$GITHUB_OUTPUT"
             echo "::notice::Fork PR detected; SonarQube analysis is skipped because GitHub Actions secrets are not available to forks."
+            exit 0
+          fi
+
+          if [ "${{ github.event_name }}" = "pull_request" ] && [ -z "$SONAR_TOKEN" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::SONAR_TOKEN is not available in this PR context (e.g., Dependabot); skipping SonarQube analysis."
             exit 0
           fi
 
