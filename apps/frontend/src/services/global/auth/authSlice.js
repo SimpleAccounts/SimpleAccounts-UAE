@@ -330,26 +330,6 @@ export const getCompanyCount = () => {
   };
 };
 
-// Internal thunk for getCompanyCount (used in extraReducers for state management)
-const getCompanyCountThunk = createAsyncThunk(
-  'auth/getCompanyCount',
-  async (_, { rejectWithValue }) => {
-    try {
-      const data = {
-        method: 'get',
-        url: '/rest/company/getCompanyCount',
-      };
-      const res = await api(data);
-      if (res.status === 200) {
-        return { data: res.data, status: res.status };
-      }
-      return { data: 0, status: res.status };
-    } catch (err) {
-      return { data: 0, status: err.response?.status || 500 };
-    }
-  }
-);
-
 export const logOut = () => (dispatch) => {
   window['localStorage'].clear();
   dispatch(authSlice.actions.signedOut());
