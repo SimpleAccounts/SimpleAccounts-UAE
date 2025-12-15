@@ -13,7 +13,7 @@ RUN npm ci --legacy-peer-deps
 # Copy source code
 COPY . .
 
-# Build the React app (increase Node memory limit for large builds)
+# Build the React app with Vite (increase Node memory limit for large builds)
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
@@ -23,8 +23,8 @@ RUN npm run build
 FROM nginx:stable-alpine-perl
 WORKDIR /usr/share/nginx/html
 
-# Copy built assets from builder stage
-COPY --from=builder /app/build .
+# Copy built assets from builder stage (Vite outputs to 'dist' instead of 'build')
+COPY --from=builder /app/dist .
 RUN rm -rf /etc/nginx/conf.d
 COPY nginx /etc/nginx
 EXPOSE 80

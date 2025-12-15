@@ -134,7 +134,7 @@
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20231013</version>
+			<version>20250517</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -162,7 +162,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.18.0</version>
+			<version>3.20.0</version>
 		</dependency>
 
 		<!-- Jakarta JAXB (XML Binding) for Spring Boot 3 -->
@@ -215,7 +215,7 @@
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
-			<version>3.24.2</version>
+			<version>3.27.6</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -303,7 +303,7 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.20.0</version>
+			<version>2.21.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.sonarsource.scanner.maven/sonar-maven-plugin -->
 		<dependency>
@@ -345,7 +345,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.5.2</version>
+				<version>3.5.4</version>
 				<configuration>
 					<argLine>${surefireArgLine}</argLine>
 					<useSystemClassLoader>false</useSystemClassLoader>
@@ -502,7 +502,7 @@
 					<plugin>
 						<groupId>io.gatling</groupId>
 						<artifactId>gatling-maven-plugin</artifactId>
-						<version>4.3.7</version>
+						<version>4.20.13</version>
 						<configuration>
 							<simulationsFolder>src/perf/scala/simulations</simulationsFolder>
 							<resultsFolder>target/gatling</resultsFolder>

@@ -45,7 +45,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "sass": "1.32.0"
+    "sass": "1.96.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",
