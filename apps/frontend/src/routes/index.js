@@ -1,9 +1,3 @@
-import mainRoutes from './main'
-import initialRoutes from './initial'
-import adminRoutes from './admin'
-
-export {
-  mainRoutes,
-  initialRoutes,
-  adminRoutes
-}
+export { default as mainRoutes } from './main'
+export { default as initialRoutes } from './initial'
+export { default as adminRoutes } from './admin'

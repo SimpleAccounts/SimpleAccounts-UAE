@@ -27,6 +27,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import * as ProfileActions from './actions';
 import { CommonActions, AuthActions } from 'services/global';
+import { withNavigation } from 'utils/withNavigation';
 import './style.scss';
 import { upperFirst } from 'lodash-es';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -2831,4 +2832,4 @@ class Profile extends React.Component {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(Profile));

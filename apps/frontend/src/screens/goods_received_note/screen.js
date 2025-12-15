@@ -39,6 +39,11 @@ import './style.scss';
 import { Create } from '@material-ui/icons';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+// Use import instead of require for Vite compatibility
+import invoiceimage from 'assets/images/invoice/invoice.png';
+import overWeekly from 'assets/images/invoice/week1.png';
+import overduemonthly from 'assets/images/invoice/month.png';
+import overdue from 'assets/images/invoice/due1.png';
 
 const mapStateToProps = (state) => {
 	return {
@@ -67,11 +72,6 @@ const customStyles = {
 		},
 	}),
 };
-
-const invoiceimage = require('assets/images/invoice/invoice.png');
-const overWeekly = require('assets/images/invoice/week1.png');
-const overduemonthly = require('assets/images/invoice/month.png');
-const overdue = require('assets/images/invoice/due1.png');
 
 let strings = new LocalizedStrings(data);
 class GoodsReceivedNote extends React.Component {

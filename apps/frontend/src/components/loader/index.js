@@ -4,10 +4,11 @@ import { motion } from 'framer-motion'
 //
 import { alpha, styled, useTheme } from '@mui/material/styles';
 import { Box, GlobalStyles } from '@mui/material';
-const loaderImage = require('assets/images/brand/loader-gif.gif')
+// Use import instead of require for Vite compatibility
+import loaderImage from 'assets/images/brand/loader-gif.gif';
 // const loaderImage = require('assets/images/settings/thumbnail.png');
 // const newloaderImage = require('assets/images/settings/thumbnail.png');
-const oldloaderImage = require('assets/images/brand/loader-gif.gif')
+import oldloaderImage from 'assets/images/brand/loader-gif.gif';
 export default function Loader({loadingMsg,NextloadingMsg}) {
   return (
 

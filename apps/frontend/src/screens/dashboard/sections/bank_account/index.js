@@ -63,8 +63,6 @@ const backOption = {
 	visibility: true ,
 };
 
-const bankIcon = require('assets/images/dashboard/bank1.png');
-
 class BankAccount extends Component {
 	constructor(props) {
 		super(props);

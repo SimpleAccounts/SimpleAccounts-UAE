@@ -31,7 +31,8 @@ import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { upperFirst } from 'lodash';
 
-const eye = require('assets/images/settings/eye.png');
+// Use import instead of require for Vite compatibility
+import eye from 'assets/images/settings/eye.png';
 const mapStateToProps = (state) => {
 	return {
 		employee_list: state.user.employee_list,

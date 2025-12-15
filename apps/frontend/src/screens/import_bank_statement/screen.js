@@ -42,8 +42,8 @@ const mapDispatchToProps = (dispatch) => {
 		detailBankAccountActions : bindActionCreators(DetailBankAccountActions,dispatch)
 	};
 };
+
 let strings = new LocalizedStrings(data);
-const Papa = require("papaparse");
 class ImportBankStatement extends React.Component {
 	constructor(props) {
 		super(props);

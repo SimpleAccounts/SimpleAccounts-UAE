@@ -33,7 +33,7 @@ import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { StringStream } from 'codemirror';
+// import { StringStream } from 'codemirror'; // Removed: StringStream not available in CodeMirror 6
 import FilterComponent3 from '../filterComponent3';
 
 const mapStateToProps = (state) => {

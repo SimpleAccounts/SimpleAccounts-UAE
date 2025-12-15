@@ -41,7 +41,7 @@ import { Date } from 'core-js';
 import download from 'downloadjs';
 import { align } from '@progress/kendo-drawing';
 import { toast } from 'react-toastify';
-import { StringStream } from 'codemirror';
+// import { StringStream } from 'codemirror'; // Removed: StringStream not available in CodeMirror 6
 import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {

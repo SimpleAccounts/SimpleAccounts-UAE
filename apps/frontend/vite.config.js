@@ -6,17 +6,6 @@ import path from 'path';
 export default defineConfig({
   plugins: [
     {
-      name: 'inject-vite-env',
-      transformIndexHtml(html) {
-        // Inject import.meta.env into window for env.js utility
-        // This allows accessing Vite env vars without Jest parse errors
-        return html.replace(
-          '<head>',
-          `<head><script>if(typeof window!=='undefined'){window.__VITE_ENV__=import.meta.env;}</script>`
-        );
-      },
-    },
-    {
       name: 'treat-js-files-as-jsx',
       enforce: 'pre', // Run before other plugins
       async transform(code, id) {
@@ -51,7 +40,23 @@ export default defineConfig({
       loader: {
         '.js': 'jsx',
       },
+      // Define global variables for CJS modules
+      define: {
+        global: 'globalThis',
+      },
     },
+    // Include React and react-is to ensure proper module resolution
+    include: [
+      'react', 
+      'react-dom', 
+      'react/jsx-runtime', 
+      'react-is', 
+      'hoist-non-react-statics', 
+      'prop-types',
+      'to-words', // CJS module that needs pre-bundling
+      '@material-ui/core/styles', // Include to handle CJS require() calls
+      '@material-ui/core',
+    ],
     // Exclude large dependencies from optimization to save memory
     exclude: [
       // Exclude test-related packages
@@ -59,10 +64,13 @@ export default defineConfig({
       'msw',
       // Exclude large UI libraries that are already optimized
       '@coreui/coreui-pro',
-      '@material-ui/core',
       // Exclude build tools
       'webpack',
       'rollup',
+      // Exclude codemirror - it has complex exports that break with optimization
+      'codemirror',
+      // Exclude react-router-navigation-prompt - incompatible with React Router v6 (uses withRouter)
+      'react-router-navigation-prompt',
     ],
     // Reduce memory usage during optimization
     force: false, // Don't force re-optimization
@@ -74,6 +82,8 @@ export default defineConfig({
     alias: {
       // Map '@' to src directory for absolute imports
       '@': path.resolve(__dirname, './src'),
+      // Replace react-router-navigation-prompt with our v6-compatible shim
+      'react-router-navigation-prompt': path.resolve(__dirname, './src/utils/react-router-navigation-prompt-shim.js'),
       // Support existing imports without '@' prefix (e.g., 'assets/css/global.scss')
       'assets': path.resolve(__dirname, './src/assets'),
       'components': path.resolve(__dirname, './src/components'),
@@ -87,6 +97,8 @@ export default defineConfig({
       'serviceWorker': path.resolve(__dirname, './src/serviceWorker'),
       'polyfill': path.resolve(__dirname, './src/polyfill'),
     },
+    // Ensure proper resolution of CJS modules in ESM context
+    dedupe: ['react-is', 'hoist-non-react-statics', 'prop-types'],
   },
   
   // Dev server configuration
@@ -106,6 +118,10 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false, // Disable source maps to reduce memory usage
+    commonjsOptions: {
+      transformMixedEsModules: true,
+      include: [/node_modules/],
+    },
     // Optimize chunk splitting for better caching and memory usage
     rollupOptions: {
       input: path.resolve(__dirname, 'index.html'),

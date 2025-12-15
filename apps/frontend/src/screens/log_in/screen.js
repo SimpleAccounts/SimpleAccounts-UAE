@@ -43,8 +43,9 @@ const mapStateToProps = (state) => {
 	};
 };
 
-const eye = require('assets/images/settings/eye.png');
-const noteye = require('assets/images/settings/noteye.png')
+// Use import instead of require for Vite compatibility
+import eye from 'assets/images/settings/eye.png';
+import noteye from 'assets/images/settings/noteye.png';
 const mapDispatchToProps = (dispatch) => {
 	return {
 		authActions: bindActionCreators(AuthActions, dispatch),

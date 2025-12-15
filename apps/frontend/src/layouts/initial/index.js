@@ -1,10 +1,11 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { initialRoutes } from 'routes';
 import { AuthActions, CommonActions } from 'services/global';
+import { withNavigation } from 'utils/withNavigation';
 import config from 'constants/config';
 
 const mapStateToProps = (state) => {
@@ -33,19 +34,19 @@ class InitialLayout extends React.Component {
 	render() {
 		return (
 			<div className="initial-container">
-				<Switch>
+				<Routes>
 					{initialRoutes.map((prop, key) => {
 						if (prop.redirect) {
-							return <Redirect from={prop.path} to={prop.pathTo} key={key} />;
+							return <Route path={prop.path} key={key} element={<Navigate to={prop.pathTo} replace />} />;
 						}
 						return (
-							<Route path={prop.path} component={prop.component} key={key} />
+							<Route path={prop.path} element={<prop.component />} key={key} />
 						);
 					})}
-				</Switch>
+				</Routes>
 			</div>
 		);
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(InitialLayout);
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(InitialLayout));

@@ -9,6 +9,17 @@ import "./style.scss";
 import { data } from "../Language/index";
 import LocalizedStrings from "react-localization";
 import config from "constants/config";
+// Use import instead of require for Vite compatibility
+import Financial from "assets/images/reports/Out line.png";
+import Vat from "assets/images/reports/vat.png";
+import Journal from "assets/images/reports/journal.png";
+import Sales from "assets/images/reports/sales.png";
+import Purchase from "assets/images/reports/pay.png";
+import Receivables from "assets/images/reports/inbox.png";
+import Credit from "assets/images/reports/credit.png";
+import Debit from "assets/images/reports/debit.png";
+import Payables from "assets/images/reports/Payables Icon.png";
+import Expenses from "assets/images/reports/Expense icon.png";
 
 const mapStateToProps = (state) => {
   return {
@@ -18,16 +29,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {};
 };
-const Financial = require("assets/images/reports/Out line.png");
-const Vat = require("assets/images/reports/vat.png");
-const Journal = require("assets/images/reports/journal.png");
-const Sales = require("assets/images/reports/sales.png");
-const Purchase = require("assets/images/reports/pay.png");
-const Receivables = require("assets/images/reports/inbox.png");
-const Credit = require("assets/images/reports/credit.png");
-const Debit = require("assets/images/reports/debit.png");
-const Payables = require("assets/images/reports/Payables Icon.png");
-const Expenses = require("assets/images/reports/Expense icon.png");
 
 let strings = new LocalizedStrings(data);
 class FinancialReport extends React.Component {

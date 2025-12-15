@@ -97,8 +97,6 @@ const customStyles = {
 	}),
 };
 
-const invoiceimage = require('assets/images/invoice/invoice.png');
-
 let strings = new LocalizedStrings(data);
 class CreateGoodsReceivedNote extends React.Component {
 	constructor(props) {

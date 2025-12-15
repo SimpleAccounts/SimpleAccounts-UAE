@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { NavLink, Redirect, Route, Switch } from 'react-router-dom';
+import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
@@ -9,6 +9,7 @@ import { AuthActions, CommonActions } from 'services/global';
 import PrivateRoute from '../private';
 import navigation from 'constants/navigation';
 import { Footer, Header, Loading, Loader } from 'components';
+import { withNavigation } from 'utils/withNavigation';
 import './style.scss';
 import { data } from '../../screens/Language/index';
 import LocalizedStrings from 'react-localization';
@@ -343,23 +344,26 @@ class AdminLayout extends React.Component {
                     closeOnClick
                     draggable
                   />
-                  <Switch>
+                  <Routes>
                     {adminRoutes?.map((prop, key) => {
                       if (prop?.redirect) {
-                        return <Redirect from={prop?.path} to={prop?.pathTo} key={key} />;
+                        return <Route path={prop.path} key={key} element={<Navigate to={prop.pathTo} replace />} />;
                       }
                       return (
-                        <PrivateRoute
+                        <Route
                           path={prop.path}
-                          name={prop.name}
-                          node={user_role_list}
-                          component={prop.component}
                           key={key}
-                          exact
+                          element={
+                            <PrivateRoute
+                              element={<prop.component />}
+                              name={prop.name}
+                              node={user_role_list}
+                            />
+                          }
                         />
                       );
                     })}
-                  </Switch>
+                  </Routes>
                 </Suspense>
               </Container>
             </main>
@@ -375,4 +379,4 @@ class AdminLayout extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminLayout);
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(AdminLayout));

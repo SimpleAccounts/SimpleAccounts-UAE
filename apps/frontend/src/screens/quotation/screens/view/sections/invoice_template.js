@@ -7,7 +7,8 @@ import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextField } from '@material-ui/core';
 
-const { ToWords } = require('to-words');
+// Use import instead of require for Vite compatibility
+import { ToWords } from 'to-words';
 const ZERO=0.00
 const toWords = new ToWords({
 	localeCode: 'en-IN',
@@ -19,7 +20,8 @@ const toWords = new ToWords({
 	}
   });
 let strings = new LocalizedStrings(data);
-const footer = require('assets/images/invoice/invoiceFooter.png');
+// Use import instead of require for Vite compatibility
+import footer from 'assets/images/invoice/invoiceFooter.png';
 class RFQTemplate extends Component {
 	constructor(props) {
 		super(props);
