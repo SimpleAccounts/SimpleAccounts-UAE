@@ -15,13 +15,12 @@ import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -52,7 +51,6 @@ public class TransactionCategoryBalanceController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Save")
 	@PostMapping(value = "/save")
 		public ResponseEntity<Object> save(@ModelAttribute ListOfTCBPModel persistmodelList,
 										   HttpServletRequest request) {
@@ -164,7 +162,6 @@ public class TransactionCategoryBalanceController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "/Update")
 	@PostMapping(value = "update")
 		public ResponseEntity<Object> update(@RequestBody TransactioncategoryBalancePersistModel persistModel,
 											 HttpServletRequest request) {
@@ -263,7 +260,6 @@ public class TransactionCategoryBalanceController {
 	}
 	
 	@LogRequest
-	@ApiOperation(value = "Get Transaction By ID")
 	@GetMapping(value = "/getTransactionById")
 	public ResponseEntity<TransactioncategoryBalancePersistModel> getTransactionById(@RequestParam(value = "id") Integer id) {
 		TransactionCategoryBalance transactionCategoryBalance = transactionCategoryBalanceService.findByPK(id);
@@ -275,7 +271,6 @@ public class TransactionCategoryBalanceController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
 	public ResponseEntity<PaginationResponseModel> getAll(OpeningBalanceRequestFilterModel filterModel,HttpServletRequest request) {
 

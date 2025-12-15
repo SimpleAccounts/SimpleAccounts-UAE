@@ -3,7 +3,7 @@ package com.simpleaccounts.entity.bankaccount;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -21,7 +21,7 @@ public class ReconcileStatus implements Serializable  {
 
     @Basic
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BANK_ACCOUNT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_RECONCILE_STATUS_BANK_ACCOUNT_ID_BANK_ACCOUNT"))
+    @JoinColumn(name = "BANK_ACCOUNT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_RECONCILE_STATUS_BANK_ACCOUNT_ID_BANK_ACCOUNT"))
     private BankAccount bankAccount;
 
     @Basic

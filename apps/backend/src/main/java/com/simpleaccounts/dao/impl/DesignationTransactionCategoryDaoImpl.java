@@ -4,7 +4,7 @@ import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.DesignationTransactionCategoryDao;
 import com.simpleaccounts.entity.DesignationTransactionCategory;
 import java.util.List;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 @Repository("designationTransactionCategoryDao")

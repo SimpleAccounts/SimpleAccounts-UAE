@@ -4,7 +4,7 @@ import com.simpleaccounts.constant.dbfilter.DbFilter;
 import com.simpleaccounts.rest.PaginationModel;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 public interface Dao<PK, ENTITY> {
 

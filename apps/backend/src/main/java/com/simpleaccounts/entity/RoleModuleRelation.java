@@ -2,7 +2,7 @@ package com.simpleaccounts.entity;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -30,11 +30,11 @@ public class RoleModuleRelation {
         private Integer id;
 
         @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "SIMPLEACCOUNTS_MODULE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_ROLE_MOD_RELATION_SA_MOD_ID_SA_MOD"))
+        @JoinColumn(name = "SIMPLEACCOUNTS_MODULE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_ROLE_MOD_RELATION_SA_MOD_ID_SA_MOD"))
         private SimpleAccountsModules simpleAccountsModule;
 
         @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "ROLE_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_ROLE_MODULE_RELATION_ROLE_CODE_ROLE"))
+        @JoinColumn(name = "ROLE_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_ROLE_MODULE_RELATION_ROLE_CODE_ROLE"))
         private Role role;
 
         @Column(name = "ORDER_SEQUENCE")

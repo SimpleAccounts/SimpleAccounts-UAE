@@ -9,7 +9,7 @@ import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.SearchViewDao;
 import com.simpleaccounts.entity.SearchView;
 import java.util.List;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 /**

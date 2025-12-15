@@ -3,7 +3,7 @@ package com.simpleaccounts.entity.bankaccount;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.transaction.annotation.Transactional;

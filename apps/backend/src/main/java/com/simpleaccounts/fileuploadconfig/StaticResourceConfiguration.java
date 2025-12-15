@@ -1,7 +1,7 @@
 package com.simpleaccounts.fileuploadconfig;
 
 import com.simpleaccounts.utils.OSValidator;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -10,21 +10,36 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author S@urabh
  */
 @Configuration
-@RequiredArgsConstructor
 public class StaticResourceConfiguration implements WebMvcConfigurer {
 
-	private final OSValidator osVaidator;
+	private final String fileLocation;
+	private final String fileLocationLinux;
 
-	/**
-	 * {@link com.simpleaccounts.fileuploadconfig.FileUploadConfig#getFileBaseLocation}
-	 */
-	private final String basePath;
+	public StaticResourceConfiguration(
+			@Value("${simpleaccounts.filelocation:upload/}") String fileLocation,
+			@Value("${simpleaccounts.filelocation.linux:}") String fileLocationLinux) {
+		this.fileLocation = fileLocation;
+		this.fileLocationLinux = fileLocationLinux;
+	}
+
+	private String resolveBasePath() {
+		if (OSValidator.isWindows()) {
+			return fileLocation;
+		}
+
+		if (fileLocationLinux != null && !fileLocationLinux.isBlank()) {
+			return fileLocationLinux;
+		}
+
+		return fileLocation;
+	}
 
 	/**
 	 * @param basePath set base path for view file from server
 	 */
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		String basePath = resolveBasePath();
 		/**
 		 * @author $@urabh map "/file/" to base folder to access file from server
 		 */

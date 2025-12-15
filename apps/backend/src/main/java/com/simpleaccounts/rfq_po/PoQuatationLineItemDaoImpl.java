@@ -1,7 +1,7 @@
 package com.simpleaccounts.rfq_po;
 
 import com.simpleaccounts.dao.AbstractDao;
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository(value = "poQuatationLineItemDaoImpl")

@@ -9,9 +9,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import javax.sql.DataSource; // javax.sql is still valid - not migrated to jakarta
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,7 +45,14 @@ class InvoiceRepositoryTest {
     void registerDateTruncAlias() throws SQLException {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.execute("CREATE ALIAS IF NOT EXISTS DATE_TRUNC FOR \"com.simpleaccounts.repository.H2Functions.dateTrunc\"");
+            try {
+                statement.execute(
+                        "CREATE ALIAS IF NOT EXISTS DATE_TRUNC FOR \"com.simpleaccounts.repository.H2Functions.dateTrunc\"");
+            } catch (SQLException ex) {
+                if (ex.getErrorCode() != 90076) {
+                    throw ex;
+                }
+            }
         }
     }
 
@@ -96,4 +103,3 @@ class InvoiceRepositoryTest {
         entityManager.flush();
     }
 }
-

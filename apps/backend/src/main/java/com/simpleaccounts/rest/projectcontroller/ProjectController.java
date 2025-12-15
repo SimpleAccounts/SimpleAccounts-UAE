@@ -15,12 +15,11 @@ import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.ProjectService;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +54,6 @@ public class ProjectController{
 	private final JwtTokenUtil jwtTokenUtil;
 
 	@LogRequest
-	@ApiOperation(value = "Get Project By ID")
 	@GetMapping(value = "/getProjectById")
 	public ResponseEntity<ProjectRequestModel> getProductById(@RequestParam(value = "id") Integer id) {
 		Project project = projectService.findByPK(id);
@@ -68,7 +66,6 @@ public class ProjectController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Project List")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getProductList(ProjectRequestFilterModel filterModel) {
 		Map<ProjectFilterEnum, Object> filterDataMap = new HashMap();
@@ -97,7 +94,6 @@ public class ProjectController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Project By ID")
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<String> deleteProject(@RequestParam(value = "id") Integer id){
 		try {
@@ -118,7 +114,6 @@ public class ProjectController{
 	
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Project in Bulk")
 	@DeleteMapping(value = "/deletes")
 	public ResponseEntity<String> deleteProjects(@RequestBody DeleteModel ids){
 		try {
@@ -144,7 +139,6 @@ public class ProjectController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update Product")
 	@PostMapping(value = "/update")
 	public ResponseEntity<String> update(@RequestBody ProjectRequestModel projectRequestModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);

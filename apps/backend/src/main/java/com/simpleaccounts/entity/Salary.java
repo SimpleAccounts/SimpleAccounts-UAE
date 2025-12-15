@@ -3,7 +3,7 @@ package com.simpleaccounts.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -22,11 +22,11 @@ public class Salary implements Serializable {
     private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EMPLOYEE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_SALARY_EMPLOYEE_ID_EMPLOYEE"))
+    @JoinColumn(name = "EMPLOYEE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_SALARY_EMPLOYEE_ID_EMPLOYEE"))
     private Employee employeeId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SALARY_COMPONENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_SALARY_SALARY_COMPONENT_ID_SALARY_COMPONENT"))
+    @JoinColumn(name = "SALARY_COMPONENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_SALARY_SALARY_COMPONENT_ID_SALARY_COMPONENT"))
     private SalaryComponent salaryComponent;
 
     @Column(name = "TYPE")
@@ -62,7 +62,7 @@ public class Salary implements Serializable {
     private LocalDateTime salaryDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PAYROLL_ID",referencedColumnName="PAYROLL_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_SALARY_PAYROLL_ID_PAYROLL"))
+    @JoinColumn(name = "PAYROLL_ID",referencedColumnName="PAYROLL_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_SALARY_PAYROLL_ID_PAYROLL"))
     private Payroll payrollId;
 
     @Column(name = "ORDER_SEQUENCE")

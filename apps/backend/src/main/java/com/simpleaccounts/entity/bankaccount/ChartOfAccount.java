@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -56,7 +56,7 @@ public class ChartOfAccount implements Serializable {
 	private String chartOfAccountDescription;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PARENT_CHART_OF_ACCOUNT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CHART_OF_ACCOUNT_PARENT_CHART_OF_ACCOUNT_ID_CHART_OF_ACCOUNT"))
+	@JoinColumn(name = "PARENT_CHART_OF_ACCOUNT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CHART_OF_ACCOUNT_PARENT_CHART_OF_ACCOUNT_ID_CHART_OF_ACCOUNT"))
 	private ChartOfAccount parentChartOfAccount;
 
 	@Column(name = "DEBIT_CREDIT_FLAG")

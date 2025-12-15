@@ -1,7 +1,7 @@
 package com.simpleaccounts.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 

@@ -4,7 +4,6 @@ import static com.simpleaccounts.constant.ErrorConstant.ERROR;
 
 import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.CustomizeInvoiceTemplate;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,6 @@ public class CustomizeInvoiceTemplateController {
     private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
     @LogRequest
-    @ApiOperation(value = "Get Invoice Prefix List")
     @GetMapping(value = "/getListForInvoicePrefixAndSuffix")
     public ResponseEntity<Object> getListForInvoicePrefix(@RequestParam(value = "invoiceType") Integer invoiceType){
 
@@ -43,7 +41,6 @@ public class CustomizeInvoiceTemplateController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Next invoice No")
     @GetMapping(value = "/getNextInvoiceNo")
     public ResponseEntity<String> getNextInvoiceNo(@RequestParam(value = "invoiceType") Integer invoiceType) {
         try {

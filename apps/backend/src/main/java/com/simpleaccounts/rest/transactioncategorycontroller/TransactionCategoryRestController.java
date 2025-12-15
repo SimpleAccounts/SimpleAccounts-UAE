@@ -24,13 +24,12 @@ import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +72,6 @@ public class TransactionCategoryRestController{
 	private final TransactionExpensesRepository transactionExpensesRepository;
 
 	@LogRequest
-	@ApiOperation(value = "Get All Transaction Categories for the Loggedin User and the Master data")
 	@GetMapping(value = "/gettransactioncategory")
 	public ResponseEntity<List<TransactionCategoryModel>> getAllTransactionCategory(HttpServletRequest request) {
 		List<TransactionCategory> transactionCategories = transactionCategoryService.findAllTransactionCategory();
@@ -86,7 +84,6 @@ public class TransactionCategoryRestController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get All Transaction Categories for the Loggedin User and the Master data by filter")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getAllTransactionCategoryListByFilter(TransactionCategoryRequestFilterModel filterModel,
 			HttpServletRequest request) {
@@ -119,7 +116,6 @@ public class TransactionCategoryRestController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get All Transaction Categories for export")
 	@GetMapping(value = "/getExportList")
 	public ResponseEntity<List<TransactionCategoryExportModel>> getAllTransactionCategoryForExport(HttpServletRequest request) {
 		List<TransactionCategory> response = transactionCategoryService.findAllTransactionCategory();
@@ -132,7 +128,6 @@ public class TransactionCategoryRestController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Transaction Category By ID")
 	@GetMapping(value = "/getTransactionCategoryById")
 	public ResponseEntity<TransactionCategoryModel> getTransactionCategoryById(@RequestParam("id") Integer id) {
 		TransactionCategory transactionCategories = transactionCategoryService.findByPK(id);
@@ -145,7 +140,6 @@ public class TransactionCategoryRestController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Transaction Category")
 	@DeleteMapping(value = "/deleteTransactionCategory")
 	public ResponseEntity<Object> deleteTransactionCategory(@RequestParam("id") Integer id) {
 		try{
@@ -170,7 +164,6 @@ public class TransactionCategoryRestController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Transaction Category In Bulk")
 	@DeleteMapping(value = "/deleteTransactionCategories")
 	public ResponseEntity<Object> deleteTransactionCategories(@RequestBody DeleteModel ids) {
 		try {
@@ -189,7 +182,6 @@ public class TransactionCategoryRestController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Add New Transaction Category")
 	@PostMapping(value = "/save")
 	public ResponseEntity<Object> save(@RequestBody TransactionCategoryBean transactionCategoryBean,
 			HttpServletRequest request) {
@@ -218,7 +210,6 @@ public class TransactionCategoryRestController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update Transaction Category")
 	@PostMapping(value = "/update")
 	public ResponseEntity<Object> update(@RequestBody TransactionCategoryBean transactionCategoryBean,
 			HttpServletRequest request) {
@@ -253,7 +244,6 @@ public class TransactionCategoryRestController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get All Transaction Categories for Expense")
 	@GetMapping(value = "/getForExpenses")
 	public ResponseEntity<List<TransactionCategory>> getTransactionCatgeoriesForExpenses(HttpServletRequest request) {
 		List<TransactionCategory> transactionCategories =transactionExpensesRepository.getTransactionCategory(logger.getName());
@@ -268,7 +258,6 @@ public class TransactionCategoryRestController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Explained Transaction Count For Transaction Id")
 	@GetMapping(value = "/getExplainedTransactionCountForTransactionCategory")
 	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int transactionCategoryId) {
 		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryId);
@@ -280,7 +269,6 @@ public class TransactionCategoryRestController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Transaction category For Product")
 	@GetMapping(value = "/getTransactionCategoryListForManualJornal")
 	public ResponseEntity<List<SingleLevelDropDownModel>> getTransactionCategoryListManualJornal(){
 		List<SingleLevelDropDownModel> response  = new ArrayList<>();

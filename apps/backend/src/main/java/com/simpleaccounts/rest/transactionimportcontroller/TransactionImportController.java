@@ -25,7 +25,6 @@ import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.FileHelper;
-import io.swagger.annotations.ApiOperation;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -35,7 +34,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -78,7 +77,6 @@ public class TransactionImportController{
 	private final JwtTokenUtil jwtTokenUtil;
 
 	@LogRequest
-	@ApiOperation(value = "Get Bank Account List")
 	@GetMapping(value = "/getbankaccountlist")
 	public ResponseEntity<List<BankAccount>> getBankAccount() {
 		List<BankAccount> bankAccounts = bankAccountService.getBankAccounts();
@@ -90,7 +88,6 @@ public class TransactionImportController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Download csv of Tranaction")
 	@GetMapping(value = "/downloadcsv")
 	public ResponseEntity<Object> downloadSimpleFile() {
 		ClassLoader classLoader = getClass().getClassLoader();
@@ -110,7 +107,6 @@ public class TransactionImportController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get List of Date format")
 	@GetMapping(value = "/getformatdate")
 	public ResponseEntity<List<String>> getDateFormatList() {
 		List<String> dateFormatList = DateFormatUtil.dateFormatList();
@@ -130,7 +126,6 @@ public class TransactionImportController{
 	 */
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Save Import Transaction")
 	@PostMapping(value = "/saveimporttransaction")
 	public ResponseEntity<Integer> saveTransactions(@RequestBody List<TransactionModel> transactionList,
 													@RequestParam(value = "id") Integer id, @RequestParam(value = "bankId") Integer bankId) {
@@ -180,7 +175,6 @@ public class TransactionImportController{
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Import Trnsaction")
 	@PostMapping(value = "/save")
 	public ResponseEntity<String> importTransaction(@RequestBody TransactionImportModel transactionImportModel,
 													HttpServletRequest request) {
@@ -203,7 +197,6 @@ public class TransactionImportController{
 	}
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Import Trnsaction")
 	@PostMapping(value = "/savewithtemplate")
 	public ResponseEntity<String> importTransaction2(@RequestBody TransactionImportModel transactionImportModel,
 													HttpServletRequest request) {
@@ -226,7 +219,6 @@ public class TransactionImportController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "parse file and return data according template")
 	@PostMapping("/parse")
 	@SuppressWarnings("unchecked")
 	public ResponseEntity<Map<String, Object>> parseTransaction(@RequestBody MultipartFile file, @RequestParam(value = "id") Long id) throws IOException {
@@ -256,7 +248,6 @@ public class TransactionImportController{
 		return new ResponseEntity<>(dataMap, HttpStatus.OK);
 	}
 	@LogRequest
-	@ApiOperation(value = "Write file and return file")
 	@PostMapping("/parseFile")
 	@SuppressWarnings("unchecked")
 	public ResponseEntity<Map<String, Object>> makeFile(@ModelAttribute TransactionImportRequestModel transactionImportRequestModel) throws IOException {
@@ -277,7 +268,6 @@ public class TransactionImportController{
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Write file and return file")
 	@PostMapping("/parseFileWithoutTemplate")
 	@SuppressWarnings("unchecked")
 	public ResponseEntity<Map<String, Object>> makeFile2(@RequestBody TransactionImportRequestModel transactionImportRequestModel) throws IOException {

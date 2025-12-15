@@ -2,7 +2,7 @@ package com.simpleaccounts.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -82,11 +82,11 @@ public class Contact implements Serializable {
 	private String addressLine3;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "COUNTRY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_CONTACT_COUNTRY_CODE_COUNTRY"))
+	@JoinColumn(name = "COUNTRY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CONTACT_COUNTRY_CODE_COUNTRY"))
 	private Country country;
 
 	@OneToOne
-	@JoinColumn(name = "STATE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CONTACT_STATE_ID_STATE"))
+	@JoinColumn(name = "STATE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CONTACT_STATE_ID_STATE"))
 	private State state;
 
 	@Basic
@@ -110,7 +110,7 @@ public class Contact implements Serializable {
 	private String vatRegistrationNumber;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_CONTACT_CURRENCY_CODE_CURRENCY"))
+	@JoinColumn(name = "CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CONTACT_CURRENCY_CODE_CURRENCY"))
 	private Currency currency;
 
 	@Basic(optional = false)
@@ -138,7 +138,7 @@ public class Contact implements Serializable {
 	private Boolean deleteFlag = Boolean.FALSE;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PLACE_OF_SUPPLY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CONTACT_PLACE_OF_SUPPLY_ID_PLACE_OF_SUPPLY"))
+	@JoinColumn(name = "PLACE_OF_SUPPLY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CONTACT_PLACE_OF_SUPPLY_ID_PLACE_OF_SUPPLY"))
 	private PlaceOfSupply placeOfSupplyId;
 
 	@Basic(optional = false)
@@ -157,15 +157,15 @@ public class Contact implements Serializable {
 	private Boolean isRegisteredForVat = false;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "TAX_TREATMENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CONTACT_TAX_TREATMENT_ID_TAX_TREATMENT"))
+	@JoinColumn(name = "TAX_TREATMENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CONTACT_TAX_TREATMENT_ID_TAX_TREATMENT"))
 	private TaxTreatment taxTreatment;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "SHIPPING_COUNTRY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_CONTACT_SHIPPING_COUNTRY_CODE_COUNTRY"))
+	@JoinColumn(name = "SHIPPING_COUNTRY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CONTACT_SHIPPING_COUNTRY_CODE_COUNTRY"))
 	private Country shippingCountry;
 
 	@OneToOne
-	@JoinColumn(name = "SHIPPING_STATE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CONTACT_SHIPPING_STATE_ID_STATE"))
+	@JoinColumn(name = "SHIPPING_STATE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CONTACT_SHIPPING_STATE_ID_STATE"))
 	private State shippingState;
 
 	@Basic

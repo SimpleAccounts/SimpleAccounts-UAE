@@ -11,7 +11,7 @@ import com.simpleaccounts.rest.payroll.PayrollJpaTest;
 import com.simpleaccounts.rest.payroll.SalaryTemplateDao;
 import java.util.Collections;
 import java.util.List;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;

@@ -24,14 +24,13 @@ import com.simpleaccounts.rest.usercontroller.UserRestHelper;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +38,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,13 +46,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Slf4j
-	@Component
-	@RequestMapping("/rest/company")
-	@SuppressWarnings("java:S131")
-	@RequiredArgsConstructor
+@RestController
+@RequestMapping("/rest/company")
+@SuppressWarnings("java:S131")
+@RequiredArgsConstructor
 public class CompanyController {
 	private static final String MSG_UPDATED_SUCCESSFULLY = "Updated Successfully";
 
@@ -108,7 +107,6 @@ public class CompanyController {
 	
 	@LogRequest
 	@LogExecutionTime
-	@ApiOperation(value = "Get Company List")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<List<CompanyListModel>> getCompanyList(HttpServletRequest request) {
 		try {
@@ -138,7 +136,6 @@ public class CompanyController {
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
 	@LogExecutionTime
-	@ApiOperation(value = "delete By Id")
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<String> deleteCompany(@RequestParam(value = "id") Integer id) {
 		try {
@@ -160,7 +157,6 @@ public class CompanyController {
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
 	@LogExecutionTime
-	@ApiOperation(value = "Delete Companies in Bulk")
 	@DeleteMapping(value = "/deletes")
 	public ResponseEntity<String> deleteCompanies(@RequestBody DeleteModel ids) {
 		try {
@@ -175,7 +171,6 @@ public class CompanyController {
 
 	@LogRequest
 	@LogExecutionTime
-	@ApiOperation(value = "Get Company Deatials for login user")
 	@GetMapping(value = "/getCompanyDetails")
 	public ResponseEntity<CompanyModel> getCompanyById(HttpServletRequest request) {
 		try {
@@ -195,7 +190,6 @@ public class CompanyController {
 
 	@LogRequest
 	@LogExecutionTime
-	@ApiOperation(value = "Get Company Count ")
 	@GetMapping(value = "/getCompanyCount")
 	public ResponseEntity<Integer> getCompanyCount(HttpServletRequest request) {
 		try {
@@ -213,7 +207,6 @@ public class CompanyController {
 
 	@LogRequest
 	@LogExecutionTime
-	@ApiOperation(value = "Get List of Time zones ")
 	@GetMapping(value = "/getTimeZoneList")
 	public ResponseEntity<List<String>> getGetTimeZoneList(HttpServletRequest request) {
 		try {
@@ -227,7 +220,6 @@ public class CompanyController {
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
 	@LogExecutionTime
-	@ApiOperation(value = "Add New Company")
 	@PostMapping(value = "/save")
 	public ResponseEntity<String> save(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
 		try {
@@ -247,7 +239,6 @@ public class CompanyController {
 	@LogRequest
 	@Transactional
 	@LogExecutionTime
-	@ApiOperation(value = "Register New Company")
 	@PostMapping(value = "/register")
 	public ResponseEntity<String> save(@ModelAttribute RegistrationModel registrationModel,
 			HttpServletRequest request) {
@@ -461,7 +452,6 @@ public class CompanyController {
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
 	@LogExecutionTime
-	@ApiOperation(value = "Update Company")
 	@PostMapping(value = "/update")
 	public ResponseEntity<String> update(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
 		try {
@@ -514,7 +504,6 @@ public class CompanyController {
 
 	@LogRequest
 	@LogExecutionTime
-	@ApiOperation(value = "Get Currency List", response = List.class)
 	@GetMapping(value = "/getCurrency")
 	public ResponseEntity<List<Currency>> getCurrencies() {
 		try {
@@ -532,7 +521,6 @@ public class CompanyController {
 
 	@LogRequest
 	@LogExecutionTime
-	@ApiOperation(value = "Get Database Connection", response = List.class)
 	@GetMapping(value = "/getHealthCheck")
 	public ResponseEntity<Object> getDbConnection() {
 		try {
@@ -559,7 +547,6 @@ public class CompanyController {
 
 	@LogRequest
 	@LogExecutionTime
-	@ApiOperation(value = "Get Company Currency")
 	@GetMapping(value = "/getCompanyCurrency")
 	public ResponseEntity<Object> getCurrencyConversionById() {
 		Currency companyCurrency = companyService.getCompanyCurrency();
@@ -578,7 +565,6 @@ public class CompanyController {
 
 	@LogRequest
 	@LogExecutionTime
-	@ApiOperation(value = "Get Company by Id")
 	@GetMapping(value = "/getById")
 	public ResponseEntity<CompanyModel> getById(@RequestParam(value = "id") Integer id) {
 		try {
@@ -623,7 +609,6 @@ public class CompanyController {
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
 	@LogExecutionTime
-	@ApiOperation(value = "Update Company")
 	@PostMapping(value = "/updateCompanyDetailsForPayrollRun")
 	public ResponseEntity<String> updateCompanyDetailsForPayrollRun(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
 		try {
@@ -658,7 +643,6 @@ public class CompanyController {
 	 * @return
 	 */
 	@LogRequest
-	@ApiOperation(value = "Get Release Number")
 	@GetMapping(value = "/getSimpleAccountsreleasenumber")
 	public ResponseEntity<SimpleAccountsConfigModel> getSimpleAccountsReleaseNumber(HttpServletRequest request)
 	{
@@ -673,7 +657,6 @@ public class CompanyController {
 		return new ResponseEntity<>(config, HttpStatus.OK);
 	}
 	@LogRequest
-	@ApiOperation(value = "Update Generate Sif file settings")
 	@PostMapping(value = "/updateSifSettings")
 	public ResponseEntity<Object> update( @RequestParam(required = true, defaultValue = "true") boolean generateSif, HttpServletRequest request) {
 		try {

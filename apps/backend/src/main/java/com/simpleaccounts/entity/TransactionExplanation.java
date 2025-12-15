@@ -5,7 +5,7 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,7 +26,7 @@ public class TransactionExplanation {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "TRANSACTION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_"))
+    @JoinColumn(name = "TRANSACTION_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_"))
     private Transaction transaction;
 
     @Column(name = "REMAINING_BALANCE")
@@ -38,7 +38,7 @@ public class TransactionExplanation {
     private BigDecimal paidAmount = BigDecimal.ZERO;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EXPLAINED_TRANSACTION_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANX_EXP_EXP_TRANX_CAT_CODE_TRANX_CAT"))
+    @JoinColumn(name = "EXPLAINED_TRANSACTION_CATEGORY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANX_EXP_EXP_TRANX_CAT_CODE_TRANX_CAT"))
     private TransactionCategory explainedTransactionCategory;
 
     @Basic
@@ -58,7 +58,7 @@ public class TransactionExplanation {
     private Integer explanationUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COA_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_COA_CATEGORY_ID_COA_CATEGORY"))
+    @JoinColumn(name = "COA_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_COA_CATEGORY_ID_COA_CATEGORY"))
     private ChartOfAccountCategory coaCategory;
 
     @Basic
@@ -91,7 +91,7 @@ public class TransactionExplanation {
     private LocalDateTime lastUpdateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FILE_ATTACHMENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_FILE_ATTACHMENT_ID_FILE_ATTACHMENT"))
+    @JoinColumn(name = "FILE_ATTACHMENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_EXPLANATION_FILE_ATTACHMENT_ID_FILE_ATTACHMENT"))
     private FileAttachment fileAttachment;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "transactionExplanation")

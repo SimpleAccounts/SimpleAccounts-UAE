@@ -2,7 +2,7 @@ package com.simpleaccounts.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -21,7 +21,7 @@ public class SalaryComponent implements Serializable {
     private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SALARY_STRUCTURE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_SALARY_COMPONENT_SALARY_STRUCTURE_ID_SALARY_STRUCTURE"))
+    @JoinColumn(name = "SALARY_STRUCTURE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_SALARY_COMPONENT_SALARY_STRUCTURE_ID_SALARY_STRUCTURE"))
     private SalaryStructure salaryStructure;
 
     @Basic

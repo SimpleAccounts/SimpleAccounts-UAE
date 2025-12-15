@@ -9,22 +9,21 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.util.StringUtils;
 
-@SuppressWarnings("deprecation")
 public class PageableBuilderUtil {
 
 	private static final int DEFAULT_MAX_PAGE_SIZE = 100;
 	private static final int DEFAULT_MIN_PAGE_SIZE = 10;
-	static final Pageable DEFAULT_PAGE_REQUEST = new PageRequest(0, 20);
+	static final Pageable DEFAULT_PAGE_REQUEST = PageRequest.of(0, 20);
 	private static final String DEFAULT_SORT_DELIMITER = ";";
 	private static final String DEFAULT_PROPERTY_DELIMITER = ",";
-	
+
 	public static Pageable getPageable(int pageSize,int page) {
 		// Limit lower bound
 		pageSize = pageSize < DEFAULT_MIN_PAGE_SIZE ? DEFAULT_MIN_PAGE_SIZE : pageSize;
 		// Limit upper bound
 		pageSize = pageSize > DEFAULT_MAX_PAGE_SIZE ? DEFAULT_MAX_PAGE_SIZE : pageSize;
 		// Default if necessary and default configured
-		return new PageRequest(page, pageSize);
+		return PageRequest.of(page, pageSize);
 
 	}
 
@@ -39,17 +38,17 @@ public class PageableBuilderUtil {
 			sort = parsedSort == null ? Sort.unsorted() : parsedSort;
 		}
 		// Default if necessary and default configured
-		return new PageRequest(page, pageSize, sort);
+		return PageRequest.of(page, pageSize, sort);
 
 	}
-	
+
 	private static Sort getSortArgument(String sortStr) {
 		String[] directionParameter = sortStr.split(DEFAULT_SORT_DELIMITER);
 		Sort sort = parseParameterIntoSort(directionParameter, DEFAULT_PROPERTY_DELIMITER);
 
 		return sort;
 	}
-	
+
 	private static Sort parseParameterIntoSort(String[] source, String delimiter) {
 		List<Order> allOrders = new ArrayList<Sort.Order>();
 		for (String part : source) {
@@ -69,6 +68,6 @@ public class PageableBuilderUtil {
 				allOrders.add(new Order(direction, property));
 			}
 		}
-		return allOrders.isEmpty() ? null : new Sort(allOrders);
+		return allOrders.isEmpty() ? null : Sort.by(allOrders);
 	}
 }

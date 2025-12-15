@@ -8,7 +8,6 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.JournalLineItemService;
 import com.simpleaccounts.service.TransactionCategoryService;
-import io.swagger.annotations.ApiOperation;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +40,6 @@ public class TaxesRestController {
     private final TaxesRestHelper taxesRestHelper;
 
     @LogRequest
-    @ApiOperation(value = "Get Vat Transation list")
     @GetMapping(value = "/getVatTransationList")
     public ResponseEntity<PaginationResponseModel> getVatTransactionList (TaxesFilterModel filterModel, HttpServletRequest request) {
         try {

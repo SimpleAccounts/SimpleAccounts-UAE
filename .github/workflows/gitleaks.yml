@@ -34,7 +34,8 @@ jobs:
           set -euo pipefail
 
           VERSION="8.30.0"
-          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz" \
+          curl -sSfL --retry 5 --retry-delay 3 --retry-all-errors \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz" \
             -o /tmp/gitleaks.tar.gz
           tar -xzf /tmp/gitleaks.tar.gz -C /tmp
           sudo install -m 0755 /tmp/gitleaks /usr/local/bin/gitleaks
