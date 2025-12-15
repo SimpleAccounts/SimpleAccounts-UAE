@@ -21,7 +21,7 @@ on:
 env:
   NODE_OPTIONS: --openssl-legacy-provider
   SPRING_PROFILES_ACTIVE: test
-  JAVA_VERSION: '11'
+  JAVA_VERSION: '21'
   NODE_VERSION: '20.x'
 
 jobs:

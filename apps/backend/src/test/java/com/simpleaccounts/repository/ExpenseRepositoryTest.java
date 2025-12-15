@@ -47,7 +47,14 @@ class ExpenseRepositoryTest {
     void registerDateTruncAlias() throws SQLException {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.execute("CREATE ALIAS IF NOT EXISTS DATE_TRUNC FOR \"com.simpleaccounts.repository.H2Functions.dateTrunc\"");
+            try {
+                statement.execute(
+                        "CREATE ALIAS IF NOT EXISTS DATE_TRUNC FOR \"com.simpleaccounts.repository.H2Functions.dateTrunc\"");
+            } catch (SQLException ex) {
+                if (ex.getErrorCode() != 90076) {
+                    throw ex;
+                }
+            }
         }
     }
 
@@ -118,4 +125,3 @@ class ExpenseRepositoryTest {
         entityManager.flush();
     }
 }
-
