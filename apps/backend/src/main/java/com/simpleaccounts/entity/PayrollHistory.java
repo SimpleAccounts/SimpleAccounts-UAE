@@ -2,7 +2,7 @@
 package com.simpleaccounts.entity;
 
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -18,7 +18,7 @@ public class PayrollHistory {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PAYROLL_ID",referencedColumnName="PAYROLL_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PAYROLL_HISTORY_PAYROLL_ID_PAYROLL"))
+    @JoinColumn(name = "PAYROLL_ID",referencedColumnName="PAYROLL_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PAYROLL_HISTORY_PAYROLL_ID_PAYROLL"))
     private Payroll payrollId;
 
     @Basic

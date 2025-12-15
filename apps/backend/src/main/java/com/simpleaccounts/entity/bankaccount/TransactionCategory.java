@@ -3,7 +3,7 @@ package com.simpleaccounts.entity.bankaccount;
 import com.simpleaccounts.entity.VatCategory;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -16,10 +16,10 @@ import org.hibernate.annotations.ColumnDefault;
 		@NamedQuery(name = "findAllTransactionCategoryByUserId", query = "SELECT t FROM TransactionCategory t where t.deleteFlag=false and (t.createdBy = :createdBy or t.createdBy = 1) ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC"),
 		@NamedQuery(name = "findMaxTnxCodeByChartOfAccId", query = "SELECT t FROM TransactionCategory t where chartOfAccount =:chartOfAccountId ORDER BY transactionCategoryId  DESC"),
 		@NamedQuery(name = "findTnxCatForReicpt", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId =8  and t.deleteFlag=false "),
-		@NamedQuery(name = "getTransactionCategoryListForPurchaseProduct", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in ('11','16','17','18','15','10','13','19') AND t.transactionCategoryId not in ('18','99','101','103','118','119','84','153') and t.deleteFlag=false "),
-		@NamedQuery(name = "getTransactionCategoryListForSalesProduct", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in ('15') AND t.transactionCategoryId in ('80','84') and t.deleteFlag=false"),
+		@NamedQuery(name = "getTransactionCategoryListForPurchaseProduct", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in (11,16,17,18,15,10,13,19) AND t.transactionCategoryId not in (18,99,101,103,118,119,84,153) and t.deleteFlag=false "),
+		@NamedQuery(name = "getTransactionCategoryListForSalesProduct", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in (15) AND t.transactionCategoryId in (80,84) and t.deleteFlag=false"),
 		@NamedQuery(name = "getTransactionCategoryListManualJornal", query = "SELECT t FROM TransactionCategory t WHERE t.deleteFlag=false"),
-		@NamedQuery(name = "getTransactionCategoryListForInventory", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in ('20') AND t.transactionCategoryId in ('150')"),
+		@NamedQuery(name = "getTransactionCategoryListForInventory", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in (20) AND t.transactionCategoryId in (150)"),
 })
 
 @Entity
@@ -48,15 +48,15 @@ public class TransactionCategory implements Serializable {
 	private String transactionCategoryCode;
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "CHART_OF_ACCOUNT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_CATEGORY_CHART_OF_ACCOUNT_ID_CHART_OF_ACCOUNT"))
+	@JoinColumn(name = "CHART_OF_ACCOUNT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_CATEGORY_CHART_OF_ACCOUNT_ID_CHART_OF_ACCOUNT"))
 	private ChartOfAccount chartOfAccount;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PARENT_TRANSACTION_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANX_CATEGORY_PARENT_TRANX_CATEGORY_CODE_TRANX_CATEGORY"))
+	@JoinColumn(name = "PARENT_TRANSACTION_CATEGORY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANX_CATEGORY_PARENT_TRANX_CATEGORY_CODE_TRANX_CATEGORY"))
 	private TransactionCategory parentTransactionCategory;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "VAT_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_CATEGORY_VAT_CATEGORY_CODE_VAT_CATEGORY"))
+	@JoinColumn(name = "VAT_CATEGORY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_CATEGORY_VAT_CATEGORY_CODE_VAT_CATEGORY"))
 	private VatCategory vatCategory;
 
 	@Column(name = "DEFAULT_FLAG")

@@ -27,9 +27,8 @@ import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import com.simpleaccounts.utils.ChartOfAccountCacheService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,7 +150,6 @@ public class DataListController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "All Transaction Types")
 	@GetMapping(value = "/getTransactionTypes")
 	public ResponseEntity<List<ChartOfAccount>> getTransactionTypes() {
 		try {
@@ -172,7 +170,6 @@ public class DataListController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "All Invoice Status Types")
 	@GetMapping(value = "/getInvoiceStatusTypes")
 	public ResponseEntity<List<DropdownModel>> getInvoiceStatusTypes() {
 		try {
@@ -215,7 +212,6 @@ public class DataListController {
 	}
 	
 	@LogRequest
-	@ApiOperation(value = "All Contact Types")
 	@GetMapping(value = "/getContactTypes")
 	public ResponseEntity<List<DropdownModel>> getContactTypes() {
 		try {
@@ -236,7 +232,6 @@ public class DataListController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "All Industry Types")
 	@GetMapping(value = "/getIndustryTypes")
 	public ResponseEntity<List<DropdownModel>> getIndustryTypes() {
 		try {
@@ -277,7 +272,6 @@ public class DataListController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get getProductCategoryList")
 	@GetMapping(value ="/getProductCategoryList")
 	public ResponseEntity<Object> getProductCategoryList(){
 		try {
@@ -328,7 +322,6 @@ public class DataListController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "get Pay mode (expense)")
 	@GetMapping(value = "/payMode")
 	public ResponseEntity<List<EnumDropdownModel>> getPayMode() {
 		try {
@@ -360,7 +353,6 @@ public class DataListController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "All subChartofAccount")
 	@GetMapping(value = "/getsubChartofAccount")
 	public ResponseEntity<Map<String, List<DropdownModel>>> getsubChartofAccount() {
 		try {
@@ -411,7 +403,6 @@ public class DataListController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "reconsileCategories")
 	@GetMapping(value = "/reconsileCategories")
 	public ResponseEntity<List<SingleLevelDropDownModel>> getReconsilteCategories(@RequestParam("debitCreditFlag") String debitCreditFlag) {
 		try {
@@ -477,7 +468,6 @@ public class DataListController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "get Product List")
 	@GetMapping(value = "/product")
 	public ResponseEntity<List<ProductPriceModel>> getProductList(@RequestParam ProductPriceType priceType) {
 		try {
@@ -506,7 +496,6 @@ public class DataListController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Transaction Category for receipt")
 	@GetMapping(value = "/receipt/tnxCat")
 	public ResponseEntity<List<SingleLevelDropDownModel>> getTransactionCategoryListForReceipt() {
 		try {
@@ -551,7 +540,6 @@ public class DataListController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Tax Treatment Category")
 	@GetMapping(value ="/getTaxTreatment")
 	public ResponseEntity<Object> getTaxTreatmentList(){
 		try {
@@ -564,7 +552,6 @@ public class DataListController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get getUnitTypeList")
 	@GetMapping(value ="/getUnitTypeList")
 	public ResponseEntity<Object> getUnitTypeList(){
 		try {
@@ -591,7 +578,6 @@ public class DataListController {
 	 * @return
 	 */
 	@LogRequest
-	@ApiOperation(value = "Get getUnitTypeList")
 	@GetMapping(value ="/getNoteSettingsInfo")
 	public ResponseEntity<Object> getNoteSettingsInfo(){
 		try {
@@ -614,7 +600,6 @@ public class DataListController {
 	 * @return
 	 */
 	@LogRequest
-	@ApiOperation(value = "Save Default Notes Info")
 	@PostMapping(value ="/saveNoteSettingsInfo")
 	public ResponseEntity<Object> saveNoteSettingsInfo(@RequestParam(value = "defaultNote") String defaultNote,
 												  @RequestParam(value = "defaultFootNote") String defaultFootNote,

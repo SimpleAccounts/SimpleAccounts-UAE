@@ -175,19 +175,18 @@ public class ExcelParserTest {
 
             Cell stringCell = row.createCell(0);
             stringCell.setCellValue("Text");
-            // Use getCellTypeEnum() for POI 3.x compatibility
-            assertEquals(CellType.STRING, stringCell.getCellTypeEnum());
+            assertEquals(CellType.STRING, stringCell.getCellType());
 
             Cell numericCell = row.createCell(1);
             numericCell.setCellValue(123.45);
-            assertEquals(CellType.NUMERIC, numericCell.getCellTypeEnum());
+            assertEquals(CellType.NUMERIC, numericCell.getCellType());
 
             Cell booleanCell = row.createCell(2);
             booleanCell.setCellValue(true);
-            assertEquals(CellType.BOOLEAN, booleanCell.getCellTypeEnum());
+            assertEquals(CellType.BOOLEAN, booleanCell.getCellType());
 
             Cell blankCell = row.createCell(3);
-            assertEquals(CellType.BLANK, blankCell.getCellTypeEnum());
+            assertEquals(CellType.BLANK, blankCell.getCellType());
         }
     }
 

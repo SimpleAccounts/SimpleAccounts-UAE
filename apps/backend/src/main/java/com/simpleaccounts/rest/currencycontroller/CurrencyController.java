@@ -24,12 +24,11 @@ import com.simpleaccounts.service.InvoiceService;
 import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +72,6 @@ public class CurrencyController {
 
 	
 	@LogRequest
-	@ApiOperation(value = "Get Currency List", response = List.class)
 	@GetMapping(value = "/getcurrency")
 	public ResponseEntity<List<Currency>> getCurrencies() {
 		try {
@@ -90,7 +88,6 @@ public class CurrencyController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Active Currency List", response = List.class)
 	@GetMapping(value = "/getactivecurrencies")
 	public ResponseEntity<List<Currency>> getActiveCurrencies() {
 		try {
@@ -107,7 +104,6 @@ public class CurrencyController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Active Currency List", response = List.class)
 	@GetMapping(value = "/getCompanyCurrencies")
 	public ResponseEntity<List<Currency>> getCompanyCurrencies() {
 		try {
@@ -124,7 +120,6 @@ public class CurrencyController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Currency by Currency Code", response = Currency.class)
 	@GetMapping("/{currencyCode}")
 	public ResponseEntity<Currency> getCurrency(@PathVariable("currencyCode") Integer currencyCode) {
 		try {
@@ -143,7 +138,6 @@ public class CurrencyController {
 	
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Save Currency Code", response = Currency.class)
 	@PostMapping(value = "/save")
 	public ResponseEntity<SimpleAccountsMessage> createCurrency(@RequestBody CurrencyDTO currencyDTO, HttpServletRequest request) {
 		try {
@@ -171,7 +165,6 @@ public class CurrencyController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update Currency by Currency Code", response = Currency.class)
 	@PutMapping(value = "/{currencyCode}")
 	public ResponseEntity<Object> editCurrency(@RequestBody CurrencyDTO currencyDTO,
 			@PathVariable("currencyCode") Integer currencyCode, HttpServletRequest request) {
@@ -202,7 +195,6 @@ public class CurrencyController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Currency by Currency Code", response = Currency.class)
 	@DeleteMapping(value = "/{currencyCode}")
 	public ResponseEntity<Object> deleteCurrency(@PathVariable("currencyCode") Integer currencyCode,
 			HttpServletRequest request) {
@@ -232,7 +224,6 @@ public class CurrencyController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Invoices Count For Currency")
 	@GetMapping(value = "/getInvoicesCountForCurrency")
 	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int currencyId){
 		Integer response = 0;

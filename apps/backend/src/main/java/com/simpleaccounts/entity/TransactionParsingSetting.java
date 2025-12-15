@@ -4,7 +4,7 @@ import com.simpleaccounts.constant.ExcellDelimiterEnum;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -12,7 +12,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Table(name = "TRANSACTION_PARSING_SETTING")
 @Data
 @NamedQueries({
-		@NamedQuery(name = "getDateFormatIdTemplateId", query = "select df.format from TransactionParsingSetting t inner join DateFormat df on df.id=t.dateFormat where t.id = :id") })
+		@NamedQuery(name = "getDateFormatIdTemplateId", query = "select df.format from TransactionParsingSetting t join t.dateFormat df where t.id = :id") })
 public class TransactionParsingSetting implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -49,7 +49,7 @@ public class TransactionParsingSetting implements Serializable {
 	private String textQualifier;
 
 	@OneToOne
-	@JoinColumn(name = "DATE_FORMAT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_PARSING_SETTING_DATE_FORMAT_ID_DATE_FORMAT"))
+	@JoinColumn(name = "DATE_FORMAT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_PARSING_SETTING_DATE_FORMAT_ID_DATE_FORMAT"))
 	private DateFormat dateFormat;
 
 	@Column(name = "CREATED_BY")
@@ -77,7 +77,7 @@ public class TransactionParsingSetting implements Serializable {
 	private Boolean deleteFlag = Boolean.FALSE;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "TRANSACTION_PARSING_SETTING_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANX_PARS_SETTING_TRANX_DATA_COL_MAP_ID_TRANX_DATA_COL_MAP"))
+	@JoinColumn(name = "TRANSACTION_PARSING_SETTING_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANX_PARS_SETTING_TRANX_DATA_COL_MAP_ID_TRANX_DATA_COL_MAP"))
 	private List<TransactionDataColMapping> transactionDataColMapping;
 
 	@Column(name = "VERSION_NUMBER")

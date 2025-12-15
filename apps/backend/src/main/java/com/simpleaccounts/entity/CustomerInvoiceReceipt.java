@@ -3,7 +3,7 @@ package com.simpleaccounts.entity;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,11 +30,11 @@ public class CustomerInvoiceReceipt {
 	private long id;
 
 	@ManyToOne
-	@JoinColumn(name = "CUSTOMER_INVOICE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CUST_INVOICE_RECEIPT_CUST_INVOICE_ID_CUST_INVOICE"))
+	@JoinColumn(name = "CUSTOMER_INVOICE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CUST_INVOICE_RECEIPT_CUST_INVOICE_ID_CUST_INVOICE"))
 	private Invoice customerInvoice;
 
 	@ManyToOne
-	@JoinColumn(name = "RECEIPT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CUST_INVOICE_RECEIPT_RECEIPT_ID_RECEIPT"))
+	@JoinColumn(name = "RECEIPT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CUST_INVOICE_RECEIPT_RECEIPT_ID_RECEIPT"))
 	private Receipt receipt;
 
 	@Basic(optional = false)
@@ -69,7 +69,7 @@ public class CustomerInvoiceReceipt {
 	private LocalDateTime lastUpdateDate;
 
 	@OneToOne
-	@JoinColumn(name = "TRANSACTION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CUSTOMER_INVOICE_RECEIPT_TRANSACTION_ID_TRANSACTION"))
+	@JoinColumn(name = "TRANSACTION_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CUSTOMER_INVOICE_RECEIPT_TRANSACTION_ID_TRANSACTION"))
 	private Transaction transaction;
 
 	@Column(name = "VERSION_NUMBER")

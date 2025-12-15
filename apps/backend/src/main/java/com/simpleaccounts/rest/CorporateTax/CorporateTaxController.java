@@ -24,7 +24,6 @@ import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,7 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +65,6 @@ public class CorporateTaxController {
     DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @LogRequest
-    @ApiOperation(value = "Add Corporate Tax settings")
     @PostMapping(value = "/save")
     public ResponseEntity<Object> save(@RequestBody CorporateTaxDateModel model, HttpServletRequest request) {
         try {
@@ -102,7 +100,6 @@ public class CorporateTaxController {
         }
     }
     @LogRequest
-    @ApiOperation(value = "Get Corporate Tax settings")
     @GetMapping(value = "/get/setting")
     public ResponseEntity<Object> getsetting(HttpServletRequest request) {
         try {
@@ -134,7 +131,6 @@ public class CorporateTaxController {
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
     @LogExecutionTime
-    @ApiOperation(value = "Generate Corporate Tax settings")
     @PostMapping(value = "/generatect")
     public ResponseEntity<String> generatect(@RequestBody CorporateTaxModel corporateTaxModel, HttpServletRequest request) {
         try {
@@ -196,7 +192,6 @@ public class CorporateTaxController {
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
     @LogExecutionTime
-    @ApiOperation(value = "View Corporate Tax settings")
     @GetMapping(value = "/viewct")
     public ResponseEntity<Object> viewct(@RequestParam(value = "id") Integer id) {
         try {
@@ -218,7 +213,6 @@ public class CorporateTaxController {
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
     @LogExecutionTime
-    @ApiOperation(value = "File Corporate Tax")
     @PostMapping(value = "/filect")
     public ResponseEntity<String> filect(@RequestBody CorporateTaxModel corporateTaxModel, HttpServletRequest request) {
         try {
@@ -259,7 +253,6 @@ public class CorporateTaxController {
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
     @LogExecutionTime
-    @ApiOperation(value = "Un File Corporate Tax")
     @PostMapping(value = "/unfilect")
     public ResponseEntity<String> unfilect(@RequestBody CorporateTaxModel corporateTaxModel, HttpServletRequest request) {
         try {
@@ -284,7 +277,6 @@ public class CorporateTaxController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Record CT Payment")
     @PostMapping(value = "/recordctpayment")
     public ResponseEntity<Object> recordctpayment(@RequestBody CorporateTaxPaymentModel corporateTaxPaymentModel, HttpServletRequest
             request){
@@ -297,7 +289,6 @@ public class CorporateTaxController {
         }
     }
     @LogRequest
-    @ApiOperation(value = "Corporate tax list")
     @GetMapping(value = "/Corporate/list")
     public ResponseEntity<Object> getList(@RequestParam(defaultValue = "0") int pageNo,
                                      @RequestParam(defaultValue = "10") int pageSize,
@@ -313,7 +304,6 @@ public class CorporateTaxController {
         }
     }
     @LogRequest
-    @ApiOperation(value = "Corporate tax payment history")
     @GetMapping(value = "/payment/history")
     public ResponseEntity<Object> getPaymentHistoryList(HttpServletRequest request,
                                      @RequestParam(defaultValue = "0") int pageNo,
@@ -333,7 +323,6 @@ public class CorporateTaxController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Delete Corporate Tax Report By ID")
     @DeleteMapping(value = "/delete")
     public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id) {
         try {

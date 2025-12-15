@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -61,7 +61,7 @@ import org.hibernate.annotations.ColumnDefault;
     private LocalDateTime lastUpdateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CORPORATE_TAX_PAYMENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_CORPORATE_TAX_PAYMENT_HISTORY_CORPORATE_TAX_PAYMENT_ID_CORPORATE_TAX_PAYMENT"))
+    @JoinColumn(name = "CORPORATE_TAX_PAYMENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CORPORATE_TAX_PAYMENT_HISTORY_CORPORATE_TAX_PAYMENT_ID_CORPORATE_TAX_PAYMENT"))
     @JsonManagedReference
     private CorporateTaxPayment corporateTaxPayment;
     @PrePersist

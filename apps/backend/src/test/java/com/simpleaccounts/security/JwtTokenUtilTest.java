@@ -6,11 +6,11 @@ import static org.mockito.Mockito.*;
 import com.simpleaccounts.entity.User;
 import com.simpleaccounts.service.UserService;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.security.SecurityException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +23,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 class JwtTokenUtilTest {
 
     private JwtTokenUtil jwtTokenUtil;
-    private static final String SECRET = "mySecretKeyForTestingOnly1234567890";
+    // JJWT 0.12.x with HS512 requires at least 64 bytes (512 bits) key
+    private static final String SECRET = "mySecretKeyForTestingOnly1234567890mySecretKeyForTestingOnly1234567890";
 
     @Mock
     private UserService userService;
@@ -178,15 +179,15 @@ class JwtTokenUtilTest {
 
     @Test
     void shouldThrowExceptionForInvalidSignature() {
-        // Create a token with different secret
+        // Create a token with different secret (must be at least 64 bytes for HS512)
         JwtTokenUtil differentKeyUtil = new JwtTokenUtil(userService);
-        ReflectionTestUtils.setField(differentKeyUtil, "secret", "differentSecretKey12345678901234567890");
+        ReflectionTestUtils.setField(differentKeyUtil, "secret", "differentSecretKey12345678901234567890differentSecretKey12345678901234567890");
 
         UserDetails userDetails = new org.springframework.security.core.userdetails.User(
             "testuser@example.com", "password", new ArrayList<>());
         String tokenWithDifferentKey = differentKeyUtil.generateToken(userDetails);
 
-        assertThrows(SignatureException.class, () -> {
+        assertThrows(SecurityException.class, () -> {
             jwtTokenUtil.getUsernameFromToken(tokenWithDifferentKey);
         });
     }

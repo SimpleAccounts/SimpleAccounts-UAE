@@ -11,7 +11,7 @@ import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.TaxTransactionDao;
 import com.simpleaccounts.entity.TaxTransaction;
 import java.util.List;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 /**

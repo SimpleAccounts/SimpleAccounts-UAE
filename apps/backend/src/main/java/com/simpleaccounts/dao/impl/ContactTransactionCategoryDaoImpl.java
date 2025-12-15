@@ -6,7 +6,7 @@ import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.ContactTransactionCategoryRelation;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import com.simpleaccounts.service.ContactService;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

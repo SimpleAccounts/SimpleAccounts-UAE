@@ -7,8 +7,7 @@ import com.simpleaccounts.model.TrialBalanceResponseModel;
 import com.simpleaccounts.model.VatReportResponseModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.UserService;
-import io.swagger.annotations.ApiOperation;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,6 @@ public class FinancialReportController {
 	private final JwtTokenUtil jwtTokenUtil;
 
 	@LogRequest
-	@ApiOperation(value = "Get Profit and Loss Report")
 	@GetMapping(value = "/profitandloss")
 	public ResponseEntity<ProfitAndLossResponseModel> getFormat(FinancialReportRequestModel reportRequestModel,
 																HttpServletRequest request) {
@@ -48,7 +46,6 @@ public class FinancialReportController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get BalanceSheet Report")
 	@GetMapping(value = "/balanceSheet")
 	public ResponseEntity<BalanceSheetResponseModel> getFormatBalanceSheet(FinancialReportRequestModel reportRequestModel,
 																		   HttpServletRequest request) {
@@ -65,7 +62,6 @@ public class FinancialReportController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "GetTrial Balance Report")
 	@GetMapping(value = "/trialBalanceReport")
 	public ResponseEntity<TrialBalanceResponseModel> getTrialBalanceReport(FinancialReportRequestModel reportRequestModel,
 																		   HttpServletRequest request) {
@@ -81,7 +77,6 @@ public class FinancialReportController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Vat Return Report")
 	@GetMapping(value = "/vatReturnReport")
 	public ResponseEntity<VatReportResponseModel> getvatReturnReport(FinancialReportRequestModel reportRequestModel,
 																	 HttpServletRequest request) {
@@ -97,7 +92,6 @@ public class FinancialReportController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get CashFlow Report")
 	@GetMapping(value = "/cashflow")
 	public ResponseEntity<CashFlowResponseModel> getFormatCashFlow(FinancialReportRequestModel reportRequestModel,
 																HttpServletRequest request) {

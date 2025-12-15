@@ -6,12 +6,11 @@ import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.rest.vatcontroller.VatController;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.MailThemeTemplatesService;
-import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +39,6 @@ public class TemplatesController {
     
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update Mail Template Theme")
     @PostMapping(value = "/updateMailTemplateTheme")
     public ResponseEntity<String> update(@RequestParam(value = "templateId") Integer templateId, HttpServletRequest request) {
         try {
@@ -57,7 +55,6 @@ public class TemplatesController {
     }
 
     @LogRequest
-    @ApiOperation(value = "All Templates for For Dropdown")
     @GetMapping(value = "/getTemplateDropdown")
     public ResponseEntity<List<DropdownModelForTemplates>> getTemplateDropdown() {
         try {

@@ -25,7 +25,7 @@ concurrency:
 
 env:
   # SonarQube Community Build 25.x requires the scanner to run on Java 17+
-  JAVA_VERSION: '17'
+  JAVA_VERSION: '21'
   NODE_VERSION: '18.x'
   SONAR_HOST_URL: 'https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io'
 
@@ -40,12 +40,14 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v4
         with:
           fetch-depth: 0 # Full history for accurate blame information
 
       - name: Determine whether to run SonarQube
         id: sonar
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN || secrets.SONARQUBE_TOKEN }}
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]; then
             echo "run=false" >> "$GITHUB_OUTPUT"
@@ -53,11 +55,17 @@ jobs:
             exit 0
           fi
 
+          if [ "${{ github.event_name }}" = "pull_request" ] && [ -z "$SONAR_TOKEN" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::SONAR_TOKEN is not available in this PR context (e.g., Dependabot); skipping SonarQube analysis."
+            exit 0
+          fi
+
           echo "run=true" >> "$GITHUB_OUTPUT"
 
       - name: Set up JDK
         if: steps.sonar.outputs.run == 'true'
-        uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9 # v4
+        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -65,7 +73,7 @@ jobs:
 
       - name: Set up Node.js
         if: steps.sonar.outputs.run == 'true'
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 

@@ -3,7 +3,7 @@ package com.simpleaccounts.dao.impl;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.MailThemeTemplates;
 import com.simpleaccounts.dao.MailThemeTemplatesDao;
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 /**

@@ -2,7 +2,7 @@ package com.simpleaccounts.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

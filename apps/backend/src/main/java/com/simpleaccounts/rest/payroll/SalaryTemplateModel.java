@@ -1,6 +1,6 @@
 package com.simpleaccounts.rest.payroll;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
