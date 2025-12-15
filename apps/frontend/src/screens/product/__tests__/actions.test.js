@@ -41,14 +41,14 @@ describe('Product Actions', () => {
 				paginationDisable: false,
 			};
 
-			await store.dispatch(actions.getProductList(params));
+			const result = await store.dispatch(actions.getProductList(params));
 
 			expect(authApi).toHaveBeenCalled();
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions).toContainEqual({
-				type: PRODUCT.PRODUCT_LIST,
-				payload: mockProducts,
-			});
+			expect(dispatchedActions[0].type).toBe('product/getProductList/pending');
+			expect(dispatchedActions[1].type).toBe('product/getProductList/fulfilled');
+			expect(dispatchedActions[1].payload).toEqual(mockProducts);
+			expect(result.type).toBe('product/getProductList/fulfilled');
 		});
 
 		it('should build URL with all parameters', async () => {
@@ -76,20 +76,24 @@ describe('Product Actions', () => {
 		it('should not dispatch when paginationDisable is true', async () => {
 			authApi.mockResolvedValue({ status: 200, data: [] });
 
-			await store.dispatch(
+			const result = await store.dispatch(
 				actions.getProductList({ paginationDisable: true })
 			);
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions.length).toBe(0);
+			// Still dispatches pending/fulfilled, but returns full response
+			expect(dispatchedActions[0].type).toBe('product/getProductList/pending');
+			expect(result.type).toBe('product/getProductList/fulfilled');
 		});
 
-		it('should handle fetch error', async () => {
+		it('should dispatch rejected action on fetch error', async () => {
 			authApi.mockRejectedValue(new Error('Network error'));
 
-			await expect(
-				store.dispatch(actions.getProductList({}))
-			).rejects.toThrow('Network error');
+			const result = await store.dispatch(actions.getProductList({}));
+
+			const dispatchedActions = store.getActions();
+			expect(dispatchedActions[1].type).toBe('product/getProductList/rejected');
+			expect(result.type).toBe('product/getProductList/rejected');
 		});
 	});
 
@@ -116,15 +120,15 @@ describe('Product Actions', () => {
 				data: mockProductData,
 			});
 
-			expect(result.status).toBe(200);
+			expect(result.type).toBe('product/createAndSaveProduct/fulfilled');
 		});
 
-		it('should handle create product error', async () => {
+		it('should dispatch rejected action on create product error', async () => {
 			authApi.mockRejectedValue(new Error('Failed to create product'));
 
-			await expect(
-				store.dispatch(actions.createAndSaveProduct({}))
-			).rejects.toThrow('Failed to create product');
+			const result = await store.dispatch(actions.createAndSaveProduct({}));
+
+			expect(result.type).toBe('product/createAndSaveProduct/rejected');
 		});
 	});
 
@@ -148,25 +152,24 @@ describe('Product Actions', () => {
 			});
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions).toContainEqual({
-				type: PRODUCT.PRODUCT_WHARE_HOUSE,
-				payload: mockWarehouses,
-			});
+			expect(dispatchedActions[0].type).toBe('product/getProductWareHouseList/pending');
+			expect(dispatchedActions[1].type).toBe('product/getProductWareHouseList/fulfilled');
+			expect(dispatchedActions[1].payload).toEqual(mockWarehouses);
 
-			expect(result.status).toBe(200);
+			expect(result.type).toBe('product/getProductWareHouseList/fulfilled');
 		});
 
-		it('should handle warehouse list error', async () => {
+		it('should dispatch rejected action on warehouse list error', async () => {
 			authApi.mockRejectedValue(new Error('Failed to fetch warehouses'));
 
-			await expect(
-				store.dispatch(actions.getProductWareHouseList())
-			).rejects.toThrow('Failed to fetch warehouses');
+			const result = await store.dispatch(actions.getProductWareHouseList());
+
+			expect(result.type).toBe('product/getProductWareHouseList/rejected');
 		});
 	});
 
 	describe('getProductVatCategoryList', () => {
-		it('should fetch VAT category list successfully', async () => {
+		it('should fetch VAT category list successfully and filter items', async () => {
 			const mockVatCategories = [
 				{ id: 1, name: 'Standard VAT', percentage: 5 },
 				{ id: 2, name: 'Zero Rate', percentage: 0 },
@@ -184,19 +187,20 @@ describe('Product Actions', () => {
 			const dispatchedActions = store.getActions();
 
 			// Should filter out items with id 4 and 10
-			expect(dispatchedActions[0].payload.length).toBe(2);
-			expect(dispatchedActions[0].payload).toEqual([
+			expect(dispatchedActions[1].payload.length).toBe(2);
+			expect(dispatchedActions[1].payload).toEqual([
 				{ id: 1, name: 'Standard VAT', percentage: 5 },
 				{ id: 2, name: 'Zero Rate', percentage: 0 },
 			]);
+			expect(result.type).toBe('product/getProductVatCategoryList/fulfilled');
 		});
 
-		it('should handle VAT category error', async () => {
+		it('should dispatch rejected action on VAT category error', async () => {
 			authApi.mockRejectedValue(new Error('Failed to fetch VAT categories'));
 
-			await expect(
-				store.dispatch(actions.getProductVatCategoryList())
-			).rejects.toThrow('Failed to fetch VAT categories');
+			const result = await store.dispatch(actions.getProductVatCategoryList());
+
+			expect(result.type).toBe('product/getProductVatCategoryList/rejected');
 		});
 	});
 
@@ -212,7 +216,8 @@ describe('Product Actions', () => {
 				data: mockExciseTaxes,
 			});
 
-			const result = await store.dispatch(actions.getExciseTaxList());
+			// getExciseTaxList is not an async thunk, it's a regular function
+			const result = await actions.getExciseTaxList();
 
 			expect(authApi).toHaveBeenCalledWith({
 				method: 'GET',
@@ -243,12 +248,11 @@ describe('Product Actions', () => {
 			});
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions).toContainEqual({
-				type: PRODUCT.PRODUCT_CATEGORY,
-				payload: mockCategories,
-			});
+			expect(dispatchedActions[0].type).toBe('product/getProductCategoryList/pending');
+			expect(dispatchedActions[1].type).toBe('product/getProductCategoryList/fulfilled');
+			expect(dispatchedActions[1].payload).toEqual(mockCategories);
 
-			expect(result.status).toBe(200);
+			expect(result.type).toBe('product/getProductCategoryList/fulfilled');
 		});
 	});
 
@@ -261,7 +265,8 @@ describe('Product Actions', () => {
 				data: { message: 'Deleted successfully' },
 			});
 
-			const result = await store.dispatch(actions.removeBulk(mockIds));
+			// removeBulk is not an async thunk, it's a regular function
+			const result = await actions.removeBulk(mockIds);
 
 			expect(authApi).toHaveBeenCalledWith({
 				method: 'delete',
@@ -275,9 +280,9 @@ describe('Product Actions', () => {
 		it('should handle bulk delete error', async () => {
 			authApi.mockRejectedValue(new Error('Delete failed'));
 
-			await expect(
-				store.dispatch(actions.removeBulk({ ids: [1, 2] }))
-			).rejects.toThrow('Delete failed');
+			await expect(actions.removeBulk({ ids: [1, 2] })).rejects.toThrow(
+				'Delete failed'
+			);
 		});
 	});
 
@@ -304,12 +309,11 @@ describe('Product Actions', () => {
 			});
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions).toContainEqual({
-				type: PRODUCT.INVENTORY_LIST,
-				payload: mockInventory,
-			});
+			expect(dispatchedActions[0].type).toBe('product/getInventoryByProductId/pending');
+			expect(dispatchedActions[1].type).toBe('product/getInventoryByProductId/fulfilled');
+			expect(dispatchedActions[1].payload).toEqual(mockInventory);
 
-			expect(result.data).toEqual(mockInventory);
+			expect(result.type).toBe('product/getInventoryByProductId/fulfilled');
 		});
 	});
 
@@ -338,10 +342,10 @@ describe('Product Actions', () => {
 			});
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions).toContainEqual({
-				type: PRODUCT.INVENTORY_HISTORY_LIST,
-				payload: mockHistory,
-			});
+			expect(dispatchedActions[0].type).toBe('product/getInventoryHistory/pending');
+			expect(dispatchedActions[1].type).toBe('product/getInventoryHistory/fulfilled');
+			expect(dispatchedActions[1].payload).toEqual(mockHistory);
+			expect(result.type).toBe('product/getInventoryHistory/fulfilled');
 		});
 	});
 
@@ -357,9 +361,8 @@ describe('Product Actions', () => {
 				data: mockCategories,
 			});
 
-			const result = await store.dispatch(
-				actions.getTransactionCategoryListForSalesProduct(1)
-			);
+			// This is not an async thunk, it's a regular function
+			const result = await actions.getTransactionCategoryListForSalesProduct(1);
 
 			expect(authApi).toHaveBeenCalledWith({
 				method: 'get',
@@ -382,9 +385,8 @@ describe('Product Actions', () => {
 				data: mockCategories,
 			});
 
-			const result = await store.dispatch(
-				actions.getTransactionCategoryListForPurchaseProduct(1)
-			);
+			// This is not an async thunk, it's a regular function
+			const result = await actions.getTransactionCategoryListForPurchaseProduct(1);
 
 			expect(authApi).toHaveBeenCalledWith({
 				method: 'get',
@@ -407,9 +409,8 @@ describe('Product Actions', () => {
 				data: { isValid: true },
 			});
 
-			const result = await store.dispatch(
-				actions.checkValidation(mockValidationData)
-			);
+			// This is not an async thunk, it's a regular function
+			const result = await actions.checkValidation(mockValidationData);
 
 			expect(authApi).toHaveBeenCalledWith({
 				method: 'get',
@@ -432,9 +433,8 @@ describe('Product Actions', () => {
 				data: { isValid: true },
 			});
 
-			const result = await store.dispatch(
-				actions.checkProductNameValidation(mockValidationData)
-			);
+			// This is not an async thunk, it's a regular function
+			const result = await actions.checkProductNameValidation(mockValidationData);
 
 			expect(authApi).toHaveBeenCalledWith({
 				method: 'get',
@@ -458,9 +458,8 @@ describe('Product Actions', () => {
 				data: { message: 'Updated successfully' },
 			});
 
-			const result = await store.dispatch(
-				actions.updateInventory(mockInventoryData)
-			);
+			// This is not an async thunk, it's a regular function
+			const result = await actions.updateInventory(mockInventoryData);
 
 			expect(authApi).toHaveBeenCalledWith({
 				method: 'POST',
@@ -479,7 +478,8 @@ describe('Product Actions', () => {
 				data: { nextCode: 'PROD-0010' },
 			});
 
-			const result = await store.dispatch(actions.getProductCode());
+			// This is not an async thunk, it's a regular function
+			const result = await actions.getProductCode();
 
 			expect(authApi).toHaveBeenCalledWith({
 				method: 'GET',
@@ -502,7 +502,8 @@ describe('Product Actions', () => {
 				data: mockCompanyDetails,
 			});
 
-			const result = await store.dispatch(actions.getCompanyDetails());
+			// This is not an async thunk, it's a regular function
+			const result = await actions.getCompanyDetails();
 
 			expect(authApi).toHaveBeenCalledWith({
 				method: 'GET',
@@ -526,7 +527,8 @@ describe('Product Actions', () => {
 				data: mockUnitTypes,
 			});
 
-			const result = await store.dispatch(actions.getUnitTypeList());
+			// This is not an async thunk, it's a regular function
+			const result = await actions.getUnitTypeList();
 
 			expect(authApi).toHaveBeenCalledWith({
 				method: 'GET',

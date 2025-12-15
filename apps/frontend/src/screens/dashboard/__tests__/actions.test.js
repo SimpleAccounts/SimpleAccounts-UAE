@@ -20,7 +20,7 @@ describe('Dashboard Actions', () => {
 	});
 
 	describe('getCashFlowGraphData', () => {
-		it('should dispatch CASH_FLOW_GRAPH action on success', async () => {
+		it('should dispatch pending and fulfilled actions on success', async () => {
 			const mockResponse = {
 				data: {
 					inflow: [5000, 6000],
@@ -30,32 +30,39 @@ describe('Dashboard Actions', () => {
 
 			authApi.mockResolvedValue(mockResponse);
 
-			await store.dispatch(actions.getCashFlowGraphData(6));
+			const result = await store.dispatch(actions.getCashFlowGraphData(6));
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions[0]).toEqual({
-				type: DASHBOARD.CASH_FLOW_GRAPH,
-				payload: mockResponse.data,
-			});
+			// Check pending action
+			expect(dispatchedActions[0].type).toBe('dashboard/getCashFlowGraphData/pending');
+			// Check fulfilled action
+			expect(dispatchedActions[1].type).toBe('dashboard/getCashFlowGraphData/fulfilled');
+			expect(dispatchedActions[1].payload).toEqual(mockResponse.data);
 
 			expect(authApi).toHaveBeenCalledWith({
 				method: 'GET',
 				url: '/rest/transaction/getCashFlow?monthNo=6',
 			});
+
+			// RTK thunks resolve with the fulfilled action, not throw
+			expect(result.type).toBe('dashboard/getCashFlowGraphData/fulfilled');
 		});
 
-		it('should throw error on API failure', async () => {
+		it('should dispatch rejected action on API failure', async () => {
 			const mockError = new Error('API Error');
 			authApi.mockRejectedValue(mockError);
 
-			await expect(
-				store.dispatch(actions.getCashFlowGraphData(6))
-			).rejects.toThrow('API Error');
+			const result = await store.dispatch(actions.getCashFlowGraphData(6));
+
+			const dispatchedActions = store.getActions();
+			expect(dispatchedActions[0].type).toBe('dashboard/getCashFlowGraphData/pending');
+			expect(dispatchedActions[1].type).toBe('dashboard/getCashFlowGraphData/rejected');
+			expect(result.type).toBe('dashboard/getCashFlowGraphData/rejected');
 		});
 	});
 
 	describe('getInvoiceGraphData', () => {
-		it('should dispatch INVOICE_GRAPH action on success', async () => {
+		it('should dispatch pending and fulfilled actions on success', async () => {
 			const mockResponse = {
 				data: { paid: 10, unpaid: 5 },
 			};
@@ -65,12 +72,12 @@ describe('Dashboard Actions', () => {
 			const result = await store.dispatch(actions.getInvoiceGraphData(12));
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions[0]).toEqual({
-				type: DASHBOARD.INVOICE_GRAPH,
-				payload: mockResponse.data,
-			});
+			expect(dispatchedActions[0].type).toBe('dashboard/getInvoiceGraphData/pending');
+			expect(dispatchedActions[1].type).toBe('dashboard/getInvoiceGraphData/fulfilled');
+			expect(dispatchedActions[1].payload).toEqual(mockResponse.data);
 
-			expect(result).toEqual(mockResponse);
+			expect(result.type).toBe('dashboard/getInvoiceGraphData/fulfilled');
+			expect(result.payload).toEqual(mockResponse.data);
 		});
 
 		it('should call API with correct month count parameter', async () => {
@@ -87,30 +94,34 @@ describe('Dashboard Actions', () => {
 	});
 
 	describe('getProfitLossReport', () => {
-		it('should dispatch INVOICE_GRAPH action on success', async () => {
+		it('should dispatch pending and fulfilled actions on success', async () => {
 			const mockResponse = {
 				data: { profit: 50000, loss: 20000 },
 			};
 
 			authApi.mockResolvedValue(mockResponse);
 
-			await store.dispatch(actions.getProfitLossReport(6));
+			const result = await store.dispatch(actions.getProfitLossReport(6));
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions[0].type).toBe(DASHBOARD.INVOICE_GRAPH);
+			expect(dispatchedActions[0].type).toBe('dashboard/getProfitLossReport/pending');
+			expect(dispatchedActions[1].type).toBe('dashboard/getProfitLossReport/fulfilled');
+			expect(result.type).toBe('dashboard/getProfitLossReport/fulfilled');
 		});
 
-		it('should handle API errors', async () => {
+		it('should dispatch rejected action on API errors', async () => {
 			authApi.mockRejectedValue(new Error('Network error'));
 
-			await expect(
-				store.dispatch(actions.getProfitLossReport(6))
-			).rejects.toThrow('Network error');
+			const result = await store.dispatch(actions.getProfitLossReport(6));
+
+			const dispatchedActions = store.getActions();
+			expect(dispatchedActions[1].type).toBe('dashboard/getProfitLossReport/rejected');
+			expect(result.type).toBe('dashboard/getProfitLossReport/rejected');
 		});
 	});
 
 	describe('getBankAccountTypes', () => {
-		it('should dispatch BANK_ACCOUNT_TYPE action on successful response', async () => {
+		it('should dispatch pending and fulfilled actions on successful response', async () => {
 			const mockResponse = {
 				status: 200,
 				data: {
@@ -123,16 +134,16 @@ describe('Dashboard Actions', () => {
 
 			authApi.mockResolvedValue(mockResponse);
 
-			await store.dispatch(actions.getBankAccountTypes());
+			const result = await store.dispatch(actions.getBankAccountTypes());
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions[0]).toEqual({
-				type: DASHBOARD.BANK_ACCOUNT_TYPE,
-				payload: mockResponse.data.data,
-			});
+			expect(dispatchedActions[0].type).toBe('dashboard/getBankAccountTypes/pending');
+			expect(dispatchedActions[1].type).toBe('dashboard/getBankAccountTypes/fulfilled');
+			expect(dispatchedActions[1].payload).toEqual(mockResponse.data.data);
+			expect(result.type).toBe('dashboard/getBankAccountTypes/fulfilled');
 		});
 
-		it('should not dispatch action if status is not 200', async () => {
+		it('should dispatch rejected action if status is not 200', async () => {
 			const mockResponse = {
 				status: 404,
 				data: { data: [] },
@@ -140,15 +151,16 @@ describe('Dashboard Actions', () => {
 
 			authApi.mockResolvedValue(mockResponse);
 
-			await store.dispatch(actions.getBankAccountTypes());
+			const result = await store.dispatch(actions.getBankAccountTypes());
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions).toHaveLength(0);
+			expect(dispatchedActions[1].type).toBe('dashboard/getBankAccountTypes/rejected');
+			expect(result.type).toBe('dashboard/getBankAccountTypes/rejected');
 		});
 	});
 
 	describe('getBankAccountGraphData', () => {
-		it('should dispatch BANK_ACCOUNT_GRAPH action with correct data', async () => {
+		it('should dispatch pending and fulfilled actions with correct data', async () => {
 			const mockResponse = {
 				status: 200,
 				data: {
@@ -159,31 +171,34 @@ describe('Dashboard Actions', () => {
 
 			authApi.mockResolvedValue(mockResponse);
 
-			await store.dispatch(actions.getBankAccountGraphData(1, 6));
+			const result = await store.dispatch(actions.getBankAccountGraphData({ account: 1, daterange: 6 }));
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions[0]).toEqual({
-				type: DASHBOARD.BANK_ACCOUNT_GRAPH,
-				payload: mockResponse.data,
-			});
+			expect(dispatchedActions[0].type).toBe('dashboard/getBankAccountGraphData/pending');
+			expect(dispatchedActions[1].type).toBe('dashboard/getBankAccountGraphData/fulfilled');
+			expect(dispatchedActions[1].payload).toEqual(mockResponse.data);
 
 			expect(authApi).toHaveBeenCalledWith({
 				method: 'GET',
 				url: '/rest/bank/getBankChart?bankId=1&monthCount=6',
 			});
+
+			expect(result.type).toBe('dashboard/getBankAccountGraphData/fulfilled');
 		});
 
-		it('should handle errors gracefully', async () => {
+		it('should dispatch rejected action on errors', async () => {
 			authApi.mockRejectedValue(new Error('Database error'));
 
-			await expect(
-				store.dispatch(actions.getBankAccountGraphData(1, 6))
-			).rejects.toThrow('Database error');
+			const result = await store.dispatch(actions.getBankAccountGraphData({ account: 1, daterange: 6 }));
+
+			const dispatchedActions = store.getActions();
+			expect(dispatchedActions[1].type).toBe('dashboard/getBankAccountGraphData/rejected');
+			expect(result.type).toBe('dashboard/getBankAccountGraphData/rejected');
 		});
 	});
 
 	describe('getProfitAndLossData', () => {
-		it('should dispatch PROFIT_LOSS action and return "1"', async () => {
+		it('should dispatch pending and fulfilled actions', async () => {
 			const mockResponse = {
 				data: { netProfit: 30000 },
 			};
@@ -193,12 +208,11 @@ describe('Dashboard Actions', () => {
 			const result = await store.dispatch(actions.getProfitAndLossData(12));
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions[0]).toEqual({
-				type: DASHBOARD.PROFIT_LOSS,
-				payload: mockResponse.data,
-			});
+			expect(dispatchedActions[0].type).toBe('dashboard/getProfitAndLossData/pending');
+			expect(dispatchedActions[1].type).toBe('dashboard/getProfitAndLossData/fulfilled');
+			expect(dispatchedActions[1].payload).toEqual(mockResponse.data);
 
-			expect(result).toBe('1');
+			expect(result.type).toBe('dashboard/getProfitAndLossData/fulfilled');
 		});
 
 		it('should call API with correct URL', async () => {
@@ -215,7 +229,7 @@ describe('Dashboard Actions', () => {
 	});
 
 	describe('getTaxes', () => {
-		it('should dispatch TAXES action on success', async () => {
+		it('should dispatch pending and fulfilled actions on success', async () => {
 			const mockResponse = {
 				data: {
 					totalVAT: 5000,
@@ -225,13 +239,13 @@ describe('Dashboard Actions', () => {
 
 			authApi.mockResolvedValue(mockResponse);
 
-			await store.dispatch(actions.getTaxes(6));
+			const result = await store.dispatch(actions.getTaxes(6));
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions[0]).toEqual({
-				type: DASHBOARD.TAXES,
-				payload: mockResponse.data,
-			});
+			expect(dispatchedActions[0].type).toBe('dashboard/getTaxes/pending');
+			expect(dispatchedActions[1].type).toBe('dashboard/getTaxes/fulfilled');
+			expect(dispatchedActions[1].payload).toEqual(mockResponse.data);
+			expect(result.type).toBe('dashboard/getTaxes/fulfilled');
 		});
 
 		it('should use correct endpoint with month parameter', async () => {
@@ -248,7 +262,7 @@ describe('Dashboard Actions', () => {
 	});
 
 	describe('getExpensesGraphData', () => {
-		it('should dispatch EXPENSE_GRAPH action when status is 200', async () => {
+		it('should dispatch pending and fulfilled actions when status is 200', async () => {
 			const mockResponse = {
 				status: 200,
 				data: {
@@ -261,16 +275,16 @@ describe('Dashboard Actions', () => {
 
 			authApi.mockResolvedValue(mockResponse);
 
-			await store.dispatch(actions.getExpensesGraphData());
+			const result = await store.dispatch(actions.getExpensesGraphData());
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions[0]).toEqual({
-				type: DASHBOARD.EXPENSE_GRAPH,
-				payload: mockResponse.data.data,
-			});
+			expect(dispatchedActions[0].type).toBe('dashboard/getExpensesGraphData/pending');
+			expect(dispatchedActions[1].type).toBe('dashboard/getExpensesGraphData/fulfilled');
+			expect(dispatchedActions[1].payload).toEqual(mockResponse.data.data);
+			expect(result.type).toBe('dashboard/getExpensesGraphData/fulfilled');
 		});
 
-		it('should not dispatch if status is not 200', async () => {
+		it('should dispatch rejected action if status is not 200', async () => {
 			const mockResponse = {
 				status: 500,
 				data: { data: [] },
@@ -278,14 +292,16 @@ describe('Dashboard Actions', () => {
 
 			authApi.mockResolvedValue(mockResponse);
 
-			await store.dispatch(actions.getExpensesGraphData());
+			const result = await store.dispatch(actions.getExpensesGraphData());
 
-			expect(store.getActions()).toHaveLength(0);
+			const dispatchedActions = store.getActions();
+			expect(dispatchedActions[1].type).toBe('dashboard/getExpensesGraphData/rejected');
+			expect(result.type).toBe('dashboard/getExpensesGraphData/rejected');
 		});
 	});
 
 	describe('getRevenuesGraphData', () => {
-		it('should dispatch REVENUE_GRAPH action with invoice type 2', async () => {
+		it('should dispatch pending and fulfilled actions with invoice type 2', async () => {
 			const mockResponse = {
 				status: 200,
 				data: {
@@ -295,31 +311,34 @@ describe('Dashboard Actions', () => {
 
 			authApi.mockResolvedValue(mockResponse);
 
-			await store.dispatch(actions.getRevenuesGraphData());
+			const result = await store.dispatch(actions.getRevenuesGraphData());
 
 			const dispatchedActions = store.getActions();
-			expect(dispatchedActions[0]).toEqual({
-				type: DASHBOARD.REVENUE_GRAPH,
-				payload: mockResponse.data.data,
-			});
+			expect(dispatchedActions[0].type).toBe('dashboard/getRevenuesGraphData/pending');
+			expect(dispatchedActions[1].type).toBe('dashboard/getRevenuesGraphData/fulfilled');
+			expect(dispatchedActions[1].payload).toEqual(mockResponse.data.data);
 
 			expect(authApi).toHaveBeenCalledWith({
 				method: 'GET',
 				url: '/rest/invoice/getList?type=2',
 			});
+
+			expect(result.type).toBe('dashboard/getRevenuesGraphData/fulfilled');
 		});
 
-		it('should handle network errors', async () => {
+		it('should dispatch rejected action on network errors', async () => {
 			authApi.mockRejectedValue(new Error('Connection timeout'));
 
-			await expect(
-				store.dispatch(actions.getRevenuesGraphData())
-			).rejects.toThrow('Connection timeout');
+			const result = await store.dispatch(actions.getRevenuesGraphData());
+
+			const dispatchedActions = store.getActions();
+			expect(dispatchedActions[1].type).toBe('dashboard/getRevenuesGraphData/rejected');
+			expect(result.type).toBe('dashboard/getRevenuesGraphData/rejected');
 		});
 	});
 
 	describe('getTotalBalance', () => {
-		it('should return response without dispatching action', async () => {
+		it('should dispatch pending and fulfilled actions', async () => {
 			const mockResponse = {
 				data: { totalBalance: 100000 },
 			};
@@ -328,8 +347,11 @@ describe('Dashboard Actions', () => {
 
 			const result = await store.dispatch(actions.getTotalBalance());
 
-			expect(result).toEqual(mockResponse);
-			expect(store.getActions()).toHaveLength(0);
+			const dispatchedActions = store.getActions();
+			expect(dispatchedActions[0].type).toBe('dashboard/getTotalBalance/pending');
+			expect(dispatchedActions[1].type).toBe('dashboard/getTotalBalance/fulfilled');
+			expect(dispatchedActions[1].payload).toEqual(mockResponse.data);
+			expect(result.type).toBe('dashboard/getTotalBalance/fulfilled');
 		});
 
 		it('should call correct API endpoint', async () => {

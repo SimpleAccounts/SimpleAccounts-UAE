@@ -201,7 +201,9 @@ public class CompanyController {
 			}
 		} catch (Exception e) {
 			log.error(ERROR, e);
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			// Return 0 on error to allow registration screen to appear
+			// This is safer than returning 500 with no body, which causes XML parsing errors
+			return new ResponseEntity<>(0, HttpStatus.OK);
 		}
 	}
 
@@ -213,7 +215,8 @@ public class CompanyController {
 			return new ResponseEntity<List<String>>(companyRestHelper.getTimeZoneList(), HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(ERROR, e);
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			// Return empty list on error instead of 500 with no body
+			return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
 		}
 	}
 
@@ -423,12 +426,13 @@ public class CompanyController {
 					modelList.add(new DropdownModel(state.getId(), state.getStateName()));
 				return new ResponseEntity<>(modelList, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<>(modelList, HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(modelList, HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			log.error(ERROR, e);
+			// Return empty list on error instead of 500 with no body
+			return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
 		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	private TransactionCategory getValidTransactionCategory(TransactionCategory transactionCategory) {
@@ -511,12 +515,13 @@ public class CompanyController {
 			if (currencies != null && !currencies.isEmpty()) {
 				return new ResponseEntity<>(currencies, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+				return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			log.error(ErrorConstant.ERROR, e);
+			// Return empty list on error instead of 500 with no body
+			return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
 		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@LogRequest
@@ -599,12 +604,13 @@ public class CompanyController {
 			if (dropdownModelList != null && ! dropdownModelList.isEmpty()) {
 				return new ResponseEntity<>(dropdownModelList, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			log.error(ERROR, e);
+			// Return empty list on error instead of 500 with no body
+			return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
 		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)

@@ -27,6 +27,7 @@ import config from 'constants/config';
 
 import LocalizedStrings from 'react-localization';
 import { data } from 'screens/Language/index'
+import { withNavigation } from 'utils/withNavigation';
 
 let strings = new LocalizedStrings(data);
 
@@ -365,4 +366,4 @@ class LogIn extends React.Component {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LogIn);
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(LogIn));
