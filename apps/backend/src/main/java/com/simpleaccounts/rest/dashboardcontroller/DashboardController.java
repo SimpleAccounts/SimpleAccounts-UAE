@@ -16,7 +16,6 @@ import com.simpleaccounts.service.TransactionCategoryClosingBalanceService;
 import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateFormatUtil;
-import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -120,7 +119,6 @@ public class DashboardController {
 
 @LogExecutionTime
 @LogRequest
-@ApiOperation(value = "Get Profit and Loss Report")
 @Cacheable(cacheNames = "dashboardProfitLoss", key = "T(com.simpleaccounts.helper.DashboardCacheKeyUtil).profitLossKey(#monthNo)")
 @GetMapping(value = "/profitandloss")
 public ResponseEntity<Object> getDashboardProfitAndLoss(@RequestParam(required = false) Integer monthNo) {

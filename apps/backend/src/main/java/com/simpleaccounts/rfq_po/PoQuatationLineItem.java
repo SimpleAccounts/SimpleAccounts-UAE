@@ -5,7 +5,7 @@ import com.simpleaccounts.entity.*;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -49,7 +49,7 @@ public class PoQuatationLineItem {
     private Boolean deleteFlag = Boolean.FALSE;
 
     @ManyToOne
-    @JoinColumn(name = "PO_QUATATION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PO_QUATATION_PO_QUATATION_LINE_ITEM"))
+    @JoinColumn(name = "PO_QUATATION_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PO_QUATATION_PO_QUATATION_LINE_ITEM"))
     private PoQuatation poQuatation;
 
     @Basic(optional = false)
@@ -71,7 +71,7 @@ public class PoQuatationLineItem {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "VAT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_VAT_PO_QUATATION_LINE_ITEM"))
+    @JoinColumn(name = "VAT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_VAT_PO_QUATATION_LINE_ITEM"))
     private VatCategory vatCategory;
 
     @Basic
@@ -80,7 +80,7 @@ public class PoQuatationLineItem {
     private BigDecimal subTotal = BigDecimal.ZERO;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PRODUCT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PRODUCT_PO_QUATATION_LINE_ITEM"))
+    @JoinColumn(name = "PRODUCT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PRODUCT_PO_QUATATION_LINE_ITEM"))
     private Product product;
 
     @Enumerated(EnumType.STRING)
@@ -92,7 +92,7 @@ public class PoQuatationLineItem {
     private BigDecimal discount = BigDecimal.ZERO;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EXCISE_TAX",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXCISE_TAX_PO_QUATATION_LINE_ITEM"))
+    @JoinColumn(name = "EXCISE_TAX",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EXCISE_TAX_PO_QUATATION_LINE_ITEM"))
     private ExciseTax exciseCategory;
 
     @Column(name = "EXCISE_AMOUNT")
@@ -104,7 +104,7 @@ public class PoQuatationLineItem {
     private BigDecimal vatAmount = BigDecimal.ZERO;
 
     @ManyToOne
-    @JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_TRANX_CAT_ID_TRANX_CAT"))
+    @JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_TRANX_CAT_ID_TRANX_CAT"))
     private TransactionCategory trnsactioncCategory;
 
     @Basic(optional = false)
@@ -113,7 +113,7 @@ public class PoQuatationLineItem {
     private Boolean isMigratedRecord = Boolean.FALSE;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UNIT_TYPE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_UNIT_TYPE_PO_QUATATION_LINE_ITEM"))
+    @JoinColumn(name = "UNIT_TYPE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_UNIT_TYPE_PO_QUATATION_LINE_ITEM"))
     private UnitType unitTypeId;
 
     @Column(name = "UNIT_TYPE")

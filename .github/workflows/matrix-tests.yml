@@ -34,10 +34,10 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            java: '11'
+            java: '21'
             experimental: false
           - os: windows-latest
-            java: '11'
+            java: '21'
             experimental: true
 
     steps:
@@ -75,7 +75,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v4
         with:
           node-version: ${{ matrix.node }}
 

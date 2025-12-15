@@ -5,7 +5,7 @@ import com.simpleaccounts.dao.RoleModuleRelationDao;
 import com.simpleaccounts.entity.RoleModuleRelation;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 @Repository

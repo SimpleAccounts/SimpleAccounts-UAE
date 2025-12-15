@@ -14,15 +14,14 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Join;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,12 +40,6 @@ class TransactionExpensesPayrollDaoImplTest {
 
     @Mock
     private EntityManager entityManager;
-
-    @Mock
-    private Session session;
-
-    @Mock
-    private Criteria criteria;
 
     @Mock
     private TypedQuery<TransactionExpensesPayroll> typedQuery;
@@ -99,8 +92,6 @@ class TransactionExpensesPayrollDaoImplTest {
         lenient().when(countCriteriaQuery.from(TransactionExpensesPayroll.class)).thenReturn(root);
         lenient().when(entityManager.createQuery(countCriteriaQuery)).thenReturn(countQuery);
         lenient().when(countQuery.getSingleResult()).thenReturn(0L);
-
-        lenient().when(entityManager.getDelegate()).thenReturn(session);
     }
 
     @Test

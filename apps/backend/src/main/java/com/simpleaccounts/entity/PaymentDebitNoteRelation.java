@@ -2,7 +2,7 @@ package com.simpleaccounts.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -42,7 +42,7 @@ public class PaymentDebitNoteRelation
     private LocalDateTime lastUpdateDate;
 
     @ManyToOne
-    @JoinColumn(name = "PAYMENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PAYMENT_DEBIT_NOTE_RELATION_PAYMENT_ID_PAYMENT"))
+    @JoinColumn(name = "PAYMENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PAYMENT_DEBIT_NOTE_RELATION_PAYMENT_ID_PAYMENT"))
     private Payment payment;
 
     @Basic(optional = false)
@@ -51,7 +51,7 @@ public class PaymentDebitNoteRelation
 
     //this column will store the debit note obj
     @ManyToOne
-    @JoinColumn(name = "CREDIT_NOTE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PAYMENT_DEBIT_NOTE_RELATION_CREDIT_NOTE_ID_CREDIT_NOTE"))
+    @JoinColumn(name = "CREDIT_NOTE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PAYMENT_DEBIT_NOTE_RELATION_CREDIT_NOTE_ID_CREDIT_NOTE"))
     private CreditNote creditNote;
 
     @Basic(optional = false)

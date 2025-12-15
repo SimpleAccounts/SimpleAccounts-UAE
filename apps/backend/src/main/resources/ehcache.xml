@@ -1,114 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ehcache
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://www.ehcache.org/ehcache.xsd"
-         updateCheck="true"
-         monitoring="autodetect"
-         dynamicConfig="true">
-         
-	<cache name="chartOfAccountCategoryCache"
-           maxElementsInMemory="200"
-           eternal="false"
-           overflowToDisk="false"
-           timeToLiveSeconds="900"
-           timeToIdleSeconds="0"
-           memoryStoreEvictionPolicy="LFU"
-           transactionalMode="off" />
-	<cache name="chartOfAccountCategoryListCache"
-		   maxElementsInMemory="20"
-		   eternal="false"
-		   overflowToDisk="false"
-		   timeToLiveSeconds="900"
-		   timeToIdleSeconds="0"
-		   memoryStoreEvictionPolicy="LFU"
-		   transactionalMode="off" />
-	<cache name="userCache"
-		   maxElementsInMemory="20"
-		   eternal="false"
-		   overflowToDisk="false"
-		   timeToLiveSeconds="900"
-		   timeToIdleSeconds="0"
-		   memoryStoreEvictionPolicy="LFU"
-		   transactionalMode="off" />
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.ehcache.org/v3"
+        xmlns:jsr107="http://www.ehcache.org/v3/jsr107"
+        xsi:schemaLocation="http://www.ehcache.org/v3
+                            http://www.ehcache.org/schema/ehcache-core-3.0.xsd
+                            http://www.ehcache.org/v3/jsr107
+                            http://www.ehcache.org/schema/ehcache-107-ext-3.0.xsd">
 
-	<cache name="productCache"
-		   maxElementsInMemory="200"
-		   eternal="false"
-		   overflowToDisk="false"
-		   timeToLiveSeconds="900"
-		   timeToIdleSeconds="0"
-		   memoryStoreEvictionPolicy="LFU"
-		   transactionalMode="off" />
+    <!-- Default cache template -->
+    <cache-template name="defaultTemplate">
+        <expiry>
+            <ttl unit="seconds">900</ttl>
+        </expiry>
+        <heap unit="entries">200</heap>
+    </cache-template>
 
-	<cache name="vatCategoryCache"
-		   maxElementsInMemory="100"
-		   eternal="false"
-		   overflowToDisk="false"
-		   timeToLiveSeconds="900"
-		   timeToIdleSeconds="0"
-		   memoryStoreEvictionPolicy="LFU"
-		   transactionalMode="off" />
+    <!-- Dashboard cache template with shorter TTL -->
+    <cache-template name="dashboardTemplate">
+        <expiry>
+            <ttl unit="seconds">300</ttl>
+        </expiry>
+        <heap unit="entries">50</heap>
+    </cache-template>
 
-	<cache name="productCategoryCache"
-		   maxElementsInMemory="100"
-		   eternal="false"
-		   overflowToDisk="false"
-		   timeToLiveSeconds="900"
-		   timeToIdleSeconds="0"
-		   memoryStoreEvictionPolicy="LFU"
-		   transactionalMode="off" />
+    <cache alias="chartOfAccountCategoryCache" uses-template="defaultTemplate">
+        <heap unit="entries">200</heap>
+    </cache>
 
-	<cache name="transactionCategoryCache"
-		   maxElementsInMemory="200"
-		   eternal="false"
-		   overflowToDisk="false"
-		   timeToLiveSeconds="900"
-		   timeToIdleSeconds="0"
-		   memoryStoreEvictionPolicy="LFU"
-		   transactionalMode="off" />
+    <cache alias="chartOfAccountCategoryListCache" uses-template="defaultTemplate">
+        <heap unit="entries">20</heap>
+    </cache>
 
-	<cache name="dashboardProfitLoss"
-		   maxElementsInMemory="50"
-		   eternal="false"
-		   overflowToDisk="false"
-		   timeToLiveSeconds="300"
-		   timeToIdleSeconds="0"
-		   memoryStoreEvictionPolicy="LFU"
-		   transactionalMode="off" />
+    <cache alias="userCache" uses-template="defaultTemplate">
+        <heap unit="entries">20</heap>
+    </cache>
 
-	<cache name="dashboardCashFlow"
-		   maxElementsInMemory="50"
-		   eternal="false"
-		   overflowToDisk="false"
-		   timeToLiveSeconds="300"
-		   timeToIdleSeconds="0"
-		   memoryStoreEvictionPolicy="LFU"
-		   transactionalMode="off" />
+    <cache alias="productCache" uses-template="defaultTemplate">
+        <heap unit="entries">200</heap>
+    </cache>
 
-	<cache name="dashboardInvoiceChart"
-		   maxElementsInMemory="50"
-		   eternal="false"
-		   overflowToDisk="false"
-		   timeToLiveSeconds="300"
-		   timeToIdleSeconds="0"
-		   memoryStoreEvictionPolicy="LFU"
-		   transactionalMode="off" />
+    <cache alias="vatCategoryCache" uses-template="defaultTemplate">
+        <heap unit="entries">100</heap>
+    </cache>
 
-	<cache name="dashboardBankChart"
-		   maxElementsInMemory="100"
-		   eternal="false"
-		   overflowToDisk="false"
-		   timeToLiveSeconds="300"
-		   timeToIdleSeconds="0"
-		   memoryStoreEvictionPolicy="LFU"
-		   transactionalMode="off" />
+    <cache alias="productCategoryCache" uses-template="defaultTemplate">
+        <heap unit="entries">100</heap>
+    </cache>
 
-	<cache name="dashboardBankTotalBalance"
-		   maxElementsInMemory="10"
-		   eternal="false"
-		   overflowToDisk="false"
-		   timeToLiveSeconds="300"
-		   timeToIdleSeconds="0"
-		   memoryStoreEvictionPolicy="LFU"
-		   transactionalMode="off" />
-</ehcache>
+    <cache alias="transactionCategoryCache" uses-template="defaultTemplate">
+        <heap unit="entries">200</heap>
+    </cache>
+
+    <cache alias="dashboardProfitLoss" uses-template="dashboardTemplate"/>
+
+    <cache alias="dashboardCashFlow" uses-template="dashboardTemplate"/>
+
+    <cache alias="dashboardInvoiceChart" uses-template="dashboardTemplate"/>
+
+    <cache alias="dashboardBankChart" uses-template="dashboardTemplate">
+        <heap unit="entries">100</heap>
+    </cache>
+
+    <cache alias="dashboardBankTotalBalance" uses-template="dashboardTemplate">
+        <heap unit="entries">10</heap>
+    </cache>
+
+</config>

@@ -10,7 +10,7 @@ import com.simpleaccounts.dao.ConfigurationDao;
 import com.simpleaccounts.entity.Configuration;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 /**

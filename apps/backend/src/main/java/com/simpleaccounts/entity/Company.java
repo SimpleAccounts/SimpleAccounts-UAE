@@ -4,10 +4,9 @@ import com.simpleaccounts.constant.CommonConstant;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Type;
 
 /**
  * Created by mohsinh on 2/26/2017.
@@ -44,11 +43,11 @@ public class Company implements Serializable {
     private String companyRegistrationNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COMPANY_TYPE_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_COMPANY_COMPANY_TYPE_CODE_COMPANY_TYPE"))
+    @JoinColumn(name = "COMPANY_TYPE_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_COMPANY_COMPANY_TYPE_CODE_COMPANY_TYPE"))
     private CompanyType companyTypeCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "INDUSTRY_TYPE_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_COMPANY_INDUSTRY_TYPE_CODE_INDUSTRY_TYPE"))
+    @JoinColumn(name = "INDUSTRY_TYPE_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_COMPANY_INDUSTRY_TYPE_CODE_INDUSTRY_TYPE"))
     private IndustryType industryTypeCode;
 
     @Basic
@@ -57,7 +56,6 @@ public class Company implements Serializable {
 
     @Basic
     @Lob
-    @Type(type = "org.hibernate.type.ImageType")
     @Column(name = "COMPANY_LOGO")
     private byte[] companyLogo;
 
@@ -114,11 +112,11 @@ public class Company implements Serializable {
     private String invoicingPoBoxNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "INVOICING_COUNTRY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_COMPANY_INVOICING_COUNTRY_CODE_COUNTRY"))
+    @JoinColumn(name = "INVOICING_COUNTRY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_COMPANY_INVOICING_COUNTRY_CODE_COUNTRY"))
     private Country invoicingCountryCode;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_COMPANY_CURRENCY_CODE_CURRENCY"))
+    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_COMPANY_CURRENCY_CODE_CURRENCY"))
     private Currency currencyCode;
 
     @Basic
@@ -150,7 +148,7 @@ public class Company implements Serializable {
     private String companyPoBoxNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COMPANY_COUNTRY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_COMPANY_COMPANY_COUNTRY_CODE"))
+    @JoinColumn(name = "COMPANY_COUNTRY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_COMPANY_COMPANY_COUNTRY_CODE"))
     private Country companyCountryCode;
 
     @Column(name = "COMPANY_EXPENSE_BUDGET")
@@ -214,7 +212,7 @@ public class Company implements Serializable {
     private LocalDateTime vatRegistrationDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COMPANY_STATE_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_COMPANY_COMPANY_STATE_CODE_STATE"))
+    @JoinColumn(name = "COMPANY_STATE_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_COMPANY_COMPANY_STATE_CODE_STATE"))
     private State companyStateCode;
 
     @Basic

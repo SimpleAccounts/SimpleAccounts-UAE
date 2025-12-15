@@ -3,7 +3,7 @@ package com.simpleaccounts.entity;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -30,11 +30,11 @@ public class InventoryHistory implements Serializable {
     private Integer inventoryHistoryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PRODUCT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVENTORY_HISTORY_PRODUCT_ID_PRODUCT"))
+    @JoinColumn(name = "PRODUCT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVENTORY_HISTORY_PRODUCT_ID_PRODUCT"))
     private Product productId ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SUPPLIER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVENTORY_HISTORY_SUPPLIER_ID_SUPPLIER"))
+    @JoinColumn(name = "SUPPLIER_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVENTORY_HISTORY_SUPPLIER_ID_SUPPLIER"))
     private Contact supplierId ;
 
     @Basic
@@ -54,11 +54,11 @@ public class InventoryHistory implements Serializable {
     private Float  unitSellingPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "INVENTORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVENTORY_HISTORY_INVENTORY_ID_INVENTORY"))
+    @JoinColumn(name = "INVENTORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVENTORY_HISTORY_INVENTORY_ID_INVENTORY"))
     private Inventory inventory;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "INVOICE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVENTORY_HISTORY_INVOICE_ID_INVOICE"))
+    @JoinColumn(name = "INVOICE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVENTORY_HISTORY_INVOICE_ID_INVOICE"))
     private Invoice invoice;
 
     @Column(name = "DELETE_FLAG")

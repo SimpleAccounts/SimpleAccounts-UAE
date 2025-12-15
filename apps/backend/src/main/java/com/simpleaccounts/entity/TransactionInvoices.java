@@ -4,7 +4,7 @@ import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,11 +35,11 @@ public class TransactionInvoices {
     private BigDecimal remainingToExplain;
 
     @ManyToOne
-    @JoinColumn(name = "TRANSACTION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTON_INVOICES_TRANSACTION_ID_TRANSACTION"))
+    @JoinColumn(name = "TRANSACTION_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTON_INVOICES_TRANSACTION_ID_TRANSACTION"))
     private Transaction transaction;
 
     @ManyToOne
-    @JoinColumn(name = "INVOICE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTON_INVOICES_INVOICE_ID_INVOICE"))
+    @JoinColumn(name = "INVOICE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTON_INVOICES_INVOICE_ID_INVOICE"))
     private Invoice invoice;
 
     @Column(name = "INVOICE_TYPE")

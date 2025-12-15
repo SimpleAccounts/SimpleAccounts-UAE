@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -29,10 +29,10 @@ public class PurchaseLineItem implements Serializable {
     @Column(name = "PURCHASE_LINE_ITEM_DESCRIPTION")
     private String purchaseLineItemDescription;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PURCHASE_LINE_ITEM_PRODUCT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PUR_LINE_ITEM_PUR_LINE_ITEM_PROD_ID_PUR_LINE_ITEM_PROD"))
+    @JoinColumn(name = "PURCHASE_LINE_ITEM_PRODUCT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PUR_LINE_ITEM_PUR_LINE_ITEM_PROD_ID_PUR_LINE_ITEM_PROD"))
     private Product purchaseLineItemProductService;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PURCHASE_LINE_ITEM_VAT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PUR_LINE_ITEM_PUR_LINE_ITEM_VAT_ID_PUR_LINE_ITEM_VAT"))
+    @JoinColumn(name = "PURCHASE_LINE_ITEM_VAT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PUR_LINE_ITEM_PUR_LINE_ITEM_VAT_ID_PUR_LINE_ITEM_VAT"))
     private VatCategory purchaseLineItemVat;
     @Basic
     @Column(name = "PURCHASE_LINE_ITEM_UNIT_PRICE")
@@ -51,7 +51,7 @@ public class PurchaseLineItem implements Serializable {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "PURCHASE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PURCHASE_LINE_ITEM_PURCHASE_ID_PURCHASE"))
+    @JoinColumn(name = "PURCHASE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PURCHASE_LINE_ITEM_PURCHASE_ID_PURCHASE"))
     private Purchase purchase;
     @Column(name = "PURCHASE_PRODUCT_NAME")
     private String productName;

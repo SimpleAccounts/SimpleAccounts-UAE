@@ -3,7 +3,7 @@ package com.simpleaccounts.entity;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,7 +29,7 @@ public class VatTaxAgency implements Serializable {
 
     @Basic
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_VAT_TAX_AGENCY_USER_ID_SA_USER"))
+    @JoinColumn(name = "USER_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_VAT_TAX_AGENCY_USER_ID_SA_USER"))
     private User userId;
 
     @Column(name = "CREATED_BY")
@@ -82,7 +82,7 @@ public class VatTaxAgency implements Serializable {
     private String vatRegistrationNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "VAT_REPORT_FILING_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_VAT_TAX_AGENCY_VAT_REPORT_FILING_ID_VAT_REPORT_FILING"))
+    @JoinColumn(name = "VAT_REPORT_FILING_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_VAT_TAX_AGENCY_VAT_REPORT_FILING_ID_VAT_REPORT_FILING"))
     private VatReportFiling vatReportFiling;
 
     @Column(name = "DELETE_FLAG")

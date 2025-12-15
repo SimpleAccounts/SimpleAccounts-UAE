@@ -5,7 +5,7 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -41,7 +41,7 @@ public class ProductLineItem implements Serializable {
 	private String description;
 
 	@ManyToOne
-	@JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PROD_LINE_ITEM_TRANX_CAT_ID_TRANX_CAT"))
+	@JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PROD_LINE_ITEM_TRANX_CAT_ID_TRANX_CAT"))
 	private TransactionCategory transactioncategory;
 
 	@Column(name = "CREATED_BY")
@@ -74,7 +74,7 @@ public class ProductLineItem implements Serializable {
 	private Integer versionNumber = 1;
 
 	@ManyToOne
-	@JoinColumn(name = "PRODUCT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PRODUCT_LINE_ITEM_PRODUCT_ID_PRODUCT"))
+	@JoinColumn(name = "PRODUCT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PRODUCT_LINE_ITEM_PRODUCT_ID_PRODUCT"))
 	private Product product;
 
 	@Basic(optional = false)

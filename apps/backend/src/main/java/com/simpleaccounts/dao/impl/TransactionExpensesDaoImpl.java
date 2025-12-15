@@ -3,11 +3,11 @@ package com.simpleaccounts.dao.impl;
 import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.TransactionExpensesDao;
 import com.simpleaccounts.entity.TransactionExpenses;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Root;
 import java.util.List;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,14 +16,16 @@ public class TransactionExpensesDaoImpl extends AbstractDao<Integer, Transaction
 
 	@Override
 	public List<TransactionExpenses> getMappedExpenses(Integer transactionId) {
-		org.hibernate.Session session = (Session) getEntityManager().getDelegate();
-		Criteria criteria = DetachedCriteria.forClass(TransactionExpenses.class).getExecutableCriteria(session);
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<TransactionExpenses> query = cb.createQuery(TransactionExpenses.class);
+		Root<TransactionExpenses> root = query.from(TransactionExpenses.class);
+
 		if (transactionId != null) {
-			criteria.createAlias("transaction", "tr");
-			criteria.add(Restrictions.eq("tr.transactionId", transactionId));
+			Join<Object, Object> transactionJoin = root.join("transaction");
+			query.where(cb.equal(transactionJoin.get("transactionId"), transactionId));
 		}
 
-		return criteria.list();
+		return getEntityManager().createQuery(query).getResultList();
 	}
 
 }
