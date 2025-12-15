@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   flexRender,
   getCoreRowModel,
@@ -16,6 +16,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
 import { DataTablePagination } from './data-table-pagination';
 
 export function DataTable({ columns, data, searchKey, enableRowSelection = false }) {
@@ -24,9 +25,43 @@ export function DataTable({ columns, data, searchKey, enableRowSelection = false
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState('');
 
+  // Add selection column if row selection is enabled
+  const tableColumns = useMemo(() => {
+    if (!enableRowSelection) {
+      return columns;
+    }
+
+    return [
+      {
+        id: 'select',
+        header: ({ table }) => {
+          const isAllSelected = table.getIsAllPageRowsSelected();
+          const isSomeSelected = table.getIsSomePageRowsSelected();
+          return (
+            <Checkbox
+              checked={isAllSelected ? true : isSomeSelected ? 'indeterminate' : false}
+              onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+              aria-label="Select all"
+            />
+          );
+        },
+        cell: ({ row }) => (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+          />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+      },
+      ...columns,
+    ];
+  }, [columns, enableRowSelection]);
+
   const table = useReactTable({
     data,
-    columns,
+    columns: tableColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -100,7 +135,10 @@ export function DataTable({ columns, data, searchKey, enableRowSelection = false
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={tableColumns.length}
+                  className="h-24 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>

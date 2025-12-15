@@ -109,5 +109,45 @@ describe('DataTable', () => {
 
     expect(screen.getByText('No results.')).toBeInTheDocument();
   });
+
+  it('renders checkbox column when row selection is enabled', () => {
+    render(<DataTable columns={mockColumns} data={mockData} enableRowSelection={true} />);
+
+    // Check for select all checkbox in header
+    const selectAllCheckbox = screen.getByLabelText('Select all');
+    expect(selectAllCheckbox).toBeInTheDocument();
+
+    // Check for row checkboxes
+    const rowCheckboxes = screen.getAllByLabelText('Select row');
+    expect(rowCheckboxes.length).toBe(mockData.length);
+  });
+
+  it('does not render checkbox column when row selection is disabled', () => {
+    render(<DataTable columns={mockColumns} data={mockData} enableRowSelection={false} />);
+
+    const selectAllCheckbox = screen.queryByLabelText('Select all');
+    expect(selectAllCheckbox).not.toBeInTheDocument();
+
+    const rowCheckboxes = screen.queryAllByLabelText('Select row');
+    expect(rowCheckboxes.length).toBe(0);
+  });
+
+  it('toggles row selection when checkbox is clicked', () => {
+    render(<DataTable columns={mockColumns} data={mockData} enableRowSelection={true} />);
+
+    const rowCheckboxes = screen.getAllByLabelText('Select row');
+    const firstCheckbox = rowCheckboxes[0];
+
+    // Initially unchecked
+    expect(firstCheckbox).not.toBeChecked();
+
+    // Click to select
+    fireEvent.click(firstCheckbox);
+    expect(firstCheckbox).toBeChecked();
+
+    // Click to deselect
+    fireEvent.click(firstCheckbox);
+    expect(firstCheckbox).not.toBeChecked();
+  });
 });
 

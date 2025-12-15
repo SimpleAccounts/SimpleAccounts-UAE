@@ -182,7 +182,7 @@ export function ExampleDataTable() {
             columns={columns}
             data={sampleData}
             searchKey="name"
-            enableRowSelection={false}
+            enableRowSelection={true}
           />
         </CardContent>
       </Card>
