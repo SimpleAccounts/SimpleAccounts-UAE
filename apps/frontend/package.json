@@ -102,7 +102,7 @@
     "react-toastify": "^11.0.5",
     "react-transition-group": "^4.3.0",
     "reactstrap": "^9.2.3",
-    "redux": "^4.0.4",
+    "redux": "^5.0.1",
     "redux-thunk": "^2.3.0",
     "sass": "^1.96.0",
     "simple-line-icons": "^2.4.1",
