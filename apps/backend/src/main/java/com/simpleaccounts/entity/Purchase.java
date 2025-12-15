@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -69,28 +69,28 @@ public class Purchase implements Serializable {
 
     @Basic
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CLAIMANT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PURCHASE_CLAIMANT_ID_CLAIMANT"))
+    @JoinColumn(name = "CLAIMANT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PURCHASE_CLAIMANT_ID_CLAIMANT"))
     private User user;
 
     @Basic
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TRANSACTION_TYPE_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_PURCHASE_TRANSACTION_TYPE_CODE_TRANSACTION_TYPE"))
+    @JoinColumn(name = "TRANSACTION_TYPE_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PURCHASE_TRANSACTION_TYPE_CODE_TRANSACTION_TYPE"))
     private ChartOfAccount transactionType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_PURCHASE_TRANSACTION_CATEGORY_CODE_TRANSACTION_CATEGORY"))
+    @JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PURCHASE_TRANSACTION_CATEGORY_CODE_TRANSACTION_CATEGORY"))
     private TransactionCategory transactionCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_PURCHASE_CURRENCY_CODE_CURRENCY"))
+    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PURCHASE_CURRENCY_CODE_CURRENCY"))
     private Currency currency;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PROJECT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PURCHASE_PROJECT_ID_PROJECT"))
+    @JoinColumn(name = "PROJECT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PURCHASE_PROJECT_ID_PROJECT"))
     private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CONTACT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_PURCHASE_CONTACT_ID_CONTACT"))
+    @JoinColumn(name = "CONTACT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_PURCHASE_CONTACT_ID_CONTACT"))
     private Contact purchaseContact;
 
     @Basic

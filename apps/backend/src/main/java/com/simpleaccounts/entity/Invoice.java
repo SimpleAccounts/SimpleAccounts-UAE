@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +25,7 @@ import org.hibernate.annotations.ColumnDefault;
 @AllArgsConstructor
 @NamedQueries({
 		@NamedQuery(name = "allInvoices", query = "from Invoice i where i.deleteFlag = false order by i.lastUpdateDate desc"),
-		@NamedQuery(name = "allInvoicesByPlaceOfSupply", query = "SELECT Sum(i.totalAmount) as TOTAL_AMOUNT,Sum(i.totalVatAmount) as TOTAL_VAT_AMOUNT, i.placeOfSupplyId as PLACE_OF_SUPPLY_ID from Invoice i,PlaceOfSupply p where i.placeOfSupplyId = p.id and i.type=2 group by  i.placeOfSupplyId "),
+		@NamedQuery(name = "allInvoicesByPlaceOfSupply", query = "SELECT Sum(i.totalAmount) as TOTAL_AMOUNT,Sum(i.totalVatAmount) as TOTAL_VAT_AMOUNT, p.id as PLACE_OF_SUPPLY_ID from Invoice i join i.placeOfSupplyId p where i.type=2 group by p.id "),
 		@NamedQuery(name = "invoiceForDropdown", query = "SELECT new " + CommonConstant.DROPDOWN_MODEL_PACKAGE
 				+ "(i.id , i.referenceNumber )" + " FROM Invoice i where i.deleteFlag = FALSE and i.type=:type and i.status in (6) and i.cnCreatedOnPaidInvoice=false order by i.id desc"),
 		@NamedQuery(name = "updateStatus", query = "Update Invoice i set i.status = :status where id = :id "),
@@ -40,8 +40,8 @@ import org.hibernate.annotations.ColumnDefault;
 		@NamedQuery(name = "totalInputVatAmount", query = "SELECT SUM (i.totalVatAmount) AS TOTAL_VAT_AMOUNT FROM Invoice i WHERE i.type=2 and i.deleteFlag = false and i.invoiceDate between :startDate and :endDate "),
 		@NamedQuery(name = "totalOutputVatAmount", query = "SELECT SUM(i.totalVatAmount) AS TOTAL_VAT_AMOUNT FROM Invoice i WHERE i.type=1 and i.deleteFlag = false and i.invoiceDate between :startDate and :endDate "),
 		@NamedQuery(name = "getListByPlaceOfSupply",query = "SELECT SUM(i.totalAmount) AS TOTAL_AMOUNT,SUM(i.totalVatAmount) AS TOTAL_VAT_AMOUNT, " +
-				"i.placeOfSupplyId AS PLACE_OF_SUPPLY_ID FROM Invoice i, PlaceOfSupply p WHERE i.placeOfSupplyId = p.id " +
-				"and i.type=2 and i.totalVatAmount > 0 AND i.invoiceDate between :startDate AND :endDate GROUP By i.placeOfSupplyId "),
+				"p.id AS PLACE_OF_SUPPLY_ID FROM Invoice i join i.placeOfSupplyId p " +
+				"where i.type=2 and i.totalVatAmount > 0 AND i.invoiceDate between :startDate AND :endDate GROUP By p.id "),
 		@NamedQuery(name = "getSumOfTotalAmountWithVatForRCM", query = "SELECT SUM(i.totalAmount) AS TOTAL_AMOUNT, SUM(i.totalVatAmount) AS TOTAL_VAT_AMOUNT FROM Invoice i WHERE i.status not in(2) AND i.type=1 AND i.isReverseChargeEnabled=True AND i.deleteFlag=false AND i.invoiceDate between :startDate and :endDate"),
 
 		@NamedQuery(name = "suggestionUnpaidInvoices", query = "Select i from Invoice i where i.status in :status  and  i.contact.contactId = :id and  i.type =:type and i.currency.currencyCode in :currency  and i.deleteFlag = false  and i.createdBy = :userId  order by i.id desc "),
@@ -135,7 +135,7 @@ public class Invoice implements Serializable {
 	private String contactPoNumber;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_CURRENCY_CODE_CURRENCY"))
+	@JoinColumn(name = "CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_CURRENCY_CODE_CURRENCY"))
 	private Currency currency;
 
 	@Basic
@@ -177,15 +177,15 @@ public class Invoice implements Serializable {
 	private Integer versionNumber = 1;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CONTACT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_CONTACT_ID_CONTACT"))
+	@JoinColumn(name = "CONTACT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_CONTACT_ID_CONTACT"))
 	private Contact contact;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PROJECT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_PROJECT_ID_PROJECT"))
+	@JoinColumn(name = "PROJECT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_PROJECT_ID_PROJECT"))
 	private Project project;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "DOCUMENT_TEMPLATE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_DOCUMENT_TEMPLATE_ID_DOCUMENT_TEMPLATE"))
+	@JoinColumn(name = "DOCUMENT_TEMPLATE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_DOCUMENT_TEMPLATE_ID_DOCUMENT_TEMPLATE"))
 	private DocumentTemplate documentTemplate;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "invoice")
@@ -201,7 +201,7 @@ public class Invoice implements Serializable {
 	private BigDecimal totalVatAmount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PLACE_OF_SUPPLY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_PLACE_OF_SUPPLY_ID_PLACE_OF_SUPPLY"))
+	@JoinColumn(name = "PLACE_OF_SUPPLY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_PLACE_OF_SUPPLY_ID_PLACE_OF_SUPPLY"))
 	private PlaceOfSupply placeOfSupplyId;
 
 	/**
@@ -220,7 +220,7 @@ public class Invoice implements Serializable {
 	private String receiptAttachmentPath;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "FILE_ATTACHMENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_FILE_ATTACHMENT_ID_FILE_ATTACHMENT"))
+	@JoinColumn(name = "FILE_ATTACHMENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_FILE_ATTACHMENT_ID_FILE_ATTACHMENT"))
 	private FileAttachment AttachmentFileName;
 
 	@Basic
@@ -277,11 +277,11 @@ public class Invoice implements Serializable {
 	private String shippingAddress;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "SHIPPING_COUNTRY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_SHIPPING_COUNTRY_CODE_COUNTRY"))
+	@JoinColumn(name = "SHIPPING_COUNTRY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_SHIPPING_COUNTRY_CODE_COUNTRY"))
 	private Country shippingCountry;
 
 	@OneToOne
-	@JoinColumn(name = "SHIPPING_STATE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_SHIPPING_STATE_ID_STATE"))
+	@JoinColumn(name = "SHIPPING_STATE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_SHIPPING_STATE_ID_STATE"))
 	private State shippingState;
 
 	@Basic

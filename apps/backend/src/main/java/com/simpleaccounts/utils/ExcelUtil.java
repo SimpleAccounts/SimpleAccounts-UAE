@@ -10,7 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -79,7 +78,7 @@ public class ExcelUtil {
 					file.deleteOnExit();
 
 				return excelDateMap;
-			} catch (EncryptedDocumentException | IOException | InvalidFormatException e) {
+			} catch (EncryptedDocumentException | IOException e) {
 				LOGGER.error("Error = ", e);
 			}
 

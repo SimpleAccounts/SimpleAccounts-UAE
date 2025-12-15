@@ -21,8 +21,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
         "spring.jpa.hibernate.ddl-auto=none",
         "spring.jpa.properties.hibernate.hbm2ddl.auto=none",
         "spring.liquibase.enabled=false",
-        "spring.datasource.initialization-mode=always",
-        "spring.datasource.schema=classpath:/schema-payroll.sql"
+        "spring.sql.init.mode=always",
+        "spring.sql.init.schema-locations=classpath:schema-payroll.sql"
 })
 public @interface PayrollJpaTest {
 }

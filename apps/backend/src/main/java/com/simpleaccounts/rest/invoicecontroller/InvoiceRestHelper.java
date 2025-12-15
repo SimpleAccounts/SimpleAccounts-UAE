@@ -29,10 +29,10 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.DatatypeConverter;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -41,7 +41,8 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.server.ServerErrorException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Service
@@ -132,7 +133,7 @@ public class InvoiceRestHelper {
 			}
 			// If invoice is paid cannot update
 			if (invoice.getStatus() > CommonStatusEnum.APPROVED.getValue())
-				throw new ServerErrorException("Cannot Update Paid Invoice.");
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot Update Paid Invoice.");
 		}
 
 		if (invoiceModel.getPlaceOfSupplyId() !=null){

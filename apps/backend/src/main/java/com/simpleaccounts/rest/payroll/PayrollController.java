@@ -23,13 +23,10 @@ import com.simpleaccounts.rest.payroll.service.SalaryStructureService;
 import com.simpleaccounts.rest.payroll.service.SalaryTemplateService;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,7 +95,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Save a employeeBankDetails", response = EmployeeBankDetails.class)
     @PostMapping(value = "/saveEmployeeBankDetails")
     public ResponseEntity<String> save(@ModelAttribute EmployeeBankDetailsPersistModel employeeBankDetailsPersistModel, HttpServletRequest request) {
         try {
@@ -120,7 +116,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update EmployeeBankDetails", response = EmployeeBankDetails.class)
     @PostMapping(value = "/updateEmployeeBankDetails")
     public ResponseEntity<String> update(@ModelAttribute EmployeeBankDetailsPersistModel employeeBankDetailsPersistModel, HttpServletRequest request) {
         try {
@@ -142,7 +137,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Delete EmployeeBankDetails By ID")
     @DeleteMapping(value = "/delete")
     public ResponseEntity<String> delete(@RequestParam(value = "id") Integer id) {
         try {
@@ -159,7 +153,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get EmployeeBankDetails By ID")
     @GetMapping(value = "/getById")
     public ResponseEntity<EmployeeBankDetailsPersistModel> getById(@RequestParam(value = "id") Integer id) {
         try {
@@ -179,7 +172,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Save a Employment", response = Employment.class)
     @PostMapping(value = "/saveEmployment")
     public ResponseEntity<String> saveEmployment(@ModelAttribute EmploymentPersistModel employmentPersistModel, HttpServletRequest request) {
         try {
@@ -199,7 +191,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update Employment", response = Employment.class)
     @PostMapping(value = "/updateEmployment")
     public ResponseEntity<String> updateEmployment(@ModelAttribute EmploymentPersistModel employmentPersistModel, HttpServletRequest request) {
         try {
@@ -217,7 +208,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Delete Employment By ID")
     @DeleteMapping(value = "/deleteEmployment")
     public ResponseEntity<String> deleteEmployment(@RequestParam(value = "id") Integer id) {
         try {
@@ -236,14 +226,12 @@ public class PayrollController {
     ////#################################################################################################################################################################################
 ////SalaryRole
     @LogRequest
-    @ApiOperation(value = "get SalaryRole DropdownModel ", response = SalaryRole.class)
     @GetMapping(value = "/getSalaryRolesForDropdown")
     public ResponseEntity<List<DropdownObjectModel>> getSalaryRolesForDropdown() {
         return new ResponseEntity<>(salaryRoleService.getSalaryRolesForDropdownObjectModel(), HttpStatus.OK);
     }
 
     @LogRequest
-    @ApiOperation(value = "get SalaryComponent DropdownModel ", response = SalaryComponent.class)
     @GetMapping(value = "/getSalaryComponentForDropdown")
     public ResponseEntity<List<DropdownObjectModel>> getSalaryComponentForDropdown(@RequestParam(value = "id") Integer id) {
         return new ResponseEntity<>(salaryComponentService.getSalaryComponentForDropdownObjectModel(id), HttpStatus.OK);
@@ -251,7 +239,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Save a SalaryRole", response = SalaryRole.class)
     @PostMapping(value = "/saveSalaryRole")
     public ResponseEntity<String> saveSalaryRole(@ModelAttribute SalaryRolePersistModel salaryRolePersistModel, HttpServletRequest request) {
         try {
@@ -268,7 +255,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update SalaryRole", response = SalaryRole.class)
     @PostMapping(value = "/updateSalaryRole")
     public ResponseEntity<String> updateSalaryRole(@ModelAttribute SalaryRolePersistModel salaryRolePersistModel, HttpServletRequest request) {
         try {
@@ -287,7 +273,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Delete SalaryRole By ID")
     @DeleteMapping(value = "/deleteSalaryRole")
     public ResponseEntity<String> deleteSalaryRole(@RequestParam(value = "id") Integer id) {
         try {
@@ -304,7 +289,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Salary Role By ID")
     @GetMapping(value = "/getSalaryRoleById")
     public ResponseEntity<SalaryRolePersistModel> getSalaryRoleById(@RequestParam(value = "id") Integer id) {
         try {
@@ -321,7 +305,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Salary Roles", response = List.class)
     @GetMapping(value = "/salaryRoleList")
     public ResponseEntity<PaginationResponseModel> getSalaryRoleList(PayRollFilterModel filterModel,
                                                                      HttpServletRequest request) {
@@ -337,7 +320,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Salary Structure list", response = List.class)
     @GetMapping(value = "/salaryStructureList")
     public ResponseEntity<PaginationResponseModel> getSalaryStructureList(PayRollFilterModel filterModel,
                                                                           HttpServletRequest request) {
@@ -354,7 +336,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Save a Salary Structure", response = SalaryRole.class)
     @PostMapping(value = "/saveSalaryStructure")
     public ResponseEntity<String> saveSalaryStructure(@ModelAttribute SalaryStructurePersistModel salaryStructurePersistModel, HttpServletRequest request) {
         try {
@@ -371,7 +352,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update SalaryStructure", response = SalaryStructure.class)
     @PostMapping(value = "/updateSalaryStructure")
     public ResponseEntity<String> updateSalaryStructure(@ModelAttribute SalaryStructurePersistModel salaryStructurePersistModel,
                                                         HttpServletRequest request) {
@@ -388,7 +368,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Salary Structure By ID")
     @GetMapping(value = "/getSalaryStructureById")
     public ResponseEntity<SalaryStructurePersistModel> getSalaryStructureById(@RequestParam(value = "id") Integer id) {
         try {
@@ -405,14 +384,12 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "get Salary Structure DropdownModel ", response = SalaryRole.class)
     @GetMapping(value = "/getSalaryStructureForDropdown")
     public ResponseEntity<List<DropdownObjectModel>> getSalaryStructureForDropdown() {
         return new ResponseEntity<>(salaryStructureService.getSalaryStructureDropdown(), HttpStatus.OK);
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Salary Template list", response = List.class)
     @GetMapping(value = "/salaryTemplatePaginationList")
     public ResponseEntity<PaginationResponseModel> getSalaryTemplateList(PayRollFilterModel filterModel,
                                                                          HttpServletRequest request) {
@@ -428,7 +405,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Salary Component list", response = List.class)
     @GetMapping(value = "/getSalaryComponentList")
     public ResponseEntity<PaginationResponseModel> getSalaryComponentList(PayRollFilterModel filterModel,
                                                                           HttpServletRequest request) {
@@ -445,7 +421,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Save a Salary Template", response = SalaryRole.class)
     @PostMapping(value = "/saveSalaryTemplate")
     public ResponseEntity<String> saveSalaryTemplate(@ModelAttribute SalaryTemplatePersistModel salaryTemplatePersistModel, HttpServletRequest request) {
         try {
@@ -466,7 +441,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update Salary Template")
     @PostMapping(value = "/updateSalaryTemplate")
     public ResponseEntity<String> updateSalaryTemplate(@ModelAttribute SalaryTemplatePersistModel salaryTemplatePersistModel, HttpServletRequest request) {
         try {
@@ -481,7 +455,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Save a Salary Component", response = SalaryRole.class)
     @PostMapping(value = "/saveSalaryComponent")
     public ResponseEntity<String> saveSalaryComponent(@ModelAttribute SalaryComponentPersistModel salaryComponentPersistModel, HttpServletRequest request) {
         try {
@@ -497,7 +470,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Delete Salary Component row for a employee ")
     @DeleteMapping(value = "/deleteSalaryComponentRow")
     public ResponseEntity<String> deleteSalaryComponentRow(@RequestParam(value = "id") Integer employeeId, @RequestParam(value = "componentId") Integer componentId, HttpServletRequest request) {
         try {
@@ -513,7 +485,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update Salary Component")
     @PostMapping(value = "/updateSalaryComponent")
     public ResponseEntity<String> updateSalaryComponent(@ModelAttribute SalaryComponentPersistModel salaryComponentPersistModel, HttpServletRequest request) {
         try {
@@ -529,7 +500,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update Salary Component")
     @PostMapping(value = "/updateSalaryComponentAsNoOfDays")
     public ResponseEntity<String> updateSalaryComponentAsNoOfDays(@RequestParam(value = "id") Integer id, @RequestParam(value = "noOfDays") BigDecimal noOfDays, HttpServletRequest request) {
         try {
@@ -548,7 +518,6 @@ public class PayrollController {
 ////##############################################################################################################################################################
 //
     @LogRequest
-    @ApiOperation(value = "Get Employment By ID")
     @GetMapping(value = "/getEmploymentById")
     public ResponseEntity<EmploymentPersistModel> getEmploymentById(@RequestParam(value = "id") Integer id) {
         try {
@@ -565,7 +534,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Salary Template By ID")
     @GetMapping(value = "/getSalaryTemplateById")
     public ResponseEntity<SalaryTemplatePersistModel> getSalaryTemplateById(@RequestParam(value = "id") Integer id) {
         try {
@@ -582,7 +550,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Default Salary Templates")
     @GetMapping(value = "/getDefaultSalaryTemplates")
     public ResponseEntity<DefaultSalaryTemplateModel> getSalaryTemplates() {
 
@@ -596,7 +563,6 @@ public class PayrollController {
 
     // This below method will fetch the SalaryComponents from EmployeeSalaryComponentRelation
     @LogRequest
-    @ApiOperation(value = "Get Salary Component By employeeID")
     @GetMapping(value = "/getSalaryComponentByEmployeeId")
     public ResponseEntity<DefaultEmployeeSalaryComponentRelationModel> getSalaryComponentByEmployeeId(@RequestParam(value = "id") Integer id) {
         try {
@@ -609,7 +575,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Salary Detail By employeeID and NoOfDays")
     @GetMapping(value = "/getSalaryDetailByEmployeeIdNoOfDays")
     public ResponseEntity<SalaryDeatilByEmployeeIdNoOfDaysResponseModel> getSalaryDeatilByEmployeeIdNoOfDays(@RequestParam(value = "id") Integer id) {
         try {
@@ -622,7 +587,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Generate Sif File")
     @GetMapping(value = "/generteSifFile")
     public ResponseEntity<List<String>> generteSifFile(@RequestParam(value = "payrollId") Integer payrollId, @RequestParam(value = "id") List<Integer> ids,@RequestParam (value = "currentTime") String currentTime) {
         try {
@@ -636,7 +600,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Salary Component By Id")
     @GetMapping(value = "/getSalaryComponentById")
     public ResponseEntity<SalaryComponentPersistModel> getSalaryComponentById(@RequestParam(value = "id") Integer id) {
         try {
@@ -653,7 +616,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Unpaid Payroll list")
     @GetMapping(value = "/getUnpaidPayrollList")
     public ResponseEntity<List<PayrollDropdownModel>> getUnpaidPayrollList(HttpServletRequest request) {
         try {
@@ -673,8 +635,6 @@ public class PayrollController {
      * @return Payroll List
      */
     @LogRequest
-    @ApiOperation(value = "Get All Payroll List", notes = "Getting all payroll list data")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping(value = "/getPayrollList")
     public ResponseEntity<List<PayrollListModel>> getPayrollList(HttpServletRequest request) {
         try {
@@ -735,7 +695,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Payroll List")
     @GetMapping(value = "/getList")
     public ResponseEntity<PaginationResponseModel> getPayrollList(PayRollFilterModel filterModel,
                                                                   HttpServletRequest request) {
@@ -763,8 +722,6 @@ public class PayrollController {
      * @return Payroll
      */
     @LogRequest
-    @ApiOperation(value = "GetPayroll ", notes = "Getting payroll data")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping(value = "/getPayroll")
     public ResponseEntity<PayrollListModel> getPayroll(@RequestParam(value = "id") Integer id) {
         try {
@@ -825,8 +782,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Save a payroll", response = Payroll.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/createPayroll")
     public ResponseEntity<Integer> createPayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
         try {
@@ -849,8 +804,6 @@ public class PayrollController {
      */
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Save payroll employee relation", response = Payroll.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/savePayrollEmployeeRelation ")
     public ResponseEntity<String> createPayrollEmployeeRelation(@RequestParam(value = "payrollId") Integer payrollId, @RequestParam(value = "employeeListIds") List<Integer> employeeListIds, HttpServletRequest request) {
         try {
@@ -871,8 +824,6 @@ public class PayrollController {
      * @return Payroll
      */
     @LogRequest
-    @ApiOperation(value = "getAproverUsers ", notes = "Getting Aprovered Users data")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping(value = "/getAproverUsers")
     public ResponseEntity<List<UserDto>> getAproverUsers(HttpServletRequest request) {
         try {
@@ -894,8 +845,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "removeEmployee ", notes = "remove Employee")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @DeleteMapping(value = "/removeEmployee")
     public ResponseEntity<List<PayrollEmployee>> removeEmployee(@RequestParam(value = "payEmpListIds") List<Integer> payEmpListIds) {
         try {
@@ -913,8 +862,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "getAllPayrollEmployee ", notes = "Getting Aprovered Users data")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping(value = "/getAllPayrollEmployee")
     public ResponseEntity<List<PayrollEmployeeDto>> getAllPayrollEmployee(@RequestParam(value = "payrollid") Integer payrollid, @RequestParam(value = "payrollDate") String payrollDate, HttpServletRequest request) {
         try {
@@ -935,8 +882,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Generate a payroll")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/generatePayroll")
     public ResponseEntity<String> generatePayroll(@ModelAttribute GeneratePayrollPersistModel generatePayrollPersistModel, HttpServletRequest request) {
         try {
@@ -951,8 +896,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Approve and run")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/approveRunPayroll")
     public ResponseEntity<String> approveRunPayroll(PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
         try {
@@ -976,7 +919,6 @@ public class PayrollController {
      */
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Void Journal Entry")
     @PostMapping(value = "/voidJournalEntry")
     public ResponseEntity<String> voidJournalEntry(@RequestBody PostingRequestModel postingRequestModel, String comment , HttpServletRequest request) {
         try {
@@ -990,8 +932,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Convert payroll to paid")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/convertPayrollToPaid")
     public ResponseEntity<String> convertPayrollToPaid(@RequestParam(value = "payEmpListIds") List<Integer> payEmpListIds, HttpServletRequest request) {
         try {
@@ -1014,8 +954,6 @@ public class PayrollController {
      */
 
     @LogRequest
-    @ApiOperation(value = "Get User and role")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping(value = "/getUserAndRole")
     public ResponseEntity<List<DropdownModel>> getUserAndRole(HttpServletRequest request) {
         try {
@@ -1028,8 +966,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "getAllPayrollEmployeeForApprover ", notes = "Getting getAllPayrollEmployeeforApprover ")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping(value = "/getAllPayrollEmployeeForApprover")
     public ResponseEntity<List<PayrollEmployeeDto>> getAllPayrollEmployeeForApprover(@RequestParam(value = "payrollid") Integer payrollid, HttpServletRequest request) {
         try {
@@ -1055,8 +991,6 @@ public class PayrollController {
      * @param payrollId,List<Integer> employeeListIds
      */
     @LogRequest
-    @ApiOperation(value = "Change payroll status", response = Payroll.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/changePayrollStatus ")
     public ResponseEntity<String> changePayrollStatus(@RequestParam(value = "payrollId") Integer payrollId, @RequestParam(value = "approverId") Integer approverId, HttpServletRequest request) {
         try {
@@ -1076,8 +1010,6 @@ public class PayrollController {
      * @param payrollId
      */
     @LogRequest
-    @ApiOperation(value = "Reject and make it draft")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/rejectPayroll")
     public ResponseEntity<String> rejectPayroll(Integer payrollId, String comment, HttpServletRequest request) {
         try {
@@ -1100,8 +1032,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "create And Submit Payroll", response = Payroll.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/createAndSubmitPayroll")
     public ResponseEntity<Integer> createAndSubmitPayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
         try {
@@ -1128,8 +1058,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update a payroll", response = Payroll.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/updatePayroll")
     public ResponseEntity<Integer> updatePayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
         try {
@@ -1153,8 +1081,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update and Submit payroll", response = Payroll.class)
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "/updateAndSubmitPayroll")
     public ResponseEntity<Integer> updateAndSubmitPayroll(@ModelAttribute PayrolRequestModel payrolRequestModel, HttpServletRequest request) {
         try {
@@ -1173,7 +1099,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Delete Payroll By ID")
     @DeleteMapping(value = "/deletePayroll")
     public ResponseEntity<String> deletePayroll(@RequestParam(value = "payrollId") Integer id) {
 
@@ -1190,7 +1115,6 @@ public class PayrollController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Employee Payroll list")
     @GetMapping(value = "/payrollemployee/list")
 	    public ResponseEntity<Object> getPayrollEmployee(HttpServletRequest request) {
         try {
@@ -1231,7 +1155,6 @@ public class PayrollController {
         return payrollEmployeeModelList;
     }
     @LogRequest
-    @ApiOperation(value = "Get Payroll Count For User")
     @GetMapping(value = "/getPayrollCountByUserId")
     public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam Integer userId){
         String generatedBy = userId.toString();
@@ -1241,7 +1164,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Salary components")
     @GetMapping(value = "/getSalaryList")
 	    public ResponseEntity<Object> getSalaryComponent(@RequestParam(defaultValue = "0") int pageNo,
 	                                                @RequestParam(defaultValue = "10") int pageSize,
@@ -1260,7 +1182,6 @@ public class PayrollController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Delete Salary components")
     @DeleteMapping(value = "/deleteSalaryComponent")
 	    public ResponseEntity<Object> deleteSalaryComponent(@RequestParam(value = "id") Integer id,
 	                                                HttpServletRequest request){

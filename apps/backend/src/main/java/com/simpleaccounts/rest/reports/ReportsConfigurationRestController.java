@@ -8,9 +8,8 @@ import com.simpleaccounts.aop.LogRequest;
 import com.simpleaccounts.entity.ReportsConfiguration;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,6 @@ public class ReportsConfigurationRestController {
     private final UserService userService;
 
     @LogRequest
-    @ApiOperation(value = "Get Report columns By ID")
     @GetMapping(value = "/getById")
 	    public ResponseEntity<Object> getReportConfigurationById(@RequestParam("id") Integer id) {
 	        JsonNode rootNode = null;
@@ -46,7 +44,6 @@ public class ReportsConfigurationRestController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Update Report Columns Configuration")
 	    @PostMapping(value = "/update")
 	    public ResponseEntity<Object> update(@RequestBody ReportsConfigurationModel model, HttpServletRequest request) {
 		        try {

@@ -2,7 +2,7 @@ package com.simpleaccounts.entity;
 
 import com.simpleaccounts.rfq_po.PoQuatation;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -20,12 +20,12 @@ public class QuotationInvoiceRelation<Q> {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "QUOTATION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_QUOTATION_INVOICE_RELATION_QUOTATION_ID_QUOTATION"))
+    @JoinColumn(name = "QUOTATION_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_QUOTATION_INVOICE_RELATION_QUOTATION_ID_QUOTATION"))
     @ToString.Exclude
     private PoQuatation poQuatation;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "INVOICE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_QUOTATION_INVOICE_RELATION_INVOICE_ID"))
+    @JoinColumn(name = "INVOICE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_QUOTATION_INVOICE_RELATION_INVOICE_ID"))
     @ToString.Exclude
     private Invoice invoice;
 

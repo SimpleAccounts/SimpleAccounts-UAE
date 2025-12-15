@@ -1,7 +1,7 @@
 package com.simpleaccounts.entity;
 
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -34,7 +34,7 @@ public class SimpleAccountsModules {
     private String simpleAccountsModuleName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PARENT_SIMPLEACCOUNTS_MODULE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_SA_MODULES_PARENT_SA_MODULE_ID_PARENT_SA_MODULE"))
+    @JoinColumn(name = "PARENT_SIMPLEACCOUNTS_MODULE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_SA_MODULES_PARENT_SA_MODULE_ID_PARENT_SA_MODULE"))
     private SimpleAccountsModules parentModule;
 
     @Column(name = "DEFAULT_FLAG")

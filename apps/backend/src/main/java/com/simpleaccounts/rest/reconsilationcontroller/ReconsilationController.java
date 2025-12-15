@@ -25,13 +25,12 @@ import com.simpleaccounts.service.*;
 import com.simpleaccounts.service.bankaccount.ReconcileStatusService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.service.impl.TransactionCategoryClosingBalanceServiceImpl;
-import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -243,7 +242,6 @@ public class ReconsilationController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get ReconcileStatusList")
 	@GetMapping(value = "/list")
 	public ResponseEntity<PaginationResponseModel> getAllReconcileStatus(ReconcileStatusRequestModel filterModel) {
 
@@ -263,7 +261,6 @@ public class ReconsilationController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Add New ReconcileStatus")
 	@PostMapping(value = "/save")
 	public ResponseEntity<String> save(@RequestParam Integer bankAccountId, @RequestParam BigDecimal closingBalance) {
 		try {
@@ -353,7 +350,6 @@ public class ReconsilationController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Delete Reconcile Status")
 	@DeleteMapping(value = "/deletes")
 	public ResponseEntity<String> deleteTransactions(@RequestBody DeleteModel ids) {
 		try {
@@ -366,7 +362,6 @@ public class ReconsilationController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get ReconcileStatusList")
 		@GetMapping(value = "/getChildrenTransactionCategoryList")
 		public ResponseEntity<List<SingleLevelDropDownModel>> getlistEmployeeTransactionCategory(Integer id){
 			try {
@@ -384,7 +379,6 @@ public class ReconsilationController {
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	@LogRequest
-	@ApiOperation(value = "Get ReconcileStatusList")
 	@GetMapping(value = "/getCOACList")
 		public ResponseEntity<List<SingleLevelDropDownModel>> getCOACList(){
 	

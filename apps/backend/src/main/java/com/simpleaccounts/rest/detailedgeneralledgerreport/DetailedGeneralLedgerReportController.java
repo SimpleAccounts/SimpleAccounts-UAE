@@ -9,9 +9,8 @@ import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.TransactionCategoryClosingBalanceService;
 import com.simpleaccounts.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,6 @@ public class DetailedGeneralLedgerReportController {
 	private final TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
 	@LogRequest
-	@ApiOperation(value = "Get list of DateFormat")
 	@GetMapping(value = "/getList")
 		public ResponseEntity<List> getDateFormat(ReportRequestModel reportRequestModel,
 												  HttpServletRequest request) {
@@ -59,7 +57,6 @@ public class DetailedGeneralLedgerReportController {
 	 * @return List of Transaction categorydata list
 	 */
 	@LogRequest
-	@ApiOperation(value = "Get Transaction category list that are in use")
 	@GetMapping(value = "/getUsedTransactionCatogery")
 	public ResponseEntity<List<DropdownModel>> getUsedTransactionCatogery(
 			ReportRequestModel reportRequestModel,HttpServletRequest request) {

@@ -4,7 +4,7 @@ import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.LanguageDao;
 import com.simpleaccounts.entity.Language;
 import java.util.List;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 /**

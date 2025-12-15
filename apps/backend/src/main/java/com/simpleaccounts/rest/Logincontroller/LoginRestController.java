@@ -12,7 +12,6 @@ import com.simpleaccounts.service.EmaiLogsService;
 import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +41,6 @@ public class LoginRestController {
 	private final UserJpaRepository userJpaRepository;
 
 	@LogRequest
-	@ApiOperation(value = "forgotPassword")
 	@PostMapping(value = "/forgotPassword")
 	public ResponseEntity<String> forgotPassword(@RequestBody JwtRequest jwtRequest) {
 
@@ -71,7 +69,6 @@ public class LoginRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "resetPassword")
 	@PostMapping(value = "/resetPassword")
 	public ResponseEntity<Object> resetPassword(@RequestBody ResetPasswordModel resetPasswordModel) {
 		try{

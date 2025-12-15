@@ -25,10 +25,9 @@ import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import com.simpleaccounts.utils.TransactionCategoryCreationHelper;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -359,7 +358,6 @@ public class ContactController {
 	 * @return
 	 */
 	@LogRequest
-	@ApiOperation(value = "Get Invoices Count For Contact")
 	@GetMapping(value = "/getInvoicesCountForContact")
 	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int contactId) {
 		try {

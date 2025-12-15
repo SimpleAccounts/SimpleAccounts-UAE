@@ -5,7 +5,7 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -47,11 +47,11 @@ public class InvoiceLineItem implements Serializable {
 	private BigDecimal subTotal;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "VAT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_VAT_ID_VAT"))
+	@JoinColumn(name = "VAT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_VAT_ID_VAT"))
 	private VatCategory vatCategory;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PRODUCT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_PRODUCT_ID_PRODUCT"))
+	@JoinColumn(name = "PRODUCT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_PRODUCT_ID_PRODUCT"))
 	private Product product;
 
 	@Column(name = "CREATED_BY")
@@ -77,11 +77,11 @@ public class InvoiceLineItem implements Serializable {
 	private Boolean deleteFlag = Boolean.FALSE;
 
 	@ManyToOne
-	@JoinColumn(name = "INVOICE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_INVOICE_ID_INVOICE"))
+	@JoinColumn(name = "INVOICE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_INVOICE_ID_INVOICE"))
 	private Invoice invoice;
 
 	@ManyToOne
-	@JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_TRANX_CAT_ID_TRANX_CAT"))
+	@JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_TRANX_CAT_ID_TRANX_CAT"))
 	private TransactionCategory trnsactioncCategory;
 
 	@Basic(optional = false)
@@ -98,7 +98,7 @@ public class InvoiceLineItem implements Serializable {
 	private BigDecimal discount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EXCISE_TAX_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_EXCISE_TAX_ID_EXCISE_TAX"))
+	@JoinColumn(name = "EXCISE_TAX_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_EXCISE_TAX_ID_EXCISE_TAX"))
 	private ExciseTax exciseCategory;
 
 	@Column(name = "EXCISE_AMOUNT")
@@ -110,7 +110,7 @@ public class InvoiceLineItem implements Serializable {
 	private BigDecimal vatAmount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "UNIT_TYPE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_UNIT_TYPE_ID_UNIT_TYPE"))
+	@JoinColumn(name = "UNIT_TYPE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_INVOICE_LINE_ITEM_UNIT_TYPE_ID_UNIT_TYPE"))
 	private UnitType unitTypeId;
 
 	@Column(name = "UNIT_TYPE")

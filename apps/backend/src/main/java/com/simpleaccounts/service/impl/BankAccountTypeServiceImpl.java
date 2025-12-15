@@ -5,7 +5,7 @@ import com.simpleaccounts.dao.Dao;
 import com.simpleaccounts.entity.bankaccount.BankAccountType;
 import com.simpleaccounts.service.BankAccountTypeService;
 import java.util.List;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

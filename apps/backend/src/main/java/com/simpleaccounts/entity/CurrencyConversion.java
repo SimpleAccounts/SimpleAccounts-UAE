@@ -8,7 +8,7 @@ package com.simpleaccounts.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -24,7 +24,7 @@ import org.hibernate.annotations.ColumnDefault;
 @NamedQueries({
         @NamedQuery(name = "listOfCurrency", query = "SELECT cc FROM CurrencyConversion cc WHERE cc.deleteFlag=false"),
         @NamedQuery(name = "listOfActiveCurrency", query = "SELECT cc FROM CurrencyConversion cc WHERE cc.deleteFlag=false and cc.isActive=true "),
-        @NamedQuery(name = "getcompanyCurrency", query ="SELECT cc.currencyCode, cc.exchangeRate FROM CurrencyConversion cc where cc.currencyCode IN (select c.currencyCode from Currency c)" )
+        @NamedQuery(name = "getcompanyCurrency", query ="SELECT cc.currencyCode, cc.exchangeRate FROM CurrencyConversion cc where cc.currencyCode IN (select c from Currency c)" )
 })
 public class CurrencyConversion implements Serializable {
 
@@ -36,11 +36,11 @@ public class CurrencyConversion implements Serializable {
     private Integer currencyConversionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_CONVERTED_CURRENCY_CURRENCY_CODE_CURRENCY"))
+    @JoinColumn(name = "CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CONVERTED_CURRENCY_CURRENCY_CODE_CURRENCY"))
     private Currency currencyCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_CODE_CONVERTED_TO",foreignKey = @javax.persistence.ForeignKey(name = "FK_CONVERTED_CURRENCY_CURRENCY_CODE_CONVERTED_TO_CURRENCY"))
+    @JoinColumn(name = "CURRENCY_CODE_CONVERTED_TO",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_CONVERTED_CURRENCY_CURRENCY_CODE_CONVERTED_TO_CURRENCY"))
     private Currency currencyCodeConvertedTo;
 
     @Basic

@@ -3,7 +3,7 @@ package com.simpleaccounts.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -66,7 +66,7 @@ public class Employment   implements Serializable {
     private LocalDateTime  visaExpiryDate;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EMPLOYEE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EMPLOYMENT_EMPLOYEE_ID_EMPLOYEE"))
+    @JoinColumn(name = "EMPLOYEE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EMPLOYMENT_EMPLOYEE_ID_EMPLOYEE"))
     private Employee employee;
 
     @Column(name = "DELETE_FLAG")

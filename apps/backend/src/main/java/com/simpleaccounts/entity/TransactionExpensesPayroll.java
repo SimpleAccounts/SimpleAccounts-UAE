@@ -4,7 +4,7 @@ import com.simpleaccounts.constant.TransactionExplinationStatusEnum;
 import com.simpleaccounts.entity.bankaccount.Transaction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,15 +35,15 @@ public class TransactionExpensesPayroll {
     private BigDecimal remainingToExplain;
 
     @ManyToOne
-    @JoinColumn(name = "TRANSACTION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_EXPENSES_PAYROLL_TRANSACTION_ID_TRANSACTION"))
+    @JoinColumn(name = "TRANSACTION_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_EXPENSES_PAYROLL_TRANSACTION_ID_TRANSACTION"))
     private Transaction transaction;
 
     @ManyToOne
-    @JoinColumn(name = "PAYROLL_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_EXPENSES_PAYROLL_PAYROLL_ID_PAYROLL"))
+    @JoinColumn(name = "PAYROLL_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_EXPENSES_PAYROLL_PAYROLL_ID_PAYROLL"))
     private Payroll payroll;
 
     @ManyToOne
-    @JoinColumn(name = "EXPENSE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_TRANSACTION_EXPENSES_PAYROLL_EXPENSE_ID_EXPENSE"))
+    @JoinColumn(name = "EXPENSE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_TRANSACTION_EXPENSES_PAYROLL_EXPENSE_ID_EXPENSE"))
     private Expense expense;
 
     @Column(name = "CREATED_BY")
