@@ -53,6 +53,7 @@ export default defineConfig({
       'react-is', 
       'hoist-non-react-statics', 
       'prop-types',
+      'react-router-dom', // Ensure React Router is properly bundled
       'to-words', // CJS module that needs pre-bundling
       '@material-ui/core/styles', // Include to handle CJS require() calls
       '@material-ui/core',
@@ -98,12 +99,14 @@ export default defineConfig({
       'polyfill': path.resolve(__dirname, './src/polyfill'),
     },
     // Ensure proper resolution of CJS modules in ESM context
-    dedupe: ['react-is', 'hoist-non-react-statics', 'prop-types'],
+    // Deduplicate React to prevent multiple instances (fixes "Invalid hook call" errors)
+    dedupe: ['react', 'react-dom', 'react-is', 'hoist-non-react-statics', 'prop-types'],
   },
   
   // Dev server configuration
   server: {
     port: 3000,
+    host: true, // Listen on all interfaces (0.0.0.0 and ::)
     open: false, // Don't auto-open browser
     strictPort: false, // Allow fallback to next available port if 3000 is taken
     // Reduce memory usage in dev

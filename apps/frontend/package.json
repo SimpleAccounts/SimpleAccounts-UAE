@@ -8,6 +8,7 @@
     "@coreui/react": "^5.9.2",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "@hookform/resolvers": "^5.2.2",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@mui/material": "^5.3.1",
@@ -77,6 +78,7 @@
     "react-draft-wysiwyg": "^1.15.0",
     "react-google-maps": "9.4.5",
     "react-grid-layout": "^0.16.6",
+    "react-hook-form": "^7.68.0",
     "react-images-upload": "^1.2.7",
     "react-is": "^16.13.1",
     "react-js-pagination": "^3.0.3",
@@ -111,7 +113,8 @@
     "styled-components": "^5.3.11",
     "tailwind-merge": "^3.4.0",
     "to-words": "^4.9.0",
-    "yup": "^1.7.1"
+    "yup": "^1.7.1",
+    "zod": "^4.2.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
