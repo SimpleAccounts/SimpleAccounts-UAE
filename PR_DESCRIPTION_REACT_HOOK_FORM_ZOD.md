@@ -49,7 +49,8 @@ All tests passing:
 - ✅ Form component tests (6 test suites)
 - ✅ Validation schema tests
 - ✅ Example form integration tests
-- ✅ 58 tests total, all passing
+- ✅ 62 tests total, all passing
+- ✅ Numeric coercion tests for HTML input compatibility
 
 **Test Command:**
 ```bash
@@ -64,6 +65,14 @@ cd apps/frontend && npm test -- --testPathPattern="(form|validation)" --watchAll
   - Patches Yup schema validation to normalize errors
 - Suppressed `findDOMNode` deprecation warning from react-select v3
   - Known issue in react-select v3.x, will be fixed in v5+
+
+### Numeric Input Handling
+- Fixed numeric validation to handle HTML input string values
+  - Updated `requiredNumber`, `positiveNumber`, and `optionalNumber` to use `z.coerce.number()`
+  - HTML `<input type="number" />` fields return strings ('100'), but schemas expected numbers (100)
+  - Now properly coerces string numbers before validation
+  - Added preprocess to `requiredNumber` to properly reject null/undefined
+  - All numeric validations now work correctly with React Hook Form
 
 ### Configuration
 - Updated `vite.config.js` for React Router v6 compatibility
