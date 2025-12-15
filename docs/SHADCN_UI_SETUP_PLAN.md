@@ -13,16 +13,19 @@ Install and configure shadcn/ui component library with Base UI primitives as the
 ## Prerequisites
 
 ### Blocked By (must complete first)
+
 - ✅ **[TASK] Migrate from Create React App to Vite #157** - COMPLETE
 - ✅ **[TASK] Setup Tailwind CSS configuration #158** - COMPLETE
 
 ### Blocks (cannot start until this is done)
+
 - Component migrations
 - Screen migrations
 
 ## Current State Analysis
 
 ### Existing Setup
+
 - ✅ **Vite** - Build system configured
 - ✅ **Tailwind CSS** - Fully configured with shadcn/ui-compatible theme
 - ✅ **Path Aliases** - `@/` alias configured in `vite.config.js` and `jsconfig.json`
@@ -30,6 +33,7 @@ Install and configure shadcn/ui component library with Base UI primitives as the
 - ✅ **CSS Variables** - Theme colors defined in `tailwind.css`
 
 ### Project Structure
+
 - **Components:** `src/components/` (existing components)
 - **Utils:** `src/utils/` (existing utilities)
 - **Path Alias:** `@/` → `src/` (already configured)
@@ -39,12 +43,14 @@ Install and configure shadcn/ui component library with Base UI primitives as the
 ### Phase 1: Install Dependencies
 
 **Required Packages:**
+
 - `shadcn-ui` (CLI tool, used via npx)
 - `clsx` - For conditional class names
 - `tailwind-merge` - For merging Tailwind classes
 - `@base-ui-components/react` - Base UI primitives (optional, can use shadcn's built-in)
 
 **Installation:**
+
 ```bash
 cd apps/frontend
 npm install clsx tailwind-merge
@@ -53,12 +59,14 @@ npm install clsx tailwind-merge
 ### Phase 2: Initialize shadcn/ui
 
 **Command:**
+
 ```bash
 cd apps/frontend
 npx shadcn@latest init
 ```
 
 **Configuration Options:**
+
 - Style: `default`
 - Base color: `slate` (or match existing theme)
 - CSS variables: `true` (already using CSS variables)
@@ -70,6 +78,7 @@ npx shadcn@latest init
 **File:** `apps/frontend/components.json`
 
 **Configuration:**
+
 ```json
 {
   "$schema": "https://ui.shadcn.com/schema.json",
@@ -90,6 +99,7 @@ npx shadcn@latest init
 ```
 
 **Key Points:**
+
 - `css`: Points to our Tailwind CSS file
 - `aliases`: Uses existing `@/` path alias
 - `cssVariables`: `true` (matches our setup)
@@ -100,17 +110,18 @@ npx shadcn@latest init
 **File:** `apps/frontend/src/lib/utils.js` (new)
 
 **Content:**
+
 ```javascript
-import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 /**
  * Utility function to merge Tailwind CSS classes
  * Combines clsx for conditional classes and tailwind-merge for conflict resolution
- * 
+ *
  * @param {...any} inputs - Class names or conditional class objects
  * @returns {string} Merged class string
- * 
+ *
  * @example
  * cn("px-2 py-1", "px-4") // Returns "py-1 px-4" (px-4 overrides px-2)
  * cn("bg-red-500", isActive && "bg-blue-500") // Conditional classes
@@ -121,6 +132,7 @@ export function cn(...inputs) {
 ```
 
 **Why `lib/` instead of `utils/`?**
+
 - shadcn/ui convention uses `lib/utils`
 - Can create alias or keep both
 - Existing `utils/` directory can coexist
@@ -128,11 +140,13 @@ export function cn(...inputs) {
 ### Phase 5: Update Path Aliases (if needed)
 
 **Check if `@/lib` alias is needed:**
+
 - Current: `@/` → `src/`
 - shadcn uses: `@/lib/utils`
 - This maps to: `src/lib/utils.js` ✅ (works with current setup)
 
 **Optional:** Add explicit alias in `vite.config.js`:
+
 ```javascript
 'lib': path.resolve(__dirname, './src/lib'),
 ```
@@ -140,6 +154,7 @@ export function cn(...inputs) {
 ### Phase 6: Install Initial Components
 
 **Core Components to Add:**
+
 ```bash
 npx shadcn@latest add button
 npx shadcn@latest add input
@@ -148,6 +163,7 @@ npx shadcn@latest add dialog
 ```
 
 **Component Location:**
+
 - Components will be added to `src/components/ui/`
 - Each component is a `.jsx` file (or `.js` if configured)
 - Components are copied, not installed as dependencies
@@ -155,6 +171,7 @@ npx shadcn@latest add dialog
 ### Phase 7: Verify Installation
 
 **Verification Steps:**
+
 1. Check `components.json` exists and is correct
 2. Verify `src/lib/utils.js` exists with `cn()` function
 3. Verify components in `src/components/ui/`
@@ -167,6 +184,7 @@ npx shadcn@latest add dialog
 ## Directory Structure
 
 ### After Setup
+
 ```
 apps/frontend/
 ├── components.json              # shadcn/ui configuration
@@ -193,6 +211,7 @@ npm install clsx tailwind-merge
 ```
 
 **Verification:**
+
 - Check `package.json` for new dependencies
 - Verify installation: `npm list clsx tailwind-merge`
 
@@ -204,6 +223,7 @@ npx shadcn@latest init
 ```
 
 **Interactive Prompts:**
+
 1. **Style:** `default`
 2. **Base color:** `slate` (or `blue` to match brand)
 3. **CSS variables:** `Yes` (we're using CSS variables)
@@ -211,6 +231,7 @@ npx shadcn@latest init
 5. **RSC:** `No`
 
 **Expected Output:**
+
 - Creates `components.json`
 - May create `src/lib/utils.js` (or we create it manually)
 
@@ -219,12 +240,14 @@ npx shadcn@latest init
 **File:** `apps/frontend/components.json`
 
 **Verify Configuration:**
+
 - `css`: Should point to `src/assets/css/tailwind.css`
 - `aliases.components`: Should be `@/components`
 - `aliases.utils`: Should be `@/lib/utils`
 - `cssVariables`: Should be `true`
 
 **If needed, update manually:**
+
 ```json
 {
   "$schema": "https://ui.shadcn.com/schema.json",
@@ -249,9 +272,10 @@ npx shadcn@latest init
 **File:** `apps/frontend/src/lib/utils.js`
 
 **If not created by init:**
+
 ```javascript
-import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -261,6 +285,7 @@ export function cn(...inputs) {
 ### Step 5: Update Path Aliases (if needed)
 
 **Check vite.config.js:**
+
 - Verify `@/` alias exists (should already be there)
 - Add `lib` alias if needed:
   ```javascript
@@ -268,6 +293,7 @@ export function cn(...inputs) {
   ```
 
 **Check jsconfig.json:**
+
 - Verify `baseUrl` is `"./src"` (should already be there)
 - This allows `@/lib/utils` to work
 
@@ -284,6 +310,7 @@ npx shadcn@latest add dialog
 ```
 
 **Expected Behavior:**
+
 - Components added to `src/components/ui/`
 - Components use `.jsx` extension (or `.js` if configured)
 - Components import from `@/lib/utils` for `cn()` function
@@ -315,6 +342,7 @@ export const ShadcnTest = () => {
 ```
 
 **Verify:**
+
 - Component imports without errors
 - Component renders correctly
 - Styles apply correctly
@@ -345,6 +373,7 @@ export const ShadcnTest = () => {
 ### Path Alias Configuration
 
 **Current Setup:**
+
 - `@/` → `src/` (already configured)
 - `@/components` → `src/components/`
 - `@/lib/utils` → `src/lib/utils.js`
@@ -354,12 +383,14 @@ export const ShadcnTest = () => {
 ## Component Installation Strategy
 
 ### Initial Components (Phase 1)
+
 - `button` - Core interactive element
 - `input` - Form input element
 - `card` - Container component
 - `dialog` - Modal/dialog component
 
 ### Future Components (as needed)
+
 - `form` - Form wrapper with validation
 - `select` - Dropdown select
 - `table` - Data table
@@ -370,6 +401,7 @@ export const ShadcnTest = () => {
 ## Testing Strategy
 
 ### Manual Testing
+
 1. **Component Import:**
    - Import a component in a test file
    - Verify no import errors
@@ -384,6 +416,7 @@ export const ShadcnTest = () => {
    - Test dark mode (if applicable)
 
 ### Automated Testing
+
 - Existing Jest tests should continue to pass
 - Add component tests as needed
 - Test `cn()` utility function
@@ -391,18 +424,23 @@ export const ShadcnTest = () => {
 ## Potential Issues & Solutions
 
 ### Issue 1: Path Alias Not Working
+
 **Solution:** Verify `vite.config.js` and `jsconfig.json` have correct aliases
 
 ### Issue 2: Components Use TypeScript
+
 **Solution:** Configure `tsx: false` in `components.json`, or convert to `.js`
 
 ### Issue 3: CSS Variables Not Found
+
 **Solution:** Verify `tailwind.css` path in `components.json` is correct
 
 ### Issue 4: cn() Function Not Found
+
 **Solution:** Verify `src/lib/utils.js` exists and exports `cn()`
 
 ### Issue 5: Base UI Dependency
+
 **Solution:** shadcn/ui components include their own primitives, Base UI is optional
 
 ## Acceptance Criteria
@@ -420,6 +458,7 @@ export const ShadcnTest = () => {
 ## Files to Create/Modify
 
 ### New Files
+
 - `apps/frontend/components.json` - shadcn/ui configuration
 - `apps/frontend/src/lib/utils.js` - cn() utility function
 - `apps/frontend/src/components/ui/button.jsx` - Button component
@@ -428,6 +467,7 @@ export const ShadcnTest = () => {
 - `apps/frontend/src/components/ui/dialog.jsx` - Dialog component
 
 ### Modified Files
+
 - `apps/frontend/package.json` - Add clsx, tailwind-merge dependencies
 - `apps/frontend/vite.config.js` - May need lib alias (optional)
 - `apps/frontend/jsconfig.json` - Verify baseUrl (should be fine)
@@ -435,6 +475,7 @@ export const ShadcnTest = () => {
 ## Next Steps (Post-Setup)
 
 After shadcn/ui is set up:
+
 1. Begin using components in new features
 2. Plan component migrations
 3. Add more components as needed

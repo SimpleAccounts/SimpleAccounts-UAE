@@ -59,7 +59,9 @@ export const ShadcnTest = () => {
           </div>
           <div className="flex flex-wrap gap-2">
             <Button disabled>Disabled</Button>
-            <Button variant="default" disabled>Disabled Default</Button>
+            <Button variant="default" disabled>
+              Disabled Default
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -75,14 +77,12 @@ export const ShadcnTest = () => {
             type="text"
             placeholder="Enter text here..."
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={e => setInputValue(e.target.value)}
           />
           <Input type="email" placeholder="Email address" />
           <Input type="password" placeholder="Password" />
           <Input type="text" placeholder="Disabled input" disabled />
-          <p className="text-sm text-muted-foreground">
-            Current value: {inputValue || '(empty)'}
-          </p>
+          <p className="text-sm text-muted-foreground">Current value: {inputValue || '(empty)'}</p>
         </CardContent>
       </Card>
 
@@ -90,14 +90,12 @@ export const ShadcnTest = () => {
       <Card>
         <CardHeader>
           <CardTitle>Card Component</CardTitle>
-          <CardDescription>
-            This card demonstrates the card component structure
-          </CardDescription>
+          <CardDescription>This card demonstrates the card component structure</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-foreground">
-            Cards are perfect for grouping related content. They provide a clean,
-            structured way to display information with proper spacing and shadows.
+            Cards are perfect for grouping related content. They provide a clean, structured way to
+            display information with proper spacing and shadows.
           </p>
         </CardContent>
         <CardFooter className="flex justify-between">
@@ -121,8 +119,8 @@ export const ShadcnTest = () => {
               <DialogHeader>
                 <DialogTitle>Dialog Test</DialogTitle>
                 <DialogDescription>
-                  This is a test dialog. It should display as a modal overlay
-                  with proper animations and focus management.
+                  This is a test dialog. It should display as a modal overlay with proper animations
+                  and focus management.
                 </DialogDescription>
               </DialogHeader>
               <div className="py-4">

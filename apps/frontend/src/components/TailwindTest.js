@@ -2,7 +2,7 @@ import React from 'react';
 
 /**
  * Tailwind CSS Test Component
- * 
+ *
  * This component is used to verify that Tailwind CSS is working correctly.
  * It demonstrates various Tailwind utility classes including:
  * - Colors (background, text)
@@ -12,7 +12,7 @@ import React from 'react';
  * - Shadows
  * - Hover states
  * - Dark mode support
- * 
+ *
  * This is a temporary component for Phase 2 verification.
  * Can be removed after confirming Tailwind CSS is working.
  */
@@ -48,9 +48,13 @@ export const TailwindTest = () => {
           </h3>
           <div className="flex gap-2 flex-wrap">
             <div className="bg-primary text-primary-foreground px-4 py-2 rounded">Primary</div>
-            <div className="bg-secondary text-secondary-foreground px-4 py-2 rounded">Secondary</div>
+            <div className="bg-secondary text-secondary-foreground px-4 py-2 rounded">
+              Secondary
+            </div>
             <div className="bg-accent text-accent-foreground px-4 py-2 rounded">Accent</div>
-            <div className="bg-destructive text-destructive-foreground px-4 py-2 rounded">Destructive</div>
+            <div className="bg-destructive text-destructive-foreground px-4 py-2 rounded">
+              Destructive
+            </div>
             <div className="bg-muted text-muted-foreground px-4 py-2 rounded">Muted</div>
           </div>
         </div>
@@ -61,12 +65,8 @@ export const TailwindTest = () => {
             Spacing Utilities
           </h3>
           <div className="border-2 border-gray-300 dark:border-gray-600 p-4 rounded">
-            <div className="mb-4 p-4 bg-gray-100 dark:bg-gray-700 rounded">
-              Padding and Margin
-            </div>
-            <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded">
-              More Spacing
-            </div>
+            <div className="mb-4 p-4 bg-gray-100 dark:bg-gray-700 rounded">Padding and Margin</div>
+            <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded">More Spacing</div>
           </div>
         </div>
 
@@ -100,7 +100,8 @@ export const TailwindTest = () => {
             Dark Mode Support
           </h3>
           <p className="text-gray-600 dark:text-gray-300">
-            Add <code className="bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">class="dark"</code> to the HTML element to test dark mode.
+            Add <code className="bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">class="dark"</code>{' '}
+            to the HTML element to test dark mode.
           </p>
         </div>
 
