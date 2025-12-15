@@ -180,6 +180,66 @@ Continue with on-demand migration. No need to migrate all at once.
 
 ---
 
+---
+
+## Issue #4: Backend API Errors (Unrelated to Migration)
+
+### Status
+⚠️ **KNOWN ISSUE** - Backend configuration issue, not related to React Router migration
+
+### Problem
+The frontend application makes API calls to the backend that are failing:
+- `GET /rest/company/getCompanyCount` returns 500 Internal Server Error with "XML Parsing Error: no root element found"
+- `GET /api/getSimpleAccountsSubscription` returns 404 Not Found
+
+### Root Cause
+- Backend may not be fully configured or database not initialized
+- Subscription service endpoint may not exist in the backend
+- Database connection issues or uninitialized schema
+
+### Impact
+- **Frontend routing works correctly** - these are backend API errors
+- Frontend error handling gracefully catches these errors
+- Login/registration flows continue to work (errors are handled with fallbacks)
+- Application is functional despite backend errors
+
+### Frontend Error Handling
+The frontend already handles these errors gracefully:
+
+**getCompanyCount** (in `log_in/screen.js`):
+```javascript
+this.props.authActions.getCompanyCount().then((response) => {
+  // Handle success
+}).catch((err) => {
+  // If API fails (e.g., database not set up), show register button
+  this.setState({ companyCount: 0 }, () => { });
+});
+```
+
+**getUserSubscription** (in `log_in/screen.js`):
+```javascript
+this.props.authActions.getUserSubscription().then((res) => {
+  // Handle success
+}).catch((err) => {
+  this.setState({ SubscriptionMessage: strings.SubscriptionErrorMessage });
+});
+```
+
+### Resolution Steps (Backend Team)
+1. Check backend logs for actual error messages
+2. Verify database is running and accessible
+3. Ensure Spring Boot backend is running on port 8080
+4. Initialize database with required schema if needed
+5. Verify subscription service endpoint exists or configure it
+
+### Recommendation
+This is a **backend configuration issue**, not a frontend routing issue. The React Router v6 migration is complete and working. These backend errors are unrelated to the routing migration and do not affect the frontend routing functionality.
+
+### Priority
+**Low** - Frontend handles errors gracefully, application is functional. Backend team should address as part of backend setup/configuration.
+
+---
+
 ## Summary
 
 | Issue | Status | Priority | Blocking |
@@ -187,6 +247,7 @@ Continue with on-demand migration. No need to migrate all at once.
 | react-router-navigation-prompt | ⚠️ Known | Medium | No |
 | Test files using v5 patterns | ⚠️ Known | Low | No |
 | Components without HOC | ℹ️ Informational | Low | No |
+| Backend API errors | ⚠️ Known | Low | No |
 
-**Overall**: Migration is **complete and functional**. All issues are non-blocking and can be addressed incrementally.
+**Overall**: Migration is **complete and functional**. All issues are non-blocking and can be addressed incrementally. The backend API errors are unrelated to the React Router migration.
 

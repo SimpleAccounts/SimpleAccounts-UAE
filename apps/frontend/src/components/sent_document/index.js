@@ -10,9 +10,10 @@ import { CommonActions } from 'services/global';
 import { bindActionCreators } from 'redux';
 import { ActionMessagesList } from 'utils';
 import EmailPopUpCard from './email_popup_card';
+// Use import instead of require for Vite compatibility
+import { ToWords } from 'to-words';
 
 let strings = new LocalizedStrings(data);
-const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {

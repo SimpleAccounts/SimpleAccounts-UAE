@@ -38,6 +38,8 @@ import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import dayjs from '@/utils/date';
+// Use import instead of require for Vite compatibility
+import invoiceimage from 'assets/images/invoice/invoice.png';
 
 const mapStateToProps = (state) => {
 	return {
@@ -85,8 +87,6 @@ const customStyles = {
 		},
 	}),
 };
-
-const invoiceimage = require('assets/images/invoice/invoice.png');
 
 let strings = new LocalizedStrings(data);
 class CreatePurchaseOrder extends React.Component {

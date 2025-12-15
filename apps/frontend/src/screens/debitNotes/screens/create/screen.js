@@ -36,6 +36,8 @@ import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
 import { Checkbox } from '@material-ui/core';
+// Use import instead of require for Vite compatibility
+import invoiceimage from 'assets/images/invoice/invoice.png';
 
 const mapStateToProps = (state) => {
 	return {
@@ -72,8 +74,6 @@ const customStyles = {
 		},
 	}),
 };
-
-const invoiceimage = require('assets/images/invoice/invoice.png');
 
 let strings = new LocalizedStrings(data);
 class CreateDebitNote extends React.Component {

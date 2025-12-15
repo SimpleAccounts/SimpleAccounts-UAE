@@ -30,7 +30,9 @@ import { Loader } from 'components';
 import { Formik } from 'formik';
 import { ThreeSixty } from '@material-ui/icons';
 import { ThemeProvider } from '@material-ui/core';
-
+// Use import instead of require for Vite compatibility
+import Papa from "papaparse";
+import { convertArrayToCSV } from 'convert-array-to-csv';
 
 const mapStateToProps = (state) => {
 	return {
@@ -53,8 +55,7 @@ const mapDispatchToProps = (dispatch) => {
 		detailBankAccountActions: bindActionCreators(DetailBankAccountActions, dispatch)
 	};
 };
-const Papa = require("papaparse")
-const { convertArrayToCSV } = require('convert-array-to-csv')
+
 let strings = new LocalizedStrings(data);
 class ImportTransaction extends React.Component {
 	constructor(props) {

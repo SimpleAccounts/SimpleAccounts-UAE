@@ -43,6 +43,8 @@ import { data } from "../../../Language/index";
 import LocalizedStrings from "react-localization";
 import { Checkbox } from "@material-ui/core";
 import { TextareaAutosize, TextField } from "@material-ui/core";
+// Use import instead of require for Vite compatibility
+import invoiceimage from "assets/images/invoice/invoice.png";
 
 const mapStateToProps = (state) => {
   const contact_list = state.customer_invoice.customer_list;
@@ -88,7 +90,6 @@ const customStyles = {
   }),
 };
 
-const invoiceimage = require("assets/images/invoice/invoice.png");
 const ZERO = 0.0;
 let strings = new LocalizedStrings(data);
 class CreateCreditNote extends React.Component {

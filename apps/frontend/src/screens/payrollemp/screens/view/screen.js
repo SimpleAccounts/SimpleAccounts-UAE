@@ -34,6 +34,9 @@ import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { toast } from 'react-toastify';
 import { amountFormat } from 'screens/bank_account/screens/transactions/screens/create/helpers/amountformater';
+// Use import instead of require for Vite compatibility
+import avatar from 'assets/images/avatars/default-avatar.jpg';
+
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
@@ -49,7 +52,6 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-const avatar = require('assets/images/avatars/default-avatar.jpg');
 let strings = new LocalizedStrings(data);
 class ViewEmployee extends React.Component {
 	constructor(props) {

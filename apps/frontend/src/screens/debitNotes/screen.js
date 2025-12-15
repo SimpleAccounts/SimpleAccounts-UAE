@@ -30,8 +30,9 @@ import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { upperCase } from 'lodash';
 import dayjs from '@/utils/date';
+// Use import instead of require for Vite compatibility
+import { ToWords } from 'to-words';
 
-const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {

@@ -12,9 +12,9 @@ import {
 	CardBody,
 } from 'reactstrap';
 import './style.scss';
-
-const minusIcon = require('assets/images/dashboard/minus.png');
-const equalIcon = require('assets/images/dashboard/equal.png');
+// Use import instead of require for Vite compatibility
+import minusIcon from 'assets/images/dashboard/minus.png';
+import equalIcon from 'assets/images/dashboard/equal.png';
 
 class ProfitAndLoss extends Component {
 	constructor(props) {

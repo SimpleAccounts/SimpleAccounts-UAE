@@ -19,6 +19,8 @@ import '../style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import dayjs from '@/utils/date';
 import { Currency } from 'components';
+// Use import instead of require for Vite compatibility
+import { ToWords } from 'to-words';
 
 const mapStateToProps = (state) => {
 
@@ -49,7 +51,6 @@ const customStyles = {
 };
 
 let strings = new LocalizedStrings(data);
-const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {

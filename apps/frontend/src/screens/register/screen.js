@@ -44,7 +44,8 @@ const mapStateToProps = (state) => {
 		company_type_list: state.common.company_type_list,
 	};
 };
-const eye = require('assets/images/settings/eye.png');
+// Use import instead of require for Vite compatibility
+import eye from 'assets/images/settings/eye.png';
 const mapDispatchToProps = (dispatch) => {
 	return {
 		authActions: bindActionCreators(AuthActions, dispatch),

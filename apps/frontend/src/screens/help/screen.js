@@ -8,6 +8,11 @@ import { Card, CardBody, Col, Row ,CardGroup} from 'reactstrap';
 import {data}  from '../../screens//Language/index'
 import LocalizedStrings from 'react-localization';
 import './style.scss';
+// Use import instead of require for Vite compatibility
+import gettingStarted from 'assets/images/settings/gettingStarted.png';
+import faqIcon from 'assets/images/settings/faq.png';
+import userIcon from 'assets/images/settings/user.png';
+import versionimage from 'assets/images/settings/version.png';
 
 let strings = new LocalizedStrings(data);
 const mapStateToProps = (state) => {
@@ -28,10 +33,6 @@ class Help extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const gettingStarted = require('assets/images/settings/gettingStarted.png');
-		const faqIcon = require('assets/images/settings/faq.png');
-		const userIcon = require('assets/images/settings/user.png');
-		const versionimage = require('assets/images/settings/version.png');
 		const {  version } = this.props;
 		return (
 			<div className="help-screen">

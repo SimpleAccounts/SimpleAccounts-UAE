@@ -32,11 +32,7 @@ const cashBarOption = {
 	maintainAspectRatio: false,
 };
 
-
 let strings = new LocalizedStrings(data);
-const incomeIcon = require('assets/images/dashboard/Inflow.png');
-const outcomeIcon = require('assets/images/dashboard/Outflow.png');
-const totalIcon = require('assets/images/dashboard/Net.png');
 
 class CashFlow extends Component {
 	constructor(props) {

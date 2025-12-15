@@ -6,8 +6,10 @@ import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
+// Use import instead of require for Vite compatibility
+import footer from 'assets/images/invoice/invoiceFooter.png';
+
 let strings = new LocalizedStrings(data);
-const footer = require('assets/images/invoice/invoiceFooter.png');
 const ZERO=0.00
 
 class ExpenseTemplate extends Component {

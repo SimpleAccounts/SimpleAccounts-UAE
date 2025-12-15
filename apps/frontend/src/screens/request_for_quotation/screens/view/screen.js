@@ -19,7 +19,7 @@ import './style.scss';
 import { RFQTemplate } from './sections';
 import { Card, CardBody, Table } from 'reactstrap';
 import dayjs from '@/utils/date';
-import { StringStream } from 'codemirror';
+// import { StringStream } from 'codemirror'; // Removed: StringStream not available in CodeMirror 6
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 

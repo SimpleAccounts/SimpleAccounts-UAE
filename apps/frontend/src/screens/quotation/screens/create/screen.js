@@ -89,7 +89,8 @@ const customStyles = {
 	}),
 };
 
-const invoiceimage = require('assets/images/invoice/invoice.png');
+// Use import instead of require for Vite compatibility
+import invoiceimage from 'assets/images/invoice/invoice.png';
 let strings = new LocalizedStrings(data);
 
 class CreateQuotation extends React.Component {

@@ -6,9 +6,9 @@ import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
-const footer = require('assets/images/invoice/invoiceFooter.png');
-
-const { ToWords } = require('to-words');
+// Use import instead of require for Vite compatibility
+import footer from 'assets/images/invoice/invoiceFooter.png';
+import { ToWords } from 'to-words';
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {

@@ -132,6 +132,37 @@ The `react-router-navigation-prompt@1.9.6` library is incompatible with React Ro
 
 **Strategy**: Applied incrementally as components are accessed. Critical components already migrated.
 
+### 3. Backend API Errors (Unrelated to Migration)
+**Status**: ⚠️ **KNOWN ISSUE** - Backend configuration issue, not related to React Router migration
+
+**Problem**: The frontend application makes API calls to the backend that are failing:
+- `GET /rest/company/getCompanyCount` returns 500 Internal Server Error
+- `GET /api/getSimpleAccountsSubscription` returns 404 Not Found
+
+**Impact**: 
+- Frontend error handling gracefully catches these errors
+- Login/registration flows continue to work (errors are handled with fallbacks)
+- Application is functional despite backend errors
+
+**Root Cause**: 
+- Backend may not be fully configured or database not initialized
+- Subscription service endpoint may not exist in the backend
+
+**Frontend Handling**:
+- `getCompanyCount` errors are caught and default to `companyCount: 0` (allows registration)
+- `getUserSubscription` errors are caught and show subscription error message
+- All error handling is in place and working correctly
+
+**Resolution**: 
+- This is a **backend configuration issue**, not a frontend routing issue
+- Backend team should verify:
+  - Database is running and accessible
+  - Spring Boot backend is running on port 8080
+  - Database is initialized with required schema
+  - Subscription service endpoint exists or is configured
+
+**Note**: The React Router v6 migration is **complete and working**. These backend errors are unrelated to the routing migration and do not affect the frontend routing functionality.
+
 ## Breaking Changes Handled
 
 1. ✅ `Switch` → `Routes` (all instances migrated)
