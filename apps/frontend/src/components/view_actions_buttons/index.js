@@ -4,7 +4,7 @@ import {
 	Button,
 } from 'reactstrap';
 import { bindActionCreators } from 'redux';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { data } from 'screens/Language/index'
@@ -176,8 +176,8 @@ class ActionButtons extends React.Component {
 											this.props.history.push(`${URL}/record-payment`,
 												URL.includes('invoice') ?
 												{id: { id: id, 
-													invoiceDate: moment(invoiceDate).format('DD-MM-YYYY'), 
-													invoiceDueDate: moment(invoiceDueDate).format('DD-MM-YYYY'), 
+													invoiceDate: dayjs(invoiceDate).format('DD-MM-YYYY'), 
+													invoiceDueDate: dayjs(invoiceDueDate).format('DD-MM-YYYY'), 
 													invoiceAmount: totalAmount, 
 													dueAmount: dueAmount, 
 													invoiceNumber: referenceNumber, 
@@ -187,8 +187,8 @@ class ActionButtons extends React.Component {
 											} :
 											{
 													id: id,
-													invoiceDate: moment(date).format('DD-MM-YYYY'),
-													invoiceDueDate: moment(dueDate).format('DD-MM-YYYY'),
+													invoiceDate: dayjs(date).format('DD-MM-YYYY'),
+													invoiceDueDate: dayjs(dueDate).format('DD-MM-YYYY'),
 													invoiceAmount: totalAmount,
 													dueAmount: dueAmount,
 													invoiceNumber: number,
@@ -212,8 +212,8 @@ class ActionButtons extends React.Component {
 											this.props.history.push(`${URL}/refund`,
 												URL.includes('credit') ?
 												{id: { id: id, 
-													invoiceDate: moment(invoiceDate).format('DD-MM-YYYY'), 
-													invoiceDueDate: moment(invoiceDueDate).format('DD-MM-YYYY'), 
+													invoiceDate: dayjs(invoiceDate).format('DD-MM-YYYY'), 
+													invoiceDueDate: dayjs(invoiceDueDate).format('DD-MM-YYYY'), 
 													invoiceAmount: totalAmount, 
 													dueAmount: dueAmount, 
 													invoiceNumber: referenceNumber, 

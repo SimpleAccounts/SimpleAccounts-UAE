@@ -21,7 +21,7 @@ import { EditorState } from 'draft-js';
 import { selectOptionsFactory } from 'utils';
 import DatePicker from 'react-datepicker';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import * as RequestForQuotationDetailsAction from '../screens/detail/actions';
 import { bindActionCreators } from 'redux';
 import * as RequestForQuotationAction from '../screens/detail/actions';
@@ -255,9 +255,9 @@ class CreateCreditNoteModal extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.creditNoteDate, 'DD-MM-YYYY').toDate();
+			: dayjs(props.values.creditNoteDate, 'DD-MM-YYYY').toDate();
 		// if (temp && values) {
-		// 	const date = moment(values)
+		// 	const date = dayjs(values)
 		// 		.add(temp - 1, 'days')
 		// 		.format('DD-MM-YYYY');
 		// 	props.setFieldValue('invoiceDueDate', date, true);
@@ -1118,13 +1118,13 @@ class CreateCreditNoteModal extends React.Component {
 		formData.append('cnCreatedOnPaidInvoice','1');
 		// formData.append(
 		// 	'invoiceDueDate',
-		// 	invoiceDueDate ? moment(invoiceDueDate, 'DD-MM-YYYY').toDate() : null,
+		// 	invoiceDueDate ? dayjs(invoiceDueDate, 'DD-MM-YYYY').toDate() : null,
 		// );
 		formData.append(
 			'creditNoteDate',
 			creditNoteDate
 				?
-						moment(creditNoteDate,'DD-MM-YYYY')
+						dayjs(creditNoteDate,'DD-MM-YYYY')
 						.toDate()
 				: '',
 		);

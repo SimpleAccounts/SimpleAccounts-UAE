@@ -1,6 +1,6 @@
 import { JOURNAL } from 'constants/types';
 import { authApi } from 'utils';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 export const getJournalList = (obj) => {
 	let journalDate = obj.journalDate ? obj.journalDate : '';
@@ -14,7 +14,7 @@ export const getJournalList = (obj) => {
 
 	let url = `/rest/journal/getList?journalReferenceNo=${journalReferenceNo}&description=${description}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 	if (journalDate) {
-		let date = moment(journalDate).format('YYYY-MM-DD');
+		let date = dayjs(journalDate).format('YYYY-MM-DD');
 		url = url + `&journalDate=${date}`;
 	}
 	return (dispatch) => {

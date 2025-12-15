@@ -36,7 +36,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -559,7 +559,7 @@ this.state.data.map((obj, index) => {
 								current_grn_id: this.props.location.state.id,
 								initValue: {
 									grnReceiveDate: res.data.grnReceiveDate
-										? moment(res.data.grnReceiveDate).format('DD-MM-YYYY')
+										? dayjs(res.data.grnReceiveDate).format('DD-MM-YYYY')
 										: '',
 										grnReceiveDate1: res.data.grnReceiveDate
 										? res.data.grnReceiveDate
@@ -585,7 +585,7 @@ this.state.data.map((obj, index) => {
 								},
 								poNumber : res.data.poNumber ? res.data.poNumber : '',
 								grnReceiveDateNotChanged: res.data.grnReceiveDate
-										? moment(res.data.grnReceiveDate)
+										? dayjs(res.data.grnReceiveDate)
 										: '',
 								grnReceiveDate: res.data.grnReceiveDate
 										? res.data.grnReceiveDate
@@ -1139,9 +1139,9 @@ this.state.data.map((obj, index) => {
 	// 	const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 	// 	const values = value
 	// 		? value
-	// 		: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
+	// 		: dayjs(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 	// 	if (temp && values) {
-	// 		const date = moment(values)
+	// 		const date = dayjs(values)
 	// 			.add(temp - 1, 'days')
 	// 			.format('DD-MM-YYYY');
 	// 		props.setFieldValue('invoiceDueDate', date, true);

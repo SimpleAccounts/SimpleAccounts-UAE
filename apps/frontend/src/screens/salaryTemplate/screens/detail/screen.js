@@ -17,7 +17,7 @@ import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import moment from 'moment'
+import dayjs from '@/utils/date'
 
 import { Loader, ConfirmDeleteModal } from 'components'
 

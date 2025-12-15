@@ -26,7 +26,7 @@ import { CommonActions } from 'services/global';
 
 
 import * as PayRollActions from './actions';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 import './style.scss';
 import { data } from '../Language/index'
@@ -72,7 +72,7 @@ class PayrollRun extends React.Component {
 			loading: true,
 			selectedRows: [],
 			dialog: false,
-			salaryDate: moment().startOf('month').format('DD-MM-YYYY'),
+			salaryDate: dayjs().startOf('month').format('DD-MM-YYYY'),
 			filterData: {
 				contactId: '',
 				invoiceId: '',
@@ -81,7 +81,7 @@ class PayrollRun extends React.Component {
 				contactType: 2,
 			},
 			initValue: {
-				presentdate: moment().local().format('DD-MM-YYYY'),
+				presentdate: dayjs().local().format('DD-MM-YYYY'),
 			},
 			activeTab: new Array(4).fill('1'),
 			csvData: [],
@@ -208,7 +208,7 @@ class PayrollRun extends React.Component {
 	};
 
 	renderDate = (cell, rows) => {
-		return rows.payrollDate ? moment(rows.payrollDate).format('DD-MM-YYYY') : '-';
+		return rows.payrollDate ? dayjs(rows.payrollDate).format('DD-MM-YYYY') : '-';
 	};
 
 	renderAmount = (cell, row, extraData) => {
@@ -281,7 +281,7 @@ class PayrollRun extends React.Component {
 		});
 	};
 	renderRunDate = (cell, row) => {
-		return row.runDate ? moment(row.runDate).format('DD-MM-YYYY') : '-';
+		return row.runDate ? dayjs(row.runDate).format('DD-MM-YYYY') : '-';
 	};
 	renderPayrolltotalAmount = (cell, row) => {
 		return (

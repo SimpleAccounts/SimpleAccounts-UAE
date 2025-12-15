@@ -15,7 +15,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 //import './style.scss';
 import * as CTreportAction from '../../actions';
 import logo from 'assets/images/brand/logo.png';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import * as FinancialReportActions from '../../../../actions';
 import { Currency } from 'components';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -140,7 +140,7 @@ class CorporateTaxPaymentHistory extends React.Component {
     };
 
     renderDate = (cell, row) => {
-        return cell ? moment(cell)
+        return cell ? dayjs(cell)
             .format('DD-MM-YYYY')
             // .format('LL')
             : '-';
@@ -160,8 +160,8 @@ class CorporateTaxPaymentHistory extends React.Component {
             return ("---")
     }
     renderTaxPeriod = (cell, row) => {
-        let startDate = moment(row.startDate).format("DD-MM-YYYY");
-        let endDate = moment(row.endDate).format("DD-MM-YYYY");
+        let startDate = dayjs(row.startDate).format("DD-MM-YYYY");
+        let endDate = dayjs(row.endDate).format("DD-MM-YYYY");
     
         return <>{startDate} To {endDate}</>;
       };

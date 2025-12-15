@@ -22,7 +22,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import * as PayrollEmployeeActions from './actions';
 import { CommonActions } from 'services/global';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { data } from '../Language/index';
 import LocalizedStrings from 'react-localization';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -294,7 +294,7 @@ class PayrollEmployee extends React.Component {
     }
   };
   renderDOB = (cell, rows) => {
-    return moment(rows.dob).format('DD-MM-YYYY');
+    return dayjs(rows.dob).format('DD-MM-YYYY');
   };
 
   renderStatus = (cell, row) => {
@@ -444,7 +444,7 @@ class PayrollEmployee extends React.Component {
     );
   };
   renderDate = data => {
-    return moment(data.value).format('DD-MM-YYYY');
+    return dayjs(data.value).format('DD-MM-YYYY');
   };
   render() {
     strings.setLanguage(this.state.language);
@@ -643,7 +643,7 @@ class PayrollEmployee extends React.Component {
                             thStyle={{ whiteSpace: 'normal' }}
                             csvHeader="DATE OF BIRTH"
                             csvFormat={date => {
-                              return moment(date).format('DD-MM-YYYY');
+                              return dayjs(date).format('DD-MM-YYYY');
                             }}
                           >
                             {strings.DateOfBirth}

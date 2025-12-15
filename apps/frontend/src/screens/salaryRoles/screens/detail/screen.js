@@ -15,7 +15,7 @@ import {
 } from 'reactstrap'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import moment from 'moment'
+import dayjs from '@/utils/date'
 import { Loader, LeavePage, ConfirmDeleteModal } from 'components'
 import { CommonActions } from 'services/global'
 import * as EmployeeActions from '../../actions';

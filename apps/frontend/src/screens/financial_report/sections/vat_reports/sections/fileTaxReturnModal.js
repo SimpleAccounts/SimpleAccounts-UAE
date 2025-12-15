@@ -24,7 +24,7 @@ import LocalizedStrings from 'react-localization';
 import '../style.scss';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions'
 import * as VatreportActions from '../actions';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 const mapStateToProps = (state) => {
 

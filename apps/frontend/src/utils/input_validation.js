@@ -1,4 +1,4 @@
-import moment from "moment";
+import dayjs from '@/utils/date';
 import { data } from "screens/Language/index";
 import LocalizedStrings from "react-localization";
 

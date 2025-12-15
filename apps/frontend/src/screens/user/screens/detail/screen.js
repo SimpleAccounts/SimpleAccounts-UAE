@@ -20,7 +20,7 @@ import * as UserActions from '../../actions';
 import * as UserDetailActions from './actions';
 import { CommonActions, AuthActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 // import 'react-images-uploader/styles.css'
@@ -116,7 +116,7 @@ class DetailUser extends React.Component {
 							lastName: res.data.lastName ? res.data.lastName : '',
 							email: res.data.email ? res.data.email : '',
 							password: '',
-							dob: res.data.dob ? moment(res.data.dob, 'DD-MM-YYYY').toDate() : '',
+							dob: res.data.dob ? dayjs(res.data.dob, 'DD-MM-YYYY').toDate() : '',
 							active: res.data.active ? res.data.active : '',
 							confirmPassword: '',
 							roleId: res.data.roleId ? res.data.roleId : '',
@@ -255,7 +255,7 @@ class DetailUser extends React.Component {
 		formData.append('email', email ? email : '');
 		formData.append('timeZone', timeZone ? timeZone : '');
 		formData.append('userPhotoChange', this.state.userPhotoChange);
-		formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
+		formData.append('dob', dob ? dayjs(dob).format('DD-MM-YYYY') : '');
 		formData.append(
 			'roleId',
 			typeof roleId !== 'object' ? roleId : roleId.value,
@@ -616,13 +616,13 @@ class DetailUser extends React.Component {
 																							showYearDropdown
 																							dateFormat="dd-MM-yyyy"
 																							dropdownMode="select"
-																							maxDate={moment().subtract(18, "years").toDate()}
+																							maxDate={dayjs().subtract(18, "years").toDate()}
 																							autoComplete="off"
 																							placeholderText={strings.Enter + strings.DateOfBirth}
 																							// selected={props.values.dob}
 																							value={
 																								props.values.dob
-																									? moment(props.values.dob).format(
+																									? dayjs(props.values.dob).format(
 																										'DD-MM-YYYY',
 																									)
 																									: ''

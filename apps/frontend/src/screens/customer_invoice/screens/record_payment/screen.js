@@ -26,7 +26,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextField } from '@material-ui/core';
@@ -141,11 +141,11 @@ class RecordCustomerPayment extends React.Component {
 				paidInvoiceListStr: [
 					{
 						id: this.props.location.state.id.id,
-						date: moment(
+						date: dayjs(
 							this.props.location.state.id.invoiceDate,
 							'DD-MM-YYYY',
 						).toDate(),
-						dueDate: moment(
+						dueDate: dayjs(
 							this.props.location.state.id.invoiceDueDate,
 							'DD-MM-YYYY',
 						).toDate(),
@@ -250,7 +250,7 @@ class RecordCustomerPayment extends React.Component {
 		formData.append(
 			'receiptDate',
 			typeof receiptDate === 'string'
-				? moment(receiptDate, 'DD-MM-YYYY').toDate()
+				? dayjs(receiptDate, 'DD-MM-YYYY').toDate()
 				: receiptDate,
 		);
 		formData.append(

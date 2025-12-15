@@ -13,7 +13,7 @@ import {
 import DatePicker from 'react-datepicker';
 
 import { Formik } from 'formik';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 import './style.scss';
 import {data}  from '../../Language/index'
@@ -26,7 +26,7 @@ class FilterComponent extends Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			initValue: {
-				endDate: moment().endOf('month').format('YYYY-MM-DD hh:mm'),
+				endDate: dayjs().endOf('month').format('YYYY-MM-DD hh:mm'),
 			},
 		};
 	}
@@ -69,17 +69,17 @@ class FilterComponent extends Component {
 													autoComplete="off"
 												//	maxDate={new Date()}
 													showYearDropdown
-													value={moment(props.values.endDate).format(
+													value={dayjs(props.values.endDate).format(
 														'DD-MM-YYYY',
 													)}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
 													onChange={(value) => {
 														props.handleChange('endDate')(value);
-														if (moment(value).isBefore(props.values.endDate)) {
+														if (dayjs(value).isBefore(props.values.endDate)) {
 															props.setFieldValue(
 																'startDate',
-																moment(value).subtract(1, 'M'),
+																dayjs(value).subtract(1, 'M'),
 															);
 														}
 													}}

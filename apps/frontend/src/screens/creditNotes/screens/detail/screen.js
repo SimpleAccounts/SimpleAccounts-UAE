@@ -39,7 +39,7 @@ import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 import { CommonActions } from "services/global";
 import { selectCurrencyFactory, selectOptionsFactory } from "utils";
 import "./style.scss";
-import moment from "moment";
+import dayjs from '@/utils/date';
 import { data } from "../../../Language/index";
 import LocalizedStrings from "react-localization";
 import { TextareaAutosize, TextField } from "@material-ui/core";
@@ -193,7 +193,7 @@ class DetailCreditNote extends React.Component {
             currencyCode: currencyCode,
           },
         },
-        companyVATRegistrationDate: new Date(moment(vatRegistrationDate)),
+        companyVATRegistrationDate: new Date(dayjs(vatRegistrationDate)),
         isDesignatedZone: isDesignatedZone,
         isRegisteredVat: isRegisteredVat,
         loading: false,
@@ -283,7 +283,7 @@ class DetailCreditNote extends React.Component {
                     ? res.data.currencyName
                     : "",
                   // invoiceDueDate: res.data.invoiceDueDate
-                  // 	? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
+                  // 	? dayjs(res.data.invoiceDueDate).format('DD-MM-YYYY')
                   // 	: '',
                   invoiceDate: res.data.creditNoteDate
                     ? res.data.creditNoteDate
@@ -663,7 +663,7 @@ class DetailCreditNote extends React.Component {
     );
     formData.append(
       "creditNoteDate",
-      invoiceDate ? moment(invoiceDate) : new Date()
+      invoiceDate ? dayjs(invoiceDate) : new Date()
     );
     formData.append("vatCategoryId", 2);
     formData.append("exchangeRate", exchangeRate);
@@ -1442,7 +1442,7 @@ class DetailCreditNote extends React.Component {
                                         dateFormat="dd-MM-yyyy"
                                         minDate={new Date()}
                                         dropdownMode="select"
-                                        value={moment(
+                                        value={dayjs(
                                           props.values.invoiceDate
                                         ).format("DD-MM-YYYY")}
                                         onChange={(value) => {

@@ -2,7 +2,7 @@ import { PAYMENT } from 'constants/types'
 import {
   authApi
 } from 'utils'
-import moment from 'moment'
+import dayjs from '@/utils/date'
 
 export const getCurrencyList = () => {
   return (dispatch) => {
@@ -112,7 +112,7 @@ export const getPaymentList = (obj) => {
   return (dispatch) => {
     let param = `/rest/payment/getlist?supplierId=${supplierId}&invoiceAmount=${invoiceAmount}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     if (paymentDate) {
-      let date = moment(paymentDate).format('YYYY-MM-DD')
+      let date = dayjs(paymentDate).format('YYYY-MM-DD')
       param = param + `&paymentDate=${date}`
     }
     let data = {

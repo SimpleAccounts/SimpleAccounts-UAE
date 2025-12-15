@@ -1,6 +1,6 @@
 import { DEBIT_NOTE } from 'constants/types';
 import { authApi } from 'utils';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 export const getdebitNotesList = (postObj) => {
 	let customerName = postObj.customerId ? postObj.customerId.value : '';
@@ -21,11 +21,11 @@ export const getdebitNotesList = (postObj) => {
 	return (dispatch) => {
 		let param = `/rest/creditNote/getList?contact=${customerName}&type=13&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 		if (invoiceDate) {
-			let date = moment(invoiceDate).format('DD-MM-YYYY');
+			let date = dayjs(invoiceDate).format('DD-MM-YYYY');
 			param = param + `&invoiceDate=${date}`;
 		}
 		if (invoiceDueDate) {
-			let date = moment(invoiceDueDate).format('DD-MM-YYYY');
+			let date = dayjs(invoiceDueDate).format('DD-MM-YYYY');
 			param = param + `&invoiceDueDate=${date}`;
 		}
 		let data = {

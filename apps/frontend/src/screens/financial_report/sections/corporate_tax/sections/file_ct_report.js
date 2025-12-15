@@ -24,7 +24,7 @@ import LocalizedStrings from 'react-localization';
 import '../style.scss';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions'
 import * as CTReportActions from '../actions';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 const mapStateToProps = (state) => {
 	return {
@@ -87,10 +87,10 @@ class FileCtReportModal extends React.Component {
 		this.setState({ disabled: true });
 		let formData = new FormData();
 		const postData = {
-			taxFiledOn: moment(data.taxFiledOn ? data.taxFiledOn : this.props.endDate).format('DD/MM/YYYY'),
+			taxFiledOn: dayjs(data.taxFiledOn ? data.taxFiledOn : this.props.endDate).format('DD/MM/YYYY'),
 			id: data.corporateTaxFiling ? data.corporateTaxFiling : this.props.current_report_id ,
 		};
-		formData.append('taxFiledOn', moment(data.taxFiledOn).format('DD/MM/YYYY'))
+		formData.append('taxFiledOn', dayjs(data.taxFiledOn).format('DD/MM/YYYY'))
 		formData.append('id', data.corporateTaxFiling)
 		this.props.ctReportActions
 			.fileCTReport(postData)

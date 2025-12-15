@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import ConnectedComponent from './view_bank_account';
 
 const ViewBankAccount = ConnectedComponent.WrappedComponent;
@@ -38,7 +38,7 @@ describe('ViewBankAccount', () => {
       screen.getByText('Receipt attachment', { exact: false }),
     ).toBeInTheDocument();
 
-    const formattedDate = moment(
+    const formattedDate = dayjs(
       baseProps.initialVals.transactionDate,
     ).format('DD/MM/YYYY');
     expect(screen.getByText(formattedDate)).toBeInTheDocument();

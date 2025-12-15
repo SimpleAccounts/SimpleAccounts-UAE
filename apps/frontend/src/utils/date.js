@@ -34,7 +34,7 @@ dayjs.extend(duration);
  *   dayjs(date).fromNow();
  * 
  * Available plugins:
- * - customParseFormat: Parse dates with format strings (moment(date, format))
+ * - customParseFormat: Parse dates with format strings (dayjs(date, format))
  * - relativeTime: Relative time formatting (.fromNow())
  * - utc: UTC timezone handling
  * - timezone: Timezone conversions

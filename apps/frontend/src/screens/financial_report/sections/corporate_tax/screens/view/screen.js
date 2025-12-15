@@ -14,7 +14,7 @@ import {
 	DropdownItem,
 } from 'reactstrap';
 
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';
 import { ExcelExport as XLSX } from 'utils';
@@ -118,8 +118,8 @@ class ViewCorporateTax extends React.Component {
 	// 	this.setState(
 	// 		{
 	// 			initValue: {
-	// 				startDate: moment(value.startDate).format('DD/MM/YYYY'),
-	// 				endDate: moment(value.endDate).format('DD/MM/YYYY'),
+	// 				startDate: dayjs(value.startDate).format('DD/MM/YYYY'),
+	// 				endDate: dayjs(value.endDate).format('DD/MM/YYYY'),
 	// 			},
 	// 			loading: true,
 	// 			view: !this.state.view,
@@ -368,7 +368,7 @@ class ViewCorporateTax extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.ProfitandLoss}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {moment(this.props.location.state.startDate).format('DD-MM-YYYY')} {strings.To} {moment(this.props.location.state.endDate).format('DD-MM-YYYY')} 
+											{strings.From} {dayjs(this.props.location.state.startDate).format('DD-MM-YYYY')} {strings.To} {dayjs(this.props.location.state.endDate).format('DD-MM-YYYY')} 
 									</div>
 									<div>
 									</div>									

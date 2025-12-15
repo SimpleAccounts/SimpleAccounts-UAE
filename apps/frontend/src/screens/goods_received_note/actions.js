@@ -1,6 +1,6 @@
 import { GOODS_RECEVED_NOTE } from 'constants/types';
 import { authApi } from 'utils';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 export const getGRNList = (postObj) => {
 	let supplierId = postObj.supplierId ? postObj.supplierId.value : '';
@@ -20,11 +20,11 @@ export const getGRNList = (postObj) => {
 	return (dispatch) => {
 		let param = `/rest/poquatation/getListForGRN?supplierId=${supplierId}&rfqNumber=${rfqNumber}&status=${status}&type=5&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 		if (rfqReceiveDate) {
-			let date = moment(rfqReceiveDate).format('DD-MM-YYYY');
+			let date = dayjs(rfqReceiveDate).format('DD-MM-YYYY');
 			param = param + `&rfqReceiveDate=${date}`;
 		}
 		if (rfqExpiryDate) {
-			let date = moment(rfqExpiryDate).format('DD-MM-YYYY');
+			let date = dayjs(rfqExpiryDate).format('DD-MM-YYYY');
 			param = param + `&rfqExpiryDate=${date}`;
 		}
 		let data = {

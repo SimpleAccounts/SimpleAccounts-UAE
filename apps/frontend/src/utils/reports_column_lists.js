@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Table } from "reactstrap";
 import { Currency } from "components";
-import moment from "moment";
+import dayjs from '@/utils/date';
 import LocalizedStrings from "react-localization";
 import { data } from "../screens/Language/index";
 import { Link } from "react-router-dom";
@@ -1338,7 +1338,7 @@ export const List = {
 };
 
 function renderDate(date) {
-  if (date) return moment(date).format("DD-MM-YYYY");
+  if (date) return dayjs(date).format("DD-MM-YYYY");
   else return "";
 }
 function renderAmount(amount) {

@@ -14,7 +14,7 @@ import DatePicker from "react-datepicker"
 
 import { Formik } from "formik"
 import Select from "react-select"
-import moment from 'moment'
+import dayjs from '@/utils/date'
 
 import { selectOptionsFactory } from "utils";
 import './style.scss'
@@ -38,8 +38,8 @@ class FilterComponent extends Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			initValue: {
-				startDate: moment().startOf('month').format('YYYY-MM-DD hh:mm'),
-				endDate: moment().endOf('month').format('YYYY-MM-DD hh:mm'),
+				startDate: dayjs().startOf('month').format('YYYY-MM-DD hh:mm'),
+				endDate: dayjs().endOf('month').format('YYYY-MM-DD hh:mm'),
 				reportBasis: 'ACCRUAL',
 				chartOfAccountId: ''
 			}
@@ -82,13 +82,13 @@ class FilterComponent extends Component {
 													placeholderText="From"
 													showMonthDropdown
 													showYearDropdown
-													value={moment(props.values.startDate).format('DD-MM-YYYY')}
+													value={dayjs(props.values.startDate).format('DD-MM-YYYY')}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
 													onChange={(value) => {
 														props.handleChange("startDate")(value);
-														if (moment(value).isAfter(props.values.endDate)) {
-															props.setFieldValue('endDate', moment(value).add(1, 'M'))
+														if (dayjs(value).isAfter(props.values.endDate)) {
+															props.setFieldValue('endDate', dayjs(value).add(1, 'M'))
 														}
 													}}
 												/>
@@ -107,13 +107,13 @@ class FilterComponent extends Component {
 													placeholderText={strings.Select}
 													showMonthDropdown
 													showYearDropdown
-													value={moment(props.values.endDate).format('DD-MM-YYYY')}
+													value={dayjs(props.values.endDate).format('DD-MM-YYYY')}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
 													onChange={(value) => {
 														props.handleChange("endDate")(value);
-														if (moment(value).isBefore(props.values.startDate)) {
-															props.setFieldValue('startDate', moment(value).subtract(1, 'M'))
+														if (dayjs(value).isBefore(props.values.startDate)) {
+															props.setFieldValue('startDate', dayjs(value).subtract(1, 'M'))
 														}
 													}}
 												/>

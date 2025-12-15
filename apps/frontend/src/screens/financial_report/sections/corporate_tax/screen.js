@@ -24,7 +24,7 @@ import { upperFirst } from "lodash-es";
 import { CTReport, CTSettingModal, FileCtReportModal, DeleteModal, } from './sections';
 // import 'ag-grid-community/dist/styles/ag-grid.css';
 // import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import moment from "moment";
+import dayjs from '@/utils/date';
 // import download from "downloadjs";
 import { ConfirmDeleteModal, Currency, Loader } from "components";
 import { data } from "../../../Language/index";
@@ -224,8 +224,8 @@ class CorporateTax extends React.Component {
   };
 
   getActionButtons = (cell, params) => {
-    const startDate = moment(params.startDate).format("DD-MM-YYYY");
-    const endDate = moment(params.endDate).format("DD-MM-YYYY");
+    const startDate = dayjs(params.startDate).format("DD-MM-YYYY");
+    const endDate = dayjs(params.endDate).format("DD-MM-YYYY");
     const taxPeriod = startDate + ' To ' + endDate
     return (
       // DROPDOWN ACTIONS
@@ -459,7 +459,7 @@ class CorporateTax extends React.Component {
 
   renderDate = (cell, row) => {
     return cell
-      ? moment(cell).format("DD-MM-YYYY")
+      ? dayjs(cell).format("DD-MM-YYYY")
       : // .format('LL')
       "-";
   };
@@ -468,8 +468,8 @@ class CorporateTax extends React.Component {
     return <>{row.vatNumber}</>;
   };
   renderTaxPeriod = (cell, row) => {
-    let startDate = moment(row.startDate).format("DD-MM-YYYY");
-    let endDate = moment(row.endDate).format("DD-MM-YYYY");
+    let startDate = dayjs(row.startDate).format("DD-MM-YYYY");
+    let endDate = dayjs(row.endDate).format("DD-MM-YYYY");
 
     return <>{startDate} To {endDate}</>;
   };
@@ -568,8 +568,8 @@ class CorporateTax extends React.Component {
                           if (setting) {
                             const startingMonth = setting.fiscalYear.split(' - ')[0];
                             const startingDate = startingMonth === 'January' ? '1-1-' : '6-1-';
-                            const startingYear = lastRecordYear ? lastRecordYear  :startingMonth === 'January' ? moment().year() + 1 : moment().year() ;
-                            // const startingYear = lastRecordYear ? lastRecordYear  : startingMonth === 'January' ? moment().month() > 1 ? moment().year()+1 : moment.year() : moment().month() > 6 ? moment().year()+1 : moment.year() ;
+                            const startingYear = lastRecordYear ? lastRecordYear  :startingMonth === 'January' ? dayjs().year() + 1 : dayjs().year() ;
+                            // const startingYear = lastRecordYear ? lastRecordYear  : startingMonth === 'January' ? dayjs().month() > 1 ? dayjs().year()+1 : moment.year() : dayjs().month() > 6 ? dayjs().year()+1 : moment.year() ;
                             for (let i = 0; i < 4; i++) {
                               const year = parseInt(startingYear) + parseInt(i);
                               const date = startingDate + year;

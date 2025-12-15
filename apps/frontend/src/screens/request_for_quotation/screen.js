@@ -34,7 +34,7 @@ import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { upperCase } from 'lodash';
 
 const { ToWords } = require('to-words');
@@ -593,10 +593,10 @@ class RequestForQuotation extends React.Component {
 				openPurchaseOrder : true, rowId : id,
 				    selectedData:res.data,
 					rfqReceiveDate: res.data.rfqReceiveDate
-						? moment(res.data.rfqReceiveDate).format('DD-MM-YYYY')
+						? dayjs(res.data.rfqReceiveDate).format('DD-MM-YYYY')
 						: '',
 						rfqExpiryDate: res.data.rfqExpiryDate
-						? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+						? dayjs(res.data.rfqExpiryDate).format('DD-MM-YYYY')
 						: '',
 						supplierId: res.data.supplierId ? res.data.supplierId : '',
 						rfqNumber: res.data.rfqNumber

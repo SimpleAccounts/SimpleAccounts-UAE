@@ -4,7 +4,7 @@ import {
 	authApi,
 } from 'utils';
 
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 export const getReceiptList = (obj) => {
 	let receiptDate = obj.receiptDate ? obj.receiptDate : '';
@@ -21,7 +21,7 @@ export const getReceiptList = (obj) => {
 
 	let url = `/rest/receipt/getList?referenceCode=${receiptReferenceCode}&contactId=${contactId}&invoiceId=${invoiceId}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 	if (receiptDate) {
-		let date = moment(receiptDate).format('DD-MM-YYYY');
+		let date = dayjs(receiptDate).format('DD-MM-YYYY');
 		url = url + `&receiptDate=${date}`;
 	}
 	return (dispatch) => {

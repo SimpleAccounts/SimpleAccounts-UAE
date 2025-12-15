@@ -13,7 +13,7 @@ import {
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import { ExcelExport as XLSX } from 'utils';
 import { Loader } from 'components';
@@ -231,7 +231,7 @@ class ViewFtaAuditReport extends React.Component {
 			});
 	};
 	renderDate = (cell, row) => {
-		return cell ? moment(cell)
+		return cell ? dayjs(cell)
 			.format('DD-MM-YYYY') 
 			// .format('LL')
 			: '-';

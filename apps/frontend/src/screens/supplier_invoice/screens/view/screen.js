@@ -15,7 +15,7 @@ import { CommonActions } from 'services/global';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Currency, InvoiceViewJournalEntries } from 'components';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import ActionButtons from 'components/view_actions_buttons';
 import { StatusActionList } from 'utils';
 
@@ -297,7 +297,7 @@ class ViewInvoice extends React.Component {
 									}}>
 										<td className="center">{1}</td>
 										<td style={{color:'blue'}}>{debitNoteDataList.creditNoteNumber}</td>
-										<td>{debitNoteDataList.creditNoteDate ? moment(debitNoteDataList.creditNoteDate).format('DD-MM-YYYY') : ''}</td>
+										<td>{debitNoteDataList.creditNoteDate ? dayjs(debitNoteDataList.creditNoteDate).format('DD-MM-YYYY') : ''}</td>
 										<td align="right">{debitNoteDataList?.status}</td>
 										<td align="right">
 											{debitNoteDataList.totalAmount ? <Currency

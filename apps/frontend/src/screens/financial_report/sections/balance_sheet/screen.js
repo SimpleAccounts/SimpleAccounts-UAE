@@ -13,7 +13,7 @@ import {
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 // import 'react-select/dist/react-select.css'
@@ -62,8 +62,8 @@ class BalanceSheet extends React.Component {
 			hideExportOptions:false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate: dayjs().startOf('month').format('DD/MM/YYYY'),
+				endDate: dayjs().endOf('month').format('DD/MM/YYYY'),
 				reportBasis: 'ACCRUAL',
 				chartOfAccountId: '',
 			},
@@ -118,8 +118,8 @@ class BalanceSheet extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD/MM/YYYY'),
-					endDate: moment(value.endDate).format('DD/MM/YYYY'),
+					startDate: dayjs(value.startDate).format('DD/MM/YYYY'),
+					endDate: dayjs(value.endDate).format('DD/MM/YYYY'),
 				},
 				loading: true,
 				view: !this.state.view,
@@ -283,7 +283,7 @@ class BalanceSheet extends React.Component {
 									}}
 									handleCancel={() => {
 										if (customPeriod === 'asOn') {
-										const currentDate = moment();
+										const currentDate = dayjs();
 										this.setState(prevState => ({
 										initValue: {
 										...prevState.initValue,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardBody, Row, Col, Table } from 'reactstrap';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { Currency } from 'components';
@@ -162,7 +162,7 @@ class DebitNoteTemplate extends Component {
 										<tbody>
 											<tr>
 												<td>{debitNoteData.creditNoteNumber}</td>
-												<td>{' '}{moment(debitNoteData.creditNoteDate).format('DD-MM-YYYY',)}</td>
+												<td>{' '}{dayjs(debitNoteData.creditNoteDate).format('DD-MM-YYYY',)}</td>
 												<td>{debitNoteData.status ? debitNoteData.status === 'Partially Paid' ? 'Partially Debited' : debitNoteData.status : ''}</td>
 												{debitNoteData.referenceNo && <td>{debitNoteData.referenceNo}</td>}
 												{isCNWithoutProduct && <td style={{ textAlign: 'right' }}>

@@ -23,7 +23,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { data } from '../../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { formControlClasses } from '@mui/material';
@@ -128,7 +128,7 @@ class RecordVatPayment extends React.Component {
 					const data = res.data?.data || []
 					const reportInfoById = data.find((obj) => obj.id === this.props.location.state.id)
 					if (reportInfoById) {
-						console.log('reportInfoById', moment(reportInfoById.filedOn))
+						console.log('reportInfoById', dayjs(reportInfoById.filedOn))
 						this.setState({
 							reportfilledOn: new Date(reportInfoById.filedOn),							
 						})

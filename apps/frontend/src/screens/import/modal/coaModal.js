@@ -24,7 +24,7 @@ import {
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Select from 'react-select';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { bindActionCreators } from 'redux';
 import { CommonActions } from 'services/global';
 
@@ -297,7 +297,7 @@ class AddEmployeesModal extends React.Component {
         }
     }
     renderDOB = (cell, rows) => {
-        return moment(rows.dob).format('DD/MM/YYYY');
+        return dayjs(rows.dob).format('DD/MM/YYYY');
     };
     sortColumn = (sortName, sortOrder) => {
         this.options.sortName = sortName;

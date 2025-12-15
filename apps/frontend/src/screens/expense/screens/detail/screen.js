@@ -29,7 +29,7 @@ import { CommonActions } from 'services/global';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import * as ExpenseCreateActions from '../create/actions';
 import { TextareaAutosize } from '@material-ui/core';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import './style.scss';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -316,7 +316,7 @@ class DetailExpense extends React.Component {
 		formData.append('expenseNumber', expenseNumber);
 		formData.append('expenseId', current_expense_id);
 		formData.append('payee', payee ? payee.value : '');
-		formData.append('expenseDate', expenseDate !== null ? moment(expenseDate) : '');
+		formData.append('expenseDate', expenseDate !== null ? dayjs(expenseDate) : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription,);
@@ -1031,8 +1031,8 @@ class DetailExpense extends React.Component {
 																						: ''
 																						}`}
 																					placeholderText={strings.ExpenseDate}
-																					value={props.values.expenseDate ? moment(props.values.expenseDate,).format('DD-MM-YYYY') : ''}
-																					selected={props.values.expenseDate ? new Date(moment(props.values.expenseDate).format('MM DD YYYY')) : ''}
+																					value={props.values.expenseDate ? dayjs(props.values.expenseDate,).format('DD-MM-YYYY') : ''}
+																					selected={props.values.expenseDate ? new Date(dayjs(props.values.expenseDate).format('MM DD YYYY')) : ''}
 																					showMonthDropdown
 																					showYearDropdown
 																					dropdownMode="select"

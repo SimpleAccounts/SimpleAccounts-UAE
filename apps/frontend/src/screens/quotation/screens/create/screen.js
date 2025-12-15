@@ -38,7 +38,7 @@ import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextField } from '@material-ui/core';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { ReorderOutlined } from '@material-ui/icons';
 
 const mapStateToProps = (state) => {
@@ -546,10 +546,10 @@ class CreateQuotation extends React.Component {
 							parentId: parentId,
 							initValue: {
 								quotaionExpiration: res.data.quotaionExpiration
-									? moment(res.data.quotaionExpiration).format('DD-MM-YYYY')
+									? dayjs(res.data.quotaionExpiration).format('DD-MM-YYYY')
 									: '',
 								quotationdate: res.data.quotationdate
-									? moment(res.data.quotationdate).format('DD-MM-YYYY')
+									? dayjs(res.data.quotationdate).format('DD-MM-YYYY')
 									: '',
 								quotationdate1: res.data.quotationdate
 									? res.data.quotationdate
@@ -601,7 +601,7 @@ class CreateQuotation extends React.Component {
 								taxType: res.data.taxType
 							},
 							quotaionExpirationNotChanged: res.data.quotaionExpiration
-								? moment(res.data.quotaionExpiration)
+								? dayjs(res.data.quotaionExpiration)
 								: '',
 							quotaionExpiration: res.data.quotaionExpiration
 								? res.data.quotaionExpiration
@@ -953,7 +953,7 @@ class CreateQuotation extends React.Component {
 				if (res.status === 200) {
 					this.setState({
 						isDesignatedZone: res.data.isDesignatedZone,
-						companyVATRegistrationDate: new Date(moment(res.data.vatRegistrationDate).format('MM DD YYYY')),
+						companyVATRegistrationDate: new Date(dayjs(res.data.vatRegistrationDate).format('MM DD YYYY')),
 					});
 					this.setState({
 						isRegisteredVat: res.data.isRegisteredVat,
@@ -1451,9 +1451,9 @@ class CreateQuotation extends React.Component {
 	// 	const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 	// 	const values = value
 	// 		? value
-	// 		: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
+	// 		: dayjs(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 	// 	if (temp && values) {
-	// 		const date = moment(values)
+	// 		const date = dayjs(values)
 	// 			.add(temp - 1, 'days')
 	// 			.format('DD-MM-YYYY');
 	// 		props.setFieldValue('invoiceDueDate', date, true);

@@ -15,7 +15,7 @@ import {
 
 
 // import './style.scss'
-import moment from 'moment'
+import dayjs from '@/utils/date'
 import API_ROOT_URL from '../../../../../constants/config'
 
 
@@ -74,7 +74,7 @@ class ViewExpenseDetails extends React.Component {
                                     <Col lg={4}>
                                         <FormGroup className="mb-3">
                                             <Label className="label" htmlFor="currency">Expense Date :</Label>
-                                            <p> {initialVals.expenseDate ? moment(initialVals.expenseDate).format('DD/MM/YYYY') : '-'}</p>
+                                            <p> {initialVals.expenseDate ? dayjs(initialVals.expenseDate).format('DD/MM/YYYY') : '-'}</p>
                                         </FormGroup>
                                     </Col>
                                 </Row>

@@ -33,7 +33,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
@@ -500,10 +500,10 @@ class CreateSupplierInvoice extends React.Component {
 									? res.data.currencyName
 									: '',
 								invoiceDueDate: res.data.invoiceDueDate
-									? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
+									? dayjs(res.data.invoiceDueDate).format('DD-MM-YYYY')
 									: '',
 								invoiceDate: res.data.invoiceDate
-									? moment(res.data.invoiceDate).format('DD-MM-YYYY')
+									? dayjs(res.data.invoiceDate).format('DD-MM-YYYY')
 									: '',
 								invoiceDate1: res.data.invoiceDate
 									? res.data.invoiceDate
@@ -571,10 +571,10 @@ class CreateSupplierInvoice extends React.Component {
 								? res.data.exciseType
 								: res.data.exciseType,
 							invoiceDateNoChange: res.data.invoiceDate
-								? moment(res.data.invoiceDate)
+								? dayjs(res.data.invoiceDate)
 								: '',
 							invoiceDueDateNoChange: res.data.invoiceDueDate
-								? moment(res.data.invoiceDueDate)
+								? dayjs(res.data.invoiceDueDate)
 								: '',
 							invoiceDate: res.data.invoiceDate
 								? res.data.invoiceDate
@@ -647,10 +647,10 @@ class CreateSupplierInvoice extends React.Component {
 								const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 								const values = new Date();
 								this.setState({
-									date: moment(values).add(temp, 'days'),
-									invoiceDate: moment(values),
+									date: dayjs(values).add(temp, 'days'),
+									invoiceDate: dayjs(values),
 								});
-								const date1 = moment(values).add(temp, 'days').format('DD-MM-YYYY')
+								const date1 = dayjs(values).add(temp, 'days').format('DD-MM-YYYY')
 								this.formRef.current.setFieldValue('invoiceDueDate', date1, true);
 								this.setExchange(this.getCurrency(res.data.contactId));
 								this.addRow();
@@ -679,7 +679,7 @@ class CreateSupplierInvoice extends React.Component {
 								poId: rfqId,
 								initValue: {
 									rfqExpiryDateFormatted: res.data.rfqExpiryDate
-										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+										? dayjs(res.data.rfqExpiryDate).format('DD-MM-YYYY')
 										: '',
 									rfqExpiryDate: res.data.rfqExpiryDate
 										? res.data.rfqExpiryDate
@@ -712,7 +712,7 @@ class CreateSupplierInvoice extends React.Component {
 								taxType: res.data.taxType
 							},
 							invoiceDateNoChange: res.data.rfqExpiryDate
-								? moment(res.data.rfqExpiryDate)
+								? dayjs(res.data.rfqExpiryDate)
 								: '',
 							invoiceDueDateNoChange: res.data.rfqExpiryDate
 								? res.data.rfqExpiryDate
@@ -793,7 +793,7 @@ class CreateSupplierInvoice extends React.Component {
 								poId: poId,
 								initValue: {
 									rfqExpiryDateFormatted: res.data.rfqExpiryDate
-										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+										? dayjs(res.data.rfqExpiryDate).format('DD-MM-YYYY')
 										: '',
 									rfqExpiryDate: res.data.rfqExpiryDate
 										? res.data.rfqExpiryDate
@@ -844,7 +844,7 @@ class CreateSupplierInvoice extends React.Component {
 								? res.data.discount
 								: 0,
 							invoiceDateNoChange: res.data.rfqExpiryDate
-								? moment(res.data.rfqExpiryDate)
+								? dayjs(res.data.rfqExpiryDate)
 								: '',
 							invoiceDueDateNoChange: res.data.rfqExpiryDate
 								? res.data.rfqExpiryDate
@@ -1199,7 +1199,7 @@ class CreateSupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.setState({
 						isDesignatedZone: res.data.isDesignatedZone,
-						companyVATRegistrationDate: new Date(moment(res.data.vatRegistrationDate).format('MM DD YYYY')),
+						companyVATRegistrationDate: new Date(dayjs(res.data.vatRegistrationDate).format('MM DD YYYY')),
 					});
 					this.setState({
 						isRegisteredVat: res.data.isRegisteredVat,
@@ -1829,12 +1829,12 @@ class CreateSupplierInvoice extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
+			: dayjs(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 		if (temp && values) {
 			this.setState({
-				date: moment(values).add(temp, 'days'),
+				date: dayjs(values).add(temp, 'days'),
 			});
-			const date1 = moment(values)
+			const date1 = dayjs(values)
 				.add(temp, 'days')
 				.format('DD-MM-YYYY')
 			props.setFieldValue('invoiceDueDate', date1, true);
@@ -1914,7 +1914,7 @@ class CreateSupplierInvoice extends React.Component {
 		formData.append('referenceNumber', invoice_number ? this.state.prefix + invoice_number : '');
 		formData.append('invoiceDueDate', invoiceDueDate ? this.state.date : null);
 		formData.append('invoiceDate', invoiceDate ? invoiceDate
-			// moment(invoiceDate,'DD-MM-YYYY')
+			// dayjs(invoiceDate,'DD-MM-YYYY')
 			// .toDate()
 			: null);
 		formData.append('receiptNumber', receiptNumber ? receiptNumber : '');

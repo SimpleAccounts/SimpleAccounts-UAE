@@ -7,7 +7,7 @@ import {
   // DropdownMenu,
   DropdownToggle
 } from 'reactstrap'
-import moment from 'moment'
+import dayjs from '@/utils/date'
 
 import DateRangePicker from 'react-bootstrap-daterangepicker'
 
@@ -17,8 +17,8 @@ class DateRangePicker2 extends React.Component{
   constructor(props) {
     super(props)
     this.state = {
-      startDate: moment(),
-      endDate: moment()
+      startDate: dayjs(),
+      endDate: dayjs()
     }
 
     this.handleEvent = this.handleEvent.bind(this)

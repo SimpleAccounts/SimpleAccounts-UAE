@@ -33,7 +33,7 @@ import { selectOptionsFactory } from "utils";
 import "react-datepicker/dist/react-datepicker.css";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import moment from "moment";
+import dayjs from '@/utils/date';
 import * as CreatePayrollEmployeeActions from "../create/actions";
 import * as PayrollEmployeeActions from "../../actions";
 import { DesignationModal, SalaryComponent } from "screens/payrollemp/sections";
@@ -585,14 +585,14 @@ class CreateEmployeePayroll extends React.Component {
     );
     formData.append(
       "passportExpiryDate",
-      passportExpiryDate ? moment(passportExpiryDate).format("DD-MM-YYYY") : ""
+      passportExpiryDate ? dayjs(passportExpiryDate).format("DD-MM-YYYY") : ""
     );
 
     // formData.append(
     //     'visaNumber',
     //     visaNumber != null ? visaNumber : '',
     // )
-    // formData.append('visaExpiryDate', visaExpiryDate ? moment(visaExpiryDate).format('DD-MM-YYYY') : '')
+    // formData.append('visaExpiryDate', visaExpiryDate ? dayjs(visaExpiryDate).format('DD-MM-YYYY') : '')
 
     formData.append("employeeCode", employeeCode != null ? employeeCode : "");
     // formData.append(
@@ -601,7 +601,7 @@ class CreateEmployeePayroll extends React.Component {
     // )
     formData.append(
       "dateOfJoining",
-      dateOfJoining ? moment(dateOfJoining).format("DD-MM-YYYY") : ""
+      dateOfJoining ? dayjs(dateOfJoining).format("DD-MM-YYYY") : ""
     );
     if (salaryRoleId && salaryRoleId.value) {
       formData.append("salaryRoleId", salaryRoleId.value);
@@ -715,7 +715,7 @@ class CreateEmployeePayroll extends React.Component {
     formData.append("firstName", firstName !== null ? firstName : "");
     formData.append("middleName", middleName !== null ? middleName : "");
     formData.append("lastName", lastName !== null ? lastName : "");
-    formData.append("dob", dob ? moment(dob).format("DD-MM-YYYY") : "");
+    formData.append("dob", dob ? dayjs(dob).format("DD-MM-YYYY") : "");
     formData.append("mobileNumber", mobileNumber !== null ? mobileNumber : "");
     formData.append("email", email != null ? email : "");
     formData.append(
@@ -825,7 +825,7 @@ class CreateEmployeePayroll extends React.Component {
             // );
             formData1.append(
               "dateOfJoining",
-              dateOfJoining ? moment(dateOfJoining).format("DD-MM-YYYY") : ""
+              dateOfJoining ? dayjs(dateOfJoining).format("DD-MM-YYYY") : ""
             );
             this.props.createPayrollEmployeeActions
               .saveEmployment(formData1)
@@ -866,7 +866,7 @@ class CreateEmployeePayroll extends React.Component {
             );
             formData1.append(
               "dateOfJoining",
-              dateOfJoining ? moment(dateOfJoining).format("DD-MM-YYYY") : ""
+              dateOfJoining ? dayjs(dateOfJoining).format("DD-MM-YYYY") : ""
             );
             this.props.detailEmployeeEmployementAction
               .updateEmployment(formData1)
@@ -1628,7 +1628,7 @@ class CreateEmployeePayroll extends React.Component {
                                                     }
                                                     showMonthDropdown
                                                     showYearDropdown
-                                                    maxDate={moment()
+                                                    maxDate={dayjs()
                                                       .subtract(18, "years")
                                                       .toDate()}
                                                     autoComplete={"off"}

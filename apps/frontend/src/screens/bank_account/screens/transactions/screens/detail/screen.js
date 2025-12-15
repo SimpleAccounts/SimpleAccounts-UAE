@@ -20,7 +20,7 @@ import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import { CommonActions } from "services/global";
 import { selectOptionsFactory } from "utils";
-import moment from "moment";
+import dayjs from '@/utils/date';
 import { LeavePage, Loader } from "components";
 import * as transactionDetailActions from "./actions";
 import * as transactionActions from "../../actions";
@@ -195,7 +195,7 @@ class DetailBankTransaction extends React.Component {
     formData.append(
       "transactionDate",
       typeof transactionDate === "string"
-        ? moment(transactionDate).toDate()
+        ? dayjs(transactionDate).toDate()
         : transactionDate
     );
     formData.append(
@@ -442,7 +442,7 @@ class DetailBankTransaction extends React.Component {
                                       dropdownMode="select"
                                       value={
                                         props.values.transactionDate
-                                          ? moment(
+                                          ? dayjs(
                                               props.values.transactionDate
                                             ).format("DD-MM-YYYY")
                                           : ""

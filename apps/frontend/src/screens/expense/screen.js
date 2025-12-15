@@ -26,7 +26,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { CommonActions } from 'services/global';
 import * as ExpenseActions from './actions';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -198,7 +198,7 @@ class Expense extends React.Component {
 	};
 
 	renderDate = (cell, rows) => {
-		return moment(rows.expenseDate).format('DD-MM-YYYY');
+		return dayjs(rows.expenseDate).format('DD-MM-YYYY');
 	};
 
 	expenseType = (cell, row) => {

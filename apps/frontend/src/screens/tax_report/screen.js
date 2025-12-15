@@ -12,7 +12,7 @@ import {
 
 import Select from 'react-select'
 import { DateRangePicker2 } from 'components'
-import moment from 'moment'
+import dayjs from '@/utils/date'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 
 import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
@@ -100,11 +100,11 @@ const tempdata = [{
 }]
 
 const ranges =  {
-  'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-  'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-  'This Week': [moment().startOf('week'), moment().endOf('week')],
-  'This Month': [moment().startOf('month'), moment().endOf('month')],
-  'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+  'Last 7 Days': [dayjs().subtract(6, 'days'), dayjs()],
+  'Last 30 Days': [dayjs().subtract(29, 'days'), dayjs()],
+  'This Week': [dayjs().startOf('week'), dayjs().endOf('week')],
+  'This Month': [dayjs().startOf('month'), dayjs().endOf('month')],
+  'Last Month': [dayjs().subtract(1, 'month').startOf('month'), dayjs().subtract(1, 'month').endOf('month')],
 }
 
 class TaxReport extends React.Component {

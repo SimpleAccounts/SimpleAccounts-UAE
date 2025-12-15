@@ -31,7 +31,7 @@ import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory, InputValidation, DropdownLists, Lists } from 'utils';
 import './style.scss';
 import { AddressComponent } from 'screens/contact/sections';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
@@ -257,10 +257,10 @@ class DetailCustomerInvoice extends React.Component {
 									exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName: res.data.currencyName ? res.data.currencyName : '',
 									invoiceDueDate: res.data.invoiceDueDate
-										? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
+										? dayjs(res.data.invoiceDueDate).format('DD-MM-YYYY')
 										: '',
 									invoiceDate: res.data.invoiceDate
-										? moment(res.data.invoiceDate).format('DD-MM-YYYY')
+										? dayjs(res.data.invoiceDate).format('DD-MM-YYYY')
 										: '',
 									invoiceDate1: res.data.invoiceDate
 										? res.data.invoiceDate
@@ -303,11 +303,11 @@ class DetailCustomerInvoice extends React.Component {
 								discountEnabled: res.data.discount > 0 ? true : false,
 								customer_taxTreatment_des: res.data.taxTreatment ? res.data.taxTreatment : '',
 								invoiceDateNoChange: res.data.invoiceDate
-									? moment(res.data.invoiceDate)
+									? dayjs(res.data.invoiceDate)
 									: '',
 								taxType: res.data.taxType ? true : false,
 								invoiceDueDateNoChange: res.data.invoiceDueDate ?
-									moment(res.data.invoiceDueDate) : '',
+									dayjs(res.data.invoiceDueDate) : '',
 								invoiceDate: res.data.invoiceDate
 									? res.data.invoiceDate
 									: '',
@@ -873,7 +873,7 @@ class DetailCustomerInvoice extends React.Component {
 				if (res.status === 200) {
 					this.setState({
 						isDesignatedZone: res.data.isDesignatedZone,
-						companyVATRegistrationDate: new Date(moment(res.data.vatRegistrationDate).format('MM DD YYYY')),
+						companyVATRegistrationDate: new Date(dayjs(res.data.vatRegistrationDate).format('MM DD YYYY')),
 					});
 					this.setState({
 						isRegisteredVat: res.data.isRegisteredVat,
@@ -1503,10 +1503,10 @@ class DetailCustomerInvoice extends React.Component {
 			: props.values.invoiceDate1
 		if (temp && values) {
 			this.setState({
-				invoiceDueDate: moment(values).add(temp, 'days'),
-				invoiceDate: moment(values),
+				invoiceDueDate: dayjs(values).add(temp, 'days'),
+				invoiceDate: dayjs(values),
 			});
-			const date = moment(values)
+			const date = dayjs(values)
 				.add(temp, 'days')
 				.format('DD-MM-YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);

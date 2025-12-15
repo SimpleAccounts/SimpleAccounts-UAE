@@ -13,7 +13,7 @@ import {
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import { ReportTables } from 'screens/financial_report/sections'
 import { ExcelExport as XLSX } from 'utils';
@@ -68,8 +68,8 @@ class DetailedGeneralLedgerReport extends React.Component {
 			hideExportOptions: false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate: dayjs().startOf('month').format('DD/MM/YYYY'),
+				endDate: dayjs().endOf('month').format('DD/MM/YYYY'),
 				reportBasis: 'ACCRUAL',
 				chartOfAccountId: '',
 			},
@@ -217,8 +217,8 @@ class DetailedGeneralLedgerReport extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD/MM/YYYY'),
-					endDate: moment(value.endDate).format('DD/MM/YYYY'),
+					startDate: dayjs(value.startDate).format('DD/MM/YYYY'),
+					endDate: dayjs(value.endDate).format('DD/MM/YYYY'),
 					// reportBasis: value.reportBasis.value,
 					// chartOfAccountId: value.chartOfAccountId.value,
 				},
@@ -247,10 +247,10 @@ class DetailedGeneralLedgerReport extends React.Component {
 					nameB = b[`${column}`] ? b[`${column}`].toUpperCase() : '';
 				} else {
 					nameA = a[`${column}`]
-						? moment(a[`${column}`], 'DD/MM/YYYY').toDate()
+						? dayjs(a[`${column}`], 'DD/MM/YYYY').toDate()
 						: '';
 					nameB = b[`${column}`]
-						? moment(b[`${column}`], 'DD/MM/YYYY').toDate()
+						? dayjs(b[`${column}`], 'DD/MM/YYYY').toDate()
 						: '';
 				}
 				if (nameA < nameB) {
@@ -464,7 +464,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 									}}
 									handleCancel={() => {
                                     if (customPeriod === 'asOn') {
-                                    const currentDate = moment();
+                                    const currentDate = dayjs();
                                     this.setState(prevState => ({
                                     initValue: {
                                     ...prevState.initValue,

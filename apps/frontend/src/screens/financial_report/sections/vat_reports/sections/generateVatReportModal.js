@@ -18,7 +18,7 @@ import { Formik } from "formik";
 import Select from "react-select";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
-import moment from "moment";
+import dayjs from '@/utils/date';
 import { bindActionCreators } from "redux";
 import { CommonActions } from "services/global";
 import { toast } from "react-toastify";
@@ -143,10 +143,10 @@ class GenerateVatReportModal extends React.Component {
     let notgererated = true;
     this.props.vatReportDataList.data.map(({ taxReturns }) => {
       let dateArr = taxReturns ? taxReturns.split("-") : [];
-      let currenttartdate = moment(this.getStartDate());
-      let currentenddate = moment(this.getEndDate(), "DD-MM-YYYY");
-      let startDate = moment(dateArr[0]);
-      let endDate = moment(dateArr[1], "DD/MM/YYYY");
+      let currenttartdate = dayjs(this.getStartDate());
+      let currentenddate = dayjs(this.getEndDate(), "DD-MM-YYYY");
+      let startDate = dayjs(dateArr[0]);
+      let endDate = dayjs(dateArr[1], "DD/MM/YYYY");
 
       console.log(
         currenttartdate.diff(startDate, "days"),
@@ -171,8 +171,8 @@ class GenerateVatReportModal extends React.Component {
     this.setState({ disabled: true });
     const { initValue } = this.state;
     const postData = {
-      // startDate: moment(this.state.initValue.startDate).format('DD/MM/YYYY'),
-      // endDate: moment(this.state.initValue.endDate).format('DD/MM/YYYY'),
+      // startDate: dayjs(this.state.initValue.startDate).format('DD/MM/YYYY'),
+      // endDate: dayjs(this.state.initValue.endDate).format('DD/MM/YYYY'),
       vrn: this.state.VRN,
       startDate: this.getStartDate().replaceAll("-", "/"),
       endDate: this.getEndDate().replaceAll("-", "/"),
@@ -379,7 +379,7 @@ class GenerateVatReportModal extends React.Component {
 																	minDate={new Date("01/01/2018")}
 																	// maxDate={firstdayoflastmonth.setMonth(firstdayoflastmonth.getMonth()-1)}
 																	maxDate={new Date(Date.now() - 86400000)}
-																	value={moment(props.values.startDate).format(
+																	value={dayjs(props.values.startDate).format(
 																		'DD-MM-YYYY',
 																	)}   
 																	dropdownMode="select"
@@ -389,10 +389,10 @@ class GenerateVatReportModal extends React.Component {
 																	// disabledDate={disabledDate}
 																	// onChange={(value) => {
 																	// 	props.handleChange('startDate')(value);
-																	// 	if (moment(value).isBefore(props.values.startDate)) {
+																	// 	if (dayjs(value).isBefore(props.values.startDate)) {
 																	// 		props.setFieldValue(
 																	// 			'startDate',
-																	// 			moment(value).add(1, 'M'),
+																	// 			dayjs(value).add(1, 'M'),
 																	// 		);
 																	// 	}
 																	// }}
@@ -427,10 +427,10 @@ class GenerateVatReportModal extends React.Component {
 																	showMonthDropdown
 																	showYearDropdown
 																
-																		value={moment(this.state.initValue.startDate).endOf(
+																		value={dayjs(this.state.initValue.startDate).endOf(
 																		'quarter'
 																	).format("DD-MM-YYYY")}
-																	// value={moment(props.values.endDate).format(
+																	// value={dayjs(props.values.endDate).format(
 																	// 	'DD-MM-YYYY',
 																	// )}
 																	dropdownMode="select"
@@ -490,7 +490,7 @@ class GenerateVatReportModal extends React.Component {
     const { monthOption } = this.props;
 
     if (this.state.monthlyDate) {
-      let date = moment(this.state.monthlyDate).format("DD-MM-YYYY");
+      let date = dayjs(this.state.monthlyDate).format("DD-MM-YYYY");
 
       return date;
     }
@@ -502,12 +502,12 @@ class GenerateVatReportModal extends React.Component {
     let date = "";
     if (this.state.monthlyDate) {
       if (monthOption.value === 0) {
-        date = moment(this.state.monthlyDate)
+        date = dayjs(this.state.monthlyDate)
           .add(1, "month")
           .subtract(1, "day")
           .format("DD-MM-YYYY");
       } else if (monthOption.value === 2) {
-        date = moment(this.state.monthlyDate)
+        date = dayjs(this.state.monthlyDate)
           .add(3, "month")
           .subtract(1, "day")
           .format("DD-MM-YYYY");

@@ -14,7 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import * as JournalActions from './actions';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { data } from 'screens/Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -94,7 +94,7 @@ class InvoiceViewJournalEntries extends React.Component {
 
     renderDate = (cell, rows) => {
         return rows.journalDate
-            ? moment(rows.journalDate).format('DD-MM-YYYY')
+            ? dayjs(rows.journalDate).format('DD-MM-YYYY')
             : '';
     };
 

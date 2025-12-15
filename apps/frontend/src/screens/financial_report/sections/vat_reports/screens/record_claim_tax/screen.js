@@ -23,7 +23,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import {data}  from '../../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -138,7 +138,7 @@ class RecordTaxClaim extends React.Component {
 		formData.append(
 			'vatPaymentDate',
 			typeof vatPaymentDate === 'string'
-				? moment(vatPaymentDate, 'DD-MM-YYYY').toDate()
+				? dayjs(vatPaymentDate, 'DD-MM-YYYY').toDate()
 				: vatPaymentDate,
 		);
 

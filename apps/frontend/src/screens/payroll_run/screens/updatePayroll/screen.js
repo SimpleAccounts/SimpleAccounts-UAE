@@ -31,7 +31,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { DateRangePicker, isInclusivelyBeforeDay } from 'react-dates';
 import { toast } from 'react-toastify';
 
@@ -153,7 +153,7 @@ class UpdatePayroll extends React.Component {
 
 	};
 	calculatePayperioad = (startDate, endDate) => {
-		let month = moment(startDate).format("MMMM");
+		let month = dayjs(startDate).format("MMMM");
 		// let diffDays=	Math.abs(parseInt((this.state.startDate - this.state.endDate) / (1000 * 60 * 60 * 24), 10))+1
 		const diffTime = Math.abs(startDate - endDate);
 		let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
@@ -198,8 +198,8 @@ class UpdatePayroll extends React.Component {
 					// 	onSelect: this.onRowSelect,
 					// 	onSelectAll: this.onSelectAll,
 					// },
-					startDate: moment(dateArray[0], 'DD/MM/YYYY'),
-					endDate: moment(dateArray[1], 'DD/MM/YYYY')
+					startDate: dayjs(dateArray[0], 'DD/MM/YYYY'),
+					endDate: dayjs(dateArray[1], 'DD/MM/YYYY')
 
 				}
 				)
@@ -333,7 +333,7 @@ class UpdatePayroll extends React.Component {
 		} = data;
 		let employeeListIds = this.state.selectedRows ? this.state.selectedRows : '';
 		let diff = Math.abs(parseInt((startDate - endDate) / (1000 * 60 * 60 * 24), 10)) + 1
-		let string = moment(this.state.startDate).format('DD/MM/YYYY') + '-' + moment(this.state.endDate).format('DD/MM/YYYY')
+		let string = dayjs(this.state.startDate).format('DD/MM/YYYY') + '-' + dayjs(this.state.endDate).format('DD/MM/YYYY')
 		// this.setState({payPeriod:diff});
 		this.setState({ payPeriod: string });
 		const formData = new FormData();
@@ -404,7 +404,7 @@ class UpdatePayroll extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.payrollDate, 'DD-MM-YYYY').toDate();
+			: dayjs(props.values.payrollDate, 'DD-MM-YYYY').toDate();
 	};
 
 	getAllPayrollEmployee2 = () => {
@@ -492,8 +492,8 @@ class UpdatePayroll extends React.Component {
 				if (response.status === 200) {
 					employeePayPeriodlList = response.data;
 					let date = startDate ? startDate : this.state.startDate;
-					let month = moment(date).format("MMMM");
-					this.props.createPayrollActions.getAllPayrollEmployee2(this.state.payrollId, moment(date).format("DD/MM/YYYY")).then((res) => {
+					let month = dayjs(date).format("MMMM");
+					this.props.createPayrollActions.getAllPayrollEmployee2(this.state.payrollId, dayjs(date).format("DD/MM/YYYY")).then((res) => {
 						if (res.status === 200) {
 							if (res.data.length === 0) {
 								this.props.createPayrollActions.getAllPayrollEmployee(this.state.payrollId, date).then((res) => {
@@ -533,7 +533,7 @@ class UpdatePayroll extends React.Component {
 								if (empList && empList?.length > 0) {
 									let flag = true;
 									empList.map(obj => {
-										if (obj.payPeriod.includes(moment(date).format("DD/MM/YYYY"))) {
+										if (obj.payPeriod.includes(dayjs(date).format("DD/MM/YYYY"))) {
 											flag = false;
 										}
 									})
@@ -1136,7 +1136,7 @@ class UpdatePayroll extends React.Component {
 																							onFocusChange={(option) => { this.setState({ focusedInput: option }) }}
 																							isOutsideRange={
 																								() => null
-																								// day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
+																								// day => isInclusivelyBeforeDay(day, dayjs(new Date(today.getFullYear(), today.getMonth(),0)))
 																							}
 																						/>
 

@@ -25,7 +25,7 @@ import './style.scss';
 import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import * as DetailBankAccountActions from '../bank_account/screens/detail/actions'
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { Loader } from 'components';
 import { Formik } from 'formik';
 import { ThreeSixty } from '@material-ui/icons';
@@ -457,7 +457,7 @@ class ImportTransaction extends React.Component {
 	// 				return false
 	// 				}
 	// 	            // tableDataDate=tableDataDate.replaceAll("-","/");
-	// 				// let tableDateFormat=moment(tableDataDate).creationData();
+	// 				// let tableDateFormat=dayjs(tableDataDate).creationData();
 	// 				// if(tableDateFormat=="Invalid Date")
 	// 				//    tableDateFormat=new Date(tableDataDate).format("DD/MM/YYYY");
 	// 				 
@@ -609,7 +609,7 @@ class ImportTransaction extends React.Component {
 						invaliddate = true
 					}
 					debugger
-					const data = moment(formatedDate, 'DD/MM/YYYY').format('DD/MM/YYYY')
+					const data = dayjs(formatedDate, 'DD/MM/YYYY').format('DD/MM/YYYY')
 
 
 

@@ -22,7 +22,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { CommonActions } from 'services/global';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import * as transactionReconcileActions from './actions';
 import * as transactionActions from '../../actions';
@@ -147,7 +147,7 @@ class ReconcileTransaction extends React.Component {
 		let formData = new FormData();
 		formData.append('bankId ', bankAccountId ? bankAccountId : '');
 		formData.append('closingBalance', closingBalance ? closingBalance : '');
-		formData.append('date', date ? moment(date).format('DD-MM-YYYY') : '');
+		formData.append('date', date ? dayjs(date).format('DD-MM-YYYY') : '');
 		this.props.transactionReconcileActions
 			.reconcilenow(formData)
 			.then((res) => {
@@ -331,7 +331,7 @@ class ReconcileTransaction extends React.Component {
 																			maxDate={new Date()}
 																			value={
 																				props.values.date
-																					? moment(props.values.date).format(
+																					? dayjs(props.values.date).format(
 																							'DD-MM-YYYY',
 																					  )
 																					: ''

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardBody, Table } from 'reactstrap';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../../Language/index'
@@ -336,9 +336,9 @@ class InvoiceTemplate extends Component {
 									{invoiceData.receiptNumber && (<div className="mb-1 ml-2"><b>{strings.ReferenceNo}: </b>{invoiceData.receiptNumber}</div>)}
 									<div className="mb-1 ml-2"><b>
 										{strings.InvoiceDate}: </b>	{' '}
-										{moment(invoiceData.invoiceDate).format('DD-MM-YYYY')}
+										{dayjs(invoiceData.invoiceDate).format('DD-MM-YYYY')}
 									</div>
-									<div className="mb-1 ml-2"><b>{strings.DueDate}: </b>	{moment(invoiceData.invoiceDueDate).format('DD-MM-YYYY')}
+									<div className="mb-1 ml-2"><b>{strings.DueDate}: </b>	{dayjs(invoiceData.invoiceDueDate).format('DD-MM-YYYY')}
 									</div>
 									<div className="mb-1 ml-2"><b>{strings.Terms}: </b>{this.getTerms(invoiceData.term)}
 									</div>

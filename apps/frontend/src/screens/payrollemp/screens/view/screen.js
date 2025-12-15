@@ -24,7 +24,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import { bindActionCreators } from 'redux';
 import { upperFirst } from 'lodash-es';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { ViewPaySlip } from './sections';
 import {
@@ -151,7 +151,7 @@ class ViewEmployee extends React.Component {
 					onClick={() => {
 						const postData = {
 							id: this.props.location.state.id,
-							salaryDate: moment(row.salaryDate).format('DD/MM/YYYY'),
+							salaryDate: dayjs(row.salaryDate).format('DD/MM/YYYY'),
 							sendMail: false,
 							startDate: '',
 							endDate: '',
@@ -179,8 +179,8 @@ class ViewEmployee extends React.Component {
 								const endDate = endDateString.trim();
 								const postData = {
 									employeeId: this.props.location.state.id,
-									startDate: moment(startDate).format('DD/MM/YYYY'),
-									endDate: moment(endDate).format('DD/MM/YYYY'),
+									startDate: dayjs(startDate).format('DD/MM/YYYY'),
+									endDate: dayjs(endDate).format('DD/MM/YYYY'),
 								};
 								this.props.employeeViewActions
 									.getEmployeeTransactions(postData)
@@ -205,7 +205,7 @@ class ViewEmployee extends React.Component {
 								);
 							});
 
-						this.viewPaySlip({ id: this.props.location.state.id, salaryDate: moment(Date(row.salaryDate)).format('DD/MM/YYYY') });
+						this.viewPaySlip({ id: this.props.location.state.id, salaryDate: dayjs(Date(row.salaryDate)).format('DD/MM/YYYY') });
 					}
 
 					}
@@ -224,10 +224,10 @@ class ViewEmployee extends React.Component {
 						const endDate = endDateString.trim();
 						const postData = {
 							id: this.props.location.state.id,
-							salaryDate: moment(row.salaryDate).format('DD/MM/YYYY'),
+							salaryDate: dayjs(row.salaryDate).format('DD/MM/YYYY'),
 							sendMail: true,
-							startDate: moment(startDate, "DD/MM/YYYY").format('DD-MM-YYYY'),
-							endDate: moment(endDate, "DD/MM/YYYY").format('DD-MM-YYYY'),
+							startDate: dayjs(startDate, "DD/MM/YYYY").format('DD-MM-YYYY'),
+							endDate: dayjs(endDate, "DD/MM/YYYY").format('DD-MM-YYYY'),
 						};
 						this.props.employeeViewActions
 							.getSalarySlip(postData)
@@ -239,8 +239,8 @@ class ViewEmployee extends React.Component {
 									// const endDate = endDateString.trim();
 									// const postData = {
 									// 	employeeId: this.props.location.state.id,
-									// 	startDate: moment(startDate).format('DD/MM/YYYY'),
-									// 	endDate: moment(endDate).format('DD/MM/YYYY'),
+									// 	startDate: dayjs(startDate).format('DD/MM/YYYY'),
+									// 	endDate: dayjs(endDate).format('DD/MM/YYYY'),
 									// };
 									toast.success("Payslip Sent Successfully")
 								}
@@ -422,7 +422,7 @@ class ViewEmployee extends React.Component {
 		return image;
 	}
 	renderSalaryDate = (cell, row) => {
-		let salaryDateString = moment(row.salaryDate).format('DD-MM-YYYY')
+		let salaryDateString = dayjs(row.salaryDate).format('DD-MM-YYYY')
 		return salaryDateString
 	}
 	getEmployeeInviteEmail = () => {
@@ -624,7 +624,7 @@ class ViewEmployee extends React.Component {
 																	<Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.middleName && this.state.EmployeeDetails.lastName ?
 																		this.state.EmployeeDetails.middleName + " " + this.state.EmployeeDetails.lastName : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>{strings.DateOfBirth} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.dob ? moment(this.state.EmployeeDetails.dob).format('DD-MM-YYYY') : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.DateOfBirth} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.dob ? dayjs(this.state.EmployeeDetails.dob).format('DD-MM-YYYY') : ('-')}</Col></Row>
 
 																{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.email ? this.state.EmployeeDetails.email : ('-')}</Col></Row>				 */}
 

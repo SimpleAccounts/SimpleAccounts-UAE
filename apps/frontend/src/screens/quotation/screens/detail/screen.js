@@ -37,7 +37,7 @@ import {
   selectOptionsFactory,
 } from "utils";
 import "./style.scss";
-import moment from "moment";
+import dayjs from '@/utils/date';
 import Switch from "react-switch";
 import { data } from "../../../Language/index";
 import LocalizedStrings from "react-localization";
@@ -219,13 +219,13 @@ class DetailQuotation extends React.Component {
                 current_po_id: this.props.location.state.id,
                 initValue: {
                   quotaionExpiration: res.data.quotaionExpiration
-                    ? moment(res.data.quotaionExpiration).format("DD-MM-YYYY")
+                    ? dayjs(res.data.quotaionExpiration).format("DD-MM-YYYY")
                     : "",
                   quotaionExpiration1: res.data.quotaionExpiration
                     ? res.data.quotaionExpiration
                     : "",
                   quotationdate: res.data.quotationdate
-                    ? moment(res.data.quotationdate).format("DD-MM-YYYY")
+                    ? dayjs(res.data.quotationdate).format("DD-MM-YYYY")
                     : "",
                   quotationdate1: res.data.quotationdate
                     ? res.data.quotationdate
@@ -269,7 +269,7 @@ class DetailQuotation extends React.Component {
                   currency: res.data.currencyCode ? res.data.currencyCode : '',
                 },
                 quotaionExpirationNotChanged: res.data.quotaionExpiration
-                  ? moment(res.data.quotaionExpiration)
+                  ? dayjs(res.data.quotaionExpiration)
                   : "",
                 quotaionExpiration: res.data.quotaionExpiration
                   ? res.data.quotaionExpiration
@@ -1029,7 +1029,7 @@ class DetailQuotation extends React.Component {
           this.setState({
             isDesignatedZone: res.data.isDesignatedZone,
             companyVATRegistrationDate: new Date(
-              moment(res.data.vatRegistrationDate).format("MM DD YYYY")
+              dayjs(res.data.vatRegistrationDate).format("MM DD YYYY")
             ),
           });
           this.setState({
@@ -1801,7 +1801,7 @@ class DetailQuotation extends React.Component {
     const values1 = value ? value : props.values.quotaionExpiration1;
     if (values1) {
       this.setState({
-        quotaionExpiration: moment(values1),
+        quotaionExpiration: dayjs(values1),
       });
       props.setFieldValue("quotaionExpiration1", values1, true);
     }
@@ -1813,7 +1813,7 @@ class DetailQuotation extends React.Component {
     const values1 = value ? value : props.values.quotationdate1;
     if (values1) {
       this.setState({
-        quotationdate: moment(values1),
+        quotationdate: dayjs(values1),
       });
       props.setFieldValue("quotationdate1", values1, true);
     }
@@ -2053,12 +2053,12 @@ class DetailQuotation extends React.Component {
                                 values.quotationdate &&
                                 values.quotaionExpiration &&
                                 new Date(
-                                  moment(values.quotationdate1).format(
+                                  dayjs(values.quotationdate1).format(
                                     "MM DD YYYY"
                                   )
                                 ) >
                                 new Date(
-                                  moment(values.quotaionExpiration1).format(
+                                  dayjs(values.quotaionExpiration1).format(
                                     "MM DD YYYY"
                                   )
                                 )

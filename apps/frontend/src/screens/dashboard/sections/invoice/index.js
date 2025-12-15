@@ -45,13 +45,13 @@ const invoiceOption = {
 };
 
 // const ranges =  {
-//   // 'Today': [moment(), moment()],
-//   // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-//   'This Week': [moment().startOf('week'), moment().endOf('week')],
-//   'This Month': [moment().startOf('month'), moment().endOf('month')],
-//   'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-//   'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-//   'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+//   // 'Today': [dayjs(), dayjs()],
+//   // 'Yesterday': [dayjs().subtract(1, 'days'), dayjs().subtract(1, 'days')],
+//   'This Week': [dayjs().startOf('week'), dayjs().endOf('week')],
+//   'This Month': [dayjs().startOf('month'), dayjs().endOf('month')],
+//   'Last 7 Days': [dayjs().subtract(6, 'days'), dayjs()],
+//   'Last 30 Days': [dayjs().subtract(29, 'days'), dayjs()],
+//   'Last Month': [dayjs().subtract(1, 'month').startOf('month'), dayjs().subtract(1, 'month').endOf('month')],
 // }
 
 class Invoice extends Component {

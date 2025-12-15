@@ -10,7 +10,7 @@ import * as TransactionsActions from '../actions';
 import { CommonActions } from 'services/global';
 import './style.scss';
 import { Loader } from 'components';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 const mapDispatchToProps = (dispatch) => {
 	return {
@@ -771,7 +771,7 @@ min="0"
 												selected={this.state.startDate}
 												value={
 													selectedData.transactionDate
-														? moment(
+														? dayjs(
 																selectedData.transactionDate,
 																'DD-MM-YYYY',
 														  ).format('DD-MM-YYYY')

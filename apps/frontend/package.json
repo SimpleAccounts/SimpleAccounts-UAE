@@ -35,6 +35,7 @@
     "convert-array-to-csv": "^2.0.0",
     "core-js": "^3.13.0",
     "crypto-js": "^4.2.0",
+    "dayjs": "^1.11.19",
     "downloadjs": "^1.4.7",
     "draft-js": "^0.11.1",
     "exceljs": "^4.4.0",

@@ -1,6 +1,6 @@
 import { PURCHASE_ORDER } from 'constants/types';
 import { authApi } from 'utils';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 export const getpoList = (postObj) => {
 	let supplierId = postObj.supplierId ? postObj.supplierId.value : '';
@@ -20,11 +20,11 @@ export const getpoList = (postObj) => {
 	return (dispatch) => {
 		let param = `/rest/poquatation/getListForPO?supplierId=${supplierId}&poNumber=${poNumber}&status=${status}&type=4&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 		if (poReceiveDate) {
-			let date = moment(poReceiveDate).format('DD-MM-YYYY');
+			let date = dayjs(poReceiveDate).format('DD-MM-YYYY');
 			param = param + `&poReceiveDate=${date}`;
 		}
 		if (poExpiryDate) {
-			let date = moment(poExpiryDate).format('DD-MM-YYYY');
+			let date = dayjs(poExpiryDate).format('DD-MM-YYYY');
 			param = param + `&poExpiryDate=${date}`;
 		}
 		let data = {

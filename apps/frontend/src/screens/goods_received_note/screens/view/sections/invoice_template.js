@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardBody, Row, Col, Table } from 'reactstrap';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../../Language/index'
@@ -177,7 +177,7 @@ getVatNo=(contactData,RFQData)=>{
 									<br/>
 									<div className="mb-1 ml-2"><b>{strings.GRNNo}: </b> # {RFQData.grnNumber}</div>
 								<div className="mb-1 ml-2"><b>{strings.ReceiveDate }: </b>{' '}
-										{moment(RFQData.grnReceiveDate).format('DD MMM YYYY')}</div>		
+										{dayjs(RFQData.grnReceiveDate).format('DD MMM YYYY')}</div>		
 								<div className="mb-1 ml-2"><b>{strings.Status}: </b>{this.renderRFQStatus(status)}</div><br />
                                 </div>
 								</div>

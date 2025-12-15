@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import * as actions from '../actions';
 import { PAYMENT } from 'constants/types';
 import { authApi } from 'utils';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 jest.mock('utils', () => ({
 	authApi: jest.fn(),
@@ -266,7 +266,7 @@ describe('Payment Actions', () => {
 
 			await store.dispatch(actions.getPaymentList(params));
 
-			const expectedDateFormat = moment(dateToTest).format('YYYY-MM-DD');
+			const expectedDateFormat = dayjs(dateToTest).format('YYYY-MM-DD');
 			expect(authApi).toHaveBeenCalledWith(
 				expect.objectContaining({
 					url: expect.stringContaining(`paymentDate=${expectedDateFormat}`),

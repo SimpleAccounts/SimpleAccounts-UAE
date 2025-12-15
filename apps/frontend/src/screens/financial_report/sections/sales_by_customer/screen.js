@@ -12,7 +12,7 @@ import {
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import { ExcelExport as XLSX } from 'utils';
 import { Loader } from 'components';
@@ -49,8 +49,8 @@ class SalesByCustomer extends React.Component {
 			dropdownOpen: false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate: dayjs().startOf('month').format('DD/MM/YYYY'),
+				endDate: dayjs().endOf('month').format('DD/MM/YYYY'),
 
 			},
 			csvData: [],
@@ -71,8 +71,8 @@ class SalesByCustomer extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD/MM/YYYY'),
-					endDate: moment(value.endDate).format('DD/MM/YYYY'),
+					startDate: dayjs(value.startDate).format('DD/MM/YYYY'),
+					endDate: dayjs(value.endDate).format('DD/MM/YYYY'),
 				},
 				loading: true,
 				view: !this.state.view,
@@ -242,7 +242,7 @@ class SalesByCustomer extends React.Component {
 									}}
 									handleCancel={() => {
 										if (customPeriod === 'customRange') {
-										const currentDate = moment();
+										const currentDate = dayjs();
 										this.setState(prevState => ({
 										initValue: {
 										...prevState.initValue,

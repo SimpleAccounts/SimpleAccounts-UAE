@@ -24,7 +24,7 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import * as JournalActions from './actions';
 import { CommonActions } from 'services/global';
 
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 import './style.scss';
 import {data}  from '../Language/index'
@@ -245,7 +245,7 @@ class Journal extends React.Component {
 
 	renderDate = (cell, rows) => {
 		return rows.journalDate
-			? moment(rows.journalDate).format('DD-MM-YYYY')
+			? dayjs(rows.journalDate).format('DD-MM-YYYY')
 			: '';
 	};
 

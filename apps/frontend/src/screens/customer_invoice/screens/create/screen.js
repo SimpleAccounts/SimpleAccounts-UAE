@@ -27,7 +27,7 @@ import { CommonActions } from 'services/global';
 import { renderList, selectOptionsFactory, InputValidation, DropdownLists, Lists } from 'utils';
 import Switch from "react-switch";
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { AddressComponent } from 'screens/contact/sections';
@@ -204,12 +204,12 @@ class CreateCustomerInvoice extends React.Component {
 
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
+			: dayjs(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 		if (temp && values) {
 			this.setState({
-				date: moment(values).add(temp, 'days'),
+				date: dayjs(values).add(temp, 'days'),
 			});
-			const date1 = moment(values)
+			const date1 = dayjs(values)
 				.add(temp, 'days')
 				.format('DD-MM-YYYY')
 			props.handleChange('invoiceDate1')(value);
@@ -361,7 +361,7 @@ class CreateCustomerInvoice extends React.Component {
 						currencyCode: currencyCode,
 					},
 				},
-				companyVATRegistrationDate: new Date(moment(vatRegistrationDate)),
+				companyVATRegistrationDate: new Date(dayjs(vatRegistrationDate)),
 				isDesignatedZone: isDesignatedZone,
 				isRegisteredVat: isRegisteredVat,
 				loading: false,
@@ -1236,7 +1236,7 @@ class CreateCustomerInvoice extends React.Component {
 																				if (field === 'term')
 																					this.setState({ term: value, });
 																				else if (field === 'invoiceDate') {
-																					if (moment(value).isBefore(moment(companyVATRegistrationDate))) {
+																					if (dayjs(value).isBefore(dayjs(companyVATRegistrationDate))) {
 																						this.setState({ invoiceBeforeVatRegistration: true }, () => { this.resetProductTableValues(); });
 																					} else {
 																						this.setState({ invoiceBeforeVatRegistration: false }, () => { this.resetProductTableValues(); });

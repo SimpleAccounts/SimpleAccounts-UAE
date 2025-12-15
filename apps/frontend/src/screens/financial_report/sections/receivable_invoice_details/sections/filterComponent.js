@@ -14,7 +14,7 @@ import DatePicker from "react-datepicker"
 
 import { Formik } from "formik"
 import Select from "react-select"
-import moment from 'moment'
+import dayjs from '@/utils/date'
 import { selectOptionsFactory } from "utils";
 import './style.scss'
 import {data}  from '../../../../Language/index'
@@ -38,8 +38,8 @@ class FilterComponent extends Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			initValue: {
-				startDate: moment().startOf('month').format('YYYY-MM-DD hh:mm'),
-				endDate: moment().endOf('month').format('YYYY-MM-DD hh:mm'),
+				startDate: dayjs().startOf('month').format('YYYY-MM-DD hh:mm'),
+				endDate: dayjs().endOf('month').format('YYYY-MM-DD hh:mm'),
 			}
 		}
 
@@ -87,23 +87,23 @@ class FilterComponent extends Component {
 													showMonthDropdown
 													showYearDropdown
 													autoComplete="off"
-													maxDate={props.values.endDate ? moment(props.values.endDate).toDate() : null}
-													value={moment(props.values.startDate).format(
+													maxDate={props.values.endDate ? dayjs(props.values.endDate).toDate() : null}
+													value={dayjs(props.values.startDate).format(
 														'DD-MM-YYYY',
 													)}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
 													// onChange={(value) => {
 													// 	props.handleChange('startDate')(value);
-													// 	if (moment(value).isBefore(props.values.startDate)) {
+													// 	if (dayjs(value).isBefore(props.values.startDate)) {
 													// 		props.setFieldValue(
 													// 			'startDate',
-													// 			moment(value).add(1, 'M'),
+													// 			dayjs(value).add(1, 'M'),
 													// 		);
 													// 	}
 													// }}
 													onChange={(value) => {
-                                                        props.setFieldValue('startDate', moment(value).format('YYYY-MM-DD hh:mm'));
+                                                        props.setFieldValue('startDate', dayjs(value).format('YYYY-MM-DD hh:mm'));
                                                     }}
 												/>
 											</FormGroup>
@@ -116,26 +116,26 @@ class FilterComponent extends Component {
 													name="endDate"
 													className={`form-control`}
 													autoComplete="off"
-													minDate={props.values.startDate ? moment(props.values.startDate).toDate() : null}
+													minDate={props.values.startDate ? dayjs(props.values.startDate).toDate() : null}
 													placeholderText="From"
 													showMonthDropdown
 													showYearDropdown
-													value={moment(props.values.endDate).format(
+													value={dayjs(props.values.endDate).format(
 														'DD-MM-YYYY',
 													)}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
 													// onChange={(value) => {
 													// 	props.handleChange('endDate')(value);
-													// 	if (moment(value).isBefore(props.values.endDate)) {
+													// 	if (dayjs(value).isBefore(props.values.endDate)) {
 													// 		props.setFieldValue(
 													// 			'endDate',
-													// 			moment(value).subtract(1, 'M'),
+													// 			dayjs(value).subtract(1, 'M'),
 													// 		);
 													// 	}
 													// }}
 													onChange={(value) => {
-                                                        props.setFieldValue('endDate', moment(value).format('YYYY-MM-DD hh:mm'));
+                                                        props.setFieldValue('endDate', dayjs(value).format('YYYY-MM-DD hh:mm'));
                                                     }}
 												/>
 											</FormGroup>

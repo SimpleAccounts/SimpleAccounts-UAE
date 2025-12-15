@@ -38,7 +38,7 @@ import {
   DropdownLists,
 } from "utils";
 import "./style.scss";
-import moment from "moment";
+import dayjs from '@/utils/date';
 import { data } from "../../../Language/index";
 import LocalizedStrings from "react-localization";
 import { Checkbox } from "@material-ui/core";
@@ -246,9 +246,9 @@ class CreateCreditNote extends React.Component {
     const temp = val[val.length - 1] === "Receipt" ? 1 : val[val.length - 1];
     const values = value
       ? value
-      : moment(props.values.creditNoteDate, "DD-MM-YYYY").toDate();
+      : dayjs(props.values.creditNoteDate, "DD-MM-YYYY").toDate();
     // if (temp && values) {
-    // 	const date = moment(values)
+    // 	const date = dayjs(values)
     // 		.add(temp - 1, 'days')
     // 		.format('DD-MM-YYYY');
     // 	props.setFieldValue('invoiceDueDate', date, true);
@@ -340,7 +340,7 @@ class CreateCreditNote extends React.Component {
             currencyCode: currencyCode,
           },
         },
-        companyVATRegistrationDate: new Date(moment(vatRegistrationDate)),
+        companyVATRegistrationDate: new Date(dayjs(vatRegistrationDate)),
         isDesignatedZone: isDesignatedZone,
         isRegisteredVat: isRegisteredVat,
         loading: false,
@@ -672,7 +672,7 @@ class CreateCreditNote extends React.Component {
     formData.append("email", email ? email : "");
     formData.append(
       "creditNoteDate",
-      creditNoteDate ? moment(creditNoteDate, "DD-MM-YYYY").toDate() : null
+      creditNoteDate ? dayjs(creditNoteDate, "DD-MM-YYYY").toDate() : null
     );
     formData.append("referenceNo", receiptNumber !== null ? receiptNumber : "");
     formData.append("exchangeRate", exchangeRate ? exchangeRate : "");
@@ -1609,7 +1609,7 @@ class CreateCreditNote extends React.Component {
                                         dateFormat="dd-MM-yyyy"
                                         minDate={
                                           new Date(
-                                            moment(
+                                            dayjs(
                                               this.state.receiptDate,
                                               "YYYY-MM-DD"
                                             ).format()

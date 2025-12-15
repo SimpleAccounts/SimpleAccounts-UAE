@@ -26,7 +26,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import './style.scss';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
@@ -146,11 +146,11 @@ class Refund extends React.Component {
 				paidInvoiceListStr: [
 					{
 						id: this.props.location.state.id.id,
-						date: moment(
+						date: dayjs(
 							this.props.location.state.id.invoiceDate,
 							'DD-MM-YYYY',
 						).toDate(),
-						dueDate: moment(
+						dueDate: dayjs(
 							this.props.location.state.id.invoiceDueDate,
 							'DD-MM-YYYY',
 						).toDate(),
@@ -302,7 +302,7 @@ class Refund extends React.Component {
 		formData.append(
 			'paymentDate',
 			typeof receiptDate === 'string'
-				? moment(receiptDate, 'DD/MM/YYYY').toDate()
+				? dayjs(receiptDate, 'DD/MM/YYYY').toDate()
 				: receiptDate,
 		);
 		this.setState({ loading:true, loadingMsg:"Credit Refunding..."});
@@ -338,7 +338,7 @@ class Refund extends React.Component {
 		formData.append(
 			'paymentDate',
 			typeof receiptDate === 'string'
-				? moment(receiptDate, 'DD/MM/YYYY').toDate()
+				? dayjs(receiptDate, 'DD/MM/YYYY').toDate()
 				: receiptDate,
 		);		
 			formData.append('payMode', payMode !== null ? payMode.value : '');
@@ -678,7 +678,7 @@ class Refund extends React.Component {
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
-																			minDate={new Date(moment(this.state.creditNoteDate,'YYYY-MM-DD').format())}																										
+																			minDate={new Date(dayjs(this.state.creditNoteDate,'YYYY-MM-DD').format())}																										
 																			value={props.values.receiptDate}
 																			selected={props.values.receiptDate}
 																			onChange={(value) => {

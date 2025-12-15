@@ -1,6 +1,6 @@
 import { VAT_TRANSACTIONS } from 'constants/types';
 import { authApi } from 'utils';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 export const initialData = (obj) => {
 	return (dispatch) => {};

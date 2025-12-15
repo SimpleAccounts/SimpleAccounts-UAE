@@ -20,7 +20,7 @@ import DatePicker from "react-datepicker";
 import * as Yup from "yup";
 import { LeavePage, Loader, ConfirmDeleteModal } from "components";
 import { SupplierModal } from "../../sections";
-import moment from "moment";
+import dayjs from '@/utils/date';
 import "react-datepicker/dist/react-datepicker.css";
 import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 import "./style.scss";
@@ -529,7 +529,7 @@ class DetailPayment extends React.Component {
                                               option
                                             )
                                           }
-                                          value={moment(
+                                          value={dayjs(
                                             props.values.payment_date
                                           ).format("DD-MM-YYYY")}
                                         // selected={props.values.payment_date}

@@ -17,7 +17,7 @@ import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import moment from 'moment'
+import dayjs from '@/utils/date'
 
 import { Loader, ConfirmDeleteModal } from 'components'
 
@@ -377,7 +377,7 @@ class DetailEmployeePayroll extends React.Component {
                                         dateFormat="dd-MM-yyyy"
                                         dropdownMode="select"
                                         placeholderText="Select Date of Birth"
-                                        value={moment(props.values.dob).format('DD-MM-YYYY')}
+                                        value={dayjs(props.values.dob).format('DD-MM-YYYY')}
                                         maxDate={new Date()}
                                         onChange={(value) => {
                                           props.handleChange("dob")(value)

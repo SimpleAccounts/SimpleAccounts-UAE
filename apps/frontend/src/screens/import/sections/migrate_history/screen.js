@@ -24,7 +24,7 @@ import * as ProductActions from '../../actions';
 import * as ImportActions from '../../actions';
 import { CommonActions } from 'services/global';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import moment from 'moment';
+import dayjs from '@/utils/date';
 
 
 
@@ -132,9 +132,9 @@ class MigarteHistory extends React.Component {
 <CardBody style={{margin:"0px 176px 0px 176px"}}><h1 className="text-center">Migration Summary</h1>
 <br></br>
 <Row lg={12} className="mb-4 mt-2">
-<Col  lg={4} className="pull-left"> <b>Migration Beginning Date: </b>{moment(migrationBeginningDate).format('DD/MM/YYYY')}</Col>
+<Col  lg={4} className="pull-left"> <b>Migration Beginning Date: </b>{dayjs(migrationBeginningDate).format('DD/MM/YYYY')}</Col>
 <Col  lg={4} ><b>Source Application: </b>{sourceApplication} </Col>
-<Col  lg={4} className="pull-right"><b>Execution Date: </b> {moment(executionDate).format('DD/MM/YYYY')}</Col>
+<Col  lg={4} className="pull-right"><b>Execution Date: </b> {dayjs(executionDate).format('DD/MM/YYYY')}</Col>
 </Row>				
 				
 						<div>
