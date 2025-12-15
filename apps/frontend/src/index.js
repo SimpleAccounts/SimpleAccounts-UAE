@@ -55,8 +55,10 @@ import { createRoot } from 'react-dom/client';
 import 'assets/css/tailwind.css';
 import 'assets/css/global.scss';
 import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from 'next-themes';
 
 import App from 'app';
+import { Toaster } from '@/components/ui/sonner';
 import * as serviceWorker from 'serviceWorker';
 
 const theme = createTheme({
@@ -74,7 +76,10 @@ const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
 	<MuiThemeProvider theme={theme}>
-		<App />
+		<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+			<App />
+			<Toaster />
+		</ThemeProvider>
 	</MuiThemeProvider>
 );
 

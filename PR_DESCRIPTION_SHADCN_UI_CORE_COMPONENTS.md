@@ -2,7 +2,8 @@
 
 **Issue:** [#164](https://github.com/SimpleAccounts/SimpleAccounts-UAE/issues/164)  
 **Type:** `feat(frontend):`  
-**Status:** ✅ Ready for Review
+**Status:** ✅ Ready for Review  
+**Closes:** #164
 
 ## Summary
 
@@ -89,6 +90,7 @@ apps/frontend/src/components/ui/
 
 - `apps/frontend/components.json` - Fixed path aliases
 - `apps/frontend/package.json` - Added new dependencies
+- `apps/frontend/src/index.js` - Added ThemeProvider and Toaster setup
 
 ### Files Created
 
@@ -202,25 +204,23 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 </Tabs>
 ```
 
-## Next Steps
+## Theme Provider Setup ✅
 
-### Optional: Set Up Theme Provider for Sonner
+The `sonner` toast component requires `ThemeProvider` from `next-themes` to function properly. This has been set up in `src/index.js`:
 
-The `sonner` toast component uses `next-themes` for theme support. To enable full theme switching:
+- Added `ThemeProvider` wrapper around the App component
+- Added `Toaster` component for global toast notifications
+- Configured with `attribute="class"`, `defaultTheme="system"`, and `enableSystem` for automatic theme detection
 
-1. Wrap app root with `ThemeProvider`:
+The Toaster is now available globally and will automatically use the current theme. To use toast notifications in any component:
 
 ```javascript
-import { ThemeProvider } from 'next-themes';
+import { toast } from 'sonner';
 
-<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-  {/* App content */}
-</ThemeProvider>
+toast.success('Success message');
+toast.error('Error message');
+toast.info('Info message');
 ```
-
-2. The `Toaster` component will automatically use the current theme.
-
-**Note:** This is optional. Sonner will work without ThemeProvider, but theme switching won't be automatic.
 
 ## Acceptance Criteria
 
@@ -259,11 +259,14 @@ import { ThemeProvider } from 'next-themes';
 - [x] Components verified to render correctly
 - [x] Build passes successfully
 - [x] Import test passes
+- [x] ThemeProvider and Toaster set up for Sonner
 - [x] Documentation created
 - [x] No breaking changes
 - [x] Ready for review
 
 ---
+
+**Closes #164**
 
 **Ready for:** Component usage and migration to shadcn/ui components
 
