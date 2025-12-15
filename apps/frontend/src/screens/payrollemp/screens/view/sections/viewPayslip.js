@@ -11,7 +11,6 @@ import {
 	CardBody,
 	Table,
 } from 'reactstrap';
-import { upperCase } from 'lodash';
 import { toast } from 'react-toastify';
 import { data } from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -23,32 +22,11 @@ import { Currency } from 'components';
 import { ToWords } from 'to-words';
 
 const mapStateToProps = (state) => {
-
 	return {
-
-		contact_list: state.request_for_quotation.contact_list,
 		company_details: state.common.company_details,
-
-	};
-
-};
-
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-
 	};
 };
-const customStyles = {
-	control: (base, state) => ({
-		...base,
-		borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-		boxShadow: state.isFocused ? null : null,
-		'&:hover': {
-			borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-		},
-	}),
-};
+
 
 let strings = new LocalizedStrings(data);
 const toWords = new ToWords({
@@ -622,7 +600,4 @@ class PaySlipModal extends React.Component {
 }
 
 
-export default connect(
-	mapStateToProps
-
-)(PaySlipModal);
+export default connect(mapStateToProps)(PaySlipModal);
