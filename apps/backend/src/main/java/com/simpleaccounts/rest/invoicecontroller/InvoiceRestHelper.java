@@ -2603,7 +2603,7 @@ public class InvoiceRestHelper {
 	private String getInvoceStatusLabel(Date dueDate) {
 		String status = "";
 		Date today = new Date();
-		today = org.apache.commons.lang.time.DateUtils.truncate(today, Calendar.DAY_OF_MONTH);
+		today = org.apache.commons.lang3.time.DateUtils.truncate(today, Calendar.DAY_OF_MONTH);
 		int dueDays = dateUtils.diff(today, dueDate);
 		int dueDay = Math.abs(dueDays);
 		if (dueDays > 0) {
