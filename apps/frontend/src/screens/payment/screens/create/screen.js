@@ -346,7 +346,7 @@ min="0" value="0.00" />;
 	};
 
 	date = (cell, rows, props) => {
-		return <div>{moment.utc(rows.date).format('DD-MM-YYYY')}</div>;
+		return <div>{dayjs.utc(rows.date).format('DD-MM-YYYY')}</div>;
 	};
 
 	renderAmount = (cell, rows, props) => {

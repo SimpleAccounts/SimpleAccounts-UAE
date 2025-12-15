@@ -672,8 +672,12 @@ class Profile extends React.Component {
 		formData.append('isRegisteredVat', isRegisteredVat ? isRegisteredVat : 0);
 
 		
-		if(vatRegistrationDate && vatRegistrationDate!="Invalid date")
-			formData.append('vatRegistrationDate', dayjs(vatRegistrationDate));
+		if(vatRegistrationDate && vatRegistrationDate !== "Invalid date") {
+			const formattedDate = dayjs(vatRegistrationDate);
+			if (formattedDate.isValid()) {
+				formData.append('vatRegistrationDate', formattedDate.format('YYYY-MM-DD'));
+			}
+		}
 		formData.append('fax', fax ? fax : '');
 		formData.append('telephoneNumber', telephoneNumber ? telephoneNumber : '');
 		formData.append('currencyCode', currencyCode ? currencyCode : '');
