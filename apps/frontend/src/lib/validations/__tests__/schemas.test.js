@@ -3,7 +3,6 @@
  * Verifies Phase 3: Validation Schema Patterns
  */
 
-import { z } from 'zod';
 import {
   loginSchema,
   userSchema,
