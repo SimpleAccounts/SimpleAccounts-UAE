@@ -673,7 +673,7 @@ class Profile extends React.Component {
 
 		
 		if(vatRegistrationDate && vatRegistrationDate!="Invalid date")
-		formData.append('vatRegistrationDate',vatRegistrationDate !== null ? dayjs(vatRegistrationDate) : '',);
+			formData.append('vatRegistrationDate', dayjs(vatRegistrationDate));
 		formData.append('fax', fax ? fax : '');
 		formData.append('telephoneNumber', telephoneNumber ? telephoneNumber : '');
 		formData.append('currencyCode', currencyCode ? currencyCode : '');
