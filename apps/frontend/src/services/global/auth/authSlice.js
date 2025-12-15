@@ -197,6 +197,26 @@ export const getSimpleAccountsreleasenumber = () => {
   };
 };
 
+// Internal thunk for getCompanyCount (must be declared before createSlice)
+const getCompanyCountThunk = createAsyncThunk(
+  'auth/getCompanyCount',
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = {
+        method: 'get',
+        url: '/rest/company/getCompanyCount',
+      };
+      const res = await api(data);
+      if (res.status === 200) {
+        return { data: res.data, status: res.status };
+      }
+      return { data: 0, status: res.status };
+    } catch (err) {
+      return { data: 0, status: err.response?.status || 500 };
+    }
+  }
+);
+
 // ============ Slice ============
 
 const initialState = {
