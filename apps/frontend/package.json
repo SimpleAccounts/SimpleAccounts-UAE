@@ -57,7 +57,7 @@
     "react-app-polyfill": "^3.0.0",
     "react-autosuggest": "^9.4.3",
     "react-big-calendar": "^0.21.0",
-    "react-bootstrap-daterangepicker": "^4.1.0",
+    "react-bootstrap-daterangepicker": "^8.0.0",
     "react-bootstrap-table": "4.3.1",
     "react-bootstrap-table-next": "^4.0.1",
     "react-bootstrap-table2-paginator": "^2.1.2",
