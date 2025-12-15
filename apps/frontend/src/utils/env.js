@@ -10,7 +10,7 @@
 
 // Helper to get import.meta.env safely (works in both Vite and Jest)
 // NOTE: We cannot use import.meta directly because Jest will try to parse it and fail
-// Solution: Check for Jest mock first, then use a Vite-specific global that we'll inject
+// Solution: Check for Jest mock first, then use import.meta.env directly in Vite
 function getMetaEnv() {
   // In Jest tests (mocked via globalThis.import) - check this first
   // eslint-disable-next-line no-undef
@@ -23,13 +23,18 @@ function getMetaEnv() {
       return globalImport.meta.env;
     }
   }
-  // In Vite runtime - check for a global that Vite will inject
-  // We use window.__VITE_ENV__ which will be set by Vite at build time
-  // This avoids Jest parse errors while still getting Vite env vars
-  if (typeof window !== 'undefined' && window.__VITE_ENV__) {
-    return window.__VITE_ENV__;
+  // In Vite runtime - use import.meta.env directly (Vite handles this natively)
+  // Use try-catch to handle cases where import.meta is not available
+  try {
+    // eslint-disable-next-line no-undef
+    if (typeof import.meta !== 'undefined' && import.meta.env) {
+      // eslint-disable-next-line no-undef
+      return import.meta.env;
+    }
+  } catch (e) {
+    // Fall through to fallback
   }
-  // Fallback (used when not in Jest and Vite env not injected)
+  // Fallback (used when not in Jest and import.meta not available)
   return {
     MODE: 'development',
     DEV: true,

@@ -9,6 +9,7 @@ import { AuthActions, CommonActions } from 'services/global';
 import PrivateRoute from '../private';
 import navigation from 'constants/navigation';
 import { Footer, Header, Loading, Loader } from 'components';
+import { withNavigation } from 'utils/withNavigation';
 import './style.scss';
 import { data } from '../../screens/Language/index';
 import LocalizedStrings from 'react-localization';
@@ -378,4 +379,4 @@ class AdminLayout extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminLayout);
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(AdminLayout));
