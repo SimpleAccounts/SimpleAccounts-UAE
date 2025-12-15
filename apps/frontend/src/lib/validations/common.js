@@ -53,19 +53,31 @@ export const requiredString = (message = 'This field is required') =>
 
 /**
  * Required number validation helper
+ * Uses z.coerce.number() to handle string inputs from HTML number inputs
+ * Rejects null and undefined to ensure the field is actually provided
  * @param {string} message - Custom error message
- * @returns {z.ZodNumber} Zod number schema
+ * @returns {z.ZodEffects<z.ZodNumber>} Zod number schema with coercion
  */
 export const requiredNumber = (message = 'This field is required') =>
-  z.number({ required_error: message, invalid_type_error: message });
+  z.preprocess(
+    (val) => {
+      // Reject null and undefined for required fields
+      if (val === null || val === undefined) {
+        return undefined; // This will trigger required_error
+      }
+      return val;
+    },
+    z.coerce.number({ required_error: message, invalid_type_error: message })
+  );
 
 /**
  * Positive number validation helper
+ * Uses z.coerce.number() to handle string inputs from HTML number inputs
  * @param {string} message - Custom error message
- * @returns {z.ZodNumber} Zod number schema
+ * @returns {z.ZodEffects<z.ZodNumber>} Zod number schema with coercion
  */
 export const positiveNumber = (message = 'Must be a positive number') =>
-  z.number().positive(message);
+  z.coerce.number().positive(message);
 
 /**
  * Date validation schema
@@ -85,8 +97,9 @@ export const optionalString = (schema = z.string()) => schema.optional();
 
 /**
  * Optional number validation helper
- * @param {z.ZodNumber} schema - Base number schema
- * @returns {z.ZodOptional<z.ZodNumber>} Optional Zod number schema
+ * Uses z.coerce.number() to handle string inputs from HTML number inputs
+ * @param {z.ZodNumber|z.ZodEffects<z.ZodNumber>} schema - Base number schema
+ * @returns {z.ZodOptional} Optional Zod number schema with coercion
  */
-export const optionalNumber = (schema = z.number()) => schema.optional();
+export const optionalNumber = (schema = z.coerce.number()) => schema.optional();
 

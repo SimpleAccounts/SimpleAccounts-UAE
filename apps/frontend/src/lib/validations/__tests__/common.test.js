@@ -87,10 +87,28 @@ describe('Common Validation Schemas (Phase 3)', () => {
       expect(() => schema.parse(-5)).not.toThrow();
     });
 
-    test('rejects non-numbers', () => {
+    test('coerces string numbers from HTML inputs', () => {
+      const schema = requiredNumber('Number required');
+      // HTML number inputs return strings, so we need to coerce them
+      expect(() => schema.parse('0')).not.toThrow();
+      expect(() => schema.parse('42')).not.toThrow();
+      expect(() => schema.parse('-5')).not.toThrow();
+      expect(() => schema.parse('100')).not.toThrow();
+      // Verify the coerced value is actually a number
+      expect(schema.parse('42')).toBe(42);
+      expect(schema.parse('100')).toBe(100);
+    });
+
+    test('rejects non-numeric strings', () => {
       const schema = requiredNumber('Number required');
       expect(() => schema.parse('not a number')).toThrow();
+      expect(() => schema.parse('abc123')).toThrow();
+    });
+
+    test('rejects null and undefined', () => {
+      const schema = requiredNumber('Number required');
       expect(() => schema.parse(null)).toThrow();
+      expect(() => schema.parse(undefined)).toThrow();
     });
   });
 
@@ -100,9 +118,25 @@ describe('Common Validation Schemas (Phase 3)', () => {
       expect(() => positiveNumber().parse(100)).not.toThrow();
     });
 
+    test('coerces string numbers from HTML inputs', () => {
+      // HTML number inputs return strings, so we need to coerce them
+      expect(() => positiveNumber().parse('1')).not.toThrow();
+      expect(() => positiveNumber().parse('100')).not.toThrow();
+      // Verify the coerced value is actually a number
+      expect(positiveNumber().parse('100')).toBe(100);
+      expect(positiveNumber().parse('42')).toBe(42);
+    });
+
     test('rejects zero and negative numbers', () => {
       expect(() => positiveNumber().parse(0)).toThrow();
       expect(() => positiveNumber().parse(-1)).toThrow();
+      expect(() => positiveNumber().parse('0')).toThrow();
+      expect(() => positiveNumber().parse('-1')).toThrow();
+    });
+
+    test('rejects non-numeric strings', () => {
+      expect(() => positiveNumber().parse('not a number')).toThrow();
+      expect(() => positiveNumber().parse('abc')).toThrow();
     });
   });
 

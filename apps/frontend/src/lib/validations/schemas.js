@@ -160,7 +160,7 @@ export const productSchema = z.object({
   productCode: z.string().optional(),
   description: z.string().optional(),
   price: positiveNumber('Price must be positive'),
-  quantity: z.number().min(0, 'Quantity cannot be negative').optional(),
+  quantity: z.coerce.number().min(0, 'Quantity cannot be negative').optional(),
   categoryId: z.string().optional(),
   vatCategoryId: z.string().optional(),
 });
