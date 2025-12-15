@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import javax.sql.DataSource;
+import javax.sql.DataSource; // javax.sql is still valid - not migrated to jakarta
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

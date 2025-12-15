@@ -16,10 +16,10 @@ import org.hibernate.annotations.ColumnDefault;
 		@NamedQuery(name = "findAllTransactionCategoryByUserId", query = "SELECT t FROM TransactionCategory t where t.deleteFlag=false and (t.createdBy = :createdBy or t.createdBy = 1) ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC"),
 		@NamedQuery(name = "findMaxTnxCodeByChartOfAccId", query = "SELECT t FROM TransactionCategory t where chartOfAccount =:chartOfAccountId ORDER BY transactionCategoryId  DESC"),
 		@NamedQuery(name = "findTnxCatForReicpt", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId =8  and t.deleteFlag=false "),
-		@NamedQuery(name = "getTransactionCategoryListForPurchaseProduct", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in ('11','16','17','18','15','10','13','19') AND t.transactionCategoryId not in ('18','99','101','103','118','119','84','153') and t.deleteFlag=false "),
-		@NamedQuery(name = "getTransactionCategoryListForSalesProduct", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in ('15') AND t.transactionCategoryId in ('80','84') and t.deleteFlag=false"),
+		@NamedQuery(name = "getTransactionCategoryListForPurchaseProduct", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in (11,16,17,18,15,10,13,19) AND t.transactionCategoryId not in (18,99,101,103,118,119,84,153) and t.deleteFlag=false "),
+		@NamedQuery(name = "getTransactionCategoryListForSalesProduct", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in (15) AND t.transactionCategoryId in (80,84) and t.deleteFlag=false"),
 		@NamedQuery(name = "getTransactionCategoryListManualJornal", query = "SELECT t FROM TransactionCategory t WHERE t.deleteFlag=false"),
-		@NamedQuery(name = "getTransactionCategoryListForInventory", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in ('20') AND t.transactionCategoryId in ('150')"),
+		@NamedQuery(name = "getTransactionCategoryListForInventory", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in (20) AND t.transactionCategoryId in (150)"),
 })
 
 @Entity

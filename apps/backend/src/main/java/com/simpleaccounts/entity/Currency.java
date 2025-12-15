@@ -18,10 +18,10 @@ import org.hibernate.annotations.ColumnDefault;
                         + "FROM Currency c  ORDER BY c.defaultFlag DESC, c.orderSequence,c.currencyDescription ASC "),
         @NamedQuery(name = "allCompanyCurrencies",
                 query = "SELECT c "
-                        + "FROM Currency c  where c.currencyCode IN (SELECT cc.currencyCode from Company cc)"),
+                        + "FROM Currency c  where c IN (SELECT cc.currencyCode from Company cc)"),
         @NamedQuery(name = "allActiveCurrencies",
                 query = "SELECT c "
-                        + "FROM Currency c where c.currencyCode IN (Select cc.currencyCode from CurrencyConversion cc where cc.deleteFlag=false and cc.isActive=true) ORDER BY c.defaultFlag DESC, c.orderSequence,c.currencyDescription ASC "),
+                        + "FROM Currency c where c IN (Select cc.currencyCode from CurrencyConversion cc where cc.deleteFlag=false and cc.isActive=true) ORDER BY c.defaultFlag DESC, c.orderSequence,c.currencyDescription ASC "),
         @NamedQuery(name = "setDeafualtCurrency",query = "UPDATE Currency c SET c.deleteFlag=false WHERE c.currencyCode != :currencyCode ")
         })
 

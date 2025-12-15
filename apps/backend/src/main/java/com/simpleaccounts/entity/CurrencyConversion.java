@@ -24,7 +24,7 @@ import org.hibernate.annotations.ColumnDefault;
 @NamedQueries({
         @NamedQuery(name = "listOfCurrency", query = "SELECT cc FROM CurrencyConversion cc WHERE cc.deleteFlag=false"),
         @NamedQuery(name = "listOfActiveCurrency", query = "SELECT cc FROM CurrencyConversion cc WHERE cc.deleteFlag=false and cc.isActive=true "),
-        @NamedQuery(name = "getcompanyCurrency", query ="SELECT cc.currencyCode, cc.exchangeRate FROM CurrencyConversion cc where cc.currencyCode IN (select c.currencyCode from Currency c)" )
+        @NamedQuery(name = "getcompanyCurrency", query ="SELECT cc.currencyCode, cc.exchangeRate FROM CurrencyConversion cc where cc.currencyCode IN (select c from Currency c)" )
 })
 public class CurrencyConversion implements Serializable {
 
