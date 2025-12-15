@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
 
-import { AuthReducer, CommonReducer } from './global';
+// Import new RTK slices
+import authReducer from './global/auth/authSlice';
+import commonReducer from './global/common/commonSlice';
 
 import {
 	Dashboard,
@@ -50,11 +52,11 @@ import {
 	DebitNotes
 } from 'screens';
 
-import InvoiceViewJournalReducer from 'components/invoice_view_journal_entries/reducer';
+import InvoiceViewJournalReducer from 'components/invoice_view_journal_entries/invoiceViewJournalSlice';
 
 const reducer = combineReducers({
-	common: CommonReducer,
-	auth: AuthReducer,
+	common: commonReducer,
+	auth: authReducer,
 
 	dashboard: Dashboard.reducer,
 	journal: Journal.reducer,

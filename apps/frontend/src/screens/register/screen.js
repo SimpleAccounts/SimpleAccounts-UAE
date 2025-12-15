@@ -33,6 +33,7 @@ import { upperFirst } from 'lodash-es';
 import PasswordChecklist from "react-password-checklist";
 import configData from '../../constants/config';
 import { version } from 'core-js';
+import { withNavigation } from 'utils/withNavigation';
 
 
 const mapStateToProps = (state) => {
@@ -151,22 +152,35 @@ class Register extends React.Component {
 	};
 	getInitialData = () => {
 		this.props.authActions.getTimeZoneList().then((response) => {
-			let output = response.data.map(function (value) {
-				return { label: value, value: value };
-			});
-			this.setState({ timezone: output });
+			if (response && response.data && Array.isArray(response.data)) {
+				let output = response.data.map(function (value) {
+					return { label: value, value: value };
+				});
+				this.setState({ timezone: output });
+			}
+		}).catch((err) => {
+			// On error, set empty timezone list
+			this.setState({ timezone: [] });
 		});
 
-		this.props.commonActions.getStateList();
+		this.props.commonActions.getStateList().catch(() => {
+			// Silently handle errors
+		});
 		// this.props.commonActions.getCountryList();
-		this.props.commonActions.getCompanyTypeListRegister();
+		this.props.commonActions.getCompanyTypeListRegister().catch(() => {
+			// Silently handle errors
+		});
 
-
-		this.props.authActions.getCurrencyList();
+		this.props.authActions.getCurrencyList().catch(() => {
+			// Silently handle errors
+		});
 		this.props.authActions.getCompanyCount().then((response) => {
-			if (response.data > 0) {
+			if (response && response.data > 0) {
 				this.props.history.push('/login');
 			}
+		}).catch((err) => {
+			// If API fails, stay on register screen (allow registration)
+			// This matches the old behavior where errors would prevent redirect
 		});
 	};
 
@@ -416,7 +430,7 @@ class Register extends React.Component {
 											<Col lg={10} className="mx-auto">
 												<CardGroup>
 
-													<Card m className="p-4">
+													<Card className="p-4">
 														{loading ? (
 															<Row>
 																<Col lg={12}>
@@ -1461,4 +1475,4 @@ class Register extends React.Component {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(Register));

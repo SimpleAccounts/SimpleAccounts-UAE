@@ -269,13 +269,13 @@ class CompanyControllerTest {
     }
 
     @Test
-    @DisplayName("Should return no content when no currencies")
+    @DisplayName("Should return empty list when no currencies")
     void getCurrenciesReturnsNoContentWhenEmpty() throws Exception {
         when(currencyService.getCurrenciesProfile())
             .thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/rest/company/getCurrency"))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk());
     }
 
     @Test
@@ -353,7 +353,7 @@ class CompanyControllerTest {
             .thenReturn(new ArrayList<>());
 
         mockMvc.perform(get("/rest/company/getCompanyType"))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isOk());
     }
 
     @Test

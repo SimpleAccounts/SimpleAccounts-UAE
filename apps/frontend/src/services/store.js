@@ -1,15 +1,10 @@
-import { createStore, applyMiddleware, compose } from 'redux'
-import thunk from 'redux-thunk'
+import { configureStore as rtkConfigureStore } from '@reduxjs/toolkit'
 import rootReducer from './reducer'
 
-const composeEnhancers =
-  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-
-export default function configureStore(initialState={}) {
-  return createStore(
-    rootReducer,
-    composeEnhancers(
-        applyMiddleware(thunk)
-      )
-  )
+export default function configureStore(initialState = {}) {
+  return rtkConfigureStore({
+    reducer: rootReducer,
+    preloadedState: initialState,
+    devTools: process.env.NODE_ENV !== 'production',
+  })
 }
