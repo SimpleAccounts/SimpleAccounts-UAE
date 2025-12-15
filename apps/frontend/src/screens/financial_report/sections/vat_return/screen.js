@@ -28,7 +28,7 @@ import FilterComponent2 from '../filterComponet2';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { withRouter } from 'react-router-dom';
+import { withNavigation } from 'utils/withNavigation';
 import * as Vatreport from '../vat_reports/actions';
 import { FileTaxReturnModal } from '../vat_reports/sections';
 
@@ -1549,4 +1549,4 @@ class VatReturnsReport extends React.Component {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(VatReturnsReport));
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(VatReturnsReport));

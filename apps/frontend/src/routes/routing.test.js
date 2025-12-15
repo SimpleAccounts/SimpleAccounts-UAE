@@ -1,12 +1,16 @@
 /**
- * Tests for React Router v5 patterns.
- * These tests verify that routing works correctly and document patterns that would
- * break during React Router v5 → v6 upgrade.
+ * Tests for React Router v5 patterns (LEGACY - FOR DOCUMENTATION ONLY).
+ * 
+ * These tests document v5 patterns for reference. The application has been
+ * migrated to React Router v6. For v6 tests, see routing.v6.test.js
  *
- * Covers: react-router-dom 5.0.1 → 6.x upgrade
+ * Covers: react-router-dom 5.0.1 → 6.x upgrade (COMPLETED)
  *
- * IMPORTANT: These tests document CURRENT v5 patterns.
- * After upgrading to v6, these tests will need significant changes.
+ * IMPORTANT: These tests are kept for documentation purposes only.
+ * They use v5 patterns (Switch, Redirect, component prop) which are deprecated in v6.
+ * All active routing now uses v6 patterns (Routes, Navigate, element prop).
+ * 
+ * See: apps/frontend/src/routes/routing.v6.test.js for v6 test suite
  */
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -39,7 +43,9 @@ const UserProfile = ({ match }) => (
   <div data-testid="user-profile">User ID: {match.params.id}</div>
 );
 
-describe('React Router v5 Patterns', () => {
+// NOTE: These tests document v5 patterns but cannot run with v6
+// They are kept for reference. See routing.v6.test.js for v6 tests.
+describe.skip('React Router v5 Patterns (LEGACY - DOCUMENTATION ONLY)', () => {
   // ============ Basic Routing ============
 
   describe('Basic Routing', () => {

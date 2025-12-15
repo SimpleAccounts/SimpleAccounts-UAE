@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css';
 import { Circles } from 'react-loader-spinner'
-import { withRouter, } from "react-router-dom";
+import { withNavigation } from 'utils/withNavigation';
 
 // const styles = {
 //   display: "flex",
@@ -311,4 +311,4 @@ ImageUploader.defaultProps = {
 //   singleImage: PropTypes.bool,
 //   defaultImages: PropTypes.array
 // };
-export default withRouter(ImageUploader)
+export default withNavigation(ImageUploader)

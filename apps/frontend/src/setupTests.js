@@ -130,3 +130,20 @@ if (global.document) {
     },
   });
 }
+
+// Mock react-router-navigation-prompt (incompatible with React Router v6)
+// This library uses withRouter which doesn't exist in v6
+jest.mock('react-router-navigation-prompt', () => {
+  return {
+    __esModule: true,
+    default: ({ children, when }) => {
+      // Return a component that renders children with mock functions
+      // This allows tests to run without the actual navigation prompt functionality
+      return children({
+        isActive: false,
+        onCancel: jest.fn(),
+        onConfirm: jest.fn(),
+      });
+    },
+  };
+});
