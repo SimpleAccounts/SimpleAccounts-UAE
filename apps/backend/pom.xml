@@ -502,7 +502,7 @@
 					<plugin>
 						<groupId>io.gatling</groupId>
 						<artifactId>gatling-maven-plugin</artifactId>
-						<version>4.3.7</version>
+						<version>4.20.13</version>
 						<configuration>
 							<simulationsFolder>src/perf/scala/simulations</simulationsFolder>
 							<resultsFolder>target/gatling</resultsFolder>
