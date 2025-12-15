@@ -1,5 +1,7 @@
 # [TASK] Setup shadcn/ui with Base UI primitives
 
+Closes #159
+
 **Issue:** [#159](https://github.com/SimpleAccounts/SimpleAccounts-UAE/issues/159)  
 **Type:** feat  
 **Scope:** frontend
