@@ -5,6 +5,7 @@ import 'polyfill';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
+import 'assets/css/tailwind.css';
 import 'assets/css/global.scss';
 import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 
