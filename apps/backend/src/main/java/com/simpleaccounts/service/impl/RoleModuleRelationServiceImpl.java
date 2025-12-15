@@ -5,7 +5,7 @@ import com.simpleaccounts.dao.RoleModuleRelationDao;
 import com.simpleaccounts.entity.RoleModuleRelation;
 import com.simpleaccounts.service.RoleModuleRelationService;
 import java.util.List;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -8,11 +8,10 @@ import com.simpleaccounts.service.CurrencyExchangeService;
 import com.simpleaccounts.service.CurrencyService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +38,6 @@ public class CurrencyConversionController{
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Save Currency Conversion", response = CurrencyConversion.class)
     @PostMapping(value = "/save")
 
     public ResponseEntity<Object> saveConvertedCurrency(@RequestBody CurrencyConversionRequestModel currencyConversionRequestModel
@@ -65,7 +63,6 @@ public class CurrencyConversionController{
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "update Currency Conversion", response = CurrencyConversion.class)
     @PostMapping("/update")
     public ResponseEntity<Object> updateConvertedCurrency(@RequestBody CurrencyConversionRequestModel
                                                                       currencyConversionRequestModel,HttpServletRequest request){
@@ -101,7 +98,6 @@ public class CurrencyConversionController{
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Currency List")
     @GetMapping(value = "/getCurrencyConversionList")
     public ResponseEntity<List<CurrencyConversionResponseModel>> getCurrencyConversionList(){
         List<CurrencyConversionResponseModel> response  = new ArrayList<>();
@@ -112,7 +108,6 @@ public class CurrencyConversionController{
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @LogRequest
-    @ApiOperation(value = "Get Currency List")
     @GetMapping(value = "/getActiveCurrencyConversionList")
     public ResponseEntity<List<CurrencyConversionResponseModel>> getActiveCurrencyConversionList(){
         List<CurrencyConversionResponseModel> response  = new ArrayList<>();
@@ -124,7 +119,6 @@ public class CurrencyConversionController{
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Currency List")
     @GetMapping(value = "/getCurrencyConversionById")
     public ResponseEntity<?> getCurrencyConversionById(@RequestParam int id)  {
         CurrencyConversion currencyConversion = currencyExchangeService.findByPK(id);
@@ -145,7 +139,6 @@ public class CurrencyConversionController{
     
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Delete Currency by Currency Code", response = CurrencyConversion.class)
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object> deleteCurrency(@PathVariable("id") int id,
                                                    HttpServletRequest request) {

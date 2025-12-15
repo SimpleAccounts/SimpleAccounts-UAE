@@ -4,7 +4,7 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -47,11 +47,11 @@ public class CoacTransactionCategory implements Serializable {
 	@Basic(optional = false)
 	private Boolean deleteFlag = Boolean.FALSE;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_COAC_TRANX_CAT_TRANX_CAT_ID_TRANX_CAT"))
+	@JoinColumn(name = "TRANSACTION_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_COAC_TRANX_CAT_TRANX_CAT_ID_TRANX_CAT"))
 	private TransactionCategory transactionCategory;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "CHART_OF_ACCOUNT_CATEGORY_ID ",foreignKey = @javax.persistence.ForeignKey(name = "FK_COAC_TRANX_CAT_COA_CAT_ID_COA_CAT"))
+	@JoinColumn(name = "CHART_OF_ACCOUNT_CATEGORY_ID ",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_COAC_TRANX_CAT_COA_CAT_ID_COA_CAT"))
 	private ChartOfAccountCategory chartOfAccountCategory;
 
 	@Column(name = "VERSION_NUMBER")

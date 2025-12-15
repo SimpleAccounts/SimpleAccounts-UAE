@@ -14,10 +14,9 @@ import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.time.ZoneId;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -67,7 +66,6 @@ PoQuatationController {
     private final JournalService journalService;
 
     @LogRequest
-    @ApiOperation(value = "Get Invoice List")
     @GetMapping(value = "/getListForRfq")
     public ResponseEntity<PaginationResponseModel> getListForRfq(RfqRequestFilterModel filterModel,
                                                                   HttpServletRequest request) {
@@ -99,7 +97,6 @@ PoQuatationController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "New Request For Quatation")
     @PostMapping(value = "/saverfq")
     public ResponseEntity<Object> saveRequestForQuatation(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
@@ -131,7 +128,6 @@ PoQuatationController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update Request For Quatation")
     @PostMapping(value = "/updaterfq")
     public ResponseEntity<Object> updateRequestForQuatation(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
@@ -152,7 +148,6 @@ PoQuatationController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get Rfq By ID")
     @GetMapping(value = "/getRfqById")
     public ResponseEntity<PoQuatationRequestModel> getInvoiceById(@RequestParam(value = "id") Integer id) {
         PoQuatation quotation = poQuatationService.findByPK(id);
@@ -164,7 +159,6 @@ PoQuatationController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Send RFQ")
     @PostMapping(value = "/sendrfq")
     public ResponseEntity<Object> sendRfq(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
         try {
@@ -187,7 +181,6 @@ PoQuatationController {
 
     //--------------------------------------------PO---------------------------------------------------
     @LogRequest
-    @ApiOperation(value = "Get Purchase Order  List")
     @GetMapping(value = "/getListForPO")
     public ResponseEntity<PaginationResponseModel> getListForPO(PORequestFilterModel filterModel,
                                                                  HttpServletRequest request) {
@@ -219,7 +212,6 @@ PoQuatationController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "New Request For Purchase Order")
     @PostMapping(value = "/savepo")
     public ResponseEntity<Object> savePurchaseOrder(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
@@ -254,7 +246,6 @@ PoQuatationController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update Request For Purchase Order")
     @PostMapping(value = "/updatepo")
     public ResponseEntity<Object> updatePurchaseOrder(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
@@ -280,7 +271,6 @@ PoQuatationController {
     }
     
     @LogRequest
-    @ApiOperation(value = "Get PO By ID")
     @GetMapping(value = "/getPOById")
     public ResponseEntity<PoQuatationRequestModel> getPOById(@RequestParam(value = "id") Integer id) {
         PoQuatation poQuatation = poQuatationService.findByPK(id);
@@ -293,7 +283,6 @@ PoQuatationController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Send Purchase Order")
     @PostMapping(value = "/sendPO")
     public ResponseEntity<Object> sendPO(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
         try {
@@ -316,7 +305,6 @@ PoQuatationController {
  //--------------------------------------------GRN---------------------------------------------------
 
     @LogRequest
-    @ApiOperation(value = "Get GRN List")
     @GetMapping(value = "/getListForGRN")
     public ResponseEntity<PaginationResponseModel> getListForGRN(PORequestFilterModel filterModel,
                                                                  HttpServletRequest request) {
@@ -349,7 +337,6 @@ PoQuatationController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "New Request For Purchase Order")
     @PostMapping(value = "/savegrn")
     public ResponseEntity<Object> saveGoodsReceiveNotes(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
@@ -393,7 +380,6 @@ PoQuatationController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update Goods Receive Notes")
     @PostMapping(value = "/updategrn")
     public ResponseEntity<Object> updateGoodsReceiveNotes(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
@@ -415,7 +401,6 @@ PoQuatationController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get GRN By ID")
     @GetMapping(value = "/getGRNById")
     public ResponseEntity<PoQuatationRequestModel> getGRNById(@RequestParam(value = "id") Integer id) {
         PoQuatation poQuatation = poQuatationService.findByPK(id);
@@ -427,7 +412,6 @@ PoQuatationController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Send GRN")
     @PostMapping(value = "/sendGRN")
     public ResponseEntity<Object> sendGRN(@RequestParam("id") Integer id, HttpServletRequest request) {
         try {
@@ -450,7 +434,6 @@ PoQuatationController {
     // This Api will create an supplier invoice for the GRN
     @LogRequest
     @Transactional
-    @ApiOperation(value = "Post GRN")
     @PostMapping(value = "/postGRN")
     public ResponseEntity<Object> postGRN(@RequestParam("id") Integer id, HttpServletRequest request) {
         try {
@@ -490,7 +473,6 @@ PoQuatationController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Delete RFQ PO GRN By ID")
     @DeleteMapping(value = "/delete")
     public ResponseEntity<Object> delete(@RequestParam(value = "id") Integer id) {
         PoQuatation poQuatation = poQuatationService.findByPK(id);
@@ -527,7 +509,6 @@ PoQuatationController {
     //Quatation For Customer
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "New Request For Quatation")
     @PostMapping(value = "/saveQuatation")
     public ResponseEntity<Object> saveQuatation(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
@@ -559,7 +540,6 @@ PoQuatationController {
 
     @LogRequest
     @Transactional(rollbackFor = Exception.class)
-    @ApiOperation(value = "Update Request For Quatation")
     @PostMapping(value = "/updateQuatation")
     public ResponseEntity<Object> updateQuatation(@ModelAttribute PoQuatationRequestModel requestModel, HttpServletRequest request) {
         try {
@@ -580,7 +560,6 @@ PoQuatationController {
     }
     
     @LogRequest
-    @ApiOperation(value = "Get Quotation By ID")
     @GetMapping(value = "/getQuotationById")
     public ResponseEntity<PoQuatationRequestModel> getQuotationById(@RequestParam(value = "id") Integer id) {
         PoQuatation poQuatation = poQuatationService.findByPK(id);
@@ -594,7 +573,6 @@ PoQuatationController {
 
     //getList for quatation
     @LogRequest
-    @ApiOperation(value = "Get Quatation List")
     @GetMapping(value = "/getListForQuatation")
     public ResponseEntity<PaginationResponseModel> getListForQuatation(PORequestFilterModel filterModel,
                                                                  HttpServletRequest request) {
@@ -626,7 +604,6 @@ PoQuatationController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Send Quotation")
     @PostMapping(value = "/sendQuotation")
     public ResponseEntity<Object> sendQuotation(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
         try {
@@ -658,7 +635,6 @@ PoQuatationController {
 
     
     @LogRequest
-    @ApiOperation(value = "Change Status")
     @PostMapping(value = "/changeStatus")
     public ResponseEntity<Object> changeStatus(@RequestParam(value = "id") Integer id,@RequestParam(value = "status")String status, HttpServletRequest request) {
         try {

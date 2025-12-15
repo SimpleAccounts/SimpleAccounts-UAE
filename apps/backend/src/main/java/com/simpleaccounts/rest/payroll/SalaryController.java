@@ -10,9 +10,8 @@ import com.simpleaccounts.rest.payroll.service.SalaryTemplateService;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.EmploymentService;
 import com.simpleaccounts.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +44,6 @@ public class SalaryController {
     private final SalaryServiceImpl salaryServiceImpl;
 
     @LogRequest
-    @ApiOperation(value = "Get SalaryPerMonth  List")
     @GetMapping(value = "/getSalaryPerMonthList")
     public ResponseEntity<SalaryListPerMonthResponseModel> getSalaryPerMonthList(@ModelAttribute SalaryPerMonthRequestModel requestModel,
                                                                           HttpServletRequest request) {
@@ -59,7 +57,6 @@ public class SalaryController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Get incomplete employee  List")
     @GetMapping(value = "/getIncompleteEmployeeList")
     public ResponseEntity<IncompleteEmployeeResponseModel> getIncompleteEmployeeList() {
         try {
@@ -72,7 +69,6 @@ public class SalaryController {
     }
 
     @LogRequest
-    @ApiOperation(value = "Generate salary")
     @PostMapping(value = "/generateSalary")
     public ResponseEntity<String> generateSalary(@ModelAttribute SalaryPersistModel salaryPersistModel, HttpServletRequest request)  {
          try {
@@ -95,7 +91,6 @@ public class SalaryController {
      * @return
      */
     @LogRequest
-    @ApiOperation(value = "Get Salaries By EmployeeID")
     @GetMapping(value = "/getSalariesByEmployeeId")
     public ResponseEntity<SalarySlipModel> getSalariesByEmployeeId(@RequestParam(value = "id") Integer employeeId,
                                                                    @RequestParam(value = "salaryDate") String salaryDate,
@@ -114,7 +109,6 @@ public class SalaryController {
     }
 }
     @LogRequest
-    @ApiOperation(value = "Get Employee expense category")
     @GetMapping(value = "/getEmployeeTc")
     public ResponseEntity<List> getDateFormat(@RequestParam(required = false) Integer employeeId,
                                               @RequestParam(required = false) String startDate,
@@ -131,7 +125,6 @@ public class SalaryController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
     @LogRequest
-    @ApiOperation(value = "Get SalarySlip  List")
     @GetMapping(value = "/getSalarySlipList")
     public ResponseEntity<SalarySlipListtResponseModel> getInvoiceList(@RequestParam(value = "id") Integer employeeId,
                                                                           HttpServletRequest request) {

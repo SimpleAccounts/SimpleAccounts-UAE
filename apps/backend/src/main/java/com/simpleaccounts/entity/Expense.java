@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -66,12 +66,12 @@ public class Expense implements Serializable {
 	private String expenseDescription;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPENSE_TRANSACTION_CATEGORY_CODE_TRANSACTION_CATEGORY"))
+	@JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EXPENSE_TRANSACTION_CATEGORY_CODE_TRANSACTION_CATEGORY"))
 	@JsonManagedReference
 	private TransactionCategory transactionCategory;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPENSE_CURRENCY_CODE_CURRENCY"))
+	@JoinColumn(name = "CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EXPENSE_CURRENCY_CODE_CURRENCY"))
 	@JsonManagedReference
 	private Currency currency;
 
@@ -80,17 +80,17 @@ public class Expense implements Serializable {
 	private BigDecimal exchangeRate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PROJECT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPENSE_PROJECT_ID_PROJECT"))
+	@JoinColumn(name = "PROJECT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EXPENSE_PROJECT_ID_PROJECT"))
 	@JsonManagedReference
 	private Project project;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EMPLOYEE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPENSE_EMPLOYEE_ID_EMPLOYEE"))
+	@JoinColumn(name = "EMPLOYEE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EXPENSE_EMPLOYEE_ID_EMPLOYEE"))
 	@JsonManagedReference
 	private Employee employee;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USER_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPENSE_USER_ID_USER"))
+	@JoinColumn(name = "USER_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EXPENSE_USER_ID_USER"))
 	private User userId;
 
 	@Basic
@@ -124,7 +124,7 @@ public class Expense implements Serializable {
 	private Integer status;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "VAT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPENSE_VAT_ID_VAT"))
+	@JoinColumn(name = "VAT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EXPENSE_VAT_ID_VAT"))
 	private VatCategory vatCategory;
 
 	@Column(name = "PAY_MODE")
@@ -133,7 +133,7 @@ public class Expense implements Serializable {
 	private PayMode payMode;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "BANK_ACCOUNT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPENSE_BANK_ACCOUNT_BANK_ACCOUNT_ID"))
+	@JoinColumn(name = "BANK_ACCOUNT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EXPENSE_BANK_ACCOUNT_BANK_ACCOUNT_ID"))
 	private BankAccount bankAccount;
 
 	@Column(name = "LAST_UPDATED_BY")
@@ -169,7 +169,7 @@ public class Expense implements Serializable {
 	private String payee;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "FILE_ATTACHMENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPENSE_FILE_ATTACHMENT_ID_FILE_ATTACHMENT"))
+	@JoinColumn(name = "FILE_ATTACHMENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EXPENSE_FILE_ATTACHMENT_ID_FILE_ATTACHMENT"))
 	private FileAttachment fileAttachment;
 
 	@Basic(optional = false)
@@ -178,7 +178,7 @@ public class Expense implements Serializable {
 	private Boolean isMigratedRecord = false;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "TAX_TREATMENT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPENSE_TAX_TREATMENT_ID_TAX_TREATMENT"))
+	@JoinColumn(name = "TAX_TREATMENT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EXPENSE_TAX_TREATMENT_ID_TAX_TREATMENT"))
 	private TaxTreatment taxTreatment;
 
 	@Basic(optional = false)
@@ -187,7 +187,7 @@ public class Expense implements Serializable {
 	private Boolean isReverseChargeEnabled  = Boolean.FALSE;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PLACE_OF_SUPPLY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPENSE_PLACE_OF_SUPPLY_ID_PLACE_OF_SUPPLY"))
+	@JoinColumn(name = "PLACE_OF_SUPPLY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EXPENSE_PLACE_OF_SUPPLY_ID_PLACE_OF_SUPPLY"))
 	private PlaceOfSupply placeOfSupplyId;
 
 	@Column(name = "EDIT_FLAG")

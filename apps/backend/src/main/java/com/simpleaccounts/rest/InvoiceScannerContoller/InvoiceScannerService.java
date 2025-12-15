@@ -20,14 +20,15 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ServerErrorException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -127,7 +128,7 @@ public class InvoiceScannerService {
             }
             // If invoice is paid cannot update
             if (invoice.getStatus() > CommonStatusEnum.APPROVED.getValue())
-                throw new ServerErrorException("Cannot Update Paid Invoice.");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot Update Paid Invoice.");
         }
 
         if (invoiceModel.getPlaceOfSupplyId() !=null){

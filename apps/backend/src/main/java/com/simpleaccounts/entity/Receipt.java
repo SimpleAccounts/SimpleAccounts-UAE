@@ -4,7 +4,7 @@ import com.simpleaccounts.constant.PayMode;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -36,11 +36,11 @@ public class Receipt {
 	private String referenceCode;
 
 	@OneToOne
-	@JoinColumn(name = "CONTACT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_RECEIPT_CONTACT_ID_CONTACT"))
+	@JoinColumn(name = "CONTACT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_RECEIPT_CONTACT_ID_CONTACT"))
 	private Contact contact;
 
 	@OneToOne
-	@JoinColumn(name = "INVOICE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_RECEIPT_INVOICE_ID_INVOICE"))
+	@JoinColumn(name = "INVOICE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_RECEIPT_INVOICE_ID_INVOICE"))
 	private Invoice invoice;
 
 	@Basic
@@ -79,7 +79,7 @@ public class Receipt {
 	private PayMode payMode;
 
 	@ManyToOne
-	@JoinColumn(name = "DEPOSIT_TO_TRANSACTION_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_RECEIPT_DEPOSIT_TO_TRANX_CATEGORY_ID_TRANX_CATEGORY"))
+	@JoinColumn(name = "DEPOSIT_TO_TRANSACTION_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_RECEIPT_DEPOSIT_TO_TRANX_CATEGORY_ID_TRANX_CATEGORY"))
 	private TransactionCategory depositeToTransactionCategory;
 
 	@Basic

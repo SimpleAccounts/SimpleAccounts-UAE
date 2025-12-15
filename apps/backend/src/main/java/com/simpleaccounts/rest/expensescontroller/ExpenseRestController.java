@@ -18,14 +18,13 @@ import com.simpleaccounts.service.*;
 import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
-import io.swagger.annotations.ApiOperation;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -72,7 +71,6 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 
     private final InvoiceRestHelper invoiceRestHelper;
 	@LogRequest
-	@ApiOperation(value = "Get Expense List")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getExpenseList(ExpenseRequestFilterModel expenseRequestFilterModel,
 																  HttpServletRequest request) {
@@ -114,7 +112,6 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Add New Expense")
 	@PostMapping(value = "/save")
 	public ResponseEntity<Object> save(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
 		try {
@@ -157,7 +154,6 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 
 	@LogRequest
 	@Transactional(rollbackFor = Exception.class)
-	@ApiOperation(value = "Update Expense")
 	@PostMapping(value = "/update")
 	public ResponseEntity<Object> update(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
 		try {
@@ -192,7 +188,6 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 	}
 
 	@LogRequest
-	@ApiOperation(value = "Get Expense Detail by Expanse Id")
 	@GetMapping(value = "/getExpenseById")
 	public ResponseEntity<ExpenseModel> getExpenseById(@RequestParam("expenseId") Integer expenseId) {
 		try {

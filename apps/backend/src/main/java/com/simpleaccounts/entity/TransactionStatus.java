@@ -5,7 +5,7 @@ import com.simpleaccounts.entity.bankaccount.Transaction;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -41,15 +41,15 @@ public class TransactionStatus implements Serializable {
 
 	@Deprecated
 	@OneToOne
-	@JoinColumn(name = "RECONSILE_JOURNAL_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPLANATION_STATUS_RECONSILE_JOURNAL_ID_RECONSILE_JOURNAL"))
+	@JoinColumn(name = "RECONSILE_JOURNAL_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EXPLANATION_STATUS_RECONSILE_JOURNAL_ID_RECONSILE_JOURNAL"))
 	private Journal reconsileJournal;
 
 	@OneToOne
-	@JoinColumn(name = "INVOICE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPLANATION_STATUS_INVOICE_ID_INVOICE"))
+	@JoinColumn(name = "INVOICE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EXPLANATION_STATUS_INVOICE_ID_INVOICE"))
 	private Invoice invoice;
 
 	@OneToOne
-	@JoinColumn(name = "TRANSACTION_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_EXPLANATION_STATUS_TRANSACTION_ID_TRANSACTION"))
+	@JoinColumn(name = "TRANSACTION_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_EXPLANATION_STATUS_TRANSACTION_ID_TRANSACTION"))
 	private Transaction transaction;
 
 	@Column(name = "CREATED_BY")

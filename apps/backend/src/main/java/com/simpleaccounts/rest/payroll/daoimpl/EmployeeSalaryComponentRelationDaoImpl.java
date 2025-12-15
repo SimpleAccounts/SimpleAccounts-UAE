@@ -4,7 +4,7 @@ import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.entity.EmployeeSalaryComponentRelation;
 import com.simpleaccounts.rest.payroll.dao.EmployeeSalaryComponentRelationDao;
 import java.util.List;
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository(value = "employeeSalaryTempRelationDao")

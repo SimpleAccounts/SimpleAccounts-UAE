@@ -4,13 +4,13 @@ import com.simpleaccounts.constant.ErrorConstant;
 import com.simpleaccounts.service.ConfigurationService;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public class EmailSender {
 			prop.put("mail.smtp.ssl.checkserveridentity", "true");
 
 		Session session;
-		session = Session.getInstance(prop, new javax.mail.Authenticator() {
+		session = Session.getInstance(prop, new jakarta.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(username, password);
 			}

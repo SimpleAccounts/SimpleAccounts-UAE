@@ -6,7 +6,7 @@ import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -78,15 +78,15 @@ public class JournalLineItem implements Serializable {
 	private String description;
 
 	@OneToOne
-	@JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_JOURNAL_LINE_ITEM_TRANX_CAT_CODE_TRANX_CAT"))
+	@JoinColumn(name = "TRANSACTION_CATEGORY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_JOURNAL_LINE_ITEM_TRANX_CAT_CODE_TRANX_CAT"))
 	private TransactionCategory transactionCategory;
 
 	@OneToOne
-	@JoinColumn(name = "CONTACT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_JOURNAL_LINE_ITEM_CONTACT_ID_CONTACT"))
+	@JoinColumn(name = "CONTACT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_JOURNAL_LINE_ITEM_CONTACT_ID_CONTACT"))
 	private Contact contact;
 
 	@OneToOne
-	@JoinColumn(name = "VAT_CATEGORY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_JOURNAL_LINE_ITEM_VAT_CATEGORY_CODE_VAT_CATEGORY"))
+	@JoinColumn(name = "VAT_CATEGORY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_JOURNAL_LINE_ITEM_VAT_CATEGORY_CODE_VAT_CATEGORY"))
 	private VatCategory vatCategory;
 
 	@Basic
@@ -120,7 +120,7 @@ public class JournalLineItem implements Serializable {
 	private Boolean deleteFlag = Boolean.FALSE;
 
 	@ManyToOne
-	@JoinColumn(name = "JOURNAL_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_JOURNAL_LINE_ITEM_JOURNAL_ID_JOURNAL"))
+	@JoinColumn(name = "JOURNAL_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_JOURNAL_LINE_ITEM_JOURNAL_ID_JOURNAL"))
 	private Journal journal;
 
 	@Column(name = "REFERENCE_ID")
@@ -143,7 +143,7 @@ public class JournalLineItem implements Serializable {
 	private Boolean isCurrencyConversionEnabled = Boolean.FALSE;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CURRENCY_CODE",foreignKey = @javax.persistence.ForeignKey(name = "FK_JOURNAL_LINE_ITEM_CURRENCY_CODE_CURRENCY"))
+	@JoinColumn(name = "CURRENCY_CODE",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_JOURNAL_LINE_ITEM_CURRENCY_CODE_CURRENCY"))
 	private Currency currencyCode;
 
 	@Basic

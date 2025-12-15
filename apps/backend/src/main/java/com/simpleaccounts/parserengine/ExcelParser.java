@@ -14,7 +14,6 @@ import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
@@ -72,7 +71,7 @@ public class ExcelParser implements TransactionFileParser {
 				});
 
 				return list;
-			} catch (EncryptedDocumentException | IOException | InvalidFormatException e) {
+			} catch (EncryptedDocumentException | IOException e) {
 				logger.error(LOG_ERROR_PREFIX, e);
 			}
 
@@ -176,7 +175,7 @@ public class ExcelParser implements TransactionFileParser {
 				responseMap.put("error", errorList);
 
 				return responseMap;
-			} catch (EncryptedDocumentException | IOException | InvalidFormatException e) {
+			} catch (EncryptedDocumentException | IOException e) {
 				logger.error(LOG_ERROR_PREFIX, e);
 			}
 
@@ -188,7 +187,7 @@ public class ExcelParser implements TransactionFileParser {
 		boolean isEmptyRow = true;
 		for(int cellNum = row.getFirstCellNum(); cellNum < row.getLastCellNum(); cellNum++){
 			Cell cell = row.getCell(cellNum);
-			if(cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK && StringUtils.isNotBlank(cell.toString())){
+			if(cell != null && cell.getCellType() != org.apache.poi.ss.usermodel.CellType.BLANK && StringUtils.isNotBlank(cell.toString())){
 				isEmptyRow = false;
 			}
 		}
@@ -222,7 +221,7 @@ public class ExcelParser implements TransactionFileParser {
 					});
 				});
 				return list;
-			} catch (EncryptedDocumentException | IOException | InvalidFormatException e) {
+			} catch (EncryptedDocumentException | IOException e) {
 				logger.error(LOG_ERROR_PREFIX, e);
 			}
 

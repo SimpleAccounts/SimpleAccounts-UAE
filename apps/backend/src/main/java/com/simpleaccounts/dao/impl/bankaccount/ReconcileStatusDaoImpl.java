@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 @Repository

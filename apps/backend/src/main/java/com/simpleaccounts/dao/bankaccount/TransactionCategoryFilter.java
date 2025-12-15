@@ -2,9 +2,9 @@ package com.simpleaccounts.dao.bankaccount;
 
 import com.simpleaccounts.dao.AbstractFilter;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Root;
 
 public class TransactionCategoryFilter extends AbstractFilter<TransactionCategory> {
 

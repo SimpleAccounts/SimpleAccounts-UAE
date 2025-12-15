@@ -1,7 +1,7 @@
 package com.simpleaccounts.entity.bankaccount;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +31,7 @@ public class ReconcileCategory implements Serializable {
 	private String reconcileCategoryDescription;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PARENT_RECONCILE_CATEGORY_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_REC_CATEGORY_PARENT_REC_CATEGORY_ID_REC_CATEGORY"))
+	@JoinColumn(name = "PARENT_RECONCILE_CATEGORY_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_REC_CATEGORY_PARENT_REC_CATEGORY_ID_REC_CATEGORY"))
 	private ReconcileCategory parentReconcileCategory;
 
 	@Column(name = "RECONCILE_CATEGORY_CODE")

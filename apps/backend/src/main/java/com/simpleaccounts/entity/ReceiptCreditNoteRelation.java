@@ -2,7 +2,7 @@ package com.simpleaccounts.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -41,7 +41,7 @@ public class ReceiptCreditNoteRelation {
     private LocalDateTime lastUpdateDate;
 
     @ManyToOne
-    @JoinColumn(name = "RECEIPT_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_RECEIPT_CREDIT_NOTE_RELATION_ID_RECEIPT"))
+    @JoinColumn(name = "RECEIPT_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_RECEIPT_CREDIT_NOTE_RELATION_ID_RECEIPT"))
     private Receipt receipt;
 
     @Basic(optional = false)
@@ -49,7 +49,7 @@ public class ReceiptCreditNoteRelation {
     private BigDecimal receiptAmountAfterApplyingCredits;
 
     @ManyToOne
-    @JoinColumn(name = "CREDIT_NOTE_ID",foreignKey = @javax.persistence.ForeignKey(name = "FK_RECEIPT_CREDIT_NOTE_RELATION_CREDIT_NOTE_ID_CREDIT_NOTE"))
+    @JoinColumn(name = "CREDIT_NOTE_ID",foreignKey = @jakarta.persistence.ForeignKey(name = "FK_RECEIPT_CREDIT_NOTE_RELATION_CREDIT_NOTE_ID_CREDIT_NOTE"))
     private CreditNote creditNote;
 
     @Basic(optional = false)
