@@ -46,6 +46,13 @@ describe('Footer Component', () => {
     localStorageStore = { language: 'en' };
     // Clear all mocks to reset call history
     jest.clearAllMocks();
+    // Restore mock implementation after clearAllMocks
+    localStorageMock.getItem.mockImplementation((key) => {
+      return localStorageStore[key] || null;
+    });
+    localStorageMock.setItem.mockImplementation((key, value) => {
+      localStorageStore[key] = value.toString();
+    });
   });
 
   test('renders footer with logo', () => {
@@ -60,7 +67,7 @@ describe('Footer Component', () => {
   });
 
   test('displays current language from localStorage', () => {
-    // Clear mocks before this test to track calls
+    // Clear call history but keep implementation
     localStorageMock.getItem.mockClear();
     
     // Set language in store before rendering
