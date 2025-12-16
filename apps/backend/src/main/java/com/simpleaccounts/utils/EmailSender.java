@@ -51,7 +51,7 @@ public class EmailSender {
 		String smtpHost = mailDefaultConfigurationModel.getMailhost() != null ? mailDefaultConfigurationModel.getMailhost()
 				: System.getenv("SIMPLEACCOUNTS_SMTP_HOST");
 		if (smtpHost == null || smtpHost.trim().isEmpty()) {
-			logger.warn("SMTP is not configured. Email will not be sent to: {}", recipients);
+			logger.warn("SMTP is not configured. Email will not be sent to: {}", sanitizeForLog(recipients));
 			throw new MessagingException("SMTP is not configured");
 		}
 
@@ -676,4 +676,18 @@ public class EmailSender {
 			"\n" +
 			"</body>\n" +
 			"</html>";
+	}
+
+	/**
+	 * Sanitize user input for logging to prevent log injection attacks
+	 * @param value The value to sanitize
+	 * @return Sanitized value safe for logging
+	 */
+	private static String sanitizeForLog(String value) {
+		if (value == null) {
+			return "null";
+		}
+		// Remove newlines, carriage returns, and tabs to prevent log injection
+		return value.replace('\n', '_').replace('\r', '_').replace('\t', '_');
+	}
 }

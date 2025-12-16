@@ -61,17 +61,6 @@ public class SimpleCorsFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         HttpServletRequest request = (HttpServletRequest) req;
 
-        // Log incoming request for registration endpoint
-        if (request.getRequestURI() != null && request.getRequestURI().contains("/rest/company/register")) {
-            DebugFileLogger.log("=== SimpleCorsFilter: Processing /rest/company/register request ===");
-            DebugFileLogger.log("Method: " + request.getMethod());
-            DebugFileLogger.log("Content-Type: " + request.getContentType());
-            System.out.println("=== SimpleCorsFilter: Processing /rest/company/register request ===");
-            System.out.println("Method: " + request.getMethod());
-            System.out.println("Content-Type: " + request.getContentType());
-            System.out.flush();
-        }
-
         String origin = request.getHeader("Origin");
         String allowedOrigin = determineAllowedOrigin(origin);
 
@@ -85,22 +74,7 @@ public class SimpleCorsFilter implements Filter {
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
-            try {
-                chain.doFilter(req, res);
-                if (request.getRequestURI() != null && request.getRequestURI().contains("/rest/company/register")) {
-                    DebugFileLogger.log("=== SimpleCorsFilter: /rest/company/register request completed ===");
-                    System.out.println("=== SimpleCorsFilter: /rest/company/register request completed ===");
-                    System.out.flush();
-                }
-            } catch (Exception e) {
-                DebugFileLogger.logException("SimpleCorsFilter: filter chain", e);
-                System.err.println("=== SimpleCorsFilter: Exception during filter chain ===");
-                System.err.println("Exception type: " + e.getClass().getName());
-                System.err.println("Exception message: " + e.getMessage());
-                e.printStackTrace(System.err);
-                System.err.flush();
-                throw e;
-            }
+            chain.doFilter(req, res);
         }
     }
 

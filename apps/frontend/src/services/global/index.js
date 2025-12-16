@@ -3,8 +3,6 @@ import authReducer from './auth/authSlice';
 import commonReducer from './common/commonSlice';
 
 // Legacy exports for backward compatibility during migration
-import AuthReducer from './auth/reducer';
-import CommonReducer from './common/reducer';
 import * as AuthActions from './auth/actions';
 import * as CommonActions from './common/actions';
 

@@ -351,8 +351,16 @@ public class CompanyController {
 			boolean smtpConfigured = emailSender.isSmtpConfigured();
 			String passwordResetLink = null;
 			if (!smtpConfigured && passwordToken != null) {
-				passwordResetLink = selecteduser.getUrl() + "/new-password?token=" + passwordToken;
-				log.info("SMTP not configured. Password reset link generated for user: {}", selecteduser.getEmail());
+				// Validate and sanitize URL to prevent XSS
+				String loginUrl = selecteduser.getUrl();
+				if (loginUrl != null && isValidUrl(loginUrl)) {
+					passwordResetLink = loginUrl + "/new-password?token=" + passwordToken;
+					log.info("SMTP not configured. Password reset link generated for user: {}", sanitizeForLog(selecteduser.getEmail()));
+				} else {
+					log.warn("Invalid login URL provided: {}", sanitizeForLog(loginUrl));
+					// Use a default safe URL or omit the link
+					passwordResetLink = null;
+				}
 			}
 
 			// Create email log
@@ -456,8 +464,9 @@ public class CompanyController {
 			return new ResponseEntity<>(responseMessage, HttpStatus.OK);
 		} catch (Exception e) {
 			// Sanitize user input to prevent log injection
-			String sanitizedCompanyName = sanitizeForLog(registrationModel != null ? registrationModel.getCompanyName() : "null");
-			String sanitizedEmail = sanitizeForLog(registrationModel != null ? registrationModel.getEmail() : "null");
+			// registrationModel cannot be null here due to earlier null check
+			String sanitizedCompanyName = sanitizeForLog(registrationModel.getCompanyName());
+			String sanitizedEmail = sanitizeForLog(registrationModel.getEmail());
 			log.error("Registration failed for company: {}, email: {}", sanitizedCompanyName, sanitizedEmail);
 			log.error("Error during company registration: ", e);
 			
@@ -489,6 +498,27 @@ public class CompanyController {
 		}
 		// Remove newlines, carriage returns, and tabs to prevent log injection
 		return value.replace('\n', '_').replace('\r', '_').replace('\t', '_');
+	}
+
+	/**
+	 * Validates URL to prevent XSS attacks
+	 * @param url The URL to validate
+	 * @return true if URL is safe, false otherwise
+	 */
+	private static boolean isValidUrl(String url) {
+		if (url == null || url.trim().isEmpty()) {
+			return false;
+		}
+		// Check for dangerous characters that could be used for XSS
+		String dangerousChars = "<>\"'&";
+		for (char c : dangerousChars.toCharArray()) {
+			if (url.indexOf(c) >= 0) {
+				return false;
+			}
+		}
+		// Basic URL format validation - must start with http:// or https://
+		String trimmed = url.trim().toLowerCase();
+		return trimmed.startsWith("http://") || trimmed.startsWith("https://");
 	}
 
 	/**
