@@ -56,7 +56,6 @@ class AdminLayout extends React.Component {
       SubscriptionMessage: '',
       sidebarShow: false,
       sidebarMinimized: false,
-      navDropdownOpen: {},
     };
   }
 
@@ -158,8 +157,7 @@ class AdminLayout extends React.Component {
       draggable: true,
     };
     const { loading, loadingMsg, SubscriptionMessage, sidebarMinimized } = this.state;
-    const { user_role_list, user_list } = this.props;
-    var arr = [];
+    const { user_role_list } = this.props;
 
     function parentPathPresent(arr, name) {
       return arr.items.find((path) => path.name == name);
