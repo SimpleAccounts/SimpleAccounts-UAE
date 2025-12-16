@@ -35,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -388,10 +389,34 @@ public class CompanyController {
 			coacTransactionCategoryService.addCoacTransactionCategory(
 					pettyCash.getTransactionCategory().getChartOfAccount(), pettyCash.getTransactionCategory());
 
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>("Registration successful", HttpStatus.OK);
 		} catch (Exception e) {
-			log.error(ERROR, e);
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			log.error("Error during company registration: ", e);
+			log.error("Registration model data: companyName={}, email={}, stateId={}, currencyCode={}, companyTypeCode={}", 
+				registrationModel != null ? registrationModel.getCompanyName() : "null", 
+				registrationModel != null ? registrationModel.getEmail() : "null",
+				registrationModel != null ? registrationModel.getStateId() : "null",
+				registrationModel != null ? registrationModel.getCurrencyCode() : "null",
+				registrationModel != null ? registrationModel.getCompanyTypeCode() : "null");
+			// Log full stack trace for debugging
+			e.printStackTrace();
+			// Return error message in response body for debugging
+			String errorMessage = "Registration failed: " + (e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName());
+			if (e.getCause() != null) {
+				errorMessage += " - Cause: " + e.getCause().getMessage();
+			}
+			// Set CORS headers directly in the response
+			HttpHeaders headers = new HttpHeaders();
+			String origin = request.getHeader("Origin");
+			if (origin != null && !origin.isEmpty()) {
+				headers.set("Access-Control-Allow-Origin", origin);
+			} else {
+				headers.set("Access-Control-Allow-Origin", "*");
+			}
+			headers.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
+			headers.set("Access-Control-Allow-Headers", "x-requested-with, authorization, content-type");
+			headers.set("Access-Control-Allow-Credentials", "true");
+			return new ResponseEntity<>(errorMessage, headers, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
