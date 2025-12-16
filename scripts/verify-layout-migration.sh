@@ -45,7 +45,9 @@ echo ""
 # Check if AdminLayout is updated
 echo "🔧 Checking AdminLayout..."
 if [ -f "$FRONTEND_DIR/src/layouts/admin/index.jsx" ]; then
-  if grep -q "from.*layouts/components" "$FRONTEND_DIR/src/layouts/admin/index.jsx" 2>/dev/null; then
+  if grep -q "from '../components/header'" "$FRONTEND_DIR/src/layouts/admin/index.jsx" 2>/dev/null || \
+     grep -q "from '../components/sidebar'" "$FRONTEND_DIR/src/layouts/admin/index.jsx" 2>/dev/null || \
+     grep -q "from '../components/footer'" "$FRONTEND_DIR/src/layouts/admin/index.jsx" 2>/dev/null; then
     echo -e "${GREEN}✅ AdminLayout uses new components${NC}"
   else
     echo -e "${YELLOW}⚠️  AdminLayout may not be using new components${NC}"
