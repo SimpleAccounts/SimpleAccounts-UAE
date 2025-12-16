@@ -132,9 +132,16 @@ public class UserServiceImpl extends UserService{
 	}
 
 	@Override
-	public boolean createPassword(User user,UserModel selectedUser,User sender) {
+	public String createPassword(User user,UserModel selectedUser,User sender) {
 
 		String token = randomString.getAlphaNumericString(30);
+
+		// Always save the token first so user can set password via link
+		user.setForgotPasswordToken(token);
+		user.setForgotPasswordTokenExpiryDate(dateUtils.add(LocalDateTime.now(), 1));
+		persist(user);
+
+		// Try to send email (will gracefully fail if SMTP not configured)
 		try {
 			emailSender.send(selectedUser.getEmail(), "Create Password",
 					emailSender.NEW_PASSWORD.replace("LINK",selectedUser.getUrl()+ "/new-password?token=" + token)
@@ -146,13 +153,11 @@ public class UserServiceImpl extends UserService{
 					EmailConstant.ADMIN_SUPPORT_EMAIL,
 					EmailConstant.ADMIN_EMAIL_SENDER_NAME, true);
 		} catch (MessagingException e) {
-			logger.error(LOG_ERROR, e);
-			return false;
+			logger.warn("Email not sent (SMTP may not be configured): {}", e.getMessage());
+			// Don't fail - token is saved, user can use the link directly
 		}
-		user.setForgotPasswordToken(token);
-		user.setForgotPasswordTokenExpiryDate(dateUtils.add(LocalDateTime.now(), 1));
-		persist(user);
-		return true;
+
+		return token;
 	}
 
 	@Override
