@@ -19,7 +19,8 @@ Object.defineProperty(window, 'location', {
 // Mock localStorage properly
 let localStorageStore = { language: 'en' };
 
-const localStorageMock = {
+// Create mock functions that will be restored after clearAllMocks
+const createLocalStorageMock = () => ({
   getItem: jest.fn((key) => {
     return localStorageStore[key] || null;
   }),
@@ -32,7 +33,9 @@ const localStorageMock = {
   removeItem: jest.fn((key) => {
     delete localStorageStore[key];
   }),
-};
+});
+
+let localStorageMock = createLocalStorageMock();
 
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
@@ -46,12 +49,13 @@ describe('Footer Component', () => {
     localStorageStore = { language: 'en' };
     // Clear all mocks to reset call history
     jest.clearAllMocks();
-    // Restore mock implementation after clearAllMocks
-    localStorageMock.getItem.mockImplementation((key) => {
-      return localStorageStore[key] || null;
-    });
-    localStorageMock.setItem.mockImplementation((key, value) => {
-      localStorageStore[key] = value.toString();
+    // Recreate mock implementation after clearAllMocks
+    // This ensures the mock functions are fresh and properly configured
+    localStorageMock = createLocalStorageMock();
+    Object.defineProperty(window, 'localStorage', {
+      value: localStorageMock,
+      writable: true,
+      configurable: true,
     });
   });
 
@@ -67,9 +71,6 @@ describe('Footer Component', () => {
   });
 
   test('displays current language from localStorage', () => {
-    // Clear call history but keep implementation
-    localStorageMock.getItem.mockClear();
-    
     // Set language in store before rendering
     localStorageStore['language'] = 'it';
     
@@ -80,6 +81,7 @@ describe('Footer Component', () => {
     expect(screen.getByText(/change language/i)).toBeInTheDocument();
     // Verify localStorage getItem was called (component reads it in constructor)
     // The component uses window['localStorage'].getItem, so we need to check the mock
+    // Note: beforeEach already cleared and restored the mock, so we can check calls directly
     expect(localStorageMock.getItem).toHaveBeenCalledWith('language');
   });
 
