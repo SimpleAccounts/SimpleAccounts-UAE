@@ -414,7 +414,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- Pitest Mutation Testing Plugin -->
 			<plugin>
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>

@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 /**
  * Created by mohsinh on 2/26/2017.
@@ -93,8 +95,8 @@ public class User implements Serializable {
 	private String password;
 
 	@Basic
-	@Lob
-	@Column(name = "PROFILE_IMAGE")
+	@JdbcTypeCode(SqlTypes.BINARY)
+	@Column(name = "PROFILE_IMAGE", columnDefinition = "bytea", nullable = true)
 	private byte[] profileImageBinary;
 
 	@ManyToOne(fetch = FetchType.EAGER)

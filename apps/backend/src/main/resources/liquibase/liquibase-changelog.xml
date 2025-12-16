@@ -10,5 +10,7 @@
 	<include file="databaseChangeLogs/basescript-simpleaccounts-ddl-changeset-2.sql" relativeToChangelogFile="true"/>
 	<include file="databaseChangeLogs/basescript-simpleaccounts-dml-changeset-3.sql" relativeToChangelogFile="true"/>
 	<include file="databaseChangeLogs/changescript-simpleaccounts-changeset-4.sql" relativeToChangelogFile="true"/>
+	<!-- New changeset to seed industry type data -->
+	<include file="databaseChangeLogs/seed-industry-type-data.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

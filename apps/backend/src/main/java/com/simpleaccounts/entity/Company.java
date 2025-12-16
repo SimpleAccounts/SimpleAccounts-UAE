@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 /**
  * Created by mohsinh on 2/26/2017.
@@ -57,6 +59,7 @@ public class Company implements Serializable {
     @Basic
     @Lob
     @Column(name = "COMPANY_LOGO")
+    @JdbcTypeCode(SqlTypes.BINARY)
     private byte[] companyLogo;
 
     @Basic

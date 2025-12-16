@@ -26,6 +26,9 @@
 	<logger name="org.springframework.web" 		  level="info" />
 	<logger name="org.springframework.web.client" level="error" />
 	<logger name="com.virtustream.fusion"  		  level="debug" />
+	<logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="debug" />
+	<logger name="org.springframework.boot" level="info" />
+	<logger name="com.simpleaccounts" level="debug" />
 
 	<!-- Setting the root level of logging to INFO -->
 	<root level="info">
