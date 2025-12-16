@@ -34,6 +34,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -97,6 +98,9 @@ public class CompanyController {
 	private final BankAccountTypeService bankAccountTypeService;
 
 	private final UserRestHelper userRestHelper;
+
+	@Value("${cors.allowed.origins:*}")
+	private String allowedOriginsConfig;
 
 	private final BankAccountRestHelper bankRestHelper;
 
@@ -415,12 +419,13 @@ public class CompanyController {
 			// Do not expose internal error details to users
 			String errorMessage = "Registration failed. Please try again or contact support.";
 			// Set CORS headers directly in the response
+			// Validate origin against whitelist to prevent XSS vulnerabilities
 			HttpHeaders headers = new HttpHeaders();
 			String origin = request.getHeader("Origin");
-			if (origin != null && !origin.isEmpty()) {
-				headers.set("Access-Control-Allow-Origin", origin);
-			} else {
-				headers.set("Access-Control-Allow-Origin", "*");
+			String allowedOrigin = determineAllowedOrigin(origin);
+			// Only set CORS header if origin is validated (not empty)
+			if (!allowedOrigin.isEmpty()) {
+				headers.set("Access-Control-Allow-Origin", allowedOrigin);
 			}
 			headers.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
 			headers.set("Access-Control-Allow-Headers", "x-requested-with, authorization, content-type");
@@ -440,6 +445,38 @@ public class CompanyController {
 		}
 		// Remove newlines, carriage returns, and tabs to prevent log injection
 		return value.replace('\n', '_').replace('\r', '_').replace('\t', '_');
+	}
+
+	/**
+	 * Validates the Origin header against a whitelist of trusted origins
+	 * to prevent Cross-site scripting (XSS) vulnerabilities.
+	 * 
+	 * @param origin The Origin header value from the request
+	 * @return The validated origin if it's in the whitelist, "*" if wildcard is configured,
+	 *         or an empty string if the origin is not trusted
+	 */
+	private String determineAllowedOrigin(String origin) {
+		// Parse allowed origins from configuration
+		Set<String> allowedOrigins = new HashSet<>();
+		if (allowedOriginsConfig != null && !allowedOriginsConfig.trim().isEmpty()) {
+			allowedOrigins = new HashSet<>(Arrays.asList(allowedOriginsConfig.split(",")));
+		} else {
+			allowedOrigins.add("*");
+		}
+
+		// If wildcard is configured, allow all origins
+		if (allowedOrigins.contains("*")) {
+			return "*";
+		}
+
+		// If the request origin is in the allowed list, return it
+		if (origin != null && !origin.trim().isEmpty() && allowedOrigins.contains(origin)) {
+			return origin;
+		}
+
+		// Origin not in whitelist - return empty string (no CORS header will be set)
+		// This is safer than reflecting an untrusted origin
+		return "";
 	}
 
 	@LogRequest
