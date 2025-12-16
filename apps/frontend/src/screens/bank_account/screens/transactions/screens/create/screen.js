@@ -98,7 +98,7 @@ class CreateBankTransaction extends React.Component {
       "application/vnd.ms-excel",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
-    this.regEx = /^[0-9\d]+$/;
+    this.regEx = /^\d+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
     this.formRef = React.createRef();
@@ -139,21 +139,25 @@ class CreateBankTransaction extends React.Component {
     this.props.commonActions
       .getCurrencyConversionList()
       .then((response) => {
-        this.setState({
+        // Capture response data to avoid stale closure
+        const responseData = response.data;
+        const currencyCode = responseData?.[0]?.currencyCode;
+        
+        this.setState((prevState) => ({
           initValue: {
-            ...this.state.initValue,
+            ...prevState.initValue,
             ...{
-              currency: response.data
-                ? parseInt(response.data[0].currencyCode)
-                : "",
+              currency: currencyCode ? parseInt(currencyCode) : "",
             },
           },
-        });
-        this.formRef.current.setFieldValue(
-          "currency",
-          response.data[0].currencyCode,
-          true
-        );
+        }));
+        if (currencyCode) {
+          this.formRef.current.setFieldValue(
+            "currency",
+            currencyCode,
+            true
+          );
+        }
       });
 
     const paginationData = {
@@ -178,9 +182,11 @@ class CreateBankTransaction extends React.Component {
       })
 
     if (this.props.location.state && this.props.location.state.bankAccountId) {
-      this.setState({ id: this.props.location.state.bankAccountId, });
+      // Capture bankAccountId to avoid stale closure
+      const bankAccountId = this.props.location.state.bankAccountId;
+      this.setState({ id: bankAccountId });
       this.props.detailBankAccountActions
-        .getBankAccountByID(this.props.location.state.bankAccountId)
+        .getBankAccountByID(bankAccountId)
         .then((res) => {
           this.setState(
             {
@@ -358,20 +364,20 @@ class CreateBankTransaction extends React.Component {
     if (transactionCategoryId) {
       formData.append(
         "transactionCategoryId",
-        transactionCategoryId ? transactionCategoryId.value : ""
+        transactionCategoryId.value || ""
       );
     }
     if (expenseCategory && coaCategoryId.label === "Expense") {
       formData.append(
         "expenseCategory",
-        expenseCategory ? expenseCategory.value : ""
+        expenseCategory.value || ""
       );
     }
     if (
       (vatId && coaCategoryId.value === 10) ||
       (vatId && coaCategoryId.label === "Expense")
     ) {
-      formData.append("vatId", vatId ? vatId.value : "");
+      formData.append("vatId", vatId.value || "");
       formData.append(
         "transactionVatAmount",
         this.state.transactionVatAmount ? this.state.transactionVatAmount : ""
@@ -837,7 +843,7 @@ class CreateBankTransaction extends React.Component {
     });
     const exchange = result[0].exchangeRate;
 
-    return (amount = amount * exchange);
+    return amount * exchange;
   };
 
   basecurrencyconvertor = (customerinvoice) => {
@@ -869,10 +875,10 @@ class CreateBankTransaction extends React.Component {
         if (remainingcredit > 0) {
           localremainamount = remainingcredit - i.dueAmount * localexe;
 
+          let finalcredit;
           if (localremainamount >= 0) {
             finalcredit = i.dueAmount * localexe;
-          }
-          if (localremainamount < 0) {
+          } else {
             finalcredit = i.dueAmount * localexe + localremainamount;
           }
           remainingcredit = localremainamount;
@@ -1012,8 +1018,11 @@ class CreateBankTransaction extends React.Component {
         ? parentId
         : null;
     }
+    // Capture current state to avoid stale closure
+    const categoriesList = this.state.categoriesList;
+    const catLabel = getParentLabel(categoriesList, type.label);
     this.setState({
-      cat_label: getParentLabel(this.state.categoriesList, type.label),
+      cat_label: catLabel,
     });
     this.setValue(null);
     try {
@@ -1450,17 +1459,16 @@ class CreateBankTransaction extends React.Component {
                               "fileType",
                               "*Unsupported File Format",
                               (value) => {
-                                value &&
+                                if (value) {
                                   this.setState({
                                     fileName: value.name,
                                   });
+                                }
                                 if (
                                   !value ||
-                                  (value &&
-                                    this.supported_format.includes(
-                                      value.type
-                                    )) ||
-                                  !value
+                                  this.supported_format.includes(
+                                    value.type
+                                  )
                                 ) {
                                   return true;
                                 } else {
@@ -1474,8 +1482,7 @@ class CreateBankTransaction extends React.Component {
                               (value) => {
                                 if (
                                   !value ||
-                                  (value && value.size <= this.file_size) ||
-                                  !value
+                                  value.size <= this.file_size
                                 ) {
                                   return true;
                                 } else {

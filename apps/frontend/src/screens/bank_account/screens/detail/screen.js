@@ -112,7 +112,7 @@ class DetailBankAccount extends React.Component {
 		};
 
 		this.regExAlpha = /^[a-zA-Z ]+$/;
-		this.regEx = /^[0-9\d]+$/;
+		this.regEx = /^\d+$/;
 		this.regExBoth = /[a-zA-Z0-9_ ]+$/;
 		this.ifscCode = /[a-zA-Z0-9]+$/;
 		this.swiftRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/;
@@ -125,9 +125,11 @@ class DetailBankAccount extends React.Component {
 
 	componentDidMount = () => {
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
+			// Capture bankAccountId to avoid stale closure
+			const bankAccountId = this.props.location.state.bankAccountId;
 			this.initializeData();
 			// this.checkvalid();
-			this.props.detailBankAccountActions.getTransactionsCountByBankId(this.props.location.state.bankAccountId)
+			this.props.detailBankAccountActions.getTransactionsCountByBankId(bankAccountId)
 				.then((res) => {
 				
 					if(res.status===200){
@@ -136,15 +138,15 @@ class DetailBankAccount extends React.Component {
 						}
 					}
 				})
-			this.updateOpeningBalance(this.props.location.state.bankAccountId);
+			this.updateOpeningBalance(bankAccountId);
 
 			this.setState(
 				{
-					current_bank_account_id: this.props.location.state.bankAccountId,
+					current_bank_account_id: bankAccountId,
 				},
 				() => {
 					this.props.detailBankAccountActions
-						.getBankAccountByID(this.state.current_bank_account_id)
+						.getBankAccountByID(bankAccountId)
 						.then((res) => {
 							this.setState({
 								current_bank_account: res,

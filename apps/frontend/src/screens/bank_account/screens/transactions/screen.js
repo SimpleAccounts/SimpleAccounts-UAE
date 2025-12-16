@@ -394,11 +394,12 @@ class BankTransactions extends React.Component {
 
   handleChange = (val, name, reconcile, row, label) => {
     if (!reconcile) {
-      this.setState({
-        filterData: Object.assign(this.state.filterData, {
+      this.setState((prevState) => ({
+        filterData: {
+          ...prevState.filterData,
           [name]: val,
-        }),
-      });
+        },
+      }));
     } else {
       if (row) {
         this.handleExplain(val, name, reconcile, row, label);
@@ -589,8 +590,6 @@ class BankTransactions extends React.Component {
       row.creationMode !== "POTENTIAL_DUPLICATE"
     ) {
       return <div className="label-danger">Not Explained</div>;
-    } else if (row.explinationStatusEnum === "RECONCILED") {
-      return <div>Reconciled</div>;
     } else if (row.creationMode === "POTENTIAL_DUPLICATE") {
       return (
         <div>
