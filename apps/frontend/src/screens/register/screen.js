@@ -505,7 +505,7 @@ class Register extends React.Component {
 																		if (values.IsRegistered === true) {
 																			if (!values.TaxRegistrationNumber) {
 																				errors.TaxRegistrationNumber = "Tax registration number is required";
-																			} else if (values.TaxRegistrationNumber.length <= 15) {
+																			} else if (values.TaxRegistrationNumber.length < 15) {
 																				errors.TaxRegistrationNumber = "Invalid TRN";
 																			}
 																			if (!values.vatRegistrationDate) {
