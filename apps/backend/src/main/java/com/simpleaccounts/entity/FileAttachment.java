@@ -29,8 +29,8 @@ public class FileAttachment implements Serializable {
     @Column(name = "FILE_TYPE")
     private String fileType;
 
-    @Lob
-    @Column(name = "FILE_DATA")
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "FILE_DATA", columnDefinition = "bytea")
     private byte[] fileData;
 
     @Column(name = "ORDER_SEQUENCE")

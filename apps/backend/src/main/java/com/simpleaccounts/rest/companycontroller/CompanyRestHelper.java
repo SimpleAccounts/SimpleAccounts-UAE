@@ -231,49 +231,83 @@ public class CompanyRestHelper{
 	}
 
     public Company registerCompany(RegistrationModel registrationModel) {
+		logger.info("Registering company: {}", registrationModel.getCompanyName());
+		
 		Company company = new Company();
 		company.setCompanyName(registrationModel.getCompanyName());
+		
+		// Company Type lookup
 		if (registrationModel.getCompanyTypeCode() != null) {
-			company.setCompanyTypeCode(companyTypeService.findByPK(registrationModel.getCompanyTypeCode()));
+			CompanyType companyType = companyTypeService.findByPK(registrationModel.getCompanyTypeCode());
+			if (companyType == null) {
+				throw new RuntimeException("CompanyType not found for code: " + registrationModel.getCompanyTypeCode());
+			}
+			company.setCompanyTypeCode(companyType);
 		}
+		
+		// Industry Type lookup
 		if (registrationModel.getIndustryTypeCode() != null) {
-			company.setIndustryTypeCode(industryTypeService.findByPK(registrationModel.getIndustryTypeCode()));
+			IndustryType industryType = industryTypeService.findByPK(registrationModel.getIndustryTypeCode());
+			if (industryType == null) {
+				throw new RuntimeException("IndustryType not found for code: " + registrationModel.getIndustryTypeCode());
+			}
+			company.setIndustryTypeCode(industryType);
 		}
+		
+		// Currency Code lookup - REQUIRED
 		if (registrationModel.getCurrencyCode() != null) {
-			company.setCurrencyCode(currencyService.findByPK(registrationModel.getCurrencyCode()));
+			Currency currency = currencyService.findByPK(registrationModel.getCurrencyCode());
+			if (currency == null) {
+				throw new RuntimeException("Currency not found for code: " + registrationModel.getCurrencyCode());
+			}
+			company.setCurrencyCode(currency);
+		} else {
+			throw new RuntimeException("CurrencyCode is required but was null");
 		}
+		
+		// Country lookup
 		if (registrationModel.getCountryId() != null) {
-			company.setCompanyCountryCode(countryService.getCountry(registrationModel.getCountryId()));
+			Country country = countryService.getCountry(registrationModel.getCountryId());
+			if (country == null) {
+				throw new RuntimeException("Country not found for ID: " + registrationModel.getCountryId());
+			}
+			company.setCompanyCountryCode(country);
 		}
-		if(registrationModel.getStateId() != null){
-			company.setCompanyStateCode(
-					stateService.findByPK(registrationModel.getStateId()));
+		
+		// State lookup
+		if (registrationModel.getStateId() != null) {
+			State state = stateService.findByPK(registrationModel.getStateId());
+			if (state == null) {
+				throw new RuntimeException("State not found for ID: " + registrationModel.getStateId());
+			}
+			company.setCompanyStateCode(state);
 		}
-		if(registrationModel.getPhoneNumber()!=null){
+		
+		if (registrationModel.getPhoneNumber() != null) {
 			company.setPhoneNumber(registrationModel.getPhoneNumber());
 		}
-
-		if(registrationModel.getIsDesignatedZone() != null){
+		if (registrationModel.getIsDesignatedZone() != null) {
 			company.setIsDesignatedZone(registrationModel.getIsDesignatedZone());
 		}
-		if(registrationModel.getIsRegisteredVat() != null){
+		if (registrationModel.getIsRegisteredVat() != null) {
 			company.setIsRegisteredVat(registrationModel.getIsRegisteredVat());
 		}
 		if (registrationModel.getVatRegistrationDate() != null) {
 			Instant instant = Instant.ofEpochMilli(registrationModel.getVatRegistrationDate().getTime());
-			LocalDateTime vatRegistrationDate = LocalDateTime.ofInstant(instant,
-					ZoneId.systemDefault());
+			LocalDateTime vatRegistrationDate = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 			company.setVatRegistrationDate(vatRegistrationDate);
 		}
-		if(registrationModel.getTaxRegistrationNumber() != null){
+		if (registrationModel.getTaxRegistrationNumber() != null) {
 			company.setVatNumber(registrationModel.getTaxRegistrationNumber());
 		}
-		if(registrationModel.getCompanyAddressLine1() != null){
+		if (registrationModel.getCompanyAddressLine1() != null) {
 			company.setCompanyAddressLine1(registrationModel.getCompanyAddressLine1());
 		}
-		if(registrationModel.getCompanyAddressLine2() != null){
+		if (registrationModel.getCompanyAddressLine2() != null) {
 			company.setCompanyAddressLine2(registrationModel.getCompanyAddressLine2());
 		}
-        return company;
+		
+		logger.info("Company registration prepared successfully");
+		return company;
     }
 }

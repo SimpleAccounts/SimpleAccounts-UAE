@@ -84,20 +84,35 @@ class AdminLayout extends React.Component {
     } else {
       this.props.authActions
         .checkAuthStatus()
-        .then(async (response) => {
-          await this.props.commonActions.getCompanyDetails().then((res) => {
-            this.setState({ registeredVat: res.data.isRegisteredVat });
-          });
-          await this.props.commonActions.getRoleList(response.data.role.roleCode);
-          await this.props.commonActions.getCompanyCurrency();
-          await this.props.commonActions.getCurrencyConversionList();
-          await this.props.commonActions.getVatList();
-          await this.props.commonActions.getCurrencyList();
-          this.setState({
-            loading: false,
-          });
+        .then(async (action) => {
+          // Redux Toolkit thunks return action objects, check for fulfilled
+          if (action && action.type && action.type.includes('fulfilled')) {
+            const userData = action.payload;
+            
+            const companyAction = await this.props.commonActions.getCompanyDetails();
+            if (companyAction && companyAction.type && companyAction.type.includes('fulfilled')) {
+              this.setState({ registeredVat: companyAction.payload?.isRegisteredVat ?? true });
+            }
+            
+            if (userData?.role?.roleCode) {
+              await this.props.commonActions.getRoleList(userData.role.roleCode);
+            }
+            await this.props.commonActions.getCompanyCurrency();
+            await this.props.commonActions.getCurrencyConversionList();
+            await this.props.commonActions.getVatList();
+            await this.props.commonActions.getCurrencyList();
+            this.setState({
+              loading: false,
+            });
+          } else {
+            // Auth check failed - user not authenticated
+            this.props.commonActions.tostifyAlert('error', 'Session Timed out');
+            this.props.authActions.logOut();
+            this.props.history.push('/login');
+          }
         })
         .catch((err) => {
+          console.error('Auth check error:', err);
           this.props.commonActions.tostifyAlert('error', 'Session Timed out');
           this.props.authActions.logOut();
           this.props.history.push('/login');
@@ -109,43 +124,45 @@ class AdminLayout extends React.Component {
         }
         if (status === 'success') {
           toast.success(message, {
-            position: toast.POSITION.TOP_RIGHT,
+            position: 'top-right',
           });
         } else if (status === 'error') {
           toast.error(message, {
-            position: toast.POSITION.TOP_RIGHT,
+            position: 'top-right',
           });
         } else if (status === 'warn') {
           toast.warn(message, {
-            position: toast.POSITION.TOP_RIGHT,
+            position: 'top-right',
           });
         } else if (status === 'info') {
           toast.info(message, {
-            position: toast.POSITION.TOP_RIGHT,
+            position: 'top-right',
           });
         }
       };
       this.props.commonActions.setTostifyAlertFunc(toastifyAlert);
       this.props.authActions
         .getUserSubscription()
-        .then((res) => {
+        .then((action) => {
+          // This thunk may fail for local dev (no subscription service), that's OK
           let message = null;
-          if (res.status === 200) {
+          if (action && action.type && action.type.includes('fulfilled')) {
+            const data = action.payload;
             if (
-              (res.data.message && res.data.message.toLowerCase() === 'active') ||
-              (res.data.status && res.data.status.toLowerCase() === 'active')
+              (data?.message && data.message.toLowerCase() === 'active') ||
+              (data?.status && data.status.toLowerCase() === 'active')
             ) {
               message = null;
             } else {
               message = strings.SubscriptionExpiredMessage;
             }
-          } else {
-            message = strings.SubscriptionFailedMessage;
           }
+          // Don't show error for subscription check failures in local dev
           this.setState({ SubscriptionMessage: message });
         })
         .catch((err) => {
-          this.setState({ SubscriptionMessage: strings.SubscriptionErrorMessage });
+          // Subscription check is optional, don't break the app
+          this.setState({ SubscriptionMessage: null });
         });
     }
   }

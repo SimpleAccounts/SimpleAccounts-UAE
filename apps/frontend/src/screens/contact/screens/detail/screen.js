@@ -322,7 +322,7 @@ class DetailContact extends React.Component {
 	success = (msg) => {
 		toast.success(msg, {
 			autoClose: 80000,
-			position: toast.POSITION.TOP_RIGHT,
+			position: 'top-right',
 		});
 	};
 

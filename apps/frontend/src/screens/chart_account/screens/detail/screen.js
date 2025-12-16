@@ -149,7 +149,7 @@ class DetailChartAccount extends React.Component {
 	// Show Success Toast
 	success = (msg) => {
 		toast.success(msg, {
-			position: toast.POSITION.TOP_RIGHT,
+			position: 'top-right',
 		});
 	};
 

@@ -98,7 +98,7 @@ class CreateChartAccount extends React.Component {
 	// Show Success Toast
 	// success() {
 	//   toast.success('Chart Of Account Created Successfully... ', {
-	//     position: toast.POSITION.TOP_RIGHT
+	//     position: 'top-right'
 	//   })
 	// }
 

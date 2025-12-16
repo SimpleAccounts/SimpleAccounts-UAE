@@ -22,12 +22,18 @@
 		</encoder>
 	</appender> 
 	</then> </if>
-	<logger name="org.hibernate.SQL"       		  level="info" />
-	<logger name="org.springframework.web" 		  level="info" />
+	<!-- Hibernate SQL logging (disabled by default, enable for debugging) -->
+	<!-- <logger name="org.hibernate.SQL" level="debug" /> -->
+	<!-- <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace" /> -->
+	
+	<!-- Spring framework logging -->
 	<logger name="org.springframework.web.client" level="error" />
-	<logger name="com.virtustream.fusion"  		  level="debug" />
+	
+	<!-- Application logging -->
+	<logger name="com.simpleaccounts.rest.companycontroller" level="info" />
+	<logger name="com.simpleaccounts.service" level="info" />
 
-	<!-- Setting the root level of logging to INFO -->
+	<!-- Root logging level -->
 	<root level="info">
 		<if condition='isDefined("LogDir")'>
 			<then>

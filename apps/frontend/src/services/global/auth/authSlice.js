@@ -39,7 +39,10 @@ export const logIn = createAsyncThunk(
       window['localStorage'].setItem('language', 'en');
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
+      // api interceptor returns error.response, so err.data is the error body
+      // Backend returns: {"timestamp":..., "status":401, "error":"Unauthorized", "path":...}
+      const errorMessage = err?.data?.message || err?.data?.error || err?.statusText || 'Invalid email or password';
+      return rejectWithValue(errorMessage);
     }
   }
 );

@@ -54,9 +54,8 @@ public class Company implements Serializable {
     @Column(name = "VAT_NUMBER")
     private String vatNumber;
 
-    @Basic
-    @Lob
-    @Column(name = "COMPANY_LOGO")
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "COMPANY_LOGO", columnDefinition = "bytea")
     private byte[] companyLogo;
 
     @Basic

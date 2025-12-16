@@ -89,7 +89,7 @@ class CreateProductCategory extends React.Component {
 	// Show Success Toast
 	// success() {
 	//   toast.success('Product Category Created successfully... ', {
-	//     position: toast.POSITION.TOP_RIGHT
+	//     position: 'top-right'
 	//   })
 	// }
 

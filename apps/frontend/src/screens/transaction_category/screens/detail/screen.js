@@ -230,7 +230,7 @@ class DetailTransactionCategory extends React.Component {
   // Show Success Message
   success = () => {
     return toast.success('Transaction Category Updated successfully... ', {
-      position: toast.POSITION.TOP_RIGHT
+      position: 'top-right'
     })
   }
 

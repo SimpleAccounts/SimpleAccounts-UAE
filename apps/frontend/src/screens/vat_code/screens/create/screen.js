@@ -111,7 +111,7 @@ class CreateVatCode extends React.Component {
 	// Show Success Toast
 	success = () => {
 		toast.success('VAT category Updated successfully... ', {
-			position: toast.POSITION.TOP_RIGHT,
+			position: 'top-right',
 		});
 	};
 

@@ -245,31 +245,40 @@ public class CompanyController {
 	}
 
 	@LogRequest
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	@LogExecutionTime
 	@PostMapping(value = "/register")
 	public ResponseEntity<String> save(@ModelAttribute RegistrationModel registrationModel,
 			HttpServletRequest request) {
+		log.info("Registration request received for company: {}", 
+			registrationModel != null ? registrationModel.getCompanyName() : "null");
+		
+		// Validate request
+		if (registrationModel == null) {
+			log.error("Registration failed: registration model is null");
+			return new ResponseEntity<>("Invalid registration data", HttpStatus.BAD_REQUEST);
+		}
+		
 		try {
-			// Null check to prevent NullPointerException
-			if (registrationModel == null) {
-				log.error("Registration model is null");
-				return new ResponseEntity<>("Invalid registration data", HttpStatus.BAD_REQUEST);
-			}
+			// Check if company already exists
 			Company existingCompany = companyService.getCompany();
-			if (existingCompany!=null){
-				return new ResponseEntity<>("Company Already Exist",HttpStatus.OK);
+			if (existingCompany != null) {
+				log.warn("Registration rejected: company already exists");
+				return new ResponseEntity<>("Company Already Exist", HttpStatus.OK);
 			}
+			
+			// Encode password
 			String password = registrationModel.getPassword();
 			String encodedPassword = null;
-			SimpleAccountsMessage message= null;
 			if (password != null && !password.trim().isEmpty()) {
 				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-				 encodedPassword = passwordEncoder.encode(password);
+				encodedPassword = passwordEncoder.encode(password);
 				registrationModel.setPassword(encodedPassword);
+			} else {
+				log.warn("Password is null or empty");
 			}
 
-			//end of password block
+			// Create user
 			User user = new User();
 			user.setFirstName(registrationModel.getFirstName());
 			user.setLastName(registrationModel.getLastName());
@@ -279,36 +288,62 @@ public class CompanyController {
 			user.setRole(roleService.findByPK(1));
 			user.setCreatedDate(LocalDateTime.now());
 			user.setIsActive(true);
-
 			user.setPassword(encodedPassword);
 			user.setForgotPasswordToken(null);
 			user.setForgotPasswordTokenExpiryDate(null);
+			user.setProfileImageBinary(null);
+			
 			userService.persist(user);
-			//maintain user credential and password history
+			log.info("User created with ID: {}", user.getUserId());
+			
+			// Save user credential
 			userRestHelper.saveUserCredential(user, encodedPassword);
 
+			// Create company
 			Company company = companyRestHelper.registerCompany(registrationModel);
-			currencyService.updateCurrencyProfile(company.getCurrencyCode().getCurrencyCode());
+			if (company == null) {
+				throw new RuntimeException("Company registration failed: null returned");
+			}
+			
+			// Validate currency
+			if (company.getCurrencyCode() == null || company.getCurrencyCode().getCurrencyCode() == null) {
+				throw new RuntimeException("Currency code is required but was null");
+			}
+			
+			Integer currencyCodeValue = company.getCurrencyCode().getCurrencyCode();
+			currencyService.updateCurrencyProfile(currencyCodeValue);
+			
+			// Create currency conversion
 			CurrencyConversion currencyConversion = new CurrencyConversion();
-			Currency currency = currencyService.findByPK(company.getCurrencyCode().getCurrencyCode());
+			Currency currency = currencyService.findByPK(currencyCodeValue);
+			if (currency == null) {
+				throw new RuntimeException("Currency not found for code: " + currencyCodeValue);
+			}
 			currencyConversion.setCurrencyCode(currency);
 			currencyConversion.setCurrencyCodeConvertedTo(currency);
 			currencyConversion.setExchangeRate(BigDecimal.ONE);
 			currencyConversion.setCreatedDate(LocalDateTime.now());
 			currencyExchangeService.persist(currencyConversion);
+			
+			// Persist company
 			company.setCreatedBy(user.getUserId());
 			company.setCreatedDate(LocalDateTime.now());
 			company.setDeleteFlag(Boolean.FALSE);
 			companyService.persist(company);
+			log.info("Company created with ID: {}", company.getCompanyId());
+			
+			// Link user to company
 			user.setCompany(company);
 			userService.update(user);
-			UserModel selecteduser  = new UserModel();
+			
+			// Setup user password
+			UserModel selecteduser = new UserModel();
 			selecteduser.setEmail(registrationModel.getEmail());
 			selecteduser.setUrl(registrationModel.getLoginUrl());
 			selecteduser.setPassword(registrationModel.getPassword());
+			userService.createPassword(user, selecteduser, null);
 
-			userService.createPassword(user,selecteduser,null);
-
+			// Create email log
 			EmailLogs emailLogs = new EmailLogs();
 			emailLogs.setEmailDate(LocalDateTime.now());
 			emailLogs.setEmailTo(selecteduser.getEmail());
@@ -319,10 +354,11 @@ public class CompanyController {
 					.replacePath(null)
 					.build()
 					.toUriString();
-			System.out.println(baseUrl);
 			emailLogs.setBaseUrl(baseUrl);
 			emailLogs.setModuleName("REGISTER");
 			emaiLogsService.persist(emailLogs);
+			
+			// Create petty cash account
 			BankAccount pettyCash = new BankAccount();
 			pettyCash.setBankName("PettyCash");
 			pettyCash.setBankAccountName(company.getCompanyName());
@@ -339,28 +375,24 @@ public class CompanyController {
 			BankAccountStatus bankAccountStatus = bankAccountStatusService.getBankAccountStatusByName("ACTIVE");
 			pettyCash.setBankAccountStatus(bankAccountStatus);
 
-			// create transaction category with bankname-accout name
-
 			if (pettyCash.getTransactionCategory() == null) {
 				TransactionCategory bankCategory = transactionCategoryService
 						.findTransactionCategoryByTransactionCategoryCode(
 								TransactionCategoryCodeEnum.PETTY_CASH.getCode());
 				pettyCash.setTransactionCategory(bankCategory);
-
 			}
 			bankAccountService.persist(pettyCash);
 
+			// Create journal entries
 			TransactionCategory category = transactionCategoryService
 					.findByPK(pettyCash.getTransactionCategory().getTransactionCategoryId());
 			TransactionCategory transactionCategory = getValidTransactionCategory(category);
-			boolean isDebit = false;
-			if (StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
-					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())) {
-				isDebit = true;
-			}
+			boolean isDebit = StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
+					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 
 			List<JournalLineItem> journalLineItemList = new ArrayList<>();
 			Journal journal = new Journal();
+			
 			JournalLineItem journalLineItem1 = new JournalLineItem();
 			journalLineItem1.setTransactionCategory(category);
 			if (isDebit) {
@@ -395,35 +427,26 @@ public class CompanyController {
 			journal.setJournalDate(LocalDate.now());
 			journal.setTransactionDate(LocalDate.now());
 			journalService.persist(journal);
+			
 			coacTransactionCategoryService.addCoacTransactionCategory(
 					pettyCash.getTransactionCategory().getChartOfAccount(), pettyCash.getTransactionCategory());
 
+			log.info("Registration completed successfully for company: {}", company.getCompanyName());
 			return new ResponseEntity<>("Registration successful", HttpStatus.OK);
 		} catch (Exception e) {
-			log.error("Error during company registration: ", e);
 			// Sanitize user input to prevent log injection
 			String sanitizedCompanyName = sanitizeForLog(registrationModel != null ? registrationModel.getCompanyName() : "null");
 			String sanitizedEmail = sanitizeForLog(registrationModel != null ? registrationModel.getEmail() : "null");
-			Integer stateId = registrationModel != null ? registrationModel.getStateId() : null;
-			Integer currencyCode = registrationModel != null ? registrationModel.getCurrencyCode() : null;
-			Integer companyTypeCode = registrationModel != null ? registrationModel.getCompanyTypeCode() : null;
-			log.error("Registration model data: companyName={}, email={}, stateId={}, currencyCode={}, companyTypeCode={}", 
-				sanitizedCompanyName, 
-				sanitizedEmail,
-				stateId,
-				currencyCode,
-				companyTypeCode);
-			// Log full stack trace for debugging
-			e.printStackTrace();
-			// Return generic error message to prevent information exposure and XSS
-			// Do not expose internal error details to users
+			log.error("Registration failed for company: {}, email: {}", sanitizedCompanyName, sanitizedEmail);
+			log.error("Error during company registration: ", e);
+			
+			// Return generic error message to prevent information exposure
 			String errorMessage = "Registration failed. Please try again or contact support.";
-			// Set CORS headers directly in the response
-			// Validate origin against whitelist to prevent XSS vulnerabilities
+			
+			// Set CORS headers - validate origin against whitelist
 			HttpHeaders headers = new HttpHeaders();
 			String origin = request.getHeader("Origin");
 			String allowedOrigin = determineAllowedOrigin(origin);
-			// Only set CORS header if origin is validated (not empty)
 			if (!allowedOrigin.isEmpty()) {
 				headers.set("Access-Control-Allow-Origin", allowedOrigin);
 			}

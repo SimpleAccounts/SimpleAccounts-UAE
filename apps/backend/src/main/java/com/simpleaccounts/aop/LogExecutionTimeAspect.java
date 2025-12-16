@@ -13,12 +13,23 @@ public class LogExecutionTimeAspect {
 	
 	@Around("@annotation(LogExecutionTime)")
 	public Object logDuration(ProceedingJoinPoint joinPoint) throws Throwable{
+		String className = joinPoint.getTarget().getClass().getName();
+		String methodName = joinPoint.getSignature().getName();
+		
 		long startTime = System.currentTimeMillis();
-		Object result = joinPoint.proceed();
-		long endTime = System.currentTimeMillis();
-		long duration = endTime - startTime;
-		log.info("{}.{} execution time : {} ms", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(), duration);
-		return result;
+		
+		try {
+			Object result = joinPoint.proceed();
+			long endTime = System.currentTimeMillis();
+			long duration = endTime - startTime;
+			log.info("{}.{} execution time: {} ms", className, methodName, duration);
+			return result;
+		} catch (Throwable e) {
+			long endTime = System.currentTimeMillis();
+			long duration = endTime - startTime;
+			log.error("Exception in {}.{} after {} ms: {}", className, methodName, duration, e.getMessage(), e);
+			throw e;
+		}
 	}
 
 }

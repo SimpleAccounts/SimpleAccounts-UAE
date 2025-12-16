@@ -27,9 +27,13 @@ authApi.interceptors.response.use(
 	},
 	(error) => {
 		if (error.response && error.response.status === 401) {
-			toast.error("Session Ended. Log in Again !")
+			toast.error("Session Ended. Log in Again!", {
+				position: 'top-right',
+			});
 			window['localStorage'].clear();
 			window['location'] = '/login';
+			// Return rejected promise to properly handle the error in calling code
+			return Promise.reject(error.response);
 		} else {
 			return Promise.reject(error.response);
 		}

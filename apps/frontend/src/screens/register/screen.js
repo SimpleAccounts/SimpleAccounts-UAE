@@ -217,7 +217,7 @@ class Register extends React.Component {
 			firstName: safeData.firstName,
 			lastName: safeData.lastName
 		});
-		
+
 		//below code to get backend release number 
 		const { sabackend } = this.state;
 		//end of code block
@@ -382,13 +382,13 @@ class Register extends React.Component {
 				// RTK thunk returns action object, check if it was fulfilled
 				if (action && action.type && action.type.includes('fulfilled')) {
 					// Registration successful
-					this.setState({
+				this.setState({
 						loading: false,
-						userDetail: true,
-					});
-					toast.success('Password created successfully', {
+					userDetail: true,
+				});
+				toast.success('Password created successfully', {
 						position: 'top-right',
-					});
+				});
 					// Redirect to login after successful registration
 					setTimeout(() => {
 						this.props.history.push('/login');
@@ -509,7 +509,7 @@ class Register extends React.Component {
 																				errors.TaxRegistrationNumber = "Invalid TRN";
 																			}
 																			if (!values.vatRegistrationDate) {
-																				errors.vatRegistrationDate = "VAT registration date is required";
+																			errors.vatRegistrationDate = "VAT registration date is required";
 																			}
 																		}
 																		return errors;

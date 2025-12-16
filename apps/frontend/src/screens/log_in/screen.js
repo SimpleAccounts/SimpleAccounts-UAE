@@ -128,23 +128,32 @@ class LogIn extends React.Component {
 		};
 		this.props.authActions
 			.logIn(obj)
-			.then((res) => {
-				toast.success('Log in Succesfully', {
-					position: 'top-right',
-				});
-
-				this.props.history.push(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
+			.then((action) => {
+				// Redux Toolkit thunks return an action object, not the response directly
+				if (action && action.type && action.type.includes('fulfilled')) {
+					toast.success('Log in Successfully', {
+						position: 'top-right',
+					});
+					this.props.history.push(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
+				} else {
+					// Login failed - action is rejected
+					this.setState({ loading: false });
+					// Map technical error messages to user-friendly ones
+					let errorMessage = action?.payload?.message || action?.payload || 'Invalid email or password';
+					if (errorMessage === 'Unauthorized') {
+						errorMessage = 'Invalid email or password';
+					}
+					toast.error(errorMessage, {
+						position: 'top-right',
+					});
+				}
 			})
 			.catch((err) => {
+				// This catches unexpected errors (network issues, etc.)
 				this.setState({ loading: false });
-				toast.error(
-					err && err.data
-						? 'Log in failed. '
-						: 'Something Went Wrong',
-					{
-						position: 'top-right',
-					},
-				);
+				toast.error('Something went wrong. Please try again.', {
+					position: 'top-right',
+				});
 			});
 	};
 

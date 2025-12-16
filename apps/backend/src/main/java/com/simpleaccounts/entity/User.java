@@ -92,9 +92,8 @@ public class User implements Serializable {
 	@Column(name = "USER_PASSWORD")
 	private String password;
 
-	@Basic
-	@Lob
-	@Column(name = "PROFILE_IMAGE")
+	@Basic(fetch = FetchType.LAZY)
+	@Column(name = "PROFILE_IMAGE", columnDefinition = "bytea")
 	private byte[] profileImageBinary;
 
 	@ManyToOne(fetch = FetchType.EAGER)

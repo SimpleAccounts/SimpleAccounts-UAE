@@ -181,7 +181,7 @@ class UpdateRole extends React.Component {
 	// Show Success Toast
 	success = () => {
 		toast.success('VAT Code Updated successfully... ', {
-			position: toast.POSITION.TOP_RIGHT,
+			position: 'top-right',
 		});
 	};
 

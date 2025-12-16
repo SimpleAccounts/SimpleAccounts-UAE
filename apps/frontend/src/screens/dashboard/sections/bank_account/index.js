@@ -85,18 +85,18 @@ class BankAccount extends Component {
 
 	componentDidMount = () => {
 		// Run getTotalBalance in parallel - it doesn't depend on getBankAccountTypes
-		this.props.DashboardActions.getTotalBalance().then((res) => {
-			if (res.status === 200) {
-				this.setState({ totalBalance: res.data });
+		this.props.DashboardActions.getTotalBalance().then((action) => {
+			// Redux Toolkit thunks return action objects
+			if (action && action.type && action.type.includes('fulfilled')) {
+				this.setState({ totalBalance: action.payload });
 			}
 		});
 
-		this.props.DashboardActions.getBankAccountTypes().then((res) => {
-			if (res.status === 200) {
-				let val =
-					res.data && res.data.data && res.data.data[0]
-						? res.data.data[0].bankAccountId
-						: '';
+		this.props.DashboardActions.getBankAccountTypes().then((action) => {
+			// Redux Toolkit thunks return action objects
+			if (action && action.type && action.type.includes('fulfilled')) {
+				const data = action.payload;
+				let val = data && data[0] ? data[0].bankAccountId : '';
 				this.getBankAccountGraphData(val, 12);
 			}
 		});

@@ -73,9 +73,8 @@ public class Employee implements Serializable {
     @Column(name = "PRESENT_ADDRESS")
     private String presentAddress;
 
-    @Basic
-    @Lob
-    @Column(name = "PROFILE_IMAGE")
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "PROFILE_IMAGE", columnDefinition = "bytea")
     private byte[] profileImageBinary;
 
     @Basic
