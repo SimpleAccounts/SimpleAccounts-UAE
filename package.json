@@ -45,6 +45,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "playwright": "^1.57.0",
     "sass": "1.96.0"
   },
   "devDependencies": {

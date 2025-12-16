@@ -6,6 +6,7 @@ Thank you for your interest in contributing to SimpleAccounts UAE! This document
 
 - [Code of Conduct](#code-of-conduct)
 - [Getting Started](#getting-started)
+- [Preferred Qualifications](#preferred-qualifications)
 - [Development Setup](#development-setup)
 - [How to Contribute](#how-to-contribute)
 - [Pull Request Process](#pull-request-process)
@@ -24,6 +25,53 @@ This project and everyone participating in it is governed by our [Code of Conduc
 4. Create a new branch for your feature or bug fix
 5. Make your changes
 6. Submit a pull request
+
+## Preferred Qualifications
+
+While we welcome contributors from all backgrounds, the following qualifications are particularly valuable for this project:
+
+### Technical Skills
+
+- **Software Development**: Experience in software development or AI engineering
+  - Frontend: React, JavaScript/TypeScript, modern web development
+  - Backend: Java, Spring Boot, RESTful APIs
+  - Full-stack development experience
+  - Understanding of software architecture and design patterns
+
+- **Automation & AI**: Experience with RPA (Robotic Process Automation) or automation tools
+  - Familiarity with AI/ML concepts and implementations
+  - Experience building intelligent agents or automated workflows
+  - Understanding of agentic AI systems
+
+### Domain Knowledge
+
+- **Accounting & Finance**: Background in accounting, finance, or consulting
+  - Understanding of accounting principles and financial reporting
+  - Experience with accounting software or financial systems
+  - Knowledge of VAT, tax compliance, and regulatory requirements
+  - Familiarity with UAE accounting standards and practices
+
+### Interests & Values
+
+- **Open Source**: Interest in open-source projects and contributing to the community
+  - Experience contributing to open-source projects
+  - Understanding of open-source development workflows
+  - Commitment to collaborative development
+
+- **Agentic AI**: Interest in Agentic AI and intelligent automation
+  - Curiosity about how AI agents can transform business processes
+  - Enthusiasm for exploring cutting-edge AI technologies
+  - Interest in building practical AI solutions for real-world problems
+
+### Additional Assets
+
+- Experience with monorepo structures and npm workspaces
+- Knowledge of Docker and containerization
+- Understanding of PostgreSQL and database design
+- Experience with testing frameworks (Jest, JUnit)
+- Familiarity with CI/CD pipelines and DevOps practices
+
+**Note**: These qualifications are preferred but not required. We value diverse perspectives and welcome contributors at all skill levels. If you're passionate about accounting software, automation, or open-source development, we'd love to have you contribute!
 
 ## Development Setup
 
