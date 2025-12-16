@@ -84,16 +84,19 @@ class LogIn extends React.Component {
 			// If API fails (e.g., database not set up), show register button
 			this.setState({ companyCount: 0 }, () => { });
 		});
-		this.props.authActions.getUserSubscription().then((res) => {
+		this.props.authActions.getUserSubscription().then((action) => {
+			// Redux Toolkit thunks return an action object, not the response directly
 			let message = null;
-			if (res.status === 200) {
-				if ((res.data.message && res.data.message.toLowerCase() === 'active') || 
-					(res.data.status && res.data.status.toLowerCase() === 'active')) {
+			if (action && action.type && action.type.includes('fulfilled')) {
+				const data = action.payload;
+				if ((data && data.message && data.message.toLowerCase() === 'active') || 
+					(data && data.status && data.status.toLowerCase() === 'active')) {
 					message = null;
 				} else {
 					message = strings.SubscriptionExpiredMessage;
 				}
 			} else {
+				// Rejected or other error
 				message = strings.SubscriptionFailedMessage;
 			}
 			this.setState({ SubscriptionMessage: message });
