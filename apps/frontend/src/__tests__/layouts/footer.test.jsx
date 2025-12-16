@@ -60,6 +60,9 @@ describe('Footer Component', () => {
   });
 
   test('displays current language from localStorage', () => {
+    // Clear mocks before this test to track calls
+    localStorageMock.getItem.mockClear();
+    
     // Set language in store before rendering
     localStorageStore['language'] = 'it';
     
