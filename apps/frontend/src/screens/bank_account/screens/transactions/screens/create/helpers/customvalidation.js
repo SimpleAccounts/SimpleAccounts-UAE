@@ -160,14 +160,14 @@ export const createTranYupSchema = () => {
             fileName: value.name,
           });
         }
-        if (!value || (value && this.supported_format.includes(value.type))) {
+        if (!value || this.supported_format.includes(value.type)) {
           return true;
         } else {
           return false;
         }
       })
       .test("fileSize", "*File Size is too large", (value) => {
-        if (!value || (value && value.size <= this.file_size)) {
+        if (!value || value.size <= this.file_size) {
           return true;
         } else {
           return false;

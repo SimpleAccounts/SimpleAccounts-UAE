@@ -1466,10 +1466,9 @@ class CreateBankTransaction extends React.Component {
                                 }
                                 if (
                                   !value ||
-                                  (value &&
-                                    this.supported_format.includes(
-                                      value.type
-                                    ))
+                                  this.supported_format.includes(
+                                    value.type
+                                  )
                                 ) {
                                   return true;
                                 } else {
@@ -1483,8 +1482,7 @@ class CreateBankTransaction extends React.Component {
                               (value) => {
                                 if (
                                   !value ||
-                                  (value && value.size <= this.file_size) ||
-                                  !value
+                                  value.size <= this.file_size
                                 ) {
                                   return true;
                                 } else {
