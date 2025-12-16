@@ -23,6 +23,7 @@ import com.simpleaccounts.rest.usercontroller.UserModel;
 import com.simpleaccounts.rest.usercontroller.UserRestHelper;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
+import com.simpleaccounts.utils.EmailSender;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -98,6 +99,8 @@ public class CompanyController {
 	private final BankAccountTypeService bankAccountTypeService;
 
 	private final UserRestHelper userRestHelper;
+
+	private final EmailSender emailSender;
 
 	@Value("${cors.allowed.origins:*}")
 	private String allowedOriginsConfig;
@@ -291,8 +294,7 @@ public class CompanyController {
 			user.setPassword(encodedPassword);
 			user.setForgotPasswordToken(null);
 			user.setForgotPasswordTokenExpiryDate(null);
-			user.setProfileImageBinary(null);
-			
+			user.setProfileImageBinary(null); // Explicitly set to null to avoid bytea/oid type mismatch
 			userService.persist(user);
 			log.info("User created with ID: {}", user.getUserId());
 			
@@ -341,7 +343,17 @@ public class CompanyController {
 			selecteduser.setEmail(registrationModel.getEmail());
 			selecteduser.setUrl(registrationModel.getLoginUrl());
 			selecteduser.setPassword(registrationModel.getPassword());
-			userService.createPassword(user, selecteduser, null);
+			
+			// Create password token and attempt to send email
+			String passwordToken = userService.createPassword(user, selecteduser, null);
+
+			// Check if SMTP is configured - if not, we'll include the password link in response
+			boolean smtpConfigured = emailSender.isSmtpConfigured();
+			String passwordResetLink = null;
+			if (!smtpConfigured && passwordToken != null) {
+				passwordResetLink = selecteduser.getUrl() + "/new-password?token=" + passwordToken;
+				log.info("SMTP not configured. Password reset link generated for user: {}", selecteduser.getEmail());
+			}
 
 			// Create email log
 			EmailLogs emailLogs = new EmailLogs();
@@ -431,8 +443,17 @@ public class CompanyController {
 			coacTransactionCategoryService.addCoacTransactionCategory(
 					pettyCash.getTransactionCategory().getChartOfAccount(), pettyCash.getTransactionCategory());
 
+			// Build response message
+			String responseMessage;
+			if (passwordResetLink != null) {
+				// SMTP not configured - include password link in response
+				responseMessage = "Registration successful. Email could not be sent (SMTP not configured).\n" +
+						"Please use this link to set your password:\n" + passwordResetLink;
+			} else {
+				responseMessage = "Registration successful";
+			}
 			log.info("Registration completed successfully for company: {}", company.getCompanyName());
-			return new ResponseEntity<>("Registration successful", HttpStatus.OK);
+			return new ResponseEntity<>(responseMessage, HttpStatus.OK);
 		} catch (Exception e) {
 			// Sanitize user input to prevent log injection
 			String sanitizedCompanyName = sanitizeForLog(registrationModel != null ? registrationModel.getCompanyName() : "null");
