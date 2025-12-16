@@ -17,42 +17,35 @@ Object.defineProperty(window, 'location', {
 });
 
 // Mock localStorage properly
-const localStorageMock = (() => {
-  let store = { language: 'en' };
-  return {
-    getItem: jest.fn((key) => {
-      return store[key] || null;
-    }),
-    setItem: jest.fn((key, value) => {
-      store[key] = value.toString();
-    }),
-    clear: jest.fn(() => {
-      store = { language: 'en' };
-    }),
-    removeItem: jest.fn((key) => {
-      delete store[key];
-    }),
-  };
-})();
+let localStorageStore = { language: 'en' };
+
+const localStorageMock = {
+  getItem: jest.fn((key) => {
+    return localStorageStore[key] || null;
+  }),
+  setItem: jest.fn((key, value) => {
+    localStorageStore[key] = value.toString();
+  }),
+  clear: jest.fn(() => {
+    localStorageStore = { language: 'en' };
+  }),
+  removeItem: jest.fn((key) => {
+    delete localStorageStore[key];
+  }),
+};
 
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
   writable: true,
+  configurable: true,
 });
 
 describe('Footer Component', () => {
   beforeEach(() => {
+    // Reset store
+    localStorageStore = { language: 'en' };
+    // Clear all mocks to reset call history
     jest.clearAllMocks();
-    // Reset the store
-    localStorageMock.clear();
-    // Set default language
-    const store = { language: 'en' };
-    // Override getItem to actually read from store
-    localStorageMock.getItem.mockImplementation((key) => store[key] || null);
-    localStorageMock.setItem.mockImplementation((key, value) => {
-      store[key] = value.toString();
-    });
-    localStorageMock.setItem('language', 'en');
   });
 
   test('renders footer with logo', () => {
@@ -67,15 +60,8 @@ describe('Footer Component', () => {
   });
 
   test('displays current language from localStorage', () => {
-    // Create a store to track values
-    const store = { language: 'it' };
-    localStorageMock.getItem.mockImplementation((key) => store[key] || null);
-    localStorageMock.setItem.mockImplementation((key, value) => {
-      store[key] = value.toString();
-    });
-    
-    // Set language
-    localStorageMock.setItem('language', 'it');
+    // Set language in store before rendering
+    localStorageStore['language'] = 'it';
     
     render(<Footer />);
     
@@ -83,6 +69,7 @@ describe('Footer Component', () => {
     // Verify the component rendered (which means it read from localStorage)
     expect(screen.getByText(/change language/i)).toBeInTheDocument();
     // Verify localStorage getItem was called (component reads it in constructor)
+    // The component uses window['localStorage'].getItem, so we need to check the mock
     expect(localStorageMock.getItem).toHaveBeenCalledWith('language');
   });
 
