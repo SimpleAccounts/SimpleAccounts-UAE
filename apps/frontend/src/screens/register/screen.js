@@ -68,7 +68,6 @@ class Register extends React.Component {
 		this.state = {
 			isPasswordShown: false,
 			sabackend: '',
-			alert: null,
 			currencyList: [],
 			country_list: [
 				{
@@ -88,7 +87,6 @@ class Register extends React.Component {
 					versionNumber: 1,
 				}
 			],
-			success: false,
 			initValue: {
 				companyName: '',
 				currencyCode: 150,
@@ -112,8 +110,6 @@ class Register extends React.Component {
 
 			},
 			userDetail: false,
-			show: false,
-			togglePassword: '***********',
 			loading: false,
 			checkphoneNumberParam: false,
 			loadingMsg: "Loading...",
@@ -389,8 +385,6 @@ class Register extends React.Component {
 					this.setState({
 						loading: false,
 						userDetail: true,
-						userName: email,
-						password: formPassword,
 					});
 					toast.success('Password created successfully', {
 						position: 'top-right',

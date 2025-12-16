@@ -247,6 +247,11 @@ public class CompanyController {
 	public ResponseEntity<String> save(@ModelAttribute RegistrationModel registrationModel,
 			HttpServletRequest request) {
 		try {
+			// Null check to prevent NullPointerException
+			if (registrationModel == null) {
+				log.error("Registration model is null");
+				return new ResponseEntity<>("Invalid registration data", HttpStatus.BAD_REQUEST);
+			}
 			Company existingCompany = companyService.getCompany();
 			if (existingCompany!=null){
 				return new ResponseEntity<>("Company Already Exist",HttpStatus.OK);
@@ -392,19 +397,23 @@ public class CompanyController {
 			return new ResponseEntity<>("Registration successful", HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("Error during company registration: ", e);
+			// Sanitize user input to prevent log injection
+			String sanitizedCompanyName = sanitizeForLog(registrationModel != null ? registrationModel.getCompanyName() : "null");
+			String sanitizedEmail = sanitizeForLog(registrationModel != null ? registrationModel.getEmail() : "null");
+			Integer stateId = registrationModel != null ? registrationModel.getStateId() : null;
+			Integer currencyCode = registrationModel != null ? registrationModel.getCurrencyCode() : null;
+			Integer companyTypeCode = registrationModel != null ? registrationModel.getCompanyTypeCode() : null;
 			log.error("Registration model data: companyName={}, email={}, stateId={}, currencyCode={}, companyTypeCode={}", 
-				registrationModel != null ? registrationModel.getCompanyName() : "null", 
-				registrationModel != null ? registrationModel.getEmail() : "null",
-				registrationModel != null ? registrationModel.getStateId() : "null",
-				registrationModel != null ? registrationModel.getCurrencyCode() : "null",
-				registrationModel != null ? registrationModel.getCompanyTypeCode() : "null");
+				sanitizedCompanyName, 
+				sanitizedEmail,
+				stateId,
+				currencyCode,
+				companyTypeCode);
 			// Log full stack trace for debugging
 			e.printStackTrace();
-			// Return error message in response body for debugging
-			String errorMessage = "Registration failed: " + (e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName());
-			if (e.getCause() != null) {
-				errorMessage += " - Cause: " + e.getCause().getMessage();
-			}
+			// Return generic error message to prevent information exposure and XSS
+			// Do not expose internal error details to users
+			String errorMessage = "Registration failed. Please try again or contact support.";
 			// Set CORS headers directly in the response
 			HttpHeaders headers = new HttpHeaders();
 			String origin = request.getHeader("Origin");
@@ -418,6 +427,19 @@ public class CompanyController {
 			headers.set("Access-Control-Allow-Credentials", "true");
 			return new ResponseEntity<>(errorMessage, headers, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	/**
+	 * Sanitize user input for logging to prevent log injection attacks
+	 * @param value The value to sanitize
+	 * @return Sanitized value safe for logging
+	 */
+	private static String sanitizeForLog(String value) {
+		if (value == null) {
+			return "null";
+		}
+		// Remove newlines, carriage returns, and tabs to prevent log injection
+		return value.replace('\n', '_').replace('\r', '_').replace('\t', '_');
 	}
 
 	@LogRequest
