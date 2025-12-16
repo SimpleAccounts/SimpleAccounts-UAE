@@ -676,7 +676,6 @@ public class EmailSender {
 			"\n" +
 			"</body>\n" +
 			"</html>";
-	}
 
 	/**
 	 * Sanitize user input for logging to prevent log injection attacks
