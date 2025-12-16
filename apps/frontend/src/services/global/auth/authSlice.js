@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api, authApi, cryptoService } from 'utils';
-import config from '../../../constants/config';
 import { AUTH } from 'constants/types';
 
 // ============ Async Thunks ============
@@ -25,46 +24,42 @@ export const checkAuthStatus = createAsyncThunk(
   }
 );
 
-export const logIn = createAsyncThunk(
-  'auth/logIn',
-  async (obj, { rejectWithValue }) => {
-    try {
-      const data = {
-        method: 'post',
-        url: '/auth/token',
-        data: obj,
-      };
-      const res = await api(data);
-      window['localStorage'].setItem('accessToken', res.data.token);
-      window['localStorage'].setItem('language', 'en');
-      return res.data;
-    } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
-    }
+export const logIn = createAsyncThunk('auth/logIn', async (obj, { rejectWithValue }) => {
+  try {
+    const data = {
+      method: 'post',
+      url: '/auth/token',
+      data: obj,
+    };
+    const res = await api(data);
+    window['localStorage'].setItem('accessToken', res.data.token);
+    window['localStorage'].setItem('language', 'en');
+    return res.data;
+  } catch (err) {
+    return rejectWithValue(err.response?.data || err.message);
   }
-);
+});
 
-export const register = createAsyncThunk(
-  'auth/register',
-  async (obj, { rejectWithValue }) => {
-    try {
-      const data = {
-        method: 'post',
-        url: '/rest/company/register',
-        data: obj,
-        // Content-Type will be automatically set by axios interceptor for FormData
-      };
-      const res = await api(data);
-      return res.data;
-    } catch (err) {
-      // Handle CORS errors and network errors
-      if (!err || !err.data) {
-        return rejectWithValue({ message: 'Network error or CORS issue. Please check backend logs.' });
-      }
-      return rejectWithValue(err.data || err.message);
+export const register = createAsyncThunk('auth/register', async (obj, { rejectWithValue }) => {
+  try {
+    const data = {
+      method: 'post',
+      url: '/rest/company/register',
+      data: obj,
+      // Content-Type will be automatically set by axios interceptor for FormData
+    };
+    const res = await api(data);
+    return res.data;
+  } catch (err) {
+    // Handle CORS errors and network errors
+    if (!err || !err.data) {
+      return rejectWithValue({
+        message: 'Network error or CORS issue. Please check backend logs.',
+      });
     }
+    return rejectWithValue(err.data || err.message);
   }
-);
+});
 
 export const registerStrapiUser = createAsyncThunk(
   'auth/registerStrapiUser',
@@ -111,27 +106,6 @@ export const registerStrapiCompany = async (apiToken, companyObj) => {
   }
 };
 
-export const getUserSubscription = createAsyncThunk(
-  'auth/getUserSubscription',
-  async (_, { rejectWithValue }) => {
-    try {
-      const apiUrl = `${config.SIMPLE_SERVICES_HOST}/api/getSimpleAccountsSubscription`;
-      const apiKey = config.SIMPLE_SERVICES_GET_SUBSCRIPTION_KEY;
-      const domainUrl = window.location.origin;
-      const url = `${apiUrl}?code=${apiKey}&domainUrl=${domainUrl}`;
-      const data = {
-        method: 'get',
-        url: url,
-      };
-      const res = await api(data);
-      return res.data;
-    } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
-    }
-  }
-);
-
-
 // Internal thunk for getTimeZoneList (used in extraReducers if needed)
 const getTimeZoneListThunk = createAsyncThunk(
   'auth/getTimeZoneList',
@@ -155,8 +129,8 @@ const getTimeZoneListThunk = createAsyncThunk(
 // Wrapper for getTimeZoneList to maintain backward compatibility
 // Old thunk returned the full response object (res), components expect response.data
 export const getTimeZoneList = () => {
-  return (dispatch) => {
-    return dispatch(getTimeZoneListThunk()).then((action) => {
+  return dispatch => {
+    return dispatch(getTimeZoneListThunk()).then(action => {
       // Transform RTK action to old response format
       // Components expect response.data, so return { data: action.payload, status: 200 }
       if (action.type === 'auth/getTimeZoneList/fulfilled') {
@@ -190,8 +164,8 @@ const getSimpleAccountsreleasenumberThunk = createAsyncThunk(
 // Wrapper for getSimpleAccountsreleasenumber to maintain backward compatibility
 // Old thunk returned res.data directly, components expect that format
 export const getSimpleAccountsreleasenumber = () => {
-  return (dispatch) => {
-    return dispatch(getSimpleAccountsreleasenumberThunk()).then((action) => {
+  return dispatch => {
+    return dispatch(getSimpleAccountsreleasenumberThunk()).then(action => {
       // Transform RTK action to old response format
       // Components expect res.data directly (which has simpleAccountsRelease property)
       if (action.type === 'auth/getSimpleAccountsreleasenumber/fulfilled') {
@@ -236,10 +210,10 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    signedIn: (state) => {
+    signedIn: state => {
       state.is_authed = true;
     },
-    signedOut: (state) => {
+    signedOut: state => {
       state.is_authed = false;
     },
     setUserProfile: (state, action) => {
@@ -248,14 +222,14 @@ const authSlice = createSlice({
     setCompanyCount: (state, action) => {
       state.ccount = action.payload;
     },
-    clearError: (state) => {
+    clearError: state => {
       state.error = null;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       // checkAuthStatus
-      .addCase(checkAuthStatus.pending, (state) => {
+      .addCase(checkAuthStatus.pending, state => {
         state.loading = true;
         state.error = null;
       })
@@ -269,11 +243,11 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
       // logIn
-      .addCase(logIn.pending, (state) => {
+      .addCase(logIn.pending, state => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(logIn.fulfilled, (state) => {
+      .addCase(logIn.fulfilled, state => {
         state.loading = false;
         state.is_authed = true;
       })
@@ -282,11 +256,11 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
       // register
-      .addCase(register.pending, (state) => {
+      .addCase(register.pending, state => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(register.fulfilled, (state) => {
+      .addCase(register.fulfilled, state => {
         state.loading = false;
       })
       .addCase(register.rejected, (state, action) => {
@@ -299,10 +273,10 @@ const authSlice = createSlice({
         state.ccount = action.payload?.data || action.payload;
       })
       // Backward compatibility with old action types
-      .addCase(AUTH.SIGNED_IN, (state) => {
+      .addCase(AUTH.SIGNED_IN, state => {
         state.is_authed = true;
       })
-      .addCase(AUTH.SIGNED_OUT, (state) => {
+      .addCase(AUTH.SIGNED_OUT, state => {
         state.is_authed = false;
       })
       .addCase(AUTH.USER_PROFILE, (state, action) => {
@@ -318,13 +292,13 @@ const authSlice = createSlice({
 // Old thunks returned the response directly (res object with res.data and res.status)
 // This wrapper makes it behave exactly like the old thunk
 export const getCompanyCount = () => {
-  return (dispatch) => {
+  return dispatch => {
     const data = {
       method: 'get',
       url: '/rest/company/getCompanyCount',
     };
     return api(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           // Return the full response object to match old behavior exactly
           // Also dispatch the thunk to update state
@@ -336,15 +310,15 @@ export const getCompanyCount = () => {
         dispatch(getCompanyCountThunk.fulfilled({ payload: { data: 0, status: res.status } }));
         return response;
       })
-      .catch((err) => {
+      .catch(err => {
         // On error (e.g., 500 with no body, network error):
         // - Register screen: .then() won't execute, stays on register (good)
         // - Login screen: .catch() executes, sets companyCount to 0, shows register button (good)
         // But we want to be more robust: return a response object instead of throwing
         // This ensures both screens work correctly
-        const response = { 
-          data: 0, 
-          status: (err && err.status) ? err.status : 500 
+        const response = {
+          data: 0,
+          status: err && err.status ? err.status : 500,
         };
         // Update state
         dispatch(getCompanyCountThunk.fulfilled({ payload: response }));
@@ -355,7 +329,7 @@ export const getCompanyCount = () => {
   };
 };
 
-export const logOut = () => (dispatch) => {
+export const logOut = () => dispatch => {
   window['localStorage'].clear();
   dispatch(authSlice.actions.signedOut());
 };
@@ -363,4 +337,3 @@ export const logOut = () => (dispatch) => {
 export const { signedIn, signedOut, setUserProfile, setCompanyCount, clearError } =
   authSlice.actions;
 export default authSlice.reducer;
-

@@ -1,6 +1,12 @@
 // New RTK slices
-import authReducer from './auth/authSlice'
-import commonReducer from './common/commonSlice'
+import authReducer from './auth/authSlice';
+import commonReducer from './common/commonSlice';
+
+// Legacy exports for backward compatibility during migration
+import AuthReducer from './auth/reducer';
+import CommonReducer from './common/reducer';
+import * as AuthActions from './auth/actions';
+import * as CommonActions from './common/actions';
 
 // Export actions from slices (selective to avoid conflicts)
 export {
@@ -10,7 +16,6 @@ export {
   register,
   registerStrapiUser,
   registerStrapiCompany,
-  getUserSubscription,
   getCompanyCount,
   getTimeZoneList,
   getSimpleAccountsreleasenumber,
@@ -20,7 +25,7 @@ export {
   setUserProfile,
   setCompanyCount,
   clearError as clearAuthError,
-} from './auth/authSlice'
+} from './auth/authSlice';
 
 export {
   // Common actions
@@ -51,13 +56,7 @@ export {
   setTostifyAlertFunc,
   tostifyAlert,
   clearError,
-} from './common/commonSlice'
-
-// Legacy exports for backward compatibility during migration
-import AuthReducer from './auth/reducer'
-import CommonReducer from './common/reducer'
-import * as AuthActions from './auth/actions'
-import * as CommonActions from './common/actions'
+} from './common/commonSlice';
 
 export {
   // New RTK slices (primary)
@@ -65,5 +64,5 @@ export {
   commonReducer as CommonReducer,
   // Legacy exports (for components still using old actions)
   AuthActions,
-  CommonActions
-}
+  CommonActions,
+};

@@ -25,14 +25,14 @@ import { data } from '../../screens/Language/index';
 import LocalizedStrings from 'react-localization';
 import config from '../../constants/config';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     user_list: state.user.user_list,
     version: state.common.version,
     user_role_list: state.common.user_role_list,
   };
 };
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     authActions: bindActionCreators(AuthActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch),
@@ -53,27 +53,26 @@ class AdminLayout extends React.Component {
       registeredVat: true,
       loading: true,
       loadingMsg: 'Loading...',
-      SubscriptionMessage: '',
       sidebarShow: false,
       sidebarMinimized: false,
     };
   }
 
   toggleSidebar = () => {
-    this.setState((prevState) => ({
+    this.setState(prevState => ({
       sidebarShow: !prevState.sidebarShow,
     }));
   };
 
   toggleSidebarMinimize = () => {
-    this.setState((prevState) => ({
+    this.setState(prevState => ({
       sidebarMinimized: !prevState.sidebarMinimized,
     }));
   };
 
-  getBreadcrumbName = (pathname) => {
+  getBreadcrumbName = pathname => {
     const matched = adminRoutes.find(
-      (route) => !route.redirect && route.path && route.path === pathname
+      route => !route.redirect && route.path && route.path === pathname
     );
     return matched?.name;
   };
@@ -84,11 +83,14 @@ class AdminLayout extends React.Component {
     } else {
       this.props.authActions
         .checkAuthStatus()
-        .then(async (response) => {
-          await this.props.commonActions.getCompanyDetails().then((res) => {
-            this.setState({ registeredVat: res.data.isRegisteredVat });
+        .then(async response => {
+          // RTK thunks return { type, payload }, so use response.payload
+          const userData = response.payload || response.data || response;
+          await this.props.commonActions.getCompanyDetails().then(res => {
+            const companyData = res.payload || res.data || res;
+            this.setState({ registeredVat: companyData.isRegisteredVat });
           });
-          await this.props.commonActions.getRoleList(response.data.role.roleCode);
+          await this.props.commonActions.getRoleList(userData.role.roleCode);
           await this.props.commonActions.getCompanyCurrency();
           await this.props.commonActions.getCurrencyConversionList();
           await this.props.commonActions.getVatList();
@@ -97,7 +99,7 @@ class AdminLayout extends React.Component {
             loading: false,
           });
         })
-        .catch((err) => {
+        .catch(err => {
           this.props.commonActions.tostifyAlert('error', 'Session Timed out');
           this.props.authActions.logOut();
           this.props.history.push('/login');
@@ -126,27 +128,6 @@ class AdminLayout extends React.Component {
         }
       };
       this.props.commonActions.setTostifyAlertFunc(toastifyAlert);
-      this.props.authActions
-        .getUserSubscription()
-        .then((res) => {
-          let message = null;
-          if (res.status === 200) {
-            if (
-              (res.data.message && res.data.message.toLowerCase() === 'active') ||
-              (res.data.status && res.data.status.toLowerCase() === 'active')
-            ) {
-              message = null;
-            } else {
-              message = strings.SubscriptionExpiredMessage;
-            }
-          } else {
-            message = strings.SubscriptionFailedMessage;
-          }
-          this.setState({ SubscriptionMessage: message });
-        })
-        .catch((err) => {
-          this.setState({ SubscriptionMessage: strings.SubscriptionErrorMessage });
-        });
     }
   }
 
@@ -156,17 +137,17 @@ class AdminLayout extends React.Component {
       closeOnClick: true,
       draggable: true,
     };
-    const { loading, loadingMsg, SubscriptionMessage, sidebarMinimized } = this.state;
+    const { loading, loadingMsg, sidebarMinimized } = this.state;
     const { user_role_list } = this.props;
 
     function parentPathPresent(arr, name) {
-      return arr.items.find((path) => path.name == name);
+      return arr.items.find(path => path.name == name);
     }
 
     function filterPaths(arr, moduleName) {
-      navigation.items.forEach((item) => {
+      navigation.items.forEach(item => {
         if (item.children) {
-          var childPath = item.children.find((child) => {
+          var childPath = item.children.find(child => {
             return child.path == moduleName;
           });
 
@@ -210,25 +191,25 @@ class AdminLayout extends React.Component {
 
     var finalArray = { items: [] };
 
-    user_role_list.forEach((p) => {
+    user_role_list.forEach(p => {
       filterPaths(finalArray, p.moduleName);
     });
 
-    var correctSequence = navigation.items.map((item) => item.name);
+    var correctSequence = navigation.items.map(item => item.name);
 
     finalArray.items = correctSequence.reduce((arr, name) => {
       const filteredItems = finalArray.items.slice();
 
-      filteredItems.filter((item) => {
+      filteredItems.filter(item => {
         if (item.name === 'Master') {
           if (this.state.registeredVat === false) {
-            item.children = item.children.filter((i) => i.name !== 'VAT Category');
+            item.children = item.children.filter(i => i.name !== 'VAT Category');
           }
         }
         return item;
       });
 
-      const ele = filteredItems.find((item) => item.name === name);
+      const ele = filteredItems.find(item => item.name === name);
       if (ele) arr.push(ele);
 
       return arr;
@@ -249,17 +230,8 @@ class AdminLayout extends React.Component {
           pathname={pathname}
         />
         <div className="flex flex-1">
-          <Sidebar
-            items={finalArray.items}
-            pathname={pathname}
-            minimized={sidebarMinimized}
-          />
+          <Sidebar items={finalArray.items} pathname={pathname} minimized={sidebarMinimized} />
           <main className="flex-1 overflow-y-auto">
-            {SubscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
-              <Alert variant="destructive" className="m-4">
-                <AlertDescription>{SubscriptionMessage}</AlertDescription>
-              </Alert>
-            )}
             <div className="border-b bg-background px-6 py-4">
               <Breadcrumb>
                 <BreadcrumbList>
@@ -325,4 +297,3 @@ class AdminLayout extends React.Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(AdminLayout));
-

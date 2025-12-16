@@ -43,7 +43,6 @@ class AdminLayout extends React.Component {
       registeredVat: true,
       loading: true,
       loadingMsg: 'Loading...',
-      SubscriptionMessage: '',
       sidebarShow: false,
       sidebarMinimized: false,
       navDropdownOpen: {},
@@ -132,10 +131,13 @@ class AdminLayout extends React.Component {
       this.props.authActions
         .checkAuthStatus()
         .then(async response => {
+          // RTK thunks return { type, payload }, so use response.payload
+          const userData = response.payload || response.data || response;
           await this.props.commonActions.getCompanyDetails().then(res => {
-            this.setState({ registeredVat: res.data.isRegisteredVat });
+            const companyData = res.payload || res.data || res;
+            this.setState({ registeredVat: companyData.isRegisteredVat });
           });
-          await this.props.commonActions.getRoleList(response.data.role.roleCode);
+          await this.props.commonActions.getRoleList(userData.role.roleCode);
           await this.props.commonActions.getCompanyCurrency();
           await this.props.commonActions.getCurrencyConversionList();
           await this.props.commonActions.getVatList();
@@ -173,27 +175,6 @@ class AdminLayout extends React.Component {
         }
       };
       this.props.commonActions.setTostifyAlertFunc(toastifyAlert);
-      this.props.authActions
-        .getUserSubscription()
-        .then(res => {
-          let message = null;
-          if (res.status === 200) {
-            if (
-              (res.data.message && res.data.message.toLowerCase() === 'active') ||
-              (res.data.status && res.data.status.toLowerCase() === 'active')
-            ) {
-              message = null;
-            } else {
-              message = strings.SubscriptionExpiredMessage;
-            }
-          } else {
-            message = strings.SubscriptionFailedMessage;
-          }
-          this.setState({ SubscriptionMessage: message });
-        })
-        .catch(err => {
-          this.setState({ SubscriptionMessage: strings.SubscriptionErrorMessage });
-        });
     }
   }
 
@@ -204,7 +185,7 @@ class AdminLayout extends React.Component {
       closeOnClick: true,
       draggable: true,
     };
-    const { loading, loadingMsg, SubscriptionMessage, sidebarShow, sidebarMinimized } = this.state;
+    const { loading, loadingMsg, sidebarShow, sidebarMinimized } = this.state;
     const { user_role_list, user_list } = this.props;
     var arr = [];
 
@@ -324,9 +305,6 @@ class AdminLayout extends React.Component {
               />
             </div>
             <main className="main">
-              {SubscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
-                <div className="alert alert-danger mt-3 ml-3 mr-3 mb-0">{SubscriptionMessage}</div>
-              )}
               <div className="breadcrumb-container">
                 <Breadcrumb>
                   <BreadcrumbItem>
@@ -347,7 +325,13 @@ class AdminLayout extends React.Component {
                   <Routes>
                     {adminRoutes?.map((prop, key) => {
                       if (prop?.redirect) {
-                        return <Route path={prop.path} key={key} element={<Navigate to={prop.pathTo} replace />} />;
+                        return (
+                          <Route
+                            path={prop.path}
+                            key={key}
+                            element={<Navigate to={prop.pathTo} replace />}
+                          />
+                        );
                       }
                       return (
                         <Route
