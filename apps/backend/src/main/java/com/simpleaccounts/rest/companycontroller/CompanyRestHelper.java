@@ -231,7 +231,7 @@ public class CompanyRestHelper{
 	}
 
     public Company registerCompany(RegistrationModel registrationModel) {
-		logger.info("Registering company: {}", registrationModel.getCompanyName());
+		logger.info("Registering company: {}", sanitizeForLog(registrationModel.getCompanyName()));
 		
 		Company company = new Company();
 		company.setCompanyName(registrationModel.getCompanyName());
@@ -310,4 +310,17 @@ public class CompanyRestHelper{
 		logger.info("Company registration prepared successfully");
 		return company;
     }
+
+	/**
+	 * Sanitize user input for logging to prevent log injection attacks
+	 * @param value The value to sanitize
+	 * @return Sanitized value safe for logging
+	 */
+	private static String sanitizeForLog(String value) {
+		if (value == null) {
+			return "null";
+		}
+		// Remove newlines, carriage returns, and tabs to prevent log injection
+		return value.replace('\n', '_').replace('\r', '_').replace('\t', '_');
+	}
 }

@@ -35,6 +35,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
@@ -254,7 +255,7 @@ public class CompanyController {
 	public ResponseEntity<String> save(@ModelAttribute RegistrationModel registrationModel,
 			HttpServletRequest request) {
 		log.info("Registration request received for company: {}", 
-			registrationModel != null ? registrationModel.getCompanyName() : "null");
+			registrationModel != null ? sanitizeForLog(registrationModel.getCompanyName()) : "null");
 		
 		// Validate request
 		if (registrationModel == null) {
@@ -407,8 +408,10 @@ public class CompanyController {
 			TransactionCategory category = transactionCategoryService
 					.findByPK(pettyCash.getTransactionCategory().getTransactionCategoryId());
 			TransactionCategory transactionCategory = getValidTransactionCategory(category);
-			boolean isDebit = StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
-					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
+			// Use String.equalsIgnoreCase directly to avoid deprecated StringUtils method
+			boolean isDebit = transactionCategory.getTransactionCategoryCode() != null &&
+					transactionCategory.getTransactionCategoryCode().equalsIgnoreCase(
+							TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 
 			List<JournalLineItem> journalLineItemList = new ArrayList<>();
 			Journal journal = new Journal();
@@ -455,12 +458,14 @@ public class CompanyController {
 			String responseMessage;
 			if (passwordResetLink != null) {
 				// SMTP not configured - include password link in response
+				// HTML encode the URL to prevent XSS
+				String encodedUrl = StringEscapeUtils.escapeHtml4(passwordResetLink);
 				responseMessage = "Registration successful. Email could not be sent (SMTP not configured).\n" +
-						"Please use this link to set your password:\n" + passwordResetLink;
+						"Please use this link to set your password:\n" + encodedUrl;
 			} else {
 				responseMessage = "Registration successful";
 			}
-			log.info("Registration completed successfully for company: {}", company.getCompanyName());
+			log.info("Registration completed successfully for company: {}", sanitizeForLog(company.getCompanyName()));
 			return new ResponseEntity<>(responseMessage, HttpStatus.OK);
 		} catch (Exception e) {
 			// Sanitize user input to prevent log injection
