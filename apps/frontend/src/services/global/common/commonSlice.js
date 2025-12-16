@@ -11,7 +11,7 @@ export const getSimpleAccountsVersion = createAsyncThunk(
   'common/getSimpleAccountsVersion',
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${config.API_ROOT_URL}/rest/config/getReleaseNumber`);
+      const res = await axios.get(`${config.API_ROOT_URL}/rest/config/getreleasenumber`);
       return res.data.simpleAccountsRelease;
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);

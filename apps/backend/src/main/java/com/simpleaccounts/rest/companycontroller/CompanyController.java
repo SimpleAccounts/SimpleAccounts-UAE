@@ -23,6 +23,7 @@ import com.simpleaccounts.rest.usercontroller.UserModel;
 import com.simpleaccounts.rest.usercontroller.UserRestHelper;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
+import com.simpleaccounts.utils.EmailSender;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -33,8 +34,10 @@ import java.util.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -96,6 +99,11 @@ public class CompanyController {
 	private final BankAccountTypeService bankAccountTypeService;
 
 	private final UserRestHelper userRestHelper;
+
+	private final EmailSender emailSender;
+
+	@Value("${cors.allowed.origins:*}")
+	private String allowedOriginsConfig;
 
 	private final BankAccountRestHelper bankRestHelper;
 
@@ -240,26 +248,40 @@ public class CompanyController {
 	}
 
 	@LogRequest
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	@LogExecutionTime
 	@PostMapping(value = "/register")
 	public ResponseEntity<String> save(@ModelAttribute RegistrationModel registrationModel,
 			HttpServletRequest request) {
+		log.info("Registration request received for company: {}", 
+			registrationModel != null ? sanitizeForLog(registrationModel.getCompanyName()) : "null");
+		
+		// Validate request
+		if (registrationModel == null) {
+			log.error("Registration failed: registration model is null");
+			return new ResponseEntity<>("Invalid registration data", HttpStatus.BAD_REQUEST);
+		}
+		
 		try {
+			// Check if company already exists
 			Company existingCompany = companyService.getCompany();
-			if (existingCompany!=null){
-				return new ResponseEntity<>("Company Already Exist",HttpStatus.OK);
+			if (existingCompany != null) {
+				log.warn("Registration rejected: company already exists");
+				return new ResponseEntity<>("Company Already Exist", HttpStatus.OK);
 			}
+			
+			// Encode password
 			String password = registrationModel.getPassword();
 			String encodedPassword = null;
-			SimpleAccountsMessage message= null;
 			if (password != null && !password.trim().isEmpty()) {
 				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-				 encodedPassword = passwordEncoder.encode(password);
+				encodedPassword = passwordEncoder.encode(password);
 				registrationModel.setPassword(encodedPassword);
+			} else {
+				log.warn("Password is null or empty");
 			}
 
-			//end of password block
+			// Create user
 			User user = new User();
 			user.setFirstName(registrationModel.getFirstName());
 			user.setLastName(registrationModel.getLastName());
@@ -269,36 +291,79 @@ public class CompanyController {
 			user.setRole(roleService.findByPK(1));
 			user.setCreatedDate(LocalDateTime.now());
 			user.setIsActive(true);
-
 			user.setPassword(encodedPassword);
 			user.setForgotPasswordToken(null);
 			user.setForgotPasswordTokenExpiryDate(null);
+			user.setProfileImageBinary(null); // Explicitly set to null to avoid bytea/oid type mismatch
 			userService.persist(user);
-			//maintain user credential and password history
+			log.info("User created with ID: {}", user.getUserId());
+			
+			// Save user credential
 			userRestHelper.saveUserCredential(user, encodedPassword);
 
+			// Create company
 			Company company = companyRestHelper.registerCompany(registrationModel);
-			currencyService.updateCurrencyProfile(company.getCurrencyCode().getCurrencyCode());
+			if (company == null) {
+				throw new RuntimeException("Company registration failed: null returned");
+			}
+			
+			// Validate currency
+			if (company.getCurrencyCode() == null || company.getCurrencyCode().getCurrencyCode() == null) {
+				throw new RuntimeException("Currency code is required but was null");
+			}
+			
+			Integer currencyCodeValue = company.getCurrencyCode().getCurrencyCode();
+			currencyService.updateCurrencyProfile(currencyCodeValue);
+			
+			// Create currency conversion
 			CurrencyConversion currencyConversion = new CurrencyConversion();
-			Currency currency = currencyService.findByPK(company.getCurrencyCode().getCurrencyCode());
+			Currency currency = currencyService.findByPK(currencyCodeValue);
+			if (currency == null) {
+				throw new RuntimeException("Currency not found for code: " + currencyCodeValue);
+			}
 			currencyConversion.setCurrencyCode(currency);
 			currencyConversion.setCurrencyCodeConvertedTo(currency);
 			currencyConversion.setExchangeRate(BigDecimal.ONE);
 			currencyConversion.setCreatedDate(LocalDateTime.now());
 			currencyExchangeService.persist(currencyConversion);
+			
+			// Persist company
 			company.setCreatedBy(user.getUserId());
 			company.setCreatedDate(LocalDateTime.now());
 			company.setDeleteFlag(Boolean.FALSE);
 			companyService.persist(company);
+			log.info("Company created with ID: {}", company.getCompanyId());
+			
+			// Link user to company
 			user.setCompany(company);
 			userService.update(user);
-			UserModel selecteduser  = new UserModel();
+			
+			// Setup user password
+			UserModel selecteduser = new UserModel();
 			selecteduser.setEmail(registrationModel.getEmail());
 			selecteduser.setUrl(registrationModel.getLoginUrl());
 			selecteduser.setPassword(registrationModel.getPassword());
+			
+			// Create password token and attempt to send email
+			String passwordToken = userService.createPassword(user, selecteduser, null);
 
-			userService.createPassword(user,selecteduser,null);
+			// Check if SMTP is configured - if not, we'll include the password link in response
+			boolean smtpConfigured = emailSender.isSmtpConfigured();
+			String passwordResetLink = null;
+			if (!smtpConfigured && passwordToken != null) {
+				// Validate and sanitize URL to prevent XSS
+				String loginUrl = selecteduser.getUrl();
+				if (loginUrl != null && isValidUrl(loginUrl)) {
+					passwordResetLink = loginUrl + "/new-password?token=" + passwordToken;
+					log.info("SMTP not configured. Password reset link generated for user: {}", sanitizeForLog(selecteduser.getEmail()));
+				} else {
+					log.warn("Invalid login URL provided: {}", sanitizeForLog(loginUrl));
+					// Use a default safe URL or omit the link
+					passwordResetLink = null;
+				}
+			}
 
+			// Create email log
 			EmailLogs emailLogs = new EmailLogs();
 			emailLogs.setEmailDate(LocalDateTime.now());
 			emailLogs.setEmailTo(selecteduser.getEmail());
@@ -309,10 +374,11 @@ public class CompanyController {
 					.replacePath(null)
 					.build()
 					.toUriString();
-			System.out.println(baseUrl);
 			emailLogs.setBaseUrl(baseUrl);
 			emailLogs.setModuleName("REGISTER");
 			emaiLogsService.persist(emailLogs);
+			
+			// Create petty cash account
 			BankAccount pettyCash = new BankAccount();
 			pettyCash.setBankName("PettyCash");
 			pettyCash.setBankAccountName(company.getCompanyName());
@@ -329,28 +395,26 @@ public class CompanyController {
 			BankAccountStatus bankAccountStatus = bankAccountStatusService.getBankAccountStatusByName("ACTIVE");
 			pettyCash.setBankAccountStatus(bankAccountStatus);
 
-			// create transaction category with bankname-accout name
-
 			if (pettyCash.getTransactionCategory() == null) {
 				TransactionCategory bankCategory = transactionCategoryService
 						.findTransactionCategoryByTransactionCategoryCode(
 								TransactionCategoryCodeEnum.PETTY_CASH.getCode());
 				pettyCash.setTransactionCategory(bankCategory);
-
 			}
 			bankAccountService.persist(pettyCash);
 
+			// Create journal entries
 			TransactionCategory category = transactionCategoryService
 					.findByPK(pettyCash.getTransactionCategory().getTransactionCategoryId());
 			TransactionCategory transactionCategory = getValidTransactionCategory(category);
-			boolean isDebit = false;
-			if (StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
-					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())) {
-				isDebit = true;
-			}
+			// Use String.equalsIgnoreCase directly to avoid deprecated StringUtils method
+			boolean isDebit = transactionCategory.getTransactionCategoryCode() != null &&
+					transactionCategory.getTransactionCategoryCode().equalsIgnoreCase(
+							TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 
 			List<JournalLineItem> journalLineItemList = new ArrayList<>();
 			Journal journal = new Journal();
+			
 			JournalLineItem journalLineItem1 = new JournalLineItem();
 			journalLineItem1.setTransactionCategory(category);
 			if (isDebit) {
@@ -385,14 +449,112 @@ public class CompanyController {
 			journal.setJournalDate(LocalDate.now());
 			journal.setTransactionDate(LocalDate.now());
 			journalService.persist(journal);
+			
 			coacTransactionCategoryService.addCoacTransactionCategory(
 					pettyCash.getTransactionCategory().getChartOfAccount(), pettyCash.getTransactionCategory());
 
-			return new ResponseEntity<>(HttpStatus.OK);
+			// Build response message
+			String responseMessage;
+			if (passwordResetLink != null) {
+				// SMTP not configured - include password link in response
+				// HTML encode the URL to prevent XSS
+				String encodedUrl = StringEscapeUtils.escapeHtml4(passwordResetLink);
+				responseMessage = "Registration successful. Email could not be sent (SMTP not configured).\n" +
+						"Please use this link to set your password:\n" + encodedUrl;
+			} else {
+				responseMessage = "Registration successful";
+			}
+			log.info("Registration completed successfully for company: {}", sanitizeForLog(company.getCompanyName()));
+			return new ResponseEntity<>(responseMessage, HttpStatus.OK);
 		} catch (Exception e) {
-			log.error(ERROR, e);
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			// Sanitize user input to prevent log injection
+			// registrationModel cannot be null here due to earlier null check
+			String sanitizedCompanyName = sanitizeForLog(registrationModel.getCompanyName());
+			String sanitizedEmail = sanitizeForLog(registrationModel.getEmail());
+			log.error("Registration failed for company: {}, email: {}", sanitizedCompanyName, sanitizedEmail);
+			log.error("Error during company registration: ", e);
+			
+			// Return generic error message to prevent information exposure
+			String errorMessage = "Registration failed. Please try again or contact support.";
+			
+			// Set CORS headers - validate origin against whitelist
+			HttpHeaders headers = new HttpHeaders();
+			String origin = request.getHeader("Origin");
+			String allowedOrigin = determineAllowedOrigin(origin);
+			if (!allowedOrigin.isEmpty()) {
+				headers.set("Access-Control-Allow-Origin", allowedOrigin);
+			}
+			headers.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
+			headers.set("Access-Control-Allow-Headers", "x-requested-with, authorization, content-type");
+			headers.set("Access-Control-Allow-Credentials", "true");
+			return new ResponseEntity<>(errorMessage, headers, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	/**
+	 * Sanitize user input for logging to prevent log injection attacks
+	 * @param value The value to sanitize
+	 * @return Sanitized value safe for logging
+	 */
+	private static String sanitizeForLog(String value) {
+		if (value == null) {
+			return "null";
+		}
+		// Remove newlines, carriage returns, and tabs to prevent log injection
+		return value.replace('\n', '_').replace('\r', '_').replace('\t', '_');
+	}
+
+	/**
+	 * Validates URL to prevent XSS attacks
+	 * @param url The URL to validate
+	 * @return true if URL is safe, false otherwise
+	 */
+	private static boolean isValidUrl(String url) {
+		if (url == null || url.trim().isEmpty()) {
+			return false;
+		}
+		// Check for dangerous characters that could be used for XSS
+		String dangerousChars = "<>\"'&";
+		for (char c : dangerousChars.toCharArray()) {
+			if (url.indexOf(c) >= 0) {
+				return false;
+			}
+		}
+		// Basic URL format validation - must start with http:// or https://
+		String trimmed = url.trim().toLowerCase();
+		return trimmed.startsWith("http://") || trimmed.startsWith("https://");
+	}
+
+	/**
+	 * Validates the Origin header against a whitelist of trusted origins
+	 * to prevent Cross-site scripting (XSS) vulnerabilities.
+	 * 
+	 * @param origin The Origin header value from the request
+	 * @return The validated origin if it's in the whitelist, "*" if wildcard is configured,
+	 *         or an empty string if the origin is not trusted
+	 */
+	private String determineAllowedOrigin(String origin) {
+		// Parse allowed origins from configuration
+		Set<String> allowedOrigins = new HashSet<>();
+		if (allowedOriginsConfig != null && !allowedOriginsConfig.trim().isEmpty()) {
+			allowedOrigins = new HashSet<>(Arrays.asList(allowedOriginsConfig.split(",")));
+		} else {
+			allowedOrigins.add("*");
+		}
+
+		// If wildcard is configured, allow all origins
+		if (allowedOrigins.contains("*")) {
+			return "*";
+		}
+
+		// If the request origin is in the allowed list, return it
+		if (origin != null && !origin.trim().isEmpty() && allowedOrigins.contains(origin)) {
+			return origin;
+		}
+
+		// Origin not in whitelist - return empty string (no CORS header will be set)
+		// This is safer than reflecting an untrusted origin
+		return "";
 	}
 
 	@LogRequest

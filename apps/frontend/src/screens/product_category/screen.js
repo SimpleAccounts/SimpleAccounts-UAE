@@ -117,7 +117,7 @@ class ProductCategory extends React.Component {
 	// Show Success Toast
 	success = () => {
 		return toast.success('Product Category Deleted Successfully.', {
-			position: toast.POSITION.TOP_RIGHT,
+			position: 'top-right',
 		});
 	};
 

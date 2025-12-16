@@ -130,9 +130,8 @@ public class Purchase implements Serializable {
     @Version
     private Integer versionNumber = 1;
 
-    @Basic
-    @Lob
-    @Column(name = "RECEIPT_ATTACHMENT")
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "RECEIPT_ATTACHMENT", columnDefinition = "bytea")
     private byte[] receiptAttachmentBinary;
 
     @Column(name = "STATUS")

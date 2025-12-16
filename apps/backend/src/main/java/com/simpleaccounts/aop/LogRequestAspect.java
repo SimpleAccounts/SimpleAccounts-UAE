@@ -14,7 +14,9 @@ public class LogRequestAspect {
 
 	@Before("@annotation(LogRequest)")
 	public void logRequest(JoinPoint joinPoint){
-		log.info("{}::{}: {}",joinPoint.getSignature().getDeclaringType().getSimpleName(),
-				joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
+		String className = joinPoint.getSignature().getDeclaringType().getSimpleName();
+		String methodName = joinPoint.getSignature().getName();
+		log.info("LogRequestAspect: {}.{} called with args: {}", 
+			className, methodName, Arrays.toString(joinPoint.getArgs()));
 	}
 }

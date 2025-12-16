@@ -42,9 +42,10 @@ class ProfitAndLossReport extends Component {
 
 	loadProfitLossReport = (range) => {
 		this.props.DashboardActions.getProfitLossReport(range)
-			.then((res) => {
-				if (res.status === 200) {
-					this.getProfitLossGraph(res.data);
+			.then((action) => {
+				// Redux Toolkit thunks return action objects
+				if (action && action.type && action.type.includes('fulfilled')) {
+					this.getProfitLossGraph(action.payload);
 				}
 			})
 			.catch((err) => {

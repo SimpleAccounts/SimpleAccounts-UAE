@@ -29,17 +29,38 @@ public class EmailSender {
 	private final Logger logger = LoggerFactory.getLogger(EmailSender.class);
 	private final ConfigurationService configurationService;
 	private final Environment env;
+
+	/**
+	 * Check if SMTP is configured either via database configuration or environment variables
+	 * @return true if SMTP host is configured, false otherwise
+	 */
+	public boolean isSmtpConfigured() {
+		MailConfigurationModel mailConfig = MailUtility
+				.getEMailConfigurationList(configurationService.getConfigurationList());
+		String smtpHost = mailConfig.getMailhost() != null ? mailConfig.getMailhost()
+				: System.getenv("SIMPLEACCOUNTS_SMTP_HOST");
+		return smtpHost != null && !smtpHost.trim().isEmpty();
+	}
+
 	public void send(String recipients, String subject, String content, String fromEmail,String fromName,  boolean html)
 			throws MessagingException {
 		MailConfigurationModel mailDefaultConfigurationModel = MailUtility
 				.getEMailConfigurationList(configurationService.getConfigurationList());
+
+		// Check if SMTP is configured before attempting to send
+		String smtpHost = mailDefaultConfigurationModel.getMailhost() != null ? mailDefaultConfigurationModel.getMailhost()
+				: System.getenv("SIMPLEACCOUNTS_SMTP_HOST");
+		if (smtpHost == null || smtpHost.trim().isEmpty()) {
+			logger.warn("SMTP is not configured. Email will not be sent to: {}", sanitizeForLog(recipients));
+			throw new MessagingException("SMTP is not configured");
+		}
+
 		final String username = mailDefaultConfigurationModel.getMailusername() != null ? mailDefaultConfigurationModel.getMailusername()
 				: System.getenv("SIMPLEACCOUNTS_SMTP_USER");
 		final String password = mailDefaultConfigurationModel.getMailpassword() != null ? mailDefaultConfigurationModel.getMailpassword()
 				: System.getenv("SIMPLEACCOUNTS_SMTP_PASS");
 		Properties prop = new Properties();
-		prop.put("mail.smtp.host", mailDefaultConfigurationModel.getMailhost() != null ? mailDefaultConfigurationModel.getMailhost()
-				: System.getenv("SIMPLEACCOUNTS_SMTP_HOST"));
+		prop.put("mail.smtp.host", smtpHost);
 			prop.put("mail.smtp.port", mailDefaultConfigurationModel.getMailport() != null ? mailDefaultConfigurationModel.getMailport()
 					: System.getenv("SIMPLEACCOUNTS_SMTP_PORT"));
 			prop.put("mail.smtp.auth", mailDefaultConfigurationModel.getMailsmtpAuth() != null ? mailDefaultConfigurationModel.getMailsmtpAuth()
@@ -655,4 +676,17 @@ public class EmailSender {
 			"\n" +
 			"</body>\n" +
 			"</html>";
+
+	/**
+	 * Sanitize user input for logging to prevent log injection attacks
+	 * @param value The value to sanitize
+	 * @return Sanitized value safe for logging
+	 */
+	private static String sanitizeForLog(String value) {
+		if (value == null) {
+			return "null";
+		}
+		// Remove newlines, carriage returns, and tabs to prevent log injection
+		return value.replace('\n', '_').replace('\r', '_').replace('\t', '_');
+	}
 }

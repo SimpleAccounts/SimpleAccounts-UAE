@@ -39,7 +39,10 @@ export const logIn = createAsyncThunk(
       window['localStorage'].setItem('language', 'en');
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
+      // api interceptor returns error.response, so err.data is the error body
+      // Backend returns: {"timestamp":..., "status":401, "error":"Unauthorized", "path":...}
+      const errorMessage = err?.data?.message || err?.data?.error || err?.statusText || 'Invalid email or password';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -52,11 +55,16 @@ export const register = createAsyncThunk(
         method: 'post',
         url: '/rest/company/register',
         data: obj,
+        // Content-Type will be automatically set by axios interceptor for FormData
       };
       const res = await api(data);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
+      // Handle CORS errors and network errors
+      if (!err || !err.data) {
+        return rejectWithValue({ message: 'Network error or CORS issue. Please check backend logs.' });
+      }
+      return rejectWithValue(err.data || err.message);
     }
   }
 );

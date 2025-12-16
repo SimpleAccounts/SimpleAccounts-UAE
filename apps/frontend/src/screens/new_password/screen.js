@@ -83,7 +83,7 @@ class NewPassword extends React.Component {
 
   displayMsg = (msg) => {
     toast.error(msg, {
-      position: toast.POSITION.TOP_RIGHT
+      position: 'top-right'
     });
   }
   togglePasswordVisiblity = () => {

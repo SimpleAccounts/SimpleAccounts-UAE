@@ -107,7 +107,7 @@ class TransactionCategory extends React.Component {
   // Show Success Toast
   success = () => {
     return toast.success('Transaction Category Deleted Successfully...', {
-      position: toast.POSITION.TOP_RIGHT
+      position: 'top-right'
     })
   }
 

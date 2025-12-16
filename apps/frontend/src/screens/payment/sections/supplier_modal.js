@@ -95,7 +95,7 @@ class SupplierModal extends React.Component {
 
   displayMsg = () => {
     toast.error('Something Went Wrong... ', {
-      position: toast.POSITION.TOP_RIGHT
+      position: 'top-right'
     })
   }
 

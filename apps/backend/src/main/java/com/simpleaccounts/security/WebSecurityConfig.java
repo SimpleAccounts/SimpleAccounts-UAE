@@ -73,7 +73,8 @@ public class WebSecurityConfig {
 				.requestMatchers("/rest/company/getState").permitAll()
 				.requestMatchers("/rest/company/getCompanyType").permitAll()
 				.requestMatchers("/public/**").permitAll()
-				.requestMatchers("/rest/company/getSimpleAccountsreleasenumber").permitAll()
+				.requestMatchers("/rest/config/getReleaseNumber").permitAll()
+				.requestMatchers("/rest/config/getreleasenumber").permitAll()
 				// SpringDoc OpenAPI endpoints
 				.requestMatchers("/swagger-ui/**").permitAll()
 				.requestMatchers("/swagger-ui.html").permitAll()

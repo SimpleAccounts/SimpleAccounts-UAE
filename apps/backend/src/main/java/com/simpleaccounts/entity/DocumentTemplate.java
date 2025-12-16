@@ -73,9 +73,8 @@ public class DocumentTemplate implements Serializable {
 	@Version
 	private Integer versionNumber = 1;
 
-	@Basic(optional = false)
-	@Lob
-	@Column(name = "TEMPLATE")
+	@Basic(optional = false, fetch = FetchType.LAZY)
+	@Column(name = "TEMPLATE", columnDefinition = "bytea")
 	private byte[] template;
 
 	public DocumentTemplate() {

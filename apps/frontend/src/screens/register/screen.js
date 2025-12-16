@@ -68,7 +68,6 @@ class Register extends React.Component {
 		this.state = {
 			isPasswordShown: false,
 			sabackend: '',
-			alert: null,
 			currencyList: [],
 			country_list: [
 				{
@@ -88,7 +87,6 @@ class Register extends React.Component {
 					versionNumber: 1,
 				}
 			],
-			success: false,
 			initValue: {
 				companyName: '',
 				currencyCode: 150,
@@ -99,22 +97,19 @@ class Register extends React.Component {
 				email: '',
 				password: '',
 				confirmPassword: '',
-				timeZone: { label: "Asia/Dubai", value: "Asia/Dubai" },
+				timeZone: "Asia/Dubai", // Changed from object to string to match validation
 				countryId: 229,
 				stateId: '',
-				IsDesignatedZone: '',
-				IsRegistered: '',
+				IsDesignatedZone: false,
+				IsRegistered: false,
 				TaxRegistrationNumber: '',
 				vatRegistrationDate: '',
 				companyAddress1: '',
 				phoneNumber: '',
-				password: "",
-				confirmPassword: '',
+				// Removed duplicate password and confirmPassword entries
 
 			},
 			userDetail: false,
-			show: false,
-			togglePassword: '***********',
 			loading: false,
 			checkphoneNumberParam: false,
 			loadingMsg: "Loading...",
@@ -214,6 +209,14 @@ class Register extends React.Component {
 
 
 	handleSubmit = (data, resetForm) => {
+		// Removed password from console.log for security - only log non-sensitive fields
+		const { password: userPassword, confirmPassword, ...safeData } = data;
+		console.log('handleSubmit called - registration started for:', {
+			companyName: safeData.companyName,
+			email: safeData.email,
+			firstName: safeData.firstName,
+			lastName: safeData.lastName
+		});
 
 		//below code to get backend release number 
 		const { sabackend } = this.state;
@@ -228,7 +231,7 @@ class Register extends React.Component {
 			firstName,
 			lastName,
 			email,
-			password,
+			password: formPassword,
 			timeZone,
 			countryId,
 			stateId,
@@ -314,7 +317,16 @@ class Register extends React.Component {
 		formData.append('timeZone', 'Asia/Dubai')
 		// formData.append('countryCode',	countryCode ? countryCode.value : '');
 		formData.append('countryId', countryId ? countryId : '229')
-		formData.append('stateId', stateId ? stateId.value : '')
+		// Handle stateId - can be object (from Select) or string/number
+		let stateIdValue = '';
+		if (stateId) {
+			if (typeof stateId === 'object' && stateId.value !== undefined) {
+				stateIdValue = stateId.value;
+			} else if (typeof stateId === 'string' || typeof stateId === 'number') {
+				stateIdValue = stateId;
+			}
+		}
+		formData.append('stateId', stateIdValue)
 		formData.append('phoneNumber', phoneNumber ? phoneNumber : '')
 		formData.append('IsDesignatedZone', this.state.isDesignatedZone ? this.state.isDesignatedZone : false);
 		if (IsRegistered) {
@@ -330,10 +342,10 @@ class Register extends React.Component {
 		formData.append('companyAddressLine1', companyAddress1 ? companyAddress1 : '')
 		formData.append('companyAddressLine2', companyAddress2 ? companyAddress2 : '')
 		formData.append('loginUrl', window.location.origin);
-		formData.append('password', password)
+		formData.append('password', formPassword)
 
 		toast.success('Please wait till we setup your account', {
-			position: toast.POSITION.TOP_RIGHT,
+			position: 'top-right',
 			autoClose: 40000,
 		});
 
@@ -350,7 +362,7 @@ class Register extends React.Component {
 		let strapiUserObj = {
 			username: email,
 			email: email,
-			password: password,
+			password: formPassword,
 			first_name: firstName,
 			last_name: lastName,
 			MobileNumber: phoneNumber
@@ -358,34 +370,59 @@ class Register extends React.Component {
 
 		this.props.authActions
 			.registerStrapiUser(strapiUserObj, companyStrapiObj)
+			.catch((strapiErr) => {
+				// Log Strapi registration error but continue with local registration
+				console.warn('Strapi registration failed (non-critical):', strapiErr);
+			});
+		
 		this.props.authActions
 			.register(formData)
-			.then((res) => {
-				this.setState({ loading: true });
-
+			.then((action) => {
+				console.log('Registration action:', action);
+				// RTK thunk returns action object, check if it was fulfilled
+				if (action && action.type && action.type.includes('fulfilled')) {
+					// Registration successful
 				this.setState({
+						loading: false,
 					userDetail: true,
-					userName: email,
-					password: password,
 				});
 				toast.success('Password created successfully', {
-					position: toast.POSITION.TOP_RIGHT,
+						position: 'top-right',
 				});
-				// setTimeout(() => {
-				// 	this.props.history.push('/login');
-				// }, 3000);
-				{ this.setState({ loading: false, }) }
+					// Redirect to login after successful registration
+					setTimeout(() => {
+						this.props.history.push('/login');
+					}, 2000);
+				} else {
+					// Handle case where response indicates failure
+					this.setState({ loading: false });
+					const errorMessage = action?.payload?.message || action?.payload || 'Registration failed';
+					toast.error(errorMessage, {
+						position: 'top-right',
+					});
+				}
 			})
-			.catch((err) => {
-				this.setState({ loading: true });
-				toast.error(
-					err && err.data
-						? 'Login Failed. Please Try Again'
-						: 'Something Went Wrong',
-					{
-						position: toast.POSITION.TOP_RIGHT,
-					},
-				);
+			.catch((action) => {
+				console.error('Registration error action:', action);
+				this.setState({ loading: false });
+				// RTK thunk rejections also return action objects
+				let errorMessage = 'Registration Failed. Please Try Again';
+				if (action?.payload) {
+					if (typeof action.payload === 'string') {
+						errorMessage = action.payload;
+					} else if (action.payload.message) {
+						errorMessage = action.payload.message;
+					} else if (action.payload.error) {
+						errorMessage = action.payload.error;
+					}
+				} else if (action?.error?.message) {
+					errorMessage = action.error.message;
+				}
+				console.error('Registration failed with error:', errorMessage);
+				toast.error(errorMessage, {
+					position: 'top-right',
+					autoClose: 5000,
+				});
 			});
 	};
 
@@ -464,8 +501,16 @@ class Register extends React.Component {
 																			errors.phoneNumber =
 																				'Invalid mobile number';
 																		}
-																		if (values.IsRegistered === true && !values.vatRegistrationDate) {
+																		// Handle conditional validation for VAT fields
+																		if (values.IsRegistered === true) {
+																			if (!values.TaxRegistrationNumber) {
+																				errors.TaxRegistrationNumber = "Tax registration number is required";
+																			} else if (values.TaxRegistrationNumber.length < 15) {
+																				errors.TaxRegistrationNumber = "Invalid TRN";
+																			}
+																			if (!values.vatRegistrationDate) {
 																			errors.vatRegistrationDate = "VAT registration date is required";
+																			}
 																		}
 																		return errors;
 																	}}
@@ -496,9 +541,16 @@ class Register extends React.Component {
 																		countryId: Yup.string().required(
 																			'Country is required',
 																		),
-																		stateId: Yup.string().required(
-																			'Emirate is required',
-																		),
+																		stateId: Yup.mixed()
+																			.required('Emirate is required')
+																			.test('stateId', 'Emirate is required', function(value) {
+																				if (!value) return false;
+																				// Can be object (from Select) or string
+																				if (typeof value === 'object') {
+																					return value.value !== undefined && value.value !== null && value.value !== '';
+																				}
+																				return value !== '';
+																			}),
 																		firstName: Yup.string().required(
 																			'First name is required',
 																		),
@@ -514,44 +566,34 @@ class Register extends React.Component {
 																		// phoneNumber: Yup.string().required(
 																		// 	'Mobile number is required',
 																		// ),
-																		TaxRegistrationNumber: Yup.string().when(
-																			'IsRegistered',
-																			{
-																				is: (value) => value === true,
-																				then: Yup.string().required(
-																					'Tax registration number is required',
-																				)
-																					.test(
-																						'TaxRegistrationNumber',
-																						'Invalid TRN',
-																						(value) => {
-																							if (value > 15) {
-																								return true;
-																							} else {
-																								return false;
-																							}
-																						},
-																					),
-																				otherwise: Yup.string(),
-																			},
-																		),
-																		vatRegistrationDate: Yup.string().when(
-																			'IsRegistered',
-																			{
-																				is: (value) => value === true,
-																				then: Yup.string().required(
-																					'VAT registration date is required',
-																				),
-																				otherwise: Yup.string(),
-																			},
-																		)
+																		IsRegistered: Yup.boolean(),
+																		IsDesignatedZone: Yup.boolean(),
+																		TaxRegistrationNumber: Yup.string().nullable(),
+																		vatRegistrationDate: Yup.string().nullable()
 
 																	})}
 																>
 																	{(props) => {
+																		// Debug: Log validation state (only when form is invalid to reduce noise)
+																		if (!props.isValid && Object.keys(props.touched).length > 0) {
+																			console.log('Form validation errors:', {
+																				isValid: props.isValid,
+																				errors: props.errors,
+																				touched: props.touched
+																			});
+																		}
 
 																		return (
-																			<Form onSubmit={props.handleSubmit}>
+																			<Form onSubmit={(e) => {
+																				console.log('Form onSubmit triggered', e);
+																				console.log('Form validation state:', {
+																					isValid: props.isValid,
+																					errors: props.errors,
+																					values: props.values
+																				});
+																				// Let Formik handle the submission
+																				props.handleSubmit(e);
+																			}}>
 																				{/* <h1>Log In</h1> */}
 																				<div className="registerScreen">
 																					<h2 className="">{strings.Register}</h2>
@@ -783,7 +825,14 @@ class Register extends React.Component {
 																								id="timeZone"
 																								name="timeZone"
 																								options={timezone ? timezone : []}
-																								value={props.values.timeZone}
+																								value={
+																									timezone && props.values.timeZone
+																										? timezone.find(
+																												(option) =>
+																													option.value === props.values.timeZone,
+																											)
+																										: null
+																								}
 																								onChange={(option) => {
 																									if (option && option.value) {
 																										props.handleChange('timeZone')(
@@ -1438,9 +1487,28 @@ class Register extends React.Component {
 																							name="submit"
 																							color="primary"
 																							disabled={this.state.loading}
-
+																							onClick={(e) => {
+																								console.log('Register button clicked', {
+																									loading: this.state.loading,
+																									isValid: props.isValid,
+																									errors: props.errors,
+																									errorCount: Object.keys(props.errors).length
+																								});
+																								// If form is invalid, show errors
+																								if (!props.isValid) {
+																									console.warn('Form is invalid. Errors:', props.errors);
+																									// Mark all fields as touched to show validation errors
+																									Object.keys(props.errors).forEach(field => {
+																										props.setFieldTouched(field, true);
+																									});
+																								}
+																							}}
 																							className="btn-square mr-3 mt-3 "
-																							style={{ width: '200px' }}
+																							style={{ 
+																								width: '200px',
+																								opacity: (!props.isValid && Object.keys(props.touched).length > 0) ? 0.6 : 1
+																							}}
+																							title={!props.isValid ? `Please fill all required fields. Errors: ${Object.keys(props.errors).length}` : ''}
 																						>
 																							<i className="fa fa-dot-circle-o"></i>{' '}
 																							{this.state.loading
@@ -1464,8 +1532,6 @@ class Register extends React.Component {
 											</Col>
 										</Row>
 									)}
-									{userDetail === true &&
-										this.props.history.push('/login')}
 								</Container>
 							</div>
 						</div>

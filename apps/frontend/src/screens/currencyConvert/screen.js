@@ -110,7 +110,7 @@ class CurrencyConvert extends React.Component {
 			'success',
 			res.data ? res.data.message : '	Currency Conversion Deleted Successfully.', 
 			{
-			position: toast.POSITION.TOP_RIGHT,
+			position: 'top-right',
 		});
 	};
 

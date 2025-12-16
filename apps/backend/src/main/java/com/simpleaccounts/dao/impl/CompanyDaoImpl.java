@@ -71,7 +71,8 @@ public Integer getDbConncection(){
 	}
 	@Override
 	public Currency getCompanyCurrency() {
-		TypedQuery<Currency> query = getEntityManager().createQuery("select c from Currency c where c.currencyCode IN(SELECT cc.currencyCode FROM Company cc)", Currency.class);
+		// Directly select the Currency entity from Company - cc.currencyCode is a Currency entity, not an Integer
+		TypedQuery<Currency> query = getEntityManager().createQuery("SELECT cc.currencyCode FROM Company cc WHERE cc.currencyCode IS NOT NULL", Currency.class);
 		List<Currency> currencyList = query.getResultList();
 		if (currencyList != null && !currencyList.isEmpty()) {
 			return currencyList.get(0);

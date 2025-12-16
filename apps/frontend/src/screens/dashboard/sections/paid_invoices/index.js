@@ -33,9 +33,10 @@ class PaidInvoices extends Component {
 	};
 
 	componentDidMount = () => {
-		this.props.DashboardActions.getInvoiceGraphData(12).then((res) => {
-			if (res.status === 200) {
-				this.getInvoiceGraph(res.data);
+		this.props.DashboardActions.getInvoiceGraphData(12).then((action) => {
+			// Redux Toolkit thunks return action objects
+			if (action && action.type && action.type.includes('fulfilled')) {
+				this.getInvoiceGraph(action.payload);
 			}
 		});
 	};

@@ -32,7 +32,7 @@ public abstract class UserService extends SimpleAccountsService<Integer, User> {
 
 	public abstract boolean updateForgotPasswordToken(User user, JwtRequest jwtRequest);
 
-	public abstract boolean createPassword (User user,UserModel selectedUser,User sender);
+	public abstract String createPassword (User user,UserModel selectedUser,User sender);
 
 	public abstract boolean newUserMail(User user,String loginUrl,String pas);
 	public abstract boolean testUserMail(User user) throws IOException;

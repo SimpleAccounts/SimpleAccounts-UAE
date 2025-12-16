@@ -201,7 +201,7 @@ class ProductModal extends React.Component {
 
 	displayMsg = (err) => {
 		toast.error(`${err.data}`, {
-			position: toast.POSITION.TOP_RIGHT,
+			position: 'top-right',
 		});
 	};
 

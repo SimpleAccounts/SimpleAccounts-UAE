@@ -1,11 +1,14 @@
 // Re-export new RTK slice actions for backward compatibility
+// Legacy exports - these dispatch to COMMON, should be moved to common actions
+import { COMMON } from 'constants/types';
+import { api, authApi } from 'utils';
+
 export {
   checkAuthStatus,
   logIn,
   register,
   registerStrapiUser,
   registerStrapiCompany,
-  getUserSubscription,
   getCompanyCount,
   getTimeZoneList,
   getSimpleAccountsreleasenumber,
@@ -17,18 +20,14 @@ export {
   clearError,
 } from './authSlice';
 
-// Legacy exports - these dispatch to COMMON, should be moved to common actions
-import { COMMON } from 'constants/types';
-import { api, authApi } from 'utils';
-
 export const getCurrencyList = () => {
-  return (dispatch) => {
+  return dispatch => {
     const data = {
       method: 'get',
       url: '/rest/company/getCurrency',
     };
     return api(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: COMMON.UNIVERSAL_CURRENCY_LIST,
@@ -47,7 +46,7 @@ export const getCurrencyList = () => {
         });
         return { ...res, data: [] };
       })
-      .catch((err) => {
+      .catch(err => {
         // On error, dispatch empty list instead of throwing
         // This prevents uncaught promise rejections
         dispatch({
@@ -62,13 +61,13 @@ export const getCurrencyList = () => {
 };
 
 export const getCurrencylist = () => {
-  return (dispatch) => {
+  return dispatch => {
     const data = {
       method: 'get',
       url: '/rest/currency/getcurrency',
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: COMMON.CURRENCY_LIST,
@@ -87,7 +86,7 @@ export const getCurrencylist = () => {
         });
         return { ...res, data: [] };
       })
-      .catch((err) => {
+      .catch(err => {
         // On error, dispatch empty list instead of throwing
         // This prevents uncaught promise rejections
         dispatch({
