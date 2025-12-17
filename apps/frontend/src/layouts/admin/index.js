@@ -406,7 +406,6 @@ class AdminLayout extends React.Component {
                       );
                     })}
                   </Routes>
-                  )}
                 </Suspense>
               </Container>
             </main>

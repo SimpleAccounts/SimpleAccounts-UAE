@@ -469,7 +469,8 @@ const commonSlice = createSlice({
       })
       // getCurrencyConversionList
       .addCase(getCurrencyConversionList.fulfilled, (state, action) => {
-        state.currency_convert_list = action.payload.data;
+        // Thunk already returns res.data || res, so payload is the data array directly
+        state.currency_convert_list = action.payload || [];
       })
       // getStateList
       .addCase(getStateList.fulfilled, (state, action) => {
