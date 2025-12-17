@@ -9,6 +9,9 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
+// Import after mocking
+import { Bar, Line, Pie, Doughnut } from 'react-chartjs-2';
+
 // Mock Chart.js to avoid canvas issues in tests
 jest.mock('react-chartjs-2', () => ({
   Bar: ({ data, options }) => (
@@ -31,15 +34,7 @@ jest.mock('react-chartjs-2', () => ({
       Doughnut Chart Mock
     </div>
   ),
-  HorizontalBar: ({ data, options }) => (
-    <div data-testid="horizontal-bar-chart" data-labels={JSON.stringify(data.labels)}>
-      Horizontal Bar Chart Mock
-    </div>
-  )
 }));
-
-// Import after mocking
-import { Bar, Line, Pie, Doughnut, HorizontalBar } from 'react-chartjs-2';
 
 describe('Chart.js Components', () => {
   // ============ Chart Data Structure ============
@@ -54,9 +49,9 @@ describe('Chart.js Components', () => {
             data: [12, 19, 3, 5, 2],
             backgroundColor: 'rgba(75, 192, 192, 0.6)',
             borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-          }
-        ]
+            borderWidth: 1,
+          },
+        ],
       };
 
       expect(data.labels).toHaveLength(5);
@@ -71,14 +66,14 @@ describe('Chart.js Components', () => {
           {
             label: 'Revenue',
             data: [100, 200, 150, 300],
-            backgroundColor: 'blue'
+            backgroundColor: 'blue',
           },
           {
             label: 'Expenses',
             data: [80, 150, 120, 200],
-            backgroundColor: 'red'
-          }
-        ]
+            backgroundColor: 'red',
+          },
+        ],
       };
 
       expect(data.datasets).toHaveLength(2);
@@ -92,9 +87,9 @@ describe('Chart.js Components', () => {
         datasets: [
           {
             data: [30, 50, 20],
-            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-          }
-        ]
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+          },
+        ],
       };
 
       expect(data.labels).toHaveLength(3);
@@ -110,19 +105,23 @@ describe('Chart.js Components', () => {
       // This is the CURRENT v2 format
       const optionsV2 = {
         scales: {
-          xAxes: [{
-            stacked: true,
-            gridLines: {
-              display: false
-            }
-          }],
-          yAxes: [{
-            stacked: true,
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
+          xAxes: [
+            {
+              stacked: true,
+              gridLines: {
+                display: false,
+              },
+            },
+          ],
+          yAxes: [
+            {
+              stacked: true,
+              ticks: {
+                beginAtZero: true,
+              },
+            },
+          ],
+        },
       };
 
       expect(optionsV2.scales.xAxes).toBeDefined();
@@ -137,9 +136,9 @@ describe('Chart.js Components', () => {
           position: 'right',
           labels: {
             fontColor: '#333',
-            fontSize: 12
-          }
-        }
+            fontSize: 12,
+          },
+        },
       };
 
       expect(optionsV2.legend.display).toBe(true);
@@ -155,9 +154,9 @@ describe('Chart.js Components', () => {
           callbacks: {
             label: (tooltipItem, data) => {
               return `Value: ${tooltipItem.value}`;
-            }
-          }
-        }
+            },
+          },
+        },
       };
 
       expect(optionsV2.tooltips.enabled).toBe(true);
@@ -167,7 +166,7 @@ describe('Chart.js Components', () => {
     it('should have valid v2 responsive configuration', () => {
       const optionsV2 = {
         responsive: true,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
       };
 
       expect(optionsV2.responsive).toBe(true);
@@ -181,7 +180,7 @@ describe('Chart.js Components', () => {
     it('should render Bar chart', () => {
       const data = {
         labels: ['A', 'B', 'C'],
-        datasets: [{ label: 'Test', data: [1, 2, 3] }]
+        datasets: [{ label: 'Test', data: [1, 2, 3] }],
       };
 
       render(<Bar data={data} options={{}} />);
@@ -191,7 +190,7 @@ describe('Chart.js Components', () => {
     it('should render Line chart', () => {
       const data = {
         labels: ['Jan', 'Feb', 'Mar'],
-        datasets: [{ label: 'Trend', data: [10, 20, 15] }]
+        datasets: [{ label: 'Trend', data: [10, 20, 15] }],
       };
 
       render(<Line data={data} options={{}} />);
@@ -201,7 +200,7 @@ describe('Chart.js Components', () => {
     it('should render Pie chart', () => {
       const data = {
         labels: ['Part 1', 'Part 2'],
-        datasets: [{ data: [60, 40] }]
+        datasets: [{ data: [60, 40] }],
       };
 
       render(<Pie data={data} options={{}} />);
@@ -211,7 +210,7 @@ describe('Chart.js Components', () => {
     it('should render Doughnut chart', () => {
       const data = {
         labels: ['Complete', 'Remaining'],
-        datasets: [{ data: [75, 25] }]
+        datasets: [{ data: [75, 25] }],
       };
 
       render(<Doughnut data={data} options={{}} />);
@@ -230,29 +229,33 @@ describe('Chart.js Components', () => {
           {
             label: 'Invoices',
             data: [15000, 8000, 2000],
-            backgroundColor: ['#4CAF50', '#FFC107', '#F44336']
-          }
-        ]
+            backgroundColor: ['#4CAF50', '#FFC107', '#F44336'],
+          },
+        ],
       };
 
       const invoiceOption = {
         tooltips: {
-          enabled: true
+          enabled: true,
         },
         legend: {
           display: true,
-          position: 'right'
+          position: 'right',
         },
         scales: {
-          xAxes: [{
-            stacked: true
-          }],
-          yAxes: [{
-            stacked: true
-          }]
+          xAxes: [
+            {
+              stacked: true,
+            },
+          ],
+          yAxes: [
+            {
+              stacked: true,
+            },
+          ],
         },
         responsive: true,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
       };
 
       expect(invoiceData.datasets[0].data).toEqual([15000, 8000, 2000]);
@@ -267,14 +270,14 @@ describe('Chart.js Components', () => {
           {
             label: 'Income',
             data: [50000, 45000, 60000, 55000],
-            backgroundColor: '#4CAF50'
+            backgroundColor: '#4CAF50',
           },
           {
             label: 'Expenses',
             data: [30000, 35000, 40000, 38000],
-            backgroundColor: '#F44336'
-          }
-        ]
+            backgroundColor: '#F44336',
+          },
+        ],
       };
 
       expect(cashFlowData.datasets).toHaveLength(2);
@@ -292,9 +295,9 @@ describe('Chart.js Components', () => {
             data: [10000, 12000, 11000, 15000, 14000, 18000],
             borderColor: '#2064d8',
             fill: false,
-            tension: 0.1
-          }
-        ]
+            tension: 0.1,
+          },
+        ],
       };
 
       expect(bankData.datasets[0].borderColor).toBe('#2064d8');
@@ -310,16 +313,16 @@ describe('Chart.js Components', () => {
       const v2Scales = {
         scales: {
           xAxes: [{ stacked: true }],
-          yAxes: [{ stacked: true }]
-        }
+          yAxes: [{ stacked: true }],
+        },
       };
 
       // v4 format:
       const v4Scales = {
         scales: {
           x: { stacked: true },
-          y: { stacked: true }
-        }
+          y: { stacked: true },
+        },
       };
 
       expect(v2Scales.scales.xAxes).toBeDefined();
@@ -331,8 +334,8 @@ describe('Chart.js Components', () => {
       const v2Options = {
         legend: {
           display: true,
-          position: 'right'
-        }
+          position: 'right',
+        },
       };
 
       // v4 format:
@@ -340,9 +343,9 @@ describe('Chart.js Components', () => {
         plugins: {
           legend: {
             display: true,
-            position: 'right'
-          }
-        }
+            position: 'right',
+          },
+        },
       };
 
       expect(v2Options.legend).toBeDefined();
@@ -354,8 +357,8 @@ describe('Chart.js Components', () => {
       const v2Options = {
         tooltips: {
           enabled: true,
-          mode: 'index'
-        }
+          mode: 'index',
+        },
       };
 
       // v4 format:
@@ -363,9 +366,9 @@ describe('Chart.js Components', () => {
         plugins: {
           tooltip: {
             enabled: true,
-            mode: 'index'
-          }
-        }
+            mode: 'index',
+          },
+        },
       };
 
       expect(v2Options.tooltips).toBeDefined();

@@ -1,31 +1,121 @@
 # Repository Guidelines
 
+## Getting Started
+
+For complete setup instructions including prerequisites, database setup, environment configuration, and running the application, see **[SETUP.md](./SETUP.md)**.
+
+**Quick Start:**
+
+```bash
+# Prerequisites: Node 20+, Java 21, PostgreSQL 14+
+
+# 1. Install dependencies
+npm install
+
+# 2. Setup database and create apps/backend/.env (see SETUP.md)
+
+# 3. Run application
+npm run backend:run   # Terminal 1
+npm run frontend      # Terminal 2
+```
+
+---
+
 ## Project Structure
+
 - `apps/frontend/`: React frontend. Source in `src/`, static assets in `public/`, Playwright e2e in `e2e/`, build output in `dist/` (Vite) or `build/` (CRA fallback).
 - `apps/backend/`: Spring Boot backend (WAR). Code in `src/main/java/com/simpleaccounts`, config/resources in `src/main/resources`, tests in `src/test/java`.
 - `apps/agents/`: Optional Node-based agents; each agent lives in its own subfolder with a `package.json`.
 - `deploy/`, `docs/`, `scripts/`, `k6/`: deployment recipes, product docs, helper scripts, and load tests.
 
-## Setup, Build, and Run
-Prereqs: Node 20+, npm 9+, Java 11+, Maven (or `./mvnw`).
-Common commands from repo root:
-- `npm install` – install workspace dependencies.
-- `npm run frontend` – start the React dev server on localhost.
-- `npm run backend:run` – run backend via `apps/backend/run.sh`.
-- `npm run frontend:build` / `npm run backend:build` – production builds.
-- `npm test` / `npm run lint` – run tests or lint across workspaces.
+---
+
+## Build and Run Commands
+
+From repo root:
+
+| Command                  | Description                             |
+| ------------------------ | --------------------------------------- |
+| `npm install`            | Install workspace dependencies          |
+| `npm run frontend`       | Start React dev server (localhost:3000) |
+| `npm run backend:run`    | Run backend via `apps/backend/run.sh`   |
+| `npm run frontend:build` | Production build for frontend           |
+| `npm run backend:build`  | Production build for backend            |
+| `npm test`               | Run tests across workspaces             |
+| `npm run lint`           | Run linter across workspaces            |
+
+---
 
 ## Coding Style
-- Frontend/agents: Prettier + ESLint. 2-space indentation, single quotes, semicolons, 100‑char line width. Format with `npm run format`; pre-commit hooks run `eslint --fix` and Prettier.
-- Backend: standard Java conventions, packages under `com.simpleaccounts.*`. Format Java with Google Java Format (`scripts/run-java-formatter.sh`).
+
+### Frontend/Agents
+
+- Prettier + ESLint
+- 2-space indentation, single quotes, semicolons
+- 100-char line width
+- Format with `npm run format`
+- Pre-commit hooks run `eslint --fix` and Prettier
+
+### Backend
+
+- Standard Java conventions
+- Packages under `com.simpleaccounts.*`
+- Format Java with Google Java Format (`scripts/run-java-formatter.sh`)
+
+---
 
 ## Testing
-- Frontend: Jest via `react-scripts`. Name tests `*.test.{js,jsx,ts,tsx}` or place in `__tests__/`. Coverage thresholds are enforced in `apps/frontend/package.json`. Run `cd apps/frontend && npm test`, `npm run test:cov`, or e2e with `npm run test:frontend:e2e`.
-- Backend: JUnit 5 + Spring Boot test. Keep tests in `apps/backend/src/test/java` and name classes `*Test.java`. Run `cd apps/backend && ./mvnw test`.
+
+### Frontend
+
+- Jest via `react-scripts`
+- Name tests `*.test.{js,jsx,ts,tsx}` or place in `__tests__/`
+- Coverage thresholds enforced in `apps/frontend/package.json`
+
+```bash
+cd apps/frontend
+npm test                     # Run tests
+npm run test:cov             # Run with coverage
+npm run test:frontend:e2e    # Playwright E2E tests
+```
+
+### Backend
+
+- JUnit 5 + Spring Boot test
+- Tests in `apps/backend/src/test/java`
+- Name classes `*Test.java`
+
+```bash
+cd apps/backend
+./mvnw test
+```
+
+---
 
 ## Commits & Pull Requests
-- Use Conventional Commits (`feat:`, `fix(scope):`, etc.); subject lower‑case, ≤72 chars. Commitlint + Husky enforce this.
-- Branch from `develop` (`feature/...`, `fix/...`, `docs/...`). PRs target `develop`, include a clear description and linked issue, add screenshots for UI changes, and ensure `npm test`, `npm run lint`, and backend tests pass.
+
+### Commit Convention
+
+- Use Conventional Commits: `feat:`, `fix(scope):`, `docs:`, `chore:`, etc.
+- Subject must be lower-case, ≤72 chars
+- Commitlint + Husky enforce this
+
+### Branch Naming
+
+- Branch from `develop`
+- Use prefixes: `feature/...`, `fix/...`, `docs/...`
+
+### PR Requirements
+
+- Target `develop` branch
+- Include clear description and linked issue
+- Add screenshots for UI changes
+- Ensure `npm test`, `npm run lint`, and backend tests pass
+
+---
 
 ## Security & Configuration
-Do not commit secrets. Use local `.env` files for runtime config and follow `SECURITY.md` for vulnerability reporting.
+
+- **Never commit secrets** - use local `.env` files
+- See [SECURITY.md](./SECURITY.md) for vulnerability reporting
+- See [SETUP.md](./SETUP.md) for environment configuration
