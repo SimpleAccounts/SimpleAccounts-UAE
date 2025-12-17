@@ -84,21 +84,35 @@ class BankAccount extends Component {
 	// };
 
 	componentDidMount = () => {
+		console.log('[Dashboard Debug] BankAccount componentDidMount called');
 		// Run getTotalBalance in parallel - it doesn't depend on getBankAccountTypes
 		this.props.DashboardActions.getTotalBalance().then((action) => {
 			// Redux Toolkit thunks return action objects
+			console.log('[Dashboard Debug] getTotalBalance action:', action);
 			if (action && action.type && action.type.includes('fulfilled')) {
+				console.log('[Dashboard Debug] getTotalBalance fulfilled, payload:', action.payload);
 				this.setState({ totalBalance: action.payload });
+			} else {
+				console.warn('[Dashboard Debug] getTotalBalance rejected or pending:', action);
 			}
+		}).catch((err) => {
+			console.error('[Dashboard Debug] getTotalBalance error:', err);
 		});
 
 		this.props.DashboardActions.getBankAccountTypes().then((action) => {
 			// Redux Toolkit thunks return action objects
+			console.log('[Dashboard Debug] getBankAccountTypes action:', action);
 			if (action && action.type && action.type.includes('fulfilled')) {
 				const data = action.payload;
+				console.log('[Dashboard Debug] getBankAccountTypes fulfilled, payload:', data);
 				let val = data && data[0] ? data[0].bankAccountId : '';
+				console.log('[Dashboard Debug] Calling getBankAccountGraphData with:', val, 12);
 				this.getBankAccountGraphData(val, 12);
+			} else {
+				console.warn('[Dashboard Debug] getBankAccountTypes rejected or pending:', action);
 			}
+		}).catch((err) => {
+			console.error('[Dashboard Debug] getBankAccountTypes error:', err);
 		});
 	};
 

@@ -11,7 +11,7 @@ export default function configureStore(initialState = {}) {
         serializableCheck: {
           // Ignore these action types and paths in state
           ignoredActions: ['common/setTostifyAlertFunc', 'common/tostifyAlert'],
-          ignoredActionPaths: ['payload.headers'],
+          ignoredActionPaths: ['payload.headers', 'payload.config', 'payload.config.transformRequest'],
           ignoredPaths: ['common.tostifyAlertFunc'],
         },
       }),

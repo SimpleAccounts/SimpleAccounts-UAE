@@ -63,7 +63,8 @@ export const getCurrencyConversionList = createAsyncThunk(
         url: `/rest/currencyConversion/getActiveCurrencyConversionList`,
       };
       const res = await authApi(data);
-      return res;
+      // Return only the data, not the full response object with config
+      return res.data || res;
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);
     }

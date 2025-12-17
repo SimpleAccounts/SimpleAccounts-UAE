@@ -52,7 +52,17 @@ class CashFlow extends Component {
 	};
 
 	componentDidMount = () => {
-		this.props.DashboardActions.getCashFlowGraphData(12);
+		console.log('[Dashboard Debug] CashFlow componentDidMount called');
+		this.props.DashboardActions.getCashFlowGraphData(12).then((action) => {
+			console.log('[Dashboard Debug] getCashFlowGraphData action:', action);
+			if (action && action.type && action.type.includes('fulfilled')) {
+				console.log('[Dashboard Debug] getCashFlowGraphData fulfilled, payload:', action.payload);
+			} else {
+				console.warn('[Dashboard Debug] getCashFlowGraphData rejected or pending:', action);
+			}
+		}).catch((err) => {
+			console.error('[Dashboard Debug] getCashFlowGraphData error:', err);
+		});
 	};
 
 	handleChange = (e) => {

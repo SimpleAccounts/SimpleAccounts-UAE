@@ -33,11 +33,18 @@ class PaidInvoices extends Component {
 	};
 
 	componentDidMount = () => {
+		console.log('[Dashboard Debug] PaidInvoices componentDidMount called');
 		this.props.DashboardActions.getInvoiceGraphData(12).then((action) => {
 			// Redux Toolkit thunks return action objects
+			console.log('[Dashboard Debug] getInvoiceGraphData action:', action);
 			if (action && action.type && action.type.includes('fulfilled')) {
+				console.log('[Dashboard Debug] getInvoiceGraphData fulfilled, payload:', action.payload);
 				this.getInvoiceGraph(action.payload);
+			} else {
+				console.warn('[Dashboard Debug] getInvoiceGraphData rejected or pending:', action);
 			}
+		}).catch((err) => {
+			console.error('[Dashboard Debug] getInvoiceGraphData error:', err);
 		});
 	};
 
