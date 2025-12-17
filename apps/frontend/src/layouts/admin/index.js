@@ -109,7 +109,11 @@ class AdminLayout extends React.Component {
 
       return (
         <li key={item.url} className="nav-item">
-          <NavLink to={item.url} className="nav-link" activeClassName="active" exact>
+          <NavLink
+            to={item.url}
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            end
+          >
             {item.icon && <i className={`nav-icon ${item.icon}`} />}
             <span>{item.name}</span>
           </NavLink>

@@ -93,7 +93,9 @@ class BankAccount extends Component {
   };
 
   getBankAccountGraphData = (account, dateRange) => {
-    this.props.DashboardActions.getBankAccountGraphData(account, dateRange);
+    if (account && dateRange) {
+      this.props.DashboardActions.getBankAccountGraphData({ account, daterange: dateRange });
+    }
   };
 
   // componentWillReceiveProps(newProps) {
