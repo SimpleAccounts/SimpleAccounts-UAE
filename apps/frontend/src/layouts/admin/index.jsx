@@ -104,13 +104,13 @@ class AdminLayout extends React.Component {
             if (userData?.role?.roleCode) {
               await this.props.commonActions.getRoleList(userData.role.roleCode);
             }
-            await this.props.commonActions.getCompanyCurrency();
-            await this.props.commonActions.getCurrencyConversionList();
-            await this.props.commonActions.getVatList();
-            await this.props.commonActions.getCurrencyList();
-            this.setState({
-              loading: false,
-            });
+          await this.props.commonActions.getCompanyCurrency();
+          await this.props.commonActions.getCurrencyConversionList();
+          await this.props.commonActions.getVatList();
+          await this.props.commonActions.getCurrencyList();
+          this.setState({
+            loading: false,
+          });
           } else {
             // Auth check failed - user not authenticated
             this.props.commonActions.tostifyAlert('error', 'Session Timed out');

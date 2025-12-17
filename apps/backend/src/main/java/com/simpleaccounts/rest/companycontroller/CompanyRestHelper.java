@@ -279,7 +279,7 @@ public class CompanyRestHelper{
 			State state = stateService.findByPK(registrationModel.getStateId());
 			if (state == null) {
 				throw new RuntimeException("State not found for ID: " + registrationModel.getStateId());
-			}
+		}
 			company.setCompanyStateCode(state);
 		}
 		
@@ -308,7 +308,7 @@ public class CompanyRestHelper{
 		}
 		
 		logger.info("Company registration prepared successfully");
-		return company;
+        return company;
     }
 
 	/**
@@ -322,5 +322,5 @@ public class CompanyRestHelper{
 		}
 		// Remove newlines, carriage returns, and tabs to prevent log injection
 		return value.replace('\n', '_').replace('\r', '_').replace('\t', '_');
-	}
+    }
 }

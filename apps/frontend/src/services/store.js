@@ -6,5 +6,25 @@ export default function configureStore(initialState = {}) {
     reducer: rootReducer,
     preloadedState: initialState,
     devTools: process.env.NODE_ENV !== 'production',
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          // Ignore these action types and paths in state
+          ignoredActions: [
+            'common/setTostifyAlertFunc',
+            'common/tostifyAlert',
+            'common/TOSTIFY_ALERT_FUNC',
+            'common/TOSTIFY_ALERT',
+            'common/getCurrencyConversionList/fulfilled',
+          ],
+          ignoredActionPaths: [
+            'payload.headers',
+            'payload.config',
+            'payload.config.transformRequest',
+            'payload.request',
+          ],
+          ignoredPaths: ['common.tostifyAlertFunc'],
+        },
+      }),
   })
 }

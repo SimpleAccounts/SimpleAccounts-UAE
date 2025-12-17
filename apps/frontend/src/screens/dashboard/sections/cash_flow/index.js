@@ -105,9 +105,9 @@ class CashFlow extends Component {
                 <img alt="income" src={incomeIcon} />
                 <div>
                   <h5>
-                    {universal_currency_list[0] && this.props.cash_flow_graph.inflow && (
+                    {universal_currency_list[0] && inflow && (
                       <Currency
-                        value={(this.props.cash_flow_graph.inflow || {})['sum']}
+                        value={inflow.sum || 0}
                         currencySymbol={
                           universal_currency_list[0]
                             ? universal_currency_list[0].currencyIsoCode
@@ -123,9 +123,9 @@ class CashFlow extends Component {
                 <img alt="outgoing" src={outcomeIcon} />
                 <div>
                   <h5>
-                    {universal_currency_list[0] && this.props.cash_flow_graph.outflow && (
+                    {universal_currency_list[0] && outflow && (
                       <Currency
-                        value={(this.props.cash_flow_graph.outflow || {})['sum']}
+                        value={outflow.sum || 0}
                         currencySymbol={
                           universal_currency_list[0]
                             ? universal_currency_list[0].currencyIsoCode
@@ -146,12 +146,9 @@ class CashFlow extends Component {
               <div className="column">
                 <h5>
                   {' '}
-                  {universal_currency_list[0] && this.props.cash_flow_graph.outflow && (
+                  {universal_currency_list[0] && outflow && (
                     <Currency
-                      value={
-                        (this.props.cash_flow_graph.inflow || {})['sum'] -
-                        (this.props.cash_flow_graph.outflow || {})['sum']
-                      }
+                      value={(inflow.sum || 0) - (outflow.sum || 0)}
                       currencySymbol={
                         universal_currency_list[0]
                           ? universal_currency_list[0].currencyIsoCode

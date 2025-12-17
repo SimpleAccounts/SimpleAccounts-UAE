@@ -135,9 +135,9 @@ class LogIn extends React.Component {
 				// Redux Toolkit thunks return an action object, not the response directly
 				if (action && action.type && action.type.includes('fulfilled')) {
 					toast.success('Log in Successfully', {
-						position: 'top-right',
-					});
-					this.props.history.push(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
+					position: 'top-right',
+				});
+				this.props.history.push(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
 				} else {
 					// Login failed - action is rejected
 					this.setState({ loading: false });
@@ -155,7 +155,7 @@ class LogIn extends React.Component {
 				// This catches unexpected errors (network issues, etc.)
 				this.setState({ loading: false });
 				toast.error('Something went wrong. Please try again.', {
-					position: 'top-right',
+						position: 'top-right',
 				});
 			});
 	};
