@@ -60,3 +60,7 @@ coverage/
 *.swo
 # MCP environment variables
 .mcp.env
+
+# Local reference files (not to be committed)
+*.battle-plan*.md
+*.local-plan*.md
