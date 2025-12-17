@@ -15,6 +15,11 @@ import { data } from '../../screens/Language/index';
 import LocalizedStrings from 'react-localization';
 import config from '../../constants/config';
 
+// Debug: Log adminRoutes and Config.DASHBOARD at module load
+console.log('[AdminLayout Module Load] Config.DASHBOARD:', config.DASHBOARD);
+console.log('[AdminLayout Module Load] adminRoutes length:', adminRoutes?.length);
+console.log('[AdminLayout Module Load] dashboard route:', adminRoutes?.find(r => r?.path === '/admin/dashboard'));
+
 const mapStateToProps = state => {
   return {
     user_list: state.user.user_list,
@@ -376,6 +381,10 @@ class AdminLayout extends React.Component {
                   />
                   <Routes>
                     {adminRoutes?.map((prop, key) => {
+                      if (!prop || !prop.path) {
+                        console.log('[AdminLayout Debug] Skipping invalid route at index', key, prop);
+                        return null;
+                      }
                       if (prop?.redirect) {
                         return <Route path={prop.path} key={key} element={<Navigate to={prop.pathTo} replace />} />;
                       }
