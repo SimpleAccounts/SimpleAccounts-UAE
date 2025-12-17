@@ -142,7 +142,15 @@ class AdminLayout extends React.Component {
             }
             
             if (userData?.role?.roleCode) {
-              await this.props.commonActions.getRoleList(userData.role.roleCode);
+              const roleListAction = await this.props.commonActions.getRoleList(userData.role.roleCode);
+              console.log('[AdminLayout Debug] getRoleList action:', roleListAction);
+              if (roleListAction && roleListAction.type && roleListAction.type.includes('fulfilled')) {
+                console.log('[AdminLayout Debug] getRoleList fulfilled, payload:', roleListAction.payload);
+              } else {
+                console.warn('[AdminLayout Debug] getRoleList rejected or pending:', roleListAction);
+              }
+            } else {
+              console.warn('[AdminLayout Debug] No roleCode found in userData:', userData);
             }
           await this.props.commonActions.getCompanyCurrency();
           await this.props.commonActions.getCurrencyConversionList();
