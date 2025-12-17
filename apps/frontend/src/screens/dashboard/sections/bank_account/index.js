@@ -103,7 +103,8 @@ class BankAccount extends Component {
 	};
 
 	getBankAccountGraphData = (account, dateRange) => {
-		this.props.DashboardActions.getBankAccountGraphData(account, dateRange);
+		// Redux Toolkit thunks accept a single argument, so pass as array
+		this.props.DashboardActions.getBankAccountGraphData([account, dateRange]);
 	};
 
 	// componentWillReceiveProps(newProps) {

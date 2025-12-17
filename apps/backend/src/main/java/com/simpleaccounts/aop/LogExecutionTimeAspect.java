@@ -19,11 +19,11 @@ public class LogExecutionTimeAspect {
 		long startTime = System.currentTimeMillis();
 		
 		try {
-			Object result = joinPoint.proceed();
-			long endTime = System.currentTimeMillis();
-			long duration = endTime - startTime;
+		Object result = joinPoint.proceed();
+		long endTime = System.currentTimeMillis();
+		long duration = endTime - startTime;
 			log.info("{}.{} execution time: {} ms", className, methodName, duration);
-			return result;
+		return result;
 		} catch (Throwable e) {
 			long endTime = System.currentTimeMillis();
 			long duration = endTime - startTime;
