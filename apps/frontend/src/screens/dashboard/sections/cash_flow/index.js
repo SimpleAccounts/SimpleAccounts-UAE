@@ -72,20 +72,21 @@ class CashFlow extends Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
+		const cashFlowGraph = this.props.cash_flow_graph || {};
 		const cashFlowBar = {
-			labels: this.props.cash_flow_graph.labels || [],
+			labels: cashFlowGraph.labels || [],
 			datasets: [
 				{
-					label: (this.props.cash_flow_graph.inflow || {})['label'],
+					label: (cashFlowGraph.inflow || {})['label'] || 'Inflow',
 					backgroundColor: 'rgba(65, 145, 255, 0.85)',
 					hoverBackgroundColor: 'rgba(65, 145, 255, 0.85',
-					data: (this.props.cash_flow_graph.inflow || {})['data'],
+					data: (cashFlowGraph.inflow || {})['data'] || [],
 				},
 				{
-					label: (this.props.cash_flow_graph.outflow || {})['label'],
+					label: (cashFlowGraph.outflow || {})['label'] || 'Outflow',
 					backgroundColor: 'rgba(244, 119, 46, 0.85)',
 					hoverBackgroundColor: 'rgba(244, 119, 46, 0.85)',
-					data: (this.props.cash_flow_graph.outflow || {})['data'],
+					data: (cashFlowGraph.outflow || {})['data'] || [],
 				},
 			],
 		};
@@ -115,10 +116,10 @@ class CashFlow extends Component {
 								<div>
 									<h5>
 										{universal_currency_list[0] &&
-											this.props.cash_flow_graph.inflow && (
+											cashFlowGraph.inflow && (
 												<Currency
 													value={
-														(this.props.cash_flow_graph.inflow || {})['sum']
+														(cashFlowGraph.inflow || {})['sum'] || 0
 													}
 													currencySymbol={
 														universal_currency_list[0]
@@ -136,10 +137,10 @@ class CashFlow extends Component {
 								<div>
 									<h5>
 										{universal_currency_list[0] &&
-											this.props.cash_flow_graph.outflow && (
+											cashFlowGraph.outflow && (
 												<Currency
 													value={
-														(this.props.cash_flow_graph.outflow || {})['sum']
+														(cashFlowGraph.outflow || {})['sum'] || 0
 													}
 													currencySymbol={
 														universal_currency_list[0]
@@ -160,11 +161,11 @@ class CashFlow extends Component {
 									<h5>
 										{' '}
 										{universal_currency_list[0] &&
-											this.props.cash_flow_graph.outflow && (
+											cashFlowGraph.outflow && (
 												<Currency
 													value={
-														(this.props.cash_flow_graph.inflow || {})['sum'] -
-														(this.props.cash_flow_graph.outflow || {})['sum']
+														((cashFlowGraph.inflow || {})['sum'] || 0) -
+														((cashFlowGraph.outflow || {})['sum'] || 0)
 													}
 													currencySymbol={
 														universal_currency_list[0]

@@ -137,11 +137,12 @@ class BankAccount extends Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
+		const bankAccountGraph = this.props.bank_account_graph || {};
 		const line = {
-			labels: this.props.bank_account_graph.labels,
+			labels: bankAccountGraph.labels || [],
 			datasets: [
 				{
-					label: "Delta of " + this.props.bank_account_graph.account_name+" ",
+					label: "Delta of " + (bankAccountGraph.account_name || '') + " ",
 					fill: true,
 					lineTension: 0.1,
 					backgroundColor: 'rgba(32, 100, 216, 0.4)',
@@ -159,7 +160,7 @@ class BankAccount extends Component {
 					pointHoverBorderWidth: 2,
 					pointRadius: 4,
 					pointHitRadius: 20,
-					data: this.props.bank_account_graph.data,
+					data: bankAccountGraph.data || [],
 				},
 			],
 		};
@@ -199,7 +200,7 @@ class BankAccount extends Component {
 													ref={this.bankAccountSelect}
 													onChange={(e) => this.handleChange(e)}
 												>
-													{this.props.bank_account_type.map(
+													{(this.props.bank_account_type || []).map(
 														(account, index) => (
 															<option key={index} value={account.bankAccountId}>
 																{account.name + '-' + account.accounName}
@@ -212,7 +213,7 @@ class BankAccount extends Component {
 												<Row className="text-center mt-2" style={{    display: "block"}}>
 												<p style={{ fontWeight: 500, textIndent: 5 ,marginTop:"-4px" }}>
 												{strings.Lastupdatedon}{' '}
-													{this.props.bank_account_graph.updatedDate}
+													{bankAccountGraph.updatedDate || ''}
 												</p>
 									
 									
