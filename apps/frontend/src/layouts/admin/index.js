@@ -366,6 +366,7 @@ class AdminLayout extends React.Component {
                       if (prop?.redirect) {
                         return <Route path={prop.path} key={key} element={<Navigate to={prop.pathTo} replace />} />;
                       }
+                      console.log('[AdminLayout Debug] Rendering route:', prop?.path, prop?.name, prop?.component);
                       return (
                         <Route
                           path={prop.path}

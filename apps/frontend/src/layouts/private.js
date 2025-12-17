@@ -1,6 +1,7 @@
 import React from 'react';
 
 const PrivateRoute = ({ element, name, node }) => {
+  console.log('[PrivateRoute Debug] Rendering route:', name, 'element:', element);
 	if (node.length === 0) {
 		return <div></div>;
 	}
