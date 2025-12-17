@@ -223,6 +223,9 @@ class AdminLayout extends React.Component {
     };
     const { loading, loadingMsg, SubscriptionMessage, sidebarShow, sidebarMinimized } = this.state;
     const { user_role_list, user_list } = this.props;
+    console.log('[AdminLayout Debug] Render - user_role_list:', user_role_list);
+    console.log('[AdminLayout Debug] Render - loading:', loading);
+    console.log('[AdminLayout Debug] Render - adminRoutes:', adminRoutes);
     var arr = [];
 
     function parentPathPresent(arr, name) {
@@ -382,6 +385,7 @@ class AdminLayout extends React.Component {
                       );
                     })}
                   </Routes>
+                  )}
                 </Suspense>
               </Container>
             </main>
