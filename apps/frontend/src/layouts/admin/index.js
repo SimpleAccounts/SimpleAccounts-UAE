@@ -233,7 +233,9 @@ class AdminLayout extends React.Component {
     const { user_role_list, user_list } = this.props;
     console.log('[AdminLayout Debug] Render - user_role_list:', user_role_list);
     console.log('[AdminLayout Debug] Render - loading:', loading);
-    console.log('[AdminLayout Debug] Render - adminRoutes:', adminRoutes);
+    console.log('[AdminLayout Debug] Render - adminRoutes length:', adminRoutes?.length);
+    console.log('[AdminLayout Debug] Render - dashboard route:', adminRoutes?.find(r => r?.path === '/admin/dashboard'));
+    console.log('[AdminLayout Debug] Render - all routes:', adminRoutes?.map(r => ({ path: r?.path, name: r?.name })));
     var arr = [];
 
     function parentPathPresent(arr, name) {
