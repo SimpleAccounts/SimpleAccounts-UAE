@@ -183,14 +183,14 @@ const ResetNewPassword = ({ token, history }) => {
 																<span className="text-danger">* </span> Confirm Password
 															</Label>
 															<Input
-														onPaste={(e) => {
-															e.preventDefault();
-															return false;
-														}}
-														onCopy={(e) => {
-															e.preventDefault();
-															return false;
-														}}
+																onPaste={(e) => {
+																	e.preventDefault();
+																	return false;
+																}}
+																onCopy={(e) => {
+																	e.preventDefault();
+																	return false;
+																}}
 																minLength={8}
 																maxLength={255}
 																autoComplete="off"
