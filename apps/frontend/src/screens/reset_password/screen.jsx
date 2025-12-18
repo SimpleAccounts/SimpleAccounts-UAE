@@ -35,6 +35,7 @@ const ResetPassword = ({ history, location }) => {
 
 	const form = useForm({
 		resolver: zodResolver(resetPasswordSchema),
+		mode: 'onBlur', // Validate on blur for better UX
 		defaultValues: {
 			username: '',
 		},
