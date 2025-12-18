@@ -20,6 +20,8 @@ import { toast } from 'react-toastify';
 import { Message } from 'components';
 import PasswordChecklist from 'react-password-checklist';
 import { withNavigation } from 'utils/withNavigation';
+import logo from 'assets/images/brand/logo.png';
+import '../../reset_password/style.scss';
 
 // Zod validation schema
 const resetNewPasswordSchema = z
@@ -102,22 +104,25 @@ const ResetNewPassword = ({ token, history }) => {
 	};
 
 	return (
-		<div className="animated fadeIn">
-			<div className="app flex-row align-items-center">
-				<Container>
-					<Row className="justify-content-center">
-						<Col md="5">
-							{alert}
-						</Col>
-					</Row>
-					<Row className="justify-content-center">
-						<Col md="5">
-							<Card>
-								<CardHeader className="register-header d-flex">
-									<i className="fas fa-lock"></i>
-									<h5 className="mb-0">Reset Password</h5>
-								</CardHeader>
-								<CardBody className="p-4">
+		<div className="reset-password-screen">
+			<div className="animated fadeIn">
+				<div className="app flex-row align-items-center">
+					<Container>
+						<Row className="justify-content-center">
+							<Col md="5">
+								{alert}
+							</Col>
+						</Row>
+						<Row className="justify-content-center">
+							<Col md="5">
+								<Card>
+									<CardBody className="p-4">
+										<div className="logo-container">
+											<img src={logo} alt="logo" />
+										</div>
+										<div className="d-flex registerScreen">
+											<h2 className="mb-0">Reset Password</h2>
+										</div>
 									<Form onSubmit={form.handleSubmit(onSubmit)}>
 										<Row>
 											<Col lg={12}>

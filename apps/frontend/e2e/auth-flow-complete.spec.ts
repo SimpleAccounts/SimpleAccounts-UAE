@@ -144,55 +144,66 @@ test.describe('Complete Authentication Flow', () => {
       await expect(page).toHaveURL(new RegExp(POST_LOGIN_PATH));
     });
 
-    // Step 2: Navigate to reset password page
-    await test.step('Navigate to reset password', async () => {
+    // Step 2: Navigate to reset password page and test reset password flow
+    await test.step('Test reset password flow', async () => {
       // First, logout to access reset password page
       await logout(page);
       await expect(page).toHaveURL(new RegExp(LOGIN_PATH));
 
-      // Click on "Forgot password" link
-      const forgotPasswordLink = page.getByRole('link', { name: /forgot.*password|reset.*password/i });
-      const linkExists = await forgotPasswordLink.isVisible({ timeout: 5000 }).catch(() => false);
+      // Navigate to reset password page
+      await page.goto(RESET_PASSWORD_PATH, { waitUntil: 'domcontentloaded' });
+      await expect(page).toHaveURL(new RegExp(RESET_PASSWORD_PATH));
 
-      if (linkExists) {
-        await forgotPasswordLink.click();
-        await page.waitForURL(`**${RESET_PASSWORD_PATH}**`, { timeout: 10_000 });
-        await expect(page).toHaveURL(new RegExp(RESET_PASSWORD_PATH));
+      // Verify reset password form is displayed
+      const emailInput = page.locator('input#username, input[name="username"]');
+      await expect(emailInput).toBeVisible({ timeout: 10_000 });
 
-        // Verify reset password form is displayed
-        const emailInput = page.locator('input[type="email"], input[name*="email"], input[id*="email"], input[name*="username"]');
-        await expect(emailInput).toBeVisible({ timeout: 10_000 });
+      // Verify logo is present
+      const logo = page.locator('.logo-container img, img[alt="logo"]');
+      await expect(logo).toBeVisible({ timeout: 5_000 });
 
-        // Fill in email and submit (this will send reset email)
-        await emailInput.fill(testEmail);
-        const submitButton = page.getByRole('button', { name: /send|submit|reset/i });
-        if (await submitButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-          await submitButton.click();
-          // Wait for success message or redirect
-          await page.waitForTimeout(2000);
-        }
+      // Verify form elements
+      await expect(page.getByText(/forgot password/i)).toBeVisible({ timeout: 5_000 });
+      await expect(page.getByRole('button', { name: /send.*verification.*email/i })).toBeVisible({ timeout: 5_000 });
+      await expect(page.getByRole('button', { name: /back.*login/i })).toBeVisible({ timeout: 5_000 });
 
-        // Navigate back to login
-        const backToLoginButton = page.getByRole('button', { name: /back.*login|login/i });
-        if (await backToLoginButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-          await backToLoginButton.click();
-        } else {
+      // Fill in email with valid email format
+      await emailInput.fill(testEmail);
+      
+      // Verify email was filled
+      await expect(emailInput).toHaveValue(testEmail);
+
+      // Submit the form
+      const submitButton = page.getByRole('button', { name: /send.*verification.*email/i });
+      await submitButton.click();
+
+      // Wait for success message or redirect
+      // The form should show a success message or redirect to login
+      await page.waitForTimeout(2000);
+      
+      // Check for success message
+      const successMessage = page.locator('.alert-success, [class*="success"], .Message');
+      const hasSuccessMessage = await successMessage.isVisible({ timeout: 5_000 }).catch(() => false);
+      
+      if (hasSuccessMessage) {
+        // Success message displayed, verify it contains expected text
+        const messageText = await successMessage.textContent().catch(() => '');
+        expect(messageText.toLowerCase()).toContain('email');
+      }
+
+      // Navigate back to login (either via button or auto-redirect)
+      const backToLoginButton = page.getByRole('button', { name: /back.*login/i });
+      if (await backToLoginButton.isVisible({ timeout: 3_000 }).catch(() => false)) {
+        await backToLoginButton.click();
+      } else {
+        // Wait for auto-redirect or navigate manually
+        await page.waitForTimeout(2000);
+        if (!page.url().includes(LOGIN_PATH)) {
           await page.goto(LOGIN_PATH);
         }
-      } else {
-        // If no forgot password link, navigate directly to reset password page
-        await page.goto(RESET_PASSWORD_PATH);
-        await expect(page).toHaveURL(new RegExp(RESET_PASSWORD_PATH));
-
-        const emailInput = page.locator('input[type="email"], input[name*="email"], input[id*="email"], input[name*="username"]');
-        await expect(emailInput).toBeVisible({ timeout: 10_000 });
-
-        // Fill in email
-        await emailInput.fill(testEmail);
-
-        // Navigate back to login
-        await page.goto(LOGIN_PATH);
       }
+      
+      await expect(page).toHaveURL(new RegExp(LOGIN_PATH));
     });
 
     // Step 3: Login again and navigate to dashboard
@@ -247,6 +258,10 @@ test.describe('Complete Authentication Flow', () => {
   test('should verify login form elements are present', async ({ page }) => {
     await page.goto(LOGIN_PATH);
 
+    // Verify logo is present
+    const logo = page.locator('.logo-container img, img[alt="logo"]');
+    await expect(logo).toBeVisible({ timeout: 5_000 });
+
     // Verify form elements
     await expect(page.locator('input#username')).toBeVisible();
     await expect(page.locator('input#password')).toBeVisible();
@@ -255,6 +270,72 @@ test.describe('Complete Authentication Flow', () => {
     // Verify input types
     await expect(page.locator('input#username')).toHaveAttribute('type', 'text');
     await expect(page.locator('input#password')).toHaveAttribute('type', 'password');
+
+    // Verify "Forgot password" link
+    const forgotPasswordLink = page.getByRole('button', { name: /forgot.*password/i });
+    await expect(forgotPasswordLink).toBeVisible({ timeout: 5_000 });
+
+    // Verify "Register Here" link
+    const registerLink = page.getByText(/register here/i);
+    await expect(registerLink).toBeVisible({ timeout: 5_000 });
+  });
+
+  test('should verify reset password screen elements and functionality', async ({ page }) => {
+    await page.goto(RESET_PASSWORD_PATH, { waitUntil: 'domcontentloaded' });
+    
+    // Verify URL
+    await expect(page).toHaveURL(new RegExp(RESET_PASSWORD_PATH));
+
+    // Verify logo is present
+    const logo = page.locator('.logo-container img, img[alt="logo"]');
+    await expect(logo).toBeVisible({ timeout: 5_000 });
+
+    // Verify form elements
+    const emailInput = page.locator('input#username, input[name="username"]');
+    await expect(emailInput).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(/forgot password/i)).toBeVisible({ timeout: 5_000 });
+    
+    // Verify buttons
+    await expect(page.getByRole('button', { name: /send.*verification.*email/i })).toBeVisible({ timeout: 5_000 });
+    await expect(page.getByRole('button', { name: /back.*login/i })).toBeVisible({ timeout: 5_000 });
+
+    // Test form validation - try submitting empty form
+    const submitButton = page.getByRole('button', { name: /send.*verification.*email/i });
+    await submitButton.click();
+    
+    // Should show validation error
+    await page.waitForTimeout(1000);
+    const validationError = page.locator('.invalid-feedback, [class*="error"]');
+    const hasError = await validationError.isVisible({ timeout: 3_000 }).catch(() => false);
+    expect(hasError).toBeTruthy();
+
+    // Test with invalid email
+    await emailInput.fill('invalid-email');
+    await submitButton.click();
+    await page.waitForTimeout(1000);
+    const invalidEmailError = page.locator('.invalid-feedback, [class*="error"]');
+    const hasInvalidError = await invalidEmailError.isVisible({ timeout: 3_000 }).catch(() => false);
+    expect(hasInvalidError).toBeTruthy();
+
+    // Test with valid email format
+    await emailInput.fill(testEmail);
+    await expect(emailInput).toHaveValue(testEmail);
+    
+    // Click submit (this will send email if backend is configured)
+    await submitButton.click();
+    
+    // Wait for response (success message or error)
+    await page.waitForTimeout(2000);
+    
+    // Verify either success message or error message appears
+    const message = page.locator('.alert-success, .alert-danger, .Message, [class*="success"], [class*="error"]');
+    const hasMessage = await message.isVisible({ timeout: 5_000 }).catch(() => false);
+    expect(hasMessage).toBeTruthy();
+
+    // Test "Back To Login" button
+    const backButton = page.getByRole('button', { name: /back.*login/i });
+    await backButton.click();
+    await expect(page).toHaveURL(new RegExp(LOGIN_PATH));
   });
 
   test('should verify logout redirects to login', async ({ page }) => {
