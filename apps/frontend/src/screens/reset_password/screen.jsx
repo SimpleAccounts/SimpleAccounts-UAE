@@ -113,31 +113,25 @@ const ResetPassword = ({ history, location }) => {
 												<Form onSubmit={form.handleSubmit(onSubmit)}>
 													<Row>
 														<Col lg="12">
-															<FormField
-																control={form.control}
-																name="username"
-																render={({ field, fieldState }) => (
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="username">
-																			<span className="text-danger">* </span>
-																			<b>Email Address</b>
-																		</Label>
-																		<Input
-																			type="text"
-																			id="username"
-																			name="username"
-																			placeholder="Please Enter Your Email Address"
-																			{...field}
-																			className={fieldState.error ? 'is-invalid' : ''}
-																		/>
-																		{fieldState.error && (
-																			<div className="invalid-feedback">
-																				{getFieldError(fieldState)}
-																			</div>
-																		)}
-																	</FormGroup>
+															<FormGroup className="mb-3">
+																<Label htmlFor="username">
+																	<span className="text-danger">* </span>
+																	<b>Email Address</b>
+																</Label>
+																<Input
+																	type="text"
+																	id="username"
+																	name="username"
+																	placeholder="Please Enter Your Email Address"
+																	{...form.register('username')}
+																	invalid={!!form.formState.errors.username}
+																/>
+																{form.formState.errors.username && (
+																	<div className="invalid-feedback d-block">
+																		{form.formState.errors.username.message}
+																	</div>
 																)}
-															/>
+															</FormGroup>
 														</Col>
 													</Row>
 													<Row className="button-group">
