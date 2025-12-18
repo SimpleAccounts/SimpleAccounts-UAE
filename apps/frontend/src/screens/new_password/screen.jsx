@@ -131,8 +131,8 @@ const NewPassword = ({ history, location }) => {
 										<div>
 											<Form onSubmit={form.handleSubmit(onSubmit)}>
 												<Row>
-											<Col lg={12}>
-												<FormGroup>
+													<Col lg={12}>
+														<FormGroup>
 													<Label htmlFor="password">
 														<span className="text-danger">* </span>
 														Password
@@ -180,10 +180,10 @@ const NewPassword = ({ history, location }) => {
 															valueAgain={form.watch('confirmPassword')}
 														/>
 													)}
-												</FormGroup>
-											</Col>
-											<Col lg={12}>
-												<FormGroup>
+														</FormGroup>
+													</Col>
+													<Col lg={12}>
+														<FormGroup>
 													<Label htmlFor="confirmPassword">
 														<span className="text-danger">* </span>
 														Confirm Password
@@ -218,21 +218,21 @@ const NewPassword = ({ history, location }) => {
 															valueAgain={form.watch('confirmPassword')}
 														/>
 													)}
-												</FormGroup>
-												</Col>
-											</Row>
-											<Row className="button-group mt-4">
-											<Col lg="12">
-												<Button
+														</FormGroup>
+													</Col>
+												</Row>
+												<Row className="button-group mt-4">
+													<Col lg="12">
+														<Button
 													color="primary"
 													type="submit"
 													className="btn-square w-100 submit-btn"
 													disabled={form.formState.isSubmitting}
 												>
-													Create Password
-												</Button>
-												</Col>
-											</Row>
+															Create Password
+														</Button>
+													</Col>
+												</Row>
 											</Form>
 										</div>
 									</CardBody>

@@ -125,8 +125,8 @@ const ResetNewPassword = ({ token, history }) => {
 										<div>
 											<Form onSubmit={form.handleSubmit(onSubmit)}>
 												<Row>
-											<Col lg={12}>
-												<FormGroup>
+													<Col lg={12}>
+														<FormGroup>
 													<Label htmlFor="password">
 														<span className="text-danger">* </span> Password
 													</Label>
@@ -175,10 +175,10 @@ const ResetNewPassword = ({ token, history }) => {
 															valueAgain={form.watch('confirmPassword')}
 														/>
 													)}
-												</FormGroup>
-											</Col>
-											<Col lg={12}>
-												<FormGroup>
+														</FormGroup>
+													</Col>
+													<Col lg={12}>
+														<FormGroup>
 													<Label htmlFor="confirmPassword">
 														<span className="text-danger">* </span> Confirm Password
 													</Label>
@@ -216,21 +216,21 @@ const ResetNewPassword = ({ token, history }) => {
 															valueAgain={form.watch('confirmPassword')}
 														/>
 													)}
-												</FormGroup>
-												</Col>
-											</Row>
-											<Row className="button-group">
-											<Col lg="12">
-												<Button
+														</FormGroup>
+													</Col>
+												</Row>
+												<Row className="button-group">
+													<Col lg="12">
+														<Button
 													color="primary"
 													type="submit"
 													className="btn-square w-100 submit-btn"
 													disabled={form.formState.isSubmitting}
 												>
-													Reset Password
-												</Button>
-												</Col>
-											</Row>
+															Reset Password
+														</Button>
+													</Col>
+												</Row>
 											</Form>
 										</div>
 									</CardBody>
