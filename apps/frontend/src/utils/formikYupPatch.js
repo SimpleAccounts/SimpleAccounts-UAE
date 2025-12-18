@@ -112,22 +112,22 @@ async function patchFormikYupToFormErrors() {
             });
           } catch (defineError) {
             // If both fail, silently skip - Yup patch will handle it
-            if (import.meta.env?.DEV || process.env.NODE_ENV === 'development') {
-              console.debug('Could not patch Formik yupToFormErrors (read-only, using Yup patch instead)');
-            }
+            // No need to log as this is expected for read-only properties
           }
         }
       } else {
         // Property is read-only, skip patching - Yup patch will handle it
-        if (import.meta.env?.DEV || process.env.NODE_ENV === 'development') {
-          console.debug('Formik yupToFormErrors is read-only, using Yup patch instead');
-        }
+        // No need to log as this is expected and handled by Yup patch
       }
     }
   } catch (error) {
     // Formik might not be loaded yet or yupToFormErrors might not be exported
     // This is okay, we'll rely on the Yup patch instead
-    if (import.meta.env?.DEV || process.env.NODE_ENV === 'development') {
+    // Only log unexpected errors (not read-only property errors)
+    if ((import.meta.env?.DEV || process.env.NODE_ENV === 'development') && 
+        error.message && 
+        !error.message.includes('read-only') &&
+        !error.message.includes('Cannot assign')) {
       console.debug('Could not patch Formik yupToFormErrors:', error.message);
     }
   }
