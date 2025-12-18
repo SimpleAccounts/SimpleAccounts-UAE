@@ -1160,8 +1160,10 @@ const Register = ({
 																				placeholder=" Enter Password"
 																				{...form.register('password')}
 																				onChange={(e) => {
-																					form.setValue('password', e.target.value);
+																					form.setValue('password', e.target.value, { shouldValidate: true });
 																					handlePasswordChange(e);
+																					// Trigger validation on confirmPassword when password changes
+																					form.trigger('confirmPassword');
 																				}}
 																				invalid={!!form.formState.errors.password}
 																			/>
@@ -1208,6 +1210,9 @@ const Register = ({
 																			name="confirmPassword"
 																			placeholder="Confirm Password"
 																			{...form.register('confirmPassword')}
+																			onChange={(e) => {
+																				form.setValue('confirmPassword', e.target.value, { shouldValidate: true });
+																			}}
 																			invalid={!!form.formState.errors.confirmPassword}
 																		/>
 																		{form.formState.errors.confirmPassword && (
