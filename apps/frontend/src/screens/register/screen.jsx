@@ -1103,8 +1103,6 @@ const Register = ({
 																			placeholder="Enter Last Name"
 																			{...form.register('lastName')}
 																			onChange={(e) => {
-																				const registerOnChange = form.register('lastName').onChange;
-																				if (registerOnChange) registerOnChange(e);
 																				handleNameChange('lastName', e);
 																			}}
 																			invalid={!!form.formState.errors.lastName}
