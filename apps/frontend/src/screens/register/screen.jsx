@@ -515,7 +515,7 @@ const Register = ({
 		const value = e.target.value;
 		if (value === '' || regExAlpha.test(value)) {
 			const upperValue = upperFirst(value);
-			form.setValue(fieldName, upperValue);
+			form.setValue(fieldName, upperValue, { shouldValidate: true });
 		}
 	};
 
@@ -1076,13 +1076,12 @@ const Register = ({
 																			id="firstName"
 																			name="firstName"
 																			placeholder="Enter First Name"
-																			value={form.watch('firstName')}
-																			onChange={(e) => handleNameChange('firstName', e)}
-																			className={
-																				form.formState.errors.firstName
-																					? 'is-invalid'
-																					: ''
-																			}
+																			{...form.register('firstName', {
+																				onChange: (e) => {
+																					handleNameChange('firstName', e);
+																				}
+																			})}
+																			invalid={!!form.formState.errors.firstName}
 																		/>
 																		{form.formState.errors.firstName && (
 																			<div className="invalid-feedback d-block">
@@ -1102,13 +1101,13 @@ const Register = ({
 																			id="lastName"
 																			name="lastName"
 																			placeholder="Enter Last Name"
-																			value={form.watch('lastName')}
-																			onChange={(e) => handleNameChange('lastName', e)}
-																			className={
-																				form.formState.errors.lastName
-																					? 'is-invalid'
-																					: ''
-																			}
+																			{...form.register('lastName')}
+																			onChange={(e) => {
+																				const registerOnChange = form.register('lastName').onChange;
+																				if (registerOnChange) registerOnChange(e);
+																				handleNameChange('lastName', e);
+																			}}
+																			invalid={!!form.formState.errors.lastName}
 																		/>
 																		{form.formState.errors.lastName && (
 																			<div className="invalid-feedback d-block">
@@ -1209,7 +1208,6 @@ const Register = ({
 																			type="password"
 																			id="confirmPassword"
 																			name="confirmPassword"
-																			value={form.watch('confirmPassword')}
 																			placeholder="Confirm Password"
 																			{...form.register('confirmPassword')}
 																			invalid={!!form.formState.errors.confirmPassword}
