@@ -119,7 +119,7 @@ const ResetPassword = ({ history, location }) => {
 																	<b>Email Address</b>
 																</Label>
 																<Input
-																	type="text"
+																	type="email"
 																	id="username"
 																	name="username"
 																	placeholder="Please Enter Your Email Address"
