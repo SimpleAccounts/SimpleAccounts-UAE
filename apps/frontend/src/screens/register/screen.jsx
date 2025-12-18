@@ -1006,13 +1006,12 @@ const Register = ({
 																			placeholder="Enter Tax Registration Number"
 																			id="TaxRegistrationNumber"
 																			name="TaxRegistrationNumber"
-																			value={form.watch('TaxRegistrationNumber')}
-																			onChange={handleTRNChange}
-																			className={
-																				form.formState.errors.TaxRegistrationNumber
-																					? 'is-invalid'
-																					: ''
-																			}
+																			{...form.register('TaxRegistrationNumber')}
+																			onChange={(e) => {
+																				handleTRNChange(e);
+																				form.trigger('TaxRegistrationNumber');
+																			}}
+																			invalid={!!form.formState.errors.TaxRegistrationNumber}
 																		/>
 																		{form.formState.errors.TaxRegistrationNumber && (
 																			<div className="invalid-feedback d-block">
@@ -1108,6 +1107,7 @@ const Register = ({
 																			placeholder="Enter Last Name"
 																			{...form.register('lastName')}
 																			onChange={(e) => {
+																				form.setValue('lastName', e.target.value, { shouldValidate: true });
 																				handleNameChange('lastName', e);
 																			}}
 																			invalid={!!form.formState.errors.lastName}
