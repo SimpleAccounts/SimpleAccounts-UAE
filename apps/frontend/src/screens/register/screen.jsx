@@ -180,7 +180,7 @@ const Register = ({
 
 	const form = useForm({
 		resolver: zodResolver(registerSchema),
-		mode: 'onBlur', // Validate on blur for better UX
+		mode: 'onChange', // Validate on change for better feedback
 		defaultValues: {
 			companyName: '',
 			currencyCode: 150,
@@ -584,7 +584,9 @@ const Register = ({
 																			id="companyName"
 																			name="companyName"
 																			placeholder="Enter Company Name"
-																			{...form.register('companyName')}
+																			{...form.register('companyName', {
+																				onBlur: () => form.trigger('companyName')
+																			})}
 																			invalid={!!form.formState.errors.companyName}
 																		/>
 																		{form.formState.errors.companyName && (
@@ -710,7 +712,9 @@ const Register = ({
 																			id="companyAddress1"
 																			name="companyAddress1"
 																			placeholder="Enter Company Address"
-																			{...form.register('companyAddress1')}
+																			{...form.register('companyAddress1', {
+																				onBlur: () => form.trigger('companyAddress1')
+																			})}
 																			invalid={!!form.formState.errors.companyAddress1}
 																		/>
 																		{form.formState.errors.companyAddress1 && (
@@ -1125,8 +1129,11 @@ const Register = ({
 																			maxLength="80"
 																			id="email"
 																			name="email"
+																			autoComplete="email"
 																			placeholder="Enter Email Address"
-																			{...form.register('email')}
+																			{...form.register('email', {
+																				onBlur: () => form.trigger('email')
+																			})}
 																			invalid={!!form.formState.errors.email}
 																		/>
 																		{form.formState.errors.email && (
