@@ -127,62 +127,62 @@ const ResetNewPassword = ({ token, history }) => {
 												<Row>
 													<Col lg={12}>
 														<FormGroup>
-													<Label htmlFor="password">
-														<span className="text-danger">* </span> Password
-													</Label>
-													<div>
-														<Input
-															onPaste={(e) => {
-																e.preventDefault();
-																return false;
-															}}
-															onCopy={(e) => {
-																e.preventDefault();
-																return false;
-															}}
-															type={isPasswordShown ? 'text' : 'password'}
-															minLength={8}
-															maxLength={255}
-															autoComplete="off"
-															id="password"
-															name="password"
-															placeholder=" Enter New Password"
-															{...form.register('password')}
-															onChange={(e) => {
-																form.setValue('password', e.target.value);
-																handlePasswordChange(e);
-															}}
-															invalid={!!form.formState.errors.password}
-														/>
-														<i
-															className={`fa ${isPasswordShown ? 'fa-eye' : 'fa-eye-slash'} password-icon fa-lg`}
-															onClick={togglePasswordVisiblity}
-															style={{ cursor: 'pointer' }}
-														>
-														</i>
-													</div>
-													{form.formState.errors.password && (
-														<div className="invalid-feedback d-block">
-															{form.formState.errors.password.message}
-														</div>
-													)}
-													{displayRules === true && (
-														<PasswordChecklist
-															rules={['maxLength', 'minLength', 'specialChar', 'number', 'capital']}
-															minLength={8}
-															maxLength={255}
-															value={form.watch('password')}
-															valueAgain={form.watch('confirmPassword')}
-														/>
-													)}
+															<Label htmlFor="password">
+																<span className="text-danger">* </span> Password
+															</Label>
+															<div>
+																<Input
+																	onPaste={(e) => {
+																		e.preventDefault();
+																		return false;
+																	}}
+																	onCopy={(e) => {
+																		e.preventDefault();
+																		return false;
+																	}}
+																	type={isPasswordShown ? 'text' : 'password'}
+																	minLength={8}
+																	maxLength={255}
+																	autoComplete="off"
+																	id="password"
+																	name="password"
+																	placeholder=" Enter New Password"
+																	{...form.register('password')}
+																	onChange={(e) => {
+																		form.setValue('password', e.target.value);
+																		handlePasswordChange(e);
+																	}}
+																	invalid={!!form.formState.errors.password}
+																/>
+																<i
+																	className={`fa ${isPasswordShown ? 'fa-eye' : 'fa-eye-slash'} password-icon fa-lg`}
+																	onClick={togglePasswordVisiblity}
+																	style={{ cursor: 'pointer' }}
+																>
+																</i>
+															</div>
+															{form.formState.errors.password && (
+																<div className="invalid-feedback d-block">
+																	{form.formState.errors.password.message}
+																</div>
+															)}
+															{displayRules === true && (
+																<PasswordChecklist
+																	rules={['maxLength', 'minLength', 'specialChar', 'number', 'capital']}
+																	minLength={8}
+																	maxLength={255}
+																	value={form.watch('password')}
+																	valueAgain={form.watch('confirmPassword')}
+																/>
+															)}
 														</FormGroup>
 													</Col>
 													<Col lg={12}>
 														<FormGroup>
-													<Label htmlFor="confirmPassword">
-														<span className="text-danger">* </span> Confirm Password
-													</Label>
-													<Input
+															<Label htmlFor="confirmPassword">
+																<span className="text-danger">* </span> Confirm Password
+															</Label>
+															<Input
 														onPaste={(e) => {
 															e.preventDefault();
 															return false;
@@ -191,42 +191,42 @@ const ResetNewPassword = ({ token, history }) => {
 															e.preventDefault();
 															return false;
 														}}
-														minLength={8}
-														maxLength={255}
-														autoComplete="off"
-														type="password"
-														id="confirmPassword"
-														name="confirmPassword"
-														value={form.watch('confirmPassword')}
-														placeholder="Confirm Password"
-														{...form.register('confirmPassword')}
-														invalid={!!form.formState.errors.confirmPassword}
-													/>
-													{form.formState.errors.confirmPassword && (
-														<div className="invalid-feedback d-block">
-															{form.formState.errors.confirmPassword.message}
-														</div>
-													)}
-													{displayRules === true && (
-														<PasswordChecklist
-															rules={['match']}
-															minLength={8}
-															maxLength={255}
-															value={form.watch('password')}
-															valueAgain={form.watch('confirmPassword')}
-														/>
-													)}
+																minLength={8}
+																maxLength={255}
+																autoComplete="off"
+																type="password"
+																id="confirmPassword"
+																name="confirmPassword"
+																value={form.watch('confirmPassword')}
+																placeholder="Confirm Password"
+																{...form.register('confirmPassword')}
+																invalid={!!form.formState.errors.confirmPassword}
+															/>
+															{form.formState.errors.confirmPassword && (
+																<div className="invalid-feedback d-block">
+																	{form.formState.errors.confirmPassword.message}
+																</div>
+															)}
+															{displayRules === true && (
+																<PasswordChecklist
+																	rules={['match']}
+																	minLength={8}
+																	maxLength={255}
+																	value={form.watch('password')}
+																	valueAgain={form.watch('confirmPassword')}
+																/>
+															)}
 														</FormGroup>
 													</Col>
 												</Row>
 												<Row className="button-group">
 													<Col lg="12">
 														<Button
-													color="primary"
-													type="submit"
-													className="btn-square w-100 submit-btn"
-													disabled={form.formState.isSubmitting}
-												>
+															color="primary"
+															type="submit"
+															className="btn-square w-100 submit-btn"
+															disabled={form.formState.isSubmitting}
+														>
 															Reset Password
 														</Button>
 													</Col>
