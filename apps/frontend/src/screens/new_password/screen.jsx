@@ -189,14 +189,14 @@ const NewPassword = ({ history, location }) => {
 																Confirm Password
 															</Label>
 															<Input
-														onPaste={(e) => {
-															e.preventDefault();
-															return false;
-														}}
-														onCopy={(e) => {
-															e.preventDefault();
-															return false;
-														}}
+																onPaste={(e) => {
+																	e.preventDefault();
+																	return false;
+																}}
+																onCopy={(e) => {
+																	e.preventDefault();
+																	return false;
+																}}
 																type="password"
 																id="confirmPassword"
 																name="confirmPassword"
@@ -240,6 +240,7 @@ const NewPassword = ({ history, location }) => {
 						</Col>
 					</Row>
 				</Container>
+				</div>
 			</div>
 		</div>
 	);
