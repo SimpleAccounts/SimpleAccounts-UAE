@@ -124,7 +124,7 @@ const ResetNewPassword = ({ token, history }) => {
 										</div>
 										<div>
 											<Form onSubmit={form.handleSubmit(onSubmit)}>
-										<Row>
+												<Row>
 											<Col lg={12}>
 												<FormGroup>
 													<Label htmlFor="password">
@@ -217,9 +217,9 @@ const ResetNewPassword = ({ token, history }) => {
 														/>
 													)}
 												</FormGroup>
-											</Col>
-										</Row>
-										<Row className="button-group">
+												</Col>
+											</Row>
+											<Row className="button-group">
 											<Col lg="12">
 												<Button
 													color="primary"
@@ -229,8 +229,8 @@ const ResetNewPassword = ({ token, history }) => {
 												>
 													Reset Password
 												</Button>
-											</Col>
-										</Row>
+												</Col>
+											</Row>
 											</Form>
 										</div>
 									</CardBody>

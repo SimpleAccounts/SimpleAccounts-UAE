@@ -130,7 +130,7 @@ const NewPassword = ({ history, location }) => {
 										</div>
 										<div>
 											<Form onSubmit={form.handleSubmit(onSubmit)}>
-										<Row>
+												<Row>
 											<Col lg={12}>
 												<FormGroup>
 													<Label htmlFor="password">
@@ -219,9 +219,9 @@ const NewPassword = ({ history, location }) => {
 														/>
 													)}
 												</FormGroup>
-											</Col>
-										</Row>
-										<Row className="button-group mt-4">
+												</Col>
+											</Row>
+											<Row className="button-group mt-4">
 											<Col lg="12">
 												<Button
 													color="primary"
@@ -231,8 +231,8 @@ const NewPassword = ({ history, location }) => {
 												>
 													Create Password
 												</Button>
-											</Col>
-										</Row>
+												</Col>
+											</Row>
 											</Form>
 										</div>
 									</CardBody>
