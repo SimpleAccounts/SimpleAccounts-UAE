@@ -1,11 +1,11 @@
-import React from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import * as FinancialReportActions from "../actions";
-import "./style.scss";
-import { data } from "screens/Language";
-import LocalizedStrings from "react-localization";
-import { ReportsColumnList } from "utils";
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as FinancialReportActions from '../actions';
+import './style.scss';
+import { data } from 'screens/Language';
+import LocalizedStrings from 'react-localization';
+import { ReportsColumnList } from 'utils';
 import {
   Card,
   CardHeader,
@@ -17,17 +17,14 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from "reactstrap";
+} from 'reactstrap';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {};
 };
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    financialReportActions: bindActionCreators(
-      FinancialReportActions,
-      dispatch
-    ),
+    financialReportActions: bindActionCreators(FinancialReportActions, dispatch),
   };
 };
 let strings = new LocalizedStrings(data);
@@ -36,11 +33,11 @@ class ReportTables extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      language: window["localStorage"].getItem("language"),
+      language: window['localStorage'].getItem('language'),
       loading: true,
       columnConfigs: [],
       sortedRows: [],
-      dropdownOpen: "",
+      dropdownOpen: '',
     };
   }
 
@@ -55,7 +52,7 @@ class ReportTables extends React.Component {
     };
     this.props.financialReportActions
       .getColumnConfigs(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           this.setState({
             columnConfigs: res.data,
@@ -63,13 +60,12 @@ class ReportTables extends React.Component {
           });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.setState({ loading: false });
       });
   };
 
-  updateColumnConfigs = (json) => {
-    debugger;
+  updateColumnConfigs = json => {
     const { id, reportName } = this.props;
     const postData = {
       id: id,
@@ -78,7 +74,7 @@ class ReportTables extends React.Component {
     };
     this.props.financialReportActions
       .updateColumnConfigs(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           this.setState({
             columnConfigs: res.data,
@@ -87,7 +83,7 @@ class ReportTables extends React.Component {
           this.getColumnConfigs();
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.setState({ loading: false });
       });
   };
@@ -100,18 +96,16 @@ class ReportTables extends React.Component {
     const sortedRows = [...rows];
     const { field, sort } = sortModel[0];
 
-    const totalRow = sortedRows.find((row) => row.isTotalRow);
-    const totalRow2 = sortedRows.find((row) => row.isTotalRow2);
-    const otherRows = sortedRows.filter(
-      (row) => !row.isTotalRow && !row.isTotalRow2
-    );
+    const totalRow = sortedRows.find(row => row.isTotalRow);
+    const totalRow2 = sortedRows.find(row => row.isTotalRow2);
+    const otherRows = sortedRows.filter(row => !row.isTotalRow && !row.isTotalRow2);
 
     otherRows.sort((a, b) => {
       if (a[field] < b[field]) {
-        return sort === "asc" ? -1 : 1;
+        return sort === 'asc' ? -1 : 1;
       }
       if (a[field] > b[field]) {
-        return sort === "asc" ? 1 : -1;
+        return sort === 'asc' ? 1 : -1;
       }
       return 0;
     });
@@ -126,9 +120,7 @@ class ReportTables extends React.Component {
   };
 
   handleSortModelChange = (field, sort) => {
-    const sortedRows = this.customSort(this.props.reportDataList, [
-      { field, sort },
-    ]);
+    const sortedRows = this.customSort(this.props.reportDataList, [{ field, sort }]);
     this.setState({ sortedRows });
   };
 
@@ -141,15 +133,11 @@ class ReportTables extends React.Component {
       <thead className="table-header-bg">
         <tr>
           {columns.map(
-            (col) =>
+            col =>
               columnConfigs[col.field] !== false && (
                 <th key={col.field}>
                   <div className="d-flex justify-content-between">
-                    <div
-                      onClick={() =>
-                        this.handleSortModelChange(col.field, "asc")
-                      }
-                    >
+                    <div onClick={() => this.handleSortModelChange(col.field, 'asc')}>
                       {col.headerName}
                     </div>
                     {this.renderColumnDropdown(col.field)}
@@ -161,11 +149,11 @@ class ReportTables extends React.Component {
       </thead>
     );
   };
-  renderColumnDropdown = (column) => {
+  renderColumnDropdown = column => {
     const { columnConfigs, dropdownOpen } = this.state;
     const columnFields = Object.keys(columnConfigs);
 
-    const toggleColumn = (field) => {
+    const toggleColumn = field => {
       const newColumnConfigs = {
         ...columnConfigs,
         [field]: !columnConfigs[field],
@@ -175,7 +163,7 @@ class ReportTables extends React.Component {
 
     const hideAllColumns = () => {
       const newConfigs = {};
-      columnFields.forEach((field) => {
+      columnFields.forEach(field => {
         newConfigs[field] = false;
       });
       this.updateColumnConfigs(newConfigs);
@@ -184,7 +172,7 @@ class ReportTables extends React.Component {
 
     const showAllColumns = () => {
       const newConfigs = {};
-      columnFields.forEach((field) => {
+      columnFields.forEach(field => {
         newConfigs[field] = true;
       });
       this.updateColumnConfigs(newConfigs);
@@ -193,17 +181,15 @@ class ReportTables extends React.Component {
     return (
       <Dropdown
         isOpen={dropdownOpen === column}
-        toggle={() =>
-          this.setState({ dropdownOpen: dropdownOpen ? null : column })
-        }
+        toggle={() => this.setState({ dropdownOpen: dropdownOpen ? null : column })}
       >
         <DropdownToggle
           style={{
-            background: "transparent",
-            border: "none",
-            opacity: "0.6",
-            color: "#000",
-            boxShadow: "none",
+            background: 'transparent',
+            border: 'none',
+            opacity: '0.6',
+            color: '#000',
+            boxShadow: 'none',
           }}
         >
           <i className="fa fa-ellipsis-v" />
@@ -214,32 +200,25 @@ class ReportTables extends React.Component {
               type="text"
               placeholder="Find column"
               className="form-control mb-2"
-              onChange={(e) =>
-                this.setState({ columnSearch: e.target.value.toLowerCase() })
-              }
+              onChange={e => this.setState({ columnSearch: e.target.value.toLowerCase() })}
             />
             <div className="column-list">
               {columnFields
-                .filter((field) =>
-                  field.toLowerCase().includes(this.state.columnSearch || "")
-                )
-                .map((field) => {
+                .filter(field => field.toLowerCase().includes(this.state.columnSearch || ''))
+                .map(field => {
                   const columnData = this.getHeaderName(field);
-                  if (!columnData) return "";
+                  if (!columnData) return '';
                   return (
                     <div
                       key={field}
                       className={`d-flex align-items-center`}
-                      style={
-                        columnData.hideable === false ? { opacity: "50%" } : {}
-                      }
+                      style={columnData.hideable === false ? { opacity: '50%' } : {}}
                     >
                       <input
                         type="checkbox"
                         checked={columnConfigs[field]}
                         onChange={() => {
-                          if (columnData.hideable !== false)
-                            toggleColumn(field);
+                          if (columnData.hideable !== false) toggleColumn(field);
                         }}
                         className={`mt-0`}
                       />
@@ -263,11 +242,11 @@ class ReportTables extends React.Component {
     );
   };
 
-  getHeaderName = (field) => {
+  getHeaderName = field => {
     const { reportName } = this.props;
     const columns = ReportsColumnList.List[reportName];
     if (columns) {
-      const column = columns.find((obj) => obj.field === field);
+      const column = columns.find(obj => obj.field === field);
       if (column) {
         return column;
       }
@@ -283,13 +262,13 @@ class ReportTables extends React.Component {
 
     return (
       <tbody className=" table-bordered table-hover">
-        {rows.map((row) => (
-          <tr key={row.id} className={row.isTotalRow ? "total-row" : ""}>
+        {rows.map(row => (
+          <tr key={row.id} className={row.isTotalRow ? 'total-row' : ''}>
             {columns.map(
-              (col) =>
+              col =>
                 this.state.columnConfigs[col.field] !== false && (
                   <td key={col.field}>
-                    {" "}
+                    {' '}
                     {col.renderCell
                       ? col.renderCell({ row, value: row[col.field] })
                       : row[col.field]}

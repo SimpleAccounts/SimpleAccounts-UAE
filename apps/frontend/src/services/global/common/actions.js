@@ -1,3 +1,6 @@
+// Import actions that need to be used locally
+import { startLoading as startLoadingAction, endLoading as endLoadingAction } from './commonSlice';
+
 // Re-export new RTK slice actions for backward compatibility
 export {
   getSimpleAccountsVersion,
@@ -30,10 +33,10 @@ export {
 } from './commonSlice';
 
 // Legacy wrapper functions for backward compatibility
-export const startRequest = () => (dispatch) => {
-  dispatch(startLoading());
+export const startRequest = () => dispatch => {
+  dispatch(startLoadingAction());
 };
 
-export const endRequest = () => (dispatch) => {
-  dispatch(endLoading());
+export const endRequest = () => dispatch => {
+  dispatch(endLoadingAction());
 };
