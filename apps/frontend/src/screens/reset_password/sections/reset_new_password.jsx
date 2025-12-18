@@ -238,6 +238,7 @@ const ResetNewPassword = ({ token, history }) => {
 						</Col>
 					</Row>
 				</Container>
+				</div>
 			</div>
 		</div>
 	);
