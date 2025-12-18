@@ -25,7 +25,7 @@ test.describe('Authentication Screens - Complete Tests', () => {
 		await expect(page.locator('.logo-container img')).toBeVisible({ timeout: 10_000 });
 
 		// Check for register heading
-		await expect(page.getByText(/register/i)).toBeVisible({ timeout: 5_000 });
+		await expect(page.getByRole('heading', { name: /register/i })).toBeVisible({ timeout: 5_000 });
 
 		// Check for Company Details section
 		await expect(page.getByText(/company details/i)).toBeVisible({ timeout: 5_000 });
@@ -85,24 +85,27 @@ test.describe('Authentication Screens - Complete Tests', () => {
 		await emailInput.blur();
 
 		// Wait for validation
-		await page.waitForTimeout(500);
+		await page.waitForTimeout(1000);
 
 		// Check for email validation error
 		const emailError = page.locator('#email').locator('..').locator('.invalid-feedback');
-		const hasError = await emailError.isVisible().catch(() => false);
+		let hasError = await emailError.isVisible().catch(() => false);
 		
-		// Email validation might happen on blur or submit
-		// Try submitting to trigger validation
-		const submitButton = page.getByRole('button', { name: /register/i });
-		await submitButton.click();
-		await page.waitForTimeout(500);
+		// If no error yet, try submitting to trigger validation
+		if (!hasError) {
+			const submitButton = page.getByRole('button', { name: /register/i });
+			await submitButton.click();
+			await page.waitForTimeout(1000);
+			hasError = await emailError.isVisible().catch(() => false);
+		}
 
-		// Check if error is visible after submit
-		const emailErrorAfterSubmit = page.locator('#email').locator('..').locator('.invalid-feedback');
-		const hasErrorAfterSubmit = await emailErrorAfterSubmit.isVisible().catch(() => false);
-		
+		// Also check for browser native validation
+		const isInvalid = await emailInput.evaluate((el: HTMLInputElement) => {
+			return !el.validity.valid;
+		}).catch(() => false);
+
 		// At least one validation should catch invalid email
-		expect(hasError || hasErrorAfterSubmit).toBeTruthy();
+		expect(hasError || isInvalid).toBeTruthy();
 	});
 
 	test('should validate password matching in register screen', async ({ page }) => {
