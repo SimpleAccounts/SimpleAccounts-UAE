@@ -1,6 +1,6 @@
-import React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Card,
   CardHeader,
@@ -12,31 +12,31 @@ import {
   FormGroup,
   Input,
   Label,
-} from "reactstrap";
-import Select from "react-select";
-import DatePicker from "react-datepicker";
-import { Formik, Field } from "formik";
-import * as Yup from "yup";
-import { CommonActions } from "services/global";
+} from 'reactstrap';
+import Select from 'react-select';
+import DatePicker from 'react-datepicker';
+import { Formik, Field } from 'formik';
+import * as Yup from 'yup';
+import { CommonActions } from 'services/global';
 import dayjs from '@/utils/date';
-import * as transactionCreateActions from "./actions";
-import * as transactionActions from "../../actions";
-import * as detailBankAccountActions from "../../../detail/actions";
-import * as AllPayrollActions from "../../../../../payroll_run/actions";
-import * as CurrencyConvertActions from "../../../../../currencyConvert/actions";
-import "react-datepicker/dist/react-datepicker.css";
-import "./style.scss";
-import { data } from "../../../../../Language/index";
-import LocalizedStrings from "react-localization";
-import { selectOptionsFactory, selectCurrencyFactory } from "utils";
-import Switch from "react-switch";
-import { LeavePage, Loader } from "components";
-import { Checkbox } from "@material-ui/core";
-import { defaultState } from "./helpers/defaultstate";
-import { calculateVAT } from "./helpers/calculateVat";
-import { amountFormat } from "./helpers/amountformater";
+import * as transactionCreateActions from './actions';
+import * as transactionActions from '../../actions';
+import * as detailBankAccountActions from '../../../detail/actions';
+import * as AllPayrollActions from '../../../../../payroll_run/actions';
+import * as CurrencyConvertActions from '../../../../../currencyConvert/actions';
+import 'react-datepicker/dist/react-datepicker.css';
+import './style.scss';
+import { data } from '../../../../../Language/index';
+import LocalizedStrings from 'react-localization';
+import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
+import Switch from 'react-switch';
+import { LeavePage, Loader } from 'components';
+import { Checkbox } from '@material-ui/core';
+import { defaultState } from './helpers/defaultstate';
+import { calculateVAT } from './helpers/calculateVat';
+import { amountFormat } from './helpers/amountformater';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     transaction_category_list: state.bank_account.transaction_category_list,
     transaction_type_list: state.bank_account.transaction_type_list,
@@ -52,32 +52,23 @@ const mapStateToProps = (state) => {
     UnPaidPayrolls_List: state.bank_account.UnPaidPayrolls_List,
   };
 };
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     transactionActions: bindActionCreators(transactionActions, dispatch),
     allPayrollActions: bindActionCreators(AllPayrollActions, dispatch),
-    transactionCreateActions: bindActionCreators(
-      transactionCreateActions,
-      dispatch
-    ),
-    currencyConvertActions: bindActionCreators(
-      CurrencyConvertActions,
-      dispatch
-    ),
+    transactionCreateActions: bindActionCreators(transactionCreateActions, dispatch),
+    currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch),
-    detailBankAccountActions: bindActionCreators(
-      detailBankAccountActions,
-      dispatch
-    ),
+    detailBankAccountActions: bindActionCreators(detailBankAccountActions, dispatch),
   };
 };
 const customStyles = {
   control: (base, state) => ({
     ...base,
-    borderColor: state.isFocused ? "#2064d8" : "#c7c7c7",
+    borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
     boxShadow: state.isFocused ? null : null,
-    "&:hover": {
-      borderColor: state.isFocused ? "#2064d8" : "#c7c7c7",
+    '&:hover': {
+      borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
     },
   }),
 };
@@ -86,17 +77,20 @@ let strings = new LocalizedStrings(data);
 class CreateBankTransaction extends React.Component {
   constructor(props) {
     super(props);
-    this.state = defaultState(this.props.location.state?.currency, this.props.location.state?.isRegisteredVat);
+    this.state = defaultState(
+      this.props.location.state?.currency,
+      this.props.location.state?.isRegisteredVat
+    );
 
     this.file_size = 1024000;
     this.supported_format = [
-      "image/png",
-      "image/jpeg",
-      "text/plain",
-      "application/pdf",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "application/vnd.ms-excel",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      'image/png',
+      'image/jpeg',
+      'text/plain',
+      'application/pdf',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     ];
     this.regEx = /^\d+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -107,16 +101,15 @@ class CreateBankTransaction extends React.Component {
   componentDidMount = () => {
     this.props.transactionActions.getUnPaidPayrollsList();
     this.initializeData();
-    this.props.transactionActions
-      .getCOACList()
-      .then((response) => {
-        this.setState({ COACList: response.data });
-      });
+    this.props.transactionActions.getCOACList().then(response => {
+      this.setState({ COACList: response.data });
+    });
     this.getCorporateTaxList();
 
-    this.props.commonActions.getCompanyDetails().then((res) => {
-      if (res.status === 200) {
-        const isRegisteredVat = res.data.isRegisteredVat;
+    this.props.commonActions.getCompanyDetails().then(action => {
+      // Redux Toolkit thunks return action objects
+      if (action && action.type && action.type.includes('fulfilled')) {
+        const isRegisteredVat = action.payload.isRegisteredVat;
 
         this.props.history.replace({
           pathname: this.props.location.pathname,
@@ -127,7 +120,7 @@ class CreateBankTransaction extends React.Component {
         });
 
         this.setState({
-          companyDetails: res.data,
+          companyDetails: action.payload,
           isRegisteredVat: isRegisteredVat,
         });
       }
@@ -136,29 +129,25 @@ class CreateBankTransaction extends React.Component {
 
   initializeData = () => {
     this.getCompanyCurrency();
-    this.props.commonActions
-      .getCurrencyConversionList()
-      .then((response) => {
-        // Capture response data to avoid stale closure
-        const responseData = response.data;
-        const currencyCode = responseData?.[0]?.currencyCode;
-        
-        this.setState((prevState) => ({
-          initValue: {
-            ...prevState.initValue,
-            ...{
-              currency: currencyCode ? parseInt(currencyCode) : "",
-            },
+    this.props.commonActions.getCurrencyConversionList().then(action => {
+      // Redux Toolkit thunks return action objects
+      if (!(action && action.type && action.type.includes('fulfilled'))) return;
+      // Capture payload data to avoid stale closure
+      const responseData = action.payload;
+      const currencyCode = responseData?.[0]?.currencyCode;
+
+      this.setState(prevState => ({
+        initValue: {
+          ...prevState.initValue,
+          ...{
+            currency: currencyCode ? parseInt(currencyCode) : '',
           },
-        }));
-        if (currencyCode) {
-          this.formRef.current.setFieldValue(
-            "currency",
-            currencyCode,
-            true
-          );
-        }
-      });
+        },
+      }));
+      if (currencyCode) {
+        this.formRef.current.setFieldValue('currency', currencyCode, true);
+      }
+    });
 
     const paginationData = {
       pageNo: '',
@@ -171,15 +160,14 @@ class CreateBankTransaction extends React.Component {
     };
     const postData = { ...paginationData, ...sortingData };
 
-    this.props.transactionCreateActions.getAllPayrollList(postData)
-      .then((res) => {
-        this.setState(
-          {
-            payrolldata: res.data
-          },
-          () => { }
-        );
-      })
+    this.props.transactionCreateActions.getAllPayrollList(postData).then(res => {
+      this.setState(
+        {
+          payrolldata: res.data,
+        },
+        () => {}
+      );
+    });
 
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       // Capture bankAccountId to avoid stale closure
@@ -187,24 +175,22 @@ class CreateBankTransaction extends React.Component {
       this.setState({ id: bankAccountId });
       this.props.detailBankAccountActions
         .getBankAccountByID(bankAccountId)
-        .then((res) => {
+        .then(res => {
           this.setState(
             {
-              date: res.openingDate
-                ? dayjs(res.openingDate).format("MM/DD/YYYY")
-                : "",
+              date: res.openingDate ? dayjs(res.openingDate).format('MM/DD/YYYY') : '',
               reconciledDate: res.lastReconcileDate
-                ? dayjs(res.lastReconcileDate).format("MM/DD/YYYY")
-                : "",
-              bankCurrency: res.bankAccountCurrency ? res : "",
+                ? dayjs(res.lastReconcileDate).format('MM/DD/YYYY')
+                : '',
+              bankCurrency: res.bankAccountCurrency ? res : '',
             },
-            () => { }
+            () => {}
           );
         })
-        .catch((err) => {
+        .catch(err => {
           this.props.commonActions.tostifyAlert(
-            "error",
-            err && err.data ? err.data.message : "Something Went Wrong"
+            'error',
+            err && err.data ? err.data.message : 'Something Went Wrong'
           );
         });
     }
@@ -215,50 +201,54 @@ class CreateBankTransaction extends React.Component {
     let reader = new FileReader();
     let file = e.target.files[0];
     if (file) {
-      reader.onloadend = () => { };
+      reader.onloadend = () => {};
       reader.readAsDataURL(file);
-      props.setFieldValue("attachment", file, true);
+      props.setFieldValue('attachment', file, true);
     }
   };
 
-  getVatReportListForBank = (id) => {
-    this.props.transactionCreateActions
-      .getVatReportListForBank(id)
-      .then((res) => {
-        this.setState({ VATlist: res.data });
-      });
+  getVatReportListForBank = id => {
+    this.props.transactionCreateActions.getVatReportListForBank(id).then(res => {
+      this.setState({ VATlist: res.data });
+    });
   };
   getCorporateTaxList = () => {
-    this.props.transactionActions
-      .getCorporateTaxList()
-      .then((res) => {
-        if (res.status === 200) {
-          let list = [];
-          res.data = res.data && res.data.data.length > 0 ? res.data.data.filter(obj => obj.status === 'Filed') : [];
-          res.data && res.data.length > 0 && res.data.map((obj, index) => {
-            var label = dayjs(obj.startDate).format('DD-MM-YYYY') + ' To ' + dayjs(obj.endDate).format('DD-MM-YYYY')
+    this.props.transactionActions.getCorporateTaxList().then(res => {
+      if (res.status === 200) {
+        let list = [];
+        res.data =
+          res.data && res.data.data.length > 0
+            ? res.data.data.filter(obj => obj.status === 'Filed')
+            : [];
+        res.data &&
+          res.data.length > 0 &&
+          res.data.map((obj, index) => {
+            var label =
+              dayjs(obj.startDate).format('DD-MM-YYYY') +
+              ' To ' +
+              dayjs(obj.endDate).format('DD-MM-YYYY');
             var value = index;
-            list.push({ 'label': label, 'value': value })
-          })
-          this.setState({ corporateTaxList: res.data, ct_taxPeriodList: list });
-        }
-      });
+            list.push({ label: label, value: value });
+          });
+        this.setState({ corporateTaxList: res.data, ct_taxPeriodList: list });
+      }
+    });
   };
-  setCTValues = (value) => {
-    const { corporateTaxList } = this.state
+  setCTValues = value => {
+    const { corporateTaxList } = this.state;
     const report = corporateTaxList ? corporateTaxList.find((obj, index) => index === value) : '';
-    this.formRef.current.setFieldValue("transactionAmount", report.balanceDue, true);
-    this.formRef.current.setFieldValue("balanceDue", report.balanceDue, true);
-    this.formRef.current.setFieldValue("totalAmount", report.taxAmount, true);
-    this.formRef.current.setFieldValue("transactionDate", new Date(report.taxFiledOn), true);
-  }
+    this.formRef.current.setFieldValue('transactionAmount', report.balanceDue, true);
+    this.formRef.current.setFieldValue('balanceDue', report.balanceDue, true);
+    this.formRef.current.setFieldValue('totalAmount', report.taxAmount, true);
+    this.formRef.current.setFieldValue('transactionDate', new Date(report.taxFiledOn), true);
+  };
 
   handleSubmit = (data, resetForm) => {
     this.setState({ disabled: true, loading: true, disableLeavePage: true });
     let bankAccountId =
       this.props.location.state && this.props.location.state.bankAccountId
         ? this.props.location.state.bankAccountId
-        : "";
+        : '';
     let {
       transactionDate,
       description,
@@ -282,18 +272,15 @@ class CreateBankTransaction extends React.Component {
       exchangeRateFromList,
     } = data;
     let formData = new FormData();
-    if (coaCategoryId && (coaCategoryId.value === 10 || coaCategoryId.label === "Expense")) {
+    if (coaCategoryId && (coaCategoryId.value === 10 || coaCategoryId.label === 'Expense')) {
       const list = calculateVAT(transactionAmount, vatId.value, exclusiveVat);
-      transactionAmount = list.transactionAmount
+      transactionAmount = list.transactionAmount;
       this.setState({
         transactionVatAmount: list.transactionVatAmount,
         transactionExpenseAmount: list.transactionExpenseAmount,
-      })
+      });
     }
-    if (
-      coaCategoryId.label === "Sales" ||
-      coaCategoryId.label === "Supplier Invoice"
-    ) {
+    if (coaCategoryId.label === 'Sales' || coaCategoryId.label === 'Supplier Invoice') {
       var result = invoiceIdList.map((o, index) => ({
         id: o.value,
         remainingInvoiceAmount: 0,
@@ -301,197 +288,157 @@ class CreateBankTransaction extends React.Component {
         exchangeRate: exchangeRate,
       }));
 
+      formData.append('explainParamListStr', invoiceIdList ? JSON.stringify(result) : '');
       formData.append(
-        "explainParamListStr",
-        invoiceIdList ? JSON.stringify(result) : ""
-      );
-      formData.append(
-        "explainedInvoiceListString",
+        'explainedInvoiceListString',
         invoiceIdList
           ? JSON.stringify(
-            invoiceIdList.map((i) => {
-              return {
-                invoiceId: i.value,
-                invoiceAmount: i.dueAmount,
-                convertedInvoiceAmount: i.convertedInvoiceAmount,
-                explainedAmount: i.explainedAmount,
-                exchangeRate: i.exchangeRate,
-                partiallyPaid: i.pp,
-                nonConvertedInvoiceAmount: i.explainedAmount / i.exchangeRate,
-                convertedToBaseCurrencyAmount:
-                  i.convertedToBaseCurrencyAmount,
-              };
-            })
-          )
+              invoiceIdList.map(i => {
+                return {
+                  invoiceId: i.value,
+                  invoiceAmount: i.dueAmount,
+                  convertedInvoiceAmount: i.convertedInvoiceAmount,
+                  explainedAmount: i.explainedAmount,
+                  exchangeRate: i.exchangeRate,
+                  partiallyPaid: i.pp,
+                  nonConvertedInvoiceAmount: i.explainedAmount / i.exchangeRate,
+                  convertedToBaseCurrencyAmount: i.convertedToBaseCurrencyAmount,
+                };
+              })
+            )
           : []
       );
       formData.append(
-        "exchangeGainOrLossId",
-        this.setexcessorshortamount().data
-          ? 103
-          : this.setexcessorshortamount().data > 0
-            ? 79
-            : 0
+        'exchangeGainOrLossId',
+        this.setexcessorshortamount().data ? 103 : this.setexcessorshortamount().data > 0 ? 79 : 0
       );
-      formData.append("exchangeGainOrLoss", this.setexcessorshortamount().data);
+      formData.append('exchangeGainOrLoss', this.setexcessorshortamount().data);
     }
     if (
       payrollListIds &&
       expenseCategory.value &&
-      expenseCategory.label === "Salaries and Employee Wages"
+      expenseCategory.label === 'Salaries and Employee Wages'
     ) {
-      var result1 = payrollListIds.map((o) => ({
+      var result1 = payrollListIds.map(o => ({
         payrollId: o.value,
       }));
     }
 
-    formData.append("expenseType", this.state.expenseType);
-    formData.append("bankId ", bankAccountId ? bankAccountId : "");
-    formData.append("date", transactionDate ? transactionDate : "");
-    formData.append("description", description ? description : "");
-    formData.append("amount", transactionAmount ? transactionAmount : "");
+    formData.append('expenseType', this.state.expenseType);
+    formData.append('bankId ', bankAccountId ? bankAccountId : '');
+    formData.append('date', transactionDate ? transactionDate : '');
+    formData.append('description', description ? description : '');
+    formData.append('amount', transactionAmount ? transactionAmount : '');
     formData.append(
-      "coaCategoryId",
+      'coaCategoryId',
       coaCategoryId
         ? coaCategoryId.value && coaCategoryId.value == 100
           ? 10
           : coaCategoryId.value
-        : ""
+        : ''
     );
 
-    formData.append("exchangeRate", exchangeRate);
+    formData.append('exchangeRate', exchangeRate);
 
     if (transactionCategoryId) {
-      formData.append(
-        "transactionCategoryId",
-        transactionCategoryId.value || ""
-      );
+      formData.append('transactionCategoryId', transactionCategoryId.value || '');
     }
-    if (expenseCategory && coaCategoryId.label === "Expense") {
-      formData.append(
-        "expenseCategory",
-        expenseCategory.value || ""
-      );
+    if (expenseCategory && coaCategoryId.label === 'Expense') {
+      formData.append('expenseCategory', expenseCategory.value || '');
     }
-    if (
-      (vatId && coaCategoryId.value === 10) ||
-      (vatId && coaCategoryId.label === "Expense")
-    ) {
-      formData.append("vatId", vatId.value || "");
+    if ((vatId && coaCategoryId.value === 10) || (vatId && coaCategoryId.label === 'Expense')) {
+      formData.append('vatId', vatId.value || '');
       formData.append(
-        "transactionVatAmount",
-        this.state.transactionVatAmount ? this.state.transactionVatAmount : ""
+        'transactionVatAmount',
+        this.state.transactionVatAmount ? this.state.transactionVatAmount : ''
       );
       formData.append(
-        "transactionExpenseAmount",
-        this.state.transactionExpenseAmount
-          ? this.state.transactionExpenseAmount
-          : ""
+        'transactionExpenseAmount',
+        this.state.transactionExpenseAmount ? this.state.transactionExpenseAmount : ''
       );
-      formData.append("currencyName", currencyName ? currencyName : "");
-      formData.append("bankGenerated", true);
-      formData.append("isReverseChargeEnabled", isReverseChargeEnabled);
-      formData.append("exclusiveVat", exclusiveVat);
-      formData.append(
-        "convertedAmount",
-        this.expenceconvert(transactionAmount)
-      );
+      formData.append('currencyName', currencyName ? currencyName : '');
+      formData.append('bankGenerated', true);
+      formData.append('isReverseChargeEnabled', isReverseChargeEnabled);
+      formData.append('exclusiveVat', exclusiveVat);
+      formData.append('convertedAmount', this.expenceconvert(transactionAmount));
     }
     if (
-      (currencyCode && coaCategoryId.label === "Expense") ||
-      coaCategoryId.label === "Sales" ||
-      coaCategoryId.label === "Supplier Invoice"
+      (currencyCode && coaCategoryId.label === 'Expense') ||
+      coaCategoryId.label === 'Sales' ||
+      coaCategoryId.label === 'Supplier Invoice'
     ) {
-      formData.append(
-        "currencyCode",
-        currencyCode.value ? currencyCode.value : currencyCode
-      );
+      formData.append('currencyCode', currencyCode.value ? currencyCode.value : currencyCode);
     }
     if (
-      (customerId &&
-        coaCategoryId.value &&
-        coaCategoryId.label === "Expenses") ||
-      (customerId && coaCategoryId.value && coaCategoryId.label === "Sales")
+      (customerId && coaCategoryId.value && coaCategoryId.label === 'Expenses') ||
+      (customerId && coaCategoryId.value && coaCategoryId.label === 'Sales')
     ) {
-      formData.append("customerId", customerId ? customerId.value : "");
+      formData.append('customerId', customerId ? customerId.value : '');
     }
-    if (vendorId && coaCategoryId.value && coaCategoryId.label === "Expenses") {
-      formData.append("vendorId", vendorId ? vendorId.value : "");
+    if (vendorId && coaCategoryId.value && coaCategoryId.label === 'Expenses') {
+      formData.append('vendorId', vendorId ? vendorId.value : '');
     }
 
-    if (vendorId && coaCategoryId.label === "Supplier Invoice") {
-      formData.append("vendorId", vendorId.value ? vendorId.value : vendorId);
+    if (vendorId && coaCategoryId.label === 'Supplier Invoice') {
+      formData.append('vendorId', vendorId.value ? vendorId.value : vendorId);
     }
-    if (vendorId && coaCategoryId.value && coaCategoryId.label === "Expenses") {
-      formData.append("vatId", vatId ? vatId.value : "");
+    if (vendorId && coaCategoryId.value && coaCategoryId.label === 'Expenses') {
+      formData.append('vatId', vatId ? vatId.value : '');
     }
     if (employeeId) {
-      formData.append("employeeId", employeeId ? employeeId.value : "");
+      formData.append('employeeId', employeeId ? employeeId.value : '');
     }
 
-    formData.append("reference", reference ? reference : "");
+    formData.append('reference', reference ? reference : '');
     if (this.uploadFile?.files?.[0]) {
-      formData.append("attachmentFile", this.uploadFile?.files?.[0]);
+      formData.append('attachmentFile', this.uploadFile?.files?.[0]);
     }
     if (
       payrollListIds &&
       expenseCategory.value &&
-      expenseCategory.label === "Salaries and Employee Wages"
+      expenseCategory.label === 'Salaries and Employee Wages'
     ) {
-      formData.append(
-        "payrollListIds",
-        payrollListIds ? JSON.stringify(result1) : ""
-      );
+      formData.append('payrollListIds', payrollListIds ? JSON.stringify(result1) : '');
     }
-    if (
-      coaCategoryId.label === "VAT Payment" ||
-      coaCategoryId.label === "VAT Claim"
-    ) {
+    if (coaCategoryId.label === 'VAT Payment' || coaCategoryId.label === 'VAT Claim') {
       const info = {
-        ...this.state.VATlist.find((i) => i.id === VATReportId.value),
+        ...this.state.VATlist.find(i => i.id === VATReportId.value),
       };
       delete info.taxFiledOn;
 
-      formData.append(
-        "explainedVatPaymentListString",
-        info ? JSON.stringify([info]) : ""
-      );
+      formData.append('explainedVatPaymentListString', info ? JSON.stringify([info]) : '');
     }
-    if (coaCategoryId.label === "Corporate Tax Payment") {
+    if (coaCategoryId.label === 'Corporate Tax Payment') {
       const report = {
-        ...this.state.corporateTaxList.find((obj, index) => index === this.state.ct_taxPeriod.value),
+        ...this.state.corporateTaxList.find(
+          (obj, index) => index === this.state.ct_taxPeriod.value
+        ),
       };
-      formData.append(
-        "explainedCorporateTaxListString",
-        report ? JSON.stringify([report]) : ""
-      );
+      formData.append('explainedCorporateTaxListString', report ? JSON.stringify([report]) : '');
     }
     this.props.transactionCreateActions
       .createTransaction(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           resetForm();
-          this.props.commonActions.tostifyAlert(
-            "success",
-            "New Transaction Created Successfully."
-          );
+          this.props.commonActions.tostifyAlert('success', 'New Transaction Created Successfully.');
           if (this.state.createMore) {
             this.setState({
               createMore: false,
               disabled: false,
             });
           } else {
-            this.props.history.push("/admin/banking/bank-account/transaction", {
+            this.props.history.push('/admin/banking/bank-account/transaction', {
               bankAccountId,
               currency: this.props.location.state?.currency,
             });
           }
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.props.commonActions.tostifyAlert(
-          "error",
-          err && err.data ? err.data.message : "Something Went Wrong"
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong'
         );
         this.setState({
           disabled: false,
@@ -501,7 +448,7 @@ class CreateBankTransaction extends React.Component {
       });
   };
 
-  setValue = (value) => {
+  setValue = value => {
     this.setState({
       transactionCategoryList: [],
     });
@@ -509,47 +456,32 @@ class CreateBankTransaction extends React.Component {
 
   totalAmount(option) {
     let totalInvoiceAmount = 0;
-    if (option && option != "") {
-      option.map((row) => {
+    if (option && option != '') {
+      option.map(row => {
         let listData = row.amount;
         totalInvoiceAmount += listData;
       });
 
-      const amount = option.reduce(
-        (totalAmount, invoice) => totalAmount + invoice.amount,
-        0
-      );
+      const amount = option.reduce((totalAmount, invoice) => totalAmount + invoice.amount, 0);
 
-      this.setState(
-        { totalAmount: amount, totalInvoiceAmount: totalInvoiceAmount },
-        () => { }
-      );
+      this.setState({ totalAmount: amount, totalInvoiceAmount: totalInvoiceAmount }, () => {});
     } else {
-      this.setState(
-        { totalAmount: 0, totalInvoiceAmount: totalInvoiceAmount },
-        () => { }
-      );
+      this.setState({ totalAmount: 0, totalInvoiceAmount: totalInvoiceAmount }, () => {});
     }
   }
 
   getExpensesCategoriesList = () => {
     this.props.transactionActions.getExpensesCategoriesList();
-    this.props.transactionActions.getCurrencyList().then((response) => {
+    this.props.transactionActions.getCurrencyList().then(response => {
       this.setState({
         initValue: {
           ...this.state.initValue,
           ...{
-            currencyCode: response.data
-              ? parseInt(response.data[0].currencyCode)
-              : "",
+            currencyCode: response.data ? parseInt(response.data[0].currencyCode) : '',
           },
         },
       });
-      this.formRef.current.setFieldValue(
-        "currency",
-        response.data[0].currencyCode,
-        true
-      );
+      this.formRef.current.setFieldValue('currency', response.data[0].currencyCode, true);
     });
     this.props.transactionActions.getUserForDropdown();
     this.props.transactionActions.getVatList();
@@ -557,19 +489,16 @@ class CreateBankTransaction extends React.Component {
 
   getVendorList = () => {
     this.props.transactionActions.getVendorList(
-      this.props.location.state.bankAccountId
-        ? this.props.location.state.bankAccountId
-        : ""
+      this.props.location.state.bankAccountId ? this.props.location.state.bankAccountId : ''
     );
   };
   getSuggestionInvoicesFotCust = (option, amount) => {
     const data = {
       amount: amount,
       id: option,
-      currency:
-        this.state?.bankCurrency?.bankAccountCurrency
-          ? this.state?.bankCurrency?.bankAccountCurrency
-          : 0,
+      currency: this.state?.bankCurrency?.bankAccountCurrency
+        ? this.state?.bankCurrency?.bankAccountCurrency
+        : 0,
       bankId: this.props.location.state.bankAccountId,
     };
     this.props.transactionActions.getCustomerInvoiceList(data);
@@ -579,21 +508,20 @@ class CreateBankTransaction extends React.Component {
     const data = {
       amount: amount,
       id: option,
-      currency:
-        this.state.bankCurrency?.bankAccountCurrency
-          ? this.state.bankCurrency?.bankAccountCurrency
-          : 0,
+      currency: this.state.bankCurrency?.bankAccountCurrency
+        ? this.state.bankCurrency?.bankAccountCurrency
+        : 0,
       bankId: this.props.location.state.bankAccountId,
     };
     this.props.transactionActions.getVendorInvoiceList(data);
     if (invoice_list === null) {
-      this.formRef.current.setFieldValue("curreancyname", "", true);
-      this.formRef.current.setFieldValue("exchangeRate", "", true);
-      this.formRef.current.setFieldValue("currencyCode", "", true);
+      this.formRef.current.setFieldValue('curreancyname', '', true);
+      this.formRef.current.setFieldValue('exchangeRate', '', true);
+      this.formRef.current.setFieldValue('currencyCode', '', true);
     }
   };
 
-  invoiceIdList = (option) => {
+  invoiceIdList = option => {
     this.setState({
       initValue: {
         ...this.state.initValue,
@@ -602,31 +530,24 @@ class CreateBankTransaction extends React.Component {
         },
       },
     });
-    this.formRef.current.setFieldValue("invoiceIdList", option, true);
+    this.formRef.current.setFieldValue('invoiceIdList', option, true);
   };
   getInvoiceCurrency = (opt, props) => {
     const { customer_invoice_list } = this.props;
 
-    const customerinvoice = customer_invoice_list.data.filter(
-      (item) => item.value === opt.value
-    );
+    const customerinvoice = customer_invoice_list.data.filter(item => item.value === opt.value);
     this.setState(
       {
         invoiceCurrency: customerinvoice?.[0].currencyCode,
         invCurrency: customerinvoice?.[0],
       },
       () => {
-        this.formRef.current.setFieldValue(
-          "currencyCode",
-          customerinvoice?.[0].currencyCode,
-          true
-        );
+        this.formRef.current.setFieldValue('currencyCode', customerinvoice?.[0].currencyCode, true);
 
         this.setCurrency(customerinvoice?.[0].currencyCode);
         // this.setExchange(this.state.bankCurrency.bankAccountCurrency);
       }
     );
-
   };
 
   getVendorInvoiceCurrency = (opt, props) => {
@@ -642,19 +563,14 @@ class CreateBankTransaction extends React.Component {
         // 	props.values.customerId,
         // 	props.values.transactionAmount,
         // )
-        this.formRef.current.setFieldValue(
-          "currencyCode",
-          opt?.[0].currencyCode,
-          true
-        );
+        this.formRef.current.setFieldValue('currencyCode', opt?.[0].currencyCode, true);
 
         this.setCurrency(opt?.[0].currencyCode);
         //this.setExchange(this.state.bankCurrency.bankAccountCurrency);
       }
     );
-
   };
-  payrollList = (option) => {
+  payrollList = option => {
     this.setState({
       initValue: {
         ...this.state.initValue,
@@ -663,49 +579,48 @@ class CreateBankTransaction extends React.Component {
         },
       },
     });
-    this.formRef.current.setFieldValue("payrollListIds", option, true);
+    this.formRef.current.setFieldValue('payrollListIds', option, true);
   };
 
-  getPayrollAmount = (option) => {
-    const amounts = option && option.map((i) => {
-      const startIndex = i.label.indexOf("(");
-      const endIndex = i.label.indexOf(")");
-      const amountString = i.label.slice(startIndex + 1, endIndex);
-      const amount = parseFloat(amountString);
-      return amount;
-    });
+  getPayrollAmount = option => {
+    const amounts =
+      option &&
+      option.map(i => {
+        const startIndex = i.label.indexOf('(');
+        const endIndex = i.label.indexOf(')');
+        const amountString = i.label.slice(startIndex + 1, endIndex);
+        const amount = parseFloat(amountString);
+        return amount;
+      });
     const totalAmount = amounts && amounts.reduce((sum, amount) => sum + amount, 0);
-    this.formRef.current.setFieldValue("transactionAmount", totalAmount)
-  }
+    this.formRef.current.setFieldValue('transactionAmount', totalAmount);
+  };
 
   getPayrollList = (UnPaidPayrolls_List, props) => {
     return (
       <Col lg={3}>
         <FormGroup className="mb-3">
-          <Label htmlFor="payrollListIds"><span className="text-danger">* </span>{strings.Payroll}</Label>
+          <Label htmlFor="payrollListIds">
+            <span className="text-danger">* </span>
+            {strings.Payroll}
+          </Label>
           <Select
             style={customStyles}
             isMulti
-            options={
-              UnPaidPayrolls_List && UnPaidPayrolls_List
-                ? UnPaidPayrolls_List
-                : []
-            }
+            options={UnPaidPayrolls_List && UnPaidPayrolls_List ? UnPaidPayrolls_List : []}
             placeholder={strings.Select + strings.Payroll}
             id="payrollListIds"
-            onChange={(option) => {
-
-              this.state.selectedPayrollListBank = []
-              props.handleChange("payrollListIds")(option);
+            onChange={option => {
+              this.state.selectedPayrollListBank = [];
+              props.handleChange('payrollListIds')(option);
               this.payrollList(option);
               this.getPayrollAmount(option);
-              (!option && this.formRef.current.setFieldValue("transactionAmount", ""))
+              !option && this.formRef.current.setFieldValue('transactionAmount', '');
               // let selectedPayroll1 = []
               if (option) {
-                option.map((i) => {
-
-                  const selectedPayroll = this.state.payrolldata.find((el) => el.id === i.value)
-                  this.state.selectedPayrollListBank.push(selectedPayroll)
+                option.map(i => {
+                  const selectedPayroll = this.state.payrolldata.find(el => el.id === i.value);
+                  this.state.selectedPayrollListBank.push(selectedPayroll);
                   const uniqueArray = [];
                   const seenIds = new Set();
                   for (const obj of this.state.selectedPayrollListBank) {
@@ -714,131 +629,105 @@ class CreateBankTransaction extends React.Component {
                       seenIds.add(obj.id);
                     }
                   }
-                })
+                });
               }
             }}
-            className={
-              props.errors.vatId &&
-                props.touched.vatId
-                ? "is-invalid"
-                : ""
-            }
+            className={props.errors.vatId && props.touched.vatId ? 'is-invalid' : ''}
           />
-          {props.errors.vatId &&
-            props.touched.vatId && (
-              <div className="invalid-feedback">
-                {props.errors.vatId}
-              </div>
-            )}
+          {props.errors.vatId && props.touched.vatId && (
+            <div className="invalid-feedback">{props.errors.vatId}</div>
+          )}
         </FormGroup>
       </Col>
     );
   };
 
-  getCompanyCurrency = (basecurrency) => {
+  getCompanyCurrency = basecurrency => {
     this.props.currencyConvertActions
       .getCompanyCurrency()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           this.setState({ basecurrency: res.data });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.props.commonActions.tostifyAlert(
-          "error",
-          err && err.data ? err.data.message : "Something Went Wrong"
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong'
         );
         this.setState({ loading: false });
       });
   };
 
-  setExchange = (value) => {
+  setExchange = value => {
     let exchange;
-    let result = this.props.currency_convert_list.filter((obj) => {
+    let result = this.props.currency_convert_list.filter(obj => {
       return obj.currencyCode === value;
     });
-    if (
-      this.state.invoiceCurrency === this.state.bankCurrency.bankAccountCurrency
-    ) {
+    if (this.state.invoiceCurrency === this.state.bankCurrency.bankAccountCurrency) {
       exchange = 1;
-    } else if (
-      this.state.invoiceCurrency !== this.state.bankCurrency.bankAccountCurrency
-    ) {
+    } else if (this.state.invoiceCurrency !== this.state.bankCurrency.bankAccountCurrency) {
       if (this.state.invoiceCurrency !== this.state.basecurrency.currencyCode) {
         exchange = result[0].exchangeRate;
       } else {
         exchange = 1 / result[0].exchangeRate;
       }
     }
-    this.formRef.current.setFieldValue("exchangeRate", exchange, true);
+    this.formRef.current.setFieldValue('exchangeRate', exchange, true);
   };
   getExchangeRate = () => {
-    let result = this.props.currency_convert_list.filter((obj) => {
+    let result = this.props.currency_convert_list.filter(obj => {
       return obj.currencyCode === this.state?.bankCurrency?.bankAccountCurrency;
     });
     if (result[0]) {
-      this.formRef.current.setFieldValue(
-        "exchangeRate",
-        result[0].exchangeRate,
-        true
-      );
-      this.formRef.current.setFieldValue(
-        "currencyName",
-        result[0].currencyName,
-        true
-      );
+      this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+      this.formRef.current.setFieldValue('currencyName', result[0].currencyName, true);
     }
   };
-  getVatListByIds = (vatIds) => {
+  getVatListByIds = vatIds => {
     const { vat_list } = this.props;
-    const finalarr = vat_list.filter((i) => vatIds.includes(i.id));
+    const finalarr = vat_list.filter(i => vatIds.includes(i.id));
     return finalarr;
   };
 
-  getVatListByIds = (vatIds) => {
+  getVatListByIds = vatIds => {
     const { vat_list } = this.props;
-    const finalarr = vat_list.filter((i) => vatIds.includes(i.id));
+    const finalarr = vat_list.filter(i => vatIds.includes(i.id));
 
     return finalarr;
   };
 
-  setCurrency = (value) => {
-    let result = this.props.currency_convert_list.find((obj) => {
+  setCurrency = value => {
+    let result = this.props.currency_convert_list.find(obj => {
       return obj.currencyCode === value;
     });
-    this.formRef.current.setFieldValue(
-      "curreancyname",
-      result.currencyIsoCode,
-      true
-    );
+    this.formRef.current.setFieldValue('curreancyname', result.currencyIsoCode, true);
   };
 
   setcustomexchnage = (customerinvoice, exrate) => {
     let exchange;
     let convertor =
-      this.state.bankCurrency.bankAccountCurrency ===
-        this.state.basecurrency.currencyCode
+      this.state.bankCurrency.bankAccountCurrency === this.state.basecurrency.currencyCode
         ? customerinvoice
         : this.state.bankCurrency.bankAccountCurrency;
-    let result = this.props.currency_convert_list.filter((obj) => {
+    let result = this.props.currency_convert_list.filter(obj => {
       return obj.currencyCode === convertor;
     });
     const ex = exrate || result[0].exchangeRate;
-    this.formRef.current.setFieldValue("exchangeRate", ex, true);
+    this.formRef.current.setFieldValue('exchangeRate', ex, true);
     if (customerinvoice === this.state.bankCurrency.bankAccountCurrency) {
       exchange = 1;
     } else {
-      if (this.state.basecurrency.currencyCode === customerinvoice)
-        exchange = 1 / ex;
+      if (this.state.basecurrency.currencyCode === customerinvoice) exchange = 1 / ex;
       else exchange = ex;
     }
-    this.formRef.current.setFieldValue("exchangeRateFromList", ex, true);
+    this.formRef.current.setFieldValue('exchangeRateFromList', ex, true);
 
     return exchange;
   };
 
-  expenceconvert = (amount) => {
-    let result = this.props.currency_convert_list.filter((obj) => {
+  expenceconvert = amount => {
+    let result = this.props.currency_convert_list.filter(obj => {
       return obj.currencyCode === this.state.bankCurrency.bankAccountCurrency;
     });
     const exchange = result[0].exchangeRate;
@@ -846,10 +735,10 @@ class CreateBankTransaction extends React.Component {
     return amount * exchange;
   };
 
-  basecurrencyconvertor = (customerinvoice) => {
+  basecurrencyconvertor = customerinvoice => {
     let exchange;
     if (customerinvoice !== this.state.basecurrency.currencyCode) {
-      let result = this.props.currency_convert_list.filter((obj) => {
+      let result = this.props.currency_convert_list.filter(obj => {
         return obj.currencyCode === customerinvoice;
       });
       exchange = result[0].exchangeRate;
@@ -862,8 +751,7 @@ class CreateBankTransaction extends React.Component {
 
   setexchnagedamount = (option, amount, exrate) => {
     if (option?.length > 0) {
-      const transactionAmount =
-        amount || this.formRef.current.state.values.transactionAmount;
+      const transactionAmount = amount || this.formRef.current.state.values.transactionAmount;
       const invoicelist = [...option];
       let remainingcredit = transactionAmount;
       const finaldata = invoicelist?.map((i, ind) => {
@@ -897,10 +785,10 @@ class CreateBankTransaction extends React.Component {
         };
       });
 
-      this.formRef.current.setFieldValue("invoiceIdList", finaldata);
+      this.formRef.current.setFieldValue('invoiceIdList', finaldata);
       return finaldata;
     } else {
-      this.formRef.current.setFieldValue("invoiceIdList", []);
+      this.formRef.current.setFieldValue('invoiceIdList', []);
       return [];
     }
   };
@@ -910,29 +798,21 @@ class CreateBankTransaction extends React.Component {
     local2[indexofinvoce].pp = value;
     let finaldata = [...local2];
     //how many are clicked
-    const howManyAreClicked = finaldata.reduce(
-      (a, c, i) => a + (c.pp ? 1 : 0),
-      0
-    );
-    const transactionAmount =
-      this.formRef.current.state.values.transactionAmount;
-    const total = finaldata.reduce(
-      (accu, curr, index) => accu + curr.convertedInvoiceAmount,
-      0
-    );
+    const howManyAreClicked = finaldata.reduce((a, c, i) => a + (c.pp ? 1 : 0), 0);
+    const transactionAmount = this.formRef.current.state.values.transactionAmount;
+    const total = finaldata.reduce((accu, curr, index) => accu + curr.convertedInvoiceAmount, 0);
     const shortAmount = transactionAmount - total;
     let remainingcredit = transactionAmount;
     let updatedfinaldata = [];
     let temp = finaldata.reduce(
-      (a, c, i) =>
-        c.convertedInvoiceAmount >= transactionAmount ? a + 1 : a + 0,
+      (a, c, i) => (c.convertedInvoiceAmount >= transactionAmount ? a + 1 : a + 0),
       0
     );
     let amountislessthanallinvoice = temp === finaldata.length;
     let tempdata;
     if (amountislessthanallinvoice) {
       if (value) {
-        tempdata = finaldata.map((i) => {
+        tempdata = finaldata.map(i => {
           const basecurrency = this.basecurrencyconvertor(i.currencyCode);
           return {
             ...i,
@@ -945,22 +825,21 @@ class CreateBankTransaction extends React.Component {
           };
         });
       } else {
-        const temp = finaldata.map((i) => {
+        const temp = finaldata.map(i => {
           return { ...i, pp: value };
         });
         tempdata = this.setexchnagedamount(temp);
       }
       finaldata = [...tempdata];
-      if (transactionAmount > 0 && transactionAmount !== "")
-        this.formRef.current.setFieldValue("invoiceIdList", finaldata);
+      if (transactionAmount > 0 && transactionAmount !== '')
+        this.formRef.current.setFieldValue('invoiceIdList', finaldata);
     } else {
       let currentshort = shortAmount;
       finaldata.map((i, inx) => {
         const local = { ...i };
 
         if (i.pp) {
-          let iio =
-            local.convertedInvoiceAmount + currentshort / howManyAreClicked;
+          let iio = local.convertedInvoiceAmount + currentshort / howManyAreClicked;
           if (iio < 0) {
             local.explainedAmount = 0;
           } else {
@@ -971,23 +850,21 @@ class CreateBankTransaction extends React.Component {
         }
         updatedfinaldata.push(local);
       });
-      let updatedfinaldata2 = updatedfinaldata.map((i) => {
+      let updatedfinaldata2 = updatedfinaldata.map(i => {
         const basecurrency = this.basecurrencyconvertor(i.currencyCode);
         return {
           ...i,
-          convertedToBaseCurrencyAmount: (
-            i.explainedAmount * basecurrency
-          )?.toFixed(2),
+          convertedToBaseCurrencyAmount: (i.explainedAmount * basecurrency)?.toFixed(2),
         };
       });
-      this.formRef.current.setFieldValue("invoiceIdList", updatedfinaldata2);
+      this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata2);
     }
   };
 
-  getCurrency = (opt) => {
+  getCurrency = opt => {
     let supplier_currencyCode = 0;
 
-    this.props.vendor_list.map((item) => {
+    this.props.vendor_list.map(item => {
       if (item.label.contactId == opt) {
         this.setState({
           supplier_currency: item.label.currency.currencyCode,
@@ -1007,13 +884,12 @@ class CreateBankTransaction extends React.Component {
     }
   };
 
-  getTransactionCategoryList = (type) => {
+  getTransactionCategoryList = type => {
     function getParentLabel(array, id, parentId) {
       return array.some(
-        (o) =>
+        o =>
           o.label === id ||
-          (o.options &&
-            (parentId = getParentLabel(o.options, id, o.label)) !== null)
+          (o.options && (parentId = getParentLabel(o.options, id, o.label)) !== null)
       )
         ? parentId
         : null;
@@ -1027,25 +903,27 @@ class CreateBankTransaction extends React.Component {
     this.setValue(null);
     try {
       this.props.transactionCreateActions
-        .getTransactionCategoryListForExplain(
-          type.value,
-          this.props.location.state.bankAccountId
-        )
-        .then((res) => {
+        .getTransactionCategoryListForExplain(type.value, this.props.location.state.bankAccountId)
+        .then(res => {
           if (res.status === 200) {
-            let categoryList = res.data.categoriesList && res.data.categoriesList.map((category) => {
-              let newcategory = category.label;
-              let newOption = category.options;
-              if (category.label === 'Other Current Liability') {
-                newOption = category.options.filter(obj => obj.label !== 'Payroll Liability')
-              }
-              return { label: newcategory, options: newOption }
-            })
+            let categoryList =
+              res.data.categoriesList &&
+              res.data.categoriesList.map(category => {
+                let newcategory = category.label;
+                let newOption = category.options;
+                if (category.label === 'Other Current Liability') {
+                  newOption = category.options.filter(obj => obj.label !== 'Payroll Liability');
+                }
+                return { label: newcategory, options: newOption };
+              });
             this.setState(
               {
-                transactionCategoryList: { categoriesList: categoryList, dataList: res.data.dataList },
+                transactionCategoryList: {
+                  categoriesList: categoryList,
+                  dataList: res.data.dataList,
+                },
               },
-              () => { }
+              () => {}
             );
           }
         });
@@ -1053,20 +931,18 @@ class CreateBankTransaction extends React.Component {
       console.log(err);
     }
   };
-  getMoneyPaidToUserlist = (option) => {
+  getMoneyPaidToUserlist = option => {
     try {
-      this.props.transactionActions
-        .getMoneyCategoryList(option.value)
-        .then((res) => {
-          if (res.status === 200) {
-            this.setState(
-              {
-                moneyCategoryList: res.data,
-              },
-              () => { }
-            );
-          }
-        });
+      this.props.transactionActions.getMoneyCategoryList(option.value).then(res => {
+        if (res.status === 200) {
+          this.setState(
+            {
+              moneyCategoryList: res.data,
+            },
+            () => {}
+          );
+        }
+      });
     } catch (err) {
       console.log(err);
     }
@@ -1076,40 +952,35 @@ class CreateBankTransaction extends React.Component {
     const data = {
       amount: amount,
       id: option.value,
-      currency:
-        this.state?.bankCurrency?.bankAccountCurrency
-          ? this.state?.bankCurrency?.bankAccountCurrency
-          : 0,
+      currency: this.state?.bankCurrency?.bankAccountCurrency
+        ? this.state?.bankCurrency?.bankAccountCurrency
+        : 0,
       bankId: this.props.location.state.bankAccountId,
     };
     this.props.transactionActions.getCustomerInvoiceList(data);
     if (invoice_list === null) {
-      this.formRef.current.setFieldValue("curreancyname", "", true);
-      this.formRef.current.setFieldValue("exchangeRate", "", true);
-      this.formRef.current.setFieldValue("currencyCode", "", true);
+      this.formRef.current.setFieldValue('curreancyname', '', true);
+      this.formRef.current.setFieldValue('exchangeRate', '', true);
+      this.formRef.current.setFieldValue('currencyCode', '', true);
     }
   };
 
   setexcessorshortamount = () => {
-    const totalexpainedamount =
-      this.formRef.current.state.values?.invoiceIdList?.reduce(
-        (accu, curr, index) => accu + curr.explainedAmount,
-        0
-      );
+    const totalexpainedamount = this.formRef.current.state.values?.invoiceIdList?.reduce(
+      (accu, curr, index) => accu + curr.explainedAmount,
+      0
+    );
 
-    const totalconvetedamount =
-      this.formRef.current.state.values?.invoiceIdList?.reduce(
-        (accu, curr, index) => accu + curr.convertedInvoiceAmount,
-        0
-      );
+    const totalconvetedamount = this.formRef.current.state.values?.invoiceIdList?.reduce(
+      (accu, curr, index) => accu + curr.convertedInvoiceAmount,
+      0
+    );
 
-    const transactionAmount =
-      this.formRef.current.state.values.transactionAmount;
-    const isppselected =
-      this.formRef.current.state.values?.invoiceIdList?.reduce(
-        (a, c, i) => a + (c.pp ? 1 : 0),
-        0
-      );
+    const transactionAmount = this.formRef.current.state.values.transactionAmount;
+    const isppselected = this.formRef.current.state.values?.invoiceIdList?.reduce(
+      (a, c, i) => a + (c.pp ? 1 : 0),
+      0
+    );
 
     let final = 0;
     const totalshort = totalexpainedamount - totalconvetedamount;
@@ -1121,21 +992,21 @@ class CreateBankTransaction extends React.Component {
       final = transactionAmount - totalconvetedamount;
     }
     return {
-      value: ` ${this.state.bankCurrency.bankAccountCurrencyIsoCode
-        } ${final.toLocaleString(navigator.language, {
+      value: ` ${this.state.bankCurrency.bankAccountCurrencyIsoCode} ${final.toLocaleString(
+        navigator.language,
+        {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
-        })} `,
+        }
+      )} `,
       data: final?.toFixed(2),
     };
   };
   expense_categories_list_generate = () => {
     const categoriesList = [...this.props.expense_categories_list];
     const grouped = [];
-    categoriesList.map((i) => {
-      const category = grouped.findIndex(
-        (g) => g.label === i.transactionCategoryDescription
-      );
+    categoriesList.map(i => {
+      const category = grouped.findIndex(g => g.label === i.transactionCategoryDescription);
       if (category > -1) {
         grouped[category].options = [
           ...grouped[category].options,
@@ -1177,7 +1048,7 @@ class CreateBankTransaction extends React.Component {
     } = this.props;
     let tmpSupplier_list = [];
 
-    vendor_list.map((item) => {
+    vendor_list.map(item => {
       let obj = { label: item.label.contactName, value: item.value };
 
       tmpSupplier_list.push(obj);
@@ -1194,9 +1065,7 @@ class CreateBankTransaction extends React.Component {
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
                         <i className="icon-doc" />
-                        <span className="ml-2">
-                          {strings.CreateBankTransaction}
-                        </span>
+                        <span className="ml-2">{strings.CreateBankTransaction}</span>
                       </div>
                     </Col>
                   </Row>
@@ -1210,7 +1079,7 @@ class CreateBankTransaction extends React.Component {
                         onSubmit={(values, { resetForm }) => {
                           this.handleSubmit(values, resetForm);
                         }}
-                        validate={(values) => {
+                        validate={values => {
                           let errors = {};
                           const totalexpaled = values?.invoiceIdList.reduce(
                             (a, c) => a + c.explainedAmount,
@@ -1218,143 +1087,122 @@ class CreateBankTransaction extends React.Component {
                           );
 
                           if (
-                            values.coaCategoryId === "VAT Payment" ||
-                            values.coaCategoryId === "VAT Claim"
+                            values.coaCategoryId === 'VAT Payment' ||
+                            values.coaCategoryId === 'VAT Claim'
                           ) {
-                            if (
-                              values?.transactionAmount > values?.vatDueAmount
-                            )
+                            if (values?.transactionAmount > values?.vatDueAmount)
                               errors.transactionAmount = `Amount cannot be greater than Due amount`;
 
                             const info = this.state.VATlist.find(
-                              (i) => i.id === values.VATReportId.value
+                              i => i.id === values.VATReportId.value
                             );
 
                             if (
                               dayjs(values.transactionDate).diff(
                                 new Date(info.taxFiledOn),
-                                "seconds"
+                                'seconds'
                               ) < 0
                             ) {
                               errors.transactionDate =
-                                "The transaction date cannot be before the Date of Filing.";
+                                'The transaction date cannot be before the Date of Filing.';
                             }
                           }
 
-                          const date = dayjs(values.transactionDate).format(
-                            "MM/DD/YYYY"
-                          );
+                          const date = dayjs(values.transactionDate).format('MM/DD/YYYY');
                           const date1 = new Date(date);
                           const date2 = new Date(this.state.date);
 
                           if (
                             values.coaCategoryId &&
-                            this.props.location.state?.currency === "AED" &&
-                            (values.coaCategoryId.label === "VAT Payment" ||
-                              values.coaCategoryId.label === "VAT Claim")
+                            this.props.location.state?.currency === 'AED' &&
+                            (values.coaCategoryId.label === 'VAT Payment' ||
+                              values.coaCategoryId.label === 'VAT Claim')
                           ) {
-                            if (
-                              !values.VATReportId ||
-                              values.VATReportId === ""
-                            ) {
-                              errors.VATReportId = "Please Select Vat Report Number";
+                            if (!values.VATReportId || values.VATReportId === '') {
+                              errors.VATReportId = 'Please Select Vat Report Number';
                             }
                           }
 
                           if (
-                            values.coaCategoryId.label !== "Expense" &&
-                            values.coaCategoryId.label !== "Supplier Invoice" &&
-                            values.coaCategoryId.label !== "Sales" &&
-                            values.coaCategoryId.label !== "VAT Payment" &&
-                            values.coaCategoryId.label !== "VAT Claim" &&
-                            values.coaCategoryId.label !== "Corporate Tax Payment"
+                            values.coaCategoryId.label !== 'Expense' &&
+                            values.coaCategoryId.label !== 'Supplier Invoice' &&
+                            values.coaCategoryId.label !== 'Sales' &&
+                            values.coaCategoryId.label !== 'VAT Payment' &&
+                            values.coaCategoryId.label !== 'VAT Claim' &&
+                            values.coaCategoryId.label !== 'Corporate Tax Payment'
                           ) {
                             if (
                               !values.transactionCategoryId ||
-                              values.transactionCategoryId === ""
+                              values.transactionCategoryId === ''
                             ) {
-                              errors.transactionCategoryId =
-                                "Category is required";
+                              errors.transactionCategoryId = 'Category is required';
                             }
                             if (
                               (values.coaCategoryId.value === 12 ||
                                 values.coaCategoryId.value === 6) &&
                               !values.employeeId
                             ) {
-                              errors.employeeId = "User is Required";
+                              errors.employeeId = 'User is Required';
                             }
                           }
-                          if (
-                            values.coaCategoryId.label === "Expense" &&
-                            !values.expenseCategory
-                          ) {
-                            errors.expenseCategory =
-                              "Expense Category is Required";
+                          if (values.coaCategoryId.label === 'Expense' && !values.expenseCategory) {
+                            errors.expenseCategory = 'Expense Category is Required';
                           }
                           if (
-                            values.vatId === "" &&
-                            values.coaCategoryId.label === "Expense" &&
+                            values.vatId === '' &&
+                            values.coaCategoryId.label === 'Expense' &&
                             values.expenseCategory.value !== 34
                           ) {
-                            errors.vatId = "Please select vat";
+                            errors.vatId = 'Please select vat';
                           }
                           if (
-                            (values.payrollListIds === "" || !values.payrollListIds || values.payrollListIds?.length === 0) &&
-                            values.coaCategoryId.label === "Expense" &&
+                            (values.payrollListIds === '' ||
+                              !values.payrollListIds ||
+                              values.payrollListIds?.length === 0) &&
+                            values.coaCategoryId.label === 'Expense' &&
                             values.expenseCategory.value == 34
                           ) {
-                            errors.vatId = "Payroll is Required";
+                            errors.vatId = 'Payroll is Required';
                           }
                           if (
                             values.coaCategoryId.value === 2 ||
                             values.coaCategoryId.value === 100
                           ) {
-                            if (
-                              !values.vendorId.value &&
-                              values.coaCategoryId.value === 100
-                            ) {
-                              errors.vendorId = "Please select the Vendor";
+                            if (!values.vendorId.value && values.coaCategoryId.value === 100) {
+                              errors.vendorId = 'Please select the Vendor';
                             }
-                            if (
-                              !values.customerId.value &&
-                              values.coaCategoryId.value === 2
-                            ) {
-                              errors.customerId = "Please select the Customer";
+                            if (!values.customerId.value && values.coaCategoryId.value === 2) {
+                              errors.customerId = 'Please select the Customer';
                             }
                             if (values.invoiceIdList.length === 0) {
-                              errors.invoiceIdList = "Please Select Invoice";
+                              errors.invoiceIdList = 'Please Select Invoice';
                             } else {
                               let isExplainAmountZero = false;
-                              values.invoiceIdList.map((i) => {
+                              values.invoiceIdList.map(i => {
                                 if (i.explainedAmount === 0) {
                                   isExplainAmountZero = true;
                                 }
                               });
 
                               if (isExplainAmountZero) {
-                                errors.invoiceIdList =
-                                  "Expain Amount Cannot Be Zero";
+                                errors.invoiceIdList = 'Expain Amount Cannot Be Zero';
                               }
 
-                              values.invoiceIdList.map((ii) => {
+                              values.invoiceIdList.map(ii => {
                                 if (
-                                  this.state.bankCurrency
-                                    .bankAccountCurrency !==
-                                  this.state.basecurrency.currencyCode &&
-                                  this.state.basecurrency.currencyCode !==
-                                  ii.currencyCode &&
-                                  this.state.bankCurrency
-                                    .bankAccountCurrency !== ii.currencyCode
+                                  this.state.bankCurrency.bankAccountCurrency !==
+                                    this.state.basecurrency.currencyCode &&
+                                  this.state.basecurrency.currencyCode !== ii.currencyCode &&
+                                  this.state.bankCurrency.bankAccountCurrency !== ii.currencyCode
                                 )
                                   errors.invoiceIdList =
-                                    "Invoices created in another FCY cannot be processed by this foreign currency bank account.";
+                                    'Invoices created in another FCY cannot be processed by this foreign currency bank account.';
                               });
 
                               if (
                                 values.transactionAmount > totalexpaled &&
-                                this.state?.bankCurrency
-                                  ?.bankAccountCurrency ===
-                                values?.invoiceIdList?.[0]?.currencyCode
+                                this.state?.bankCurrency?.bankAccountCurrency ===
+                                  values?.invoiceIdList?.[0]?.currencyCode
                               ) {
                                 errors.transactionAmount = `The transaction amount cannot be greater than the invoice amount.`;
                               }
@@ -1364,135 +1212,128 @@ class CreateBankTransaction extends React.Component {
                               );
                               if (
                                 values.transactionAmount < totalexpaled &&
-                                this.state?.bankCurrency
-                                  ?.bankAccountCurrency ===
-                                values?.invoiceIdList?.[0]?.currencyCode &&
+                                this.state?.bankCurrency?.bankAccountCurrency ===
+                                  values?.invoiceIdList?.[0]?.currencyCode &&
                                 isppselected === 0
                               ) {
                                 errors.transactionAmount = `The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `;
                               }
                             }
 
-                            if (
-                              date1 < date2 ||
-                              date1 < new Date(this.state.reconciledDate)
-                            ) {
+                            if (date1 < date2 || date1 < new Date(this.state.reconciledDate)) {
                               errors.transactionDate =
-                                "Transaction Date cannot be before Bank Account Opening Date or after Current Date.";
+                                'Transaction Date cannot be before Bank Account Opening Date or after Current Date.';
+                            }
+
+                            if (values.coaCategoryId.label === 'Expense' && !values.currencyCode) {
+                              errors.currencyCode = ' Currency is Required';
                             }
 
                             if (
-                              values.coaCategoryId.label === "Expense" &&
-                              !values.currencyCode
-                            ) {
-                              errors.currencyCode = " Currency is Required";
-                            }
-
-                            if (
-                              this.state.totalInvoiceAmount === "" &&
+                              this.state.totalInvoiceAmount === '' &&
                               this.state.totalInvoiceAmount === 0
                             ) {
                               errors.transactionAmount = `Enter Amount`;
                             }
-                            values.invoiceIdList.map((i1) => {
+                            values.invoiceIdList.map(i1 => {
                               const transactionDate = dayjs(values.transactionDate);
                               const invoiceDate = dayjs(i1.invoiceDate);
 
-                              console.log(transactionDate.format("MM/DD/YYYY") + '-' + invoiceDate.format("MM/DD/YYYY"));
-                              
+                              console.log(
+                                transactionDate.format('MM/DD/YYYY') +
+                                  '-' +
+                                  invoiceDate.format('MM/DD/YYYY')
+                              );
+
                               if (transactionDate.diff(invoiceDate) < 0) {
-                                  errors.transactionDate = 'Transaction date cannot be before Invoice date';
+                                errors.transactionDate =
+                                  'Transaction date cannot be before Invoice date';
                               }
                             });
                           }
-                          if (values.coaCategoryId?.label === "Corporate Tax Payment") {
+                          if (values.coaCategoryId?.label === 'Corporate Tax Payment') {
                             if (!values.transactionAmount)
                               errors.transactionAmount = strings.AmountIsRequired;
                             if (!values.ct_taxPeriod)
-                              errors.ct_taxPeriod = strings.TaxPeriodIsRequired
-                            if (values.balanceDue && values.transactionAmount && parseFloat(values.balanceDue) < parseFloat(values.transactionAmount))
-                              errors.transactionAmount = strings.AmountShouldBeLessThanOrEqualToTheBalanceDue;
+                              errors.ct_taxPeriod = strings.TaxPeriodIsRequired;
+                            if (
+                              values.balanceDue &&
+                              values.transactionAmount &&
+                              parseFloat(values.balanceDue) < parseFloat(values.transactionAmount)
+                            )
+                              errors.transactionAmount =
+                                strings.AmountShouldBeLessThanOrEqualToTheBalanceDue;
                           }
-                          if (values.coaCategoryId && values.coaCategoryId?.label === "Expense") {
-                            if (values.expenseCategory && values.expenseCategory.value === 34 && values.payrollListIds && values.payrollListIds?.length > 0) {
-                              const sumOfPayrollAmounts = values.payrollListIds.reduce((sum, item) => {
-                                let num = parseFloat(item.label.match(/\d+\.\d+/)[0]);
-                                return sum + num;
-                              }, 0);
+                          if (values.coaCategoryId && values.coaCategoryId?.label === 'Expense') {
+                            if (
+                              values.expenseCategory &&
+                              values.expenseCategory.value === 34 &&
+                              values.payrollListIds &&
+                              values.payrollListIds?.length > 0
+                            ) {
+                              const sumOfPayrollAmounts = values.payrollListIds.reduce(
+                                (sum, item) => {
+                                  let num = parseFloat(item.label.match(/\d+\.\d+/)[0]);
+                                  return sum + num;
+                                },
+                                0
+                              );
                               if (values.transactionAmount > sumOfPayrollAmounts) {
-                                errors.transactionAmount = 'Transaction amount cannot be greater than payroll amount.';
+                                errors.transactionAmount =
+                                  'Transaction amount cannot be greater than payroll amount.';
                               }
                             }
                           }
                           if (!values.transactionDate) {
-                            errors.transactionDate = "Transaction Date is Required";
+                            errors.transactionDate = 'Transaction Date is Required';
                           }
                           if (values.transactionDate) {
-                            this.state.selectedPayrollListBank.forEach((payrollItem) => {
+                            this.state.selectedPayrollListBank.forEach(payrollItem => {
                               const payrollDate = dayjs(payrollItem.runDate).startOf('day');
                               const transactionDate = dayjs(values.transactionDate).startOf('day');
 
                               if (transactionDate.isBefore(payrollDate)) {
-                                errors.transactionDate = "Transaction Date cannot be earlier than the payroll approval date.";
+                                errors.transactionDate =
+                                  'Transaction Date cannot be earlier than the payroll approval date.';
                               }
                             });
                           }
                           return errors;
                         }}
                         validationSchema={Yup.object().shape({
-                          transactionDate: Yup.date().required(
-                            "Transaction Date is Required"
-                          ),
+                          transactionDate: Yup.date().required('Transaction Date is Required'),
                           reference: Yup.string().max(20),
                           transactionAmount: Yup.string()
-                            .required("Amount is Required")
+                            .required('Amount is Required')
                             .test(
-                              "transactionAmount",
-                              "Transaction Amount Must Be Greater Than 0",
-                              (value) => value > 0
+                              'transactionAmount',
+                              'Transaction Amount Must Be Greater Than 0',
+                              value => value > 0
                             ),
-                          coaCategoryId: Yup.string().required(
-                            "Transaction Type is Required"
-                          ),
+                          coaCategoryId: Yup.string().required('Transaction Type is Required'),
                           attachment: Yup.mixed()
-                            .test(
-                              "fileType",
-                              "*Unsupported File Format",
-                              (value) => {
-                                if (value) {
-                                  this.setState({
-                                    fileName: value.name,
-                                  });
-                                }
-                                if (
-                                  !value ||
-                                  this.supported_format.includes(
-                                    value.type
-                                  )
-                                ) {
-                                  return true;
-                                } else {
-                                  return false;
-                                }
+                            .test('fileType', '*Unsupported File Format', value => {
+                              if (value) {
+                                this.setState({
+                                  fileName: value.name,
+                                });
                               }
-                            )
-                            .test(
-                              "fileSize",
-                              "*File Size is too large",
-                              (value) => {
-                                if (
-                                  !value ||
-                                  value.size <= this.file_size
-                                ) {
-                                  return true;
-                                } else {
-                                  return false;
-                                }
+                              if (!value || this.supported_format.includes(value.type)) {
+                                return true;
+                              } else {
+                                return false;
                               }
-                            ),
+                            })
+                            .test('fileSize', '*File Size is too large', value => {
+                              if (!value || value.size <= this.file_size) {
+                                return true;
+                              } else {
+                                return false;
+                              }
+                            }),
                         })}
                       >
-                        {(props) => (
+                        {props => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
                               <Col lg={3}>
@@ -1504,74 +1345,60 @@ class CreateBankTransaction extends React.Component {
                                   <Select
                                     options={categoriesList}
                                     value={props.values.coaCategoryId}
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       if (option && option.value) {
                                         this.getExchangeRate();
-                                        props.handleChange("coaCategoryId")(
-                                          option
-                                        );
+                                        props.handleChange('coaCategoryId')(option);
                                       } else {
-                                        props.handleChange("coaCategoryId")("");
+                                        props.handleChange('coaCategoryId')('');
                                       }
 
                                       if (
-                                        option.label !== "Expense" &&
-                                        option.label !== "Supplier Invoice" &&
-                                        option.label !== "VAT Payment" &&
-                                        option.label !== "VAT Claim" &&
-                                        option.label !== "Corporate Tax Payment"
+                                        option.label !== 'Expense' &&
+                                        option.label !== 'Supplier Invoice' &&
+                                        option.label !== 'VAT Payment' &&
+                                        option.label !== 'VAT Claim' &&
+                                        option.label !== 'Corporate Tax Payment'
                                       ) {
                                         this.getTransactionCategoryList(option);
-                                      }
-                                      else if (option.label === "Expense") {
-                                        props.handleChange("currencyCode")(
-                                          this.state.bankCurrency
-                                            .bankAccountCurrency
+                                      } else if (option.label === 'Expense') {
+                                        props.handleChange('currencyCode')(
+                                          this.state.bankCurrency.bankAccountCurrency
                                         );
                                         this.getExpensesCategoriesList();
-                                      }
-                                      else if (option.label === "Supplier Invoice") {
+                                      } else if (option.label === 'Supplier Invoice') {
                                         this.getVendorList();
-                                      }
-                                      else if (option.label === "VAT Payment") {
+                                      } else if (option.label === 'VAT Payment') {
                                         this.getVatReportListForBank(1);
-                                        props.handleChange("VATReportId")("");
-                                        props.handleChange("vatDueAmount")("");
-                                        props.handleChange("vatAmountpc")("");
-                                      }
-                                      else if (option.label === "VAT Claim") {
+                                        props.handleChange('VATReportId')('');
+                                        props.handleChange('vatDueAmount')('');
+                                        props.handleChange('vatAmountpc')('');
+                                      } else if (option.label === 'VAT Claim') {
                                         this.getVatReportListForBank(2);
-                                        props.handleChange("VATReportId")("");
-                                        props.handleChange("vatDueAmount")("");
+                                        props.handleChange('VATReportId')('');
+                                        props.handleChange('vatDueAmount')('');
 
-                                        props.handleChange("vatAmountpc")("");
-                                      }
-                                      else if (option.label === "Corporate Tax Payment") {
+                                        props.handleChange('vatAmountpc')('');
+                                      } else if (option.label === 'Corporate Tax Payment') {
                                         this.getCorporateTaxList();
                                       }
 
-                                      this.totalAmount("");
+                                      this.totalAmount('');
                                     }}
-                                    placeholder={
-                                      strings.Select +
-                                      " " +
-                                      strings.TransactionType
-                                    }
+                                    placeholder={strings.Select + ' ' + strings.TransactionType}
                                     id="coaCategoryId"
                                     name="coaCategoryId"
                                     className={
-                                      props.errors.coaCategoryId &&
-                                        props.touched.coaCategoryId
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.coaCategoryId && props.touched.coaCategoryId
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.coaCategoryId &&
-                                    props.touched.coaCategoryId && (
-                                      <div className="invalid-feedback">
-                                        {props.errors.coaCategoryId}
-                                      </div>
-                                    )}
+                                  {props.errors.coaCategoryId && props.touched.coaCategoryId && (
+                                    <div className="invalid-feedback">
+                                      {props.errors.coaCategoryId}
+                                    </div>
+                                  )}
                                 </FormGroup>
                               </Col>
                               <Col lg={3}>
@@ -1591,14 +1418,15 @@ class CreateBankTransaction extends React.Component {
                                     dropdownMode="select"
                                     value={props.values.transactionDate}
                                     selected={props.values.transactionDate}
-                                    onBlur={props.handleBlur("transactionDate")}
-                                    onChange={(value) => {
-                                      props.handleChange("transactionDate")(value);
+                                    onBlur={props.handleBlur('transactionDate')}
+                                    onChange={value => {
+                                      props.handleChange('transactionDate')(value);
                                     }}
-                                    className={`form-control ${props.errors.transactionDate &&
-                                      props.touched.transactionDate
-                                      ? "is-invalid"
-                                      : ""}`}
+                                    className={`form-control ${
+                                      props.errors.transactionDate && props.touched.transactionDate
+                                        ? 'is-invalid'
+                                        : ''
+                                    }`}
                                   />
                                   {props.errors.transactionDate &&
                                     props.touched.transactionDate && (
@@ -1618,23 +1446,20 @@ class CreateBankTransaction extends React.Component {
                                     type="number"
                                     min="0"
                                     maxLength="100"
-                                    disabled={
-                                      props.values.coaCategoryId?.label ===
-                                      "VAT Claim"
-                                    }
+                                    disabled={props.values.coaCategoryId?.label === 'VAT Claim'}
                                     id="transactionAmount"
                                     name="transactionAmount"
-                                    placeholder={props.values.coaCategoryId?.label === "Corporate Tax Payment" ? strings.Enter + strings.Amount : strings.Amount}
-                                    onChange={(option) => {
+                                    placeholder={
+                                      props.values.coaCategoryId?.label === 'Corporate Tax Payment'
+                                        ? strings.Enter + strings.Amount
+                                        : strings.Amount
+                                    }
+                                    onChange={option => {
                                       if (
-                                        option.target.value === "" ||
-                                        this.regDecimal.test(
-                                          option.target.value
-                                        )
+                                        option.target.value === '' ||
+                                        this.regDecimal.test(option.target.value)
                                       ) {
-                                        props.handleChange("transactionAmount")(
-                                          option
-                                        );
+                                        props.handleChange('transactionAmount')(option);
                                         this.setexchnagedamount(
                                           props.values.invoiceIdList,
                                           option.target.value,
@@ -1645,9 +1470,9 @@ class CreateBankTransaction extends React.Component {
                                     value={props.values.transactionAmount}
                                     className={
                                       props.errors.transactionAmount &&
-                                        props.touched.transactionAmount
-                                        ? "is-invalid"
-                                        : ""
+                                      props.touched.transactionAmount
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
                                   {props.errors.transactionAmount &&
@@ -1659,114 +1484,96 @@ class CreateBankTransaction extends React.Component {
                                 </FormGroup>
                               </Col>
 
-                              {props.values.coaCategoryId?.label ===
-                                "VAT Payment" && (
-                                  <Col lg={3}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="dueAmount">
-                                        <span className="text-danger">* </span>
-                                        Balance Due
-                                      </Label>
-                                      <Input
-                                        type="number"
-                                        min="0"
-                                        disabled
-                                        maxLength="100"
-                                        id="vatDueAmount"
-                                        name="vatDueAmount"
-                                        placeholder="Balance Due"
-                                        onChange={(option) => {
-                                          if (
-                                            option.target.value === "" ||
-                                            this.regDecimal.test(
-                                              option.target.value
-                                            )
-                                          ) {
-                                            props.handleChange("vatDueAmount")(
-                                              option
-                                            );
-                                          }
-                                        }}
-                                        value={props.values.vatDueAmount}
-                                        className={
-                                          props.errors.vatDueAmount &&
-                                            props.touched.vatDueAmount
-                                            ? "is-invalid"
-                                            : ""
+                              {props.values.coaCategoryId?.label === 'VAT Payment' && (
+                                <Col lg={3}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="dueAmount">
+                                      <span className="text-danger">* </span>
+                                      Balance Due
+                                    </Label>
+                                    <Input
+                                      type="number"
+                                      min="0"
+                                      disabled
+                                      maxLength="100"
+                                      id="vatDueAmount"
+                                      name="vatDueAmount"
+                                      placeholder="Balance Due"
+                                      onChange={option => {
+                                        if (
+                                          option.target.value === '' ||
+                                          this.regDecimal.test(option.target.value)
+                                        ) {
+                                          props.handleChange('vatDueAmount')(option);
                                         }
-                                      />
-                                      {props.errors.vatDueAmount &&
-                                        props.touched.vatDueAmount && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.vatDueAmount}
-                                          </div>
-                                        )}
-                                    </FormGroup>
-                                  </Col>
-                                )}
-                              {(props.values.coaCategoryId?.label ===
-                                "VAT Claim" ||
-                                props.values.coaCategoryId?.label ===
-                                "VAT Payment") && (
-                                  <Col lg={3}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="vatAmountpc">
-                                        <span className="text-danger">* </span>
-                                        {props.values.coaCategoryId?.label ===
-                                          "VAT Claim"
-                                          ? "Total VAT Reclaimable"
-                                          : "Total VAT Payable"}
-                                      </Label>
-                                      <Input
-                                        type="number"
-                                        min="0"
-                                        disabled
-                                        maxLength="100"
-                                        id="vatAmountpc"
-                                        name="vatAmountpc"
-                                        placeholder={
-                                          props.values.coaCategoryId?.label ===
-                                            "VAT Claim"
-                                            ? "Total VAT Reclaimable"
-                                            : "Total VAT Payable"
+                                      }}
+                                      value={props.values.vatDueAmount}
+                                      className={
+                                        props.errors.vatDueAmount && props.touched.vatDueAmount
+                                          ? 'is-invalid'
+                                          : ''
+                                      }
+                                    />
+                                    {props.errors.vatDueAmount && props.touched.vatDueAmount && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.vatDueAmount}
+                                      </div>
+                                    )}
+                                  </FormGroup>
+                                </Col>
+                              )}
+                              {(props.values.coaCategoryId?.label === 'VAT Claim' ||
+                                props.values.coaCategoryId?.label === 'VAT Payment') && (
+                                <Col lg={3}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="vatAmountpc">
+                                      <span className="text-danger">* </span>
+                                      {props.values.coaCategoryId?.label === 'VAT Claim'
+                                        ? 'Total VAT Reclaimable'
+                                        : 'Total VAT Payable'}
+                                    </Label>
+                                    <Input
+                                      type="number"
+                                      min="0"
+                                      disabled
+                                      maxLength="100"
+                                      id="vatAmountpc"
+                                      name="vatAmountpc"
+                                      placeholder={
+                                        props.values.coaCategoryId?.label === 'VAT Claim'
+                                          ? 'Total VAT Reclaimable'
+                                          : 'Total VAT Payable'
+                                      }
+                                      onChange={option => {
+                                        if (
+                                          option.target.value === '' ||
+                                          this.regDecimal.test(option.target.value)
+                                        ) {
+                                          props.handleChange('vatAmountpc')(option);
                                         }
-                                        onChange={(option) => {
-                                          if (
-                                            option.target.value === "" ||
-                                            this.regDecimal.test(
-                                              option.target.value
-                                            )
-                                          ) {
-                                            props.handleChange("vatAmountpc")(
-                                              option
-                                            );
-                                          }
-                                        }}
-                                        value={props.values.vatAmountpc}
-                                        className={
-                                          props.errors.vatAmountpc &&
-                                            props.touched.vatAmountpc
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                      />
-                                      {props.errors.vatAmountpc &&
-                                        props.touched.vatAmountpc && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.vatAmountpc}
-                                          </div>
-                                        )}
-                                    </FormGroup>
-                                  </Col>
-                                )}
+                                      }}
+                                      value={props.values.vatAmountpc}
+                                      className={
+                                        props.errors.vatAmountpc && props.touched.vatAmountpc
+                                          ? 'is-invalid'
+                                          : ''
+                                      }
+                                    />
+                                    {props.errors.vatAmountpc && props.touched.vatAmountpc && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.vatAmountpc}
+                                      </div>
+                                    )}
+                                  </FormGroup>
+                                </Col>
+                              )}
                             </Row>
                             <hr />
-                            {props.values.coaCategoryId?.label === "Corporate Tax Payment" && (
+                            {props.values.coaCategoryId?.label === 'Corporate Tax Payment' && (
                               <Row className="mb-3">
                                 <Col lg={3} className=" pull-right ">
                                   <Label>
-                                    <span className="text-danger">* </span>{' '}
-                                    {strings.TaxPeriod}
+                                    <span className="text-danger">* </span> {strings.TaxPeriod}
                                   </Label>
                                   <Select
                                     options={ct_taxPeriodList}
@@ -1774,29 +1581,28 @@ class CreateBankTransaction extends React.Component {
                                     name="ct_taxPeriod"
                                     value={this.state.ct_taxPeriod}
                                     placeholder={strings.Select + strings.TaxPeriod}
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       this.setState({ ct_taxPeriod: option });
                                       props.handleChange('ct_taxPeriod')(option);
-                                      this.setCTValues(option.value)
+                                      this.setCTValues(option.value);
                                     }}
                                     className={
-                                      props.errors.ct_taxPeriod &&
-                                        props.touched.ct_taxPeriod
+                                      props.errors.ct_taxPeriod && props.touched.ct_taxPeriod
                                         ? 'is-invalid'
                                         : ''
                                     }
                                   />
-                                  {props.errors.ct_taxPeriod &&
-                                    props.touched.ct_taxPeriod && (
-                                      <div className="invalid-feedback">
-                                        {props.errors.ct_taxPeriod}
-                                      </div>
-                                    )}
+                                  {props.errors.ct_taxPeriod && props.touched.ct_taxPeriod && (
+                                    <div className="invalid-feedback">
+                                      {props.errors.ct_taxPeriod}
+                                    </div>
+                                  )}
                                 </Col>
                                 <Col lg={3}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="totalAmount">
-                                      <span className="text-danger">* </span> {strings.TotalCorporateTaxAmount}
+                                      <span className="text-danger">* </span>{' '}
+                                      {strings.TotalCorporateTaxAmount}
                                     </Label>
                                     <Input
                                       type="number"
@@ -1805,71 +1611,66 @@ class CreateBankTransaction extends React.Component {
                                       name="totalAmount"
                                       placeholder={strings.Enter + strings.TotalCorporateTaxAmount}
                                       value={props.values.totalAmount}
-                                      onChange={(option) => {
+                                      onChange={option => {
                                         if (
-                                          option.target.value === '' ||
-                                          this.regDecimal.test(option.target.value),
-                                          props.handleChange('totalAmount')(option)
+                                          (option.target.value === '' ||
+                                            this.regDecimal.test(option.target.value),
+                                          props.handleChange('totalAmount')(option))
                                         ) {
                                           props.handleChange('totalAmount')(option);
                                         }
                                       }}
                                       className={
-                                        props.errors.totalAmount &&
-                                          props.touched.totalAmount
+                                        props.errors.totalAmount && props.touched.totalAmount
                                           ? 'is-invalid'
                                           : ''
                                       }
                                     />
-                                    {props.errors.totalAmount &&
-                                      props.touched.totalAmount && (
-                                        <div className="invalid-feedback">
-                                          {props.errors.totalAmount}
-                                        </div>
-                                      )}
+                                    {props.errors.totalAmount && props.touched.totalAmount && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.totalAmount}
+                                      </div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                                 <Col lg={3}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="project">
-                                      <span className="text-danger">* </span>{' '}
-                                      Balance Due
+                                      <span className="text-danger">* </span> Balance Due
                                     </Label>
                                     <Input
                                       disabled
                                       type="number"
-                                      placeholder='Enter Balance Amount'
+                                      placeholder="Enter Balance Amount"
                                       id="balanceDue"
                                       name="balanceDue"
                                       value={props.values.balanceDue}
-                                      onChange={(option) => {
+                                      onChange={option => {
                                         if (
-                                          option.target.value === '' ||
-                                          this.regDecimal.test(option.target.value),
-                                          props.handleChange('balanceDue')(option)
+                                          (option.target.value === '' ||
+                                            this.regDecimal.test(option.target.value),
+                                          props.handleChange('balanceDue')(option))
                                         ) {
                                           props.handleChange('balanceDue')(option);
                                         }
                                       }}
                                       className={
-                                        props.errors.balanceDue &&
-                                          props.touched.balanceDue
+                                        props.errors.balanceDue && props.touched.balanceDue
                                           ? 'is-invalid'
                                           : ''
                                       }
                                     />
-                                    {props.errors.balanceDue &&
-                                      props.touched.balanceDue && (
-                                        <div className="invalid-feedback">
-                                          {props.errors.balanceDue}
-                                        </div>
-                                      )}
+                                    {props.errors.balanceDue && props.touched.balanceDue && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.balanceDue}
+                                      </div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                               </Row>
                             )}
                             {props.values.coaCategoryId &&
-                              props.values.coaCategoryId?.label === "Expense" && (
+                              props.values.coaCategoryId?.label === 'Expense' && (
                                 <Row>
                                   <Col lg={3}>
                                     <FormGroup className="mb-3">
@@ -1885,16 +1686,16 @@ class CreateBankTransaction extends React.Component {
                                             ? this.expense_categories_list_generate()
                                             : []
                                         }
-                                        onChange={(option) => {
-                                          props.handleChange("expenseCategory")(option,);
+                                        onChange={option => {
+                                          props.handleChange('expenseCategory')(option);
                                         }}
                                         id="expenseCategory"
                                         name="expenseCategory"
                                         className={
                                           props.errors.expenseCategory &&
-                                            props.touched.expenseCategory
-                                            ? "is-invalid"
-                                            : ""
+                                          props.touched.expenseCategory
+                                            ? 'is-invalid'
+                                            : ''
                                         }
                                       />
                                       {props.errors.expenseCategory &&
@@ -1908,21 +1709,15 @@ class CreateBankTransaction extends React.Component {
                                   {props.values.expenseCategory &&
                                     props.values.expenseCategory.value &&
                                     props.values.expenseCategory.value == 34 &&
-                                    this.getPayrollList(
-                                      UnPaidPayrolls_List,
-                                      props
-                                    )}
+                                    this.getPayrollList(UnPaidPayrolls_List, props)}
                                   {props.values.coaCategoryId &&
-                                    props.values.coaCategoryId?.label ===
-                                    "Expense" &&
+                                    props.values.coaCategoryId?.label === 'Expense' &&
                                     props.values.expenseCategory &&
-                                    props.values.expenseCategory.value !==
-                                    34 && this.state.isRegisteredVat && (
+                                    props.values.expenseCategory.value !== 34 &&
+                                    this.state.isRegisteredVat && (
                                       <Col lg={3}>
                                         <FormGroup className="mb-3">
-                                          <span className="text-danger">
-                                            *{" "}
-                                          </span>
+                                          <span className="text-danger">* </span>
                                           <Label htmlFor="vatId">VAT</Label>
                                           <Select
                                             style={customStyles}
@@ -1930,81 +1725,64 @@ class CreateBankTransaction extends React.Component {
                                             options={
                                               vat_list
                                                 ? selectOptionsFactory.renderOptions(
-                                                  "name",
-                                                  "id",
-                                                  this.getVatListByIds(
-                                                    this.state
-                                                      .isReverseChargeEnabled
-                                                      ? [1, 2]
-                                                      : [1, 2, 3, 4]
-                                                  ),
-                                                  "Tax"
-                                                )
+                                                    'name',
+                                                    'id',
+                                                    this.getVatListByIds(
+                                                      this.state.isReverseChargeEnabled
+                                                        ? [1, 2]
+                                                        : [1, 2, 3, 4]
+                                                    ),
+                                                    'Tax'
+                                                  )
                                                 : []
                                             }
-                                            onChange={(option) => {
+                                            onChange={option => {
                                               if (option && option.value) {
-                                                props.handleChange("vatId")(
-                                                  option
-                                                );
+                                                props.handleChange('vatId')(option);
                                               } else {
-                                                props.handleChange("vatId")("");
+                                                props.handleChange('vatId')('');
                                               }
                                             }}
-                                            placeholder={strings.Select + " VAT"}
+                                            placeholder={strings.Select + ' VAT'}
                                             id="vatId"
                                             name="vatId"
                                             className={
-                                              props.errors.vatId &&
-                                                props.touched.vatId
-                                                ? "is-invalid"
-                                                : ""
+                                              props.errors.vatId && props.touched.vatId
+                                                ? 'is-invalid'
+                                                : ''
                                             }
                                           />
-                                          {props.errors.vatId &&
-                                            props.touched.vatId && (
-                                              <div className="invalid-feedback">
-                                                {props.errors.vatId}
-                                              </div>
-                                            )}
+                                          {props.errors.vatId && props.touched.vatId && (
+                                            <div className="invalid-feedback">
+                                              {props.errors.vatId}
+                                            </div>
+                                          )}
                                         </FormGroup>
                                       </Col>
                                     )}
                                   {props.values.coaCategoryId &&
-                                    props.values.coaCategoryId?.label ===
-                                    "Expense" &&
+                                    props.values.coaCategoryId?.label === 'Expense' &&
                                     props.values.expenseCategory &&
-                                    props.values.expenseCategory.value !==
-                                    34 && (
+                                    props.values.expenseCategory.value !== 34 && (
                                       <Col className="mb-6" lg={6}>
                                         <Label htmlFor="inline-radio3">
                                           <span className="text-danger">* </span>
                                           {strings.ExpenseType}
                                         </Label>
-                                        <div style={{ display: "flex" }}>
+                                        <div style={{ display: 'flex' }}>
                                           {this.state.expenseType === false ? (
-                                            <span
-                                              style={{ color: "#0069d9" }}
-                                              className="mr-4"
-                                            >
+                                            <span style={{ color: '#0069d9' }} className="mr-4">
                                               <b>{strings.NonClaimable}</b>
                                             </span>
                                           ) : (
-                                            <span className="mr-4">
-                                              {strings.NonClaimable}
-                                            </span>
+                                            <span className="mr-4">{strings.NonClaimable}</span>
                                           )}
 
                                           <Switch
                                             checked={this.state.expenseType}
-                                            onChange={(expenseType) => {
-                                              props.handleChange("expenseType")(
-                                                expenseType
-                                              );
-                                              this.setState(
-                                                { expenseType },
-                                                () => { }
-                                              );
+                                            onChange={expenseType => {
+                                              props.handleChange('expenseType')(expenseType);
+                                              this.setState({ expenseType }, () => {});
                                             }}
                                             onColor="#2064d8"
                                             onHandleColor="#2693e6"
@@ -2019,16 +1797,11 @@ class CreateBankTransaction extends React.Component {
                                           />
 
                                           {this.state.expenseType === true ? (
-                                            <span
-                                              style={{ color: "#0069d9" }}
-                                              className="ml-4"
-                                            >
+                                            <span style={{ color: '#0069d9' }} className="ml-4">
                                               <b>{strings.Claimable}</b>
                                             </span>
                                           ) : (
-                                            <span className="ml-4">
-                                              {strings.Claimable}
-                                            </span>
+                                            <span className="ml-4">{strings.Claimable}</span>
                                           )}
                                         </div>
                                       </Col>
@@ -2036,48 +1809,33 @@ class CreateBankTransaction extends React.Component {
                                 </Row>
                               )}
                             {props.values.coaCategoryId &&
-                              props.values.coaCategoryId?.label === "Expense" &&
+                              props.values.coaCategoryId?.label === 'Expense' &&
                               props.values?.vatId?.value === 1 && (
                                 <Row>
                                   <Col lg={3}></Col>
                                   {props.values.expenseCategory &&
                                     props.values.expenseCategory.value &&
                                     props.values.expenseCategory.value == 34 &&
-                                    this.getPayrollList(
-                                      UnPaidPayrolls_List,
-                                      props
-                                    )}
+                                    this.getPayrollList(UnPaidPayrolls_List, props)}
                                   {props.values.coaCategoryId &&
-                                    props.values.coaCategoryId?.label ===
-                                    "Expense" &&
+                                    props.values.coaCategoryId?.label === 'Expense' &&
                                     props.values.expenseCategory &&
-                                    props.values.expenseCategory.value !==
-                                    34 && (
+                                    props.values.expenseCategory.value !== 34 && (
                                       <Col lg={3}>
-                                        <div style={{ display: "flex" }}>
+                                        <div style={{ display: 'flex' }}>
                                           {!this.state.exclusiveVat ? (
-                                            <span
-                                              style={{ color: "#0069d9" }}
-                                              className="mr-4"
-                                            >
+                                            <span style={{ color: '#0069d9' }} className="mr-4">
                                               <b>{strings.InclusiveVAT}</b>
                                             </span>
                                           ) : (
-                                            <span className="mr-4">
-                                              {strings.InclusiveVAT}
-                                            </span>
+                                            <span className="mr-4">{strings.InclusiveVAT}</span>
                                           )}
 
                                           <Switch
                                             checked={this.state.exclusiveVat}
-                                            onChange={(exclusiveVat) => {
-                                              props.handleChange(
-                                                "exclusiveVat"
-                                              )(exclusiveVat);
-                                              this.setState(
-                                                { exclusiveVat },
-                                                () => { }
-                                              );
+                                            onChange={exclusiveVat => {
+                                              props.handleChange('exclusiveVat')(exclusiveVat);
+                                              this.setState({ exclusiveVat }, () => {});
                                             }}
                                             onColor="#2064d8"
                                             onHandleColor="#2693e6"
@@ -2092,16 +1850,11 @@ class CreateBankTransaction extends React.Component {
                                           />
 
                                           {this.state.exclusiveVat ? (
-                                            <span
-                                              style={{ color: "#0069d9" }}
-                                              className="ml-4"
-                                            >
+                                            <span style={{ color: '#0069d9' }} className="ml-4">
                                               <b>{strings.ExclusiveVAT}</b>
                                             </span>
                                           ) : (
-                                            <span className="ml-4">
-                                              {strings.ExclusiveVAT}
-                                            </span>
+                                            <span className="ml-4">{strings.ExclusiveVAT}</span>
                                           )}
                                         </div>
                                       </Col>
@@ -2111,26 +1864,24 @@ class CreateBankTransaction extends React.Component {
                               )}
                             <Row>
                               {props.values.coaCategoryId &&
-                                props.values.coaCategoryId?.label ===
-                                "Expense" &&
+                                props.values.coaCategoryId?.label === 'Expense' &&
                                 props.values.expenseCategory &&
-                                props.values.expenseCategory.value !==
-                                34 && (
+                                props.values.expenseCategory.value !== 34 && (
                                   <Col>
                                     <Checkbox
                                       id="isReverseChargeEnabled"
                                       checked={this.state.isReverseChargeEnabled}
-                                      onChange={(option) => {
+                                      onChange={option => {
                                         this.setState({
                                           isReverseChargeEnabled:
                                             !this.state.isReverseChargeEnabled,
                                           exclusiveVat: false,
                                         });
 
-                                        props.handleChange("vatId")("");
-                                        props.handleChange(
-                                          "isReverseChargeEnabled"
-                                        )(!props.values.isReverseChargeEnabled);
+                                        props.handleChange('vatId')('');
+                                        props.handleChange('isReverseChargeEnabled')(
+                                          !props.values.isReverseChargeEnabled
+                                        );
                                       }}
                                     />
                                     <Label>{strings.IsReverseCharge}</Label>
@@ -2138,8 +1889,7 @@ class CreateBankTransaction extends React.Component {
                                 )}
                             </Row>
                             {props.values.coaCategoryId &&
-                              props.values.coaCategoryId?.label ===
-                              "Supplier Invoice" && (
+                              props.values.coaCategoryId?.label === 'Supplier Invoice' && (
                                 <Row>
                                   <Col lg={3}>
                                     <FormGroup className="mb-3">
@@ -2151,23 +1901,19 @@ class CreateBankTransaction extends React.Component {
                                         options={
                                           tmpSupplier_list
                                             ? selectOptionsFactory.renderOptions(
-                                              "label",
-                                              "value",
-                                              tmpSupplier_list,
-                                              "Supplier Name"
-                                            )
+                                                'label',
+                                                'value',
+                                                tmpSupplier_list,
+                                                'Supplier Name'
+                                              )
                                             : []
                                         }
-                                        onChange={(option) => {
+                                        onChange={option => {
                                           if (option && option.value) {
-                                            props.handleChange("vendorId")(
-                                              option
-                                            );
-                                            props.handleChange("invoiceIdList")(
-                                              []
-                                            );
+                                            props.handleChange('vendorId')(option);
+                                            props.handleChange('invoiceIdList')([]);
                                           } else {
-                                            props.handleChange("vendorId")("");
+                                            props.handleChange('vendorId')('');
                                           }
 
                                           this.getSuggestionInvoicesFotVend(
@@ -2175,58 +1921,57 @@ class CreateBankTransaction extends React.Component {
                                             props.values.transactionAmount
                                           );
                                         }}
-                                        placeholder={strings.Select + " Vendor"}
+                                        placeholder={strings.Select + ' Vendor'}
                                         id="vendorId"
                                         name="vendorId"
                                         className={
-                                          props.errors.vendorId &&
-                                            props.touched.vendorId
-                                            ? "is-invalid"
-                                            : ""
+                                          props.errors.vendorId && props.touched.vendorId
+                                            ? 'is-invalid'
+                                            : ''
                                         }
                                       />
 
-                                      {props.errors.vendorId &&
-                                        props.touched.vendorId && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.vendorId}
-                                          </div>
-                                        )}
+                                      {props.errors.vendorId && props.touched.vendorId && (
+                                        <div className="invalid-feedback">
+                                          {props.errors.vendorId}
+                                        </div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                   {props.values.coaCategoryId &&
-                                    props.values.coaCategoryId?.label ===
-                                    "Supplier Invoice" && (
+                                    props.values.coaCategoryId?.label === 'Supplier Invoice' && (
                                       <Col lg={3}>
                                         <FormGroup className="mb-3">
                                           <Label htmlFor="invoiceIdList">
-                                            <span className="text-danger">
-                                              *{" "}
-                                            </span>
+                                            <span className="text-danger">* </span>
                                             Invoice
                                           </Label>
                                           <Select
                                             style={customStyles}
                                             isMulti
                                             options={
-                                              vendor_invoice_list
-                                                ? vendor_invoice_list.data
-                                                : []
+                                              vendor_invoice_list ? vendor_invoice_list.data : []
                                             }
-                                            onChange={(selectedOptions) => {
-                                              if (!selectedOptions || selectedOptions.length === 0) {
-
-                                                props.setFieldValue("transactionAmount", 0);
-                                                props.setFieldValue("invoiceIdList", []);
+                                            onChange={selectedOptions => {
+                                              if (
+                                                !selectedOptions ||
+                                                selectedOptions.length === 0
+                                              ) {
+                                                props.setFieldValue('transactionAmount', 0);
+                                                props.setFieldValue('invoiceIdList', []);
                                                 return;
                                               }
 
                                               const totalDueAmount = selectedOptions.reduce(
-                                                (acc, selectedOption) => acc + (selectedOption.dueAmount || 0),
+                                                (acc, selectedOption) =>
+                                                  acc + (selectedOption.dueAmount || 0),
                                                 0
                                               );
 
-                                              props.setFieldValue("transactionAmount", totalDueAmount);
+                                              props.setFieldValue(
+                                                'transactionAmount',
+                                                totalDueAmount
+                                              );
 
                                               this.setexchnagedamount(selectedOptions);
                                               this.totalAmount(selectedOptions);
@@ -2238,16 +1983,14 @@ class CreateBankTransaction extends React.Component {
                                               }
                                             }}
                                             value={props.values.invoiceIdList}
-                                            placeholder={
-                                              strings.Select + " Invoice"
-                                            }
+                                            placeholder={strings.Select + ' Invoice'}
                                             id="invoiceIdList"
                                             name="invoiceIdList"
                                             className={
                                               props.errors.invoiceIdList &&
-                                                props.touched.invoiceIdList
-                                                ? "is-invalid"
-                                                : ""
+                                              props.touched.invoiceIdList
+                                                ? 'is-invalid'
+                                                : ''
                                             }
                                           />
                                           {props.errors.invoiceIdList &&
@@ -2266,18 +2009,16 @@ class CreateBankTransaction extends React.Component {
                                                 className={
                                                   this.state.initValue.invoiceIdList.reduce(
                                                     (totalAmount, invoice) =>
-                                                      totalAmount +
-                                                      invoice.amount,
+                                                      totalAmount + invoice.amount,
                                                     0
-                                                  ) >
-                                                    this.state.initValue.amount
-                                                    ? "is-invalid"
-                                                    : ""
+                                                  ) > this.state.initValue.amount
+                                                    ? 'is-invalid'
+                                                    : ''
                                                 }
                                               >
                                                 <div className="invalid-feedback">
-                                                  Total Invoice Amount Is More
-                                                  Than The Transaction Amount
+                                                  Total Invoice Amount Is More Than The Transaction
+                                                  Amount
                                                 </div>
                                               </div>
                                             )}
@@ -2287,11 +2028,11 @@ class CreateBankTransaction extends React.Component {
                                 </Row>
                               )}
                             {transactionCategoryList.categoriesList &&
-                              props.values.coaCategoryId?.label !== "VAT Payment" &&
-                              props.values.coaCategoryId?.label !== "VAT Claim" &&
-                              props.values.coaCategoryId?.label !== "Expense" &&
-                              props.values.coaCategoryId?.label !== "Supplier Invoice" &&
-                              props.values.coaCategoryId?.label !== "Sales" && (
+                              props.values.coaCategoryId?.label !== 'VAT Payment' &&
+                              props.values.coaCategoryId?.label !== 'VAT Claim' &&
+                              props.values.coaCategoryId?.label !== 'Expense' &&
+                              props.values.coaCategoryId?.label !== 'Supplier Invoice' &&
+                              props.values.coaCategoryId?.label !== 'Sales' && (
                                 <Row>
                                   <Col lg={3}>
                                     <FormGroup className="mb-3">
@@ -2302,9 +2043,7 @@ class CreateBankTransaction extends React.Component {
                                       <Select
                                         style={customStyles}
                                         // className="select-default-width"
-                                        placeholder={
-                                          strings.Select + " Category"
-                                        }
+                                        placeholder={strings.Select + ' Category'}
                                         options={
                                           transactionCategoryList
                                             ? transactionCategoryList.categoriesList
@@ -2313,84 +2052,61 @@ class CreateBankTransaction extends React.Component {
                                         value={
                                           transactionCategoryList
                                             ? props.values.transactionCategoryId
-                                            : ""
+                                            : ''
                                         }
                                         id="transactionCategoryId"
-                                        onChange={(option) => {
+                                        onChange={option => {
                                           if (option && option.value) {
-                                            props.handleChange(
-                                              "transactionCategoryId"
-                                            )(option);
+                                            props.handleChange('transactionCategoryId')(option);
                                           } else {
-                                            props.handleChange(
-                                              "transactionCategoryId"
-                                            )("");
+                                            props.handleChange('transactionCategoryId')('');
                                           }
                                           if (
-                                            option.label !== "Salaries and Employee Wages" &&
-                                            option.label !== "Owners Drawing" &&
-                                            option.label !== "Dividend" &&
-                                            option.label !== "Owners Current Account" &&
-                                            option.label !== "Share Premium" &&
-                                            option.label !== "Employee Advance" &&
-                                            option.label !== "Employee Reimbursements" &&
-                                            option.label !== "Director Loan Account" &&
-                                            option.label !== "Owners Equity"
+                                            option.label !== 'Salaries and Employee Wages' &&
+                                            option.label !== 'Owners Drawing' &&
+                                            option.label !== 'Dividend' &&
+                                            option.label !== 'Owners Current Account' &&
+                                            option.label !== 'Share Premium' &&
+                                            option.label !== 'Employee Advance' &&
+                                            option.label !== 'Employee Reimbursements' &&
+                                            option.label !== 'Director Loan Account' &&
+                                            option.label !== 'Owners Equity'
                                           ) {
                                           }
-                                          if (
-                                            option.label ===
-                                            "Salaries and Employee Wages"
-                                          ) {
+                                          if (option.label === 'Salaries and Employee Wages') {
                                             this.getMoneyPaidToUserlist(option);
                                           }
-                                          if (
-                                            option.label === "Owners Drawing"
-                                          ) {
+                                          if (option.label === 'Owners Drawing') {
                                             this.getMoneyPaidToUserlist(option);
                                           }
-                                          if (option.label === "Dividend") {
+                                          if (option.label === 'Dividend') {
                                             this.getMoneyPaidToUserlist(option);
                                           }
-                                          if (
-                                            option.label ===
-                                            "Owners Current Account"
-                                          ) {
+                                          if (option.label === 'Owners Current Account') {
                                             this.getMoneyPaidToUserlist(option);
                                           }
-                                          if (
-                                            option.label === "Share Premium"
-                                          ) {
+                                          if (option.label === 'Share Premium') {
                                             this.getMoneyPaidToUserlist(option);
                                           }
-                                          if (
-                                            option.label === "Employee Advance"
-                                          ) {
+                                          if (option.label === 'Employee Advance') {
                                             this.getMoneyPaidToUserlist(option);
                                           }
-                                          if (
-                                            option.label ===
-                                            "Employee Reimbursements"
-                                          ) {
+                                          if (option.label === 'Employee Reimbursements') {
                                             this.getMoneyPaidToUserlist(option);
                                           }
-                                          if (
-                                            option.label ===
-                                            "Director Loan Account"
-                                          ) {
+                                          if (option.label === 'Director Loan Account') {
                                             this.getMoneyPaidToUserlist(option);
                                           }
-                                          if (
-                                            option.label === "Owners Equity"
-                                          ) {
+                                          if (option.label === 'Owners Equity') {
                                             this.getMoneyPaidToUserlist(option);
                                           }
                                         }}
-                                        className={`${props.errors.transactionCategoryId &&
+                                        className={`${
+                                          props.errors.transactionCategoryId &&
                                           props.touched.transactionCategoryId
-                                          ? "is-invalid"
-                                          : ""
-                                          }`}
+                                            ? 'is-invalid'
+                                            : ''
+                                        }`}
                                       />
                                       {props.errors.transactionCategoryId &&
                                         props.touched.transactionCategoryId && (
@@ -2414,30 +2130,23 @@ class CreateBankTransaction extends React.Component {
                                       <Select
                                         style={customStyles}
                                         //className="select-default-width"
-                                        options={
-                                          moneyCategoryList
-                                            ? moneyCategoryList
-                                            : []
-                                        }
+                                        options={moneyCategoryList ? moneyCategoryList : []}
                                         id="employeeId"
                                         value={props.values.employeeId}
-                                        onChange={(option) => {
-                                          props.handleChange("employeeId")(
-                                            option
-                                          );
+                                        onChange={option => {
+                                          props.handleChange('employeeId')(option);
                                         }}
-                                        className={`${props.errors.employeeId &&
-                                          props.touched.employeeId
-                                          ? "is-invalid"
-                                          : ""
-                                          }`}
+                                        className={`${
+                                          props.errors.employeeId && props.touched.employeeId
+                                            ? 'is-invalid'
+                                            : ''
+                                        }`}
                                       />
-                                      {props.errors.employeeId &&
-                                        props.touched.employeeId && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.employeeId}
-                                          </div>
-                                        )}
+                                      {props.errors.employeeId && props.touched.employeeId && (
+                                        <div className="invalid-feedback">
+                                          {props.errors.employeeId}
+                                        </div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                 )}
@@ -2450,91 +2159,71 @@ class CreateBankTransaction extends React.Component {
                                       </Label>
                                       <Select
                                         style={customStyles}
-                                        options={
-                                          moneyCategoryList
-                                            ? moneyCategoryList
-                                            : []
-                                        }
+                                        options={moneyCategoryList ? moneyCategoryList : []}
                                         id="employeeId"
                                         value={props.values.employeeId}
-                                        onChange={(option) => {
-                                          props.handleChange("employeeId")(
-                                            option
-                                          );
+                                        onChange={option => {
+                                          props.handleChange('employeeId')(option);
                                         }}
-                                        className={`${props.errors.employeeId &&
-                                          props.touched.employeeId
-                                          ? "is-invalid"
-                                          : ""
-                                          }`}
+                                        className={`${
+                                          props.errors.employeeId && props.touched.employeeId
+                                            ? 'is-invalid'
+                                            : ''
+                                        }`}
                                       />
-                                      {props.errors.employeeId &&
-                                        props.touched.employeeId && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.employeeId}
-                                          </div>
-                                        )}
+                                      {props.errors.employeeId && props.touched.employeeId && (
+                                        <div className="invalid-feedback">
+                                          {props.errors.employeeId}
+                                        </div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                 )}
 
-                                {props.values.coaCategoryId?.label ===
-                                  "Sales" && (
-                                    <Col lg={3}>
-                                      <FormGroup className="mb-3">
-                                        <Label htmlFor="customerId">
-                                          {" "}
-                                          <span className="text-danger">* </span>
-                                          Customer
-                                        </Label>
-                                        <Select
-                                          style={customStyles}
-                                          placeholder={
-                                            strings.Select + " Customer"
-                                          }
-                                          className={`select-default-width , ${props.errors.customerId &&
-                                            props.touched.customerId
-                                            ? "is-invalid"
-                                            : ""
-                                            }`}
-                                          options={
-                                            transactionCategoryList &&
-                                              transactionCategoryList.dataList[1]
-                                              ? transactionCategoryList
-                                                .dataList[0].options
-                                              : []
-                                          }
-                                          id="customerId"
-                                          value={props.values.customerId}
-                                          onChange={(option) => {
-                                            props.handleChange("customerId")(
-                                              option
-                                            );
+                                {props.values.coaCategoryId?.label === 'Sales' && (
+                                  <Col lg={3}>
+                                    <FormGroup className="mb-3">
+                                      <Label htmlFor="customerId">
+                                        {' '}
+                                        <span className="text-danger">* </span>
+                                        Customer
+                                      </Label>
+                                      <Select
+                                        style={customStyles}
+                                        placeholder={strings.Select + ' Customer'}
+                                        className={`select-default-width , ${
+                                          props.errors.customerId && props.touched.customerId
+                                            ? 'is-invalid'
+                                            : ''
+                                        }`}
+                                        options={
+                                          transactionCategoryList &&
+                                          transactionCategoryList.dataList[1]
+                                            ? transactionCategoryList.dataList[0].options
+                                            : []
+                                        }
+                                        id="customerId"
+                                        value={props.values.customerId}
+                                        onChange={option => {
+                                          props.handleChange('customerId')(option);
 
-                                            props.handleChange("invoiceIdList")(
-                                              []
-                                            );
-                                            this.getInvoices(
-                                              option,
-                                              props.values.transactionAmount
-                                            );
+                                          props.handleChange('invoiceIdList')([]);
+                                          this.getInvoices(option, props.values.transactionAmount);
 
-                                            this.getSuggestionInvoicesFotCust(
-                                              option.value,
-                                              props.values.transactionAmount
-                                            );
-
-                                          }}
-                                        />
-                                        {props.errors.customerId &&
-                                          props.touched.customerId && (
-                                            <div className="invalid-feedback">
-                                              {props.errors.customerId}
-                                            </div>
-                                          )}
-                                      </FormGroup>
-                                    </Col>
-                                  )}
+                                          this.getSuggestionInvoicesFotCust(
+                                            option.value,
+                                            props.values.transactionAmount
+                                          );
+                                        }}
+                                      />
+                                      {props.errors.customerId && props.touched.customerId && (
+                                        <div className="invalid-feedback">
+                                          {props.errors.customerId}
+                                        </div>
+                                      )}
+                                    </FormGroup>
+                                  </Col>
+                                )}
                                 {props.values.coaCategoryId.value === 2 && (
                                   <Col lg={3}>
                                     <FormGroup className="mb-3">
@@ -2544,12 +2233,13 @@ class CreateBankTransaction extends React.Component {
                                       </Label>
                                       <Select
                                         style={customStyles}
-                                        placeholder={strings.Select + " Invoice"}
+                                        placeholder={strings.Select + ' Invoice'}
                                         isMulti
-                                        className={`select-default-width, ${props.errors.invoiceIdList &&
-                                          props.touched.invoiceIdList
-                                          ? "is-invalid"
-                                          : ""}`}
+                                        className={`select-default-width, ${
+                                          props.errors.invoiceIdList && props.touched.invoiceIdList
+                                            ? 'is-invalid'
+                                            : ''
+                                        }`}
                                         options={
                                           customer_invoice_list && customer_invoice_list.data
                                             ? customer_invoice_list.data
@@ -2557,20 +2247,20 @@ class CreateBankTransaction extends React.Component {
                                         }
                                         value={props.values.invoiceIdList}
                                         id="invoiceIdList"
-                                        onChange={(selectedOptions) => {
+                                        onChange={selectedOptions => {
                                           if (!selectedOptions || selectedOptions.length === 0) {
-
-                                            props.setFieldValue("transactionAmount", 0);
-                                            props.setFieldValue("invoiceIdList", []);
+                                            props.setFieldValue('transactionAmount', 0);
+                                            props.setFieldValue('invoiceIdList', []);
                                             return;
                                           }
 
                                           const totalDueAmount = selectedOptions.reduce(
-                                            (acc, selectedOption) => acc + (selectedOption.dueAmount || 0),
+                                            (acc, selectedOption) =>
+                                              acc + (selectedOption.dueAmount || 0),
                                             0
                                           );
 
-                                          props.setFieldValue("transactionAmount", totalDueAmount);
+                                          props.setFieldValue('transactionAmount', totalDueAmount);
 
                                           this.setexchnagedamount(selectedOptions);
                                           this.totalAmount(selectedOptions);
@@ -2593,68 +2283,55 @@ class CreateBankTransaction extends React.Component {
                             )}
 
                             {props.values.coaCategoryId &&
-                              (props.values.coaCategoryId?.label === "Sales" ||
-                                props.values.coaCategoryId?.label ===
-                                "Supplier Invoice") && (
+                              (props.values.coaCategoryId?.label === 'Sales' ||
+                                props.values.coaCategoryId?.label === 'Supplier Invoice') && (
                                 <>
                                   {props.values?.invoiceIdList.length > 0 && (
                                     <Row
                                       className="border-bottom mb-3"
                                       style={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
                                       }}
                                     >
                                       <Col lg={1}>
-                                        <span className="font-weight-bold">
-                                          {" "}
-                                          Invoice
-                                        </span>
+                                        <span className="font-weight-bold"> Invoice</span>
                                       </Col>
                                       <Col lg={2}>
-                                        <span className="font-weight-bold">
-                                          {" "}
-                                          Invoice Date
-                                        </span>
+                                        <span className="font-weight-bold"> Invoice Date</span>
                                       </Col>
                                       <Col lg={2}>
-                                        <span className="font-weight-bold">
-                                          Invoice Amount
-                                        </span>
+                                        <span className="font-weight-bold">Invoice Amount</span>
                                       </Col>
-                                      {this.state.bankCurrency
-                                        .bankAccountCurrencyIsoCode !==
+                                      {this.state.bankCurrency.bankAccountCurrencyIsoCode !==
                                         props.values.curreancyname && (
-                                          <Col lg={2}>
-                                            <FormGroup className="mb-3">
-                                              <div>
-                                                <span className="font-weight-bold">
-                                                  Currency Rate
-                                                </span>
-                                              </div>
-                                            </FormGroup>
-                                          </Col>
-                                        )}
-                                      {this.state.bankCurrency
-                                        .bankAccountCurrencyIsoCode !==
+                                        <Col lg={2}>
+                                          <FormGroup className="mb-3">
+                                            <div>
+                                              <span className="font-weight-bold">
+                                                Currency Rate
+                                              </span>
+                                            </div>
+                                          </FormGroup>
+                                        </Col>
+                                      )}
+                                      {this.state.bankCurrency.bankAccountCurrencyIsoCode !==
                                         props.values.curreancyname && (
-                                          <Col lg={2}>
-                                            <FormGroup className="mb-3">
-                                              <div>
-                                                <span className="font-weight-bold">
-                                                  Amount
-                                                </span>
-                                              </div>
-                                            </FormGroup>
-                                          </Col>
-                                        )}
+                                        <Col lg={2}>
+                                          <FormGroup className="mb-3">
+                                            <div>
+                                              <span className="font-weight-bold">Amount</span>
+                                            </div>
+                                          </FormGroup>
+                                        </Col>
+                                      )}
                                       <Col lg={1}>
                                         <FormGroup
                                           className="font-weight-bold "
                                           style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            alignItems: "center",
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
                                           }}
                                         >
                                           <div>Partially Paid</div>
@@ -2670,227 +2347,204 @@ class CreateBankTransaction extends React.Component {
                                       </Col>
                                     </Row>
                                   )}
-                                  {props.values?.invoiceIdList?.map(
-                                    (i, invindex) => {
-                                      return (
-                                        <Row
-                                          style={{
-                                            display: "flex",
-                                            justifyContent: "space-between",
-                                          }}
-                                        >
-                                          <Col lg={1}>
-                                            <span>{i.invoiceNumber}</span>
-                                          </Col>
+                                  {props.values?.invoiceIdList?.map((i, invindex) => {
+                                    return (
+                                      <Row
+                                        style={{
+                                          display: 'flex',
+                                          justifyContent: 'space-between',
+                                        }}
+                                      >
+                                        <Col lg={1}>
+                                          <span>{i.invoiceNumber}</span>
+                                        </Col>
+                                        <Col lg={2}>
+                                          <Input
+                                            disabled
+                                            id="1"
+                                            name="1"
+                                            value={dayjs(i.invoiceDate).format('DD-MM-YYYY')}
+                                          />
+                                        </Col>
+                                        <Col lg={2}>
+                                          <Input
+                                            style={{ textAlign: 'right' }}
+                                            disabled
+                                            id="1"
+                                            name="1"
+                                            value={` ${props.values.curreancyname} ${i.dueAmount}`}
+                                          />
+                                        </Col>
+
+                                        {this.state.bankCurrency.bankAccountCurrencyIsoCode !==
+                                          props.values.curreancyname && (
                                           <Col lg={2}>
-                                            <Input
-                                              disabled
-                                              id="1"
-                                              name="1"
-                                              value={dayjs(
-                                                i.invoiceDate
-                                              ).format("DD-MM-YYYY")}
-                                            />
-                                          </Col>
-                                          <Col lg={2}>
-                                            <Input
-                                              style={{ textAlign: "right" }}
-                                              disabled
-                                              id="1"
-                                              name="1"
-                                              value={` ${props.values.curreancyname} ${i.dueAmount}`}
-                                            />
-                                          </Col>
-
-                                          {this.state.bankCurrency
-                                            .bankAccountCurrencyIsoCode !==
-                                            props.values.curreancyname && (
-                                              <Col lg={2}>
-                                                <FormGroup className="mb-3">
-                                                  <div>
-                                                    <Input
-                                                      className="form-control"
-                                                      id="exchangeamount"
-                                                      name="exchangeamount"
-                                                      type="number"
-                                                      style={{
-                                                        textAlign: "right",
-                                                      }}
-                                                      disabled
-                                                      value={i.exchangeRate}
-                                                      onChange={(value) => {
-                                                        let local2 = [
-                                                          ...props.values
-                                                            ?.invoiceIdList,
-                                                        ].map((i) => {
-                                                          return {
-                                                            ...i,
-                                                            exchangeRate:
-                                                              value.target.value,
-                                                          };
-                                                        });
-
-                                                        this.setexchnagedamount(
-                                                          local2
-                                                        );
-                                                      }}
-                                                    />
-                                                  </div>
-                                                </FormGroup>
-                                              </Col>
-                                            )}
-
-                                          {this.state.bankCurrency
-                                            .bankAccountCurrencyIsoCode !==
-                                            props.values.curreancyname && (
-                                              <Col lg={2}>
-                                                <FormGroup className="mb-3">
-                                                  <div>
-                                                    <Input
-                                                      className="form-control"
-                                                      id="exchangeRate"
-                                                      style={{
-                                                        textAlign: "right",
-                                                      }}
-                                                      name="exchangeRate"
-                                                      disabled
-                                                      value={`${this.state.bankCurrency
-                                                        .bankAccountCurrencyIsoCode
-                                                        } ${i.convertedInvoiceAmount?.toLocaleString(
-                                                          navigator.language,
-                                                          {
-                                                            minimumFractionDigits: 2,
-                                                            maximumFractionDigits: 2,
-                                                          }
-                                                        )} `}
-                                                      onChange={(value) => { }}
-                                                    />
-                                                  </div>
-                                                </FormGroup>
-                                              </Col>
-                                            )}
-                                          <Col lg={1}>
-                                            <FormGroup
-                                              className="mb-3"
-                                              style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                alignItems: "center",
-                                              }}
-                                            >
+                                            <FormGroup className="mb-3">
                                               <div>
                                                 <Input
-                                                  disabled={
-                                                    props.values
-                                                      ?.transactionAmount -
-                                                    props.values?.invoiceIdList?.reduce(
-                                                      (accu, curr, index) =>
-                                                        accu +
-                                                        curr.dueAmount *
-                                                        curr.exchangeRate,
-                                                      0
-                                                    ) >=
-                                                    0
-                                                  }
-                                                  type="checkbox"
-                                                  checked={
-                                                    i.pp !== undefined
-                                                      ? i.pp
-                                                      : false
-                                                  }
-                                                  onChange={(e) => {
-                                                    this.onppclick(
-                                                      e.target.checked,
-                                                      invindex
-                                                    );
+                                                  className="form-control"
+                                                  id="exchangeamount"
+                                                  name="exchangeamount"
+                                                  type="number"
+                                                  style={{
+                                                    textAlign: 'right',
+                                                  }}
+                                                  disabled
+                                                  value={i.exchangeRate}
+                                                  onChange={value => {
+                                                    let local2 = [
+                                                      ...props.values?.invoiceIdList,
+                                                    ].map(i => {
+                                                      return {
+                                                        ...i,
+                                                        exchangeRate: value.target.value,
+                                                      };
+                                                    });
+
+                                                    this.setexchnagedamount(local2);
                                                   }}
                                                 />
                                               </div>
                                             </FormGroup>
                                           </Col>
+                                        )}
 
+                                        {this.state.bankCurrency.bankAccountCurrencyIsoCode !==
+                                          props.values.curreancyname && (
                                           <Col lg={2}>
                                             <FormGroup className="mb-3">
                                               <div>
                                                 <Input
                                                   className="form-control"
                                                   id="exchangeRate"
+                                                  style={{
+                                                    textAlign: 'right',
+                                                  }}
                                                   name="exchangeRate"
                                                   disabled
-                                                  style={{ textAlign: "right" }}
-                                                  value={`${this.state.bankCurrency
-                                                    .bankAccountCurrencyIsoCode
-                                                    } ${i.explainedAmount?.toLocaleString(
-                                                      navigator.language,
-                                                      {
-                                                        minimumFractionDigits: 2,
-                                                        maximumFractionDigits: 2,
-                                                      }
-                                                    )} `}
-                                                  onChange={(value) => { }}
+                                                  value={`${
+                                                    this.state.bankCurrency
+                                                      .bankAccountCurrencyIsoCode
+                                                  } ${i.convertedInvoiceAmount?.toLocaleString(
+                                                    navigator.language,
+                                                    {
+                                                      minimumFractionDigits: 2,
+                                                      maximumFractionDigits: 2,
+                                                    }
+                                                  )} `}
+                                                  onChange={value => {}}
                                                 />
-                                                {i.explainedAmount === 0 && (
-                                                  <div
-                                                    style={{
-                                                      color: "red",
-                                                      fontSize: "9px",
-                                                    }}
-                                                  >
-                                                    Expain Amount Cannot be Zero
-                                                  </div>
-                                                )}
                                               </div>
                                             </FormGroup>
                                           </Col>
-                                        </Row>
-                                      );
-                                    }
-                                  )}
+                                        )}
+                                        <Col lg={1}>
+                                          <FormGroup
+                                            className="mb-3"
+                                            style={{
+                                              display: 'flex',
+                                              justifyContent: 'center',
+                                              alignItems: 'center',
+                                            }}
+                                          >
+                                            <div>
+                                              <Input
+                                                disabled={
+                                                  props.values?.transactionAmount -
+                                                    props.values?.invoiceIdList?.reduce(
+                                                      (accu, curr, index) =>
+                                                        accu + curr.dueAmount * curr.exchangeRate,
+                                                      0
+                                                    ) >=
+                                                  0
+                                                }
+                                                type="checkbox"
+                                                checked={i.pp !== undefined ? i.pp : false}
+                                                onChange={e => {
+                                                  this.onppclick(e.target.checked, invindex);
+                                                }}
+                                              />
+                                            </div>
+                                          </FormGroup>
+                                        </Col>
+
+                                        <Col lg={2}>
+                                          <FormGroup className="mb-3">
+                                            <div>
+                                              <Input
+                                                className="form-control"
+                                                id="exchangeRate"
+                                                name="exchangeRate"
+                                                disabled
+                                                style={{ textAlign: 'right' }}
+                                                value={`${
+                                                  this.state.bankCurrency.bankAccountCurrencyIsoCode
+                                                } ${i.explainedAmount?.toLocaleString(
+                                                  navigator.language,
+                                                  {
+                                                    minimumFractionDigits: 2,
+                                                    maximumFractionDigits: 2,
+                                                  }
+                                                )} `}
+                                                onChange={value => {}}
+                                              />
+                                              {i.explainedAmount === 0 && (
+                                                <div
+                                                  style={{
+                                                    color: 'red',
+                                                    fontSize: '9px',
+                                                  }}
+                                                >
+                                                  Expain Amount Cannot be Zero
+                                                </div>
+                                              )}
+                                            </div>
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                    );
+                                  })}
                                   {props.values?.invoiceIdList?.length > 0 && (
                                     <>
                                       <Row
                                         style={{
-                                          display: "flex",
-                                          flexDirection: "row-reverse",
-                                          justifyContent: "flex-start",
+                                          display: 'flex',
+                                          flexDirection: 'row-reverse',
+                                          justifyContent: 'flex-start',
                                         }}
                                       >
-                                        <Col lg={2} style={{ float: "right" }}>
+                                        <Col lg={2} style={{ float: 'right' }}>
                                           <Input
                                             disabled
-                                            style={{ textAlign: "right" }}
+                                            style={{ textAlign: 'right' }}
                                             id="total"
                                             name="total"
                                             value={amountFormat(
                                               props.values?.invoiceIdList?.reduce(
-                                                (accu, curr) =>
-                                                 curr.explainedAmount,
+                                                (accu, curr) => curr.explainedAmount,
                                                 0
                                               ),
-                                              this.state.bankCurrency
-                                                .bankAccountCurrencyIsoCode
+                                              this.state.bankCurrency.bankAccountCurrencyIsoCode
                                             )}
                                           />
                                         </Col>
                                         <Col lg={3}>
                                           <Input
-                                            style={{ textAlign: "right" }}
+                                            style={{ textAlign: 'right' }}
                                             disabled
                                             id="total"
                                             name="total"
-                                            value={"Total Explained Amount ="}
+                                            value={'Total Explained Amount ='}
                                           />
                                         </Col>
                                       </Row>
-                                      {this.setexcessorshortamount().data !==
-                                        0 &&
-                                        this.state.bankCurrency
-                                          .bankAccountCurrencyIsoCode !==
-                                        props.values.curreancyname && (
+                                      {this.setexcessorshortamount().data !== 0 &&
+                                        this.state.bankCurrency.bankAccountCurrencyIsoCode !==
+                                          props.values.curreancyname && (
                                           <Row
                                             style={{
-                                              display: "flex",
-                                              justifyContent: "flex-end",
+                                              display: 'flex',
+                                              justifyContent: 'flex-end',
 
                                               marginTop: 10,
                                             }}
@@ -2900,28 +2554,25 @@ class CreateBankTransaction extends React.Component {
                                                 <Select
                                                   options={[
                                                     {
-                                                      label: "Currency Gain ",
+                                                      label: 'Currency Gain ',
                                                       value: 79,
                                                     },
                                                     {
-                                                      label: "Currency Loss",
+                                                      label: 'Currency Loss',
                                                       value: 103,
                                                     },
                                                   ]}
                                                   isDisabled={true}
                                                   value={
-                                                    this.setexcessorshortamount()
-                                                      .data < 0
+                                                    this.setexcessorshortamount().data < 0
                                                       ? {
-                                                        label:
-                                                          "Currency Loss",
-                                                        value: 103,
-                                                      }
+                                                          label: 'Currency Loss',
+                                                          value: 103,
+                                                        }
                                                       : {
-                                                        label:
-                                                          "Currency Gain ",
-                                                        value: 103,
-                                                      }
+                                                          label: 'Currency Gain ',
+                                                          value: 103,
+                                                        }
                                                   }
                                                 />
                                               </Col>
@@ -2929,26 +2580,21 @@ class CreateBankTransaction extends React.Component {
 
                                             <Col lg={3}>
                                               <Input
-                                                style={{ textAlign: "right" }}
+                                                style={{ textAlign: 'right' }}
                                                 disabled
                                                 id="total"
                                                 name="total"
-                                                value={
-                                                  "Total Excess/Short Amount = "
-                                                }
+                                                value={'Total Excess/Short Amount = '}
                                               />
                                             </Col>
 
                                             <Col lg={2}>
                                               <Input
-                                                style={{ textAlign: "right" }}
+                                                style={{ textAlign: 'right' }}
                                                 disabled
                                                 id="total"
                                                 name="total"
-                                                value={
-                                                  this.setexcessorshortamount()
-                                                    .value
-                                                }
+                                                value={this.setexcessorshortamount().value}
                                               />
                                             </Col>
                                           </Row>
@@ -2959,17 +2605,14 @@ class CreateBankTransaction extends React.Component {
                               )}
 
                             {props.values.coaCategoryId &&
-                              props.values.coaCategoryId?.label ===
-                              "Supplier Invoice" &&
+                              props.values.coaCategoryId?.label === 'Supplier Invoice' &&
                               (this.state.invoiceCurrency &&
-                                this.state.invoiceCurrency !==
+                              this.state.invoiceCurrency !==
                                 this.state.bankCurrency.bankAccountCurrency ? (
                                 <Row>
                                   <Col lg={3}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="currencyCode">
-                                        {strings.Currency}
-                                      </Label>
+                                      <Label htmlFor="currencyCode">{strings.Currency}</Label>
                                       <Select
                                         style={customStyles}
                                         id="currencyCode"
@@ -2977,125 +2620,100 @@ class CreateBankTransaction extends React.Component {
                                         options={
                                           currency_convert_list
                                             ? selectCurrencyFactory.renderOptions(
-                                              "currencyName",
-                                              "currencyCode",
-                                              currency_convert_list,
-                                              "Currency"
-                                            )
+                                                'currencyName',
+                                                'currencyCode',
+                                                currency_convert_list,
+                                                'Currency'
+                                              )
                                             : []
                                         }
                                         value={
                                           currency_convert_list &&
                                           selectCurrencyFactory
                                             .renderOptions(
-                                              "currencyName",
-                                              "currencyCode",
+                                              'currencyName',
+                                              'currencyCode',
                                               currency_convert_list,
-                                              "Currency"
+                                              'Currency'
                                             )
                                             .find(
-                                              (option) =>
-                                                option.value ===
-                                                +this.state.invoiceCurrency
+                                              option => option.value === +this.state.invoiceCurrency
                                             )
                                         }
                                         isDisabled={true}
-                                        onChange={(option) => {
-                                          props.handleChange("currencyCode")(
-                                            option
-                                          );
+                                        onChange={option => {
+                                          props.handleChange('currencyCode')(option);
                                           this.setExchange(option.value);
                                           this.setCurrency(option.value);
                                         }}
                                       />
-                                      {props.errors.currencyCode &&
-                                        props.touched.currencyCode && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.currencyCode}
-                                          </div>
-                                        )}
+                                      {props.errors.currencyCode && props.touched.currencyCode && (
+                                        <div className="invalid-feedback">
+                                          {props.errors.currencyCode}
+                                        </div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                 </Row>
                               ) : (
-                                ""
+                                ''
                               ))}
 
                             {props.values.coaCategoryId &&
-                              (props.values.coaCategoryId?.label ===
-                                "VAT Payment" ||
-                                props.values.coaCategoryId?.label ===
-                                "VAT Claim") && (
+                              (props.values.coaCategoryId?.label === 'VAT Payment' ||
+                                props.values.coaCategoryId?.label === 'VAT Claim') && (
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="currencyCode">
-                                        VAT Report Number
-                                      </Label>
+                                      <Label htmlFor="currencyCode">VAT Report Number</Label>
                                       <Select
                                         style={customStyles}
                                         id="VATReport"
                                         name="VATReportId"
-                                        options={this.state.VATlist.map((i) => {
+                                        options={this.state.VATlist.map(i => {
                                           return {
                                             label: i.vatNumber,
                                             value: i.id,
                                           };
                                         })}
-                                        value={props.values.VATReportId || ""}
-                                        onChange={(option) => {
-                                          props.handleChange("VATReportId")(
-                                            option
-                                          );
+                                        value={props.values.VATReportId || ''}
+                                        onChange={option => {
+                                          props.handleChange('VATReportId')(option);
                                           const info = this.state.VATlist.find(
-                                            (i) => i.id === option.value
+                                            i => i.id === option.value
                                           );
-                                          props.handleChange("vatAmountpc")(
-                                            info.totalAmount
-                                          );
-                                          if (
-                                            props.values.coaCategoryId
-                                              ?.label === "VAT Claim"
-                                          )
-                                            props.handleChange(
-                                              "transactionAmount"
-                                            )(info.totalAmount);
+                                          props.handleChange('vatAmountpc')(info.totalAmount);
+                                          if (props.values.coaCategoryId?.label === 'VAT Claim')
+                                            props.handleChange('transactionAmount')(
+                                              info.totalAmount
+                                            );
 
-                                          props.handleChange("vatDueAmount")(
-                                            info.dueAmount
-                                          );
+                                          props.handleChange('vatDueAmount')(info.dueAmount);
                                         }}
                                       />
-                                      {props.errors.VATReportId &&
-                                        props.touched.VATReportId && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.VATReportId}
-                                          </div>
-                                        )}
+                                      {props.errors.VATReportId && props.touched.VATReportId && (
+                                        <div className="invalid-feedback">
+                                          {props.errors.VATReportId}
+                                        </div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                 </Row>
                               )}
                             {props.values.coaCategoryId &&
-                              this.state?.bankCurrency?.bankAccountCurrency !==
-                              150 && <hr />}
+                              this.state?.bankCurrency?.bankAccountCurrency !== 150 && <hr />}
                             {props.values.coaCategoryId &&
-                              this.state?.bankCurrency?.bankAccountCurrency !==
-                              150 && (
+                              this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
                                 <Row>
                                   <Col>
-                                    <Label htmlFor="currency">
-                                      {strings.CurrencyExchangeRate}
-                                    </Label>
+                                    <Label htmlFor="currency">{strings.CurrencyExchangeRate}</Label>
                                   </Col>
                                 </Row>
                               )}
                             {props.values.coaCategoryId &&
-                              props.values?.coaCategoryId?.label !== "Sales" &&
-                              props.values?.coaCategoryId?.label !==
-                              "Supplier Invoice" &&
-                              this.state?.bankCurrency?.bankAccountCurrency !==
-                              150 && (
+                              props.values?.coaCategoryId?.label !== 'Sales' &&
+                              props.values?.coaCategoryId?.label !== 'Supplier Invoice' &&
+                              this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
                                 <Row>
                                   <Col lg={1}>
                                     <Input disabled id="1" name="1" value={1} />
@@ -3112,10 +2730,8 @@ class CreateBankTransaction extends React.Component {
                                           id="currencyName"
                                           name="currencyName"
                                           value={props.values.currencyName}
-                                          onChange={(value) => {
-                                            props.handleChange("curreancyname")(
-                                              value
-                                            );
+                                          onChange={value => {
+                                            props.handleChange('curreancyname')(value);
                                           }}
                                         />
                                       </div>
@@ -3124,7 +2740,7 @@ class CreateBankTransaction extends React.Component {
                                   <FormGroup className="mt-2">
                                     <label>
                                       <b>=</b>
-                                    </label>{" "}
+                                    </label>{' '}
                                   </FormGroup>
                                   <Col lg={2}>
                                     <FormGroup className="mb-3">
@@ -3140,10 +2756,8 @@ class CreateBankTransaction extends React.Component {
                                           name="exchangeRate"
                                           maxLength="20"
                                           value={props.values.exchangeRate}
-                                          onChange={(option) => {
-                                            props.handleChange("exchangeRate")(
-                                              option
-                                            );
+                                          onChange={option => {
+                                            props.handleChange('exchangeRate')(option);
                                             //props.values.exchangeRate =
                                           }}
                                         />
@@ -3156,23 +2770,18 @@ class CreateBankTransaction extends React.Component {
                                       disabled
                                       id="currencyName"
                                       name="currencyName"
-                                      value={
-                                        this.state?.basecurrency?.currencyName
-                                      }
+                                      value={this.state?.basecurrency?.currencyName}
                                     />
                                   </Col>
                                 </Row>
                               )}
 
-                            {(props.values?.coaCategoryId?.label === "Sales" ||
-                              props.values?.coaCategoryId?.label ===
-                              "Supplier Invoice") &&
+                            {(props.values?.coaCategoryId?.label === 'Sales' ||
+                              props.values?.coaCategoryId?.label === 'Supplier Invoice') &&
                               props.values.curreancyname !==
-                              this.state?.bankCurrency
-                                ?.bankAccountCurrencyIsoCode &&
+                                this.state?.bankCurrency?.bankAccountCurrencyIsoCode &&
                               props.values.curreancyname &&
-                              this.state?.bankCurrency
-                                ?.bankAccountCurrencyIsoCode &&
+                              this.state?.bankCurrency?.bankAccountCurrencyIsoCode &&
                               this.state?.bankCurrency?.bankAccountCurrency && (
                                 <Row className="mt-2">
                                   <Col lg={1}>
@@ -3190,15 +2799,12 @@ class CreateBankTransaction extends React.Component {
                                           id="currencyName"
                                           name="currencyName"
                                           value={
-                                            props.values.curreancyname === "AED"
-                                              ? this.state?.bankCurrency
-                                                ?.bankAccountCurrencyIsoCode
+                                            props.values.curreancyname === 'AED'
+                                              ? this.state?.bankCurrency?.bankAccountCurrencyIsoCode
                                               : props.values.curreancyname
                                           }
-                                          onChange={(value) => {
-                                            props.handleChange("curreancyname")(
-                                              value
-                                            );
+                                          onChange={value => {
+                                            props.handleChange('curreancyname')(value);
                                           }}
                                         />
                                       </div>
@@ -3207,7 +2813,7 @@ class CreateBankTransaction extends React.Component {
                                   <FormGroup className="mt-2">
                                     <label>
                                       <b>=</b>
-                                    </label>{" "}
+                                    </label>{' '}
                                   </FormGroup>
                                   <Col lg={2}>
                                     <FormGroup className="mb-3">
@@ -3223,16 +2829,12 @@ class CreateBankTransaction extends React.Component {
                                           name="exchangeRate"
                                           maxLength="20"
                                           value={props.values.exchangeRate}
-                                          onChange={(option) => {
-                                            props.handleChange("exchangeRate")(
-                                              option
-                                            );
+                                          onChange={option => {
+                                            props.handleChange('exchangeRate')(option);
                                             this.setexchnagedamount(
                                               props.values.invoiceIdList,
                                               null,
-                                              option.target.value
-                                                ? option.target.value
-                                                : 0
+                                              option.target.value ? option.target.value : 0
                                             );
                                           }}
                                         />
@@ -3245,9 +2847,8 @@ class CreateBankTransaction extends React.Component {
                                       id="currencyName"
                                       name="currencyName"
                                       value={
-                                        props.values.curreancyname !== "AED"
-                                          ? this.state?.bankCurrency
-                                            ?.bankAccountCurrencyIsoCode
+                                        props.values.curreancyname !== 'AED'
+                                          ? this.state?.bankCurrency?.bankAccountCurrencyIsoCode
                                           : props.values.curreancyname
                                       }
                                     />
@@ -3255,66 +2856,56 @@ class CreateBankTransaction extends React.Component {
                                 </Row>
                               )}
 
-                            {props.values.coaCategoryId?.label !== "Corporate Tax Payment" && (<Row>
-                              <Col lg={8}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="description">
-                                    {strings.Description}
-                                  </Label>
-                                  <Input
-                                    type="textarea"
-                                    name="description"
-                                    id="description"
-                                    rows="6"
-                                    placeholder={strings.Description}
-                                    onChange={(option) => {
-                                      if (!option.target.value.includes("="))
-                                        props.handleChange("description")(
-                                          option
-                                        );
-                                    }}
-                                    value={props.values.description}
-                                  />
-                                </FormGroup>
-                              </Col>
-                            </Row>)}
+                            {props.values.coaCategoryId?.label !== 'Corporate Tax Payment' && (
+                              <Row>
+                                <Col lg={8}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="description">{strings.Description}</Label>
+                                    <Input
+                                      type="textarea"
+                                      name="description"
+                                      id="description"
+                                      rows="6"
+                                      placeholder={strings.Description}
+                                      onChange={option => {
+                                        if (!option.target.value.includes('='))
+                                          props.handleChange('description')(option);
+                                      }}
+                                      value={props.values.description}
+                                    />
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                            )}
                             <Row>
                               <Col lg={8}>
                                 <Row>
                                   <Col lg={6}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="reference">
-                                        {strings.ReferenceNumber}
-                                      </Label>
+                                      <Label htmlFor="reference">{strings.ReferenceNumber}</Label>
                                       <Input
                                         type="text"
                                         maxLength="20"
                                         id="reference"
                                         name="reference"
                                         placeholder={strings.ReceiptNumber}
-                                        onChange={(option) => {
+                                        onChange={option => {
                                           // if (
                                           //   option.target.value === "" ||
                                           //   this.regExBoth.test(
                                           //     option.target.value
                                           //   )
                                           // ) {
-                                          props.handleChange("reference")(
-                                            option
-                                          );
+                                          props.handleChange('reference')(option);
                                           // }
                                         }}
                                         value={props.values.reference}
                                       />
-                                      {props.errors.reference &&
-                                        props.touched.reference && (
-                                          <div
-                                            className="invalid-file"
-                                            style={{ color: "red" }}
-                                          >
-                                            {props.errors.reference}
-                                          </div>
-                                        )}
+                                      {props.errors.reference && props.touched.reference && (
+                                        <div className="invalid-file" style={{ color: 'red' }}>
+                                          {props.errors.reference}
+                                        </div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                 </Row>
@@ -3327,28 +2918,24 @@ class CreateBankTransaction extends React.Component {
                                         name="attachment"
                                         render={({ field, form }) => (
                                           <div>
-                                            <Label>{strings.Attachment}</Label>{" "}
-                                            <br />
+                                            <Label>{strings.Attachment}</Label> <br />
                                             <Button
                                               color="primary"
                                               onClick={() => {
-                                                document
-                                                  .getElementById("fileInput")
-                                                  .click();
+                                                document.getElementById('fileInput').click();
                                               }}
                                               className="btn-square mr-3"
                                             >
-                                              <i className="fa fa-upload"></i>{" "}
-                                              {strings.upload}
+                                              <i className="fa fa-upload"></i> {strings.upload}
                                             </Button>
                                             <input
                                               id="fileInput"
-                                              ref={(ref) => {
+                                              ref={ref => {
                                                 this.uploadFile = ref;
                                               }}
                                               type="file"
-                                              style={{ display: "none" }}
-                                              onChange={(e) => {
+                                              style={{ display: 'none' }}
+                                              onChange={e => {
                                                 this.handleFileChange(e, props);
                                               }}
                                             />
@@ -3358,22 +2945,21 @@ class CreateBankTransaction extends React.Component {
                                                   className="fa fa-close"
                                                   onClick={() =>
                                                     this.setState({
-                                                      fileName: "",
+                                                      fileName: '',
                                                     })
                                                   }
-                                                ></i>{" "}
+                                                ></i>{' '}
                                                 {this.state.fileName}
                                               </div>
                                             )}
                                           </div>
                                         )}
                                       />
-                                      {props.errors.attachment &&
-                                        props.touched.attachment && (
-                                          <div className="invalid-file">
-                                            {props.errors.attachment}
-                                          </div>
-                                        )}
+                                      {props.errors.attachment && props.touched.attachment && (
+                                        <div className="invalid-file">
+                                          {props.errors.attachment}
+                                        </div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                 </Row>
@@ -3389,25 +2975,17 @@ class CreateBankTransaction extends React.Component {
                                     disabled={this.state.disabled}
                                     onClick={() => {
                                       //	added validation popup	msg
-                                      console.log(props.errors, "EERRROR");
+                                      console.log(props.errors, 'EERRROR');
                                       props.handleBlur();
-                                      if (
-                                        props.errors &&
-                                        Object.keys(props.errors).length != 0
-                                      )
+                                      if (props.errors && Object.keys(props.errors).length != 0)
                                         this.props.commonActions.fillManDatoryDetails();
-                                      this.setState(
-                                        { createMore: false },
-                                        () => {
-                                          props.handleSubmit();
-                                        }
-                                      );
+                                      this.setState({ createMore: false }, () => {
+                                        props.handleSubmit();
+                                      });
                                     }}
                                   >
-                                    <i className="fa fa-dot-circle-o"></i>{" "}
-                                    {this.state.disabled
-                                      ? "Creating..."
-                                      : strings.Create}
+                                    <i className="fa fa-dot-circle-o"></i>{' '}
+                                    {this.state.disabled ? 'Creating...' : strings.Create}
                                   </Button>
                                   <Button
                                     type="button"
@@ -3417,40 +2995,30 @@ class CreateBankTransaction extends React.Component {
                                     onClick={() => {
                                       //	added validation popup	msg
                                       props.handleBlur();
-                                      if (
-                                        props.errors &&
-                                        Object.keys(props.errors).length != 0
-                                      )
+                                      if (props.errors && Object.keys(props.errors).length != 0)
                                         this.props.commonActions.fillManDatoryDetails();
-                                      this.setState(
-                                        { createMore: true },
-                                        () => {
-                                          props.handleSubmit();
-                                        }
-                                      );
+                                      this.setState({ createMore: true }, () => {
+                                        props.handleSubmit();
+                                      });
                                     }}
                                   >
-                                    <i className="fa fa-refresh"></i>{" "}
-                                    {this.state.disabled
-                                      ? "Creating..."
-                                      : strings.CreateandMore}
+                                    <i className="fa fa-refresh"></i>{' '}
+                                    {this.state.disabled ? 'Creating...' : strings.CreateandMore}
                                   </Button>
                                   <Button
                                     color="secondary"
                                     className="btn-square"
                                     onClick={() => {
                                       this.props.history.push(
-                                        "/admin/banking/bank-account/transaction",
+                                        '/admin/banking/bank-account/transaction',
                                         {
                                           bankAccountId: id,
-                                          currency:
-                                            this.props.location.state?.currency,
+                                          currency: this.props.location.state?.currency,
                                         }
                                       );
                                     }}
                                   >
-                                    <i className="fa fa-ban"></i>{" "}
-                                    {strings.Cancel}
+                                    <i className="fa fa-ban"></i> {strings.Cancel}
                                   </Button>
                                 </FormGroup>
                               </Col>
@@ -3465,13 +3033,10 @@ class CreateBankTransaction extends React.Component {
             </Col>
           </Row>
         </div>
-        {this.state.disableLeavePage ? "" : <LeavePage />}
+        {this.state.disableLeavePage ? '' : <LeavePage />}
       </div>
     );
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CreateBankTransaction);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateBankTransaction);

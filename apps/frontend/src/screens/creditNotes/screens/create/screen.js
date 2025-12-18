@@ -1,6 +1,6 @@
-import React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Card,
   CardHeader,
@@ -12,41 +12,37 @@ import {
   FormGroup,
   Input,
   Label,
-} from "reactstrap";
-import Select from "react-select";
-import DatePicker from "react-datepicker";
-import { Formik, Field } from "formik";
-import Switch from "react-switch";
-import * as Yup from "yup";
-import * as CreditNotesCreateActions from "./actions";
-import * as CreditNotesActions from "../../actions";
-import * as ProductActions from "../../../product/actions";
-import * as CurrencyConvertActions from "../../../currencyConvert/actions";
+} from 'reactstrap';
+import Select from 'react-select';
+import DatePicker from 'react-datepicker';
+import { Formik, Field } from 'formik';
+import Switch from 'react-switch';
+import * as Yup from 'yup';
+import * as CreditNotesCreateActions from './actions';
+import * as CreditNotesActions from '../../actions';
+import * as ProductActions from '../../../product/actions';
+import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import {
   LeavePage,
   Loader,
   ProductTableCalculation,
   ProductTable,
   TotalCalculation,
-} from "components";
-import "react-datepicker/dist/react-datepicker.css";
-import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
-import { CommonActions } from "services/global";
-import {
-  selectCurrencyFactory,
-  selectOptionsFactory,
-  DropdownLists,
-} from "utils";
-import "./style.scss";
+} from 'components';
+import 'react-datepicker/dist/react-datepicker.css';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import { CommonActions } from 'services/global';
+import { selectCurrencyFactory, selectOptionsFactory, DropdownLists } from 'utils';
+import './style.scss';
 import dayjs from '@/utils/date';
-import { data } from "../../../Language/index";
-import LocalizedStrings from "react-localization";
-import { Checkbox } from "@material-ui/core";
-import { TextareaAutosize, TextField } from "@material-ui/core";
+import { data } from '../../../Language/index';
+import LocalizedStrings from 'react-localization';
+import { Checkbox } from '@material-ui/core';
+import { TextareaAutosize, TextField } from '@material-ui/core';
 // Use import instead of require for Vite compatibility
-import invoiceimage from "assets/images/invoice/invoice.png";
+import invoiceimage from 'assets/images/invoice/invoice.png';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const contact_list = state.customer_invoice.customer_list;
   return {
     currency_list: state.customer_invoice.currency_list,
@@ -63,17 +59,11 @@ const mapStateToProps = (state) => {
     companyDetails: state.common.company_details,
   };
 };
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     creditNotesActions: bindActionCreators(CreditNotesActions, dispatch),
-    currencyConvertActions: bindActionCreators(
-      CurrencyConvertActions,
-      dispatch
-    ),
-    creditNotesCreateActions: bindActionCreators(
-      CreditNotesCreateActions,
-      dispatch
-    ),
+    currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
+    creditNotesCreateActions: bindActionCreators(CreditNotesCreateActions, dispatch),
     productActions: bindActionCreators(ProductActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch),
   };
@@ -82,10 +72,10 @@ const mapDispatchToProps = (dispatch) => {
 const customStyles = {
   control: (base, state) => ({
     ...base,
-    borderColor: state.isFocused ? "#2064d8" : "#c7c7c7",
+    borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
     boxShadow: state.isFocused ? null : null,
-    "&:hover": {
-      borderColor: state.isFocused ? "#2064d8" : "#c7c7c7",
+    '&:hover': {
+      borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
     },
   }),
 };
@@ -96,103 +86,103 @@ class CreateCreditNote extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      language: window["localStorage"].getItem("language"),
-      customer_currency_symbol: "",
+      language: window['localStorage'].getItem('language'),
+      customer_currency_symbol: '',
       loading: false,
       disabled: false,
       discountOptions: [
-        { value: "FIXED", label: "Fixed" },
-        { value: "PERCENTAGE", label: "Percentage" },
+        { value: 'FIXED', label: 'Fixed' },
+        { value: 'PERCENTAGE', label: 'Percentage' },
       ],
       exciseTypeOption: [
-        { value: "Inclusive", label: "Inclusive" },
-        { value: "Exclusive", label: "Exclusive" },
+        { value: 'Inclusive', label: 'Inclusive' },
+        { value: 'Exclusive', label: 'Exclusive' },
       ],
       disabledDate: true,
       data: [
         {
           id: 0,
-          description: "",
+          description: '',
           quantity: 1,
-          unitPrice: "",
-          vatCategoryId: "",
-          exciseTaxId: "",
+          unitPrice: '',
+          vatCategoryId: '',
+          exciseTaxId: '',
           exciseAmount: 0,
           subTotal: 0,
           vatAmount: 0,
-          productId: "",
-          isExciseTaxExclusive: "",
-          discountType: "FIXED",
+          productId: '',
+          isExciseTaxExclusive: '',
+          discountType: 'FIXED',
           discount: 0,
-          unitType: "",
-          unitTypeId: "",
+          unitType: '',
+          unitTypeId: '',
         },
       ],
       idCount: 0,
       initValue: {
-        invoiceNumber: "",
-        receiptAttachmentDescription: "",
-        receiptNumber: "",
-        contact_po_number: "",
-        currency: "",
+        invoiceNumber: '',
+        receiptAttachmentDescription: '',
+        receiptNumber: '',
+        contact_po_number: '',
+        currency: '',
         // invoiceDueDate: '',
         creditNoteDate: new Date(),
-        contactId: "",
-        placeOfSupplyId: "",
-        project: "",
-        term: "",
+        contactId: '',
+        placeOfSupplyId: '',
+        project: '',
+        term: '',
         // exchangeRate:'',
         lineItemsString: [
           {
             id: 0,
-            description: "",
+            description: '',
             quantity: 1,
             exciseAmount: 0,
             discount: 0,
-            unitPrice: "",
-            vatCategoryId: "",
-            productId: "",
+            unitPrice: '',
+            vatCategoryId: '',
+            productId: '',
             subTotal: 0,
           },
         ],
-        creditNoteNumber: "",
+        creditNoteNumber: '',
         totalNet: 0,
         invoiceVATAmount: 0,
         totalVatAmount: 0,
         totalAmount: 0,
-        notes: "",
-        email: "",
+        notes: '',
+        email: '',
         discount: 0,
-        discountPercentage: "",
-        discountType: "FIXED",
-        creditAmount: "",
+        discountPercentage: '',
+        discountType: 'FIXED',
+        creditAmount: '',
         totalExciseAmount: 0,
       },
       currentData: {},
       contactType: 2,
-      selectedContact: "",
+      selectedContact: '',
       createMore: false,
-      fileName: "",
-      term: "",
-      selectedType: { value: "FIXED", label: "Fixed" },
-      discountPercentage: "",
+      fileName: '',
+      term: '',
+      selectedType: { value: 'FIXED', label: 'Fixed' },
+      discountPercentage: '',
       discountAmount: 0,
       exist: false,
-      prefix: "",
+      prefix: '',
       purchaseCategory: [],
       salesCategory: [],
       // exchangeRate:'',
       basecurrency: [],
       inventoryList: [],
-      remainingInvoiceAmount: "",
+      remainingInvoiceAmount: '',
       invoiceSelected: false,
       isCreatedWIWP: false,
-      quantityExceeded: "",
+      quantityExceeded: '',
       isCreatedWithoutInvoice: false,
-      loadingMsg: "Loading",
+      loadingMsg: 'Loading',
       disableLeavePage: false,
       lockInvoiceDetail: false,
-      receiptDate: "",
+      receiptDate: '',
       isfreshCN: true,
     };
 
@@ -200,54 +190,51 @@ class CreateCreditNote extends React.Component {
 
     this.file_size = 1024000;
     this.supported_format = [
-      "image/png",
-      "image/jpeg",
-      "text/plain",
-      "application/pdf",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "application/vnd.ms-excel",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      'image/png',
+      'image/jpeg',
+      'text/plain',
+      'application/pdf',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     ];
 
     this.termList = [
-      { label: "Net 7 Days", value: "NET_7" },
-      { label: "Net 10 Days", value: "NET_10" },
-      { label: "Net 30 Days", value: "NET_30" },
-      { label: "Due on Receipt", value: "DUE_ON_RECEIPT" },
+      { label: 'Net 7 Days', value: 'NET_7' },
+      { label: 'Net 10 Days', value: 'NET_10' },
+      { label: 'Net 30 Days', value: 'NET_30' },
+      { label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
     ];
     this.placelist = [
-      { label: "Abu Dhabi", value: "1" },
-      { label: "Dubai", value: "2" },
-      { label: "Sharjah", value: "3" },
-      { label: "Ajman", value: "4" },
-      { label: "Umm Al Quwain", value: "5" },
-      { label: "Ras al-Khaimah", value: "6" },
-      { label: "Fujairah", value: "7" },
+      { label: 'Abu Dhabi', value: '1' },
+      { label: 'Dubai', value: '2' },
+      { label: 'Sharjah', value: '3' },
+      { label: 'Ajman', value: '4' },
+      { label: 'Umm Al Quwain', value: '5' },
+      { label: 'Ras al-Khaimah', value: '6' },
+      { label: 'Fujairah', value: '7' },
     ];
     this.regEx = /^[0-9\b]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExCNNum = /[a-zA-Z0-9-/]+$/;
     this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-    this.regDecimalP =
-      /(^100(\.0{1,2})?$)|(^([1-9]([0-9])?|0)(\.[0-9]{1,2})?$)/;
+    this.regDecimalP = /(^100(\.0{1,2})?$)|(^([1-9]([0-9])?|0)(\.[0-9]{1,2})?$)/;
   }
 
-  discountType = (row) => {
+  discountType = row => {
     return (
       this.state.discountOptions &&
       selectOptionsFactory
-        .renderOptions("label", "value", this.state.discountOptions, "discount")
-        .find((option) => option.value === +row.discountType)
+        .renderOptions('label', 'value', this.state.discountOptions, 'discount')
+        .find(option => option.value === +row.discountType)
     );
   };
 
   setDate = (props, value) => {
     const { term } = this.state;
-    const val = term ? term.value.split("_") : "";
-    const temp = val[val.length - 1] === "Receipt" ? 1 : val[val.length - 1];
-    const values = value
-      ? value
-      : dayjs(props.values.creditNoteDate, "DD-MM-YYYY").toDate();
+    const val = term ? term.value.split('_') : '';
+    const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
+    const values = value ? value : dayjs(props.values.creditNoteDate, 'DD-MM-YYYY').toDate();
     // if (temp && values) {
     // 	const date = dayjs(values)
     // 		.add(temp - 1, 'days')
@@ -256,52 +243,42 @@ class CreateCreditNote extends React.Component {
     // }
   };
 
-  setExchange = (value) => {
+  setExchange = value => {
     let result = this.props.currency_convert_list
-      ? this.props.currency_convert_list.find((obj) => {
+      ? this.props.currency_convert_list.find(obj => {
           return obj.currencyCode === value;
         })
-      : "";
+      : '';
 
-    this.formRef.current.setFieldValue(
-      "exchangeRate",
-      result?.exchangeRate,
-      true
-    );
+    this.formRef.current.setFieldValue('exchangeRate', result?.exchangeRate, true);
   };
 
-  setCurrency = (value) => {
-    let result = this.props.currency_convert_list.filter((obj) => {
+  setCurrency = value => {
+    let result = this.props.currency_convert_list.filter(obj => {
       return obj.currencyCode === value;
     });
-    this.formRef.current.setFieldValue(
-      "curreancyname",
-      result[0].currencyName,
-      true
-    );
+    this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
   };
 
-  validationCheck = (value) => {
+  validationCheck = value => {
     const data = {
       moduleType: 28,
       name: value,
     };
-    this.props.creditNotesCreateActions
-      .checkValidation(data)
-      .then((response) => {
-        if (response.data === "Credit Note Number Already Exists") {
-          this.setState(
-            {
-              exist: true,
-            },
-            () => {}
-          );
-        } else {
-          this.setState({
-            exist: false,
-          });
-        }
-      });
+    this.props.creditNotesCreateActions.checkValidation(data).then(response => {
+      if (response.data === 'Credit Note Number Already Exists') {
+        this.setState(
+          {
+            exist: true,
+          },
+          () => {}
+        );
+      } else {
+        this.setState({
+          exist: false,
+        });
+      }
+    });
   };
 
   componentDidMount = () => {
@@ -310,30 +287,18 @@ class CreateCreditNote extends React.Component {
   };
 
   getDefaultNotes = () => {
-    this.props.commonActions.getNoteSettingsInfo().then((res) => {
+    this.props.commonActions.getNoteSettingsInfo().then(res => {
       if (res.status === 200) {
-        this.formRef.current.setFieldValue(
-          "notes",
-          res.data.defaultNotes,
-          true
-        );
-        this.formRef.current.setFieldValue(
-          "footNote",
-          res.data.defaultFootNotes,
-          true
-        );
+        this.formRef.current.setFieldValue('notes', res.data.defaultNotes, true);
+        this.formRef.current.setFieldValue('footNote', res.data.defaultFootNotes, true);
       }
     });
   };
   getInitialData = () => {
     const { companyDetails } = this.props;
     if (companyDetails) {
-      const {
-        currencyCode,
-        isRegisteredVat,
-        isDesignatedZone,
-        vatRegistrationDate,
-      } = companyDetails;
+      const { currencyCode, isRegisteredVat, isDesignatedZone, vatRegistrationDate } =
+        companyDetails;
       this.setState({
         initValue: {
           ...this.state.initValue,
@@ -346,8 +311,7 @@ class CreateCreditNote extends React.Component {
         isRegisteredVat: isRegisteredVat,
         loading: false,
       });
-      this.formRef?.current &&
-        this.formRef.current.setFieldValue("currencyCode", currencyCode);
+      this.formRef?.current && this.formRef.current.setFieldValue('currencyCode', currencyCode);
     }
     this.getInvoiceNo();
     this.props.creditNotesActions.getInvoiceListForDropdown();
@@ -359,33 +323,31 @@ class CreateCreditNote extends React.Component {
     this.props.productActions.getProductCategoryList();
     this.props.creditNotesActions
       .getTaxTreatment()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           let array = [];
-          res.data.map((row) => {
+          res.data.map(row => {
             if (row.id !== 8) array.push(row);
           });
           this.setState({ taxTreatmentList: array });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.setState({ disabled: false });
-        this.props.commonActions.tostifyAlert(
-          "error",
-          err.data ? err.data.message : "ERROR"
-        );
+        this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : 'ERROR');
       });
-    this.props.commonActions.getCurrencyConversionList().then((response) => {
-      this.setState({
-        initValue: {
-          ...this.state.initValue,
-          ...{
-            currency: response.data
-              ? parseInt(response.data[0].currencyCode)
-              : "",
+    this.props.commonActions.getCurrencyConversionList().then(action => {
+      // Redux Toolkit thunks return action objects
+      if (action && action.type && action.type.includes('fulfilled')) {
+        this.setState({
+          initValue: {
+            ...this.state.initValue,
+            ...{
+              currency: action.payload ? parseInt(action.payload[0].currencyCode) : '',
+            },
           },
-        },
-      });
+        });
+      }
     });
     this.getCompanyCurrency();
     this.salesCategory();
@@ -393,7 +355,7 @@ class CreateCreditNote extends React.Component {
     if (this.props.location?.state?.invoiceID) {
       this.getInvoiceDetails(this.props.location?.state?.invoiceID);
       this.formRef.current.setFieldValue(
-        "invoiceNumber",
+        'invoiceNumber',
         this.props.location?.state?.invoiceID,
         true
       );
@@ -401,54 +363,50 @@ class CreateCreditNote extends React.Component {
     }
   };
 
-  getCompanyCurrency = (basecurrency) => {
+  getCompanyCurrency = basecurrency => {
     this.props.currencyConvertActions
       .getCompanyCurrency()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           this.setState({ basecurrency: res.data });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.props.commonActions.tostifyAlert(
-          "error",
-          err && err.data ? err.data.message : "Something Went Wrong"
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong'
         );
         this.setState({ loading: false });
       });
   };
   salesCategory = () => {
     try {
-      this.props.productActions
-        .getTransactionCategoryListForSalesProduct("2")
-        .then((res) => {
-          if (res.status === 200) {
-            this.setState(
-              {
-                salesCategory: res.data,
-              },
-              () => {}
-            );
-          }
-        });
+      this.props.productActions.getTransactionCategoryListForSalesProduct('2').then(res => {
+        if (res.status === 200) {
+          this.setState(
+            {
+              salesCategory: res.data,
+            },
+            () => {}
+          );
+        }
+      });
     } catch (err) {
       console.log(err);
     }
   };
   purchaseCategory = () => {
     try {
-      this.props.productActions
-        .getTransactionCategoryListForPurchaseProduct("10")
-        .then((res) => {
-          if (res.status === 200) {
-            this.setState(
-              {
-                purchaseCategory: res.data,
-              },
-              () => {}
-            );
-          }
-        });
+      this.props.productActions.getTransactionCategoryListForPurchaseProduct('10').then(res => {
+        if (res.status === 200) {
+          this.setState(
+            {
+              purchaseCategory: res.data,
+            },
+            () => {}
+          );
+        }
+      });
     } catch (err) {
       console.log(err);
     }
@@ -460,26 +418,22 @@ class CreateCreditNote extends React.Component {
       {
         data: data.concat({
           id: this.state.idCount + 1,
-          description: "",
+          description: '',
           quantity: 1,
-          unitPrice: "",
-          vatCategoryId: "",
-          productId: "",
+          unitPrice: '',
+          vatCategoryId: '',
+          productId: '',
           subTotal: 0,
-          discountType: "FIXED",
+          discountType: 'FIXED',
           discount: 0,
-          exciseTaxId: "",
-          unitType: "",
-          unitTypeId: "",
+          exciseTaxId: '',
+          unitType: '',
+          unitTypeId: '',
         }),
         idCount: this.state.idCount + 1,
       },
       () => {
-        this.formRef.current.setFieldValue(
-          "lineItemsString",
-          this.state.data,
-          true
-        );
+        this.formRef.current.setFieldValue('lineItemsString', this.state.data, true);
         this.formRef.current.setFieldTouched(
           `lineItemsString[${this.state.data.length - 1}]`,
           false,
@@ -500,24 +454,12 @@ class CreateCreditNote extends React.Component {
       }
       return obj;
     });
-    if (
-      name === "unitPrice" ||
-      name === "vatCategoryId" ||
-      name === "quantity"
-    ) {
-      form.setFieldValue(
-        field.name,
-        this.state.data[parseInt(idx, 10)][`${name}`],
-        true
-      );
+    if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
+      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][`${name}`], true);
       this.updateAmount(data, props);
     } else {
       this.setState({ data }, () => {
-        form.setFieldValue(
-          field.name,
-          this.state.data[parseInt(idx, 10)][`${name}`],
-          true
-        );
+        form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][`${name}`], true);
       });
     }
   };
@@ -525,71 +467,51 @@ class CreateCreditNote extends React.Component {
   prductValue = (e, row, name, form, field, props) => {
     const { product_list } = this.props;
     let data = this.state.data;
-    const result = product_list.find((item) => item.id === parseInt(e));
+    const result = product_list.find(item => item.id === parseInt(e));
     let idx;
     data.map((obj, index) => {
       if (obj.id === row.id) {
-        obj["unitPrice"] = result.unitPrice;
-        obj["vatCategoryId"] = result.vatCategoryId;
-        obj["description"] = result.description;
-        obj["exciseTaxId"] = result.exciseTaxId;
-        obj["discountType"] = result.discountType;
-        obj["isExciseTaxExclusive"] = result.isExciseTaxExclusive;
-        obj["unitType"] = result.unitType;
-        obj["unitTypeId"] = result.unitTypeId;
+        obj['unitPrice'] = result.unitPrice;
+        obj['vatCategoryId'] = result.vatCategoryId;
+        obj['description'] = result.description;
+        obj['exciseTaxId'] = result.exciseTaxId;
+        obj['discountType'] = result.discountType;
+        obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+        obj['unitType'] = result.unitType;
+        obj['unitTypeId'] = result.unitTypeId;
         idx = index;
       }
       return obj;
     });
-    form.setFieldValue(
-      `lineItemsString.${idx}.vatCategoryId`,
-      result.vatCategoryId,
-      true
-    );
-    form.setFieldValue(
-      `lineItemsString.${idx}.unitPrice`,
-      result.unitPrice,
-      true
-    );
-    form.setFieldValue(
-      `lineItemsString.${idx}.exciseTaxId`,
-      result.exciseTaxId,
-      true
-    );
-    form.setFieldValue(
-      `lineItemsString.${idx}.description`,
-      result.description,
-      true
-    );
-    form.setFieldValue(
-      `lineItemsString.${idx}.discountType`,
-      result.discountType,
-      true
-    );
+    form.setFieldValue(`lineItemsString.${idx}.vatCategoryId`, result.vatCategoryId, true);
+    form.setFieldValue(`lineItemsString.${idx}.unitPrice`, result.unitPrice, true);
+    form.setFieldValue(`lineItemsString.${idx}.exciseTaxId`, result.exciseTaxId, true);
+    form.setFieldValue(`lineItemsString.${idx}.description`, result.description, true);
+    form.setFieldValue(`lineItemsString.${idx}.discountType`, result.discountType, true);
     this.updateAmount(data, props);
   };
 
-  setValue = (value) => {
-    this.setState((prevState) => ({
+  setValue = value => {
+    this.setState(prevState => ({
       ...prevState,
       initValue: [],
     }));
   };
 
   deleteRow = (e, row, props) => {
-    const id = row["id"];
+    const id = row['id'];
     let newData = [];
     e.preventDefault();
     const data = this.state.data;
-    newData = data.filter((obj) => obj.id !== id);
-    props.setFieldValue("lineItemsString", newData, true);
+    newData = data.filter(obj => obj.id !== id);
+    props.setFieldValue('lineItemsString', newData, true);
     this.updateAmount(newData, props);
   };
 
   checkedRow = () => {
     if (this.state.data.length > 0) {
       let length = this.state.data.length - 1;
-      let temp = Object.values(this.state.data[`${length}`]).indexOf("");
+      let temp = Object.values(this.state.data[`${length}`]).indexOf('');
       if (temp > -1) {
         return true;
       } else {
@@ -603,11 +525,7 @@ class CreateCreditNote extends React.Component {
   updateAmount = (data, props) => {
     const { vat_list } = this.props;
     const { taxType } = this.state;
-    const list = ProductTableCalculation.updateAmount(
-      data ? data : [],
-      vat_list,
-      taxType
-    );
+    const list = ProductTableCalculation.updateAmount(data ? data : [], vat_list, taxType);
     this.setState({
       data: list.data ? list.data : [],
       initValue: {
@@ -617,9 +535,7 @@ class CreateCreditNote extends React.Component {
           totalVatAmount: list.totalVatAmount ? list.totalVatAmount : 0,
           discount: list.discount ? list.discount : 0,
           totalAmount: list.totalAmount ? list.totalAmount : 0,
-          totalExciseAmount: list.totalExciseAmount
-            ? list.totalExciseAmount
-            : 0,
+          totalExciseAmount: list.totalExciseAmount ? list.totalExciseAmount : 0,
         },
       },
     });
@@ -632,7 +548,7 @@ class CreateCreditNote extends React.Component {
     if (file) {
       reader.onloadend = () => {};
       reader.readAsDataURL(file);
-      props.setFieldValue("attachmentFile", file, true);
+      props.setFieldValue('attachmentFile', file, true);
     }
   };
 
@@ -661,109 +577,87 @@ class CreateCreditNote extends React.Component {
     const { isCreatedWIWP } = this.state;
     const formData = new FormData();
 
+    formData.append('isCreatedWithoutInvoice', this.state.isCreatedWithoutInvoice);
+    formData.append('isCreatedWIWP', isCreatedWIWP);
     formData.append(
-      "isCreatedWithoutInvoice",
-      this.state.isCreatedWithoutInvoice
+      'creditNoteNumber',
+      creditNoteNumber ? this.state.prefix + creditNoteNumber : ''
     );
-    formData.append("isCreatedWIWP", isCreatedWIWP);
+    formData.append('email', email ? email : '');
     formData.append(
-      "creditNoteNumber",
-      creditNoteNumber ? this.state.prefix + creditNoteNumber : ""
+      'creditNoteDate',
+      creditNoteDate ? dayjs(creditNoteDate, 'DD-MM-YYYY').toDate() : null
     );
-    formData.append("email", email ? email : "");
+    formData.append('referenceNo', receiptNumber !== null ? receiptNumber : '');
+    formData.append('exchangeRate', exchangeRate ? exchangeRate : '');
+    formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '');
     formData.append(
-      "creditNoteDate",
-      creditNoteDate ? dayjs(creditNoteDate, "DD-MM-YYYY").toDate() : null
+      'receiptAttachmentDescription',
+      receiptAttachmentDescription !== null ? receiptAttachmentDescription : ''
     );
-    formData.append("referenceNo", receiptNumber !== null ? receiptNumber : "");
-    formData.append("exchangeRate", exchangeRate ? exchangeRate : "");
-    formData.append(
-      "contactPoNumber",
-      contact_po_number !== null ? contact_po_number : ""
-    );
-    formData.append(
-      "receiptAttachmentDescription",
-      receiptAttachmentDescription !== null ? receiptAttachmentDescription : ""
-    );
-    formData.append("notes", notes !== null ? notes : "");
-    formData.append("type", 7);
-    if (isCreatedWIWP === true)
-      formData.append("totalAmount", creditAmount);
+    formData.append('notes', notes !== null ? notes : '');
+    formData.append('type', 7);
+    if (isCreatedWIWP === true) formData.append('totalAmount', creditAmount);
 
-    formData.append("vatCategoryId", 2);
-    formData.append("taxType", this.state.taxType ? this.state.taxType : false);
+    formData.append('vatCategoryId', 2);
+    formData.append('taxType', this.state.taxType ? this.state.taxType : false);
 
     if (invoiceNumber) {
-      formData.append(
-        "invoiceId",
-        invoiceNumber.value ? invoiceNumber.value : invoiceNumber
-      );
-      formData.append("cnCreatedOnPaidInvoice", "1");
+      formData.append('invoiceId', invoiceNumber.value ? invoiceNumber.value : invoiceNumber);
+      formData.append('cnCreatedOnPaidInvoice', '1');
     }
     if (placeOfSupplyId) {
       formData.append(
-        "placeOfSupplyId",
+        'placeOfSupplyId',
         placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId
       );
     }
     if (!isCreatedWIWP) {
-      formData.append("lineItemsString", JSON.stringify(this.state.data));
-      formData.append("totalVatAmount", this.state.initValue.totalVatAmount);
-      formData.append("totalAmount", this.state.initValue.totalAmount);
-      formData.append("discount", this.state.initValue.discount);
-      formData.append(
-        "totalExciseTaxAmount",
-        this.state.initValue.totalExciseAmount
-      );
+      formData.append('lineItemsString', JSON.stringify(this.state.data));
+      formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
+      formData.append('totalAmount', this.state.initValue.totalAmount);
+      formData.append('discount', this.state.initValue.discount);
+      formData.append('totalExciseTaxAmount', this.state.initValue.totalExciseAmount);
     }
     if (contactId) {
-      formData.append(
-        "contactId",
-        contactId.value ? contactId.value : contactId
-      );
+      formData.append('contactId', contactId.value ? contactId.value : contactId);
     }
     if (currency !== null && currency) {
-      formData.append("currencyCode", this.state.customer_currency);
+      formData.append('currencyCode', this.state.customer_currency);
     }
-    if (
-      this.uploadFile &&
-      this.uploadFile.files &&
-      this.uploadFile?.files?.[0]
-    ) {
-      formData.append("attachmentFile", this.uploadFile?.files?.[0]);
+    if (this.uploadFile && this.uploadFile.files && this.uploadFile?.files?.[0]) {
+      formData.append('attachmentFile', this.uploadFile?.files?.[0]);
     }
 
-    this.setState({ loading: true, loadingMsg: "Creating Credit Note..." });
+    this.setState({ loading: true, loadingMsg: 'Creating Credit Note...' });
     this.props.creditNotesCreateActions
       .createCreditNote(formData)
-      .then((res) => {
+      .then(res => {
         this.setState({ disabled: false });
         this.setState({ loading: false });
         this.props.commonActions.tostifyAlert(
-          "success",
-          res.data
-            ? res.data.message
-            : "New Tax Credit Note Created Successfully."
+          'success',
+          res.data ? res.data.message : 'New Tax Credit Note Created Successfully.'
         );
         if (this.state.createMore) {
           this.props.creditNotesActions.getInvoiceListForDropdown();
           this.setState(
             {
               disableLeavePage: false,
-              remainingInvoiceAmount: "",
+              remainingInvoiceAmount: '',
               createMore: false,
-              selectedContact: "",
-              term: "",
-              exchangeRate: "",
+              selectedContact: '',
+              term: '',
+              exchangeRate: '',
               data: [
                 {
                   id: 0,
-                  description: "",
+                  description: '',
                   quantity: 1,
-                  unitPrice: "",
-                  vatCategoryId: "",
+                  unitPrice: '',
+                  vatCategoryId: '',
                   subTotal: 0,
-                  productId: "",
+                  productId: '',
                 },
               ],
               initValue: {
@@ -772,9 +666,9 @@ class CreateCreditNote extends React.Component {
                   totalNet: 0,
                   totalVatAmount: 0,
                   totalAmount: 0,
-                  discountType: "",
+                  discountType: '',
                   discount: 0,
-                  discountPercentage: "",
+                  discountPercentage: '',
                   totalExciseAmount: 0,
                 },
               },
@@ -782,38 +676,32 @@ class CreateCreditNote extends React.Component {
             () => {
               resetForm(this.state.initValue);
               this.getInvoiceNo();
-              this.formRef.current.setFieldValue(
-                "lineItemsString",
-                this.state.data,
-                false
-              );
+              this.formRef.current.setFieldValue('lineItemsString', this.state.data, false);
             }
           );
         } else {
-          this.props.history.push("/admin/income/credit-notes");
+          this.props.history.push('/admin/income/credit-notes');
           this.setState({ loading: false });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.setState({
           disabled: false,
           loading: false,
           disableLeavePage: false,
         });
         this.props.commonActions.tostifyAlert(
-          "error",
-          err && err.data
-            ? err.data.message
-            : "New Tax Credit Note Created Unsuccessfully."
+          'error',
+          err && err.data ? err.data.message : 'New Tax Credit Note Created Unsuccessfully.'
         );
       });
   };
-  getCurrentNumber = (data) => {
+  getCurrentNumber = data => {
     this.getInvoiceNo();
   };
 
   getCurrentProduct = () => {
-    this.props.creditNotesActions.getProductList().then((res) => {
+    this.props.creditNotesActions.getProductList().then(res => {
       this.setState(
         {
           data: [
@@ -850,35 +738,19 @@ class CreateCreditNote extends React.Component {
         res.data[0].unitType,
         true
       );
-      this.formRef.current.setFieldValue(
-        `lineItemsString.${0}.quantity`,
-        1,
-        true
-      );
+      this.formRef.current.setFieldValue(`lineItemsString.${0}.quantity`, 1, true);
       this.formRef.current.setFieldValue(
         `lineItemsString.${0}.vatCategoryId`,
         res.data[0].vatCategoryId,
         true
       );
-      this.formRef.current.setFieldValue(
-        `lineItemsString.${0}.productId`,
-        res.data[0].id,
-        true
-      );
-      this.formRef.current.setFieldValue(
-        `lineItemsString.${0}.discountType`,
-        1,
-        true
-      );
-      this.formRef.current.setFieldValue(
-        `lineItemsString.${0}.exciseTaxId`,
-        1,
-        true
-      );
+      this.formRef.current.setFieldValue(`lineItemsString.${0}.productId`, res.data[0].id, true);
+      this.formRef.current.setFieldValue(`lineItemsString.${0}.discountType`, 1, true);
+      this.formRef.current.setFieldValue(`lineItemsString.${0}.exciseTaxId`, 1, true);
     });
   };
   getInvoiceNo = () => {
-    this.props.creditNotesCreateActions.getInvoiceNo().then((res) => {
+    this.props.creditNotesCreateActions.getInvoiceNo().then(res => {
       if (res.status === 200) {
         this.setState({
           initValue: {
@@ -887,7 +759,7 @@ class CreateCreditNote extends React.Component {
           },
         });
         this.formRef.current.setFieldValue(
-          "creditNoteNumber",
+          'creditNoteNumber',
           res.data,
           true,
           this.validationCheck(res.data)
@@ -905,10 +777,10 @@ class CreateCreditNote extends React.Component {
 
     return currencyCode;
   };
-  getTaxTreatment = (opt) => {
+  getTaxTreatment = opt => {
     let customer_taxTreatmentId = 0;
-    let customer_item_taxTreatment = "";
-    this.props.customer_list.map((item) => {
+    let customer_item_taxTreatment = '';
+    this.props.customer_list.map(item => {
       if (item.label.contactId == opt) {
         this.setState({
           customer_taxTreatment: item.label.taxTreatment.id,
@@ -924,93 +796,71 @@ class CreateCreditNote extends React.Component {
     return customer_taxTreatmentId;
   };
 
-  getInvoiceDetails = (value) => {
+  getInvoiceDetails = value => {
     if (value) {
-      this.props.creditNotesCreateActions
-        .getInvoiceById(value)
-        .then((response) => {
-          if (response.status === 200) {
-            const customerdetails = {
-              label:
-                response.data.organisationName === ""
-                  ? response.data.name
-                  : response.data.organisationName,
-              value: response.data.contactId,
-            };
+      this.props.creditNotesCreateActions.getInvoiceById(value).then(response => {
+        if (response.status === 200) {
+          const customerdetails = {
+            label:
+              response.data.organisationName === ''
+                ? response.data.name
+                : response.data.organisationName,
+            value: response.data.contactId,
+          };
 
-            this.setState(
-              {
-                invoiceID: this.props.location?.state?.invoiceID,
-                isfreshCN: false,
-                receiptDate: response.data.receiptDate,
-                taxType: response.data.taxType,
-                placeOfSupplyId: response.data.placeOfSupplyId,
-                option: {
-                  label:
-                    response.data.organisationName === ""
-                      ? response.data.name
-                      : response.data.organisationName,
-                  value: response.data.contactId,
-                },
-                data: response.data.invoiceLineItems,
-                totalAmount: response.data.totalAmount,
-                customer_currency: response.data.currencyCode,
-                remainingInvoiceAmount: response.data.remainingInvoiceAmount,
+          this.setState(
+            {
+              invoiceID: this.props.location?.state?.invoiceID,
+              isfreshCN: false,
+              receiptDate: response.data.receiptDate,
+              taxType: response.data.taxType,
+              placeOfSupplyId: response.data.placeOfSupplyId,
+              option: {
+                label:
+                  response.data.organisationName === ''
+                    ? response.data.name
+                    : response.data.organisationName,
+                value: response.data.contactId,
               },
-              () => {
-                this.formRef.current.setFieldValue(
-                  "lineItemsString",
-                  this.state.data,
-                  true
-                );
-                this.formRef.current.setFieldTouched(
-                  `lineItemsString[${this.state.data.length - 1}]`,
-                  false,
-                  true
-                );
-                this.updateAmount(this.state.data);
-              }
-            );
-            this.formRef.current.setFieldValue(
-              "currency",
-              response.data.currencyCode,
-              true
-            );
-            this.formRef.current.setFieldValue(
-              "taxTreatmentid",
-              this.getTaxTreatment(customerdetails.value),
-              true
-            );
-            this.formRef.current.setFieldValue(
-              "placeOfSupplyId",
-              this.state.placeOfSupplyId,
-              true
-            );
-            this.setExchange(
-              this.getCurrency(
-                response?.data?.currencyCode,
-                response?.data?.currencyName,
-                response?.data?.currencyIsoCode
-              )
-            );
-            this.formRef.current.setFieldValue(
-              "contactId",
-              response.data.contactId,
-              true
-            );
-            this.formRef.current.setFieldValue(
-              "remainingInvoiceAmount",
-              this.state.remainingInvoiceAmount,
-              true
-            );
-            this.formRef.current.setFieldValue(
-              "currencyCode",
-              response.data.currencyCode,
-              true
-            );
-            // this.getTaxTreatment(this.state.option.value)
-          }
-        });
+              data: response.data.invoiceLineItems,
+              totalAmount: response.data.totalAmount,
+              customer_currency: response.data.currencyCode,
+              remainingInvoiceAmount: response.data.remainingInvoiceAmount,
+            },
+            () => {
+              this.formRef.current.setFieldValue('lineItemsString', this.state.data, true);
+              this.formRef.current.setFieldTouched(
+                `lineItemsString[${this.state.data.length - 1}]`,
+                false,
+                true
+              );
+              this.updateAmount(this.state.data);
+            }
+          );
+          this.formRef.current.setFieldValue('currency', response.data.currencyCode, true);
+          this.formRef.current.setFieldValue(
+            'taxTreatmentid',
+            this.getTaxTreatment(customerdetails.value),
+            true
+          );
+          this.formRef.current.setFieldValue('placeOfSupplyId', this.state.placeOfSupplyId, true);
+          this.setExchange(
+            this.getCurrency(
+              response?.data?.currencyCode,
+              response?.data?.currencyName,
+              response?.data?.currencyIsoCode
+            )
+          );
+          this.formRef.current.setFieldValue('contactId', response.data.contactId, true);
+          this.formRef.current.setFieldValue(
+            'remainingInvoiceAmount',
+            this.state.remainingInvoiceAmount,
+            true
+          );
+          this.formRef.current.setFieldValue('currencyCode', response.data.currencyCode, true);
+          // this.getTaxTreatment(this.state.option.value)
+        }
+      });
     }
   };
   showDescription(row, form, field, props, idx) {
@@ -1023,9 +873,9 @@ class CreateCreditNote extends React.Component {
           multiline
           minRows={1}
           maxRows={4}
-          value={row["description"] !== "" ? row["description"] : ""}
-          onChange={(e) => {
-            this.selectItem(e.target.value, row, "description", form, field);
+          value={row['description'] !== '' ? row['description'] : ''}
+          onChange={e => {
+            this.selectItem(e.target.value, row, 'description', form, field);
           }}
           placeholder={strings.Description}
           className={`textarea ${
@@ -1036,8 +886,8 @@ class CreateCreditNote extends React.Component {
             props.touched.lineItemsString &&
             props.touched.lineItemsString[parseInt(idx, 10)] &&
             props.touched.lineItemsString[parseInt(idx, 10)].description
-              ? "is-invalid"
-              : ""
+              ? 'is-invalid'
+              : ''
           }`}
         />
       </div>
@@ -1081,9 +931,7 @@ class CreateCreditNote extends React.Component {
                       <Col lg={12}>
                         <div className="h4 mb-0 d-flex align-items-center">
                           <i className="nav-icon fas fa-donate" />
-                          <span className="ml-2">
-                            {strings.CreateCreditNote}
-                          </span>
+                          <span className="ml-2">{strings.CreateCreditNote}</span>
                         </div>
                       </Col>
                     </Row>
@@ -1104,36 +952,26 @@ class CreateCreditNote extends React.Component {
                             onSubmit={(values, { resetForm }) => {
                               this.handleSubmit(values, resetForm);
                             }}
-                            validate={(values) => {
+                            validate={values => {
                               let errors = {};
 
                               if (exist === true) {
-                                errors.creditNoteNumber =
-                                  "Tax Credit Note already exists";
+                                errors.creditNoteNumber = 'Tax Credit Note already exists';
                               }
 
-                              if (
-                                isCreatedWIWP == false &&
-                                !values.invoiceNumber
-                              ) {
-                                errors.invoiceNumber =
-                                  "Invoice number is required";
+                              if (isCreatedWIWP == false && !values.invoiceNumber) {
+                                errors.invoiceNumber = 'Invoice number is required';
                               }
-                              if (
-                                isCreatedWIWP &&
-                                values.creditAmount == ""
-                              ) {
-                                errors.creditAmount =
-                                  "Credit Amount is required";
+                              if (isCreatedWIWP && values.creditAmount == '') {
+                                errors.creditAmount = 'Credit Amount is required';
                               }
                               if (
                                 this.state.invoiceSelected &&
                                 isCreatedWIWP &&
-                                values.creditAmount >
-                                  this.state.remainingInvoiceAmount
+                                values.creditAmount > this.state.remainingInvoiceAmount
                               ) {
                                 errors.creditAmount =
-                                  "Credit Amount Cannot Be Greater Than Remaining Invoice Amount";
+                                  'Credit Amount Cannot Be Greater Than Remaining Invoice Amount';
                               }
                               return errors;
                             }}
@@ -1142,11 +980,9 @@ class CreateCreditNote extends React.Component {
                               // 	'Invoice Number is required',
                               // ),
                               creditNoteNumber: Yup.string().required(
-                                "Tax credit note number is required"
+                                'Tax credit note number is required'
                               ),
-                              contactId: Yup.string().required(
-                                "Customer name is required"
-                              ),
+                              contactId: Yup.string().required('Customer name is required'),
                               // contactId: Yup.string().required(
                               // 	'Customer is required',
                               // ),
@@ -1156,27 +992,21 @@ class CreateCreditNote extends React.Component {
                               // 	'Currency is required',
                               // ),
                               creditNoteDate: Yup.string().required(
-                                "Tax credit note date is required"
+                                'Tax credit note date is required'
                               ),
                               lineItemsString: Yup.array()
-                                .required(
-                                  "Atleast one Tax Credit Note sub detail is mandatory"
-                                )
+                                .required('Atleast one Tax Credit Note sub detail is mandatory')
                                 .of(
                                   Yup.object().shape({
                                     quantity: Yup.string()
-                                      .test(
-                                        "quantity",
-                                        strings.QuantityGreaterThan0,
-                                        (value) => {
-                                          if (value > 0) {
-                                            return true;
-                                          } else {
-                                            return false;
-                                          }
+                                      .test('quantity', strings.QuantityGreaterThan0, value => {
+                                        if (value > 0) {
+                                          return true;
+                                        } else {
+                                          return false;
                                         }
-                                      )
-                                      .required("Quantity is required"),
+                                      })
+                                      .required('Quantity is required'),
                                     // 			unitPrice: Yup.string()
                                     // 				.required('Value is required')
                                     // 				.test(
@@ -1199,70 +1029,51 @@ class CreateCreditNote extends React.Component {
                                   })
                                 ),
                               attachmentFile: Yup.mixed()
-                                .test(
-                                  "fileType",
-                                  "*Unsupported file format",
-                                  (value) => {
-                                    value &&
-                                      this.setState({
-                                        fileName: value.name,
-                                      });
-                                    if (
-                                      !value ||
-                                      (value &&
-                                        this.supported_format.includes(
-                                          value.type
-                                        ))
-                                    ) {
-                                      return true;
-                                    } else {
-                                      return false;
-                                    }
+                                .test('fileType', '*Unsupported file format', value => {
+                                  value &&
+                                    this.setState({
+                                      fileName: value.name,
+                                    });
+                                  if (
+                                    !value ||
+                                    (value && this.supported_format.includes(value.type))
+                                  ) {
+                                    return true;
+                                  } else {
+                                    return false;
                                   }
-                                )
-                                .test(
-                                  "fileSize",
-                                  "*File size is too large",
-                                  (value) => {
-                                    if (
-                                      !value ||
-                                      (value && value.size <= this.file_size)
-                                    ) {
-                                      return true;
-                                    } else {
-                                      return false;
-                                    }
+                                })
+                                .test('fileSize', '*File size is too large', value => {
+                                  if (!value || (value && value.size <= this.file_size)) {
+                                    return true;
+                                  } else {
+                                    return false;
                                   }
-                                ),
+                                }),
                             })}
                           >
-                            {(props) => (
+                            {props => (
                               <Form onSubmit={props.handleSubmit}>
                                 <Row>
                                   {!this.state.isCreatedWithoutInvoice && (
                                     <Col lg={3}>
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="invoiceNumber">
-                                          <span className="text-danger">
-                                            *{" "}
-                                          </span>
+                                          <span className="text-danger">* </span>
                                           {strings.InvoiceNumber}
                                         </Label>
                                         <Select
                                           isDisabled={lockInvoiceDetail}
                                           id="invoiceNumber"
                                           name="invoiceNumber"
-                                          placeholder={
-                                            strings.Select +
-                                            strings.InvoiceNumber
-                                          }
+                                          placeholder={strings.Select + strings.InvoiceNumber}
                                           options={
                                             invoice_list.data
                                               ? selectOptionsFactory.renderOptions(
-                                                  "label",
-                                                  "value",
+                                                  'label',
+                                                  'value',
                                                   invoice_list.data,
-                                                  "Invoice Number"
+                                                  'Invoice Number'
                                                 )
                                               : []
                                           }
@@ -1272,25 +1083,19 @@ class CreateCreditNote extends React.Component {
                                               : invoice_list.data &&
                                                 selectOptionsFactory
                                                   .renderOptions(
-                                                    "label",
-                                                    "value",
+                                                    'label',
+                                                    'value',
                                                     invoice_list.data,
-                                                    "Invoice Number"
+                                                    'Invoice Number'
                                                   )
                                                   .find(
-                                                    (obj) =>
-                                                      obj.value ===
-                                                      props.values.invoiceNumber
+                                                    obj => obj.value === props.values.invoiceNumber
                                                   )
                                           }
-                                          onChange={(option) => {
+                                          onChange={option => {
                                             if (option && option.value) {
-                                              this.getInvoiceDetails(
-                                                option.value
-                                              );
-                                              props.handleChange(
-                                                "invoiceNumber"
-                                              )(option);
+                                              this.getInvoiceDetails(option.value);
+                                              props.handleChange('invoiceNumber')(option);
                                               this.setState({
                                                 invoiceSelected: true,
                                               });
@@ -1298,15 +1103,13 @@ class CreateCreditNote extends React.Component {
                                               this.setState({
                                                 invoiceSelected: false,
                                               });
-                                              props.handleChange(
-                                                "invoiceNumber"
-                                              )("");
+                                              props.handleChange('invoiceNumber')('');
                                               this.setState({
                                                 invoiceSelected: false,
                                               });
                                             }
                                             this.formRef.current.setFieldValue(
-                                              "receiptNumber",
+                                              'receiptNumber',
                                               option.label,
                                               true
                                             );
@@ -1314,8 +1117,8 @@ class CreateCreditNote extends React.Component {
                                           className={
                                             props.errors.invoiceNumber &&
                                             props.touched.invoiceNumber
-                                              ? "is-invalid"
-                                              : ""
+                                              ? 'is-invalid'
+                                              : ''
                                           }
                                         />
                                         {props.errors.invoiceNumber &&
@@ -1340,34 +1143,23 @@ class CreateCreditNote extends React.Component {
                                         type="text"
                                         id="creditNoteNumber"
                                         name="creditNoteNumber"
-                                        placeholder={
-                                          strings.Enter +
-                                          strings.CreditNoteNumber
-                                        }
+                                        placeholder={strings.Enter + strings.CreditNoteNumber}
                                         value={props.values.creditNoteNumber}
-                                        onBlur={props.handleBlur(
-                                          "creditNoteNumber"
-                                        )}
-                                        onChange={(option) => {
+                                        onBlur={props.handleBlur('creditNoteNumber')}
+                                        onChange={option => {
                                           if (
-                                            option.target.value === "" ||
-                                            this.regExCNNum.test(
-                                              option.target.value
-                                            )
+                                            option.target.value === '' ||
+                                            this.regExCNNum.test(option.target.value)
                                           ) {
-                                            props.handleChange(
-                                              "creditNoteNumber"
-                                            )(option);
+                                            props.handleChange('creditNoteNumber')(option);
                                           }
-                                          this.validationCheck(
-                                            option.target.value
-                                          );
+                                          this.validationCheck(option.target.value);
                                         }}
                                         className={
                                           props.errors.creditNoteNumber &&
                                           props.touched.creditNoteNumber
-                                            ? "is-invalid"
-                                            : ""
+                                            ? 'is-invalid'
+                                            : ''
                                         }
                                       />
                                       {props.errors.creditNoteNumber &&
@@ -1391,10 +1183,10 @@ class CreateCreditNote extends React.Component {
                                         options={
                                           customer_list_dropdown
                                             ? selectOptionsFactory.renderOptions(
-                                                "label",
-                                                "value",
+                                                'label',
+                                                'value',
                                                 customer_list_dropdown,
-                                                "Customer Name"
+                                                'Customer Name'
                                               )
                                             : []
                                         }
@@ -1404,91 +1196,71 @@ class CreateCreditNote extends React.Component {
                                             : customer_list_dropdown &&
                                               selectOptionsFactory
                                                 .renderOptions(
-                                                  "label",
-                                                  "value",
+                                                  'label',
+                                                  'value',
                                                   customer_list_dropdown,
-                                                  "Customer Name"
+                                                  'Customer Name'
                                                 )
-                                                .find(
-                                                  (obj) =>
-                                                    obj.value ===
-                                                    props.values.contactId
-                                                )
+                                                .find(obj => obj.value === props.values.contactId)
                                         }
                                         isDisabled={this.state.invoiceSelected}
-                                        onChange={(option) => {
+                                        onChange={option => {
                                           if (option && option.value) {
-                                            props.handleChange("contactId")(
-                                              option
-                                            );
+                                            props.handleChange('contactId')(option);
                                           } else {
-                                            props.handleChange("contactId")("");
+                                            props.handleChange('contactId')('');
                                           }
                                         }}
                                         className={
-                                          props.errors.contactId &&
-                                          props.touched.contactId
-                                            ? "is-invalid"
-                                            : ""
+                                          props.errors.contactId && props.touched.contactId
+                                            ? 'is-invalid'
+                                            : ''
                                         }
                                       />
-                                      {props.errors.contactId &&
-                                        props.touched.contactId && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.contactId}
-                                          </div>
-                                        )}
+                                      {props.errors.contactId && props.touched.contactId && (
+                                        <div className="invalid-feedback">
+                                          {props.errors.contactId}
+                                        </div>
+                                      )}
                                     </FormGroup>
                                   </Col>
 
                                   <Col lg={3}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="taxTreatmentid">
-                                        {strings.TaxTreatment}
-                                      </Label>
+                                      <Label htmlFor="taxTreatmentid">{strings.TaxTreatment}</Label>
                                       <Select
                                         options={
                                           taxTreatmentList
                                             ? selectOptionsFactory.renderOptions(
-                                                "name",
-                                                "id",
+                                                'name',
+                                                'id',
                                                 taxTreatmentList,
-                                                "VAT"
+                                                'VAT'
                                               )
                                             : []
                                         }
                                         isDisabled={true}
                                         id="taxTreatmentid"
                                         name="taxTreatmentid"
-                                        placeholder={
-                                          strings.Select + strings.TaxTreatment
-                                        }
+                                        placeholder={strings.Select + strings.TaxTreatment}
                                         value={
                                           taxTreatmentList &&
                                           selectOptionsFactory
-                                            .renderOptions(
-                                              "name",
-                                              "id",
-                                              taxTreatmentList,
-                                              "VAT"
-                                            )
+                                            .renderOptions('name', 'id', taxTreatmentList, 'VAT')
                                             .find(
-                                              (option) =>
+                                              option =>
                                                 option.label ===
-                                                this.state
-                                                  .customer_taxTreatment_des
+                                                this.state.customer_taxTreatment_des
                                             )
                                         }
-                                        onChange={(option) => {
-                                          props.handleChange("taxTreatmentid")(
-                                            option
-                                          );
+                                        onChange={option => {
+                                          props.handleChange('taxTreatmentid')(option);
                                         }}
                                         className={
                                           props.errors.taxTreatmentid &&
                                           props.touched.taxTreatmentid
-                                            ? "is-invalid"
-                                            : ""
+                                            ? 'is-invalid'
+                                            : ''
                                         }
                                       />
                                       {props.errors.taxTreatmentid &&
@@ -1500,34 +1272,27 @@ class CreateCreditNote extends React.Component {
                                     </FormGroup>
                                   </Col>
                                   <Col lg={3}>
-                                    {this.state.customer_taxTreatment_des !==
-                                      "NON GCC" &&
+                                    {this.state.customer_taxTreatment_des !== 'NON GCC' &&
                                       this.state.customer_taxTreatment_des !==
-                                        "GCC VAT REGISTERED" &&
+                                        'GCC VAT REGISTERED' &&
                                       this.state.customer_taxTreatment_des !==
-                                        "GCC NON-VAT REGISTERED" && (
+                                        'GCC NON-VAT REGISTERED' && (
                                         <FormGroup className="mb-3">
                                           <Label htmlFor="placeOfSupplyId">
-                                            <span className="text-danger">
-                                              *{" "}
-                                            </span>
+                                            <span className="text-danger">* </span>
                                             {strings.PlaceofSupply}
                                           </Label>
                                           <Select
                                             id="placeOfSupplyId"
                                             name="placeOfSupplyId"
-                                            placeholder={
-                                              strings.Select +
-                                              strings.PlaceofSupply
-                                            }
+                                            placeholder={strings.Select + strings.PlaceofSupply}
                                             options={
-                                              console.log(this.placelist) ||
-                                              this.placelist
+                                              console.log(this.placelist) || this.placelist
                                                 ? selectOptionsFactory.renderOptions(
-                                                    "label",
-                                                    "value",
+                                                    'label',
+                                                    'value',
                                                     this.placelist,
-                                                    "Place of Supply"
+                                                    'Place of Supply'
                                                   )
                                                 : []
                                             }
@@ -1535,46 +1300,33 @@ class CreateCreditNote extends React.Component {
                                               this.placelist &&
                                               selectOptionsFactory
                                                 .renderOptions(
-                                                  "label",
-                                                  "value",
+                                                  'label',
+                                                  'value',
                                                   this.placelist,
-                                                  "Place of Supply"
+                                                  'Place of Supply'
                                                 )
                                                 .find(
-                                                  (option) =>
+                                                  option =>
                                                     option.value ==
                                                     (this.state.invoiceId
-                                                      ? this.state
-                                                          .placeOfSupplyId &&
-                                                        this.state
-                                                          .placeOfSupplyId
-                                                          .value !== null
-                                                        ? this.state
-                                                            .placeOfSupplyId
-                                                            .value
-                                                        : this.state
-                                                            .placeOfSupplyId
-                                                      : props.values
-                                                          .placeOfSupplyId !==
-                                                        null
-                                                      ? props.values.placeOfSupplyId.toString()
-                                                      : "")
+                                                      ? this.state.placeOfSupplyId &&
+                                                        this.state.placeOfSupplyId.value !== null
+                                                        ? this.state.placeOfSupplyId.value
+                                                        : this.state.placeOfSupplyId
+                                                      : props.values.placeOfSupplyId !== null
+                                                        ? props.values.placeOfSupplyId.toString()
+                                                        : '')
                                                 )
                                             }
-                                            isDisabled={
-                                              this.state.placeOfSupplyId !==
-                                              null
-                                            }
+                                            isDisabled={this.state.placeOfSupplyId !== null}
                                             className={
                                               props.errors.placeOfSupplyId &&
                                               props.touched.placeOfSupplyId
-                                                ? "is-invalid"
-                                                : ""
+                                                ? 'is-invalid'
+                                                : ''
                                             }
-                                            onChange={(option) => {
-                                              props.handleChange(
-                                                "placeOfSupplyId"
-                                              )(option);
+                                            onChange={option => {
+                                              props.handleChange('placeOfSupplyId')(option);
                                               this.setState({
                                                 placeOfSupplyId: option,
                                               });
@@ -1601,44 +1353,34 @@ class CreateCreditNote extends React.Component {
                                       <DatePicker
                                         id="creditNoteDate"
                                         name="creditNoteDate"
-                                        placeholderText={
-                                          strings.Select +
-                                          strings.CreditNoteDate
-                                        }
+                                        placeholderText={strings.Select + strings.CreditNoteDate}
                                         showMonthDropdown
                                         showYearDropdown
                                         dateFormat="dd-MM-yyyy"
                                         minDate={
                                           new Date(
-                                            dayjs(
-                                              this.state.receiptDate,
-                                              "YYYY-MM-DD"
-                                            ).format()
+                                            dayjs(this.state.receiptDate, 'YYYY-MM-DD').format()
                                           )
                                         }
                                         dropdownMode="select"
                                         value={props.values.creditNoteDate}
                                         selected={props.values.creditNoteDate}
-                                        onChange={(value) => {
-                                          props.handleChange("creditNoteDate")(
-                                            value
-                                          );
+                                        onChange={value => {
+                                          props.handleChange('creditNoteDate')(value);
                                           this.setDate(props, value);
                                         }}
                                         className={`form-control ${
                                           props.errors.creditNoteDate &&
                                           props.touched.creditNoteDate
-                                            ? "is-invalid"
-                                            : ""
+                                            ? 'is-invalid'
+                                            : ''
                                         }`}
                                       />
                                       {props.errors.creditNoteDate &&
                                         props.touched.creditNoteDate && (
                                           <div className="invalid-feedback">
-                                            {props.errors.creditNoteDate.includes(
-                                              "nullable()"
-                                            )
-                                              ? "Tax credit note date is required"
+                                            {props.errors.creditNoteDate.includes('nullable()')
+                                              ? 'Tax credit note date is required'
                                               : props.errors.creditNoteDate}
                                           </div>
                                         )}
@@ -1653,16 +1395,14 @@ class CreateCreditNote extends React.Component {
                                       <Select
                                         isDisabled={true}
                                         styles={customStyles}
-                                        placeholder={
-                                          strings.Select + strings.Currency
-                                        }
+                                        placeholder={strings.Select + strings.Currency}
                                         options={
                                           currency_convert_list
                                             ? selectCurrencyFactory.renderOptions(
-                                                "currencyName",
-                                                "currencyCode",
+                                                'currencyName',
+                                                'currencyCode',
                                                 currency_convert_list,
-                                                "Currency"
+                                                'Currency'
                                               )
                                             : []
                                         }
@@ -1672,37 +1412,32 @@ class CreateCreditNote extends React.Component {
                                           currency_convert_list &&
                                           selectCurrencyFactory
                                             .renderOptions(
-                                              "currencyName",
-                                              "currencyCode",
+                                              'currencyName',
+                                              'currencyCode',
                                               currency_convert_list,
-                                              "Currency"
+                                              'Currency'
                                             )
                                             .find(
-                                              (option) =>
-                                                option.value ===
-                                                +this.state.customer_currency
+                                              option =>
+                                                option.value === +this.state.customer_currency
                                             )
                                         }
                                         className={
-                                          props.errors.currency &&
-                                          props.touched.currency
-                                            ? "is-invalid"
-                                            : ""
+                                          props.errors.currency && props.touched.currency
+                                            ? 'is-invalid'
+                                            : ''
                                         }
-                                        onChange={(option) => {
-                                          props.handleChange("currency")(
-                                            option
-                                          );
+                                        onChange={option => {
+                                          props.handleChange('currency')(option);
                                           // this.setExchange(option.value);
                                           this.setCurrency(option.value);
                                         }}
                                       />
-                                      {props.errors.currency &&
-                                        props.touched.currency && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.currency}
-                                          </div>
-                                        )}
+                                      {props.errors.currency && props.touched.currency && (
+                                        <div className="invalid-feedback">
+                                          {props.errors.currency}
+                                        </div>
+                                      )}
                                     </FormGroup>
                                   </Col>
 
@@ -1719,17 +1454,11 @@ class CreateCreditNote extends React.Component {
                                             name="remainingInvoiceAmount"
                                             placeholder="Remaining invoice Amount"
                                             disabled={true}
-                                            value={
-                                              this.state.remainingInvoiceAmount
-                                            }
+                                            value={this.state.remainingInvoiceAmount}
                                           />
-                                          {props.errors
-                                            .remainingInvoiceAmount && (
+                                          {props.errors.remainingInvoiceAmount && (
                                             <div className="text-danger">
-                                              {
-                                                props.errors
-                                                  .remainingInvoiceAmount
-                                              }
+                                              {props.errors.remainingInvoiceAmount}
                                             </div>
                                           )}
                                         </FormGroup>
@@ -1740,9 +1469,7 @@ class CreateCreditNote extends React.Component {
                                     <Col lg={3}>
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="creditAmount">
-                                          <span className="text-danger">
-                                            *{" "}
-                                          </span>
+                                          <span className="text-danger">* </span>
                                           {strings.CreditAmount}
                                         </Label>
                                         <Input
@@ -1750,31 +1477,22 @@ class CreateCreditNote extends React.Component {
                                           maxLength="14,2"
                                           id="creditAmount"
                                           name="creditAmount"
-                                          placeholder={
-                                            strings.Enter + strings.CreditAmount
-                                          }
+                                          placeholder={strings.Enter + strings.CreditAmount}
                                           value={props.values.creditAmount}
                                           // onBlur={props.handleBlur('currencyCode')}
-                                          onChange={(value) => {
+                                          onChange={value => {
                                             if (
-                                              (this.regDecimal.test(
-                                                value.target.value
-                                              ) &&
-                                                parseFloat(
-                                                  value.target.value
-                                                ) >= 1) ||
-                                              value.target.value === ""
+                                              (this.regDecimal.test(value.target.value) &&
+                                                parseFloat(value.target.value) >= 1) ||
+                                              value.target.value === ''
                                             ) {
-                                              props.handleChange(
-                                                "creditAmount"
-                                              )(value);
+                                              props.handleChange('creditAmount')(value);
                                             }
                                           }}
                                           className={
-                                            props.errors.creditAmount &&
-                                            props.touched.creditAmount
-                                              ? "is-invalid"
-                                              : ""
+                                            props.errors.creditAmount && props.touched.creditAmount
+                                              ? 'is-invalid'
+                                              : ''
                                           }
                                         />
                                         {props.errors.creditAmount && (
@@ -1785,7 +1503,6 @@ class CreateCreditNote extends React.Component {
                                       </FormGroup>
                                     </Col>
                                   )}
-                                
                                 </Row>
                                 <hr />
                                 {isCreatedWIWP === false && (
@@ -1794,30 +1511,20 @@ class CreateCreditNote extends React.Component {
                                       <Col lg={8} className="mb-3"></Col>
                                       <Col>
                                         {this.state.taxType === false ? (
-                                          <span
-                                            style={{ color: "#0069d9" }}
-                                            className="mr-4"
-                                          >
+                                          <span style={{ color: '#0069d9' }} className="mr-4">
                                             <b>{strings.Exclusive}</b>
                                           </span>
                                         ) : (
-                                          <span className="mr-4">
-                                            {strings.Exclusive}
-                                          </span>
+                                          <span className="mr-4">{strings.Exclusive}</span>
                                         )}
                                         <Switch
                                           value={props.values.taxType}
                                           checked={this.state.taxType}
                                           disabled
-                                          onChange={(taxType) => {
-                                            props.handleChange("taxType")(
-                                              taxType
-                                            );
+                                          onChange={taxType => {
+                                            props.handleChange('taxType')(taxType);
                                             this.setState({ taxType }, () => {
-                                              this.updateAmount(
-                                                this.state.data,
-                                                props
-                                              );
+                                              this.updateAmount(this.state.data, props);
                                             });
                                           }}
                                           onColor="#2064d8"
@@ -1832,16 +1539,11 @@ class CreateCreditNote extends React.Component {
                                           className="react-switch "
                                         />
                                         {this.state.taxType === true ? (
-                                          <span
-                                            style={{ color: "#0069d9" }}
-                                            className="ml-4"
-                                          >
+                                          <span style={{ color: '#0069d9' }} className="ml-4">
                                             <b>{strings.Inclusive}</b>
                                           </span>
                                         ) : (
-                                          <span className="ml-4">
-                                            {strings.Inclusive}
-                                          </span>
+                                          <span className="ml-4">{strings.Inclusive}</span>
                                         )}
                                       </Col>
                                     </Row>
@@ -1851,25 +1553,21 @@ class CreateCreditNote extends React.Component {
                                           data={data}
                                           initValue={initValue}
                                           isRegisteredVat={isRegisteredVat}
-                                          universal_currency_list={
-                                            universal_currency_list
-                                          }
-                                          setData={(data) => {
+                                          universal_currency_list={universal_currency_list}
+                                          setData={data => {
                                             this.setState({ data: data });
                                             this.formRef.current.setFieldValue(
-                                              "lineItemsString",
+                                              'lineItemsString',
                                               data,
                                               true
                                             );
                                             this.formRef.current.setFieldTouched(
-                                              `lineItemsString[${
-                                                data.length - 1
-                                              }]`,
+                                              `lineItemsString[${data.length - 1}]`,
                                               false,
                                               true
                                             );
                                           }}
-                                          setIdCount={(idCount) => {
+                                          setIdCount={idCount => {
                                             this.setState({ idCount: idCount });
                                           }}
                                           props={props}
@@ -1877,23 +1575,16 @@ class CreateCreditNote extends React.Component {
                                           vat_list={vat_list}
                                           product_list={product_list}
                                           excise_list={excise_list}
-                                          discountEnabled={
-                                            initValue.discount != 0
-                                              ? true
-                                              : false
-                                          }
+                                          discountEnabled={initValue.discount != 0 ? true : false}
                                           idCount={idCount}
-                                          updateAmount={(data) => {
+                                          updateAmount={data => {
                                             this.updateAmount(data);
                                           }}
                                           enableAccount={false}
-                                          exchangeRate={
-                                            props.values.exchangeRate
-                                          }
+                                          exchangeRate={props.values.exchangeRate}
                                           disableVat={!isRegisteredVat}
-                                          getProductType={(id) => {
-                                            const vat_list =
-                                              this.getProductType(id);
+                                          getProductType={id => {
+                                            const vat_list = this.getProductType(id);
                                             return vat_list;
                                           }}
                                           disableAll={true}
@@ -1908,20 +1599,10 @@ class CreateCreditNote extends React.Component {
                                             <Input
                                               type="checkbox"
                                               id="discountEnabled"
-                                              checked={
-                                                initValue.discount != 0
-                                                  ? true
-                                                  : false
-                                              }
-                                              value={
-                                                initValue.discount != 0
-                                                  ? true
-                                                  : false
-                                              }
+                                              checked={initValue.discount != 0 ? true : false}
+                                              value={initValue.discount != 0 ? true : false}
                                             />
-                                            <Label>
-                                              {strings.ApplyLineItemDiscount}
-                                            </Label>
+                                            <Label>{strings.ApplyLineItemDiscount}</Label>
                                           </FormGroup>
                                         </Col>
                                       </Row>
@@ -1932,23 +1613,19 @@ class CreateCreditNote extends React.Component {
                                   <Row>
                                     <Col lg={8}>
                                       <FormGroup className="py-2">
-                                        <Label htmlFor="notes">
-                                          {strings.RefundNotes}
-                                        </Label>
+                                        <Label htmlFor="notes">{strings.RefundNotes}</Label>
                                         <br />
                                         <TextField
                                           type="textarea"
                                           multiline
-                                          style={{ width: "500px" }}
+                                          style={{ width: '500px' }}
                                           className="textarea"
                                           inputProps={{ maxLength: 255 }}
                                           name="notes"
                                           id="notes"
                                           maxRows={4}
                                           placeholder={strings.DeliveryNotes}
-                                          onChange={(option) =>
-                                            props.handleChange("notes")(option)
-                                          }
+                                          onChange={option => props.handleChange('notes')(option)}
                                           value={props.values.notes}
                                         />
                                       </FormGroup>
@@ -1965,19 +1642,15 @@ class CreateCreditNote extends React.Component {
                                               id="receiptNumber"
                                               name="receiptNumber"
                                               value={props.values.receiptNumber}
-                                              placeholder={
-                                                strings.ReceiptNumber
-                                              }
-                                              onChange={(value) => {
-                                                props.handleChange(
-                                                  "receiptNumber"
-                                                )(value);
+                                              placeholder={strings.ReceiptNumber}
+                                              onChange={value => {
+                                                props.handleChange('receiptNumber')(value);
                                               }}
                                               className={
                                                 props.errors.receiptNumber &&
                                                 props.touched.receiptNumber
-                                                  ? "is-invalid"
-                                                  : " "
+                                                  ? 'is-invalid'
+                                                  : ' '
                                               }
                                             />
                                             {props.errors.receiptNumber &&
@@ -1994,36 +1667,26 @@ class CreateCreditNote extends React.Component {
                                               name="attachmentFile"
                                               render={({ field, form }) => (
                                                 <div>
-                                                  <Label>
-                                                    {strings.ReceiptAttachment}
-                                                  </Label>{" "}
-                                                  <br />
+                                                  <Label>{strings.ReceiptAttachment}</Label> <br />
                                                   <Button
                                                     color="primary"
                                                     onClick={() => {
-                                                      document
-                                                        .getElementById(
-                                                          "fileInput"
-                                                        )
-                                                        .click();
+                                                      document.getElementById('fileInput').click();
                                                     }}
                                                     className="btn-square mr-3"
                                                   >
-                                                    <i className="fa fa-upload"></i>{" "}
+                                                    <i className="fa fa-upload"></i>{' '}
                                                     {strings.upload}
                                                   </Button>
                                                   <input
                                                     id="fileInput"
-                                                    ref={(ref) => {
+                                                    ref={ref => {
                                                       this.uploadFile = ref;
                                                     }}
                                                     type="file"
-                                                    style={{ display: "none" }}
-                                                    onChange={(e) => {
-                                                      this.handleFileChange(
-                                                        e,
-                                                        props
-                                                      );
+                                                    style={{ display: 'none' }}
+                                                    onChange={e => {
+                                                      this.handleFileChange(e, props);
                                                     }}
                                                   />
                                                   {this.state.fileName && (
@@ -2032,10 +1695,10 @@ class CreateCreditNote extends React.Component {
                                                         className="fa fa-close"
                                                         onClick={() =>
                                                           this.setState({
-                                                            fileName: "",
+                                                            fileName: '',
                                                           })
                                                         }
-                                                      ></i>{" "}
+                                                      ></i>{' '}
                                                       {this.state.fileName}
                                                     </div>
                                                   )}
@@ -2060,22 +1723,17 @@ class CreateCreditNote extends React.Component {
                                           type="textarea"
                                           className="textarea form-control"
                                           maxLength="250"
-                                          style={{ width: "700px" }}
+                                          style={{ width: '700px' }}
                                           name="receiptAttachmentDescription"
                                           id="receiptAttachmentDescription"
                                           rows="2"
-                                          placeholder={
-                                            strings.ReceiptAttachmentDescription
+                                          placeholder={strings.ReceiptAttachmentDescription}
+                                          onChange={option =>
+                                            props.handleChange('receiptAttachmentDescription')(
+                                              option
+                                            )
                                           }
-                                          onChange={(option) =>
-                                            props.handleChange(
-                                              "receiptAttachmentDescription"
-                                            )(option)
-                                          }
-                                          value={
-                                            props.values
-                                              .receiptAttachmentDescription
-                                          }
+                                          value={props.values.receiptAttachmentDescription}
                                         />
                                       </FormGroup>
                                     </Col>
@@ -2083,16 +1741,10 @@ class CreateCreditNote extends React.Component {
                                       <Col lg={4}>
                                         <TotalCalculation
                                           initValue={initValue}
-                                          currency_symbol={
-                                            initValue.currencyIsoCode
-                                          }
+                                          currency_symbol={initValue.currencyIsoCode}
                                           isRegisteredVat={isRegisteredVat}
                                           strings={strings}
-                                          discountEnabled={
-                                            initValue.discount != 0
-                                              ? true
-                                              : false
-                                          }
+                                          discountEnabled={initValue.discount != 0 ? true : false}
                                         />
                                       </Col>
                                     )}
@@ -2101,22 +1753,18 @@ class CreateCreditNote extends React.Component {
                                   <Row>
                                     <Col lg={8}>
                                       <FormGroup className="py-2">
-                                        <Label htmlFor="notes">
-                                          {strings.RefundNotes}
-                                        </Label>
+                                        <Label htmlFor="notes">{strings.RefundNotes}</Label>
                                         <br />
                                         <TextareaAutosize
                                           type="textarea"
-                                          style={{ width: "700px" }}
+                                          style={{ width: '700px' }}
                                           className="textarea form-control"
                                           maxLength="255"
                                           name="notes"
                                           id="notes"
                                           rows="2"
                                           placeholder={strings.DeliveryNotes}
-                                          onChange={(option) =>
-                                            props.handleChange("notes")(option)
-                                          }
+                                          onChange={option => props.handleChange('notes')(option)}
                                           value={props.values.notes}
                                         />
                                       </FormGroup>
@@ -2136,40 +1784,27 @@ class CreateCreditNote extends React.Component {
                                         disabled={
                                           this.state.disabled ||
                                           (parseFloat(
-                                            parseFloat(
-                                              initValue.totalAmount
-                                            ).toFixed(2)
-                                          ) >
-                                            this.state.remainingInvoiceAmount &&
+                                            parseFloat(initValue.totalAmount).toFixed(2)
+                                          ) > this.state.remainingInvoiceAmount &&
                                             !isCreatedWIWP)
                                         }
                                         onClick={() => {
-                                          console.log(props.errors, "Error");
+                                          console.log(props.errors, 'Error');
                                           //	added validation popup	msg
                                           props.handleBlur();
-                                          if (
-                                            props.errors &&
-                                            Object.keys(props.errors).length !=
-                                              0
-                                          )
+                                          if (props.errors && Object.keys(props.errors).length != 0)
                                             this.props.commonActions.fillManDatoryDetails();
 
-                                          this.setState(
-                                            { createMore: false },
-                                            () => {
-                                              props.handleSubmit();
-                                            }
-                                          );
+                                          this.setState({ createMore: false }, () => {
+                                            props.handleSubmit();
+                                          });
                                         }}
                                       >
-                                        <i className="fa fa-dot-circle-o"></i>{" "}
-                                        {this.state.disabled
-                                          ? "Creating..."
-                                          : strings.Create}
+                                        <i className="fa fa-dot-circle-o"></i>{' '}
+                                        {this.state.disabled ? 'Creating...' : strings.Create}
                                       </Button>
 
-                                      {!this.props.location?.state
-                                        ?.invoiceID && (
+                                      {!this.props.location?.state?.invoiceID && (
                                         <Button
                                           type="button"
                                           color="primary"
@@ -2177,12 +1812,8 @@ class CreateCreditNote extends React.Component {
                                           disabled={
                                             this.state.disabled ||
                                             (parseFloat(
-                                              parseFloat(
-                                                initValue.totalAmount
-                                              ).toFixed(2)
-                                            ) >
-                                              this.state
-                                                .remainingInvoiceAmount &&
+                                              parseFloat(initValue.totalAmount).toFixed(2)
+                                            ) > this.state.remainingInvoiceAmount &&
                                               !isCreatedWIWP)
                                           }
                                           onClick={() => {
@@ -2190,8 +1821,7 @@ class CreateCreditNote extends React.Component {
                                             props.handleBlur();
                                             if (
                                               props.errors &&
-                                              Object.keys(props.errors)
-                                                .length != 0
+                                              Object.keys(props.errors).length != 0
                                             )
                                               this.props.commonActions.fillManDatoryDetails();
                                             this.setState(
@@ -2204,9 +1834,9 @@ class CreateCreditNote extends React.Component {
                                             );
                                           }}
                                         >
-                                          <i className="fa fa-refresh"></i>{" "}
+                                          <i className="fa fa-refresh"></i>{' '}
                                           {this.state.disabled
-                                            ? "Creating..."
+                                            ? 'Creating...'
                                             : strings.CreateandMore}
                                         </Button>
                                       )}
@@ -2214,44 +1844,32 @@ class CreateCreditNote extends React.Component {
                                         color="secondary"
                                         className="btn-square"
                                         onClick={() => {
-                                          if (
-                                            this.props?.location?.state
-                                              ?.renderURL
-                                          ) {
+                                          if (this.props?.location?.state?.renderURL) {
                                             this.props.history.push(
                                               `${this.props?.location?.state?.renderURL}`,
                                               {
-                                                id: this.props?.location?.state
-                                                  ?.renderID,
+                                                id: this.props?.location?.state?.renderID,
                                               }
                                             );
-                                          } else if (
-                                            this.props.location?.state
-                                              ?.invoiceID
-                                          )
+                                          } else if (this.props.location?.state?.invoiceID)
                                             this.props.history.push(
-                                              "/admin/income/customer-invoice"
+                                              '/admin/income/customer-invoice'
                                             );
                                           else
-                                            this.props.history.push(
-                                              "/admin/income/credit-notes"
-                                            );
+                                            this.props.history.push('/admin/income/credit-notes');
                                         }}
                                       >
-                                        <i className="fa fa-ban"></i>{" "}
-                                        {strings.Cancel}
+                                        <i className="fa fa-ban"></i> {strings.Cancel}
                                       </Button>
                                     </FormGroup>
                                   </Col>
                                 </Row>
 
-                                {parseFloat(
-                                  parseFloat(initValue.totalAmount).toFixed(2)
-                                ) > this.state.remainingInvoiceAmount &&
+                                {parseFloat(parseFloat(initValue.totalAmount).toFixed(2)) >
+                                  this.state.remainingInvoiceAmount &&
                                   !isCreatedWIWP && (
-                                    <div style={{ color: "red" }}>
-                                      Remaining Invoice Amount cananot less than
-                                      Total Amount sdgsdg
+                                    <div style={{ color: 'red' }}>
+                                      Remaining Invoice Amount cananot less than Total Amount sdgsdg
                                       {this.state.isCreatedWithoutInvoice}
                                     </div>
                                   )}
@@ -2267,7 +1885,7 @@ class CreateCreditNote extends React.Component {
             </Row>
           </div>
         </div>
-        {this.state.disableLeavePage ? "" : <LeavePage />}
+        {this.state.disableLeavePage ? '' : <LeavePage />}
       </div>
     );
   }
