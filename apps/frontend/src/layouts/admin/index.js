@@ -109,7 +109,11 @@ class AdminLayout extends React.Component {
 
       return (
         <li key={item.url} className="nav-item">
-          <NavLink to={item.url} className="nav-link" activeClassName="active" exact>
+          <NavLink
+            to={item.url}
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            end
+          >
             {item.icon && <i className={`nav-icon ${item.icon}`} />}
             <span>{item.name}</span>
           </NavLink>
@@ -142,15 +146,23 @@ class AdminLayout extends React.Component {
             }
             
             if (userData?.role?.roleCode) {
-              await this.props.commonActions.getRoleList(userData.role.roleCode);
+              const roleListAction = await this.props.commonActions.getRoleList(userData.role.roleCode);
+              console.log('[AdminLayout Debug] getRoleList action:', roleListAction);
+              if (roleListAction && roleListAction.type && roleListAction.type.includes('fulfilled')) {
+                console.log('[AdminLayout Debug] getRoleList fulfilled, payload:', roleListAction.payload);
+              } else {
+                console.warn('[AdminLayout Debug] getRoleList rejected or pending:', roleListAction);
+              }
+            } else {
+              console.warn('[AdminLayout Debug] No roleCode found in userData:', userData);
             }
-            await this.props.commonActions.getCompanyCurrency();
-            await this.props.commonActions.getCurrencyConversionList();
-            await this.props.commonActions.getVatList();
-            await this.props.commonActions.getCurrencyList();
-            this.setState({
-              loading: false,
-            });
+          await this.props.commonActions.getCompanyCurrency();
+          await this.props.commonActions.getCurrencyConversionList();
+          await this.props.commonActions.getVatList();
+          await this.props.commonActions.getCurrencyList();
+          this.setState({
+            loading: false,
+          });
           } else {
             // Auth check failed - user not authenticated
             this.props.commonActions.tostifyAlert('error', 'Session Timed out');
@@ -223,6 +235,14 @@ class AdminLayout extends React.Component {
     };
     const { loading, loadingMsg, SubscriptionMessage, sidebarShow, sidebarMinimized } = this.state;
     const { user_role_list, user_list } = this.props;
+    console.log('[AdminLayout Debug] Render - user_role_list:', user_role_list);
+    console.log('[AdminLayout Debug] Render - loading:', loading);
+    console.log('[AdminLayout Debug] Render - Config.DASHBOARD:', config.DASHBOARD);
+    console.log('[AdminLayout Debug] Render - adminRoutes length:', adminRoutes?.length);
+    const dashboardRoute = adminRoutes?.find(r => r?.path === '/admin/dashboard');
+    console.log('[AdminLayout Debug] Render - dashboard route:', dashboardRoute);
+    console.log('[AdminLayout Debug] Render - dashboard route type:', typeof dashboardRoute, dashboardRoute === false, dashboardRoute === null, dashboardRoute === undefined);
+    console.log('[AdminLayout Debug] Render - first 5 routes:', adminRoutes?.slice(0, 5).map(r => ({ path: r?.path, name: r?.name, hasPath: !!r?.path })));
     var arr = [];
 
     function parentPathPresent(arr, name) {
@@ -363,9 +383,14 @@ class AdminLayout extends React.Component {
                   />
                   <Routes>
                     {adminRoutes?.map((prop, key) => {
+                      if (!prop || !prop.path) {
+                        console.log('[AdminLayout Debug] Skipping invalid route at index', key, prop);
+                        return null;
+                      }
                       if (prop?.redirect) {
                         return <Route path={prop.path} key={key} element={<Navigate to={prop.pathTo} replace />} />;
                       }
+                      console.log('[AdminLayout Debug] Rendering route:', prop?.path, prop?.name, prop?.component);
                       return (
                         <Route
                           path={prop.path}

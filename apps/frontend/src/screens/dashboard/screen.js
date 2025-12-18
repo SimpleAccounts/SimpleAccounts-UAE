@@ -53,8 +53,20 @@ class Dashboard extends React.Component {
 		};
 	}
 	
+	componentDidMount() {
+		console.log('[Dashboard Debug] Dashboard screen componentDidMount called');
+		console.log('[Dashboard Debug] Dashboard props:', this.props);
+		console.log('[Dashboard Debug] Dashboard state from Redux:', {
+			bank_account_type: this.props.bank_account_type,
+			bank_account_graph: this.props.bank_account_graph,
+			cash_flow_graph: this.props.cash_flow_graph,
+			invoice_graph: this.props.invoice_graph,
+			profit_loss: this.props.profit_loss,
+		});
+	}
 
 	render() {
+		console.log('[Dashboard Debug] Dashboard render called');
 		return (
 			<div className="dashboard-screen">
 				<div className="animated fadeIn">

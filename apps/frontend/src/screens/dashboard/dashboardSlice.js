@@ -73,11 +73,26 @@ export const getBankAccountTypes = createAsyncThunk(
 
 export const getBankAccountGraphData = createAsyncThunk(
   'dashboard/getBankAccountGraphData',
-  async ({ account, daterange }, { rejectWithValue }) => {
+  async (args, { rejectWithValue }) => {
     try {
+      // Handle both object and array arguments
+      let accountId, monthCount;
+      if (Array.isArray(args)) {
+        // Called with array: [account, daterange]
+        accountId = args[0];
+        monthCount = args[1];
+      } else if (typeof args === 'object' && args !== null) {
+        // Called with object: { account, daterange }
+        accountId = args.account;
+        monthCount = args.daterange;
+      } else {
+        // Single argument (fallback)
+        accountId = args;
+        monthCount = 12; // default
+      }
       const data = {
         method: 'GET',
-        url: `/rest/bank/getBankChart?bankId=${account}&monthCount=${daterange}`,
+        url: `/rest/bank/getBankChart?bankId=${accountId}&monthCount=${monthCount}`,
       };
       const res = await authApi(data);
       if (res.status === 200) {
@@ -235,7 +250,7 @@ const dashboardSlice = createSlice({
       })
       // getProfitLossReport
       .addCase(getProfitLossReport.fulfilled, (state, action) => {
-        state.invoice_graph = action.payload;
+        state.proft_loss = action.payload;
       })
       // getBankAccountTypes
       .addCase(getBankAccountTypes.fulfilled, (state, action) => {

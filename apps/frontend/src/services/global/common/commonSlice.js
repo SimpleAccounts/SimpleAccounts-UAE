@@ -63,7 +63,8 @@ export const getCurrencyConversionList = createAsyncThunk(
         url: `/rest/currencyConversion/getActiveCurrencyConversionList`,
       };
       const res = await authApi(data);
-      return res;
+      // Return only the data, not the full response object with config
+      return res.data || res;
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);
     }
@@ -468,7 +469,8 @@ const commonSlice = createSlice({
       })
       // getCurrencyConversionList
       .addCase(getCurrencyConversionList.fulfilled, (state, action) => {
-        state.currency_convert_list = action.payload.data;
+        // Thunk already returns res.data || res, so payload is the data array directly
+        state.currency_convert_list = action.payload || [];
       })
       // getStateList
       .addCase(getStateList.fulfilled, (state, action) => {

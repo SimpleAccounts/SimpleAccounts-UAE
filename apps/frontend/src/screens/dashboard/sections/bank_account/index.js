@@ -93,7 +93,9 @@ class BankAccount extends Component {
   };
 
   getBankAccountGraphData = (account, dateRange) => {
-    this.props.DashboardActions.getBankAccountGraphData(account, dateRange);
+    if (account && dateRange) {
+      this.props.DashboardActions.getBankAccountGraphData({ account, daterange: dateRange });
+    }
   };
 
   // componentWillReceiveProps(newProps) {
@@ -175,7 +177,7 @@ class BankAccount extends Component {
                   ref={this.bankAccountSelect}
                   onChange={e => this.handleChange(e)}
                 >
-                  {this.props.bank_account_type.map((account, index) => (
+                  {(this.props.bank_account_type || []).map((account, index) => (
                     <option key={index} value={account.bankAccountId}>
                       {account.name + '-' + account.accounName}
                     </option>
@@ -185,7 +187,7 @@ class BankAccount extends Component {
             </Row>
             <Row className="text-center mt-2" style={{ display: 'block' }}>
               <p style={{ fontWeight: 500, textIndent: 5, marginTop: '-4px' }}>
-                {strings.Lastupdatedon} {this.props.bank_account_graph.updatedDate}
+                {strings.Lastupdatedon} {graphData.updatedDate || ''}
               </p>
             </Row>
             <Row style={{ marginBottom: '10px' }}>
@@ -205,7 +207,7 @@ class BankAccount extends Component {
                     {universal_currency_list[0] && (
                       <Currency
                         value={
-                          this.props.bank_account_graph.balance
+                          this.props.bank_account_graph?.balance
                             ? this.props.bank_account_graph.balance
                             : 0
                         }

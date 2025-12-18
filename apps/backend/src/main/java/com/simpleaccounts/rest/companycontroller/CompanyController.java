@@ -275,7 +275,7 @@ public class CompanyController {
 			String encodedPassword = null;
 			if (password != null && !password.trim().isEmpty()) {
 				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-				encodedPassword = passwordEncoder.encode(password);
+				 encodedPassword = passwordEncoder.encode(password);
 				registrationModel.setPassword(encodedPassword);
 			} else {
 				log.warn("Password is null or empty");
@@ -343,7 +343,7 @@ public class CompanyController {
 			selecteduser.setEmail(registrationModel.getEmail());
 			selecteduser.setUrl(registrationModel.getLoginUrl());
 			selecteduser.setPassword(registrationModel.getPassword());
-			
+
 			// Create password token and attempt to send email
 			String passwordToken = userService.createPassword(user, selecteduser, null);
 
