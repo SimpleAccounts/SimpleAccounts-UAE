@@ -2,17 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-	Button,
-	Card,
-	CardBody,
-	CardGroup,
-	Col,
-	Container,
-	Form,
-	Input,
-	Row,
-	FormGroup,
-	Label,
+  Button,
+  Card,
+  CardBody,
+  CardGroup,
+  Col,
+  Container,
+  Form,
+  Input,
+  Row,
+  FormGroup,
+  Label,
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
@@ -24,1001 +24,969 @@ import { AuthActions, CommonActions } from 'services/global';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-toastify/dist/ReactToastify.css';
-import PhoneInput from "react-phone-input-2";
+import PhoneInput from 'react-phone-input-2';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
-import { data } from '../Language/index'
+import { data } from '../Language/index';
 import LocalizedStrings from 'react-localization';
 import { upperFirst } from 'lodash-es';
-import PasswordChecklist from "react-password-checklist";
+import PasswordChecklist from 'react-password-checklist';
 import configData from '../../constants/config';
 import { version } from 'core-js';
 import { withNavigation } from 'utils/withNavigation';
-
-
-const mapStateToProps = (state) => {
-	return {
-		country_list: state.common.country_list,
-		state_list: state.common.state_list,
-		version: state.common.version,
-		universal_currency_list: state.common.universal_currency_list,
-		company_type_list: state.common.company_type_list,
-	};
-};
 // Use import instead of require for Vite compatibility
 import eye from 'assets/images/settings/eye.png';
-const mapDispatchToProps = (dispatch) => {
-	return {
-		authActions: bindActionCreators(AuthActions, dispatch),
-		commonActions: bindActionCreators(CommonActions, dispatch),
-	};
+
+const mapStateToProps = state => {
+  return {
+    country_list: state.common.country_list,
+    state_list: state.common.state_list,
+    version: state.common.version,
+    universal_currency_list: state.common.universal_currency_list,
+    company_type_list: state.common.company_type_list,
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    authActions: bindActionCreators(AuthActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch),
+  };
 };
 const options = [
-	{ value: 'chocolate', label: 'Chocolate' },
-	{ value: 'strawberry', label: 'Strawberry' },
-	{ value: 'vanilla', label: 'Vanilla' },
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' },
 ];
-
 
 let strings = new LocalizedStrings(data);
 class Register extends React.Component {
-	constructor(props) {
-		super(props);
-		//alert("version", this.state.version);
-		this.state = {
-			isPasswordShown: false,
-			sabackend: '',
-			currencyList: [],
-			country_list: [
-				{
-					countryCode: 229,
-					countryDescription: '',
-					countryFullName: "United Arab Emirates - (null)",
-					countryName: "United Arab Emirates",
-					createdBy: '',
-					createdDate: '',
-					currencyCode: '',
-					defaltFlag: "Y",
-					deleteFlag: false,
-					isoAlpha3Code: '',
-					lastUpdateBy: '',
-					lastUpdateDate: '',
-					orderSequence: '',
-					versionNumber: 1,
-				}
-			],
-			initValue: {
-				companyName: '',
-				currencyCode: 150,
-				companyTypeCode: '',
-				industryTypeCode: '',
-				firstName: '',
-				lastName: '',
-				email: '',
-				password: '',
-				confirmPassword: '',
-				timeZone: "Asia/Dubai", // Changed from object to string to match validation
-				countryId: 229,
-				stateId: '',
-				IsDesignatedZone: false,
-				IsRegistered: false,
-				TaxRegistrationNumber: '',
-				vatRegistrationDate: '',
-				companyAddress1: '',
-				phoneNumber: '',
-				// Removed duplicate password and confirmPassword entries
+  constructor(props) {
+    super(props);
+    //alert("version", this.state.version);
+    this.state = {
+      isPasswordShown: false,
+      sabackend: '',
+      currencyList: [],
+      country_list: [
+        {
+          countryCode: 229,
+          countryDescription: '',
+          countryFullName: 'United Arab Emirates - (null)',
+          countryName: 'United Arab Emirates',
+          createdBy: '',
+          createdDate: '',
+          currencyCode: '',
+          defaltFlag: 'Y',
+          deleteFlag: false,
+          isoAlpha3Code: '',
+          lastUpdateBy: '',
+          lastUpdateDate: '',
+          orderSequence: '',
+          versionNumber: 1,
+        },
+      ],
+      initValue: {
+        companyName: '',
+        currencyCode: 150,
+        companyTypeCode: '',
+        industryTypeCode: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        timeZone: 'Asia/Dubai', // Changed from object to string to match validation
+        countryId: 229,
+        stateId: '',
+        IsDesignatedZone: false,
+        IsRegistered: false,
+        TaxRegistrationNumber: '',
+        vatRegistrationDate: '',
+        companyAddress1: '',
+        phoneNumber: '',
+        // Removed duplicate password and confirmPassword entries
+      },
+      userDetail: false,
+      loading: false,
+      checkphoneNumberParam: false,
+      loadingMsg: 'Loading...',
+      isDesignatedZone: false,
+      // timeZone: "Asia/Dubai",
+      // timezone: {	label: "Asia/Dubai",value: "Asia/Dubai"	},
+    };
 
-			},
-			userDetail: false,
-			loading: false,
-			checkphoneNumberParam: false,
-			loadingMsg: "Loading...",
-			isDesignatedZone: false,
-			// timeZone: "Asia/Dubai",
-			// timezone: {	label: "Asia/Dubai",value: "Asia/Dubai"	},
-		};
+    this.regEx = /^[0-9\d]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
+  }
 
-		this.regEx = /^[0-9\d]+$/;
-		this.regExAlpha = /^[a-zA-Z ]+$/;
-	}
+  componentDidMount = () => {
+    this.getInitialData();
+    this.getBackendRelease();
+  };
+  getBackendRelease = () => {
+    return new Promise((resolve, reject) => {
+      this.props.authActions
+        .getSimpleAccountsreleasenumber()
+        .then(backendVersion => {
+          const backendRelease = backendVersion.simpleAccountsRelease;
+          this.setState({ sabackend: backendRelease }); // Set the value in the component state
+          resolve(backendRelease);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  };
+  getStateList = countryCode => {
+    this.props.commonActions.getStateList(229);
+  };
+  getInitialData = () => {
+    this.props.authActions
+      .getTimeZoneList()
+      .then(response => {
+        if (response && response.data && Array.isArray(response.data)) {
+          let output = response.data.map(function (value) {
+            return { label: value, value: value };
+          });
+          this.setState({ timezone: output });
+        }
+      })
+      .catch(err => {
+        // On error, set empty timezone list
+        this.setState({ timezone: [] });
+      });
 
+    this.props.commonActions.getStateList().catch(() => {
+      // Silently handle errors
+    });
+    // this.props.commonActions.getCountryList();
+    this.props.commonActions.getCompanyTypeListRegister().catch(() => {
+      // Silently handle errors
+    });
 
+    this.props.authActions.getCurrencyList().catch(() => {
+      // Silently handle errors
+    });
+    this.props.authActions
+      .getCompanyCount()
+      .then(response => {
+        if (response && response.data > 0) {
+          this.props.history.push('/login');
+        }
+      })
+      .catch(err => {
+        // If API fails, stay on register screen (allow registration)
+        // This matches the old behavior where errors would prevent redirect
+      });
+  };
 
-	componentDidMount = () => {
-		this.getInitialData();
-		this.getBackendRelease();
-	};
-	getBackendRelease = () => {
-		return new Promise((resolve, reject) => {
-			this.props.authActions
-				.getSimpleAccountsreleasenumber()
-				.then((backendVersion) => {
-					const backendRelease = backendVersion.simpleAccountsRelease;
-					this.setState({ sabackend: backendRelease }); // Set the value in the component state
-					resolve(backendRelease);
-				})
-				.catch((error) => {
-					reject(error);
-				});
-		});
-	};
-	getStateList = (countryCode) => {
-		this.props.commonActions.getStateList(229);
-	};
-	getInitialData = () => {
-		this.props.authActions.getTimeZoneList().then((response) => {
-			if (response && response.data && Array.isArray(response.data)) {
-				let output = response.data.map(function (value) {
-					return { label: value, value: value };
-				});
-				this.setState({ timezone: output });
-			}
-		}).catch((err) => {
-			// On error, set empty timezone list
-			this.setState({ timezone: [] });
-		});
+  // togglePasswordVisiblity = () => {
+  // 	this.setState({
+  // 		passwordShown: !this.state.passwordShown,
+  // 	});
+  // };
+  // togglePasswordVisiblity = () => {
+  // 	const { isPasswordShown } = this.state;
+  // 	this.setState({ isPasswordShown: !isPasswordShown });
+  //   };
+  handleChange = (key, val) => {
+    this.setState({
+      [key]: val,
+    });
+  };
 
-		this.props.commonActions.getStateList().catch(() => {
-			// Silently handle errors
-		});
-		// this.props.commonActions.getCountryList();
-		this.props.commonActions.getCompanyTypeListRegister().catch(() => {
-			// Silently handle errors
-		});
+  registerStrapiUser = datauser => {
+    this.setState({});
+    const { userName, email, password, first_name, lastName, MobileNumber } = datauser;
+  };
 
-		this.props.authActions.getCurrencyList().catch(() => {
-			// Silently handle errors
-		});
-		this.props.authActions.getCompanyCount().then((response) => {
-			if (response && response.data > 0) {
-				this.props.history.push('/login');
-			}
-		}).catch((err) => {
-			// If API fails, stay on register screen (allow registration)
-			// This matches the old behavior where errors would prevent redirect
-		});
-	};
+  handleSubmit = (data, resetForm) => {
+    // Removed password from console.log for security - only log non-sensitive fields
+    const { password: userPassword, confirmPassword, ...safeData } = data;
+    console.log('handleSubmit called - registration started for:', {
+      companyName: safeData.companyName,
+      email: safeData.email,
+      firstName: safeData.firstName,
+      lastName: safeData.lastName,
+    });
 
-	// togglePasswordVisiblity = () => {
-	// 	this.setState({
-	// 		passwordShown: !this.state.passwordShown,
-	// 	});
-	// };
-	// togglePasswordVisiblity = () => {
-	// 	const { isPasswordShown } = this.state;
-	// 	this.setState({ isPasswordShown: !isPasswordShown });
-	//   };
-	handleChange = (key, val) => {
-		this.setState({
-			[key]: val,
-		});
-	};
+    //below code to get backend release number
+    const { sabackend } = this.state;
+    //end of code block
+    this.setState({ loading: true });
+    const {
+      companyName,
+      currencyCode,
+      countryCode,
+      companyTypeCode,
+      industryTypeCode,
+      firstName,
+      lastName,
+      email,
+      password: formPassword,
+      timeZone,
+      countryId,
+      stateId,
+      IsDesignatedZone,
+      IsRegistered,
+      TaxRegistrationNumber,
+      phoneNumber,
+      vatRegistrationDate,
+      companyAddress1,
+      companyAddress2,
+      domainName,
+      companyURL,
+      frontend,
+      backend,
+      status,
+      createdAt,
+      updatedAt,
+      id,
+      userName,
+      provider,
+      confirmed,
+      blocked,
+      nickname,
+      activePlan,
+    } = data;
 
-	registerStrapiUser = (datauser) => {
-		this.setState({})
-		const {
-			userName,
-			email,
-			password,
-			first_name,
-			lastName,
-			MobileNumber
-		} = datauser;
-	}
+    let companyStrapiObj = {
+      CompanyName: companyName,
+      currency: currencyCode ? currencyCode : '',
+      companyType: companyTypeCode,
+      industryTypeCode: industryTypeCode,
+      // countryCode: countryCode ? countryCode : '',
+      country: 'UAE',
+      stateId: stateId.value,
+      IsDesignatedZone: this.state.isDesignatedZone ? this.state.isDesignatedZone : false,
+      IsRegisteredVat: IsRegistered ? IsRegistered : false,
+      TaxRegistrationNumber: TaxRegistrationNumber,
+      vatRegistrationDate: vatRegistrationDate,
+      domainName: configData.API_ROOT_URL,
+      companyURL: companyName,
+      frontend: configData.FRONTEND_RELEASE,
+      backend: sabackend,
+      status: 'nosub',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      TimeZonePrefrence: 'Asia/Dubai',
+      Emirate: stateId.label,
+      MobileNumber: phoneNumber,
+      IsVatRegistered: IsRegistered ? IsRegistered : false,
+      CompanyLocatedAt: 'Dubai',
+      Currency: 'UAE Dirham - AED',
+      CompanyAddressLine1: companyAddress1,
+      CompanyAddressLine2: companyAddress2,
+      // id: null,
+      user: {
+        id: '6',
+        username: email,
+        email: email,
+        provider: 'local',
+        confirmed: true,
+        blocked: false,
+        nickname: null,
+        firstname: firstName,
+        lastname: lastName,
+        createdAt: '2023-02-16T01:31:47.856Z',
+        updatedAt: '2023-02-16T02:32:18.563Z',
+      },
+      activePlan: null,
+      isPasswordShown: false,
+    };
+    let formData = new FormData();
+    // for (var key in this.state.initValue) {
+    // 	formData.append(key, data[key]);
+    // }
+    formData.append('companyName', companyName ? companyName : '');
+    formData.append('currencyCode', currencyCode ? currencyCode : '');
+    formData.append('firstName', firstName ? firstName : '');
+    formData.append('lastName', lastName ? lastName : '');
+    formData.append('email', email ? email : '');
+    formData.append('timeZone', 'Asia/Dubai');
+    // formData.append('countryCode',	countryCode ? countryCode.value : '');
+    formData.append('countryId', countryId ? countryId : '229');
+    // Handle stateId - can be object (from Select) or string/number
+    let stateIdValue = '';
+    if (stateId) {
+      if (typeof stateId === 'object' && stateId.value !== undefined) {
+        stateIdValue = stateId.value;
+      } else if (typeof stateId === 'string' || typeof stateId === 'number') {
+        stateIdValue = stateId;
+      }
+    }
+    formData.append('stateId', stateIdValue);
+    formData.append('phoneNumber', phoneNumber ? phoneNumber : '');
+    formData.append(
+      'IsDesignatedZone',
+      this.state.isDesignatedZone ? this.state.isDesignatedZone : false
+    );
+    if (IsRegistered) {
+      formData.append('IsRegisteredVat', IsRegistered);
+    }
+    if (TaxRegistrationNumber) {
+      formData.append('TaxRegistrationNumber', TaxRegistrationNumber);
+    }
+    if (vatRegistrationDate) {
+      formData.append('vatRegistrationDate', vatRegistrationDate);
+    }
+    formData.append('companyTypeCode', companyTypeCode ? companyTypeCode : '');
+    formData.append('companyAddressLine1', companyAddress1 ? companyAddress1 : '');
+    formData.append('companyAddressLine2', companyAddress2 ? companyAddress2 : '');
+    formData.append('loginUrl', window.location.origin);
+    formData.append('password', formPassword);
 
+    toast.success('Please wait till we setup your account', {
+      position: 'top-right',
+      autoClose: 40000,
+    });
 
+    {
+      this.setState({
+        loading: true,
+        loadingMsg: 'Registering Company,',
+        NextloadingMsg: 'Please wait till we setup your account',
+      });
+    }
 
-	handleSubmit = (data, resetForm) => {
-		// Removed password from console.log for security - only log non-sensitive fields
-		const { password: userPassword, confirmPassword, ...safeData } = data;
-		console.log('handleSubmit called - registration started for:', {
-			companyName: safeData.companyName,
-			email: safeData.email,
-			firstName: safeData.firstName,
-			lastName: safeData.lastName
-		});
+    // this.props.authActions
+    // 	.registerStrapy(obj)
+    let strapiUserObj = {
+      username: email,
+      email: email,
+      password: formPassword,
+      first_name: firstName,
+      last_name: lastName,
+      MobileNumber: phoneNumber,
+    };
 
-		//below code to get backend release number 
-		const { sabackend } = this.state;
-		//end of code block
-		this.setState({ loading: true });
-		const {
-			companyName,
-			currencyCode,
-			countryCode,
-			companyTypeCode,
-			industryTypeCode,
-			firstName,
-			lastName,
-			email,
-			password: formPassword,
-			timeZone,
-			countryId,
-			stateId,
-			IsDesignatedZone,
-			IsRegistered,
-			TaxRegistrationNumber,
-			phoneNumber,
-			vatRegistrationDate,
-			companyAddress1,
-			companyAddress2,
-			domainName,
-			companyURL,
-			frontend,
-			backend,
-			status,
-			createdAt,
-			updatedAt,
-			id,
-			userName,
-			provider,
-			confirmed,
-			blocked,
-			nickname,
-			activePlan
+    this.props.authActions.registerStrapiUser(strapiUserObj, companyStrapiObj).catch(strapiErr => {
+      // Log Strapi registration error but continue with local registration
+      console.warn('Strapi registration failed (non-critical):', strapiErr);
+    });
 
+    this.props.authActions
+      .register(formData)
+      .then(action => {
+        console.log('Registration action:', action);
+        // RTK thunk returns action object, check if it was fulfilled
+        if (action && action.type && action.type.includes('fulfilled')) {
+          // Registration successful
+          this.setState({
+            loading: false,
+            userDetail: true,
+          });
+          toast.success('Password created successfully', {
+            position: 'top-right',
+          });
+          // Redirect to login after successful registration
+          setTimeout(() => {
+            this.props.history.push('/login');
+          }, 2000);
+        } else {
+          // Handle case where response indicates failure
+          this.setState({ loading: false });
+          const errorMessage = action?.payload?.message || action?.payload || 'Registration failed';
+          toast.error(errorMessage, {
+            position: 'top-right',
+          });
+        }
+      })
+      .catch(action => {
+        console.error('Registration error action:', action);
+        this.setState({ loading: false });
+        // RTK thunk rejections also return action objects
+        let errorMessage = 'Registration Failed. Please Try Again';
+        if (action?.payload) {
+          if (typeof action.payload === 'string') {
+            errorMessage = action.payload;
+          } else if (action.payload.message) {
+            errorMessage = action.payload.message;
+          } else if (action.payload.error) {
+            errorMessage = action.payload.error;
+          }
+        } else if (action?.error?.message) {
+          errorMessage = action.error.message;
+        }
+        console.error('Registration failed with error:', errorMessage);
+        toast.error(errorMessage, {
+          position: 'top-right',
+          autoClose: 5000,
+        });
+      });
+  };
 
-		} = data;
+  togglePasswordVisiblity = () => {
+    const { isPasswordShown } = this.state;
+    this.setState({ isPasswordShown: !isPasswordShown });
+  };
 
-		let companyStrapiObj = {
-			CompanyName: companyName,
-			currency: currencyCode ? currencyCode : '',
-			companyType: companyTypeCode,
-			industryTypeCode: industryTypeCode,
-			// countryCode: countryCode ? countryCode : '',
-			country: "UAE",
-			stateId: stateId.value,
-			IsDesignatedZone: this.state.isDesignatedZone ? this.state.isDesignatedZone : false,
-			IsRegisteredVat: IsRegistered ? IsRegistered : false,
-			TaxRegistrationNumber: TaxRegistrationNumber,
-			vatRegistrationDate: vatRegistrationDate,
-			domainName: configData.API_ROOT_URL,
-			companyURL: companyName,
-			frontend: configData.FRONTEND_RELEASE,
-			backend: sabackend,
-			status: "nosub",
-			createdAt: new Date(),
-			updatedAt: new Date(),
-			TimeZonePrefrence: "Asia/Dubai",
-			Emirate: stateId.label,
-			MobileNumber: phoneNumber,
-			IsVatRegistered: IsRegistered ? IsRegistered : false,
-			CompanyLocatedAt: "Dubai",
-			Currency: "UAE Dirham - AED",
-			CompanyAddressLine1: companyAddress1,
-			CompanyAddressLine2: companyAddress2,
-			// id: null,
-			user: {
-				id: '6',
-				username: email,
-				email: email,
-				provider: "local",
-				confirmed: true,
-				blocked: false,
-				nickname: null,
-				firstname: firstName,
-				lastname: lastName,
-				createdAt: '2023-02-16T01:31:47.856Z',
-				updatedAt: '2023-02-16T02:32:18.563Z'
-			},
-			activePlan: null,
-			isPasswordShown: false,
+  render() {
+    const { isPasswordShown, companyTypeList, checkphoneNumberParam } = this.state;
+    const customStyles = {
+      control: (base, state) => ({
+        ...base,
+        flex: '1 1 auto',
+        borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+        boxShadow: state.isFocused ? null : null,
+        '&:hover': {
+          borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+        },
+      }),
+    };
 
-		};
-		let formData = new FormData();
-		// for (var key in this.state.initValue) {
-		// 	formData.append(key, data[key]);
-		// }
-		formData.append('companyName', companyName ? companyName : '')
-		formData.append('currencyCode', currencyCode ? currencyCode : '')
-		formData.append('firstName', firstName ? firstName : '')
-		formData.append('lastName', lastName ? lastName : '')
-		formData.append('email', email ? email : '')
-		formData.append('timeZone', 'Asia/Dubai')
-		// formData.append('countryCode',	countryCode ? countryCode.value : '');
-		formData.append('countryId', countryId ? countryId : '229')
-		// Handle stateId - can be object (from Select) or string/number
-		let stateIdValue = '';
-		if (stateId) {
-			if (typeof stateId === 'object' && stateId.value !== undefined) {
-				stateIdValue = stateId.value;
-			} else if (typeof stateId === 'string' || typeof stateId === 'number') {
-				stateIdValue = stateId;
-			}
-		}
-		formData.append('stateId', stateIdValue)
-		formData.append('phoneNumber', phoneNumber ? phoneNumber : '')
-		formData.append('IsDesignatedZone', this.state.isDesignatedZone ? this.state.isDesignatedZone : false);
-		if (IsRegistered) {
-			formData.append('IsRegisteredVat', IsRegistered);
-		}
-		if (TaxRegistrationNumber) {
-			formData.append('TaxRegistrationNumber', TaxRegistrationNumber);
-		}
-		if (vatRegistrationDate) {
-			formData.append('vatRegistrationDate', vatRegistrationDate);
-		}
-		formData.append('companyTypeCode', companyTypeCode ? companyTypeCode : '');
-		formData.append('companyAddressLine1', companyAddress1 ? companyAddress1 : '')
-		formData.append('companyAddressLine2', companyAddress2 ? companyAddress2 : '')
-		formData.append('loginUrl', window.location.origin);
-		formData.append('password', formPassword)
+    const {
+      initValue,
+      currencyList,
+      userDetail,
+      country_list,
+      timezone,
+      loading,
+      loadingMsg,
+      NextloadingMsg,
+    } = this.state;
+    const { universal_currency_list, state_list, company_type_list, version } = this.props;
+    //console.log(company_type_list)
 
-		toast.success('Please wait till we setup your account', {
-			position: 'top-right',
-			autoClose: 40000,
-		});
+    return loading == true ? (
+      <Loader loadingMsg={loadingMsg} NextloadingMsg={NextloadingMsg} />
+    ) : (
+      <div>
+        <div className="log-in-screen">
+          <ToastContainer autoClose={1700} closeOnClick draggable />
+          <div className="animated fadeIn">
+            <div className="app flex-row ">
+              <Container>
+                {userDetail === false && (
+                  <Row className="justify-content-center">
+                    <Col lg={10} className="mx-auto">
+                      <CardGroup>
+                        <Card className="p-4">
+                          {loading ? (
+                            <Row>
+                              <Col lg={12}>
+                                <Loader />
+                              </Col>
+                            </Row>
+                          ) : (
+                            <CardBody>
+                              <div className="logo-container">
+                                <img src={logo} alt="logo" style={{ width: '300px' }} />
+                              </div>
 
-		{
-			this.setState({
-				loading: true,
-				loadingMsg: "Registering Company,",
-				NextloadingMsg: "Please wait till we setup your account"
-			})
-		}
+                              <Formik
+                                initialValues={initValue}
+                                onSubmit={(values, { resetForm }) => {
+                                  this.handleSubmit(values, resetForm);
+                                }}
+                                validate={values => {
+                                  let errors = {};
+                                  if (!values.phoneNumber) {
+                                    errors.phoneNumber = 'Mobile number is required';
+                                  }
 
-		// this.props.authActions
-		// 	.registerStrapy(obj)
-		let strapiUserObj = {
-			username: email,
-			email: email,
-			password: formPassword,
-			first_name: firstName,
-			last_name: lastName,
-			MobileNumber: phoneNumber
-		};
+                                  if (values.phoneNumber && checkphoneNumberParam == true) {
+                                    errors.phoneNumber = 'Invalid mobile number';
+                                  }
+                                  // Handle conditional validation for VAT fields
+                                  if (values.IsRegistered === true) {
+                                    if (!values.TaxRegistrationNumber) {
+                                      errors.TaxRegistrationNumber =
+                                        'Tax registration number is required';
+                                    } else if (values.TaxRegistrationNumber.length < 15) {
+                                      errors.TaxRegistrationNumber = 'Invalid TRN';
+                                    }
+                                    if (!values.vatRegistrationDate) {
+                                      errors.vatRegistrationDate =
+                                        'VAT registration date is required';
+                                    }
+                                  }
+                                  return errors;
+                                }}
+                                validationSchema={Yup.object().shape({
+                                  password: Yup.string()
+                                    .required('Password is required')
+                                    // .min(8, "Password Too Short")
+                                    .matches(
+                                      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+                                      'Must contain minimum 8 characters, must contain maximum 255 characters, one uppercase, one lowercase, one number and one special case character'
+                                    ),
+                                  confirmPassword: Yup.string()
+                                    .required('Confirm password is required')
+                                    .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+                                  companyName: Yup.string().required('Company name is required'),
+                                  currencyCode: Yup.string().required('Currency is required'),
+                                  companyTypeCode: Yup.string().required(
+                                    'Company / business type is required'
+                                  ),
+                                  companyAddress1: Yup.string().required(
+                                    'Company address line 1 is required'
+                                  ),
+                                  countryId: Yup.string().required('Country is required'),
+                                  stateId: Yup.mixed()
+                                    .required('Emirate is required')
+                                    .test('stateId', 'Emirate is required', function (value) {
+                                      if (!value) return false;
+                                      // Can be object (from Select) or string
+                                      if (typeof value === 'object') {
+                                        return (
+                                          value.value !== undefined &&
+                                          value.value !== null &&
+                                          value.value !== ''
+                                        );
+                                      }
+                                      return value !== '';
+                                    }),
+                                  firstName: Yup.string().required('First name is required'),
+                                  lastName: Yup.string().required('Last name is required'),
+                                  email: Yup.string()
+                                    .required('Email is required')
+                                    .email('Invalid Email'),
+                                  timeZone: Yup.string().required('Time zone is required'),
+                                  // phoneNumber: Yup.string().required(
+                                  // 	'Mobile number is required',
+                                  // ),
+                                  IsRegistered: Yup.boolean(),
+                                  IsDesignatedZone: Yup.boolean(),
+                                  TaxRegistrationNumber: Yup.string().nullable(),
+                                  vatRegistrationDate: Yup.string().nullable(),
+                                })}
+                              >
+                                {props => {
+                                  // Debug: Log validation state (only when form is invalid to reduce noise)
+                                  if (!props.isValid && Object.keys(props.touched).length > 0) {
+                                    console.log('Form validation errors:', {
+                                      isValid: props.isValid,
+                                      errors: props.errors,
+                                      touched: props.touched,
+                                    });
+                                  }
 
-		this.props.authActions
-			.registerStrapiUser(strapiUserObj, companyStrapiObj)
-			.catch((strapiErr) => {
-				// Log Strapi registration error but continue with local registration
-				console.warn('Strapi registration failed (non-critical):', strapiErr);
-			});
-		
-		this.props.authActions
-			.register(formData)
-			.then((action) => {
-				console.log('Registration action:', action);
-				// RTK thunk returns action object, check if it was fulfilled
-				if (action && action.type && action.type.includes('fulfilled')) {
-					// Registration successful
-				this.setState({
-						loading: false,
-					userDetail: true,
-				});
-				toast.success('Password created successfully', {
-						position: 'top-right',
-				});
-					// Redirect to login after successful registration
-					setTimeout(() => {
-						this.props.history.push('/login');
-					}, 2000);
-				} else {
-					// Handle case where response indicates failure
-					this.setState({ loading: false });
-					const errorMessage = action?.payload?.message || action?.payload || 'Registration failed';
-					toast.error(errorMessage, {
-						position: 'top-right',
-					});
-				}
-			})
-			.catch((action) => {
-				console.error('Registration error action:', action);
-				this.setState({ loading: false });
-				// RTK thunk rejections also return action objects
-				let errorMessage = 'Registration Failed. Please Try Again';
-				if (action?.payload) {
-					if (typeof action.payload === 'string') {
-						errorMessage = action.payload;
-					} else if (action.payload.message) {
-						errorMessage = action.payload.message;
-					} else if (action.payload.error) {
-						errorMessage = action.payload.error;
-					}
-				} else if (action?.error?.message) {
-					errorMessage = action.error.message;
-				}
-				console.error('Registration failed with error:', errorMessage);
-				toast.error(errorMessage, {
-					position: 'top-right',
-					autoClose: 5000,
-				});
-			});
-	};
-
-	togglePasswordVisiblity = () => {
-		const { isPasswordShown } = this.state;
-		this.setState({ isPasswordShown: !isPasswordShown });
-	};
-
-	render() {
-		const { isPasswordShown, companyTypeList, checkphoneNumberParam } = this.state;
-		const customStyles = {
-			control: (base, state) => ({
-				...base,
-				flex: '1 1 auto',
-				borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-				boxShadow: state.isFocused ? null : null,
-				'&:hover': {
-					borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-				},
-			}),
-		};
-
-		const { initValue, currencyList, userDetail, country_list, timezone, loading, loadingMsg, NextloadingMsg } = this.state;
-		const { universal_currency_list, state_list, company_type_list, version } = this.props;
-		//console.log(company_type_list)
-
-
-		return (
-			loading == true ? <Loader loadingMsg={loadingMsg} NextloadingMsg={NextloadingMsg} /> :
-				<div>
-					<div className="log-in-screen">
-						<ToastContainer
-							autoClose={1700}
-							closeOnClick
-							draggable
-						/>
-						<div className="animated fadeIn">
-							<div className="app flex-row ">
-								<Container >
-									{userDetail === false && (
-										<Row className="justify-content-center">
-											<Col lg={10} className="mx-auto">
-												<CardGroup>
-
-													<Card className="p-4">
-														{loading ? (
-															<Row>
-																<Col lg={12}>
-																	<Loader />
-																</Col>
-															</Row>
-														) : (
-															<CardBody>
-
-																<div className="logo-container">
-																	<img
-																		src={logo}
-																		alt="logo"
-																		style={{ width: '300px' }}
-																	/>
-																</div>
-
-																<Formik
-																	initialValues={initValue}
-																	onSubmit={(values, { resetForm }) => {
-																		this.handleSubmit(values, resetForm);
-																	}}
-																	validate={(values) => {
-																		let errors = {};
-																		if (!values.phoneNumber) {
-																			errors.phoneNumber =
-																				'Mobile number is required';
-																		}
-
-																		if (values.phoneNumber && checkphoneNumberParam == true) {
-																			errors.phoneNumber =
-																				'Invalid mobile number';
-																		}
-																		// Handle conditional validation for VAT fields
-																		if (values.IsRegistered === true) {
-																			if (!values.TaxRegistrationNumber) {
-																				errors.TaxRegistrationNumber = "Tax registration number is required";
-																			} else if (values.TaxRegistrationNumber.length < 15) {
-																				errors.TaxRegistrationNumber = "Invalid TRN";
-																			}
-																			if (!values.vatRegistrationDate) {
-																			errors.vatRegistrationDate = "VAT registration date is required";
-																			}
-																		}
-																		return errors;
-																	}}
-
-																	validationSchema={Yup.object().shape({
-																		password: Yup.string()
-																			.required("Password is required")
-																			// .min(8, "Password Too Short")
-																			.matches(
-																				/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-																				"Must contain minimum 8 characters, must contain maximum 255 characters, one uppercase, one lowercase, one number and one special case character"
-																			),
-																		confirmPassword: Yup.string()
-																			.required('Confirm password is required')
-																			.oneOf([Yup.ref("password"), null], "Passwords must match"),
-																		companyName: Yup.string().required(
-																			'Company name is required',
-																		),
-																		currencyCode: Yup.string().required(
-																			'Currency is required',
-																		),
-																		companyTypeCode: Yup.string().required(
-																			'Company / business type is required',
-																		),
-																		companyAddress1: Yup.string().required(
-																			'Company address line 1 is required',
-																		),
-																		countryId: Yup.string().required(
-																			'Country is required',
-																		),
-																		stateId: Yup.mixed()
-																			.required('Emirate is required')
-																			.test('stateId', 'Emirate is required', function(value) {
-																				if (!value) return false;
-																				// Can be object (from Select) or string
-																				if (typeof value === 'object') {
-																					return value.value !== undefined && value.value !== null && value.value !== '';
-																				}
-																				return value !== '';
-																			}),
-																		firstName: Yup.string().required(
-																			'First name is required',
-																		),
-																		lastName: Yup.string().required(
-																			'Last name is required',
-																		),
-																		email: Yup.string()
-																			.required('Email is required')
-																			.email('Invalid Email'),
-																		timeZone: Yup.string().required(
-																			'Time zone is required',
-																		),
-																		// phoneNumber: Yup.string().required(
-																		// 	'Mobile number is required',
-																		// ),
-																		IsRegistered: Yup.boolean(),
-																		IsDesignatedZone: Yup.boolean(),
-																		TaxRegistrationNumber: Yup.string().nullable(),
-																		vatRegistrationDate: Yup.string().nullable()
-
-																	})}
-																>
-																	{(props) => {
-																		// Debug: Log validation state (only when form is invalid to reduce noise)
-																		if (!props.isValid && Object.keys(props.touched).length > 0) {
-																			console.log('Form validation errors:', {
-																				isValid: props.isValid,
-																				errors: props.errors,
-																				touched: props.touched
-																			});
-																		}
-
-																		return (
-																			<Form onSubmit={(e) => {
-																				console.log('Form onSubmit triggered', e);
-																				console.log('Form validation state:', {
-																					isValid: props.isValid,
-																					errors: props.errors,
-																					values: props.values
-																				});
-																				// Let Formik handle the submission
-																				props.handleSubmit(e);
-																			}}>
-																				{/* <h1>Log In</h1> */}
-																				<div className="registerScreen">
-																					<h2 className="">{strings.Register}</h2>
-																					<p>Enter Your Details Below To Register</p>
-																				</div>
-																				<div>
-																					<h4 className="">{strings.CompanyDetails}</h4>
-																				</div>
-																				<Row className="mt-2">
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-
-																							<Label htmlFor="select"><span className="text-danger">* </span>{strings.CompanyName}</Label>
-																							<Input
-																								type="text"
-																								maxLength="100"
-																								id="companyName"
-																								name="companyName"
-																								placeholder="Enter Company Name"
-																								value={props.values.account_name}
-																								onChange={(option) => {
-																									props.handleChange('companyName')(
-																										option,
-																									);
-																								}}
-																								className={
-																									props.errors.companyName &&
-																										props.touched.companyName
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.companyName &&
-																								props.touched.companyName && (
-																									<div className="invalid-feedback">
-																										{props.errors.companyName}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="currencyCode">
-																								{strings.Currency}
-																							</Label>
-																							<Select
-																								isDisabled
-																								styles={customStyles}
-																								id="currencyCode"
-																								name="currencyCode"
-																								// placeholder="Select Currency"
-																								options={
-																									universal_currency_list
-																										? selectCurrencyFactory.renderOptions(
-																											'currencyName',
-																											'currencyCode',
-																											universal_currency_list,
-																											'Currency',
-																										)
-																										: []
-																								}
-																								value={
-																									universal_currency_list &&
-																									selectCurrencyFactory
-																										.renderOptions(
-																											'currencyName',
-																											'currencyCode',
-																											universal_currency_list,
-																											'Currency',
-																										)
-																										.find(
-																											(option) =>
-																												option.value ===
-																												+props.values.currencyCode,
-																										)
-																								}
-																								onChange={(option) => {
-																									if (option && option.value) {
-																										props.handleChange(
-																											'currencyCode',
-																										)(option.value);
-																									} else {
-																										props.handleChange(
-																											'currencyCode',
-																										)('');
-																									}
-																								}}
-																								className={
-																									props.errors.currencyCode &&
-																										props.touched.currencyCode
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.currencyCode &&
-																								props.touched.currencyCode && (
-																									<div className="invalid-feedback">
-																										{props.errors.currencyCode}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup>
-																							<Label htmlFor="companyId">
-																								<span className="text-danger">* </span>
-																								{strings.CompanyBusinessType}
-																							</Label>
-																							<Select
-																								options={
-																									company_type_list
-																										? selectOptionsFactory.renderOptions(
-																											'label',
-																											'value',
-																											company_type_list,
-																											'Company Type Code',
-																										)
-																										: []
-																								}
-																								value={
-																									company_type_list &&
-																									company_type_list.find(
-																										(option) =>
-																											option.value ===
-																											+props.values
-																												.companyTypeCode,
-																									)
-																								}
-																								onChange={(option) => {
-																									if (option && option.value) {
-																										props.handleChange(
-																											'companyTypeCode',
-																										)(option.value);
-																									} else {
-																										props.handleChange(
-																											'companyTypeCode',
-																										)('');
-																									}
-																								}}
-																								placeholder={strings.Select + strings.CompanyBusinessType}
-																								id="companyTypeCode"
-																								name="companyTypeCode"
-																								className={
-																									props.errors.companyTypeCode &&
-																										props.touched.companyTypeCode
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.companyTypeCode &&
-																								props.touched.companyTypeCode && (
-																									<div className="invalid-feedback">
-																										{props.errors.companyTypeCode}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-
-																				</Row>
-																				<Row className="row-wrapper">
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="select"><span className="text-danger">* </span>{strings.CompanyAddressLine1}</Label>
-																							<Input
-																								type="text"
-																								maxLength="250"
-																								id="companyAddress1"
-																								name="companyAddress1"
-																								placeholder="Enter Company Address"
-																								value={props.values.account_name}
-																								onChange={(option) => {
-																									props.handleChange('companyAddress1')(
-																										option,
-																									);
-																								}}
-																								className={
-																									props.errors.companyAddress1 &&
-																										props.touched.companyAddress1
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.companyAddress1 &&
-																								props.touched.companyAddress1 && (
-																									<div className="invalid-feedback">
-																										{props.errors.companyAddress1}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="companyAddress2">{strings.CompanyAddressLine2}</Label>
-																							<Input
-																								type="text"
-																								maxLength="250"
-																								id="companyAddress2"
-																								name="companyAddress2"
-																								placeholder="Enter Company Address"
-																								value={props.values.account_name}
-																								onChange={(option) => {
-																									props.handleChange('companyAddress2')(
-																										option,
-																									);
-																								}}
-																								className={
-																									props.errors.CompanyAddressLine2 &&
-																										props.touched.CompanyAddressLine2
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.companyAddress2 &&
-																								props.touched.companyAddress2 && (
-																									<div className="invalid-feedback">
-																										{props.errors.CompanyAddressLine2}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="timeZone">
-																								{strings.TimeZonePreference}
-																							</Label>
-																							<Select
-																								isDisabled
-																								styles={customStyles}
-																								id="timeZone"
-																								name="timeZone"
-																								options={timezone ? timezone : []}
-																								value={
-																									timezone && props.values.timeZone
-																										? timezone.find(
-																												(option) =>
-																													option.value === props.values.timeZone,
-																											)
-																										: null
-																								}
-																								onChange={(option) => {
-																									if (option && option.value) {
-																										props.handleChange('timeZone')(
-																											option.value,
-																										);
-																									} else {
-																										props.handleChange('timeZone')(
-																											'',
-																										);
-																									}
-																								}}
-																								className={
-																									props.errors.timeZone &&
-																										props.touched.timeZone
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.timeZone &&
-																								props.touched.timeZone && (
-																									<div className="invalid-feedback">
-																										{props.errors.timeZone}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-
-																				</Row>
-																				<Row className="row-wrapper">
-																					<Col lg={4}>
-																						<FormGroup>
-																							<Label htmlFor="countryId">{strings.Country}</Label>
-																							<Select
-																								isDisabled
-																								styles={customStyles}
-																								options={
-																									country_list
-																										? selectOptionsFactory.renderOptions(
-																											'countryName',
-																											'countryCode',
-																											country_list,
-																											'Country',
-																										)
-																										: []
-																								}
-																								// value={props.values.countryId}
-																								value={
-																									country_list &&
-																									selectOptionsFactory.renderOptions(
-																										'countryName',
-																										'countryCode',
-																										country_list,
-																										'Country',
-																									)
-																										.find(
-																											(option) =>
-																												option.value ===
-																												+props.values.countryId,
-																										)
-																								}
-																								onChange={(option) => {
-																									if (option && option.value) {
-																										props.handleChange('countryId')(option);
-																										this.getStateList(option.value);
-																									} else {
-																										props.handleChange('countryId')('');
-																										this.getStateList('');
-																									}
-																									props.handleChange('stateId')({
-																										label: 'Select State',
-																										value: '',
-																									});
-																								}}
-																								// placeholder={strings.Select+strings.Country}
-																								id="countryId"
-																								name="countryId"
-																								className={
-																									props.errors.countryId &&
-																										props.touched.countryId
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.countryId &&
-																								props.touched.countryId && (
-																									<div className="invalid-feedback">
-																										{props.errors.countryId}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup>
-																							<Label htmlFor="select"><span className="text-danger">* </span>{strings.Emirate}</Label>
-																							<Select
-																								// styles={customStyles}
-																								options={
-																									state_list
-																										? selectOptionsFactory.renderOptions(
-																											'label',
-																											'value',
-																											state_list,
-																											'Emirate',
-																										)
-																										: []
-																								}
-																								// value={props.values.stateId}
-																								value={
-																									state_list &&
-																									state_list.find(
-																										(option) =>
-																											option.value ===
-																											+props.values
-																												.stateId,
-																									)
-																								}
-																								onChange={(option) => {
-																									if (option && option.value) {
-																										props.handleChange('stateId')(option);
-																									} else {
-																										props.handleChange('stateId')('');
-																									}
-																								}}
-																								// placeholder={strings.Select+strings.StateRegion}
-																								id="stateId"
-																								name="stateId"
-																								placeholder="Select Emirate"
-																								className={
-																									props.errors.stateId &&
-																										props.touched.stateId
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.stateId &&
-																								props.touched.stateId && (
-																									<div className="invalid-feedback">
-																										{props.errors.stateId}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3 ">
-																							<Label htmlFor="phoneNumber">
-																								<span className="text-danger">* </span> {strings.MobileNumber}
-																							</Label>
-																							<div className={
-																								props.errors.phoneNumber &&
-																									props.touched.phoneNumber
-																									? ' is-invalidMobile '
-																									: ''
-																							}>
-																								<PhoneInput
-																									country={"ae"}
-																									enableSearch={true}
-																									international
-																									// style={{width:"260px "}}
-																									value={props.values.phoneNumber}
-																									placeholder={strings.Enter + strings.MobileNumber}
-																									onChange={(option) => {
-																										props.handleChange('phoneNumber',)(option);
-																										option.length !== 12 ? this.setState({ checkphoneNumberParam: true }) : this.setState({ checkphoneNumberParam: false });
-																									}}
-																									isValid
-																								// className={
-																								// 	props.errors.phoneNumber &&
-																								// 		props.touched.phoneNumber
-																								// 		? ' invalid-feedback is-invalid is-invalidMobile '
-																								// 		: ''
-																								// }
-																								/></div>
-																							{props.errors.phoneNumber &&
-																								props.touched.phoneNumber && (
-																									<div className="invalid-feedback">
-																										{props.errors.phoneNumber}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-
-																				</Row>
-																				{/* style={{display:props.values.countryId.value === 229 ? '' : 'none'}} */}
-																				<Row >
-																					<Col lg={5} >
-																						{/* <FormGroup check inline className="mt-1">
+                                  return (
+                                    <Form
+                                      onSubmit={e => {
+                                        console.log('Form onSubmit triggered', e);
+                                        console.log('Form validation state:', {
+                                          isValid: props.isValid,
+                                          errors: props.errors,
+                                          values: props.values,
+                                        });
+                                        // Let Formik handle the submission
+                                        props.handleSubmit(e);
+                                      }}
+                                    >
+                                      {/* <h1>Log In</h1> */}
+                                      <div className="registerScreen">
+                                        <h2 className="">{strings.Register}</h2>
+                                        <p>Enter Your Details Below To Register</p>
+                                      </div>
+                                      <div>
+                                        <h4 className="">{strings.CompanyDetails}</h4>
+                                      </div>
+                                      <Row className="mt-2">
+                                        <Col lg={4}>
+                                          <FormGroup className="mb-3">
+                                            <Label htmlFor="select">
+                                              <span className="text-danger">* </span>
+                                              {strings.CompanyName}
+                                            </Label>
+                                            <Input
+                                              type="text"
+                                              maxLength="100"
+                                              id="companyName"
+                                              name="companyName"
+                                              placeholder="Enter Company Name"
+                                              value={props.values.account_name}
+                                              onChange={option => {
+                                                props.handleChange('companyName')(option);
+                                              }}
+                                              className={
+                                                props.errors.companyName &&
+                                                props.touched.companyName
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }
+                                            />
+                                            {props.errors.companyName &&
+                                              props.touched.companyName && (
+                                                <div className="invalid-feedback">
+                                                  {props.errors.companyName}
+                                                </div>
+                                              )}
+                                          </FormGroup>
+                                        </Col>
+                                        <Col lg={4}>
+                                          <FormGroup className="mb-3">
+                                            <Label htmlFor="currencyCode">{strings.Currency}</Label>
+                                            <Select
+                                              isDisabled
+                                              styles={customStyles}
+                                              id="currencyCode"
+                                              name="currencyCode"
+                                              // placeholder="Select Currency"
+                                              options={
+                                                universal_currency_list
+                                                  ? selectCurrencyFactory.renderOptions(
+                                                      'currencyName',
+                                                      'currencyCode',
+                                                      universal_currency_list,
+                                                      'Currency'
+                                                    )
+                                                  : []
+                                              }
+                                              value={
+                                                universal_currency_list &&
+                                                selectCurrencyFactory
+                                                  .renderOptions(
+                                                    'currencyName',
+                                                    'currencyCode',
+                                                    universal_currency_list,
+                                                    'Currency'
+                                                  )
+                                                  .find(
+                                                    option =>
+                                                      option.value === +props.values.currencyCode
+                                                  )
+                                              }
+                                              onChange={option => {
+                                                if (option && option.value) {
+                                                  props.handleChange('currencyCode')(option.value);
+                                                } else {
+                                                  props.handleChange('currencyCode')('');
+                                                }
+                                              }}
+                                              className={
+                                                props.errors.currencyCode &&
+                                                props.touched.currencyCode
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }
+                                            />
+                                            {props.errors.currencyCode &&
+                                              props.touched.currencyCode && (
+                                                <div className="invalid-feedback">
+                                                  {props.errors.currencyCode}
+                                                </div>
+                                              )}
+                                          </FormGroup>
+                                        </Col>
+                                        <Col lg={4}>
+                                          <FormGroup>
+                                            <Label htmlFor="companyId">
+                                              <span className="text-danger">* </span>
+                                              {strings.CompanyBusinessType}
+                                            </Label>
+                                            <Select
+                                              options={
+                                                company_type_list
+                                                  ? selectOptionsFactory.renderOptions(
+                                                      'label',
+                                                      'value',
+                                                      company_type_list,
+                                                      'Company Type Code'
+                                                    )
+                                                  : []
+                                              }
+                                              value={
+                                                company_type_list &&
+                                                company_type_list.find(
+                                                  option =>
+                                                    option.value === +props.values.companyTypeCode
+                                                )
+                                              }
+                                              onChange={option => {
+                                                if (option && option.value) {
+                                                  props.handleChange('companyTypeCode')(
+                                                    option.value
+                                                  );
+                                                } else {
+                                                  props.handleChange('companyTypeCode')('');
+                                                }
+                                              }}
+                                              placeholder={
+                                                strings.Select + strings.CompanyBusinessType
+                                              }
+                                              id="companyTypeCode"
+                                              name="companyTypeCode"
+                                              className={
+                                                props.errors.companyTypeCode &&
+                                                props.touched.companyTypeCode
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }
+                                            />
+                                            {props.errors.companyTypeCode &&
+                                              props.touched.companyTypeCode && (
+                                                <div className="invalid-feedback">
+                                                  {props.errors.companyTypeCode}
+                                                </div>
+                                              )}
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                      <Row className="row-wrapper">
+                                        <Col lg={4}>
+                                          <FormGroup className="mb-3">
+                                            <Label htmlFor="select">
+                                              <span className="text-danger">* </span>
+                                              {strings.CompanyAddressLine1}
+                                            </Label>
+                                            <Input
+                                              type="text"
+                                              maxLength="250"
+                                              id="companyAddress1"
+                                              name="companyAddress1"
+                                              placeholder="Enter Company Address"
+                                              value={props.values.account_name}
+                                              onChange={option => {
+                                                props.handleChange('companyAddress1')(option);
+                                              }}
+                                              className={
+                                                props.errors.companyAddress1 &&
+                                                props.touched.companyAddress1
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }
+                                            />
+                                            {props.errors.companyAddress1 &&
+                                              props.touched.companyAddress1 && (
+                                                <div className="invalid-feedback">
+                                                  {props.errors.companyAddress1}
+                                                </div>
+                                              )}
+                                          </FormGroup>
+                                        </Col>
+                                        <Col lg={4}>
+                                          <FormGroup className="mb-3">
+                                            <Label htmlFor="companyAddress2">
+                                              {strings.CompanyAddressLine2}
+                                            </Label>
+                                            <Input
+                                              type="text"
+                                              maxLength="250"
+                                              id="companyAddress2"
+                                              name="companyAddress2"
+                                              placeholder="Enter Company Address"
+                                              value={props.values.account_name}
+                                              onChange={option => {
+                                                props.handleChange('companyAddress2')(option);
+                                              }}
+                                              className={
+                                                props.errors.CompanyAddressLine2 &&
+                                                props.touched.CompanyAddressLine2
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }
+                                            />
+                                            {props.errors.companyAddress2 &&
+                                              props.touched.companyAddress2 && (
+                                                <div className="invalid-feedback">
+                                                  {props.errors.CompanyAddressLine2}
+                                                </div>
+                                              )}
+                                          </FormGroup>
+                                        </Col>
+                                        <Col lg={4}>
+                                          <FormGroup className="mb-3">
+                                            <Label htmlFor="timeZone">
+                                              {strings.TimeZonePreference}
+                                            </Label>
+                                            <Select
+                                              isDisabled
+                                              styles={customStyles}
+                                              id="timeZone"
+                                              name="timeZone"
+                                              options={timezone ? timezone : []}
+                                              value={
+                                                timezone && props.values.timeZone
+                                                  ? timezone.find(
+                                                      option =>
+                                                        option.value === props.values.timeZone
+                                                    )
+                                                  : null
+                                              }
+                                              onChange={option => {
+                                                if (option && option.value) {
+                                                  props.handleChange('timeZone')(option.value);
+                                                } else {
+                                                  props.handleChange('timeZone')('');
+                                                }
+                                              }}
+                                              className={
+                                                props.errors.timeZone && props.touched.timeZone
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }
+                                            />
+                                            {props.errors.timeZone && props.touched.timeZone && (
+                                              <div className="invalid-feedback">
+                                                {props.errors.timeZone}
+                                              </div>
+                                            )}
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                      <Row className="row-wrapper">
+                                        <Col lg={4}>
+                                          <FormGroup>
+                                            <Label htmlFor="countryId">{strings.Country}</Label>
+                                            <Select
+                                              isDisabled
+                                              styles={customStyles}
+                                              options={
+                                                country_list
+                                                  ? selectOptionsFactory.renderOptions(
+                                                      'countryName',
+                                                      'countryCode',
+                                                      country_list,
+                                                      'Country'
+                                                    )
+                                                  : []
+                                              }
+                                              // value={props.values.countryId}
+                                              value={
+                                                country_list &&
+                                                selectOptionsFactory
+                                                  .renderOptions(
+                                                    'countryName',
+                                                    'countryCode',
+                                                    country_list,
+                                                    'Country'
+                                                  )
+                                                  .find(
+                                                    option =>
+                                                      option.value === +props.values.countryId
+                                                  )
+                                              }
+                                              onChange={option => {
+                                                if (option && option.value) {
+                                                  props.handleChange('countryId')(option);
+                                                  this.getStateList(option.value);
+                                                } else {
+                                                  props.handleChange('countryId')('');
+                                                  this.getStateList('');
+                                                }
+                                                props.handleChange('stateId')({
+                                                  label: 'Select State',
+                                                  value: '',
+                                                });
+                                              }}
+                                              // placeholder={strings.Select+strings.Country}
+                                              id="countryId"
+                                              name="countryId"
+                                              className={
+                                                props.errors.countryId && props.touched.countryId
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }
+                                            />
+                                            {props.errors.countryId && props.touched.countryId && (
+                                              <div className="invalid-feedback">
+                                                {props.errors.countryId}
+                                              </div>
+                                            )}
+                                          </FormGroup>
+                                        </Col>
+                                        <Col lg={4}>
+                                          <FormGroup>
+                                            <Label htmlFor="select">
+                                              <span className="text-danger">* </span>
+                                              {strings.Emirate}
+                                            </Label>
+                                            <Select
+                                              // styles={customStyles}
+                                              options={
+                                                state_list
+                                                  ? selectOptionsFactory.renderOptions(
+                                                      'label',
+                                                      'value',
+                                                      state_list,
+                                                      'Emirate'
+                                                    )
+                                                  : []
+                                              }
+                                              // value={props.values.stateId}
+                                              value={
+                                                state_list &&
+                                                state_list.find(
+                                                  option => option.value === +props.values.stateId
+                                                )
+                                              }
+                                              onChange={option => {
+                                                if (option && option.value) {
+                                                  props.handleChange('stateId')(option);
+                                                } else {
+                                                  props.handleChange('stateId')('');
+                                                }
+                                              }}
+                                              // placeholder={strings.Select+strings.StateRegion}
+                                              id="stateId"
+                                              name="stateId"
+                                              placeholder="Select Emirate"
+                                              className={
+                                                props.errors.stateId && props.touched.stateId
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }
+                                            />
+                                            {props.errors.stateId && props.touched.stateId && (
+                                              <div className="invalid-feedback">
+                                                {props.errors.stateId}
+                                              </div>
+                                            )}
+                                          </FormGroup>
+                                        </Col>
+                                        <Col lg={4}>
+                                          <FormGroup className="mb-3 ">
+                                            <Label htmlFor="phoneNumber">
+                                              <span className="text-danger">* </span>{' '}
+                                              {strings.MobileNumber}
+                                            </Label>
+                                            <div
+                                              className={
+                                                props.errors.phoneNumber &&
+                                                props.touched.phoneNumber
+                                                  ? ' is-invalidMobile '
+                                                  : ''
+                                              }
+                                            >
+                                              <PhoneInput
+                                                country={'ae'}
+                                                enableSearch={true}
+                                                international
+                                                // style={{width:"260px "}}
+                                                value={props.values.phoneNumber}
+                                                placeholder={strings.Enter + strings.MobileNumber}
+                                                onChange={option => {
+                                                  props.handleChange('phoneNumber')(option);
+                                                  option.length !== 12
+                                                    ? this.setState({ checkphoneNumberParam: true })
+                                                    : this.setState({
+                                                        checkphoneNumberParam: false,
+                                                      });
+                                                }}
+                                                isValid
+                                                // className={
+                                                // 	props.errors.phoneNumber &&
+                                                // 		props.touched.phoneNumber
+                                                // 		? ' invalid-feedback is-invalid is-invalidMobile '
+                                                // 		: ''
+                                                // }
+                                              />
+                                            </div>
+                                            {props.errors.phoneNumber &&
+                                              props.touched.phoneNumber && (
+                                                <div className="invalid-feedback">
+                                                  {props.errors.phoneNumber}
+                                                </div>
+                                              )}
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                      {/* style={{display:props.values.countryId.value === 229 ? '' : 'none'}} */}
+                                      <Row>
+                                        <Col lg={5}>
+                                          {/* <FormGroup check inline className="mt-1">
 																		<Label
 																			className="form-check-label mt-3"
 																			check
@@ -1056,489 +1024,524 @@ class Register extends React.Component {
 																				)}
 																		</Label>
 																	</FormGroup> */}
-																						<Row>
-																							<Col xs={12}>
-																								<Label>Where Is The Company Located?</Label>
-																							</Col>
-																							<Col>
-																								<FormGroup className="mb-3">
-																									<FormGroup check inline>
-																										<div className="custom-radio custom-control">
-																											<input
-																												className="custom-control-input"
-																												type="radio"
-																												id="inline-radio1"
-																												name="active"
-																												checked={!this.state.isDesignatedZone}
-																												value={true}
-																												onChange={(value) => {
-																													this.setState({ isDesignatedZone: !this.state.isDesignatedZone })
-																												}}
-																											/>
-																											<label
-																												className="custom-control-label"
-																												htmlFor="inline-radio1"
-																											>
-																												{strings.Mainland}
-																											</label>
-																										</div>
-																									</FormGroup>
-																									<FormGroup check inline>
-																										<div className="custom-radio custom-control">
-																											<input
-																												className="custom-control-input"
-																												type="radio"
-																												id="inline-radio2"
-																												name="active"
-																												value={false}
-																												checked={this.state.isDesignatedZone}
-																												onChange={(value) => {
-																													this.setState({ isDesignatedZone: !this.state.isDesignatedZone })
-																												}}
-																											/>
-																											<label
-																												className="custom-control-label"
-																												htmlFor="inline-radio2"
-																											>
-																												{strings.Freezone}
-																											</label>
-																										</div>
-																									</FormGroup>
+                                          <Row>
+                                            <Col xs={12}>
+                                              <Label>Where Is The Company Located?</Label>
+                                            </Col>
+                                            <Col>
+                                              <FormGroup className="mb-3">
+                                                <FormGroup check inline>
+                                                  <div className="custom-radio custom-control">
+                                                    <input
+                                                      className="custom-control-input"
+                                                      type="radio"
+                                                      id="inline-radio1"
+                                                      name="active"
+                                                      checked={!this.state.isDesignatedZone}
+                                                      value={true}
+                                                      onChange={value => {
+                                                        this.setState({
+                                                          isDesignatedZone:
+                                                            !this.state.isDesignatedZone,
+                                                        });
+                                                      }}
+                                                    />
+                                                    <label
+                                                      className="custom-control-label"
+                                                      htmlFor="inline-radio1"
+                                                    >
+                                                      {strings.Mainland}
+                                                    </label>
+                                                  </div>
+                                                </FormGroup>
+                                                <FormGroup check inline>
+                                                  <div className="custom-radio custom-control">
+                                                    <input
+                                                      className="custom-control-input"
+                                                      type="radio"
+                                                      id="inline-radio2"
+                                                      name="active"
+                                                      value={false}
+                                                      checked={this.state.isDesignatedZone}
+                                                      onChange={value => {
+                                                        this.setState({
+                                                          isDesignatedZone:
+                                                            !this.state.isDesignatedZone,
+                                                        });
+                                                      }}
+                                                    />
+                                                    <label
+                                                      className="custom-control-label"
+                                                      htmlFor="inline-radio2"
+                                                    >
+                                                      {strings.Freezone}
+                                                    </label>
+                                                  </div>
+                                                </FormGroup>
+                                              </FormGroup>
+                                            </Col>
+                                          </Row>
+                                        </Col>
+                                      </Row>
+                                      {/* style={{display:props.values.countryId.value === 229 ? '' : 'none'}}  */}
+                                      <Row className="mb-4">
+                                        <Col lg={5}>
+                                          <FormGroup check inline className="mt-1">
+                                            <Label
+                                              className="form-check-label mt-3"
+                                              check
+                                              htmlFor="vat"
+                                            >
+                                              <Input
+                                                type="checkbox"
+                                                id="IsRegistered"
+                                                name="IsRegistered"
+                                                checked={props.values.IsRegistered}
+                                                value={true}
+                                                onChange={value => {
+                                                  if (value != null) {
+                                                    props.handleChange('IsRegistered')(value);
+                                                  } else {
+                                                    props.handleChange('IsRegistered')('');
+                                                  }
+                                                }}
+                                                className={
+                                                  props.errors.IsRegistered &&
+                                                  props.touched.IsRegistered
+                                                    ? 'is-invalid'
+                                                    : ''
+                                                }
+                                              />
+                                              Is VAT Registered?
+                                              {props.errors.IsRegistered &&
+                                                props.touched.IsRegistered && (
+                                                  <div className="invalid-feedback">
+                                                    {props.errors.IsRegistered}
+                                                  </div>
+                                                )}
+                                            </Label>
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                      <Row
+                                        className="row-wrapper"
+                                        style={{
+                                          display: props.values.IsRegistered === true ? '' : 'none',
+                                        }}
+                                      >
+                                        <Col lg={4}>
+                                          <FormGroup>
+                                            <Label htmlFor="TaxRegistrationNumber">
+                                              <span className="text-danger">* </span>
+                                              {strings.TaxRegistrationNumber}
+                                              <div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
+                                                <span className="tooltiptext">
+                                                  Please note that the TRN cannot be updated{' '}
+                                                  <br></br>once a document has been created.
+                                                </span>
+                                              </div>
+                                            </Label>
+                                            <Input
+                                              type="text"
+                                              minLength="15"
+                                              maxLength="15"
+                                              placeholder="Enter Tax Registration Number"
+                                              id="TaxRegistrationNumber"
+                                              name="TaxRegistrationNumber"
+                                              // placeholder={strings.Enter+strings.TaxRegistrationNumber}
+                                              onChange={option => {
+                                                if (
+                                                  option.target.value === '' ||
+                                                  this.regEx.test(option.target.value)
+                                                ) {
+                                                  props.handleChange('TaxRegistrationNumber')(
+                                                    option
+                                                  );
+                                                }
+                                              }}
+                                              value={props.values.TaxRegistrationNumber}
+                                              className={
+                                                props.errors.TaxRegistrationNumber &&
+                                                props.touched.TaxRegistrationNumber
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }
+                                            />
+                                            {props.errors.TaxRegistrationNumber &&
+                                              props.touched.TaxRegistrationNumber && (
+                                                <div className="invalid-feedback">
+                                                  {props.errors.TaxRegistrationNumber}
+                                                </div>
+                                              )}
+                                            <div className="VerifyTRN">
+                                              <br />
+                                              <b>
+                                                {' '}
+                                                <a
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                                  href="https://tax.gov.ae/en/default.aspx"
+                                                  style={{ color: '#2266d8' }}
+                                                >
+                                                  {strings.VerifyTRN}
+                                                </a>
+                                              </b>
+                                            </div>
+                                          </FormGroup>
+                                        </Col>
+                                        <Col lg={4}>
+                                          <FormGroup>
+                                            <Label htmlFor="date">
+                                              <span className="text-danger">* </span>
+                                              VAT Registered On
+                                              <div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
+                                                <span className="tooltiptext">
+                                                  Please note that you cannot update <br></br> this
+                                                  detail once you have created a document.
+                                                </span>
+                                              </div>
+                                            </Label>
+                                            <DatePicker
+                                              autoComplete="off"
+                                              id="vatRegistrationDate"
+                                              minDate={new Date('01/01/2018')}
+                                              name="vatRegistrationDate"
+                                              placeholderText="Select VAT Registered Date"
+                                              maxDate={new Date()}
+                                              showMonthDropdown
+                                              showYearDropdown
+                                              dateFormat="dd-MM-yyyy"
+                                              dropdownMode="select"
+                                              value={props.values.vatRegistrationDate}
+                                              selected={props.values.vatRegistrationDate}
+                                              onBlur={props.handleBlur('vatRegistrationDate')}
+                                              onChange={value => {
+                                                props.handleChange('vatRegistrationDate')(value);
+                                              }}
+                                              className={`form-control ${
+                                                props.errors.vatRegistrationDate &&
+                                                props.touched.vatRegistrationDate
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }`}
+                                            />
+                                            {props.errors.vatRegistrationDate &&
+                                              props.touched.vatRegistrationDate && (
+                                                <div className="invalid-feedback">
+                                                  {props.errors.vatRegistrationDate}
+                                                </div>
+                                              )}
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                      <hr />
+                                      <div>
+                                        <h4>Super Admin</h4>
+                                      </div>
 
-																								</FormGroup>
-																							</Col>
-																						</Row>
-
-																					</Col>
-																				</Row>
-																				{/* style={{display:props.values.countryId.value === 229 ? '' : 'none'}}  */}
-																				<Row className="mb-4" >
-																					<Col lg={5}>
-																						<FormGroup check inline className="mt-1">
-																							<Label
-																								className="form-check-label mt-3"
-																								check
-																								htmlFor="vat"
-																							>
-																								<Input
-																									type="checkbox"
-																									id="IsRegistered"
-																									name="IsRegistered"
-																									checked={props.values.IsRegistered}
-																									value={true}
-																									onChange={(value) => {
-																										if (value != null) {
-																											props.handleChange('IsRegistered')(
-																												value,
-																											);
-																										} else {
-																											props.handleChange('IsRegistered')(
-																												'',
-																											);
-																										}
-
-																									}}
-																									className={
-																										props.errors.IsRegistered &&
-																											props.touched.IsRegistered
-																											? 'is-invalid'
-																											: ''
-																									}
-																								/>
-																								Is VAT Registered?
-																								{props.errors.IsRegistered &&
-																									props.touched.IsRegistered && (
-																										<div className="invalid-feedback">
-																											{props.errors.IsRegistered}
-																										</div>
-																									)}
-																							</Label>
-																						</FormGroup>
-																					</Col>
-																				</Row>
-																				<Row className="row-wrapper" style={{ display: props.values.IsRegistered === true ? '' : 'none' }}>
-																					<Col lg={4}>
-																						<FormGroup >
-																							<Label htmlFor="TaxRegistrationNumber"><span className="text-danger">* </span>
-																								{strings.TaxRegistrationNumber}
-																								<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
-																									<span className="tooltiptext">Please note that the TRN cannot be updated <br></br>once a document has been created.</span></div>
-																							</Label>
-																							<Input
-																								type="text"
-																								minLength="15"
-																								maxLength="15"
-																								placeholder="Enter Tax Registration Number"
-																								id="TaxRegistrationNumber"
-																								name="TaxRegistrationNumber"
-																								// placeholder={strings.Enter+strings.TaxRegistrationNumber}
-																								onChange={(option) => {
-																									if (
-																										option.target.value === '' ||
-																										this.regEx.test(option.target.value)
-																									) {
-																										props.handleChange(
-																											'TaxRegistrationNumber',
-																										)(option);
-																									}
-																								}}
-																								value={props.values.TaxRegistrationNumber}
-																								className={
-																									props.errors.TaxRegistrationNumber &&
-																										props.touched.TaxRegistrationNumber
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.TaxRegistrationNumber &&
-																								props.touched.TaxRegistrationNumber && (
-																									<div className="invalid-feedback">
-																										{props.errors.TaxRegistrationNumber}
-																									</div>
-																								)}
-																							<div className="VerifyTRN">
-																								<br />
-																								<b>	<a target="_blank" rel="noopener noreferrer" href="https://tax.gov.ae/en/default.aspx" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
-																							</div>
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup>
-																							<Label htmlFor="date"><span className="text-danger">* </span>
-																								VAT Registered On
-																								<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
-																									<span className="tooltiptext">Please note that you cannot update <br></br> this detail once you have created a document.</span></div>
-																							</Label>
-																							<DatePicker
-																								autoComplete="off"
-																								id="vatRegistrationDate"
-																								minDate={new Date("01/01/2018")}
-																								name="vatRegistrationDate"
-																								placeholderText="Select VAT Registered Date"
-																								maxDate={new Date()}
-																								showMonthDropdown
-																								showYearDropdown
-																								dateFormat="dd-MM-yyyy"
-																								dropdownMode="select"
-																								value={props.values.vatRegistrationDate}
-																								selected={props.values.vatRegistrationDate}
-																								onBlur={props.handleBlur('vatRegistrationDate')}
-																								onChange={(value) => {
-																									props.handleChange('vatRegistrationDate')(
-																										value,
-																									);
-																								}}
-																								className={`form-control ${props.errors.vatRegistrationDate &&
-																										props.touched.vatRegistrationDate
-																										? 'is-invalid'
-																										: ''
-																									}`}
-																							/>
-																							{props.errors.vatRegistrationDate &&
-																								props.touched.vatRegistrationDate && (
-																									<div className="invalid-feedback">
-																										{props.errors.vatRegistrationDate}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																				</Row>
-																				<hr />
-																				<div>
-																					<h4>Super Admin</h4>
-																				</div>
-
-																				<Row>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="firstName">
-																								<span className="text-danger">* </span>{strings.FirstName}</Label>
-																							<Input
-																								type="text"
-																								maxLength="100"
-																								id="firstName"
-																								name="firstName"
-																								placeholder="Enter First Name"
-																								value={props.values.firstName}
-																								onChange={(option) => {
-																									if (
-																										option.target.value === '' ||
-																										this.regExAlpha.test(
-																											option.target.value,
-																										)
-																									) {
-
-																										let option1 = upperFirst(option.target.value)
-																										props.handleChange('firstName')(option1);
-																									}
-																								}}
-																								// onChange={(option) => {
-																								// 	props.handleChange('firstName')(
-																								// 		option,
-																								// 	);
-																								// }}
-																								className={
-																									props.errors.firstName &&
-																										props.touched.firstName
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.firstName &&
-																								props.touched.firstName && (
-																									<div className="invalid-feedback">
-																										{props.errors.firstName}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="lastName">
-																								<span className="text-danger">* </span>{strings.LastName}</Label>
-																							<Input
-																								type="text"
-																								maxLength="100"
-																								id="lastName"
-																								name="lastName"
-																								placeholder="Enter Last Name"
-																								value={props.values.lastName}
-																								onChange={(option) => {
-																									if (
-																										option.target.value === '' ||
-																										this.regExAlpha.test(
-																											option.target.value,
-																										)
-																									) {
-
-																										let option1 = upperFirst(option.target.value)
-																										props.handleChange('lastName')(option1);
-																									}
-																								}}
-																								// onChange={(option) => {
-																								// 	props.handleChange('lastName')(
-																								// 		option,
-																								// 	);
-																								// }}
-																								className={
-																									props.errors.lastName &&
-																										props.touched.lastName
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.lastName &&
-																								props.touched.lastName && (
-																									<div className="invalid-feedback">
-																										{props.errors.lastName}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="email">
-																								<span className="text-danger">* </span>{strings.EmailAddress}</Label>
-																							<Input
-																								type="email"
-																								maxLength="80"
-																								id="email"
-																								name="email"
-																								placeholder="Enter Email Address"
-																								value={props.values.email}
-																								onChange={(option) => {
-																									props.handleChange('email')(option);
-																								}}
-																								className={
-																									props.errors.email &&
-																										props.touched.email
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.email &&
-																								props.touched.email && (
-																									<div className="invalid-feedback">
-																										{props.errors.email}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																				</Row>
-																				<Row>
-																					<Col lg={6}>
-																						<FormGroup>
-																							<Label htmlFor="select">
-																								<span className="text-danger">* </span>
-																								Password
-																							</Label>
-																							<div>
-																								<Input
-																									onPaste={(e) => {
-																										e.preventDefault()
-																										return false;
-																									}} onCopy={(e) => {
-																										e.preventDefault()
-																										return false;
-																									}}
-																									type={
-																										this.state.isPasswordShown
-																											? 'text'
-																											: 'password'
-																									}
-																									autoComplete="off"
-																									id="password"
-																									name="password"
-																									placeholder=" Enter Password"
-																									value={props.values.password}
-																									onChange={(option) => {
-																										if (option.target.value != "") {
-																											props.handleChange('password')(
-																												option,
-																											);
-																											this.setState({ displayRules: true })
-																										}
-																										else {
-																											props.handleChange('password')(
-																												option,
-																											);
-																											this.setState({ displayRules: false })
-																										}
-																									}}
-																									className={
-																										props.errors.password &&
-																											props.touched.password
-																											? 'is-invalid'
-																											: ''
-																									}
-																								/>
-																								<i className={`fa ${isPasswordShown ? "fa-eye" : "fa-eye-slash"} password-icon fa-lg`}
-																									onClick={this.togglePasswordVisiblity}
-																								>
-																								</i>
-																							</div>
-																							{props.errors.password &&
-																								props.touched.password && (
-																									<div className="invalid-feedback">
-																										{props.errors.password}
-																									</div>
-																								)}
-																							{this.state.displayRules == true && (<PasswordChecklist
-																								rules={["maxLength", "minLength", "specialChar", "number", "capital"]}
-																								minLength={8}
-																								maxLength={255}
-																								value={props.values.password}
-																								valueAgain={props.values.confirmPassword}
-																							/>)}
-																						</FormGroup>
-																					</Col>
-																					<Col lg={6}>
-																						<FormGroup>
-																							<Label htmlFor="select">
-																								<span className="text-danger">* </span>
-																								Confirm Password
-																							</Label>
-																							<Input
-																								onPaste={(e) => {
-																									e.preventDefault()
-																									return false;
-																								}} onCopy={(e) => {
-																									e.preventDefault()
-																									return false;
-																								}}
-																								// autoComplete="off"
-																								type="password"
-																								id="confirmPassword"
-																								name="confirmPassword"
-																								value={props.values.confirmPassword}
-																								placeholder="Confirm Password"
-																								onChange={(value) => {
-																									props.handleChange('confirmPassword')(
-																										value,
-																									);
-																								}}
-																								className={
-																									props.errors.confirmPassword &&
-																										props.touched.confirmPassword
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.confirmPassword &&
-																								props.touched.confirmPassword && (
-																									<div className="invalid-feedback">
-																										{props.errors.confirmPassword}
-																									</div>
-																								)}
-																							{this.state.displayRules == true && (<PasswordChecklist
-																								rules={["match"]}
-																								minLength={8}
-																								value={props.values.password}
-																								valueAgain={props.values.confirmPassword}
-																							/>)}
-																						</FormGroup>
-																					</Col>
-																				</Row>
-																				<>Note:<b> Super Admin</b> Details Cannot Be Altered After Registration</>
-																				<Row>
-																					<Col className="text-center">
-																						<Button
-																							type="submit"
-																							name="submit"
-																							color="primary"
-																							disabled={this.state.loading}
-																							onClick={(e) => {
-																								console.log('Register button clicked', {
-																									loading: this.state.loading,
-																									isValid: props.isValid,
-																									errors: props.errors,
-																									errorCount: Object.keys(props.errors).length
-																								});
-																								// If form is invalid, show errors
-																								if (!props.isValid) {
-																									console.warn('Form is invalid. Errors:', props.errors);
-																									// Mark all fields as touched to show validation errors
-																									Object.keys(props.errors).forEach(field => {
-																										props.setFieldTouched(field, true);
-																									});
-																								}
-																							}}
-																							className="btn-square mr-3 mt-3 "
-																							style={{ 
-																								width: '200px',
-																								opacity: (!props.isValid && Object.keys(props.touched).length > 0) ? 0.6 : 1
-																							}}
-																							title={!props.isValid ? `Please fill all required fields. Errors: ${Object.keys(props.errors).length}` : ''}
-																						>
-																							<i className="fa fa-dot-circle-o"></i>{' '}
-																							{this.state.loading
-																								? 'Creating...'
-																								: 'Register'}
-																						</Button>
-																					</Col>
-																				</Row>
-																				<label><a href="https://www.simpleaccounts.io/privacy-policy/" target="_blank">Privacy Policy</a></label>
-																			</Form>
-																		);
-																	}}
-																</Formik>
-
-															</CardBody>
-														)}
-
-													</Card>
-
-												</CardGroup>
-											</Col>
-										</Row>
-									)}
-								</Container>
-							</div>
-						</div>
-					</div>
-				</div>
-		);
-	}
+                                      <Row>
+                                        <Col lg={4}>
+                                          <FormGroup className="mb-3">
+                                            <Label htmlFor="firstName">
+                                              <span className="text-danger">* </span>
+                                              {strings.FirstName}
+                                            </Label>
+                                            <Input
+                                              type="text"
+                                              maxLength="100"
+                                              id="firstName"
+                                              name="firstName"
+                                              placeholder="Enter First Name"
+                                              value={props.values.firstName}
+                                              onChange={option => {
+                                                if (
+                                                  option.target.value === '' ||
+                                                  this.regExAlpha.test(option.target.value)
+                                                ) {
+                                                  let option1 = upperFirst(option.target.value);
+                                                  props.handleChange('firstName')(option1);
+                                                }
+                                              }}
+                                              // onChange={(option) => {
+                                              // 	props.handleChange('firstName')(
+                                              // 		option,
+                                              // 	);
+                                              // }}
+                                              className={
+                                                props.errors.firstName && props.touched.firstName
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }
+                                            />
+                                            {props.errors.firstName && props.touched.firstName && (
+                                              <div className="invalid-feedback">
+                                                {props.errors.firstName}
+                                              </div>
+                                            )}
+                                          </FormGroup>
+                                        </Col>
+                                        <Col lg={4}>
+                                          <FormGroup className="mb-3">
+                                            <Label htmlFor="lastName">
+                                              <span className="text-danger">* </span>
+                                              {strings.LastName}
+                                            </Label>
+                                            <Input
+                                              type="text"
+                                              maxLength="100"
+                                              id="lastName"
+                                              name="lastName"
+                                              placeholder="Enter Last Name"
+                                              value={props.values.lastName}
+                                              onChange={option => {
+                                                if (
+                                                  option.target.value === '' ||
+                                                  this.regExAlpha.test(option.target.value)
+                                                ) {
+                                                  let option1 = upperFirst(option.target.value);
+                                                  props.handleChange('lastName')(option1);
+                                                }
+                                              }}
+                                              // onChange={(option) => {
+                                              // 	props.handleChange('lastName')(
+                                              // 		option,
+                                              // 	);
+                                              // }}
+                                              className={
+                                                props.errors.lastName && props.touched.lastName
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }
+                                            />
+                                            {props.errors.lastName && props.touched.lastName && (
+                                              <div className="invalid-feedback">
+                                                {props.errors.lastName}
+                                              </div>
+                                            )}
+                                          </FormGroup>
+                                        </Col>
+                                        <Col lg={4}>
+                                          <FormGroup className="mb-3">
+                                            <Label htmlFor="email">
+                                              <span className="text-danger">* </span>
+                                              {strings.EmailAddress}
+                                            </Label>
+                                            <Input
+                                              type="email"
+                                              maxLength="80"
+                                              id="email"
+                                              name="email"
+                                              placeholder="Enter Email Address"
+                                              value={props.values.email}
+                                              onChange={option => {
+                                                props.handleChange('email')(option);
+                                              }}
+                                              className={
+                                                props.errors.email && props.touched.email
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }
+                                            />
+                                            {props.errors.email && props.touched.email && (
+                                              <div className="invalid-feedback">
+                                                {props.errors.email}
+                                              </div>
+                                            )}
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                      <Row>
+                                        <Col lg={6}>
+                                          <FormGroup>
+                                            <Label htmlFor="select">
+                                              <span className="text-danger">* </span>
+                                              Password
+                                            </Label>
+                                            <div>
+                                              <Input
+                                                onPaste={e => {
+                                                  e.preventDefault();
+                                                  return false;
+                                                }}
+                                                onCopy={e => {
+                                                  e.preventDefault();
+                                                  return false;
+                                                }}
+                                                type={
+                                                  this.state.isPasswordShown ? 'text' : 'password'
+                                                }
+                                                autoComplete="off"
+                                                id="password"
+                                                name="password"
+                                                placeholder=" Enter Password"
+                                                value={props.values.password}
+                                                onChange={option => {
+                                                  if (option.target.value != '') {
+                                                    props.handleChange('password')(option);
+                                                    this.setState({ displayRules: true });
+                                                  } else {
+                                                    props.handleChange('password')(option);
+                                                    this.setState({ displayRules: false });
+                                                  }
+                                                }}
+                                                className={
+                                                  props.errors.password && props.touched.password
+                                                    ? 'is-invalid'
+                                                    : ''
+                                                }
+                                              />
+                                              <i
+                                                className={`fa ${isPasswordShown ? 'fa-eye' : 'fa-eye-slash'} password-icon fa-lg`}
+                                                onClick={this.togglePasswordVisiblity}
+                                              ></i>
+                                            </div>
+                                            {props.errors.password && props.touched.password && (
+                                              <div className="invalid-feedback">
+                                                {props.errors.password}
+                                              </div>
+                                            )}
+                                            {this.state.displayRules == true && (
+                                              <PasswordChecklist
+                                                rules={[
+                                                  'maxLength',
+                                                  'minLength',
+                                                  'specialChar',
+                                                  'number',
+                                                  'capital',
+                                                ]}
+                                                minLength={8}
+                                                maxLength={255}
+                                                value={props.values.password}
+                                                valueAgain={props.values.confirmPassword}
+                                              />
+                                            )}
+                                          </FormGroup>
+                                        </Col>
+                                        <Col lg={6}>
+                                          <FormGroup>
+                                            <Label htmlFor="select">
+                                              <span className="text-danger">* </span>
+                                              Confirm Password
+                                            </Label>
+                                            <Input
+                                              onPaste={e => {
+                                                e.preventDefault();
+                                                return false;
+                                              }}
+                                              onCopy={e => {
+                                                e.preventDefault();
+                                                return false;
+                                              }}
+                                              // autoComplete="off"
+                                              type="password"
+                                              id="confirmPassword"
+                                              name="confirmPassword"
+                                              value={props.values.confirmPassword}
+                                              placeholder="Confirm Password"
+                                              onChange={value => {
+                                                props.handleChange('confirmPassword')(value);
+                                              }}
+                                              className={
+                                                props.errors.confirmPassword &&
+                                                props.touched.confirmPassword
+                                                  ? 'is-invalid'
+                                                  : ''
+                                              }
+                                            />
+                                            {props.errors.confirmPassword &&
+                                              props.touched.confirmPassword && (
+                                                <div className="invalid-feedback">
+                                                  {props.errors.confirmPassword}
+                                                </div>
+                                              )}
+                                            {this.state.displayRules == true && (
+                                              <PasswordChecklist
+                                                rules={['match']}
+                                                minLength={8}
+                                                value={props.values.password}
+                                                valueAgain={props.values.confirmPassword}
+                                              />
+                                            )}
+                                          </FormGroup>
+                                        </Col>
+                                      </Row>
+                                      <>
+                                        Note:<b> Super Admin</b> Details Cannot Be Altered After
+                                        Registration
+                                      </>
+                                      <Row>
+                                        <Col className="text-center">
+                                          <Button
+                                            type="submit"
+                                            name="submit"
+                                            color="primary"
+                                            disabled={this.state.loading}
+                                            onClick={e => {
+                                              console.log('Register button clicked', {
+                                                loading: this.state.loading,
+                                                isValid: props.isValid,
+                                                errors: props.errors,
+                                                errorCount: Object.keys(props.errors).length,
+                                              });
+                                              // If form is invalid, show errors
+                                              if (!props.isValid) {
+                                                console.warn(
+                                                  'Form is invalid. Errors:',
+                                                  props.errors
+                                                );
+                                                // Mark all fields as touched to show validation errors
+                                                Object.keys(props.errors).forEach(field => {
+                                                  props.setFieldTouched(field, true);
+                                                });
+                                              }
+                                            }}
+                                            className="btn-square mr-3 mt-3 "
+                                            style={{
+                                              width: '200px',
+                                              opacity:
+                                                !props.isValid &&
+                                                Object.keys(props.touched).length > 0
+                                                  ? 0.6
+                                                  : 1,
+                                            }}
+                                            title={
+                                              !props.isValid
+                                                ? `Please fill all required fields. Errors: ${Object.keys(props.errors).length}`
+                                                : ''
+                                            }
+                                          >
+                                            <i className="fa fa-dot-circle-o"></i>{' '}
+                                            {this.state.loading ? 'Creating...' : 'Register'}
+                                          </Button>
+                                        </Col>
+                                      </Row>
+                                      <label>
+                                        <a
+                                          href="https://www.simpleaccounts.io/privacy-policy/"
+                                          target="_blank"
+                                          rel="noreferrer"
+                                        >
+                                          Privacy Policy
+                                        </a>
+                                      </label>
+                                    </Form>
+                                  );
+                                }}
+                              </Formik>
+                            </CardBody>
+                          )}
+                        </Card>
+                      </CardGroup>
+                    </Col>
+                  </Row>
+                )}
+              </Container>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(Register));
