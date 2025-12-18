@@ -81,10 +81,11 @@ function normalizeYupError(error) {
 /**
  * Patches Formik's yupToFormErrors function if it's accessible
  */
-function patchFormikYupToFormErrors() {
+async function patchFormikYupToFormErrors() {
   try {
-    // Try to import Formik and patch yupToFormErrors
-    const formikModule = require('formik');
+    // Try to dynamically import Formik and patch yupToFormErrors
+    // Using dynamic import for ES modules/Vite compatibility
+    const formikModule = await import('formik').catch(() => null);
     if (formikModule && formikModule.yupToFormErrors) {
       const originalYupToFormErrors = formikModule.yupToFormErrors;
       formikModule.yupToFormErrors = function (yupError) {
@@ -95,7 +96,7 @@ function patchFormikYupToFormErrors() {
   } catch (error) {
     // Formik might not be loaded yet or yupToFormErrors might not be exported
     // This is okay, we'll rely on the Yup patch instead
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env?.DEV || process.env.NODE_ENV === 'development') {
       console.debug('Could not patch Formik yupToFormErrors:', error.message);
     }
   }
@@ -169,7 +170,10 @@ try {
 
 // Try to patch Formik's yupToFormErrors (may not work if Formik isn't loaded yet)
 // This will be called again when Formik is actually imported
-patchFormikYupToFormErrors();
+// Using async call since we're using dynamic import
+patchFormikYupToFormErrors().catch(() => {
+  // Silently handle if Formik isn't available yet
+});
 
 // Export the normalize function for use in Formik wrapper
 export { normalizeYupError };

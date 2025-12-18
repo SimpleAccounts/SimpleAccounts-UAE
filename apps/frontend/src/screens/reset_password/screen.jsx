@@ -17,13 +17,9 @@ import {
 } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { withNavigation } from 'utils/withNavigation';
-import {
-	FormField,
-} from '@/components/ui/form';
-import { getFieldError } from '@/lib/validations/utils';
 import { api } from 'utils';
 import { Message } from 'components';
-import ResetNewPassword from './sections/reset_new_password';
+import ResetNewPassword from './sections/reset_new_password.jsx';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 

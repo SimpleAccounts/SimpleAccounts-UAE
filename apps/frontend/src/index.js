@@ -82,10 +82,11 @@ window.addEventListener('unhandledrejection', event => {
 
 // Try to patch Formik's yupToFormErrors when Formik is loaded
 // This runs after the initial render to ensure Formik is available
-setTimeout(() => {
+setTimeout(async () => {
   try {
-    const formikModule = require('formik');
-    const { normalizeYupError } = require('utils/formikYupPatch');
+    // Use dynamic import for ES modules/Vite compatibility
+    const formikModule = await import('formik').catch(() => null);
+    const { normalizeYupError } = await import('utils/formikYupPatch').catch(() => ({ normalizeYupError: null }));
 
     if (formikModule && formikModule.yupToFormErrors && normalizeYupError) {
       const originalYupToFormErrors = formikModule.yupToFormErrors;
@@ -94,14 +95,14 @@ setTimeout(() => {
         return originalYupToFormErrors.call(this, normalized);
       };
 
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env?.DEV || process.env.NODE_ENV === 'development') {
         console.debug('Successfully patched Formik yupToFormErrors');
       }
     }
   } catch (error) {
     // Formik might not be loaded yet or yupToFormErrors might not be accessible
     // This is okay, we'll rely on the Yup patch instead
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env?.DEV || process.env.NODE_ENV === 'development') {
       console.debug(
         'Could not patch Formik yupToFormErrors (this is usually fine):',
         error.message
