@@ -11,6 +11,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { SocialLoginButtons } from '@/components/ui/social-login-buttons';
+import { ButtonSpinner, SkeletonCard } from '@/components/ui/loading-spinner';
 
 import { AuthActions } from 'services/global';
 import logo from 'assets/images/brand/logo.png';
@@ -31,6 +36,7 @@ if (localStorage.getItem('language') == null) {
 const loginSchema = z.object({
   username: z.string().min(1, 'Email is required').email('Please enter a valid email'),
   password: z.string().min(1, 'Please enter your password'),
+  rememberMe: z.boolean().optional(),
 });
 
 const LogIn = () => {
@@ -41,13 +47,15 @@ const LogIn = () => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [companyCount, setCompanyCount] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [subscriptionMessage, setSubscriptionMessage] = useState(null);
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: '',
+      username: localStorage.getItem('rememberedEmail') || '',
       password: '',
+      rememberMe: !!localStorage.getItem('rememberedEmail'),
     },
   });
 
@@ -56,39 +64,41 @@ const LogIn = () => {
   }, []);
 
   const getInitialData = () => {
-    dispatch(AuthActions.getCompanyCount())
-      .then(response => {
-        if (response.data < 1) {
-          navigate('/register');
-        }
-        setCompanyCount(response.data);
-      })
-      .catch(() => {
-        // If API fails (e.g., database not set up), show register button
-        setCompanyCount(0);
-      });
-
-    dispatch(AuthActions.getUserSubscription())
-      .then(action => {
-        let message = null;
-        if (action && action.type && action.type.includes('fulfilled')) {
-          const data = action.payload;
-          if (
-            (data && data.message && data.message.toLowerCase() === 'active') ||
-            (data && data.status && data.status.toLowerCase() === 'active')
-          ) {
-            message = null;
-          } else {
-            message = strings.SubscriptionExpiredMessage;
+    Promise.all([
+      dispatch(AuthActions.getCompanyCount())
+        .then(response => {
+          if (response.data < 1) {
+            navigate('/register');
           }
-        } else {
-          message = strings.SubscriptionFailedMessage;
-        }
-        setSubscriptionMessage(message);
-      })
-      .catch(() => {
-        setSubscriptionMessage(strings.SubscriptionErrorMessage);
-      });
+          setCompanyCount(response.data);
+        })
+        .catch(() => {
+          setCompanyCount(0);
+        }),
+      dispatch(AuthActions.getUserSubscription())
+        .then(action => {
+          let message = null;
+          if (action && action.type && action.type.includes('fulfilled')) {
+            const data = action.payload;
+            if (
+              (data && data.message && data.message.toLowerCase() === 'active') ||
+              (data && data.status && data.status.toLowerCase() === 'active')
+            ) {
+              message = null;
+            } else {
+              message = strings.SubscriptionExpiredMessage;
+            }
+          } else {
+            message = strings.SubscriptionFailedMessage;
+          }
+          setSubscriptionMessage(message);
+        })
+        .catch(() => {
+          setSubscriptionMessage(strings.SubscriptionErrorMessage);
+        }),
+    ]).finally(() => {
+      setInitialLoading(false);
+    });
   };
 
   const togglePasswordVisibility = () => {
@@ -97,7 +107,14 @@ const LogIn = () => {
 
   const onSubmit = data => {
     setLoading(true);
-    const { username, password } = data;
+    const { username, password, rememberMe } = data;
+
+    // Handle remember me
+    if (rememberMe) {
+      localStorage.setItem('rememberedEmail', username);
+    } else {
+      localStorage.removeItem('rememberedEmail');
+    }
 
     dispatch(AuthActions.logIn({ username, password }))
       .then(action => {
@@ -120,40 +137,76 @@ const LogIn = () => {
       });
   };
 
+  const handleSocialLogin = provider => {
+    toast.info(`${provider} login coming soon!`);
+  };
+
+  if (initialLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4">
+        <SkeletonCard />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4 transition-colors duration-300">
+      {/* Theme Toggle - Fixed position */}
+      <div className="fixed top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
+
+      <Card className="w-full max-w-md animate-slide-up shadow-lg dark:shadow-2xl">
         <CardHeader className="space-y-4 text-center">
-          <div className="flex justify-center">
-            <img src={logo} alt="logo" className="h-16 w-auto" />
+          <div className="flex justify-center animate-fade-in">
+            <img src={logo} alt="SimpleAccounts Logo" className="h-16 w-auto" />
           </div>
-          <div>
-            <CardTitle className="text-2xl">Login</CardTitle>
-            <CardDescription>Enter your details below to continue</CardDescription>
+          <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
+            <CardTitle className="text-2xl">Welcome Back</CardTitle>
+            <CardDescription>Enter your credentials to access your account</CardDescription>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="animate-fade-in" style={{ animationDelay: '200ms' }}>
           {subscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
-            <div className="mb-4 p-3 bg-destructive/10 text-destructive text-sm rounded-md">
+            <div
+              className="mb-4 p-3 bg-destructive/10 text-destructive text-sm rounded-md animate-shake"
+              role="alert"
+              aria-live="polite"
+            >
               {subscriptionMessage}
             </div>
           )}
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4"
+              noValidate
+              aria-label="Login form"
+            >
               <FormField
                 control={form.control}
                 name="username"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel className="font-semibold">Email</FormLabel>
+                    <FormLabel className="font-semibold" htmlFor="email-input">
+                      Email
+                    </FormLabel>
                     <Input
+                      id="email-input"
                       type="email"
-                      placeholder="Enter Email Id"
-                      className={fieldState.error ? 'border-destructive' : ''}
+                      placeholder="Enter your email"
+                      autoComplete="email"
+                      aria-describedby={fieldState.error ? 'email-error' : undefined}
+                      aria-invalid={!!fieldState.error}
+                      className={`input-transition focus-ring-animate ${fieldState.error ? 'border-destructive animate-shake' : ''}`}
                       {...field}
                     />
-                    {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+                    {fieldState.error && (
+                      <FormMessage id="email-error" role="alert">
+                        {fieldState.error.message}
+                      </FormMessage>
+                    )}
                   </FormItem>
                 )}
               />
@@ -163,13 +216,19 @@ const LogIn = () => {
                 name="password"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel className="font-semibold">Password</FormLabel>
+                    <FormLabel className="font-semibold" htmlFor="password-input">
+                      Password
+                    </FormLabel>
                     <div className="relative">
                       <Input
+                        id="password-input"
                         type={isPasswordShown ? 'text' : 'password'}
-                        placeholder="Enter password"
+                        placeholder="Enter your password"
                         maxLength={255}
-                        className={fieldState.error ? 'border-destructive pr-10' : 'pr-10'}
+                        autoComplete="current-password"
+                        aria-describedby={fieldState.error ? 'password-error' : undefined}
+                        aria-invalid={!!fieldState.error}
+                        className={`input-transition focus-ring-animate pr-10 ${fieldState.error ? 'border-destructive animate-shake' : ''}`}
                         onPaste={e => e.preventDefault()}
                         onCopy={e => e.preventDefault()}
                         {...field}
@@ -177,38 +236,84 @@ const LogIn = () => {
                       <button
                         type="button"
                         onClick={togglePasswordVisibility}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded"
+                        aria-label={isPasswordShown ? 'Hide password' : 'Show password'}
+                        aria-pressed={isPasswordShown}
                       >
                         {isPasswordShown ? (
-                          <EyeOff className="h-4 w-4" />
+                          <EyeOff className="h-4 w-4" aria-hidden="true" />
                         ) : (
-                          <Eye className="h-4 w-4" />
+                          <Eye className="h-4 w-4" aria-hidden="true" />
                         )}
                       </button>
                     </div>
-                    {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+                    {fieldState.error && (
+                      <FormMessage id="password-error" role="alert">
+                        {fieldState.error.message}
+                      </FormMessage>
+                    )}
                   </FormItem>
                 )}
               />
 
-              <div className="flex justify-end">
+              <div className="flex items-center justify-between">
+                <FormField
+                  control={form.control}
+                  name="rememberMe"
+                  render={({ field }) => (
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="remember-me"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        aria-label="Remember my email"
+                      />
+                      <Label
+                        htmlFor="remember-me"
+                        className="text-sm font-normal cursor-pointer select-none"
+                      >
+                        Remember me
+                      </Label>
+                    </div>
+                  )}
+                />
                 <Button
                   type="button"
                   variant="link"
-                  className="px-0 h-auto"
+                  className="px-0 h-auto text-sm"
                   onClick={() => navigate('/reset-password')}
                 >
                   Forgot password?
                 </Button>
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading}>
-                <LogInIcon className="h-4 w-4 mr-2" />
-                {loading ? 'Logging in...' : 'Log In'}
+              <Button
+                type="submit"
+                className="w-full transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                disabled={loading}
+                aria-busy={loading}
+              >
+                {loading ? (
+                  <>
+                    <ButtonSpinner className="mr-2" />
+                    Logging in...
+                  </>
+                ) : (
+                  <>
+                    <LogInIcon className="h-4 w-4 mr-2" aria-hidden="true" />
+                    Log In
+                  </>
+                )}
               </Button>
 
+              <SocialLoginButtons
+                onGoogleClick={() => handleSocialLogin('Google')}
+                onMicrosoftClick={() => handleSocialLogin('Microsoft')}
+                disabled={loading}
+              />
+
               {companyCount < 1 && (
-                <p className="text-center text-sm text-muted-foreground">
+                <p className="text-center text-sm text-muted-foreground pt-2">
                   Don't have an account?{' '}
                   <Button
                     type="button"

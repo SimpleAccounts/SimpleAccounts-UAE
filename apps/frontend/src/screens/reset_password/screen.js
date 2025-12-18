@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { ButtonSpinner } from '@/components/ui/loading-spinner';
 
 import { api } from 'utils';
 import logo from 'assets/images/brand/logo.png';
@@ -54,12 +56,12 @@ const ResetPassword = () => {
         });
         setTimeout(() => {
           navigate('/login');
-        }, 1500);
+        }, 2000);
       })
       .catch(() => {
         setAlert({
           type: 'error',
-          message: 'Invalid email address',
+          message: 'Invalid email address or account not found.',
         });
       })
       .finally(() => {
@@ -73,61 +75,103 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4 transition-colors duration-300">
+      {/* Theme Toggle */}
+      <div className="fixed top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
+
+      <Card className="w-full max-w-md animate-slide-up shadow-lg dark:shadow-2xl">
         <CardHeader className="space-y-4 text-center">
-          <div className="flex justify-center">
-            <img src={logo} alt="logo" className="h-16 w-auto" />
+          <div className="flex justify-center animate-fade-in">
+            <img src={logo} alt="SimpleAccounts Logo" className="h-16 w-auto" />
           </div>
-          <div>
+          <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
             <CardTitle className="text-2xl">Forgot Password</CardTitle>
             <CardDescription>
-              Enter your email address to receive a verification link
+              Enter your email address and we'll send you a link to reset your password
             </CardDescription>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="animate-fade-in" style={{ animationDelay: '200ms' }}>
           {alert && (
             <Alert
-              className={`mb-4 ${alert.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-destructive/10 text-destructive border-destructive/20'}`}
+              className={`mb-4 animate-fade-in ${
+                alert.type === 'success'
+                  ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
+                  : 'bg-destructive/10 text-destructive border-destructive/20'
+              }`}
+              role="alert"
+              aria-live="polite"
             >
               <AlertDescription>{alert.message}</AlertDescription>
             </Alert>
           )}
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4"
+              noValidate
+              aria-label="Reset password form"
+            >
               <FormField
                 control={form.control}
                 name="username"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel className="font-semibold">
-                      <span className="text-destructive">* </span>Email Address
+                    <FormLabel className="font-semibold" htmlFor="reset-email">
+                      <span className="text-destructive" aria-hidden="true">
+                        *{' '}
+                      </span>
+                      Email Address
                     </FormLabel>
                     <Input
+                      id="reset-email"
                       type="email"
-                      placeholder="Please enter your email address"
-                      className={fieldState.error ? 'border-destructive' : ''}
+                      placeholder="Enter your email address"
+                      autoComplete="email"
+                      aria-required="true"
+                      aria-describedby={fieldState.error ? 'reset-email-error' : undefined}
+                      aria-invalid={!!fieldState.error}
+                      className={`input-transition focus-ring-animate ${fieldState.error ? 'border-destructive animate-shake' : ''}`}
                       {...field}
                     />
-                    {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+                    {fieldState.error && (
+                      <FormMessage id="reset-email-error" role="alert">
+                        {fieldState.error.message}
+                      </FormMessage>
+                    )}
                   </FormItem>
                 )}
               />
 
-              <div className="flex gap-3 pt-2">
-                <Button type="submit" className="flex-1" disabled={loading}>
-                  <Mail className="h-4 w-4 mr-2" />
-                  {loading ? 'Sending...' : 'Send Verification Email'}
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                <Button
+                  type="submit"
+                  className="flex-1 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                  disabled={loading}
+                  aria-busy={loading}
+                >
+                  {loading ? (
+                    <>
+                      <ButtonSpinner className="mr-2" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="h-4 w-4 mr-2" aria-hidden="true" />
+                      Send Reset Link
+                    </>
+                  )}
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
-                  className="flex-1"
+                  className="flex-1 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                   onClick={() => navigate('/login')}
                 >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  <ArrowLeft className="h-4 w-4 mr-2" aria-hidden="true" />
                   Back to Login
                 </Button>
               </div>
