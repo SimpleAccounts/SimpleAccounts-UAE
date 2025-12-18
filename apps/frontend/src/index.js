@@ -36,6 +36,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Global error handler for Formik/Yup compatibility issue
 // Catches "yupError.inner is undefined" errors from Formik validation
+// This is a fallback - the patch should prevent these errors, but this catches any that slip through
 window.addEventListener('unhandledrejection', event => {
   if (event.reason) {
     const errorMessage = event.reason.message || event.reason.toString() || '';
@@ -45,9 +46,27 @@ window.addEventListener('unhandledrejection', event => {
     if (
       errorMessage.includes('yupError.inner is undefined') ||
       errorMessage.includes('inner is undefined') ||
+      errorMessage.includes('inner.length') ||
       errorStack.includes('yupToFormErrors') ||
-      (errorMessage.includes('TypeError') && errorStack.includes('formik'))
+      (errorMessage.includes('TypeError') &&
+        (errorStack.includes('formik') || errorStack.includes('yup')))
     ) {
+      // Try to normalize the error if possible
+      try {
+        const { normalizeYupError } = require('utils/formikYupPatch');
+        if (normalizeYupError && event.reason) {
+          const normalized = normalizeYupError(event.reason);
+          // Replace the reason with normalized error
+          Object.defineProperty(event, 'reason', {
+            value: normalized,
+            writable: true,
+            configurable: true,
+          });
+        }
+      } catch (e) {
+        // If normalization fails, just suppress the error
+      }
+
       // Suppress this specific error - it's a known compatibility issue
       // between Yup 1.7.1 and Formik 1.5.1
       event.preventDefault();
@@ -60,6 +79,36 @@ window.addEventListener('unhandledrejection', event => {
     }
   }
 });
+
+// Try to patch Formik's yupToFormErrors when Formik is loaded
+// This runs after the initial render to ensure Formik is available
+setTimeout(() => {
+  try {
+    const formikModule = require('formik');
+    const { normalizeYupError } = require('utils/formikYupPatch');
+
+    if (formikModule && formikModule.yupToFormErrors && normalizeYupError) {
+      const originalYupToFormErrors = formikModule.yupToFormErrors;
+      formikModule.yupToFormErrors = function (yupError) {
+        const normalized = normalizeYupError(yupError);
+        return originalYupToFormErrors.call(this, normalized);
+      };
+
+      if (process.env.NODE_ENV === 'development') {
+        console.debug('Successfully patched Formik yupToFormErrors');
+      }
+    }
+  } catch (error) {
+    // Formik might not be loaded yet or yupToFormErrors might not be accessible
+    // This is okay, we'll rely on the Yup patch instead
+    if (process.env.NODE_ENV === 'development') {
+      console.debug(
+        'Could not patch Formik yupToFormErrors (this is usually fine):',
+        error.message
+      );
+    }
+  }
+}, 100);
 
 const theme = createTheme({
   palette: {

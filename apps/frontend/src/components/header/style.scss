@@ -1,11 +1,39 @@
-
 .header-component {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+
   .header-dropdown-menu {
     height: auto;
     right: 0;
   }
 }
+
 .img-avatar {
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+// Ensure nav items align horizontally
+.app-header .nav.navbar-nav,
+.app-header .nav[navbar] {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+}
+
+// User dropdown alignment
+.app-header .nav-item,
+.app-header .dropdown {
+  display: flex;
+  align-items: center;
+}
+
+.app-header .dropdown-toggle {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
 }
