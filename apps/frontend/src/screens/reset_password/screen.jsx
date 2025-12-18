@@ -25,7 +25,7 @@ import logo from 'assets/images/brand/logo.png';
 
 // Zod validation schema
 const resetPasswordSchema = z.object({
-	username: z.string().min(1, 'Email id is required').email('Invalid email Id'),
+	username: z.string().min(1, 'Email id is required').email('Invalid email address'),
 });
 
 const ResetPassword = ({ history, location }) => {
