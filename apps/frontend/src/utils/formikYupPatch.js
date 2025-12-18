@@ -79,7 +79,7 @@ function normalizeYupError(error) {
 }
 
 /**
- * Patches Formik's yupToFormErrors function if it's accessible
+ * Patches Formik's yupToFormErrors function if it's accessible and writable
  */
 async function patchFormikYupToFormErrors() {
   try {
@@ -88,10 +88,41 @@ async function patchFormikYupToFormErrors() {
     const formikModule = await import('formik').catch(() => null);
     if (formikModule && formikModule.yupToFormErrors) {
       const originalYupToFormErrors = formikModule.yupToFormErrors;
-      formikModule.yupToFormErrors = function (yupError) {
-        const normalized = normalizeYupError(yupError);
-        return originalYupToFormErrors.call(this, normalized);
-      };
+      
+      // Check if the property is writable before attempting to patch
+      const descriptor = Object.getOwnPropertyDescriptor(formikModule, 'yupToFormErrors');
+      
+      // If property exists and is writable, patch it
+      if (!descriptor || descriptor.writable !== false) {
+        try {
+          formikModule.yupToFormErrors = function (yupError) {
+            const normalized = normalizeYupError(yupError);
+            return originalYupToFormErrors.call(this, normalized);
+          };
+        } catch (writeError) {
+          // Property might be read-only, try using defineProperty
+          try {
+            Object.defineProperty(formikModule, 'yupToFormErrors', {
+              value: function (yupError) {
+                const normalized = normalizeYupError(yupError);
+                return originalYupToFormErrors.call(this, normalized);
+              },
+              writable: true,
+              configurable: true,
+            });
+          } catch (defineError) {
+            // If both fail, silently skip - Yup patch will handle it
+            if (import.meta.env?.DEV || process.env.NODE_ENV === 'development') {
+              console.debug('Could not patch Formik yupToFormErrors (read-only, using Yup patch instead)');
+            }
+          }
+        }
+      } else {
+        // Property is read-only, skip patching - Yup patch will handle it
+        if (import.meta.env?.DEV || process.env.NODE_ENV === 'development') {
+          console.debug('Formik yupToFormErrors is read-only, using Yup patch instead');
+        }
+      }
     }
   } catch (error) {
     // Formik might not be loaded yet or yupToFormErrors might not be exported
