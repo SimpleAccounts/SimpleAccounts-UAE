@@ -102,7 +102,7 @@ class CashFlow extends Component {
 
             <div className="data-info">
               <div className="data-item">
-                <img alt="income" src={incomeIcon} />
+                <img alt="income" src={incomeIcon} style={{ width: '50px', height: '55px' }} />
                 <div>
                   <h5>
                     {universal_currency_list[0] && inflow && (
@@ -120,7 +120,7 @@ class CashFlow extends Component {
                 </div>
               </div>
               <div className="data-item ml-4">
-                <img alt="outgoing" src={outcomeIcon} />
+                <img alt="outgoing" src={outcomeIcon} style={{ width: '40px', height: '40px' }} />
                 <div>
                   <h5>
                     {universal_currency_list[0] && outflow && (
@@ -138,14 +138,28 @@ class CashFlow extends Component {
                 </div>
               </div>
             </div>
-            <div className="row data-item total mt-2">
-              <div className="column" style={{ width: '50%', textAlign: 'right' }}>
-                {' '}
-                <img className=" mr-3" alt="total" src={totalIcon} />{' '}
+            <div
+              className="row data-item total mt-2"
+              style={{ display: 'flex', alignItems: 'center' }}
+            >
+              <div
+                className="column"
+                style={{
+                  width: '50%',
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                }}
+              >
+                <img
+                  className="mr-3"
+                  alt="total"
+                  src={totalIcon}
+                  style={{ width: '50px', height: '50px' }}
+                />
               </div>
-              <div className="column">
+              <div className="column" style={{ width: '50%' }}>
                 <h5>
-                  {' '}
                   {universal_currency_list[0] && outflow && (
                     <Currency
                       value={(inflow.sum || 0) - (outflow.sum || 0)}
