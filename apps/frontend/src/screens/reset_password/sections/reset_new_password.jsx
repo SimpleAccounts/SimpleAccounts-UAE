@@ -5,7 +5,6 @@ import { z } from 'zod';
 import {
 	Button,
 	Card,
-	CardHeader,
 	CardBody,
 	Col,
 	Container,
@@ -123,7 +122,8 @@ const ResetNewPassword = ({ token, history }) => {
 										<div className="d-flex registerScreen">
 											<h2 className="mb-0">Reset Password</h2>
 										</div>
-									<Form onSubmit={form.handleSubmit(onSubmit)}>
+										<div>
+											<Form onSubmit={form.handleSubmit(onSubmit)}>
 										<Row>
 											<Col lg={12}>
 												<FormGroup>
@@ -231,8 +231,9 @@ const ResetNewPassword = ({ token, history }) => {
 												</Button>
 											</Col>
 										</Row>
-									</Form>
-								</CardBody>
+											</Form>
+										</div>
+									</CardBody>
 							</Card>
 						</Col>
 					</Row>

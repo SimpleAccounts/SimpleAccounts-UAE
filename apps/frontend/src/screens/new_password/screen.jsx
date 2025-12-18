@@ -5,7 +5,6 @@ import { z } from 'zod';
 import {
 	Button,
 	Card,
-	CardHeader,
 	CardBody,
 	Col,
 	Container,
@@ -129,7 +128,8 @@ const NewPassword = ({ history, location }) => {
 										<div className="d-flex registerScreen">
 											<h2 className="mb-0">Create Password</h2>
 										</div>
-									<Form onSubmit={form.handleSubmit(onSubmit)}>
+										<div>
+											<Form onSubmit={form.handleSubmit(onSubmit)}>
 										<Row>
 											<Col lg={12}>
 												<FormGroup>
@@ -233,8 +233,9 @@ const NewPassword = ({ history, location }) => {
 												</Button>
 											</Col>
 										</Row>
-									</Form>
-								</CardBody>
+											</Form>
+										</div>
+									</CardBody>
 							</Card>
 						</Col>
 					</Row>
