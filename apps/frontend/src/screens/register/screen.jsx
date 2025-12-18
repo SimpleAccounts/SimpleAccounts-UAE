@@ -516,7 +516,8 @@ const Register = ({
 		const value = e.target.value;
 		if (value === '' || regExAlpha.test(value)) {
 			const upperValue = upperFirst(value);
-			form.setValue(fieldName, upperValue, { shouldValidate: true });
+			// Update form state - this will trigger validation
+			form.setValue(fieldName, upperValue, { shouldValidate: true, shouldTouch: true });
 		}
 	};
 
@@ -1080,11 +1081,14 @@ const Register = ({
 																			id="firstName"
 																			name="firstName"
 																			placeholder="Enter First Name"
-																			{...form.register('firstName', {
-																				onChange: (e) => {
-																					handleNameChange('firstName', e);
+																			{...form.register('firstName')}
+																			onChange={(e) => {
+																				const value = e.target.value;
+																				if (value === '' || regExAlpha.test(value)) {
+																					const upperValue = upperFirst(value);
+																					form.setValue('firstName', upperValue, { shouldValidate: true, shouldTouch: true });
 																				}
-																			})}
+																			}}
 																			invalid={!!form.formState.errors.firstName}
 																		/>
 																		{form.formState.errors.firstName && (
