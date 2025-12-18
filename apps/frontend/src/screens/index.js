@@ -1,5 +1,5 @@
 import LogIn from './log_in';
-import LogInTwo from './log_in/screen-two';
+import LogInTwo from './log_in/screen-two.jsx';
 import Register from './register';
 import ResetPassword from './reset_password';
 import NewPassword from './new_password';

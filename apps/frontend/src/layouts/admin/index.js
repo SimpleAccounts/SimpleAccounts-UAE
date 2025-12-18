@@ -130,10 +130,19 @@ class AdminLayout extends React.Component {
   };
 
   componentDidMount() {
-    if (!window['localStorage'].getItem('accessToken')) {
-      this.props.history.push('/login');
-    } else {
-      this.props.authActions
+    // Check for accessToken immediately and redirect if not found
+    const accessToken = window['localStorage'].getItem('accessToken');
+    console.log('[AdminLayout] componentDidMount - accessToken exists:', !!accessToken);
+    if (!accessToken) {
+      console.log('[AdminLayout] No accessToken in componentDidMount, logging out and redirecting');
+      this.props.authActions.logOut(); // Ensure complete logout
+      window.sessionStorage.clear(); // Clear sessionStorage too
+      this.props.history.replace('/login'); // Use replace instead of push
+      return; // Exit early to prevent further execution
+    }
+    
+    // Only proceed if user is authenticated
+    this.props.authActions
         .checkAuthStatus()
         .then(async (action) => {
           // Redux Toolkit thunks return action objects, check for fulfilled
@@ -223,10 +232,18 @@ class AdminLayout extends React.Component {
           // Subscription check is optional, don't break the app
           this.setState({ SubscriptionMessage: null });
         });
-    }
   }
 
   render() {
+    // Check for accessToken before rendering - redirect immediately if not authenticated
+    const accessToken = window['localStorage'].getItem('accessToken');
+    console.log('[AdminLayout] Render check - accessToken exists:', !!accessToken);
+    if (!accessToken) {
+      console.log('[AdminLayout] No accessToken found, redirecting to /login');
+      // Use Navigate component for immediate redirect
+      return <Navigate to="/login" replace />;
+    }
+    
     // strings.setLanguage(this.state.language);
     const containerStyle = {
       zIndex: 1999,

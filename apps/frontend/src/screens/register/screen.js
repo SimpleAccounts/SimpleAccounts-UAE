@@ -169,14 +169,9 @@ class Register extends React.Component {
 		this.props.authActions.getCurrencyList().catch(() => {
 			// Silently handle errors
 		});
-		this.props.authActions.getCompanyCount().then((response) => {
-			if (response && response.data > 0) {
-				this.props.history.push('/login');
-			}
-		}).catch((err) => {
-			// If API fails, stay on register screen (allow registration)
-			// This matches the old behavior where errors would prevent redirect
-		});
+		// Removed redirect logic - register screen should always be accessible
+		// Users can register even if companies exist (for additional companies/users)
+		// The register button on login screen is always visible, so users should be able to access this screen
 	};
 
 	// togglePasswordVisiblity = () => {

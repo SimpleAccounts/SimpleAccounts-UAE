@@ -10,6 +10,14 @@
 		}
 	}
 	background-color: #ffffffc7;
+	
+	.registerScreen {
+		margin-bottom: 40px;
+		h2 {
+			color: #2064d8;
+			font-weight: 600;
+		}
+	}
 }
 .forgot-password-modal {
 	max-width: 40%;
@@ -26,6 +34,7 @@
 	color: #54e0c4;
 	font-weight: 700;
 	margin-top: 10px;
+	cursor: pointer;
 }
 .main-banner_container{
 	position: relative;
