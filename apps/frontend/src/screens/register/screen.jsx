@@ -180,6 +180,7 @@ const Register = ({
 
 	const form = useForm({
 		resolver: zodResolver(registerSchema),
+		mode: 'onBlur', // Validate on blur for better UX
 		defaultValues: {
 			companyName: '',
 			currencyCode: 150,
