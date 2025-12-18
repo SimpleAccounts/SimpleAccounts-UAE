@@ -1,37 +1,23 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import {
-  Button,
-  Card,
-  CardBody,
-  CardGroup,
-  Col,
-  Container,
-  Form,
-  Input,
-  FormGroup,
-  Label,
-  Row,
-} from 'reactstrap';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Eye, EyeOff, LogIn as LogInIcon } from 'lucide-react';
+import { toast } from 'sonner';
 
-import { AuthActions, CommonActions } from 'services/global';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import './style.scss';
+import { AuthActions } from 'services/global';
 import logo from 'assets/images/brand/logo.png';
 import config from 'constants/config';
 
 import LocalizedStrings from 'react-localization';
 import { data } from 'screens/Language/index';
-import { withNavigation } from 'utils/withNavigation';
-
-// Use import instead of require for Vite compatibility
-import eye from 'assets/images/settings/eye.png';
-import noteye from 'assets/images/settings/noteye.png';
 
 let strings = new LocalizedStrings(data);
 
@@ -41,55 +27,49 @@ if (localStorage.getItem('language') == null) {
   strings.setLanguage(localStorage.getItem('language'));
 }
 
-const mapStateToProps = state => {
-  return {
-    version: state.common.version,
-  };
-};
-const mapDispatchToProps = dispatch => {
-  return {
-    authActions: bindActionCreators(AuthActions, dispatch),
-    commonActions: bindActionCreators(CommonActions, dispatch),
-  };
-};
+// Zod validation schema
+const loginSchema = z.object({
+  username: z.string().min(1, 'Email is required').email('Please enter a valid email'),
+  password: z.string().min(1, 'Please enter your password'),
+});
 
-class LogIn extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isPasswordShown: false,
-      initValue: {
-        username: '',
-        password: '',
-      },
-      alert: null,
-      openForgotPasswordModal: false,
-      companyCount: 1,
-      loading: false,
-    };
-  }
+const LogIn = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const version = useSelector(state => state.common.version);
 
-  componentDidMount = () => {
-    this.getInitialData();
-  };
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
+  const [companyCount, setCompanyCount] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [subscriptionMessage, setSubscriptionMessage] = useState(null);
 
-  getInitialData = () => {
-    this.props.authActions
-      .getCompanyCount()
+  const form = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: '',
+      password: '',
+    },
+  });
+
+  useEffect(() => {
+    getInitialData();
+  }, []);
+
+  const getInitialData = () => {
+    dispatch(AuthActions.getCompanyCount())
       .then(response => {
         if (response.data < 1) {
-          this.props.history.push('/register');
+          navigate('/register');
         }
-        this.setState({ companyCount: response.data }, () => {});
+        setCompanyCount(response.data);
       })
-      .catch(err => {
+      .catch(() => {
         // If API fails (e.g., database not set up), show register button
-        this.setState({ companyCount: 0 }, () => {});
+        setCompanyCount(0);
       });
-    this.props.authActions
-      .getUserSubscription()
+
+    dispatch(AuthActions.getUserSubscription())
       .then(action => {
-        // Redux Toolkit thunks return an action object, not the response directly
         let message = null;
         if (action && action.type && action.type.includes('fulfilled')) {
           const data = action.payload;
@@ -102,263 +82,150 @@ class LogIn extends React.Component {
             message = strings.SubscriptionExpiredMessage;
           }
         } else {
-          // Rejected or other error
           message = strings.SubscriptionFailedMessage;
         }
-        this.setState({ SubscriptionMessage: message });
+        setSubscriptionMessage(message);
       })
-      .catch(err => {
-        this.setState({ SubscriptionMessage: strings.SubscriptionErrorMessage });
+      .catch(() => {
+        setSubscriptionMessage(strings.SubscriptionErrorMessage);
       });
   };
 
-  handleChange = (key, val) => {
-    this.setState({
-      [key]: val,
-    });
+  const togglePasswordVisibility = () => {
+    setIsPasswordShown(!isPasswordShown);
   };
 
-  // togglePasswordVisiblity = () => {
-  // 	this.setState({
-  // 		passwordShown: !this.state.passwordShown,
-  // 	});
-  // };
-
-  togglePasswordVisiblity = () => {
-    const { isPasswordShown } = this.state;
-    this.setState({ isPasswordShown: !isPasswordShown });
-  };
-
-  handleSubmit = (data, resetForm) => {
-    this.setState({ loading: true });
+  const onSubmit = data => {
+    setLoading(true);
     const { username, password } = data;
-    let obj = {
-      username,
-      password,
-    };
-    this.props.authActions
-      .logIn(obj)
+
+    dispatch(AuthActions.logIn({ username, password }))
       .then(action => {
-        // Redux Toolkit thunks return an action object, not the response directly
         if (action && action.type && action.type.includes('fulfilled')) {
-          toast.success('Log in Successfully', {
-            position: 'top-right',
-          });
-          this.props.history.push(
-            config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE
-          );
+          toast.success('Logged in successfully');
+          navigate(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
         } else {
-          // Login failed - action is rejected
-          this.setState({ loading: false });
-          // Map technical error messages to user-friendly ones
+          setLoading(false);
           let errorMessage =
             action?.payload?.message || action?.payload || 'Invalid email or password';
           if (errorMessage === 'Unauthorized') {
             errorMessage = 'Invalid email or password';
           }
-          toast.error(errorMessage, {
-            position: 'top-right',
-          });
+          toast.error(errorMessage);
         }
       })
-      .catch(err => {
-        // This catches unexpected errors (network issues, etc.)
-        this.setState({ loading: false });
-        toast.error('Something went wrong. Please try again.', {
-          position: 'top-right',
-        });
+      .catch(() => {
+        setLoading(false);
+        toast.error('Something went wrong. Please try again.');
       });
   };
 
-  openForgotPasswordModal = () => {
-    this.setState({ openForgotPasswordModal: true });
-  };
-
-  closeForgotPasswordModal = res => {
-    this.setState({ openForgotPasswordModal: false });
-  };
-
-  render() {
-    const { isPasswordShown, SubscriptionMessage } = this.state;
-    const { initValue } = this.state;
-    return (
-      <div className="log-in-screen">
-        <ToastContainer position="top-right" autoClose={1700} closeOnClick draggable />
-        <div className="animated fadeIn ">
-          <div className="main-banner_container col-md-12 flex">
-            {/* <img src={login_bg} alt="login_bg" className="login_bg" /> */}
-            {/* <img src={login_banner} alt="login_banner" className="login_banner"/> */}
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-4 text-center">
+          <div className="flex justify-center">
+            <img src={logo} alt="logo" className="h-16 w-auto" />
           </div>
-          <div className="app flex-row align-items-center ">
-            <Container>
-              <Row className="justify-content-center">
-                <Col md="6">{this.state.alert}</Col>
-              </Row>
-              <Row className="justify-content-center ">
-                <Col md="6">
-                  <CardGroup>
-                    <Card className="p-4">
-                      <CardBody>
-                        <div>
-                          {SubscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
-                            <div className="alert alert-danger mb-4">{SubscriptionMessage}</div>
-                          )}
-                          <div className="logo-container">
-                            <img src={logo} alt="logo" />
-                          </div>
-                          <Formik
-                            initialValues={initValue}
-                            onSubmit={(values, { resetForm }) => {
-                              this.handleSubmit(values, resetForm);
-                            }}
-                            validationSchema={Yup.object().shape({
-                              username: Yup.string().required('Email is required'),
-                              password: Yup.string().required('Please enter your password'),
-                            })}
-                          >
-                            {props => {
-                              return (
-                                <Form onSubmit={props.handleSubmit}>
-                                  {/* <h1>Log In</h1> */}
-                                  <div className="registerScreen">
-                                    <h2 className="">Login</h2>
-                                    <p>Enter your details below to continue</p>
-                                  </div>
-                                  <Row>
-                                    <Col lg={12}>
-                                      <FormGroup className="mb-3">
-                                        <Label htmlFor="username">
-                                          <b>Email</b>
-                                        </Label>
-                                        <Input
-                                          type="text"
-                                          id="username"
-                                          name="username"
-                                          placeholder="Enter Email Id"
-                                          value={props.values.username}
-                                          onChange={option => {
-                                            props.handleChange('username')(option);
-                                          }}
-                                          className={
-                                            props.errors.username && props.touched.username
-                                              ? 'is-invalid'
-                                              : ''
-                                          }
-                                        />
-                                        {props.errors.username && props.touched.username && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.username}
-                                          </div>
-                                        )}
-                                      </FormGroup>
-                                    </Col>
-                                    <Col lg={12}>
-                                      <FormGroup className="mb-3">
-                                        <Label htmlFor="password">
-                                          <b> Password</b>
-                                        </Label>
-
-                                        <Input
-                                          onPaste={e => {
-                                            e.preventDefault();
-                                            return false;
-                                          }}
-                                          onCopy={e => {
-                                            e.preventDefault();
-                                            return false;
-                                          }}
-                                          type={this.state.isPasswordShown ? 'text' : 'password'}
-                                          // minLength={8}
-                                          maxLength={255}
-                                          id="password"
-                                          name="password"
-                                          placeholder="Enter password"
-                                          value={props.values.password}
-                                          onChange={option => {
-                                            props.handleChange('password')(option);
-                                          }}
-                                          className={
-                                            props.errors.password && props.touched.password
-                                              ? 'is-invalid'
-                                              : ''
-                                          }
-                                        />
-                                        <i
-                                          className={`fa ${isPasswordShown ? 'fa-eye' : 'fa-eye-slash'} password-icon fa-lg`}
-                                          onClick={this.togglePasswordVisiblity}
-                                        >
-                                          {/* <img 
-																			src={eye}
-																			style={{ width: '20px' }}
-																		/> */}
-                                        </i>
-
-                                        {props.errors.password && props.touched.password && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.password}
-                                          </div>
-                                        )}
-                                      </FormGroup>
-                                    </Col>
-                                    <Col>
-                                      <Button
-                                        type="button"
-                                        color="link"
-                                        className="px-0"
-                                        onClick={() => {
-                                          this.props.history.push('/reset-password');
-                                        }}
-                                        style={{ marginTop: '-10px' }}
-                                      >
-                                        Forgot password?
-                                      </Button>
-                                    </Col>
-                                  </Row>
-                                  <Row>
-                                    <Col className="text-center">
-                                      <Button
-                                        color="primary"
-                                        type="submit"
-                                        className="px-4 btn-square mt-3"
-                                        style={{ width: '200px' }}
-                                        disabled={this.state.loading}
-                                      >
-                                        <i className="fa fa-sign-in" /> Log In
-                                      </Button>
-                                    </Col>
-                                  </Row>
-                                  {this.state.companyCount < 1 && (
-                                    <Row>
-                                      <Col className="mt-3">
-                                        <p className="r-btn">
-                                          Don't have an account?{' '}
-                                          <span
-                                            onClick={() => {
-                                              this.props.history.push('/register');
-                                            }}
-                                          >
-                                            Register Here
-                                          </span>
-                                        </p>
-                                      </Col>
-                                    </Row>
-                                  )}
-                                </Form>
-                              );
-                            }}
-                          </Formik>
-                        </div>
-                      </CardBody>
-                    </Card>
-                  </CardGroup>
-                </Col>
-              </Row>
-            </Container>
+          <div>
+            <CardTitle className="text-2xl">Login</CardTitle>
+            <CardDescription>Enter your details below to continue</CardDescription>
           </div>
-        </div>
-      </div>
-    );
-  }
-}
+        </CardHeader>
+        <CardContent>
+          {subscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
+            <div className="mb-4 p-3 bg-destructive/10 text-destructive text-sm rounded-md">
+              {subscriptionMessage}
+            </div>
+          )}
 
-export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(LogIn));
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field, fieldState }) => (
+                  <FormItem>
+                    <FormLabel className="font-semibold">Email</FormLabel>
+                    <Input
+                      type="email"
+                      placeholder="Enter Email Id"
+                      className={fieldState.error ? 'border-destructive' : ''}
+                      {...field}
+                    />
+                    {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field, fieldState }) => (
+                  <FormItem>
+                    <FormLabel className="font-semibold">Password</FormLabel>
+                    <div className="relative">
+                      <Input
+                        type={isPasswordShown ? 'text' : 'password'}
+                        placeholder="Enter password"
+                        maxLength={255}
+                        className={fieldState.error ? 'border-destructive pr-10' : 'pr-10'}
+                        onPaste={e => e.preventDefault()}
+                        onCopy={e => e.preventDefault()}
+                        {...field}
+                      />
+                      <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      >
+                        {isPasswordShown ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
+                    {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex justify-end">
+                <Button
+                  type="button"
+                  variant="link"
+                  className="px-0 h-auto"
+                  onClick={() => navigate('/reset-password')}
+                >
+                  Forgot password?
+                </Button>
+              </div>
+
+              <Button type="submit" className="w-full" disabled={loading}>
+                <LogInIcon className="h-4 w-4 mr-2" />
+                {loading ? 'Logging in...' : 'Log In'}
+              </Button>
+
+              {companyCount < 1 && (
+                <p className="text-center text-sm text-muted-foreground">
+                  Don't have an account?{' '}
+                  <Button
+                    type="button"
+                    variant="link"
+                    className="px-0 h-auto"
+                    onClick={() => navigate('/register')}
+                  >
+                    Register Here
+                  </Button>
+                </p>
+              )}
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default LogIn;

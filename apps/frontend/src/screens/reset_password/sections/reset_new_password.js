@@ -1,281 +1,235 @@
-import React from "react";
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  Col,
-  Container,
-  Form,
-  Input,
-  FormGroup,
-  Label,
-  Row
-} from 'reactstrap'
-import {
-  api,
-} from 'utils'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Eye, EyeOff, KeyRound } from 'lucide-react';
+import { toast } from 'sonner';
+import PasswordChecklist from 'react-password-checklist';
 
-import { Formik } from "formik";
-import * as Yup from "yup";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
-import { toast } from "react-toastify";
-import './style.scss'
-import {
-  Message
-} from 'components'
-import PasswordChecklist from "react-password-checklist"
-// import { display } from "html2canvas/dist/types/css/property-descriptors/display";
+import { api } from 'utils';
+import logo from 'assets/images/brand/logo.png';
 
-class ResetNewPassword extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      initValue: {
-        password: "",
-        confirmPassword: ''
-      },
-      isPasswordShown: false,
-      alert: null,
-      displayRules:false
-    };
-    this.formikRef = React.createRef();
-  }
+// Password validation regex: 8+ chars, uppercase, lowercase, number, special char
+const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
 
-  handleSubmit = (val) => {
-   let obj = {
-      password: val.password,
-      token: this.props.token
-    }
-      let data = {
-        method: 'post',
-        url: '/public/resetPassword',
-        data: obj
-      } 
-    api(data).then((res) => {
-      if(res.status === 200 ) {
-        this.setState({
-          alert: <Message
-            type="success"
-            content="Password Reset Successfully."
-          />
-        },() => {
-          setTimeout(() => {
-            this.props.history.push('/login')
-          },1500)
-        })
-      }
-    }).catch((err) => {
-      this.setState({
-        alert: <Message
-          type="danger"
-          content="Email Verification Link Is Expired. Please enter your email address and we'll send another verification link."
-          link="/reset-password"
-        />
-      })
+// Zod validation schema
+const resetNewPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(1, 'Password is required')
+      .min(8, 'Password must be at least 8 characters')
+      .max(255, 'Password must be at most 255 characters')
+      .regex(
+        passwordRegex,
+        'Must contain 8 characters, one uppercase, one lowercase, one number and one special character'
+      ),
+    confirmPassword: z.string().min(1, 'Confirm password is required'),
   })
-}
+  .refine(data => data.password === data.confirmPassword, {
+    message: 'Passwords must match',
+    path: ['confirmPassword'],
+  });
 
-  displayMsg = (msg) => {
-    toast.error(msg, {
-      position: 'top-right'
-    });
-  }
-  togglePasswordVisiblity = () => {
-		const { isPasswordShown } = this.state;
-		this.setState({ isPasswordShown: !isPasswordShown });
-	};
+const ResetNewPassword = ({ token }) => {
+  const navigate = useNavigate();
 
-  render() {
-    const { initValue } = this.state;
-    const { isPasswordShown } = this.state;
-    return (
-      // <div className="reset-password-screen">
-        <div className="animated fadeIn">
-          <div className="app flex-row align-items-center">
-            <Container>
-              <Row className="justify-content-center">
-                <Col md="5">
-                  {this.state.alert}
-                </Col>
-              </Row>
-              <Row className="justify-content-center">
-                <Col md="5">
-                  <Card>
-                    <CardHeader className="register-header d-flex">
-                      <i className="fas fa-lock"></i> <h5 className="mb-0">Reset Password</h5>
-                    </CardHeader>
-                    <CardBody className="p-4">
-                      <Formik
-                        ref={this.formikRef}
-                        initialValues={initValue}
-                        onSubmit={(values, { resetForm }) => {
-                          this.handleSubmit(values, resetForm);
-                        }}
-                        validationSchema={Yup.object().shape({
-                          password: Yup.string()
-                            .required("Password is required")
-                            // .min(8, "Password Too Short")
-                            .matches(
-                              /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-                              "Must contain 8 characters, must contain max 255 characters, one uppercase, one lowercase, one number and one special case character"
-                            ),
-                          confirmPassword: Yup.string()
-                            .required('Confirm password is required')
-                            .oneOf([Yup.ref("password"), null], "Passwords must match"),
-                        })}
-                      >
-                        {(props) => {
-                          return (
-                            <Form >
-                              <Row>
-                                <Col lg={12}>
-                                  <FormGroup>
-																			<Label htmlFor="select">
-																				<span className="text-danger">* </span> Password
-																			</Label>
-																			<div>
-																				<Input
-                                        onPaste={(e)=>{
-                                          e.preventDefault()
-                                          return false;
-                                          }} onCopy={(e)=>{
-                                          e.preventDefault()
-                                          return false;
-                                          }}
-																					type={
-																						this.state.isPasswordShown
-																							? 'text'
-																							: 'password'
-																					}
-                                          minLength={8}
-                                          maxLength={255}
-                                          autoComplete="off"
-																					id="password"
-																					name="password"
-																					placeholder=" Enter New Password"
-																					value={props.values.password}
-																					onChange={(option) => {
-                                            if(option.target.value!="")
-																				  {		
-                                            props.handleChange('password')(
-																							option,
-																						);
-                                            this.setState({displayRules:true})}
-                                            else{
-                                              props.handleChange('password')(
-                                                option,
-                                              );
-                                              this.setState({displayRules:false})
-                                            }
-																					}}
-																					className={
-																						props.errors.password &&
-																							props.touched.password
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				<i className={`fa ${isPasswordShown ? "fa-eye" : "fa-eye-slash"} password-icon fa-lg`}
-																					onClick={this.togglePasswordVisiblity}
-																				>
-																					{/* <img 
-																			src={eye}
-																			style={{ width: '20px' }}
-																		/> */}
-																				</i>
-																			</div>
-																			{props.errors.password &&
-																				props.touched.password && (
-																					<div style={{ color: "red" }}>
-																						{props.errors.password}
-																					</div>
-																				)}
-																			{this.state.displayRules==true&&( <PasswordChecklist
-																				rules={["maxLength", "minLength", "specialChar", "number", "capital"]}
-																				minLength={8}
-                                        maxLength={255}
-																				value={props.values.password}
-																				valueAgain={props.values.confirmPassword}
-																			/>)}
-																		</FormGroup>
-                                </Col>
-                                <Col lg={12}>
-                                  <FormGroup>
-																			<Label htmlFor="select">
-																				<span className="text-danger">* </span> Confirm Password
-																			</Label>
-																			<Input
-                                      onPaste={(e)=>{
-                                        e.preventDefault()
-                                        return false;
-                                        }} onCopy={(e)=>{
-                                        e.preventDefault()
-                                        return false;
-                                        }}
-                                        minLength={8}
-                                        maxLength={255}
-                                        autoComplete="off"
-																				type="password"
-																				id="confirmPassword"
-																				name="confirmPassword"
-																				value={props.values.confirmPassword}
-																				placeholder="Confirm Password"
-																				onChange={(value) => {
-																					props.handleChange('confirmPassword')(
-																						value,
-																					);
-																				}}
-																				className={
-																					props.errors.confirmPassword &&
-																						props.touched.confirmPassword
-																						? 'is-invalid'
-																						: ''
-																				}
-																			/>
-																			{props.errors.confirmPassword &&
-																				props.touched.confirmPassword && (
-																					<div className="invalid-feedback">
-																						{props.errors.confirmPassword}
-																					</div>
-																				)}
-																				{this.state.displayRules==true&&( <PasswordChecklist
-																				rules={[ "match"]}
-																				minLength={8}
-                                        maxLength={255}
-																				value={props.values.password}
-																				valueAgain={props.values.confirmPassword}
-																			/>)}
-																		</FormGroup>
-                                </Col>
-                              </Row>
-                              <Row className="button-group">
-                                <Col lg="12">
-                                  <Button
-                                    color="primary"
-                                    type="button"
-                                    className="btn-square w-100 submit-btn"
-                                 //   disabled={isSubmitting}
-                                    onClick={() => { props.handleSubmit() }}
-                                  >
-                                   Reset Password
-                               </Button>
-                                </Col>
-                              </Row>
-                            </Form>
-                          );
-                        }}
-                      </Formik>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row>
-            </Container>
+  const [loading, setLoading] = useState(false);
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
+  const [alert, setAlert] = useState(null);
+  const [showRules, setShowRules] = useState(false);
+
+  const form = useForm({
+    resolver: zodResolver(resetNewPasswordSchema),
+    defaultValues: {
+      password: '',
+      confirmPassword: '',
+    },
+  });
+
+  const password = form.watch('password');
+  const confirmPassword = form.watch('confirmPassword');
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordShown(!isPasswordShown);
+  };
+
+  const onSubmit = data => {
+    setLoading(true);
+    setAlert(null);
+
+    const apiData = {
+      method: 'post',
+      url: '/public/resetPassword',
+      data: {
+        password: data.password,
+        token: token,
+      },
+    };
+
+    api(apiData)
+      .then(res => {
+        if (res.status === 200) {
+          setAlert({
+            type: 'success',
+            message: 'Password reset successfully.',
+          });
+          setTimeout(() => {
+            navigate('/login');
+          }, 1500);
+        }
+      })
+      .catch(() => {
+        setAlert({
+          type: 'error',
+          message:
+            "Email verification link is expired. Please enter your email address and we'll send another verification link.",
+          link: '/reset-password',
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-4 text-center">
+          <div className="flex justify-center">
+            <img src={logo} alt="logo" className="h-16 w-auto" />
           </div>
-        </div>
-      // </div>
-    );
-  }
-}
+          <div>
+            <CardTitle className="text-2xl">Reset Password</CardTitle>
+            <CardDescription>Enter your new password below</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {alert && (
+            <Alert
+              className={`mb-4 ${alert.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-destructive/10 text-destructive border-destructive/20'}`}
+            >
+              <AlertDescription>
+                {alert.message}
+                {alert.link && (
+                  <Button
+                    variant="link"
+                    className="h-auto p-0 ml-1 text-destructive"
+                    onClick={() => navigate(alert.link)}
+                  >
+                    Click here
+                  </Button>
+                )}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field, fieldState }) => (
+                  <FormItem>
+                    <FormLabel className="font-semibold">
+                      <span className="text-destructive">* </span>Password
+                    </FormLabel>
+                    <div className="relative">
+                      <Input
+                        type={isPasswordShown ? 'text' : 'password'}
+                        placeholder="Enter new password"
+                        minLength={8}
+                        maxLength={255}
+                        autoComplete="new-password"
+                        className={fieldState.error ? 'border-destructive pr-10' : 'pr-10'}
+                        onPaste={e => e.preventDefault()}
+                        onCopy={e => e.preventDefault()}
+                        {...field}
+                        onChange={e => {
+                          field.onChange(e);
+                          setShowRules(e.target.value !== '');
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      >
+                        {isPasswordShown ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
+                    {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+                    {showRules && (
+                      <div className="mt-2">
+                        <PasswordChecklist
+                          rules={['maxLength', 'minLength', 'specialChar', 'number', 'capital']}
+                          minLength={8}
+                          maxLength={255}
+                          value={password}
+                          valueAgain={confirmPassword}
+                        />
+                      </div>
+                    )}
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field, fieldState }) => (
+                  <FormItem>
+                    <FormLabel className="font-semibold">
+                      <span className="text-destructive">* </span>Confirm Password
+                    </FormLabel>
+                    <Input
+                      type="password"
+                      placeholder="Confirm password"
+                      minLength={8}
+                      maxLength={255}
+                      autoComplete="new-password"
+                      className={fieldState.error ? 'border-destructive' : ''}
+                      onPaste={e => e.preventDefault()}
+                      onCopy={e => e.preventDefault()}
+                      {...field}
+                    />
+                    {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+                    {showRules && (
+                      <div className="mt-2">
+                        <PasswordChecklist
+                          rules={['match']}
+                          minLength={8}
+                          maxLength={255}
+                          value={password}
+                          valueAgain={confirmPassword}
+                        />
+                      </div>
+                    )}
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" className="w-full" disabled={loading}>
+                <KeyRound className="h-4 w-4 mr-2" />
+                {loading ? 'Resetting...' : 'Reset Password'}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
 
 export default ResetNewPassword;
