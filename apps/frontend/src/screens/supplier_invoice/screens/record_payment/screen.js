@@ -65,11 +65,6 @@ class RecordSupplierPayment extends React.Component {
       language: window['localStorage'].getItem('language'),
       loading: false,
       dialog: false,
-      discountOptions: [
-        { value: 'FIXED', label: 'Fixed' },
-        { value: 'PERCENTAGE', label: 'Percentage' },
-      ],
-      discount_option: '',
       data: [],
       current_customer_id: null,
       initValue: {
@@ -89,13 +84,7 @@ class RecordSupplierPayment extends React.Component {
         paidInvoiceListStr: [],
         deleteFlag: true,
       },
-      invoiceId: this.props.location.state.id.id,
       contactType: 1,
-      selectedContact: '',
-      term: '',
-      selectedType: '',
-      discountPercentage: '',
-      discountAmount: 0,
       fileName: '',
       disabled: false,
       loadingMsg: 'Loading...',
@@ -133,22 +122,23 @@ class RecordSupplierPayment extends React.Component {
   };
 
   initializeData = () => {
-    console.log(this.props.location.state.id);
-    this.setState({
+    const { id } = this.props.location.state;
+    this.setState(prevState => ({
       initValue: {
+        ...prevState.initValue,
         paidInvoiceListStr: [
           {
-            id: this.props.location.state.id.id,
-            date: dayjs(this.props.location.state.id.invoiceDate, 'DD-MM-YYYY').toDate(),
-            dueDate: dayjs(this.props.location.state.id.invoiceDueDate, 'DD-MM-YYYY').toDate(),
-            paidAmount: this.props.location.state.id.invoiceAmount,
-            dueAmount: this.props.location.state.id.dueAmount,
-            referenceNo: this.props.location.state.id.invoiceNumber,
-            totalAount: this.props.location.state.id.invoiceAmount,
+            id: id.id,
+            date: dayjs(id.invoiceDate, 'DD-MM-YYYY').toDate(),
+            dueDate: dayjs(id.invoiceDueDate, 'DD-MM-YYYY').toDate(),
+            paidAmount: id.invoiceAmount,
+            dueAmount: id.dueAmount,
+            referenceNo: id.invoiceNumber,
+            totalAount: id.invoiceAmount,
           },
         ],
       },
-    });
+    }));
     Promise.all([
       this.props.SupplierInvoiceActions.getDepositList(),
       this.props.SupplierInvoiceActions.getPaymentMode(),
@@ -161,12 +151,12 @@ class RecordSupplierPayment extends React.Component {
     this.props.CustomerRecordPaymentActions.getReceiptNo(this.props.location.state.id.id).then(
       res => {
         if (res.status === 200) {
-          this.setState({
+          this.setState(prevState => ({
             initValue: {
-              ...this.state.initValue,
-              ...{ receiptNo: res.data },
+              ...prevState.initValue,
+              receiptNo: res.data,
             },
-          });
+          }));
           this.formRef.current.setFieldValue('receiptNo', res.data, true);
         }
       }
@@ -225,7 +215,6 @@ class RecordSupplierPayment extends React.Component {
 
   handleSubmit = data => {
     this.setState({ disabled: true, disableLeavePage: true });
-    const { invoiceId } = this.state;
     const {
       paymentNo,
       paymentDate,
@@ -419,10 +408,7 @@ class RecordSupplierPayment extends React.Component {
                                     this.setState({
                                       fileName: value.name,
                                     });
-                                  if (
-                                    !value ||
-                                    (value && this.supported_format.includes(value.type))
-                                  ) {
+                                  if (!value || this.supported_format.includes(value.type)) {
                                     return true;
                                   } else {
                                     return false;

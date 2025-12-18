@@ -136,21 +136,23 @@ class RecordCustomerPayment extends React.Component {
   };
 
   initializeData = () => {
-    this.setState({
+    const { id } = this.props.location.state;
+    this.setState(prevState => ({
       initValue: {
+        ...prevState.initValue,
         paidInvoiceListStr: [
           {
-            id: this.props.location.state.id.id,
-            date: dayjs(this.props.location.state.id.invoiceDate, 'DD-MM-YYYY').toDate(),
-            dueDate: dayjs(this.props.location.state.id.invoiceDueDate, 'DD-MM-YYYY').toDate(),
-            paidAmount: this.props.location.state.id.invoiceAmount,
-            dueAmount: this.props.location.state.id.dueAmount,
-            referenceNo: this.props.location.state.id.invoiceNumber,
-            totalAount: this.props.location.state.id.invoiceAmount,
+            id: id.id,
+            date: dayjs(id.invoiceDate, 'DD-MM-YYYY').toDate(),
+            dueDate: dayjs(id.invoiceDueDate, 'DD-MM-YYYY').toDate(),
+            paidAmount: id.invoiceAmount,
+            dueAmount: id.dueAmount,
+            referenceNo: id.invoiceNumber,
+            totalAount: id.invoiceAmount,
           },
         ],
       },
-    });
+    }));
     Promise.all([
       this.props.customerInvoiceActions.getDepositList(),
       this.props.customerInvoiceActions.getPaymentMode(),
@@ -163,12 +165,12 @@ class RecordCustomerPayment extends React.Component {
     this.props.CustomerRecordPaymentActions.getReceiptNo(this.props.location.state.id.id).then(
       res => {
         if (res.status === 200) {
-          this.setState({
+          this.setState(prevState => ({
             initValue: {
-              ...this.state.initValue,
-              ...{ receiptNo: res.data },
+              ...prevState.initValue,
+              receiptNo: res.data,
             },
-          });
+          }));
           this.formRef.current.setFieldValue('receiptNo', res.data, true);
         }
       }
@@ -227,7 +229,6 @@ class RecordCustomerPayment extends React.Component {
 
   handleSubmit = data => {
     this.setState({ disabled: true, disableLeavePage: true });
-    const { invoiceId } = this.state;
     const { receiptNo, receiptDate, contactId, amount, depositeTo, payMode, notes, referenceCode } =
       data;
 
@@ -359,7 +360,6 @@ class RecordCustomerPayment extends React.Component {
     strings.setLanguage(this.state.language);
     const { initValue, loading, dialog, loadingMsg } = this.state;
     const { pay_mode, customer_list, deposit_list } = this.props;
-    const { dueAmount, date } = initValue.paidInvoiceListStr;
 
     let tmpcustomer_list = [];
 
@@ -884,25 +884,5 @@ class RecordCustomerPayment extends React.Component {
     );
   }
 }
-
-const getDate = date => {
-  if (date) {
-    if (typeof date === 'string') {
-      date = date.replaceAll('/', '-');
-      date = date.split('-');
-      const month = date[1];
-      const day = date[0];
-      const year = date[2];
-      date = new Date();
-      date.setFullYear(year);
-      date.setMonth(month - 1);
-      date.setDate(day);
-      return date;
-    } else {
-      return date;
-    }
-  }
-  return '';
-};
 
 export default connect(mapStateToProps, mapDispatchToProps)(RecordCustomerPayment);
