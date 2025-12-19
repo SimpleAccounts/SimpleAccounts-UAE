@@ -560,15 +560,8 @@ const Register = ({
 								<Row className="justify-content-center">
 									<Col lg={10} className="mx-auto">
 										<CardGroup>
-											<Card className="p-4">
-												{loading ? (
-													<Row>
-														<Col lg={12}>
-															<Loader />
-														</Col>
-													</Row>
-												) : (
-													<CardBody>
+										<Card className="p-4">
+											<CardBody>
 														<div className="logo-container">
 															<img
 																src={logo}
@@ -1333,7 +1326,6 @@ const Register = ({
 															</label>
 														</Form>
 													</CardBody>
-												)}
 											</Card>
 										</CardGroup>
 									</Col>
