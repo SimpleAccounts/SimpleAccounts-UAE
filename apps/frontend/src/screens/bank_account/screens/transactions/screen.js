@@ -1,6 +1,6 @@
-import React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Card,
   CardHeader,
@@ -16,46 +16,40 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from "reactstrap";
-import Select from "react-select";
-import { selectOptionsFactory } from "utils";
-import BootstrapTable from "react-bootstrap-table-next";
-import DatePicker from "react-datepicker";
-import { Loader, ConfirmDeleteModal } from "components";
-import "react-toastify/dist/ReactToastify.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
-import paginationFactory from "react-bootstrap-table2-paginator";
-import "bootstrap-daterangepicker/daterangepicker.css";
-import * as TransactionsActions from "./actions";
-import * as detailBankAccountActions from "./../detail/actions";
-import { CommonActions } from "services/global";
-import { ExplainTrasactionDetail } from "./sections";
-import "./style.scss";
-import { data } from "../../../Language/index";
-import LocalizedStrings from "react-localization";
-import * as transactionDetailActions from "../transactions/screens/detail/actions";
-import { Suspense, lazy } from "react";
-import Getbyid from "./sections/transactiondetails";
+} from 'reactstrap';
+import Select from 'react-select';
+import { selectOptionsFactory } from 'utils';
+import BootstrapTable from 'react-bootstrap-table-next';
+import DatePicker from 'react-datepicker';
+import { Loader, ConfirmDeleteModal } from 'components';
+import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import paginationFactory from 'react-bootstrap-table2-paginator';
+import 'bootstrap-daterangepicker/daterangepicker.css';
+import * as TransactionsActions from './actions';
+import * as detailBankAccountActions from './../detail/actions';
+import { CommonActions } from 'services/global';
+import { ExplainTrasactionDetail } from './sections';
+import './style.scss';
+import { data } from '../../../Language/index';
+import LocalizedStrings from 'react-localization';
+import * as transactionDetailActions from '../transactions/screens/detail/actions';
+import { Suspense, lazy } from 'react';
+import Getbyid from './sections/transactiondetails';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     bank_transaction_list: state.bank_account.bank_transaction_list,
     transaction_type_list: state.bank_account.transaction_type_list,
     universal_currency_list: state.common.universal_currency_list,
   };
 };
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     transactionsActions: bindActionCreators(TransactionsActions, dispatch),
-    detailBankAccountActions: bindActionCreators(
-      detailBankAccountActions,
-      dispatch
-    ),
-    transactionDetailActions: bindActionCreators(
-      transactionDetailActions,
-      dispatch
-    ),
+    detailBankAccountActions: bindActionCreators(detailBankAccountActions, dispatch),
+    transactionDetailActions: bindActionCreators(transactionDetailActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch),
   };
 };
@@ -66,53 +60,53 @@ class BankTransactions extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      language: window["localStorage"].getItem("language"),
+      language: window['localStorage'].getItem('language'),
       loading: true,
       openDeleteModal: false,
       typeOptions: [
-        { value: "Withdrawal", label: "Withdrawal" },
-        { value: "Deposit", label: "Deposit" },
+        { value: 'Withdrawal', label: 'Withdrawal' },
+        { value: 'Deposit', label: 'Deposit' },
       ],
       statusOptions: [
-        { value: "All", label: "All" },
-        { value: "Matched", label: "Matched" },
-        { value: "Manually Added", label: "Manually Added" },
-        { value: "Categorized", label: "Categorized" },
-        { value: "Reconciled", label: "Reconciled" },
-        { value: "Unreconciled", label: "Unreconciled" },
+        { value: 'All', label: 'All' },
+        { value: 'Matched', label: 'Matched' },
+        { value: 'Manually Added', label: 'Manually Added' },
+        { value: 'Categorized', label: 'Categorized' },
+        { value: 'Reconciled', label: 'Reconciled' },
+        { value: 'Unreconciled', label: 'Unreconciled' },
       ],
       actionButtons: {},
       filterData: {
-        transactionDate: "",
-        chartOfAccountId: "",
+        transactionDate: '',
+        chartOfAccountId: '',
       },
-      selectedData: "",
-      selectedreconcileRrefId: "",
-      id: "",
+      selectedData: '',
+      selectedreconcileRrefId: '',
+      id: '',
       dialog: null,
       selectedRowData: {},
       sidebarOpen: false,
       csvData: [],
       view: false,
       selectedRow: null,
-      transactionId: "",
+      transactionId: '',
       openExplainTransactionModal: false,
       rowId: null,
       show: false,
-      bankId: "",
-      openingBalance: "",
-      closingBalance: "",
-      currentBalance: "",
-      bankAccountCurrencySymbol: "",
-      bankAccountCurrencyIsoCode: "",
-      accounName: "",
+      bankId: '',
+      openingBalance: '',
+      closingBalance: '',
+      currentBalance: '',
+      bankAccountCurrencySymbol: '',
+      bankAccountCurrencyIsoCode: '',
+      accounName: '',
       expanded: false,
       page: 1,
-      activeTab: new Array(3).fill("all"),
-      transactionType: "all",
+      activeTab: new Array(3).fill('all'),
+      transactionType: 'all',
       nonexpand: [],
       selected_id_list: [],
-      transation_data: "",
+      transation_data: '',
       res: [],
       showExpandedRow: true,
     };
@@ -125,8 +119,8 @@ class BankTransactions extends React.Component {
     };
 
     this.selectRowProp = {
-      mode: "checkbox",
-      bgColor: "rgba(0,0,0, 0.05)",
+      mode: 'checkbox',
+      bgColor: 'rgba(0,0,0, 0.05)',
       clickToSelect: true,
       onSelectAll: this.onSelectAll,
     };
@@ -136,10 +130,8 @@ class BankTransactions extends React.Component {
   getnewbackdetils = () => {
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       this.props.detailBankAccountActions
-        .getBankAccountByID(
-          this.props.location.state.bankAccountId
-        )
-        .then((res) => {
+        .getBankAccountByID(this.props.location.state.bankAccountId)
+        .then(res => {
           this.setState({
             bankAccountCurrencySymbol: res.bankAccountCurrencySymbol,
             bankAccountCurrencyIsoCode: res.bankAccountCurrencyIsoCode,
@@ -150,14 +142,14 @@ class BankTransactions extends React.Component {
             transactionCount: res.transactionCount,
           });
         })
-        .catch((err) => {
+        .catch(err => {
           this.props.commonActions.tostifyAlert(
-            "error",
-            err && err.data ? err.data.message : "Something Went Wrong"
+            'error',
+            err && err.data ? err.data.message : 'Something Went Wrong'
           );
-          this.props.history.push("/admin/banking/bank-account");
+          this.props.history.push('/admin/banking/bank-account');
         });
-      this.toggle(0, "all");
+      this.toggle(0, 'all');
       //.this.initializeData();
       this.props.transactionsActions.getTransactionTypeList();
       this.initializeData();
@@ -167,10 +159,8 @@ class BankTransactions extends React.Component {
   componentDidMount = () => {
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       this.props.detailBankAccountActions
-        .getBankAccountByID(
-          this.props.location.state.bankAccountId
-        )
-        .then((res) => {
+        .getBankAccountByID(this.props.location.state.bankAccountId)
+        .then(res => {
           this.setState({
             bankAccountCurrencySymbol: res.bankAccountCurrencySymbol,
             bankAccountCurrencyIsoCode: res.bankAccountCurrencyIsoCode,
@@ -181,18 +171,19 @@ class BankTransactions extends React.Component {
             transactionCount: res.transactionCount,
           });
         })
-        .catch((err) => {
+        .catch(err => {
           this.props.commonActions.tostifyAlert(
-            "error",
-            err && err.data ? err.data.message : "Something Went Wrong"
+            'error',
+            err && err.data ? err.data.message : 'Something Went Wrong'
           );
-          this.props.history.push("/admin/banking/bank-account");
+          this.props.history.push('/admin/banking/bank-account');
         });
-      this.toggle(0, "all");
+      this.toggle(0, 'all');
       //.this.initializeData();
-      this.props.commonActions.getCompanyDetails().then((res) => {
-        if (res.status === 200) {
-          const isRegisteredVat = res.data.isRegisteredVat;
+      this.props.commonActions.getCompanyDetails().then(action => {
+        // Redux Toolkit thunks return action objects
+        if (action && action.type && action.type.includes('fulfilled')) {
+          const isRegisteredVat = action.payload.isRegisteredVat;
 
           this.props.history.replace({
             pathname: this.props.location.pathname,
@@ -203,7 +194,7 @@ class BankTransactions extends React.Component {
           });
 
           this.setState({
-            companyDetails: res.data,
+            companyDetails: action.payload,
             isRegisteredVat: isRegisteredVat,
           });
         }
@@ -228,34 +219,34 @@ class BankTransactions extends React.Component {
       };
       this.props.transactionsActions
         .getTransactionList(postData)
-        .then((res) => {
+        .then(res => {
           const array = [];
           if (res.status === 200) {
             this.setState({
               loading: false,
               transation_data: res.data.data,
             });
-            res.data.data.map((item) => {
-              if (item.creationMode === "POTENTIAL_DUPLICATE") {
+            res.data.data.map(item => {
+              if (item.creationMode === 'POTENTIAL_DUPLICATE') {
                 array.push(item.id);
               }
               this.setState({ nonexpand: array });
             });
           }
         })
-        .catch((err) => {
+        .catch(err => {
           this.props.commonActions.tostifyAlert(
-            "error",
-            err && err.data ? err.data.message : "Something Went Wrong"
+            'error',
+            err && err.data ? err.data.message : 'Something Went Wrong'
           );
           this.setState({ loading: false });
         });
     } else {
-      this.props.history.push("/admin/banking/bank-account");
+      this.props.history.push('/admin/banking/bank-account');
     }
   };
 
-  toggleActionButton = (row) => {
+  toggleActionButton = row => {
     let temp = Object.assign({}, this.state.actionButtons);
     if (temp[parseInt(row, 10)]) {
       temp[parseInt(row, 10)] = false;
@@ -271,11 +262,7 @@ class BankTransactions extends React.Component {
     return (
       <label
         className="mb-0 my-link"
-        onClick={() =>
-          this.props.history.push(
-            "/admin/banking/bank-account/transaction/detail"
-          )
-        }
+        onClick={() => this.props.history.push('/admin/banking/bank-account/transaction/detail')}
       >
         {row.reference_number}
       </label>
@@ -283,29 +270,29 @@ class BankTransactions extends React.Component {
   };
 
   renderTransactionStatus = (cell, row) => {
-    let classname = "";
-    if (row.status === "Explained") {
-      classname = "badge-success";
-    } else if (row.status === "Unexplained") {
-      classname = "badge-danger";
+    let classname = '';
+    if (row.status === 'Explained') {
+      classname = 'badge-success';
+    } else if (row.status === 'Unexplained') {
+      classname = 'badge-danger';
     } else {
-      classname = "badge-primary";
+      classname = 'badge-primary';
     }
     return <span className={`badge ${classname} mb-0`}>{row.status}</span>;
   };
 
   renderreconcileRrefId = (cell, row) => {
-    let classname = "";
-    let value = "";
-    if (row.status === "Explained") {
-      classname = "badge-success";
-      value = "Withdrawal";
-    } else if (row.status === "Unexplained") {
-      classname = "badge-danger";
-      value = "Deposit";
+    let classname = '';
+    let value = '';
+    if (row.status === 'Explained') {
+      classname = 'badge-success';
+      value = 'Withdrawal';
+    } else if (row.status === 'Unexplained') {
+      classname = 'badge-danger';
+      value = 'Deposit';
     } else {
-      classname = "badge-primary";
-      value = "Tax Claim";
+      classname = 'badge-primary';
+      value = 'Tax Claim';
     }
     return <span className={`badge ${classname} mb-0`}>{value}</span>;
   };
@@ -313,43 +300,43 @@ class BankTransactions extends React.Component {
   renderDepositAmount = (cell, row, rowIndex, extraData) => {
     return row.depositeAmount >= 0
       ? row.currencyIsoCode +
-      " " +
-      row.depositeAmount.toLocaleString(navigator.language, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })
-      : "";
+          ' ' +
+          row.depositeAmount.toLocaleString(navigator.language, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+      : '';
   };
   renderWithdrawalAmount = (cell, row, rowIndex, extraData) => {
     return row.withdrawalAmount >= 0
       ? row.currencyIsoCode +
-      " " +
-      row.withdrawalAmount.toLocaleString(navigator.language, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })
-      : "";
+          ' ' +
+          row.withdrawalAmount.toLocaleString(navigator.language, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+      : '';
   };
   renderRunningAmount = (cell, row) => {
     return row.runningAmount >= 0
       ? row.currencyIsoCode +
-      " " +
-      row.runningAmount.toLocaleString(navigator.language, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })
-      : "";
+          ' ' +
+          row.runningAmount.toLocaleString(navigator.language, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+      : '';
   };
 
   renderDueAmount = (cell, row, rowIndex, extraData) => {
     return row.dueAmount >= 0
       ? row.currencyIsoCode +
-      " " +
-      row.dueAmount.toLocaleString(navigator.language, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })
-      : "";
+          ' ' +
+          row.dueAmount.toLocaleString(navigator.language, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+      : '';
   };
 
   test(row) {
@@ -374,7 +361,7 @@ class BankTransactions extends React.Component {
     );
   };
 
-  onSizePerPageList = (sizePerPage) => {
+  onSizePerPageList = sizePerPage => {
     if (this.options.sizePerPage !== sizePerPage) {
       this.options.sizePerPage = sizePerPage;
       this.initializeData();
@@ -394,7 +381,7 @@ class BankTransactions extends React.Component {
 
   handleChange = (val, name, reconcile, row, label) => {
     if (!reconcile) {
-      this.setState((prevState) => ({
+      this.setState(prevState => ({
         filterData: {
           ...prevState.filterData,
           [name]: val,
@@ -411,14 +398,13 @@ class BankTransactions extends React.Component {
     this.initializeData();
   };
 
-  closeTransaction = (id) => {
+  closeTransaction = id => {
     const message1 = (
       <text>
         <b>Delete Transaction?</b>
       </text>
     );
-    const message =
-      "This Transaction will be deleted permanently and cannot be recovered.";
+    const message = 'This Transaction will be deleted permanently and cannot be recovered.';
     this.setState({
       dialog: (
         <ConfirmDeleteModal
@@ -432,22 +418,16 @@ class BankTransactions extends React.Component {
     });
   };
 
-  removeTransaction = (id) => {
+  removeTransaction = id => {
     this.removeDialog();
     this.props.transactionsActions
       .deleteTransactionById(id)
-      .then((res) => {
-        this.props.commonActions.tostifyAlert(
-          "success",
-          "Transaction Deleted Successfully"
-        );
+      .then(res => {
+        this.props.commonActions.tostifyAlert('success', 'Transaction Deleted Successfully');
         this.initializeData();
       })
-      .catch((err) => {
-        this.props.commonActions.tostifyAlert(
-          "error",
-          err && err.data ? err.data.message : null
-        );
+      .catch(err => {
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null);
       });
   };
 
@@ -461,12 +441,10 @@ class BankTransactions extends React.Component {
     if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true,
-        id: this.props.location.state
-          ? this.props.location.state.bankAccountId
-          : "",
+        id: this.props.location.state ? this.props.location.state.bankAccountId : '',
         transactionType: this.state.transactionType,
       };
-      this.props.transactionsActions.getTransactionList(obj).then((res) => {
+      this.props.transactionsActions.getTransactionList(obj).then(res => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -484,8 +462,8 @@ class BankTransactions extends React.Component {
     this.setState(
       {
         filterData: {
-          transactionDate: "",
-          chartOfAccountId: "",
+          transactionDate: '',
+          chartOfAccountId: '',
         },
       },
       () => {
@@ -494,7 +472,7 @@ class BankTransactions extends React.Component {
     );
   };
 
-  openExplainTransactionModal = (row) => {
+  openExplainTransactionModal = row => {
     this.setState(
       {
         selectedData: row,
@@ -507,7 +485,7 @@ class BankTransactions extends React.Component {
     );
   };
 
-  closeExplainTransactionModal = (res) => {
+  closeExplainTransactionModal = res => {
     this.initializeData();
     const array = [];
     this.setState(() => ({
@@ -535,13 +513,13 @@ class BankTransactions extends React.Component {
     );
   };
 
-  onRowSelect = (row) => {
+  onRowSelect = row => {
     let tempList = [];
     if (row) {
       tempList = Object.assign([], this.state.selected_id_list);
       tempList.push(row);
     } else {
-      this.state.selected_id_list.map((item) => {
+      this.state.selected_id_list.map(item => {
         if (item !== row) {
           tempList.push(item);
         }
@@ -560,18 +538,18 @@ class BankTransactions extends React.Component {
           .changeTransaction(obj)
           .then(() => {
             this.props.commonActions.tostifyAlert(
-              "success",
-              "Transaction status changed successfully"
+              'success',
+              'Transaction status changed successfully'
             );
             this.initializeData();
             this.setState({
               selected_id_list: [],
             });
           })
-          .catch((err) => {
+          .catch(err => {
             this.props.commonActions.tostifyAlert(
-              "error",
-              err && err.data ? err.data.message : "Something Went Wrong"
+              'error',
+              err && err.data ? err.data.message : 'Something Went Wrong'
             );
           });
       }
@@ -579,32 +557,28 @@ class BankTransactions extends React.Component {
   };
 
   statusFormatter = (cell, row, extraData) => {
-    if (row.explinationStatusEnum === "FULL") {
+    if (row.explinationStatusEnum === 'FULL') {
       return <div className="label-info">Explained</div>;
-    } else if (row.explinationStatusEnum === "RECONCILED") {
+    } else if (row.explinationStatusEnum === 'RECONCILED') {
       return <div className="label-success">Reconciled</div>;
-    } else if (row.explinationStatusEnum === "PARTIAL") {
+    } else if (row.explinationStatusEnum === 'PARTIAL') {
       return <div className="label-PartiallyPaid">Partially Explained</div>;
     } else if (
-      row.explinationStatusEnum === "NOT_EXPLAIN" &&
-      row.creationMode !== "POTENTIAL_DUPLICATE"
+      row.explinationStatusEnum === 'NOT_EXPLAIN' &&
+      row.creationMode !== 'POTENTIAL_DUPLICATE'
     ) {
       return <div className="label-danger">Not Explained</div>;
-    } else if (row.creationMode === "POTENTIAL_DUPLICATE") {
+    } else if (row.creationMode === 'POTENTIAL_DUPLICATE') {
       return (
         <div>
           <ButtonDropdown
             isOpen={this.state.actionButtons[row.id]}
-            toggle={(e) => {
+            toggle={e => {
               e.preventDefault();
               this.toggleActionButton(row.id);
             }}
           >
-            <DropdownToggle
-              size="sm"
-              color="primary"
-              className="btn-brand icon"
-            >
+            <DropdownToggle size="sm" color="primary" className="btn-brand icon">
               {this.state.actionButtons[row.id] === true ? (
                 <i className="fas fa-chevron-up" />
               ) : (
@@ -635,7 +609,7 @@ class BankTransactions extends React.Component {
     }
   };
 
-  getbyid = (row) => {
+  getbyid = row => {
     return (
       <>
         <>
@@ -643,7 +617,7 @@ class BankTransactions extends React.Component {
             this.state.response?.data?.map((i, inx) => {
               return (
                 <ExplainTrasactionDetail
-                  closeExplainTransactionModal={(e) => {
+                  closeExplainTransactionModal={e => {
                     this.closeExplainTransactionModal(e);
                   }}
                   bankId={this.props.location.state.bankAccountId}
@@ -656,9 +630,9 @@ class BankTransactions extends React.Component {
         </>
         <>
           {row.explanationIds.length > 0 ||
-            (row.explinationStatusEnum === "PARTIAL" && (
+            (row.explinationStatusEnum === 'PARTIAL' && (
               <ExplainTrasactionDetail
-                closeExplainTransactionModal={(e) => {
+                closeExplainTransactionModal={e => {
                   this.closeExplainTransactionModal(e);
                 }}
                 bankId={this.props.location.state.bankAccountId}
@@ -674,62 +648,50 @@ class BankTransactions extends React.Component {
 
   render() {
     strings.setLanguage(this.state.language);
-    const {
-      loading,
-      statusOptions,
-      filterData,
-      dialog,
-      csvData,
-      view,
-      nonexpand,
-      expanded,
-    } = this.state;
-    const {
-      bank_transaction_list,
-      transaction_type_list,
-      universal_currency_list,
-    } = this.props;
+    const { loading, statusOptions, filterData, dialog, csvData, view, nonexpand, expanded } =
+      this.state;
+    const { bank_transaction_list, transaction_type_list, universal_currency_list } = this.props;
     const columns = [
       {
-        dataField: "transactionDate",
-        text: "Date",
+        dataField: 'transactionDate',
+        text: 'Date',
       },
       {
-        dataField: "description",
-        text: "Description",
+        dataField: 'description',
+        text: 'Description',
       },
       {
-        dataField: "depositeAmount",
-        text: "Deposit Amount",
+        dataField: 'depositeAmount',
+        text: 'Deposit Amount',
         formatter: this.renderDepositAmount,
         formatExtraData: universal_currency_list,
       },
       {
-        dataField: "withdrawalAmount",
-        text: "Withdrawal Amount",
+        dataField: 'withdrawalAmount',
+        text: 'Withdrawal Amount',
         formatter: this.renderWithdrawalAmount,
         formatExtraData: universal_currency_list,
       },
       {
-        dataField: "dueAmount",
-        text: "Due Amount",
+        dataField: 'dueAmount',
+        text: 'Due Amount',
         formatter: this.renderDueAmount,
         formatExtraData: universal_currency_list,
       },
       {
-        dataField: "explinationStatusEnum",
-        text: "Status",
+        dataField: 'explinationStatusEnum',
+        text: 'Status',
         formatter: this.statusFormatter,
         formatExtraData: this.state.actionButtons,
       },
     ];
     const expandRow = {
       onlyOneExpanding: true,
-      renderer: (row) => (
+      renderer: row => (
         <Getbyid
           row={row}
           getbankdetails={this.getnewbackdetils}
-          closeExplainTransactionModal={(e) => {
+          closeExplainTransactionModal={e => {
             this.closeExplainTransactionModal(e);
           }}
           bankAccountId={this.props.location.state.bankAccountId}
@@ -745,12 +707,12 @@ class BankTransactions extends React.Component {
     return (
       <div className="bank-transaction-screen transaction">
         <div className="animated fadeIn">
-          <Card className={this.state.sidebarOpen ? `main-table-panel` : ""}>
+          <Card className={this.state.sidebarOpen ? `main-table-panel` : ''}>
             <CardHeader>
               <Row>
                 <Col>
                   <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="fas fa-university" />
+                    <i className="fas fa-university" />
                     <span className="ml-2">{strings.BankTransactions}</span>
                   </div>
                 </Col>
@@ -758,7 +720,7 @@ class BankTransactions extends React.Component {
                   <Button
                     title="Back"
                     onClick={() => {
-                      this.props.history.push("/admin/banking/bank-account");
+                      this.props.history.push('/admin/banking/bank-account');
                     }}
                     className=" pull-right"
                   >
@@ -789,17 +751,14 @@ class BankTransactions extends React.Component {
                           <h3>
                             {this.state.bankAccountCurrencyIsoCode} &nbsp;
                             {this.state.currentBalance
-                              ? this.state.currentBalance.toLocaleString(
-                                navigator.language,
-                                {
+                              ? this.state.currentBalance.toLocaleString(navigator.language, {
                                   minimumFractionDigits: 2,
                                   maximumFractionDigits: 2,
-                                }
-                              )
-                              : " " +
-                              ZERO.toLocaleString(navigator.language, {
-                                minimumFractionDigits: 2,
-                              })}
+                                })
+                              : ' ' +
+                                ZERO.toLocaleString(navigator.language, {
+                                  minimumFractionDigits: 2,
+                                })}
                           </h3>
                         </Col>
                         <Col lg={3}>
@@ -808,17 +767,14 @@ class BankTransactions extends React.Component {
                           <h3>
                             {this.state.bankAccountCurrencyIsoCode} &nbsp;
                             {this.state.closingBalance
-                              ? this.state.closingBalance.toLocaleString(
-                                navigator.language,
-                                {
+                              ? this.state.closingBalance.toLocaleString(navigator.language, {
                                   minimumFractionDigits: 2,
                                   maximumFractionDigits: 2,
-                                }
-                              )
-                              : " " +
-                              ZERO.toLocaleString(navigator.language, {
-                                minimumFractionDigits: 2,
-                              })}
+                                })
+                              : ' ' +
+                                ZERO.toLocaleString(navigator.language, {
+                                  minimumFractionDigits: 2,
+                                })}
                           </h3>
                         </Col>
                         <Col lg={3}>
@@ -826,17 +782,14 @@ class BankTransactions extends React.Component {
                           <h3>
                             {this.state.bankAccountCurrencyIsoCode} &nbsp;
                             {this.state.openingBalance
-                              ? this.state.openingBalance.toLocaleString(
-                                navigator.language,
-                                {
+                              ? this.state.openingBalance.toLocaleString(navigator.language, {
                                   minimumFractionDigits: 2,
                                   maximumFractionDigits: 2,
-                                }
-                              )
-                              : " " +
-                              ZERO.toLocaleString(navigator.language, {
-                                minimumFractionDigits: 2,
-                              })}
+                                })
+                              : ' ' +
+                                ZERO.toLocaleString(navigator.language, {
+                                  minimumFractionDigits: 2,
+                                })}
                           </h3>
                         </Col>
                       </Row>
@@ -866,17 +819,13 @@ class BankTransactions extends React.Component {
                               color="info"
                               className="btn-square mr-1"
                               onClick={() =>
-                                this.props.history.push(
-                                  "/admin/banking/upload-statement",
-                                  {
-                                    bankAccountId:
-                                      this.props.location.state &&
-                                        this.props.location.state.bankAccountId
-                                        ? this.props.location.state
-                                          .bankAccountId
-                                        : "",
-                                  }
-                                )
+                                this.props.history.push('/admin/banking/upload-statement', {
+                                  bankAccountId:
+                                    this.props.location.state &&
+                                    this.props.location.state.bankAccountId
+                                      ? this.props.location.state.bankAccountId
+                                      : '',
+                                })
                               }
                             >
                               <i className="fa glyphicon glyphicon-export fa-upload mr-1" />
@@ -884,23 +833,19 @@ class BankTransactions extends React.Component {
                             </Button>
                             &nbsp; &nbsp; &nbsp;
                             {this.state.transactionCount > 0 ? (
-                              ""
+                              ''
                             ) : (
                               <Button
                                 color="success"
                                 className="btn-square mr-1"
                                 onClick={() =>
-                                  this.props.history.push(
-                                    "/admin/banking/bank-account/detail",
-                                    {
-                                      bankAccountId:
-                                        this.props.location.state &&
-                                          this.props.location.state.bankAccountId
-                                          ? this.props.location.state
-                                            .bankAccountId
-                                          : "",
-                                    }
-                                  )
+                                  this.props.history.push('/admin/banking/bank-account/detail', {
+                                    bankAccountId:
+                                      this.props.location.state &&
+                                      this.props.location.state.bankAccountId
+                                        ? this.props.location.state.bankAccountId
+                                        : '',
+                                  })
                                 }
                               >
                                 <i className="fas fa-edit mr-1" />
@@ -913,14 +858,13 @@ class BankTransactions extends React.Component {
                               className="btn-square mr-1"
                               onClick={() =>
                                 this.props.history.push(
-                                  "/admin/banking/bank-account/transaction/reconcile",
+                                  '/admin/banking/bank-account/transaction/reconcile',
                                   {
                                     bankAccountId:
                                       this.props.location.state &&
-                                        this.props.location.state.bankAccountId
-                                        ? this.props.location.state
-                                          .bankAccountId
-                                        : "",
+                                      this.props.location.state.bankAccountId
+                                        ? this.props.location.state.bankAccountId
+                                        : '',
                                   }
                                 )
                               }
@@ -1013,9 +957,9 @@ class BankTransactions extends React.Component {
                       <Nav tabs className="pull-left">
                         <NavItem>
                           <NavLink
-                            active={this.state.activeTab[0] === "all"}
+                            active={this.state.activeTab[0] === 'all'}
                             onClick={() => {
-                              this.toggle(0, "all");
+                              this.toggle(0, 'all');
                             }}
                           >
                             {strings.All}
@@ -1023,9 +967,9 @@ class BankTransactions extends React.Component {
                         </NavItem>
                         <NavItem>
                           <NavLink
-                            active={this.state.activeTab[0] === "not_explain"}
+                            active={this.state.activeTab[0] === 'not_explain'}
                             onClick={() => {
-                              this.toggle(0, "not_explain");
+                              this.toggle(0, 'not_explain');
                             }}
                           >
                             {strings.NotExplained}
@@ -1033,11 +977,9 @@ class BankTransactions extends React.Component {
                         </NavItem>
                         <NavItem>
                           <NavLink
-                            active={
-                              this.state.activeTab[0] === "potential_duplicate"
-                            }
+                            active={this.state.activeTab[0] === 'potential_duplicate'}
                             onClick={() => {
-                              this.toggle(0, "potential_duplicate");
+                              this.toggle(0, 'potential_duplicate');
                             }}
                           >
                             {strings.PotentialDuplicate}
@@ -1049,15 +991,14 @@ class BankTransactions extends React.Component {
                         className="btn-square pull-right"
                         onClick={() =>
                           this.props.history.push(
-                            "/admin/banking/bank-account/transaction/create",
+                            '/admin/banking/bank-account/transaction/create',
                             {
                               bankAccountId:
-                                this.props.location.state &&
-                                  this.props.location.state.bankAccountId
+                                this.props.location.state && this.props.location.state.bankAccountId
                                   ? this.props.location.state.bankAccountId
-                                  : "",
+                                  : '',
                               currency: this.props.location.state.currency,
-                              isRegisteredVat: this.props.location.state.isRegisteredVat
+                              isRegisteredVat: this.props.location.state.isRegisteredVat,
                             }
                           )
                         }
@@ -1070,11 +1011,7 @@ class BankTransactions extends React.Component {
                       <BootstrapTable
                         id="myTable"
                         keyField="id"
-                        data={
-                          bank_transaction_list.data
-                            ? bank_transaction_list.data
-                            : []
-                        }
+                        data={bank_transaction_list.data ? bank_transaction_list.data : []}
                         columns={columns}
                         expandRow={expandRow}
                         noDataIndication="There are no records to display."

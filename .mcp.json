@@ -15,10 +15,7 @@
     "gemini": {
       "type": "stdio",
       "command": "npx",
-      "args": [
-        "-y",
-        "@google/gemini-cli@0.20.2"
-      ],
+      "args": ["-y", "@google/gemini-cli@latest"],
       "env": {
         "GEMINI_API_KEY": "${GEMINI_API_KEY}"
       }

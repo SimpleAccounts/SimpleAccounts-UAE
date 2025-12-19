@@ -1,31 +1,31 @@
-import { BANK_ACCOUNT } from "constants/types";
+import { BANK_ACCOUNT } from 'constants/types';
 import {
   // api,
   authApi,
-} from "utils";
+} from 'utils';
 import dayjs from '@/utils/date';
 
-export const getTransactionList = (obj) => {
-  let id = obj.id ? obj.id : "";
-  let chartOfAccountId = obj.chartOfAccountId ? obj.chartOfAccountId.value : "";
-  let transactionDate = obj.transactionDate ? obj.transactionDate : "";
-  let pageNo = obj.pageNo ? obj.pageNo : "";
-  let pageSize = obj.pageSize ? obj.pageSize : "";
+export const getTransactionList = obj => {
+  let id = obj.id ? obj.id : '';
+  let chartOfAccountId = obj.chartOfAccountId ? obj.chartOfAccountId.value : '';
+  let transactionDate = obj.transactionDate ? obj.transactionDate : '';
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
   let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false;
-  let transactionType = obj.transactionType ? obj.transactionType : "";
+  let transactionType = obj.transactionType ? obj.transactionType : '';
 
   let param = `/rest/transaction/list?bankId=${id}&transactionType=${transactionType}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`;
-  if (transactionDate !== "") {
-    let date = dayjs(transactionDate).format("DD-MM-YYYY");
+  if (transactionDate !== '') {
+    let date = dayjs(transactionDate).format('DD-MM-YYYY');
     param = param + `&transactionDate=${date}`;
   }
-  return (dispatch) => {
+  return dispatch => {
     let data = {
-      method: "get",
+      method: 'get',
       url: param,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           if (!obj.paginationDisable) {
             dispatch({
@@ -38,20 +38,20 @@ export const getTransactionList = (obj) => {
           return res;
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
 export const getTransactionCategoryList = () => {
-  return (dispatch) => {
+  return dispatch => {
     let data = {
-      method: "get",
-      url: "/rest/transactioncategory/getList",
+      method: 'get',
+      url: '/rest/transactioncategory/getList',
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         console.log(res);
         if (res.status === 200) {
           dispatch({
@@ -61,20 +61,20 @@ export const getTransactionCategoryList = () => {
         }
         return res;
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
 export const getTransactionTypeList = () => {
-  return (dispatch) => {
+  return dispatch => {
     let data = {
-      method: "get",
-      url: "/rest/datalist/getTransactionTypes",
+      method: 'get',
+      url: '/rest/datalist/getTransactionTypes',
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.TRANSACTION_TYPE_LIST,
@@ -83,20 +83,20 @@ export const getTransactionTypeList = () => {
         }
         return res;
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
 export const getProjectList = () => {
-  return (dispatch) => {
+  return dispatch => {
     let data = {
-      method: "get",
-      url: "/rest/project/getProjectsForDropdown",
+      method: 'get',
+      url: '/rest/project/getProjectsForDropdown',
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.PROJECT_LIST,
@@ -104,20 +104,20 @@ export const getProjectList = () => {
           });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
-export const getCustomerInvoiceList = (param) => {
-  return (dispatch) => {
+export const getCustomerInvoiceList = param => {
+  return dispatch => {
     let data = {
-      method: "get",
+      method: 'get',
       url: `/rest/invoice/getSuggestionInvoicesFotCust?amount=${param.amount}&currency=${param.currency}&id=${param.id}&bankId=${param.bankId}`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.CUSTOMER_INVOICE_LIST,
@@ -128,21 +128,21 @@ export const getCustomerInvoiceList = (param) => {
           return res;
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
-export const getCustomerExplainedInvoiceList = (param) => {
+export const getCustomerExplainedInvoiceList = param => {
   console.log(param);
-  return (dispatch) => {
+  return dispatch => {
     let data = {
-      method: "get",
+      method: 'get',
       url: `/rest/invoice/getSuggestionExplainedForCust?amount=${param.amount}&currency=${param.currency}&id=${param.id}&bankId=${param.bankId}`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.CUSTOMER_INVOICE_LIST,
@@ -153,20 +153,20 @@ export const getCustomerExplainedInvoiceList = (param) => {
           return res;
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
 export const getCurrencyList = () => {
-  return (dispatch) => {
+  return dispatch => {
     let data = {
-      method: "get",
-      url: "/rest/currency/getactivecurrencies",
+      method: 'get',
+      url: '/rest/currency/getactivecurrencies',
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.CURRENCY_LIST,
@@ -177,20 +177,20 @@ export const getCurrencyList = () => {
           return res;
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
-export const getVendorList = (bankId) => {
-  return (dispatch) => {
+export const getVendorList = bankId => {
+  return dispatch => {
     let data = {
-      method: "get",
+      method: 'get',
       url: `/rest/contact/getContactsForDropdownForVendor?bankId=${bankId}`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.VENDOR_LIST,
@@ -198,20 +198,20 @@ export const getVendorList = (bankId) => {
           });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
-export const getVendorInvoiceList = (param) => {
-  return (dispatch) => {
+export const getVendorInvoiceList = param => {
+  return dispatch => {
     let data = {
-      method: "get",
+      method: 'get',
       url: `/rest/invoice/getSuggestionInvoicesFotVend?amount=${param.amount}&currency=${param.currency}&id=${param.id}&bankId=${param.bankId}`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.VENDOR_INVOICE_LIST,
@@ -222,20 +222,20 @@ export const getVendorInvoiceList = (param) => {
           return res;
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
-export const getVendorExplainedInvoiceList = (param) => {
-  return (dispatch) => {
+export const getVendorExplainedInvoiceList = param => {
+  return dispatch => {
     let data = {
-      method: "get",
+      method: 'get',
       url: `/rest/invoice/getSuggestionExplainedForVend?amount=${param.amount}&currency=${param.currency}&id=${param.id}&bankId=${param.bankId}`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.VENDOR_INVOICE_LIST,
@@ -246,20 +246,20 @@ export const getVendorExplainedInvoiceList = (param) => {
           return res;
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
-export const getExpensesList = (param) => {
-  return (dispatch) => {
+export const getExpensesList = param => {
+  return dispatch => {
     let data = {
-      method: "get",
+      method: 'get',
       url: `/rest/invoice/getSuggestionExpenses?amount=${param.amount}`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.EXPENSE_LIST,
@@ -269,20 +269,20 @@ export const getExpensesList = (param) => {
           });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
 export const getExpensesCategoriesList = () => {
-  return (dispatch) => {
+  return dispatch => {
     let data = {
-      method: "get",
-      url: "/rest/transactioncategory/getForExpenses",
+      method: 'get',
+      url: '/rest/transactioncategory/getForExpenses',
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.EXPENSE_CATEGORIES_LIST,
@@ -290,20 +290,20 @@ export const getExpensesCategoriesList = () => {
           });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
 export const getUserForDropdown = () => {
-  return (dispatch) => {
+  return dispatch => {
     let data = {
-      method: "get",
-      url: "/rest/user/getUserForDropdown",
+      method: 'get',
+      url: '/rest/user/getUserForDropdown',
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.USER_LIST,
@@ -311,128 +311,128 @@ export const getUserForDropdown = () => {
           });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
-export const getMoneyCategoryList = (id) => {
-  return (dispatch) => {
+export const getMoneyCategoryList = id => {
+  return dispatch => {
     let data = {
-      method: "get",
+      method: 'get',
       url: `/rest/reconsile/getChildrenTransactionCategoryList?id=${id}`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           return res;
         }
       })
-      .catch((err) => {
-        alert("error" + err);
+      .catch(err => {
+        console.error('Transaction update error:', err);
         throw err;
       });
   };
 };
 
-export const deleteTransactionById = (id) => {
-  return (dispatch) => {
+export const deleteTransactionById = id => {
+  return dispatch => {
     let data = {
-      method: "DELETE",
+      method: 'DELETE',
       url: `/rest/transaction/delete?id=${id}`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         return res;
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
-export const getChartOfCategoryList = (type) => {
-  return (dispatch) => {
+export const getChartOfCategoryList = type => {
+  return dispatch => {
     let data = {
-      method: "get",
+      method: 'get',
       url: `/rest/datalist/reconsileCategories?debitCreditFlag=${type}`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           return res;
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
 export const getTransactionCategoryListForExplain = (id, bankId) => {
-  return (dispatch) => {
+  return dispatch => {
     let data = {
-      method: "get",
+      method: 'get',
       url: `/rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}&bankId=${bankId}`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           return res;
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
-export const getCategoryListForReconcile = (code) => {
-  return (dispatch) => {
+export const getCategoryListForReconcile = code => {
+  return dispatch => {
     let data = {
-      method: "get",
+      method: 'get',
       url: `/rest/reconsile/getByReconcilationCatCode?reconcilationCatCode=${code}`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           return res;
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
-export const reconcileTransaction = (obj) => {
-  return (dispatch) => {
+export const reconcileTransaction = obj => {
+  return dispatch => {
     let data = {
-      method: "POST",
+      method: 'POST',
       url: `/rest/reconsile/reconcile`,
       data: obj,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           return res;
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
 export const getVatList = () => {
-  return (dispatch) => {
+  return dispatch => {
     let data = {
-      method: "get",
-      url: "/rest/vat/getList",
+      method: 'get',
+      url: '/rest/vat/getList',
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.VAT_LIST,
@@ -440,37 +440,37 @@ export const getVatList = () => {
           });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
-export const changeTransaction = (obj) => {
-  return (dispatch) => {
+export const changeTransaction = obj => {
+  return dispatch => {
     let data = {
-      method: "post",
-      url: "/rest/transaction/changestatus",
+      method: 'post',
+      url: '/rest/transaction/changestatus',
       data: obj,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         return res;
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 export const getUnPaidPayrollsList = () => {
-  console.log("getUnPaidPayrollsList");
-  return (dispatch) => {
+  console.log('getUnPaidPayrollsList');
+  return dispatch => {
     let data = {
-      method: "get",
+      method: 'get',
       url: `/rest/payroll/getUnpaidPayrollList`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.UNPAID_PAYROLLS,
@@ -481,7 +481,7 @@ export const getUnPaidPayrollsList = () => {
           return res;
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
@@ -523,48 +523,48 @@ export const getUnPaidPayrollsList = () => {
 //   transaction_date: 'Oct 28th, 2019'
 // }]
 
-export const getVatReportListForBank = (id) => {
-  return (dispatch) => {
+export const getVatReportListForBank = id => {
+  return dispatch => {
     let data = {
-      method: "GET",
+      method: 'GET',
       url: `/rest/vatReport/getVatReportListForBank?id=${id}`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         return res;
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
-export const getCorporateTaxList = (id) => {
-  return (dispatch) => {
+export const getCorporateTaxList = id => {
+  return dispatch => {
     let data = {
-      method: "GET",
+      method: 'GET',
       url: `/rest/corporate/tax/Corporate/list?paginationDisable=true`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         return res;
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
 export const getCOACList = () => {
-  return (dispatch) => {
+  return dispatch => {
     let data = {
-      method: "GET",
+      method: 'GET',
       url: `/rest/reconsile/getCOACList`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         return res;
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
