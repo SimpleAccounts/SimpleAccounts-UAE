@@ -67,7 +67,8 @@ jobs:
         include:
           - node: '20.x'
             experimental: false
-          - node: '18.x'
+          # Vitest 4.x requires Node 20+, so we test with Node 22 as the experimental version
+          - node: '22.x'
             experimental: true
 
     steps:
