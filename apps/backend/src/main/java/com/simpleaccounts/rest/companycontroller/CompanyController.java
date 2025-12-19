@@ -429,7 +429,7 @@ public class CompanyController {
 			if (transactionCategory == null) {
 				// Fallback to default transaction category if getValidTransactionCategory returns null
 				log.warn("getValidTransactionCategory returned null for category: {}. Using default offset liabilities category.", 
-					category != null ? category.getTransactionCategoryId() : "null");
+					category.getTransactionCategoryId());
 				transactionCategory = transactionCategoryService.findTransactionCategoryByTransactionCategoryCode(
 					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 				if (transactionCategory == null) {
@@ -517,8 +517,8 @@ public class CompanyController {
 			} else {
 				responseMessage = "Registration successful";
 			}
-			// Log success with defensive null check
-			if (company != null && company.getCompanyName() != null) {
+			// Log success with company name if available
+			if (company.getCompanyName() != null) {
 				log.info("Registration completed successfully for company: {}", sanitizeForLog(company.getCompanyName()));
 			} else {
 				log.info("Registration completed successfully");
