@@ -97,13 +97,13 @@ setTimeout(async () => {
       // If property exists and is writable, patch it
       if (!descriptor || descriptor.writable !== false) {
         try {
-          formikModule.yupToFormErrors = function (yupError) {
-            const normalized = normalizeYupError(yupError);
-            return originalYupToFormErrors.call(this, normalized);
-          };
+      formikModule.yupToFormErrors = function (yupError) {
+        const normalized = normalizeYupError(yupError);
+        return originalYupToFormErrors.call(this, normalized);
+      };
 
           if (import.meta.env?.DEV || process.env.NODE_ENV === 'development') {
-            console.debug('Successfully patched Formik yupToFormErrors');
+        console.debug('Successfully patched Formik yupToFormErrors');
           }
         } catch (writeError) {
           // Property might be read-only, try using defineProperty
@@ -133,10 +133,10 @@ setTimeout(async () => {
     if (import.meta.env?.DEV || process.env.NODE_ENV === 'development') {
       // Only log if it's not a read-only property error
       if (!error.message || !error.message.includes('read-only')) {
-        console.debug(
-          'Could not patch Formik yupToFormErrors (this is usually fine):',
-          error.message
-        );
+      console.debug(
+        'Could not patch Formik yupToFormErrors (this is usually fine):',
+        error.message
+      );
       }
     }
   }

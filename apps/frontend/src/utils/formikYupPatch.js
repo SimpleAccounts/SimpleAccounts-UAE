@@ -95,10 +95,10 @@ async function patchFormikYupToFormErrors() {
       // If property exists and is writable, patch it
       if (!descriptor || descriptor.writable !== false) {
         try {
-          formikModule.yupToFormErrors = function (yupError) {
-            const normalized = normalizeYupError(yupError);
-            return originalYupToFormErrors.call(this, normalized);
-          };
+      formikModule.yupToFormErrors = function (yupError) {
+        const normalized = normalizeYupError(yupError);
+        return originalYupToFormErrors.call(this, normalized);
+      };
         } catch (writeError) {
           // Property might be read-only, try using defineProperty
           try {

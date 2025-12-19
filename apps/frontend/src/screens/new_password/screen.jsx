@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -15,7 +15,8 @@ import {
 	Row,
 } from 'reactstrap';
 import { api } from 'utils';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import { Message } from 'components';
 import PasswordChecklist from 'react-password-checklist';
@@ -87,17 +88,24 @@ const NewPassword = ({ history, location }) => {
 		try {
 			const res = await api(requestData);
 			if (res.status === 200) {
-				setAlert(
-					<Message
-						type="success"
-						content="Password Created Successfully."
-					/>
-				);
+				toast.success('Password Created Successfully.', {
+					position: 'top-right',
+					autoClose: 3000,
+				});
 				setTimeout(() => {
 					history.push('/login');
 				}, 1500);
 			}
 		} catch (err) {
+			const errorMessage = err?.response?.data?.message || 
+				'Email Verification Link Is Expired. Please enter your email address and we\'ll send another verification link.';
+			
+			toast.error(errorMessage, {
+				position: 'top-right',
+				autoClose: 5000,
+			});
+			
+			// Also show alert with link for better UX
 			setAlert(
 				<Message
 					type="danger"
@@ -110,14 +118,22 @@ const NewPassword = ({ history, location }) => {
 
 	return (
 		<div className="reset-password-screen">
+			<ToastContainer
+				autoClose={5000}
+				closeOnClick
+				draggable
+				position="top-right"
+			/>
 			<div className="animated fadeIn">
 				<div className="app flex-row align-items-center">
 					<Container>
-						<Row className="justify-content-center">
-							<Col md="5">
-								{alert}
-							</Col>
-						</Row>
+						{alert && (
+							<Row className="justify-content-center mb-3">
+								<Col md="8">
+									{alert}
+								</Col>
+							</Row>
+						)}
 						<Row className="justify-content-center">
 							<Col md="5">
 								<Card>
@@ -138,26 +154,34 @@ const NewPassword = ({ history, location }) => {
 																Password
 															</Label>
 															<div>
-																<Input
-																	onPaste={(e) => {
-																		e.preventDefault();
-																		return false;
-																	}}
-																	onCopy={(e) => {
-																		e.preventDefault();
-																		return false;
-																	}}
-																	type={isPasswordShown ? 'text' : 'password'}
-																	autoComplete="off"
-																	id="password"
+																<Controller
 																	name="password"
-																	placeholder=" Enter Password"
-																	{...form.register('password')}
-																	onChange={(e) => {
-																		form.setValue('password', e.target.value);
-																		handlePasswordChange(e);
-																	}}
-																	invalid={!!form.formState.errors.password}
+																	control={form.control}
+																	render={({ field, fieldState }) => (
+																		<Input
+																			onPaste={(e) => {
+																				e.preventDefault();
+																				return false;
+																			}}
+																			onCopy={(e) => {
+																				e.preventDefault();
+																				return false;
+																			}}
+																			type={isPasswordShown ? 'text' : 'password'}
+																			autoComplete="off"
+																			id="password"
+																			name="password"
+																			placeholder=" Enter Password"
+																			{...field}
+																			onChange={(e) => {
+																				field.onChange(e.target.value);
+																				handlePasswordChange(e);
+																				// Trigger validation on confirmPassword when password changes
+																				form.trigger('confirmPassword');
+																			}}
+																			invalid={!!fieldState.error}
+																		/>
+																	)}
 																/>
 																<i
 																	className={`fa ${isPasswordShown ? 'fa-eye' : 'fa-eye-slash'} password-icon fa-lg`}
@@ -188,22 +212,32 @@ const NewPassword = ({ history, location }) => {
 																<span className="text-danger">* </span>
 																Confirm Password
 															</Label>
-															<Input
-																onPaste={(e) => {
-																	e.preventDefault();
-																	return false;
-																}}
-																onCopy={(e) => {
-																	e.preventDefault();
-																	return false;
-																}}
-																type="password"
-																id="confirmPassword"
+															<Controller
 																name="confirmPassword"
-																value={form.watch('confirmPassword')}
-																placeholder="Confirm Password"
-																{...form.register('confirmPassword')}
-																invalid={!!form.formState.errors.confirmPassword}
+																control={form.control}
+																render={({ field, fieldState }) => (
+																	<Input
+																		onPaste={(e) => {
+																			e.preventDefault();
+																			return false;
+																		}}
+																		onCopy={(e) => {
+																			e.preventDefault();
+																			return false;
+																		}}
+																		type="password"
+																		id="confirmPassword"
+																		name="confirmPassword"
+																		placeholder="Confirm Password"
+																		{...field}
+																		onChange={(e) => {
+																			field.onChange(e.target.value);
+																			// Trigger validation on password field when confirmPassword changes
+																			form.trigger('password');
+																		}}
+																		invalid={!!fieldState.error}
+																	/>
+																)}
 															/>
 															{form.formState.errors.confirmPassword && (
 																<div className="invalid-feedback d-block">

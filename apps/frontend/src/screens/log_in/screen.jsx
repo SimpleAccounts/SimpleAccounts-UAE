@@ -292,32 +292,6 @@ const LogIn = ({ authActions, commonActions, history, version }) => {
 															</Button>
 														</Col>
 													</Row>
-													{/* Register button - ALWAYS visible */}
-													<Row>
-														<Col className="mt-3">
-															<p className="r-btn">
-																Don't have an account?{' '}
-																<span
-																	onClick={(e) => {
-																		e.preventDefault();
-																		e.stopPropagation();
-																		history.push('/register');
-																	}}
-																	style={{ cursor: 'pointer' }}
-																	role="button"
-																	tabIndex={0}
-																	onKeyDown={(e) => {
-																		if (e.key === 'Enter' || e.key === ' ') {
-																			e.preventDefault();
-																			history.push('/register');
-																		}
-																	}}
-																>
-																	Register Here
-																</span>
-															</p>
-														</Col>
-													</Row>
 												</Form>
 											</div>
 										</CardBody>

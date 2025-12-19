@@ -142,7 +142,7 @@ class AdminLayout extends React.Component {
     }
     
     // Only proceed if user is authenticated
-    this.props.authActions
+      this.props.authActions
         .checkAuthStatus()
         .then(async (action) => {
           // Redux Toolkit thunks return action objects, check for fulfilled

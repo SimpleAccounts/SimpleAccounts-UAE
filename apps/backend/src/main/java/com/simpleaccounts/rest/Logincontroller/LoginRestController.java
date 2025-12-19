@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,6 +70,7 @@ public class LoginRestController {
 	}
 
 	@LogRequest
+	@Transactional(rollbackFor = Exception.class)
 	@PostMapping(value = "/resetPassword")
 	public ResponseEntity<Object> resetPassword(@RequestBody ResetPasswordModel resetPasswordModel) {
 		try{
@@ -79,9 +81,14 @@ public class LoginRestController {
 				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
 			User user = userList.get(0);
+			// Reload user from database to ensure all fields are properly loaded
+			User reloadedUser = userService.findByPK(user.getUserId());
+			if (reloadedUser == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
 			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			String encodedPassword = passwordEncoder.encode(resetPasswordModel.getPassword());
-			List<PasswordHistory> passwordHistoryList = passwordHistoryRepository.findPasswordHistoriesByUser(user);
+			List<PasswordHistory> passwordHistoryList = passwordHistoryRepository.findPasswordHistoriesByUser(reloadedUser);
 			if (passwordHistoryList!=null){
 				for (PasswordHistory passwordHistory:passwordHistoryList){
 					boolean passwordExist = passwordEncoder.matches(resetPasswordModel.getPassword(), passwordHistory.getPassword());
@@ -93,12 +100,12 @@ public class LoginRestController {
 					}
 				}
 			}
-			user.setPassword(encodedPassword);
-			user.setForgotPasswordToken(null);
-			user.setForgotPasswordTokenExpiryDate(null);
-				userService.persist(user);
+			reloadedUser.setPassword(encodedPassword);
+			reloadedUser.setForgotPasswordToken(null);
+			reloadedUser.setForgotPasswordTokenExpiryDate(null);
+				userService.update(reloadedUser, reloadedUser.getUserId());
 				//maintain user credential and password history
-				message = userRestHelper.saveUserCredential(user, encodedPassword);
+				message = userRestHelper.saveUserCredential(reloadedUser, encodedPassword);
 				return new ResponseEntity<>(message,HttpStatus.OK);
 			} catch (Exception e) {
 			SimpleAccountsMessage message= null;

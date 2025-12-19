@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -180,7 +180,7 @@ const Register = ({
 
 	const form = useForm({
 		resolver: zodResolver(registerSchema),
-		mode: 'onChange', // Validate on change for better feedback
+		mode: 'onBlur', // Validate on blur for better UX
 		defaultValues: {
 			companyName: '',
 			currencyCode: 150,
@@ -277,6 +277,9 @@ const Register = ({
 			firstName: safeData.firstName,
 			lastName: safeData.lastName
 		});
+
+		// Note: Email duplicate check will be handled by backend response
+		// Backend returns "Company Already Exist" if email/company exists
 
 		setLoading(true);
 		setLoadingMsg('Registering Company,');
@@ -459,11 +462,30 @@ const Register = ({
 	};
 
 	// Handle phone number validation
-	const handlePhoneChange = (value) => {
+	const handlePhoneChange = (value, country, e, formattedValue, isValid) => {
 		form.setValue('phoneNumber', value);
-		if (value.length !== 12) {
-			setCheckphoneNumberParam(true);
+		// PhoneInput provides isValid parameter - use it for validation
+		// For UAE (+971), valid numbers should be 9 digits after country code
+		// PhoneInput stores numbers as: 971XXXXXXXXX (12 digits total for UAE)
+		if (value && value.length > 0) {
+			// Remove country code to check local number length
+			const localNumber = value.startsWith('971') ? value.substring(3) : value;
+			// UAE local numbers should be exactly 9 digits
+			if (localNumber.length === 9 && /^[0-9]+$/.test(localNumber)) {
+				// Valid UAE number
+				setCheckphoneNumberParam(false);
+			} else if (value.length === 12 && value.startsWith('971') && /^[0-9]+$/.test(value)) {
+				// Full number with country code (971XXXXXXXXX = 12 digits) - also valid
+				setCheckphoneNumberParam(false);
+			} else if (value.length < 9) {
+				// Number too short - only show error if user has typed something
+				setCheckphoneNumberParam(value.length > 0);
+			} else {
+				// Number format might be invalid - clear error and let PhoneInput handle it
+				setCheckphoneNumberParam(false);
+			}
 		} else {
+			// Empty value - no error
 			setCheckphoneNumberParam(false);
 		}
 	};
@@ -579,16 +601,20 @@ const Register = ({
 																		<Label htmlFor="companyName">
 																			<span className="text-danger">* </span>{strings.CompanyName}
 																		</Label>
-																		<Input
-																			type="text"
-																			maxLength="100"
-																			id="companyName"
+																		<Controller
 																			name="companyName"
-																			placeholder="Enter Company Name"
-																			{...form.register('companyName', {
-																				onBlur: () => form.trigger('companyName')
-																			})}
-																			invalid={!!form.formState.errors.companyName}
+																			control={form.control}
+																			render={({ field, fieldState }) => (
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="companyName"
+																					name="companyName"
+																					placeholder="Enter Company Name"
+																					{...field}
+																					invalid={!!fieldState.error}
+																				/>
+																			)}
 																		/>
 																		{form.formState.errors.companyName && (
 																			<div className="invalid-feedback d-block">
@@ -672,18 +698,20 @@ const Register = ({
 																			value={
 																				company_type_list &&
 																				company_type_list.find(
-																					(option) =>
-																						option.value ===
-																						+form.watch('companyTypeCode'),
+																					(option) => {
+																						const watchedValue = form.watch('companyTypeCode');
+																						return option.value === +watchedValue || String(option.value) === String(watchedValue);
+																					}
 																				)
 																			}
 																			onChange={(option) => {
 																				if (option && option.value) {
-																					form.setValue('companyTypeCode', option.value);
+																					form.setValue('companyTypeCode', String(option.value), { shouldValidate: true, shouldTouch: true });
 																				} else {
-																					form.setValue('companyTypeCode', '');
+																					form.setValue('companyTypeCode', '', { shouldValidate: true, shouldTouch: true });
 																				}
 																			}}
+																			onBlur={() => form.trigger('companyTypeCode')}
 																			placeholder={strings.Select + strings.CompanyBusinessType}
 																			id="companyTypeCode"
 																			name="companyTypeCode"
@@ -707,16 +735,20 @@ const Register = ({
 																		<Label htmlFor="companyAddress1">
 																			<span className="text-danger">* </span>{strings.CompanyAddressLine1}
 																		</Label>
-																		<Input
-																			type="text"
-																			maxLength="250"
-																			id="companyAddress1"
+																		<Controller
 																			name="companyAddress1"
-																			placeholder="Enter Company Address"
-																			{...form.register('companyAddress1', {
-																				onBlur: () => form.trigger('companyAddress1')
-																			})}
-																			invalid={!!form.formState.errors.companyAddress1}
+																			control={form.control}
+																			render={({ field, fieldState }) => (
+																				<Input
+																					type="text"
+																					maxLength="250"
+																					id="companyAddress1"
+																					name="companyAddress1"
+																					placeholder="Enter Company Address"
+																					{...field}
+																					invalid={!!fieldState.error}
+																				/>
+																			)}
 																		/>
 																		{form.formState.errors.companyAddress1 && (
 																			<div className="invalid-feedback d-block">
@@ -859,7 +891,11 @@ const Register = ({
 																					}
 																				)
 																			}
-																			onChange={handleStateChange}
+																			onChange={(option) => {
+																				handleStateChange(option);
+																				form.trigger('stateId');
+																			}}
+																			onBlur={() => form.trigger('stateId')}
 																			id="stateId"
 																			name="stateId"
 																			placeholder="Select Emirate"
@@ -893,7 +929,14 @@ const Register = ({
 																				value={form.watch('phoneNumber')}
 																				placeholder={strings.Enter + strings.MobileNumber}
 																				onChange={handlePhoneChange}
-																				isValid
+																				isValid={(value, country) => {
+																					// UAE phone validation: 9 digits after country code
+																					if (country && country.dialCode === '971') {
+																						const localNumber = value.replace(/^971/, '');
+																						return localNumber.length === 9 && /^[0-9]+$/.test(localNumber);
+																					}
+																					return true; // Let PhoneInput handle other countries
+																				}}
 																			/>
 																		</div>
 																		{(form.formState.errors.phoneNumber || checkphoneNumberParam) && (
@@ -1075,21 +1118,27 @@ const Register = ({
 																		<Label htmlFor="firstName">
 																			<span className="text-danger">* </span>{strings.FirstName}
 																		</Label>
-																		<Input
-																			type="text"
-																			maxLength="100"
-																			id="firstName"
+																		<Controller
 																			name="firstName"
-																			placeholder="Enter First Name"
-																			{...form.register('firstName')}
-																			onChange={(e) => {
-																				const value = e.target.value;
-																				if (value === '' || regExAlpha.test(value)) {
-																					const upperValue = upperFirst(value);
-																					form.setValue('firstName', upperValue, { shouldValidate: true, shouldTouch: true });
-																				}
-																			}}
-																			invalid={!!form.formState.errors.firstName}
+																			control={form.control}
+																			render={({ field, fieldState }) => (
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="firstName"
+																					name="firstName"
+																					placeholder="Enter First Name"
+																					{...field}
+																					onChange={(e) => {
+																						const value = e.target.value;
+																						if (value === '' || regExAlpha.test(value)) {
+																							const upperValue = upperFirst(value);
+																							field.onChange(upperValue);
+																						}
+																					}}
+																					invalid={!!fieldState.error}
+																				/>
+																			)}
 																		/>
 																		{form.formState.errors.firstName && (
 																			<div className="invalid-feedback d-block">
@@ -1103,18 +1152,27 @@ const Register = ({
 																		<Label htmlFor="lastName">
 																			<span className="text-danger">* </span>{strings.LastName}
 																		</Label>
-																		<Input
-																			type="text"
-																			maxLength="100"
-																			id="lastName"
+																		<Controller
 																			name="lastName"
-																			placeholder="Enter Last Name"
-																			{...form.register('lastName')}
-																			onChange={(e) => {
-																				form.setValue('lastName', e.target.value, { shouldValidate: true });
-																				handleNameChange('lastName', e);
-																			}}
-																			invalid={!!form.formState.errors.lastName}
+																			control={form.control}
+																			render={({ field, fieldState }) => (
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="lastName"
+																					name="lastName"
+																					placeholder="Enter Last Name"
+																					{...field}
+																					onChange={(e) => {
+																						const value = e.target.value;
+																						if (value === '' || regExAlpha.test(value)) {
+																							const upperValue = upperFirst(value);
+																							field.onChange(upperValue);
+																						}
+																					}}
+																					invalid={!!fieldState.error}
+																				/>
+																			)}
 																		/>
 																		{form.formState.errors.lastName && (
 																			<div className="invalid-feedback d-block">
@@ -1128,17 +1186,23 @@ const Register = ({
 																		<Label htmlFor="email">
 																			<span className="text-danger">* </span>{strings.EmailAddress}
 																		</Label>
-																		<Input
-																			type="email"
-																			maxLength="80"
-																			id="email"
+																		<Controller
 																			name="email"
-																			autoComplete="email"
-																			placeholder="Enter Email Address"
-																			{...form.register('email', {
-																				onBlur: () => form.trigger('email')
-																			})}
-																			invalid={!!form.formState.errors.email}
+																			control={form.control}
+																			render={({ field, fieldState }) => (
+																				<Input
+																					type="email"
+																					maxLength="80"
+																					id="email"
+																					name="email"
+																					autoComplete="username"
+																					data-lpignore="true"
+																					data-form-type="other"
+																					placeholder="Enter Email Address"
+																					{...field}
+																					invalid={!!fieldState.error}
+																				/>
+																			)}
 																		/>
 																		{form.formState.errors.email && (
 																			<div className="invalid-feedback d-block">
@@ -1156,28 +1220,34 @@ const Register = ({
 																			Password
 																		</Label>
 																		<div>
-																			<Input
-																				onPaste={(e) => {
-																					e.preventDefault();
-																					return false;
-																				}}
-																				onCopy={(e) => {
-																					e.preventDefault();
-																					return false;
-																				}}
-																				type={isPasswordShown ? 'text' : 'password'}
-																				autoComplete="off"
-																				id="password"
+																			<Controller
 																				name="password"
-																				placeholder=" Enter Password"
-																				{...form.register('password')}
-																				onChange={(e) => {
-																					form.setValue('password', e.target.value, { shouldValidate: true });
-																					handlePasswordChange(e);
-																					// Trigger validation on confirmPassword when password changes
-																					form.trigger('confirmPassword');
-																				}}
-																				invalid={!!form.formState.errors.password}
+																				control={form.control}
+																				render={({ field, fieldState }) => (
+																					<Input
+																						onPaste={(e) => {
+																							e.preventDefault();
+																							return false;
+																						}}
+																						onCopy={(e) => {
+																							e.preventDefault();
+																							return false;
+																						}}
+																						type={isPasswordShown ? 'text' : 'password'}
+																						autoComplete="off"
+																						id="password"
+																						name="password"
+																						placeholder=" Enter Password"
+																						{...field}
+																						onChange={(e) => {
+																							field.onChange(e.target.value);
+																							handlePasswordChange(e);
+																							// Trigger validation on confirmPassword when password changes
+																							form.trigger('confirmPassword');
+																						}}
+																						invalid={!!fieldState.error}
+																					/>
+																				)}
 																			/>
 																			<i
 																				className={`fa ${isPasswordShown ? "fa-eye" : "fa-eye-slash"} password-icon fa-lg`}
@@ -1208,24 +1278,27 @@ const Register = ({
 																			<span className="text-danger">* </span>
 																			Confirm Password
 																		</Label>
-																		<Input
-																			onPaste={(e) => {
-																				e.preventDefault();
-																				return false;
-																			}}
-																			onCopy={(e) => {
-																				e.preventDefault();
-																				return false;
-																			}}
-																			type="password"
-																			id="confirmPassword"
+																		<Controller
 																			name="confirmPassword"
-																			placeholder="Confirm Password"
-																			{...form.register('confirmPassword')}
-																			onChange={(e) => {
-																				form.setValue('confirmPassword', e.target.value, { shouldValidate: true });
-																			}}
-																			invalid={!!form.formState.errors.confirmPassword}
+																			control={form.control}
+																			render={({ field, fieldState }) => (
+																				<Input
+																					onPaste={(e) => {
+																						e.preventDefault();
+																						return false;
+																					}}
+																					onCopy={(e) => {
+																						e.preventDefault();
+																						return false;
+																					}}
+																					type="password"
+																					id="confirmPassword"
+																					name="confirmPassword"
+																					placeholder="Confirm Password"
+																					{...field}
+																					invalid={!!fieldState.error}
+																				/>
+																			)}
 																		/>
 																		{form.formState.errors.confirmPassword && (
 																			<div className="invalid-feedback d-block">

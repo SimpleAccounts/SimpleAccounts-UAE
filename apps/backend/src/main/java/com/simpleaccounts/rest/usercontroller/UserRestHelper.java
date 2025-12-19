@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,9 @@ public class UserRestHelper {
 
 	private final UserCredentialRepository userCredentialRepository;
 	private final EmployeeUserRelationRepository employeeUserRelationRepository;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	public List<UserModel> getModelList(Object userList) {
 		List<UserModel> userModelList = new ArrayList<>();
@@ -149,29 +154,47 @@ public class UserRestHelper {
 		return null;
 	}
 	public SimpleAccountsMessage saveUserCredential(User user, String encodedPassword) {
-		UserCredential existingUser = userCredentialRepository.findUserCredentialByUser(user);
+		// Ensure user is managed and has all required fields
+		User managedUser = userService.findByPK(user.getUserId());
+		if (managedUser == null) {
+			logger.error("User not found for userId: {}", user.getUserId());
+			throw new RuntimeException("User not found for userId: " + user.getUserId());
+		}
+		// Verify userEmail is not null
+		if (managedUser.getUserEmail() == null || managedUser.getUserEmail().trim().isEmpty()) {
+			logger.error("User email is null for userId: {}", user.getUserId());
+			throw new RuntimeException("User email is required but was null for userId: " + user.getUserId());
+		}
+		
+		UserCredential existingUser = userCredentialRepository.findUserCredentialByUser(managedUser);
 		if (existingUser!=null){
+			// Try to save password history, but don't fail the entire operation if it fails
+			try {
+				savePasswordHistory(managedUser.getUserId(), existingUser.getPassword(), existingUser.getCreatedBy(), existingUser.getLastUpdatedBy(), existingUser.getIsActive());
+			} catch (Exception e) {
+				logger.warn("Failed to save password history for userId: {}. Password reset will continue, but password history will not be updated. Error: {}", 
+					managedUser.getUserId(), e.getMessage());
+				// Continue with the password reset even if password history fails
+			}
 
-			savePasswordHistory(existingUser);
-
-			existingUser.setCreatedBy(user.getUserId());
+			existingUser.setCreatedBy(managedUser.getUserId());
 			existingUser.setCreatedDate(LocalDateTime.now());
-			existingUser.setLastUpdatedBy(user.getUserId());
+			existingUser.setLastUpdatedBy(managedUser.getUserId());
 			existingUser.setLastUpdateDate(LocalDateTime.now());
-			existingUser.setUser(user);
-			existingUser.setIsActive(user.getIsActive());
+			existingUser.setUser(managedUser);
+			existingUser.setIsActive(managedUser.getIsActive());
 			existingUser.setPassword(encodedPassword);
 			userCredentialRepository.save(existingUser);
 		}
 		else {
 			//create new user credential
 			UserCredential userCredential = new UserCredential();
-			userCredential.setCreatedBy(user.getUserId());
+			userCredential.setCreatedBy(managedUser.getUserId());
 			userCredential.setCreatedDate(LocalDateTime.now());
-			userCredential.setLastUpdatedBy(user.getUserId());
+			userCredential.setLastUpdatedBy(managedUser.getUserId());
 			userCredential.setLastUpdateDate(LocalDateTime.now());
-			userCredential.setUser(user);
-			userCredential.setIsActive(user.getIsActive());
+			userCredential.setUser(managedUser);
+			userCredential.setIsActive(managedUser.getIsActive());
 			userCredential.setPassword(encodedPassword);
 			userCredentialRepository.save(userCredential);
 		}
@@ -179,20 +202,30 @@ public class UserRestHelper {
 				MessageUtil.getMessage("resetPassword.created.successful.msg.0088"), false);
 		return message;
 	}
-	private void savePasswordHistory(UserCredential existingUser) {
-		List<PasswordHistory> passwordHistoryList = passwordHistoryRepository.findPasswordHistoriesByUser(existingUser.getUser());
+	private void savePasswordHistory(Integer userId, String password, Integer createdBy, Integer lastUpdatedBy, Boolean isActive) {
+		// First verify the user exists and has a valid email
+		User user = userService.findByPK(userId);
+		if (user == null) {
+			logger.error("User not found for userId: {}", userId);
+			throw new RuntimeException("User not found for userId: " + userId);
+		}
+		// Verify userEmail is not null
+		if (user.getUserEmail() == null || user.getUserEmail().trim().isEmpty()) {
+			logger.error("User email is null for userId: {}, cannot save password history. User details: firstName={}, lastName={}", 
+				userId, user.getFirstName(), user.getLastName());
+			throw new RuntimeException("User email is required but was null for userId: " + userId);
+		}
+		
+		// Use custom query with userId instead of User entity to avoid entity detachment issues
+		List<PasswordHistory> passwordHistoryList = passwordHistoryRepository.findPasswordHistoriesByUserId(userId);
 		//this will delete the very first stored password in Password History
 		if (passwordHistoryList!=null && passwordHistoryList.size()>9){
 			passwordHistoryRepository.delete(passwordHistoryList.get(0));
 		}
-		PasswordHistory passwordHistory = new PasswordHistory();
-		passwordHistory.setCreatedBy(existingUser.getCreatedBy());
-		passwordHistory.setCreatedDate(LocalDateTime.now());
-		passwordHistory.setLastUpdatedBy(existingUser.getLastUpdatedBy());
-		passwordHistory.setLastUpdateDate(LocalDateTime.now());
-		passwordHistory.setUser(existingUser.getUser());
-		passwordHistory.setIsActive(existingUser.getIsActive());
-		passwordHistory.setPassword(existingUser.getPassword());
-		passwordHistoryRepository.save(passwordHistory);
+		
+		// Use native SQL insert to avoid loading/setting the User entity, which causes Hibernate to try to persist it
+		// This directly inserts the USER_ID foreign key without needing the User entity
+		LocalDateTime now = LocalDateTime.now();
+		passwordHistoryRepository.insertPasswordHistory(createdBy, now, lastUpdatedBy, now, userId, password, isActive);
 	}
 }

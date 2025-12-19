@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -25,7 +25,7 @@ import logo from 'assets/images/brand/logo.png';
 
 // Zod validation schema
 const resetPasswordSchema = z.object({
-	username: z.string().trim().min(1, 'Email id is required').email('Invalid email address'),
+	username: z.string().min(1, 'Email id is required').email('Invalid email address'),
 });
 
 const ResetPassword = ({ history, location }) => {
@@ -35,7 +35,7 @@ const ResetPassword = ({ history, location }) => {
 
 	const form = useForm({
 		resolver: zodResolver(resetPasswordSchema),
-		mode: 'onBlur', // Validate on blur for better UX
+		mode: 'onChange', // Validate on change for immediate feedback
 		defaultValues: {
 			username: '',
 		},
@@ -119,13 +119,24 @@ const ResetPassword = ({ history, location }) => {
 																	<span className="text-danger">* </span>
 																	<b>Email Address</b>
 																</Label>
-																<Input
-																	type="email"
-																	id="username"
+																<Controller
 																	name="username"
-																	placeholder="Please Enter Your Email Address"
-																	{...form.register('username')}
-																	invalid={!!form.formState.errors.username}
+																	control={form.control}
+																	render={({ field, fieldState }) => (
+																		<Input
+																			type="email"
+																			id="username"
+																			name="username"
+																			placeholder="Please Enter Your Email Address"
+																			{...field}
+																			onChange={(e) => {
+																				// Trim whitespace on change
+																				const trimmedValue = e.target.value.trim();
+																				field.onChange(trimmedValue);
+																			}}
+																			invalid={!!fieldState.error}
+																		/>
+																	)}
 																/>
 																{form.formState.errors.username && (
 																	<div className="invalid-feedback d-block">

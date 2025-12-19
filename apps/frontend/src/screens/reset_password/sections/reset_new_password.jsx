@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -182,25 +182,35 @@ const ResetNewPassword = ({ token, history }) => {
 															<Label htmlFor="confirmPassword">
 																<span className="text-danger">* </span> Confirm Password
 															</Label>
-															<Input
-																onPaste={(e) => {
-																	e.preventDefault();
-																	return false;
-																}}
-																onCopy={(e) => {
-																	e.preventDefault();
-																	return false;
-																}}
-																minLength={8}
-																maxLength={255}
-																autoComplete="off"
-																type="password"
-																id="confirmPassword"
+															<Controller
 																name="confirmPassword"
-																value={form.watch('confirmPassword')}
-																placeholder="Confirm Password"
-																{...form.register('confirmPassword')}
-																invalid={!!form.formState.errors.confirmPassword}
+																control={form.control}
+																render={({ field, fieldState }) => (
+																	<Input
+																		onPaste={(e) => {
+																			e.preventDefault();
+																			return false;
+																		}}
+																		onCopy={(e) => {
+																			e.preventDefault();
+																			return false;
+																		}}
+																		minLength={8}
+																		maxLength={255}
+																		autoComplete="off"
+																		type="password"
+																		id="confirmPassword"
+																		name="confirmPassword"
+																		placeholder="Confirm Password"
+																		{...field}
+																		onChange={(e) => {
+																			field.onChange(e.target.value);
+																			// Trigger validation on password field when confirmPassword changes
+																			form.trigger('password');
+																		}}
+																		invalid={!!fieldState.error}
+																	/>
+																)}
 															/>
 															{form.formState.errors.confirmPassword && (
 																<div className="invalid-feedback d-block">
