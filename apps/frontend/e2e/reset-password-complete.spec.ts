@@ -1,5 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
-import { execSync } from 'child_process';
+import { execSync, execFileSync } from 'child_process';
 import * as path from 'path';
 
 const BASE_URL = process.env.E2E_BASE_URL || 'http://localhost:3000';
