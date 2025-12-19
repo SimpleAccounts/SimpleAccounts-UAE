@@ -70,7 +70,7 @@ const registerSchema = z
 			z.object({ value: z.union([z.string(), z.number()]), label: z.string().optional() })
 		]).refine((val) => {
 			if (!val) return false;
-			if (typeof val === 'object') {
+			if (typeof val === 'object' && val !== null) {
 				return val.value !== undefined && val.value !== null && val.value !== '';
 			}
 			return typeof val === 'number' || val !== '';
@@ -563,7 +563,7 @@ const Register = ({
 									<Col lg={10} className="mx-auto">
 										<CardGroup>
 											<Card className="p-4">
-												{loading ? (
+												{!!loading ? (
 													<Row>
 														<Col lg={12}>
 															<Loader />
@@ -1315,7 +1315,7 @@ const Register = ({
 																		type="submit"
 																		name="submit"
 																		color="primary"
-																		disabled={loading}
+																		disabled={!!loading}
 																		className="btn-square mr-3 mt-3"
 																		style={{
 																			width: '200px',
@@ -1324,7 +1324,7 @@ const Register = ({
 																		title={!form.formState.isValid ? `Please fill all required fields. Errors: ${Object.keys(form.formState.errors).length}` : ''}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		{loading ? 'Creating...' : 'Register'}
+																		{!!loading ? 'Creating...' : 'Register'}
 																	</Button>
 																</Col>
 															</Row>
