@@ -70,10 +70,10 @@ const registerSchema = z
 			z.object({ value: z.union([z.string(), z.number()]), label: z.string().optional() })
 		]).refine((val) => {
 			if (!val) return false;
-			if (typeof val === 'object' && val !== null) {
+			if (typeof val === 'object') {
 				return val.value !== undefined && val.value !== null && val.value !== '';
 			}
-			return val !== '';
+			return typeof val === 'number' || val !== '';
 		}, 'Emirate is required'),
 		phoneNumber: z.string().min(1, 'Mobile number is required'),
 		timeZone: z.string().min(1, 'Time zone is required'),
@@ -543,7 +543,7 @@ const Register = ({
 		}
 	};
 
-	if (loading === true) {
+	if (loading) {
 		return <Loader loadingMsg={loadingMsg} NextloadingMsg={NextloadingMsg} />;
 	}
 

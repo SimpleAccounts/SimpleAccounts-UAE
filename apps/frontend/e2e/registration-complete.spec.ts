@@ -21,13 +21,6 @@ async function clearDatabase() {
 	}
 }
 
-// Helper function to wait for form fields to be visible
-async function waitForFormFields(page: Page, fieldIds: string[]) {
-	for (const fieldId of fieldIds) {
-		await expect(page.locator(`#${fieldId}`)).toBeVisible({ timeout: 10_000 });
-	}
-}
-
 // Helper function to fill registration form
 async function fillRegistrationForm(page: Page, data: {
 	companyName?: string;
@@ -51,7 +44,6 @@ async function fillRegistrationForm(page: Page, data: {
 		companyAddress1 = '123 Test Street',
 		phoneNumber = '971501234567',
 		companyTypeCode,
-		stateId = '3798',
 	} = data;
 
 	// Wait for form to be ready - wait for the page to be fully loaded
@@ -64,6 +56,14 @@ async function fillRegistrationForm(page: Page, data: {
 
 	// Fill company name
 	await page.locator('#companyName').fill(companyName);
+	
+	// Use companyTypeCode if provided (for custom test scenarios)
+	if (companyTypeCode) {
+		const companyTypeInput = page.locator('#companyTypeCode').locator('input').first();
+		await companyTypeInput.fill(companyTypeCode);
+		await companyTypeInput.press('Enter');
+		await page.waitForTimeout(500);
+	}
 
 	// Fill company address
 	await page.locator('#companyAddress1').fill(companyAddress1);

@@ -418,7 +418,7 @@ test.describe('Reset Password Complete Flow', () => {
 		}
 
 		// If API succeeded or we're redirected, that's success
-		const overallSuccess = apiSuccess || hasSuccessToast || hasSuccessMessage || redirectedToLogin;
+		const overallSuccess = redirectedToLogin || hasSuccessToast || hasSuccessMessage;
 		expect(overallSuccess).toBeTruthy();
 
 		// Verify we can login with new password (only if API succeeded or redirected)
