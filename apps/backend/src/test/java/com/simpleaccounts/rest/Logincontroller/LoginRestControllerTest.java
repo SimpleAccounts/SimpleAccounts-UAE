@@ -139,6 +139,8 @@ class LoginRestControllerTest {
 
         when(userJpaRepository.findUsersByForgotPasswordToken("valid-token"))
                 .thenReturn(Collections.singletonList(testUser));
+        when(userService.findByPK(testUser.getUserId()))
+                .thenReturn(testUser);
         when(passwordHistoryRepository.findPasswordHistoriesByUser(any()))
                 .thenReturn(Collections.emptyList());
         when(userRestHelper.saveUserCredential(any(), any())).thenReturn(null);
@@ -199,6 +201,8 @@ class LoginRestControllerTest {
 
         when(userJpaRepository.findUsersByForgotPasswordToken("valid-token"))
                 .thenReturn(Collections.singletonList(testUser));
+        when(userService.findByPK(testUser.getUserId()))
+                .thenReturn(testUser);
         when(passwordHistoryRepository.findPasswordHistoriesByUser(any()))
                 .thenReturn(Collections.singletonList(passwordHistory));
 
