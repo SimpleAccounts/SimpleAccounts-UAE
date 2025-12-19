@@ -14,6 +14,21 @@ import { server } from './msw/server';
 // eslint-disable-next-line no-undef
 globalThis.jest = vi;
 
+// Set up globalThis.import.meta.env for env.js compatibility
+// env.js checks globalThis.import.meta.env first for Jest compatibility
+// eslint-disable-next-line no-undef
+globalThis.import = {
+  meta: {
+    env: {
+      MODE: 'test',
+      DEV: true,
+      PROD: false,
+      SSR: false,
+      BASE_URL: '/',
+    },
+  },
+};
+
 // Polyfills for Node environment
 if (!global.TextEncoder) {
   global.TextEncoder = TextEncoder;

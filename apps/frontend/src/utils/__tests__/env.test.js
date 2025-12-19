@@ -1,19 +1,25 @@
 /**
  * Tests for environment variable utilities
  * Verifies that import.meta.env mocking works correctly in Jest
- * 
+ *
  * IMPORTANT: This test verifies that getMetaEnv() is defined and accessible,
  * preventing ReferenceError when importing the module.
  */
 
-import { getEnvMode, isProduction, isDevelopment, getBaseUrl, getEnvVar, getAllEnvVars, env } from '../env';
+import {
+  getEnvMode,
+  isProduction,
+  isDevelopment,
+  getBaseUrl,
+  getEnvVar,
+  getAllEnvVars,
+  env,
+} from '../env';
 
 describe('env utilities - module loading', () => {
-  it('should load without ReferenceError', () => {
+  it('should load without ReferenceError', async () => {
     // This test verifies that getMetaEnv() is defined and the module loads correctly
-    expect(() => {
-      require('../env');
-    }).not.toThrow();
+    await expect(import('../env')).resolves.toBeDefined();
   });
 
   it('should export all expected functions', () => {
@@ -37,15 +43,18 @@ describe('env utilities', () => {
 
     it('should handle missing MODE with fallback', () => {
       // Test the fallback path when MODE is undefined
-      const originalMODE = globalThis.import.meta.env.MODE;
-      delete globalThis.import.meta.env.MODE;
-      
-      // Should fall back to 'development' when MODE is missing
+      // In Vitest, we need to save and fully replace the env object
+      /* eslint-disable no-undef */
+      const originalEnv = globalThis.import.meta.env;
+      globalThis.import.meta.env = { ...originalEnv, MODE: undefined };
+
+      // Should fall back to 'development' when MODE is missing/undefined
       const mode = getEnvMode();
       expect(mode).toBe('development');
-      
+
       // Restore
-      globalThis.import.meta.env.MODE = originalMODE;
+      globalThis.import.meta.env = originalEnv;
+      /* eslint-enable no-undef */
     });
   });
 
@@ -69,15 +78,17 @@ describe('env utilities', () => {
 
     it('should handle missing BASE_URL with fallback', () => {
       // Test the fallback path when BASE_URL is undefined
-      const originalBASE_URL = globalThis.import.meta.env.BASE_URL;
-      delete globalThis.import.meta.env.BASE_URL;
-      
+      /* eslint-disable no-undef */
+      const originalEnv = globalThis.import.meta.env;
+      globalThis.import.meta.env = { ...originalEnv, BASE_URL: undefined };
+
       // Should fall back to '/' when BASE_URL is missing
       const baseUrl = getBaseUrl();
       expect(baseUrl).toBe('/');
-      
+
       // Restore
-      globalThis.import.meta.env.BASE_URL = originalBASE_URL;
+      globalThis.import.meta.env = originalEnv;
+      /* eslint-enable no-undef */
     });
   });
 
@@ -91,23 +102,17 @@ describe('env utilities', () => {
     });
 
     it('should handle VITE_ prefixed variables', () => {
-      // If VITE_TEST_VAR is set in process.env, it should be available
-      const originalEnv = process.env.VITE_TEST_VAR;
-      process.env.VITE_TEST_VAR = 'test-value';
-      
-      // Re-define import.meta.env mock with new variable
-      globalThis.import.meta.env.VITE_TEST_VAR = 'test-value';
-      
+      // In Vitest, we need to replace the entire env object to add new variables
+      /* eslint-disable no-undef */
+      const originalEnv = globalThis.import.meta.env;
+      globalThis.import.meta.env = { ...originalEnv, VITE_TEST_VAR: 'test-value' };
+
       expect(getEnvVar('TEST_VAR', 'default')).toBe('test-value');
       expect(getEnvVar('VITE_TEST_VAR', 'default')).toBe('test-value');
-      
+
       // Restore
-      if (originalEnv !== undefined) {
-        process.env.VITE_TEST_VAR = originalEnv;
-      } else {
-        delete process.env.VITE_TEST_VAR;
-      }
-      delete globalThis.import.meta.env.VITE_TEST_VAR;
+      globalThis.import.meta.env = originalEnv;
+      /* eslint-enable no-undef */
     });
   });
 
@@ -146,21 +151,21 @@ describe('env utilities', () => {
       // (setupTests.js sets it to process.env.NODE_ENV || 'test')
       const expectedMode = process.env.NODE_ENV || 'test';
       expect(env.mode).toBe(expectedMode);
-      
+
       // isProduction should be false when not in production mode
       // isProduction checks if mode === 'production', so it should be false for 'test'
       expect(env.isProduction).toBe(expectedMode === 'production');
-      
+
       // baseUrl should default to '/'
       expect(env.baseUrl).toBe('/');
-      
+
       // DEV is true when NODE_ENV is not 'production'
       const expectedDev = process.env.NODE_ENV !== 'production';
       expect(env.dev).toBe(expectedDev);
-      
+
       // PROD is true only when NODE_ENV is 'production'
       expect(env.prod).toBe(process.env.NODE_ENV === 'production');
-      
+
       // SSR should always be false in browser environment
       expect(env.ssr).toBe(false);
     });

@@ -86,6 +86,6 @@ jobs:
 
       - name: Run frontend unit tests
         working-directory: apps/frontend
-        run: npm test -- --watchAll=false
+        run: npm test
         env:
           CI: true
