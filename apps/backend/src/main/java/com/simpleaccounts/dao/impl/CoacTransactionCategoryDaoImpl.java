@@ -32,7 +32,16 @@ public class CoacTransactionCategoryDaoImpl extends AbstractDao<Integer, CoacTra
 
         TypedQuery<Integer> typedQuery = getEntityManager().createQuery(query, Integer.class);
 
-        Integer id = typedQuery.getSingleResult();
+        Integer id = null;
+        try {
+            id = typedQuery.getSingleResult();
+        } catch (jakarta.persistence.NoResultException e) {
+            // No existing records, start from 0
+            id = 0;
+        }
+        if (id == null) {
+            id = 0;
+        }
 
         String coaquery =  "SELECT c.chartOfAccountCategory.chartOfAccountCategoryId  FROM CoaCoaCategory c  WHERE c.chartOfAccount = :chartOfAccount";
 
@@ -46,11 +55,13 @@ public class CoacTransactionCategoryDaoImpl extends AbstractDao<Integer, CoacTra
 
             for ( Integer coaCategoryId : coaCategoryList ){
                 id = id+1;
-                CoacTransactionCategory coacTransactionCategory = new CoacTransactionCategory();
-                coacTransactionCategory.setChartOfAccountCategory(chartOfAccountCategoryService.findByPK(coaCategoryId));
-                coacTransactionCategory.setTransactionCategory(transactionCategory);
-                persist(coacTransactionCategory);
-
+                var chartOfAccountCategoryEntity = chartOfAccountCategoryService.findByPK(coaCategoryId);
+                if (chartOfAccountCategoryEntity != null) {
+                    CoacTransactionCategory coacTransactionCategory = new CoacTransactionCategory();
+                    coacTransactionCategory.setChartOfAccountCategory(chartOfAccountCategoryEntity);
+                    coacTransactionCategory.setTransactionCategory(transactionCategory);
+                    persist(coacTransactionCategory);
+                }
             }
         }
     }

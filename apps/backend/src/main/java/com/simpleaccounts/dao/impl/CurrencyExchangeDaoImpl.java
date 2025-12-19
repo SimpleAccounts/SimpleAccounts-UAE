@@ -16,12 +16,17 @@ public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConver
 
 	@Override
 	public CurrencyConversion getExchangeRate(Integer currencyCode){
+		// Filter by both currencyCode and currencyCodeConvertedTo to get self-conversion (rate = 1.0)
+		// Also order by createdDate descending to get the most recent one
 		TypedQuery<CurrencyConversion> query = getEntityManager().createQuery(
-				" SELECT cc FROM CurrencyConversion cc WHERE cc.currencyCode.currencyCode=:currencyCode",
+				" SELECT cc FROM CurrencyConversion cc WHERE cc.currencyCode.currencyCode=:currencyCode " +
+				"AND cc.currencyCodeConvertedTo.currencyCode=:currencyCode ORDER BY cc.createdDate DESC",
 				CurrencyConversion.class);
 		query.setParameter("currencyCode", currencyCode);
-		if (query.getResultList() != null && !query.getResultList().isEmpty()) {
-			return query.getSingleResult();
+		query.setMaxResults(1); // Limit to 1 result
+		List<CurrencyConversion> results = query.getResultList();
+		if (results != null && !results.isEmpty()) {
+			return results.get(0);
 		}
 		return null;
 	}

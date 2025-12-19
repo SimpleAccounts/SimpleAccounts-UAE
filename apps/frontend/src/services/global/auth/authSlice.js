@@ -51,6 +51,8 @@ export const register = createAsyncThunk(
   'auth/register',
   async (obj, { rejectWithValue }) => {
     try {
+      // FormData is not serializable for Redux, but we need to send it to API
+      // The thunk will handle FormData correctly for the API call
       const data = {
         method: 'post',
         url: '/rest/company/register',
@@ -58,13 +60,16 @@ export const register = createAsyncThunk(
         // Content-Type will be automatically set by axios interceptor for FormData
       };
       const res = await api(data);
-      return res.data;
+      // Return only serializable data (string response from backend)
+      return typeof res.data === 'string' ? res.data : (res.data?.message || JSON.stringify(res.data));
     } catch (err) {
       // Handle CORS errors and network errors
       if (!err || !err.data) {
-        return rejectWithValue({ message: 'Network error or CORS issue. Please check backend logs.' });
+        return rejectWithValue('Network error or CORS issue. Please check backend logs.');
       }
-      return rejectWithValue(err.data || err.message);
+      // Return serializable error data (string)
+      const errorData = err.data || err.message;
+      return rejectWithValue(typeof errorData === 'string' ? errorData : (errorData?.message || JSON.stringify(errorData)));
     }
   }
 );

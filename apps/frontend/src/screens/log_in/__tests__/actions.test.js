@@ -208,7 +208,7 @@ describe('LogIn Actions', () => {
       expect(actionsDispatched[0].payload).toBe(5);
     });
 
-    it('should handle company count of zero', async () => {
+    it('should handle company count of zero (triggers redirect to register)', async () => {
       const mockGetCompanyCount = () => {
         return (dispatch) => {
           const data = {
@@ -229,10 +229,42 @@ describe('LogIn Actions', () => {
 
       authApi.mockResolvedValue({ status: 200, data: 0 });
 
-      await store.dispatch(mockGetCompanyCount());
+      const result = await store.dispatch(mockGetCompanyCount());
 
       const actionsDispatched = store.getActions();
       expect(actionsDispatched[0].payload).toBe(0);
+      expect(result.data).toBe(0);
+      // When companyCount === 0, login screen should redirect to register
+      // This is handled in the component, not in the action
+    });
+
+    it('should handle company count greater than zero (shows login without register button)', async () => {
+      const mockGetCompanyCount = () => {
+        return (dispatch) => {
+          const data = {
+            method: 'GET',
+            url: '/rest/company/count',
+          };
+
+          return authApi(data)
+            .then((res) => {
+              dispatch({
+                type: 'SET_COMPANY_COUNT',
+                payload: res.data,
+              });
+              return res;
+            });
+        };
+      };
+
+      authApi.mockResolvedValue({ status: 200, data: 1 });
+
+      await store.dispatch(mockGetCompanyCount());
+
+      const actionsDispatched = store.getActions();
+      expect(actionsDispatched[0].payload).toBe(1);
+      // When companyCount > 0, login screen should display without register button
+      // This is handled in the component, not in the action
     });
 
     it('should handle error when fetching company count', async () => {

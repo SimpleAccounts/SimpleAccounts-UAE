@@ -118,7 +118,7 @@ class Header extends Component {
               {strings.Hey} <i>{profile && profile.firstName + ' ' + profile.lastName}</i>
               <i className="fas fa-angle-down ml-2 mr-3"></i>
             </DropdownToggle>
-            <DropdownMenu right>
+            <DropdownMenu end>
               <DropdownItem onClick={() => this.props.history.push('/admin/profile')}>
                 <i className="fas fa-user"></i> {strings.Profile}
               </DropdownItem>

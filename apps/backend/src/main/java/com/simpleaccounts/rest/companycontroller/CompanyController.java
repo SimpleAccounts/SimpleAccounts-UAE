@@ -35,9 +35,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.StringEscapeUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -101,9 +99,6 @@ public class CompanyController {
 	private final UserRestHelper userRestHelper;
 
 	private final EmailSender emailSender;
-
-	@Value("${cors.allowed.origins:*}")
-	private String allowedOriginsConfig;
 
 	private final BankAccountRestHelper bankRestHelper;
 
@@ -253,8 +248,10 @@ public class CompanyController {
 	@PostMapping(value = "/register")
 	public ResponseEntity<String> save(@ModelAttribute RegistrationModel registrationModel,
 			HttpServletRequest request) {
-		log.info("Registration request received for company: {}", 
+		log.info("=== REGISTRATION START ===");
+		log.info("Registration request received for company: {}",
 			registrationModel != null ? sanitizeForLog(registrationModel.getCompanyName()) : "null");
+		System.out.println("=== REGISTRATION START (System.out) ===");
 		
 		// Validate request
 		if (registrationModel == null) {
@@ -341,7 +338,16 @@ public class CompanyController {
 			// Setup user password
 			UserModel selecteduser = new UserModel();
 			selecteduser.setEmail(registrationModel.getEmail());
-			selecteduser.setUrl(registrationModel.getLoginUrl());
+			// Use loginUrl from registration model, or fallback to baseUrl from request
+			String userLoginUrl = registrationModel.getLoginUrl();
+			if (userLoginUrl == null || userLoginUrl.trim().isEmpty()) {
+				// Build baseUrl from request if loginUrl is not provided
+				userLoginUrl = ServletUriComponentsBuilder.fromRequestUri(request)
+						.replacePath(null)
+						.build()
+						.toUriString();
+			}
+			selecteduser.setUrl(userLoginUrl);
 			selecteduser.setPassword(registrationModel.getPassword());
 
 			// Create password token and attempt to send email
@@ -404,9 +410,32 @@ public class CompanyController {
 			bankAccountService.persist(pettyCash);
 
 			// Create journal entries
+			log.info("Starting journal creation for petty cash account");
+			if (pettyCash.getTransactionCategory() == null) {
+				log.error("Petty cash transaction category is null - cannot create journal");
+				throw new RuntimeException("Petty cash transaction category is null");
+			}
+			log.info("Petty cash transaction category ID: {}", pettyCash.getTransactionCategory().getTransactionCategoryId());
 			TransactionCategory category = transactionCategoryService
 					.findByPK(pettyCash.getTransactionCategory().getTransactionCategoryId());
+			log.info("Retrieved transaction category: {}", category != null ? category.getTransactionCategoryId() : "null");
+			if (category == null) {
+				log.error("Transaction category is null - cannot proceed with journal creation");
+				throw new RuntimeException("Transaction category not found for petty cash");
+			}
+			log.info("Calling getValidTransactionCategory");
 			TransactionCategory transactionCategory = getValidTransactionCategory(category);
+			log.info("getValidTransactionCategory returned: {}", transactionCategory != null ? transactionCategory.getTransactionCategoryId() : "null");
+			if (transactionCategory == null) {
+				// Fallback to default transaction category if getValidTransactionCategory returns null
+				log.warn("getValidTransactionCategory returned null for category: {}. Using default offset liabilities category.", 
+					category.getTransactionCategoryId());
+				transactionCategory = transactionCategoryService.findTransactionCategoryByTransactionCategoryCode(
+					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
+				if (transactionCategory == null) {
+					throw new RuntimeException("Default transaction category not found for petty cash");
+				}
+			}
 			// Use String.equalsIgnoreCase directly to avoid deprecated StringUtils method
 			boolean isDebit = transactionCategory.getTransactionCategoryCode() != null &&
 					transactionCategory.getTransactionCategoryCode().equalsIgnoreCase(
@@ -448,11 +477,35 @@ public class CompanyController {
 			journal.setPostingReferenceType(PostingReferenceTypeEnum.PETTY_CASH);
 			journal.setJournalDate(LocalDate.now());
 			journal.setTransactionDate(LocalDate.now());
-			journalService.persist(journal);
+			log.info("About to persist journal with {} line items", journalLineItemList.size());
+			try {
+				journalService.persist(journal);
+				log.info("Journal persisted successfully");
+			} catch (Exception e) {
+				log.error("Failed to persist journal: ", e);
+				throw e; // Re-throw to be caught by outer catch block
+			}
 			
-			coacTransactionCategoryService.addCoacTransactionCategory(
-					pettyCash.getTransactionCategory().getChartOfAccount(), pettyCash.getTransactionCategory());
+			log.info("Journal creation completed, proceeding to COAC transaction category");
+			// Add COAC transaction category relationship
+			// Wrap in try-catch to prevent non-critical operation from failing registration
+			try {
+				if (pettyCash.getTransactionCategory() != null && 
+						pettyCash.getTransactionCategory().getChartOfAccount() != null) {
+					log.info("Adding COAC transaction category");
+					coacTransactionCategoryService.addCoacTransactionCategory(
+							pettyCash.getTransactionCategory().getChartOfAccount(), 
+							pettyCash.getTransactionCategory());
+					log.info("COAC transaction category added successfully");
+				} else {
+					log.warn("Cannot add COAC transaction category: transaction category or chart of account is null");
+				}
+			} catch (Exception e) {
+				log.warn("Failed to add COAC transaction category (non-critical): ", e);
+				// Continue with registration - this is not a critical failure
+			}
 
+			log.info("Building response message");
 			// Build response message
 			String responseMessage;
 			if (passwordResetLink != null) {
@@ -464,30 +517,45 @@ public class CompanyController {
 			} else {
 				responseMessage = "Registration successful";
 			}
-			log.info("Registration completed successfully for company: {}", sanitizeForLog(company.getCompanyName()));
+			// Log success with company name if available
+			if (company.getCompanyName() != null) {
+				log.info("Registration completed successfully for company: {}", sanitizeForLog(company.getCompanyName()));
+			} else {
+				log.info("Registration completed successfully");
+			}
 			return new ResponseEntity<>(responseMessage, HttpStatus.OK);
 		} catch (Exception e) {
 			// Sanitize user input to prevent log injection
 			// registrationModel cannot be null here due to earlier null check
 			String sanitizedCompanyName = sanitizeForLog(registrationModel.getCompanyName());
 			String sanitizedEmail = sanitizeForLog(registrationModel.getEmail());
+			log.error("=== REGISTRATION ERROR ===");
 			log.error("Registration failed for company: {}, email: {}", sanitizedCompanyName, sanitizedEmail);
 			log.error("Error during company registration: ", e);
+			log.error("Exception type: {}", e.getClass().getName());
+			log.error("Exception message: {}", e.getMessage());
+			System.err.println("=== REGISTRATION ERROR (System.err) ===");
+			System.err.println("Exception type: " + e.getClass().getName());
+			System.err.println("Exception message: " + e.getMessage());
+			e.printStackTrace(System.err);
+			if (e.getCause() != null) {
+				log.error("Caused by: {}", e.getCause().getClass().getName());
+				log.error("Caused by message: {}", e.getCause().getMessage());
+				System.err.println("Caused by: " + e.getCause().getClass().getName());
+				System.err.println("Caused by message: " + e.getCause().getMessage());
+			}
+			// Print stack trace to logs for debugging
+			java.io.StringWriter sw = new java.io.StringWriter();
+			java.io.PrintWriter pw = new java.io.PrintWriter(sw);
+			e.printStackTrace(pw);
+			log.error("Stack trace: {}", sw.toString());
 			
 			// Return generic error message to prevent information exposure
 			String errorMessage = "Registration failed. Please try again or contact support.";
 			
-			// Set CORS headers - validate origin against whitelist
-			HttpHeaders headers = new HttpHeaders();
-			String origin = request.getHeader("Origin");
-			String allowedOrigin = determineAllowedOrigin(origin);
-			if (!allowedOrigin.isEmpty()) {
-				headers.set("Access-Control-Allow-Origin", allowedOrigin);
-			}
-			headers.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
-			headers.set("Access-Control-Allow-Headers", "x-requested-with, authorization, content-type");
-			headers.set("Access-Control-Allow-Credentials", "true");
-			return new ResponseEntity<>(errorMessage, headers, HttpStatus.INTERNAL_SERVER_ERROR);
+			// CORS headers are handled by SimpleCorsFilter - no need to set them manually here
+			// Manual CORS header setting causes "Multiple CORS header 'Access-Control-Allow-Origin' not allowed" error
+			return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -525,37 +593,6 @@ public class CompanyController {
 		return trimmed.startsWith("http://") || trimmed.startsWith("https://");
 	}
 
-	/**
-	 * Validates the Origin header against a whitelist of trusted origins
-	 * to prevent Cross-site scripting (XSS) vulnerabilities.
-	 * 
-	 * @param origin The Origin header value from the request
-	 * @return The validated origin if it's in the whitelist, "*" if wildcard is configured,
-	 *         or an empty string if the origin is not trusted
-	 */
-	private String determineAllowedOrigin(String origin) {
-		// Parse allowed origins from configuration
-		Set<String> allowedOrigins = new HashSet<>();
-		if (allowedOriginsConfig != null && !allowedOriginsConfig.trim().isEmpty()) {
-			allowedOrigins = new HashSet<>(Arrays.asList(allowedOriginsConfig.split(",")));
-		} else {
-			allowedOrigins.add("*");
-		}
-
-		// If wildcard is configured, allow all origins
-		if (allowedOrigins.contains("*")) {
-			return "*";
-		}
-
-		// If the request origin is in the allowed list, return it
-		if (origin != null && !origin.trim().isEmpty() && allowedOrigins.contains(origin)) {
-			return origin;
-		}
-
-		// Origin not in whitelist - return empty string (no CORS header will be set)
-		// This is safer than reflecting an untrusted origin
-		return "";
-	}
 
 	@LogRequest
 	@GetMapping(value = "/getCountry")
@@ -598,7 +635,16 @@ public class CompanyController {
 	}
 
 	private TransactionCategory getValidTransactionCategory(TransactionCategory transactionCategory) {
+		if (transactionCategory == null) {
+			return null;
+		}
+		if (transactionCategory.getChartOfAccount() == null) {
+			return null;
+		}
 		String transactionCategoryCode = transactionCategory.getChartOfAccount().getChartOfAccountCode();
+		if (transactionCategoryCode == null) {
+			return null;
+		}
 		ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum
 				.getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
 		if (chartOfAccountCategoryCodeEnum == null)

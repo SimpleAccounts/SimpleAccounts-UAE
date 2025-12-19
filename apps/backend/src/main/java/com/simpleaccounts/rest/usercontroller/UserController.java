@@ -386,6 +386,7 @@ public class UserController{
 	}
 
 	@LogRequest
+	@Transactional(rollbackFor = Exception.class)
 	@PostMapping(value = "/resetNewpassword")
 	public ResponseEntity<Object> resetNewPassword(@ModelAttribute UserModel userModel, HttpServletRequest request) {
 
