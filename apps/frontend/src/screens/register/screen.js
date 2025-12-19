@@ -158,6 +158,8 @@ const Register = () => {
   const [sabackend, setSabackend] = useState('');
   const [checkPhoneNumberParam, setCheckPhoneNumberParam] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [step3Submitted, setStep3Submitted] = useState(false);
+  const [step3TouchedFields, setStep3TouchedFields] = useState({});
 
   // Default country list for UAE
   const country_list = [{ countryCode: 229, countryName: 'United Arab Emirates' }];
@@ -191,6 +193,16 @@ const Register = () => {
   const confirmPassword = form.watch('confirmPassword');
   const isVatRegistered = form.watch('IsRegistered');
 
+  // Helper to track step 3 field interactions
+  const markStep3FieldTouched = fieldName => {
+    setStep3TouchedFields(prev => ({ ...prev, [fieldName]: true }));
+  };
+
+  // Helper to check if step 3 field should show error
+  const shouldShowStep3Error = (fieldName, fieldState) => {
+    return fieldState.error && (step3TouchedFields[fieldName] || step3Submitted);
+  };
+
   useEffect(() => {
     getInitialData();
     getBackendRelease();
@@ -208,8 +220,8 @@ const Register = () => {
   const getInitialData = () => {
     dispatch(AuthActions.getTimeZoneList())
       .then(action => {
-        if (action?.payload && Array.isArray(action.payload)) {
-          setTimezone(action.payload.map(value => ({ label: value, value: value })));
+        if (action?.data && Array.isArray(action.data)) {
+          setTimezone(action.data.map(value => ({ label: value, value: value })));
         }
       })
       .catch(() => setTimezone([]));
@@ -253,7 +265,23 @@ const Register = () => {
         form.setError('phoneNumber', { message: 'Invalid mobile number' });
         return;
       }
-      setCurrentStep(prev => Math.min(prev + 1, 3));
+
+      const nextStep = Math.min(currentStep + 1, 3);
+
+      // Clear errors for the next step's fields to ensure a clean slate
+      if (nextStep === 2) {
+        form.clearErrors([
+          'countryId',
+          'stateId',
+          'phoneNumber',
+          'TaxRegistrationNumber',
+          'vatRegistrationDate',
+        ]);
+      } else if (nextStep === 3) {
+        form.clearErrors(['firstName', 'lastName', 'email', 'password', 'confirmPassword']);
+      }
+
+      setCurrentStep(nextStep);
     }
   };
 
@@ -431,24 +459,33 @@ const Register = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4 py-8 transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 via-slate-50 to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-black p-4 py-8 transition-colors duration-300">
       <div className="fixed top-4 right-4 z-50">
         <ThemeToggle />
       </div>
       <div className="fixed top-4 left-4 z-50">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/login')} className="gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate('/login')}
+          className="gap-2 hover:bg-white/20 hover:text-primary transition-all"
+        >
           <ArrowLeft className="h-4 w-4" /> Back to Login
         </Button>
       </div>
 
-      <Card className="w-full max-w-4xl animate-slide-up shadow-lg dark:shadow-2xl">
-        <CardHeader className="space-y-4 text-center">
+      <Card className="w-full max-w-4xl animate-slide-up shadow-2xl shadow-blue-900/5 dark:shadow-blue-900/20 backdrop-blur-sm bg-white/95 dark:bg-slate-900/95 border-slate-200/60 dark:border-slate-800 rounded-2xl overflow-hidden">
+        <CardHeader className="space-y-6 text-center pb-8 border-b border-border/40 bg-slate-50/50 dark:bg-slate-900/50">
           <div className="flex justify-center animate-fade-in">
-            <img src={logo} alt="SimpleAccounts Logo" className="h-16 w-auto" />
+            <img src={logo} alt="SimpleAccounts Logo" className="h-20 w-auto drop-shadow-sm" />
           </div>
-          <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
-            <CardTitle className="text-2xl">Create Your Account</CardTitle>
-            <CardDescription>Complete the steps below to get started</CardDescription>
+          <div className="animate-fade-in space-y-2" style={{ animationDelay: '100ms' }}>
+            <CardTitle className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              Create Your Account
+            </CardTitle>
+            <CardDescription className="text-base">
+              Complete the steps below to get started
+            </CardDescription>
           </div>
           <StepWizard
             steps={WIZARD_STEPS}
@@ -461,17 +498,37 @@ const Register = () => {
         <CardContent className="animate-fade-in" style={{ animationDelay: '200ms' }}>
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(onSubmit)}
+              onSubmit={e => {
+                e.preventDefault();
+                if (currentStep < 3) {
+                  handleNext();
+                } else {
+                  // Only submit if triggered by Create Account button click
+                  // step3Submitted is set in the button's onClick handler
+                  if (step3Submitted) {
+                    form.handleSubmit(onSubmit)(e);
+                  }
+                }
+              }}
               className="space-y-6"
               noValidate
               aria-label="Registration form"
             >
               {/* Step 1: Company Details */}
               <StepContent isActive={currentStep === 1}>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Building2 className="h-5 w-5 text-primary" aria-hidden="true" />
-                    <h3 className="text-lg font-semibold">{strings.CompanyDetails}</h3>
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border/50">
+                    <div className="p-2.5 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-primary shadow-sm">
+                      <Building2 className="h-6 w-6" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold tracking-tight text-foreground">
+                        {strings.CompanyDetails}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Enter your business information below
+                      </p>
+                    </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
@@ -626,7 +683,6 @@ const Register = () => {
                         <FormItem>
                           <FormLabel>{strings.TimeZonePreference}</FormLabel>
                           <Select
-                            isDisabled
                             styles={customSelectStyles}
                             options={timezone}
                             aria-label="Timezone"
@@ -642,10 +698,19 @@ const Register = () => {
 
               {/* Step 2: Location & VAT */}
               <StepContent isActive={currentStep === 2}>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 mb-4">
-                    <MapPin className="h-5 w-5 text-primary" aria-hidden="true" />
-                    <h3 className="text-lg font-semibold">Location & VAT Details</h3>
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border/50">
+                    <div className="p-2.5 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-primary shadow-sm">
+                      <MapPin className="h-6 w-6" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold tracking-tight text-foreground">
+                        Location & VAT Details
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Set up your company location and tax info
+                      </p>
+                    </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
@@ -864,14 +929,23 @@ const Register = () => {
 
               {/* Step 3: Admin Account */}
               <StepContent isActive={currentStep === 3}>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 mb-4">
-                    <User className="h-5 w-5 text-primary" aria-hidden="true" />
-                    <h3 className="text-lg font-semibold">Super Admin Account</h3>
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border/50">
+                    <div className="p-2.5 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-primary shadow-sm">
+                      <User className="h-6 w-6" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold tracking-tight text-foreground">
+                        Super Admin Account
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Create the main administrator for this account
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    This account will have full administrative access. Details cannot be changed
-                    after registration.
+                  <p className="text-sm text-amber-600 dark:text-amber-500 bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg border border-amber-200 dark:border-amber-800 mb-6 flex items-start gap-2">
+                    <span className="mt-0.5">⚠️</span> This account will have full administrative
+                    access. Details cannot be changed easily after registration.
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
@@ -891,14 +965,18 @@ const Register = () => {
                             maxLength={100}
                             aria-required="true"
                             aria-invalid={!!fieldState.error}
-                            className={`input-transition ${fieldState.error ? 'border-destructive animate-shake' : ''}`}
+                            className={`input-transition ${shouldShowStep3Error('firstName', fieldState) ? 'border-destructive animate-shake' : ''}`}
                             {...field}
                             onChange={e => {
                               if (e.target.value === '' || /^[a-zA-Z ]+$/.test(e.target.value))
                                 field.onChange(upperFirst(e.target.value));
                             }}
+                            onBlur={e => {
+                              field.onBlur(e);
+                              markStep3FieldTouched('firstName');
+                            }}
                           />
-                          {fieldState.error && (
+                          {shouldShowStep3Error('firstName', fieldState) && (
                             <FormMessage role="alert">{fieldState.error.message}</FormMessage>
                           )}
                         </FormItem>
@@ -921,14 +999,18 @@ const Register = () => {
                             maxLength={100}
                             aria-required="true"
                             aria-invalid={!!fieldState.error}
-                            className={`input-transition ${fieldState.error ? 'border-destructive animate-shake' : ''}`}
+                            className={`input-transition ${shouldShowStep3Error('lastName', fieldState) ? 'border-destructive animate-shake' : ''}`}
                             {...field}
                             onChange={e => {
                               if (e.target.value === '' || /^[a-zA-Z ]+$/.test(e.target.value))
                                 field.onChange(upperFirst(e.target.value));
                             }}
+                            onBlur={e => {
+                              field.onBlur(e);
+                              markStep3FieldTouched('lastName');
+                            }}
                           />
-                          {fieldState.error && (
+                          {shouldShowStep3Error('lastName', fieldState) && (
                             <FormMessage role="alert">{fieldState.error.message}</FormMessage>
                           )}
                         </FormItem>
@@ -954,10 +1036,14 @@ const Register = () => {
                           autoComplete="email"
                           aria-required="true"
                           aria-invalid={!!fieldState.error}
-                          className={`input-transition ${fieldState.error ? 'border-destructive animate-shake' : ''}`}
+                          className={`input-transition ${shouldShowStep3Error('email', fieldState) ? 'border-destructive animate-shake' : ''}`}
                           {...field}
+                          onBlur={e => {
+                            field.onBlur(e);
+                            markStep3FieldTouched('email');
+                          }}
                         />
-                        {fieldState.error && (
+                        {shouldShowStep3Error('email', fieldState) && (
                           <FormMessage role="alert">{fieldState.error.message}</FormMessage>
                         )}
                       </FormItem>
@@ -984,10 +1070,14 @@ const Register = () => {
                               aria-required="true"
                               aria-invalid={!!fieldState.error}
                               aria-describedby="password-strength"
-                              className={`input-transition pr-10 ${fieldState.error ? 'border-destructive animate-shake' : ''}`}
+                              className={`input-transition pr-10 ${shouldShowStep3Error('password', fieldState) ? 'border-destructive animate-shake' : ''}`}
                               onPaste={e => e.preventDefault()}
                               onCopy={e => e.preventDefault()}
                               {...field}
+                              onBlur={e => {
+                                field.onBlur(e);
+                                markStep3FieldTouched('password');
+                              }}
                             />
                             <button
                               type="button"
@@ -1003,7 +1093,7 @@ const Register = () => {
                               )}
                             </button>
                           </div>
-                          {fieldState.error && (
+                          {shouldShowStep3Error('password', fieldState) && (
                             <FormMessage role="alert">{fieldState.error.message}</FormMessage>
                           )}
                           <div id="password-strength">
@@ -1031,10 +1121,14 @@ const Register = () => {
                               autoComplete="new-password"
                               aria-required="true"
                               aria-invalid={!!fieldState.error}
-                              className={`input-transition pr-10 ${fieldState.error ? 'border-destructive animate-shake' : ''}`}
+                              className={`input-transition pr-10 ${shouldShowStep3Error('confirmPassword', fieldState) ? 'border-destructive animate-shake' : ''}`}
                               onPaste={e => e.preventDefault()}
                               onCopy={e => e.preventDefault()}
                               {...field}
+                              onBlur={e => {
+                                field.onBlur(e);
+                                markStep3FieldTouched('confirmPassword');
+                              }}
                             />
                             <button
                               type="button"
@@ -1052,7 +1146,7 @@ const Register = () => {
                               )}
                             </button>
                           </div>
-                          {fieldState.error && (
+                          {shouldShowStep3Error('confirmPassword', fieldState) && (
                             <FormMessage role="alert">{fieldState.error.message}</FormMessage>
                           )}
                           {password && confirmPassword && password === confirmPassword && (
@@ -1073,7 +1167,7 @@ const Register = () => {
                 totalSteps={3}
                 onPrevious={handlePrevious}
                 onNext={handleNext}
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={() => setStep3Submitted(true)}
                 isSubmitting={loading}
                 submitLabel="Create Account"
               />

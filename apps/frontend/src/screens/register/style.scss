@@ -1,89 +1,181 @@
 .select-register {
-	position: relative;
-	flex: 1 1 auto;
-	width: 1%;
-	margin-bottom: 0;
+  position: relative;
+  flex: 1 1 auto;
+  width: 1%;
+  margin-bottom: 0;
 }
 .select-register div:nth-child(2) {
-	position: relative;
-	flex: 1 1 auto;
-	width: 1%;
-	margin-bottom: 0;
+  position: relative;
+  flex: 1 1 auto;
+  width: 1%;
+  margin-bottom: 0;
 }
 .registerScreen h2 {
-	color: #2064d8;
-	font-weight: 600;
+  color: #2064d8;
+  font-weight: 600;
 }
 .registerScreen {
-	margin-bottom: 40px;
+  margin-bottom: 40px;
 }
 .inputRShow {
-    position: absolute;
-    top: 45%;
-    right: 10%;
-  }
-  .inputRShow:hover {
-    color: #2064d8;
-    cursor: pointer;
-  }
+  position: absolute;
+  top: 45%;
+  right: 10%;
+}
+.inputRShow:hover {
+  color: #2064d8;
+  cursor: pointer;
+}
 
-  .password-icon {
-	position: absolute;
-	top: 41px;
-	right: 41px;
-	cursor: pointer;
-	color: grey;
+.password-icon {
+  position: absolute;
+  top: 41px;
+  right: 41px;
+  cursor: pointer;
+  color: grey;
+}
+.react-datepicker-wrapper {
+  width: 100%;
+}
+.phoneNumber {
+  .react-tel-input .form-control {
+    width: 260px !important;
   }
-  .react-datepicker-wrapper{
+  .invalid-feedback {
+    display: block;
     width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.71rem;
+    color: #f86c6b;
   }
-  .phoneNumber{
-	.react-tel-input .form-control{
-		width: 260px !important;
-	}
-	.invalid-feedback {
-		display: block;
-		width: 100%;
-		margin-top: 0.25rem;
-		font-size: 0.71rem;
-		color:#f86c6b;
-	  }
+}
+
+.tooltip-icon {
+  position: relative;
+  display: inline-block;
+}
+.tooltip-icon .tooltiptext {
+  visibility: hidden;
+  width: 350px;
+  background-color: #555;
+  color: white;
+  border: 2px solid #555;
+  text-align: center;
+  border-radius: 10px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: -15px;
+  font-weight: normal;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip-icon .tooltiptext::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 10%;
+  margin-left: -20px;
+  border-width: 9px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip-icon:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Modern Input Styling */
+.input-transition {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+
+  &:hover {
+    background-color: #ffffff;
+    border-color: #94a3b8;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 
-  .tooltip-icon {
-	position: relative;
-	display: inline-block;
+  &:focus {
+    background-color: #ffffff;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    transform: translateY(-1px);
   }
-  .tooltip-icon .tooltiptext {
-	visibility: hidden;
-	width: 350px;
-	background-color: #555;
-	color: white;
-	border: 2px solid #555;
-	text-align: center;
-	border-radius: 10px;
-	padding: 5px 0;
-	position: absolute;
-	z-index: 1;
-	bottom: 150%;
-	left: -15px;
-	font-weight: normal;
-	opacity: 0;
-	transition: opacity 0.3s;
+}
+
+/* Dark mode support via global class usually, or relying on native inputs */
+:global(.dark) .input-transition {
+  background-color: rgba(30, 41, 59, 0.5);
+  border-color: rgba(51, 65, 85, 0.6);
+  color: white;
+
+  &:hover {
+    background-color: rgba(30, 41, 59, 0.8);
+    border-color: #64748b;
   }
-  
-  .tooltip-icon .tooltiptext::after {
-	content: "";
-	position: absolute;
-	top: 100%;
-	left: 10%;
-	margin-left: -20px;
-	border-width: 9px;
-	border-style: solid;
-	border-color: #555 transparent transparent transparent;
+
+  &:focus {
+    background-color: rgba(15, 23, 42, 1);
+    border-color: #3b82f6;
   }
-  
-  .tooltip-icon:hover .tooltiptext {
-	visibility: visible;
-	opacity: 1;
+}
+
+/* Phone Input Overrides */
+.phone-input-container {
+  .form-control {
+    width: 100% !important;
+    height: 2.5rem !important; /* h-10 */
+    border-radius: 0.375rem !important; /* rounded-md */
+    font-size: 0.875rem !important; /* text-sm */
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+
+    &:hover {
+      background-color: #ffffff !important;
+      border-color: #94a3b8 !important;
+    }
+
+    &:focus {
+      background-color: #ffffff !important;
+      border-color: #3b82f6 !important;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
+    }
   }
+
+  .flag-dropdown {
+    border-color: #e2e8f0 !important;
+    background-color: transparent !important;
+
+    &:hover {
+      background-color: #f1f5f9 !important;
+    }
+  }
+}
+
+:global(.dark) .phone-input-container {
+  .form-control {
+    background-color: rgba(30, 41, 59, 0.5) !important;
+    border-color: rgba(51, 65, 85, 0.6) !important;
+    color: white !important;
+
+    &:hover {
+      background-color: rgba(30, 41, 59, 0.8) !important;
+      border-color: #64748b !important;
+    }
+  }
+
+  .flag-dropdown {
+    border-color: rgba(51, 65, 85, 0.6) !important;
+
+    .selected-flag:hover {
+      background-color: rgba(51, 65, 85, 0.6) !important;
+    }
+  }
+}

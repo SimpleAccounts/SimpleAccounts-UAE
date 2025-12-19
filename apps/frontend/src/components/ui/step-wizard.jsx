@@ -18,8 +18,8 @@ export function StepWizard({ steps, currentStep, onStepClick, className }) {
               {index < steps.length - 1 && (
                 <div
                   className={cn(
-                    'absolute top-4 left-1/2 w-full h-0.5 transition-colors duration-300',
-                    isCompleted ? 'bg-primary' : 'bg-muted'
+                    'absolute top-5 left-1/2 w-full h-[3px] transition-colors duration-500 ease-in-out',
+                    isCompleted ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'
                   )}
                   aria-hidden="true"
                 />
@@ -31,7 +31,7 @@ export function StepWizard({ steps, currentStep, onStepClick, className }) {
                 onClick={() => isClickable && onStepClick?.(stepNumber)}
                 disabled={!isClickable}
                 className={cn(
-                  'relative flex flex-col items-center group',
+                  'relative flex flex-col items-center group focus:outline-none',
                   isClickable ? 'cursor-pointer' : 'cursor-not-allowed'
                 )}
                 aria-current={isCurrent ? 'step' : undefined}
@@ -40,32 +40,32 @@ export function StepWizard({ steps, currentStep, onStepClick, className }) {
                 {/* Circle */}
                 <span
                   className={cn(
-                    'relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 transition-all duration-300',
+                    'relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all duration-300 shadow-sm',
                     isCompleted
-                      ? 'bg-primary border-primary text-primary-foreground'
+                      ? 'bg-primary border-primary text-primary-foreground shadow-primary/25'
                       : isCurrent
-                        ? 'bg-background border-primary text-primary'
-                        : 'bg-background border-muted text-muted-foreground',
+                        ? 'bg-background border-primary text-primary ring-4 ring-primary/10 shadow-lg scale-110'
+                        : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-400',
                     isClickable &&
                       !isCompleted &&
-                      'group-hover:border-primary/70 group-hover:text-primary/70'
+                      'group-hover:border-primary/50 group-hover:text-primary/70'
                   )}
                 >
                   {isCompleted ? (
-                    <Check className="h-4 w-4 animate-scale-in" aria-hidden="true" />
+                    <Check className="h-5 w-5 animate-scale-in stroke-[3]" aria-hidden="true" />
                   ) : (
-                    <span className="text-sm font-medium">{stepNumber}</span>
+                    <span className="text-sm font-bold">{stepNumber}</span>
                   )}
                 </span>
 
                 {/* Label */}
                 <span
                   className={cn(
-                    'mt-2 text-xs font-medium text-center transition-colors duration-200 hidden sm:block',
+                    'mt-3 text-xs font-semibold uppercase tracking-wider text-center transition-colors duration-200 hidden sm:block',
                     isCurrent
                       ? 'text-primary'
                       : isCompleted
-                        ? 'text-foreground'
+                        ? 'text-foreground/80'
                         : 'text-muted-foreground'
                   )}
                 >
