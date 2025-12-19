@@ -130,32 +130,50 @@ class AdminLayout extends React.Component {
   };
 
   componentDidMount() {
-    if (!window['localStorage'].getItem('accessToken')) {
-      this.props.history.push('/login');
-    } else {
-      this.props.authActions
-        .checkAuthStatus()
-        .then(async (action) => {
-          // Redux Toolkit thunks return action objects, check for fulfilled
-          if (action && action.type && action.type.includes('fulfilled')) {
-            const userData = action.payload;
-            
-            const companyAction = await this.props.commonActions.getCompanyDetails();
-            if (companyAction && companyAction.type && companyAction.type.includes('fulfilled')) {
-              this.setState({ registeredVat: companyAction.payload?.isRegisteredVat ?? true });
-            }
-            
-            if (userData?.role?.roleCode) {
-              const roleListAction = await this.props.commonActions.getRoleList(userData.role.roleCode);
-              console.log('[AdminLayout Debug] getRoleList action:', roleListAction);
-              if (roleListAction && roleListAction.type && roleListAction.type.includes('fulfilled')) {
-                console.log('[AdminLayout Debug] getRoleList fulfilled, payload:', roleListAction.payload);
-              } else {
-                console.warn('[AdminLayout Debug] getRoleList rejected or pending:', roleListAction);
-              }
+    // Check for accessToken immediately and redirect if not found
+    const accessToken = window['localStorage'].getItem('accessToken');
+    console.log('[AdminLayout] componentDidMount - accessToken exists:', !!accessToken);
+    if (!accessToken) {
+      console.log('[AdminLayout] No accessToken in componentDidMount, logging out and redirecting');
+      this.props.authActions.logOut(); // Ensure complete logout
+      window.sessionStorage.clear(); // Clear sessionStorage too
+      this.props.history.replace('/login'); // Use replace instead of push
+      return; // Exit early to prevent further execution
+    }
+
+    // Only proceed if user is authenticated
+    this.props.authActions
+      .checkAuthStatus()
+      .then(async action => {
+        // Redux Toolkit thunks return action objects, check for fulfilled
+        if (action && action.type && action.type.includes('fulfilled')) {
+          const userData = action.payload;
+
+          const companyAction = await this.props.commonActions.getCompanyDetails();
+          if (companyAction && companyAction.type && companyAction.type.includes('fulfilled')) {
+            this.setState({ registeredVat: companyAction.payload?.isRegisteredVat ?? true });
+          }
+
+          if (userData?.role?.roleCode) {
+            const roleListAction = await this.props.commonActions.getRoleList(
+              userData.role.roleCode
+            );
+            console.log('[AdminLayout Debug] getRoleList action:', roleListAction);
+            if (
+              roleListAction &&
+              roleListAction.type &&
+              roleListAction.type.includes('fulfilled')
+            ) {
+              console.log(
+                '[AdminLayout Debug] getRoleList fulfilled, payload:',
+                roleListAction.payload
+              );
             } else {
-              console.warn('[AdminLayout Debug] No roleCode found in userData:', userData);
+              console.warn('[AdminLayout Debug] getRoleList rejected or pending:', roleListAction);
             }
+          } else {
+            console.warn('[AdminLayout Debug] No roleCode found in userData:', userData);
+          }
           await this.props.commonActions.getCompanyCurrency();
           await this.props.commonActions.getCurrencyConversionList();
           await this.props.commonActions.getVatList();
@@ -163,70 +181,78 @@ class AdminLayout extends React.Component {
           this.setState({
             loading: false,
           });
-          } else {
-            // Auth check failed - user not authenticated
-            this.props.commonActions.tostifyAlert('error', 'Session Timed out');
-            this.props.authActions.logOut();
-            this.props.history.push('/login');
-          }
-        })
-        .catch(err => {
-          console.error('Auth check error:', err);
+        } else {
+          // Auth check failed - user not authenticated
           this.props.commonActions.tostifyAlert('error', 'Session Timed out');
           this.props.authActions.logOut();
           this.props.history.push('/login');
+        }
+      })
+      .catch(err => {
+        console.error('Auth check error:', err);
+        this.props.commonActions.tostifyAlert('error', 'Session Timed out');
+        this.props.authActions.logOut();
+        this.props.history.push('/login');
+      });
+    this.props.commonActions.getSimpleAccountsVersion();
+    const toastifyAlert = (status, message) => {
+      if (!message) {
+        message = 'Unexpected Error';
+      }
+      if (status === 'success') {
+        toast.success(message, {
+          position: 'top-right',
         });
-      this.props.commonActions.getSimpleAccountsVersion();
-      const toastifyAlert = (status, message) => {
-        if (!message) {
-          message = 'Unexpected Error';
-        }
-        if (status === 'success') {
-          toast.success(message, {
-            position: 'top-right',
-          });
-        } else if (status === 'error') {
-          toast.error(message, {
-            position: 'top-right',
-          });
-        } else if (status === 'warn') {
-          toast.warn(message, {
-            position: 'top-right',
-          });
-        } else if (status === 'info') {
-          toast.info(message, {
-            position: 'top-right',
-          });
-        }
-      };
-      this.props.commonActions.setTostifyAlertFunc(toastifyAlert);
-      this.props.authActions
-        .getUserSubscription()
-        .then((action) => {
-          // This thunk may fail for local dev (no subscription service), that's OK
-          let message = null;
-          if (action && action.type && action.type.includes('fulfilled')) {
-            const data = action.payload;
-            if (
-              (data?.message && data.message.toLowerCase() === 'active') ||
-              (data?.status && data.status.toLowerCase() === 'active')
-            ) {
-              message = null;
-            } else {
-              message = strings.SubscriptionExpiredMessage;
-            }
+      } else if (status === 'error') {
+        toast.error(message, {
+          position: 'top-right',
+        });
+      } else if (status === 'warn') {
+        toast.warn(message, {
+          position: 'top-right',
+        });
+      } else if (status === 'info') {
+        toast.info(message, {
+          position: 'top-right',
+        });
+      }
+    };
+    this.props.commonActions.setTostifyAlertFunc(toastifyAlert);
+    this.props.authActions
+      .getUserSubscription()
+      .then(action => {
+        // This thunk may fail for local dev (no subscription service), that's OK
+        let message = null;
+        if (action && action.type && action.type.includes('fulfilled')) {
+          const data = action.payload;
+          if (
+            (data?.message && data.message.toLowerCase() === 'active') ||
+            (data?.status && data.status.toLowerCase() === 'active')
+          ) {
+            message = null;
+          } else {
+            message = strings.SubscriptionExpiredMessage;
           }
-          // Don't show error for subscription check failures in local dev
-          this.setState({ SubscriptionMessage: message });
-        })
-        .catch(err => {
-          // Subscription check is optional, don't break the app
-          this.setState({ SubscriptionMessage: null });
-        });
-    }
+        }
+        // Don't show error for subscription check failures in local dev
+        this.setState({ SubscriptionMessage: message });
+      })
+      .catch(err => {
+        // Subscription check is optional, don't break the app
+        this.setState({ SubscriptionMessage: null });
+      });
   }
 
   render() {
+    // Check for accessToken before rendering - redirect immediately if not authenticated
+    const accessToken = window['localStorage'].getItem('accessToken');
+    console.log('[AdminLayout] Render check - accessToken exists:', !!accessToken);
+    if (!accessToken) {
+      console.log('[AdminLayout] No accessToken found, redirecting to /login');
+      // Use Navigate component for immediate redirect
+      return <Navigate to="/login" replace />;
+    }
+
     // strings.setLanguage(this.state.language);
     const containerStyle = {
       zIndex: 1999,
@@ -241,8 +267,17 @@ class AdminLayout extends React.Component {
     console.log('[AdminLayout Debug] Render - adminRoutes length:', adminRoutes?.length);
     const dashboardRoute = adminRoutes?.find(r => r?.path === '/admin/dashboard');
     console.log('[AdminLayout Debug] Render - dashboard route:', dashboardRoute);
-    console.log('[AdminLayout Debug] Render - dashboard route type:', typeof dashboardRoute, dashboardRoute === false, dashboardRoute === null, dashboardRoute === undefined);
-    console.log('[AdminLayout Debug] Render - first 5 routes:', adminRoutes?.slice(0, 5).map(r => ({ path: r?.path, name: r?.name, hasPath: !!r?.path })));
+    console.log(
+      '[AdminLayout Debug] Render - dashboard route type:',
+      typeof dashboardRoute,
+      dashboardRoute === false,
+      dashboardRoute === null,
+      dashboardRoute === undefined
+    );
+    console.log(
+      '[AdminLayout Debug] Render - first 5 routes:',
+      adminRoutes?.slice(0, 5).map(r => ({ path: r?.path, name: r?.name, hasPath: !!r?.path }))
+    );
     var arr = [];
 
     function parentPathPresent(arr, name) {
@@ -384,13 +419,28 @@ class AdminLayout extends React.Component {
                   <Routes>
                     {adminRoutes?.map((prop, key) => {
                       if (!prop || !prop.path) {
-                        console.log('[AdminLayout Debug] Skipping invalid route at index', key, prop);
+                        console.log(
+                          '[AdminLayout Debug] Skipping invalid route at index',
+                          key,
+                          prop
+                        );
                         return null;
                       }
                       if (prop?.redirect) {
-                        return <Route path={prop.path} key={key} element={<Navigate to={prop.pathTo} replace />} />;
+                        return (
+                          <Route
+                            path={prop.path}
+                            key={key}
+                            element={<Navigate to={prop.pathTo} replace />}
+                          />
+                        );
                       }
-                      console.log('[AdminLayout Debug] Rendering route:', prop?.path, prop?.name, prop?.component);
+                      console.log(
+                        '[AdminLayout Debug] Rendering route:',
+                        prop?.path,
+                        prop?.name,
+                        prop?.component
+                      );
                       return (
                         <Route
                           path={prop.path}

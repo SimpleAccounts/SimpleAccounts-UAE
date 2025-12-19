@@ -14,6 +14,7 @@ import com.simpleaccounts.repository.UserJpaRepository;
 import com.simpleaccounts.rest.usercontroller.UserRestHelper;
 import com.simpleaccounts.service.EmaiLogsService;
 import com.simpleaccounts.service.UserService;
+import com.simpleaccounts.utils.SimpleAccountsMessage;
 import java.time.LocalDateTime;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -139,9 +140,15 @@ class LoginRestControllerTest {
 
         when(userJpaRepository.findUsersByForgotPasswordToken("valid-token"))
                 .thenReturn(Collections.singletonList(testUser));
+        when(userService.findByPK(testUser.getUserId()))
+                .thenReturn(testUser);
+        when(userService.update(any(User.class), any(Integer.class)))
+                .thenReturn(testUser);
         when(passwordHistoryRepository.findPasswordHistoriesByUser(any()))
                 .thenReturn(Collections.emptyList());
-        when(userRestHelper.saveUserCredential(any(), any())).thenReturn(null);
+        SimpleAccountsMessage successMessage = new SimpleAccountsMessage("0088",
+                "Password Created Successfully.", false);
+        when(userRestHelper.saveUserCredential(any(), any())).thenReturn(successMessage);
 
         mockMvc.perform(post("/public/resetPassword")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -199,6 +206,9 @@ class LoginRestControllerTest {
 
         when(userJpaRepository.findUsersByForgotPasswordToken("valid-token"))
                 .thenReturn(Collections.singletonList(testUser));
+        when(userService.findByPK(testUser.getUserId()))
+                .thenReturn(testUser);
+        // Note: userService.update() is not called when password already exists (early return)
         when(passwordHistoryRepository.findPasswordHistoriesByUser(any()))
                 .thenReturn(Collections.singletonList(passwordHistory));
 

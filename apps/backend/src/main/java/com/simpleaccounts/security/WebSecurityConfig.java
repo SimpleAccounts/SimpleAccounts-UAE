@@ -68,6 +68,7 @@ public class WebSecurityConfig {
 				.requestMatchers("/rest/company/getHealthCheck").permitAll()
 				.requestMatchers("/rest/company/getTimeZoneList").permitAll()
 				.requestMatchers("/rest/company/getCompanyCount").permitAll()
+				.requestMatchers("/rest/company/getSimpleAccountsreleasenumber").permitAll()
 				.requestMatchers("/rest/company/getCurrency").permitAll()
 				.requestMatchers("/rest/company/getCountry").permitAll()
 				.requestMatchers("/rest/company/getState").permitAll()

@@ -60,3 +60,13 @@ coverage/
 *.swo
 # MCP environment variables
 .mcp.env
+
+# Local reference files (not to be committed)
+*.battle-plan*.md
+*.local-plan*.md
+
+# Database clearing scripts (local only, do not commit)
+scripts/clear-database.sh
+scripts/clear-database-for-registration-test.sql
+scripts/check-database-counts.sql
+scripts/README-clear-database.md
