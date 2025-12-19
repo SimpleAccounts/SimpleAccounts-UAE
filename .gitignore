@@ -64,6 +64,21 @@ coverage/
 # Local reference files (not to be committed)
 *.battle-plan*.md
 *.local-plan*.md
+*.action-plan*.md
+*.task-*.md
+*.pending-items*.md
+*.pr-description*.md
+*.github-issue-*.md
+*.github-setup-*.md
+*.quick-start-*.md
+*.investigation-summary-*.md
+*.issue-*.md
+*.next-steps-*.md
+*.test-plan-*.md
+*.branch-deletion-*.md
+*.final-summary*.md
+*.git-branch-status*.md
+*.github-actions*.md
 
 # Database clearing scripts (local only, do not commit)
 scripts/clear-database.sh
