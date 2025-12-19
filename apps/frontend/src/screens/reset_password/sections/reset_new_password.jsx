@@ -15,7 +15,6 @@ import {
 	Row,
 } from 'reactstrap';
 import { api } from 'utils';
-import { toast } from 'react-toastify';
 import { Message } from 'components';
 import PasswordChecklist from 'react-password-checklist';
 import { withNavigation } from 'utils/withNavigation';

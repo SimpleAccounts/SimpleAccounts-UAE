@@ -15,7 +15,6 @@ import {
 	Label,
 	Row,
 } from 'reactstrap';
-import { toast } from 'react-toastify';
 import { withNavigation } from 'utils/withNavigation';
 import { api } from 'utils';
 import { Message } from 'components';

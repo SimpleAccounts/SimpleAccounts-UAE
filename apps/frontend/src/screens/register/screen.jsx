@@ -44,7 +44,7 @@ if (localStorage.getItem('language') == null) {
 }
 
 // Regular expressions
-const regEx = /^[0-9\d]+$/;
+const regEx = /^[0-9]+$/; // Fixed: removed redundant \d (0-9 already covers digits)
 const regExAlpha = /^[a-zA-Z ]+$/;
 
 // Zod validation schema with conditional VAT validation
@@ -533,15 +533,7 @@ const Register = ({
 		}
 	};
 
-	// Handle firstName/lastName change with alpha validation and upperFirst
-	const handleNameChange = (fieldName, e) => {
-		const value = e.target.value;
-		if (value === '' || regExAlpha.test(value)) {
-			const upperValue = upperFirst(value);
-			// Update form state - this will trigger validation
-			form.setValue(fieldName, upperValue, { shouldValidate: true, shouldTouch: true });
-		}
-	};
+	// Note: handleNameChange was removed as it's not used - name fields are handled directly via Controller
 
 	// Handle TRN change with numeric validation
 	const handleTRNChange = (e) => {

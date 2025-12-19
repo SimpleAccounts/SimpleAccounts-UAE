@@ -14,27 +14,27 @@ echo "window._env_ = {" >> "${OUTPUT_FILE}"
 
 # Read each line in .env file (if it exists)
 if [ -f .env ]; then
-  while read -r line || [[ -n "$line" ]];
-  do
+while read -r line || [[ -n "$line" ]];
+do
     # Skip empty lines and comments
     [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
     
-    # Split env variables by character `=`
-    if printf '%s\n' "$line" | grep -q -e '='; then
-      varname=$(printf '%s\n' "$line" | sed -e 's/=.*//')
-      varvalue=$(printf '%s\n' "$line" | sed -e 's/^[^=]*=//')
-    fi
+  # Split env variables by character `=`
+  if printf '%s\n' "$line" | grep -q -e '='; then
+    varname=$(printf '%s\n' "$line" | sed -e 's/=.*//')
+    varvalue=$(printf '%s\n' "$line" | sed -e 's/^[^=]*=//')
+  fi
 
-    # Read value of current variable if exists as Environment variable
-    if [ -n "$varname" ]; then
-      value=$(eval echo "\$$varname" 2>/dev/null)
-    fi
-    # Otherwise use value from .env file
-    [[ -z $value ]] && value=${varvalue}
+  # Read value of current variable if exists as Environment variable
+  if [ -n "$varname" ]; then
+    value=$(eval echo "\$$varname" 2>/dev/null)
+  fi
+  # Otherwise use value from .env file
+  [[ -z $value ]] && value=${varvalue}
 
-    # Append configuration property to JS file
+  # Append configuration property to JS file
     echo "  $varname: \"$value\"," >> "${OUTPUT_FILE}"
-  done < .env
+done < .env
 else
   # If no .env file, create empty config with default values
   echo "  SIMPLEACCOUNTS_HOST: \"\"," >> "${OUTPUT_FILE}"

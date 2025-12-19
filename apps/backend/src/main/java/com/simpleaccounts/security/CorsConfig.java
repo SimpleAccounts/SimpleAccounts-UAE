@@ -1,14 +1,14 @@
 package com.simpleaccounts.security;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 public class CorsConfig {
 
+    // Commented out to prevent duplicate CORS headers
+    // SimpleCorsFilter already handles CORS with @Order(Ordered.HIGHEST_PRECEDENCE)
+    // Having both filters causes "Multiple CORS header 'Access-Control-Allow-Origin' not allowed" error
+    /*
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -20,5 +20,6 @@ public class CorsConfig {
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
+    */
 }
 

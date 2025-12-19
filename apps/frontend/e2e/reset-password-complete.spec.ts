@@ -3,7 +3,6 @@ import { execSync } from 'child_process';
 import * as path from 'path';
 
 const BASE_URL = process.env.E2E_BASE_URL || 'http://localhost:3000';
-const BACKEND_URL = process.env.E2E_BACKEND_URL || 'http://localhost:8080';
 const RESET_PASSWORD_PATH = '/reset-password';
 const LOGIN_PATH = '/login';
 const E2E_USERNAME = process.env.E2E_USERNAME || 'test@example.com';
@@ -86,9 +85,7 @@ async function registerTestUser(page: Page) {
 
 	// Submit form
 	const submitButton = page.getByRole('button', { name: /register|submit/i });
-	const responsePromise = page.waitForResponse(response => response.url().includes('/rest/company/register'), { timeout: 30_000 }).catch(() => null);
 	await submitButton.click();
-	const response = await responsePromise;
 	await page.waitForTimeout(3000);
 
 	// Wait for redirect to login (success) or check for error
@@ -247,6 +244,7 @@ test.describe('Reset Password Complete Flow', () => {
 		// Verify values were set - check both input value and form state
 		const passwordValue = await passwordInput.inputValue();
 		const confirmPasswordValue = await confirmPasswordInput.inputValue();
+		// Log lengths only, not actual values for security
 		console.log('Password value length:', passwordValue.length);
 		console.log('Confirm password value length:', confirmPasswordValue.length);
 		
@@ -268,7 +266,8 @@ test.describe('Reset Password Complete Flow', () => {
 			
 			// Verify it was set
 			const confirmPasswordValueAfter = await confirmPasswordInput.inputValue();
-			console.log('Confirm password value after JS set:', confirmPasswordValueAfter.length);
+			// Log length only, not actual value for security
+			console.log('Confirm password value after JS set (length):', confirmPasswordValueAfter.length);
 		}
 
 		// Check for validation errors before submitting
@@ -277,8 +276,9 @@ test.describe('Reset Password Complete Flow', () => {
 		const hasPasswordError = await passwordError.isVisible({ timeout: 2_000 }).catch(() => false);
 		const hasConfirmPasswordError = await confirmPasswordError.isVisible({ timeout: 2_000 }).catch(() => false);
 		
-		console.log('Password validation error:', hasPasswordError);
-		console.log('Confirm password validation error:', hasConfirmPasswordError);
+		// Log validation state only, not password values
+		console.log('Password validation error present:', hasPasswordError);
+		console.log('Confirm password validation error present:', hasConfirmPasswordError);
 		
 		if (hasPasswordError || hasConfirmPasswordError) {
 			const passwordErrorText = hasPasswordError ? await passwordError.textContent() : '';
@@ -325,7 +325,7 @@ test.describe('Reset Password Complete Flow', () => {
 			apiError = status >= 400;
 			if (status !== 200) {
 				const responseBody = await response.text().catch(() => '');
-				console.log('Reset password response body:', responseBody.substring(0, 200));
+				console.log('Reset password response body (first 200 chars):', responseBody.substring(0, 200));
 				// Try to parse error message
 				try {
 					const errorObj = JSON.parse(responseBody);
@@ -334,6 +334,9 @@ test.describe('Reset Password Complete Flow', () => {
 					errorMessage = responseBody;
 				}
 			}
+		} else {
+			// No response received - API might have failed or timed out
+			apiError = true;
 		}
 
 		// Wait a bit more for UI updates
@@ -372,7 +375,8 @@ test.describe('Reset Password Complete Flow', () => {
 			let oldPasswordWorks = false;
 			if (oldPasswordResponse) {
 				const oldPasswordStatus = oldPasswordResponse.status();
-				console.log('Login with old password status:', oldPasswordStatus);
+				// Log status code only, not password values
+				console.log('Login with old password HTTP status:', oldPasswordStatus);
 				oldPasswordWorks = oldPasswordStatus === 200;
 			}
 			
@@ -389,7 +393,8 @@ test.describe('Reset Password Complete Flow', () => {
 			let newPasswordWorks = false;
 			if (newPasswordResponse) {
 				const newPasswordStatus = newPasswordResponse.status();
-				console.log('Login with new password status:', newPasswordStatus);
+				// Log status code only, not password values
+				console.log('Login with new password HTTP status:', newPasswordStatus);
 				newPasswordWorks = newPasswordStatus === 200;
 			}
 			
@@ -413,10 +418,11 @@ test.describe('Reset Password Complete Flow', () => {
 		}
 
 		// If API succeeded or we're redirected, that's success
-		expect(apiSuccess || hasSuccessToast || hasSuccessMessage || redirectedToLogin).toBeTruthy();
+		const overallSuccess = apiSuccess || hasSuccessToast || hasSuccessMessage || redirectedToLogin;
+		expect(overallSuccess).toBeTruthy();
 
 		// Verify we can login with new password (only if API succeeded or redirected)
-		if (apiSuccess || redirectedToLogin || hasSuccessToast || hasSuccessMessage) {
+		if (overallSuccess) {
 			await page.goto(`${BASE_URL}${LOGIN_PATH}`, { waitUntil: 'networkidle' });
 			await page.waitForSelector('#username', { state: 'visible', timeout: 10_000 });
 			await page.locator('#username').fill(E2E_USERNAME);
@@ -504,7 +510,6 @@ test.describe('Reset Password Complete Flow', () => {
 		
 		// Also check if we're redirected to login with error
 		const redirectedToLogin = page.url().includes(LOGIN_PATH);
-		const errorInUrl = page.url().includes('error') || page.url().includes('invalid');
 
 		console.log('Error message visible:', hasError);
 		console.log('Redirected to login:', redirectedToLogin);
