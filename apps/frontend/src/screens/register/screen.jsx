@@ -563,7 +563,7 @@ const Register = ({
 									<Col lg={10} className="mx-auto">
 										<CardGroup>
 											<Card className="p-4">
-												{!!loading ? (
+												{loading ? (
 													<Row>
 														<Col lg={12}>
 															<Loader />
@@ -1315,7 +1315,7 @@ const Register = ({
 																		type="submit"
 																		name="submit"
 																		color="primary"
-																		disabled={!!loading}
+																		disabled={loading}
 																		className="btn-square mr-3 mt-3"
 																		style={{
 																			width: '200px',
