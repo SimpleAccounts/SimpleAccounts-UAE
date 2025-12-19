@@ -98,23 +98,52 @@ async function registerTestUser(page: Page) {
 // Helper function to get reset token from database
 async function getResetTokenFromDB(): Promise<string | null> {
 	try {
+		// Escape single quotes in username to prevent SQL injection
+		const escapedUsername = E2E_USERNAME.replace(/'/g, "''");
+		
 		// Table name is sa_user (lowercase), Hibernate maps to uppercase columns
 		// Try with quoted uppercase first (Hibernate style)
-		let query = `SELECT FORGOT_PASS_TOKEN FROM sa_user WHERE USER_EMAIL = '${E2E_USERNAME}' AND FORGOT_PASS_TOKEN IS NOT NULL ORDER BY CREATED_DATE DESC LIMIT 1;`;
-		let result = execSync(
-			`docker exec simpleaccounts-db psql -U simpleaccounts_db_user -d simpleaccounts_db -t -A -c "${query}"`,
+		let query = `SELECT FORGOT_PASS_TOKEN FROM sa_user WHERE USER_EMAIL = '${escapedUsername}' AND FORGOT_PASS_TOKEN IS NOT NULL ORDER BY CREATED_DATE DESC LIMIT 1;`;
+		let result = execFileSync(
+			'docker',
+			[
+				'exec',
+				'simpleaccounts-db',
+				'psql',
+				'-U',
+				'simpleaccounts_db_user',
+				'-d',
+				'simpleaccounts_db',
+				'-t',
+				'-A',
+				'-c',
+				query,
+			],
 			{ encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] }
-		);
+		) as string;
 		let token = result.trim();
 		if (token && token.length > 0) {
 			return token;
 		}
 		// Try with lowercase column names
-		query = `SELECT forgot_pass_token FROM sa_user WHERE user_email = '${E2E_USERNAME}' AND forgot_pass_token IS NOT NULL ORDER BY created_date DESC LIMIT 1;`;
-		result = execSync(
-			`docker exec simpleaccounts-db psql -U simpleaccounts_db_user -d simpleaccounts_db -t -A -c "${query}"`,
+		query = `SELECT forgot_pass_token FROM sa_user WHERE user_email = '${escapedUsername}' AND forgot_pass_token IS NOT NULL ORDER BY created_date DESC LIMIT 1;`;
+		result = execFileSync(
+			'docker',
+			[
+				'exec',
+				'simpleaccounts-db',
+				'psql',
+				'-U',
+				'simpleaccounts_db_user',
+				'-d',
+				'simpleaccounts_db',
+				'-t',
+				'-A',
+				'-c',
+				query,
+			],
 			{ encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] }
-		);
+		) as string;
 		token = result.trim();
 		return token && token.length > 0 ? token : null;
 	} catch (error: any) {
@@ -244,9 +273,7 @@ test.describe('Reset Password Complete Flow', () => {
 		// Verify values were set - check both input value and form state
 		const passwordValue = await passwordInput.inputValue();
 		const confirmPasswordValue = await confirmPasswordInput.inputValue();
-		// Log lengths only, not actual values for security
-		console.log('Password value length:', passwordValue.length);
-		console.log('Confirm password value length:', confirmPasswordValue.length);
+		// Do not log password values or their derived data (such as length) for security
 		
 		// If confirmPassword is still empty, use JavaScript to set value and trigger React Hook Form
 		if (!confirmPasswordValue || confirmPasswordValue.length === 0) {
@@ -266,8 +293,8 @@ test.describe('Reset Password Complete Flow', () => {
 			
 			// Verify it was set
 			const confirmPasswordValueAfter = await confirmPasswordInput.inputValue();
-			// Log length only, not actual value for security
-			console.log('Confirm password value after JS set (length):', confirmPasswordValueAfter.length);
+			// Do not log password-derived data; log only generic status information
+			console.log('Confirm password value successfully set via JavaScript.');
 		}
 
 		// Check for validation errors before submitting
@@ -276,9 +303,7 @@ test.describe('Reset Password Complete Flow', () => {
 		const hasPasswordError = await passwordError.isVisible({ timeout: 2_000 }).catch(() => false);
 		const hasConfirmPasswordError = await confirmPasswordError.isVisible({ timeout: 2_000 }).catch(() => false);
 		
-		// Log validation state only, not password values
-		console.log('Password validation error present:', hasPasswordError);
-		console.log('Confirm password validation error present:', hasConfirmPasswordError);
+		// Avoid logging password-related validation state to prevent leaking sensitive information
 		
 		if (hasPasswordError || hasConfirmPasswordError) {
 			const passwordErrorText = hasPasswordError ? await passwordError.textContent() : '';
@@ -375,8 +400,7 @@ test.describe('Reset Password Complete Flow', () => {
 			let oldPasswordWorks = false;
 			if (oldPasswordResponse) {
 				const oldPasswordStatus = oldPasswordResponse.status();
-				// Log status code only, not password values
-				console.log('Login with old password HTTP status:', oldPasswordStatus);
+				// Do not log authentication-related status codes to avoid leaking sensitive information
 				oldPasswordWorks = oldPasswordStatus === 200;
 			}
 			
@@ -393,8 +417,7 @@ test.describe('Reset Password Complete Flow', () => {
 			let newPasswordWorks = false;
 			if (newPasswordResponse) {
 				const newPasswordStatus = newPasswordResponse.status();
-				// Log status code only, not password values
-				console.log('Login with new password HTTP status:', newPasswordStatus);
+				// Do not log authentication-related status codes to avoid leaking sensitive information
 				newPasswordWorks = newPasswordStatus === 200;
 			}
 			

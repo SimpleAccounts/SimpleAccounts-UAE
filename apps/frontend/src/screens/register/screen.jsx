@@ -1324,7 +1324,7 @@ const Register = ({
 																		title={!form.formState.isValid ? `Please fill all required fields. Errors: ${Object.keys(form.formState.errors).length}` : ''}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		{!!loading ? 'Creating...' : 'Register'}
+																		Register
 																	</Button>
 																</Col>
 															</Row>
