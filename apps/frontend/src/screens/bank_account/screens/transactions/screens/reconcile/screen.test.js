@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
+import { vi } from 'vitest';
 import ConnectedComponent from './screen';
 
 const ReconcileTransaction = ConnectedComponent.WrappedComponent;
@@ -11,14 +12,12 @@ global.FormData = class {
   }
 };
 
-jest.mock('react-datepicker', () => (props) => (
-  <input data-testid={props.id} onChange={() => props.onChange(new Date())} />
-));
+vi.mock('react-datepicker', () => ({
+  default: props => <input data-testid={props.id} onChange={() => props.onChange(new Date())} />,
+}));
 
 jest.mock('react-bootstrap-table', () => {
-  const Table = ({ children }) => (
-    <div data-testid="bootstrap-table">{children}</div>
-  );
+  const Table = ({ children }) => <div data-testid="bootstrap-table">{children}</div>;
   const Column = ({ children }) => <div>{children}</div>;
   return { BootstrapTable: Table, TableHeaderColumn: Column };
 });
@@ -96,11 +95,13 @@ describe('ReconcileTransaction screen', () => {
 
     render(<ReconcileTransaction {...props} />);
 
-    await waitFor(() => expect(getReconcileList).toHaveBeenCalledWith({
-      pageNo: 0,
-      pageSize: 10,
-      bankId: 9,
-    }));
+    await waitFor(() =>
+      expect(getReconcileList).toHaveBeenCalledWith({
+        pageNo: 0,
+        pageSize: 10,
+        bankId: 9,
+      })
+    );
   });
 
   it('redirects to banking list when bank account id is missing', async () => {
@@ -112,9 +113,7 @@ describe('ReconcileTransaction screen', () => {
 
     render(<ReconcileTransaction {...props} />);
 
-    await waitFor(() =>
-      expect(history.push).toHaveBeenCalledWith('/admin/banking/bank-account'),
-    );
+    await waitFor(() => expect(history.push).toHaveBeenCalledWith('/admin/banking/bank-account'));
   });
 
   it('removes reconciled rows and refreshes list', async () => {
@@ -126,12 +125,12 @@ describe('ReconcileTransaction screen', () => {
     await waitFor(() => expect(ref.current).toBeTruthy());
     await ref.current.removeReconciled(42);
 
-    expect(props.transactionReconcileActions.removeBulkReconciled).toHaveBeenCalledWith(
-      { ids: [42] },
-    );
+    expect(props.transactionReconcileActions.removeBulkReconciled).toHaveBeenCalledWith({
+      ids: [42],
+    });
     expect(props.commonActions.tostifyAlert).toHaveBeenCalledWith(
       'success',
-      'Deleted Successfully',
+      'Deleted Successfully'
     );
     await waitFor(() => expect(getReconcileList).toHaveBeenCalledTimes(2));
   });
@@ -160,7 +159,7 @@ describe('ReconcileTransaction screen', () => {
         closingBalance: '123.45',
         date: new Date(Date.UTC(2024, 0, 5)),
       },
-      resetForm,
+      resetForm
     );
 
     expect(reconcilenow).toHaveBeenCalledTimes(1);
@@ -194,10 +193,9 @@ describe('ReconcileTransaction screen', () => {
         closingBalance: '50.00',
         date: new Date(),
       },
-      jest.fn(),
+      jest.fn()
     );
 
     expect(tostifyAlert).toHaveBeenCalledWith('error', 'balance mismatch');
   });
 });
-

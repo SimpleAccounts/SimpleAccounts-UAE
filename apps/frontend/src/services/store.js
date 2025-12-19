@@ -1,5 +1,5 @@
-import { configureStore as rtkConfigureStore } from '@reduxjs/toolkit'
-import rootReducer from './reducer'
+import { configureStore as rtkConfigureStore } from '@reduxjs/toolkit';
+import rootReducer from './reducer';
 
 export default function configureStore(initialState = {}) {
   // Configure serializable check to ignore FormData in register actions
@@ -7,7 +7,7 @@ export default function configureStore(initialState = {}) {
     reducer: rootReducer,
     preloadedState: initialState,
     devTools: process.env.NODE_ENV !== 'production',
-    middleware: (getDefaultMiddleware) =>
+    middleware: getDefaultMiddleware =>
       getDefaultMiddleware({
         serializableCheck: {
           // Ignore these action types and paths in state
@@ -31,5 +31,5 @@ export default function configureStore(initialState = {}) {
           ignoredPaths: ['common.tostifyAlertFunc'],
         },
       }),
-  })
+  });
 }

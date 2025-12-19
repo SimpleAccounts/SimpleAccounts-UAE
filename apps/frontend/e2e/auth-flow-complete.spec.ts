@@ -17,7 +17,7 @@ async function login(page: Page, username: string, password: string) {
 
   const loginButton = page.getByRole('button', { name: /log in/i });
   const buttonHandle = await loginButton.elementHandle();
-  
+
   // Click login button
   if (buttonHandle) {
     await loginButton.click({ timeout: 30_000 });
@@ -31,21 +31,31 @@ async function login(page: Page, username: string, password: string) {
 
   // Wait for URL change with timeout
   try {
-    await page.waitForURL(`**${normalizedPostLoginPath}**`, { timeout: 60_000, waitUntil: 'domcontentloaded' });
+    await page.waitForURL(`**${normalizedPostLoginPath}**`, {
+      timeout: 60_000,
+      waitUntil: 'domcontentloaded',
+    });
   } catch (error) {
     // If navigation didn't happen, check for error messages
     const currentUrl = page.url();
-    
+
     // Wait a bit for any error messages to appear
     await page.waitForTimeout(3000);
-    
+
     // Check for toast notifications (react-toastify)
-    const toastError = await page.locator('.Toastify__toast--error, [class*="toast-error"]').isVisible({ timeout: 2000 }).catch(() => false);
+    const toastError = await page
+      .locator('.Toastify__toast--error, [class*="toast-error"]')
+      .isVisible({ timeout: 2000 })
+      .catch(() => false);
     if (toastError) {
-      const toastText = await page.locator('.Toastify__toast--error, [class*="toast-error"]').first().textContent().catch(() => '');
+      const toastText = await page
+        .locator('.Toastify__toast--error, [class*="toast-error"]')
+        .first()
+        .textContent()
+        .catch(() => '');
       throw new Error(`Login failed: Toast error - "${toastText}". Current URL: ${currentUrl}`);
     }
-    
+
     // Check for alert/error messages
     const errorSelectors = [
       '.alert-danger',
@@ -54,7 +64,7 @@ async function login(page: Page, username: string, password: string) {
       '[class*="error"]',
       '[role="alert"]',
     ];
-    
+
     let errorMessage = '';
     for (const selector of errorSelectors) {
       try {
@@ -67,22 +77,32 @@ async function login(page: Page, username: string, password: string) {
         // Continue to next selector
       }
     }
-    
+
     // Check if we're still on login page
     if (currentUrl.includes(LOGIN_PATH) || currentUrl.endsWith('/login')) {
       if (errorMessage) {
-        throw new Error(`Login failed with error: "${errorMessage}". Current URL: ${currentUrl}. Make sure backend is running and credentials are correct.`);
+        throw new Error(
+          `Login failed with error: "${errorMessage}". Current URL: ${currentUrl}. Make sure backend is running and credentials are correct.`
+        );
       } else {
         // Check if form has validation errors
         const validationErrors = await page.locator('.invalid-feedback, [class*="error"]').count();
         if (validationErrors > 0) {
-          const validationText = await page.locator('.invalid-feedback, [class*="error"]').first().textContent().catch(() => '');
-          throw new Error(`Login failed: Form validation error - "${validationText}". Current URL: ${currentUrl}`);
+          const validationText = await page
+            .locator('.invalid-feedback, [class*="error"]')
+            .first()
+            .textContent()
+            .catch(() => '');
+          throw new Error(
+            `Login failed: Form validation error - "${validationText}". Current URL: ${currentUrl}`
+          );
         }
-        throw new Error(`Login failed: Still on login page after ${60_000}ms. Current URL: ${currentUrl}. Check if backend is running at http://localhost:8080 and credentials (${username}) are correct.`);
+        throw new Error(
+          `Login failed: Still on login page after ${60_000}ms. Current URL: ${currentUrl}. Check if backend is running at http://localhost:8080 and credentials (${username}) are correct.`
+        );
       }
     }
-    
+
     // If we got here, re-throw the original error
     throw error;
   }
@@ -130,7 +150,10 @@ test.describe('Complete Authentication Flow', () => {
   const testEmail = process.env.E2E_TEST_EMAIL || username;
 
   test.beforeEach(async ({ page }) => {
-    test.skip(!username || !password, 'E2E_USERNAME and E2E_PASSWORD must be set. These should be valid credentials for testing.');
+    test.skip(
+      !username || !password,
+      'E2E_USERNAME and E2E_PASSWORD must be set. These should be valid credentials for testing.'
+    );
   });
 
   test('should complete full auth flow: login → reset password → dashboard → logout', async ({
@@ -164,12 +187,16 @@ test.describe('Complete Authentication Flow', () => {
 
       // Verify form elements
       await expect(page.getByText(/forgot password/i)).toBeVisible({ timeout: 5_000 });
-      await expect(page.getByRole('button', { name: /send.*verification.*email/i })).toBeVisible({ timeout: 5_000 });
-      await expect(page.getByRole('button', { name: /back.*login/i })).toBeVisible({ timeout: 5_000 });
+      await expect(page.getByRole('button', { name: /send.*verification.*email/i })).toBeVisible({
+        timeout: 5_000,
+      });
+      await expect(page.getByRole('button', { name: /back.*login/i })).toBeVisible({
+        timeout: 5_000,
+      });
 
       // Fill in email with valid email format
       await emailInput.fill(testEmail);
-      
+
       // Verify email was filled
       await expect(emailInput).toHaveValue(testEmail);
 
@@ -180,11 +207,13 @@ test.describe('Complete Authentication Flow', () => {
       // Wait for success message or redirect
       // The form should show a success message or redirect to login
       await page.waitForTimeout(2000);
-      
+
       // Check for success message
       const successMessage = page.locator('.alert-success, [class*="success"], .Message');
-      const hasSuccessMessage = await successMessage.isVisible({ timeout: 5_000 }).catch(() => false);
-      
+      const hasSuccessMessage = await successMessage
+        .isVisible({ timeout: 5_000 })
+        .catch(() => false);
+
       if (hasSuccessMessage) {
         // Success message displayed, verify it contains expected text
         const messageText = await successMessage.textContent().catch(() => '');
@@ -202,7 +231,7 @@ test.describe('Complete Authentication Flow', () => {
           await page.goto(LOGIN_PATH);
         }
       }
-      
+
       await expect(page).toHaveURL(new RegExp(LOGIN_PATH));
     });
 
@@ -248,7 +277,7 @@ test.describe('Complete Authentication Flow', () => {
 
       // Verify we're logged out by checking we can't access protected routes
       await page.goto(DASHBOARD_PATH, { waitUntil: 'domcontentloaded' });
-      
+
       // Should redirect back to login
       await page.waitForURL(`**${LOGIN_PATH}**`, { timeout: 10_000 });
       await expect(page).toHaveURL(new RegExp(LOGIN_PATH));
@@ -283,7 +312,7 @@ test.describe('Complete Authentication Flow', () => {
 
   test('should verify reset password screen elements and functionality', async ({ page }) => {
     await page.goto(RESET_PASSWORD_PATH, { waitUntil: 'domcontentloaded' });
-    
+
     // Verify URL
     await expect(page).toHaveURL(new RegExp(RESET_PASSWORD_PATH));
 
@@ -295,15 +324,19 @@ test.describe('Complete Authentication Flow', () => {
     const emailInput = page.locator('input#username, input[name="username"]');
     await expect(emailInput).toBeVisible({ timeout: 10_000 });
     await expect(page.getByText(/forgot password/i)).toBeVisible({ timeout: 5_000 });
-    
+
     // Verify buttons
-    await expect(page.getByRole('button', { name: /send.*verification.*email/i })).toBeVisible({ timeout: 5_000 });
-    await expect(page.getByRole('button', { name: /back.*login/i })).toBeVisible({ timeout: 5_000 });
+    await expect(page.getByRole('button', { name: /send.*verification.*email/i })).toBeVisible({
+      timeout: 5_000,
+    });
+    await expect(page.getByRole('button', { name: /back.*login/i })).toBeVisible({
+      timeout: 5_000,
+    });
 
     // Test form validation - try submitting empty form
     const submitButton = page.getByRole('button', { name: /send.*verification.*email/i });
     await submitButton.click();
-    
+
     // Should show validation error
     await page.waitForTimeout(1000);
     const validationError = page.locator('.invalid-feedback, [class*="error"]');
@@ -315,31 +348,35 @@ test.describe('Complete Authentication Flow', () => {
     await submitButton.click();
     await page.waitForTimeout(1000);
     const invalidEmailError = page.locator('.invalid-feedback, [class*="error"]');
-    const hasInvalidError = await invalidEmailError.isVisible({ timeout: 3_000 }).catch(() => false);
+    const hasInvalidError = await invalidEmailError
+      .isVisible({ timeout: 3_000 })
+      .catch(() => false);
     expect(hasInvalidError).toBeTruthy();
 
     // Test with valid email format
     await emailInput.fill(testEmail);
     await expect(emailInput).toHaveValue(testEmail);
-    
+
     // Clear any previous validation errors
     await page.waitForTimeout(500);
-    
+
     // Verify no validation errors for valid email
     const emailErrorBeforeSubmit = emailInput.locator('..').locator('.invalid-feedback');
-    const hasEmailErrorBefore = await emailErrorBeforeSubmit.isVisible({ timeout: 1_000 }).catch(() => false);
+    const hasEmailErrorBefore = await emailErrorBeforeSubmit
+      .isVisible({ timeout: 1_000 })
+      .catch(() => false);
     expect(hasEmailErrorBefore).toBeFalsy();
-    
+
     // Click submit (this will send email if backend is configured)
     await submitButton.click();
-    
+
     // Wait for response (success message, error message, or redirect)
     await page.waitForTimeout(3000);
-    
+
     // Check current URL - might redirect to login on success
     const currentUrl = page.url();
     const redirectedToLogin = currentUrl.includes(LOGIN_PATH);
-    
+
     // Verify either:
     // 1. Success message appears (toast or alert)
     // 2. Error message appears (toast or alert)
@@ -347,20 +384,24 @@ test.describe('Complete Authentication Flow', () => {
     // 4. Still on reset password page (form validation passed, backend may not respond)
     const toastSuccess = page.locator('.Toastify__toast--success');
     const toastError = page.locator('.Toastify__toast--error');
-    const alertMessage = page.locator('.alert-success, .alert-danger, .Message, [class*="success"], [class*="error"]');
-    
+    const alertMessage = page.locator(
+      '.alert-success, .alert-danger, .Message, [class*="success"], [class*="error"]'
+    );
+
     const hasToastSuccess = await toastSuccess.isVisible({ timeout: 2_000 }).catch(() => false);
     const hasToastError = await toastError.isVisible({ timeout: 2_000 }).catch(() => false);
     const hasAlertMessage = await alertMessage.isVisible({ timeout: 2_000 }).catch(() => false);
     const stillOnResetPage = currentUrl.includes(RESET_PASSWORD_PATH);
-    
+
     // At least one of these should be true
-    expect(hasToastSuccess || hasToastError || hasAlertMessage || redirectedToLogin || stillOnResetPage).toBeTruthy();
+    expect(
+      hasToastSuccess || hasToastError || hasAlertMessage || redirectedToLogin || stillOnResetPage
+    ).toBeTruthy();
 
     // Test "Back To Login" button
     const backButton = page.getByRole('button', { name: /back.*login/i });
     const backButtonVisible = await backButton.isVisible({ timeout: 5_000 }).catch(() => false);
-    
+
     if (backButtonVisible) {
       await backButton.click();
       await expect(page).toHaveURL(new RegExp(LOGIN_PATH), { timeout: 10_000 });
@@ -399,12 +440,7 @@ test.describe('Complete Authentication Flow', () => {
     await expect(page).toHaveURL(new RegExp(LOGIN_PATH));
 
     // Try to access protected routes
-    const protectedRoutes = [
-      DASHBOARD_PATH,
-      '/admin/income',
-      '/admin/expense',
-      '/admin/master',
-    ];
+    const protectedRoutes = [DASHBOARD_PATH, '/admin/income', '/admin/expense', '/admin/master'];
 
     for (const route of protectedRoutes) {
       await page.goto(route, { waitUntil: 'domcontentloaded' });
@@ -414,4 +450,3 @@ test.describe('Complete Authentication Flow', () => {
     }
   });
 });
-

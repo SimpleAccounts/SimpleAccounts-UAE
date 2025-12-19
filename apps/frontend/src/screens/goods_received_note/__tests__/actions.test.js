@@ -1,20 +1,24 @@
+import { vi } from 'vitest';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as actions from '../actions';
 import { GOODS_RECEVED_NOTE } from 'constants/types';
 import { authApi } from 'utils';
 
-jest.mock('utils', () => ({
-  authApi: jest.fn(),
+vi.mock('utils', () => ({
+  authApi: vi.fn(),
 }));
 
-jest.mock('@/utils/date', () => {
-  const actualDayjs = jest.requireActual('@/utils/date').default;
-  return (date) => {
-    if (date) {
-      return actualDayjs(date);
-    }
-    return actualDayjs('2024-12-01');
+vi.mock('@/utils/date', async importOriginal => {
+  const actualModule = await importOriginal();
+  const actualDayjs = actualModule.default;
+  return {
+    default: date => {
+      if (date) {
+        return actualDayjs(date);
+      }
+      return actualDayjs('2024-12-01');
+    },
   };
 });
 

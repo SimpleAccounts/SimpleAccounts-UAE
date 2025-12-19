@@ -88,17 +88,17 @@ async function patchFormikYupToFormErrors() {
     const formikModule = await import('formik').catch(() => null);
     if (formikModule && formikModule.yupToFormErrors) {
       const originalYupToFormErrors = formikModule.yupToFormErrors;
-      
+
       // Check if the property is writable before attempting to patch
       const descriptor = Object.getOwnPropertyDescriptor(formikModule, 'yupToFormErrors');
-      
+
       // If property exists and is writable, patch it
       if (!descriptor || descriptor.writable !== false) {
         try {
-      formikModule.yupToFormErrors = function (yupError) {
-        const normalized = normalizeYupError(yupError);
-        return originalYupToFormErrors.call(this, normalized);
-      };
+          formikModule.yupToFormErrors = function (yupError) {
+            const normalized = normalizeYupError(yupError);
+            return originalYupToFormErrors.call(this, normalized);
+          };
         } catch (writeError) {
           // Property might be read-only, try using defineProperty
           try {
@@ -124,10 +124,12 @@ async function patchFormikYupToFormErrors() {
     // Formik might not be loaded yet or yupToFormErrors might not be exported
     // This is okay, we'll rely on the Yup patch instead
     // Only log unexpected errors (not read-only property errors)
-    if ((import.meta.env?.DEV || process.env.NODE_ENV === 'development') && 
-        error.message && 
-        !error.message.includes('read-only') &&
-        !error.message.includes('Cannot assign')) {
+    if (
+      (import.meta.env?.DEV || process.env.NODE_ENV === 'development') &&
+      error.message &&
+      !error.message.includes('read-only') &&
+      !error.message.includes('Cannot assign')
+    ) {
       console.debug('Could not patch Formik yupToFormErrors:', error.message);
     }
   }

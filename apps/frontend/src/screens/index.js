@@ -7,13 +7,12 @@ import NewPassword from './new_password';
 import Dashboard from './dashboard';
 import DashboardTwo from './dashboard/screen-two';
 
-
 import Journal from './journal';
 import CreateJournal from './journal/screens/create';
 import DetailJournal from './journal/screens/detail';
 import OpeningBalance from './opening_balance';
-import CreateOpeningBalance from './opening_balance/screens/create'
-import DetailOpeningBalance from './opening_balance/screens/detail'
+import CreateOpeningBalance from './opening_balance/screens/create';
+import DetailOpeningBalance from './opening_balance/screens/detail';
 
 import BankAccount from './bank_account';
 import CreateBankAccount from './bank_account/screens/create';
@@ -56,18 +55,17 @@ import CreateGoodsReceivedNote from './goods_received_note/screens/create';
 import DetailGoodsReceivedNote from './goods_received_note/screens/detail';
 import ViewGoodsReceivedNote from './goods_received_note/screens/view';
 
-import CreateDebitNote from './debitNotes/screens/create'
-import DebitNotes from './debitNotes'
-import DetailDebitNote  from './debitNotes/screens/detail'
-import DebitNoteRefund from './debitNotes/screens/refund'
-import ApplyToSupplierInvoice from './debitNotes/screens/applyToInvoice'
-import ViewDebitNote from './debitNotes/screens/view'
+import CreateDebitNote from './debitNotes/screens/create';
+import DebitNotes from './debitNotes';
+import DetailDebitNote from './debitNotes/screens/detail';
+import DebitNoteRefund from './debitNotes/screens/refund';
+import ApplyToSupplierInvoice from './debitNotes/screens/applyToInvoice';
+import ViewDebitNote from './debitNotes/screens/view';
 
 import Quotation from './quotation';
 import CreateQuotation from './quotation/screens/create';
 import DetailQuotation from './quotation/screens/detail';
 import ViewQuotation from './quotation/screens/view';
-
 
 import Expense from './expense';
 import CreateExpense from './expense/screens/create';
@@ -83,8 +81,8 @@ import ReportsFiling from './reports_filing';
 
 import TransactionsReport from './transactions_report';
 import FinancialReport from './financial_report';
-import Inventory from './inventory'
-import Template from './template'
+import Inventory from './inventory';
+import Template from './template';
 import ProfitAndLossReport from './financial_report/sections/profit_and_loss';
 import BalanceSheet from './financial_report/sections/balance_sheet';
 import HorizontalBalanceSheet from './financial_report/sections/horizontal_balance_sheet';
@@ -158,259 +156,258 @@ import Help from './help';
 import Faq from './help/screens/faq';
 import PayrollEmployee from './payrollemp';
 import CreatePayrollEmployee from './payrollemp/screens/create';
-import Employment from './employment'
-import CreateEmployment from './employment/screens/create'
-import EmployeeFinancial from './employee_Bank_Details'
-import CreateEmployeeFinancial from './employee_Bank_Details/screens/create'
-import SalaryRoles from './salaryRoles'
-import CreateSalaryRoles from './salaryRoles/screens/create'
-import DetailSalaryRole from './salaryRoles/screens/detail'
-import SalaryTemplate from './salaryTemplate'
-import CreateSalaryTemplate from './salaryTemplate/screens/create'
-import CreateSalaryStucture from './salaryStructure/screens/create'
-import SalaryStucture from './salaryStructure'
-import PayrollRun from './payroll_run'
-import ViewEmployee from './payrollemp/screens/view'
+import Employment from './employment';
+import CreateEmployment from './employment/screens/create';
+import EmployeeFinancial from './employee_Bank_Details';
+import CreateEmployeeFinancial from './employee_Bank_Details/screens/create';
+import SalaryRoles from './salaryRoles';
+import CreateSalaryRoles from './salaryRoles/screens/create';
+import DetailSalaryRole from './salaryRoles/screens/detail';
+import SalaryTemplate from './salaryTemplate';
+import CreateSalaryTemplate from './salaryTemplate/screens/create';
+import CreateSalaryStucture from './salaryStructure/screens/create';
+import SalaryStucture from './salaryStructure';
+import PayrollRun from './payroll_run';
+import ViewEmployee from './payrollemp/screens/view';
 // import SalarySlip from './employeePayroll/screens/salarySlip'
-import UpdateEmployeePersonal from './payrollemp/screens/update_emp_personal'
-import UpdateEmployeeBank from './payrollemp/screens/update_emp_bank'
-import UpdateEmployeeEmployment from './payrollemp/screens/update_emp_employemet'
-import UpdateSalaryComponent from './payrollemp/screens/update_salary_component'
-import Designation from './designation'
-import CreateDesignation from './designation/screens/create'
-import CreateSalaryComponent from './salary_component/screens/create'
-import DetailSalaryStructure from './salaryStructure/screens/detail'
-import DetailSalaryComponent from './salary_component/screens/detail'
-import DetailSalaryTemplate from './salaryTemplate/screens/detail'
-import DetailDesignation from './designation/screens/detail'
-import DetailCreditNote from './creditNotes/screens/detail'
-import CreateCreditNote from './creditNotes/screens/create'
-import ViewCreditNote from './creditNotes/screens/view'
-import CreditNotes from './creditNotes'
-import ApplyToInvoice from './creditNotes/screens/applyToInvoice'
-import Refund from './creditNotes/screens/refund'
-import PayrollConfigurations from './payroll_configurations'
-import Import from './import'
+import UpdateEmployeePersonal from './payrollemp/screens/update_emp_personal';
+import UpdateEmployeeBank from './payrollemp/screens/update_emp_bank';
+import UpdateEmployeeEmployment from './payrollemp/screens/update_emp_employemet';
+import UpdateSalaryComponent from './payrollemp/screens/update_salary_component';
+import Designation from './designation';
+import CreateDesignation from './designation/screens/create';
+import CreateSalaryComponent from './salary_component/screens/create';
+import DetailSalaryStructure from './salaryStructure/screens/detail';
+import DetailSalaryComponent from './salary_component/screens/detail';
+import DetailSalaryTemplate from './salaryTemplate/screens/detail';
+import DetailDesignation from './designation/screens/detail';
+import DetailCreditNote from './creditNotes/screens/detail';
+import CreateCreditNote from './creditNotes/screens/create';
+import ViewCreditNote from './creditNotes/screens/view';
+import CreditNotes from './creditNotes';
+import ApplyToInvoice from './creditNotes/screens/applyToInvoice';
+import Refund from './creditNotes/screens/refund';
+import PayrollConfigurations from './payroll_configurations';
+import Import from './import';
 import CreatePayroll from './payroll_run/screens/createPayrollList';
 import Migrate from './import/sections/migrate';
 import MigrateHistory from './import/sections/migrate_history';
 import PayrollApproverScreen from './payroll_run/screens/approver';
 import UpdatePayroll from './payroll_run/screens/updatePayroll';
-import SOAReport from './financial_report/sections/soa_statementsOfAccounts'
-import VatReports from './financial_report/sections/vat_reports'
-import VatPaymentRecord from './financial_report/sections/vat_reports/screens/vatPaymentRecord'
-import RecordTaxClaim from './financial_report/sections/vat_reports/screens/record_claim_tax'
-import RecordVatPayment from './financial_report/sections/vat_reports/screens/record_tax_payment'
-import CorporateTax from './financial_report/sections/corporate_tax'
-import CorporateTaxPaymentHistory from './financial_report/sections/corporate_tax/screens/payment_history'
-import CorporateTaxPaymentRecord from './financial_report/sections/corporate_tax/screens/payment_record'
-import ViewCorporateTax from './financial_report/sections/corporate_tax/screens/view'
-import FtaAuditReport from './financial_report/sections/fta_audit_report_MainPage'
-import GenerateAuditFile from './financial_report/sections/fta_audit_report_MainPage/screens/generate_Fta_audit_report'
+import SOAReport from './financial_report/sections/soa_statementsOfAccounts';
+import VatReports from './financial_report/sections/vat_reports';
+import VatPaymentRecord from './financial_report/sections/vat_reports/screens/vatPaymentRecord';
+import RecordTaxClaim from './financial_report/sections/vat_reports/screens/record_claim_tax';
+import RecordVatPayment from './financial_report/sections/vat_reports/screens/record_tax_payment';
+import CorporateTax from './financial_report/sections/corporate_tax';
+import CorporateTaxPaymentHistory from './financial_report/sections/corporate_tax/screens/payment_history';
+import CorporateTaxPaymentRecord from './financial_report/sections/corporate_tax/screens/payment_record';
+import ViewCorporateTax from './financial_report/sections/corporate_tax/screens/view';
+import FtaAuditReport from './financial_report/sections/fta_audit_report_MainPage';
+import GenerateAuditFile from './financial_report/sections/fta_audit_report_MainPage/screens/generate_Fta_audit_report';
 import ViewFtaAuditReport from './financial_report/sections/Fta_Audit_Report';
-import ExciseTaxAuditReport from './financial_report/sections/excise_tax_audit_report_MainPage'
-import ViewFtaExciseAuditReport from './financial_report/sections/Excise_Audit_Report'
-import ARAgingReport from './financial_report/sections/ar_aging_report'
-import SubReports from './financial_report/sections/vat_return/screens/subReports'
-import NotesSettings from './notesSetting'
-import DebitNoteDetailsReport from './financial_report/sections/debit_note_details'
+import ExciseTaxAuditReport from './financial_report/sections/excise_tax_audit_report_MainPage';
+import ViewFtaExciseAuditReport from './financial_report/sections/Excise_Audit_Report';
+import ARAgingReport from './financial_report/sections/ar_aging_report';
+import SubReports from './financial_report/sections/vat_return/screens/subReports';
+import NotesSettings from './notesSetting';
+import DebitNoteDetailsReport from './financial_report/sections/debit_note_details';
 import PayrollSettings from './payrollsettings';
 export {
-	LogIn,
-	LogInTwo,
-	Register,
-	ResetPassword,
-	NewPassword,
-	Dashboard,
-	DashboardTwo,
-	ViewExpense,
-	Journal,
-	CreateJournal,
-	DetailJournal,
-	OpeningBalance,
-	CreateOpeningBalance,
-	DetailOpeningBalance,
-	BankAccount,
-	CreateBankAccount,
-	DetailBankAccount,
-	BankTransactions,
-	CreateBankTransaction,
-	DetailBankTransaction,
-	ReconcileTransaction,
-	ImportBankStatement,
-	ImportTransaction,
-	CustomerInvoice,
-	CreateCustomerInvoice,
-	DetailCustomerInvoice,
-	ViewCustomerInvoice,
-	RecordCustomerPayment,
-	Receipt,
-	CreateReceipt,
-	DetailReceipt,
-	SupplierInvoice,
-	CreateSupplierInvoice,
-	DetailSupplierInvoice,
-	ViewInvoice,
-	RecordSupplierPayment,
-	RequestForQuotation,
-	CreateRequestForQuotation,
-	DetailRequestForQuotation,
-	ViewRequestForQuotation,
-	PurchaseOrder,
-	CreatePurchaseOrder,
-	DetailPurchaseOrder,
-	ViewPurchaseOrder,
-	GoodsReceivedNote,
-	CreateGoodsReceivedNote,
-	DetailGoodsReceivedNote,
-	ViewGoodsReceivedNote,
-	DetailQuotation,
-	Quotation,
-	CreateQuotation,
-	ViewQuotation,
-	Expense,
-	CreateExpense,
-	DetailExpense,
-	Payment,
-	CreatePayment,
-	DetailPayment,
-	VatTransactions,
-	ReportsFiling,
-	TransactionsReport,
-	FinancialReport,
-	ProfitAndLossReport,
-	BalanceSheet,
-	HorizontalBalanceSheet,
-	TrailBalances,
-	CustomerAccountStatement,
-	Cashflow,
-	VatReturnsReport,
-	SalesByCustomer,
-	SalesByProduct,
-	PurchaseByitem,
-	PurchaseByVendor,
-	Inventory,
-	Template,
-	DetailedGeneralLedgerReport,
-	ChartAccount,
-	CreateChartAccount,
-	DetailChartAccount,
-	CurrencyConvert,
-	CreateCurrencyConvert,
-	DetailCurrencyConvert,
-	Contact,
-	CreateContact,
-	DetailContact,
-	Employee,
-	CreateEmployee,
-	DetailEmployee,
-	Product,
-	CreateProduct,
-	DetailProduct,
-	InventoryEdit,
-	InventoryHistory,
-	Project,
-	CreateProject,
-	DetailProject,
-	VatCode,
-	CreateVatCode,
-	DetailVatCode,
-	ProductCategory,
-	CreateProductCategory,
-	DetailProductCategory,
-	Currency,
-	CreateCurrency,
-	DetailCurrency,
-	User,
-	CreateUser,
-	DetailUser,
-	Organization,
-	Profile,
-	GeneralSettings,
-	TransactionCategory,
-	CreateTransactionCategory,
-	DetailTransactionCategory,
-	UsersRoles,
-	CreateRole,
-	UpdateRole,
-	Notification,
-	DataBackup,
-	Help,
-	Faq,
-	Employment,
-	CreateEmployment,
-	EmployeeFinancial,
-	CreateEmployeeFinancial,
-	CreateSalaryRoles,
-	SalaryRoles,
-	SalaryTemplate,
-	CreateSalaryTemplate,
-	SalaryStucture,
-	CreateSalaryStucture,
-	PayrollRun,
-	//SalarySlip,
-	UnderConstruction,
-	ReceivableInvoiceDetailsReport,
-	CreditNoteDetailsReport,
-	ReceivableInvoiceSummary,
-	Designation,
-	CreateDesignation,
-	PayablesInvoiceDetailsReport,
-	PayablesInvoiceSummary,
-	DetailSalaryRole,
-	DetailSalaryStructure,
-	DetailSalaryTemplate,
-	DetailDesignation,
-	DetailSalaryComponent,
-	CreateSalaryComponent,
-	CreditNotes,
-	CreateCreditNote,
-	DetailCreditNote,
-	ViewCreditNote,
-	ApplyToInvoice,
-	CreatePayrollEmployee,
-	PayrollEmployee,
-	Refund,
-	ViewEmployee,
-	UpdateEmployeePersonal,
-	UpdateEmployeeBank,
-	UpdateEmployeeEmployment,
-	UpdateSalaryComponent,
-	PayrollConfigurations,
-	ExpenseDetailsReport,
-	ExpenseByCategory,
-	InvoiceDetails,
-	Import,
-	CreatePayroll,	
-	PayrollApproverScreen,
-	UpdatePayroll,
-	MigrateHistory,
-	Migrate,
-	PayrollSummaryReport,
-	SOAReport,
-	VatReports,
-	VatPaymentRecord,
-	RecordTaxClaim,
-	RecordVatPayment,
-	CorporateTax,
-	CorporateTaxPaymentHistory,
-	CorporateTaxPaymentRecord,
-	ViewCorporateTax,
-	FtaAuditReport,
-	GenerateAuditFile,
-	ViewFtaAuditReport,
-	ExciseTaxAuditReport,
-	ViewFtaExciseAuditReport,
-	ARAgingReport,
-	SubReports,
-	NotesSettings,
-	DebitNotes,
-	CreateDebitNote,
-	DetailDebitNote,
-	DebitNoteRefund,
-	ApplyToSupplierInvoice,
-	ViewDebitNote,
-	DebitNoteDetailsReport,
-	PayrollSettings,
-
+  LogIn,
+  LogInTwo,
+  Register,
+  ResetPassword,
+  NewPassword,
+  Dashboard,
+  DashboardTwo,
+  ViewExpense,
+  Journal,
+  CreateJournal,
+  DetailJournal,
+  OpeningBalance,
+  CreateOpeningBalance,
+  DetailOpeningBalance,
+  BankAccount,
+  CreateBankAccount,
+  DetailBankAccount,
+  BankTransactions,
+  CreateBankTransaction,
+  DetailBankTransaction,
+  ReconcileTransaction,
+  ImportBankStatement,
+  ImportTransaction,
+  CustomerInvoice,
+  CreateCustomerInvoice,
+  DetailCustomerInvoice,
+  ViewCustomerInvoice,
+  RecordCustomerPayment,
+  Receipt,
+  CreateReceipt,
+  DetailReceipt,
+  SupplierInvoice,
+  CreateSupplierInvoice,
+  DetailSupplierInvoice,
+  ViewInvoice,
+  RecordSupplierPayment,
+  RequestForQuotation,
+  CreateRequestForQuotation,
+  DetailRequestForQuotation,
+  ViewRequestForQuotation,
+  PurchaseOrder,
+  CreatePurchaseOrder,
+  DetailPurchaseOrder,
+  ViewPurchaseOrder,
+  GoodsReceivedNote,
+  CreateGoodsReceivedNote,
+  DetailGoodsReceivedNote,
+  ViewGoodsReceivedNote,
+  DetailQuotation,
+  Quotation,
+  CreateQuotation,
+  ViewQuotation,
+  Expense,
+  CreateExpense,
+  DetailExpense,
+  Payment,
+  CreatePayment,
+  DetailPayment,
+  VatTransactions,
+  ReportsFiling,
+  TransactionsReport,
+  FinancialReport,
+  ProfitAndLossReport,
+  BalanceSheet,
+  HorizontalBalanceSheet,
+  TrailBalances,
+  CustomerAccountStatement,
+  Cashflow,
+  VatReturnsReport,
+  SalesByCustomer,
+  SalesByProduct,
+  PurchaseByitem,
+  PurchaseByVendor,
+  Inventory,
+  Template,
+  DetailedGeneralLedgerReport,
+  ChartAccount,
+  CreateChartAccount,
+  DetailChartAccount,
+  CurrencyConvert,
+  CreateCurrencyConvert,
+  DetailCurrencyConvert,
+  Contact,
+  CreateContact,
+  DetailContact,
+  Employee,
+  CreateEmployee,
+  DetailEmployee,
+  Product,
+  CreateProduct,
+  DetailProduct,
+  InventoryEdit,
+  InventoryHistory,
+  Project,
+  CreateProject,
+  DetailProject,
+  VatCode,
+  CreateVatCode,
+  DetailVatCode,
+  ProductCategory,
+  CreateProductCategory,
+  DetailProductCategory,
+  Currency,
+  CreateCurrency,
+  DetailCurrency,
+  User,
+  CreateUser,
+  DetailUser,
+  Organization,
+  Profile,
+  GeneralSettings,
+  TransactionCategory,
+  CreateTransactionCategory,
+  DetailTransactionCategory,
+  UsersRoles,
+  CreateRole,
+  UpdateRole,
+  Notification,
+  DataBackup,
+  Help,
+  Faq,
+  Employment,
+  CreateEmployment,
+  EmployeeFinancial,
+  CreateEmployeeFinancial,
+  CreateSalaryRoles,
+  SalaryRoles,
+  SalaryTemplate,
+  CreateSalaryTemplate,
+  SalaryStucture,
+  CreateSalaryStucture,
+  PayrollRun,
+  //SalarySlip,
+  UnderConstruction,
+  ReceivableInvoiceDetailsReport,
+  CreditNoteDetailsReport,
+  ReceivableInvoiceSummary,
+  Designation,
+  CreateDesignation,
+  PayablesInvoiceDetailsReport,
+  PayablesInvoiceSummary,
+  DetailSalaryRole,
+  DetailSalaryStructure,
+  DetailSalaryTemplate,
+  DetailDesignation,
+  DetailSalaryComponent,
+  CreateSalaryComponent,
+  CreditNotes,
+  CreateCreditNote,
+  DetailCreditNote,
+  ViewCreditNote,
+  ApplyToInvoice,
+  CreatePayrollEmployee,
+  PayrollEmployee,
+  Refund,
+  ViewEmployee,
+  UpdateEmployeePersonal,
+  UpdateEmployeeBank,
+  UpdateEmployeeEmployment,
+  UpdateSalaryComponent,
+  PayrollConfigurations,
+  ExpenseDetailsReport,
+  ExpenseByCategory,
+  InvoiceDetails,
+  Import,
+  CreatePayroll,
+  PayrollApproverScreen,
+  UpdatePayroll,
+  MigrateHistory,
+  Migrate,
+  PayrollSummaryReport,
+  SOAReport,
+  VatReports,
+  VatPaymentRecord,
+  RecordTaxClaim,
+  RecordVatPayment,
+  CorporateTax,
+  CorporateTaxPaymentHistory,
+  CorporateTaxPaymentRecord,
+  ViewCorporateTax,
+  FtaAuditReport,
+  GenerateAuditFile,
+  ViewFtaAuditReport,
+  ExciseTaxAuditReport,
+  ViewFtaExciseAuditReport,
+  ARAgingReport,
+  SubReports,
+  NotesSettings,
+  DebitNotes,
+  CreateDebitNote,
+  DetailDebitNote,
+  DebitNoteRefund,
+  ApplyToSupplierInvoice,
+  ViewDebitNote,
+  DebitNoteDetailsReport,
+  PayrollSettings,
 };

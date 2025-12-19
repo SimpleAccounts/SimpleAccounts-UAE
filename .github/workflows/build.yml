@@ -152,10 +152,9 @@ jobs:
 
       - name: Run Frontend Unit Tests with Coverage
         working-directory: apps/frontend
-        run: npm test -- --coverage --watchAll=false --coverageThreshold='{}'
+        run: npm run test:cov
         env:
           CI: true
-          NODE_OPTIONS: --openssl-legacy-provider
 
       - name: Upload Frontend Coverage
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4

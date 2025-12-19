@@ -58,8 +58,8 @@ describe('LogIn Actions', () => {
 
   describe('login async action', () => {
     it('should successfully login with valid credentials', async () => {
-      const mockLoginAction = (credentials) => {
-        return (dispatch) => {
+      const mockLoginAction = credentials => {
+        return dispatch => {
           const data = {
             method: 'POST',
             url: '/rest/auth/login',
@@ -67,14 +67,14 @@ describe('LogIn Actions', () => {
           };
 
           return authApi(data)
-            .then((res) => {
+            .then(res => {
               dispatch({
                 type: 'LOGIN_SUCCESS',
                 payload: res.data,
               });
               return res;
             })
-            .catch((err) => {
+            .catch(err => {
               dispatch({
                 type: 'LOGIN_FAILURE',
                 payload: err.message,
@@ -104,8 +104,8 @@ describe('LogIn Actions', () => {
     });
 
     it('should handle login failure with invalid credentials', async () => {
-      const mockLoginAction = (credentials) => {
-        return (dispatch) => {
+      const mockLoginAction = credentials => {
+        return dispatch => {
           const data = {
             method: 'POST',
             url: '/rest/auth/login',
@@ -113,14 +113,14 @@ describe('LogIn Actions', () => {
           };
 
           return authApi(data)
-            .then((res) => {
+            .then(res => {
               dispatch({
                 type: 'LOGIN_SUCCESS',
                 payload: res.data,
               });
               return res;
             })
-            .catch((err) => {
+            .catch(err => {
               dispatch({
                 type: 'LOGIN_FAILURE',
                 payload: err.message,
@@ -147,15 +147,15 @@ describe('LogIn Actions', () => {
     });
 
     it('should handle network error during login', async () => {
-      const mockLoginAction = (credentials) => {
-        return (dispatch) => {
+      const mockLoginAction = credentials => {
+        return dispatch => {
           const data = {
             method: 'POST',
             url: '/rest/auth/login',
             data: credentials,
           };
 
-          return authApi(data).catch((err) => {
+          return authApi(data).catch(err => {
             dispatch({
               type: 'LOGIN_FAILURE',
               payload: err.message,
@@ -182,20 +182,19 @@ describe('LogIn Actions', () => {
   describe('getCompanyCount action', () => {
     it('should fetch company count successfully', async () => {
       const mockGetCompanyCount = () => {
-        return (dispatch) => {
+        return dispatch => {
           const data = {
             method: 'GET',
             url: '/rest/company/count',
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'SET_COMPANY_COUNT',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'SET_COMPANY_COUNT',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -210,20 +209,19 @@ describe('LogIn Actions', () => {
 
     it('should handle company count of zero (triggers redirect to register)', async () => {
       const mockGetCompanyCount = () => {
-        return (dispatch) => {
+        return dispatch => {
           const data = {
             method: 'GET',
             url: '/rest/company/count',
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'SET_COMPANY_COUNT',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'SET_COMPANY_COUNT',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -240,20 +238,19 @@ describe('LogIn Actions', () => {
 
     it('should handle company count greater than zero (shows login without register button)', async () => {
       const mockGetCompanyCount = () => {
-        return (dispatch) => {
+        return dispatch => {
           const data = {
             method: 'GET',
             url: '/rest/company/count',
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'SET_COMPANY_COUNT',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'SET_COMPANY_COUNT',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -269,13 +266,13 @@ describe('LogIn Actions', () => {
 
     it('should handle error when fetching company count', async () => {
       const mockGetCompanyCount = () => {
-        return (dispatch) => {
+        return dispatch => {
           const data = {
             method: 'GET',
             url: '/rest/company/count',
           };
 
-          return authApi(data).catch((err) => {
+          return authApi(data).catch(err => {
             throw err;
           });
         };
@@ -294,20 +291,19 @@ describe('LogIn Actions', () => {
   describe('getUserSubscription action', () => {
     it('should fetch user subscription status successfully', async () => {
       const mockGetSubscription = () => {
-        return (dispatch) => {
+        return dispatch => {
           const data = {
             method: 'GET',
             url: '/rest/user/subscription',
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'SET_SUBSCRIPTION_STATUS',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'SET_SUBSCRIPTION_STATUS',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -327,20 +323,19 @@ describe('LogIn Actions', () => {
 
     it('should handle expired subscription status', async () => {
       const mockGetSubscription = () => {
-        return (dispatch) => {
+        return dispatch => {
           const data = {
             method: 'GET',
             url: '/rest/user/subscription',
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'SET_SUBSCRIPTION_STATUS',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'SET_SUBSCRIPTION_STATUS',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -361,7 +356,7 @@ describe('LogIn Actions', () => {
   describe('logout action', () => {
     it('should dispatch logout action', () => {
       const mockLogout = () => {
-        return (dispatch) => {
+        return dispatch => {
           dispatch({ type: 'LOGOUT' });
         };
       };
@@ -374,7 +369,7 @@ describe('LogIn Actions', () => {
 
     it('should clear authentication data on logout', async () => {
       const mockLogout = () => {
-        return (dispatch) => {
+        return dispatch => {
           localStorage.removeItem('token');
           localStorage.removeItem('user');
           dispatch({ type: 'LOGOUT' });
@@ -391,24 +386,23 @@ describe('LogIn Actions', () => {
   describe('login with remember me', () => {
     it('should handle login with remember me option', async () => {
       const mockLoginWithRemember = (credentials, rememberMe) => {
-        return (dispatch) => {
+        return dispatch => {
           const data = {
             method: 'POST',
             url: '/rest/auth/login',
             data: { ...credentials, rememberMe },
           };
 
-          return authApi(data)
-            .then((res) => {
-              if (rememberMe) {
-                localStorage.setItem('token', res.data.token);
-              }
-              dispatch({
-                type: 'LOGIN_SUCCESS',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            if (rememberMe) {
+              localStorage.setItem('token', res.data.token);
+            }
+            dispatch({
+              type: 'LOGIN_SUCCESS',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -429,7 +423,7 @@ describe('LogIn Actions', () => {
 
   describe('password validation', () => {
     it('should validate password strength before login', () => {
-      const validatePassword = (password) => {
+      const validatePassword = password => {
         const minLength = 8;
         const hasUpperCase = /[A-Z]/.test(password);
         const hasLowerCase = /[a-z]/.test(password);
@@ -446,7 +440,7 @@ describe('LogIn Actions', () => {
 
   describe('email validation', () => {
     it('should validate email format before login', () => {
-      const validateEmail = (email) => {
+      const validateEmail = email => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
       };

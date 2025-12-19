@@ -1,30 +1,33 @@
+import { vi } from 'vitest';
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import SalaryTemplate from '../screen';
 import * as SalaryTemplateActions from '../actions';
-import { CommonActions } from 'services/global';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-jest.mock('../actions');
-jest.mock('services/global', () => ({
+vi.mock('../actions');
+vi.mock('services/global', () => ({
   CommonActions: {
-    tostifyAlert: jest.fn(),
+    tostifyAlert: vi.fn(),
   },
 }));
 
-const mockHistoryPush = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useHistory: () => ({
-    push: mockHistoryPush,
-  }),
-}));
+const mockHistoryPush = vi.fn();
+vi.mock('react-router-dom', async importOriginal => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useHistory: () => ({
+      push: mockHistoryPush,
+    }),
+  };
+});
 
 describe('SalaryTemplate Screen Component', () => {
   let store;
@@ -45,44 +48,45 @@ describe('SalaryTemplate Screen Component', () => {
 
     store = mockStore(initialState);
 
-    SalaryTemplateActions.getSalaryTemplateList = jest.fn(() => () =>
-      Promise.resolve({
-        status: 200,
-        data: {
-          salaryComponentResult: {
-            Fixed: [
-              {
-                id: 1,
-                description: 'Basic Salary',
-                formula: 'Fixed',
-                flatAmount: 5000,
-              },
-              {
-                id: 2,
-                description: 'Housing Allowance',
-                formula: 'Fixed',
-                flatAmount: 2000,
-              },
-            ],
-            Variable: [
-              {
-                id: 3,
-                description: 'Commission',
-                formula: 'Percentage',
-                flatAmount: 0,
-              },
-            ],
-            Deduction: [
-              {
-                id: 4,
-                description: 'Tax',
-                formula: 'Percentage',
-                flatAmount: 0,
-              },
-            ],
+    SalaryTemplateActions.getSalaryTemplateList = jest.fn(
+      () => () =>
+        Promise.resolve({
+          status: 200,
+          data: {
+            salaryComponentResult: {
+              Fixed: [
+                {
+                  id: 1,
+                  description: 'Basic Salary',
+                  formula: 'Fixed',
+                  flatAmount: 5000,
+                },
+                {
+                  id: 2,
+                  description: 'Housing Allowance',
+                  formula: 'Fixed',
+                  flatAmount: 2000,
+                },
+              ],
+              Variable: [
+                {
+                  id: 3,
+                  description: 'Commission',
+                  formula: 'Percentage',
+                  flatAmount: 0,
+                },
+              ],
+              Deduction: [
+                {
+                  id: 4,
+                  description: 'Tax',
+                  formula: 'Percentage',
+                  flatAmount: 0,
+                },
+              ],
+            },
           },
-        },
-      })
+        })
     );
   });
 

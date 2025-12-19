@@ -86,24 +86,26 @@ setTimeout(async () => {
   try {
     // Use dynamic import for ES modules/Vite compatibility
     const formikModule = await import('formik').catch(() => null);
-    const { normalizeYupError } = await import('utils/formikYupPatch').catch(() => ({ normalizeYupError: null }));
+    const { normalizeYupError } = await import('utils/formikYupPatch').catch(() => ({
+      normalizeYupError: null,
+    }));
 
     if (formikModule && formikModule.yupToFormErrors && normalizeYupError) {
       const originalYupToFormErrors = formikModule.yupToFormErrors;
-      
+
       // Check if the property is writable before attempting to patch
       const descriptor = Object.getOwnPropertyDescriptor(formikModule, 'yupToFormErrors');
-      
+
       // If property exists and is writable, patch it
       if (!descriptor || descriptor.writable !== false) {
         try {
-      formikModule.yupToFormErrors = function (yupError) {
-        const normalized = normalizeYupError(yupError);
-        return originalYupToFormErrors.call(this, normalized);
-      };
+          formikModule.yupToFormErrors = function (yupError) {
+            const normalized = normalizeYupError(yupError);
+            return originalYupToFormErrors.call(this, normalized);
+          };
 
           if (import.meta.env?.DEV || process.env.NODE_ENV === 'development') {
-        console.debug('Successfully patched Formik yupToFormErrors');
+            console.debug('Successfully patched Formik yupToFormErrors');
           }
         } catch (writeError) {
           // Property might be read-only, try using defineProperty
@@ -133,10 +135,10 @@ setTimeout(async () => {
     if (import.meta.env?.DEV || process.env.NODE_ENV === 'development') {
       // Only log if it's not a read-only property error
       if (!error.message || !error.message.includes('read-only')) {
-      console.debug(
-        'Could not patch Formik yupToFormErrors (this is usually fine):',
-        error.message
-      );
+        console.debug(
+          'Could not patch Formik yupToFormErrors (this is usually fine):',
+          error.message
+        );
       }
     }
   }
