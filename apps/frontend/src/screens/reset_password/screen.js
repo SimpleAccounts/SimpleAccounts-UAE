@@ -75,25 +75,27 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4 transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 via-slate-50 to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-black p-4 transition-colors duration-300">
       {/* Theme Toggle */}
       <div className="fixed top-4 right-4 z-50">
         <ThemeToggle />
       </div>
 
-      <Card className="w-full max-w-md animate-slide-up shadow-lg dark:shadow-2xl">
-        <CardHeader className="space-y-4 text-center">
+      <Card className="w-full max-w-md animate-slide-up shadow-2xl shadow-blue-900/5 dark:shadow-blue-900/20 backdrop-blur-sm bg-white/95 dark:bg-slate-900/95 border-slate-200/60 dark:border-slate-800 rounded-2xl overflow-hidden">
+        <CardHeader className="space-y-6 text-center pb-8 border-b border-border/40 bg-slate-50/50 dark:bg-slate-900/50">
           <div className="flex justify-center animate-fade-in">
-            <img src={logo} alt="SimpleAccounts Logo" className="h-16 w-auto" />
+            <img src={logo} alt="SimpleAccounts Logo" className="h-20 w-auto drop-shadow-sm" />
           </div>
-          <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
-            <CardTitle className="text-2xl">Forgot Password</CardTitle>
-            <CardDescription>
+          <div className="animate-fade-in space-y-2" style={{ animationDelay: '100ms' }}>
+            <CardTitle className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              Forgot Password
+            </CardTitle>
+            <CardDescription className="text-base">
               Enter your email address and we'll send you a link to reset your password
             </CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="animate-fade-in" style={{ animationDelay: '200ms' }}>
+        <CardContent className="animate-fade-in pt-8" style={{ animationDelay: '200ms' }}>
           {alert && (
             <Alert
               className={`mb-4 animate-fade-in ${
