@@ -9,12 +9,6 @@ jest.mock('utils', () => ({
   api: jest.fn(),
 }));
 
-jest.mock('components', () => ({
-  Message: ({ type, content }) => (
-    <div data-testid={`message-${type}`}>{content}</div>
-  ),
-}));
-
 jest.mock('../sections/reset_new_password', () => {
   return function ResetNewPassword(props) {
     return <div data-testid="reset-new-password">Reset New Password Component</div>;
@@ -50,18 +44,18 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const emailInput = screen.getByPlaceholderText('Please Enter Your Email Address');
+    const emailInput = screen.getByPlaceholderText('Enter your email address');
     expect(emailInput).toBeInTheDocument();
   });
 
-  it('should display send verification email button', () => {
+  it('should display send reset link button', () => {
     render(
       <MemoryRouter>
         <ResetPasswordWithNavigation location={{ search: '' }} />
       </MemoryRouter>
     );
 
-    const sendButton = screen.getByText('Send Verification Email');
+    const sendButton = screen.getByText('Send Reset Link');
     expect(sendButton).toBeInTheDocument();
   });
 
@@ -72,7 +66,7 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const backButton = screen.getByText('Back To Login');
+    const backButton = screen.getByText('Back to Login');
     expect(backButton).toBeInTheDocument();
   });
 
@@ -83,11 +77,11 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const sendButton = screen.getByText('Send Verification Email');
+    const sendButton = screen.getByText('Send Reset Link');
     fireEvent.click(sendButton);
 
     await waitFor(() => {
-      expect(screen.getByText('Email id is required')).toBeInTheDocument();
+      expect(screen.getByText('Email address is required')).toBeInTheDocument();
     });
   });
 
@@ -98,14 +92,14 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const emailInput = screen.getByPlaceholderText('Please Enter Your Email Address');
+    const emailInput = screen.getByPlaceholderText('Enter your email address');
     fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
 
-    const sendButton = screen.getByText('Send Verification Email');
+    const sendButton = screen.getByText('Send Reset Link');
     fireEvent.click(sendButton);
 
     await waitFor(() => {
-      expect(screen.getByText('Invalid email Id')).toBeInTheDocument();
+      expect(screen.getByText('Invalid email address')).toBeInTheDocument();
     });
   });
 
@@ -118,10 +112,10 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const emailInput = screen.getByPlaceholderText('Please Enter Your Email Address');
+    const emailInput = screen.getByPlaceholderText('Enter your email address');
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
 
-    const sendButton = screen.getByText('Send Verification Email');
+    const sendButton = screen.getByText('Send Reset Link');
     fireEvent.click(sendButton);
 
     await waitFor(() => {
@@ -146,16 +140,15 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const emailInput = screen.getByPlaceholderText('Please Enter Your Email Address');
+    const emailInput = screen.getByPlaceholderText('Enter your email address');
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
 
-    const sendButton = screen.getByText('Send Verification Email');
+    const sendButton = screen.getByText('Send Reset Link');
     fireEvent.click(sendButton);
 
     await waitFor(() => {
-      expect(screen.getByTestId('message-success')).toBeInTheDocument();
       expect(
-        screen.getByText('We Have Sent You a Verification Email. Please Check Your Mail Box.')
+        screen.getByText('We have sent you a verification email. Please check your mailbox.')
       ).toBeInTheDocument();
     });
   });
@@ -169,10 +162,10 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const emailInput = screen.getByPlaceholderText('Please Enter Your Email Address');
+    const emailInput = screen.getByPlaceholderText('Enter your email address');
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
 
-    const sendButton = screen.getByText('Send Verification Email');
+    const sendButton = screen.getByText('Send Reset Link');
     fireEvent.click(sendButton);
 
     // Note: In v6, navigation is handled differently. The component will call history.push
@@ -191,15 +184,14 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const emailInput = screen.getByPlaceholderText('Please Enter Your Email Address');
+    const emailInput = screen.getByPlaceholderText('Enter your email address');
     fireEvent.change(emailInput, { target: { value: 'invalid@example.com' } });
 
-    const sendButton = screen.getByText('Send Verification Email');
+    const sendButton = screen.getByText('Send Reset Link');
     fireEvent.click(sendButton);
 
     await waitFor(() => {
-      expect(screen.getByTestId('message-danger')).toBeInTheDocument();
-      expect(screen.getByText('Invalid Email Address')).toBeInTheDocument();
+      expect(screen.getByText('Invalid email address or account not found.')).toBeInTheDocument();
     });
   });
 
@@ -210,7 +202,7 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const backButton = screen.getByText('Back To Login');
+    const backButton = screen.getByText('Back to Login');
     fireEvent.click(backButton);
 
     // Note: In v6, navigation is handled by withNavigation HOC
@@ -249,7 +241,7 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const logoImage = screen.getByAltText('logo');
+    const logoImage = screen.getByAltText('SimpleAccounts Logo');
     expect(logoImage).toBeInTheDocument();
   });
 
@@ -260,7 +252,7 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const emailInput = screen.getByPlaceholderText('Please Enter Your Email Address');
+    const emailInput = screen.getByPlaceholderText('Enter your email address');
     fireEvent.change(emailInput, { target: { value: 'user@test.com' } });
 
     expect(emailInput.value).toBe('user@test.com');
