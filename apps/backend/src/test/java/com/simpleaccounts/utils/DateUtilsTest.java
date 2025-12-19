@@ -170,7 +170,7 @@ class DateUtilsTest {
             "5, Jun",
             "6, Jul",
             "7, Aug",
-            "8, Sept",
+            "8, Sep",
             "9, Oct",
             "10, Nov",
             "11, Dec"
