@@ -42,8 +42,10 @@ const ResetPassword = ({ history, location }) => {
 
 	useEffect(() => {
 		// Check for token in URL query params
-		if (location && location.search) {
-			const query = new URLSearchParams(location.search);
+		// Also check window.location.search as fallback for test environments
+		const search = location?.search || window.location.search;
+		if (search) {
+			const query = new URLSearchParams(search);
 			const urlToken = query.get('token');
 			if (urlToken) {
 				setToken(urlToken);
