@@ -70,7 +70,7 @@ const registerSchema = z
 			z.object({ value: z.union([z.string(), z.number()]), label: z.string().optional() })
 		]).refine((val) => {
 			if (!val) return false;
-			if (typeof val === 'object' && val !== null) {
+			if (typeof val === 'object') {
 				return val.value !== undefined && val.value !== null && val.value !== '';
 			}
 			return typeof val === 'number' || val !== '';
