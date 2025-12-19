@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { vi } from 'vitest';
 import ResetPassword from '../screen';
 import { api } from 'utils';
 import { withNavigation } from 'utils/withNavigation';
@@ -9,11 +10,11 @@ jest.mock('utils', () => ({
   api: jest.fn(),
 }));
 
-jest.mock('../sections/reset_new_password', () => {
-  return function ResetNewPassword(props) {
+vi.mock('../sections/reset_new_password', () => ({
+  default: function ResetNewPassword() {
     return <div data-testid="reset-new-password">Reset New Password Component</div>;
-  };
-});
+  },
+}));
 
 // Mock withNavigation for ResetPassword component
 const ResetPasswordWithNavigation = withNavigation(ResetPassword);
@@ -156,7 +157,7 @@ describe('ResetPassword Screen Component', () => {
   it('should redirect to login page after successful email submission', async () => {
     api.mockResolvedValue({ status: 200, data: {} });
 
-    const { container } = render(
+    render(
       <MemoryRouter initialEntries={['/reset-password']}>
         <ResetPasswordWithNavigation location={{ search: '' }} />
       </MemoryRouter>

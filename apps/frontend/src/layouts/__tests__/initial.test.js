@@ -7,6 +7,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
+import { vi } from 'vitest';
 import InitialLayout from '../initial';
 
 const mockStore = configureStore([]);
@@ -40,10 +41,12 @@ jest.mock('services/global', () => ({
 }));
 
 // Mock config
-jest.mock('constants/config', () => ({
-  DASHBOARD: true,
-  BASE_ROUTE: '/admin/dashboard',
-  SECONDARY_BASE_ROUTE: '/admin/income/customer-invoice',
+vi.mock('constants/config', () => ({
+  default: {
+    DASHBOARD: true,
+    BASE_ROUTE: '/admin/dashboard',
+    SECONDARY_BASE_ROUTE: '/admin/income/customer-invoice',
+  },
 }));
 
 describe('InitialLayout Component', () => {
@@ -112,4 +115,3 @@ describe('InitialLayout Component', () => {
     expect(container).toBeInTheDocument();
   });
 });
-

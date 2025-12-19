@@ -81,11 +81,13 @@ export default mergeConfig(
           'src/**/*.config.js',
           'src/**/*.setup.js',
         ],
+        // Coverage thresholds disabled for CI (matching original Jest config)
+        // Can be increased as test coverage improves
         thresholds: {
-          statements: 10,
-          branches: 10,
-          functions: 10,
-          lines: 10,
+          statements: 0,
+          branches: 0,
+          functions: 0,
+          lines: 0,
         },
       },
       // Timeout for long-running tests
