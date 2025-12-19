@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
@@ -6,25 +7,27 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import Project from '../screen';
 import * as ProjectActions from '../actions';
-import { CommonActions } from 'services/global';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-jest.mock('../actions');
-jest.mock('services/global', () => ({
+vi.mock('../actions');
+vi.mock('services/global', () => ({
   CommonActions: {
-    tostifyAlert: jest.fn(),
+    tostifyAlert: vi.fn(),
   },
 }));
 
-const mockHistoryPush = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useHistory: () => ({
-    push: mockHistoryPush,
-  }),
-}));
+const mockHistoryPush = vi.fn();
+vi.mock('react-router-dom', async importOriginal => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useHistory: () => ({
+      push: mockHistoryPush,
+    }),
+  };
+});
 
 describe('Project Screen Component', () => {
   let store;
@@ -56,11 +59,12 @@ describe('Project Screen Component', () => {
 
     store = mockStore(initialState);
 
-    ProjectActions.getProjectList = jest.fn(() => () =>
-      Promise.resolve({ status: 200, data: { data: initialState.project.project_list.data } })
+    ProjectActions.getProjectList = jest.fn(
+      () => () =>
+        Promise.resolve({ status: 200, data: { data: initialState.project.project_list.data } })
     );
-    ProjectActions.removeBulk = jest.fn(() => () =>
-      Promise.resolve({ status: 200, data: { message: 'Success' } })
+    ProjectActions.removeBulk = jest.fn(
+      () => () => Promise.resolve({ status: 200, data: { message: 'Success' } })
     );
     ProjectActions.getCurrencyList = jest.fn(() => () => Promise.resolve());
     ProjectActions.getCountryList = jest.fn(() => () => Promise.resolve());

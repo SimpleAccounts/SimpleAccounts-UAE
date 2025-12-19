@@ -12,7 +12,7 @@ import thunk from 'redux-thunk';
 const initialState = {
   loading: false,
   data: null,
-  error: null
+  error: null,
 };
 
 const testReducer = (state = initialState, action) => {
@@ -32,7 +32,7 @@ const testReducer = (state = initialState, action) => {
 
 // Sample async action creator (thunk)
 const fetchDataAsync = (success = true) => {
-  return (dispatch) => {
+  return dispatch => {
     dispatch({ type: 'FETCH_START' });
 
     return new Promise((resolve, reject) => {
@@ -53,10 +53,7 @@ describe('Redux State Management', () => {
   let store;
 
   beforeEach(() => {
-    store = createStore(
-      combineReducers({ test: testReducer }),
-      applyMiddleware(thunk)
-    );
+    store = createStore(combineReducers({ test: testReducer }), applyMiddleware(thunk));
   });
 
   // ============ Store Creation ============
@@ -142,12 +139,12 @@ describe('Redux State Management', () => {
       expect(state.test.error).toBe('Failed to fetch');
     });
 
-    it('should set loading state during async operation', (done) => {
+    it('should set loading state during async operation', async () => {
       store.dispatch(fetchDataAsync(true));
       // Immediately after dispatch, loading should be true
       const state = store.getState();
       expect(state.test.loading).toBe(true);
-      setTimeout(done, 20);
+      await new Promise(resolve => setTimeout(resolve, 20));
     });
   });
 
@@ -195,7 +192,7 @@ describe('Redux State Management', () => {
       const combinedStore = createStore(
         combineReducers({
           test: testReducer,
-          counter: anotherReducer
+          counter: anotherReducer,
         }),
         applyMiddleware(thunk)
       );
@@ -214,14 +211,11 @@ describe('Redux State Management', () => {
 
   describe('Middleware', () => {
     it('should apply thunk middleware correctly', () => {
-      const thunkStore = createStore(
-        testReducer,
-        applyMiddleware(thunk)
-      );
+      const thunkStore = createStore(testReducer, applyMiddleware(thunk));
 
       // Thunk should allow dispatching functions
       expect(() => {
-        thunkStore.dispatch((dispatch) => {
+        thunkStore.dispatch(dispatch => {
           dispatch({ type: 'FETCH_START' });
         });
       }).not.toThrow();
@@ -233,10 +227,7 @@ describe('Redux State Management', () => {
       const api = { fetch: jest.fn() };
       const thunkWithExtra = thunk.withExtraArgument(api);
 
-      const storeWithExtra = createStore(
-        testReducer,
-        applyMiddleware(thunkWithExtra)
-      );
+      const storeWithExtra = createStore(testReducer, applyMiddleware(thunkWithExtra));
 
       storeWithExtra.dispatch((dispatch, getState, extraArg) => {
         expect(extraArg).toBe(api);
@@ -279,10 +270,7 @@ describe('Redux State Management', () => {
     it('should work with compose for DevTools', () => {
       const composeEnhancers = compose;
 
-      const enhancedStore = createStore(
-        testReducer,
-        composeEnhancers(applyMiddleware(thunk))
-      );
+      const enhancedStore = createStore(testReducer, composeEnhancers(applyMiddleware(thunk)));
 
       expect(enhancedStore.getState()).toEqual(initialState);
       enhancedStore.dispatch({ type: 'FETCH_START' });

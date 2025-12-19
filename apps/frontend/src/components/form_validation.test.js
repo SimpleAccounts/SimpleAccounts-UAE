@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 /**
@@ -11,7 +11,7 @@ describe('Form Validation Tests', () => {
       const [name, setName] = React.useState('');
       const [error, setError] = React.useState('');
 
-      const handleSubmit = (e) => {
+      const handleSubmit = e => {
         e.preventDefault();
         if (!name.trim()) {
           setError('Name is required');
@@ -28,7 +28,7 @@ describe('Form Validation Tests', () => {
             <input
               id="name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={e => setName(e.target.value)}
               aria-invalid={!!error}
             />
             {error && <span role="alert">{error}</span>}
@@ -82,7 +82,7 @@ describe('Form Validation Tests', () => {
       const [amount, setAmount] = React.useState('');
       const [errors, setErrors] = React.useState({});
 
-      const validate = (value) => {
+      const validate = value => {
         if (!value) return 'Amount is required';
         if (isNaN(parseFloat(value))) return 'Amount must be a number';
         if (parseFloat(value) < 0) return 'Amount cannot be negative';
@@ -90,7 +90,7 @@ describe('Form Validation Tests', () => {
         return null;
       };
 
-      const handleSubmit = (e) => {
+      const handleSubmit = e => {
         e.preventDefault();
         const error = validate(amount);
         if (error) {
@@ -109,7 +109,7 @@ describe('Form Validation Tests', () => {
               id="amount"
               type="text"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={e => setAmount(e.target.value)}
             />
             {errors.amount && <span role="alert">{errors.amount}</span>}
           </div>
@@ -169,7 +169,7 @@ describe('Form Validation Tests', () => {
       const [date, setDate] = React.useState('');
       const [error, setError] = React.useState('');
 
-      const validate = (value) => {
+      const validate = value => {
         if (!value) return 'Date is required';
         const dateObj = new Date(value);
         if (isNaN(dateObj.getTime())) return 'Invalid date format';
@@ -178,7 +178,7 @@ describe('Form Validation Tests', () => {
         return null;
       };
 
-      const handleSubmit = (e) => {
+      const handleSubmit = e => {
         e.preventDefault();
         const validationError = validate(date);
         if (validationError) {
@@ -193,12 +193,7 @@ describe('Form Validation Tests', () => {
         <form onSubmit={handleSubmit}>
           <div>
             <label htmlFor="date">Date</label>
-            <input
-              id="date"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
+            <input id="date" type="date" value={date} onChange={e => setDate(e.target.value)} />
             {error && <span role="alert">{error}</span>}
           </div>
           <button type="submit">Submit</button>
@@ -227,13 +222,7 @@ describe('Form Validation Tests', () => {
 
     test('should accept valid date within range', () => {
       const mockSubmit = jest.fn();
-      render(
-        <DateForm
-          onSubmit={mockSubmit}
-          minDate="2024-01-01"
-          maxDate="2024-12-31"
-        />
-      );
+      render(<DateForm onSubmit={mockSubmit} minDate="2024-01-01" maxDate="2024-12-31" />);
 
       fireEvent.change(screen.getByLabelText(/date/i), {
         target: { value: '2024-06-15' },
@@ -249,14 +238,14 @@ describe('Form Validation Tests', () => {
       const [email, setEmail] = React.useState('');
       const [error, setError] = React.useState('');
 
-      const validate = (value) => {
+      const validate = value => {
         if (!value) return 'Email is required';
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) return 'Invalid email format';
         return null;
       };
 
-      const handleSubmit = (e) => {
+      const handleSubmit = e => {
         e.preventDefault();
         const validationError = validate(email);
         if (validationError) {
@@ -271,12 +260,7 @@ describe('Form Validation Tests', () => {
         <form onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <input id="email" type="text" value={email} onChange={e => setEmail(e.target.value)} />
             {error && <span role="alert">{error}</span>}
           </div>
           <button type="submit">Submit</button>
@@ -331,7 +315,7 @@ describe('Form Validation Tests', () => {
         return newErrors;
       };
 
-      const handleSubmit = (e) => {
+      const handleSubmit = e => {
         e.preventDefault();
         const newErrors = validateAll();
         if (Object.keys(newErrors).length > 0) {
@@ -342,7 +326,7 @@ describe('Form Validation Tests', () => {
         onSubmit(formData);
       };
 
-      const handleChange = (field) => (e) => {
+      const handleChange = field => e => {
         setFormData({ ...formData, [field]: e.target.value });
       };
 
@@ -355,20 +339,12 @@ describe('Form Validation Tests', () => {
               value={formData.customerName}
               onChange={handleChange('customerName')}
             />
-            {errors.customerName && (
-              <span data-testid="error-customer">{errors.customerName}</span>
-            )}
+            {errors.customerName && <span data-testid="error-customer">{errors.customerName}</span>}
           </div>
           <div>
             <label htmlFor="amount">Amount</label>
-            <input
-              id="amount"
-              value={formData.amount}
-              onChange={handleChange('amount')}
-            />
-            {errors.amount && (
-              <span data-testid="error-amount">{errors.amount}</span>
-            )}
+            <input id="amount" value={formData.amount} onChange={handleChange('amount')} />
+            {errors.amount && <span data-testid="error-amount">{errors.amount}</span>}
           </div>
           <div>
             <label htmlFor="dueDate">Due Date</label>
@@ -378,9 +354,7 @@ describe('Form Validation Tests', () => {
               value={formData.dueDate}
               onChange={handleChange('dueDate')}
             />
-            {errors.dueDate && (
-              <span data-testid="error-dueDate">{errors.dueDate}</span>
-            )}
+            {errors.dueDate && <span data-testid="error-dueDate">{errors.dueDate}</span>}
           </div>
           <button type="submit">Create Invoice</button>
         </form>
