@@ -1,1 +1,39 @@
 // Here you can add other styles
+
+/* Modern Input Styling - Global Definition */
+.input-transition {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+
+  &:hover {
+    background-color: #ffffff;
+    border-color: #94a3b8;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  &:focus {
+    background-color: #ffffff;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    transform: translateY(-1px);
+  }
+}
+
+/* Dark mode support via global class usually, or relying on native inputs */
+:global(.dark) .input-transition {
+  background-color: rgba(30, 41, 59, 0.5);
+  border-color: rgba(51, 65, 85, 0.6);
+  color: white;
+
+  &:hover {
+    background-color: rgba(30, 41, 59, 0.8);
+    border-color: #64748b;
+  }
+
+  &:focus {
+    background-color: rgba(15, 23, 42, 1);
+    border-color: #3b82f6;
+  }
+}

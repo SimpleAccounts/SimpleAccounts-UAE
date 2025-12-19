@@ -56,6 +56,16 @@ From repo root:
 - Format with `npm run format`
 - Pre-commit hooks run `eslint --fix` and Prettier
 
+### Theme & Design System
+
+- **Strict Adherence Required**: All new screens and refactored UI components MUST strictly follow the design system documented in **[`docs/THEME.md`](./docs/THEME.md)**.
+- **Key Requirements**:
+  - Use the Radial Gradient background for public/auth pages.
+  - Use Glassmorphism Cards for content containers.
+  - Apply `.input-transition` class to ALL inputs.
+  - Ensure Dark Mode compatibility.
+  - Use `lucide-react` icons and `shadcn/ui` components (via `@/components/ui`) instead of legacy `reactstrap`.
+
 ### Backend
 
 - Standard Java conventions
@@ -111,6 +121,29 @@ cd apps/backend
 - Include clear description and linked issue
 - Add screenshots for UI changes
 - Ensure `npm test`, `npm run lint`, and backend tests pass
+
+---
+
+## Design System & Theme
+
+**All UI work MUST strictly follow the theme guidelines defined in [docs/THEME.md](./docs/THEME.md).**
+
+### Mandatory Theme Requirements
+
+1. **Layout**: Use radial gradient backgrounds and glassmorphism cards for all pages
+2. **Inputs**: Apply `.input-transition` class to ALL form inputs and selects
+3. **Buttons**: Include hover scale effects (`hover:scale-[1.02] active:scale-[0.98]`)
+4. **Dark Mode**: All components must be fully dark mode compatible using Slate palette
+5. **Typography**: Use Inter font with gradient text for page titles
+6. **Icons**: Use `lucide-react` exclusively for new features
+7. **Animations**: Apply `animate-slide-up`, `animate-fade-in` for entering elements
+
+### Before Submitting UI Changes
+
+- [ ] Verify dark mode contrast and styling
+- [ ] Confirm `.input-transition` is applied to all inputs
+- [ ] Check hover/focus states on all interactive elements
+- [ ] Use skeleton loaders for data fetching states
 
 ---
 
