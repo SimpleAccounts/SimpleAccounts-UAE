@@ -205,8 +205,7 @@ class LoginRestControllerTest {
                 .thenReturn(Collections.singletonList(testUser));
         when(userService.findByPK(testUser.getUserId()))
                 .thenReturn(testUser);
-        when(userService.update(any(User.class), any(Integer.class)))
-                .thenReturn(testUser);
+        // Note: userService.update() is not called when password already exists (early return)
         when(passwordHistoryRepository.findPasswordHistoriesByUser(any()))
                 .thenReturn(Collections.singletonList(passwordHistory));
 
