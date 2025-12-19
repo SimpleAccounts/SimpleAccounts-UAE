@@ -14,6 +14,7 @@ import com.simpleaccounts.repository.UserJpaRepository;
 import com.simpleaccounts.rest.usercontroller.UserRestHelper;
 import com.simpleaccounts.service.EmaiLogsService;
 import com.simpleaccounts.service.UserService;
+import com.simpleaccounts.utils.SimpleAccountsMessage;
 import java.time.LocalDateTime;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -145,7 +146,9 @@ class LoginRestControllerTest {
                 .thenReturn(testUser);
         when(passwordHistoryRepository.findPasswordHistoriesByUser(any()))
                 .thenReturn(Collections.emptyList());
-        when(userRestHelper.saveUserCredential(any(), any())).thenReturn(null);
+        SimpleAccountsMessage successMessage = new SimpleAccountsMessage("0088",
+                "Password Created Successfully.", false);
+        when(userRestHelper.saveUserCredential(any(), any())).thenReturn(successMessage);
 
         mockMvc.perform(post("/public/resetPassword")
                 .contentType(MediaType.APPLICATION_JSON)
