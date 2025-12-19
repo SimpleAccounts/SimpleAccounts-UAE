@@ -270,8 +270,7 @@ test.describe('Reset Password Complete Flow', () => {
 		await confirmPasswordInput.blur();
 		await page.waitForTimeout(1000); // Wait for validation
 
-		// Verify values were set - check both input value and form state
-		const passwordValue = await passwordInput.inputValue();
+		// Verify values were set - check confirm password value to decide if we need to patch it
 		const confirmPasswordValue = await confirmPasswordInput.inputValue();
 		// Do not log password values or their derived data (such as length) for security
 		
@@ -291,8 +290,6 @@ test.describe('Reset Password Complete Flow', () => {
 			}, { selector: '#confirmPassword', value: NEW_PASSWORD });
 			await page.waitForTimeout(1000);
 			
-			// Verify it was set
-			const confirmPasswordValueAfter = await confirmPasswordInput.inputValue();
 			// Do not log password-derived data; log only generic status information
 			console.log('Confirm password value successfully set via JavaScript.');
 		}
