@@ -1,209 +1,186 @@
-import React from "react";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardGroup,
-  Col,
-  Container,
-  Form,
-  Input,
-  FormGroup,
-  Label,
-  Row
-} from 'reactstrap'
+import React, { useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Mail, ArrowLeft } from 'lucide-react';
+import { toast } from 'sonner';
 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { ButtonSpinner } from '@/components/ui/loading-spinner';
 
-import { Formik } from "formik";
-import * as Yup from "yup";
-
-import { toast } from "react-toastify";
-import './style.scss'
-import {
-  Message
-} from 'components'
-import ResetNewPassword from './sections/reset_new_password'
-import {
-  api,
-} from 'utils'
+import { api } from 'utils';
 import logo from 'assets/images/brand/logo.png';
-// import login_bg from 'assets/images/brand/login_bg.png';
-// import login_banner from 'assets/images/brand/login_banner.png';
+import ResetNewPassword from './sections/reset_new_password';
 
-class ResetPassword extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      initValue: {
-        username: "",
-      },
-      alert: null
-    };
-    this.formikRef = React.createRef();
-  }
+// Zod validation schema
+const resetPasswordSchema = z.object({
+  username: z.string().min(1, 'Email address is required').email('Invalid email address'),
+});
 
-  componentDidMount = () => {
-    if (this.props && this.props.location && this.props.location.search) {
-      const query = new URLSearchParams(this.props.location.search);
-      const token = query.get('token')
-      this.setState({
-        token
-      })
-    }
-  }
+const ResetPassword = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token');
 
-  // Create or Contact
-  handleSubmit = (obj) => {
-    let data = {
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
+
+  const form = useForm({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: {
+      username: '',
+    },
+  });
+
+  const onSubmit = data => {
+    setLoading(true);
+    setAlert(null);
+
+    const apiData = {
       method: 'post',
       url: '/public/forgotPassword',
-      data: { "username": obj.username,url:window.location.href }
-    }
-    api(data).then((res) => {
-      this.setState({
-        alert: <Message
-          type="success"
-          content="We Have Sent You a Verification Email. Please Check Your Mail Box."
-        />
-      },() => {
-          setTimeout(() => {
-            this.props.history.push('/login')
-        }, 1500);
+      data: { username: data.username, url: window.location.href },
+    };
+
+    api(apiData)
+      .then(() => {
+        setAlert({
+          type: 'success',
+          message: 'We have sent you a verification email. Please check your mailbox.',
+        });
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
       })
-    }).catch((err) => {
-      this.setState({
-        alert: <Message
-          type="danger"
-          content="Invalid Email Address"
-        />
+      .catch(() => {
+        setAlert({
+          type: 'error',
+          message: 'Invalid email address or account not found.',
+        });
       })
-    })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  // If token exists, show the new password form
+  if (token) {
+    return <ResetNewPassword token={token} />;
   }
 
-  displayMsg = (msg) => {
-    toast.error(msg, {
-      position: 'top-right'
-    });
-  }
-
-  render() {
-    const { initValue, token } = this.state;
-
-    return (
-      <div className="reset-password-screen">
-        {!token ? (
-          <div className="animated fadeIn">
-            	{/* <div className="main-banner_container col-md-8 flex">
-													<img src={login_bg} alt="login_bg" className="login_banckground" />
-													<img src={login_banner} alt="login_banner" className="login_banner"/>
-												</div> */}
-            <div className="app flex-row align-items-center">
-              <Container>
-                <Row className="justify-content-center">
-                  <Col md="5">
-                    {this.state.alert}
-                  </Col>
-                </Row>
-                <Row className="justify-content-center">
-                  <Col md="6">
-                  <CardGroup>
-										<Card className="p-4">
-											<CardBody>
-                  <div className="logo-container">
-													<img src={logo} alt="logo" />
-												</div>
-
-                      <div className=" d-flex registerScreen">
-                        {/* <i className="fas fa-lock"></i>*/} <h2 className="mb-0">Forgot Password</h2> 
-                      </div>
-                      <div >
-                        <Formik
-                          ref={this.formikRef}
-                          initialValues={initValue}
-                          onSubmit={(values, { resetForm }) => {
-                            this.handleSubmit(values, resetForm);
-                          }}
-                          validationSchema={Yup.object().shape({
-                            username: Yup.string()
-                              .required("Email id is required")
-                              .email("Invalid email Id"),
-                          })}
-                        >
-                          {(props) => {
-                            return (
-                              <Form >
-                                <Row>
-                                  <Col lg="12">
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="username">
-                                        <span className="text-danger">* </span> <b>Email Address</b>
-                                     </Label>
-                                      <Input
-                                        type="text"
-                                        id="username"
-                                        name="username"
-                                        onChange={(value) => {
-                                          props.handleChange("username")(value);
-                                        }}
-                                        placeholder="Please Enter Your Email Address"
-                                        value={props.values.username}
-                                        className={
-                                          props.errors.username && props.touched.username
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                      />
-                                      {props.errors.username && props.touched.username && (
-                                        <div className="invalid-feedback">
-                                          {props.errors.username}
-                                        </div>
-                                      )}
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <Row className="button-group">
-                                  <Col lg="6 mt-4">
-                                    <Button
-                                      color="primary"
-                                      type="button"
-                                      className="btn-square w-100 submit-btn"
-                                  //    disabled={isSubmitting}
-                                      onClick={() => { props.handleSubmit() }}
-                                    >
-                                      Send Verification Email
-                               </Button>
-                                  </Col>
-                                  <Col lg="6 mt-4">
-                                    <Button
-                                      color="primary"
-                                      className="btn-square w-100 submit-btn"
-                                      onClick={() => {
-                                        this.props.history.push('/login')
-                                      }}
-                                    >
-                                      Back To Login
-                                     </Button>
-                                  </Col>
-                                </Row>
-                              </Form>
-                            );
-                          }}
-                        </Formik>
-                      </div>
-                  
-                      </CardBody>
-										</Card>
-									</CardGroup>
-                  </Col>
-                </Row>
-              </Container>
-            </div>
-          </div>) : (
-            <ResetNewPassword token={token} {...this.props}/>)
-        }
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4 transition-colors duration-300">
+      {/* Theme Toggle */}
+      <div className="fixed top-4 right-4 z-50">
+        <ThemeToggle />
       </div>
-    );
-  }
-}
+
+      <Card className="w-full max-w-md animate-slide-up shadow-lg dark:shadow-2xl">
+        <CardHeader className="space-y-4 text-center">
+          <div className="flex justify-center animate-fade-in">
+            <img src={logo} alt="SimpleAccounts Logo" className="h-16 w-auto" />
+          </div>
+          <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
+            <CardTitle className="text-2xl">Forgot Password</CardTitle>
+            <CardDescription>
+              Enter your email address and we'll send you a link to reset your password
+            </CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className="animate-fade-in" style={{ animationDelay: '200ms' }}>
+          {alert && (
+            <Alert
+              className={`mb-4 animate-fade-in ${
+                alert.type === 'success'
+                  ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
+                  : 'bg-destructive/10 text-destructive border-destructive/20'
+              }`}
+              role="alert"
+              aria-live="polite"
+            >
+              <AlertDescription>{alert.message}</AlertDescription>
+            </Alert>
+          )}
+
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4"
+              noValidate
+              aria-label="Reset password form"
+            >
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field, fieldState }) => (
+                  <FormItem>
+                    <FormLabel className="font-semibold" htmlFor="reset-email">
+                      <span className="text-destructive" aria-hidden="true">
+                        *{' '}
+                      </span>
+                      Email Address
+                    </FormLabel>
+                    <Input
+                      id="reset-email"
+                      type="email"
+                      placeholder="Enter your email address"
+                      autoComplete="email"
+                      aria-required="true"
+                      aria-describedby={fieldState.error ? 'reset-email-error' : undefined}
+                      aria-invalid={!!fieldState.error}
+                      className={`input-transition focus-ring-animate ${fieldState.error ? 'border-destructive animate-shake' : ''}`}
+                      {...field}
+                    />
+                    {fieldState.error && (
+                      <FormMessage id="reset-email-error" role="alert">
+                        {fieldState.error.message}
+                      </FormMessage>
+                    )}
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                <Button
+                  type="submit"
+                  className="flex-1 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                  disabled={loading}
+                  aria-busy={loading}
+                >
+                  {loading ? (
+                    <>
+                      <ButtonSpinner className="mr-2" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="h-4 w-4 mr-2" aria-hidden="true" />
+                      Send Reset Link
+                    </>
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                  onClick={() => navigate('/login')}
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" aria-hidden="true" />
+                  Back to Login
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
 
 export default ResetPassword;

@@ -21,3 +21,4 @@ public class PasswordHashGenerator {
         System.out.println("BCrypt Hash: " + hashedPassword);
     }
 }
+
