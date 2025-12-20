@@ -159,9 +159,7 @@ const LogIn = () => {
       <Card className="w-full max-w-md animate-slide-up shadow-neu-out dark:shadow-neu-out-dark bg-neu-bg dark:bg-neu-bg-dark border-none rounded-[2rem] overflow-hidden">
         <CardHeader className="space-y-6 text-center pb-8">
           <div className="flex justify-center animate-fade-in">
-            <div className="p-4 rounded-full shadow-neu-out dark:shadow-neu-out-dark bg-neu-bg dark:bg-neu-bg-dark">
-              <img src={logo} alt="SimpleAccounts Logo" className="h-16 w-auto drop-shadow-sm" />
-            </div>
+            <img src={logo} alt="SimpleAccounts Logo" className="h-16 w-auto drop-shadow-sm" />
           </div>
           <div className="animate-fade-in space-y-2" style={{ animationDelay: '100ms' }}>
             <CardTitle className="text-3xl font-bold tracking-tight text-foreground/80">
