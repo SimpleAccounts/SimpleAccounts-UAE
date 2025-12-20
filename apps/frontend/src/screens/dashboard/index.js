@@ -1,5 +1,5 @@
 import screen from './screen';
-import screenTwo from './screen-two';
+import screenTwo from './screen-two.jsx';
 import * as actions from './actions';
 import reducer from './dashboardSlice';
 

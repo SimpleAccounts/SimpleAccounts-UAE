@@ -13,7 +13,6 @@ import { createRoot } from 'react-dom/client';
 
 import 'assets/css/tailwind.css';
 import 'assets/css/global.scss';
-import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from 'next-themes';
 
 import App from 'app';
@@ -144,26 +143,13 @@ setTimeout(async () => {
   }
 }, 100);
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#2064d8',
-    },
-    secondary: {
-      main: '#2064d8',
-    },
-  },
-});
-
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
-  <MuiThemeProvider theme={theme}>
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <App />
-      <Toaster />
-    </ThemeProvider>
-  </MuiThemeProvider>
+  <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <App />
+    <Toaster />
+  </ThemeProvider>
 );
 
 serviceWorker.unregister();

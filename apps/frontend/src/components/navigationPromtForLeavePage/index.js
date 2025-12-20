@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import NavigationPrompt from "react-router-navigation-prompt";
 import { ConfirmDeleteModal, ConfirmLeavePageModal, Loader } from 'components';
 import './style.scss';

@@ -1,43 +1,40 @@
 import React from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+class ConfirmDeleteModal extends React.Component {
+  render() {
+    const { isOpen, okHandler, cancelHandler, message, message1, title } = this.props;
 
-import './style.scss';
-
-class ConfirmModal extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
-
-	render() {
-		const { isOpen, okHandler, cancelHandler, message,message1 } = this.props;
-
-		return (
-			<div className="confirm-modal-component">
-				<Modal isOpen={isOpen} centered className="modal-primary">
-					<ModalHeader toggle={cancelHandler} tag="h4">
-					<h5 className="mb-0">{message1}</h5>
-					</ModalHeader>
-					<ModalBody>
-						<h5 className="mb-0">{message}</h5>
-					</ModalBody>
-					<ModalFooter>
-						<Button color="primary" className="btn-square" onClick={okHandler}>
-							Confirm
-						</Button>{' '}
-						<Button
-							color="secondary"
-							className="btn-square"
-							onClick={cancelHandler}
-						>
-							Cancel
-						</Button>
-					</ModalFooter>
-				</Modal>
-			</div>
-		);
-	}
+    return (
+      <Dialog open={isOpen} onOpenChange={open => !open && cancelHandler()}>
+        <DialogContent className="modal-danger">
+          <DialogHeader>
+            <DialogTitle>{title || 'Delete'}</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            {message1 ? <p>{message1}</p> : null}
+            {message ? <p>{message}</p> : <p>Are you sure want to delete this record?</p>}
+          </div>
+          <DialogFooter>
+            <Button variant="destructive" onClick={okHandler}>
+              Yes
+            </Button>
+            <Button variant="secondary" onClick={cancelHandler}>
+              No
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 }
 
-export default ConfirmModal;
+export default ConfirmDeleteModal;

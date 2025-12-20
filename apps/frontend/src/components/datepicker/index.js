@@ -1,12 +1,6 @@
 import React from 'react'
-import {
-  // Input,
-  ButtonDropdown,
-  // Button,
-  // DropdownItem,
-  // DropdownMenu,
-  DropdownToggle
-} from 'reactstrap'
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 import dayjs from '@/utils/date'
 
 import DateRangePicker from 'react-bootstrap-daterangepicker'
@@ -65,11 +59,16 @@ class DateRangePicker2 extends React.Component{
         endDate={this.state.endDate}
         opens={this.props.opens || 'right'}
         ranges={this.props.ranges} onEvent={(e, picker) => this.handleEvent(e, picker)}>
-        <ButtonDropdown className="date-select" toggle={() => {}}>
-          <DropdownToggle caret>
-            {nick_key}
-          </DropdownToggle>
-        </ButtonDropdown>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="date-select">
+              {nick_key}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {/* Range selection handled by DateRangePicker wrapping this */}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </DateRangePicker>
     );
   }

@@ -1,5 +1,7 @@
-import InitialLayout from './initial'
-import AdminLayout from './admin'
+import lazyLoad from '../utils/lazyLoad';
+
+const InitialLayout = lazyLoad(() => import('./initial'));
+const AdminLayout = lazyLoad(() => import('./admin'));
 
 export {
   InitialLayout,

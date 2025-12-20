@@ -21,9 +21,7 @@
 // temp fixes
 @import 'fixes';
 
-// Spinkit
-$spinkit-spinner-color: $body-color;
-@import 'spinkit/scss/spinkit.scss';
+// Spinkit removed - using Tailwind animate-spin with lucide-react
 
 .card-header {
 	color: #2064d8 !important;

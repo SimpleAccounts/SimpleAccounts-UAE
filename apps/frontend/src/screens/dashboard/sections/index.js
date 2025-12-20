@@ -4,8 +4,8 @@ import BankAccount from './bank_account'
 import CashFlow from './cash_flow'
 import RevenueAndExpense from './revenue_expense'
 import ProfitAndLoss from './profit_loss'
-import ProfitAndLossReport from './profit_loss_report'
-import PaidInvoices from './paid_invoices'
+import ProfitAndLossReport from './profit_loss_report/index.jsx'
+import PaidInvoices from './paid_invoices/index.jsx'
 
 export {
   Temp,

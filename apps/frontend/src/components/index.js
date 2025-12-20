@@ -1,4 +1,5 @@
 import Loading from './loading';
+import RouteLoading from './loading/RouteLoading';
 import Loader from './loader';
 import Aside from './aside';
 import Header from './header';
@@ -29,6 +30,7 @@ import {EmployeeModal} from './modals'
 
 export {
 	Loading,
+	RouteLoading,
 	Loader,
 	Aside,
 	Header,

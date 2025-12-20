@@ -1,12 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-    Row,
-    Col,
-    FormGroup,
-    Input,
-    Label,
-} from 'reactstrap';
+import { Row, Col, Label, FormGroup } from 'reactstrap';
+import { Input } from '@/components/ui/input';
 const mapStateToProps = (state) => {
     return {
         basecurrencyName: state.common.companyCurrency.currencyName,

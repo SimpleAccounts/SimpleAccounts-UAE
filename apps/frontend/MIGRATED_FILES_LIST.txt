@@ -1,0 +1,100 @@
+Material-UI to shadcn/ui Migration - Complete File List
+========================================================
+
+COMPONENT FILES (11 files):
+---------------------------
+1. src/components/form_control/zip_code_input.js
+2. src/components/form_control/invoice_additional_information.js
+3. src/components/product_table/index.js
+4. src/components/invoice-template/index.js
+5. src/components/sent_document/email_popup_card.js
+
+SCREEN FILES - QUOTATION (4 files):
+------------------------------------
+6. src/screens/quotation/sections/supplier_modal.js
+7. src/screens/quotation/screens/detail/screen.js
+8. src/screens/quotation/screens/view/sections/invoice_template.js
+9. src/screens/quotation/screens/create/screen.js
+
+SCREEN FILES - CUSTOMER INVOICE (4 files):
+-------------------------------------------
+10. src/screens/customer_invoice/sections/createCN.js
+11. src/screens/customer_invoice/screens/record_payment/screen.js
+12. src/screens/customer_invoice/screens/detail/screen.js
+13. src/screens/customer_invoice/screens/view/sections/invoice_template.js
+
+SCREEN FILES - DEBIT NOTES (4 files):
+--------------------------------------
+14. src/screens/debitNotes/screens/detail/screen.js
+15. src/screens/debitNotes/screens/view/sections/debitNote_template.js
+16. src/screens/debitNotes/screens/create/screen.js
+17. src/screens/debitNotes/screens/refund/screen.js
+
+SCREEN FILES - CREDIT NOTES (4 files):
+---------------------------------------
+18. src/screens/creditNotes/sections/customer_modal.js
+19. src/screens/creditNotes/screens/detail/screen.js
+20. src/screens/creditNotes/screens/view/sections/credit_note_template.js
+21. src/screens/creditNotes/screens/create/screen.js
+22. src/screens/creditNotes/screens/refund/screen.js
+
+SCREEN FILES - EXPENSE (2 files):
+----------------------------------
+23. src/screens/expense/screens/detail/screen.js
+24. src/screens/expense/screens/create/screen.js
+
+SCREEN FILES - PURCHASE ORDER (4 files):
+-----------------------------------------
+25. src/screens/purchase_order/sections/supplier_modal.js
+26. src/screens/purchase_order/screens/detail/screen.js
+27. src/screens/purchase_order/screens/view/sections/invoice_template.js
+28. src/screens/purchase_order/screens/create/screen.js
+
+SCREEN FILES - SUPPLIER INVOICE (4 files):
+-------------------------------------------
+29. src/screens/supplier_invoice/screens/record_payment/screen.js
+30. src/screens/supplier_invoice/screens/detail/screen.js
+31. src/screens/supplier_invoice/screens/view/sections/invoice_template.js
+32. src/screens/supplier_invoice/screens/create/screen.js
+
+SCREEN FILES - REQUEST FOR QUOTATION (4 files):
+------------------------------------------------
+33. src/screens/request_for_quotation/sections/supplier_modal.js
+34. src/screens/request_for_quotation/screens/detail/screen.js
+35. src/screens/request_for_quotation/screens/view/sections/invoice_template.js
+36. src/screens/request_for_quotation/screens/create/screen.js
+
+SCREEN FILES - GOODS RECEIVED NOTE (4 files):
+----------------------------------------------
+37. src/screens/goods_received_note/sections/supplier_modal.js
+38. src/screens/goods_received_note/screens/detail/screen.js
+39. src/screens/goods_received_note/screens/view/sections/invoice_template.js
+40. src/screens/goods_received_note/screens/create/screen.js
+
+SCREEN FILES - BANK ACCOUNT (2 files):
+---------------------------------------
+41. src/screens/bank_account/screens/transactions/sections/explain_transaction_detail.js
+42. src/screens/bank_account/screens/transactions/screens/create/screen.js
+
+SCREEN FILES - VAT/FINANCIAL REPORTS (3 files):
+------------------------------------------------
+43. src/screens/financial_report/sections/vat_reports/sections/vatSettingModal.js
+44. src/screens/financial_report/sections/fta_audit_report_MainPage/sections/vatSettingModal.js
+45. src/screens/financial_report/sections/excise_tax_audit_report_MainPage/sections/vatSettingModal.js
+
+SCREEN FILES - OTHER (9 files):
+--------------------------------
+46. src/screens/vat_code/screens/detail/screen.js
+47. src/screens/vat_code/screens/create/screen.js
+48. src/screens/payrollemp/sections/salaryComponentVariable.js
+49. src/screens/payroll_run/sections/createCompanyDetailsModal.js
+50. src/screens/payroll_run/screen.js
+51. src/screens/notesSetting/screen.js
+52. src/screens/import_transaction/screen.js
+53. src/screens/under_const/screen-two.js
+
+ROOT FILES (1 file):
+--------------------
+54. src/index.js
+
+TOTAL: 54 files migrated successfully

@@ -1,9 +1,15 @@
 import React from 'react'
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import './style.scss'
 import { authApi } from 'utils';
 import { toast } from 'react-toastify';
-import { Checkbox } from '@material-ui/core';
 
 function updateMailTheme(id, templateTitle) {
 
@@ -80,36 +86,32 @@ class TemplateComponent extends React.Component {
 
     return (
       <div className="theme-wrapper">
-        <p className="template-title">
+        <p className="template-title flex items-center gap-2">
           <Checkbox checked={enable} 
-          onClick={
-          updateMailTheme(templateId, templateTitle)
-        }>
-
-        </Checkbox>
+          onCheckedChange={() => updateMailTheme(templateId, templateTitle)()}
+        />
         <b>{templateTitle}</b></p>
         <img className="template-gallery" src={templateImg} onClick={this.openDialog}></img>
-        <p>
-          <a className="dialog show_preview Button" id="caption_2_link" onClick={this.openDialog}>Preview</a>
-          <p className="use_theme Button" onClick={
-
+        <div className="flex gap-2 mt-2">
+          <Button variant="outline" size="sm" className="dialog show_preview" id="caption_2_link" onClick={this.openDialog}>Preview</Button>
+          <Button variant="default" size="sm" className="use_theme" onClick={
             updateMailTheme(templateId, templateTitle)
+          }>Use Theme</Button>
+        </div>
 
-          }>Use Theme</p>
-        </p>
-
-        <Modal isOpen={this.state.isOpen} centered className="modal-primary">
-          <ModalHeader tag="h4" className="preview-modal-title" toggle={this.toggleDanger} >
-            <h5 className="mb-0"><b>{templateTitle}</b></h5>
-            <i className="fa fa-close close-btn"
-              onClick={() => this.closePreviewModal()}
-            ></i>
-          </ModalHeader>
-          <ModalBody>
-            <img className="preview-gallery" src={templateImg}></img>
-
-          </ModalBody>
-        </Modal>
+        <Dialog open={this.state.isOpen} onOpenChange={this.closePreviewModal}>
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <div className="flex justify-between items-center w-full">
+                <DialogTitle><b>{templateTitle}</b></DialogTitle>
+                {/* Close button handled by Dialog primitive */}
+              </div>
+            </DialogHeader>
+            <div className="flex justify-center">
+              <img className="preview-gallery w-full h-auto" src={templateImg} alt={templateTitle}></img>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
 

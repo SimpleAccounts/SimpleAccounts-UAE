@@ -1,218 +1,244 @@
-import LogIn from './log_in';
-import LogInTwo from './log_in/screen-two.jsx';
-import Register from './register';
-import ResetPassword from './reset_password';
-import NewPassword from './new_password';
+import lazyLoad from '../utils/lazyLoad';
 
-import Dashboard from './dashboard';
-import DashboardTwo from './dashboard/screen-two';
+// Authentication Screens
+const LogIn = lazyLoad(() => import('./log_in'));
+const LogInTwo = lazyLoad(() => import('./log_in/screen-two.jsx'));
+const Register = lazyLoad(() => import('./register'));
+const ResetPassword = lazyLoad(() => import('./reset_password'));
+const NewPassword = lazyLoad(() => import('./new_password'));
 
-import Journal from './journal';
-import CreateJournal from './journal/screens/create';
-import DetailJournal from './journal/screens/detail';
-import OpeningBalance from './opening_balance';
-import CreateOpeningBalance from './opening_balance/screens/create';
-import DetailOpeningBalance from './opening_balance/screens/detail';
+// Dashboard Screens
+const Dashboard = lazyLoad(() => import('./dashboard'));
+const DashboardTwo = lazyLoad(() => import('./dashboard/screen-two'));
 
-import BankAccount from './bank_account';
-import CreateBankAccount from './bank_account/screens/create';
-import DetailBankAccount from './bank_account/screens/detail';
-import BankTransactions from './bank_account/screens/transactions';
-import CreateBankTransaction from './bank_account/screens/transactions/screens/create';
-import DetailBankTransaction from './bank_account/screens/transactions/screens/detail';
-import ReconcileTransaction from './bank_account/screens/transactions/screens/reconcile';
-import ImportBankStatement from './import_bank_statement';
-import ImportTransaction from './import_transaction';
+// Journal Screens
+const Journal = lazyLoad(() => import('./journal'));
+const CreateJournal = lazyLoad(() => import('./journal/screens/create'));
+const DetailJournal = lazyLoad(() => import('./journal/screens/detail'));
 
-import CustomerInvoice from './customer_invoice';
-import CreateCustomerInvoice from './customer_invoice/screens/create';
-import DetailCustomerInvoice from './customer_invoice/screens/detail';
-import ViewCustomerInvoice from './customer_invoice/screens/view';
-import RecordCustomerPayment from './customer_invoice/screens/record_payment';
+// Opening Balance Screens
+const OpeningBalance = lazyLoad(() => import('./opening_balance'));
+const CreateOpeningBalance = lazyLoad(() => import('./opening_balance/screens/create'));
+const DetailOpeningBalance = lazyLoad(() => import('./opening_balance/screens/detail'));
 
-import Receipt from './receipt';
-import CreateReceipt from './receipt/screens/create';
-import DetailReceipt from './receipt/screens/detail';
+// Bank Account Screens
+const BankAccount = lazyLoad(() => import('./bank_account'));
+const CreateBankAccount = lazyLoad(() => import('./bank_account/screens/create'));
+const DetailBankAccount = lazyLoad(() => import('./bank_account/screens/detail'));
+const BankTransactions = lazyLoad(() => import('./bank_account/screens/transactions'));
+const CreateBankTransaction = lazyLoad(() => import('./bank_account/screens/transactions/screens/create'));
+const DetailBankTransaction = lazyLoad(() => import('./bank_account/screens/transactions/screens/detail'));
+const ReconcileTransaction = lazyLoad(() => import('./bank_account/screens/transactions/screens/reconcile'));
+const ImportBankStatement = lazyLoad(() => import('./import_bank_statement'));
+const ImportTransaction = lazyLoad(() => import('./import_transaction'));
 
-import SupplierInvoice from './supplier_invoice';
-import CreateSupplierInvoice from './supplier_invoice/screens/create';
-import DetailSupplierInvoice from './supplier_invoice/screens/detail';
-import ViewInvoice from './supplier_invoice/screens/view';
-import RecordSupplierPayment from './supplier_invoice/screens/record_payment';
+// Customer Invoice Screens
+const CustomerInvoice = lazyLoad(() => import('./customer_invoice'));
+const CreateCustomerInvoice = lazyLoad(() => import('./customer_invoice/screens/create'));
+const DetailCustomerInvoice = lazyLoad(() => import('./customer_invoice/screens/detail'));
+const ViewCustomerInvoice = lazyLoad(() => import('./customer_invoice/screens/view'));
+const RecordCustomerPayment = lazyLoad(() => import('./customer_invoice/screens/record_payment'));
 
-import RequestForQuotation from './request_for_quotation';
-import CreateRequestForQuotation from './request_for_quotation/screens/create';
-import DetailRequestForQuotation from './request_for_quotation/screens/detail';
-import ViewRequestForQuotation from './request_for_quotation/screens/view';
+// Receipt Screens
+const Receipt = lazyLoad(() => import('./receipt'));
+const CreateReceipt = lazyLoad(() => import('./receipt/screens/create'));
+const DetailReceipt = lazyLoad(() => import('./receipt/screens/detail'));
 
-import PurchaseOrder from './purchase_order';
-import CreatePurchaseOrder from './purchase_order/screens/create';
-import DetailPurchaseOrder from './purchase_order/screens/detail';
-import ViewPurchaseOrder from './purchase_order/screens/view';
+// Supplier Invoice Screens
+const SupplierInvoice = lazyLoad(() => import('./supplier_invoice'));
+const CreateSupplierInvoice = lazyLoad(() => import('./supplier_invoice/screens/create'));
+const DetailSupplierInvoice = lazyLoad(() => import('./supplier_invoice/screens/detail'));
+const ViewInvoice = lazyLoad(() => import('./supplier_invoice/screens/view'));
+const RecordSupplierPayment = lazyLoad(() => import('./supplier_invoice/screens/record_payment'));
 
-import GoodsReceivedNote from './goods_received_note';
-import CreateGoodsReceivedNote from './goods_received_note/screens/create';
-import DetailGoodsReceivedNote from './goods_received_note/screens/detail';
-import ViewGoodsReceivedNote from './goods_received_note/screens/view';
+// Request for Quotation Screens
+const RequestForQuotation = lazyLoad(() => import('./request_for_quotation'));
+const CreateRequestForQuotation = lazyLoad(() => import('./request_for_quotation/screens/create'));
+const DetailRequestForQuotation = lazyLoad(() => import('./request_for_quotation/screens/detail'));
+const ViewRequestForQuotation = lazyLoad(() => import('./request_for_quotation/screens/view'));
 
-import CreateDebitNote from './debitNotes/screens/create';
-import DebitNotes from './debitNotes';
-import DetailDebitNote from './debitNotes/screens/detail';
-import DebitNoteRefund from './debitNotes/screens/refund';
-import ApplyToSupplierInvoice from './debitNotes/screens/applyToInvoice';
-import ViewDebitNote from './debitNotes/screens/view';
+// Purchase Order Screens
+const PurchaseOrder = lazyLoad(() => import('./purchase_order'));
+const CreatePurchaseOrder = lazyLoad(() => import('./purchase_order/screens/create'));
+const DetailPurchaseOrder = lazyLoad(() => import('./purchase_order/screens/detail'));
+const ViewPurchaseOrder = lazyLoad(() => import('./purchase_order/screens/view'));
 
-import Quotation from './quotation';
-import CreateQuotation from './quotation/screens/create';
-import DetailQuotation from './quotation/screens/detail';
-import ViewQuotation from './quotation/screens/view';
+// Goods Received Note Screens
+const GoodsReceivedNote = lazyLoad(() => import('./goods_received_note'));
+const CreateGoodsReceivedNote = lazyLoad(() => import('./goods_received_note/screens/create'));
+const DetailGoodsReceivedNote = lazyLoad(() => import('./goods_received_note/screens/detail'));
+const ViewGoodsReceivedNote = lazyLoad(() => import('./goods_received_note/screens/view'));
 
-import Expense from './expense';
-import CreateExpense from './expense/screens/create';
-import DetailExpense from './expense/screens/detail';
-import ViewExpense from './expense/screens/view';
+// Debit Notes Screens
+const CreateDebitNote = lazyLoad(() => import('./debitNotes/screens/create'));
+const DebitNotes = lazyLoad(() => import('./debitNotes'));
+const DetailDebitNote = lazyLoad(() => import('./debitNotes/screens/detail'));
+const DebitNoteRefund = lazyLoad(() => import('./debitNotes/screens/refund'));
+const ApplyToSupplierInvoice = lazyLoad(() => import('./debitNotes/screens/applyToInvoice'));
+const ViewDebitNote = lazyLoad(() => import('./debitNotes/screens/view'));
 
-import Payment from './payment';
-import CreatePayment from './payment/screens/create';
-import DetailPayment from './payment/screens/detail';
+// Quotation Screens
+const Quotation = lazyLoad(() => import('./quotation'));
+const CreateQuotation = lazyLoad(() => import('./quotation/screens/create'));
+const DetailQuotation = lazyLoad(() => import('./quotation/screens/detail'));
+const ViewQuotation = lazyLoad(() => import('./quotation/screens/view'));
 
-import VatTransactions from './vat_transactions';
-import ReportsFiling from './reports_filing';
+// Expense Screens
+const Expense = lazyLoad(() => import('./expense'));
+const CreateExpense = lazyLoad(() => import('./expense/screens/create'));
+const DetailExpense = lazyLoad(() => import('./expense/screens/detail'));
+const ViewExpense = lazyLoad(() => import('./expense/screens/view'));
 
-import TransactionsReport from './transactions_report';
-import FinancialReport from './financial_report';
-import Inventory from './inventory';
-import Template from './template';
-import ProfitAndLossReport from './financial_report/sections/profit_and_loss';
-import BalanceSheet from './financial_report/sections/balance_sheet';
-import HorizontalBalanceSheet from './financial_report/sections/horizontal_balance_sheet';
-import TrailBalances from './financial_report/sections/trail_Balances';
-import CustomerAccountStatement from './financial_report/sections/customer_account_statement';
-import Cashflow from './financial_report/sections/cashflow';
-import VatReturnsReport from './financial_report/sections/vat_return';
-import DetailedGeneralLedgerReport from './detailed_general_ledger_report';
-import SalesByCustomer from './financial_report/sections/sales_by_customer';
-import SalesByProduct from './financial_report/sections/sales_by_product';
-import PurchaseByitem from './financial_report/sections/purchase_by_item';
-import PurchaseByVendor from './financial_report/sections/purchase_by_vendor';
-import ReceivableInvoiceDetailsReport from './financial_report/sections/receivable_invoice_details';
-import ReceivableInvoiceSummary from './financial_report/sections/receivable_invoice_summary';
-import PayablesInvoiceDetailsReport from './financial_report/sections/payables_invoice_details';
-import PayablesInvoiceSummary from './financial_report/sections/payables_invoice_summary';
-import CreditNoteDetailsReport from './financial_report/sections/credit_note_details';
-import ExpenseDetailsReport from './financial_report/sections/expense_details';
-import ExpenseByCategory from './financial_report/sections/expense_by_catogery';
-import InvoiceDetails from './financial_report/sections/invoice_details';
-import PayrollSummaryReport from './financial_report/sections/payroll_summary';
-import ChartAccount from './chart_account';
-import CreateChartAccount from './chart_account/screens/create';
-import DetailChartAccount from './chart_account/screens/detail';
-import Contact from './contact';
-import CreateContact from './contact/screens/create';
-import DetailContact from './contact/screens/detail';
-import Employee from './employee';
-import CreateEmployee from './employee/screens/create';
-import DetailEmployee from './employee/screens/detail';
-import Product from './product';
-import CreateProduct from './product/screens/create';
-import DetailProduct from './product/screens/detail';
-import InventoryEdit from './product/screens/inventory_edit';
-import InventoryHistory from './product/screens/inventory_history';
-import CurrencyConvert from './currencyConvert';
-import CreateCurrencyConvert from './currencyConvert/screens/create';
-import DetailCurrencyConvert from './currencyConvert/screens/detail';
-import Project from './project';
-import CreateProject from './project/screens/create';
-import DetailProject from './project/screens/detail';
-import VatCode from './vat_code';
-import CreateVatCode from './vat_code/screens/create';
-import DetailVatCode from './vat_code/screens/detail';
-import ProductCategory from './product_category';
-import CreateProductCategory from './product_category/screens/create';
-import DetailProductCategory from './product_category/screens/detail';
-import Currency from './currency';
-import CreateCurrency from './currency/screens/create';
-import DetailCurrency from './currency/screens/detail';
+// Payment Screens
+const Payment = lazyLoad(() => import('./payment'));
+const CreatePayment = lazyLoad(() => import('./payment/screens/create'));
+const DetailPayment = lazyLoad(() => import('./payment/screens/detail'));
 
-import User from './user';
-import CreateUser from './user/screens/create';
-import DetailUser from './user/screens/detail';
-import Organization from './organization';
+// VAT Screens
+const VatTransactions = lazyLoad(() => import('./vat_transactions'));
+const ReportsFiling = lazyLoad(() => import('./reports_filing'));
 
-import Profile from './profile';
-import GeneralSettings from './general_settings';
-import TransactionCategory from './transaction_category';
-import CreateTransactionCategory from './transaction_category/screens/create';
-import DetailTransactionCategory from './transaction_category/screens/detail';
+// Reports Screens
+const TransactionsReport = lazyLoad(() => import('./transactions_report'));
+const FinancialReport = lazyLoad(() => import('./financial_report'));
+const Inventory = lazyLoad(() => import('./inventory'));
+const Template = lazyLoad(() => import('./template'));
+const ProfitAndLossReport = lazyLoad(() => import('./financial_report/sections/profit_and_loss'));
+const BalanceSheet = lazyLoad(() => import('./financial_report/sections/balance_sheet'));
+const HorizontalBalanceSheet = lazyLoad(() => import('./financial_report/sections/horizontal_balance_sheet'));
+const TrailBalances = lazyLoad(() => import('./financial_report/sections/trail_Balances'));
+const CustomerAccountStatement = lazyLoad(() => import('./financial_report/sections/customer_account_statement'));
+const Cashflow = lazyLoad(() => import('./financial_report/sections/cashflow'));
+const VatReturnsReport = lazyLoad(() => import('./financial_report/sections/vat_return'));
+const DetailedGeneralLedgerReport = lazyLoad(() => import('./detailed_general_ledger_report'));
+const SalesByCustomer = lazyLoad(() => import('./financial_report/sections/sales_by_customer'));
+const SalesByProduct = lazyLoad(() => import('./financial_report/sections/sales_by_product'));
+const PurchaseByitem = lazyLoad(() => import('./financial_report/sections/purchase_by_item'));
+const PurchaseByVendor = lazyLoad(() => import('./financial_report/sections/purchase_by_vendor'));
+const ReceivableInvoiceDetailsReport = lazyLoad(() => import('./financial_report/sections/receivable_invoice_details'));
+const ReceivableInvoiceSummary = lazyLoad(() => import('./financial_report/sections/receivable_invoice_summary'));
+const PayablesInvoiceDetailsReport = lazyLoad(() => import('./financial_report/sections/payables_invoice_details'));
+const PayablesInvoiceSummary = lazyLoad(() => import('./financial_report/sections/payables_invoice_summary'));
+const CreditNoteDetailsReport = lazyLoad(() => import('./financial_report/sections/credit_note_details'));
+const ExpenseDetailsReport = lazyLoad(() => import('./financial_report/sections/expense_details'));
+const ExpenseByCategory = lazyLoad(() => import('./financial_report/sections/expense_by_catogery'));
+const InvoiceDetails = lazyLoad(() => import('./financial_report/sections/invoice_details'));
+const PayrollSummaryReport = lazyLoad(() => import('./financial_report/sections/payroll_summary'));
+const SOAReport = lazyLoad(() => import('./financial_report/sections/soa_statementsOfAccounts'));
+const VatReports = lazyLoad(() => import('./financial_report/sections/vat_reports'));
+const VatPaymentRecord = lazyLoad(() => import('./financial_report/sections/vat_reports/screens/vatPaymentRecord'));
+const RecordTaxClaim = lazyLoad(() => import('./financial_report/sections/vat_reports/screens/record_claim_tax'));
+const RecordVatPayment = lazyLoad(() => import('./financial_report/sections/vat_reports/screens/record_tax_payment'));
+const CorporateTax = lazyLoad(() => import('./financial_report/sections/corporate_tax'));
+const CorporateTaxPaymentHistory = lazyLoad(() => import('./financial_report/sections/corporate_tax/screens/payment_history'));
+const CorporateTaxPaymentRecord = lazyLoad(() => import('./financial_report/sections/corporate_tax/screens/payment_record'));
+const ViewCorporateTax = lazyLoad(() => import('./financial_report/sections/corporate_tax/screens/view'));
+const FtaAuditReport = lazyLoad(() => import('./financial_report/sections/fta_audit_report_MainPage'));
+const GenerateAuditFile = lazyLoad(() => import('./financial_report/sections/fta_audit_report_MainPage/screens/generate_Fta_audit_report'));
+const ViewFtaAuditReport = lazyLoad(() => import('./financial_report/sections/Fta_Audit_Report'));
+const ExciseTaxAuditReport = lazyLoad(() => import('./financial_report/sections/excise_tax_audit_report_MainPage'));
+const ViewFtaExciseAuditReport = lazyLoad(() => import('./financial_report/sections/Excise_Audit_Report'));
+const ARAgingReport = lazyLoad(() => import('./financial_report/sections/ar_aging_report'));
+const SubReports = lazyLoad(() => import('./financial_report/sections/vat_return/screens/subReports'));
+const DebitNoteDetailsReport = lazyLoad(() => import('./financial_report/sections/debit_note_details'));
 
-import UsersRoles from './users_roles';
-import CreateRole from './users_roles/screens/create';
-import UpdateRole from './users_roles/screens/detail';
-import UnderConstruction from './under_const';
+// Master Data Screens
+const ChartAccount = lazyLoad(() => import('./chart_account'));
+const CreateChartAccount = lazyLoad(() => import('./chart_account/screens/create'));
+const DetailChartAccount = lazyLoad(() => import('./chart_account/screens/detail'));
+const Contact = lazyLoad(() => import('./contact'));
+const CreateContact = lazyLoad(() => import('./contact/screens/create'));
+const DetailContact = lazyLoad(() => import('./contact/screens/detail'));
+const Employee = lazyLoad(() => import('./employee'));
+const CreateEmployee = lazyLoad(() => import('./employee/screens/create'));
+const DetailEmployee = lazyLoad(() => import('./employee/screens/detail'));
+const Product = lazyLoad(() => import('./product'));
+const CreateProduct = lazyLoad(() => import('./product/screens/create'));
+const DetailProduct = lazyLoad(() => import('./product/screens/detail'));
+const InventoryEdit = lazyLoad(() => import('./product/screens/inventory_edit'));
+const InventoryHistory = lazyLoad(() => import('./product/screens/inventory_history'));
+const CurrencyConvert = lazyLoad(() => import('./currencyConvert'));
+const CreateCurrencyConvert = lazyLoad(() => import('./currencyConvert/screens/create'));
+const DetailCurrencyConvert = lazyLoad(() => import('./currencyConvert/screens/detail'));
+const Project = lazyLoad(() => import('./project'));
+const CreateProject = lazyLoad(() => import('./project/screens/create'));
+const DetailProject = lazyLoad(() => import('./project/screens/detail'));
+const VatCode = lazyLoad(() => import('./vat_code'));
+const CreateVatCode = lazyLoad(() => import('./vat_code/screens/create'));
+const DetailVatCode = lazyLoad(() => import('./vat_code/screens/detail'));
+const ProductCategory = lazyLoad(() => import('./product_category'));
+const CreateProductCategory = lazyLoad(() => import('./product_category/screens/create'));
+const DetailProductCategory = lazyLoad(() => import('./product_category/screens/detail'));
+const Currency = lazyLoad(() => import('./currency'));
+const CreateCurrency = lazyLoad(() => import('./currency/screens/create'));
+const DetailCurrency = lazyLoad(() => import('./currency/screens/detail'));
 
-import Notification from './notification';
-import DataBackup from './data_backup';
-import Help from './help';
-import Faq from './help/screens/faq';
-import PayrollEmployee from './payrollemp';
-import CreatePayrollEmployee from './payrollemp/screens/create';
-import Employment from './employment';
-import CreateEmployment from './employment/screens/create';
-import EmployeeFinancial from './employee_Bank_Details';
-import CreateEmployeeFinancial from './employee_Bank_Details/screens/create';
-import SalaryRoles from './salaryRoles';
-import CreateSalaryRoles from './salaryRoles/screens/create';
-import DetailSalaryRole from './salaryRoles/screens/detail';
-import SalaryTemplate from './salaryTemplate';
-import CreateSalaryTemplate from './salaryTemplate/screens/create';
-import CreateSalaryStucture from './salaryStructure/screens/create';
-import SalaryStucture from './salaryStructure';
-import PayrollRun from './payroll_run';
-import ViewEmployee from './payrollemp/screens/view';
-// import SalarySlip from './employeePayroll/screens/salarySlip'
-import UpdateEmployeePersonal from './payrollemp/screens/update_emp_personal';
-import UpdateEmployeeBank from './payrollemp/screens/update_emp_bank';
-import UpdateEmployeeEmployment from './payrollemp/screens/update_emp_employemet';
-import UpdateSalaryComponent from './payrollemp/screens/update_salary_component';
-import Designation from './designation';
-import CreateDesignation from './designation/screens/create';
-import CreateSalaryComponent from './salary_component/screens/create';
-import DetailSalaryStructure from './salaryStructure/screens/detail';
-import DetailSalaryComponent from './salary_component/screens/detail';
-import DetailSalaryTemplate from './salaryTemplate/screens/detail';
-import DetailDesignation from './designation/screens/detail';
-import DetailCreditNote from './creditNotes/screens/detail';
-import CreateCreditNote from './creditNotes/screens/create';
-import ViewCreditNote from './creditNotes/screens/view';
-import CreditNotes from './creditNotes';
-import ApplyToInvoice from './creditNotes/screens/applyToInvoice';
-import Refund from './creditNotes/screens/refund';
-import PayrollConfigurations from './payroll_configurations';
-import Import from './import';
-import CreatePayroll from './payroll_run/screens/createPayrollList';
-import Migrate from './import/sections/migrate';
-import MigrateHistory from './import/sections/migrate_history';
-import PayrollApproverScreen from './payroll_run/screens/approver';
-import UpdatePayroll from './payroll_run/screens/updatePayroll';
-import SOAReport from './financial_report/sections/soa_statementsOfAccounts';
-import VatReports from './financial_report/sections/vat_reports';
-import VatPaymentRecord from './financial_report/sections/vat_reports/screens/vatPaymentRecord';
-import RecordTaxClaim from './financial_report/sections/vat_reports/screens/record_claim_tax';
-import RecordVatPayment from './financial_report/sections/vat_reports/screens/record_tax_payment';
-import CorporateTax from './financial_report/sections/corporate_tax';
-import CorporateTaxPaymentHistory from './financial_report/sections/corporate_tax/screens/payment_history';
-import CorporateTaxPaymentRecord from './financial_report/sections/corporate_tax/screens/payment_record';
-import ViewCorporateTax from './financial_report/sections/corporate_tax/screens/view';
-import FtaAuditReport from './financial_report/sections/fta_audit_report_MainPage';
-import GenerateAuditFile from './financial_report/sections/fta_audit_report_MainPage/screens/generate_Fta_audit_report';
-import ViewFtaAuditReport from './financial_report/sections/Fta_Audit_Report';
-import ExciseTaxAuditReport from './financial_report/sections/excise_tax_audit_report_MainPage';
-import ViewFtaExciseAuditReport from './financial_report/sections/Excise_Audit_Report';
-import ARAgingReport from './financial_report/sections/ar_aging_report';
-import SubReports from './financial_report/sections/vat_return/screens/subReports';
-import NotesSettings from './notesSetting';
-import DebitNoteDetailsReport from './financial_report/sections/debit_note_details';
-import PayrollSettings from './payrollsettings';
+// User & Settings Screens
+const User = lazyLoad(() => import('./user'));
+const CreateUser = lazyLoad(() => import('./user/screens/create'));
+const DetailUser = lazyLoad(() => import('./user/screens/detail'));
+const Organization = lazyLoad(() => import('./organization'));
+const Profile = lazyLoad(() => import('./profile'));
+const GeneralSettings = lazyLoad(() => import('./general_settings'));
+const TransactionCategory = lazyLoad(() => import('./transaction_category'));
+const CreateTransactionCategory = lazyLoad(() => import('./transaction_category/screens/create'));
+const DetailTransactionCategory = lazyLoad(() => import('./transaction_category/screens/detail'));
+const UsersRoles = lazyLoad(() => import('./users_roles'));
+const CreateRole = lazyLoad(() => import('./users_roles/screens/create'));
+const UpdateRole = lazyLoad(() => import('./users_roles/screens/detail'));
+const UnderConstruction = lazyLoad(() => import('./under_const'));
+const Notification = lazyLoad(() => import('./notification'));
+const DataBackup = lazyLoad(() => import('./data_backup'));
+const Help = lazyLoad(() => import('./help'));
+const Faq = lazyLoad(() => import('./help/screens/faq'));
+const NotesSettings = lazyLoad(() => import('./notesSetting'));
+const PayrollSettings = lazyLoad(() => import('./payrollsettings'));
+
+// Payroll Screens
+const PayrollEmployee = lazyLoad(() => import('./payrollemp'));
+const CreatePayrollEmployee = lazyLoad(() => import('./payrollemp/screens/create'));
+const Employment = lazyLoad(() => import('./employment'));
+const CreateEmployment = lazyLoad(() => import('./employment/screens/create'));
+const EmployeeFinancial = lazyLoad(() => import('./employee_Bank_Details'));
+const CreateEmployeeFinancial = lazyLoad(() => import('./employee_Bank_Details/screens/create'));
+const SalaryRoles = lazyLoad(() => import('./salaryRoles'));
+const CreateSalaryRoles = lazyLoad(() => import('./salaryRoles/screens/create'));
+const DetailSalaryRole = lazyLoad(() => import('./salaryRoles/screens/detail'));
+const SalaryTemplate = lazyLoad(() => import('./salaryTemplate'));
+const CreateSalaryTemplate = lazyLoad(() => import('./salaryTemplate/screens/create'));
+const CreateSalaryStucture = lazyLoad(() => import('./salaryStructure/screens/create'));
+const SalaryStucture = lazyLoad(() => import('./salaryStructure'));
+const PayrollRun = lazyLoad(() => import('./payroll_run'));
+const ViewEmployee = lazyLoad(() => import('./payrollemp/screens/view'));
+const UpdateEmployeePersonal = lazyLoad(() => import('./payrollemp/screens/update_emp_personal'));
+const UpdateEmployeeBank = lazyLoad(() => import('./payrollemp/screens/update_emp_bank'));
+const UpdateEmployeeEmployment = lazyLoad(() => import('./payrollemp/screens/update_emp_employemet'));
+const UpdateSalaryComponent = lazyLoad(() => import('./payrollemp/screens/update_salary_component'));
+const Designation = lazyLoad(() => import('./designation'));
+const CreateDesignation = lazyLoad(() => import('./designation/screens/create'));
+const CreateSalaryComponent = lazyLoad(() => import('./salary_component/screens/create'));
+const DetailSalaryStructure = lazyLoad(() => import('./salaryStructure/screens/detail'));
+const DetailSalaryComponent = lazyLoad(() => import('./salary_component/screens/detail'));
+const DetailSalaryTemplate = lazyLoad(() => import('./salaryTemplate/screens/detail'));
+const DetailDesignation = lazyLoad(() => import('./designation/screens/detail'));
+const PayrollConfigurations = lazyLoad(() => import('./payroll_configurations'));
+const CreatePayroll = lazyLoad(() => import('./payroll_run/screens/createPayrollList'));
+const PayrollApproverScreen = lazyLoad(() => import('./payroll_run/screens/approver'));
+const UpdatePayroll = lazyLoad(() => import('./payroll_run/screens/updatePayroll'));
+
+// Credit Notes Screens
+const DetailCreditNote = lazyLoad(() => import('./creditNotes/screens/detail'));
+const CreateCreditNote = lazyLoad(() => import('./creditNotes/screens/create'));
+const ViewCreditNote = lazyLoad(() => import('./creditNotes/screens/view'));
+const CreditNotes = lazyLoad(() => import('./creditNotes'));
+const ApplyToInvoice = lazyLoad(() => import('./creditNotes/screens/applyToInvoice'));
+const Refund = lazyLoad(() => import('./creditNotes/screens/refund'));
+
+// Import/Migration Screens
+const Import = lazyLoad(() => import('./import'));
+const Migrate = lazyLoad(() => import('./import/sections/migrate'));
+const MigrateHistory = lazyLoad(() => import('./import/sections/migrate_history'));
+
 export {
   LogIn,
   LogInTwo,
@@ -346,7 +372,6 @@ export {
   SalaryStucture,
   CreateSalaryStucture,
   PayrollRun,
-  //SalarySlip,
   UnderConstruction,
   ReceivableInvoiceDetailsReport,
   CreditNoteDetailsReport,
