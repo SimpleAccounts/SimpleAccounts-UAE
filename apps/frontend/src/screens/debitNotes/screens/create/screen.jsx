@@ -32,7 +32,7 @@ import './style.scss';
 import dayjs from '@/utils/date';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 import invoiceimage from 'assets/images/invoice/invoice.png';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate, useLocation } from 'react-router-dom';

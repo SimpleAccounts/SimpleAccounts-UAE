@@ -30,7 +30,7 @@ import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory, selectStyles } from 'utils';
 import './style.scss';
 import dayjs from '@/utils/date';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';

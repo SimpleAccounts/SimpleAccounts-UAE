@@ -18,7 +18,7 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 import * as CreditNotesDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as CreditNotesActions from '../../actions';

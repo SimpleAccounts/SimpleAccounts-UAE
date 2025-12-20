@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux'
 import { Card, CardHeader, CardBody, Button, Row, Col, Table } from 'reactstrap';
-import { ToastContainer } from 'sonner';
 import { Loader } from 'components';
 
 import './style.scss';

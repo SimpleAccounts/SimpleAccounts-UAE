@@ -5,7 +5,7 @@ import { Card, CardHeader, CardBody, Button, Row, Col, ButtonGroup, Input } from
 import { Loader, ConfirmDeleteModal } from 'components';
 import * as ProjectActions from './actions';
 import { CommonActions } from 'services/global';
-import { CSVLink } from 'react-csv';
+import { CSVLink } from '@/components/ui/csv-link';
 import './style.scss';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';

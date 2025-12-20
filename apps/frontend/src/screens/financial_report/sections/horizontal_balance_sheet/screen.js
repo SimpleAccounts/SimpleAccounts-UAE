@@ -23,7 +23,7 @@ import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';
 import { ExcelExport as XLSX } from 'utils';
-import { CSVLink } from 'react-csv';
+import { CSVLink } from '@/components/ui/csv-link';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';

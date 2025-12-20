@@ -30,7 +30,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory, selectStyles } from 'utils';
 import './style.scss';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import dayjs from '@/utils/date';

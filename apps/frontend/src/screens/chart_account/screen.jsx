@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Download, Printer, BarChart3, Lock, LockOpen, Edit } from 'lucide-react';
-import { CSVLink } from 'react-csv';
+import { CSVLink } from '@/components/ui/csv-link';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

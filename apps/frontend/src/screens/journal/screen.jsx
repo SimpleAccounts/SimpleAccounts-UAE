@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Search, RefreshCw, FileText, Eye, Edit } from 'lucide-react';
 import DatePicker from 'react-datepicker';
-import { CSVLink } from 'react-csv';
+import { CSVLink } from '@/components/ui/csv-link';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

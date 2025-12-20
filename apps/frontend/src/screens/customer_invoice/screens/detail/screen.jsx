@@ -40,7 +40,7 @@ import { AddressComponent } from 'screens/contact/sections';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 
 const mapStateToProps = state => {
   return {

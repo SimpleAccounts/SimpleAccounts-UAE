@@ -17,7 +17,7 @@ import {
 } from 'reactstrap';
 import { bindActionCreators } from 'redux';
 import Select from 'react-select';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 import DatePicker from 'react-datepicker';
 import dayjs from 'dayjs';
 import { ChevronDown, ChevronUp } from 'lucide-react';

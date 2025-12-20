@@ -29,7 +29,7 @@ import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@/components/ui/checkbox';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 
 const SortExpenseCategory = list => {
   if (list.length !== 0) {
@@ -1052,20 +1052,10 @@ const CreateExpense = ({
 
                                     <Switch
                                       checked={isVatClaimable}
-                                      onChange={expenseTypeValue => {
+                                      onCheckedChange={expenseTypeValue => {
                                         setExpenseType(expenseTypeValue);
                                         setIsVatClaimable(!isVatClaimable);
                                       }}
-                                      onColor="#2064d8"
-                                      onHandleColor="#2693e6"
-                                      handleDiameter={25}
-                                      uncheckedIcon={false}
-                                      checkedIcon={false}
-                                      boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                      activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                      height={20}
-                                      width={48}
-                                      className="react-switch"
                                     />
                                     {isVatClaimable === true ? (
                                       <span style={{ color: '#0069d9' }} className="ml-4">
@@ -1272,19 +1262,9 @@ const CreateExpense = ({
                                     <span className="mr-4">{strings.ExclusiveVAT}</span>
                                     <Switch
                                       checked={!exclusiveVat}
-                                      onChange={checked => {
+                                      onCheckedChange={checked => {
                                         setExclusiveVat(!checked);
                                       }}
-                                      onColor="#2064d8"
-                                      onHandleColor="#2693e6"
-                                      handleDiameter={25}
-                                      uncheckedIcon={false}
-                                      checkedIcon={false}
-                                      boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                      activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                      height={20}
-                                      width={48}
-                                      className="react-switch "
                                     />
                                     <span className="ml-4">{strings.InclusiveVAT}</span>
                                   </FormGroup>

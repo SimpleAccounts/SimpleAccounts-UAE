@@ -41,7 +41,7 @@ import {
   Lists,
   selectStyles,
 } from 'utils';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
