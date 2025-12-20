@@ -5,7 +5,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Upload, Check, X } from 'lucide-react';
 import Select from 'react-select';
 import Papa from 'papaparse';
-import { convertArrayToCSV } from 'convert-array-to-csv';
 import dayjs from '@/utils/date';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -205,7 +204,7 @@ function ImportTransaction() {
         }
       }
 
-      const csvData = convertArrayToCSV(list);
+      const csvData = Papa.unparse(list);
       setCsv(csvData);
 
       setTableData(list);

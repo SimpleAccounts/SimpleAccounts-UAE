@@ -8,7 +8,6 @@ import Message from './message';
 import DateRangePicker2 from './datepicker';
 import ConfirmDeleteModal from './confirm_delete_modal';
 import ImageUploader from './react-image-upload';
-import SidebarComponent from './sidebar';
 import Tooltip from './tooltip';
 import Currency from './currency';
 import InvoiceTemplate from './invoice-template';
@@ -41,7 +40,6 @@ export {
   ConfirmLeavePageModal,
   LeavePage,
   ImageUploader,
-  SidebarComponent,
   CustomStyles,
   Tooltip,
   Currency,

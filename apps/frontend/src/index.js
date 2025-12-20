@@ -1,7 +1,3 @@
-import 'react-app-polyfill/ie11';
-import 'react-app-polyfill/stable';
-import 'polyfill';
-
 // Register Chart.js components before any chart renders
 import 'utils/chartRegistry';
 
