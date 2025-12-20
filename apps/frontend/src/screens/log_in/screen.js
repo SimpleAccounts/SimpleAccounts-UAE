@@ -326,8 +326,6 @@ const LogIn = () => {
                 onGoogleClick={() => handleSocialLogin('Google')}
                 onMicrosoftClick={() => handleSocialLogin('Microsoft')}
                 disabled={loading}
-                className="grid grid-cols-2 gap-4"
-                buttonClassName="w-full h-10 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-out dark:shadow-neu-out-dark hover:translate-y-[-1px] active:shadow-neu-in dark:active:shadow-neu-in-dark transition-all duration-200"
               />
 
               {companyCount < 1 && (
