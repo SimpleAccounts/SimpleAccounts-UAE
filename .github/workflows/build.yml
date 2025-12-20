@@ -69,7 +69,7 @@ jobs:
           # Exclude deleted files (--diff-filter=d) to avoid prettier errors on non-existent files
           git diff --name-only --diff-filter=d "$BASE_SHA" "$HEAD_SHA" > /tmp/changed_files.txt
 
-          grep -E '\\.(js|jsx|ts|tsx|json|yml|yaml|md|css|scss)$' /tmp/changed_files.txt \
+          grep -E '\.(js|jsx|ts|tsx|json|yml|yaml|md|css|scss)$' /tmp/changed_files.txt \
             | grep -v '^apps/backend/src/main/resources/MailTemplates/' \
             > /tmp/prettier_files.txt || true
 
@@ -80,7 +80,7 @@ jobs:
 
           echo "Running Prettier check on:"
           cat /tmp/prettier_files.txt
-          xargs -r -d '\\n' npx prettier --check < /tmp/prettier_files.txt
+          xargs -r -d $'\n' npx prettier --check < /tmp/prettier_files.txt
 
   # Stage 1: Lint and Unit Tests (fail-fast)
   test-backend:
@@ -273,7 +273,7 @@ jobs:
 
       - name: Run E2E Environment Tests
         working-directory: apps/frontend
-        run: npx playwright test e2e/environment.smoke.spec.ts --project=chromium
+        run: npx playwright test environment.smoke.spec.ts --project=chromium
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
 
