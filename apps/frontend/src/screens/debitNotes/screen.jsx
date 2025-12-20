@@ -2,7 +2,17 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, RefreshCw, CreditCard, Edit, Eye, FileText, University, Receipt } from 'lucide-react';
+import {
+  Plus,
+  Search,
+  RefreshCw,
+  CreditCard,
+  Edit,
+  Eye,
+  FileText,
+  University,
+  Receipt,
+} from 'lucide-react';
 import Select from 'react-select';
 import { upperCase } from 'lodash-es';
 import { ToWords } from 'to-words';
@@ -47,7 +57,7 @@ const selectStyles = {
       borderColor: 'hsl(var(--ring))',
     },
   }),
-  menu: (base) => ({
+  menu: base => ({
     ...base,
     backgroundColor: 'hsl(var(--background))',
     border: '1px solid hsl(var(--border))',
@@ -57,19 +67,19 @@ const selectStyles = {
     backgroundColor: state.isSelected
       ? 'hsl(var(--primary))'
       : state.isFocused
-      ? 'hsl(var(--accent))'
-      : 'transparent',
+        ? 'hsl(var(--accent))'
+        : 'transparent',
     color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
   }),
-  singleValue: (base) => ({
+  singleValue: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
   }),
-  placeholder: (base) => ({
+  placeholder: base => ({
     ...base,
     color: 'hsl(var(--muted-foreground))',
   }),
-  input: (base) => ({
+  input: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
   }),
@@ -102,8 +112,8 @@ function DebitNotes() {
   const dispatch = useDispatch();
 
   // Redux state
-  const debit_note_list = useSelector((state) => state.debit_notes.debit_note_list);
-  const customer_list = useSelector((state) => state.common.customer_list);
+  const debit_note_list = useSelector(state => state.debit_notes.debit_note_list);
+  const customer_list = useSelector(state => state.common.customer_list);
 
   // Actions
   const debitNotesActions = useMemo(
@@ -148,12 +158,12 @@ function DebitNotes() {
 
     debitNotesActions
       .getdebitNotesList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || strings.SomethingWentWrong);
         setLoading(false);
       });
@@ -192,14 +202,14 @@ function DebitNotes() {
       setLoading(true);
       debitNotesActions
         .debitNoteposting(postingRequestModel)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             commonActions.tostifyAlert('success', strings.DebitNoteStatusChangedSuccessfully);
             setLoading(false);
             initializeData();
           }
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert('error', strings.DebitNoteStatusChangedUnsuccessfully);
           setLoading(false);
         });
@@ -209,7 +219,7 @@ function DebitNotes() {
 
   // Unpost debit note (Move to Draft)
   const unPostDebitNote = useCallback(
-    (row) => {
+    row => {
       const postingRequestModel = {
         amount: row.invoiceAmount,
         postingRefId: row.id,
@@ -230,14 +240,14 @@ function DebitNotes() {
       setLoading(true);
       debitNotesActions
         .unPostDebitNote(postingRequestModel)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             commonActions.tostifyAlert('success', strings.DebitNoteMovedToDraftSuccessfully);
             setLoading(false);
             initializeData();
           }
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert('error', strings.DebitNoteMovedToDraftUnsuccessfully);
           setLoading(false);
         });
@@ -247,11 +257,11 @@ function DebitNotes() {
 
   // Filter handlers
   const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
+    setFilterData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     initializeData();
   };
 
@@ -261,14 +271,14 @@ function DebitNotes() {
       amount: '',
       contactType: 1,
     });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     setTimeout(() => initializeData(), 0);
   };
 
   // Transform customer list for select
   const supplierOptions = useMemo(() => {
     if (!customer_list) return [];
-    return customer_list.map((item) => ({
+    return customer_list.map(item => ({
       label: item.label?.contactName || item.label,
       value: item.value,
     }));
@@ -435,7 +445,7 @@ function DebitNotes() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!debit_note_list?.data) return [];
-    return debit_note_list.data.map((item) => ({
+    return debit_note_list.data.map(item => ({
       id: item.id,
       creditNoteNumber: item.creditNoteNumber || '',
       customerName: item.customerName || '',
@@ -501,7 +511,7 @@ function DebitNotes() {
                       : []
                   }
                   value={filterData.customerId}
-                  onChange={(option) => {
+                  onChange={option => {
                     handleFilterChange('customerId', option || '');
                   }}
                 />
@@ -510,7 +520,7 @@ function DebitNotes() {
                   min="0"
                   placeholder={`${strings.Enter} ${strings.Amount}`}
                   value={filterData.amount}
-                  onChange={(e) => handleFilterChange('amount', e.target.value)}
+                  onChange={e => handleFilterChange('amount', e.target.value)}
                   className="input-transition"
                 />
                 <div className="flex gap-2 lg:col-start-4">

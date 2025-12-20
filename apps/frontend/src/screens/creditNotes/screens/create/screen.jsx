@@ -42,53 +42,55 @@ import { Textarea } from '@/components/ui/textarea';
 import invoiceimage from 'assets/images/invoice/invoice.png';
 
 // Zod validation schema
-const createCreditNoteSchema = z.object({
-  invoiceNumber: z.any(),
-  creditNoteNumber: z.string().min(1, 'Tax credit note number is required'),
-  contactId: z.union([
-    z.string().min(1, 'Customer name is required'),
-    z.object({ value: z.any(), label: z.string() }),
-  ]),
-  creditNoteDate: z.any().refine((val) => val !== null && val !== '', {
-    message: 'Tax credit note date is required',
-  }),
-  lineItemsString: z
-    .array(
-      z.object({
-        quantity: z.any().refine((val) => val > 0, {
-          message: 'Quantity should be greater than 0',
-        }),
-      })
-    )
-    .min(1, 'At least one Tax Credit Note sub detail is mandatory'),
-  attachmentFile: z.any().optional(),
-  creditAmount: z.any().optional(),
-  placeOfSupplyId: z.any().optional(),
-  receiptAttachmentDescription: z.string().optional(),
-  receiptNumber: z.string().optional(),
-  contact_po_number: z.string().optional(),
-  currency: z.any().optional(),
-  notes: z.string().optional(),
-  email: z.string().optional(),
-  discount: z.any().optional(),
-  discountPercentage: z.string().optional(),
-  discountType: z.string().optional(),
-  totalNet: z.number().optional(),
-  invoiceVATAmount: z.number().optional(),
-  totalVatAmount: z.number().optional(),
-  totalAmount: z.number().optional(),
-  totalExciseAmount: z.number().optional(),
-  exchangeRate: z.any().optional(),
-  currencyCode: z.any().optional(),
-  remainingInvoiceAmount: z.any().optional(),
-  taxTreatmentid: z.any().optional(),
-}).refine(
-  (data) => {
-    // Custom validation for conditional fields
-    return true;
-  },
-  { message: 'Validation error' }
-);
+const createCreditNoteSchema = z
+  .object({
+    invoiceNumber: z.any(),
+    creditNoteNumber: z.string().min(1, 'Tax credit note number is required'),
+    contactId: z.union([
+      z.string().min(1, 'Customer name is required'),
+      z.object({ value: z.any(), label: z.string() }),
+    ]),
+    creditNoteDate: z.any().refine(val => val !== null && val !== '', {
+      message: 'Tax credit note date is required',
+    }),
+    lineItemsString: z
+      .array(
+        z.object({
+          quantity: z.any().refine(val => val > 0, {
+            message: 'Quantity should be greater than 0',
+          }),
+        })
+      )
+      .min(1, 'At least one Tax Credit Note sub detail is mandatory'),
+    attachmentFile: z.any().optional(),
+    creditAmount: z.any().optional(),
+    placeOfSupplyId: z.any().optional(),
+    receiptAttachmentDescription: z.string().optional(),
+    receiptNumber: z.string().optional(),
+    contact_po_number: z.string().optional(),
+    currency: z.any().optional(),
+    notes: z.string().optional(),
+    email: z.string().optional(),
+    discount: z.any().optional(),
+    discountPercentage: z.string().optional(),
+    discountType: z.string().optional(),
+    totalNet: z.number().optional(),
+    invoiceVATAmount: z.number().optional(),
+    totalVatAmount: z.number().optional(),
+    totalAmount: z.number().optional(),
+    totalExciseAmount: z.number().optional(),
+    exchangeRate: z.any().optional(),
+    currencyCode: z.any().optional(),
+    remainingInvoiceAmount: z.any().optional(),
+    taxTreatmentid: z.any().optional(),
+  })
+  .refine(
+    data => {
+      // Custom validation for conditional fields
+      return true;
+    },
+    { message: 'Validation error' }
+  );
 
 const mapStateToProps = state => {
   const contact_list = state.customer_invoice.customer_list;
@@ -535,7 +537,7 @@ const CreateCreditNote = ({
     });
   };
 
-  const updateAmount = (dataToUpdate) => {
+  const updateAmount = dataToUpdate => {
     const list = ProductTableCalculation.updateAmount(
       dataToUpdate ? dataToUpdate : [],
       vat_list,
@@ -1156,7 +1158,9 @@ const CreateCreditNote = ({
                                     universal_currency_list={universal_currency_list}
                                     setData={newData => {
                                       setData(newData);
-                                      setValue('lineItemsString', newData, { shouldValidate: true });
+                                      setValue('lineItemsString', newData, {
+                                        shouldValidate: true,
+                                      });
                                     }}
                                     setIdCount={setIdCount}
                                     props={{ errors, touched: touchedFields }}

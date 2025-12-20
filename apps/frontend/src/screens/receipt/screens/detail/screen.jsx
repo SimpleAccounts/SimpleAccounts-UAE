@@ -29,14 +29,14 @@ import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     contact_list: state.receipt.contact_list,
     invoice_list: state.receipt.invoice_list,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     receiptDetailActions: bindActionCreators(ReceiptDetailActions, dispatch),
@@ -59,7 +59,7 @@ const detailReceiptSchema = z.object({
     invalid_type_error: 'Receipt date is required',
   }),
   referenceCode: z.string().min(1, 'Reference number is required'),
-  contactId: z.union([z.number(), z.string()]).refine((val) => val !== '' && val !== null, {
+  contactId: z.union([z.number(), z.string()]).refine(val => val !== '' && val !== null, {
     message: 'Customer is required',
   }),
   amount: z
@@ -117,7 +117,7 @@ const DetailReceipt = ({
       receiptActions.getInvoiceList();
       receiptDetailActions
         .getReceiptById(id)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             setCurrentReceiptId(id);
             reset({
@@ -132,11 +132,8 @@ const DetailReceipt = ({
             setLoading(false);
           }
         })
-        .catch((err) => {
-          commonActions.tostifyAlert(
-            'error',
-            err ? err.data.message : 'Something Went Wrong'
-          );
+        .catch(err => {
+          commonActions.tostifyAlert('error', err ? err.data.message : 'Something Went Wrong');
           setLoading(false);
         });
     } else {
@@ -148,19 +145,12 @@ const DetailReceipt = ({
     initializeData();
   }, [initializeData]);
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     setDisabled(true);
     setDisableLeavePage(true);
 
-    const {
-      receiptDate,
-      receiptNo,
-      referenceCode,
-      contactId,
-      invoiceId,
-      amount,
-      unusedAmount,
-    } = data;
+    const { receiptDate, receiptNo, referenceCode, contactId, invoiceId, amount, unusedAmount } =
+      data;
 
     const postData = {
       receiptId: currentReceiptId,
@@ -175,13 +165,13 @@ const DetailReceipt = ({
 
     receiptDetailActions
       .updateReceipt(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert('success', res.data.message);
           history.push('/admin/revenue/receipt');
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         setLoading(false);
         commonActions.tostifyAlert('error', err.data.message);
@@ -194,8 +184,7 @@ const DetailReceipt = ({
         <b>Delete Income Receipt?</b>
       </text>
     );
-    const message =
-      'This Income Receipt will be deleted permanently and cannot be recovered. ';
+    const message = 'This Income Receipt will be deleted permanently and cannot be recovered. ';
     setDialog(
       <ConfirmDeleteModal
         isOpen={true}
@@ -210,7 +199,7 @@ const DetailReceipt = ({
   const removeReceipt = () => {
     receiptDetailActions
       .deleteReceipt(currentReceiptId)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert(
             'success',
@@ -219,11 +208,8 @@ const DetailReceipt = ({
           history.push('/admin/revenue/receipt');
         }
       })
-      .catch((err) => {
-        commonActions.tostifyAlert(
-          'error',
-          err.data ? err.data.message : 'Deleted Unsuccessfully'
-        );
+      .catch(err => {
+        commonActions.tostifyAlert('error', err.data ? err.data.message : 'Deleted Unsuccessfully');
       });
   };
 
@@ -270,11 +256,8 @@ const DetailReceipt = ({
                                     type="text"
                                     id="receiptNo"
                                     placeholder={strings.ReceiptNumber}
-                                    onChange={(e) => {
-                                      if (
-                                        e.target.value === '' ||
-                                        regExBoth.test(e.target.value)
-                                      ) {
+                                    onChange={e => {
+                                      if (e.target.value === '' || regExBoth.test(e.target.value)) {
                                         field.onChange(e);
                                       }
                                     }}
@@ -302,7 +285,7 @@ const DetailReceipt = ({
                                     dropdownMode="select"
                                     placeholderText={strings.ReceiptDate}
                                     selected={field.value}
-                                    onChange={(date) => field.onChange(date)}
+                                    onChange={date => field.onChange(date)}
                                     className={`form-control ${
                                       errors.receiptDate ? 'is-invalid' : ''
                                     }`}
@@ -333,11 +316,8 @@ const DetailReceipt = ({
                                     type="text"
                                     id="referenceCode"
                                     placeholder={strings.ReferenceNumber}
-                                    onChange={(e) => {
-                                      if (
-                                        e.target.value === '' ||
-                                        regExBoth.test(e.target.value)
-                                      ) {
+                                    onChange={e => {
+                                      if (e.target.value === '' || regExBoth.test(e.target.value)) {
                                         field.onChange(e);
                                       }
                                     }}
@@ -378,11 +358,9 @@ const DetailReceipt = ({
                                     placeholder={strings.CustomerName}
                                     value={
                                       contact_list &&
-                                      contact_list.find(
-                                        (option) => option.value === +field.value
-                                      )
+                                      contact_list.find(option => option.value === +field.value)
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       if (option && option.value) {
                                         field.onChange(option.value);
                                       } else {
@@ -425,11 +403,9 @@ const DetailReceipt = ({
                                     placeholder={strings.InvoiceNumber}
                                     value={
                                       invoice_list &&
-                                      invoice_list.find(
-                                        (option) => option.value === +field.value
-                                      )
+                                      invoice_list.find(option => option.value === +field.value)
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       if (option && option.value) {
                                         field.onChange(option.value);
                                       } else {
@@ -475,24 +451,17 @@ const DetailReceipt = ({
                                     min="0"
                                     id="amount"
                                     placeholder={strings.Amount}
-                                    onChange={(e) => {
-                                      if (
-                                        e.target.value === '' ||
-                                        regEx.test(e.target.value)
-                                      ) {
+                                    onChange={e => {
+                                      if (e.target.value === '' || regEx.test(e.target.value)) {
                                         field.onChange(e);
                                       }
                                     }}
-                                    className={`form-control ${
-                                      errors.amount ? 'is-invalid' : ''
-                                    }`}
+                                    className={`form-control ${errors.amount ? 'is-invalid' : ''}`}
                                   />
                                 )}
                               />
                               {errors.amount && (
-                                <div className="invalid-feedback">
-                                  {errors.amount.message}
-                                </div>
+                                <div className="invalid-feedback">{errors.amount.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -509,11 +478,8 @@ const DetailReceipt = ({
                                     min="0"
                                     id="unusedAmount"
                                     placeholder={strings.UnusedAmount}
-                                    onChange={(e) => {
-                                      if (
-                                        e.target.value === '' ||
-                                        regEx.test(e.target.value)
-                                      ) {
+                                    onChange={e => {
+                                      if (e.target.value === '' || regEx.test(e.target.value)) {
                                         field.onChange(e);
                                       }
                                     }}
@@ -524,13 +490,12 @@ const DetailReceipt = ({
                           </Col>
                         </Row>
                         <Row>
-                          <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
+                          <Col
+                            lg={12}
+                            className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
+                          >
                             <FormGroup>
-                              <Button
-                                color="danger"
-                                className="btn-square"
-                                onClick={deleteReceipt}
-                              >
+                              <Button color="danger" className="btn-square" onClick={deleteReceipt}>
                                 <i className="fa fa-trash"></i>
                                 {strings.Delete}
                               </Button>

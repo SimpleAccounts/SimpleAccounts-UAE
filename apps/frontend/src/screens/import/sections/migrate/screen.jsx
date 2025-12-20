@@ -1,15 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  Row,
-  Col,
-  FormGroup,
-} from 'reactstrap';
+import { Card, CardHeader, CardBody, Button, Row, Col, FormGroup } from 'reactstrap';
 import * as ImportActions from '../../actions';
 import { CommonActions } from 'services/global';
 import './style.scss';
@@ -36,12 +28,12 @@ const MigrateHistory = () => {
 
   const initializeData = () => {
     dispatch(ImportActions.getMigrationSummary())
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setSummaryList(res.data);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         toast.error(err && err.data ? err.data.message : 'Something Went Wrong');
       });
   };
@@ -52,7 +44,7 @@ const MigrateHistory = () => {
     formData.append('version', location?.state?.version || '3.4');
 
     dispatch(ImportActions.migrate(formData))
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           toast.success('migration Done Successfully.');
           navigate('/admin/settings/migrateHistory');
@@ -65,7 +57,7 @@ const MigrateHistory = () => {
 
   const rollBackMigration = () => {
     dispatch(ImportActions.rollBackMigration())
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           toast.success('Migration Rolled back Successfully.');
           navigate('/admin/settings/import');
@@ -76,27 +68,30 @@ const MigrateHistory = () => {
       });
   };
 
-  const columns = useMemo(() => [
-    {
-      accessorKey: 'fileName',
-      header: 'File Name',
-    },
-    {
-      accessorKey: 'recordCount',
-      header: 'Number of Record',
-      cell: ({ getValue }) => <div className="text-center">{getValue()}</div>,
-    },
-    {
-      accessorKey: 'recordsMigrated',
-      header: 'Migrated Records',
-      cell: ({ getValue }) => <div className="text-center">{getValue()}</div>,
-    },
-    {
-      accessorKey: 'recordsRemoved',
-      header: 'Rejected Records',
-      cell: ({ getValue }) => <div className="text-center">{getValue()}</div>,
-    },
-  ], []);
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'fileName',
+        header: 'File Name',
+      },
+      {
+        accessorKey: 'recordCount',
+        header: 'Number of Record',
+        cell: ({ getValue }) => <div className="text-center">{getValue()}</div>,
+      },
+      {
+        accessorKey: 'recordsMigrated',
+        header: 'Migrated Records',
+        cell: ({ getValue }) => <div className="text-center">{getValue()}</div>,
+      },
+      {
+        accessorKey: 'recordsRemoved',
+        header: 'Rejected Records',
+        cell: ({ getValue }) => <div className="text-center">{getValue()}</div>,
+      },
+    ],
+    []
+  );
 
   return (
     <div className="transactions-report-screen">
@@ -110,11 +105,7 @@ const MigrateHistory = () => {
               <h1>Migration Summary</h1>
             </div>
             <div style={{ border: '1px solid grey' }}>
-              <DataTable
-                data={summaryList || []}
-                columns={columns}
-                manualPagination={false}
-              />
+              <DataTable data={summaryList || []} columns={columns} manualPagination={false} />
             </div>
             <Row>
               <Col lg={12} className="mt-5">

@@ -6,7 +6,6 @@ import { CFormSwitch } from '@coreui/react';
 
 import { Loader } from 'components';
 
-
 import './style.scss';
 
 const mapStateToProps = state => {
@@ -35,8 +34,6 @@ class Notification extends React.Component {
     return (
       <div className="notification-screen">
         <div className="animated fadeIn">
-          
-
           <Card>
             <CardHeader>
               <div className="h4 mb-0 d-flex align-items-center">

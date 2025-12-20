@@ -49,15 +49,13 @@ const regEx = /^[0-9]+$/;
 const regExTelephone = /^[0-9-]+$/;
 const regExBoth = /[a-zA-Z0-9]+$/;
 
-const createValidationSchema = (isTANMandetory) => {
+const createValidationSchema = isTANMandetory => {
   return z.object({
     taxablePersonNameInEnglish: z.string().min(1, 'Taxable person name in english is required'),
     taxablePersonNameInArabic: z.string().min(1, 'Taxable person name in arabic is required'),
     taxAgentName: z.string().min(1, 'Tax agent name is required'),
     taxAgencyName: z.string().optional(),
-    taxAgencyNumber: isTANMandetory
-      ? z.string().min(1, 'TAN is required')
-      : z.string().optional(),
+    taxAgencyNumber: isTANMandetory ? z.string().min(1, 'TAN is required') : z.string().optional(),
     taxAgentApprovalNumber: z.string().min(1, 'Tax agent approval number is required'),
     vatRegistrationNumber: z.string().min(1, 'Tax registration number is required'),
     taxFiledOn: z.date({ required_error: 'Date of filling is required' }),
@@ -68,12 +66,7 @@ const createValidationSchema = (isTANMandetory) => {
 
 let strings = new LocalizedStrings(data);
 
-const GenerateAuditFile = ({
-  history,
-  commonActions,
-  vatreport,
-  financialReportActions,
-}) => {
+const GenerateAuditFile = ({ history, commonActions, vatreport, financialReportActions }) => {
   const [language] = useState(window['localStorage'].getItem('language'));
   const [disabled, setDisabled] = useState(false);
   const [isTANMandetory, setIsTANMandetory] = useState(false);
@@ -124,7 +117,7 @@ const GenerateAuditFile = ({
       });
   };
 
-  const onSubmit = (formData) => {
+  const onSubmit = formData => {
     setDisabled(true);
     console.log('Form data:', formData);
     setDisabled(false);
@@ -257,7 +250,7 @@ const GenerateAuditFile = ({
                             id="taxAgencyName"
                             placeholder="Enter Tax Agency Name"
                             value={value || ''}
-                            onChange={(e) => {
+                            onChange={e => {
                               onChange(e);
                               if (e.target.value !== '') {
                                 setIsTANMandetory(true);
@@ -285,7 +278,7 @@ const GenerateAuditFile = ({
                             autoComplete="off"
                             placeholder="Enter Tax Agency Number (TAN)"
                             value={value || ''}
-                            onChange={(e) => {
+                            onChange={e => {
                               if (e.target.value === '' || regExBoth.test(e.target.value)) {
                                 onChange(e);
                               }
@@ -314,7 +307,7 @@ const GenerateAuditFile = ({
                             maxLength={8}
                             placeholder="Enter Agent Approval Number"
                             value={value || ''}
-                            onChange={(e) => {
+                            onChange={e => {
                               if (e.target.value === '' || regExTelephone.test(e.target.value)) {
                                 onChange(e);
                               }
@@ -323,9 +316,7 @@ const GenerateAuditFile = ({
                         )}
                       />
                       {errors.taxAgentApprovalNumber && (
-                        <div className="text-danger">
-                          {errors.taxAgentApprovalNumber.message}
-                        </div>
+                        <div className="text-danger">{errors.taxAgentApprovalNumber.message}</div>
                       )}
                     </FormGroup>
                   </Col>
@@ -348,7 +339,7 @@ const GenerateAuditFile = ({
                             id="vatRegistrationNumber"
                             placeholder={strings.Enter + strings.TaxRegistrationNumber}
                             value={value || ''}
-                            onChange={(e) => {
+                            onChange={e => {
                               if (e.target.value === '' || regEx.test(e.target.value)) {
                                 onChange(e);
                               }
@@ -463,8 +454,7 @@ const GenerateAuditFile = ({
                   className="btn-square"
                   disabled={isSubmitting || disabled}
                 >
-                  <i className="fa fa-dot-circle-o"></i>{' '}
-                  {disabled ? 'Saving...' : strings.Save}
+                  <i className="fa fa-dot-circle-o"></i> {disabled ? 'Saving...' : strings.Save}
                 </Button>
                 &nbsp;
                 <Button

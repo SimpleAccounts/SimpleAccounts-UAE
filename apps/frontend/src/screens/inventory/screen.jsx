@@ -37,12 +37,8 @@ function Inventory() {
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="mb-4">
-                <TabsTrigger value="dashboard">
-                  {strings.Dashboard || 'Dashboard'}
-                </TabsTrigger>
-                <TabsTrigger value="summary">
-                  {strings.Summary || 'Summary'}
-                </TabsTrigger>
+                <TabsTrigger value="dashboard">{strings.Dashboard || 'Dashboard'}</TabsTrigger>
+                <TabsTrigger value="summary">{strings.Summary || 'Summary'}</TabsTrigger>
               </TabsList>
               <TabsContent value="dashboard">
                 <div className="table-wrapper">

@@ -29,10 +29,7 @@ function PayrollSettings() {
   const dispatch = useDispatch();
 
   // Actions
-  const payrollActions = useMemo(
-    () => bindActionCreators(PayrollActions, dispatch),
-    [dispatch]
-  );
+  const payrollActions = useMemo(() => bindActionCreators(PayrollActions, dispatch), [dispatch]);
   const commonActions = useMemo(() => bindActionCreators(CommonActions, dispatch), [dispatch]);
 
   // Local state
@@ -51,7 +48,7 @@ function PayrollSettings() {
 
   // Load initial data
   useEffect(() => {
-    payrollActions.getCompanyById().then((res) => {
+    payrollActions.getCompanyById().then(res => {
       if (res.status === 200) {
         setSifEnabled(res.data.generateSif);
       }
@@ -65,14 +62,14 @@ function PayrollSettings() {
 
     payrollActions
       .getPayrollSettings(sifEnabled)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert('success', 'Payroll Settings Saved Successfully');
           commonActions.getCompanyDetails();
           navigate(config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice');
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         commonActions.tostifyAlert('error', 'Save Unsuccessful');
       });
@@ -94,7 +91,7 @@ function PayrollSettings() {
           </CardHeader>
           <CardContent>
             <form
-              onSubmit={(e) => {
+              onSubmit={e => {
                 e.preventDefault();
                 handleSubmit();
               }}
@@ -105,7 +102,7 @@ function PayrollSettings() {
                 <Label>{strings.SifPayroll}</Label>
                 <RadioGroup
                   value={sifEnabled ? 'yes' : 'no'}
-                  onValueChange={(val) => setSifEnabled(val === 'yes')}
+                  onValueChange={val => setSifEnabled(val === 'yes')}
                   className="flex gap-6"
                 >
                   <div className="flex items-center space-x-2">
@@ -133,7 +130,9 @@ function PayrollSettings() {
                   type="button"
                   variant="secondary"
                   onClick={() =>
-                    navigate(config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice')
+                    navigate(
+                      config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice'
+                    )
                   }
                 >
                   <X className="mr-2 h-4 w-4" />

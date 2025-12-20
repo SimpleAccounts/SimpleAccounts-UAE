@@ -28,7 +28,7 @@ function VatCode() {
   const dispatch = useDispatch();
 
   // Redux state
-  const vat_list = useSelector((state) => state.vat.vat_list);
+  const vat_list = useSelector(state => state.vat.vat_list);
 
   // Actions
   const vatActions = useMemo(() => bindActionCreators(VatActions, dispatch), [dispatch]);
@@ -56,12 +56,12 @@ function VatCode() {
   useEffect(() => {
     vatActions
       .getCompanyDetails()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setCompanyDetails(res.data);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   }, [vatActions, commonActions]);
@@ -80,12 +80,12 @@ function VatCode() {
 
     vatActions
       .getVatList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
@@ -106,9 +106,12 @@ function VatCode() {
       return;
     }
 
-    vatActions.getVatCount(selectedRows).then((res) => {
+    vatActions.getVatCount(selectedRows).then(res => {
       if (res.data > 0) {
-        commonActions.tostifyAlert('error', 'You need to delete invoices to delete the VAT category');
+        commonActions.tostifyAlert(
+          'error',
+          'You need to delete invoices to delete the VAT category'
+        );
       } else {
         setDialog(
           <ConfirmDeleteModal
@@ -129,12 +132,12 @@ function VatCode() {
 
     vatActions
       .deleteVat(obj)
-      .then((res) => {
+      .then(res => {
         initializeData();
         commonActions.tostifyAlert('success', res.data.message);
         setSelectedRows([]);
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Delete failed');
       });
   };
@@ -161,8 +164,8 @@ function VatCode() {
     if (!vat_list?.data) return [];
     // Filter out IDs 3, 4, and 10
     return vat_list.data
-      .filter((item) => ![3, 4, 10].includes(item.id))
-      .map((item) => ({
+      .filter(item => ![3, 4, 10].includes(item.id))
+      .map(item => ({
         id: item.id,
         name: item.name || '',
         vat: item.vat || 0,
@@ -170,7 +173,7 @@ function VatCode() {
   }, [vat_list]);
 
   // Row click handler
-  const handleRowClick = (row) => {
+  const handleRowClick = row => {
     navigate('/admin/master/vat-category/detail', { state: { id: row.id } });
   };
 
@@ -200,11 +203,7 @@ function VatCode() {
             </div>
           </CardHeader>
           <CardContent>
-            <DataTable
-              columns={columns}
-              data={tableData}
-              onRowClick={handleRowClick}
-            />
+            <DataTable columns={columns} data={tableData} onRowClick={handleRowClick} />
           </CardContent>
         </Card>
       </div>

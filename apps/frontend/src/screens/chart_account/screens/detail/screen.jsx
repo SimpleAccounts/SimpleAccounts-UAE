@@ -36,32 +36,26 @@ if (localStorage.getItem('language') == null) {
 
 // Zod validation schema
 const detailChartAccountSchema = z.object({
-  transactionCategoryName: z
-    .string()
-    .min(1, 'Name is required')
-    .max(50, 'Name is too long'),
+  transactionCategoryName: z.string().min(1, 'Name is required').max(50, 'Name is too long'),
   chartOfAccount: z
     .object({
       value: z.number(),
       label: z.string(),
     })
     .nullable()
-    .refine((val) => val !== null, 'Type is required'),
+    .refine(val => val !== null, 'Type is required'),
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     sub_transaction_type_list: state.chart_account.sub_transaction_type_list,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     chartOfAccontActions: bindActionCreators(ChartOfAccontActions, dispatch),
-    detailChartOfAccontActions: bindActionCreators(
-      DetailChartOfAccontActions,
-      dispatch
-    ),
+    detailChartOfAccontActions: bindActionCreators(DetailChartOfAccontActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch),
   };
 };
@@ -106,11 +100,11 @@ const DetailChartAccount = ({
   } = form;
 
   const getSubTransactionTypes = useCallback(() => {
-    chartOfAccontActions.getSubTransactionTypes().then((res) => {
+    chartOfAccontActions.getSubTransactionTypes().then(res => {
       if (res.status === 200) {
         let val = Object.assign({}, res.data);
         let temp = [];
-        Object.keys(val).map((item) => {
+        Object.keys(val).map(item => {
           temp.push({
             label: item,
             options: val[`${item}`],
@@ -127,7 +121,7 @@ const DetailChartAccount = ({
     if (location.state && id) {
       detailChartOfAccontActions
         .getTransactionCategoryById(id)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             getSubTransactionTypes();
             setCoaId(res.data.transactionCategoryId);
@@ -144,7 +138,7 @@ const DetailChartAccount = ({
             setLoading(false);
           }
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
@@ -152,25 +146,19 @@ const DetailChartAccount = ({
           setLoading(false);
         });
     }
-  }, [
-    location.state,
-    detailChartOfAccontActions,
-    getSubTransactionTypes,
-    commonActions,
-    reset,
-  ]);
+  }, [location.state, detailChartOfAccontActions, getSubTransactionTypes, commonActions, reset]);
 
   useEffect(() => {
     initializeData();
   }, [initializeData]);
 
   const validationCheck = useCallback(
-    (value) => {
+    value => {
       const data = {
         moduleType: 16,
         name: value,
       };
-      detailChartOfAccontActions.checkValidation(data).then((response) => {
+      detailChartOfAccontActions.checkValidation(data).then(response => {
         if (response.data === 'Transaction Category Name Already Exists') {
           setExist(true);
           setError('transactionCategoryName', {
@@ -197,7 +185,7 @@ const DetailChartAccount = ({
     setLoadingMsg('Deleting Chart Of Account...');
     detailChartOfAccontActions
       .deleteChartAccount(id)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert(
             'success',
@@ -207,7 +195,7 @@ const DetailChartAccount = ({
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert(
           'error',
           err.data ? err.data.message : 'Chart Of Account Deleted Unsuccessfully'
@@ -218,36 +206,34 @@ const DetailChartAccount = ({
   };
 
   const deleteChartAccount = () => {
-    chartOfAccontActions
-      .getExplainedTransactionCountForTransactionCategory(coaId)
-      .then((res) => {
-        if (res.data > 0) {
-          commonActions.tostifyAlert(
-            'error',
-            'You need to delete invoices to delete the chart of account'
-          );
-        } else {
-          const message1 = (
-            <text>
-              <b>Delete Chart of Account?</b>
-            </text>
-          );
-          const message =
-            'This Chart of Account will be deleted permanently and cannot be recovered.';
-          setDialog(
-            <ConfirmDeleteModal
-              isOpen={true}
-              okHandler={removeChartAccount}
-              cancelHandler={removeDialog}
-              message={message}
-              message1={message1}
-            />
-          );
-        }
-      });
+    chartOfAccontActions.getExplainedTransactionCountForTransactionCategory(coaId).then(res => {
+      if (res.data > 0) {
+        commonActions.tostifyAlert(
+          'error',
+          'You need to delete invoices to delete the chart of account'
+        );
+      } else {
+        const message1 = (
+          <text>
+            <b>Delete Chart of Account?</b>
+          </text>
+        );
+        const message =
+          'This Chart of Account will be deleted permanently and cannot be recovered.';
+        setDialog(
+          <ConfirmDeleteModal
+            isOpen={true}
+            okHandler={removeChartAccount}
+            cancelHandler={removeDialog}
+            message={message}
+            message1={message1}
+          />
+        );
+      }
+    });
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     if (exist) {
       setError('transactionCategoryName', {
         type: 'manual',
@@ -272,7 +258,7 @@ const DetailChartAccount = ({
 
     detailChartOfAccontActions
       .updateTransactionCategory(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setDisabled(false);
           reset();
@@ -284,7 +270,7 @@ const DetailChartAccount = ({
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert(
           'error',
           err.data ? err.data.message : 'Chart Of Account Updated Unsuccessfully'
@@ -339,14 +325,10 @@ const DetailChartAccount = ({
                                 type="text"
                                 maxLength="50"
                                 id="transactionCategoryName"
-                                placeholder={
-                                  strings.Enter + strings.chartOfAccountName
-                                }
+                                placeholder={strings.Enter + strings.chartOfAccountName}
                                 {...field}
-                                onChange={(e) => handleNameChange(e, field.onChange)}
-                                className={
-                                  errors.transactionCategoryName ? 'is-invalid' : ''
-                                }
+                                onChange={e => handleNameChange(e, field.onChange)}
+                                className={errors.transactionCategoryName ? 'is-invalid' : ''}
                               />
                             )}
                           />
@@ -387,8 +369,8 @@ const DetailChartAccount = ({
                         <span style={{ fontWeight: 'bold' }}>Note:</span>
                         <span>
                           {' '}
-                          A Chart Of Account cannot be edited if they are associated
-                          with a product, document or transaction.
+                          A Chart Of Account cannot be edited if they are associated with a product,
+                          document or transaction.
                         </span>
 
                         <Row>
@@ -429,8 +411,7 @@ const DetailChartAccount = ({
                                   history.push('/admin/master/chart-account');
                                 }}
                               >
-                                <i className="fa fa-ban"></i>{' '}
-                                {strings.Cancel}
+                                <i className="fa fa-ban"></i> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

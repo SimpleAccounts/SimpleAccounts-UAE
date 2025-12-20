@@ -46,7 +46,7 @@ const createSalaryTemplateSchema = z.object({
     .optional(),
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     salary_structure_dropdown: state.salarytemplate.salary_structure_dropdown,
     salary_role_dropdown: state.salarytemplate.salary_role_dropdown,
@@ -55,7 +55,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     salaryTemplateActions: bindActionCreators(SalaryTemplateActions, dispatch),
@@ -63,7 +63,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const CreateSalaryTemplate = (props) => {
+const CreateSalaryTemplate = props => {
   const [loading, setLoading] = useState(false);
   const [createMore, setCreateMore] = useState(false);
   const [disabled, setDisabled] = useState(false);
@@ -93,7 +93,7 @@ const CreateSalaryTemplate = (props) => {
     props.salaryTemplateActions.getSalaryRolesForDropdown();
   }, []);
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     setDisabled(true);
 
     const { formula, salaryStructureId, description, salaryRoleId } = data;
@@ -111,10 +111,13 @@ const CreateSalaryTemplate = (props) => {
 
     props.employeeCreateActions
       .createSalaryTemplate(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setDisabled(false);
-          props.commonActions.tostifyAlert('success', 'New Template Component Created Successfully');
+          props.commonActions.tostifyAlert(
+            'success',
+            'New Template Component Created Successfully'
+          );
           if (createMore) {
             setCreateMore(false);
             reset({
@@ -128,7 +131,7 @@ const CreateSalaryTemplate = (props) => {
           }
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         props.commonActions.tostifyAlert(
           'error',
@@ -137,14 +140,14 @@ const CreateSalaryTemplate = (props) => {
       });
   };
 
-  const handleDescriptionChange = (e) => {
+  const handleDescriptionChange = e => {
     const value = e.target.value;
     if (value === '' || regExBoth.test(value)) {
       setValue('description', value, { shouldValidate: true });
     }
   };
 
-  const handleFormulaChange = (e) => {
+  const handleFormulaChange = e => {
     const value = e.target.value;
     if (value === '' || regExBoth.test(value)) {
       setValue('formula', value, { shouldValidate: true });

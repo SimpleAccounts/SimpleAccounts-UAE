@@ -22,15 +22,8 @@ function ZipCodeInput(props) {
   const language = window.localStorage.getItem('language') || 'en';
   strings.setLanguage(language);
 
-  const {
-    onChange,
-    zipCodeName,
-    zipCodeValue,
-    countryId,
-    zipCodeError,
-    zipCodeTouched,
-    required,
-  } = props;
+  const { onChange, zipCodeName, zipCodeValue, countryId, zipCodeError, zipCodeTouched, required } =
+    props;
 
   const placeholder = countryId === 229 ? strings.POBoxNumber : strings.PostZipCode;
   const label = countryId === 229 ? strings.POBoxNumber : strings.PostZipCode;
@@ -49,7 +42,7 @@ function ZipCodeInput(props) {
         name={zipCodeName}
         placeholder={`${strings.Enter} ${placeholder}`}
         value={zipCodeValue || ''}
-        onChange={(e) => {
+        onChange={e => {
           const regEx = /^[0-9-]+$/;
           if (e.target.value === '' || regEx.test(e.target.value)) {
             onChange(zipCodeName, e);

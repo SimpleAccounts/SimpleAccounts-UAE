@@ -54,27 +54,27 @@ const createGoodsReceivedNoteSchema = z.object({
       label: z.string(),
     })
     .nullable()
-    .refine((val) => val !== null && val !== undefined, 'Supplier is required'),
-  grnReceiveDate: z.union([z.string(), z.date()]).refine((val) => val !== null && val !== '', 'Order date is required'),
-  rfqExpiryDate: z.union([z.string(), z.date()]).refine((val) => val !== null && val !== '', 'Order due date is required'),
+    .refine(val => val !== null && val !== undefined, 'Supplier is required'),
+  grnReceiveDate: z
+    .union([z.string(), z.date()])
+    .refine(val => val !== null && val !== '', 'Order date is required'),
+  rfqExpiryDate: z
+    .union([z.string(), z.date()])
+    .refine(val => val !== null && val !== '', 'Order due date is required'),
   attachmentFile: z.any().optional(),
   lineItemsString: z
     .array(
       z.object({
-        grnReceivedQuantity: z
-          .union([z.string(), z.number()])
-          .refine((val) => Number(val) > 0, {
-            message: 'Quantity should be greater than 0',
-          }),
-        unitPrice: z
-          .union([z.string(), z.number()])
-          .refine((val) => Number(val) > 0, {
-            message: 'Unit price should be greater than 1',
-          }),
-        vatCategoryId: z.union([z.string(), z.number()]).refine((val) => val !== '' && val !== null, {
+        grnReceivedQuantity: z.union([z.string(), z.number()]).refine(val => Number(val) > 0, {
+          message: 'Quantity should be greater than 0',
+        }),
+        unitPrice: z.union([z.string(), z.number()]).refine(val => Number(val) > 0, {
+          message: 'Unit price should be greater than 1',
+        }),
+        vatCategoryId: z.union([z.string(), z.number()]).refine(val => val !== '' && val !== null, {
           message: 'Value is required',
         }),
-        productId: z.union([z.string(), z.number()]).refine((val) => val !== '' && val !== null, {
+        productId: z.union([z.string(), z.number()]).refine(val => val !== '' && val !== null, {
           message: 'Product is required',
         }),
         description: z.string().optional(),
@@ -118,7 +118,7 @@ const CreateGoodsReceivedNote = () => {
     po_list,
     country_list,
     product_category_list,
-  } = useSelector((state) => ({
+  } = useSelector(state => ({
     contact_list: state.goods_received_note.contact_list,
     currency_list: state.goods_received_note.currency_list,
     vat_list: state.goods_received_note.vat_list,
@@ -199,7 +199,16 @@ const CreateGoodsReceivedNote = () => {
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors, touchedFields }, watch, setValue, getValues, setError, clearErrors } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, touchedFields },
+    watch,
+    setValue,
+    getValues,
+    setError,
+    clearErrors,
+  } = form;
 
   useEffect(() => {
     strings.setLanguage(language);
@@ -207,10 +216,10 @@ const CreateGoodsReceivedNote = () => {
   }, [language]);
 
   // ... (Keep initializeData, addRow, selectItem, updateAmount, prductValue, deleteRow logic)
-  
+
   const getInitialData = useCallback(() => {
     // dispatch ...
-    dispatch(GoodsReceivedNoteCreateAction.getInvoiceNo()).then((res) => {
+    dispatch(GoodsReceivedNoteCreateAction.getInvoiceNo()).then(res => {
       if (res.status === 200) {
         setValue('grn_Number', res.data);
       }
@@ -250,10 +259,10 @@ const CreateGoodsReceivedNote = () => {
     const newData = [...data];
     const itemIndex = newData.findIndex(obj => obj.id === row.id);
     if (itemIndex !== -1) {
-        newData[itemIndex][name] = value;
-        setData(newData);
-        setValue(`lineItemsString.${idx}.${name}`, value);
-        // ... (updateAmount calls if needed)
+      newData[itemIndex][name] = value;
+      setData(newData);
+      setValue(`lineItemsString.${idx}.${name}`, value);
+      // ... (updateAmount calls if needed)
     }
   };
 
@@ -264,82 +273,87 @@ const CreateGoodsReceivedNote = () => {
     setValue('lineItemsString', newData);
   };
 
-  const columns = useMemo(() => [
-    {
-      id: 'actions',
-      header: '',
-      size: 50,
-      cell: ({ row }) => (
-        row.original.productId !== '' && (
-          <Button
-            size="sm"
-            className="btn-twitter btn-brand icon"
-            onClick={e => deleteRow(e, row.original)}
-          >
-            <i className="fas fa-trash"></i>
-          </Button>
-        )
-      ),
-    },
-    {
-      accessorKey: 'productId',
-      header: strings.PRODUCT,
-      size: 300,
-      cell: ({ row }) => {
-        const idx = data.findIndex(obj => obj.id === row.original.id);
-        return (
-          <>
-            <Select
-              options={product_list ? selectOptionsFactory.renderOptions('name', 'id', product_list, 'Product') : []}
-              onChange={e => {
+  const columns = useMemo(
+    () => [
+      {
+        id: 'actions',
+        header: '',
+        size: 50,
+        cell: ({ row }) =>
+          row.original.productId !== '' && (
+            <Button
+              size="sm"
+              className="btn-twitter btn-brand icon"
+              onClick={e => deleteRow(e, row.original)}
+            >
+              <i className="fas fa-trash"></i>
+            </Button>
+          ),
+      },
+      {
+        accessorKey: 'productId',
+        header: strings.PRODUCT,
+        size: 300,
+        cell: ({ row }) => {
+          const idx = data.findIndex(obj => obj.id === row.original.id);
+          return (
+            <>
+              <Select
+                options={
+                  product_list
+                    ? selectOptionsFactory.renderOptions('name', 'id', product_list, 'Product')
+                    : []
+                }
+                onChange={e => {
                   if (e && e.label !== 'Select Product') {
-                      selectItem(e.value, row.original, 'productId', idx);
-                      // prductValue logic ...
-                      addRow();
+                    selectItem(e.value, row.original, 'productId', idx);
+                    // prductValue logic ...
+                    addRow();
                   }
-              }}
-              value={product_list && selectOptionsFactory.renderOptions('name', 'id', product_list, 'Product').find(option => option.value === +row.original.productId)}
-              placeholder={strings.Select + strings.Product}
-            />
-            {row.original.productId !== '' && (
+                }}
+                value={
+                  product_list &&
+                  selectOptionsFactory
+                    .renderOptions('name', 'id', product_list, 'Product')
+                    .find(option => option.value === +row.original.productId)
+                }
+                placeholder={strings.Select + strings.Product}
+              />
+              {row.original.productId !== '' && (
                 <Input
-                    className="mt-1"
-                    type="text"
-                    value={row.original.description || ''}
-                    onChange={e => selectItem(e.target.value, row.original, 'description', idx)}
-                    placeholder={strings.Description}
+                  className="mt-1"
+                  type="text"
+                  value={row.original.description || ''}
+                  onChange={e => selectItem(e.target.value, row.original, 'description', idx)}
+                  placeholder={strings.Description}
                 />
-            )}
-          </>
-        );
+              )}
+            </>
+          );
+        },
       },
-    },
-    {
-      accessorKey: 'grnReceivedQuantity',
-      header: strings.RECEIVEDQUANTITY,
-      cell: ({ row }) => {
-        const idx = data.findIndex(obj => obj.id === row.original.id);
-        return (
-          <Input
-            type="number"
-            value={row.original.grnReceivedQuantity || 0}
-            onChange={e => selectItem(e.target.value, row.original, 'grnReceivedQuantity', idx)}
-          />
-        );
+      {
+        accessorKey: 'grnReceivedQuantity',
+        header: strings.RECEIVEDQUANTITY,
+        cell: ({ row }) => {
+          const idx = data.findIndex(obj => obj.id === row.original.id);
+          return (
+            <Input
+              type="number"
+              value={row.original.grnReceivedQuantity || 0}
+              onChange={e => selectItem(e.target.value, row.original, 'grnReceivedQuantity', idx)}
+            />
+          );
+        },
       },
-    },
-    {
-      accessorKey: 'quantity',
-      header: strings.POQUANTITY,
-      cell: ({ row }) => (
-        <Input
-          type="number"
-          disabled
-          value={row.original.quantity || 0}
-        />
-      ),
-    },
-  ], [data, product_list]);
+      {
+        accessorKey: 'quantity',
+        header: strings.POQUANTITY,
+        cell: ({ row }) => <Input type="number" disabled value={row.original.quantity || 0} />,
+      },
+    ],
+    [data, product_list]
+  );
 
   // ... (onSubmit, etc.)
 
@@ -361,12 +375,8 @@ const CreateGoodsReceivedNote = () => {
             <Form onSubmit={handleSubmit(() => {})}>
               {/* Form Rows ... */}
               <hr />
-              
-              <DataTable
-                data={data}
-                columns={columns}
-                manualPagination={false}
-              />
+
+              <DataTable data={data} columns={columns} manualPagination={false} />
 
               {/* Action Buttons ... */}
             </Form>

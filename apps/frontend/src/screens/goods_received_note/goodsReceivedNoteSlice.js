@@ -57,7 +57,7 @@ const goodsReceivedNoteSlice = createSlice({
       state.po_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(GOODS_RECEVED_NOTE.PROJECT_LIST, (state, action) => {
         state.project_list = action.payload?.data || action.payload || [];
@@ -113,4 +113,3 @@ export const {
   setPoList,
 } = goodsReceivedNoteSlice.actions;
 export default goodsReceivedNoteSlice.reducer;
-

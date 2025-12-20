@@ -4,7 +4,18 @@
  *
  * Covers: lodash 4.17.15 → 4.17.21 upgrade (security patches)
  */
-import { upperFirst, capitalize, isEqual, cloneDeep, get, set, merge, debounce, throttle, isEmpty } from 'lodash-es';
+import {
+  upperFirst,
+  capitalize,
+  isEqual,
+  cloneDeep,
+  get,
+  set,
+  merge,
+  debounce,
+  throttle,
+  isEmpty,
+} from 'lodash-es';
 
 describe('Lodash Utility Functions', () => {
   // ============ String Functions ============
@@ -31,7 +42,7 @@ describe('Lodash Utility Functions', () => {
       const original = {
         name: 'Test',
         nested: { value: 123 },
-        array: [1, 2, 3]
+        array: [1, 2, 3],
       };
       const cloned = cloneDeep(original);
 
@@ -43,7 +54,7 @@ describe('Lodash Utility Functions', () => {
 
     it('should get nested values safely', () => {
       const obj = {
-        a: { b: { c: 'value' } }
+        a: { b: { c: 'value' } },
       };
 
       expect(get(obj, 'a.b.c')).toBe('value');
@@ -54,7 +65,7 @@ describe('Lodash Utility Functions', () => {
 
     it('should get array values', () => {
       const obj = {
-        items: [{ id: 1 }, { id: 2 }, { id: 3 }]
+        items: [{ id: 1 }, { id: 2 }, { id: 3 }],
       };
 
       expect(get(obj, 'items[0].id')).toBe(1);
@@ -161,7 +172,7 @@ describe('Lodash Utility Functions', () => {
       merge(target, malicious);
 
       // After lodash 4.17.21, prototype pollution should be prevented
-      expect(({}).polluted).toBeUndefined();
+      expect({}.polluted).toBeUndefined();
     });
 
     it('should not allow constructor pollution via merge', () => {
@@ -170,7 +181,7 @@ describe('Lodash Utility Functions', () => {
 
       merge(target, malicious);
 
-      expect(({}).polluted).toBeUndefined();
+      expect({}.polluted).toBeUndefined();
     });
 
     it('should handle safe nested paths', () => {
@@ -178,7 +189,7 @@ describe('Lodash Utility Functions', () => {
       // This should NOT pollute Object.prototype
       set(obj, '__proto__.polluted', true);
 
-      expect(({}).polluted).toBeUndefined();
+      expect({}.polluted).toBeUndefined();
     });
   });
 

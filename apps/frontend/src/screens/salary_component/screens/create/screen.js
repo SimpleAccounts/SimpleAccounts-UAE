@@ -1,25 +1,21 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import React from 'react';
+import { connect } from 'react-redux';
 import { SalaryComponentScreen } from '../../sections';
-import 'react-datepicker/dist/react-datepicker.css'
-import './style.scss'
-const mapStateToProps = (state) => {
-  return ({
-  })
-}
-const mapDispatchToProps = (dispatch) => {
-  return ({
-  })
-}
+import 'react-datepicker/dist/react-datepicker.css';
+import './style.scss';
+const mapStateToProps = state => {
+  return {};
+};
+const mapDispatchToProps = dispatch => {
+  return {};
+};
 class CreateSalaryComponent extends React.Component {
-
   constructor(props) {
-    super(props)
-    this.state = {}
+    super(props);
+    this.state = {};
   }
 
-  componentDidMount = () => {
-  };
+  componentDidMount = () => {};
 
   render() {
     return (
@@ -27,12 +23,9 @@ class CreateSalaryComponent extends React.Component {
         props={this.props}
         history={this.props.history}
         isCreated={false}
-      >
-      </SalaryComponentScreen>
-    )
+      ></SalaryComponentScreen>
+    );
   }
 }
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreateSalaryComponent)
-
+export default connect(mapStateToProps, mapDispatchToProps)(CreateSalaryComponent);

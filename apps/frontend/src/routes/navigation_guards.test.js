@@ -56,11 +56,7 @@ describe('Navigation Guards Tests', () => {
 
     test('should redirect to unauthorized when role does not match', () => {
       render(
-        <RoleProtectedRoute
-          isAuthenticated={true}
-          userRole="user"
-          requiredRole="admin"
-        >
+        <RoleProtectedRoute isAuthenticated={true} userRole="user" requiredRole="admin">
           <AdminPage />
         </RoleProtectedRoute>
       );
@@ -71,11 +67,7 @@ describe('Navigation Guards Tests', () => {
 
     test('should allow access when role matches', () => {
       render(
-        <RoleProtectedRoute
-          isAuthenticated={true}
-          userRole="admin"
-          requiredRole="admin"
-        >
+        <RoleProtectedRoute isAuthenticated={true} userRole="admin" requiredRole="admin">
           <AdminPage />
         </RoleProtectedRoute>
       );
@@ -85,11 +77,7 @@ describe('Navigation Guards Tests', () => {
 
     test('should redirect to login when not authenticated regardless of role', () => {
       render(
-        <RoleProtectedRoute
-          isAuthenticated={false}
-          userRole="admin"
-          requiredRole="admin"
-        >
+        <RoleProtectedRoute isAuthenticated={false} userRole="admin" requiredRole="admin">
           <AdminPage />
         </RoleProtectedRoute>
       );
@@ -129,10 +117,7 @@ describe('Navigation Guards Tests', () => {
 
       return (
         <div>
-          <input
-            data-testid="form-input"
-            onChange={handleInputChange}
-          />
+          <input data-testid="form-input" onChange={handleInputChange} />
           <button onClick={handleNavigateAway}>Navigate Away</button>
           {showPrompt && (
             <div role="dialog" aria-label="Unsaved changes">
@@ -221,14 +206,12 @@ describe('Navigation Guards Tests', () => {
         { name: 'Settings', path: '/settings', roles: ['admin'] },
       ];
 
-      const visibleItems = menuItems.filter((item) =>
-        item.roles.includes(userRole)
-      );
+      const visibleItems = menuItems.filter(item => item.roles.includes(userRole));
 
       return (
         <nav data-testid="navigation-menu">
           <ul>
-            {visibleItems.map((item) => (
+            {visibleItems.map(item => (
               <li key={item.path}>
                 <a href={item.path}>{item.name}</a>
               </li>
@@ -285,7 +268,7 @@ describe('Navigation Guards Tests', () => {
 
         // Activity listeners
         const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
-        events.forEach((event) => window.addEventListener(event, resetTimeout));
+        events.forEach(event => window.addEventListener(event, resetTimeout));
 
         resetTimeout();
 
@@ -293,9 +276,7 @@ describe('Navigation Guards Tests', () => {
           if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
           }
-          events.forEach((event) =>
-            window.removeEventListener(event, resetTimeout)
-          );
+          events.forEach(event => window.removeEventListener(event, resetTimeout));
         };
       }, [sessionTimeout, onTimeout]);
 
@@ -337,11 +318,11 @@ describe('Navigation Guards Tests', () => {
     };
 
     const hasAnyPermission = (userPermissions, requiredPermissions) => {
-      return requiredPermissions.some((p) => userPermissions.includes(p));
+      return requiredPermissions.some(p => userPermissions.includes(p));
     };
 
     const hasAllPermissions = (userPermissions, requiredPermissions) => {
-      return requiredPermissions.every((p) => userPermissions.includes(p));
+      return requiredPermissions.every(p => userPermissions.includes(p));
     };
 
     test('hasPermission should return true when user has the permission', () => {
@@ -386,11 +367,11 @@ describe('Navigation Guards Tests', () => {
     ];
 
     const canAccessRoute = (path, userRole, userPermissions) => {
-      const route = routes.find((r) => r.path === path);
+      const route = routes.find(r => r.path === path);
       if (!route) return false;
 
       const hasRole = route.roles.includes(userRole);
-      const hasPermission = route.permissions.some((p) => userPermissions.includes(p));
+      const hasPermission = route.permissions.some(p => userPermissions.includes(p));
 
       return hasRole && hasPermission;
     };

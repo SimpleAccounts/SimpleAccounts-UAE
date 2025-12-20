@@ -161,7 +161,6 @@ const LogIn = ({ authActions, commonActions, history, version }) => {
 
   return (
     <div className="log-in-screen">
-      
       <div className="animated fadeIn">
         <div className="main-banner_container col-md-12 flex">
           {/* Background images can be added here if needed */}

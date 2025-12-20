@@ -105,29 +105,36 @@ let strings = new LocalizedStrings(data);
 // Zod validation schema
 const detailExpenseSchema = z.object({
   expenseNumber: z.string().min(1, 'Expense number is required'),
-  expenseCategory: z.union([
-    z.object({
-      value: z.number(),
-      label: z.string(),
-    }),
-    z.number()
-  ]).refine(val => val !== null && val !== '', 'Expense category is required'),
+  expenseCategory: z
+    .union([
+      z.object({
+        value: z.number(),
+        label: z.string(),
+      }),
+      z.number(),
+    ])
+    .refine(val => val !== null && val !== '', 'Expense category is required'),
   expenseDate: z.date({ required_error: 'Expense date is required' }),
-  currency: z.union([
-    z.number(),
-    z.object({
-      value: z.number(),
-      label: z.string(),
-    })
-  ]).refine(val => val !== null && val !== '', 'Currency is required'),
-  payee: z.union([
-    z.object({
-      value: z.string(),
-      label: z.string(),
-    }),
-    z.string()
-  ]).refine(val => val !== null && val !== '', 'Paid by is required'),
-  expenseAmount: z.string()
+  currency: z
+    .union([
+      z.number(),
+      z.object({
+        value: z.number(),
+        label: z.string(),
+      }),
+    ])
+    .refine(val => val !== null && val !== '', 'Currency is required'),
+  payee: z
+    .union([
+      z.object({
+        value: z.string(),
+        label: z.string(),
+      }),
+      z.string(),
+    ])
+    .refine(val => val !== null && val !== '', 'Paid by is required'),
+  expenseAmount: z
+    .string()
     .min(1, 'Amount is required')
     .regex(/^[0-9][0-9]*[.]?[0-9]{0,2}$$/, 'Enter a valid amount')
     .refine(val => parseFloat(val) > 0, 'Expense amount should be greater than 0'),
@@ -230,7 +237,15 @@ const DetailExpense = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, reset, setValue, watch, getValues } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+    watch,
+    getValues,
+  } = form;
 
   strings.setLanguage(language);
 
@@ -291,9 +306,7 @@ const DetailExpense = ({
               payMode: res.data.payMode ? res.data.payMode : '',
               bankAccountId: res.data.bankAccountId ? res.data.bankAccountId : '',
               exclusiveVat:
-                res.data.exclusiveVat && res.data.exclusiveVat != null
-                  ? res.data.exclusiveVat
-                  : '',
+                res.data.exclusiveVat && res.data.exclusiveVat != null ? res.data.exclusiveVat : '',
               exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
               expenseDescription: res.data.expenseDescription,
               receiptNumber: res.data.receiptNumber,
@@ -314,7 +327,9 @@ const DetailExpense = ({
             setExchangeRate(res?.data?.exchangeRate ? res.data.exchangeRate : '');
             setExpenseType(res.data.expenseType ? true : false);
             setIsVatClaimable(res.data.expenseType ? res.data.expenseType : false);
-            setShowPlacelist(res.data.taxTreatmentId && res.data.taxTreatmentId !== 8 ? true : false);
+            setShowPlacelist(
+              res.data.taxTreatmentId && res.data.taxTreatmentId !== 8 ? true : false
+            );
             setLockPlacelist(res.data.taxTreatmentId === 7 ? true : false);
             setTaxTreatmentId(res.data.taxTreatmentId ? res.data.taxTreatmentId : '');
             setIsReverseChargeEnabled(
@@ -617,9 +632,7 @@ const DetailExpense = ({
     if (isRegisteredVat && expenseDateForVatValidation > companyVATRegistrationDate) {
       if (isDesignatedZone && isDesignatedZone != null && isDesignatedZone === true) {
         switch (
-          values.taxTreatmentId && values.taxTreatmentId.value
-            ? values.taxTreatmentId.value
-            : ''
+          values.taxTreatmentId && values.taxTreatmentId.value ? values.taxTreatmentId.value : ''
         ) {
           case 1:
           case 3:
@@ -646,9 +659,7 @@ const DetailExpense = ({
         }
       } else if (isDesignatedZone === false)
         switch (
-          values.taxTreatmentId && values.taxTreatmentId.value
-            ? values.taxTreatmentId.value
-            : ''
+          values.taxTreatmentId && values.taxTreatmentId.value ? values.taxTreatmentId.value : ''
         ) {
           case 1:
             if (isReverseChargeEnabled === false) vatIds = [1, 2, 3];
@@ -873,9 +884,7 @@ const DetailExpense = ({
                                         }`}
                                         placeholderText={strings.ExpenseDate}
                                         value={
-                                          field.value
-                                            ? dayjs(field.value).format('DD-MM-YYYY')
-                                            : ''
+                                          field.value ? dayjs(field.value).format('DD-MM-YYYY') : ''
                                         }
                                         selected={
                                           field.value
@@ -1340,13 +1349,15 @@ const DetailExpense = ({
                                     <Checkbox
                                       id="isReverseChargeEnabled"
                                       checked={isReverseChargeEnabled}
-                                      onCheckedChange={(checked) => {
+                                      onCheckedChange={checked => {
                                         setIsReverseChargeEnabled(checked);
                                         setExclusiveVat(true);
                                         setValue('vatCategoryId', '');
                                       }}
                                     />
-                                    <Label htmlFor="isReverseChargeEnabled" className="ml-2 mb-0">{strings.IsReverseCharge}</Label>
+                                    <Label htmlFor="isReverseChargeEnabled" className="ml-2 mb-0">
+                                      {strings.IsReverseCharge}
+                                    </Label>
                                   </Col>
                                 )}
                             </Row>
@@ -1354,9 +1365,7 @@ const DetailExpense = ({
                             {values.exchangeRate !== 1 && (
                               <Row>
                                 <Col>
-                                  <Label htmlFor="currency">
-                                    {strings.CurrencyExchangeRate}
-                                  </Label>
+                                  <Label htmlFor="currency">{strings.CurrencyExchangeRate}</Label>
                                 </Col>
                               </Row>
                             )}
@@ -1430,9 +1439,7 @@ const DetailExpense = ({
                             <Row>
                               <Col lg={8}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="expenseDescription">
-                                    {strings.Description}
-                                  </Label>
+                                  <Label htmlFor="expenseDescription">{strings.Description}</Label>
                                   <Controller
                                     name="expenseDescription"
                                     control={control}

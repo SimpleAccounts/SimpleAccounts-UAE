@@ -28,7 +28,7 @@ function ProductCategory() {
   const dispatch = useDispatch();
 
   // Redux state
-  const product_category_list = useSelector((state) => state.product_category.product_category_list);
+  const product_category_list = useSelector(state => state.product_category.product_category_list);
 
   // Actions
   const productCategoryActions = useMemo(
@@ -68,17 +68,14 @@ function ProductCategory() {
 
     productCategoryActions
       .getProductCategoryList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
-        commonActions.tostifyAlert(
-          'error',
-          err?.data?.message || 'Something Went Wrong'
-        );
+        commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   }, [productCategoryActions, commonActions, pagination, sorting]);
 
@@ -114,7 +111,7 @@ function ProductCategory() {
 
     productCategoryActions
       .deleteProductCategory(obj)
-      .then((res) => {
+      .then(res => {
         initializeData();
         commonActions.tostifyAlert(
           'success',
@@ -122,7 +119,7 @@ function ProductCategory() {
         );
         setSelectedRows([]);
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert(
           'error',
           err?.data?.message || 'Product Category Deleted Unsuccessfully'
@@ -136,9 +133,7 @@ function ProductCategory() {
       {
         accessorKey: 'productCategoryCode',
         header: strings.ProductCategoryCode || 'Product Category Code',
-        cell: ({ row }) => (
-          <span className="font-medium">{row.original.productCategoryCode}</span>
-        ),
+        cell: ({ row }) => <span className="font-medium">{row.original.productCategoryCode}</span>,
       },
       {
         accessorKey: 'productCategoryName',
@@ -151,7 +146,7 @@ function ProductCategory() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!product_category_list?.data) return [];
-    return product_category_list.data.map((item) => ({
+    return product_category_list.data.map(item => ({
       id: item.id,
       productCategoryCode: item.productCategoryCode || '',
       productCategoryName: item.productCategoryName || '',
@@ -159,7 +154,7 @@ function ProductCategory() {
   }, [product_category_list]);
 
   // Row click handler
-  const handleRowClick = (row) => {
+  const handleRowClick = row => {
     navigate('/admin/master/product-category/detail', { state: { id: row.id } });
   };
 

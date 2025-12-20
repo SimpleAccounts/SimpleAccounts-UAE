@@ -43,10 +43,10 @@ function OpeningBalance() {
 
   // Redux state
   const transaction_category_list = useSelector(
-    (state) => state.opening_balance.transaction_category_list
+    state => state.opening_balance.transaction_category_list
   );
-  const profile = useSelector((state) => state.auth.profile);
-  const opening_balance_list = useSelector((state) => state.opening_balance.opening_balance_list);
+  const profile = useSelector(state => state.auth.profile);
+  const opening_balance_list = useSelector(state => state.opening_balance.opening_balance_list);
 
   // Actions
   const openingBalanceActions = useMemo(
@@ -90,7 +90,7 @@ function OpeningBalance() {
 
     openingBalanceActions
       .getOpeningBalanceList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
           const data =
@@ -109,7 +109,7 @@ function OpeningBalance() {
           setTempData(JSON.parse(JSON.stringify(data)));
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
@@ -130,15 +130,13 @@ function OpeningBalance() {
   };
 
   // Check if category is already selected
-  const checkCategory = (value) => {
-    return tableData.some(
-      (item) => item.transactionCategory?.value === value && item.disabled
-    );
+  const checkCategory = value => {
+    return tableData.some(item => item.transactionCategory?.value === value && item.disabled);
   };
 
   // Add new row
   const addMore = () => {
-    setTableData((prev) => [
+    setTableData(prev => [
       {
         id: idCount,
         transactionCategory: '',
@@ -149,14 +147,14 @@ function OpeningBalance() {
       },
       ...prev,
     ]);
-    setIdCount((prev) => prev + 1);
+    setIdCount(prev => prev + 1);
     setSubmitBtnClick(false);
   };
 
   // Select item handler
   const selectItem = (value, row, name) => {
-    setTableData((prev) =>
-      prev.map((obj) => {
+    setTableData(prev =>
+      prev.map(obj => {
         if (obj.id === row.id) {
           return { ...obj, [name]: value };
         }
@@ -166,9 +164,9 @@ function OpeningBalance() {
   };
 
   // Enable edit for row
-  const enableEdit = (row) => {
-    setTableData((prev) =>
-      prev.map((obj) => {
+  const enableEdit = row => {
+    setTableData(prev =>
+      prev.map(obj => {
         if (obj.id === row.id) {
           return { ...obj, disabled: false };
         }
@@ -178,11 +176,11 @@ function OpeningBalance() {
   };
 
   // Refresh row to original state
-  const refreshRow = (row) => {
-    const original = tempData.find((t) => t.id === row.id);
+  const refreshRow = row => {
+    const original = tempData.find(t => t.id === row.id);
     if (original) {
-      setTableData((prev) =>
-        prev.map((obj) => {
+      setTableData(prev =>
+        prev.map(obj => {
           if (obj.id === row.id) {
             return JSON.parse(JSON.stringify(original));
           }
@@ -193,13 +191,13 @@ function OpeningBalance() {
   };
 
   // Validate row
-  const validateRow = (row) => {
+  const validateRow = row => {
     setSubmitBtnClick(true);
     return row.transactionCategory !== '' && row.openingBalance !== '';
   };
 
   // Handle save
-  const handleSave = (row) => {
+  const handleSave = row => {
     if (!validateRow(row)) return;
 
     let save = true;
@@ -217,7 +215,7 @@ function OpeningBalance() {
       postData.transactionCategoryBalanceId = row.transactionCategoryBalanceId;
     }
 
-    openingBalanceActions.addOpeningBalance(postData, save).then((res) => {
+    openingBalanceActions.addOpeningBalance(postData, save).then(res => {
       if (res.status === 200) {
         const text = save ? 'added' : 'updated';
         commonActions.tostifyAlert(
@@ -269,13 +267,11 @@ function OpeningBalance() {
                     <TableHead className="min-w-[150px]">
                       {strings.OpeningBalance || 'Opening Balance'}
                     </TableHead>
-                    <TableHead className="min-w-[120px]">
-                      {strings.Actions || 'Actions'}
-                    </TableHead>
+                    <TableHead className="min-w-[120px]">{strings.Actions || 'Actions'}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {tableData.map((row) => (
+                  {tableData.map(row => (
                     <TableRow key={row.id}>
                       <TableCell>
                         <Select
@@ -295,8 +291,8 @@ function OpeningBalance() {
                               ? 'border-destructive'
                               : ''
                           }
-                          isOptionDisabled={(option) => checkCategory(option.value)}
-                          onChange={(option) => selectItem(option, row, 'transactionCategory')}
+                          isOptionDisabled={option => checkCategory(option.value)}
+                          onChange={option => selectItem(option, row, 'transactionCategory')}
                         />
                       </TableCell>
                       <TableCell>
@@ -318,7 +314,7 @@ function OpeningBalance() {
                                 ? dayjs(row.effectiveDate, 'DD-MM-YYYY').toDate()
                                 : row.effectiveDate
                             }
-                            onChange={(value) => selectItem(value, row, 'effectiveDate')}
+                            onChange={value => selectItem(value, row, 'effectiveDate')}
                           />
                         )}
                       </TableCell>
@@ -338,7 +334,7 @@ function OpeningBalance() {
                             type="text"
                             value={row.openingBalance || ''}
                             placeholder={strings.OpeningBalance || 'Opening Balance'}
-                            onChange={(e) => {
+                            onChange={e => {
                               if (e.target.value === '' || regEx.test(e.target.value)) {
                                 selectItem(e.target.value, row, 'openingBalance');
                               }
@@ -354,20 +350,12 @@ function OpeningBalance() {
                       <TableCell>
                         <div className="flex gap-2">
                           {row.disabled ? (
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => enableEdit(row)}
-                            >
+                            <Button variant="outline" size="icon" onClick={() => enableEdit(row)}>
                               <Edit className="h-4 w-4" />
                             </Button>
                           ) : (
                             <>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() => handleSave(row)}
-                              >
+                              <Button variant="outline" size="icon" onClick={() => handleSave(row)}>
                                 <Save className="h-4 w-4" />
                               </Button>
                               {!row.create && (

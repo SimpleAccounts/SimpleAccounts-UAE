@@ -11,7 +11,7 @@ const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
 vi.mock('react-datepicker', () => ({
-  default: (props) => (
+  default: props => (
     <input
       data-testid="date-picker"
       onChange={() => props.onChange && props.onChange(new Date())}
@@ -30,7 +30,9 @@ vi.mock('./sections', () => ({
 }));
 
 vi.mock('./actions', () => ({
-  getReconcileList: vi.fn(() => () => Promise.resolve({ status: 200, data: { data: [], count: 0 } })),
+  getReconcileList: vi.fn(
+    () => () => Promise.resolve({ status: 200, data: { data: [], count: 0 } })
+  ),
   reconcilenow: vi.fn(() => () => Promise.resolve({ status: 200, data: {} })),
   removeBulkReconciled: vi.fn(() => () => Promise.resolve({})),
 }));
@@ -88,7 +90,9 @@ describe('ReconcileTransaction screen', () => {
   it('handles missing bank account id gracefully', async () => {
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[{ pathname: '/admin/banking/bank-account/transactions/reconcile' }]}>
+        <MemoryRouter
+          initialEntries={[{ pathname: '/admin/banking/bank-account/transactions/reconcile' }]}
+        >
           <ReconcileTransaction />
         </MemoryRouter>
       </Provider>

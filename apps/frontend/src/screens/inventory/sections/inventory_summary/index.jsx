@@ -23,8 +23,8 @@ const strings = new LocalizedStrings(languageData);
 
 const InventorySummary = () => {
   const dispatch = useDispatch();
-  
-  const { summary_list, company_profile } = useSelector((state) => ({
+
+  const { summary_list, company_profile } = useSelector(state => ({
     summary_list: state.inventory.summary_list,
     company_profile: state.common.company_profile,
   }));
@@ -38,15 +38,15 @@ const InventorySummary = () => {
   });
   const [openModal, setOpenModal] = useState(false);
   const [inventory_history_list, setInventoryHistoryList] = useState([]);
-  
+
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   });
   const [sorting, setSorting] = useState([]);
   const [filterData, setFilterData] = useState({
-        name: '',
-        email: '',
+    name: '',
+    email: '',
   });
 
   const pdfExportComponent = useRef(null);
@@ -71,14 +71,14 @@ const InventorySummary = () => {
       sortingCol: sorting.length > 0 ? sorting[0].id : '',
     };
     const postData = { ...filterData, ...paginationData, ...sortingData };
-    
+
     dispatch(InventoryActions.getProductInventoryList(postData))
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         toast.error(err?.data?.message || 'Something Went Wrong');
       });
@@ -94,26 +94,29 @@ const InventorySummary = () => {
       sortingCol: sorting.length > 0 ? sorting[0].id : '',
     };
     const postData = { ...filterData, ...paginationData, ...sortingData };
-    
+
     dispatch(InventoryActions.getProductInventoryList(postData))
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
-            const csvConfig = mkConfig({ useKeysAsHeaders: true, filename: 'Inventory Summary List' });
-            const csv = generateCsv(csvConfig)(res.data.data);
-            download(csvConfig)(csv);
-            initializeData(); // Re-fetch current page
+          const csvConfig = mkConfig({
+            useKeysAsHeaders: true,
+            filename: 'Inventory Summary List',
+          });
+          const csv = generateCsv(csvConfig)(res.data.data);
+          download(csvConfig)(csv);
+          initializeData(); // Re-fetch current page
         }
       })
-      .catch((err) => {
+      .catch(err => {
         toast.error(err?.data?.message || 'Something Went Wrong');
       });
   };
 
-  const renderName = (cell) => {
+  const renderName = cell => {
     return <span>{cell ? cell : '-'}</span>;
   };
 
-  const renderActions = (row) => {
+  const renderActions = row => {
     return (
       <div>
         <Button
@@ -122,14 +125,16 @@ const InventorySummary = () => {
           color="link"
           onClick={() => {
             if (row.supplierId !== null && row.productId !== null) {
-              dispatch(ProductActions.getInventoryHistory({ p_id: row.productId, s_id: row.supplierId }))
-                .then((res) => {
+              dispatch(
+                ProductActions.getInventoryHistory({ p_id: row.productId, s_id: row.supplierId })
+              )
+                .then(res => {
                   if (res.status === 200) {
                     setInventoryHistoryList(res.data);
                     setOpenModal(true);
                   }
                 })
-                .catch((err) => {
+                .catch(err => {
                   toast.error(err?.data?.message || 'Something Went Wrong');
                 });
             } else {
@@ -143,41 +148,44 @@ const InventorySummary = () => {
     );
   };
 
-  const columns = useMemo(() => [
-    {
-      accessorKey: 'productCode',
-      header: strings.PRODUCTCODE,
-    },
-    {
-      accessorKey: 'productName',
-      header: strings.PRODUCTNAME,
-    },
-    {
-      accessorKey: 'purchaseOrder',
-      header: strings.ORDERQUANTITY,
-      cell: ({ getValue }) => <div className="text-center">{getValue()}</div>,
-    },
-    {
-      accessorKey: 'quantitySold',
-      header: strings.QUANTITYSOLD,
-      cell: ({ getValue }) => <div className="text-center">{getValue()}</div>,
-    },
-    {
-      accessorKey: 'stockInHand',
-      header: strings.STOCKINHAND,
-      cell: ({ getValue }) => <div className="text-center">{getValue()}</div>,
-    },
-    {
-      accessorKey: 'supplierName',
-      header: strings.SUPPLIERNAME,
-      cell: ({ getValue }) => <div className="text-center">{renderName(getValue())}</div>,
-    },
-    {
-      id: 'actions',
-      header: '',
-      cell: ({ row }) => <div className="text-right">{renderActions(row.original)}</div>,
-    },
-  ], []);
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'productCode',
+        header: strings.PRODUCTCODE,
+      },
+      {
+        accessorKey: 'productName',
+        header: strings.PRODUCTNAME,
+      },
+      {
+        accessorKey: 'purchaseOrder',
+        header: strings.ORDERQUANTITY,
+        cell: ({ getValue }) => <div className="text-center">{getValue()}</div>,
+      },
+      {
+        accessorKey: 'quantitySold',
+        header: strings.QUANTITYSOLD,
+        cell: ({ getValue }) => <div className="text-center">{getValue()}</div>,
+      },
+      {
+        accessorKey: 'stockInHand',
+        header: strings.STOCKINHAND,
+        cell: ({ getValue }) => <div className="text-center">{getValue()}</div>,
+      },
+      {
+        accessorKey: 'supplierName',
+        header: strings.SUPPLIERNAME,
+        cell: ({ getValue }) => <div className="text-center">{renderName(getValue())}</div>,
+      },
+      {
+        id: 'actions',
+        header: '',
+        cell: ({ row }) => <div className="text-right">{renderActions(row.original)}</div>,
+      },
+    ],
+    []
+  );
 
   const closeModal = () => {
     setOpenModal(false);
@@ -187,11 +195,7 @@ const InventorySummary = () => {
     <div className="transactions-report-screen">
       <div className="animated fadeIn">
         <div id="section-to-print">
-          <PDFExport
-            ref={pdfExportComponent}
-            scale={0.8}
-            paperSize="A4"
-          >
+          <PDFExport ref={pdfExportComponent} scale={0.8} paperSize="A4">
             <br />
             <br />
             <div
@@ -226,15 +230,11 @@ const InventorySummary = () => {
               </div>
 
               <div>
-                <Form onSubmit={(e) => e.preventDefault()} name="simpleForm">
+                <Form onSubmit={e => e.preventDefault()} name="simpleForm">
                   <div className="flex-wrap d-flex justify-content-end">
                     <FormGroup>
                       <ButtonGroup className="mr-3">
-                        <Button
-                          color="primary"
-                          className="btn-square"
-                          onClick={onBtnExport}
-                        >
+                        <Button color="primary" className="btn-square" onClick={onBtnExport}>
                           <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                           {strings.Export}
                         </Button>
@@ -253,7 +253,9 @@ const InventorySummary = () => {
                   columns={columns}
                   manualPagination={true}
                   manualSorting={true}
-                  pageCount={summary_list?.count ? Math.ceil(summary_list.count / pagination.pageSize) : 0}
+                  pageCount={
+                    summary_list?.count ? Math.ceil(summary_list.count / pagination.pageSize) : 0
+                  }
                   onPaginationChange={setPagination}
                   onSortingChange={setSorting}
                 />

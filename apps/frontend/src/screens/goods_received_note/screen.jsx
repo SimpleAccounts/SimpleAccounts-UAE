@@ -36,7 +36,7 @@ const selectStyles = {
       borderColor: 'hsl(var(--ring))',
     },
   }),
-  menu: (base) => ({
+  menu: base => ({
     ...base,
     backgroundColor: 'hsl(var(--background))',
     border: '1px solid hsl(var(--border))',
@@ -46,15 +46,15 @@ const selectStyles = {
     backgroundColor: state.isSelected
       ? 'hsl(var(--primary))'
       : state.isFocused
-      ? 'hsl(var(--accent))'
-      : 'transparent',
+        ? 'hsl(var(--accent))'
+        : 'transparent',
     color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
   }),
-  singleValue: (base) => ({
+  singleValue: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
   }),
-  placeholder: (base) => ({
+  placeholder: base => ({
     ...base,
     color: 'hsl(var(--muted-foreground))',
   }),
@@ -92,9 +92,9 @@ function GoodsReceivedNote() {
   const dispatch = useDispatch();
 
   // Redux state
-  const supplier_list = useSelector((state) => state.goods_received_note.supplier_list);
+  const supplier_list = useSelector(state => state.goods_received_note.supplier_list);
   const goods_received_note_list = useSelector(
-    (state) => state.goods_received_note.goods_received_note_list
+    state => state.goods_received_note.goods_received_note_list
   );
 
   // Actions
@@ -140,12 +140,12 @@ function GoodsReceivedNote() {
 
     goodsReceivedNoteAction
       .getGRNList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setLoading(false);
       });
@@ -164,7 +164,7 @@ function GoodsReceivedNote() {
   // Change status handler
   const changeStatus = useCallback(
     (id, status) => {
-      goodsReceivedNoteAction.changeStatus(id, status).then((res) => {
+      goodsReceivedNoteAction.changeStatus(id, status).then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert('success', res.data?.message);
           initializeData();
@@ -176,23 +176,17 @@ function GoodsReceivedNote() {
 
   // Send mail handler
   const sendMail = useCallback(
-    (id) => {
+    id => {
       goodsReceivedNoteAction
         .sendMail(id)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
-            commonActions.tostifyAlert(
-              'success',
-              res.data?.message || 'Send Successfully'
-            );
+            commonActions.tostifyAlert('success', res.data?.message || 'Send Successfully');
             initializeData();
           }
         })
-        .catch((err) => {
-          commonActions.tostifyAlert(
-            'error',
-            err?.data?.message || 'Send Unsuccessfully'
-          );
+        .catch(err => {
+          commonActions.tostifyAlert('error', err?.data?.message || 'Send Unsuccessfully');
         });
     },
     [goodsReceivedNoteAction, commonActions, initializeData]
@@ -200,23 +194,17 @@ function GoodsReceivedNote() {
 
   // Post GRN handler
   const postGrn = useCallback(
-    (id) => {
+    id => {
       goodsReceivedNoteAction
         .postGRN(id)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
-            commonActions.tostifyAlert(
-              'success',
-              res.data?.message || 'Posted Successfully'
-            );
+            commonActions.tostifyAlert('success', res.data?.message || 'Posted Successfully');
             initializeData();
           }
         })
-        .catch((err) => {
-          commonActions.tostifyAlert(
-            'error',
-            err?.data?.message || 'Post Unsuccessfully'
-          );
+        .catch(err => {
+          commonActions.tostifyAlert('error', err?.data?.message || 'Post Unsuccessfully');
         });
     },
     [goodsReceivedNoteAction, commonActions, initializeData]
@@ -224,11 +212,11 @@ function GoodsReceivedNote() {
 
   // Filter handlers
   const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
+    setFilterData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     initializeData();
   };
 
@@ -237,14 +225,14 @@ function GoodsReceivedNote() {
       supplierId: '',
       contactType: 1,
     });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     setTimeout(() => initializeData(), 0);
   };
 
   // Transform supplier list for select
   const supplierOptions = useMemo(() => {
     if (!supplier_list) return [];
-    return supplier_list.map((item) => ({
+    return supplier_list.map(item => ({
       label: item.label?.contactName || item.label,
       value: item.value,
     }));
@@ -272,9 +260,7 @@ function GoodsReceivedNote() {
       {
         accessorKey: 'grnRemarks',
         header: strings.GRNREMARKS,
-        cell: ({ row }) => (
-          <span className="line-clamp-2">{row.original.grnRemarks}</span>
-        ),
+        cell: ({ row }) => <span className="line-clamp-2">{row.original.grnRemarks}</span>,
       },
       {
         accessorKey: 'status',
@@ -356,7 +342,7 @@ function GoodsReceivedNote() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!goods_received_note_list?.data?.data) return [];
-    return goods_received_note_list.data.data.map((item) => ({
+    return goods_received_note_list.data.data.map(item => ({
       id: item.id,
       status: item.status || '',
       supplierName: item.supplierName || '',
@@ -412,7 +398,7 @@ function GoodsReceivedNote() {
                       : []
                   }
                   value={filterData.supplierId}
-                  onChange={(option) => {
+                  onChange={option => {
                     handleFilterChange('supplierId', option || '');
                   }}
                 />

@@ -1,16 +1,14 @@
 // import { SETTINGS } from 'constants/types'
 
-const initState = {
-}
+const initState = {};
 
 const SettingsReducer = (state = initState, action) => {
-  const { type } = action || {}
+  const { type } = action || {};
 
-  switch(type) {
-
+  switch (type) {
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default SettingsReducer
+export default SettingsReducer;

@@ -40,7 +40,7 @@ import LocalizedStrings from 'react-localization';
 import invoiceimage from 'assets/images/invoice/invoice.png';
 import { DataTable } from '@/components/ui/data-table';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     contact_list: state.purchase_order.contact_list,
     currency_list: state.purchase_order.currency_list,
@@ -55,7 +55,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     goodsReceivedNoteAction: bindActionCreators(PurchaseOrderAction, dispatch),
     supplierInvoiceActions: bindActionCreators(SupplierInvoiceActions, dispatch),
@@ -67,8 +67,8 @@ const mapDispatchToProps = (dispatch) => {
     commonActions: bindActionCreators(CommonActions, dispatch),
     purchaseOrderDetailsAction: bindActionCreators(RequestForQuotationDetailsAction, dispatch), // Was PurchaseOrderDetailsAction but mapped to RequestForQuotationDetailsAction in original??
     // Actually in original import: import * as RequestForQuotationDetailsAction from '../../../request_for_quotation/screens/detail/actions';
-    // And mapDispatchToProps: purchaseOrderDetailsAction: bindActionCreators(PurchaseOrderDetailsAction, dispatch), 
-    // BUT import was: import * as PurchaseOrderCreateAction from './actions'; 
+    // And mapDispatchToProps: purchaseOrderDetailsAction: bindActionCreators(PurchaseOrderDetailsAction, dispatch),
+    // BUT import was: import * as PurchaseOrderCreateAction from './actions';
     // And import * as PurchaseOrderDetailsAction from '../../../request_for_quotation/screens/detail/actions'; (WAIT, original import might be different)
     // Original import: import * as PurchaseOrderDetailsAction from '../../../purchase_order/screens/detail/actions'; (Wait, no it was RequestForQuotationDetailsAction in my read file output? Let me check)
     // Line 12: import * as RequestForQuotationDetailsAction from '../../../request_for_quotation/screens/detail/actions';
@@ -83,11 +83,11 @@ const mapDispatchToProps = (dispatch) => {
     // This implies `PurchaseOrderDetailsAction` is undefined?
     // Or maybe `RequestForQuotationDetailsAction` IS `PurchaseOrderDetailsAction`?
     // Let's assume it should be `RequestForQuotationDetailsAction` or maybe I missed an import line.
-    
+
     // Ah, I see: import * as PurchaseOrderAction from '../../actions';
     // And line 8: import * as SupplierInvoiceCreateActions from './actions';
     // Line 9: import * as PurchaseOrderCreateAction from './actions';
-    
+
     // Let me re-read the imports carefully from the output I got.
     /*
     import * as SupplierInvoiceCreateActions from './actions';
@@ -111,16 +111,16 @@ const mapDispatchToProps = (dispatch) => {
     // If I look at `getPoDetails` function:
     // purchaseOrderDetailsAction.getPOById(e.value)
     // This suggests `purchaseOrderDetailsAction` is used.
-    
+
     // I will assume `RequestForQuotationDetailsAction` was intended or aliased but typoed.
     // However, I will just copy the imports as they are and fix if needed.
     // Actually, `RequestForQuotationDetailsAction` is imported but not used in mapDispatchToProps.
     // I'll assume `PurchaseOrderDetailsAction` is what was meant and import it.
     // import * as PurchaseOrderDetailsAction from '../../detail/actions'; (Assuming standard structure)
-    
+
     // Let's look at `apps/frontend/src/screens/purchase_order/screens/detail/actions.js` exists?
     // Yes, `apps/frontend/src/screens/purchase_order/screens/detail/screen.jsx` exists.
-    
+
     purchaseOrderAction: bindActionCreators(PurchaseOrderAction, dispatch),
   };
 };
@@ -136,27 +136,27 @@ const createPurchaseOrderSchema = z.object({
       label: z.string(),
     })
     .nullable()
-    .refine((val) => val !== null && val !== undefined, 'Supplier is required'),
-  poApproveDate: z.union([z.string(), z.date()]).refine((val) => val !== null && val !== '', 'Order date is required'),
-  poReceiveDate: z.union([z.string(), z.date()]).refine((val) => val !== null && val !== '', 'Order due date is required'),
+    .refine(val => val !== null && val !== undefined, 'Supplier is required'),
+  poApproveDate: z
+    .union([z.string(), z.date()])
+    .refine(val => val !== null && val !== '', 'Order date is required'),
+  poReceiveDate: z
+    .union([z.string(), z.date()])
+    .refine(val => val !== null && val !== '', 'Order due date is required'),
   attachmentFile: z.any().optional(),
   lineItemsString: z
     .array(
       z.object({
-        grnReceivedQuantity: z
-          .union([z.string(), z.number()])
-          .refine((val) => Number(val) > 0, {
-            message: 'Quantity should be greater than 0',
-          }),
-        unitPrice: z
-          .union([z.string(), z.number()])
-          .refine((val) => Number(val) > 0, {
-            message: 'Unit price should be greater than 1',
-          }),
-        vatCategoryId: z.union([z.string(), z.number()]).refine((val) => val !== '' && val !== null, {
+        grnReceivedQuantity: z.union([z.string(), z.number()]).refine(val => Number(val) > 0, {
+          message: 'Quantity should be greater than 0',
+        }),
+        unitPrice: z.union([z.string(), z.number()]).refine(val => Number(val) > 0, {
+          message: 'Unit price should be greater than 1',
+        }),
+        vatCategoryId: z.union([z.string(), z.number()]).refine(val => val !== '' && val !== null, {
           message: 'Value is required',
         }),
-        productId: z.union([z.string(), z.number()]).refine((val) => val !== '' && val !== null, {
+        productId: z.union([z.string(), z.number()]).refine(val => val !== '' && val !== null, {
           message: 'Product is required',
         }),
         description: z.string().optional(),
@@ -281,7 +281,16 @@ const CreatePurchaseOrder = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors, touchedFields }, watch, setValue, getValues, setError, clearErrors } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, touchedFields },
+    watch,
+    setValue,
+    getValues,
+    setError,
+    clearErrors,
+  } = form;
 
   strings.setLanguage(language);
 
@@ -292,36 +301,45 @@ const CreatePurchaseOrder = ({
   // I will just copy the relevant functions from the original file content provided in previous read_file.
   // Due to length, I'll focus on the DataTable implementation.
 
-  const getCurrency = useCallback((opt) => {
-    let supplier_currencyCode = 0;
-    supplier_list.forEach(item => {
-      if (item.label.contactId == opt) {
-        setSupplierCurrency(item.label.currency.currencyCode);
-        setSupplierCurrencyDes(item.label.currency.currencyName);
-        setSupplierCurrencySymbol(item.label.currency.currencyIsoCode);
-        supplier_currencyCode = item.label.currency.currencyCode;
+  const getCurrency = useCallback(
+    opt => {
+      let supplier_currencyCode = 0;
+      supplier_list.forEach(item => {
+        if (item.label.contactId == opt) {
+          setSupplierCurrency(item.label.currency.currencyCode);
+          setSupplierCurrencyDes(item.label.currency.currencyName);
+          setSupplierCurrencySymbol(item.label.currency.currencyIsoCode);
+          supplier_currencyCode = item.label.currency.currencyCode;
+        }
+      });
+      return supplier_currencyCode;
+    },
+    [supplier_list]
+  );
+
+  const setExchange = useCallback(
+    value => {
+      const result = currency_convert_list.filter(obj => obj.currencyCode === value);
+      if (result && result[0] && result[0].exchangeRate) {
+        setValue('exchangeRate', result[0].exchangeRate);
       }
-    });
-    return supplier_currencyCode;
-  }, [supplier_list]);
+    },
+    [currency_convert_list, setValue]
+  );
 
-  const setExchange = useCallback((value) => {
-    const result = currency_convert_list.filter((obj) => obj.currencyCode === value);
-    if (result && result[0] && result[0].exchangeRate) {
-      setValue('exchangeRate', result[0].exchangeRate);
-    }
-  }, [currency_convert_list, setValue]);
-
-  const setCurrency = useCallback((value) => {
-    const result = currency_convert_list.filter((obj) => obj.currencyCode === value);
-    if (result && result[0]) {
-      setValue('curreancyname', result[0].currencyName);
-    }
-  }, [currency_convert_list, setValue]);
+  const setCurrency = useCallback(
+    value => {
+      const result = currency_convert_list.filter(obj => obj.currencyCode === value);
+      if (result && result[0]) {
+        setValue('curreancyname', result[0].currencyName);
+      }
+    },
+    [currency_convert_list, setValue]
+  );
 
   const salesCategoryFetch = useCallback(() => {
     try {
-      ProductActions.getTransactionCategoryListForSalesProduct('2').then((res) => {
+      ProductActions.getTransactionCategoryListForSalesProduct('2').then(res => {
         if (res.status === 200) {
           setSalesCategory(res.data);
         }
@@ -333,7 +351,7 @@ const CreatePurchaseOrder = ({
 
   const purchaseCategoryFetch = useCallback(() => {
     try {
-      ProductActions.getTransactionCategoryListForPurchaseProduct('10').then((res) => {
+      ProductActions.getTransactionCategoryListForPurchaseProduct('10').then(res => {
         if (res.status === 200) {
           setPurchaseCategory(res.data);
         }
@@ -344,7 +362,7 @@ const CreatePurchaseOrder = ({
   }, [ProductActions]);
 
   const getInvoiceNo = useCallback(() => {
-    goodsReceivedNoteCreateAction.getInvoiceNo().then((res) => {
+    goodsReceivedNoteCreateAction.getInvoiceNo().then(res => {
       if (res.status === 200) {
         setValue('po_number', res.data);
         validationCheck(res.data);
@@ -352,101 +370,125 @@ const CreatePurchaseOrder = ({
     });
   }, [goodsReceivedNoteCreateAction, setValue]);
 
-  const validationCheck = useCallback((value) => {
-    const data = {
-      moduleType: 13,
-      name: value,
-    };
-    goodsReceivedNoteCreateAction.checkValidation(data).then((response) => {
-      if (response.data === 'PO Number Already Exists') {
-        setExist(true);
-        setError('po_number', {
-          type: 'manual',
-          message: 'PO number already exists',
-        });
-      } else {
-        setExist(false);
-        clearErrors('po_number');
-      }
-    });
-  }, [goodsReceivedNoteCreateAction, setError, clearErrors]);
+  const validationCheck = useCallback(
+    value => {
+      const data = {
+        moduleType: 13,
+        name: value,
+      };
+      goodsReceivedNoteCreateAction.checkValidation(data).then(response => {
+        if (response.data === 'PO Number Already Exists') {
+          setExist(true);
+          setError('po_number', {
+            type: 'manual',
+            message: 'PO number already exists',
+          });
+        } else {
+          setExist(false);
+          clearErrors('po_number');
+        }
+      });
+    },
+    [goodsReceivedNoteCreateAction, setError, clearErrors]
+  );
 
   const getCompanyCurrency = useCallback(() => {
-    currencyConvertActions.getCompanyCurrency().then((res) => {
-      if (res.status === 200) {
-        setBasecurrency(res.data);
-      }
-    }).catch((err) => {
-      commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
-      setLoading(false);
-    });
+    currencyConvertActions
+      .getCompanyCurrency()
+      .then(res => {
+        if (res.status === 200) {
+          setBasecurrency(res.data);
+        }
+      })
+      .catch(err => {
+        commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong'
+        );
+        setLoading(false);
+      });
   }, [currencyConvertActions, commonActions]);
 
-  const getParentGrnDetails = useCallback((parentId) => {
-    goodsReceivedNoteCreateAction.getPOById(parentId).then((res) => {
-      if (res.status === 200) {
-        getCompanyCurrency();
-        purchaseCategoryFetch();
+  const getParentGrnDetails = useCallback(
+    parentId => {
+      goodsReceivedNoteCreateAction.getPOById(parentId).then(res => {
+        if (res.status === 200) {
+          getCompanyCurrency();
+          purchaseCategoryFetch();
 
-        const lineItems = res.data.poQuatationLineItemRequestModelList || [];
+          const lineItems = res.data.poQuatationLineItemRequestModelList || [];
 
-        setValue('poApproveDate', res.data.poApproveDate ? dayjs(res.data.poApproveDate).format('DD-MM-YYYY') : '');
-        setValue('supplierId', res.data.supplierId || '');
-        setValue('grnNumber', res.data.grnNumber || '');
-        setValue('totalVatAmount', res.data.totalVatAmount || 0);
-        setValue('total_excise', res.data.totalExciseAmount || 0);
-        setValue('totalAmount', res.data.totalAmount || 0);
-        setValue('total_net', 0);
-        setValue('grnRemarks', res.data.grnRemarks || '');
-        setValue('lineItemsString', lineItems);
-        setValue('supplierReferenceNumber', res.data.supplierReferenceNumber || '');
-        setValue('rfqNumber', res.data.rfqNumber || '');
+          setValue(
+            'poApproveDate',
+            res.data.poApproveDate ? dayjs(res.data.poApproveDate).format('DD-MM-YYYY') : ''
+          );
+          setValue('supplierId', res.data.supplierId || '');
+          setValue('grnNumber', res.data.grnNumber || '');
+          setValue('totalVatAmount', res.data.totalVatAmount || 0);
+          setValue('total_excise', res.data.totalExciseAmount || 0);
+          setValue('totalAmount', res.data.totalAmount || 0);
+          setValue('total_net', 0);
+          setValue('grnRemarks', res.data.grnRemarks || '');
+          setValue('lineItemsString', lineItems);
+          setValue('supplierReferenceNumber', res.data.supplierReferenceNumber || '');
+          setValue('rfqNumber', res.data.rfqNumber || '');
 
-        setData(lineItems);
-        setLoading(false);
+          setData(lineItems);
+          setLoading(false);
 
-        if (lineItems.length > 0) {
-          const maxId = Math.max(...lineItems.map((item) => item.id), 0);
-          setIdCount(maxId);
+          if (lineItems.length > 0) {
+            const maxId = Math.max(...lineItems.map(item => item.id), 0);
+            setIdCount(maxId);
 
-          let tmpSupplier_list = [];
-          supplier_list.forEach(item => {
-            let obj = { label: item.label.contactName, value: item.value };
-            tmpSupplier_list.push(obj);
-          });
+            let tmpSupplier_list = [];
+            supplier_list.forEach(item => {
+              let obj = { label: item.label.contactName, value: item.value };
+              tmpSupplier_list.push(obj);
+            });
 
-          const supplier = tmpSupplier_list &&
-            selectOptionsFactory
-              .renderOptions('label', 'value', tmpSupplier_list, strings.CustomerName)
-              .find(option => option.value == res.data.supplierId);
+            const supplier =
+              tmpSupplier_list &&
+              selectOptionsFactory
+                .renderOptions('label', 'value', tmpSupplier_list, strings.CustomerName)
+                .find(option => option.value == res.data.supplierId);
 
-          setValue('supplierId', supplier);
-          setValue('currency', getCurrency(res.data.supplierId));
-          setValue('grnRemarks', res.data.grnRemarks);
+            setValue('supplierId', supplier);
+            setValue('currency', getCurrency(res.data.supplierId));
+            setValue('grnRemarks', res.data.grnRemarks);
 
-          const po = selectOptionsFactory
-            .renderOptions('label', 'value', rfq_list, 'PO Number')
-            .find(option => option.label == res.data.rfqNumber);
+            const po = selectOptionsFactory
+              .renderOptions('label', 'value', rfq_list, 'PO Number')
+              .find(option => option.label == res.data.rfqNumber);
 
-          setValue('rfqNumber', po);
-          addRow();
-        } else {
-          setIdCount(0);
+            setValue('rfqNumber', po);
+            addRow();
+          } else {
+            setIdCount(0);
+          }
+
+          getCurrency(res.data.supplierId);
         }
-
-        getCurrency(res.data.supplierId);
-      }
-    });
-  }, [goodsReceivedNoteCreateAction, getCompanyCurrency, purchaseCategoryFetch, supplier_list, rfq_list, getCurrency, setValue]);
+      });
+    },
+    [
+      goodsReceivedNoteCreateAction,
+      getCompanyCurrency,
+      purchaseCategoryFetch,
+      supplier_list,
+      rfq_list,
+      getCurrency,
+      setValue,
+    ]
+  );
 
   const getInitialData = useCallback(() => {
     getInvoiceNo();
     goodsReceivedNoteAction.getSupplierList(contactType);
     goodsReceivedNoteAction.getPurchaseOrderListForDropdown();
-    currencyConvertActions.getCurrencyConversionList().then((response) => {
+    currencyConvertActions.getCurrencyConversionList().then(response => {
       setValue('currencyCode', response.data ? parseInt(response.data[0].currencyCode) : '');
     });
-    goodsReceivedNoteAction.getInvoicePrefix().then((response) => {
+    goodsReceivedNoteAction.getInvoicePrefix().then(response => {
       setPrefix(response.data);
     });
     goodsReceivedNoteAction.getVatList();
@@ -456,7 +498,17 @@ const CreatePurchaseOrder = ({
     purchaseCategoryFetch();
     salesCategoryFetch();
     getCompanyCurrency();
-  }, [goodsReceivedNoteAction, currencyConvertActions, ProductActions, getInvoiceNo, purchaseCategoryFetch, salesCategoryFetch, getCompanyCurrency, contactType, setValue]);
+  }, [
+    goodsReceivedNoteAction,
+    currencyConvertActions,
+    ProductActions,
+    getInvoiceNo,
+    purchaseCategoryFetch,
+    salesCategoryFetch,
+    getCompanyCurrency,
+    contactType,
+    setValue,
+  ]);
 
   useEffect(() => {
     goodsReceivedNoteAction.getVatList();
@@ -504,13 +556,19 @@ const CreatePurchaseOrder = ({
 
   const selectItem = (e, row, name) => {
     const newData = [...data];
-    const idx = newData.findIndex((obj) => obj.id === row.id);
+    const idx = newData.findIndex(obj => obj.id === row.id);
 
     if (idx !== -1) {
       newData[idx][name] = e;
       setData(newData);
 
-      if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity' || name === 'poQuantity' || name === 'grnReceivedQuantity') {
+      if (
+        name === 'unitPrice' ||
+        name === 'vatCategoryId' ||
+        name === 'quantity' ||
+        name === 'poQuantity' ||
+        name === 'grnReceivedQuantity'
+      ) {
         updateAmount(newData);
       }
 
@@ -518,14 +576,15 @@ const CreatePurchaseOrder = ({
     }
   };
 
-  const updateAmount = (dataItems) => {
+  const updateAmount = dataItems => {
     let total_net = 0;
     let total_excise = 0;
     let total_vat = 0;
     let discount = 0;
 
-    dataItems.forEach((obj) => {
-      const index = obj.vatCategoryId !== '' ? vat_list.findIndex((item) => item.id === +obj.vatCategoryId) : '';
+    dataItems.forEach(obj => {
+      const index =
+        obj.vatCategoryId !== '' ? vat_list.findIndex(item => item.id === +obj.vatCategoryId) : '';
       const vat = index !== '' && index !== -1 ? vat_list[index].vat : 0;
 
       let net_value = 0;
@@ -565,7 +624,8 @@ const CreatePurchaseOrder = ({
       let val1 = 0;
 
       if (obj.discountType === 'PERCENTAGE') {
-        val = ((+net_value - +(net_value * obj.discount) / 100) * vat * obj.grnReceivedQuantity) / 100;
+        val =
+          ((+net_value - +(net_value * obj.discount) / 100) * vat * obj.grnReceivedQuantity) / 100;
         val1 = (+net_value - +(net_value * obj.discount) / 100) * obj.grnReceivedQuantity;
       } else if (obj.discountType === 'FIXED') {
         val = (net_value * obj.grnReceivedQuantity - obj.discount) * (vat / 100);
@@ -594,9 +654,9 @@ const CreatePurchaseOrder = ({
   };
 
   const prductValue = (e, row, name) => {
-    const result = product_list.find((item) => item.id === parseInt(e));
+    const result = product_list.find(item => item.id === parseInt(e));
     const newData = [...data];
-    const idx = newData.findIndex((obj) => obj.id === row.id);
+    const idx = newData.findIndex(obj => obj.id === row.id);
 
     if (idx !== -1 && result) {
       newData[idx]['unitPrice'] = result.unitPrice;
@@ -619,13 +679,13 @@ const CreatePurchaseOrder = ({
 
   const deleteRow = (e, row) => {
     e.preventDefault();
-    const newData = data.filter((obj) => obj.id !== row.id);
+    const newData = data.filter(obj => obj.id !== row.id);
     setValue('lineItemsString', newData);
     setData(newData);
     updateAmount(newData);
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     e.preventDefault();
     let file = e.target.files[0];
     if (file) {
@@ -634,7 +694,7 @@ const CreatePurchaseOrder = ({
     }
   };
 
-  const onSubmit = (formData) => {
+  const onSubmit = formData => {
     if (exist) {
       setError('po_number', {
         type: 'manual',
@@ -673,209 +733,239 @@ const CreatePurchaseOrder = ({
     submitData.append('currencyCode', supplierCurrency);
     submitData.append('supplierReferenceNumber', formData.supplierReferenceNumber || '');
 
-    goodsReceivedNoteCreateAction.createGNR(submitData).then((res) => {
-      setDisabled(false);
-      commonActions.tostifyAlert('success', res.data ? res.data.message : 'Goods Received Note Created Successfully');
+    goodsReceivedNoteCreateAction
+      .createGNR(submitData)
+      .then(res => {
+        setDisabled(false);
+        commonActions.tostifyAlert(
+          'success',
+          res.data ? res.data.message : 'Goods Received Note Created Successfully'
+        );
 
-      if (createMore) {
-        setCreateMore(false);
-        setSupplierCurrency('');
-        setData([
-          {
-            id: 0,
-            description: '',
-            quantity: 1,
-            unitPrice: '',
-            grnReceivedQuantity: 1,
-            vatCategoryId: '',
-            exciseTaxId: '',
-            exciseAmount: '',
-            subTotal: 0,
-            vatAmount: 0,
-            productId: '',
-            isExciseTaxExclusive: '',
-            unitType: '',
-            unitTypeId: '',
-          },
-        ]);
+        if (createMore) {
+          setCreateMore(false);
+          setSupplierCurrency('');
+          setData([
+            {
+              id: 0,
+              description: '',
+              quantity: 1,
+              unitPrice: '',
+              grnReceivedQuantity: 1,
+              vatCategoryId: '',
+              exciseTaxId: '',
+              exciseAmount: '',
+              subTotal: 0,
+              vatAmount: 0,
+              productId: '',
+              isExciseTaxExclusive: '',
+              unitType: '',
+              unitTypeId: '',
+            },
+          ]);
+          setLoading(false);
+          getInvoiceNo();
+          setValue('lineItemsString', data);
+        } else {
+          history.push('/admin/expense/goods-received-note');
+          setLoading(false);
+        }
+      })
+      .catch(err => {
+        setDisabled(false);
         setLoading(false);
-        getInvoiceNo();
-        setValue('lineItemsString', data);
-      } else {
-        history.push('/admin/expense/goods-received-note');
-        setLoading(false);
-      }
-    }).catch((err) => {
-      setDisabled(false);
-      setLoading(false);
-      commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Goods Received Note Created Unsuccessfully');
-    });
+        commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Goods Received Note Created Unsuccessfully'
+        );
+      });
   };
 
   const columns = useMemo(() => {
     return [
-        {
-            accessorKey: 'action',
-            header: '',
-            size: 50,
-            cell: ({ row }) => (row.original['productId'] != '' ? (
-                <Button
-                    size="sm"
-                    className="btn-twitter btn-brand icon"
-                    onClick={(e) => {
-                        deleteRow(e, row.original);
+      {
+        accessorKey: 'action',
+        header: '',
+        size: 50,
+        cell: ({ row }) =>
+          row.original['productId'] != '' ? (
+            <Button
+              size="sm"
+              className="btn-twitter btn-brand icon"
+              onClick={e => {
+                deleteRow(e, row.original);
+              }}
+            >
+              <i className="fas fa-trash"></i>
+            </Button>
+          ) : (
+            ''
+          ),
+      },
+      {
+        accessorKey: 'productId',
+        header: strings.PRODUCT,
+        size: 200,
+        cell: ({ row }) => {
+          const idx = data.findIndex(obj => obj.id === row.original.id);
+          return (
+            <>
+              <Select
+                options={
+                  product_list
+                    ? selectOptionsFactory.renderOptions('name', 'id', product_list, 'Product')
+                    : []
+                }
+                value={
+                  product_list &&
+                  selectOptionsFactory
+                    .renderOptions('name', 'id', product_list, 'Product')
+                    .find(option => option.value === +row.original.productId)
+                }
+                onChange={e => {
+                  if (e && e.label !== 'Select Product') {
+                    selectItem(e.value, row.original, 'productId');
+                    prductValue(e.value, row.original);
+                    if (checkedRow() === false) addRow();
+                  }
+                }}
+                className={`${
+                  errors.lineItemsString &&
+                  errors.lineItemsString[parseInt(idx, 10)] &&
+                  errors.lineItemsString[parseInt(idx, 10)].productId
+                    ? 'is-invalid'
+                    : ''
+                }`}
+              />
+              {errors.lineItemsString &&
+                errors.lineItemsString[parseInt(idx, 10)] &&
+                errors.lineItemsString[parseInt(idx, 10)].productId && (
+                  <div className="invalid-feedback">
+                    {errors.lineItemsString[parseInt(idx, 10)].productId.message}
+                  </div>
+                )}
+              {row.original['productId'] != '' ? (
+                <div className="mt-1">
+                  <Input
+                    type="text"
+                    maxLength="250"
+                    value={row.original['description'] || ''}
+                    onChange={e => {
+                      selectItem(e.target.value, row.original, 'description');
                     }}
-                >
-                    <i className="fas fa-trash"></i>
-                </Button>
-            ) : '')
+                    placeholder={strings.Description}
+                    className={`form-control ${
+                      errors.lineItemsString &&
+                      errors.lineItemsString[parseInt(idx, 10)] &&
+                      errors.lineItemsString[parseInt(idx, 10)].description
+                        ? 'is-invalid'
+                        : ''
+                    }`}
+                  />
+                </div>
+              ) : (
+                ''
+              )}
+            </>
+          );
         },
-        {
-            accessorKey: 'productId',
-            header: strings.PRODUCT,
-            size: 200,
-            cell: ({ row }) => {
-                const idx = data.findIndex((obj) => obj.id === row.original.id);
-                return (
-                    <>
-                        <Select
-                            options={product_list ? selectOptionsFactory.renderOptions('name', 'id', product_list, 'Product') : []}
-                            value={
-                                product_list &&
-                                selectOptionsFactory
-                                    .renderOptions('name', 'id', product_list, 'Product')
-                                    .find((option) => option.value === +row.original.productId)
-                            }
-                            onChange={(e) => {
-                                if (e && e.label !== 'Select Product') {
-                                    selectItem(e.value, row.original, 'productId');
-                                    prductValue(e.value, row.original);
-                                    if (checkedRow() === false) addRow();
-                                }
-                            }}
-                            className={`${
-                                errors.lineItemsString &&
-                                errors.lineItemsString[parseInt(idx, 10)] &&
-                                errors.lineItemsString[parseInt(idx, 10)].productId
-                                    ? 'is-invalid'
-                                    : ''
-                            }`}
-                        />
-                        {errors.lineItemsString &&
-                            errors.lineItemsString[parseInt(idx, 10)] &&
-                            errors.lineItemsString[parseInt(idx, 10)].productId && (
-                                <div className="invalid-feedback">
-                                    {errors.lineItemsString[parseInt(idx, 10)].productId.message}
-                                </div>
-                            )}
-                        {row.original['productId'] != '' ? (
-                            <div className="mt-1">
-                                <Input
-                                    type="text"
-                                    maxLength="250"
-                                    value={row.original['description'] || ''}
-                                    onChange={(e) => {
-                                        selectItem(e.target.value, row.original, 'description');
-                                    }}
-                                    placeholder={strings.Description}
-                                    className={`form-control ${
-                                        errors.lineItemsString &&
-                                        errors.lineItemsString[parseInt(idx, 10)] &&
-                                        errors.lineItemsString[parseInt(idx, 10)].description
-                                            ? 'is-invalid'
-                                            : ''
-                                    }`}
-                                />
-                            </div>
-                        ) : ''}
-                    </>
-                );
-            }
+      },
+      {
+        accessorKey: 'grnReceivedQuantity',
+        header: strings.RECEIVEDQUANTITY,
+        size: 150,
+        cell: ({ row }) => {
+          const idx = data.findIndex(obj => obj.id === row.original.id);
+          return (
+            <div>
+              <div className="input-group">
+                <Input
+                  type="text"
+                  maxLength="10"
+                  min="0"
+                  value={row.original['grnReceivedQuantity'] || 0}
+                  onChange={e => {
+                    if (e.target.value === '' || regEx.test(e.target.value)) {
+                      selectItem(e.target.value, row.original, 'grnReceivedQuantity');
+                    }
+                  }}
+                  placeholder={strings.Quantity}
+                  className={`form-control w-50 ${
+                    errors.lineItemsString &&
+                    errors.lineItemsString[parseInt(idx, 10)] &&
+                    errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity
+                      ? 'is-invalid'
+                      : ''
+                  }`}
+                />
+                {row.original['productId'] != '' ? (
+                  <Input value={row.original['unitType']} disabled />
+                ) : (
+                  ''
+                )}
+              </div>
+              {errors.lineItemsString &&
+                errors.lineItemsString[parseInt(idx, 10)] &&
+                errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity && (
+                  <div className="invalid-feedback">
+                    {errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity.message}
+                  </div>
+                )}
+            </div>
+          );
         },
-        {
-            accessorKey: 'grnReceivedQuantity',
-            header: strings.RECEIVEDQUANTITY,
-            size: 150,
-            cell: ({ row }) => {
-                const idx = data.findIndex((obj) => obj.id === row.original.id);
-                return (
-                    <div>
-                        <div className="input-group">
-                            <Input
-                                type="text"
-                                maxLength="10"
-                                min="0"
-                                value={row.original['grnReceivedQuantity'] || 0}
-                                onChange={(e) => {
-                                    if (e.target.value === '' || regEx.test(e.target.value)) {
-                                        selectItem(e.target.value, row.original, 'grnReceivedQuantity');
-                                    }
-                                }}
-                                placeholder={strings.Quantity}
-                                className={`form-control w-50 ${
-                                    errors.lineItemsString &&
-                                    errors.lineItemsString[parseInt(idx, 10)] &&
-                                    errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity
-                                        ? 'is-invalid'
-                                        : ''
-                                }`}
-                            />
-                            {row.original['productId'] != '' ? <Input value={row.original['unitType']} disabled /> : ''}
-                        </div>
-                        {errors.lineItemsString &&
-                            errors.lineItemsString[parseInt(idx, 10)] &&
-                            errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity && (
-                                <div className="invalid-feedback">{errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity.message}</div>
-                            )}
-                    </div>
-                )
-            }
+      },
+      {
+        accessorKey: 'quantity',
+        header: strings.POQUANTITY,
+        size: 150,
+        cell: ({ row }) => {
+          const idx = data.findIndex(obj => obj.id === row.original.id);
+          return (
+            <div>
+              <div className="input-group">
+                <Input
+                  disabled
+                  type="number"
+                  min="0"
+                  value={row.original['quantity'] || 0}
+                  onChange={e => {
+                    if (e.target.value === '' || regEx.test(e.target.value)) {
+                      selectItem(e.target.value, row.original, 'quantity');
+                    }
+                  }}
+                  placeholder={strings.Quantity}
+                  className={`form-control w-50 ${
+                    errors.lineItemsString &&
+                    errors.lineItemsString[parseInt(idx, 10)] &&
+                    errors.lineItemsString[parseInt(idx, 10)].quantity
+                      ? 'is-invalid'
+                      : ''
+                  }`}
+                />
+                {row.original['productId'] != '' ? (
+                  <Input value={row.original['unitType']} disabled />
+                ) : (
+                  ''
+                )}
+              </div>
+              {errors.lineItemsString &&
+                errors.lineItemsString[parseInt(idx, 10)] &&
+                errors.lineItemsString[parseInt(idx, 10)].quantity && (
+                  <div className="invalid-feedback">
+                    {errors.lineItemsString[parseInt(idx, 10)].quantity.message}
+                  </div>
+                )}
+            </div>
+          );
         },
-        {
-            accessorKey: 'quantity',
-            header: strings.POQUANTITY,
-            size: 150,
-            cell: ({ row }) => {
-                const idx = data.findIndex((obj) => obj.id === row.original.id);
-                return (
-                    <div>
-                        <div className="input-group">
-                            <Input
-                                disabled
-                                type="number"
-                                min="0"
-                                value={row.original['quantity'] || 0}
-                                onChange={(e) => {
-                                    if (e.target.value === '' || regEx.test(e.target.value)) {
-                                        selectItem(e.target.value, row.original, 'quantity');
-                                    }
-                                }}
-                                placeholder={strings.Quantity}
-                                className={`form-control w-50 ${
-                                    errors.lineItemsString &&
-                                    errors.lineItemsString[parseInt(idx, 10)] &&
-                                    errors.lineItemsString[parseInt(idx, 10)].quantity
-                                        ? 'is-invalid'
-                                        : ''
-                                }`}
-                            />
-                            {row.original['productId'] != '' ? <Input value={row.original['unitType']} disabled /> : ''}
-                        </div>
-                        {errors.lineItemsString &&
-                            errors.lineItemsString[parseInt(idx, 10)] &&
-                            errors.lineItemsString[parseInt(idx, 10)].quantity && (
-                                <div className="invalid-feedback">{errors.lineItemsString[parseInt(idx, 10)].quantity.message}</div>
-                            )}
-                    </div>
-                )
-            }
-        }
+      },
     ];
   }, [data, product_list, errors, touchedFields, strings]);
 
   // ... (Other functions: getPoDetails, getCurrentUser, closeSupplierModal, closeProductModal, checkedRow)
   // I need to implement checkedRow and others that I skipped but are used in columns/renders.
-  
+
   const checkedRow = () => {
     if (data.length > 0) {
       let length = data.length - 1;
@@ -890,7 +980,7 @@ const CreatePurchaseOrder = ({
     }
   };
 
-  const getCurrentUser = (contactData) => {
+  const getCurrentUser = contactData => {
     let option;
     if (contactData.label || contactData.value) {
       option = contactData;
@@ -901,7 +991,9 @@ const CreatePurchaseOrder = ({
       };
     }
 
-    const result = currency_convert_list.filter((obj) => obj.currencyCode === contactData.currencyCode);
+    const result = currency_convert_list.filter(
+      obj => obj.currencyCode === contactData.currencyCode
+    );
 
     setSupplierCurrency(contactData.currencyCode);
     setSupplierCurrencyDes(result[0] && result[0].currencyName ? result[0].currencyName : 'AED');
@@ -921,7 +1013,7 @@ const CreatePurchaseOrder = ({
 
   const getPoDetails = (e, rowValue) => {
     if (e && e.label !== 'Select RFQ') {
-      purchaseOrderDetailsAction.getPOById(e.value).then((response) => {
+      purchaseOrderDetailsAction.getPOById(e.value).then(response => {
         const poData = response.data;
 
         setValue('supplierId', {
@@ -940,7 +1032,7 @@ const CreatePurchaseOrder = ({
     }
   };
 
-  const closeSupplierModal = (res) => {
+  const closeSupplierModal = res => {
     if (res) {
       goodsReceivedNoteAction.getSupplierList(contactType);
       getInvoiceNo();
@@ -988,19 +1080,30 @@ const CreatePurchaseOrder = ({
                                 control={control}
                                 render={({ field }) => (
                                   <Select
-                                    isDisabled={location.state && location.state.poId ? true : false}
+                                    isDisabled={
+                                      location.state && location.state.poId ? true : false
+                                    }
                                     styles={selectStyles}
                                     id="rfqNumber"
                                     placeholder={strings.Select + strings.PONumber}
-                                    options={rfq_list ? selectOptionsFactory.renderOptions('label', 'value', rfq_list, 'PO Number') : []}
+                                    options={
+                                      rfq_list
+                                        ? selectOptionsFactory.renderOptions(
+                                            'label',
+                                            'value',
+                                            rfq_list,
+                                            'PO Number'
+                                          )
+                                        : []
+                                    }
                                     value={
                                       rfq_list && location.state && location.state.poId
                                         ? selectOptionsFactory
                                             .renderOptions('label', 'value', rfq_list, 'PO Number')
-                                            .find((option) => option.value == location.state.poId)
+                                            .find(option => option.value == location.state.poId)
                                         : field.value
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       if (option && option.value) {
                                         getPoDetails(option, option.value);
                                         field.onChange(option);
@@ -1012,7 +1115,9 @@ const CreatePurchaseOrder = ({
                                   />
                                 )}
                               />
-                              {errors.rfqNumber && <div className="invalid-feedback">{errors.rfqNumber.message}</div>}
+                              {errors.rfqNumber && (
+                                <div className="invalid-feedback">{errors.rfqNumber.message}</div>
+                              )}
                             </FormGroup>
                           </Col>
                           <Col lg={3}>
@@ -1031,8 +1136,11 @@ const CreatePurchaseOrder = ({
                                     id="po_number"
                                     placeholder={strings.InvoiceNumber}
                                     {...field}
-                                    onChange={(e) => {
-                                      if (e.target.value === '' || regExInvNum.test(e.target.value)) {
+                                    onChange={e => {
+                                      if (
+                                        e.target.value === '' ||
+                                        regExInvNum.test(e.target.value)
+                                      ) {
                                         field.onChange(e);
                                       }
                                       validationCheck(e.target.value);
@@ -1041,7 +1149,9 @@ const CreatePurchaseOrder = ({
                                   />
                                 )}
                               />
-                              {errors.po_number && <div className="invalid-feedback">{errors.po_number.message}</div>}
+                              {errors.po_number && (
+                                <div className="invalid-feedback">{errors.po_number.message}</div>
+                              )}
                             </FormGroup>
                           </Col>
                         </Row>
@@ -1059,10 +1169,21 @@ const CreatePurchaseOrder = ({
                                   <Select
                                     id="supplierId"
                                     placeholder={strings.Select + strings.SupplierName}
-                                    options={tmpSupplier_list ? selectOptionsFactory.renderOptions('label', 'value', tmpSupplier_list, 'Supplier Name') : []}
+                                    options={
+                                      tmpSupplier_list
+                                        ? selectOptionsFactory.renderOptions(
+                                            'label',
+                                            'value',
+                                            tmpSupplier_list,
+                                            'Supplier Name'
+                                          )
+                                        : []
+                                    }
                                     value={field.value}
-                                    isDisabled={location.state && location.state.poId ? true : false}
-                                    onChange={(option) => {
+                                    isDisabled={
+                                      location.state && location.state.poId ? true : false
+                                    }
+                                    onChange={option => {
                                       if (option && option.value) {
                                         setValue('currency', getCurrency(option.value));
                                         setExchange(getCurrency(option.value));
@@ -1075,7 +1196,9 @@ const CreatePurchaseOrder = ({
                                   />
                                 )}
                               />
-                              {errors.supplierId && <div className="invalid-feedback">{errors.supplierId.message}</div>}
+                              {errors.supplierId && (
+                                <div className="invalid-feedback">{errors.supplierId.message}</div>
+                              )}
                             </FormGroup>
                           </Col>
                           {!(location.state && location.state.poId) && (
@@ -1083,7 +1206,11 @@ const CreatePurchaseOrder = ({
                               <Label htmlFor="contactId" style={{ display: 'block' }}>
                                 {strings.AddNewSupplier}
                               </Label>
-                              <Button color="primary" className="btn-square" onClick={() => setOpenSupplierModal(true)}>
+                              <Button
+                                color="primary"
+                                className="btn-square"
+                                onClick={() => setOpenSupplierModal(true)}
+                              >
                                 <i className="fas fa-plus mr-1" />
                                 {strings.AddASupplier}
                               </Button>
@@ -1119,10 +1246,15 @@ const CreatePurchaseOrder = ({
                                     value={
                                       currency_convert_list &&
                                       selectCurrencyFactory
-                                        .renderOptions('currencyName', 'currencyCode', currency_convert_list, 'Currency')
-                                        .find((option) => option.value === supplierCurrency)
+                                        .renderOptions(
+                                          'currencyName',
+                                          'currencyCode',
+                                          currency_convert_list,
+                                          'Currency'
+                                        )
+                                        .find(option => option.value === supplierCurrency)
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       field.onChange(option);
                                       setExchange(option.value);
                                       setCurrency(option.value);
@@ -1131,7 +1263,9 @@ const CreatePurchaseOrder = ({
                                   />
                                 )}
                               />
-                              {errors.currency && <div className="invalid-feedback">{errors.currency.message}</div>}
+                              {errors.currency && (
+                                <div className="invalid-feedback">{errors.currency.message}</div>
+                              )}
                             </FormGroup>
                           </Col>
                         </Row>
@@ -1157,7 +1291,7 @@ const CreatePurchaseOrder = ({
                                     dropdownMode="select"
                                     dateFormat="dd-MM-yyyy"
                                     minDate={new Date()}
-                                    onChange={(value) => {
+                                    onChange={value => {
                                       field.onChange(value);
                                     }}
                                   />
@@ -1165,7 +1299,9 @@ const CreatePurchaseOrder = ({
                               />
                               {errors.poApproveDate && (
                                 <div className="invalid-feedback">
-                                  {errors.poApproveDate.message.includes('nullable()') ? 'Order date is required' : errors.poApproveDate.message}
+                                  {errors.poApproveDate.message.includes('nullable()')
+                                    ? 'Order date is required'
+                                    : errors.poApproveDate.message}
                                 </div>
                               )}
                             </FormGroup>
@@ -1173,7 +1309,9 @@ const CreatePurchaseOrder = ({
                           {watch('supplierReferenceNumber') && (
                             <Col lg={3}>
                               <FormGroup className="mb-3">
-                                <Label htmlFor="supplierReferenceNumber">{strings.SupplierReferenceNumber}</Label>
+                                <Label htmlFor="supplierReferenceNumber">
+                                  {strings.SupplierReferenceNumber}
+                                </Label>
                                 <Controller
                                   name="supplierReferenceNumber"
                                   control={control}
@@ -1190,7 +1328,9 @@ const CreatePurchaseOrder = ({
                                   )}
                                 />
                                 {errors.supplierReferenceNumber && (
-                                  <div className="invalid-feedback">{errors.supplierReferenceNumber.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.supplierReferenceNumber.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -1219,11 +1359,7 @@ const CreatePurchaseOrder = ({
                                 <div className="invalid-feedback">{errors.lineItemsString}</div>
                               </div>
                             )}
-                            <DataTable
-                                data={data}
-                                columns={columns}
-                                manualPagination={false}
-                            />
+                            <DataTable data={data} columns={columns} manualPagination={false} />
                           </Col>
                         </Row>
                         <hr />
@@ -1249,7 +1385,9 @@ const CreatePurchaseOrder = ({
                                       )}
                                     />
                                     {errors.grnRemarks && (
-                                      <div className="invalid-feedback">{errors.grnRemarks.message}</div>
+                                      <div className="invalid-feedback">
+                                        {errors.grnRemarks.message}
+                                      </div>
                                     )}
                                   </FormGroup>
                                 </Col>
@@ -1279,20 +1417,28 @@ const CreatePurchaseOrder = ({
                                           />
                                           {fileName && (
                                             <div>
-                                              <i className="fa fa-close" onClick={() => setFileName('')}></i> {fileName}
+                                              <i
+                                                className="fa fa-close"
+                                                onClick={() => setFileName('')}
+                                              ></i>{' '}
+                                              {fileName}
                                             </div>
                                           )}
                                         </div>
                                       )}
                                     />
                                     {errors.attachmentFile && (
-                                      <div className="invalid-file">{errors.attachmentFile.message}</div>
+                                      <div className="invalid-file">
+                                        {errors.attachmentFile.message}
+                                      </div>
                                     )}
                                   </FormGroup>
                                 </Col>
                               </Row>
                               <FormGroup className="mb-3 hideAttachment">
-                                <Label htmlFor="receiptAttachmentDescription">{strings.AttachmentDescription}</Label>
+                                <Label htmlFor="receiptAttachmentDescription">
+                                  {strings.AttachmentDescription}
+                                </Label>
                                 <br />
                                 <Controller
                                   name="receiptAttachmentDescription"
@@ -1326,7 +1472,7 @@ const CreatePurchaseOrder = ({
                                       commonActions.fillManDatoryDetails();
                                     }
                                   } else {
-                                    let newData = data.filter((obj) => obj.productId !== '');
+                                    let newData = data.filter(obj => obj.productId !== '');
                                     setValue('lineItemsString', newData);
                                     updateAmount(newData);
                                   }
@@ -1334,7 +1480,8 @@ const CreatePurchaseOrder = ({
                                   handleSubmit(onSubmit)();
                                 }}
                               >
-                                <i className="fa fa-dot-circle-o"></i> {disabled ? 'Creating...' : strings.Create}
+                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                {disabled ? 'Creating...' : strings.Create}
                               </Button>
                               {!(location.state && location.state.parentId) && (
                                 <Button
@@ -1348,7 +1495,7 @@ const CreatePurchaseOrder = ({
                                         commonActions.fillManDatoryDetails();
                                       }
                                     } else {
-                                      let newData = data.filter((obj) => obj.productId !== '');
+                                      let newData = data.filter(obj => obj.productId !== '');
                                       setValue('lineItemsString', newData);
                                       updateAmount(newData);
                                     }
@@ -1383,10 +1530,10 @@ const CreatePurchaseOrder = ({
         </div>
         <SupplierModal
           openSupplierModal={openSupplierModal}
-          closeSupplierModal={(e) => {
+          closeSupplierModal={e => {
             closeSupplierModal(e);
           }}
-          getCurrentUser={(e) => {
+          getCurrentUser={e => {
             goodsReceivedNoteAction.getSupplierList(contactType);
             getCurrentUser(e);
           }}
@@ -1397,10 +1544,10 @@ const CreatePurchaseOrder = ({
         />
         <ProductModal
           openProductModal={openProductModal}
-          closeProductModal={(e) => {
+          closeProductModal={e => {
             closeProductModal(e);
           }}
-          getCurrentProduct={(e) => {
+          getCurrentProduct={e => {
             supplierInvoiceActions.getProductList();
             getCurrentProduct(e);
           }}

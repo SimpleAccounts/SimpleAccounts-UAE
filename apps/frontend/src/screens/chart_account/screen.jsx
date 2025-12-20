@@ -32,11 +32,9 @@ function ChartAccount() {
 
   // Redux state
   const transaction_category_list = useSelector(
-    (state) => state.chart_account.transaction_category_list
+    state => state.chart_account.transaction_category_list
   );
-  const transaction_type_list = useSelector(
-    (state) => state.chart_account.transaction_type_list
-  );
+  const transaction_type_list = useSelector(state => state.chart_account.transaction_type_list);
 
   // Actions
   const chartOfAccountActions = useMemo(
@@ -86,12 +84,12 @@ function ChartAccount() {
 
       chartOfAccountActions
         .getTransactionCategoryList(postData)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             setLoading(false);
           }
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
           setLoading(false);
         });
@@ -110,7 +108,7 @@ function ChartAccount() {
 
   // Navigate to detail
   const goToDetailPage = useCallback(
-    (row) => {
+    row => {
       if (row.editableFlag) {
         navigate('/admin/master/chart-account/detail', {
           state: { id: row.transactionCategoryId },
@@ -124,7 +122,7 @@ function ChartAccount() {
   const getCsvData = useCallback(() => {
     if (csvData.length === 0) {
       const obj = { paginationDisable: true };
-      chartOfAccountActions.getTransactionCategoryExportList(obj).then((res) => {
+      chartOfAccountActions.getTransactionCategoryExportList(obj).then(res => {
         if (res.status === 200) {
           setCsvData(res.data);
           setView(true);
@@ -153,14 +151,14 @@ function ChartAccount() {
     setHideForPrint(true);
     chartOfAccountActions
       .getTransactionCategoryList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           window.print();
           setHideForPrint(false);
           initializeData();
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setHideForPrint(false);
       });
@@ -180,9 +178,7 @@ function ChartAccount() {
         accessorKey: 'transactionCategoryName',
         header: strings.ACCOUNTNAME,
         cell: ({ row }) => (
-          <span
-            className={`${row.original.editableFlag ? 'text-primary cursor-pointer' : ''}`}
-          >
+          <span className={`${row.original.editableFlag ? 'text-primary cursor-pointer' : ''}`}>
             {row.original.transactionCategoryName}
           </span>
         ),
@@ -235,7 +231,7 @@ function ChartAccount() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!transaction_category_list?.data) return [];
-    return transaction_category_list.data.map((item) => ({
+    return transaction_category_list.data.map(item => ({
       transactionCategoryId: item.transactionCategoryId,
       transactionCategoryCode: item.transactionCategoryCode || '',
       transactionCategoryName: item.transactionCategoryName || '',
@@ -300,9 +296,7 @@ function ChartAccount() {
                 pageCount={
                   hideForPrint
                     ? 1
-                    : Math.ceil(
-                        (transaction_category_list?.count || 0) / pagination.pageSize
-                      )
+                    : Math.ceil((transaction_category_list?.count || 0) / pagination.pageSize)
                 }
                 onPaginationChange={setPagination}
                 pagination={pagination}

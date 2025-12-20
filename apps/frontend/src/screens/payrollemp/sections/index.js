@@ -4,10 +4,10 @@ import SalaryComponentVariable from './salaryComponentVariable.jsx';
 import SalaryComponentDeduction from './salaryComponentDeduction';
 import SalaryComponent from './salaryComponent.jsx';
 
-export { 
-    DesignationModal,
-    SalaryComponentFixed,
-    SalaryComponentVariable,
-    SalaryComponentDeduction,
-    SalaryComponent,
+export {
+  DesignationModal,
+  SalaryComponentFixed,
+  SalaryComponentVariable,
+  SalaryComponentDeduction,
+  SalaryComponent,
 };

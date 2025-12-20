@@ -54,12 +54,18 @@ const customStyles = {
 
 // Zod validation schema (same as original)
 const lineItemSchema = z.object({
-  quantity: z.union([z.string(), z.number()])
-    .refine((val) => Number(val) > 0, 'Quantity should be greater than 0'),
-  unitPrice: z.union([z.string(), z.number()])
-    .refine((val) => Number(val) > 0, 'Unit Price Should be Greater than 1'),
-  vatCategoryId: z.union([z.string(), z.number()]).refine((val) => val !== '' && val !== null, 'VAT is required'),
-  productId: z.union([z.string(), z.number()]).refine((val) => val !== '' && val !== null, 'Product is required'),
+  quantity: z
+    .union([z.string(), z.number()])
+    .refine(val => Number(val) > 0, 'Quantity should be greater than 0'),
+  unitPrice: z
+    .union([z.string(), z.number()])
+    .refine(val => Number(val) > 0, 'Unit Price Should be Greater than 1'),
+  vatCategoryId: z
+    .union([z.string(), z.number()])
+    .refine(val => val !== '' && val !== null, 'VAT is required'),
+  productId: z
+    .union([z.string(), z.number()])
+    .refine(val => val !== '' && val !== null, 'Product is required'),
   description: z.string().optional(),
   exciseTaxId: z.any().optional(),
   discountType: z.string().optional(),
@@ -73,44 +79,51 @@ const lineItemSchema = z.object({
   id: z.number().optional(),
 });
 
-const createRequestForQuotationSchema = z.object({
-  rfq_number: z.string().min(1, 'Invoice number is required'),
-  supplierId: z.object({
-    label: z.string(),
-    value: z.any(),
-  }).nullable().refine((val) => val !== null, 'Supplier is required'),
-  rfqReceiveDate: z.date({
-    required_error: 'Issue date is required',
-    invalid_type_error: 'Issue date is required',
-  }),
-  rfqExpiryDate: z.date({
-    required_error: 'Expiry date is required',
-    invalid_type_error: 'Expiry date is required',
-  }),
-  placeOfSupplyId: z.any().optional(),
-  currency: z.any().optional(),
-  exchangeRate: z.any().optional(),
-  notes: z.string().optional(),
-  receiptNumber: z.string().optional(),
-  receiptAttachmentDescription: z.string().optional(),
-  attachmentFile: z.any().optional(),
-  lineItemsString: z.array(lineItemSchema).min(1, 'Atleast one invoice sub detail is mandatory'),
-  taxType: z.boolean().optional(),
-  total_net: z.number().optional(),
-  totalVatAmount: z.number().optional(),
-  totalAmount: z.number().optional(),
-  total_excise: z.number().optional(),
-  discount: z.number().optional(),
-})
-.refine((data) => {
-  if (data.rfqReceiveDate && data.rfqExpiryDate) {
-    return new Date(data.rfqReceiveDate) <= new Date(data.rfqExpiryDate);
-  }
-  return true;
-}, {
-  message: 'Expiry date should be later than the issue date',
-  path: ['rfqExpiryDate'],
-});
+const createRequestForQuotationSchema = z
+  .object({
+    rfq_number: z.string().min(1, 'Invoice number is required'),
+    supplierId: z
+      .object({
+        label: z.string(),
+        value: z.any(),
+      })
+      .nullable()
+      .refine(val => val !== null, 'Supplier is required'),
+    rfqReceiveDate: z.date({
+      required_error: 'Issue date is required',
+      invalid_type_error: 'Issue date is required',
+    }),
+    rfqExpiryDate: z.date({
+      required_error: 'Expiry date is required',
+      invalid_type_error: 'Expiry date is required',
+    }),
+    placeOfSupplyId: z.any().optional(),
+    currency: z.any().optional(),
+    exchangeRate: z.any().optional(),
+    notes: z.string().optional(),
+    receiptNumber: z.string().optional(),
+    receiptAttachmentDescription: z.string().optional(),
+    attachmentFile: z.any().optional(),
+    lineItemsString: z.array(lineItemSchema).min(1, 'Atleast one invoice sub detail is mandatory'),
+    taxType: z.boolean().optional(),
+    total_net: z.number().optional(),
+    totalVatAmount: z.number().optional(),
+    totalAmount: z.number().optional(),
+    total_excise: z.number().optional(),
+    discount: z.number().optional(),
+  })
+  .refine(
+    data => {
+      if (data.rfqReceiveDate && data.rfqExpiryDate) {
+        return new Date(data.rfqReceiveDate) <= new Date(data.rfqExpiryDate);
+      }
+      return true;
+    },
+    {
+      message: 'Expiry date should be later than the issue date',
+      path: ['rfqExpiryDate'],
+    }
+  );
 
 const CreateRequestForQuotation = () => {
   const dispatch = useDispatch();
@@ -123,7 +136,7 @@ const CreateRequestForQuotation = () => {
     currency_convert_list,
     product_category_list,
     country_list,
-  } = useSelector((state) => ({
+  } = useSelector(state => ({
     product_list: state.request_for_quotation.product_list,
     supplier_list: state.request_for_quotation.supplier_list,
     excise_list: state.request_for_quotation.excise_list,
@@ -134,18 +147,20 @@ const CreateRequestForQuotation = () => {
 
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('Loading...');
-  const [data, setData] = useState([{
-    id: 0,
-    description: '',
-    quantity: 1,
-    unitPrice: '',
-    vatCategoryId: '',
-    exciseTaxId: '',
-    exciseAmount: '',
-    subTotal: 0,
-    vatAmount: 0,
-    productId: '',
-  }]);
+  const [data, setData] = useState([
+    {
+      id: 0,
+      description: '',
+      quantity: 1,
+      unitPrice: '',
+      vatCategoryId: '',
+      exciseTaxId: '',
+      exciseAmount: '',
+      subTotal: 0,
+      vatAmount: 0,
+      productId: '',
+    },
+  ]);
   const [idCount, setIdCount] = useState(0);
   const [taxType, setTaxType] = useState(false);
   const [openSupplierModal, setOpenSupplierModal] = useState(false);
@@ -177,14 +192,20 @@ const CreateRequestForQuotation = () => {
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, setValue, watch } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+  } = form;
 
   useEffect(() => {
     dispatch(RequestForQuotationAction.getVatList()).then(res => {
-        if (res.status === 200 && res.data) setVatList(res.data);
+      if (res.status === 200 && res.data) setVatList(res.data);
     });
     dispatch(RequestForQuotationCreateAction.getRfqNo()).then(res => {
-        setValue('rfq_number', res.data.toString());
+      setValue('rfq_number', res.data.toString());
     });
     dispatch(RequestForQuotationAction.getSupplierList(1));
     dispatch(RequestForQuotationAction.getProductList());
@@ -213,95 +234,104 @@ const CreateRequestForQuotation = () => {
 
   const deleteRow = (e, row) => {
     e.preventDefault();
-    const newData = data.filter((obj) => obj.id !== row.id);
+    const newData = data.filter(obj => obj.id !== row.id);
     setData(newData);
     setValue('lineItemsString', newData);
   };
 
-  const columns = useMemo(() => [
-    {
-      id: 'actions',
-      header: '',
-      size: 50,
-      cell: ({ row }) => (
-        row.original.productId !== '' && (
-          <Button
-            size="sm"
-            className="btn-twitter btn-brand icon"
-            disabled={data.length === 1}
-            onClick={e => deleteRow(e, row.original)}
-          >
-            <i className="fas fa-trash"></i>
-          </Button>
-        )
-      ),
-    },
-    {
-      accessorKey: 'productId',
-      header: strings.PRODUCT,
-      size: 300,
-      cell: ({ row }) => {
-        const idx = data.findIndex(obj => obj.id === row.original.id);
-        return (
-          <>
-            <Select
-              options={product_list ? selectOptionsFactory.renderOptions('name', 'id', product_list, 'Product') : []}
-              onChange={e => {
-                  if (e && e.label !== 'Select Product') {
-                      // Logic to update row and add new row
-                      addRow();
-                  }
-              }}
-              value={product_list && selectOptionsFactory.renderOptions('name', 'id', product_list, 'Product').find(option => option.value === +row.original.productId)}
-              placeholder={strings.Select + strings.Product}
-            />
-            {row.original.productId !== '' && (
-                <Input
-                    className="mt-1"
-                    type="text"
-                    value={row.original.description || ''}
-                    placeholder={strings.Description}
-                />
-            )}
-          </>
-        );
+  const columns = useMemo(
+    () => [
+      {
+        id: 'actions',
+        header: '',
+        size: 50,
+        cell: ({ row }) =>
+          row.original.productId !== '' && (
+            <Button
+              size="sm"
+              className="btn-twitter btn-brand icon"
+              disabled={data.length === 1}
+              onClick={e => deleteRow(e, row.original)}
+            >
+              <i className="fas fa-trash"></i>
+            </Button>
+          ),
       },
-    },
-    {
-      accessorKey: 'quantity',
-      header: strings.QUANTITY,
-      cell: ({ row }) => (
-        <Input type="number" value={row.original.quantity || 0} />
-      ),
-    },
-    {
-      accessorKey: 'unitPrice',
-      header: strings.UNITPRICE,
-      cell: ({ row }) => (
-        <Input type="number" value={row.original.unitPrice || 0} />
-      ),
-    },
-    {
-      accessorKey: 'vatCategoryId',
-      header: strings.VAT,
-      cell: ({ row }) => (
-        <Select
-          options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list, 'VAT') : []}
-          placeholder={strings.Select + strings.VAT}
-        />
-      ),
-    },
-    {
-      accessorKey: 'vatAmount',
-      header: strings.VATAMOUNT,
-      cell: ({ row }) => <div className="text-right">{row.original.vatAmount || 0}</div>,
-    },
-    {
-      accessorKey: 'subTotal',
-      header: strings.SUBTOTAL,
-      cell: ({ row }) => <div className="text-right">{row.original.subTotal || 0}</div>,
-    },
-  ], [data, product_list, vat_list]);
+      {
+        accessorKey: 'productId',
+        header: strings.PRODUCT,
+        size: 300,
+        cell: ({ row }) => {
+          const idx = data.findIndex(obj => obj.id === row.original.id);
+          return (
+            <>
+              <Select
+                options={
+                  product_list
+                    ? selectOptionsFactory.renderOptions('name', 'id', product_list, 'Product')
+                    : []
+                }
+                onChange={e => {
+                  if (e && e.label !== 'Select Product') {
+                    // Logic to update row and add new row
+                    addRow();
+                  }
+                }}
+                value={
+                  product_list &&
+                  selectOptionsFactory
+                    .renderOptions('name', 'id', product_list, 'Product')
+                    .find(option => option.value === +row.original.productId)
+                }
+                placeholder={strings.Select + strings.Product}
+              />
+              {row.original.productId !== '' && (
+                <Input
+                  className="mt-1"
+                  type="text"
+                  value={row.original.description || ''}
+                  placeholder={strings.Description}
+                />
+              )}
+            </>
+          );
+        },
+      },
+      {
+        accessorKey: 'quantity',
+        header: strings.QUANTITY,
+        cell: ({ row }) => <Input type="number" value={row.original.quantity || 0} />,
+      },
+      {
+        accessorKey: 'unitPrice',
+        header: strings.UNITPRICE,
+        cell: ({ row }) => <Input type="number" value={row.original.unitPrice || 0} />,
+      },
+      {
+        accessorKey: 'vatCategoryId',
+        header: strings.VAT,
+        cell: ({ row }) => (
+          <Select
+            options={
+              vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list, 'VAT') : []
+            }
+            placeholder={strings.Select + strings.VAT}
+          />
+        ),
+      },
+      {
+        accessorKey: 'vatAmount',
+        header: strings.VATAMOUNT,
+        cell: ({ row }) => <div className="text-right">{row.original.vatAmount || 0}</div>,
+      },
+      {
+        accessorKey: 'subTotal',
+        header: strings.SUBTOTAL,
+        cell: ({ row }) => <div className="text-right">{row.original.subTotal || 0}</div>,
+      },
+    ],
+    [data, product_list, vat_list]
+  );
 
   if (loading) {
     return <Loader loadingMsg={loadingMsg} />;
@@ -321,12 +351,8 @@ const CreateRequestForQuotation = () => {
             <Form onSubmit={handleSubmit(() => {})}>
               {/* Other Form Fields ... */}
               <hr />
-              
-              <DataTable
-                data={data}
-                columns={columns}
-                manualPagination={false}
-              />
+
+              <DataTable data={data} columns={columns} manualPagination={false} />
 
               {/* Totals and Buttons ... */}
             </Form>

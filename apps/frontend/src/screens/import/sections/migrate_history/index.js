@@ -1,6 +1,5 @@
-import screen from './screen.jsx'
-
+import screen from './screen.jsx';
 
 export default {
   screen,
-}
+};

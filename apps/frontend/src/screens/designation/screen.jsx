@@ -1,14 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  Row,
-  Col,
-} from 'reactstrap';
+import { Card, CardHeader, CardBody, Button, Row, Col } from 'reactstrap';
 import { Loader, ConfirmDeleteModal } from 'components';
 import * as DesignationActions from './actions';
 import { CommonActions } from 'services/global';
@@ -25,7 +18,7 @@ const Designation = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { designation_list } = useSelector((state) => ({
+  const { designation_list } = useSelector(state => ({
     designation_list: state.employeeDesignation.designation_list,
   }));
 
@@ -39,7 +32,7 @@ const Designation = () => {
   const [sorting, setSorting] = useState([]);
   const [filterData, setFilterData] = useState({
     id: '',
-    salaryRoleName: ''
+    salaryRoleName: '',
   });
 
   useEffect(() => {
@@ -61,33 +54,36 @@ const Designation = () => {
       sortingCol: sorting.length > 0 ? sorting[0].id : '',
     };
     const postData = { ...filterData, ...paginationData, ...sortingData };
-    
+
     dispatch(DesignationActions.getEmployeeDesignationList(postData))
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         toast.error(err && err.data ? err.data.message : 'Something Went Wrong');
       });
   };
 
-  const goToDetail = (row) => {
+  const goToDetail = row => {
     navigate('/admin/payroll/config/detailEmployeeDesignation', { state: { id: row.id } });
   };
 
-  const columns = useMemo(() => [
-    {
-      accessorKey: 'designationId',
-      header: strings.DESIGNATIONID,
-    },
-    {
-      accessorKey: 'designationName',
-      header: strings.DESIGNATIONNAME,
-    },
-  ], []);
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'designationId',
+        header: strings.DESIGNATIONID,
+      },
+      {
+        accessorKey: 'designationName',
+        header: strings.DESIGNATIONNAME,
+      },
+    ],
+    []
+  );
 
   if (loading) {
     return <Loader />;
@@ -113,7 +109,7 @@ const Designation = () => {
               <Row>
                 <Col lg={12}>
                   <div className="d-flex justify-content-end">
-                    <div style={{ width: "1650px" }}>
+                    <div style={{ width: '1650px' }}>
                       <Button
                         color="primary"
                         className="btn-square pull-right mb-2 mr-2"
@@ -131,7 +127,11 @@ const Designation = () => {
                       data={designation_list?.data || []}
                       columns={columns}
                       manualPagination={true}
-                      pageCount={designation_list?.count ? Math.ceil(designation_list.count / pagination.pageSize) : 0}
+                      pageCount={
+                        designation_list?.count
+                          ? Math.ceil(designation_list.count / pagination.pageSize)
+                          : 0
+                      }
                       onPaginationChange={setPagination}
                       pagination={pagination}
                       manualSorting={true}

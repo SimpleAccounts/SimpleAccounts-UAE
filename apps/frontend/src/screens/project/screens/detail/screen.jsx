@@ -30,7 +30,7 @@ import { selectOptionsFactory, selectStyles } from 'utils';
 
 import './style.scss';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     currency_list: state.project.currency_list,
     country_list: state.project.country_list,
@@ -39,7 +39,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     projectActions: bindActionCreators(ProjectActions, dispatch),
     detailProjectActions: bindActionCreators(DetailProjectActions, dispatch),
@@ -113,7 +113,7 @@ const DetailProject = ({
     if (location.state?.id) {
       detailProjectActions
         .getProjectById(location.state.id)
-        .then((res) => {
+        .then(res => {
           projectActions.getContactList();
           projectActions.getCountryList();
           projectActions.getCurrencyList();
@@ -129,11 +129,8 @@ const DetailProject = ({
             setLoading(false);
           }
         })
-        .catch((err) => {
-          commonActions.tostifyAlert(
-            'error',
-            err?.data?.message || 'Something Went Wrong'
-          );
+        .catch(err => {
+          commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
           setLoading(false);
         });
     } else {
@@ -161,14 +158,14 @@ const DetailProject = ({
   };
 
   // Show Success Toast
-  const success = (msg) => {
+  const success = msg => {
     toast.success(msg, {
       position: 'top-right',
     });
   };
 
   // Update Project
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     const postData = {
       projectId: currentProjectId,
       projectName: data.projectName || '',
@@ -179,17 +176,14 @@ const DetailProject = ({
 
     detailProjectActions
       .updateProject(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert('success', 'Project Updated successfully!');
           history.push('/admin/master/project');
         }
       })
-      .catch((err) => {
-        commonActions.tostifyAlert(
-          'error',
-          err?.data?.message || 'Something Went Wrong'
-        );
+      .catch(err => {
+        commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
 
@@ -199,8 +193,7 @@ const DetailProject = ({
         <b>Delete Project?</b>
       </text>
     );
-    const message =
-      'This Project will be deleted permanently and cannot be recovered. ';
+    const message = 'This Project will be deleted permanently and cannot be recovered. ';
     setDialog(
       <ConfirmDeleteModal
         isOpen={true}
@@ -215,17 +208,14 @@ const DetailProject = ({
   const removeProject = () => {
     detailProjectActions
       .deleteProject(currentProjectId)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           success('Project Deleted Successfully');
           history.push('/admin/master/project');
         }
       })
-      .catch((err) => {
-        commonActions.tostifyAlert(
-          'error',
-          err?.data?.message || 'Something Went Wrong'
-        );
+      .catch(err => {
+        commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
 
@@ -295,15 +285,13 @@ const DetailProject = ({
                                     id="name"
                                     placeholder="Enter Project Name"
                                     {...field}
-                                    onChange={(e) => handleProjectNameChange(e, field.onChange)}
+                                    onChange={e => handleProjectNameChange(e, field.onChange)}
                                     className={errors.projectName ? 'is-invalid' : ''}
                                   />
                                 )}
                               />
                               {errors.projectName && (
-                                <div className="invalid-feedback">
-                                  {errors.projectName.message}
-                                </div>
+                                <div className="invalid-feedback">{errors.projectName.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -320,11 +308,9 @@ const DetailProject = ({
                                     {...field}
                                     value={
                                       contact_list &&
-                                      contact_list.find(
-                                        (option) => option.value === +field.value
-                                      )
+                                      contact_list.find(option => option.value === +field.value)
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       if (option?.value) {
                                         field.onChange(option.value.toString());
                                       } else {
@@ -380,7 +366,7 @@ const DetailProject = ({
                                     id="expenseBudget"
                                     placeholder="Enter Expense Budgets"
                                     {...field}
-                                    onChange={(e) => handleExpenseBudgetChange(e, field.onChange)}
+                                    onChange={e => handleExpenseBudgetChange(e, field.onChange)}
                                     className={errors.expenseBudget ? 'is-invalid' : ''}
                                   />
                                 )}
@@ -404,7 +390,7 @@ const DetailProject = ({
                                     id="revenueBudget"
                                     placeholder="Enter VAT Revenue Budget"
                                     {...field}
-                                    onChange={(e) => handleRevenueBudgetChange(e, field.onChange)}
+                                    onChange={e => handleRevenueBudgetChange(e, field.onChange)}
                                     className={errors.revenueBudget ? 'is-invalid' : ''}
                                   />
                                 )}
@@ -445,7 +431,10 @@ const DetailProject = ({
                           </Col>
                         </Row>
                         <Row>
-                          <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
+                          <Col
+                            lg={12}
+                            className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
+                          >
                             <FormGroup>
                               <Button
                                 color="danger"
@@ -457,11 +446,7 @@ const DetailProject = ({
                               </Button>
                             </FormGroup>
                             <FormGroup className="text-right">
-                              <Button
-                                type="submit"
-                                color="primary"
-                                className="btn-square mr-3"
-                              >
+                              <Button type="submit" color="primary" className="btn-square mr-3">
                                 <i className="fa fa-dot-circle-o"></i> Update
                               </Button>
                               <Button

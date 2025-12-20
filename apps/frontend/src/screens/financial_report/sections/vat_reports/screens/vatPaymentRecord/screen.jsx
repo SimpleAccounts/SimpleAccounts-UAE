@@ -18,7 +18,7 @@ const VatPaymentRecord = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { version, company_profile } = useSelector((state) => ({
+  const { version, company_profile } = useSelector(state => ({
     version: state.common.version,
     company_profile: state.reports.company_profile,
   }));
@@ -52,21 +52,21 @@ const VatPaymentRecord = () => {
       sortingCol: sorting.length > 0 ? sorting[0].id : '',
     };
     const postData = { ...filterData, ...paginationData, ...sortingData };
-    
+
     dispatch(VatreportAction.getVatPaymentHistoryList(postData))
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setVatReportDataList(res.data);
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         toast.error(err && err.data ? err.data.message : 'Something Went Wrong');
         setLoading(false);
       });
   };
 
-  const renderDate = (cell) => {
+  const renderDate = cell => {
     return cell ? dayjs(cell).format('DD-MM-YYYY') : '-';
   };
 
@@ -80,37 +80,48 @@ const VatPaymentRecord = () => {
     else return '---';
   };
 
-  const renderTaxReturns = (cell) => {
+  const renderTaxReturns = cell => {
     let dateArr = cell ? cell.split(' ') : [];
     return <>{dateArr[0].replaceAll('/', '-')}</>;
   };
 
-  const columns = useMemo(() => [
-    {
-      accessorKey: 'vatNumber',
-      header: 'VAT Report No.',
-    },
-    {
-      accessorKey: 'taxReturns',
-      header: 'VAT Return',
-      cell: ({ row }) => renderTaxReturns(row.original.taxReturns),
-    },
-    {
-      accessorKey: 'dateOfFiling',
-      header: 'Date of Filing',
-      cell: ({ row }) => renderDate(row.original.dateOfFiling),
-    },
-    {
-      accessorKey: 'amountPaid',
-      header: 'Amount Paid',
-      cell: ({ row }) => <div className="text-right">{renderAmount(row.original.amountPaid, row.original.currency)}</div>,
-    },
-    {
-      accessorKey: 'amountReclaimed',
-      header: 'Amount Reclaimed',
-      cell: ({ row }) => <div className="text-right">{renderAmount(row.original.amountReclaimed, row.original.currency)}</div>,
-    },
-  ], []);
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'vatNumber',
+        header: 'VAT Report No.',
+      },
+      {
+        accessorKey: 'taxReturns',
+        header: 'VAT Return',
+        cell: ({ row }) => renderTaxReturns(row.original.taxReturns),
+      },
+      {
+        accessorKey: 'dateOfFiling',
+        header: 'Date of Filing',
+        cell: ({ row }) => renderDate(row.original.dateOfFiling),
+      },
+      {
+        accessorKey: 'amountPaid',
+        header: 'Amount Paid',
+        cell: ({ row }) => (
+          <div className="text-right">
+            {renderAmount(row.original.amountPaid, row.original.currency)}
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'amountReclaimed',
+        header: 'Amount Reclaimed',
+        cell: ({ row }) => (
+          <div className="text-right">
+            {renderAmount(row.original.amountReclaimed, row.original.currency)}
+          </div>
+        ),
+      },
+    ],
+    []
+  );
 
   return (
     <div className="import-bank-statement-screen">
@@ -187,7 +198,11 @@ const VatPaymentRecord = () => {
                 data={vatReportDataList?.data || []}
                 columns={columns}
                 manualPagination={true}
-                pageCount={vatReportDataList?.count ? Math.ceil(vatReportDataList.count / pagination.pageSize) : 0}
+                pageCount={
+                  vatReportDataList?.count
+                    ? Math.ceil(vatReportDataList.count / pagination.pageSize)
+                    : 0
+                }
                 onPaginationChange={setPagination}
                 pagination={pagination}
                 manualSorting={true}

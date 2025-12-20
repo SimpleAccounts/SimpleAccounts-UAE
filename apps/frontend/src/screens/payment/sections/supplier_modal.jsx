@@ -33,20 +33,25 @@ const supplierSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email'),
   telephone: z.string().min(1, 'Telephone number is required'),
   mobileNumber: z.string().min(1, 'Mobile number is required'),
-  countryId: z.object({
-    value: z.union([z.string(), z.number()]),
-    label: z.string(),
-  }).nullable().refine((val) => val !== null, 'Country is required'),
-  stateId: z.union([
-    z.object({
+  countryId: z
+    .object({
       value: z.union([z.string(), z.number()]),
       label: z.string(),
-    }),
-    z.string()
-  ]).refine((val) => {
-    // stateId is required when countryId is present
-    return val !== null && val !== '';
-  }, 'State is required'),
+    })
+    .nullable()
+    .refine(val => val !== null, 'Country is required'),
+  stateId: z
+    .union([
+      z.object({
+        value: z.union([z.string(), z.number()]),
+        label: z.string(),
+      }),
+      z.string(),
+    ])
+    .refine(val => {
+      // stateId is required when countryId is present
+      return val !== null && val !== '';
+    }, 'State is required'),
   postZipCode: z.string().min(1, 'Postal code is required'),
   vatRegistrationNumber: z.string().min(1, 'Tax registration number is required'),
   organization: z.string().optional(),
@@ -104,7 +109,14 @@ const SupplierModal = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, reset, setValue, watch } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+    watch,
+  } = form;
 
   const watchCountryId = watch('countryId');
 
@@ -120,9 +132,9 @@ const SupplierModal = ({
     }
   }, [watchCountryId]);
 
-  const handleCountryChange = (countryCode) => {
+  const handleCountryChange = countryCode => {
     if (countryCode) {
-      getStateList(countryCode).then((res) => {
+      getStateList(countryCode).then(res => {
         if (res.status === 200) {
           setStateList(res.data);
         }
@@ -132,7 +144,7 @@ const SupplierModal = ({
     }
   };
 
-  const getData = (data) => {
+  const getData = data => {
     let temp = {};
     for (let item in data) {
       if (typeof data[`${item}`] !== 'object') {
@@ -144,11 +156,11 @@ const SupplierModal = ({
     return temp;
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     setDisabled(true);
     const postData = getData(data);
     createSupplier(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           reset();
           closeSupplierModal(true);
@@ -156,7 +168,7 @@ const SupplierModal = ({
           setDisabled(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         displayMsg();
         setDisabled(false);
       });
@@ -172,9 +184,7 @@ const SupplierModal = ({
     <div className="contact-modal-screen">
       <Modal isOpen={openSupplierModal} className="modal-success contact-modal">
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <ModalHeader toggle={() => closeSupplierModal(false)}>
-            {strings.NewSupplier}
-          </ModalHeader>
+          <ModalHeader toggle={() => closeSupplierModal(false)}>{strings.NewSupplier}</ModalHeader>
           <ModalBody>
             <Row>
               <Col lg="4">
@@ -192,11 +202,8 @@ const SupplierModal = ({
                         id="firstName"
                         placeholder={strings.Enter + strings.FirstName}
                         {...field}
-                        onChange={(e) => {
-                          if (
-                            e.target.value === '' ||
-                            regExAlpha.test(e.target.value)
-                          ) {
+                        onChange={e => {
+                          if (e.target.value === '' || regExAlpha.test(e.target.value)) {
                             field.onChange(e);
                           }
                         }}
@@ -224,11 +231,8 @@ const SupplierModal = ({
                         id="middleName"
                         placeholder={strings.Enter + strings.MiddleName}
                         {...field}
-                        onChange={(e) => {
-                          if (
-                            e.target.value === '' ||
-                            regExAlpha.test(e.target.value)
-                          ) {
+                        onChange={e => {
+                          if (e.target.value === '' || regExAlpha.test(e.target.value)) {
                             field.onChange(e);
                           }
                         }}
@@ -256,11 +260,8 @@ const SupplierModal = ({
                         id="lastName"
                         placeholder={strings.Enter + strings.LastName}
                         {...field}
-                        onChange={(e) => {
-                          if (
-                            e.target.value === '' ||
-                            regExAlpha.test(e.target.value)
-                          ) {
+                        onChange={e => {
+                          if (e.target.value === '' || regExAlpha.test(e.target.value)) {
                             field.onChange(e);
                           }
                         }}
@@ -310,11 +311,8 @@ const SupplierModal = ({
                         id="poBoxNumber"
                         placeholder={strings.Enter + strings.POBoxNumber}
                         {...field}
-                        onChange={(e) => {
-                          if (
-                            e.target.value === '' ||
-                            regExBoth.test(e.target.value)
-                          ) {
+                        onChange={e => {
+                          if (e.target.value === '' || regExBoth.test(e.target.value)) {
                             field.onChange(e);
                           }
                         }}
@@ -348,9 +346,7 @@ const SupplierModal = ({
                       />
                     )}
                   />
-                  {errors.email && (
-                    <div className="invalid-feedback">{errors.email.message}</div>
-                  )}
+                  {errors.email && <div className="invalid-feedback">{errors.email.message}</div>}
                 </FormGroup>
               </Col>
               <Col md="4">
@@ -369,11 +365,8 @@ const SupplierModal = ({
                         id="telephone"
                         placeholder={strings.Enter + strings.TelephoneNumber}
                         {...field}
-                        onChange={(e) => {
-                          if (
-                            e.target.value === '' ||
-                            regEx.test(e.target.value)
-                          ) {
+                        onChange={e => {
+                          if (e.target.value === '' || regEx.test(e.target.value)) {
                             field.onChange(e);
                           }
                         }}
@@ -401,7 +394,7 @@ const SupplierModal = ({
                         enableSearch={true}
                         international
                         value={field.value}
-                        onChange={(value) => field.onChange(value)}
+                        onChange={value => field.onChange(value)}
                         className={errors.mobileNumber ? 'is-invalid' : ''}
                       />
                     )}
@@ -495,7 +488,7 @@ const SupplierModal = ({
                         placeholder={strings.Select + strings.Country}
                         id="countryId"
                         styles={selectStyles}
-                        onChange={(option) => {
+                        onChange={option => {
                           field.onChange(option);
                           setValue('stateId', '');
                         }}
@@ -505,9 +498,7 @@ const SupplierModal = ({
                     )}
                   />
                   {errors.countryId && (
-                    <div className="invalid-feedback d-block">
-                      {errors.countryId.message}
-                    </div>
+                    <div className="invalid-feedback d-block">{errors.countryId.message}</div>
                   )}
                 </FormGroup>
               </Col>
@@ -536,10 +527,10 @@ const SupplierModal = ({
                           stateList && field.value
                             ? selectOptionsFactory
                                 .renderOptions('label', 'value', stateList, 'State')
-                                .find((opt) => opt.value === field.value)
+                                .find(opt => opt.value === field.value)
                             : null
                         }
-                        onChange={(option) => {
+                        onChange={option => {
                           if (option && option.value) {
                             field.onChange(option);
                           } else {
@@ -575,9 +566,7 @@ const SupplierModal = ({
                       />
                     )}
                   />
-                  {errors.city && (
-                    <div className="invalid-feedback">{errors.city.message}</div>
-                  )}
+                  {errors.city && <div className="invalid-feedback">{errors.city.message}</div>}
                 </FormGroup>
               </Col>
             </Row>
@@ -597,11 +586,8 @@ const SupplierModal = ({
                         id="postZipCode"
                         placeholder={strings.Enter + strings.PostZipCode}
                         {...field}
-                        onChange={(e) => {
-                          if (
-                            e.target.value === '' ||
-                            regExBoth.test(e.target.value)
-                          ) {
+                        onChange={e => {
+                          if (e.target.value === '' || regExBoth.test(e.target.value)) {
                             field.onChange(e);
                           }
                         }}
@@ -657,9 +643,7 @@ const SupplierModal = ({
                     )}
                   />
                   {errors.contractPoNumber && (
-                    <div className="invalid-feedback">
-                      {errors.contractPoNumber.message}
-                    </div>
+                    <div className="invalid-feedback">{errors.contractPoNumber.message}</div>
                   )}
                 </FormGroup>
               </Col>
@@ -680,11 +664,8 @@ const SupplierModal = ({
                         id="vatRegistrationNumber"
                         placeholder={strings.Enter + strings.TaxRegistrationNumber}
                         {...field}
-                        onChange={(e) => {
-                          if (
-                            e.target.value === '' ||
-                            regExBoth.test(e.target.value)
-                          ) {
+                        onChange={e => {
+                          if (e.target.value === '' || regExBoth.test(e.target.value)) {
                             field.onChange(e);
                           }
                         }}
@@ -693,9 +674,7 @@ const SupplierModal = ({
                     )}
                   />
                   {errors.vatRegistrationNumber && (
-                    <div className="invalid-feedback">
-                      {errors.vatRegistrationNumber.message}
-                    </div>
+                    <div className="invalid-feedback">{errors.vatRegistrationNumber.message}</div>
                   )}
                 </FormGroup>
               </Col>
@@ -727,21 +706,14 @@ const SupplierModal = ({
                     )}
                   />
                   {errors.currencyCode && (
-                    <div className="invalid-feedback d-block">
-                      {errors.currencyCode.message}
-                    </div>
+                    <div className="invalid-feedback d-block">{errors.currencyCode.message}</div>
                   )}
                 </FormGroup>
               </Col>
             </Row>
           </ModalBody>
           <ModalFooter>
-            <Button
-              color="success"
-              type="submit"
-              className="btn-square"
-              disabled={disabled}
-            >
+            <Button color="success" type="submit" className="btn-square" disabled={disabled}>
               {strings.Save}
             </Button>
             &nbsp;

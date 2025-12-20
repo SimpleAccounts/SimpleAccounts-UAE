@@ -552,7 +552,6 @@ const Register = ({
   return (
     <div>
       <div className="log-in-screen">
-        
         <div className="animated fadeIn">
           <div className="app flex-row ">
             <Container>

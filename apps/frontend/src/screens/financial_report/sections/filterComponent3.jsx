@@ -1,34 +1,27 @@
-import React, { Component } from "react";
-import {
-  Button,
-  Row,
-  Col,
-  FormGroup,
-  Label,
-  Form,
-} from "reactstrap";
-import { connect } from "react-redux";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "react-datepicker/dist/react-datepicker.css";
+import React, { Component } from 'react';
+import { Button, Row, Col, FormGroup, Label, Form } from 'reactstrap';
+import { connect } from 'react-redux';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import 'react-datepicker/dist/react-datepicker.css';
 import { useForm, Controller } from 'react-hook-form';
 import dayjs from '@/utils/date';
-import Select from "react-select";
-import "./style.scss";
-import { data } from "../../Language/index";
-import LocalizedStrings from "react-localization";
-import { DropdownLists } from "utils";
-import { bindActionCreators } from "redux";
-import { CommonActions } from "services/global";
+import Select from 'react-select';
+import './style.scss';
+import { data } from '../../Language/index';
+import LocalizedStrings from 'react-localization';
+import { DropdownLists } from 'utils';
+import { bindActionCreators } from 'redux';
+import { CommonActions } from 'services/global';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const contact_list = state.common.customer_list;
   return {
     customer_list_dropdown: DropdownLists.getContactDropDownList(contact_list),
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
   };
@@ -45,29 +38,29 @@ function FilterComponentForm({
   handleCancel,
   customPeriod,
   hideCustomPeriod,
-  hideAsOn
+  hideAsOn,
 }) {
-  const [selectedPeriod, setSelectedPeriod] = React.useState(customPeriod || "asOn");
+  const [selectedPeriod, setSelectedPeriod] = React.useState(customPeriod || 'asOn');
   const [showStartDate, setShowStartDate] = React.useState(false);
   const [showEndDate, setShowEndDate] = React.useState(false);
   const [showRunReport, setShowRunReport] = React.useState(false);
 
   const options = [
-    { value: "today", label: "Today" },
-    { value: "yesterday", label: "Yesterday" },
-    { value: "last7days", label: "Last 7 days (Including Today)" },
-    { value: "last30days", label: "Last 30 days" },
-    { value: "currentWeek", label: "Current Week" },
-    { value: "currentMonth", label: "Current Month" },
-    { value: "lastWeek", label: "Last Week" },
-    { value: "lastMonth", label: "Last Month" },
-    { value: "lastQuarter", label: "Last Quarter" },
-    { value: "yearToDate", label: "Year to Date (YTD)" },
-    { value: "quarterToDate", label: "Quarter to Date (QTD)" },
-    { value: "monthToDate", label: "Month to Date (MTD)" },
-    { value: "lastYear", label: "Last Year" },
-    { value: "customRange", label: "Custom Range" },
-    { value: "asOn", label: "As on" },
+    { value: 'today', label: 'Today' },
+    { value: 'yesterday', label: 'Yesterday' },
+    { value: 'last7days', label: 'Last 7 days (Including Today)' },
+    { value: 'last30days', label: 'Last 30 days' },
+    { value: 'currentWeek', label: 'Current Week' },
+    { value: 'currentMonth', label: 'Current Month' },
+    { value: 'lastWeek', label: 'Last Week' },
+    { value: 'lastMonth', label: 'Last Month' },
+    { value: 'lastQuarter', label: 'Last Quarter' },
+    { value: 'yearToDate', label: 'Year to Date (YTD)' },
+    { value: 'quarterToDate', label: 'Quarter to Date (QTD)' },
+    { value: 'monthToDate', label: 'Month to Date (MTD)' },
+    { value: 'lastYear', label: 'Last Year' },
+    { value: 'customRange', label: 'Custom Range' },
+    { value: 'asOn', label: 'As on' },
   ];
 
   const optionsToShow = options.filter(option => {
@@ -80,17 +73,11 @@ function FilterComponentForm({
     return true;
   });
 
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    watch,
-    getValues,
-  } = useForm({
+  const { control, handleSubmit, setValue, watch, getValues } = useForm({
     defaultValues: {
-      startDate: dayjs().startOf("month").format("YYYY-MM-DD hh:mm"),
-      endDate: dayjs().endOf("month").format("YYYY-MM-DD hh:mm"),
-      contactId: "",
+      startDate: dayjs().startOf('month').format('YYYY-MM-DD hh:mm'),
+      endDate: dayjs().endOf('month').format('YYYY-MM-DD hh:mm'),
+      contactId: '',
     },
   });
 
@@ -98,103 +85,103 @@ function FilterComponentForm({
   const endDate = watch('endDate');
   const contactId = watch('contactId');
 
-  const getDateRange = (selectedOption) => {
-    const currentDate = dayjs().startOf("day");
+  const getDateRange = selectedOption => {
+    const currentDate = dayjs().startOf('day');
     let newStartDate, newEndDate;
     let newShowStartDate = false;
     let newShowEndDate = false;
     let newShowRunReport = false;
 
     switch (selectedOption) {
-      case "today":
+      case 'today':
         newStartDate = currentDate.clone().toDate();
         newEndDate = currentDate.clone().toDate();
         generateReport({ startDate: newStartDate, endDate: newEndDate });
         hideExportOptionsFunctionality(false);
         break;
-      case "yesterday":
-        newStartDate = currentDate.clone().subtract(1, "day").toDate();
-        newEndDate = currentDate.clone().subtract(1, "day").toDate();
+      case 'yesterday':
+        newStartDate = currentDate.clone().subtract(1, 'day').toDate();
+        newEndDate = currentDate.clone().subtract(1, 'day').toDate();
         generateReport({ startDate: newStartDate, endDate: newEndDate });
         hideExportOptionsFunctionality(false);
         break;
-      case "last7days":
-        newStartDate = currentDate.clone().subtract(6, "days").toDate();
+      case 'last7days':
+        newStartDate = currentDate.clone().subtract(6, 'days').toDate();
         newEndDate = currentDate.clone().toDate();
         generateReport({ startDate: newStartDate, endDate: newEndDate });
         hideExportOptionsFunctionality(false);
         break;
-      case "last30days":
-        newStartDate = currentDate.clone().subtract(29, "days").toDate();
+      case 'last30days':
+        newStartDate = currentDate.clone().subtract(29, 'days').toDate();
         newEndDate = currentDate.clone().toDate();
         generateReport({ startDate: newStartDate, endDate: newEndDate });
         hideExportOptionsFunctionality(false);
         break;
-      case "currentWeek":
-        newStartDate = currentDate.clone().startOf("week").toDate();
-        newEndDate = currentDate.clone().endOf("week").toDate();
+      case 'currentWeek':
+        newStartDate = currentDate.clone().startOf('week').toDate();
+        newEndDate = currentDate.clone().endOf('week').toDate();
         generateReport({ startDate: newStartDate, endDate: newEndDate });
         hideExportOptionsFunctionality(false);
         break;
-      case "currentMonth":
-        newStartDate = currentDate.clone().startOf("month").toDate();
-        newEndDate = currentDate.clone().endOf("month").toDate();
+      case 'currentMonth':
+        newStartDate = currentDate.clone().startOf('month').toDate();
+        newEndDate = currentDate.clone().endOf('month').toDate();
         generateReport({ startDate: newStartDate, endDate: newEndDate });
         hideExportOptionsFunctionality(false);
         break;
-      case "lastWeek":
-        newStartDate = currentDate.clone().subtract(1, "week").startOf("week").toDate();
-        newEndDate = currentDate.clone().subtract(1, "week").endOf("week").toDate();
+      case 'lastWeek':
+        newStartDate = currentDate.clone().subtract(1, 'week').startOf('week').toDate();
+        newEndDate = currentDate.clone().subtract(1, 'week').endOf('week').toDate();
         generateReport({ startDate: newStartDate, endDate: newEndDate });
         hideExportOptionsFunctionality(false);
         break;
-      case "lastMonth":
-        newStartDate = currentDate.clone().subtract(1, "month").startOf("month").toDate();
-        newEndDate = currentDate.clone().subtract(1, "month").endOf("month").toDate();
+      case 'lastMonth':
+        newStartDate = currentDate.clone().subtract(1, 'month').startOf('month').toDate();
+        newEndDate = currentDate.clone().subtract(1, 'month').endOf('month').toDate();
         generateReport({ startDate: newStartDate, endDate: newEndDate });
         hideExportOptionsFunctionality(false);
         break;
-      case "lastQuarter":
-        newStartDate = currentDate.clone().subtract(1, "quarter").startOf("quarter").toDate();
-        newEndDate = currentDate.clone().subtract(1, "quarter").endOf("quarter").toDate();
+      case 'lastQuarter':
+        newStartDate = currentDate.clone().subtract(1, 'quarter').startOf('quarter').toDate();
+        newEndDate = currentDate.clone().subtract(1, 'quarter').endOf('quarter').toDate();
         generateReport({ startDate: newStartDate, endDate: newEndDate });
         hideExportOptionsFunctionality(false);
         break;
-      case "yearToDate":
-        newStartDate = currentDate.clone().startOf("year").toDate();
+      case 'yearToDate':
+        newStartDate = currentDate.clone().startOf('year').toDate();
         newEndDate = currentDate.clone().toDate();
         generateReport({ startDate: newStartDate, endDate: newEndDate });
         hideExportOptionsFunctionality(false);
         break;
-      case "quarterToDate":
-        newStartDate = currentDate.clone().startOf("quarter").toDate();
+      case 'quarterToDate':
+        newStartDate = currentDate.clone().startOf('quarter').toDate();
         newEndDate = currentDate.clone().toDate();
         generateReport({ startDate: newStartDate, endDate: newEndDate });
         hideExportOptionsFunctionality(false);
         break;
-      case "monthToDate":
-        newStartDate = currentDate.clone().startOf("month").toDate();
+      case 'monthToDate':
+        newStartDate = currentDate.clone().startOf('month').toDate();
         newEndDate = currentDate.clone().toDate();
         generateReport({ startDate: newStartDate, endDate: newEndDate });
         hideExportOptionsFunctionality(false);
         break;
-      case "lastYear":
-        newStartDate = currentDate.clone().subtract(1, "year").startOf("year").toDate();
-        newEndDate = currentDate.clone().subtract(1, "year").endOf("year").toDate();
+      case 'lastYear':
+        newStartDate = currentDate.clone().subtract(1, 'year').startOf('year').toDate();
+        newEndDate = currentDate.clone().subtract(1, 'year').endOf('year').toDate();
         generateReport({ startDate: newStartDate, endDate: newEndDate });
         hideExportOptionsFunctionality(false);
         break;
-      case "customRange":
-        newStartDate = dayjs().startOf("month").toDate();
-        newEndDate = dayjs().endOf("month").toDate();
+      case 'customRange':
+        newStartDate = dayjs().startOf('month').toDate();
+        newEndDate = dayjs().endOf('month').toDate();
         newShowStartDate = true;
         newShowEndDate = true;
         newShowRunReport = true;
         generateReport({ startDate: newStartDate, endDate: newEndDate });
         hideExportOptionsFunctionality(true);
         break;
-      case "asOn":
-        newStartDate = dayjs().startOf("year").toDate();
+      case 'asOn':
+        newStartDate = dayjs().startOf('year').toDate();
         newEndDate = currentDate.clone().toDate();
         newShowStartDate = false;
         newShowEndDate = true;
@@ -213,7 +200,7 @@ function FilterComponentForm({
     setShowRunReport(newShowRunReport);
   };
 
-  const onSubmit = (values) => {
+  const onSubmit = values => {
     console.log(values);
     generateReport(values);
     setShowRunReport(false);
@@ -226,7 +213,7 @@ function FilterComponentForm({
     const currentDate = dayjs();
     setValue('endDate', currentDate.toDate());
     handleCancel();
-    setSelectedPeriod("asOn");
+    setSelectedPeriod('asOn');
     setShowEndDate(false);
     setShowRunReport(false);
     setShowStartDate(false);
@@ -240,25 +227,24 @@ function FilterComponentForm({
         <Col lg={3}>
           <div
             className={`align-items-center pull left ${
-              selectedPeriod !== "customRange" &&
-              selectedPeriod !== "asOn"
+              selectedPeriod !== 'customRange' && selectedPeriod !== 'asOn'
             }`}
           >
             <FormGroup>
               <Label
                 htmlFor="reportingPeriod"
                 style={{
-                  color: "black",
-                  fontWeight: "600",
-                  marginTop: "15px",
+                  color: 'black',
+                  fontWeight: '600',
+                  marginTop: '15px',
                 }}
               >
                 {strings.ReportingPeriod}
               </Label>
               <Select
                 options={optionsToShow}
-                value={optionsToShow.find((option) => option.value === selectedPeriod)}
-                onChange={(option) => {
+                value={optionsToShow.find(option => option.value === selectedPeriod)}
+                onChange={option => {
                   getDateRange(option.value);
                   setSelectedPeriod(option.value);
                   setCutomPeriod(option.value);
@@ -267,18 +253,18 @@ function FilterComponentForm({
                 id="reportingPeriod"
                 name="reportingPeriod"
                 styles={{
-                  control: (provided) => ({
+                  control: provided => ({
                     ...provided,
-                    borderColor: "black",
-                    height: "30px",
+                    borderColor: 'black',
+                    height: '30px',
                   }),
-                  singleValue: (provided) => ({
+                  singleValue: provided => ({
                     ...provided,
-                    color: "black",
+                    color: 'black',
                   }),
-                  option: (provided) => ({
+                  option: provided => ({
                     ...provided,
-                    color: "black",
+                    color: 'black',
                   }),
                 }}
               />
@@ -289,17 +275,16 @@ function FilterComponentForm({
           <Col lg={3}>
             <div
               className={`align-items-center pull left ${
-                selectedPeriod !== "customRange" &&
-                selectedPeriod !== "asOn"
+                selectedPeriod !== 'customRange' && selectedPeriod !== 'asOn'
               }`}
             >
               <FormGroup className="mb-3">
                 <Label
                   htmlFor="contactId"
                   style={{
-                    color: "black",
-                    fontWeight: "600",
-                    marginTop: "15px",
+                    color: 'black',
+                    fontWeight: '600',
+                    marginTop: '15px',
                   }}
                 >
                   {strings.CustomerName}
@@ -315,30 +300,28 @@ function FilterComponentForm({
                       value={
                         field.value?.value
                           ? field.value
-                          : customer_list_dropdown.find(
-                              (option) => option.value == field.value
-                            )
+                          : customer_list_dropdown.find(option => option.value == field.value)
                       }
-                      onChange={(option) => {
-                        setValue("contactId", option.value);
+                      onChange={option => {
+                        setValue('contactId', option.value);
                         generateReport({
                           ...getValues(),
                           contactId: option.value,
                         });
                       }}
                       styles={{
-                        control: (provided) => ({
+                        control: provided => ({
                           ...provided,
-                          borderColor: "black",
-                          height: "30px",
+                          borderColor: 'black',
+                          height: '30px',
                         }),
-                        singleValue: (provided) => ({
+                        singleValue: provided => ({
                           ...provided,
-                          color: "black",
+                          color: 'black',
                         }),
-                        option: (provided) => ({
+                        option: provided => ({
                           ...provided,
-                          color: "black",
+                          color: 'black',
                         }),
                       }}
                     />
@@ -350,17 +333,17 @@ function FilterComponentForm({
         )}
       </Row>
       <Row>
-        {selectedPeriod !== "asOn" && (
+        {selectedPeriod !== 'asOn' && (
           <Col lg={3}>
             {showStartDate && (
               <FormGroup className="mb-3">
                 <Label
                   htmlFor="startDate"
                   style={{
-                    color: "black",
-                    fontWeight: "600",
-                    marginTop: "15px",
-                    borderColor: "black",
+                    color: 'black',
+                    fontWeight: '600',
+                    marginTop: '15px',
+                    borderColor: 'black',
                   }}
                 >
                   {strings.StartDate}
@@ -376,11 +359,11 @@ function FilterComponentForm({
                       showMonthDropdown
                       showYearDropdown
                       autoComplete="off"
-                      value={dayjs(field.value).format("DD-MM-YYYY")}
+                      value={dayjs(field.value).format('DD-MM-YYYY')}
                       dropdownMode="select"
                       dateFormat="dd-MM-yyyy"
                       maxDate={endDate}
-                      onChange={(value) => {
+                      onChange={value => {
                         if (value <= endDate) {
                           field.onChange(value);
                         }
@@ -398,10 +381,10 @@ function FilterComponentForm({
               <Label
                 htmlFor="endDate"
                 style={{
-                  color: "black",
-                  fontWeight: "600",
-                  marginTop: "15px",
-                  borderColor: "black",
+                  color: 'black',
+                  fontWeight: '600',
+                  marginTop: '15px',
+                  borderColor: 'black',
                 }}
               >
                 {strings.EndDate}
@@ -417,11 +400,11 @@ function FilterComponentForm({
                     placeholderText="To"
                     showMonthDropdown
                     showYearDropdown
-                    value={dayjs(field.value).format("DD-MM-YYYY")}
+                    value={dayjs(field.value).format('DD-MM-YYYY')}
                     dropdownMode="select"
                     dateFormat="dd-MM-yyyy"
                     minDate={startDate}
-                    onChange={(value) => {
+                    onChange={value => {
                       if (value >= startDate) {
                         field.onChange(value);
                       }
@@ -441,7 +424,7 @@ function FilterComponentForm({
                 type="button"
                 color="primary"
                 className="btn-square mr-3"
-                style={{ marginTop: "15px" }}
+                style={{ marginTop: '15px' }}
                 onClick={handleSubmit(onSubmit)}
               >
                 <i className="fa fa-dot-circle-o"></i> {strings.RunReport}
@@ -449,7 +432,7 @@ function FilterComponentForm({
               <Button
                 color="secondary"
                 className="btn-square"
-                style={{ marginTop: "15px" }}
+                style={{ marginTop: '15px' }}
                 onClick={handleCancelClick}
               >
                 <i className="fa fa-ban pull"></i> {strings.Cancel}
@@ -466,7 +449,7 @@ class FilterComponent3 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      language: window["localStorage"].getItem("language"),
+      language: window['localStorage'].getItem('language'),
     };
   }
 

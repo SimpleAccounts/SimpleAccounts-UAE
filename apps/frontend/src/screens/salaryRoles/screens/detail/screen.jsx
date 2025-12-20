@@ -34,13 +34,13 @@ const updateSalaryRoleSchema = z.object({
   salaryRoleName: z.string().min(1, 'Salary role name is required'),
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     currency_list: state.employee.currency_list,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     employeeActions: bindActionCreators(EmployeeActions, dispatch),
@@ -48,7 +48,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const DetailSalaryRole = (props) => {
+const DetailSalaryRole = props => {
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(true);
   const [currentSalaryRoleId, setCurrentSalaryRoleId] = useState(null);
@@ -82,7 +82,7 @@ const DetailSalaryRole = (props) => {
     if (props.location.state && props.location.state.id) {
       props.salarayRoleDetailActions
         .getSalaryRoleById(props.location.state.id)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             setCurrentSalaryRoleId(props.location.state.id);
             reset({
@@ -91,7 +91,7 @@ const DetailSalaryRole = (props) => {
             setLoading(false);
           }
         })
-        .catch((err) => {
+        .catch(err => {
           props.commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
@@ -102,7 +102,7 @@ const DetailSalaryRole = (props) => {
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     setDisabled(true);
     setDisableLeavePage(true);
 
@@ -114,12 +114,12 @@ const DetailSalaryRole = (props) => {
 
     props.salarayRoleDetailActions
       .updateSalaryRole(formData)
-      .then((res) => {
+      .then(res => {
         setDisabled(false);
         props.commonActions.tostifyAlert('success', 'Salary Role Updated Successfully.');
         props.history.push('/admin/payroll/config');
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         props.commonActions.tostifyAlert(
           'error',
@@ -134,8 +134,7 @@ const DetailSalaryRole = (props) => {
         <b>Delete Salary Role ?</b>
       </text>
     );
-    const message =
-      'This salary role will be deleted permanently and cannot be recovered. ';
+    const message = 'This salary role will be deleted permanently and cannot be recovered. ';
     setDialog(
       <ConfirmDeleteModal
         isOpen={true}
@@ -150,14 +149,14 @@ const DetailSalaryRole = (props) => {
   const remove = () => {
     props.salarayRoleDetailActions
       .deleteSalaryRole(currentSalaryRoleId)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setDisableLeavePage(true);
           props.commonActions.tostifyAlert('success', 'Salary role deleted successfully !!');
           props.history.push('/admin/payroll/config', { tabNo: '1' });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         props.commonActions.tostifyAlert(
           'error',
           err && err.data ? err.data.message : 'Something Went Wrong'
@@ -169,7 +168,7 @@ const DetailSalaryRole = (props) => {
     setDialog(null);
   };
 
-  const handleSalaryRoleNameChange = (e) => {
+  const handleSalaryRoleNameChange = e => {
     const value = e.target.value;
     if (value === '' || regExAlpha.test(value)) {
       setValue('salaryRoleName', value, { shouldValidate: true });
@@ -244,7 +243,10 @@ const DetailSalaryRole = (props) => {
                           </Col>
                         </Row>
                         <Row>
-                          <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                          <Col
+                            lg={12}
+                            className="d-flex align-items-center justify-content-between flex-wrap mt-5"
+                          >
                             <FormGroup>
                               <Button
                                 type="button"

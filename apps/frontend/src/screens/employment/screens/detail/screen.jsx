@@ -14,7 +14,7 @@ import {
   Form,
   FormGroup,
   Input,
-  Label
+  Label,
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
@@ -22,9 +22,7 @@ import dayjs from '@/utils/date';
 
 import { Loader, ConfirmDeleteModal } from 'components';
 
-import {
-  CommonActions
-} from 'services/global';
+import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory, selectStyles } from 'utils';
 import * as EmployeeActions from '../../actions';
 import * as EmployeeDetailActions from './actions';
@@ -33,42 +31,45 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 
 // Zod validation schema
-const detailEmploymentSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  middleName: z.string().min(1, 'Middle name is required'),
-  email: z.string().optional(),
-  password: z.string()
-    .optional()
-    .refine(
-      (val) => !val || /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(val),
-      'Must contain 8 characters, one uppercase, one lowercase, one number and one special case character'
-    ),
-  confirmPassword: z.string().optional(),
-  dob: z.date({ required_error: 'DOB is required' }),
-  referenceCode: z.string().optional(),
-  title: z.string().optional(),
-  billingEmail: z.string().optional(),
-  vatRegestationNo: z.string().optional(),
-  currencyCode: z.any().optional(),
-  poBoxNumber: z.string().optional(),
-}).refine((data) => !data.password || data.password === data.confirmPassword, {
-  message: 'Passwords must match',
-  path: ['confirmPassword'],
-});
-
-const mapStateToProps = (state) => {
-  return ({
-    currency_list: state.employee.currency_list
+const detailEmploymentSchema = z
+  .object({
+    firstName: z.string().min(1, 'First name is required'),
+    lastName: z.string().min(1, 'Last name is required'),
+    middleName: z.string().min(1, 'Middle name is required'),
+    email: z.string().optional(),
+    password: z
+      .string()
+      .optional()
+      .refine(
+        val => !val || /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(val),
+        'Must contain 8 characters, one uppercase, one lowercase, one number and one special case character'
+      ),
+    confirmPassword: z.string().optional(),
+    dob: z.date({ required_error: 'DOB is required' }),
+    referenceCode: z.string().optional(),
+    title: z.string().optional(),
+    billingEmail: z.string().optional(),
+    vatRegestationNo: z.string().optional(),
+    currencyCode: z.any().optional(),
+    poBoxNumber: z.string().optional(),
+  })
+  .refine(data => !data.password || data.password === data.confirmPassword, {
+    message: 'Passwords must match',
+    path: ['confirmPassword'],
   });
+
+const mapStateToProps = state => {
+  return {
+    currency_list: state.employee.currency_list,
+  };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return ({
+const mapDispatchToProps = dispatch => {
+  return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     employeeActions: bindActionCreators(EmployeeActions, dispatch),
-    employeeDetailActions: bindActionCreators(EmployeeDetailActions, dispatch)
-  });
+    employeeDetailActions: bindActionCreators(EmployeeDetailActions, dispatch),
+  };
 };
 
 const regEx = /^[0-9]+$/;
@@ -81,7 +82,7 @@ const DetailEmployeePayroll = ({
   employeeActions,
   employeeDetailActions,
   history,
-  location
+  location,
 }) => {
   const [loading, setLoading] = useState(true);
   const [dialog, setDialog] = useState(null);
@@ -108,7 +109,13 @@ const DetailEmployeePayroll = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, reset, watch } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    watch,
+  } = form;
 
   useEffect(() => {
     initializeData();
@@ -117,54 +124,63 @@ const DetailEmployeePayroll = ({
   const initializeData = () => {
     if (location.state && location.state.id) {
       employeeActions.getCurrencyList();
-      employeeDetailActions.getEmployeeDetail(location.state.id).then((res) => {
-        if (res.status === 200) {
-          setCurrentEmployeeId(location.state.id);
-          reset({
-            id: res.data.id !== '' ? res.data.id : '',
-            firstName: res.data.firstName !== '' ? res.data.firstName : '',
-            middleName: res.data.middleName !== '' ? res.data.middleName : '',
-            lastName: res.data.lastName !== '' ? res.data.lastName : '',
-            email: res.data.email !== '' ? res.data.email : '',
-            password: res.data.password !== '' ? res.data.password : '',
-            dob: res.data.dob !== '' ? new Date(res.data.dob) : null,
-            referenceCode: res.data.referenceCode !== '' ? res.data.referenceCode : '',
-            title: res.data.title !== '' ? res.data.title : '',
-            billingEmail: res.data.billingEmail !== '' ? res.data.billingEmail : '',
-            vatRegestationNo: res.data.vatRegestationNo !== '' ? res.data.vatRegestationNo : '',
-            currencyCode: res.data.currencyCode !== '' ? res.data.currencyCode : '',
-            poBoxNumber: res.data.poBoxNumber !== '' ? res.data.poBoxNumber : '',
-          });
+      employeeDetailActions
+        .getEmployeeDetail(location.state.id)
+        .then(res => {
+          if (res.status === 200) {
+            setCurrentEmployeeId(location.state.id);
+            reset({
+              id: res.data.id !== '' ? res.data.id : '',
+              firstName: res.data.firstName !== '' ? res.data.firstName : '',
+              middleName: res.data.middleName !== '' ? res.data.middleName : '',
+              lastName: res.data.lastName !== '' ? res.data.lastName : '',
+              email: res.data.email !== '' ? res.data.email : '',
+              password: res.data.password !== '' ? res.data.password : '',
+              dob: res.data.dob !== '' ? new Date(res.data.dob) : null,
+              referenceCode: res.data.referenceCode !== '' ? res.data.referenceCode : '',
+              title: res.data.title !== '' ? res.data.title : '',
+              billingEmail: res.data.billingEmail !== '' ? res.data.billingEmail : '',
+              vatRegestationNo: res.data.vatRegestationNo !== '' ? res.data.vatRegestationNo : '',
+              currencyCode: res.data.currencyCode !== '' ? res.data.currencyCode : '',
+              poBoxNumber: res.data.poBoxNumber !== '' ? res.data.poBoxNumber : '',
+            });
+            setLoading(false);
+          }
+        })
+        .catch(err => {
+          commonActions.tostifyAlert(
+            'error',
+            err && err.data ? err.data.message : 'Something Went Wrong'
+          );
           setLoading(false);
-        }
-      }).catch((err) => {
-        commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
-        setLoading(false);
-      });
+        });
     } else {
       history.push('/admin/master/employee');
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     const postData = Object.assign({}, data);
     if (typeof postData.currencyCode === 'object') {
       postData.currencyCode = data.currencyCode.value;
     }
-    employeeDetailActions.updateEmployee(postData).then((res) => {
-      if (res.status === 200) {
+    employeeDetailActions
+      .updateEmployee(postData)
+      .then(res => {
+        if (res.status === 200) {
+          commonActions.tostifyAlert(
+            'success',
+            res.data ? res.data.message : 'Employee Updated Successfully'
+          );
+          history.push('/admin/master/employee');
+        }
+      })
+      .catch(err => {
         commonActions.tostifyAlert(
-          'success',
-          res.data ? res.data.message : 'Employee Updated Successfully'
+          'error',
+          err.data.message ? err.data.message : 'Created Unsuccessfully'
         );
-        history.push('/admin/master/employee');
-      }
-    }).catch((err) => {
-      commonActions.tostifyAlert(
-        'error',
-        err.data.message ? err.data.message : 'Created Unsuccessfully'
-      );
-    });
+      });
   };
 
   const deleteEmployee = () => {
@@ -186,20 +202,23 @@ const DetailEmployeePayroll = ({
   };
 
   const removeEmployee = () => {
-    employeeDetailActions.deleteEmployee(currentEmployeeId).then((res) => {
-      if (res.status === 200) {
+    employeeDetailActions
+      .deleteEmployee(currentEmployeeId)
+      .then(res => {
+        if (res.status === 200) {
+          commonActions.tostifyAlert(
+            'success',
+            res.data ? res.data.message : 'Employee Deleted Successfully'
+          );
+          history.push('/admin/master/employee');
+        }
+      })
+      .catch(err => {
         commonActions.tostifyAlert(
-          'success',
-          res.data ? res.data.message : 'Employee Deleted Successfully'
+          'error',
+          err.data.message ? err.data.message : 'Employee Deleted Unsuccessfully'
         );
-        history.push('/admin/master/employee');
-      }
-    }).catch((err) => {
-      commonActions.tostifyAlert(
-        'error',
-        err.data.message ? err.data.message : 'Employee Deleted Unsuccessfully'
-      );
-    });
+      });
   };
 
   const removeDialog = () => {
@@ -246,7 +265,7 @@ const DetailEmployeePayroll = ({
                                     id="referenceCode"
                                     placeholder="Enter Reference Code"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       if (e.target.value === '' || regExBoth.test(e.target.value)) {
                                         field.onChange(e);
                                       }
@@ -268,8 +287,11 @@ const DetailEmployeePayroll = ({
                                     id="title"
                                     placeholder="Enter Title"
                                     {...field}
-                                    onChange={(e) => {
-                                      if (e.target.value === '' || regExAlpha.test(e.target.value)) {
+                                    onChange={e => {
+                                      if (
+                                        e.target.value === '' ||
+                                        regExAlpha.test(e.target.value)
+                                      ) {
                                         field.onChange(e);
                                       }
                                     }}
@@ -280,7 +302,9 @@ const DetailEmployeePayroll = ({
                           </Col>
                           <Col md="4">
                             <FormGroup>
-                              <Label htmlFor="email"><span className="text-danger">* </span>Email</Label>
+                              <Label htmlFor="email">
+                                <span className="text-danger">* </span>Email
+                              </Label>
                               <Controller
                                 name="email"
                                 control={control}
@@ -301,7 +325,9 @@ const DetailEmployeePayroll = ({
                         <Row className="row-wrapper">
                           <Col md="4">
                             <FormGroup>
-                              <Label htmlFor="firstName"><span className="text-danger">* </span>First Name</Label>
+                              <Label htmlFor="firstName">
+                                <span className="text-danger">* </span>First Name
+                              </Label>
                               <Controller
                                 name="firstName"
                                 control={control}
@@ -312,8 +338,11 @@ const DetailEmployeePayroll = ({
                                     maxLength="100"
                                     placeholder="Enter First Name"
                                     {...field}
-                                    onChange={(e) => {
-                                      if (e.target.value === '' || regExAlpha.test(e.target.value)) {
+                                    onChange={e => {
+                                      if (
+                                        e.target.value === '' ||
+                                        regExAlpha.test(e.target.value)
+                                      ) {
                                         field.onChange(e);
                                       }
                                     }}
@@ -328,7 +357,9 @@ const DetailEmployeePayroll = ({
                           </Col>
                           <Col md="4">
                             <FormGroup>
-                              <Label htmlFor="middleName"><span className="text-danger">* </span>Middle Name</Label>
+                              <Label htmlFor="middleName">
+                                <span className="text-danger">* </span>Middle Name
+                              </Label>
                               <Controller
                                 name="middleName"
                                 control={control}
@@ -339,8 +370,11 @@ const DetailEmployeePayroll = ({
                                     id="middleName"
                                     placeholder="Enter Middle Name"
                                     {...field}
-                                    onChange={(e) => {
-                                      if (e.target.value === '' || regExAlpha.test(e.target.value)) {
+                                    onChange={e => {
+                                      if (
+                                        e.target.value === '' ||
+                                        regExAlpha.test(e.target.value)
+                                      ) {
                                         field.onChange(e);
                                       }
                                     }}
@@ -355,7 +389,9 @@ const DetailEmployeePayroll = ({
                           </Col>
                           <Col md="4">
                             <FormGroup>
-                              <Label htmlFor="lastName"><span className="text-danger">* </span>Last Name</Label>
+                              <Label htmlFor="lastName">
+                                <span className="text-danger">* </span>Last Name
+                              </Label>
                               <Controller
                                 name="lastName"
                                 control={control}
@@ -366,8 +402,11 @@ const DetailEmployeePayroll = ({
                                     id="lastName"
                                     placeholder="Enter Last Name"
                                     {...field}
-                                    onChange={(e) => {
-                                      if (e.target.value === '' || regExAlpha.test(e.target.value)) {
+                                    onChange={e => {
+                                      if (
+                                        e.target.value === '' ||
+                                        regExAlpha.test(e.target.value)
+                                      ) {
                                         field.onChange(e);
                                       }
                                     }}
@@ -402,7 +441,10 @@ const DetailEmployeePayroll = ({
                               {errors.password ? (
                                 <div className="invalid-feedback">{errors.password.message}</div>
                               ) : (
-                                <span className="password-msg">Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character.</span>
+                                <span className="password-msg">
+                                  Must Contain 8 Characters, One Uppercase, One Lowercase, One
+                                  Number and one special case Character.
+                                </span>
                               )}
                             </FormGroup>
                           </Col>
@@ -423,7 +465,9 @@ const DetailEmployeePayroll = ({
                                 )}
                               />
                               {errors.confirmPassword && (
-                                <div className="invalid-feedback">{errors.confirmPassword.message}</div>
+                                <div className="invalid-feedback">
+                                  {errors.confirmPassword.message}
+                                </div>
                               )}
                             </FormGroup>
                           </Col>
@@ -444,7 +488,7 @@ const DetailEmployeePayroll = ({
                                     placeholderText="Select Date of Birth"
                                     selected={field.value}
                                     maxDate={new Date()}
-                                    onChange={(date) => field.onChange(date)}
+                                    onChange={date => field.onChange(date)}
                                   />
                                 )}
                               />
@@ -477,7 +521,9 @@ const DetailEmployeePayroll = ({
                                 )}
                               />
                               {errors.billingEmail && (
-                                <div className="invalid-feedback">{errors.billingEmail.message}</div>
+                                <div className="invalid-feedback">
+                                  {errors.billingEmail.message}
+                                </div>
                               )}
                             </FormGroup>
                           </Col>
@@ -494,7 +540,7 @@ const DetailEmployeePayroll = ({
                                     id="poBoxNumber"
                                     placeholder="Enter Contract PO Number"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       if (e.target.value === '' || regExBoth.test(e.target.value)) {
                                         field.onChange(e);
                                       }
@@ -524,7 +570,7 @@ const DetailEmployeePayroll = ({
                                     id="vatRegestationNo"
                                     placeholder="Enter Tax Registration Number"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       if (e.target.value === '' || regExBoth.test(e.target.value)) {
                                         field.onChange(e);
                                       }
@@ -534,7 +580,9 @@ const DetailEmployeePayroll = ({
                                 )}
                               />
                               {errors.vatRegestationNo && (
-                                <div className="invalid-feedback">{errors.vatRegestationNo.message}</div>
+                                <div className="invalid-feedback">
+                                  {errors.vatRegestationNo.message}
+                                </div>
                               )}
                             </FormGroup>
                           </Col>
@@ -547,9 +595,28 @@ const DetailEmployeePayroll = ({
                                 render={({ field }) => (
                                   <Select
                                     {...field}
-                                    options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                                    value={currency_list && selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +field.value)}
-                                    onChange={(option) => {
+                                    options={
+                                      currency_list
+                                        ? selectCurrencyFactory.renderOptions(
+                                            'currencyName',
+                                            'currencyCode',
+                                            currency_list,
+                                            'Currency'
+                                          )
+                                        : []
+                                    }
+                                    value={
+                                      currency_list &&
+                                      selectCurrencyFactory
+                                        .renderOptions(
+                                          'currencyName',
+                                          'currencyCode',
+                                          currency_list,
+                                          'Currency'
+                                        )
+                                        .find(option => option.value === +field.value)
+                                    }
+                                    onChange={option => {
                                       if (option && option.value) {
                                         field.onChange(option);
                                       } else {
@@ -564,14 +631,19 @@ const DetailEmployeePayroll = ({
                                 )}
                               />
                               {errors.currencyCode && (
-                                <div className="invalid-feedback">{errors.currencyCode.message}</div>
+                                <div className="invalid-feedback">
+                                  {errors.currencyCode.message}
+                                </div>
                               )}
                             </FormGroup>
                           </Col>
                         </Row>
 
                         <Row>
-                          <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                          <Col
+                            lg={12}
+                            className="d-flex align-items-center justify-content-between flex-wrap mt-5"
+                          >
                             <FormGroup>
                               <Button
                                 type="button"
@@ -584,14 +656,21 @@ const DetailEmployeePayroll = ({
                               </Button>
                             </FormGroup>
                             <FormGroup className="text-right">
-                              <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
+                              <Button
+                                type="submit"
+                                name="submit"
+                                color="primary"
+                                className="btn-square mr-3"
+                              >
                                 <i className="fa fa-dot-circle-o"></i> Update
                               </Button>
                               <Button
                                 type="button"
                                 color="secondary"
                                 className="btn-square"
-                                onClick={() => { history.push('/admin/master/employee') }}
+                                onClick={() => {
+                                  history.push('/admin/master/employee');
+                                }}
                               >
                                 <i className="fa fa-ban"></i> Cancel
                               </Button>

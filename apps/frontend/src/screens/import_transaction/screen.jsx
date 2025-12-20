@@ -46,7 +46,7 @@ function ImportTransaction() {
   const dispatch = useDispatch();
 
   // Redux state
-  const date_format_list = useSelector((state) => state.import_transaction.date_format_list);
+  const date_format_list = useSelector(state => state.import_transaction.date_format_list);
 
   // Actions
   const importTransactionActions = useMemo(
@@ -134,28 +134,31 @@ function ImportTransaction() {
   }, [language]);
 
   // Set configurations from template
-  const setConfigurations = useCallback((configList) => {
-    const data = configList.filter((item) => item.id === selectedConfiguration);
-    if (data.length > 0) {
-      setInitValue((prev) => ({
-        ...prev,
-        skipRows: data[0].skipRows,
-        headerRowNo: data[0].headerRowNo,
-        delimiter: ',',
-        textQualifier: data[0].textQualifier,
-        otherDilimiterStr: data[0].otherDilimiterStr,
-        endRows: data[0].endRows,
-        skipColumns: data[0].skipColumns,
-      }));
-      setSelectedDateFormat(data[0].dateFormatId);
-      setSelectedDelimiter(data[0].delimiter);
-      setTemplateId(selectedConfiguration);
-    }
-  }, [selectedConfiguration]);
+  const setConfigurations = useCallback(
+    configList => {
+      const data = configList.filter(item => item.id === selectedConfiguration);
+      if (data.length > 0) {
+        setInitValue(prev => ({
+          ...prev,
+          skipRows: data[0].skipRows,
+          headerRowNo: data[0].headerRowNo,
+          delimiter: ',',
+          textQualifier: data[0].textQualifier,
+          otherDilimiterStr: data[0].otherDilimiterStr,
+          endRows: data[0].endRows,
+          skipColumns: data[0].skipColumns,
+        }));
+        setSelectedDateFormat(data[0].dateFormatId);
+        setSelectedDelimiter(data[0].delimiter);
+        setTemplateId(selectedConfiguration);
+      }
+    },
+    [selectedConfiguration]
+  );
 
   // Process CSV data
   const processData = useCallback(
-    (dataString) => {
+    dataString => {
       if (!dataString) return;
 
       const parse = Papa.parse(dataString, config);
@@ -164,7 +167,7 @@ function ImportTransaction() {
       let newString = '';
       if (skipColumns && skipColumns.length > 0) {
         const skipColumnsList = skipColumns.split(',');
-        skipColumnsList.forEach((row) => {
+        skipColumnsList.forEach(row => {
           newString += parseInt(row) - 1 + ',';
         });
       }
@@ -196,7 +199,7 @@ function ImportTransaction() {
               }
             }
           }
-          if (Object.values(obj).filter((x) => x).length > 0) {
+          if (Object.values(obj).filter(x => x).length > 0) {
             list.push(obj);
           }
         }
@@ -207,7 +210,7 @@ function ImportTransaction() {
 
       setTableData(list);
       setTableDataKey(headers);
-      setInitValue((prev) => ({
+      setInitValue(prev => ({
         ...prev,
         otherDilimiterStr: parse.meta.delimiter,
       }));
@@ -244,7 +247,7 @@ function ImportTransaction() {
 
     importTransactionActions.getDateFormatList();
 
-    importTransactionActions.getConfigurationList().then((res) => {
+    importTransactionActions.getConfigurationList().then(res => {
       setConfigurationList(res.data);
       setConfigurations(res.data);
     });
@@ -253,21 +256,21 @@ function ImportTransaction() {
       processData(location.state.dataString);
     }
 
-    importTransactionActions.getTableHeaderList().then((res) => {
+    importTransactionActions.getTableHeaderList().then(res => {
       setTableHeader(res.data);
     });
 
     detailBankAccountActions
       .getBankAccountByID(bankAccountId)
-      .then((res) => {
+      .then(res => {
         setDate(res.openingDate || '');
         setReconciledDate(res.lastReconcileDate || '');
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
 
-    importTransactionActions.getDelimiterList().then((res) => {
+    importTransactionActions.getDelimiterList().then(res => {
       setDelimiterList(res.data);
       setSelectedDelimiter(res.data[1]?.value || '');
       setInitialLoading(false);
@@ -289,7 +292,7 @@ function ImportTransaction() {
     setError(temp);
 
     if (Object.keys(temp).length) {
-      Object.values(temp).forEach((msg) => {
+      Object.values(temp).forEach(msg => {
         commonActions.tostifyAlert('error', msg);
       });
       return false;
@@ -305,7 +308,7 @@ function ImportTransaction() {
     const tempSelectError = [...selectError];
 
     // Check if already selected
-    const status = tempDropDown.filter((item) => item.value === e.value && e.value !== '');
+    const status = tempDropDown.filter(item => item.value === e.value && e.value !== '');
 
     if (status.length > 0) {
       tempStatus[index] = { label: e.value, status: true };
@@ -328,7 +331,7 @@ function ImportTransaction() {
 
   // Handle input change
   const handleInputChange = (name, value) => {
-    setInitValue((prev) => ({ ...prev, [name]: value }));
+    setInitValue(prev => ({ ...prev, [name]: value }));
   };
 
   // Import transactions
@@ -340,9 +343,9 @@ function ImportTransaction() {
       }
     });
 
-    const finalData = tableData.map((row) => {
+    const finalData = tableData.map(row => {
       const local2 = {};
-      mappedValues.forEach((mapping) => {
+      mappedValues.forEach(mapping => {
         const allKeys = Object.keys(row);
         const key = allKeys[mapping.inx];
         local2[mapping.val] = row[key];
@@ -354,23 +357,21 @@ function ImportTransaction() {
     let invalidDate = false;
     const delimiters = [',', ' ', '/', '-'];
 
-    const processedData = finalData.map((item) => {
+    const processedData = finalData.map(item => {
       const local = { ...item };
 
-      Object.keys(item).forEach((key) => {
+      Object.keys(item).forEach(key => {
         if (local[key] === '' || !local[key]) {
           local[key] = '-';
         }
 
         if (key === 'TRANSACTION_DATE') {
           const localData = local['TRANSACTION_DATE'];
-          const selectFormat = date_format_list?.find(
-            (f) => f.id === selectedDateFormat
-          )?.format;
+          const selectFormat = date_format_list?.find(f => f.id === selectedDateFormat)?.format;
 
           if (selectFormat) {
             let findDeli;
-            delimiters.forEach((d) => {
+            delimiters.forEach(d => {
               if (localData.split(d).length === 3) findDeli = d;
             });
 
@@ -382,24 +383,18 @@ function ImportTransaction() {
             }
 
             const dateItems = localData.split(findDeli);
-            const monthIndex = formatItems.findIndex((i) => i.includes('m'));
-            const dayIndex = formatItems.findIndex((i) => i.includes('d'));
-            const yearIndex = formatItems.findIndex((i) => i.includes('y'));
+            const monthIndex = formatItems.findIndex(i => i.includes('m'));
+            const dayIndex = formatItems.findIndex(i => i.includes('d'));
+            const yearIndex = formatItems.findIndex(i => i.includes('y'));
 
             const month = parseInt(dateItems[monthIndex]) - 1;
-            const formattedDate = new Date(
-              dateItems[yearIndex],
-              month,
-              dateItems[dayIndex]
-            );
+            const formattedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
 
             if (isNaN(formattedDate.getTime()) && !invalidDate) {
               invalidDate = true;
             }
 
-            local['TRANSACTION_DATE'] = dayjs(formattedDate, 'DD/MM/YYYY').format(
-              'DD/MM/YYYY'
-            );
+            local['TRANSACTION_DATE'] = dayjs(formattedDate, 'DD/MM/YYYY').format('DD/MM/YYYY');
           }
         }
 
@@ -425,7 +420,7 @@ function ImportTransaction() {
 
     importBankStatementActions
       .importTransaction(postData)
-      .then((res) => {
+      .then(res => {
         if (res.data.includes('Transactions Imported 0')) {
           commonActions.tostifyAlert(
             'error',
@@ -441,7 +436,7 @@ function ImportTransaction() {
           });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         navigate('/admin/banking/upload-statement');
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
@@ -477,20 +472,20 @@ function ImportTransaction() {
       indexMap,
     };
 
-    Object.keys(postData).forEach((key) => {
+    Object.keys(postData).forEach(key => {
       if (postData[key] === null) postData[key] = '';
     });
 
     importTransactionActions
       .createConfiguration(postData)
-      .then((res) => {
-        importTransactionActions.getConfigurationList().then((res2) => {
+      .then(res => {
+        importTransactionActions.getConfigurationList().then(res2 => {
           setTemplateId(res.data.id);
           setConfigurationList(res2.data);
           handleImport();
         });
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Unable to save template');
       });
   };
@@ -519,22 +514,22 @@ function ImportTransaction() {
   };
 
   // Handle configuration selection
-  const handleConfigurationChange = (e) => {
-    const data = configurationList.filter((item) => item.id === e.value);
+  const handleConfigurationChange = e => {
+    const data = configurationList.filter(item => item.id === e.value);
 
     if (data.length > 0) {
       const local = selectedValueDropdown.map(() => ({ label: 'Select', value: '' }));
 
-      Object.keys(data[0].indexMap || {}).forEach((key) => {
+      Object.keys(data[0].indexMap || {}).forEach(key => {
         const headerOption = selectOptionsFactory
           .renderOptions('label', 'value', tableHeader, '')
-          .find((val) => val.value === key);
+          .find(val => val.value === key);
         if (headerOption) {
           local[data[0].indexMap[key]] = headerOption;
         }
       });
 
-      setInitValue((prev) => ({
+      setInitValue(prev => ({
         ...prev,
         name: '',
         skipRows: data[0].skipRows,
@@ -548,7 +543,7 @@ function ImportTransaction() {
       setSelectedConfiguration(e.value);
       setSelectedDateFormat(data[0].dateFormatId);
       setSelectedDelimiter(data[0].delimiter);
-      setError((prev) => ({ ...prev, dateFormatId: '' }));
+      setError(prev => ({ ...prev, dateFormatId: '' }));
       setTemplateId(e.value);
     } else {
       setSelectedConfiguration(e.value);
@@ -583,10 +578,10 @@ function ImportTransaction() {
                     placeholder="New Template"
                     options={selectOptionsFactory
                       .renderOptions('name', 'id', configurationList, 'Configuration')
-                      .filter((i) => i.value !== 1)}
+                      .filter(i => i.value !== 1)}
                     value={selectOptionsFactory
                       .renderOptions('name', 'id', configurationList, 'Configuration')
-                      .find((option) => option.value === +selectedConfiguration)}
+                      .find(option => option.value === +selectedConfiguration)}
                     onChange={handleConfigurationChange}
                   />
                 </div>
@@ -603,9 +598,9 @@ function ImportTransaction() {
                   placeholder={`${strings.Enter || 'Enter'} ${strings.Name || 'Name'}`}
                   value={initValue.name}
                   disabled={templateId !== ''}
-                  onChange={(e) => {
+                  onChange={e => {
                     handleInputChange('name', e.target.value);
-                    setError((prev) => ({ ...prev, name: '' }));
+                    setError(prev => ({ ...prev, name: '' }));
                   }}
                   className={`input-transition w-64 ${error.name ? 'border-destructive' : ''}`}
                 />
@@ -615,9 +610,7 @@ function ImportTransaction() {
 
             {/* Parameters */}
             <fieldset className="border rounded-lg p-4">
-              <legend className="px-2 font-semibold">
-                {strings.Parameters || 'Parameters'}
-              </legend>
+              <legend className="px-2 font-semibold">{strings.Parameters || 'Parameters'}</legend>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                   <Label>Delimiter</Label>
@@ -625,8 +618,8 @@ function ImportTransaction() {
                     type="text"
                     placeholder="Delimiter"
                     value={initValue.otherDilimiterStr || ''}
-                    onChange={(e) => {
-                      setInitValue((prev) => ({
+                    onChange={e => {
+                      setInitValue(prev => ({
                         ...prev,
                         otherDilimiterStr: e.target.value,
                       }));
@@ -644,7 +637,7 @@ function ImportTransaction() {
                     type="text"
                     placeholder="Enter Number of Rows"
                     value={initValue.skipRows || ''}
-                    onChange={(e) => {
+                    onChange={e => {
                       handleInputChange('skipRows', e.target.value);
                       if (location.state?.dataString) {
                         processData(location.state.dataString);
@@ -658,7 +651,7 @@ function ImportTransaction() {
                   <Checkbox
                     id="isHeaderRow"
                     checked={isHeaderRow}
-                    onCheckedChange={(checked) => {
+                    onCheckedChange={checked => {
                       setIsHeaderRow(checked);
                       if (location.state?.dataString) {
                         processData(location.state.dataString);
@@ -684,13 +677,13 @@ function ImportTransaction() {
                     )}
                     value={selectOptionsFactory
                       .renderOptions('format', 'id', date_format_list || [], 'Date Format')
-                      .find((option) => option.value === +selectedDateFormat)}
-                    onChange={(option) => {
+                      .find(option => option.value === +selectedDateFormat)}
+                    onChange={option => {
                       if (option?.value) {
                         handleInputChange('dateFormatId', option.value);
                         setSelectedDateFormat(option.value);
                         setDateFormat(option.label);
-                        setError((prev) => ({ ...prev, dateFormatId: '' }));
+                        setError(prev => ({ ...prev, dateFormatId: '' }));
                       }
                     }}
                     className={error.dateFormatId ? 'border-destructive' : ''}
@@ -713,12 +706,12 @@ function ImportTransaction() {
                         options={selectOptionsFactory
                           .renderOptions('label', 'value', tableHeader, '')
                           .filter(
-                            (i) =>
+                            i =>
                               i.value === '' ||
-                              !selectedValueDropdown.find((i2) => i.value === i2.value)
+                              !selectedValueDropdown.find(i2 => i.value === i2.value)
                           )}
                         value={selectedValueDropdown[index]}
-                        onChange={(e) => handleDropdownChange(e, index)}
+                        onChange={e => handleDropdownChange(e, index)}
                       />
                     </div>
                   ))}

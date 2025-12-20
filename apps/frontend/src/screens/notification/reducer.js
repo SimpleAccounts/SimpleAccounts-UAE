@@ -1,16 +1,14 @@
 // import { NOTIFICATION } from 'constants/types'
 
-const initState = {
-}
+const initState = {};
 
 const NotificationReducer = (state = initState, action) => {
-  const { type } = action || {}
+  const { type } = action || {};
 
-  switch(type) {
-
+  switch (type) {
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default NotificationReducer
+export default NotificationReducer;

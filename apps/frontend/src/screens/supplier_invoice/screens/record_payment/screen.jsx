@@ -74,31 +74,46 @@ const supported_format = [
 // Zod validation schema
 const recordPaymentSchema = z.object({
   paymentNo: z.union([z.string(), z.number()]).optional(),
-  paymentDate: z.union([z.string(), z.date()]).refine((val) => val !== '', { message: 'Payment date is required' }),
+  paymentDate: z
+    .union([z.string(), z.date()])
+    .refine(val => val !== '', { message: 'Payment date is required' }),
   contactId: z.union([z.string(), z.number()]),
-  amount: z.union([z.string(), z.number()])
-    .refine((val) => {
+  amount: z.union([z.string(), z.number()]).refine(
+    val => {
       const numVal = typeof val === 'string' ? parseFloat(val) : val;
       return numVal > 0;
-    }, { message: 'Amount cannot be Less than 0' }),
-  payMode: z.object({ value: z.string(), label: z.string() }).refine((val) => val.value !== '', { message: 'Payment mode is required' }),
-  depositeTo: z.object({ value: z.union([z.string(), z.number()]), label: z.string() }).refine((val) => val.value !== '', { message: 'Paid through is required' }),
+    },
+    { message: 'Amount cannot be Less than 0' }
+  ),
+  payMode: z
+    .object({ value: z.string(), label: z.string() })
+    .refine(val => val.value !== '', { message: 'Payment mode is required' }),
+  depositeTo: z
+    .object({ value: z.union([z.string(), z.number()]), label: z.string() })
+    .refine(val => val.value !== '', { message: 'Paid through is required' }),
   notes: z.string().optional(),
   referenceCode: z.string().optional(),
   deleteFlag: z.boolean().optional(),
-  attachmentFile: z.any()
-    .refine((file) => {
-      if (!file) return true;
-      return supported_format.includes(file.type);
-    }, { message: '*Unsupported File Format' })
-    .refine((file) => {
-      if (!file) return true;
-      return file.size <= file_size;
-    }, { message: '*File Size is too large' }),
+  attachmentFile: z
+    .any()
+    .refine(
+      file => {
+        if (!file) return true;
+        return supported_format.includes(file.type);
+      },
+      { message: '*Unsupported File Format' }
+    )
+    .refine(
+      file => {
+        if (!file) return true;
+        return file.size <= file_size;
+      },
+      { message: '*File Size is too large' }
+    ),
   paidInvoiceListStr: z.array(z.any()),
 });
 
-const RecordSupplierPayment = (props) => {
+const RecordSupplierPayment = props => {
   const [language] = useState(window.localStorage.getItem('language'));
   const [loading, setLoading] = useState(false);
   const [dialog, setDialog] = useState(null);
@@ -118,7 +133,13 @@ const RecordSupplierPayment = (props) => {
     props.location.state.id.invoiceDate.substring(0, 2)
   );
 
-  const { control, handleSubmit, formState: { errors, touchedFields }, setValue, watch } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, touchedFields },
+    setValue,
+    watch,
+  } = useForm({
     resolver: zodResolver(recordPaymentSchema),
     defaultValues: {
       paymentNo: 1,
@@ -161,7 +182,7 @@ const RecordSupplierPayment = (props) => {
     ]);
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -173,7 +194,7 @@ const RecordSupplierPayment = (props) => {
     }
   };
 
-  const onSubmit = (formData) => {
+  const onSubmit = formData => {
     setDisabled(true);
     setDisableLeavePage(true);
 
@@ -213,9 +234,7 @@ const RecordSupplierPayment = (props) => {
     );
     submitData.append(
       'invoiceAmount',
-      props.location.state.id.invoiceAmount
-        ? props.location.state.id.invoiceAmount
-        : '00000'
+      props.location.state.id.invoiceAmount ? props.location.state.id.invoiceAmount : '00000'
     );
 
     setLoading(true);
@@ -239,7 +258,7 @@ const RecordSupplierPayment = (props) => {
       });
   };
 
-  const getCurrentUser = (data) => {
+  const getCurrentUser = data => {
     let option;
     if (data.label || data.value) {
       option = data;
@@ -369,9 +388,7 @@ const RecordSupplierPayment = (props) => {
                                   )}
                                 />
                                 {errors.contactId && touchedFields.contactId && (
-                                  <div className="invalid-feedback">
-                                    {errors.contactId.message}
-                                  </div>
+                                  <div className="invalid-feedback">{errors.contactId.message}</div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -393,7 +410,7 @@ const RecordSupplierPayment = (props) => {
                                       min="0.01"
                                       maxLength="14,2"
                                       id="amount"
-                                      onChange={(e) => {
+                                      onChange={e => {
                                         if (
                                           e.target.value === '' ||
                                           regDecimal.test(e.target.value)
@@ -445,7 +462,7 @@ const RecordSupplierPayment = (props) => {
                                       dropdownMode="select"
                                       minDate={invoiceDate}
                                       selected={field.value}
-                                      onChange={(date) => field.onChange(date)}
+                                      onChange={date => field.onChange(date)}
                                       className={`form-control ${
                                         errors.paymentDate && touchedFields.paymentDate
                                           ? 'is-invalid'
@@ -488,9 +505,7 @@ const RecordSupplierPayment = (props) => {
                                       placeholder={strings.Select + strings.PaymentMode}
                                       id="payMode"
                                       className={
-                                        errors.payMode && touchedFields.payMode
-                                          ? 'is-invalid'
-                                          : ''
+                                        errors.payMode && touchedFields.payMode ? 'is-invalid' : ''
                                       }
                                     />
                                   )}
@@ -505,8 +520,7 @@ const RecordSupplierPayment = (props) => {
                             <Col lg={4}>
                               <FormGroup className="mb-3">
                                 <Label htmlFor="depositeTo">
-                                  <span className="text-danger">* </span>{' '}
-                                  {strings.PaidThrough}
+                                  <span className="text-danger">* </span> {strings.PaidThrough}
                                 </Label>
                                 <Controller
                                   name="depositeTo"
@@ -558,9 +572,7 @@ const RecordSupplierPayment = (props) => {
                               <Row>
                                 <Col lg={6}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="receiptNumber">
-                                      {strings.ReferenceNumber}
-                                    </Label>
+                                    <Label htmlFor="receiptNumber">{strings.ReferenceNumber}</Label>
                                     <Controller
                                       name="receiptNumber"
                                       control={control}
@@ -572,20 +584,18 @@ const RecordSupplierPayment = (props) => {
                                           id="receiptNumber"
                                           placeholder={strings.ReceiptNumber}
                                           className={
-                                            errors.receiptNumber &&
-                                            touchedFields.receiptNumber
+                                            errors.receiptNumber && touchedFields.receiptNumber
                                               ? 'is-invalid'
                                               : ' '
                                           }
                                         />
                                       )}
                                     />
-                                    {errors.receiptNumber &&
-                                      touchedFields.receiptNumber && (
-                                        <div className="invalid-feedback">
-                                          {errors.receiptNumber.message}
-                                        </div>
-                                      )}
+                                    {errors.receiptNumber && touchedFields.receiptNumber && (
+                                      <div className="invalid-feedback">
+                                        {errors.receiptNumber.message}
+                                      </div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                                 <Col lg={6}>
@@ -616,12 +626,11 @@ const RecordSupplierPayment = (props) => {
                                         {fileName}
                                       </div>
                                     )}
-                                    {errors.attachmentFile &&
-                                      touchedFields.attachmentFile && (
-                                        <div className="invalid-file">
-                                          {errors.attachmentFile.message}
-                                        </div>
-                                      )}
+                                    {errors.attachmentFile && touchedFields.attachmentFile && (
+                                      <div className="invalid-file">
+                                        {errors.attachmentFile.message}
+                                      </div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                               </Row>
@@ -676,10 +685,7 @@ const RecordSupplierPayment = (props) => {
                                         `${props?.location?.state?.id?.renderURL}`,
                                         { id: props?.location?.state?.id?.renderID }
                                       );
-                                    } else
-                                      props.history.push(
-                                        '/admin/expense/supplier-invoice'
-                                      );
+                                    } else props.history.push('/admin/expense/supplier-invoice');
                                   }}
                                 >
                                   <i className="fa fa-ban"></i> {strings.Cancel}

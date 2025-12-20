@@ -28,7 +28,7 @@ const customStyles = {
       borderColor: 'hsl(var(--primary))',
     },
   }),
-  menu: (base) => ({
+  menu: base => ({
     ...base,
     backgroundColor: 'hsl(var(--background))',
     border: '1px solid hsl(var(--border))',
@@ -38,11 +38,11 @@ const customStyles = {
     backgroundColor: state.isFocused ? 'hsl(var(--accent))' : 'transparent',
     color: 'hsl(var(--foreground))',
   }),
-  singleValue: (base) => ({
+  singleValue: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
   }),
-  input: (base) => ({
+  input: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
   }),
@@ -100,7 +100,7 @@ function FilterComponent({ chart_of_account_list, viewFilter, generateReport }) 
   const startDate = watch('startDate');
   const endDate = watch('endDate');
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     const formattedData = {
       startDate: dayjs(data.startDate).format('YYYY-MM-DD HH:mm'),
       endDate: dayjs(data.endDate).format('YYYY-MM-DD HH:mm'),
@@ -140,7 +140,7 @@ function FilterComponent({ chart_of_account_list, viewFilter, generateReport }) 
                     showMonthDropdown
                     showYearDropdown
                     selected={field.value}
-                    onChange={(date) => {
+                    onChange={date => {
                       field.onChange(date);
                       if (dayjs(date).isAfter(endDate)) {
                         setValue('endDate', dayjs(date).add(1, 'M').toDate());
@@ -169,7 +169,7 @@ function FilterComponent({ chart_of_account_list, viewFilter, generateReport }) 
                     showMonthDropdown
                     showYearDropdown
                     selected={field.value}
-                    onChange={(date) => {
+                    onChange={date => {
                       field.onChange(date);
                       if (dayjs(date).isBefore(startDate)) {
                         setValue('startDate', dayjs(date).subtract(1, 'M').toDate());

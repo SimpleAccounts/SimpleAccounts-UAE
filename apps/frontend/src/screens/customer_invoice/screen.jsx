@@ -6,14 +6,30 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { upperCase } from 'lodash-es';
 import { ToWords } from 'to-words';
-import { Plus, Search, RefreshCw, FileText, Eye, Edit, Copy, FileCheck, Send, University, CreditCard, File } from 'lucide-react';
+import {
+  Plus,
+  Search,
+  RefreshCw,
+  FileText,
+  Eye,
+  Edit,
+  Copy,
+  FileCheck,
+  Send,
+  University,
+  CreditCard,
+  File,
+} from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { DataTable } from '@/components/ui/data-table';
-import { DataTableRowActions, commonActions as tableActions } from '@/components/ui/data-table-actions';
+import {
+  DataTableRowActions,
+  commonActions as tableActions,
+} from '@/components/ui/data-table-actions';
 
 import { Loader, ConfirmDeleteModal, SentInvoice } from 'components';
 import { selectOptionsFactory } from 'utils';
@@ -52,10 +68,10 @@ function CustomerInvoice() {
   const dispatch = useDispatch();
 
   // Redux state
-  const customer_invoice_list = useSelector((state) => state.customer_invoice.customer_invoice_list);
-  const customer_list = useSelector((state) => state.customer_invoice.customer_list);
-  const status_list = useSelector((state) => state.customer_invoice.status_list);
-  const universal_currency_list = useSelector((state) => state.common.universal_currency_list);
+  const customer_invoice_list = useSelector(state => state.customer_invoice.customer_invoice_list);
+  const customer_list = useSelector(state => state.customer_invoice.customer_list);
+  const status_list = useSelector(state => state.customer_invoice.status_list);
+  const universal_currency_list = useSelector(state => state.common.universal_currency_list);
 
   // Actions
   const customerInvoiceActions = useMemo(
@@ -128,7 +144,7 @@ function CustomerInvoice() {
 
     customerInvoiceActions
       .getCustomerInvoiceList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
           if (location.state?.id) {
@@ -136,7 +152,7 @@ function CustomerInvoice() {
           }
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setLoading(false);
       });
@@ -145,12 +161,12 @@ function CustomerInvoice() {
   const getOverdue = useCallback(() => {
     customerInvoiceActions
       .getOverdueAmountDetails(filterData.contactType)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setOverDueAmountDetails(res.data);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   }, [customerInvoiceActions, commonActions, filterData.contactType]);
@@ -189,11 +205,13 @@ function CustomerInvoice() {
 
       customerInvoiceActions
         .postInvoice(postingRequestModel)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             commonActions.tostifyAlert(
               'success',
-              markAsSent ? strings.InvoiceStatusChangedSuccessfully : strings.InvoiceSentSuccessfully
+              markAsSent
+                ? strings.InvoiceStatusChangedSuccessfully
+                : strings.InvoiceSentSuccessfully
             );
             setLoading(false);
             getOverdue();
@@ -209,7 +227,7 @@ function CustomerInvoice() {
   );
 
   const unPostInvoice = useCallback(
-    (row) => {
+    row => {
       setLoading(true);
       const postingRequestModel = {
         amount: row.invoiceAmount,
@@ -219,7 +237,7 @@ function CustomerInvoice() {
 
       customerInvoiceActions
         .unPostInvoice(postingRequestModel)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             commonActions.tostifyAlert('success', strings.InvoiceMovedToDraftSuccessfully);
             setLoading(false);
@@ -264,14 +282,17 @@ function CustomerInvoice() {
   const closeInvoice = useCallback(
     (id, status) => {
       if (status === 'Paid') {
-        commonActions.tostifyAlert('error', 'Please delete the receipt first to delete the invoice');
+        commonActions.tostifyAlert(
+          'error',
+          'Please delete the receipt first to delete the invoice'
+        );
       } else {
         setDialog(
           <ConfirmDeleteModal
             isOpen={true}
             okHandler={() => {
               setDialog(null);
-              customerInvoiceActions.deleteInvoice(id).then((res) => {
+              customerInvoiceActions.deleteInvoice(id).then(res => {
                 commonActions.tostifyAlert(
                   'success',
                   res.data?.message || 'Customer Invoice Deleted Successfully'
@@ -291,11 +312,11 @@ function CustomerInvoice() {
 
   // Filter handlers
   const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
+    setFilterData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     initializeData();
   };
 
@@ -309,7 +330,7 @@ function CustomerInvoice() {
       status: '',
       contactType: 2,
     });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     setTimeout(() => initializeData(), 0);
   };
 
@@ -489,7 +510,9 @@ function CustomerInvoice() {
               label: strings.RecordPayment,
               icon: University,
               onClick: () =>
-                navigate('/admin/income/customer-invoice/record-payment', { state: { id: invoice } }),
+                navigate('/admin/income/customer-invoice/record-payment', {
+                  state: { id: invoice },
+                }),
             });
           }
 
@@ -538,7 +561,7 @@ function CustomerInvoice() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!customer_invoice_list?.data) return [];
-    return customer_invoice_list.data.map((customer) => ({
+    return customer_invoice_list.data.map(customer => ({
       id: customer.id,
       status: customer.status,
       statusEnum: customer.statusEnum,
@@ -561,7 +584,7 @@ function CustomerInvoice() {
 
   // Customer options for filter
   const customerOptions = useMemo(() => {
-    return customer_list.map((item) => ({
+    return customer_list.map(item => ({
       label: item.label?.contactName || item.label,
       value: item.value,
     }));
@@ -601,9 +624,14 @@ function CustomerInvoice() {
                   className="react-select-container"
                   classNamePrefix="react-select"
                   placeholder={`${strings.Select}${strings.Customer}`}
-                  options={selectOptionsFactory.renderOptions('label', 'value', customerOptions, 'Customer')}
+                  options={selectOptionsFactory.renderOptions(
+                    'label',
+                    'value',
+                    customerOptions,
+                    'Customer'
+                  )}
                   value={filterData.customerId}
-                  onChange={(option) => handleFilterChange('customerId', option || '')}
+                  onChange={option => handleFilterChange('customerId', option || '')}
                   isClearable
                 />
                 <DatePicker
@@ -615,7 +643,7 @@ function CustomerInvoice() {
                   showYearDropdown
                   dateFormat="dd-MM-yyyy"
                   dropdownMode="select"
-                  onChange={(value) => handleFilterChange('invoiceDate', value)}
+                  onChange={value => handleFilterChange('invoiceDate', value)}
                 />
                 <DatePicker
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm input-transition"
@@ -627,7 +655,7 @@ function CustomerInvoice() {
                   dateFormat="dd-MM-yyyy"
                   autoComplete="off"
                   selected={filterData.invoiceDueDate}
-                  onChange={(value) => handleFilterChange('invoiceDueDate', value)}
+                  onChange={value => handleFilterChange('invoiceDueDate', value)}
                 />
                 <Input
                   type="number"
@@ -635,7 +663,7 @@ function CustomerInvoice() {
                   value={filterData.amount}
                   placeholder={`${strings.Enter}${strings.Amount}`}
                   className="input-transition"
-                  onChange={(e) => handleFilterChange('amount', e.target.value)}
+                  onChange={e => handleFilterChange('amount', e.target.value)}
                 />
                 <div className="flex gap-2">
                   <Button onClick={handleSearch} variant="default" size="icon">

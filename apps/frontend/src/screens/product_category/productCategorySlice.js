@@ -13,7 +13,7 @@ const productCategorySlice = createSlice({
       state.product_category_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder.addCase(PRODUCT_CATEGORY.PRODUCT_CATEGORY_LIST, (state, action) => {
       state.product_category_list = action.payload || [];
     });
@@ -22,4 +22,3 @@ const productCategorySlice = createSlice({
 
 export const { setProductCategoryList } = productCategorySlice.actions;
 export default productCategorySlice.reducer;
-

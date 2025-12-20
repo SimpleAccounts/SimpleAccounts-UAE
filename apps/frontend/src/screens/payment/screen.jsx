@@ -36,7 +36,7 @@ const selectStyles = {
       borderColor: 'hsl(var(--ring))',
     },
   }),
-  menu: (base) => ({
+  menu: base => ({
     ...base,
     backgroundColor: 'hsl(var(--background))',
     border: '1px solid hsl(var(--border))',
@@ -46,19 +46,19 @@ const selectStyles = {
     backgroundColor: state.isSelected
       ? 'hsl(var(--primary))'
       : state.isFocused
-      ? 'hsl(var(--accent))'
-      : 'transparent',
+        ? 'hsl(var(--accent))'
+        : 'transparent',
     color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
   }),
-  singleValue: (base) => ({
+  singleValue: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
   }),
-  placeholder: (base) => ({
+  placeholder: base => ({
     ...base,
     color: 'hsl(var(--muted-foreground))',
   }),
-  input: (base) => ({
+  input: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
   }),
@@ -73,14 +73,11 @@ function Payment() {
   const dispatch = useDispatch();
 
   // Redux state
-  const payment_list = useSelector((state) => state.payment.payment_list);
-  const supplier_list = useSelector((state) => state.payment.supplier_list);
+  const payment_list = useSelector(state => state.payment.payment_list);
+  const supplier_list = useSelector(state => state.payment.supplier_list);
 
   // Actions
-  const paymentActions = useMemo(
-    () => bindActionCreators(PaymentActions, dispatch),
-    [dispatch]
-  );
+  const paymentActions = useMemo(() => bindActionCreators(PaymentActions, dispatch), [dispatch]);
   const commonActions = useMemo(() => bindActionCreators(CommonActions, dispatch), [dispatch]);
 
   // Local state
@@ -120,12 +117,12 @@ function Payment() {
 
     paymentActions
       .getPaymentList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setLoading(false);
       });
@@ -142,11 +139,11 @@ function Payment() {
 
   // Filter handlers
   const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
+    setFilterData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     initializeData();
   };
 
@@ -156,14 +153,14 @@ function Payment() {
       paymentDate: '',
       invoiceAmount: '',
     });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     setTimeout(() => initializeData(), 0);
   };
 
   // Transform supplier list for select
   const supplierOptions = useMemo(() => {
     if (!supplier_list) return [];
-    return supplier_list.map((item) => ({
+    return supplier_list.map(item => ({
       label: item.label?.contactName || item.label,
       value: item.value,
     }));
@@ -191,9 +188,7 @@ function Payment() {
         accessorKey: 'receiptDate',
         header: strings.PAYMENTDATE,
         cell: ({ row }) =>
-          row.original.paymentDate
-            ? dayjs(row.original.paymentDate).format('DD-MM-YYYY')
-            : '',
+          row.original.paymentDate ? dayjs(row.original.paymentDate).format('DD-MM-YYYY') : '',
       },
       {
         accessorKey: 'invoiceAmount',
@@ -217,7 +212,7 @@ function Payment() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!payment_list?.data) return [];
-    return payment_list.data.map((item) => ({
+    return payment_list.data.map(item => ({
       paymentId: item.paymentId,
       supplierName: item.supplierName || '',
       invoiceNumber: item.invoiceNumber || '',
@@ -229,7 +224,7 @@ function Payment() {
   }, [payment_list]);
 
   // Row click handler
-  const handleRowClick = (row) => {
+  const handleRowClick = row => {
     navigate('/admin/expense/payment/detail', {
       state: { id: row.paymentId },
     });
@@ -272,7 +267,7 @@ function Payment() {
                       : []
                   }
                   value={filterData.supplierId}
-                  onChange={(option) => {
+                  onChange={option => {
                     handleFilterChange('supplierId', option || '');
                   }}
                 />
@@ -287,7 +282,7 @@ function Payment() {
                   autoComplete="off"
                   dateFormat="dd-MM-yyyy"
                   dropdownMode="select"
-                  onChange={(value) => {
+                  onChange={value => {
                     handleFilterChange('paymentDate', value);
                   }}
                 />

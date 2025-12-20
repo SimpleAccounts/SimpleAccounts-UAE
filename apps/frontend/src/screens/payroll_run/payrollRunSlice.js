@@ -33,7 +33,7 @@ const payrollRunSlice = createSlice({
       state.user_approver_generater_dropdown_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(EMPLOYEEPAYROLL.PAYROLL_EMPLOYEE_LIST, (state, action) => {
         state.payroll_employee_list = action.payload || [];
@@ -50,12 +50,9 @@ const payrollRunSlice = createSlice({
       .addCase(EMPLOYEEPAYROLL.APPROVER_DROPDOWN, (state, action) => {
         state.approver_dropdown_list = action.payload || [];
       })
-      .addCase(
-        EMPLOYEEPAYROLL.USER_APPROVER_GENERATER_DROPDOWN,
-        (state, action) => {
-          state.user_approver_generater_dropdown_list = action.payload || [];
-        }
-      );
+      .addCase(EMPLOYEEPAYROLL.USER_APPROVER_GENERATER_DROPDOWN, (state, action) => {
+        state.user_approver_generater_dropdown_list = action.payload || [];
+      });
   },
 });
 
@@ -68,4 +65,3 @@ export const {
   setUserApproverGeneraterDropdownList,
 } = payrollRunSlice.actions;
 export default payrollRunSlice.reducer;
-

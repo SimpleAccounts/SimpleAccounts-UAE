@@ -31,14 +31,11 @@ function Contact() {
   const dispatch = useDispatch();
 
   // Redux state
-  const contact_list = useSelector((state) => state.contact.contact_list);
-  const contact_type_list = useSelector((state) => state.contact.contact_type_list);
+  const contact_list = useSelector(state => state.contact.contact_list);
+  const contact_type_list = useSelector(state => state.contact.contact_type_list);
 
   // Actions
-  const contactActions = useMemo(
-    () => bindActionCreators(ContactActions, dispatch),
-    [dispatch]
-  );
+  const contactActions = useMemo(() => bindActionCreators(ContactActions, dispatch), [dispatch]);
   const commonActions = useMemo(() => bindActionCreators(CommonActions, dispatch), [dispatch]);
 
   // Local state
@@ -78,12 +75,12 @@ function Contact() {
 
     contactActions
       .getContactList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setLoading(false);
       });
@@ -100,7 +97,7 @@ function Contact() {
 
   // Navigate to detail
   const goToDetail = useCallback(
-    (row) => {
+    row => {
       navigate('/admin/master/contact/detail', { state: { id: row.id } });
     },
     [navigate]
@@ -108,11 +105,11 @@ function Contact() {
 
   // Filter handlers
   const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
+    setFilterData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     initializeData();
   };
 
@@ -122,7 +119,7 @@ function Contact() {
       email: '',
       contactType: '',
     });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     setTimeout(() => initializeData(), 0);
   };
 
@@ -147,9 +144,7 @@ function Contact() {
       {
         accessorKey: 'contactTypeString',
         header: strings.CONTACTTYPE,
-        cell: ({ row }) => (
-          <Badge variant="secondary">{row.original.contactTypeString}</Badge>
-        ),
+        cell: ({ row }) => <Badge variant="secondary">{row.original.contactTypeString}</Badge>,
       },
       {
         accessorKey: 'email',
@@ -201,7 +196,7 @@ function Contact() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!contact_list?.data) return [];
-    return contact_list.data.map((contact) => ({
+    return contact_list.data.map(contact => ({
       id: contact.id,
       fullName: contact.fullName || '',
       organization: contact.organization || '',
@@ -246,13 +241,13 @@ function Contact() {
                   value={filterData.name}
                   placeholder={`${strings.Enter} ${strings.Name}`}
                   className="input-transition"
-                  onChange={(e) => handleFilterChange('name', e.target.value)}
+                  onChange={e => handleFilterChange('name', e.target.value)}
                 />
                 <Input
                   value={filterData.email}
                   placeholder={`${strings.Enter} ${strings.Email}`}
                   className="input-transition"
-                  onChange={(e) => handleFilterChange('email', e.target.value)}
+                  onChange={e => handleFilterChange('email', e.target.value)}
                 />
                 <div className="flex gap-2">
                   <Button onClick={handleSearch} variant="default" size="icon">

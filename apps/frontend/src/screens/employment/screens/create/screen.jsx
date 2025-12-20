@@ -19,9 +19,7 @@ import {
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { ImageUploader } from 'components';
-import {
-  CommonActions
-} from 'services/global';
+import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory, selectStyles } from 'utils';
 import * as EmployeeActions from '../../actions';
 import * as EmploymentCreateActions from './actions';
@@ -45,20 +43,20 @@ const createEmploymentSchema = z.object({
   employeeCode: z.string().optional(),
 });
 
-const mapStateToProps = (state) => {
-  return ({
+const mapStateToProps = state => {
+  return {
     currency_list: state.employee.currency_list,
     country_list: state.contact.country_list,
     state_list: state.contact.state_list,
-  });
+  };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return ({
+const mapDispatchToProps = dispatch => {
+  return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     employeeActions: bindActionCreators(EmployeeActions, dispatch),
-    employmentCreateActions: bindActionCreators(EmploymentCreateActions, dispatch)
-  });
+    employmentCreateActions: bindActionCreators(EmploymentCreateActions, dispatch),
+  };
 };
 
 const regEx = /^[0-9]+$/;
@@ -72,7 +70,7 @@ const CreateEmployment = ({
   commonActions,
   employeeActions,
   employmentCreateActions,
-  history
+  history,
 }) => {
   const [loading, setLoading] = useState(false);
   const [createMore, setCreateMore] = useState(false);
@@ -97,7 +95,12 @@ const CreateEmployment = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, reset } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = form;
 
   useEffect(() => {
     initializeData();
@@ -107,7 +110,7 @@ const CreateEmployment = ({
     // employeeActions.getCountryList();
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     setDisabled(true);
 
     const {
@@ -126,54 +129,21 @@ const CreateEmployment = ({
 
     const formData = new FormData();
 
-    formData.append(
-      'department',
-      department !== null ? department : '',
-    );
-    formData.append(
-      'dateOfJoining',
-      dateOfJoining !== null ? dateOfJoining : '',
-    );
-    formData.append(
-      'contractType',
-      contractType !== null ? contractType : '',
-    );
-    formData.append(
-      'labourCard',
-      labourCard != null ? labourCard : '',
-    );
-    formData.append(
-      'availedLeaves',
-      availedLeaves != null ? availedLeaves : '',
-    );
-    formData.append(
-      'leavesAvailed',
-      leavesAvailed != null ? leavesAvailed : '',
-    );
-    formData.append(
-      'passportNumber',
-      passportNumber != null ? passportNumber : '',
-    );
-    formData.append(
-      'passportExpiryDate',
-      passportExpiryDate != null ? passportExpiryDate : '',
-    );
-    formData.append(
-      'visaNumber',
-      visaNumber != null ? visaNumber : '',
-    );
-    formData.append(
-      'visaExpiryDate',
-      visaExpiryDate != null ? visaExpiryDate : '',
-    );
-    formData.append(
-      'grossSalary',
-      grossSalary != null ? grossSalary : '',
-    );
+    formData.append('department', department !== null ? department : '');
+    formData.append('dateOfJoining', dateOfJoining !== null ? dateOfJoining : '');
+    formData.append('contractType', contractType !== null ? contractType : '');
+    formData.append('labourCard', labourCard != null ? labourCard : '');
+    formData.append('availedLeaves', availedLeaves != null ? availedLeaves : '');
+    formData.append('leavesAvailed', leavesAvailed != null ? leavesAvailed : '');
+    formData.append('passportNumber', passportNumber != null ? passportNumber : '');
+    formData.append('passportExpiryDate', passportExpiryDate != null ? passportExpiryDate : '');
+    formData.append('visaNumber', visaNumber != null ? visaNumber : '');
+    formData.append('visaExpiryDate', visaExpiryDate != null ? visaExpiryDate : '');
+    formData.append('grossSalary', grossSalary != null ? grossSalary : '');
 
     employmentCreateActions
       .createEmployment(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert(
             'success',
@@ -187,7 +157,8 @@ const CreateEmployment = ({
           }
           setDisabled(false);
         }
-      }).catch((err) => {
+      })
+      .catch(err => {
         commonActions.tostifyAlert(
           'error',
           err.data.message ? err.data.message : 'Created Unsuccessfully'
@@ -233,8 +204,11 @@ const CreateEmployment = ({
                                       id="department"
                                       placeholder="Enter department"
                                       {...field}
-                                      onChange={(e) => {
-                                        if (e.target.value === '' || regExAlpha.test(e.target.value)) {
+                                      onChange={e => {
+                                        if (
+                                          e.target.value === '' ||
+                                          regExAlpha.test(e.target.value)
+                                        ) {
                                           field.onChange(e);
                                         }
                                       }}
@@ -243,13 +217,17 @@ const CreateEmployment = ({
                                   )}
                                 />
                                 {errors.department && (
-                                  <div className="invalid-feedback">{errors.department.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.department.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
                             <Col md="4">
                               <FormGroup className="mb-3">
-                                <Label htmlFor="dateOfJoining"><span className="text-danger">* </span>Date Of Joining</Label>
+                                <Label htmlFor="dateOfJoining">
+                                  <span className="text-danger">* </span>Date Of Joining
+                                </Label>
                                 <Controller
                                   name="dateOfJoining"
                                   control={control}
@@ -263,12 +241,14 @@ const CreateEmployment = ({
                                       dateFormat="dd-MM-yyyy"
                                       dropdownMode="select"
                                       selected={field.value}
-                                      onChange={(date) => field.onChange(date)}
+                                      onChange={date => field.onChange(date)}
                                     />
                                   )}
                                 />
                                 {errors.dateOfJoining && (
-                                  <div className="invalid-feedback">{errors.dateOfJoining.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.dateOfJoining.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -288,8 +268,11 @@ const CreateEmployment = ({
                                       id="employeeCode"
                                       placeholder="Enter Employee Code"
                                       {...field}
-                                      onChange={(e) => {
-                                        if (e.target.value === '' || regExAlpha.test(e.target.value)) {
+                                      onChange={e => {
+                                        if (
+                                          e.target.value === '' ||
+                                          regExAlpha.test(e.target.value)
+                                        ) {
                                           field.onChange(e);
                                         }
                                       }}
@@ -298,7 +281,9 @@ const CreateEmployment = ({
                                   )}
                                 />
                                 {errors.employeeCode && (
-                                  <div className="invalid-feedback">{errors.employeeCode.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.employeeCode.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -314,8 +299,11 @@ const CreateEmployment = ({
                                       id="labourCard"
                                       placeholder="Enter Labour Card"
                                       {...field}
-                                      onChange={(e) => {
-                                        if (e.target.value === '' || regExAlpha.test(e.target.value)) {
+                                      onChange={e => {
+                                        if (
+                                          e.target.value === '' ||
+                                          regExAlpha.test(e.target.value)
+                                        ) {
                                           field.onChange(e);
                                         }
                                       }}
@@ -345,8 +333,11 @@ const CreateEmployment = ({
                                       id="availedLeaves"
                                       placeholder="Enter Available Leaves"
                                       {...field}
-                                      onChange={(e) => {
-                                        if (e.target.value === '' || regExAlpha.test(e.target.value)) {
+                                      onChange={e => {
+                                        if (
+                                          e.target.value === '' ||
+                                          regExAlpha.test(e.target.value)
+                                        ) {
                                           field.onChange(e);
                                         }
                                       }}
@@ -355,7 +346,9 @@ const CreateEmployment = ({
                                   )}
                                 />
                                 {errors.availedLeaves && (
-                                  <div className="invalid-feedback">{errors.availedLeaves.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.availedLeaves.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -371,8 +364,11 @@ const CreateEmployment = ({
                                       id="leavesAvailed"
                                       placeholder="Enter Leaves Availed"
                                       {...field}
-                                      onChange={(e) => {
-                                        if (e.target.value === '' || regExAlpha.test(e.target.value)) {
+                                      onChange={e => {
+                                        if (
+                                          e.target.value === '' ||
+                                          regExAlpha.test(e.target.value)
+                                        ) {
                                           field.onChange(e);
                                         }
                                       }}
@@ -381,7 +377,9 @@ const CreateEmployment = ({
                                   )}
                                 />
                                 {errors.leavesAvailed && (
-                                  <div className="invalid-feedback">{errors.leavesAvailed.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.leavesAvailed.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -406,13 +404,17 @@ const CreateEmployment = ({
                                   )}
                                 />
                                 {errors.passportNumber && (
-                                  <div className="invalid-feedback">{errors.passportNumber.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.passportNumber.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
                             <Col md="4">
                               <FormGroup className="mb-3">
-                                <Label htmlFor="passportExpiryDate"><span className="text-danger">* </span>Passport Expiry Date</Label>
+                                <Label htmlFor="passportExpiryDate">
+                                  <span className="text-danger">* </span>Passport Expiry Date
+                                </Label>
                                 <Controller
                                   name="passportExpiryDate"
                                   control={control}
@@ -426,12 +428,14 @@ const CreateEmployment = ({
                                       dateFormat="dd-MM-yyyy"
                                       dropdownMode="select"
                                       selected={field.value}
-                                      onChange={(date) => field.onChange(date)}
+                                      onChange={date => field.onChange(date)}
                                     />
                                   )}
                                 />
                                 {errors.passportExpiryDate && (
-                                  <div className="invalid-feedback">{errors.passportExpiryDate.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.passportExpiryDate.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -456,13 +460,17 @@ const CreateEmployment = ({
                                   )}
                                 />
                                 {errors.visaNumber && (
-                                  <div className="invalid-feedback">{errors.visaNumber.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.visaNumber.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
                             <Col md="4">
                               <FormGroup className="mb-3">
-                                <Label htmlFor="visaExpiryDate"><span className="text-danger">* </span>Visa Expiry Date</Label>
+                                <Label htmlFor="visaExpiryDate">
+                                  <span className="text-danger">* </span>Visa Expiry Date
+                                </Label>
                                 <Controller
                                   name="visaExpiryDate"
                                   control={control}
@@ -476,12 +484,14 @@ const CreateEmployment = ({
                                       dateFormat="dd-MM-yyyy"
                                       dropdownMode="select"
                                       selected={field.value}
-                                      onChange={(date) => field.onChange(date)}
+                                      onChange={date => field.onChange(date)}
                                     />
                                   )}
                                 />
                                 {errors.visaExpiryDate && (
-                                  <div className="invalid-feedback">{errors.visaExpiryDate.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.visaExpiryDate.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -506,7 +516,9 @@ const CreateEmployment = ({
                                   )}
                                 />
                                 {errors.grossSalary && (
-                                  <div className="invalid-feedback">{errors.grossSalary.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.grossSalary.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -540,7 +552,9 @@ const CreateEmployment = ({
                               type="button"
                               color="secondary"
                               className="btn-square"
-                              onClick={() => { history.push('/admin/payroll/employment') }}
+                              onClick={() => {
+                                history.push('/admin/payroll/employment');
+                              }}
                             >
                               <i className="fa fa-ban"></i> Cancel
                             </Button>

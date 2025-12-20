@@ -28,34 +28,33 @@ if (localStorage.getItem('language') == null) {
 }
 
 // Zod validation schema
-const createOpeningBalanceSchema = z
-  .object({
-    transactionCategoryId: z
-      .object({
-        value: z.number(),
-        label: z.string(),
-      })
-      .nullable()
-      .refine((val) => val !== null, 'Transaction category is required')
-      .refine(
-        (val) => val && val.label !== 'Select Transaction Category',
-        'Transaction category is required'
-      ),
-    effectiveDate: z.date({
-      required_error: 'Date is required',
-      invalid_type_error: 'Date is required',
-    }),
-    openingBalance: z.string().min(1, 'Amount is required'),
-  });
+const createOpeningBalanceSchema = z.object({
+  transactionCategoryId: z
+    .object({
+      value: z.number(),
+      label: z.string(),
+    })
+    .nullable()
+    .refine(val => val !== null, 'Transaction category is required')
+    .refine(
+      val => val && val.label !== 'Select Transaction Category',
+      'Transaction category is required'
+    ),
+  effectiveDate: z.date({
+    required_error: 'Date is required',
+    invalid_type_error: 'Date is required',
+  }),
+  openingBalance: z.string().min(1, 'Amount is required'),
+});
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     currency_list: state.common.currency_list,
     transaction_category_list: state.opening_balance.transaction_category_list,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     openingBalanceActions: bindActionCreators(OpeningBalanceActions, dispatch),
     createOpeningBalancesActions: bindActionCreators(CreateOpeningBalancesActions, dispatch),
@@ -111,12 +110,12 @@ const CreateOpeningBalance = ({
   const getOpeningBalanceList = () => {
     createOpeningBalancesActions
       .getOpeningBalanceList()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setOpeningbalancelist(res.data);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert(
           'error',
           err && err.data ? err.data.message : 'Something Went Wrong'
@@ -124,13 +123,17 @@ const CreateOpeningBalance = ({
       });
   };
 
-  const checkIfOpeningBalanceAlreadyExist = (transactioncategorylist) => {
+  const checkIfOpeningBalanceAlreadyExist = transactioncategorylist => {
     const openingbalancelistData = openingbalancelist.data;
-    if (openingbalancelistData && openingbalancelistData.length && openingbalancelistData.length !== 0) {
+    if (
+      openingbalancelistData &&
+      openingbalancelistData.length &&
+      openingbalancelistData.length !== 0
+    ) {
       let transactioncategorynewlist = [];
-      transactioncategorylist.map((category) => {
+      transactioncategorylist.map(category => {
         let openingbalance = openingbalancelistData.find(
-          (element) => category.transactionCategoryId === element.transactionCategoryId
+          element => category.transactionCategoryId === element.transactionCategoryId
         );
         if (!openingbalance) {
           transactioncategorynewlist.push(category);
@@ -144,7 +147,7 @@ const CreateOpeningBalance = ({
 
   const initializeData = () => {
     openingBalanceActions.getTransactionCategoryList();
-    commonActions.getCompanyDetails().then((action) => {
+    commonActions.getCompanyDetails().then(action => {
       // Redux Toolkit thunks return action objects
       if (action && action.type && action.type.includes('fulfilled')) {
         const isRegisteredVatValue = action.payload.isRegisteredVat;
@@ -163,11 +166,14 @@ const CreateOpeningBalance = ({
     });
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     setDisabled(true);
 
     let formData = new FormData();
-    formData.append(`persistModelList[${0}].transactionCategoryId`, data.transactionCategoryId.value);
+    formData.append(
+      `persistModelList[${0}].transactionCategoryId`,
+      data.transactionCategoryId.value
+    );
     formData.append(`persistModelList[${0}].effectiveDate`, dayjs(data.effectiveDate));
     formData.append(`persistModelList[${0}].openingBalance`, data.openingBalance);
 
@@ -177,7 +183,7 @@ const CreateOpeningBalance = ({
 
     createOpeningBalancesActions
       .addOpeningBalance(formData)
-      .then((res) => {
+      .then(res => {
         setDisabled(false);
         if (res.status === 200) {
           reset({
@@ -199,7 +205,7 @@ const CreateOpeningBalance = ({
           }
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         setLoading(false);
         commonActions.tostifyAlert(
@@ -270,7 +276,7 @@ const CreateOpeningBalance = ({
                                               'transactionCategoryId',
                                               filteredTransactionCategoryList
                                                 .filter(
-                                                  (category) =>
+                                                  category =>
                                                     isRegisteredVat ||
                                                     ![
                                                       'VAT Penalty',
@@ -280,7 +286,9 @@ const CreateOpeningBalance = ({
                                                       'GCC VAT Payable',
                                                       'Output VAT',
                                                       'Input VAT',
-                                                    ].includes(category.transactionCategoryName.trim())
+                                                    ].includes(
+                                                      category.transactionCategoryName.trim()
+                                                    )
                                                 )
                                                 .sort((a, b) =>
                                                   a.transactionCategoryName.localeCompare(
@@ -318,7 +326,7 @@ const CreateOpeningBalance = ({
                                       {...field}
                                       id="date"
                                       selected={field.value}
-                                      onChange={(date) => field.onChange(date)}
+                                      onChange={date => field.onChange(date)}
                                       className={`form-control ${
                                         errors.effectiveDate ? 'is-invalid' : ''
                                       }`}
@@ -359,7 +367,7 @@ const CreateOpeningBalance = ({
                                       id="openingBalance"
                                       rows="5"
                                       className={errors.openingBalance ? 'is-invalid' : ''}
-                                      onChange={(e) => {
+                                      onChange={e => {
                                         if (e.target.value === '' || regEx.test(e.target.value)) {
                                           field.onChange(e);
                                         }

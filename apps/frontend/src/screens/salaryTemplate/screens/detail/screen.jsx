@@ -36,7 +36,7 @@ const updateSalaryTemplateSchema = z.object({
   salaryRoleId: z.string().optional(),
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     currency_list: state.employee.currency_list,
     salary_structure_dropdown: state.salarytemplate.salary_structure_dropdown,
@@ -44,7 +44,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     employeeActions: bindActionCreators(EmployeeActions, dispatch),
@@ -53,7 +53,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const DetailSalaryTemplate = (props) => {
+const DetailSalaryTemplate = props => {
   const [loading, setLoading] = useState(true);
   const [currentSalaryTemplateId, setCurrentSalaryTemplateId] = useState(null);
   const [dialog, setDialog] = useState(false);
@@ -91,7 +91,7 @@ const DetailSalaryTemplate = (props) => {
     if (props.location.state && props.location.state.id) {
       props.salarayTemplateDetailActions
         .getSalaryTemplateById(props.location.state.id)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             setCurrentSalaryTemplateId(props.location.state.id);
             reset({
@@ -109,7 +109,7 @@ const DetailSalaryTemplate = (props) => {
             setLoading(false);
           }
         })
-        .catch((err) => {
+        .catch(err => {
           props.commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
@@ -120,7 +120,7 @@ const DetailSalaryTemplate = (props) => {
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     setDisabled(true);
 
     const { salaryRoleId, salaryStructureId, description, formula } = data;
@@ -134,12 +134,12 @@ const DetailSalaryTemplate = (props) => {
 
     props.salarayTemplateDetailActions
       .updateSalaryTemplate(formData)
-      .then((res) => {
+      .then(res => {
         setDisabled(false);
         props.commonActions.tostifyAlert('success', 'salary Template Updated Successfully.');
         props.history.push('/admin/payroll/salaryTemplate');
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         props.commonActions.tostifyAlert(
           'error',
@@ -170,13 +170,13 @@ const DetailSalaryTemplate = (props) => {
     const current_employee_id = currentSalaryTemplateId;
     props.employeeDetailActions
       .deleteEmployee(current_employee_id)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           props.commonActions.tostifyAlert('success', 'Employee Deleted Successfully !!');
           props.history.push('/admin/master/employee');
         }
       })
-      .catch((err) => {
+      .catch(err => {
         props.commonActions.tostifyAlert(
           'error',
           err && err.data ? err.data.message : 'Something Went Wrong'
@@ -188,14 +188,14 @@ const DetailSalaryTemplate = (props) => {
     setDialog(null);
   };
 
-  const handleDescriptionChange = (e) => {
+  const handleDescriptionChange = e => {
     const value = e.target.value;
     if (value === '' || regExBoth.test(value)) {
       setValue('description', value, { shouldValidate: true });
     }
   };
 
-  const handleFormulaChange = (e) => {
+  const handleFormulaChange = e => {
     const value = e.target.value;
     if (value === '' || regExBoth.test(value)) {
       setValue('formula', value, { shouldValidate: true });
@@ -320,9 +320,9 @@ const DetailSalaryTemplate = (props) => {
                                               salary_role_dropdown,
                                               'SalaryRole'
                                             )
-                                            .find((option) => option.value === salaryRoleId)
+                                            .find(option => option.value === salaryRoleId)
                                         }
-                                        onChange={(options) => {
+                                        onChange={options => {
                                           if (options && options.value) {
                                             setValue('salaryRoleId', options.value);
                                           } else {
@@ -377,9 +377,9 @@ const DetailSalaryTemplate = (props) => {
                                               salary_structure_dropdown,
                                               'SalaryStructure'
                                             )
-                                            .find((option) => option.value === salaryStructureId)
+                                            .find(option => option.value === salaryStructureId)
                                         }
-                                        onChange={(options) => {
+                                        onChange={options => {
                                           if (options && options.value) {
                                             setValue('salaryStructureId', options.value);
                                           } else {
@@ -387,7 +387,8 @@ const DetailSalaryTemplate = (props) => {
                                           }
                                         }}
                                         className={`${
-                                          errors.salaryStructureId && touchedFields.salaryStructureId
+                                          errors.salaryStructureId &&
+                                          touchedFields.salaryStructureId
                                             ? 'is-invalid'
                                             : ''
                                         }`}
@@ -406,7 +407,10 @@ const DetailSalaryTemplate = (props) => {
                           </Col>
                         </Row>
                         <Row>
-                          <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                          <Col
+                            lg={12}
+                            className="d-flex align-items-center justify-content-between flex-wrap mt-5"
+                          >
                             <FormGroup>
                               <Button
                                 type="button"

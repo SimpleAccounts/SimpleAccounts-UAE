@@ -74,7 +74,7 @@ const detailBankAccountSchema = z
     newBankName: z.string().optional(),
   })
   .refine(
-    (data) => {
+    data => {
       if (typeof data.bank_name === 'object' && data.bank_name?.value === 999) {
         return data.newBankName && data.newBankName.trim().length > 0;
       }
@@ -86,7 +86,7 @@ const detailBankAccountSchema = z
     }
   );
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     account_type_list: state.bank_account.account_type_list,
     currency_list: state.bank_account.currency_list,
@@ -94,7 +94,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     bankAccountActions: bindActionCreators(BankAccountActions, dispatch),
@@ -170,22 +170,20 @@ const DetailBankAccount = ({
       const bankAccountId = location.state.bankAccountId;
       initializeData();
 
-      detailBankAccountActions
-        .getTransactionsCountByBankId(bankAccountId)
-        .then((res) => {
-          if (res.status === 200) {
-            if (res.data === 0) {
-              setDisabledDate(false);
-            }
+      detailBankAccountActions.getTransactionsCountByBankId(bankAccountId).then(res => {
+        if (res.status === 200) {
+          if (res.data === 0) {
+            setDisabledDate(false);
           }
-        });
+        }
+      });
 
       updateOpeningBalance(bankAccountId);
       setCurrentBankAccountId(bankAccountId);
 
       detailBankAccountActions
         .getBankAccountByID(bankAccountId)
-        .then((res) => {
+        .then(res => {
           setCurrentBankAccount(res);
           reset({
             account_name: res.bankAccountName,
@@ -197,15 +195,13 @@ const DetailBankAccount = ({
             ifsc_code: res.ifscCode,
             swift_code: res.swiftCode,
             countryId: res.bankCountry ? res.bankCountry : '',
-            account_is_for: res.personalCorporateAccountInd
-              ? res.personalCorporateAccountInd
-              : '',
+            account_is_for: res.personalCorporateAccountInd ? res.personalCorporateAccountInd : '',
             openingDate: dayjs(res.openingDate).format('DD-MM-YYYY'),
             transactionCount: res.transactionCount,
             newBankName: '',
           });
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
@@ -221,19 +217,19 @@ const DetailBankAccount = ({
     detailBankAccountActions.getAccountTypeList();
     detailBankAccountActions.getCurrencyList();
     detailBankAccountActions.getCountryList();
-    detailBankAccountActions.getBankList().then((response) => {
+    detailBankAccountActions.getBankList().then(response => {
       setBankList(response.data);
     });
   }, [detailBankAccountActions]);
 
   const validationCheck = useCallback(
-    (value) => {
+    value => {
       const data = {
         moduleType: 17,
         name: value,
         checkId: currentBankAccountId,
       };
-      detailBankAccountActions.checkValidation(data).then((response) => {
+      detailBankAccountActions.checkValidation(data).then(response => {
         if (response.data === 'Bank Account Already Exists') {
           setExist(true);
           setError('account_number', {
@@ -250,13 +246,13 @@ const DetailBankAccount = ({
   );
 
   const updateOpeningBalance = useCallback(
-    (id) => {
+    id => {
       bankAccountActions
         .getExplainCount(id)
-        .then((res) => {
+        .then(res => {
           setTransactionCount(res.data);
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
@@ -266,7 +262,7 @@ const DetailBankAccount = ({
     [bankAccountActions, commonActions]
   );
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     if (exist) {
       setError('account_number', {
         type: 'manual',
@@ -283,8 +279,7 @@ const DetailBankAccount = ({
       bankAccountName: data.account_name,
       bankAccountCurrency: data.currency,
       personalCorporateAccountInd: data.account_is_for,
-      bankName:
-        data.bank_name && data.bank_name.label ? data.bank_name.label : data.bank_name,
+      bankName: data.bank_name && data.bank_name.label ? data.bank_name.label : data.bank_name,
       accountNumber: data.account_number,
       ifscCode: data.ifsc_code,
       swiftCode: data.swift_code,
@@ -299,7 +294,7 @@ const DetailBankAccount = ({
 
     detailBankAccountActions
       .updateBankAccount(obj)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setDisabled(false);
           setLoading(false);
@@ -310,22 +305,20 @@ const DetailBankAccount = ({
           history.push('/admin/banking/bank-account');
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         setLoading(false);
         commonActions.tostifyAlert(
           'error',
-          err && err.data
-            ? err.data.message
-            : 'Bank Account Details Updated Unsuccessfully'
+          err && err.data ? err.data.message : 'Bank Account Details Updated Unsuccessfully'
         );
       });
   };
 
-  const closeBankAccount = (currentBankAccountId) => {
+  const closeBankAccount = currentBankAccountId => {
     bankAccountActions
       .getExplainCount(currentBankAccountId)
-      .then((res) => {
+      .then(res => {
         if (res.data > 0) {
           commonActions.tostifyAlert(
             'error',
@@ -337,8 +330,7 @@ const DetailBankAccount = ({
               <b>Delete Bank Account?</b>
             </text>
           );
-          const message =
-            'This Bank Account will be deleted permanently and cannot be recovered.';
+          const message = 'This Bank Account will be deleted permanently and cannot be recovered.';
           setDialog(
             <ConfirmDeleteModal
               isOpen={true}
@@ -350,7 +342,7 @@ const DetailBankAccount = ({
           );
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert(
           'error',
           err && err.data ? err.data.message : 'Something Went Wrong'
@@ -366,7 +358,7 @@ const DetailBankAccount = ({
 
     detailBankAccountActions
       .removeBankAccountByID(currentBankAccountId)
-      .then((res) => {
+      .then(res => {
         setDisabled1(false);
         setLoading(false);
         commonActions.tostifyAlert(
@@ -375,7 +367,7 @@ const DetailBankAccount = ({
         );
         history.push('/admin/banking/bank-account');
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled1(false);
         setLoading(false);
         commonActions.tostifyAlert(
@@ -435,11 +427,8 @@ const DetailBankAccount = ({
                                 autoComplete="off"
                                 placeholder={strings.Enter + strings.AccountName}
                                 {...field}
-                                onChange={(e) => {
-                                  if (
-                                    e.target.value === '' ||
-                                    regExAlpha.test(e.target.value)
-                                  ) {
+                                onChange={e => {
+                                  if (e.target.value === '' || regExAlpha.test(e.target.value)) {
                                     field.onChange(e);
                                   }
                                 }}
@@ -448,9 +437,7 @@ const DetailBankAccount = ({
                             )}
                           />
                           {errors.account_name && (
-                            <div className="invalid-feedback">
-                              {errors.account_name.message}
-                            </div>
+                            <div className="invalid-feedback">{errors.account_name.message}</div>
                           )}
                         </FormGroup>
                       </Col>
@@ -486,9 +473,9 @@ const DetailBankAccount = ({
                                       currency_list,
                                       'Currency'
                                     )
-                                    .find((option) => option.value === +field.value)
+                                    .find(option => option.value === +field.value)
                                 }
-                                onChange={(option) => {
+                                onChange={option => {
                                   field.onChange(option ? option.value : '');
                                 }}
                                 styles={selectStyles}
@@ -497,9 +484,7 @@ const DetailBankAccount = ({
                             )}
                           />
                           {errors.currency && (
-                            <div className="invalid-feedback">
-                              {errors.currency.message}
-                            </div>
+                            <div className="invalid-feedback">{errors.currency.message}</div>
                           )}
                         </FormGroup>
                       </Col>
@@ -519,11 +504,8 @@ const DetailBankAccount = ({
                                 id="opening_balance"
                                 placeholder={strings.Enter + strings.OpeningBalance}
                                 {...field}
-                                onChange={(e) => {
-                                  if (
-                                    e.target.value === '' ||
-                                    regEx.test(e.target.value)
-                                  ) {
+                                onChange={e => {
+                                  if (e.target.value === '' || regEx.test(e.target.value)) {
                                     field.onChange(e);
                                   }
                                 }}
@@ -532,9 +514,7 @@ const DetailBankAccount = ({
                             )}
                           />
                           {errors.opening_balance && (
-                            <div className="invalid-feedback">
-                              {errors.opening_balance.message}
-                            </div>
+                            <div className="invalid-feedback">{errors.opening_balance.message}</div>
                           )}
                         </FormGroup>
                       </Col>
@@ -552,25 +532,21 @@ const DetailBankAccount = ({
                             render={({ field }) => (
                               <DatePicker
                                 id="openingDate"
-                                className={`form-control ${
-                                  errors.openingDate ? 'is-invalid' : ''
-                                }`}
+                                className={`form-control ${errors.openingDate ? 'is-invalid' : ''}`}
                                 value={field.value}
                                 showMonthDropdown
                                 showYearDropdown
                                 disabled={disabledDate}
                                 dropdownMode="select"
                                 dateFormat="dd-MM-yyyy"
-                                onChange={(value) => {
+                                onChange={value => {
                                   field.onChange(dayjs(value).format('DD-MM-YYYY'));
                                 }}
                               />
                             )}
                           />
                           {errors.openingDate && (
-                            <div className="invalid-feedback">
-                              {errors.openingDate.message}
-                            </div>
+                            <div className="invalid-feedback">{errors.openingDate.message}</div>
                           )}
                         </FormGroup>
                       </Col>
@@ -599,15 +575,10 @@ const DetailBankAccount = ({
                                 value={
                                   account_type_list &&
                                   selectOptionsFactory
-                                    .renderOptions(
-                                      'name',
-                                      'id',
-                                      account_type_list,
-                                      'Account Type'
-                                    )
-                                    .find((option) => option.value === field.value)
+                                    .renderOptions('name', 'id', account_type_list, 'Account Type')
+                                    .find(option => option.value === field.value)
                                 }
-                                onChange={(option) => {
+                                onChange={option => {
                                   field.onChange(option ? option.value : '');
                                 }}
                                 styles={selectStyles}
@@ -616,9 +587,7 @@ const DetailBankAccount = ({
                             )}
                           />
                           {errors.account_type && (
-                            <div className="invalid-feedback">
-                              {errors.account_type.message}
-                            </div>
+                            <div className="invalid-feedback">{errors.account_type.message}</div>
                           )}
                         </FormGroup>
                       </Col>
@@ -650,15 +619,10 @@ const DetailBankAccount = ({
                                 value={
                                   bankList &&
                                   selectOptionsFactory
-                                    .renderOptions(
-                                      'bankName',
-                                      'bankId',
-                                      bankList,
-                                      'Bank'
-                                    )
-                                    .find((option) => option.label === field.value)
+                                    .renderOptions('bankName', 'bankId', bankList, 'Bank')
+                                    .find(option => option.label === field.value)
                                 }
-                                onChange={(option) => {
+                                onChange={option => {
                                   field.onChange(option ? option : '');
                                 }}
                                 placeholder={strings.Select + strings.BankName}
@@ -668,9 +632,7 @@ const DetailBankAccount = ({
                             )}
                           />
                           {errors.bank_name && (
-                            <div className="invalid-feedback">
-                              {errors.bank_name.message}
-                            </div>
+                            <div className="invalid-feedback">{errors.bank_name.message}</div>
                           )}
                         </FormGroup>
                       </Col>
@@ -692,11 +654,8 @@ const DetailBankAccount = ({
                                 autoComplete="off"
                                 placeholder={strings.Enter + strings.AccountNumber}
                                 {...field}
-                                onChange={(e) => {
-                                  if (
-                                    e.target.value === '' ||
-                                    regEx.test(e.target.value)
-                                  ) {
+                                onChange={e => {
+                                  if (e.target.value === '' || regEx.test(e.target.value)) {
                                     field.onChange(e);
                                   }
                                   validationCheck(e.target.value);
@@ -706,9 +665,7 @@ const DetailBankAccount = ({
                             )}
                           />
                           {errors.account_number && (
-                            <div className="invalid-feedback">
-                              {errors.account_number.message}
-                            </div>
+                            <div className="invalid-feedback">{errors.account_number.message}</div>
                           )}
                         </FormGroup>
                       </Col>
@@ -740,9 +697,9 @@ const DetailBankAccount = ({
                                       country_list,
                                       'Country'
                                     )
-                                    .find((option) => option.value === +field.value)
+                                    .find(option => option.value === +field.value)
                                 }
-                                onChange={(option) => {
+                                onChange={option => {
                                   field.onChange(option ? option.value : '');
                                 }}
                                 placeholder={strings.Select + strings.Country}
@@ -752,44 +709,39 @@ const DetailBankAccount = ({
                             )}
                           />
                           {errors.countryId && (
-                            <div className="invalid-feedback">
-                              {errors.countryId.message}
-                            </div>
+                            <div className="invalid-feedback">{errors.countryId.message}</div>
                           )}
                         </FormGroup>
                       </Col>
                     </Row>
                     <Row>
-                      {typeof bankNameValue === 'object' &&
-                        bankNameValue?.value === 999 && (
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label>
-                                <span className="text-danger">* </span>
-                                {strings.AddNewBank}
-                              </Label>
-                              <Controller
-                                name="newBankName"
-                                control={control}
-                                render={({ field }) => (
-                                  <Input
-                                    type="text"
-                                    maxLength="25"
-                                    id="newBankName"
-                                    placeholder={`${strings.Enter} ${strings.New} ${strings.BankName}`}
-                                    {...field}
-                                    className={errors.newBankName ? 'is-invalid' : ''}
-                                  />
-                                )}
-                              />
-                              {errors.newBankName && (
-                                <div className="invalid-feedback">
-                                  {errors.newBankName.message}
-                                </div>
+                      {typeof bankNameValue === 'object' && bankNameValue?.value === 999 && (
+                        <Col lg={4}>
+                          <FormGroup className="mb-3">
+                            <Label>
+                              <span className="text-danger">* </span>
+                              {strings.AddNewBank}
+                            </Label>
+                            <Controller
+                              name="newBankName"
+                              control={control}
+                              render={({ field }) => (
+                                <Input
+                                  type="text"
+                                  maxLength="25"
+                                  id="newBankName"
+                                  placeholder={`${strings.Enter} ${strings.New} ${strings.BankName}`}
+                                  {...field}
+                                  className={errors.newBankName ? 'is-invalid' : ''}
+                                />
                               )}
-                            </FormGroup>
-                          </Col>
-                        )}
+                            />
+                            {errors.newBankName && (
+                              <div className="invalid-feedback">{errors.newBankName.message}</div>
+                            )}
+                          </FormGroup>
+                        </Col>
+                      )}
                       <Col lg={4}>
                         <FormGroup className="mb-3">
                           <Label htmlFor="account_is_for">
@@ -814,11 +766,9 @@ const DetailBankAccount = ({
                                 }
                                 value={
                                   account_for &&
-                                  account_for.find(
-                                    (option) => option.value === field.value
-                                  )
+                                  account_for.find(option => option.value === field.value)
                                 }
-                                onChange={(option) => {
+                                onChange={option => {
                                   field.onChange(option ? option.value : '');
                                 }}
                                 styles={selectStyles}
@@ -827,9 +777,7 @@ const DetailBankAccount = ({
                             )}
                           />
                           {errors.account_is_for && (
-                            <div className="invalid-feedback">
-                              {errors.account_is_for.message}
-                            </div>
+                            <div className="invalid-feedback">{errors.account_is_for.message}</div>
                           )}
                         </FormGroup>
                       </Col>

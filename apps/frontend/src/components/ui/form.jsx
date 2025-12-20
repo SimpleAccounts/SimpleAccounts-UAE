@@ -26,9 +26,7 @@ export const FormField = ({ name, control, render, ...props }) => {
   const fieldControl = control || formContext?.control;
 
   if (!fieldControl) {
-    throw new Error(
-      'FormField must be used within a Form component or provide control prop'
-    );
+    throw new Error('FormField must be used within a Form component or provide control prop');
   }
 
   return (
@@ -107,10 +105,7 @@ export const FormLabel = ({ className, children, ...props }) => {
  */
 export const FormDescription = ({ className, children, ...props }) => {
   return (
-    <p
-      className={cn('text-sm text-muted-foreground', className)}
-      {...props}
-    >
+    <p className={cn('text-sm text-muted-foreground', className)} {...props}>
       {children}
     </p>
   );
@@ -127,10 +122,7 @@ export const FormMessage = ({ className, children, ...props }) => {
   // If children provided, use them (for custom messages)
   if (children) {
     return (
-      <p
-        className={cn('text-sm font-medium text-destructive', className)}
-        {...props}
-      >
+      <p className={cn('text-sm font-medium text-destructive', className)} {...props}>
         {children}
       </p>
     );
@@ -138,4 +130,3 @@ export const FormMessage = ({ className, children, ...props }) => {
 
   return null;
 };
-

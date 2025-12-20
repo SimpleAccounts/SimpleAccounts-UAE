@@ -1,5 +1,5 @@
-import screen from '../purchase_by_vendor/screen'
+import screen from '../purchase_by_vendor/screen';
 
 export default {
   screen,
-}
+};

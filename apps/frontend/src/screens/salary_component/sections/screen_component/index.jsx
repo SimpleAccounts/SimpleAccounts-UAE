@@ -32,39 +32,45 @@ const regExCode = /[a-zA-Z0-9-/]+$/;
 const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$/;
 
 // Zod validation schema
-const salaryComponentSchema = z.object({
-  componentId: z.string().min(1, 'Component ID is required'),
-  componentName: z.string().min(1, 'Component Name is required'),
-  componentType: z.string().min(1, 'Component Type is required'),
-  calculationType: z.number(),
-  ctcPercent: z.string().optional(),
-  flatAmount: z.string().optional(),
-}).refine((data) => {
-  if (data.calculationType === 2 && !data.ctcPercent) {
-    return false;
-  }
-  if (data.calculationType === 1 && !data.flatAmount) {
-    return false;
-  }
-  return true;
-}, {
-  message: 'Required field is missing',
-  path: ['calculationType'],
-});
+const salaryComponentSchema = z
+  .object({
+    componentId: z.string().min(1, 'Component ID is required'),
+    componentName: z.string().min(1, 'Component Name is required'),
+    componentType: z.string().min(1, 'Component Type is required'),
+    calculationType: z.number(),
+    ctcPercent: z.string().optional(),
+    flatAmount: z.string().optional(),
+  })
+  .refine(
+    data => {
+      if (data.calculationType === 2 && !data.ctcPercent) {
+        return false;
+      }
+      if (data.calculationType === 1 && !data.flatAmount) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'Required field is missing',
+      path: ['calculationType'],
+    }
+  );
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {};
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     salaryComponentActions: bindActionCreators(SalaryComponentActions, dispatch),
   };
 };
 
-const SalaryComponentScreen = (props) => {
-  const { componentID, isCreated, ComponentType, salaryStructureModalCard, history } = props.props || props;
+const SalaryComponentScreen = props => {
+  const { componentID, isCreated, ComponentType, salaryStructureModalCard, history } =
+    props.props || props;
 
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(false);
@@ -111,7 +117,7 @@ const SalaryComponentScreen = (props) => {
 
   const initializeData = () => {
     if (componentID && isCreated) {
-      props.salaryComponentActions.getSalaryComponentById(componentID).then((res) => {
+      props.salaryComponentActions.getSalaryComponentById(componentID).then(res => {
         if (res.status === 200) {
           setEnableDelete(res.data.isComponentDeletable);
           reset({
@@ -130,7 +136,7 @@ const SalaryComponentScreen = (props) => {
   };
 
   const getComponentId = () => {
-    props.salaryComponentActions.getComponentId().then((res) => {
+    props.salaryComponentActions.getComponentId().then(res => {
       if (res.status === 200) {
         setValue('componentId', res.data, { shouldValidate: true });
         componentIdvalidationCheck(res.data);
@@ -138,12 +144,12 @@ const SalaryComponentScreen = (props) => {
     });
   };
 
-  const componentNamevalidationCheck = (value) => {
+  const componentNamevalidationCheck = value => {
     const data = {
       moduleType: 29,
       name: value,
     };
-    props.commonActions.checkValidation(data).then((response) => {
+    props.commonActions.checkValidation(data).then(response => {
       if (response.data === 'Description Name Already Exists') {
         setNameExist(true);
       } else {
@@ -152,12 +158,12 @@ const SalaryComponentScreen = (props) => {
     });
   };
 
-  const componentIdvalidationCheck = (value) => {
+  const componentIdvalidationCheck = value => {
     const data = {
       moduleType: 30,
       name: value,
     };
-    props.commonActions.checkValidation(data).then((response) => {
+    props.commonActions.checkValidation(data).then(response => {
       if (response.data === 'Component ID Already Exists') {
         setIdExist(true);
       } else {
@@ -188,13 +194,13 @@ const SalaryComponentScreen = (props) => {
     setDisableLeavePage(true);
     props.salaryComponentActions
       .deleteSalaryComponent(componentID)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           props.commonActions.tostifyAlert('success', 'Salary Component Deleted Successfully !');
           history.push('/admin/payroll/config', { tabNo: '5' });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         if (err.status === 409) {
           props.commonActions.tostifyAlert(
             'error',
@@ -212,7 +218,7 @@ const SalaryComponentScreen = (props) => {
     setDialog(null);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     // Check for validation errors from custom validators
     if (idExist) {
       props.commonActions.tostifyAlert('error', 'Component ID already exists');
@@ -226,7 +232,8 @@ const SalaryComponentScreen = (props) => {
     setDisabled(true);
     setDisableLeavePage(true);
 
-    const { componentName, componentId, componentType, flatAmount, ctcPercent, calculationType } = data;
+    const { componentName, componentId, componentType, flatAmount, ctcPercent, calculationType } =
+      data;
 
     const formData = new FormData();
     if (componentID) formData.append('id', componentID);
@@ -241,11 +248,13 @@ const SalaryComponentScreen = (props) => {
 
     props.salaryComponentActions
       .saveSalaryComponent(formData, isCreated)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           props.commonActions.tostifyAlert(
             'success',
-            isCreated ? 'Salary Component Updated Successfully' : 'Salary Component Created Successfully'
+            isCreated
+              ? 'Salary Component Updated Successfully'
+              : 'Salary Component Created Successfully'
           );
           if (createMore) {
             setCreateMore(false);
@@ -268,7 +277,7 @@ const SalaryComponentScreen = (props) => {
           }
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         setDisableLeavePage(false);
         props.commonActions.tostifyAlert(
@@ -278,7 +287,7 @@ const SalaryComponentScreen = (props) => {
       });
   };
 
-  const handleComponentIdChange = (e) => {
+  const handleComponentIdChange = e => {
     const value = e.target.value;
     if (value === '' || regExCode.test(value)) {
       setValue('componentId', value, { shouldValidate: true });
@@ -287,24 +296,28 @@ const SalaryComponentScreen = (props) => {
     }
   };
 
-  const handleComponentNameChange = (e) => {
+  const handleComponentNameChange = e => {
     const value = e.target.value;
-    if (value === '' || (!componentName && regEx.test(value)) || (componentName && regExAlpha.test(value))) {
+    if (
+      value === '' ||
+      (!componentName && regEx.test(value)) ||
+      (componentName && regExAlpha.test(value))
+    ) {
       setValue('componentName', value, { shouldValidate: true });
       setNameExist(false);
       componentNamevalidationCheck(value);
     }
   };
 
-  const handleComponentTypeChange = (value) => {
+  const handleComponentTypeChange = value => {
     setValue('componentType', value, { shouldValidate: true });
   };
 
-  const handleCalculationTypeChange = (value) => {
+  const handleCalculationTypeChange = value => {
     setValue('calculationType', value, { shouldValidate: true });
   };
 
-  const handleCtcPercentChange = (e) => {
+  const handleCtcPercentChange = e => {
     const value = e.target.value;
     if (parseInt(value) > 0 && parseInt(value) < 101) {
       setValue('ctcPercent', value, { shouldValidate: true });
@@ -313,7 +326,7 @@ const SalaryComponentScreen = (props) => {
     }
   };
 
-  const handleFlatAmountChange = (e) => {
+  const handleFlatAmountChange = e => {
     const value = e.target.value;
     if (value === '0') {
       // Don't allow 0
@@ -371,7 +384,8 @@ const SalaryComponentScreen = (props) => {
                             <Col lg={4}>
                               <FormGroup>
                                 <Label htmlFor="componentId">
-                                  <span className="text-danger">* </span>{strings.ComponentID}
+                                  <span className="text-danger">* </span>
+                                  {strings.ComponentID}
                                 </Label>
                                 <Input
                                   type="text"
@@ -389,15 +403,22 @@ const SalaryComponentScreen = (props) => {
                                   }
                                 />
                                 {errors.componentId && touchedFields.componentId && (
-                                  <div className="invalid-feedback">{errors.componentId.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.componentId.message}
+                                  </div>
                                 )}
-                                {idExist && <div className="invalid-feedback">Component ID already exists</div>}
+                                {idExist && (
+                                  <div className="invalid-feedback">
+                                    Component ID already exists
+                                  </div>
+                                )}
                               </FormGroup>
                             </Col>
                             <Col lg={4}>
                               <FormGroup>
                                 <Label htmlFor="componentName">
-                                  <span className="text-danger">* </span>{strings.ComponentName}
+                                  <span className="text-danger">* </span>
+                                  {strings.ComponentName}
                                 </Label>
                                 <Input
                                   type="text"
@@ -408,16 +429,21 @@ const SalaryComponentScreen = (props) => {
                                   placeholder={strings.Enter + strings.ComponentName}
                                   onChange={handleComponentNameChange}
                                   className={
-                                    (errors.componentName && touchedFields.componentName) || nameExist
+                                    (errors.componentName && touchedFields.componentName) ||
+                                    nameExist
                                       ? 'is-invalid'
                                       : ''
                                   }
                                 />
                                 {errors.componentName && touchedFields.componentName && (
-                                  <div className="invalid-feedback">{errors.componentName.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.componentName.message}
+                                  </div>
                                 )}
                                 {nameExist && (
-                                  <div className="invalid-feedback">Component name already exists</div>
+                                  <div className="invalid-feedback">
+                                    Component name already exists
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -429,8 +455,14 @@ const SalaryComponentScreen = (props) => {
                                 <Label htmlFor="componentType">
                                   <span className="text-danger">* </span>
                                   {strings.ComponentType}
-                                  <i id="componentTypeTooltip" className="fa fa-question-circle ml-1"></i>
-                                  <UncontrolledTooltip placement="right" target="componentTypeTooltip">
+                                  <i
+                                    id="componentTypeTooltip"
+                                    className="fa fa-question-circle ml-1"
+                                  ></i>
+                                  <UncontrolledTooltip
+                                    placement="right"
+                                    target="componentTypeTooltip"
+                                  >
                                     {strings.ComponentTypeTooltip}
                                   </UncontrolledTooltip>
                                 </Label>
@@ -447,7 +479,10 @@ const SalaryComponentScreen = (props) => {
                                       value={componentType}
                                       onChange={() => handleComponentTypeChange('Earning')}
                                     />
-                                    <label className="custom-control-label" htmlFor="componentType-inline-radio1">
+                                    <label
+                                      className="custom-control-label"
+                                      htmlFor="componentType-inline-radio1"
+                                    >
                                       {strings.Earning}
                                     </label>
                                   </div>
@@ -464,7 +499,10 @@ const SalaryComponentScreen = (props) => {
                                       checked={componentType === 'Deduction'}
                                       onChange={() => handleComponentTypeChange('Deduction')}
                                     />
-                                    <label className="custom-control-label" htmlFor="componentType-inline-radio2">
+                                    <label
+                                      className="custom-control-label"
+                                      htmlFor="componentType-inline-radio2"
+                                    >
                                       {strings.Deduction}
                                     </label>
                                   </div>
@@ -492,7 +530,10 @@ const SalaryComponentScreen = (props) => {
                                       value={calculationType}
                                       onChange={() => handleCalculationTypeChange(2)}
                                     />
-                                    <label className="custom-control-label" htmlFor="calculationType-inline-radio1">
+                                    <label
+                                      className="custom-control-label"
+                                      htmlFor="calculationType-inline-radio1"
+                                    >
                                       {strings.PercentOfCTC}
                                     </label>
                                   </div>
@@ -508,7 +549,10 @@ const SalaryComponentScreen = (props) => {
                                       checked={calculationType === 1}
                                       onChange={() => handleCalculationTypeChange(1)}
                                     />
-                                    <label className="custom-control-label" htmlFor="calculationType-inline-radio2">
+                                    <label
+                                      className="custom-control-label"
+                                      htmlFor="calculationType-inline-radio2"
+                                    >
                                       {strings.FlatAmount}
                                     </label>
                                   </div>
@@ -533,7 +577,9 @@ const SalaryComponentScreen = (props) => {
                                     id="ctcPercent"
                                     name="ctcPercent"
                                     className={
-                                      errors.ctcPercent && touchedFields.ctcPercent ? 'is-invalid' : ''
+                                      errors.ctcPercent && touchedFields.ctcPercent
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
                                   {errors.ctcPercent && touchedFields.ctcPercent && (
@@ -558,7 +604,9 @@ const SalaryComponentScreen = (props) => {
                                     id="flatAmount"
                                     name="flatAmount"
                                     className={
-                                      errors.flatAmount && touchedFields.flatAmount ? 'is-invalid' : ''
+                                      errors.flatAmount && touchedFields.flatAmount
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
                                   {errors.flatAmount && touchedFields.flatAmount && (
@@ -581,7 +629,10 @@ const SalaryComponentScreen = (props) => {
                         </Col>
                       </Row>
                       <Row>
-                        <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                        <Col
+                          lg={12}
+                          className="d-flex align-items-center justify-content-between flex-wrap mt-5"
+                        >
                           <FormGroup>
                             {enableDelete && isCreated && (
                               <Button

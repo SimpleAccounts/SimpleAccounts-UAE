@@ -75,7 +75,7 @@ function CreateCompanyDetails({ openModal, closeModal }) {
 
   useEffect(() => {
     // Load company details on mount
-    payrollRun.getCompanyDetails().then((res) => {
+    payrollRun.getCompanyDetails().then(res => {
       if (res.status === 200) {
         setValue('companyNumber', res.data.companyNumber || '');
         setValue('companyBankCode', res.data.companyBankCode || '');
@@ -83,20 +83,20 @@ function CreateCompanyDetails({ openModal, closeModal }) {
     });
   }, [payrollRun, setValue]);
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     const formdata = new FormData();
     formdata.append('companyBankCode', data.companyBankCode);
     formdata.append('companyNumber', data.companyNumber);
 
     payrollRun
       .updateCompany(formdata)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert('success', 'Company Details Saved Successfully');
           closeModal(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert(
           'error',
           err && err.data ? err.data.message : 'Something Went Wrong'
@@ -143,7 +143,7 @@ function CreateCompanyDetails({ openModal, closeModal }) {
                         minLength="13"
                         placeholder="Enter Company Number"
                         className={errors.companyNumber ? 'is-invalid' : ''}
-                        onChange={(e) => {
+                        onChange={e => {
                           const value = e.target.value;
                           if (value === '' || /^[0-9]+$/.test(value)) {
                             field.onChange(value);
@@ -179,7 +179,7 @@ function CreateCompanyDetails({ openModal, closeModal }) {
                         minLength="9"
                         placeholder="Enter Company Bank Code"
                         className={errors.companyBankCode ? 'is-invalid' : ''}
-                        onChange={(e) => {
+                        onChange={e => {
                           const value = e.target.value;
                           if (value === '' || /^[0-9]+$/.test(value)) {
                             field.onChange(value);
@@ -201,7 +201,7 @@ function CreateCompanyDetails({ openModal, closeModal }) {
               type="submit"
               className="btn-square"
               disabled={isSubmitting}
-              onClick={(e) => {
+              onClick={e => {
                 // Trigger form validation
                 handleSubmit(onSubmit)(e);
                 if (Object.keys(errors).length !== 0) {
@@ -209,8 +209,7 @@ function CreateCompanyDetails({ openModal, closeModal }) {
                 }
               }}
             >
-              <i className="fa fa-dot-circle-o"></i>{' '}
-              {isSubmitting ? 'Saving...' : strings.Save}
+              <i className="fa fa-dot-circle-o"></i> {isSubmitting ? 'Saving...' : strings.Save}
             </Button>
             &nbsp;
             <Button

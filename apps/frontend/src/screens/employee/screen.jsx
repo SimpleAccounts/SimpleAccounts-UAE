@@ -27,13 +27,10 @@ function Employee() {
   const csvLink = useRef(null);
 
   // Redux state
-  const employee_list = useSelector((state) => state.employee.employee_list);
+  const employee_list = useSelector(state => state.employee.employee_list);
 
   // Actions
-  const employeeActions = useMemo(
-    () => bindActionCreators(EmployeeActions, dispatch),
-    [dispatch]
-  );
+  const employeeActions = useMemo(() => bindActionCreators(EmployeeActions, dispatch), [dispatch]);
   const commonActions = useMemo(() => bindActionCreators(CommonActions, dispatch), [dispatch]);
 
   // Local state
@@ -70,12 +67,12 @@ function Employee() {
 
     employeeActions
       .getEmployeeList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setLoading(false);
       });
@@ -91,11 +88,11 @@ function Employee() {
 
   // Filter handlers
   const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
+    setFilterData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     initializeData();
   };
 
@@ -104,7 +101,7 @@ function Employee() {
       name: '',
       email: '',
     });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     setTimeout(() => initializeData(), 0);
   };
 
@@ -130,15 +127,21 @@ function Employee() {
     const obj = { ids: selectedRows };
     employeeActions
       .removeBulkEmployee(obj)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
-          commonActions.tostifyAlert('success', res.data?.message || 'Employees Deleted Successfully');
+          commonActions.tostifyAlert(
+            'success',
+            res.data?.message || 'Employees Deleted Successfully'
+          );
           initializeData();
           setSelectedRows([]);
         }
       })
-      .catch((err) => {
-        commonActions.tostifyAlert('error', err?.data?.message || 'Employees Deleted unsuccessfully');
+      .catch(err => {
+        commonActions.tostifyAlert(
+          'error',
+          err?.data?.message || 'Employees Deleted unsuccessfully'
+        );
       });
   };
 
@@ -146,7 +149,7 @@ function Employee() {
   const getCsvData = () => {
     if (csvData.length === 0) {
       const obj = { paginationDisable: true };
-      employeeActions.getEmployeeList(obj).then((res) => {
+      employeeActions.getEmployeeList(obj).then(res => {
         if (res.status === 200) {
           setCsvData(res.data.data);
           setView(true);
@@ -161,7 +164,7 @@ function Employee() {
   };
 
   // Row click handler
-  const handleRowClick = (row) => {
+  const handleRowClick = row => {
     navigate('/admin/master/employee/detail', { state: { id: row.id } });
   };
 
@@ -171,9 +174,7 @@ function Employee() {
       {
         accessorKey: 'fullName',
         header: 'Employee Name',
-        cell: ({ row }) => (
-          <span className="font-medium">{row.original.fullName}</span>
-        ),
+        cell: ({ row }) => <span className="font-medium">{row.original.fullName}</span>,
       },
       {
         accessorKey: 'email',
@@ -198,7 +199,7 @@ function Employee() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!employee_list?.data) return [];
-    return employee_list.data.map((item) => ({
+    return employee_list.data.map(item => ({
       id: item.id,
       fullName: item.fullName || '',
       email: item.email || '',
@@ -256,14 +257,14 @@ function Employee() {
                   type="text"
                   placeholder="Enter Employee Name"
                   value={filterData.name}
-                  onChange={(e) => handleFilterChange('name', e.target.value)}
+                  onChange={e => handleFilterChange('name', e.target.value)}
                   className="input-transition"
                 />
                 <Input
                   type="text"
                   placeholder="Enter Email"
                   value={filterData.email}
-                  onChange={(e) => handleFilterChange('email', e.target.value)}
+                  onChange={e => handleFilterChange('email', e.target.value)}
                   className="input-transition"
                 />
                 <div className="flex gap-2 lg:col-start-4">

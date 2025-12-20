@@ -34,16 +34,13 @@ function Journal() {
   const dispatch = useDispatch();
 
   // Redux state
-  const journal_list = useSelector((state) => state.journal.journal_list);
-  const universal_currency_list = useSelector((state) => state.common.universal_currency_list);
-  const page_num = useSelector((state) => state.journal.page_num);
-  const cancel_flag = useSelector((state) => state.journal.cancel_flag);
+  const journal_list = useSelector(state => state.journal.journal_list);
+  const universal_currency_list = useSelector(state => state.common.universal_currency_list);
+  const page_num = useSelector(state => state.journal.page_num);
+  const cancel_flag = useSelector(state => state.journal.cancel_flag);
 
   // Actions
-  const journalActions = useMemo(
-    () => bindActionCreators(JournalActions, dispatch),
-    [dispatch]
-  );
+  const journalActions = useMemo(() => bindActionCreators(JournalActions, dispatch), [dispatch]);
   const commonActions = useMemo(() => bindActionCreators(CommonActions, dispatch), [dispatch]);
 
   // Local state
@@ -91,12 +88,12 @@ function Journal() {
 
     journalActions
       .getJournalList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setLoading(false);
       });
@@ -114,7 +111,7 @@ function Journal() {
 
   // Navigate to detail
   const goToDetail = useCallback(
-    (row) => {
+    row => {
       if (row.postingReferenceType === 'MANUAL') {
         navigate('/admin/accountant/journal/detail', {
           state: { id: row.journalId, postingReferenceType: 'MANUAL' },
@@ -130,11 +127,11 @@ function Journal() {
 
   // Filter handlers
   const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
+    setFilterData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     initializeData();
   };
 
@@ -144,7 +141,7 @@ function Journal() {
       journalReferenceNo: '',
       description: '',
     });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     setTimeout(() => initializeData(), 0);
   };
 
@@ -152,7 +149,7 @@ function Journal() {
   const getCsvData = useCallback(() => {
     if (csvData.length === 0) {
       const obj = { paginationDisable: true };
-      journalActions.getJournalList(obj).then((res) => {
+      journalActions.getJournalList(obj).then(res => {
         if (res.status === 200) {
           setCsvData(res.data.data);
           setView(true);
@@ -196,9 +193,7 @@ function Journal() {
       {
         accessorKey: 'description',
         header: strings.NOTES,
-        cell: ({ row }) => (
-          <span className="line-clamp-2">{row.original.description}</span>
-        ),
+        cell: ({ row }) => <span className="line-clamp-2">{row.original.description}</span>,
       },
       {
         accessorKey: 'accounts',
@@ -295,7 +290,7 @@ function Journal() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!journal_list?.data?.data) return [];
-    return journal_list.data.data.map((item) => ({
+    return journal_list.data.data.map(item => ({
       journalId: item.journalId,
       journalReferenceNo: item.journalReferenceNo || '',
       postingReferenceTypeDisplayName: item.postingReferenceTypeDisplayName || '',
@@ -351,21 +346,21 @@ function Journal() {
                   dateFormat="dd-MM-yyyy"
                   autoComplete="off"
                   selected={filterData.journalDate}
-                  onChange={(value) => handleFilterChange('journalDate', value)}
+                  onChange={value => handleFilterChange('journalDate', value)}
                 />
                 <Input
                   maxLength={20}
                   value={filterData.journalReferenceNo}
                   placeholder={`${strings.Enter} ${strings.ReferenceNumber}`}
                   className="input-transition"
-                  onChange={(e) => handleFilterChange('journalReferenceNo', e.target.value)}
+                  onChange={e => handleFilterChange('journalReferenceNo', e.target.value)}
                 />
                 <Input
                   maxLength={30}
                   value={filterData.description}
                   placeholder={`${strings.Enter} ${strings.Notes}`}
                   className="input-transition"
-                  onChange={(e) => handleFilterChange('description', e.target.value)}
+                  onChange={e => handleFilterChange('description', e.target.value)}
                 />
                 <div className="flex gap-2">
                   <Button onClick={handleSearch} variant="default" size="icon">

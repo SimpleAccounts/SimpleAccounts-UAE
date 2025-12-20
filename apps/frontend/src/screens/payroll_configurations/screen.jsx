@@ -12,12 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 import { Loader } from 'components';
 import { CommonActions } from 'services/global';
@@ -57,10 +52,10 @@ function PayrollConfigurations() {
   const dispatch = useDispatch();
 
   // Redux state
-  const designation_list = useSelector((state) => state.employeeDesignation.designation_list);
-  const company_details = useSelector((state) => state.common.company_details);
-  const salaryStructure_list = useSelector((state) => state.salaryStructure.salaryStructure_list);
-  const salaryRole_list = useSelector((state) => state.salaryRoles.salaryRole_list);
+  const designation_list = useSelector(state => state.employeeDesignation.designation_list);
+  const company_details = useSelector(state => state.common.company_details);
+  const salaryStructure_list = useSelector(state => state.salaryStructure.salaryStructure_list);
+  const salaryRole_list = useSelector(state => state.salaryRoles.salaryRole_list);
 
   // Actions
   const designationActions = useMemo(
@@ -71,10 +66,7 @@ function PayrollConfigurations() {
     () => bindActionCreators(SalaryStructureAction, dispatch),
     [dispatch]
   );
-  const employeeActions = useMemo(
-    () => bindActionCreators(EmployeeActions, dispatch),
-    [dispatch]
-  );
+  const employeeActions = useMemo(() => bindActionCreators(EmployeeActions, dispatch), [dispatch]);
   const commonActions = useMemo(() => bindActionCreators(CommonActions, dispatch), [dispatch]);
   const payrollRun = useMemo(() => bindActionCreators(PayrollRun, dispatch), [dispatch]);
 
@@ -134,7 +126,7 @@ function PayrollConfigurations() {
 
   // Get company data for payroll
   const getCompanyDataForPayroll = () => {
-    payrollRun.getCompanyDetails().then((res) => {
+    payrollRun.getCompanyDetails().then(res => {
       if (res.status === 200) {
         setValue('companyNumber', res.data.companyNumber || '');
         setValue('companyBankCode', res.data.companyBankCode || '');
@@ -156,17 +148,14 @@ function PayrollConfigurations() {
 
     designationActions
       .getEmployeeDesignationList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
-        commonActions.tostifyAlert(
-          'error',
-          err?.data?.message || 'Something Went Wrong'
-        );
+        commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
 
@@ -181,7 +170,7 @@ function PayrollConfigurations() {
     };
     const postData = { ...paginationData, ...sortingData };
 
-    salaryStructureActions.getSalaryList(postData).then((res) => {
+    salaryStructureActions.getSalaryList(postData).then(res => {
       if (res.status === 200) {
         setSalaryList(res.data);
       }
@@ -189,111 +178,125 @@ function PayrollConfigurations() {
   };
 
   // Handle company details submit
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     const formData = new FormData();
     formData.append('companyBankCode', data.companyBankCode);
     formData.append('companyNumber', data.companyNumber);
 
     payrollRun
       .updateCompany(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert('success', 'Company Details Saved Successfully');
           navigate('/admin/payroll/payroll-run');
         }
       })
-      .catch((err) => {
-        commonActions.tostifyAlert(
-          'error',
-          err?.data?.message || 'Something Went Wrong'
-        );
+      .catch(err => {
+        commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
 
   // Columns for Designations
-  const designationColumns = useMemo(() => [
-    {
-      accessorKey: 'designationId',
-      header: strings.DESIGNATIONID,
-      cell: ({ row }) => row.original.designationId || row.original.id,
-    },
-    {
-      accessorKey: 'designationName',
-      header: strings.DESIGNATIONNAME,
-    },
-    {
-      id: 'actions',
-      header: '',
-      cell: ({ row }) => {
-        if (row.original.id === 1 || row.original.id === 2 || row.original.id === 3 || row.original.id === 4) return null;
-        return (
-          <div className="text-right">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() =>
-                navigate('/admin/payroll/config/detailEmployeeDesignation', { state: { id: row.original.id } })
-              }
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
-          </div>
-        );
-      }
-    }
-  ], [navigate]);
+  const designationColumns = useMemo(
+    () => [
+      {
+        accessorKey: 'designationId',
+        header: strings.DESIGNATIONID,
+        cell: ({ row }) => row.original.designationId || row.original.id,
+      },
+      {
+        accessorKey: 'designationName',
+        header: strings.DESIGNATIONNAME,
+      },
+      {
+        id: 'actions',
+        header: '',
+        cell: ({ row }) => {
+          if (
+            row.original.id === 1 ||
+            row.original.id === 2 ||
+            row.original.id === 3 ||
+            row.original.id === 4
+          )
+            return null;
+          return (
+            <div className="text-right">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() =>
+                  navigate('/admin/payroll/config/detailEmployeeDesignation', {
+                    state: { id: row.original.id },
+                  })
+                }
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+            </div>
+          );
+        },
+      },
+    ],
+    [navigate]
+  );
 
   // Columns for Salary Components
-  const salaryColumns = useMemo(() => [
-    {
-      accessorKey: 'id',
-      header: strings.ComponentId,
-      cell: ({ row }) => row.original.componentCode || row.original.id,
-    },
-    {
-      accessorKey: 'description',
-      header: strings.ComponentName,
-    },
-    {
-      accessorKey: 'componentType',
-      header: strings.ComponentType,
-      cell: ({ row }) => row.original.description === 'Basic SALARY' ? 'Earning' : row.original.componentType,
-    },
-    {
-      accessorKey: 'calculationType',
-      header: strings.calculation_type,
-      cell: ({ row }) => {
-        const item = row.original;
-        return item.calculationType
-          ? parseInt(item.calculationType) === 2
-            ? 'CTC Percent'
-            : 'Flat Amount'
-          : item.formula
-          ? 'CTC Percent'
-          : 'Flat Amount';
-      }
-    },
-    {
-      id: 'actions',
-      header: '',
-      cell: ({ row }) => {
-        if (row.original.id === 1 || row.original.id === 3) return null;
-        return (
-          <div className="text-right">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() =>
-                navigate('/admin/payroll/config/detailSalaryComponent', { state: { id: row.original.id } })
-              }
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
-          </div>
-        );
-      }
-    }
-  ], [navigate]);
+  const salaryColumns = useMemo(
+    () => [
+      {
+        accessorKey: 'id',
+        header: strings.ComponentId,
+        cell: ({ row }) => row.original.componentCode || row.original.id,
+      },
+      {
+        accessorKey: 'description',
+        header: strings.ComponentName,
+      },
+      {
+        accessorKey: 'componentType',
+        header: strings.ComponentType,
+        cell: ({ row }) =>
+          row.original.description === 'Basic SALARY' ? 'Earning' : row.original.componentType,
+      },
+      {
+        accessorKey: 'calculationType',
+        header: strings.calculation_type,
+        cell: ({ row }) => {
+          const item = row.original;
+          return item.calculationType
+            ? parseInt(item.calculationType) === 2
+              ? 'CTC Percent'
+              : 'Flat Amount'
+            : item.formula
+              ? 'CTC Percent'
+              : 'Flat Amount';
+        },
+      },
+      {
+        id: 'actions',
+        header: '',
+        cell: ({ row }) => {
+          if (row.original.id === 1 || row.original.id === 3) return null;
+          return (
+            <div className="text-right">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() =>
+                  navigate('/admin/payroll/config/detailSalaryComponent', {
+                    state: { id: row.original.id },
+                  })
+                }
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+            </div>
+          );
+        },
+      },
+    ],
+    [navigate]
+  );
 
   if (loading) {
     return <Loader />;
@@ -324,9 +327,7 @@ function PayrollConfigurations() {
                 <div className="space-y-4">
                   <div className="flex justify-end">
                     <Button
-                      onClick={() =>
-                        navigate('/admin/payroll/config/createEmployeeDesignation')
-                      }
+                      onClick={() => navigate('/admin/payroll/config/createEmployeeDesignation')}
                     >
                       <Plus className="mr-2 h-4 w-4" />
                       {strings.NewDesignation}
@@ -337,7 +338,11 @@ function PayrollConfigurations() {
                     columns={designationColumns}
                     data={designation_list?.data || []}
                     manualPagination={true}
-                    pageCount={designation_list?.count ? Math.ceil(designation_list.count / designationPagination.pageSize) : 0}
+                    pageCount={
+                      designation_list?.count
+                        ? Math.ceil(designation_list.count / designationPagination.pageSize)
+                        : 0
+                    }
                     pagination={designationPagination}
                     onPaginationChange={setDesignationPagination}
                     manualSorting={true}
@@ -396,9 +401,7 @@ function PayrollConfigurations() {
                           {...register('companyNumber')}
                         />
                         {errors.companyNumber && (
-                          <p className="text-sm text-destructive">
-                            {errors.companyNumber.message}
-                          </p>
+                          <p className="text-sm text-destructive">{errors.companyNumber.message}</p>
                         )}
                       </div>
 
@@ -448,11 +451,7 @@ function PayrollConfigurations() {
               <TabsContent value="5">
                 <div className="space-y-4">
                   <div className="flex justify-end">
-                    <Button
-                      onClick={() =>
-                        navigate('/admin/payroll/config/createSalaryComponent')
-                      }
-                    >
+                    <Button onClick={() => navigate('/admin/payroll/config/createSalaryComponent')}>
                       <Plus className="mr-2 h-4 w-4" />
                       {strings.NewSalaryComponent}
                     </Button>
@@ -462,7 +461,11 @@ function PayrollConfigurations() {
                     columns={salaryColumns}
                     data={salaryList?.data || []}
                     manualPagination={true}
-                    pageCount={salaryList?.count ? Math.ceil(salaryList.count / salaryPagination.pageSize) : 0}
+                    pageCount={
+                      salaryList?.count
+                        ? Math.ceil(salaryList.count / salaryPagination.pageSize)
+                        : 0
+                    }
                     pagination={salaryPagination}
                     onPaginationChange={setSalaryPagination}
                     manualSorting={true}

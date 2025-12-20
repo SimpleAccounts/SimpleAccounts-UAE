@@ -322,9 +322,7 @@ describe('Inventory Actions', () => {
       await expect(store.dispatch(actions.getTotalInventoryValue())).rejects.toThrow(
         'Network error'
       );
-      await expect(store.dispatch(actions.getQuantityAvailable())).rejects.toThrow(
-        'Network error'
-      );
+      await expect(store.dispatch(actions.getQuantityAvailable())).rejects.toThrow('Network error');
     });
 
     it('should handle 500 server errors', async () => {

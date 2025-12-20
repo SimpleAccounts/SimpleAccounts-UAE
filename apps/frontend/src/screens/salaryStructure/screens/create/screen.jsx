@@ -36,7 +36,7 @@ const createSalaryStructureSchema = z.object({
   name: z.string().min(1, 'Salary structure name is required'),
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     currency_list: state.employee.currency_list,
     country_list: state.contact.country_list,
@@ -44,7 +44,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     employeeActions: bindActionCreators(EmployeeActions, dispatch),
@@ -52,7 +52,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const CreateSalaryStructure = (props) => {
+const CreateSalaryStructure = props => {
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(false);
   const [createMore, setCreateMore] = useState(false);
@@ -83,7 +83,7 @@ const CreateSalaryStructure = (props) => {
     // Initialize data if needed
   }, []);
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     setDisabled(true);
     setDisableLeavePage(true);
 
@@ -95,7 +95,7 @@ const CreateSalaryStructure = (props) => {
 
     props.salaryStructureCreateActions
       .createSalaryStructure(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setDisabled(false);
           props.commonActions.tostifyAlert('success', 'New Salary Structure Created Successfully');
@@ -110,7 +110,7 @@ const CreateSalaryStructure = (props) => {
           }
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         props.commonActions.tostifyAlert(
           'error',
@@ -119,14 +119,14 @@ const CreateSalaryStructure = (props) => {
       });
   };
 
-  const handleTypeChange = (e) => {
+  const handleTypeChange = e => {
     const value = e.target.value;
     if (value === '' || regEx.test(value)) {
       setValue('type', value, { shouldValidate: true });
     }
   };
 
-  const handleNameChange = (e) => {
+  const handleNameChange = e => {
     const value = e.target.value;
     if (value === '' || regExAlpha.test(value)) {
       setValue('name', value, { shouldValidate: true });
@@ -184,9 +184,7 @@ const CreateSalaryStructure = (props) => {
                                   value={type}
                                   placeholder={strings.Enter + strings.SalaryStructureType}
                                   onChange={handleTypeChange}
-                                  className={
-                                    errors.type && touchedFields.type ? 'is-invalid' : ''
-                                  }
+                                  className={errors.type && touchedFields.type ? 'is-invalid' : ''}
                                 />
                                 {errors.type && touchedFields.type && (
                                   <div className="invalid-feedback">{errors.type.message}</div>
@@ -207,9 +205,7 @@ const CreateSalaryStructure = (props) => {
                                   value={name}
                                   placeholder={strings.Enter + strings.SalaryStructureName}
                                   onChange={handleNameChange}
-                                  className={
-                                    errors.name && touchedFields.name ? 'is-invalid' : ''
-                                  }
+                                  className={errors.name && touchedFields.name ? 'is-invalid' : ''}
                                 />
                                 {errors.name && touchedFields.name && (
                                   <div className="invalid-feedback">{errors.name.message}</div>

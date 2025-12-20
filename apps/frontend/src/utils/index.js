@@ -30,7 +30,7 @@ const selectStyles = {
       borderColor: 'hsl(var(--ring))',
     },
   }),
-  menu: (base) => ({
+  menu: base => ({
     ...base,
     backgroundColor: 'hsl(var(--background))',
     border: '1px solid hsl(var(--border))',
@@ -40,15 +40,15 @@ const selectStyles = {
     backgroundColor: state.isSelected
       ? 'hsl(var(--primary))'
       : state.isFocused
-      ? 'hsl(var(--accent))'
-      : 'transparent',
+        ? 'hsl(var(--accent))'
+        : 'transparent',
     color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
   }),
-  singleValue: (base) => ({
+  singleValue: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
   }),
-  placeholder: (base) => ({
+  placeholder: base => ({
     ...base,
     color: 'hsl(var(--muted-foreground))',
   }),

@@ -31,15 +31,9 @@ const mapDispatchToProps = dispatch => {
 
 let strings = new LocalizedStrings(data);
 
-const ViewDebitNote = (props) => {
-  const {
-    history,
-    location,
-    debitNoteActions,
-    debitNoteViewActions,
-    commonActions,
-    profile,
-  } = props;
+const ViewDebitNote = props => {
+  const { history, location, debitNoteActions, debitNoteViewActions, commonActions, profile } =
+    props;
 
   // State
   const [language] = useState(window['localStorage'].getItem('language'));
@@ -74,10 +68,7 @@ const ViewDebitNote = (props) => {
 
     if (location.state && location.state.id) {
       debitNoteActions
-        .getDebitNoteById(
-          location.state.id,
-          location.state.isCNWithoutProduct
-        )
+        .getDebitNoteById(location.state.id, location.state.isCNWithoutProduct)
         .then(res => {
           let val = 0;
           if (res.status === 200) {
@@ -88,7 +79,9 @@ const ViewDebitNote = (props) => {
 
             const invoiceDataTemp = res.data;
             const invoiceStatusTemp =
-              invoiceDataTemp.status === 'Partially Paid' ? 'Partially Debited' : invoiceDataTemp.status;
+              invoiceDataTemp.status === 'Partially Paid'
+                ? 'Partially Debited'
+                : invoiceDataTemp.status;
             let actionListTemp = StatusActionList.DebitNoteStatusActionList;
 
             if (invoiceStatusTemp && actionListTemp && actionListTemp.length > 0) {
@@ -117,34 +110,28 @@ const ViewDebitNote = (props) => {
 
             // Get contact data
             if (res.data.contactId) {
-              debitNoteViewActions
-                .getContactById(res.data.contactId)
-                .then(contactRes => {
-                  if (contactRes.status === 200) {
-                    setContactData(contactRes.data);
-                  }
-                });
+              debitNoteViewActions.getContactById(res.data.contactId).then(contactRes => {
+                if (contactRes.status === 200) {
+                  setContactData(contactRes.data);
+                }
+              });
             }
           }
         });
 
-      debitNoteViewActions
-        .getInvoicesForCNById(location.state.id)
-        .then(res => {
-          if (res.status === 200) {
-            setDebitNoteDataList(res.data);
-            setId(location.state.id);
-          }
-        });
+      debitNoteViewActions.getInvoicesForCNById(location.state.id).then(res => {
+        if (res.status === 200) {
+          setDebitNoteDataList(res.data);
+          setId(location.state.id);
+        }
+      });
 
-      debitNoteViewActions
-        .getAppliedToInvoiceDetails(location.state.id)
-        .then(res => {
-          if (res.status === 200) {
-            setApplyToInvoiceData(res.data);
-            setId(location.state.id);
-          }
-        });
+      debitNoteViewActions.getAppliedToInvoiceDetails(location.state.id).then(res => {
+        if (res.status === 200) {
+          setApplyToInvoiceData(res.data);
+          setId(location.state.id);
+        }
+      });
     }
   };
 
@@ -216,11 +203,7 @@ const ViewDebitNote = (props) => {
                 type="button"
                 className="close-btn mb-1 btn-lg print-btn-cont"
                 onClick={() => {
-                  if (
-                    location &&
-                    location.state &&
-                    location.state.gotoReports
-                  )
+                  if (location && location.state && location.state.gotoReports)
                     history.push('/admin/report/debit-note-details');
                   else if (location.state.SUP_id)
                     history.push('/admin/expense/supplier-invoice/view', {
@@ -249,8 +232,7 @@ const ViewDebitNote = (props) => {
                   companyData={companyData ? companyData : ''}
                   contactData={contactData}
                   isCNWithoutProduct={
-                    location.state.isCNWithoutProduct &&
-                    location.state.isCNWithoutProduct == true
+                    location.state.isCNWithoutProduct && location.state.isCNWithoutProduct == true
                       ? true
                       : false
                   }

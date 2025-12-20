@@ -6,7 +6,21 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { upperCase } from 'lodash-es';
 import { ToWords } from 'to-words';
-import { Plus, Search, RefreshCw, FileText, Eye, Edit, Copy, FileCheck, Send, University, CreditCard, File, Truck } from 'lucide-react';
+import {
+  Plus,
+  Search,
+  RefreshCw,
+  FileText,
+  Eye,
+  Edit,
+  Copy,
+  FileCheck,
+  Send,
+  University,
+  CreditCard,
+  File,
+  Truck,
+} from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -48,10 +62,10 @@ function SupplierInvoice() {
   const dispatch = useDispatch();
 
   // Redux state
-  const supplier_invoice_list = useSelector((state) => state.supplier_invoice.supplier_invoice_list);
-  const supplier_list = useSelector((state) => state.supplier_invoice.supplier_list);
-  const status_list = useSelector((state) => state.supplier_invoice.status_list);
-  const universal_currency_list = useSelector((state) => state.common.universal_currency_list);
+  const supplier_invoice_list = useSelector(state => state.supplier_invoice.supplier_invoice_list);
+  const supplier_list = useSelector(state => state.supplier_invoice.supplier_list);
+  const status_list = useSelector(state => state.supplier_invoice.status_list);
+  const universal_currency_list = useSelector(state => state.common.universal_currency_list);
 
   // Actions
   const supplierInvoiceActions = useMemo(
@@ -109,12 +123,12 @@ function SupplierInvoice() {
 
     supplierInvoiceActions
       .getSupplierInvoiceList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setLoading(false);
       });
@@ -123,12 +137,12 @@ function SupplierInvoice() {
   const getOverdue = useCallback(() => {
     supplierInvoiceActions
       .getOverdueAmountDetails(filterData.contactType)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setOverDueAmountDetails(res.data);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   }, [supplierInvoiceActions, commonActions, filterData.contactType]);
@@ -167,11 +181,13 @@ function SupplierInvoice() {
 
       supplierInvoiceActions
         .postInvoice(postingRequestModel)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             commonActions.tostifyAlert(
               'success',
-              markAsSent ? strings.InvoiceStatusChangedSuccessfully : strings.InvoiceSentSuccessfully
+              markAsSent
+                ? strings.InvoiceStatusChangedSuccessfully
+                : strings.InvoiceSentSuccessfully
             );
             setLoading(false);
             getOverdue();
@@ -187,7 +203,7 @@ function SupplierInvoice() {
   );
 
   const unPostInvoice = useCallback(
-    (row) => {
+    row => {
       setLoading(true);
       const postingRequestModel = {
         amount: row.invoiceAmount,
@@ -197,7 +213,7 @@ function SupplierInvoice() {
 
       supplierInvoiceActions
         .unPostInvoice(postingRequestModel)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             commonActions.tostifyAlert('success', strings.InvoiceMovedToDraftSuccessfully);
             setLoading(false);
@@ -216,14 +232,17 @@ function SupplierInvoice() {
   const closeInvoice = useCallback(
     (id, status) => {
       if (status === 'Paid') {
-        commonActions.tostifyAlert('error', 'Please delete the payment first to delete the invoice');
+        commonActions.tostifyAlert(
+          'error',
+          'Please delete the payment first to delete the invoice'
+        );
       } else {
         setDialog(
           <ConfirmDeleteModal
             isOpen={true}
             okHandler={() => {
               setDialog(null);
-              supplierInvoiceActions.deleteInvoice(id).then((res) => {
+              supplierInvoiceActions.deleteInvoice(id).then(res => {
                 commonActions.tostifyAlert(
                   'success',
                   res.data?.message || 'Supplier Invoice Deleted Successfully'
@@ -243,11 +262,11 @@ function SupplierInvoice() {
 
   // Filter handlers
   const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
+    setFilterData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     initializeData();
   };
 
@@ -261,7 +280,7 @@ function SupplierInvoice() {
       status: '',
       contactType: 1,
     });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     setTimeout(() => initializeData(), 0);
   };
 
@@ -428,7 +447,9 @@ function SupplierInvoice() {
               label: strings.RecordPayment,
               icon: University,
               onClick: () =>
-                navigate('/admin/expense/supplier-invoice/record-payment', { state: { id: invoice } }),
+                navigate('/admin/expense/supplier-invoice/record-payment', {
+                  state: { id: invoice },
+                }),
             });
           }
 
@@ -477,7 +498,7 @@ function SupplierInvoice() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!supplier_invoice_list?.data) return [];
-    return supplier_invoice_list.data.map((supplier) => ({
+    return supplier_invoice_list.data.map(supplier => ({
       id: supplier.id,
       status: supplier.status,
       statusEnum: supplier.statusEnum,
@@ -500,7 +521,7 @@ function SupplierInvoice() {
 
   // Supplier options for filter
   const supplierOptions = useMemo(() => {
-    return supplier_list.map((item) => ({
+    return supplier_list.map(item => ({
       label: item.label?.contactName || item.label,
       value: item.value,
     }));
@@ -540,9 +561,14 @@ function SupplierInvoice() {
                   className="react-select-container"
                   classNamePrefix="react-select"
                   placeholder={`${strings.Select}${strings.Supplier}`}
-                  options={selectOptionsFactory.renderOptions('label', 'value', supplierOptions, 'Supplier')}
+                  options={selectOptionsFactory.renderOptions(
+                    'label',
+                    'value',
+                    supplierOptions,
+                    'Supplier'
+                  )}
                   value={filterData.supplierId}
-                  onChange={(option) => handleFilterChange('supplierId', option || '')}
+                  onChange={option => handleFilterChange('supplierId', option || '')}
                   isClearable
                 />
                 <DatePicker
@@ -554,7 +580,7 @@ function SupplierInvoice() {
                   showYearDropdown
                   dateFormat="dd-MM-yyyy"
                   dropdownMode="select"
-                  onChange={(value) => handleFilterChange('invoiceDate', value)}
+                  onChange={value => handleFilterChange('invoiceDate', value)}
                 />
                 <DatePicker
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm input-transition"
@@ -566,7 +592,7 @@ function SupplierInvoice() {
                   dateFormat="dd-MM-yyyy"
                   autoComplete="off"
                   selected={filterData.invoiceDueDate}
-                  onChange={(value) => handleFilterChange('invoiceDueDate', value)}
+                  onChange={value => handleFilterChange('invoiceDueDate', value)}
                 />
                 <Input
                   type="number"
@@ -574,7 +600,7 @@ function SupplierInvoice() {
                   value={filterData.amount}
                   placeholder={`${strings.Enter}${strings.Amount}`}
                   className="input-transition"
-                  onChange={(e) => handleFilterChange('amount', e.target.value)}
+                  onChange={e => handleFilterChange('amount', e.target.value)}
                 />
                 <div className="flex gap-2">
                   <Button onClick={handleSearch} variant="default" size="icon">

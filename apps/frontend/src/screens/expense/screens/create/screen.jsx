@@ -102,36 +102,46 @@ let strings = new LocalizedStrings(data);
 // Zod validation schema
 const createExpenseSchema = z.object({
   expenseNumber: z.string().min(1, 'Expense number is required'),
-  expenseCategory: z.object({
-    value: z.number(),
-    label: z.string(),
-  }).nullable().refine(val => val !== null, 'Expense category is required'),
-  expenseDate: z.date({ required_error: 'Expense date is required' }),
-  currencyCode: z.union([
-    z.number(),
-    z.object({
+  expenseCategory: z
+    .object({
       value: z.number(),
       label: z.string(),
     })
-  ]).refine(val => val !== null && val !== '', 'Currency is required'),
-  payee: z.union([
-    z.object({
-      value: z.string(),
-      label: z.string(),
-    }),
-    z.string()
-  ]).refine(val => val !== null && val !== '', 'Paid by is required'),
-  expenseAmount: z.string()
+    .nullable()
+    .refine(val => val !== null, 'Expense category is required'),
+  expenseDate: z.date({ required_error: 'Expense date is required' }),
+  currencyCode: z
+    .union([
+      z.number(),
+      z.object({
+        value: z.number(),
+        label: z.string(),
+      }),
+    ])
+    .refine(val => val !== null && val !== '', 'Currency is required'),
+  payee: z
+    .union([
+      z.object({
+        value: z.string(),
+        label: z.string(),
+      }),
+      z.string(),
+    ])
+    .refine(val => val !== null && val !== '', 'Paid by is required'),
+  expenseAmount: z
+    .string()
     .min(1, 'Amount is required')
     .regex(/^[0-9][0-9]*[.]?[0-9]{0,2}$$/, 'Enter a valid amount')
     .refine(val => parseFloat(val) > 0, 'Expense amount should be greater than 0'),
-  payMode: z.union([
-    z.object({
-      value: z.string(),
-      label: z.string(),
-    }),
-    z.string()
-  ]).refine(val => val !== null && val !== '', 'Pay through is required'),
+  payMode: z
+    .union([
+      z.object({
+        value: z.string(),
+        label: z.string(),
+      }),
+      z.string(),
+    ])
+    .refine(val => val !== null && val !== '', 'Pay through is required'),
   placeOfSupplyId: z.any().optional(),
   exchangeRate: z.any().optional(),
   expenseDescription: z.string().optional(),
@@ -242,7 +252,17 @@ const CreateExpense = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, reset, setValue, watch, getValues, setError, clearErrors } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+    watch,
+    getValues,
+    setError,
+    clearErrors,
+  } = form;
 
   strings.setLanguage(language);
 
@@ -278,7 +298,8 @@ const CreateExpense = ({
             vatCategoryId: vatCategoryId ? vatCategoryId : '',
             payMode: res.data.payMode ? res.data.payMode : '',
             bankAccountId: res.data.bankAccountId ? res.data.bankAccountId : '',
-            exclusiveVat: res.data.exclusiveVat && res.data.exclusiveVat != null ? res.data.exclusiveVat : '',
+            exclusiveVat:
+              res.data.exclusiveVat && res.data.exclusiveVat != null ? res.data.exclusiveVat : '',
             exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
             expenseDescription: res.data.expenseDescription,
             receiptNumber: res.data.receiptNumber,
@@ -298,7 +319,9 @@ const CreateExpense = ({
           setShowPlacelist(res.data.taxTreatmentId !== 8 ? true : false);
           setLockPlacelist(res.data.taxTreatmentId === 7 ? true : false);
           setTaxTreatmentId(res.data.taxTreatmentId ? res.data.taxTreatmentId : '');
-          setIsReverseChargeEnabled(res.data.isReverseChargeEnabled ? res.data.isReverseChargeEnabled : false);
+          setIsReverseChargeEnabled(
+            res.data.isReverseChargeEnabled ? res.data.isReverseChargeEnabled : false
+          );
           setExclusiveVat(res.data.exclusiveVat == true ? true : false);
           setExpenseDateForVatValidation(new Date(res.data.expenseDate));
           setLoading(false);
@@ -598,9 +621,7 @@ const CreateExpense = ({
       setValue('placeOfSupplyId', '');
       setShowPlacelist(false);
     } else if (option?.value === 7) {
-      let placeOfSupplyId = placelist.find(
-        option => option.label === userStateName
-      );
+      let placeOfSupplyId = placelist.find(option => option.label === userStateName);
       setValue('placeOfSupplyId', placeOfSupplyId);
       setLockPlacelist(true);
     } else
@@ -637,19 +658,10 @@ const CreateExpense = ({
     const values = getValues();
     let vat_list_filtered = [];
     let vatIds = [];
-    if (
-      isRegisteredVat &&
-      expenseDateForVatValidation > companyVATRegistrationDate
-    ) {
-      if (
-        isDesignatedZone &&
-        isDesignatedZone != null &&
-        isDesignatedZone == true
-      ) {
+    if (isRegisteredVat && expenseDateForVatValidation > companyVATRegistrationDate) {
+      if (isDesignatedZone && isDesignatedZone != null && isDesignatedZone == true) {
         switch (
-          values.taxTreatmentId && values.taxTreatmentId.value
-            ? values.taxTreatmentId.value
-            : ''
+          values.taxTreatmentId && values.taxTreatmentId.value ? values.taxTreatmentId.value : ''
         ) {
           case 1:
           case 3:
@@ -674,9 +686,7 @@ const CreateExpense = ({
         }
       } else if (isDesignatedZone == false)
         switch (
-          values.taxTreatmentId && values.taxTreatmentId.value
-            ? values.taxTreatmentId.value
-            : ''
+          values.taxTreatmentId && values.taxTreatmentId.value ? values.taxTreatmentId.value : ''
         ) {
           case 1:
             if (isReverseChargeEnabled == false) vatIds = [1, 2, 3];
@@ -1102,7 +1112,9 @@ const CreateExpense = ({
                                   )}
                                 />
                                 {errors.payee && (
-                                  <div className="invalid-feedback d-block">{errors.payee.message}</div>
+                                  <div className="invalid-feedback d-block">
+                                    {errors.payee.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -1211,8 +1223,7 @@ const CreateExpense = ({
                               <Col lg={3}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="payMode">
-                                    <span className="text-danger">* </span>{' '}
-                                    {strings.PayThrough}
+                                    <span className="text-danger">* </span> {strings.PayThrough}
                                   </Label>
                                   <Controller
                                     name="payMode"
@@ -1299,13 +1310,15 @@ const CreateExpense = ({
                                   <Checkbox
                                     id="isReverseChargeEnabled"
                                     checked={isReverseChargeEnabled}
-                                    onCheckedChange={(checked) => {
+                                    onCheckedChange={checked => {
                                       setIsReverseChargeEnabled(checked);
                                       setExclusiveVat(true);
                                       setValue('vatCategoryId', '');
                                     }}
                                   />
-                                  <Label htmlFor="isReverseChargeEnabled" className="ml-2 mb-0">{strings.IsReverseCharge}</Label>
+                                  <Label htmlFor="isReverseChargeEnabled" className="ml-2 mb-0">
+                                    {strings.IsReverseCharge}
+                                  </Label>
                                 </Col>
                               )}
                           </Row>
@@ -1375,9 +1388,7 @@ const CreateExpense = ({
                           <Row>
                             <Col lg={8}>
                               <FormGroup className="mb-3">
-                                <Label htmlFor="expenseDescription">
-                                  {strings.Description}
-                                </Label>
+                                <Label htmlFor="expenseDescription">{strings.Description}</Label>
                                 <Controller
                                   name="expenseDescription"
                                   control={control}
@@ -1401,9 +1412,7 @@ const CreateExpense = ({
                               <Row>
                                 <Col lg={6}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="receiptNumber">
-                                      {strings.ReferenceNumber}
-                                    </Label>
+                                    <Label htmlFor="receiptNumber">{strings.ReferenceNumber}</Label>
                                     <Controller
                                       name="receiptNumber"
                                       control={control}
@@ -1465,10 +1474,9 @@ const CreateExpense = ({
                                   className="btn-square"
                                   onClick={() => {
                                     if (location?.state?.renderURL) {
-                                      history.push(
-                                        `${location?.state?.renderURL}`,
-                                        { expenseId: location?.state?.renderID }
-                                      );
+                                      history.push(`${location?.state?.renderURL}`, {
+                                        expenseId: location?.state?.renderID,
+                                      });
                                     } else history.push('/admin/expense/expense');
                                   }}
                                 >

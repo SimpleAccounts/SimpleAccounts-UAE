@@ -27,8 +27,8 @@ function VatTransactions() {
   const dispatch = useDispatch();
 
   // Redux state
-  const vat_transaction_list = useSelector((state) => state.vat_transactions.vat_transaction_list);
-  const universal_currency_list = useSelector((state) => state.common.universal_currency_list);
+  const vat_transaction_list = useSelector(state => state.vat_transactions.vat_transaction_list);
+  const universal_currency_list = useSelector(state => state.common.universal_currency_list);
 
   // Actions
   const vatTransactionActions = useMemo(
@@ -66,12 +66,12 @@ function VatTransactions() {
 
     vatTransactionActions
       .vatTransactionList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
@@ -147,7 +147,7 @@ function VatTransactions() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!vat_transaction_list?.data) return [];
-    return vat_transaction_list.data.map((item) => ({
+    return vat_transaction_list.data.map(item => ({
       journalId: item.journalId,
       customerName: item.customerName || '',
       countryName: item.countryName || '',

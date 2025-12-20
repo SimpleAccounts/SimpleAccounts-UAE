@@ -28,7 +28,7 @@ const resetPasswordSchema = z
       ),
     confirmPassword: z.string().min(1, 'Confirm password is required'),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine(data => data.password === data.confirmPassword, {
     message: 'Passwords must match',
     path: ['confirmPassword'],
   });
@@ -59,7 +59,7 @@ function ResetNewPassword({ token, history }) {
   const passwordValue = watch('password');
   const confirmPasswordValue = watch('confirmPassword');
 
-  const onSubmit = async (data) => {
+  const onSubmit = async data => {
     const obj = {
       password: data.password,
       token: token,
@@ -74,9 +74,7 @@ function ResetNewPassword({ token, history }) {
     try {
       const res = await api(requestData);
       if (res.status === 200) {
-        setAlert(
-          <Message type="success" content="Password Reset Successfully." />
-        );
+        setAlert(<Message type="success" content="Password Reset Successfully." />);
         setTimeout(() => {
           if (history) {
             history.push('/login');
@@ -127,7 +125,7 @@ function ResetNewPassword({ token, history }) {
                           placeholder="Enter Password"
                           className="pr-10"
                           {...register('password', {
-                            onChange: (e) => setShowChecklist(e.target.value.length > 0),
+                            onChange: e => setShowChecklist(e.target.value.length > 0),
                           })}
                         />
                         <button
@@ -170,9 +168,7 @@ function ResetNewPassword({ token, history }) {
                         {...register('confirmPassword')}
                       />
                       {errors.confirmPassword && (
-                        <p className="text-sm text-destructive">
-                          {errors.confirmPassword.message}
-                        </p>
+                        <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
                       )}
                       {showChecklist && (
                         <div className="mt-2 p-3 bg-muted/50 rounded-lg text-sm">
@@ -187,11 +183,7 @@ function ResetNewPassword({ token, history }) {
                     </div>
 
                     {/* Submit Button */}
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={isSubmitting}
-                    >
+                    <Button type="submit" className="w-full" disabled={isSubmitting}>
                       {isSubmitting ? 'Resetting...' : 'Reset Password'}
                     </Button>
                   </form>

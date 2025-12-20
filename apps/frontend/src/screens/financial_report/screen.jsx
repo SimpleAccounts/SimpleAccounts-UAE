@@ -52,9 +52,7 @@ function ReportSection({ icon: Icon, title, links, iconColor = 'text-primary' })
                 className="flex items-center w-full text-left text-sm text-muted-foreground hover:text-primary transition-colors group"
               >
                 <ChevronRight className="h-3 w-3 mr-2 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <span className="group-hover:translate-x-1 transition-transform">
-                  {link.label}
-                </span>
+                <span className="group-hover:translate-x-1 transition-transform">{link.label}</span>
               </button>
             </li>
           ))}
@@ -70,7 +68,7 @@ function ReportSection({ icon: Icon, title, links, iconColor = 'text-primary' })
  */
 function FinancialReport() {
   const navigate = useNavigate();
-  const companyDetails = useSelector((state) => state.common.company_details);
+  const companyDetails = useSelector(state => state.common.company_details);
   const [language] = useState(() => window.localStorage.getItem('language') || 'en');
 
   useEffect(() => {
@@ -89,7 +87,10 @@ function FinancialReport() {
       links: [
         config.REPORTS_PAL && { label: strings.ProfitandLoss, path: '/admin/report/profitandloss' },
         config.REPORTS_BS && { label: strings.BalanceSheet, path: '/admin/report/balancesheet' },
-        config.REPORTS_HBS && { label: strings.HorizontalBalanceSheet, path: '/admin/report/horizontalbalancesheet' },
+        config.REPORTS_HBS && {
+          label: strings.HorizontalBalanceSheet,
+          path: '/admin/report/horizontalbalancesheet',
+        },
         config.REPORTS_TB && { label: strings.TrailBalances, path: '/admin/report/trailbalances' },
         config.REPORTS_CF && { label: strings.Cash_flow, path: '/admin/report/cash-flow' },
       ].filter(Boolean),
@@ -100,9 +101,17 @@ function FinancialReport() {
       title: strings.VatReports,
       iconColor: 'text-purple-600',
       links: [
-        config.REPORTS_VAT_REPORTS && isRegisteredVat && { label: strings.VatReports, path: '/admin/report/vatreports' },
-        config.REPORTS_FTA_AUDIT && isRegisteredVat && { label: strings.FTA_Audit_Report, path: '/admin/report/ftaAuditReports' },
-        config.REPORTS_EXCISE_TAX && { label: strings.Excise_Tax_Report, path: '/admin/report/exciseTaxAuditReports' },
+        config.REPORTS_VAT_REPORTS &&
+          isRegisteredVat && { label: strings.VatReports, path: '/admin/report/vatreports' },
+        config.REPORTS_FTA_AUDIT &&
+          isRegisteredVat && {
+            label: strings.FTA_Audit_Report,
+            path: '/admin/report/ftaAuditReports',
+          },
+        config.REPORTS_EXCISE_TAX && {
+          label: strings.Excise_Tax_Report,
+          path: '/admin/report/exciseTaxAuditReports',
+        },
       ].filter(Boolean),
     },
     // Detailed General Ledger
@@ -129,9 +138,7 @@ function FinancialReport() {
       icon: FileSpreadsheet,
       title: strings.CorporateTax,
       iconColor: 'text-orange-600',
-      links: [
-        { label: strings.CorporateTax, path: '/admin/report/corporate-tax' },
-      ],
+      links: [{ label: strings.CorporateTax, path: '/admin/report/corporate-tax' }],
     },
     // Expense Reports
     config.REPORTS_HEAD_EXPENSE && {
@@ -140,7 +147,10 @@ function FinancialReport() {
       iconColor: 'text-red-600',
       links: [
         { label: `${strings.Expense} ${strings.Details}`, path: '/admin/report/expense-details' },
-        { label: `${strings.Expense} ${strings.By} ${strings.Category}`, path: '/admin/report/expense-by-category' },
+        {
+          label: `${strings.Expense} ${strings.By} ${strings.Category}`,
+          path: '/admin/report/expense-by-category',
+        },
       ],
     },
     // Receivables
@@ -149,8 +159,14 @@ function FinancialReport() {
       title: strings.Receivables,
       iconColor: 'text-emerald-600',
       links: [
-        { label: strings.ReceivableInvoiceSummary, path: '/admin/report/receivable-invoice-summary' },
-        { label: `${strings.Receivable} ${strings.Invoice} ${strings.Details}`, path: '/admin/report/receivable-invoice-details' },
+        {
+          label: strings.ReceivableInvoiceSummary,
+          path: '/admin/report/receivable-invoice-summary',
+        },
+        {
+          label: `${strings.Receivable} ${strings.Invoice} ${strings.Details}`,
+          path: '/admin/report/receivable-invoice-details',
+        },
       ],
     },
     // Purchase Reports
@@ -168,18 +184,14 @@ function FinancialReport() {
       icon: CreditCard,
       title: strings.CreditNote,
       iconColor: 'text-teal-600',
-      links: [
-        { label: strings.CreditNoteDetails, path: '/admin/report/credit-note-details' },
-      ],
+      links: [{ label: strings.CreditNoteDetails, path: '/admin/report/credit-note-details' }],
     },
     // Invoices
     config.REPORTS_HEAD_INVOICES && {
       icon: FileCheck,
       title: strings.Invoices,
       iconColor: 'text-sky-600',
-      links: [
-        { label: strings.InvoiceDetails, path: '/admin/report/invoice-details' },
-      ],
+      links: [{ label: strings.InvoiceDetails, path: '/admin/report/invoice-details' }],
     },
     // Payables
     config.REPORTS_PAYABLE && {
@@ -196,18 +208,14 @@ function FinancialReport() {
       icon: FileText,
       title: strings.DebitNotes,
       iconColor: 'text-rose-600',
-      links: [
-        { label: strings.DebitNoteDetails, path: '/admin/report/debit-note-details' },
-      ],
+      links: [{ label: strings.DebitNoteDetails, path: '/admin/report/debit-note-details' }],
     },
     // AR Aging Report
     config.REPORTS_ARAGINGREPORT && {
       icon: Clock,
       title: strings.ARAgingReport,
       iconColor: 'text-violet-600',
-      links: [
-        { label: strings.ARAgingReport, path: '/admin/report/arAgingReport' },
-      ],
+      links: [{ label: strings.ARAgingReport, path: '/admin/report/arAgingReport' }],
     },
     // Payroll Reports
     config.REPORTS_PAYROLLSSUMMARY && {
@@ -231,7 +239,7 @@ function FinancialReport() {
 
   // Filter out sections with no links
   const validSections = reportSections.filter(
-    (section) => section && section.links && section.links.length > 0
+    section => section && section.links && section.links.length > 0
   );
 
   return (

@@ -35,7 +35,7 @@ describe('Sidebar Component', () => {
         <Sidebar items={mockItems} pathname="/admin/dashboard" />
       </MemoryRouter>
     );
-    
+
     expect(screen.getByText('Dashboard')).toBeInTheDocument();
     expect(screen.getByText('Income')).toBeInTheDocument();
   });
@@ -46,13 +46,14 @@ describe('Sidebar Component', () => {
         <Sidebar items={mockItems} pathname="/admin/dashboard" />
       </MemoryRouter>
     );
-    
+
     const dashboardLink = screen.getByText('Dashboard').closest('a');
     // NavLink applies classes conditionally, check if it has the active styling
     // The class might be 'bg-accent' or 'text-accent-foreground' or both
-    const hasActiveClass = dashboardLink.className.includes('bg-accent') || 
-                          dashboardLink.className.includes('text-accent-foreground') ||
-                          dashboardLink.className.includes('accent');
+    const hasActiveClass =
+      dashboardLink.className.includes('bg-accent') ||
+      dashboardLink.className.includes('text-accent-foreground') ||
+      dashboardLink.className.includes('accent');
     expect(hasActiveClass).toBe(true);
   });
 
@@ -62,7 +63,7 @@ describe('Sidebar Component', () => {
         <Sidebar items={mockItems} pathname="/admin/dashboard" />
       </MemoryRouter>
     );
-    
+
     const incomeButton = screen.getByText('Income').closest('button');
     expect(incomeButton).toBeInTheDocument();
   });
@@ -73,10 +74,10 @@ describe('Sidebar Component', () => {
         <Sidebar items={mockItems} pathname="/admin/dashboard" />
       </MemoryRouter>
     );
-    
+
     const incomeButton = screen.getByText('Income').closest('button');
     fireEvent.click(incomeButton);
-    
+
     expect(screen.getByText('Customer Invoices')).toBeInTheDocument();
   });
 
@@ -86,7 +87,7 @@ describe('Sidebar Component', () => {
         <Sidebar items={mockItems} pathname="/admin/dashboard" />
       </MemoryRouter>
     );
-    
+
     const dashboardItem = screen.getByText('Dashboard').closest('a');
     expect(dashboardItem).toContainHTML('<i');
   });
@@ -97,7 +98,7 @@ describe('Sidebar Component', () => {
         <Sidebar items={[]} pathname="/admin/dashboard" />
       </MemoryRouter>
     );
-    
+
     expect(screen.getByText(/no navigation items available/i)).toBeInTheDocument();
   });
 
@@ -107,7 +108,7 @@ describe('Sidebar Component', () => {
         <Sidebar items={mockItems} pathname="/admin/dashboard" minimized={true} />
       </MemoryRouter>
     );
-    
+
     // When minimized, text is hidden but icons are still visible
     // Find the sidebar container by class name
     const sidebarContainer = container.querySelector('[class*="w-16"]');
@@ -115,4 +116,3 @@ describe('Sidebar Component', () => {
     expect(sidebarContainer).toHaveClass('w-16');
   });
 });
-

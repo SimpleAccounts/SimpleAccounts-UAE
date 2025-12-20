@@ -2,7 +2,18 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Plus, Search, RefreshCw, CreditCard, Edit, Eye, Send, FileText, Banknote, Receipt } from 'lucide-react';
+import {
+  Plus,
+  Search,
+  RefreshCw,
+  CreditCard,
+  Edit,
+  Eye,
+  Send,
+  FileText,
+  Banknote,
+  Receipt,
+} from 'lucide-react';
 import Select from 'react-select';
 import { upperCase } from 'lodash-es';
 import { ToWords } from 'to-words';
@@ -48,7 +59,7 @@ const selectStyles = {
       borderColor: 'hsl(var(--ring))',
     },
   }),
-  menu: (base) => ({
+  menu: base => ({
     ...base,
     backgroundColor: 'hsl(var(--background))',
     border: '1px solid hsl(var(--border))',
@@ -58,15 +69,15 @@ const selectStyles = {
     backgroundColor: state.isSelected
       ? 'hsl(var(--primary))'
       : state.isFocused
-      ? 'hsl(var(--accent))'
-      : 'transparent',
+        ? 'hsl(var(--accent))'
+        : 'transparent',
     color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
   }),
-  singleValue: (base) => ({
+  singleValue: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
   }),
-  placeholder: (base) => ({
+  placeholder: base => ({
     ...base,
     color: 'hsl(var(--muted-foreground))',
   }),
@@ -100,9 +111,9 @@ function CreditNotes() {
   const dispatch = useDispatch();
 
   // Redux state
-  const customer_list = useSelector((state) => state.customer_invoice.customer_list);
-  const customer_invoice_list = useSelector((state) => state.customer_invoice.customer_invoice_list);
-  const universal_currency_list = useSelector((state) => state.common.universal_currency_list);
+  const customer_list = useSelector(state => state.customer_invoice.customer_list);
+  const customer_invoice_list = useSelector(state => state.customer_invoice.customer_invoice_list);
+  const universal_currency_list = useSelector(state => state.common.universal_currency_list);
 
   // Actions
   const creditNotesActions = useMemo(
@@ -149,12 +160,12 @@ function CreditNotes() {
 
     creditNotesActions
       .getCreditNoteList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setLoading(false);
       });
@@ -198,7 +209,7 @@ function CreditNotes() {
 
   // Unpost credit note
   const unPostInvoice = useCallback(
-    (row) => {
+    row => {
       setLoading(true);
       const postingRequestModel = {
         amount: row.invoiceAmount,
@@ -218,17 +229,14 @@ function CreditNotes() {
 
       creditNotesActions
         .unPostInvoice(postingRequestModel)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
-            commonActions.tostifyAlert(
-              'success',
-              'Credit Note Moved To Draft Successfully'
-            );
+            commonActions.tostifyAlert('success', 'Credit Note Moved To Draft Successfully');
             setLoading(false);
             initializeData();
           }
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err?.data?.message || 'Invoice Unposted Unsuccessfully'
@@ -241,11 +249,11 @@ function CreditNotes() {
 
   // Filter handlers
   const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
+    setFilterData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     initializeData();
   };
 
@@ -255,14 +263,14 @@ function CreditNotes() {
       amount: '',
       contactType: 2,
     });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     setTimeout(() => initializeData(), 0);
   };
 
   // Transform customer list for select
   const customerOptions = useMemo(() => {
     if (!customer_list) return [];
-    return customer_list.map((item) => ({
+    return customer_list.map(item => ({
       label: item.label?.contactName || item.label,
       value: item.value,
     }));
@@ -290,9 +298,7 @@ function CreditNotes() {
         accessorKey: 'invoiceDate',
         header: strings.DATE,
         cell: ({ row }) =>
-          row.original.invoiceDate
-            ? dayjs(row.original.invoiceDate).format('DD-MM-YYYY')
-            : '',
+          row.original.invoiceDate ? dayjs(row.original.invoiceDate).format('DD-MM-YYYY') : '',
       },
       {
         accessorKey: 'status',
@@ -392,10 +398,7 @@ function CreditNotes() {
           }
 
           // Apply To Invoice (not Closed, Draft, and not created on paid invoice)
-          if (
-            !['Closed', 'Draft'].includes(cn.statusEnum) &&
-            cn.cnCreatedOnPaidInvoice !== true
-          ) {
+          if (!['Closed', 'Draft'].includes(cn.statusEnum) && cn.cnCreatedOnPaidInvoice !== true) {
             actions.push({
               label: strings.ApplyToInvoice,
               icon: Receipt,
@@ -437,7 +440,7 @@ function CreditNotes() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!customer_invoice_list?.data) return [];
-    return customer_invoice_list.data.map((customer) => ({
+    return customer_invoice_list.data.map(customer => ({
       id: customer.id,
       status: customer.status || '',
       statusEnum: customer.statusEnum || '',
@@ -501,7 +504,7 @@ function CreditNotes() {
                       : []
                   }
                   value={filterData.customerId}
-                  onChange={(option) => {
+                  onChange={option => {
                     handleFilterChange('customerId', option || '');
                   }}
                 />
@@ -511,7 +514,7 @@ function CreditNotes() {
                   value={filterData.amount}
                   placeholder={`${strings.Enter} ${strings.Amount}`}
                   className="input-transition"
-                  onChange={(e) => handleFilterChange('amount', e.target.value)}
+                  onChange={e => handleFilterChange('amount', e.target.value)}
                 />
                 <div className="flex gap-2 lg:col-start-4">
                   <Button onClick={handleSearch} variant="default" size="icon">
@@ -529,9 +532,7 @@ function CreditNotes() {
               columns={columns}
               data={tableData}
               manualPagination
-              pageCount={Math.ceil(
-                (customer_invoice_list?.count || 0) / pagination.pageSize
-              )}
+              pageCount={Math.ceil((customer_invoice_list?.count || 0) / pagination.pageSize)}
               onPaginationChange={setPagination}
               pagination={pagination}
               manualSorting

@@ -77,7 +77,7 @@ const CreateGoodsReceivedNote = ({
     let totalNet = 0;
     let vatTotal = 0;
 
-    lineItems.forEach((item) => {
+    lineItems.forEach(item => {
       totalNet += item.subTotal || 0;
     });
 
@@ -117,7 +117,7 @@ const CreateGoodsReceivedNote = ({
   }, [language]);
 
   const onSubmit = useCallback(
-    async (formData) => {
+    async formData => {
       if (!prefixData) {
         toast.error('GRN Number prefix is required');
         return;
@@ -170,7 +170,17 @@ const CreateGoodsReceivedNote = ({
         setLoading(false);
       }
     },
-    [prefixData, selectedData, totalAmount, totalVatAmount, createGRN, closeGRNModal, closeGoodsReceivedNotes, getNextGrnNo, reset]
+    [
+      prefixData,
+      selectedData,
+      totalAmount,
+      totalVatAmount,
+      createGRN,
+      closeGRNModal,
+      closeGoodsReceivedNotes,
+      getNextGrnNo,
+      reset,
+    ]
   );
 
   const handleClose = () => {
@@ -241,9 +251,7 @@ const CreateGoodsReceivedNote = ({
                   )}
                 />
                 {errors.grnReceiveDate && (
-                  <div className="invalid-feedback d-block">
-                    {errors.grnReceiveDate.message}
-                  </div>
+                  <div className="invalid-feedback d-block">{errors.grnReceiveDate.message}</div>
                 )}
               </FormGroup>
             </Col>
@@ -299,17 +307,21 @@ const CreateGoodsReceivedNote = ({
               <Table bordered>
                 <tbody>
                   <tr>
-                    <td><strong>{strings.SubTotal || 'Sub Total'}</strong></td>
-                    <td className="text-right">
-                      {Number(calculatedTotals.subTotal).toFixed(2)}
+                    <td>
+                      <strong>{strings.SubTotal || 'Sub Total'}</strong>
                     </td>
+                    <td className="text-right">{Number(calculatedTotals.subTotal).toFixed(2)}</td>
                   </tr>
                   <tr>
-                    <td><strong>{strings.TotalVAT || 'Total VAT'}</strong></td>
+                    <td>
+                      <strong>{strings.TotalVAT || 'Total VAT'}</strong>
+                    </td>
                     <td className="text-right">{Number(calculatedTotals.vatAmount).toFixed(2)}</td>
                   </tr>
                   <tr>
-                    <td><strong>{strings.TotalAmount || 'Total Amount'}</strong></td>
+                    <td>
+                      <strong>{strings.TotalAmount || 'Total Amount'}</strong>
+                    </td>
                     <td className="text-right">{Number(calculatedTotals.total).toFixed(2)}</td>
                   </tr>
                 </tbody>
@@ -326,12 +338,7 @@ const CreateGoodsReceivedNote = ({
                   name="notes"
                   control={control}
                   render={({ field }) => (
-                    <Input
-                      type="textarea"
-                      rows={3}
-                      placeholder="Enter notes..."
-                      {...field}
-                    />
+                    <Input type="textarea" rows={3} placeholder="Enter notes..." {...field} />
                   )}
                 />
               </FormGroup>

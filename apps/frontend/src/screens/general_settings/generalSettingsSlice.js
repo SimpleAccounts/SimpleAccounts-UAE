@@ -9,4 +9,3 @@ const generalSettingsSlice = createSlice({
 });
 
 export default generalSettingsSlice.reducer;
-

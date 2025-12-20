@@ -33,12 +33,14 @@ const ArAgingReport = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { profile, universal_currency_list, company_profile, ar_aging_report } = useSelector((state) => ({
-    profile: state.auth.profile,
-    universal_currency_list: state.common.universal_currency_list,
-    company_profile: state.reports.company_profile,
-    ar_aging_report: state.reports.ar_aging_report,
-  }));
+  const { profile, universal_currency_list, company_profile, ar_aging_report } = useSelector(
+    state => ({
+      profile: state.auth.profile,
+      universal_currency_list: state.common.universal_currency_list,
+      company_profile: state.reports.company_profile,
+      ar_aging_report: state.reports.ar_aging_report,
+    })
+  );
 
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(false);
@@ -64,7 +66,7 @@ const ArAgingReport = () => {
       endDate: currentInitValue.endDate,
     };
     dispatch(FinancialReportActions.getAgingReport(postData))
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           let list = res.data.agingResponseModelList;
           list = list.map((row, i) => {
@@ -75,12 +77,12 @@ const ArAgingReport = () => {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
       });
   };
 
-  const generateReport = (value) => {
+  const generateReport = value => {
     const newInitValue = {
       startDate: dayjs(value.startDate).format('DD/MM/YYYY'), // Not used in postData? Original used initValue.startDate which was defaulted. But generateReport sets startDate.
       endDate: dayjs(value.endDate).format('DD/MM/YYYY'),
@@ -89,7 +91,7 @@ const ArAgingReport = () => {
     // But initializeData uses initValue.startDate.
     // If we want to filter by date range, we should update both.
     // Assuming endDate is the primary filter for "As of" date in Aging reports usually.
-    
+
     setInitValue(newInitValue);
     setLoading(true);
     setView(!view);
@@ -136,7 +138,8 @@ const ArAgingReport = () => {
                         }}
                         onClick={viewFilter}
                       >
-                        <i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
+                        <i className="fa fa-cog mr-2"></i>
+                        {strings.CustomizeReport}
                       </p>
                     </div>
                     <div className="d-flex">
@@ -165,11 +168,10 @@ const ArAgingReport = () => {
                               Excel
                             </span>
                           </DropdownItem>
-                          <DropdownItem onClick={exportPDFWithComponent}>
-                            Pdf
-                          </DropdownItem>
+                          <DropdownItem onClick={exportPDFWithComponent}>Pdf</DropdownItem>
                         </DropdownMenu>
-                      </Dropdown>&nbsp;&nbsp;
+                      </Dropdown>
+                      &nbsp;&nbsp;
                       <div
                         className="mr-2 print-btn-cont"
                         onClick={() => window.print()}
@@ -196,10 +198,7 @@ const ArAgingReport = () => {
               </Row>
             </CardHeader>
             <div className={`panel ${view ? 'view-panel' : ''}`}>
-              <FilterComponent
-                viewFilter={viewFilter}
-                generateReport={generateReport}
-              />{' '}
+              <FilterComponent viewFilter={viewFilter} generateReport={generateReport} />{' '}
             </div>
             <CardBody id="section-to-print">
               <PDFExport

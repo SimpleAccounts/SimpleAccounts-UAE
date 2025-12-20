@@ -34,13 +34,13 @@ const createSalaryRoleSchema = z.object({
   salaryRoleName: z.string().min(1, 'Salary role name is required'),
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     currency_list: state.employee.currency_list,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     salaryRoleActions: bindActionCreators(SalaryRoleActions, dispatch),
@@ -48,7 +48,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const CreateSalaryRoles = (props) => {
+const CreateSalaryRoles = props => {
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(false);
   const [createMore, setCreateMore] = useState(false);
@@ -77,7 +77,7 @@ const CreateSalaryRoles = (props) => {
     // Initialize data if needed
   }, []);
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     setDisabled(true);
     setDisableLeavePage(true);
 
@@ -88,7 +88,7 @@ const CreateSalaryRoles = (props) => {
 
     props.salaryRoleCreateActions
       .createSalaryRole(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setDisabled(false);
           props.commonActions.tostifyAlert('success', 'New Salary Role Created Successfully');
@@ -102,7 +102,7 @@ const CreateSalaryRoles = (props) => {
           }
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         props.commonActions.tostifyAlert(
           'error',
@@ -111,7 +111,7 @@ const CreateSalaryRoles = (props) => {
       });
   };
 
-  const handleSalaryRoleNameChange = (e) => {
+  const handleSalaryRoleNameChange = e => {
     const value = e.target.value;
     if (value === '' || regExAlpha.test(value)) {
       setValue('salaryRoleName', value, { shouldValidate: true });

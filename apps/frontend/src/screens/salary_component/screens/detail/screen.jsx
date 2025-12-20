@@ -4,15 +4,15 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { SalaryComponentScreen } from '../../sections';
 import './style.scss';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {};
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {};
 };
 
-const DetailSalaryComponent = (props) => {
+const DetailSalaryComponent = props => {
   return (
     <SalaryComponentScreen
       props={props}

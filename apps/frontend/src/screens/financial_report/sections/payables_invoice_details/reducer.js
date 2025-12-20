@@ -1,64 +1,57 @@
-import { TEMP } from 'constants/types'
-
+import { TEMP } from 'constants/types';
 
 const initState = {
-  customer_invoice_report : [],
-contact_list :[],
-account_balance_report : [],
-account_type_list :[],
-transaction_type_list : [],
-transaction_category_list : []
-}
-
-
+  customer_invoice_report: [],
+  contact_list: [],
+  account_balance_report: [],
+  account_type_list: [],
+  transaction_type_list: [],
+  transaction_category_list: [],
+};
 
 const TempReducer = (state = initState, action) => {
-  const { type, payload} = action
-  
-  switch(type) {
+  const { type, payload } = action;
 
-    
+  switch (type) {
     case TEMP.ACCOUNT_BALANCE_REPORT:
-    return {
-      ...state,
-      account_balance_report: Object.assign([], payload.data)
-    }
-
+      return {
+        ...state,
+        account_balance_report: Object.assign([], payload.data),
+      };
 
     case TEMP.CUSTOMER_INVOICE_REPORT:
       return {
         ...state,
-        customer_invoice_report: Object.assign([], payload.data)
-      }
+        customer_invoice_report: Object.assign([], payload.data),
+      };
 
-      case TEMP.CONTACT_LIST:
+    case TEMP.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Object.assign([], payload.data)
-      }
-      
-      case TEMP.ACCOUNT_TYPE_LIST:
+        contact_list: Object.assign([], payload.data),
+      };
+
+    case TEMP.ACCOUNT_TYPE_LIST:
       return {
         ...state,
-        account_type_list: Object.assign([], payload.data)
-      }
+        account_type_list: Object.assign([], payload.data),
+      };
 
-      case TEMP.TRANSACTION_TYPE_LIST:
+    case TEMP.TRANSACTION_TYPE_LIST:
       return {
         ...state,
-        transaction_type_list: Object.assign([], payload.data)
-      }
+        transaction_type_list: Object.assign([], payload.data),
+      };
 
-      case TEMP.TRANSACTION_CATEGORY_LIST:
+    case TEMP.TRANSACTION_CATEGORY_LIST:
       return {
         ...state,
-        transaction_category_list: Object.assign([], payload.data)
-      }
-
+        transaction_category_list: Object.assign([], payload.data),
+      };
 
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default TempReducer
+export default TempReducer;

@@ -1,5 +1,3 @@
-import Temp from './temp'
+import Temp from './temp';
 
-export {
-  Temp,
-}
+export { Temp };

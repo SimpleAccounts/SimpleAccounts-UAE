@@ -31,15 +31,12 @@ function Product() {
   const dispatch = useDispatch();
 
   // Redux state
-  const product_list = useSelector((state) => state.product.product_list);
-  const vat_list = useSelector((state) => state.product.vat_list);
-  const universal_currency_list = useSelector((state) => state.common.universal_currency_list);
+  const product_list = useSelector(state => state.product.product_list);
+  const vat_list = useSelector(state => state.product.vat_list);
+  const universal_currency_list = useSelector(state => state.common.universal_currency_list);
 
   // Actions
-  const productActions = useMemo(
-    () => bindActionCreators(ProductActions, dispatch),
-    [dispatch]
-  );
+  const productActions = useMemo(() => bindActionCreators(ProductActions, dispatch), [dispatch]);
   const commonActions = useMemo(() => bindActionCreators(CommonActions, dispatch), [dispatch]);
 
   // Local state
@@ -79,12 +76,12 @@ function Product() {
 
     productActions
       .getProductList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setLoading(false);
       });
@@ -101,7 +98,7 @@ function Product() {
 
   // Navigate to detail
   const goToDetail = useCallback(
-    (row) => {
+    row => {
       navigate('/admin/master/product/detail', { state: { id: row.id } });
     },
     [navigate]
@@ -109,11 +106,11 @@ function Product() {
 
   // Filter handlers
   const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
+    setFilterData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     initializeData();
   };
 
@@ -123,7 +120,7 @@ function Product() {
       productCode: '',
       vatPercentage: '',
     });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     setTimeout(() => initializeData(), 0);
   };
 
@@ -138,16 +135,12 @@ function Product() {
       {
         accessorKey: 'productCode',
         header: strings.PRODUCTCODE,
-        cell: ({ row }) => (
-          <span className="font-medium">{row.original.productCode}</span>
-        ),
+        cell: ({ row }) => <span className="font-medium">{row.original.productCode}</span>,
       },
       {
         accessorKey: 'name',
         header: strings.PRODUCTNAME,
-        cell: ({ row }) => (
-          <span className="font-medium text-primary">{row.original.name}</span>
-        ),
+        cell: ({ row }) => <span className="font-medium text-primary">{row.original.name}</span>,
       },
       {
         accessorKey: 'productType',
@@ -177,10 +170,7 @@ function Product() {
         header: strings.UNITPRICE,
         cell: ({ row }) => (
           <div className="text-right">
-            <Currency
-              value={row.original.unitPrice || 0}
-              currencySymbol={getCurrencySymbol}
-            />
+            <Currency value={row.original.unitPrice || 0} currencySymbol={getCurrencySymbol} />
           </div>
         ),
       },
@@ -231,7 +221,7 @@ function Product() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!product_list?.data) return [];
-    return product_list.data.map((product) => ({
+    return product_list.data.map(product => ({
       id: product.id,
       productCode: product.productCode || '',
       name: product.name || '',
@@ -279,13 +269,13 @@ function Product() {
                   value={filterData.productCode}
                   placeholder={`${strings.Enter} ${strings.PRODUCTCODE}`}
                   className="input-transition"
-                  onChange={(e) => handleFilterChange('productCode', e.target.value)}
+                  onChange={e => handleFilterChange('productCode', e.target.value)}
                 />
                 <Input
                   value={filterData.name}
                   placeholder={`${strings.Enter} ${strings.Name}`}
                   className="input-transition"
-                  onChange={(e) => handleFilterChange('name', e.target.value)}
+                  onChange={e => handleFilterChange('name', e.target.value)}
                 />
                 <div className="flex gap-2">
                   <Button onClick={handleSearch} variant="default" size="icon">

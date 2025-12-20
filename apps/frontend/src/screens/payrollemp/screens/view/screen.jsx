@@ -16,13 +16,13 @@ import {
   UncontrolledTooltip,
   FormGroup,
 } from 'reactstrap';
-import * as EmployeeViewActions from "./actions"
+import * as EmployeeViewActions from './actions';
 import { ConfirmDeleteModal, Currency } from 'components';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { ViewPaySlip } from './sections';
 import { CommonActions } from 'services/global';
-import { data as languageData } from '../../../Language/index'
+import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { toast } from 'sonner';
 import { amountFormat } from 'screens/bank_account/screens/transactions/screens/create/helpers/amountformater';
@@ -81,12 +81,12 @@ const ViewEmployee = () => {
     setActiveTab(newArray);
   };
 
-  const totalEarning = (data) => {
+  const totalEarning = data => {
     let monthly = 0;
     let yearly = 0;
     if (data && data.length > 0) {
       const filteredData = data.filter(obj => obj.id !== '');
-      filteredData.forEach((item) => {
+      filteredData.forEach(item => {
         if (item.monthlyAmount) {
           monthly += parseFloat(item.monthlyAmount);
         }
@@ -106,51 +106,48 @@ const ViewEmployee = () => {
     }
 
     if (location.state?.id) {
-      dispatch(EmployeeViewActions.getEmployeeById(location.state.id))
-        .then((res) => {
-          if (res.status === 200) {
-            setCurrentEmployeeId(location.state.id);
-            setEmployeeDetails(res.data);
-            setUserPhoto(res.data.profileImageBinary ? [res.data.profileImageBinary] : []);
-            setIsEmployeeDeletable(res.data.isEmployeeDeletable);
-          }
-        });
+      dispatch(EmployeeViewActions.getEmployeeById(location.state.id)).then(res => {
+        if (res.status === 200) {
+          setCurrentEmployeeId(location.state.id);
+          setEmployeeDetails(res.data);
+          setUserPhoto(res.data.profileImageBinary ? [res.data.profileImageBinary] : []);
+          setIsEmployeeDeletable(res.data.isEmployeeDeletable);
+        }
+      });
 
-      dispatch(EmployeeViewActions.getSalarySlipList(location.state.id))
-        .then((res) => {
-          if (res.status === 200) {
-            setCurrentEmployeeId(location.state.id);
-            setSalarySlipList(res.data.resultSalarySlipList);
-          }
-        });
+      dispatch(EmployeeViewActions.getSalarySlipList(location.state.id)).then(res => {
+        if (res.status === 200) {
+          setCurrentEmployeeId(location.state.id);
+          setSalarySlipList(res.data.resultSalarySlipList);
+        }
+      });
 
-      dispatch(EmployeeViewActions.getSalaryComponentByEmployeeId(location.state.id))
-        .then((res) => {
-          if (res.status === 200) {
-            setCurrentEmployeeId(location.state.id);
-            setFixed(res.data.salaryComponentResult.Fixed);
-            setVariable(res.data.salaryComponentResult.Variable);
-            setDeduction(res.data.salaryComponentResult.Deduction);
-            setFixedAllowance(res.data.salaryComponentResult.Fixed_Allowance);
-            setCtc(res.data.ctc);
+      dispatch(EmployeeViewActions.getSalaryComponentByEmployeeId(location.state.id)).then(res => {
+        if (res.status === 200) {
+          setCurrentEmployeeId(location.state.id);
+          setFixed(res.data.salaryComponentResult.Fixed);
+          setVariable(res.data.salaryComponentResult.Variable);
+          setDeduction(res.data.salaryComponentResult.Deduction);
+          setFixedAllowance(res.data.salaryComponentResult.Fixed_Allowance);
+          setCtc(res.data.ctc);
 
-            const totalEarnings = totalEarning(res.data.salaryComponentResult.Fixed);
-            const totalDeductions = totalEarning(res.data.salaryComponentResult.Deduction);
-            const monthlyEarnings = totalEarnings.monthly;
-            const yearlyEarnings = totalEarnings.yearly;
-            const monthlyDeductions = totalDeductions.monthly;
-            const yearlyDeductions = totalDeductions.yearly;
-            const netPayMonthly = parseFloat(monthlyEarnings) - parseFloat(monthlyDeductions);
-            const netPayYearly = parseFloat(yearlyEarnings) - parseFloat(yearlyDeductions);
+          const totalEarnings = totalEarning(res.data.salaryComponentResult.Fixed);
+          const totalDeductions = totalEarning(res.data.salaryComponentResult.Deduction);
+          const monthlyEarnings = totalEarnings.monthly;
+          const yearlyEarnings = totalEarnings.yearly;
+          const monthlyDeductions = totalDeductions.monthly;
+          const yearlyDeductions = totalDeductions.yearly;
+          const netPayMonthly = parseFloat(monthlyEarnings) - parseFloat(monthlyDeductions);
+          const netPayYearly = parseFloat(yearlyEarnings) - parseFloat(yearlyDeductions);
 
-            setTotalMonthlyEarnings(monthlyEarnings);
-            setTotalYearlyEarnings(yearlyEarnings);
-            setTotalMonthlyDeductions(monthlyDeductions);
-            setTotalYearlyDeductions(yearlyDeductions);
-            setTotalNetPayMontly(netPayMonthly);
-            setTotalNetPayYearly(netPayYearly);
-          }
-        });
+          setTotalMonthlyEarnings(monthlyEarnings);
+          setTotalYearlyEarnings(yearlyEarnings);
+          setTotalMonthlyDeductions(monthlyDeductions);
+          setTotalYearlyDeductions(yearlyDeductions);
+          setTotalNetPayMontly(netPayMonthly);
+          setTotalNetPayYearly(netPayYearly);
+        }
+      });
     } else {
       navigate('/admin/master/employee');
     }
@@ -162,7 +159,7 @@ const ViewEmployee = () => {
 
   const viewPaySlip = () => {
     setOpenModal(true);
-  }
+  };
 
   const disable = () => {
     if (employeeDetails.employmentId === null) {
@@ -198,13 +195,13 @@ const ViewEmployee = () => {
   const removeEmployee = () => {
     setDisabled1(true);
     dispatch(EmployeeViewActions.deleteEmployee(currentEmployeeId))
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           toast.success(res.data?.message || 'Employee Deleted Successfully!');
           navigate('/admin/master/employee');
         }
       })
-      .catch((err) => {
+      .catch(err => {
         toast.error(err.data?.message || 'Employee Deleted Unsuccessfully');
         setDisabled1(false);
       });
@@ -215,123 +212,125 @@ const ViewEmployee = () => {
   };
 
   const getPhoto = () => {
-    const image = userPhoto.length !== 0
-      ? "data:image/png;base64, " + userPhoto[0]
-      : avatar;
+    const image = userPhoto.length !== 0 ? 'data:image/png;base64, ' + userPhoto[0] : avatar;
     return image;
-  }
+  };
 
   const getEmployeeInviteEmail = () => {
-    dispatch(EmployeeViewActions.getEmployeeInviteEmail(location.state.id))
-      .then((res) => {
-        if (res.status === 200) {
-          toast.success("Mail Sent Successfully");
-        }
-      });
-  }
+    dispatch(EmployeeViewActions.getEmployeeInviteEmail(location.state.id)).then(res => {
+      if (res.status === 200) {
+        toast.success('Mail Sent Successfully');
+      }
+    });
+  };
 
   strings.setLanguage(language);
   const { generateSif } = company_details;
 
-  const columns = useMemo(() => [
-    {
+  const columns = useMemo(
+    () => [
+      {
         accessorKey: 'salaryDate',
         header: strings.SalaryDate,
         cell: ({ getValue }) => dayjs(getValue()).format('DD-MM-YYYY'),
-    },
-    {
+      },
+      {
         accessorKey: 'monthYear',
         header: strings.MonthYear,
-    },
-    {
+      },
+      {
         id: 'actions',
         header: strings.Payslips,
         cell: ({ row }) => (
-            <div>
-				<Button
-					className="btn-sm"
-					style={{ padding: '0px' }}
-					color="link"
-					onClick={() => {
-						const postData = {
-							id: location.state.id,
-							salaryDate: dayjs(row.original.salaryDate).format('DD/MM/YYYY'),
-							sendMail: false,
-							startDate: '',
-							endDate: '',
-						};
-						dispatch(EmployeeViewActions.getSalarySlip(postData))
-							.then((res) => {
-								if (res.status === 200) {
-									res.data.netPay = res.data.earnings - res.data.deductions;
-									setSalaryDate(row.original.salaryDate);
-									setEmployeename(res.data.employeename);
-									setSelectedData(res.data);
-									setFixed(res.data.salarySlipResult.Fixed);
-									setFixedAllowance(res.data.salarySlipResult.Fixed_Allowance || res.data.salarySlipResult["Fixed Allowance"]);
-									setVariable(res.data.salarySlipResult.Variable);
-									setDeduction(res.data.salarySlipResult.Deduction);
-								}
+          <div>
+            <Button
+              className="btn-sm"
+              style={{ padding: '0px' }}
+              color="link"
+              onClick={() => {
+                const postData = {
+                  id: location.state.id,
+                  salaryDate: dayjs(row.original.salaryDate).format('DD/MM/YYYY'),
+                  sendMail: false,
+                  startDate: '',
+                  endDate: '',
+                };
+                dispatch(EmployeeViewActions.getSalarySlip(postData))
+                  .then(res => {
+                    if (res.status === 200) {
+                      res.data.netPay = res.data.earnings - res.data.deductions;
+                      setSalaryDate(row.original.salaryDate);
+                      setEmployeename(res.data.employeename);
+                      setSelectedData(res.data);
+                      setFixed(res.data.salarySlipResult.Fixed);
+                      setFixedAllowance(
+                        res.data.salarySlipResult.Fixed_Allowance ||
+                          res.data.salarySlipResult['Fixed Allowance']
+                      );
+                      setVariable(res.data.salarySlipResult.Variable);
+                      setDeduction(res.data.salarySlipResult.Deduction);
+                    }
 
-								const payPeriod = res.data.payPeriod;
-								const [startDateString, endDateString] = payPeriod.split("-");
-								const startDate = startDateString.trim();
-								const endDate = endDateString.trim();
-								const transactionPostData = {
-									employeeId: location.state.id,
-									startDate: dayjs(startDate).format('DD/MM/YYYY'),
-									endDate: dayjs(endDate).format('DD/MM/YYYY'),
-								};
-								dispatch(EmployeeViewActions.getEmployeeTransactions(transactionPostData))
-									.then((transRes) => {
-										if (transRes.status === 200) {
-											setTransactionList(transRes.data);
-										}
-									})
-									.catch((err) => {
-										toast.error(err?.data?.message || 'Something Went Wrong');
-									});
-							})
-							.catch((err) => {
-								toast.error(err?.data?.message || 'Something Went Wrong');
-							});
+                    const payPeriod = res.data.payPeriod;
+                    const [startDateString, endDateString] = payPeriod.split('-');
+                    const startDate = startDateString.trim();
+                    const endDate = endDateString.trim();
+                    const transactionPostData = {
+                      employeeId: location.state.id,
+                      startDate: dayjs(startDate).format('DD/MM/YYYY'),
+                      endDate: dayjs(endDate).format('DD/MM/YYYY'),
+                    };
+                    dispatch(EmployeeViewActions.getEmployeeTransactions(transactionPostData))
+                      .then(transRes => {
+                        if (transRes.status === 200) {
+                          setTransactionList(transRes.data);
+                        }
+                      })
+                      .catch(err => {
+                        toast.error(err?.data?.message || 'Something Went Wrong');
+                      });
+                  })
+                  .catch(err => {
+                    toast.error(err?.data?.message || 'Something Went Wrong');
+                  });
 
-						viewPaySlip();
-					}}
-				>
-					<i className="fas fa-eye" />  {strings.View}
-				</Button>
+                viewPaySlip();
+              }}
+            >
+              <i className="fas fa-eye" /> {strings.View}
+            </Button>
 
-				<Button
-					className="btn-sm ml-3"
-					style={{ padding: '0px' }}
-					color="link"
-					onClick={() => {
-						const payPeriod = row.original.payPeriod;
-						const [startDateString, endDateString] = payPeriod.split("-");
-						const startDate = startDateString.trim();
-						const endDate = endDateString.trim();
-						const postData = {
-							id: location.state.id,
-							salaryDate: dayjs(row.original.salaryDate).format('DD/MM/YYYY'),
-							sendMail: true,
-							startDate: dayjs(startDate, "DD/MM/YYYY").format('DD-MM-YYYY'),
-							endDate: dayjs(endDate, "DD/MM/YYYY").format('DD-MM-YYYY'),
-						};
-						dispatch(EmployeeViewActions.getSalarySlip(postData))
-							.then((res) => {
-								if (res.status === 200) {
-									toast.success("Payslip Sent Successfully");
-								}
-							});
-					}}
-				>
-					<i className="fas fa-send" /> {strings.Send}
-				</Button>
-			</div>
-        )
-    }
-  ], [navigate, location.state]);
+            <Button
+              className="btn-sm ml-3"
+              style={{ padding: '0px' }}
+              color="link"
+              onClick={() => {
+                const payPeriod = row.original.payPeriod;
+                const [startDateString, endDateString] = payPeriod.split('-');
+                const startDate = startDateString.trim();
+                const endDate = endDateString.trim();
+                const postData = {
+                  id: location.state.id,
+                  salaryDate: dayjs(row.original.salaryDate).format('DD/MM/YYYY'),
+                  sendMail: true,
+                  startDate: dayjs(startDate, 'DD/MM/YYYY').format('DD-MM-YYYY'),
+                  endDate: dayjs(endDate, 'DD/MM/YYYY').format('DD-MM-YYYY'),
+                };
+                dispatch(EmployeeViewActions.getSalarySlip(postData)).then(res => {
+                  if (res.status === 200) {
+                    toast.success('Payslip Sent Successfully');
+                  }
+                });
+              }}
+            >
+              <i className="fas fa-send" /> {strings.Send}
+            </Button>
+          </div>
+        ),
+      },
+    ],
+    [navigate, location.state]
+  );
 
   return (
     <div className="financial-report-screen">
@@ -346,18 +345,25 @@ const ViewEmployee = () => {
                 </div>
               </Col>
               <Col>
-                <div className='pull-right'>
+                <div className="pull-right">
                   <Button
                     type="submit"
                     color="primary"
                     className="btn-square mr-3"
-                    onClick={() => { getEmployeeInviteEmail() }}
-                  ><i className="fas fa-envelope"></i>{' '}
-                    Resend Invite
+                    onClick={() => {
+                      getEmployeeInviteEmail();
+                    }}
+                  >
+                    <i className="fas fa-envelope"></i> Resend Invite
                   </Button>
                   <Button
-                    onClick={() => { navigate('/admin/master/employee') }}
-                  > X </Button>
+                    onClick={() => {
+                      navigate('/admin/master/employee');
+                    }}
+                  >
+                    {' '}
+                    X{' '}
+                  </Button>
                 </div>
               </Col>
             </Row>
@@ -398,28 +404,34 @@ const ViewEmployee = () => {
                 <div className="table-wrapper">
                   <CardGroup>
                     <Card style={{ height: '621px' }}>
-                      <div >
-                        <CardBody className='m-4'>
-                          {generateSif && <Row>
-                            <Col>
-                              <label> <b>{strings.EmployementDetails} </b></label>
-                            </Col>
-                            <Col>
-                              <Button
-                                color="primary"
-                                className="btn-square pull-right mb-2"
-                                style={{ marginBottom: '10px' }}
-                                onClick={() =>
-                                  navigate(`/admin/master/employee/updateEmployeeEmployment`,
-                                    { state: { id: currentEmployeeId } })
-                                }
-                              >
-                                <i className="far fa-edit"></i>
-                              </Button>
-                            </Col>
-                          </Row>}
+                      <div>
+                        <CardBody className="m-4">
+                          {generateSif && (
+                            <Row>
+                              <Col>
+                                <label>
+                                  {' '}
+                                  <b>{strings.EmployementDetails} </b>
+                                </label>
+                              </Col>
+                              <Col>
+                                <Button
+                                  color="primary"
+                                  className="btn-square pull-right mb-2"
+                                  style={{ marginBottom: '10px' }}
+                                  onClick={() =>
+                                    navigate(`/admin/master/employee/updateEmployeeEmployment`, {
+                                      state: { id: currentEmployeeId },
+                                    })
+                                  }
+                                >
+                                  <i className="far fa-edit"></i>
+                                </Button>
+                              </Col>
+                            </Row>
+                          )}
 
-                          <div className='text-center'>
+                          <div className="text-center">
                             <img
                               src={getPhoto()}
                               className="img-avatar mr-2"
@@ -427,69 +439,82 @@ const ViewEmployee = () => {
                               alt=""
                             />
                           </div>
-                          <div className='text-center mt-4' >
-                            <h3>{upperFirst(employeeDetails.fullName)} {' '}
-                              ({employeeDetails.employeeCode ? employeeDetails.employeeCode : '-'}{ })</h3>
+                          <div className="text-center mt-4">
+                            <h3>
+                              {upperFirst(employeeDetails.fullName)} (
+                              {employeeDetails.employeeCode ? employeeDetails.employeeCode : '-'}
+                              {})
+                            </h3>
 
-                            <h4>
-                              {upperFirst(employeeDetails.employeeDsignationName)}
-                            </h4>
+                            <h4>{upperFirst(employeeDetails.employeeDsignationName)}</h4>
                           </div>
                           <hr style={{ width: '90%' }}></hr>
 
                           <div>
-                            <label > {strings.BasicInformation}</label>
+                            <label> {strings.BasicInformation}</label>
                             <hr style={{ width: '50%' }}></hr>
                             <div style={{ fontSize: '16px' }}>
-                              <div className='mt-2 mb-2'><span id="mail"> <i className="far fa-envelope"></i>
-                                <UncontrolledTooltip
-                                  placement="left"
-                                  target="mail"
-                                >
-                                  E-mail
-                                </UncontrolledTooltip>&nbsp;{employeeDetails.email ? employeeDetails.email : '-'}</span></div>
-                              <div className='mt-2 mb-2' ><span id="Gender"><i className="far fa-user"></i>
-                                <UncontrolledTooltip
-                                  placement="left"
-                                  target="Gender"
-                                >
-                                  Gender
-                                </UncontrolledTooltip>&nbsp;{employeeDetails.gender ? employeeDetails.gender : '-'}</span></div>
-                              <div className='mt-2 mb-2'  ><span id="dojTooltip"><i className="far fa-calendar-minus"></i>
-                                <UncontrolledTooltip
-                                  placement="left"
-                                  target="dojTooltip"
-                                >
-                                  Date of Joining
-                                </UncontrolledTooltip>  &nbsp;{employeeDetails.dateOfJoining ? employeeDetails.dateOfJoining : '-'}</span></div>
-                              {generateSif &&
-                                <div className='mt-2 mb-2' >
-                                  <UncontrolledTooltip
-                                    placement="left"
-                                    target="department"
-                                  >
+                              <div className="mt-2 mb-2">
+                                <span id="mail">
+                                  {' '}
+                                  <i className="far fa-envelope"></i>
+                                  <UncontrolledTooltip placement="left" target="mail">
+                                    E-mail
+                                  </UncontrolledTooltip>
+                                  &nbsp;{employeeDetails.email ? employeeDetails.email : '-'}
+                                </span>
+                              </div>
+                              <div className="mt-2 mb-2">
+                                <span id="Gender">
+                                  <i className="far fa-user"></i>
+                                  <UncontrolledTooltip placement="left" target="Gender">
+                                    Gender
+                                  </UncontrolledTooltip>
+                                  &nbsp;{employeeDetails.gender ? employeeDetails.gender : '-'}
+                                </span>
+                              </div>
+                              <div className="mt-2 mb-2">
+                                <span id="dojTooltip">
+                                  <i className="far fa-calendar-minus"></i>
+                                  <UncontrolledTooltip placement="left" target="dojTooltip">
+                                    Date of Joining
+                                  </UncontrolledTooltip>{' '}
+                                  &nbsp;
+                                  {employeeDetails.dateOfJoining
+                                    ? employeeDetails.dateOfJoining
+                                    : '-'}
+                                </span>
+                              </div>
+                              {generateSif && (
+                                <div className="mt-2 mb-2">
+                                  <UncontrolledTooltip placement="left" target="department">
                                     Department
                                   </UncontrolledTooltip>
-                                  <span id="department"> <i className="fas fa-network-wired"></i> &nbsp;{employeeDetails.department ? employeeDetails.department : '-'}</span>
+                                  <span id="department">
+                                    {' '}
+                                    <i className="fas fa-network-wired"></i> &nbsp;
+                                    {employeeDetails.department ? employeeDetails.department : '-'}
+                                  </span>
                                 </div>
-                              }
+                              )}
                             </div>
                           </div>
                           <hr></hr>
-                          <div>
-
-                          </div>
+                          <div></div>
                         </CardBody>
                       </div>
                     </Card>
-                    <div style={{ width: '60%' }} className='ml-4'>
+                    <div style={{ width: '60%' }} className="ml-4">
                       <Card style={{ width: '650px' }}>
                         <div>
-                          <CardBody className='m-4' style={{ height: '250px', width: '600px' }}>
+                          <CardBody className="m-4" style={{ height: '250px', width: '600px' }}>
                             <div>
                               <Row>
                                 <Col>
-                                  <label> <b>{strings.PersonalInformation} </b></label>
+                                  <label>
+                                    {' '}
+                                    <b>{strings.PersonalInformation} </b>
+                                  </label>
                                 </Col>
                                 <Col>
                                   <Button
@@ -497,67 +522,150 @@ const ViewEmployee = () => {
                                     className="btn-square pull-right mb-2"
                                     style={{ marginBottom: '10px' }}
                                     onClick={() =>
-                                      navigate(`/admin/master/employee/updateEmployeePersonal`,
-                                        { state: { id: currentEmployeeId } })
+                                      navigate(`/admin/master/employee/updateEmployeePersonal`, {
+                                        state: { id: currentEmployeeId },
+                                      })
                                     }
                                   >
                                     <i className="far fa-edit"></i>
                                   </Button>
                                 </Col>
                               </Row>
-                              <Row> <Col className='mt-2 mb-2'>{strings.MiddleName} </Col>
-                                <Col className='mt-2 mb-2'>: &nbsp;{employeeDetails.middleName && employeeDetails.lastName ?
-                                  employeeDetails.middleName + " " + employeeDetails.lastName : ('-')}</Col></Row>
+                              <Row>
+                                {' '}
+                                <Col className="mt-2 mb-2">{strings.MiddleName} </Col>
+                                <Col className="mt-2 mb-2">
+                                  : &nbsp;
+                                  {employeeDetails.middleName && employeeDetails.lastName
+                                    ? employeeDetails.middleName + ' ' + employeeDetails.lastName
+                                    : '-'}
+                                </Col>
+                              </Row>
 
-                              <Row> <Col className='mt-2 mb-2'>{strings.DateOfBirth} </Col><Col className='mt-2 mb-2'>: &nbsp;{employeeDetails.dob ? dayjs(employeeDetails.dob).format('DD-MM-YYYY') : ('-')}</Col></Row>
+                              <Row>
+                                {' '}
+                                <Col className="mt-2 mb-2">{strings.DateOfBirth} </Col>
+                                <Col className="mt-2 mb-2">
+                                  : &nbsp;
+                                  {employeeDetails.dob
+                                    ? dayjs(employeeDetails.dob).format('DD-MM-YYYY')
+                                    : '-'}
+                                </Col>
+                              </Row>
 
-                              <Row> <Col className='mt-2 mb-2'>{strings.MobileNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{employeeDetails.mobileNumber ? employeeDetails.mobileNumber : ('-')}</Col></Row>
+                              <Row>
+                                {' '}
+                                <Col className="mt-2 mb-2">{strings.MobileNumber} </Col>
+                                <Col className="mt-2 mb-2">
+                                  : &nbsp;
+                                  {employeeDetails.mobileNumber
+                                    ? employeeDetails.mobileNumber
+                                    : '-'}
+                                </Col>
+                              </Row>
 
-                              <Row> <Col className='mt-2 mb-2'>{strings.Address} </Col><Col className='mt-2 mb-2'>: &nbsp;{(employeeDetails.presentAddress ? employeeDetails.presentAddress : "") + (employeeDetails.city ? employeeDetails.city + ' , ' : '') +
-                                (employeeDetails.stateName ? employeeDetails.stateName + ' , ' : '') + (employeeDetails.countryName ? employeeDetails.countryName : '') + (employeeDetails.pincode ? employeeDetails.pincode + ' , ' : '')}</Col></Row>
-
+                              <Row>
+                                {' '}
+                                <Col className="mt-2 mb-2">{strings.Address} </Col>
+                                <Col className="mt-2 mb-2">
+                                  : &nbsp;
+                                  {(employeeDetails.presentAddress
+                                    ? employeeDetails.presentAddress
+                                    : '') +
+                                    (employeeDetails.city ? employeeDetails.city + ' , ' : '') +
+                                    (employeeDetails.stateName
+                                      ? employeeDetails.stateName + ' , '
+                                      : '') +
+                                    (employeeDetails.countryName
+                                      ? employeeDetails.countryName
+                                      : '') +
+                                    (employeeDetails.pincode
+                                      ? employeeDetails.pincode + ' , '
+                                      : '')}
+                                </Col>
+                              </Row>
                             </div>
                           </CardBody>
                         </div>
                       </Card>
 
-                      {generateSif && <Card style={{ width: '650px' }}>
-                        <div>
-                          <CardBody className='m-4' style={{ height: '250px', width: '600px' }}>
-                            <div>
-                              <Row>
-                                <Col>
-                                  <label><b> {strings.BankInformation} </b></label>
-                                </Col>
-                                <Col>
-                                  <Button
-                                    color="primary"
-                                    className="btn-square pull-right mb-2"
-                                    style={{ marginBottom: '10px' }}
-                                    onClick={() =>
-                                      navigate(`/admin/master/employee/updateEmployeeBank`,
-                                        { state: { id: currentEmployeeId } })
-                                    }
-                                  >
-                                    <i className="far fa-edit"></i>
-                                  </Button>
-                                </Col>
-                              </Row>
-                              <Row> <Col className='mt-2 mb-2'>{strings.BankHolderName} </Col><Col className='mt-2 mb-2'>: &nbsp;{employeeDetails.accountHolderName ?
-                                employeeDetails.accountHolderName : ('-')}</Col></Row>
+                      {generateSif && (
+                        <Card style={{ width: '650px' }}>
+                          <div>
+                            <CardBody className="m-4" style={{ height: '250px', width: '600px' }}>
+                              <div>
+                                <Row>
+                                  <Col>
+                                    <label>
+                                      <b> {strings.BankInformation} </b>
+                                    </label>
+                                  </Col>
+                                  <Col>
+                                    <Button
+                                      color="primary"
+                                      className="btn-square pull-right mb-2"
+                                      style={{ marginBottom: '10px' }}
+                                      onClick={() =>
+                                        navigate(`/admin/master/employee/updateEmployeeBank`, {
+                                          state: { id: currentEmployeeId },
+                                        })
+                                      }
+                                    >
+                                      <i className="far fa-edit"></i>
+                                    </Button>
+                                  </Col>
+                                </Row>
+                                <Row>
+                                  {' '}
+                                  <Col className="mt-2 mb-2">{strings.BankHolderName} </Col>
+                                  <Col className="mt-2 mb-2">
+                                    : &nbsp;
+                                    {employeeDetails.accountHolderName
+                                      ? employeeDetails.accountHolderName
+                                      : '-'}
+                                  </Col>
+                                </Row>
 
-                              <Row> <Col className='mt-2 mb-2'>{strings.AccountNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{employeeDetails.accountNumber ? employeeDetails.accountNumber : ('-')}</Col></Row>
+                                <Row>
+                                  {' '}
+                                  <Col className="mt-2 mb-2">{strings.AccountNumber} </Col>
+                                  <Col className="mt-2 mb-2">
+                                    : &nbsp;
+                                    {employeeDetails.accountNumber
+                                      ? employeeDetails.accountNumber
+                                      : '-'}
+                                  </Col>
+                                </Row>
 
-                              <Row> <Col className='mt-2 mb-2'>{strings.BankName}</Col><Col className='mt-2 mb-2'>: &nbsp;{employeeDetails.bankName ? employeeDetails.bankName : ('-')}</Col></Row>
+                                <Row>
+                                  {' '}
+                                  <Col className="mt-2 mb-2">{strings.BankName}</Col>
+                                  <Col className="mt-2 mb-2">
+                                    : &nbsp;
+                                    {employeeDetails.bankName ? employeeDetails.bankName : '-'}
+                                  </Col>
+                                </Row>
 
-                              <Row> <Col className='mt-2 mb-2'>{strings.Branch}</Col><Col className='mt-2 mb-2'>: &nbsp;{employeeDetails.branch ? employeeDetails.branch : ('-')}</Col></Row>
+                                <Row>
+                                  {' '}
+                                  <Col className="mt-2 mb-2">{strings.Branch}</Col>
+                                  <Col className="mt-2 mb-2">
+                                    : &nbsp;{employeeDetails.branch ? employeeDetails.branch : '-'}
+                                  </Col>
+                                </Row>
 
-                              <Row> <Col className='mt-2 mb-2'>{strings.IBAN} </Col><Col className='mt-2 mb-2'>: &nbsp;{employeeDetails.iban ? employeeDetails.iban : ('-')}</Col></Row>
-
-                            </div>
-                          </CardBody>
-                        </div>
-                      </Card>}
+                                <Row>
+                                  {' '}
+                                  <Col className="mt-2 mb-2">{strings.IBAN} </Col>
+                                  <Col className="mt-2 mb-2">
+                                    : &nbsp;{employeeDetails.iban ? employeeDetails.iban : '-'}
+                                  </Col>
+                                </Row>
+                              </div>
+                            </CardBody>
+                          </div>
+                        </Card>
+                      )}
                     </div>
                   </CardGroup>
                 </div>
@@ -567,39 +675,55 @@ const ViewEmployee = () => {
                 <div className="table-wrapper">
                   <Row>
                     <Col>
-                      <div className='m-4'>
+                      <div className="m-4">
                         <Row style={{ width: '63%' }}>
-                          <Col><h5> {strings.AnnualCTC} </h5>
-                            <div><h3>  {ctc ?
-                              employeeDetails.ctcType === "ANNUALLY" ?
-                                amountFormat(ctc, 'AED')
-                                :
-                                amountFormat(parseFloat(ctc) * 12, 'AED')
-                              : amountFormat(0.00, 'AED')}</h3></div></Col>
-                          <Col><h5> {strings.MonthlyIncome} </h5>
-                            <div> <h3>{ctc ?
-                              employeeDetails.ctcType === "ANNUALLY" ?
-                                amountFormat(ctc / 12, 'AED')
-                                :
-                                amountFormat(ctc, 'AED')
-                              : amountFormat(0.00, 'AED')}</h3></div></Col>
+                          <Col>
+                            <h5> {strings.AnnualCTC} </h5>
+                            <div>
+                              <h3>
+                                {' '}
+                                {ctc
+                                  ? employeeDetails.ctcType === 'ANNUALLY'
+                                    ? amountFormat(ctc, 'AED')
+                                    : amountFormat(parseFloat(ctc) * 12, 'AED')
+                                  : amountFormat(0.0, 'AED')}
+                              </h3>
+                            </div>
+                          </Col>
+                          <Col>
+                            <h5> {strings.MonthlyIncome} </h5>
+                            <div>
+                              {' '}
+                              <h3>
+                                {ctc
+                                  ? employeeDetails.ctcType === 'ANNUALLY'
+                                    ? amountFormat(ctc / 12, 'AED')
+                                    : amountFormat(ctc, 'AED')
+                                  : amountFormat(0.0, 'AED')}
+                              </h3>
+                            </div>
+                          </Col>
                           <Col>
                             <Button
-                              className={`btn-square pull-right mb-2 mr-3 ${disable() ? `disabled-cursor` : ``
-                                } `}
+                              className={`btn-square pull-right mb-2 mr-3 ${
+                                disable() ? `disabled-cursor` : ``
+                              } `}
                               disabled={disable() ? true : false}
                               color="primary"
                               style={{ marginBottom: '10px' }}
-                              onClick={() => navigate(`/admin/master/employee/updateSalaryComponent`,
-                                {
+                              onClick={() =>
+                                navigate(`/admin/master/employee/updateSalaryComponent`, {
                                   state: {
-                                    id: currentEmployeeId, ctcTypeOption: employeeDetails.ctcType != null ?
-                                      (employeeDetails.ctcType === "ANNUALLY" ?
-                                        { label: employeeDetails.ctcType, value: 1 }
-                                        : { label: employeeDetails.ctcType, value: 2 })
-                                      : { label: "ANNUALLY", value: 1 }
-                                  }
-                                })}
+                                    id: currentEmployeeId,
+                                    ctcTypeOption:
+                                      employeeDetails.ctcType != null
+                                        ? employeeDetails.ctcType === 'ANNUALLY'
+                                          ? { label: employeeDetails.ctcType, value: 1 }
+                                          : { label: employeeDetails.ctcType, value: 2 }
+                                        : { label: 'ANNUALLY', value: 1 },
+                                  },
+                                })
+                              }
                               title={
                                 disable()
                                   ? `Please fill the Employement Details before salary setup`
@@ -611,18 +735,20 @@ const ViewEmployee = () => {
                           </Col>
                         </Row>
                       </div>
-                      <Card style={{ height: 'auto', width: '65%' }} >
+                      <Card style={{ height: 'auto', width: '65%' }}>
                         <div>
                           <CardBody>
                             <Table className="text-center">
-                              <thead style={{ border: "3px solid #c8ced3" }}>
-                                <tr style={{ border: "3px solid #c8ced3", background: '#dfe9f7', color: "Black" }}>
+                              <thead style={{ border: '3px solid #c8ced3' }}>
+                                <tr
+                                  style={{
+                                    border: '3px solid #c8ced3',
+                                    background: '#dfe9f7',
+                                    color: 'Black',
+                                  }}
+                                >
                                   {columnHeader1.map((column, index) => {
-                                    return (
-                                      <th key={index}>
-                                        {column.label}
-                                      </th>
-                                    );
+                                    return <th key={index}>{column.label}</th>;
                                   })}
                                 </tr>
                               </thead>
@@ -630,44 +756,116 @@ const ViewEmployee = () => {
                                 {fixed ? (
                                   Object.values(fixed).map((item, idx) => (
                                     <tr key={`fixed-${idx}`} className="p-1">
-                                      <td className="text-left" style={{ border: "3px solid #dfe9f7" }} >{item.description}<div className=''>
-                                      </div></td>
-                                      <td className="text-right" style={{ border: "3px solid #dfe9f7" }} > {item.monthlyAmount ? amountFormat(item.monthlyAmount, 'AED') : '0.00'}</td>
-                                      <td className="text-right" style={{ border: "3px solid #dfe9f7" }} > {item.yearlyAmount ? amountFormat(item.yearlyAmount, 'AED') : '0.00'}</td>
+                                      <td
+                                        className="text-left"
+                                        style={{ border: '3px solid #dfe9f7' }}
+                                      >
+                                        {item.description}
+                                        <div className=""></div>
+                                      </td>
+                                      <td
+                                        className="text-right"
+                                        style={{ border: '3px solid #dfe9f7' }}
+                                      >
+                                        {' '}
+                                        {item.monthlyAmount
+                                          ? amountFormat(item.monthlyAmount, 'AED')
+                                          : '0.00'}
+                                      </td>
+                                      <td
+                                        className="text-right"
+                                        style={{ border: '3px solid #dfe9f7' }}
+                                      >
+                                        {' '}
+                                        {item.yearlyAmount
+                                          ? amountFormat(item.yearlyAmount, 'AED')
+                                          : '0.00'}
+                                      </td>
                                     </tr>
-                                  ))) : (<tr></tr>)}
+                                  ))
+                                ) : (
+                                  <tr></tr>
+                                )}
 
                                 {variable ? (
                                   Object.values(variable).map((item, idx) => (
                                     <tr key={`variable-${idx}`}>
-                                      <td className="text-left" style={{ border: "3px solid #dfe9f7" }} >{item.description}</td>
-                                      <td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.monthlyAmount ? amountFormat(item.monthlyAmount, 'AED') : ''}</td>
-                                      <td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.yearlyAmount ? amountFormat(item.yearlyAmount, 'AED') : ''}</td>
+                                      <td
+                                        className="text-left"
+                                        style={{ border: '3px solid #dfe9f7' }}
+                                      >
+                                        {item.description}
+                                      </td>
+                                      <td
+                                        className="text-right"
+                                        style={{ border: '3px solid #dfe9f7' }}
+                                      >
+                                        {item.monthlyAmount
+                                          ? amountFormat(item.monthlyAmount, 'AED')
+                                          : ''}
+                                      </td>
+                                      <td
+                                        className="text-right"
+                                        style={{ border: '3px solid #dfe9f7' }}
+                                      >
+                                        {item.yearlyAmount
+                                          ? amountFormat(item.yearlyAmount, 'AED')
+                                          : ''}
+                                      </td>
                                     </tr>
-                                  ))) : (<tr></tr>)}
+                                  ))
+                                ) : (
+                                  <tr></tr>
+                                )}
 
                                 {deduction ? (
                                   Object.values(deduction).map((item, idx) => (
                                     <tr key={`deduction-${idx}`}>
-                                      <td className="text-left" style={{ border: "3px solid #dfe9f7" }} >{item.description}</td>
-                                      <td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.monthlyAmount ? amountFormat(item.monthlyAmount, "AED") : ''}</td>
-                                      <td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.yearlyAmount ? amountFormat(item.yearlyAmount, "AED") : ''}</td>
+                                      <td
+                                        className="text-left"
+                                        style={{ border: '3px solid #dfe9f7' }}
+                                      >
+                                        {item.description}
+                                      </td>
+                                      <td
+                                        className="text-right"
+                                        style={{ border: '3px solid #dfe9f7' }}
+                                      >
+                                        {item.monthlyAmount
+                                          ? amountFormat(item.monthlyAmount, 'AED')
+                                          : ''}
+                                      </td>
+                                      <td
+                                        className="text-right"
+                                        style={{ border: '3px solid #dfe9f7' }}
+                                      >
+                                        {item.yearlyAmount
+                                          ? amountFormat(item.yearlyAmount, 'AED')
+                                          : ''}
+                                      </td>
                                     </tr>
-                                  ))) : (<tr></tr>)}
+                                  ))
+                                ) : (
+                                  <tr></tr>
+                                )}
                               </tbody>
                               <tfoot>
-                                <tr style={{ border: "3px solid #dfe9f7" }}>
-                                  <td className="text-left"><h5><b> {strings.CosttoCompany}</b></h5></td>
-                                  <td className="text-right"><h5>
-                                    <Currency
-                                      value={totalNetPayMontly}
-                                    />
-                                  </h5></td>
-                                  <td className="text-right"><h5>
-                                    <Currency
-                                      value={totalNetPayYearly}
-                                    />
-                                  </h5></td>
+                                <tr style={{ border: '3px solid #dfe9f7' }}>
+                                  <td className="text-left">
+                                    <h5>
+                                      <b> {strings.CosttoCompany}</b>
+                                    </h5>
+                                  </td>
+                                  <td className="text-right">
+                                    <h5>
+                                      <Currency value={totalNetPayMontly} />
+                                    </h5>
+                                  </td>
+                                  <td className="text-right">
+                                    <h5>
+                                      <Currency value={totalNetPayYearly} />
+                                    </h5>
+                                  </td>
                                 </tr>
                               </tfoot>
                             </Table>
@@ -680,7 +878,7 @@ const ViewEmployee = () => {
               </TabPane>
 
               <TabPane tabId="3">
-                <div style={{ width: "50%" }} className="table-wrapper">
+                <div style={{ width: '50%' }} className="table-wrapper">
                   <DataTable
                     data={salarySlipList || []}
                     columns={columns}
@@ -688,29 +886,31 @@ const ViewEmployee = () => {
                   />
                 </div>
               </TabPane>
-
             </TabContent>
             <Row>
               <Col>
-                <p><b>Note:</b> Employees cannot be deleted once a transaction has been created for them</p>
+                <p>
+                  <b>Note:</b> Employees cannot be deleted once a transaction has been created for
+                  them
+                </p>
               </Col>
             </Row>
             <Row>
               <Col>
-                {isEmployeeDeletable && <FormGroup>
-                  <Button
-                    type="button"
-                    name="button"
-                    color="danger"
-                    className="btn-square"
-                    disabled={disabled1}
-                    onClick={deleteEmployee}
-                  >
-                    <i className="fa fa-trash"></i> {disabled1
-                      ? 'Deleting...'
-                      : strings.Delete}
-                  </Button>
-                </FormGroup>}
+                {isEmployeeDeletable && (
+                  <FormGroup>
+                    <Button
+                      type="button"
+                      name="button"
+                      color="danger"
+                      className="btn-square"
+                      disabled={disabled1}
+                      onClick={deleteEmployee}
+                    >
+                      <i className="fa fa-trash"></i> {disabled1 ? 'Deleting...' : strings.Delete}
+                    </Button>
+                  </FormGroup>
+                )}
               </Col>
             </Row>
           </CardBody>
@@ -733,6 +933,6 @@ const ViewEmployee = () => {
       />
     </div>
   );
-}
+};
 
 export default ViewEmployee;

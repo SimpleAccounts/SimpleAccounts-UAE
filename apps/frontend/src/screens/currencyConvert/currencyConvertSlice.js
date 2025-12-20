@@ -21,7 +21,7 @@ const currencyConvertSlice = createSlice({
       state.currency_converstion_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(CURRENCYCONVERT.CURRENCY_CONVERT_LIST, (state, action) => {
         state.currency_convert_list = action.payload || [];
@@ -35,10 +35,6 @@ const currencyConvertSlice = createSlice({
   },
 });
 
-export const {
-  setCurrencyConvertList,
-  setCurrencyList,
-  setCurrencyConversionList,
-} = currencyConvertSlice.actions;
+export const { setCurrencyConvertList, setCurrencyList, setCurrencyConversionList } =
+  currencyConvertSlice.actions;
 export default currencyConvertSlice.reducer;
-

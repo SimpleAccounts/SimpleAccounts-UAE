@@ -1,4 +1,1 @@
-
-import {
-  authApi
-} from 'utils'
+import { authApi } from 'utils';

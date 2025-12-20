@@ -36,13 +36,13 @@ const updateSalaryStructureSchema = z.object({
   salaryStructureName: z.string().min(1, 'Salary structure name is required'),
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     currency_list: state.employee.currency_list,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     employeeActions: bindActionCreators(EmployeeActions, dispatch),
@@ -50,7 +50,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const DetailSalaryStructure = (props) => {
+const DetailSalaryStructure = props => {
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(true);
   const [disableLeavePage, setDisableLeavePage] = useState(false);
@@ -86,7 +86,7 @@ const DetailSalaryStructure = (props) => {
     if (props.location.state && props.location.state.id) {
       props.salarayStructureDetailActions
         .getSalaryStructureById(props.location.state.id)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             setCurrentSalaryStructureId(props.location.state.id);
             reset({
@@ -96,7 +96,7 @@ const DetailSalaryStructure = (props) => {
             setLoading(false);
           }
         })
-        .catch((err) => {
+        .catch(err => {
           props.commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
@@ -107,7 +107,7 @@ const DetailSalaryStructure = (props) => {
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     setDisabled(true);
     setDisableLeavePage(true);
 
@@ -120,12 +120,12 @@ const DetailSalaryStructure = (props) => {
 
     props.salarayStructureDetailActions
       .updateSalaryStructure(formData)
-      .then((res) => {
+      .then(res => {
         setDisabled(false);
         props.commonActions.tostifyAlert('success', 'Salary Structure Updated Successfully.');
         props.history.push('/admin/payroll/config', { tabNo: '2' });
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         props.commonActions.tostifyAlert(
           'error',
@@ -156,13 +156,13 @@ const DetailSalaryStructure = (props) => {
     const { current_employee_id } = currentSalaryStructureId;
     props.employeeDetailActions
       .deleteEmployee(current_employee_id)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           props.commonActions.tostifyAlert('success', 'Employee Deleted Successfully !!');
           props.history.push('/admin/payroll/config');
         }
       })
-      .catch((err) => {
+      .catch(err => {
         props.commonActions.tostifyAlert(
           'error',
           err && err.data ? err.data.message : 'Something Went Wrong'
@@ -174,14 +174,14 @@ const DetailSalaryStructure = (props) => {
     setDialog(null);
   };
 
-  const handleTypeChange = (e) => {
+  const handleTypeChange = e => {
     const value = e.target.value;
     if (value === '' || regEx.test(value)) {
       setValue('salaryStructureType', value, { shouldValidate: true });
     }
   };
 
-  const handleNameChange = (e) => {
+  const handleNameChange = e => {
     const value = e.target.value;
     if (value === '' || regExAlpha.test(value)) {
       setValue('salaryStructureName', value, { shouldValidate: true });
@@ -238,7 +238,8 @@ const DetailSalaryStructure = (props) => {
                                     placeholder="Enter Salary Structure Type"
                                     onChange={handleTypeChange}
                                     className={
-                                      errors.salaryStructureType && touchedFields.salaryStructureType
+                                      errors.salaryStructureType &&
+                                      touchedFields.salaryStructureType
                                         ? 'is-invalid'
                                         : ''
                                     }
@@ -266,7 +267,8 @@ const DetailSalaryStructure = (props) => {
                                     placeholder="Enter Salary Structure Name"
                                     onChange={handleNameChange}
                                     className={
-                                      errors.salaryStructureName && touchedFields.salaryStructureName
+                                      errors.salaryStructureName &&
+                                      touchedFields.salaryStructureName
                                         ? 'is-invalid'
                                         : ''
                                     }
@@ -285,7 +287,10 @@ const DetailSalaryStructure = (props) => {
                           </Col>
                         </Row>
                         <Row>
-                          <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                          <Col
+                            lg={12}
+                            className="d-flex align-items-center justify-content-between flex-wrap mt-5"
+                          >
                             {/* <FormGroup>
                               <Button
                                 type="button"

@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Row,
-  Col,
-  Table,
-  Button,
-} from 'reactstrap';
+import { Card, CardHeader, CardBody, Row, Col, Table, Button } from 'reactstrap';
 import { Loader } from 'components';
 import * as SalaryTemplateActions from './actions';
 import { CommonActions } from 'services/global';
@@ -18,7 +10,7 @@ import { toast } from 'sonner';
 
 const SalaryTemplate = () => {
   const dispatch = useDispatch();
-  
+
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
     Fixed: [],
@@ -39,7 +31,7 @@ const SalaryTemplate = () => {
 
   const initializeData = () => {
     dispatch(SalaryTemplateActions.getSalaryTemplateList())
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setData({
             Fixed: res.data.salaryComponentResult.Fixed || [],
@@ -49,7 +41,7 @@ const SalaryTemplate = () => {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         toast.error(err && err.data ? err.data.message : 'Something Went Wrong');
       });
@@ -81,7 +73,9 @@ const SalaryTemplate = () => {
           ))}
           {items.length === 0 && (
             <tr>
-              <td colSpan="4" className="text-center">No data found</td>
+              <td colSpan="4" className="text-center">
+                No data found
+              </td>
             </tr>
           )}
         </tbody>

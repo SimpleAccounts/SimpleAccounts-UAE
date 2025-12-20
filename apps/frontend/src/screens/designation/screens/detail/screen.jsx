@@ -37,48 +37,47 @@ if (localStorage.getItem('language') == null) {
 }
 
 // Zod validation schema
-const detailDesignationSchema = z.object({
-  designationName: z
-    .string()
-    .min(1, 'Designation name is required')
-    .max(30, 'Designation name is too long'),
-  designationType: z
-    .object({
-      value: z.union([z.number(), z.string()]),
-      label: z.string(),
-    })
-    .nullable()
-    .refine((val) => val !== null, strings.DesignationTypeIsRequired),
-  designationId: z
-    .string()
-    .min(1, 'Designation id is required')
-    .max(9, 'Designation id is too long'),
-}).refine(
-  (data) => {
-    const id = parseInt(data.designationId);
-    return id !== 0;
-  },
-  {
-    message: 'Enter valid designation ID',
-    path: ['designationId'],
-  }
-);
+const detailDesignationSchema = z
+  .object({
+    designationName: z
+      .string()
+      .min(1, 'Designation name is required')
+      .max(30, 'Designation name is too long'),
+    designationType: z
+      .object({
+        value: z.union([z.number(), z.string()]),
+        label: z.string(),
+      })
+      .nullable()
+      .refine(val => val !== null, strings.DesignationTypeIsRequired),
+    designationId: z
+      .string()
+      .min(1, 'Designation id is required')
+      .max(9, 'Designation id is too long'),
+  })
+  .refine(
+    data => {
+      const id = parseInt(data.designationId);
+      return id !== 0;
+    },
+    {
+      message: 'Enter valid designation ID',
+      path: ['designationId'],
+    }
+  );
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     currency_list: state.employee.currency_list,
     designationType_list: state.employeeDesignation.designationType_list,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     employeeActions: bindActionCreators(EmployeeActions, dispatch),
-    designationDetailActions: bindActionCreators(
-      DesignationDetailActions,
-      dispatch
-    ),
+    designationDetailActions: bindActionCreators(DesignationDetailActions, dispatch),
   };
 };
 
@@ -129,25 +128,21 @@ const DetailDesignation = ({
   const initializeData = useCallback(() => {
     employeeActions.getParentDesignationList();
     if (location.state && location.state.id) {
-      employeeActions
-        .getEmployeeCountForDesignation(location.state.id)
-        .then((res) => {
-          if (res.status === 200) {
-            setEnableDelete(res.data && res.data > 0 ? false : true);
-          }
-        });
+      employeeActions.getEmployeeCountForDesignation(location.state.id).then(res => {
+        if (res.status === 200) {
+          setEnableDelete(res.data && res.data > 0 ? false : true);
+        }
+      });
       designationDetailActions
         .getEmployeeDesignationById(location.state.id)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             setCurrentSalaryRoleId(location.state.id);
 
             const designationIdValue = res.data.designationId
               ? res.data.designationId.toString()
               : '';
-            const designationNameValue = res.data.designationName
-              ? res.data.designationName
-              : '';
+            const designationNameValue = res.data.designationName ? res.data.designationName : '';
 
             setInitialDesignationId(designationIdValue);
             setInitialDesignationName(designationNameValue);
@@ -155,16 +150,14 @@ const DetailDesignation = ({
             reset({
               designationId: designationIdValue,
               designationType: res.data.parentId
-                ? designationType_list?.find(
-                    (type) => type.value === res.data.parentId
-                  ) || null
+                ? designationType_list?.find(type => type.value === res.data.parentId) || null
                 : null,
               designationName: designationNameValue,
             });
             setLoading(false);
           }
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
@@ -185,12 +178,12 @@ const DetailDesignation = ({
   ]);
 
   const designationIdvalidationCheck = useCallback(
-    (value) => {
+    value => {
       const data = {
         moduleType: 25,
         name: value,
       };
-      commonActions.checkValidation(data).then((response) => {
+      commonActions.checkValidation(data).then(response => {
         if (response.data === 'Designation ID already exists') {
           setIdExist(true);
           setError('designationId', {
@@ -207,12 +200,12 @@ const DetailDesignation = ({
   );
 
   const designationNamevalidationCheck = useCallback(
-    (value) => {
+    value => {
       const data = {
         moduleType: 26,
         name: value,
       };
-      commonActions.checkValidation(data).then((response) => {
+      commonActions.checkValidation(data).then(response => {
         if (response.data === 'Designation name already exists') {
           setNameExist(true);
           setError('designationName', {
@@ -228,16 +221,10 @@ const DetailDesignation = ({
     [commonActions, setError, clearErrors]
   );
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     // Check for existing ID or reserved IDs
     const id = parseInt(data.designationId);
-    if (
-      idExist ||
-      id === 1 ||
-      id === 2 ||
-      id === 3 ||
-      id === 4
-    ) {
+    if (idExist || id === 1 || id === 2 || id === 3 || id === 4) {
       setError('designationId', {
         type: 'manual',
         message: 'Designation ID already exist',
@@ -261,25 +248,18 @@ const DetailDesignation = ({
     formData.append('id', currentSalaryRoleId);
     formData.append(
       'parentId',
-      designationType
-        ? designationType.value
-          ? designationType.value
-          : designationType
-        : ''
+      designationType ? (designationType.value ? designationType.value : designationType) : ''
     );
     formData.append('designationId', designationId ? designationId : '');
     formData.append('designationName', designationName ? designationName : '');
 
     designationDetailActions
       .updateEmployeeDesignation(formData)
-      .then((res) => {
-        commonActions.tostifyAlert(
-          'success',
-          'Designation Updated Successfully.'
-        );
+      .then(res => {
+        commonActions.tostifyAlert('success', 'Designation Updated Successfully.');
         history.push('/admin/payroll/config', { tabNo: '3' });
       })
-      .catch((err) => {
+      .catch(err => {
         setDisableLeavePage(false);
         commonActions.tostifyAlert(
           'error',
@@ -294,8 +274,7 @@ const DetailDesignation = ({
         <b>Delete Designation ?</b>
       </text>
     );
-    const message =
-      'This designation will be deleted permanently and cannot be recovered. ';
+    const message = 'This designation will be deleted permanently and cannot be recovered. ';
     setDialog(
       <ConfirmDeleteModal
         isOpen={true}
@@ -310,17 +289,14 @@ const DetailDesignation = ({
   const remove = () => {
     designationDetailActions
       .deleteDesignation(currentSalaryRoleId)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setDisableLeavePage(true);
-          commonActions.tostifyAlert(
-            'success',
-            'Designation Deleted Successfully !'
-          );
+          commonActions.tostifyAlert('success', 'Designation Deleted Successfully !');
           history.push('/admin/payroll/config', { tabNo: '3' });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         if (err.status === 409) {
           setDisableLeavePage(true);
           commonActions.tostifyAlert(
@@ -402,19 +378,10 @@ const DetailDesignation = ({
                                         type="text"
                                         id="designationId"
                                         maxLength="9"
-                                        placeholder={
-                                          strings.Enter + strings.DESIGNATIONID
-                                        }
+                                        placeholder={strings.Enter + strings.DESIGNATIONID}
                                         {...field}
-                                        onChange={(e) =>
-                                          handleDesignationIdChange(
-                                            e,
-                                            field.onChange
-                                          )
-                                        }
-                                        className={
-                                          errors.designationId ? 'is-invalid' : ''
-                                        }
+                                        onChange={e => handleDesignationIdChange(e, field.onChange)}
+                                        className={errors.designationId ? 'is-invalid' : ''}
                                       />
                                     )}
                                   />
@@ -441,17 +408,10 @@ const DetailDesignation = ({
                                         maxLength="30"
                                         placeholder="Enter Designation Name"
                                         {...field}
-                                        onChange={(e) =>
-                                          handleDesignationNameChange(
-                                            e,
-                                            field.onChange
-                                          )
+                                        onChange={e =>
+                                          handleDesignationNameChange(e, field.onChange)
                                         }
-                                        className={
-                                          errors.designationName
-                                            ? 'is-invalid'
-                                            : ''
-                                        }
+                                        className={errors.designationName ? 'is-invalid' : ''}
                                       />
                                     )}
                                   />
@@ -475,10 +435,9 @@ const DetailDesignation = ({
                                       placement="right"
                                       target="designationTypeTooltip"
                                     >
-                                      Based on the designation type selected, the
-                                      chart of accounts will be created for the
-                                      employee. This field will be locked once the
-                                      designation has been assigned to an employee.
+                                      Based on the designation type selected, the chart of accounts
+                                      will be created for the employee. This field will be locked
+                                      once the designation has been assigned to an employee.
                                     </UncontrolledTooltip>
                                   </Label>
                                   <Controller
@@ -499,13 +458,9 @@ const DetailDesignation = ({
                                               )
                                             : []
                                         }
-                                        placeholder={
-                                          strings.Select + strings.DesignationType
-                                        }
+                                        placeholder={strings.Select + strings.DesignationType}
                                         styles={selectStyles}
-                                        className={
-                                          errors.designationType ? 'is-invalid' : ''
-                                        }
+                                        className={errors.designationType ? 'is-invalid' : ''}
                                         isClearable
                                       />
                                     )}
@@ -523,8 +478,8 @@ const DetailDesignation = ({
                             <Row>
                               <Col>
                                 <p>
-                                  <strong>Note:</strong> If the designation is
-                                  assigned to an employee, it cannot be deleted.
+                                  <strong>Note:</strong> If the designation is assigned to an
+                                  employee, it cannot be deleted.
                                 </p>
                               </Col>
                             </Row>
@@ -549,13 +504,8 @@ const DetailDesignation = ({
                               )}
                             </FormGroup>
                             <FormGroup className="text-right">
-                              <Button
-                                type="submit"
-                                color="primary"
-                                className="btn-square mr-3"
-                              >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
-                                {strings.Update}
+                              <Button type="submit" color="primary" className="btn-square mr-3">
+                                <i className="fa fa-dot-circle-o"></i> {strings.Update}
                               </Button>
                               <Button
                                 type="button"

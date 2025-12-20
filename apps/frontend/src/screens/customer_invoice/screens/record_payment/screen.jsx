@@ -75,30 +75,45 @@ const supported_format = [
 // Zod validation schema
 const recordPaymentSchema = z.object({
   receiptNo: z.string().optional(),
-  receiptDate: z.union([z.string(), z.date()]).refine((val) => val !== '', { message: 'Payment date is required' }),
+  receiptDate: z
+    .union([z.string(), z.date()])
+    .refine(val => val !== '', { message: 'Payment date is required' }),
   contactId: z.union([z.string(), z.number()]),
-  amount: z.union([z.string(), z.number()])
-    .refine((val) => {
+  amount: z.union([z.string(), z.number()]).refine(
+    val => {
       const numVal = typeof val === 'string' ? parseFloat(val) : val;
       return numVal > 0;
-    }, { message: 'Amount cannot be empty or 0' }),
-  payMode: z.object({ value: z.string(), label: z.string() }).refine((val) => val.value !== '', { message: 'Payment mode is required' }),
-  depositeTo: z.object({ value: z.union([z.string(), z.number()]), label: z.string() }).refine((val) => val.value !== '', { message: 'Received through is required' }),
+    },
+    { message: 'Amount cannot be empty or 0' }
+  ),
+  payMode: z
+    .object({ value: z.string(), label: z.string() })
+    .refine(val => val.value !== '', { message: 'Payment mode is required' }),
+  depositeTo: z
+    .object({ value: z.union([z.string(), z.number()]), label: z.string() })
+    .refine(val => val.value !== '', { message: 'Received through is required' }),
   notes: z.string().optional(),
   referenceCode: z.string().optional(),
-  attachmentFile: z.any()
-    .refine((file) => {
-      if (!file) return true;
-      return supported_format.includes(file.type);
-    }, { message: '*Unsupported File Format' })
-    .refine((file) => {
-      if (!file) return true;
-      return file.size <= file_size;
-    }, { message: '*File size is too large' }),
+  attachmentFile: z
+    .any()
+    .refine(
+      file => {
+        if (!file) return true;
+        return supported_format.includes(file.type);
+      },
+      { message: '*Unsupported File Format' }
+    )
+    .refine(
+      file => {
+        if (!file) return true;
+        return file.size <= file_size;
+      },
+      { message: '*File size is too large' }
+    ),
   paidInvoiceListStr: z.array(z.any()),
 });
 
-const RecordCustomerPayment = (props) => {
+const RecordCustomerPayment = props => {
   const [language] = useState(window.localStorage.getItem('language'));
   const [loading, setLoading] = useState(false);
   const [dialog, setDialog] = useState(null);
@@ -123,7 +138,13 @@ const RecordCustomerPayment = (props) => {
       props.location.state.id.invoiceDate.substring(6)
   );
 
-  const { control, handleSubmit, formState: { errors, touchedFields }, setValue, watch } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, touchedFields },
+    setValue,
+    watch,
+  } = useForm({
     resolver: zodResolver(recordPaymentSchema),
     defaultValues: {
       receiptNo: '',
@@ -167,16 +188,14 @@ const RecordCustomerPayment = (props) => {
   };
 
   const getReceiptNo = () => {
-    props.CustomerRecordPaymentActions.getReceiptNo(invoiceId).then(
-      res => {
-        if (res.status === 200) {
-          setValue('receiptNo', res.data, true);
-        }
+    props.CustomerRecordPaymentActions.getReceiptNo(invoiceId).then(res => {
+      if (res.status === 200) {
+        setValue('receiptNo', res.data, true);
       }
-    );
+    });
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -188,11 +207,12 @@ const RecordCustomerPayment = (props) => {
     }
   };
 
-  const onSubmit = (formData) => {
+  const onSubmit = formData => {
     setDisabled(true);
     setDisableLeavePage(true);
 
-    const { receiptNo, receiptDate, contactId, amount, depositeTo, payMode, notes, referenceCode } = formData;
+    const { receiptNo, receiptDate, contactId, amount, depositeTo, payMode, notes, referenceCode } =
+      formData;
 
     let submitData = new FormData();
     submitData.append('receiptNo', receiptNo !== null ? receiptNo : '');
@@ -209,9 +229,7 @@ const RecordCustomerPayment = (props) => {
     );
     submitData.append(
       'invoiceAmount',
-      props.location.state.id.invoiceAmount
-        ? props.location.state.id.invoiceAmount
-        : '00000'
+      props.location.state.id.invoiceAmount ? props.location.state.id.invoiceAmount : '00000'
     );
     submitData.append('amount', amount !== null ? amount : '');
     submitData.append('notes', notes !== null ? notes : '');
@@ -245,12 +263,12 @@ const RecordCustomerPayment = (props) => {
       });
   };
 
-  const openCustomerModalHandler = (e) => {
+  const openCustomerModalHandler = e => {
     e.preventDefault();
     setOpenCustomerModal(true);
   };
 
-  const getCurrentUser = (data) => {
+  const getCurrentUser = data => {
     let option;
     if (data.label || data.value) {
       option = data;
@@ -263,7 +281,7 @@ const RecordCustomerPayment = (props) => {
     setValue('contactId', option.value, true);
   };
 
-  const closeCustomerModal = (res) => {
+  const closeCustomerModal = res => {
     if (res) {
       props.customerInvoiceActions.getCustomerList(contactType);
     }
@@ -387,9 +405,7 @@ const RecordCustomerPayment = (props) => {
                                   )}
                                 />
                                 {errors.contactId && touchedFields.contactId && (
-                                  <div className="invalid-feedback">
-                                    {errors.contactId.message}
-                                  </div>
+                                  <div className="invalid-feedback">{errors.contactId.message}</div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -399,8 +415,7 @@ const RecordCustomerPayment = (props) => {
                             <Col lg={4}>
                               <FormGroup className="mb-3">
                                 <Label htmlFor="amount">
-                                  <span className="text-danger">* </span>{' '}
-                                  {strings.AmountReceived}
+                                  <span className="text-danger">* </span> {strings.AmountReceived}
                                 </Label>
                                 <Controller
                                   name="amount"
@@ -412,11 +427,15 @@ const RecordCustomerPayment = (props) => {
                                       min={0}
                                       maxLength="14,2"
                                       id="amount"
-                                      value={typeof field.value === 'number' ? field.value.toLocaleString('en-US', {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2,
-                                      }) : field.value}
-                                      onChange={(e) => {
+                                      value={
+                                        typeof field.value === 'number'
+                                          ? field.value.toLocaleString('en-US', {
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                            })
+                                          : field.value
+                                      }
+                                      onChange={e => {
                                         if (
                                           e.target.value === '' ||
                                           regDecimal.test(e.target.value)
@@ -468,7 +487,7 @@ const RecordCustomerPayment = (props) => {
                                       dropdownMode="select"
                                       minDate={invoiceDate}
                                       selected={field.value}
-                                      onChange={(date) => field.onChange(date)}
+                                      onChange={date => field.onChange(date)}
                                       className={`form-control ${
                                         errors.receiptDate && touchedFields.receiptDate
                                           ? 'is-invalid'
@@ -489,8 +508,7 @@ const RecordCustomerPayment = (props) => {
                             <Col lg={4}>
                               <FormGroup className="mb-3">
                                 <Label htmlFor="payMode">
-                                  <span className="text-danger">* </span>{' '}
-                                  {strings.PaymentMode}
+                                  <span className="text-danger">* </span> {strings.PaymentMode}
                                 </Label>
                                 <Controller
                                   name="payMode"
@@ -511,9 +529,7 @@ const RecordCustomerPayment = (props) => {
                                       placeholder={strings.Select + strings.PaymentMode}
                                       id="payMode"
                                       className={
-                                        errors.payMode && touchedFields.payMode
-                                          ? 'is-invalid'
-                                          : ''
+                                        errors.payMode && touchedFields.payMode ? 'is-invalid' : ''
                                       }
                                     />
                                   )}
@@ -528,8 +544,7 @@ const RecordCustomerPayment = (props) => {
                             <Col lg={4}>
                               <FormGroup className="mb-3">
                                 <Label htmlFor="depositeTo">
-                                  <span className="text-danger">* </span>{' '}
-                                  {strings.ReceivedThrough}
+                                  <span className="text-danger">* </span> {strings.ReceivedThrough}
                                 </Label>
                                 <Controller
                                   name="depositeTo"
@@ -580,9 +595,7 @@ const RecordCustomerPayment = (props) => {
                               <Row>
                                 <Col lg={6}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="receiptNumber">
-                                      {strings.ReferenceNumber}
-                                    </Label>
+                                    <Label htmlFor="receiptNumber">{strings.ReferenceNumber}</Label>
                                     <Controller
                                       name="receiptNumber"
                                       control={control}
@@ -594,20 +607,18 @@ const RecordCustomerPayment = (props) => {
                                           id="receiptNumber"
                                           placeholder={strings.ReceiptNumber}
                                           className={
-                                            errors.receiptNumber &&
-                                            touchedFields.receiptNumber
+                                            errors.receiptNumber && touchedFields.receiptNumber
                                               ? 'is-invalid'
                                               : ' '
                                           }
                                         />
                                       )}
                                     />
-                                    {errors.receiptNumber &&
-                                      touchedFields.receiptNumber && (
-                                        <div className="invalid-feedback">
-                                          {errors.receiptNumber.message}
-                                        </div>
-                                      )}
+                                    {errors.receiptNumber && touchedFields.receiptNumber && (
+                                      <div className="invalid-feedback">
+                                        {errors.receiptNumber.message}
+                                      </div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                                 <Col lg={6}>
@@ -638,12 +649,11 @@ const RecordCustomerPayment = (props) => {
                                         {fileName}
                                       </div>
                                     )}
-                                    {errors.attachmentFile &&
-                                      touchedFields.attachmentFile && (
-                                        <div className="invalid-file">
-                                          {errors.attachmentFile.message}
-                                        </div>
-                                      )}
+                                    {errors.attachmentFile && touchedFields.attachmentFile && (
+                                      <div className="invalid-file">
+                                        {errors.attachmentFile.message}
+                                      </div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                               </Row>
@@ -697,10 +707,7 @@ const RecordCustomerPayment = (props) => {
                                         `${props?.location?.state?.id?.renderURL}`,
                                         { id: props?.location?.state?.id.renderID }
                                       );
-                                    } else
-                                      props.history.push(
-                                        '/admin/income/customer-invoice'
-                                      );
+                                    } else props.history.push('/admin/income/customer-invoice');
                                   }}
                                 >
                                   <i className="fa fa-ban"></i> {strings.Cancel}
@@ -719,10 +726,10 @@ const RecordCustomerPayment = (props) => {
         </div>
         <CustomerModal
           openCustomerModal={openCustomerModal}
-          closeCustomerModal={(e) => {
+          closeCustomerModal={e => {
             closeCustomerModal(e);
           }}
-          getCurrentUser={(e) => getCurrentUser(e)}
+          getCurrentUser={e => getCurrentUser(e)}
           createCustomer={props.customerInvoiceActions.createCustomer}
           currency_list={props.currency_list}
           country_list={props.country_list}

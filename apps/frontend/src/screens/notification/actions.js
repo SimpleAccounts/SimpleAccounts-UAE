@@ -1,10 +1,7 @@
 // import { NOTIFICATION } from 'constants/types'
-import {
-  // authApi
-} from 'utils'
+import {} from // authApi
+'utils';
 
-export const initialData = (obj) => {
-  return (dispatch) => {
-    
-  }
-}
+export const initialData = obj => {
+  return dispatch => {};
+};

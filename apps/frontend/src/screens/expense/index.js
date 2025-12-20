@@ -1,9 +1,9 @@
-import screen from './screen.jsx'
-import * as actions from './actions'
-import reducer from './expenseSlice'
+import screen from './screen.jsx';
+import * as actions from './actions';
+import reducer from './expenseSlice';
 
 export default {
   screen,
   actions,
-  reducer
-}
+  reducer,
+};

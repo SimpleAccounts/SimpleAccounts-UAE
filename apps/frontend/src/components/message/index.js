@@ -13,7 +13,7 @@ const MessageWithNavigation = ({ type, title, content, link }) => {
     danger: 'destructive',
     warning: 'warning',
     info: 'default', // or another appropriate variant
-    default: 'default'
+    default: 'default',
   };
 
   const variant = variantMap[type] || 'default';
@@ -73,13 +73,13 @@ class Message extends React.Component {
 
     // Map reactstrap color types to shadcn variants
     const variantMap = {
-        success: 'success',
-        danger: 'destructive',
-        warning: 'warning',
-        info: 'default',
-        default: 'default'
+      success: 'success',
+      danger: 'destructive',
+      warning: 'warning',
+      info: 'default',
+      default: 'default',
     };
-    
+
     const variant = variantMap[type] || 'default';
 
     return (

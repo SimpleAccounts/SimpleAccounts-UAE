@@ -13,7 +13,7 @@ const importTransactionSlice = createSlice({
       state.date_format_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder.addCase(IMPORT_TRANSACTION.DATE_FORMAT_LIST, (state, action) => {
       state.date_format_list = action.payload || [];
     });
@@ -22,4 +22,3 @@ const importTransactionSlice = createSlice({
 
 export const { setDateFormatList } = importTransactionSlice.actions;
 export default importTransactionSlice.reducer;
-

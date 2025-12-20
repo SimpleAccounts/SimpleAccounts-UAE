@@ -41,7 +41,7 @@ function InvoiceAdditionalNotesInformation(props) {
               name="receiptNumber"
               value={referenceNumberValue || ''}
               placeholder={referenceNumberPlaceholder}
-              onChange={(e) => {
+              onChange={e => {
                 onChange('receiptNumber', e);
               }}
               className="input-transition"
@@ -64,7 +64,7 @@ function InvoiceAdditionalNotesInformation(props) {
               rows={4}
               placeholder={notesPlaceholder}
               value={notesValue || ''}
-              onChange={(e) => onChange('notes', e)}
+              onChange={e => onChange('notes', e)}
               className="input-transition"
             />
           </div>
@@ -85,7 +85,7 @@ function InvoiceAdditionalNotesInformation(props) {
               rows={4}
               placeholder={footNotePlaceholder}
               value={footNoteValue || ''}
-              onChange={(e) => onChange('footNote', e)}
+              onChange={e => onChange('footNote', e)}
               className="input-transition"
             />
           </div>

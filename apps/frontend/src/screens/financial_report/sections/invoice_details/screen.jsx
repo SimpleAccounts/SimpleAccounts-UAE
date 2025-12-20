@@ -33,12 +33,14 @@ const InvoiceDetails = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { profile, universal_currency_list, company_profile, creditnote_details } = useSelector((state) => ({
-    profile: state.auth.profile,
-    universal_currency_list: state.common.universal_currency_list,
-    company_profile: state.reports.company_profile,
-    creditnote_details: state.reports.creditnote_details,
-  }));
+  const { profile, universal_currency_list, company_profile, creditnote_details } = useSelector(
+    state => ({
+      profile: state.auth.profile,
+      universal_currency_list: state.common.universal_currency_list,
+      company_profile: state.reports.company_profile,
+      creditnote_details: state.reports.creditnote_details,
+    })
+  );
 
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(true);
@@ -68,18 +70,18 @@ const InvoiceDetails = () => {
       endDate: currentInitValue.endDate,
     };
     dispatch(FinancialReportActions.getInvoiceDetails(postData))
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setData(res.data);
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
       });
   };
 
-  const generateReport = (value) => {
+  const generateReport = value => {
     const newInitValue = {
       startDate: dayjs(value.startDate).format('DD/MM/YYYY'),
       endDate: dayjs(value.endDate).format('DD/MM/YYYY'),
@@ -138,7 +140,8 @@ const InvoiceDetails = () => {
                         }}
                         onClick={viewFilter}
                       >
-                        <i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
+                        <i className="fa fa-cog mr-2"></i>
+                        {strings.CustomizeReport}
                       </p>
                     </div>
                     <div className="d-flex">
@@ -167,11 +170,10 @@ const InvoiceDetails = () => {
                               Excel
                             </span>
                           </DropdownItem>
-                          <DropdownItem onClick={exportPDFWithComponent}>
-                            Pdf
-                          </DropdownItem>
+                          <DropdownItem onClick={exportPDFWithComponent}>Pdf</DropdownItem>
                         </DropdownMenu>
-                      </Dropdown>&nbsp;&nbsp;
+                      </Dropdown>
+                      &nbsp;&nbsp;
                       <div
                         className="mr-2 print-btn-cont"
                         onClick={() => window.print()}
@@ -198,10 +200,7 @@ const InvoiceDetails = () => {
               </Row>
             </CardHeader>
             <div className={`panel ${view ? 'view-panel' : ''}`}>
-              <FilterComponent2
-                viewFilter={viewFilter}
-                generateReport={generateReport}
-              />{' '}
+              <FilterComponent2 viewFilter={viewFilter} generateReport={generateReport} />{' '}
             </div>
             <CardBody id="section-to-print">
               <PDFExport
@@ -238,7 +237,8 @@ const InvoiceDetails = () => {
                     <br style={{ marginBottom: '5px' }} />
                     <b style={{ fontSize: '18px' }}>{strings.InvoiceDetails}</b>
                     <br style={{ marginBottom: '5px' }} />
-                    {strings.From} {initValue.startDate.replaceAll('/', '-')} {strings.To} {initValue.endDate.replaceAll('/', '-')}
+                    {strings.From} {initValue.startDate.replaceAll('/', '-')} {strings.To}{' '}
+                    {initValue.endDate.replaceAll('/', '-')}
                   </div>
                   <div></div>
                 </div>
@@ -287,17 +287,27 @@ const InvoiceDetails = () => {
                                         gotoReports: '/admin/report/invoice-details',
                                       },
                                     }}
-                                    style={{ textAlign: 'left', color: '#2046DB', cursor: 'pointer' }}
+                                    style={{
+                                      textAlign: 'left',
+                                      color: '#2046DB',
+                                      cursor: 'pointer',
+                                    }}
                                   >
                                     {item.invoiceNumber}
                                   </Link>
                                 </td>
-                                <td style={{ textAlign: 'center pull-left' }}>{item.customerName}</td>
-                                <td style={{ textAlign: 'center' }}>
-                                  {item.invoiceDate ? dayjs(item.invoiceDate).format('DD-MM-YYYY') : ' '}
+                                <td style={{ textAlign: 'center pull-left' }}>
+                                  {item.customerName}
                                 </td>
                                 <td style={{ textAlign: 'center' }}>
-                                  {item.invoiceDueDate ? dayjs(item.invoiceDueDate).format('DD-MM-YYYY') : ' '}
+                                  {item.invoiceDate
+                                    ? dayjs(item.invoiceDate).format('DD-MM-YYYY')
+                                    : ' '}
+                                </td>
+                                <td style={{ textAlign: 'center' }}>
+                                  {item.invoiceDueDate
+                                    ? dayjs(item.invoiceDueDate).format('DD-MM-YYYY')
+                                    : ' '}
                                 </td>
                                 <td style={{ textAlign: 'center pull-left' }}>{item.status}</td>
                                 <td style={{ textAlign: 'right' }}>
@@ -330,7 +340,8 @@ const InvoiceDetails = () => {
                           <td style={{ textAlign: 'center', width: '20%' }}>
                             <b>{strings.Total}</b>
                           </td>
-                          <td></td> <td></td> <td></td><td></td>
+                          <td></td> <td></td> <td></td>
+                          <td></td>
                           <td style={{ textAlign: 'right', width: '20%' }}>
                             <b>
                               <Currency

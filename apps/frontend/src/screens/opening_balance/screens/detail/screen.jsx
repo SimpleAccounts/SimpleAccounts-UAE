@@ -48,13 +48,13 @@ const detailOpeningBalanceSchema = z.object({
   openingBalance: z.string().optional(),
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     transaction_category_list: state.opening_balance.transaction_category_list,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     detailOpeningBalancesAction: bindActionCreators(DetailOpeningBalancesAction, dispatch),
@@ -102,7 +102,7 @@ const DetailOpeningBalance = ({
       openingBalanceActions.getTransactionCategoryList();
       detailOpeningBalancesAction
         .getOpeningBalanceById(location.state.id)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             setLoading(false);
             setCurrentOpeningBalanceId(location.state.id);
@@ -118,7 +118,7 @@ const DetailOpeningBalance = ({
             });
           }
         })
-        .catch((err) => {
+        .catch(err => {
           setLoading(false);
           history.push('/admin/accountant/opening-balance');
         });
@@ -127,7 +127,7 @@ const DetailOpeningBalance = ({
     }
   }, [location.state, detailOpeningBalancesAction, openingBalanceActions, history, reset]);
 
-  const getData = (data) => {
+  const getData = data => {
     let temp = {};
     for (let item in data) {
       if (typeof data[`${item}`] !== 'object') {
@@ -139,7 +139,7 @@ const DetailOpeningBalance = ({
     return temp;
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     let postData = getData(data);
     postData = { ...postData, ...{ id: currentOpeningBalanceId } };
 
@@ -149,7 +149,7 @@ const DetailOpeningBalance = ({
 
     detailOpeningBalancesAction
       .updateOpeningBalance(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           reset();
           commonActions.tostifyAlert(
@@ -160,7 +160,7 @@ const DetailOpeningBalance = ({
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         commonActions.tostifyAlert(
           'error',
@@ -248,7 +248,7 @@ const DetailOpeningBalance = ({
                                       {...field}
                                       id="date"
                                       selected={field.value}
-                                      onChange={(date) => field.onChange(date)}
+                                      onChange={date => field.onChange(date)}
                                       className={`form-control ${
                                         errors.effectiveDate ? 'is-invalid' : ''
                                       }`}
@@ -288,7 +288,7 @@ const DetailOpeningBalance = ({
                                       id="openingBalance"
                                       rows="5"
                                       className={errors.openingBalance ? 'is-invalid' : ''}
-                                      onChange={(e) => {
+                                      onChange={e => {
                                         if (
                                           e.target.value === '' ||
                                           regDecimal.test(e.target.value)
@@ -309,7 +309,10 @@ const DetailOpeningBalance = ({
                             </Col>
                           </Row>
                           <Row>
-                            <Col lg={10} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
+                            <Col
+                              lg={10}
+                              className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
+                            >
                               <FormGroup className="text-right">
                                 <Button
                                   type="submit"

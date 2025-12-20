@@ -38,7 +38,7 @@ const SOAReport = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { profile, universal_currency_list, company_profile } = useSelector((state) => ({
+  const { profile, universal_currency_list, company_profile } = useSelector(state => ({
     profile: state.auth.profile,
     universal_currency_list: state.common.universal_currency_list,
     company_profile: state.reports.company_profile,
@@ -78,10 +78,10 @@ const SOAReport = () => {
 
   const initializeData = () => {
     dispatch(FinancialReportActions.getCustomerList())
-      .then((res) => {
+      .then(res => {
         setCustomerList(res);
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
       });
   };
@@ -102,7 +102,7 @@ const SOAReport = () => {
 
     setLoading(true);
     dispatch(FinancialReportActions.getSOA(postData))
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setOpeningBalance(res.data.openingBalance ? res.data.openingBalance : 0.0);
           setTotalAmountPaid(res.data.totalAmountPaid ? res.data.totalAmountPaid : 0.0);
@@ -112,7 +112,7 @@ const SOAReport = () => {
         }
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
       });
   };
@@ -136,30 +136,35 @@ const SOAReport = () => {
     var wb = XLSX.utils.table_to_book(elt, { sheet: 'sheet1' });
     return dl
       ? XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' })
-      : XLSX.writeFile(wb, fn || 'Statement Of Account( ' + customerName + ' ).' + (type || 'xlsx'));
+      : XLSX.writeFile(
+          wb,
+          fn || 'Statement Of Account( ' + customerName + ' ).' + (type || 'xlsx')
+        );
   };
 
   const toggle = () => setDropdownOpen(!dropdownOpen);
   const viewFilter = () => setView(!view);
   const exportPDFWithComponent = () => pdfExportComponent.current.save();
 
-  const renderDate = (cell) => {
+  const renderDate = cell => {
     if (cell.invoiceNumber === 'Total Balance Due') return '';
     else return dayjs(cell.date).format('DD-MM-YYYY');
   };
 
-  const renderInvoiceNumber = (cell) => {
+  const renderInvoiceNumber = cell => {
     if (cell.invoiceNumber === 'Total Balance Due') return <b> {cell.invoiceNumber}</b>;
     else return cell.invoiceNumber;
   };
 
-  const renderTotalBalanceDueAmount = (cell) => {
+  const renderTotalBalanceDueAmount = cell => {
     if (cell.invoiceNumber === 'Total Balance Due')
       return (
         <b>
           <Currency
             value={cell.balanceAmount}
-            currencySymbol={universal_currency_list[0] ? universal_currency_list[0].currencyIsoCode : 'USD'}
+            currencySymbol={
+              universal_currency_list[0] ? universal_currency_list[0].currencyIsoCode : 'USD'
+            }
           />
         </b>
       );
@@ -167,7 +172,9 @@ const SOAReport = () => {
       return (
         <Currency
           value={cell.balanceAmount}
-          currencySymbol={universal_currency_list[0] ? universal_currency_list[0].currencyIsoCode : 'USD'}
+          currencySymbol={
+            universal_currency_list[0] ? universal_currency_list[0].currencyIsoCode : 'USD'
+          }
         />
       );
   };
@@ -178,46 +185,57 @@ const SOAReport = () => {
       return (
         <Currency
           value={value}
-          currencySymbol={universal_currency_list[0] ? universal_currency_list[0].currencyIsoCode : 'USD'}
+          currencySymbol={
+            universal_currency_list[0] ? universal_currency_list[0].currencyIsoCode : 'USD'
+          }
         />
       );
   };
 
-  const columns = useMemo(() => [
-    {
-      accessorKey: 'date',
-      header: 'Date',
-      cell: ({ row }) => renderDate(row.original),
-    },
-    {
-      accessorKey: 'typeName',
-      header: 'Transaction',
-    },
-    {
-      accessorKey: 'invoiceNumber',
-      header: 'Details',
-      cell: ({ row }) => renderInvoiceNumber(row.original),
-    },
-    {
-      accessorKey: 'amount',
-      header: 'Amount',
-      cell: ({ row }) => <div className="text-right">{renderAmount(row.original, row.original.amount)}</div>,
-    },
-    {
-      accessorKey: 'paymentAmount',
-      header: 'Payments',
-      cell: ({ row }) => <div className="text-right">{renderAmount(row.original, row.original.paymentAmount)}</div>,
-    },
-    {
-      accessorKey: 'balanceAmount',
-      header: 'Balance',
-      cell: ({ row }) => <div className="text-right">{renderTotalBalanceDueAmount(row.original)}</div>,
-    },
-  ], [universal_currency_list]);
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'date',
+        header: 'Date',
+        cell: ({ row }) => renderDate(row.original),
+      },
+      {
+        accessorKey: 'typeName',
+        header: 'Transaction',
+      },
+      {
+        accessorKey: 'invoiceNumber',
+        header: 'Details',
+        cell: ({ row }) => renderInvoiceNumber(row.original),
+      },
+      {
+        accessorKey: 'amount',
+        header: 'Amount',
+        cell: ({ row }) => (
+          <div className="text-right">{renderAmount(row.original, row.original.amount)}</div>
+        ),
+      },
+      {
+        accessorKey: 'paymentAmount',
+        header: 'Payments',
+        cell: ({ row }) => (
+          <div className="text-right">{renderAmount(row.original, row.original.paymentAmount)}</div>
+        ),
+      },
+      {
+        accessorKey: 'balanceAmount',
+        header: 'Balance',
+        cell: ({ row }) => (
+          <div className="text-right">{renderTotalBalanceDueAmount(row.original)}</div>
+        ),
+      },
+    ],
+    [universal_currency_list]
+  );
 
   let tmpCustomer_list = [];
   if (customer_list)
-    customer_list.map((item) => {
+    customer_list.map(item => {
       let obj = { label: item.label.contactName, value: item.value };
       tmpCustomer_list.push(obj);
     });
@@ -328,7 +346,7 @@ const SOAReport = () => {
                           placeholder={strings.Select + strings.CustomerName}
                           options={tmpCustomer_list ? tmpCustomer_list : []}
                           value={contactId}
-                          onChange={(option) => {
+                          onChange={option => {
                             if (option && option.value) {
                               setContactId(option);
                             } else {
@@ -520,11 +538,7 @@ const SOAReport = () => {
                       <Col></Col>
                     </Row>
 
-                    <DataTable
-                        data={soa_data}
-                        columns={columns}
-                        manualPagination={false}
-                    />
+                    <DataTable data={soa_data} columns={columns} manualPagination={false} />
 
                     <hr />
                   </div>

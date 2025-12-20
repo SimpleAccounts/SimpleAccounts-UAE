@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -91,7 +97,13 @@ class Header extends Component {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="nav-link" style={{ border: 'none' }}>
-                <i className={language === 'en' ? 'flag-icon flag-icon-us' : 'flag-icon flag-icon-ae'} title="us" id="us"></i>
+                <i
+                  className={
+                    language === 'en' ? 'flag-icon flag-icon-us' : 'flag-icon flag-icon-ae'
+                  }
+                  title="us"
+                  id="us"
+                ></i>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -107,7 +119,11 @@ class Header extends Component {
           {/* User Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="nav-link flex items-center gap-2" style={{ border: 'none' }}>
+              <Button
+                variant="ghost"
+                className="nav-link flex items-center gap-2"
+                style={{ border: 'none' }}
+              >
                 <img
                   src={
                     profile && profile.profileImageBinary !== null
@@ -134,7 +150,9 @@ class Header extends Component {
               <DropdownMenuItem onClick={() => this.props.history.push('/admin/settings/user')}>
                 <i className="fas fa-user-tag mr-2"></i> {strings.User}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => this.props.history.push('/admin/settings/user-role')}>
+              <DropdownMenuItem
+                onClick={() => this.props.history.push('/admin/settings/user-role')}
+              >
                 <i className="fas fa-users mr-2"></i> {strings.Role}
               </DropdownMenuItem>
               <DropdownMenuItem
@@ -143,7 +161,9 @@ class Header extends Component {
                 <i className="fas fa-money-check-alt mr-2"></i> {strings.PayrollSettings}
               </DropdownMenuItem>
               {config.SETTING_THEME && (
-                <DropdownMenuItem onClick={() => this.props.history.push('/admin/settings/template')}>
+                <DropdownMenuItem
+                  onClick={() => this.props.history.push('/admin/settings/template')}
+                >
                   <i className="fas fa-palette mr-2"></i> {strings.MailThemes}
                 </DropdownMenuItem>
               )}

@@ -94,7 +94,7 @@ function PayrollModal({
     setCurrentSelectedData(selectedData || {});
   }, [selectedData]);
 
-  const handleLopChange = (value) => {
+  const handleLopChange = value => {
     const lopValue = parseInt(value, 10) || 0;
     const noOfDaysValue = 30 - lopValue;
     setCurrentLop(lopValue);
@@ -104,18 +104,18 @@ function PayrollModal({
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     const formData = new FormData();
     formData.append('id', current_employee);
     formData.append('noOfDays', currentNoOfDays);
 
     updateEmployeeSalary(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           closePayrollModal(true);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         toast.error(`${err.data}`, {
           position: 'top-right',
         });
@@ -163,7 +163,7 @@ function PayrollModal({
                       id="lop"
                       className={errors.lop ? 'is-invalid' : ''}
                       value={currentLop}
-                      onChange={(e) => {
+                      onChange={e => {
                         const value = e.target.value;
                         if (value === '' || regEx.test(value)) {
                           field.onChange(value);

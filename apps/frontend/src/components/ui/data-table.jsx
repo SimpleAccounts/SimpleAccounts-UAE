@@ -42,10 +42,12 @@ export function DataTable({
   const [columnFilters, setColumnFilters] = useState([]);
   const [internalRowSelection, setInternalRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState('');
-  const [pagination, setPagination] = useState(initialState.pagination || {
-    pageIndex: 0,
-    pageSize: 10,
-  });
+  const [pagination, setPagination] = useState(
+    initialState.pagination || {
+      pageIndex: 0,
+      pageSize: 10,
+    }
+  );
 
   const rowSelection = controlledRowSelection ?? internalRowSelection;
   const setRowSelection = setControlledRowSelection ?? setInternalRowSelection;
@@ -87,7 +89,7 @@ export function DataTable({
           return (
             <Checkbox
               checked={isAllSelected ? true : isSomeSelected ? 'indeterminate' : false}
-              onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+              onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
               aria-label="Select all"
             />
           );
@@ -95,7 +97,7 @@ export function DataTable({
         cell: ({ row }) => (
           <Checkbox
             checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            onCheckedChange={value => row.toggleSelected(!!value)}
             aria-label="Select row"
           />
         ),
@@ -139,13 +141,15 @@ export function DataTable({
         <div className="flex items-center py-4">
           <Input
             placeholder={`Search ${searchKey}...`}
-            value={manualFiltering ? globalFilter : (table.getColumn(searchKey)?.getFilterValue() ?? '')}
-            onChange={(e) => {
-                if (manualFiltering) {
-                    setGlobalFilter(e.target.value);
-                } else {
-                    table.getColumn(searchKey)?.setFilterValue(e.target.value)
-                }
+            value={
+              manualFiltering ? globalFilter : (table.getColumn(searchKey)?.getFilterValue() ?? '')
+            }
+            onChange={e => {
+              if (manualFiltering) {
+                setGlobalFilter(e.target.value);
+              } else {
+                table.getColumn(searchKey)?.setFilterValue(e.target.value);
+              }
             }}
             className="max-w-sm"
           />
@@ -154,9 +158,9 @@ export function DataTable({
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
+                {headerGroup.headers.map(header => (
                   <TableHead key={header.id}>
                     {header.isPlaceholder ? null : (
                       <div
@@ -181,20 +185,20 @@ export function DataTable({
           </TableHeader>
           <TableBody>
             {isLoading ? (
-                 <TableRow>
-                    <TableCell colSpan={tableColumns.length} className="h-24 text-center">
-                        Loading...
-                    </TableCell>
-                 </TableRow>
+              <TableRow>
+                <TableCell colSpan={tableColumns.length} className="h-24 text-center">
+                  Loading...
+                </TableCell>
+              </TableRow>
             ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map(row => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                   onClick={() => onRowClick && onRowClick(row.original)}
                   className={onRowClick ? 'cursor-pointer hover:bg-muted/50' : ''}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
@@ -203,10 +207,7 @@ export function DataTable({
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={tableColumns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={tableColumns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>

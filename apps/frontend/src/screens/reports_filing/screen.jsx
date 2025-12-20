@@ -10,7 +10,7 @@ import {
   FormGroup,
   Form,
   ButtonGroup,
-} from "reactstrap";
+} from 'reactstrap';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import { DateRangePicker2 } from 'components';
@@ -24,32 +24,38 @@ const vatOptions = [
   { value: 'all', label: 'All' },
 ];
 
-const tempdata = [{
-  id: 1,
-  transactionDate: '10/15/2019',
-  transactionCategoryId: 2,
-  transactionCategoryCode: 2,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-}, {
-  id: 2,
-  transactionDate: '10/15/2019',
-  transactionCategoryId: 1,
-  transactionCategoryCode: 4,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-}];
+const tempdata = [
+  {
+    id: 1,
+    transactionDate: '10/15/2019',
+    transactionCategoryId: 2,
+    transactionCategoryCode: 2,
+    transactionCategoryName: 'temp',
+    transactionCategoryDescription: 'temp',
+    parentTransactionCategory: 'Loream Ipsume',
+    transactionType: 'TEMP',
+  },
+  {
+    id: 2,
+    transactionDate: '10/15/2019',
+    transactionCategoryId: 1,
+    transactionCategoryCode: 4,
+    transactionCategoryName: 'temp',
+    transactionCategoryDescription: 'temp',
+    parentTransactionCategory: 'Loream Ipsume',
+    transactionType: 'TEMP',
+  },
+];
 
 const ranges = {
   'Last 7 Days': [dayjs().subtract(6, 'days'), dayjs()],
   'Last 30 Days': [dayjs().subtract(29, 'days'), dayjs()],
   'This Week': [dayjs().startOf('week'), dayjs().endOf('week')],
   'This Month': [dayjs().startOf('month'), dayjs().endOf('month')],
-  'Last Month': [dayjs().subtract(1, 'month').startOf('month'), dayjs().subtract(1, 'month').endOf('month')],
+  'Last Month': [
+    dayjs().subtract(1, 'month').startOf('month'),
+    dayjs().subtract(1, 'month').endOf('month'),
+  ],
 };
 
 const ReportsFiling = () => {
@@ -58,32 +64,35 @@ const ReportsFiling = () => {
   const [birthday, setBirthday] = useState(null);
 
   const getAction = () => {
-    return (<button className="btn">Detail</button>);
+    return <button className="btn">Detail</button>;
   };
 
-  const columns = useMemo(() => [
-    {
-      accessorKey: 'transactionDate',
-      header: 'Report No.',
-    },
-    {
-      accessorKey: 'transactionCategoryDescription',
-      header: 'Status',
-    },
-    {
-      accessorKey: 'transactionType',
-      header: 'Status Date',
-    },
-    {
-      accessorKey: 'parentTransactionCategory',
-      header: 'TRN',
-    },
-    {
-      id: 'actions',
-      header: 'Action',
-      cell: () => getAction(),
-    },
-  ], []);
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'transactionDate',
+        header: 'Report No.',
+      },
+      {
+        accessorKey: 'transactionCategoryDescription',
+        header: 'Status',
+      },
+      {
+        accessorKey: 'transactionType',
+        header: 'Status Date',
+      },
+      {
+        accessorKey: 'parentTransactionCategory',
+        header: 'TRN',
+      },
+      {
+        id: 'actions',
+        header: 'Action',
+        cell: () => getAction(),
+      },
+    ],
+    []
+  );
 
   return (
     <div className="report-filing-screen ">
@@ -100,15 +109,11 @@ const ReportsFiling = () => {
             </Row>
           </CardHeader>
           <CardBody>
-            <Form onSubmit={(e) => e.preventDefault()} name="simpleForm">
+            <Form onSubmit={e => e.preventDefault()} name="simpleForm">
               <div className="flex-wrap d-flex justify-content-end">
                 <FormGroup>
                   <ButtonGroup className="mr-3">
-                    <Button
-                      color="success"
-                      className="btn-square"
-                      onClick={() => {}}
-                    >
+                    <Button color="success" className="btn-square" onClick={() => {}}>
                       <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                       Export to CSV
                     </Button>
@@ -116,10 +121,7 @@ const ReportsFiling = () => {
                 </FormGroup>
                 <FormGroup>
                   <div className="date-range">
-                    <DateRangePicker2
-                      ranges={ranges}
-                      opens={'left'}
-                    />
+                    <DateRangePicker2 ranges={ranges} opens={'left'} />
                   </div>
                 </FormGroup>
               </div>
@@ -157,11 +159,7 @@ const ReportsFiling = () => {
               </Row>
             </div>
             <div className="table-wrapper">
-              <DataTable
-                data={tempdata}
-                columns={columns}
-                manualPagination={false}
-              />
+              <DataTable data={tempdata} columns={columns} manualPagination={false} />
             </div>
           </CardBody>
         </Card>

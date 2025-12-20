@@ -26,9 +26,15 @@ const BankAccount = lazyLoad(() => import('./bank_account'));
 const CreateBankAccount = lazyLoad(() => import('./bank_account/screens/create'));
 const DetailBankAccount = lazyLoad(() => import('./bank_account/screens/detail'));
 const BankTransactions = lazyLoad(() => import('./bank_account/screens/transactions'));
-const CreateBankTransaction = lazyLoad(() => import('./bank_account/screens/transactions/screens/create'));
-const DetailBankTransaction = lazyLoad(() => import('./bank_account/screens/transactions/screens/detail'));
-const ReconcileTransaction = lazyLoad(() => import('./bank_account/screens/transactions/screens/reconcile'));
+const CreateBankTransaction = lazyLoad(
+  () => import('./bank_account/screens/transactions/screens/create')
+);
+const DetailBankTransaction = lazyLoad(
+  () => import('./bank_account/screens/transactions/screens/detail')
+);
+const ReconcileTransaction = lazyLoad(
+  () => import('./bank_account/screens/transactions/screens/reconcile')
+);
 const ImportBankStatement = lazyLoad(() => import('./import_bank_statement'));
 const ImportTransaction = lazyLoad(() => import('./import_transaction'));
 
@@ -105,9 +111,13 @@ const Inventory = lazyLoad(() => import('./inventory'));
 const Template = lazyLoad(() => import('./template'));
 const ProfitAndLossReport = lazyLoad(() => import('./financial_report/sections/profit_and_loss'));
 const BalanceSheet = lazyLoad(() => import('./financial_report/sections/balance_sheet'));
-const HorizontalBalanceSheet = lazyLoad(() => import('./financial_report/sections/horizontal_balance_sheet'));
+const HorizontalBalanceSheet = lazyLoad(
+  () => import('./financial_report/sections/horizontal_balance_sheet')
+);
 const TrailBalances = lazyLoad(() => import('./financial_report/sections/trail_Balances'));
-const CustomerAccountStatement = lazyLoad(() => import('./financial_report/sections/customer_account_statement'));
+const CustomerAccountStatement = lazyLoad(
+  () => import('./financial_report/sections/customer_account_statement')
+);
 const Cashflow = lazyLoad(() => import('./financial_report/sections/cashflow'));
 const VatReturnsReport = lazyLoad(() => import('./financial_report/sections/vat_return'));
 const DetailedGeneralLedgerReport = lazyLoad(() => import('./detailed_general_ledger_report'));
@@ -115,32 +125,67 @@ const SalesByCustomer = lazyLoad(() => import('./financial_report/sections/sales
 const SalesByProduct = lazyLoad(() => import('./financial_report/sections/sales_by_product'));
 const PurchaseByitem = lazyLoad(() => import('./financial_report/sections/purchase_by_item'));
 const PurchaseByVendor = lazyLoad(() => import('./financial_report/sections/purchase_by_vendor'));
-const ReceivableInvoiceDetailsReport = lazyLoad(() => import('./financial_report/sections/receivable_invoice_details'));
-const ReceivableInvoiceSummary = lazyLoad(() => import('./financial_report/sections/receivable_invoice_summary'));
-const PayablesInvoiceDetailsReport = lazyLoad(() => import('./financial_report/sections/payables_invoice_details'));
-const PayablesInvoiceSummary = lazyLoad(() => import('./financial_report/sections/payables_invoice_summary'));
-const CreditNoteDetailsReport = lazyLoad(() => import('./financial_report/sections/credit_note_details'));
+const ReceivableInvoiceDetailsReport = lazyLoad(
+  () => import('./financial_report/sections/receivable_invoice_details')
+);
+const ReceivableInvoiceSummary = lazyLoad(
+  () => import('./financial_report/sections/receivable_invoice_summary')
+);
+const PayablesInvoiceDetailsReport = lazyLoad(
+  () => import('./financial_report/sections/payables_invoice_details')
+);
+const PayablesInvoiceSummary = lazyLoad(
+  () => import('./financial_report/sections/payables_invoice_summary')
+);
+const CreditNoteDetailsReport = lazyLoad(
+  () => import('./financial_report/sections/credit_note_details')
+);
 const ExpenseDetailsReport = lazyLoad(() => import('./financial_report/sections/expense_details'));
 const ExpenseByCategory = lazyLoad(() => import('./financial_report/sections/expense_by_catogery'));
 const InvoiceDetails = lazyLoad(() => import('./financial_report/sections/invoice_details'));
 const PayrollSummaryReport = lazyLoad(() => import('./financial_report/sections/payroll_summary'));
 const SOAReport = lazyLoad(() => import('./financial_report/sections/soa_statementsOfAccounts'));
 const VatReports = lazyLoad(() => import('./financial_report/sections/vat_reports'));
-const VatPaymentRecord = lazyLoad(() => import('./financial_report/sections/vat_reports/screens/vatPaymentRecord'));
-const RecordTaxClaim = lazyLoad(() => import('./financial_report/sections/vat_reports/screens/record_claim_tax'));
-const RecordVatPayment = lazyLoad(() => import('./financial_report/sections/vat_reports/screens/record_tax_payment'));
+const VatPaymentRecord = lazyLoad(
+  () => import('./financial_report/sections/vat_reports/screens/vatPaymentRecord')
+);
+const RecordTaxClaim = lazyLoad(
+  () => import('./financial_report/sections/vat_reports/screens/record_claim_tax')
+);
+const RecordVatPayment = lazyLoad(
+  () => import('./financial_report/sections/vat_reports/screens/record_tax_payment')
+);
 const CorporateTax = lazyLoad(() => import('./financial_report/sections/corporate_tax'));
-const CorporateTaxPaymentHistory = lazyLoad(() => import('./financial_report/sections/corporate_tax/screens/payment_history'));
-const CorporateTaxPaymentRecord = lazyLoad(() => import('./financial_report/sections/corporate_tax/screens/payment_record'));
-const ViewCorporateTax = lazyLoad(() => import('./financial_report/sections/corporate_tax/screens/view'));
-const FtaAuditReport = lazyLoad(() => import('./financial_report/sections/fta_audit_report_MainPage'));
-const GenerateAuditFile = lazyLoad(() => import('./financial_report/sections/fta_audit_report_MainPage/screens/generate_Fta_audit_report'));
+const CorporateTaxPaymentHistory = lazyLoad(
+  () => import('./financial_report/sections/corporate_tax/screens/payment_history')
+);
+const CorporateTaxPaymentRecord = lazyLoad(
+  () => import('./financial_report/sections/corporate_tax/screens/payment_record')
+);
+const ViewCorporateTax = lazyLoad(
+  () => import('./financial_report/sections/corporate_tax/screens/view')
+);
+const FtaAuditReport = lazyLoad(
+  () => import('./financial_report/sections/fta_audit_report_MainPage')
+);
+const GenerateAuditFile = lazyLoad(
+  () =>
+    import('./financial_report/sections/fta_audit_report_MainPage/screens/generate_Fta_audit_report')
+);
 const ViewFtaAuditReport = lazyLoad(() => import('./financial_report/sections/Fta_Audit_Report'));
-const ExciseTaxAuditReport = lazyLoad(() => import('./financial_report/sections/excise_tax_audit_report_MainPage'));
-const ViewFtaExciseAuditReport = lazyLoad(() => import('./financial_report/sections/Excise_Audit_Report'));
+const ExciseTaxAuditReport = lazyLoad(
+  () => import('./financial_report/sections/excise_tax_audit_report_MainPage')
+);
+const ViewFtaExciseAuditReport = lazyLoad(
+  () => import('./financial_report/sections/Excise_Audit_Report')
+);
 const ARAgingReport = lazyLoad(() => import('./financial_report/sections/ar_aging_report'));
-const SubReports = lazyLoad(() => import('./financial_report/sections/vat_return/screens/subReports'));
-const DebitNoteDetailsReport = lazyLoad(() => import('./financial_report/sections/debit_note_details'));
+const SubReports = lazyLoad(
+  () => import('./financial_report/sections/vat_return/screens/subReports')
+);
+const DebitNoteDetailsReport = lazyLoad(
+  () => import('./financial_report/sections/debit_note_details')
+);
 
 // Master Data Screens
 const ChartAccount = lazyLoad(() => import('./chart_account'));
@@ -212,8 +257,12 @@ const PayrollRun = lazyLoad(() => import('./payroll_run'));
 const ViewEmployee = lazyLoad(() => import('./payrollemp/screens/view'));
 const UpdateEmployeePersonal = lazyLoad(() => import('./payrollemp/screens/update_emp_personal'));
 const UpdateEmployeeBank = lazyLoad(() => import('./payrollemp/screens/update_emp_bank'));
-const UpdateEmployeeEmployment = lazyLoad(() => import('./payrollemp/screens/update_emp_employemet'));
-const UpdateSalaryComponent = lazyLoad(() => import('./payrollemp/screens/update_salary_component'));
+const UpdateEmployeeEmployment = lazyLoad(
+  () => import('./payrollemp/screens/update_emp_employemet')
+);
+const UpdateSalaryComponent = lazyLoad(
+  () => import('./payrollemp/screens/update_salary_component')
+);
 const Designation = lazyLoad(() => import('./designation'));
 const CreateDesignation = lazyLoad(() => import('./designation/screens/create'));
 const CreateSalaryComponent = lazyLoad(() => import('./salary_component/screens/create'));

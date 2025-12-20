@@ -28,7 +28,7 @@ import { selectOptionsFactory, selectStyles } from 'utils';
 
 import './style.scss';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     currency_list: state.project.currency_list,
     contact_list: state.project.contact_list,
@@ -37,7 +37,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     projectActions: bindActionCreators(ProjectActions, dispatch),
     createProjectActions: bindActionCreators(CreateProjectActions, dispatch),
@@ -62,7 +62,7 @@ const createProjectSchema = z.object({
       label: z.string(),
     })
     .nullable()
-    .refine((val) => val !== null, 'Contact is required'),
+    .refine(val => val !== null, 'Contact is required'),
   expenseBudget: z.string().optional(),
   revenueBudget: z.string().optional(),
   invoiceLanguageCode: z
@@ -132,7 +132,7 @@ const CreateProject = ({
   };
 
   // Create Project
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     const postData = {
       projectName: data.projectName || '',
       contactId: data.contactId?.value || '',
@@ -142,7 +142,7 @@ const CreateProject = ({
 
     createProjectActions
       .createAndSaveProject(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert('success', 'New Project Created Successfully!');
           if (createMore) {
@@ -153,11 +153,8 @@ const CreateProject = ({
           }
         }
       })
-      .catch((err) => {
-        commonActions.tostifyAlert(
-          'error',
-          err?.data?.message || 'Something Went Wrong'
-        );
+      .catch(err => {
+        commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
 
@@ -217,15 +214,13 @@ const CreateProject = ({
                                   id="name"
                                   placeholder="Enter Project Name"
                                   {...field}
-                                  onChange={(e) => handleProjectNameChange(e, field.onChange)}
+                                  onChange={e => handleProjectNameChange(e, field.onChange)}
                                   className={errors.projectName ? 'is-invalid' : ''}
                                 />
                               )}
                             />
                             {errors.projectName && (
-                              <div className="invalid-feedback">
-                                {errors.projectName.message}
-                              </div>
+                              <div className="invalid-feedback">{errors.projectName.message}</div>
                             )}
                           </FormGroup>
                         </Col>
@@ -289,15 +284,13 @@ const CreateProject = ({
                                   id="expenseBudget"
                                   placeholder="Enter Expense Budgets"
                                   {...field}
-                                  onChange={(e) => handleExpenseBudgetChange(e, field.onChange)}
+                                  onChange={e => handleExpenseBudgetChange(e, field.onChange)}
                                   className={errors.expenseBudget ? 'is-invalid' : ''}
                                 />
                               )}
                             />
                             {errors.expenseBudget && (
-                              <div className="invalid-feedback">
-                                {errors.expenseBudget.message}
-                              </div>
+                              <div className="invalid-feedback">{errors.expenseBudget.message}</div>
                             )}
                           </FormGroup>
                         </Col>
@@ -313,15 +306,13 @@ const CreateProject = ({
                                   id="revenueBudget"
                                   placeholder="Enter VAT Revenue Budget"
                                   {...field}
-                                  onChange={(e) => handleRevenueBudgetChange(e, field.onChange)}
+                                  onChange={e => handleRevenueBudgetChange(e, field.onChange)}
                                   className={errors.revenueBudget ? 'is-invalid' : ''}
                                 />
                               )}
                             />
                             {errors.revenueBudget && (
-                              <div className="invalid-feedback">
-                                {errors.revenueBudget.message}
-                              </div>
+                              <div className="invalid-feedback">{errors.revenueBudget.message}</div>
                             )}
                           </FormGroup>
                         </Col>

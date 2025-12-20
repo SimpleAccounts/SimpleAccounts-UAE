@@ -118,7 +118,6 @@ const NewPassword = ({ history, location }) => {
 
   return (
     <div className="reset-password-screen">
-      
       <div className="animated fadeIn">
         <div className="app flex-row align-items-center">
           <Container>

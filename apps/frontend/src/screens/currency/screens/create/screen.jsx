@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 
 import './style.scss';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {};
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {};
 };
 

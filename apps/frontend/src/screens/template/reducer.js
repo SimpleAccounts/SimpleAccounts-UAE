@@ -1,16 +1,14 @@
-import { TEMPLATE } from 'constants/types'
+import { TEMPLATE } from 'constants/types';
 
-const initState = {
-}
+const initState = {};
 
 const TemplateReducer = (state = initState, action) => {
-  const { type } = action || {}
+  const { type } = action || {};
 
-  switch(type) {
-
+  switch (type) {
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default TemplateReducer
+export default TemplateReducer;

@@ -46,22 +46,19 @@ const createChartAccountSchema = z.object({
       label: z.string(),
     })
     .nullable()
-    .refine((val) => val !== null, 'Account Type is required'),
+    .refine(val => val !== null, 'Account Type is required'),
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     sub_transaction_type_list: state.chart_account.sub_transaction_type_list,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     ChartOfAccontActions: bindActionCreators(ChartOfAccontActions, dispatch),
-    createChartOfAccontActions: bindActionCreators(
-      CreateChartOfAccontActions,
-      dispatch
-    ),
+    createChartOfAccontActions: bindActionCreators(CreateChartOfAccontActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch),
   };
 };
@@ -91,7 +88,15 @@ const CreateChartAccount = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, reset, setError, clearErrors, watch } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setError,
+    clearErrors,
+    watch,
+  } = form;
   const transactionCategoryName = watch('transactionCategoryName');
 
   useEffect(() => {
@@ -99,11 +104,11 @@ const CreateChartAccount = ({
   }, []);
 
   const initializeData = useCallback(() => {
-    ChartOfAccontActions.getSubTransactionTypes().then((res) => {
+    ChartOfAccontActions.getSubTransactionTypes().then(res => {
       if (res.status === 200) {
         let val = Object.assign({}, res.data);
         let temp = [];
-        Object.keys(val).map((item) => {
+        Object.keys(val).map(item => {
           temp.push({
             label: item,
             options: val[`${item}`],
@@ -115,26 +120,29 @@ const CreateChartAccount = ({
     });
   }, [ChartOfAccontActions]);
 
-  const validationCheck = useCallback((value) => {
-    const data = {
-      moduleType: 16,
-      name: value,
-    };
-    createChartOfAccontActions.checkValidation(data).then((response) => {
-      if (response.data === 'Transaction Category Name Already Exists') {
-        setExist(true);
-        setError('transactionCategoryName', {
-          type: 'manual',
-          message: 'Name already exists',
-        });
-      } else {
-        setExist(false);
-        clearErrors('transactionCategoryName');
-      }
-    });
-  }, [createChartOfAccontActions, setError, clearErrors]);
+  const validationCheck = useCallback(
+    value => {
+      const data = {
+        moduleType: 16,
+        name: value,
+      };
+      createChartOfAccontActions.checkValidation(data).then(response => {
+        if (response.data === 'Transaction Category Name Already Exists') {
+          setExist(true);
+          setError('transactionCategoryName', {
+            type: 'manual',
+            message: 'Name already exists',
+          });
+        } else {
+          setExist(false);
+          clearErrors('transactionCategoryName');
+        }
+      });
+    },
+    [createChartOfAccontActions, setError, clearErrors]
+  );
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     if (exist) {
       setError('transactionCategoryName', {
         type: 'manual',
@@ -157,7 +165,7 @@ const CreateChartAccount = ({
 
     createChartOfAccontActions
       .createTransactionCategory(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setDisabled(false);
           setLoading(false);
@@ -175,14 +183,12 @@ const CreateChartAccount = ({
           }
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         setLoading(false);
         commonActions.tostifyAlert(
           'error',
-          err && err.data
-            ? err.data.message
-            : 'New Chart Of Account Created Unsuccessfully'
+          err && err.data ? err.data.message : 'New Chart Of Account Created Unsuccessfully'
         );
       });
   };
@@ -233,7 +239,7 @@ const CreateChartAccount = ({
                                 id="transactionCategoryName"
                                 placeholder={strings.Enter + strings.chartOfAccountName}
                                 {...field}
-                                onChange={(e) => handleNameChange(e, field.onChange)}
+                                onChange={e => handleNameChange(e, field.onChange)}
                                 className={errors.transactionCategoryName ? 'is-invalid' : ''}
                               />
                             )}
@@ -275,8 +281,8 @@ const CreateChartAccount = ({
                         <span style={{ fontWeight: 'bold' }}>Note:</span>
                         <span>
                           {' '}
-                          A Chart Of Account cannot be edited if they are associated
-                          with a product, document or transaction.
+                          A Chart Of Account cannot be edited if they are associated with a product,
+                          document or transaction.
                         </span>
 
                         <FormGroup className="text-right mt-5">

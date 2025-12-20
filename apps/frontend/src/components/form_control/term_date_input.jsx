@@ -6,12 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { HelpCircle } from 'lucide-react';
 
 import { Label } from '@/components/ui/label';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 import { data } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
@@ -21,7 +16,7 @@ import dayjs from '@/utils/date';
 const strings = new LocalizedStrings(data);
 
 function setDate(term, invoiceDate) {
-  term = term ? term.value ?? term : '';
+  term = term ? (term.value ?? term) : '';
   const val = term ? term.split('_') : '';
   const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
   const values = invoiceDate;
@@ -67,9 +62,7 @@ function TermDateInput(props) {
                   <HelpCircle className="inline h-4 w-4 text-muted-foreground cursor-help" />
                 </TooltipTrigger>
                 <TooltipContent side="right" className="max-w-xs">
-                  <p className="mb-1">
-                    Terms- The duration given to a buyer for payment.
-                  </p>
+                  <p className="mb-1">Terms- The duration given to a buyer for payment.</p>
                   <p className="mb-1">Net 7 – payment due in 7 days from invoice date</p>
                   <p className="mb-1">Net 10 – payment due in 10 days from invoice date</p>
                   <p>Net 30 – payment due in 30 days from invoice date</p>
@@ -86,9 +79,9 @@ function TermDateInput(props) {
               value={
                 term.values?.value
                   ? term.values
-                  : termList.find((option) => option.value === term.values)
+                  : termList.find(option => option.value === term.values)
               }
-              onChange={(option) => {
+              onChange={option => {
                 if (option?.value) {
                   const dueDateValue = setDate(option.value, invoiceDate.value ?? new Date());
                   onChange('term', option.value);
@@ -123,7 +116,7 @@ function TermDateInput(props) {
               value={invoiceDate.values}
               selected={invoiceDate.values}
               minDate={invoiceDate.minDate}
-              onChange={(value) => {
+              onChange={value => {
                 const dueDateValue = setDate(term.values, value);
                 onChange('invoiceDate', value);
                 onChange('invoiceDueDate', dueDateValue);
@@ -155,7 +148,7 @@ function TermDateInput(props) {
               dropdownMode="select"
               selected={invoiceDueDate.values}
               value={invoiceDueDate.values}
-              onChange={(value) => {
+              onChange={value => {
                 onChange('invoiceDueDate', value);
               }}
               className="input-transition w-full border rounded px-3 py-2"

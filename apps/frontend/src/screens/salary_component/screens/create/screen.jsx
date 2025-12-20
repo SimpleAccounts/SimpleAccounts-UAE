@@ -4,22 +4,16 @@ import { SalaryComponentScreen } from '../../sections';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {};
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {};
 };
 
-const CreateSalaryComponent = (props) => {
-  return (
-    <SalaryComponentScreen
-      props={props}
-      history={props.history}
-      isCreated={false}
-    />
-  );
+const CreateSalaryComponent = props => {
+  return <SalaryComponentScreen props={props} history={props.history} isCreated={false} />;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateSalaryComponent);

@@ -37,7 +37,7 @@ const retry = (importFunc, retries = 3, interval = 1000) => {
  * @example
  * const Dashboard = lazyLoad(() => import('./screens/dashboard'));
  */
-export const lazyLoad = (importFunc) => {
+export const lazyLoad = importFunc => {
   return lazy(() => retry(importFunc));
 };
 
@@ -50,7 +50,7 @@ export const lazyLoad = (importFunc) => {
  * @example
  * preloadComponent(() => import('./screens/dashboard'));
  */
-export const preloadComponent = (importFunc) => {
+export const preloadComponent = importFunc => {
   importFunc();
 };
 

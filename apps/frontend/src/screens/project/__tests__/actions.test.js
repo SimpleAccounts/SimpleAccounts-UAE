@@ -129,9 +129,9 @@ describe('Project Actions', () => {
       const error = new Error('Contact creation failed');
       authApi.mockRejectedValue(error);
 
-      await expect(
-        store.dispatch(actions.createProjectContact({}))
-      ).rejects.toThrow('Contact creation failed');
+      await expect(store.dispatch(actions.createProjectContact({}))).rejects.toThrow(
+        'Contact creation failed'
+      );
     });
   });
 

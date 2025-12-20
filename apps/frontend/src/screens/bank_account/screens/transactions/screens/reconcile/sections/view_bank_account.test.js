@@ -34,21 +34,14 @@ describe('ViewBankAccount', () => {
     expect(screen.getByText('PR-10')).toBeInTheDocument();
     expect(screen.getByText('Invoice payment')).toBeInTheDocument();
     expect(screen.getByText('RCPT-100')).toBeInTheDocument();
-    expect(
-      screen.getByText('Receipt attachment', { exact: false }),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Receipt attachment', { exact: false })).toBeInTheDocument();
 
-    const formattedDate = dayjs(
-      baseProps.initialVals.transactionDate,
-    ).format('DD/MM/YYYY');
+    const formattedDate = dayjs(baseProps.initialVals.transactionDate).format('DD/MM/YYYY');
     expect(screen.getByText(formattedDate)).toBeInTheDocument();
     expect(screen.getByText('1,234.56')).toBeInTheDocument();
 
     const link = screen.getByRole('link', { name: 'receipt.pdf' });
-    expect(link).toHaveAttribute(
-      'href',
-      expect.stringContaining('/files/receipt.pdf'),
-    );
+    expect(link).toHaveAttribute('href', expect.stringContaining('/files/receipt.pdf'));
   });
 
   it('calls editDetails when edit icon is clicked', () => {
@@ -60,4 +53,3 @@ describe('ViewBankAccount', () => {
     expect(baseProps.editDetails).toHaveBeenCalled();
   });
 });
-

@@ -52,23 +52,15 @@ const InventoryHistoryModal = ({
       : 'AED';
   }, [universal_currency_list]);
 
-  const renderUnitCost = (value) => {
-    return value ? (
-      <Currency value={value} currencySymbol={currencySymbol} />
-    ) : (
-      ''
-    );
+  const renderUnitCost = value => {
+    return value ? <Currency value={value} currencySymbol={currencySymbol} /> : '';
   };
 
-  const renderUnitSellingPrice = (value) => {
-    return value ? (
-      <Currency value={value} currencySymbol={currencySymbol} />
-    ) : (
-      ''
-    );
+  const renderUnitSellingPrice = value => {
+    return value ? <Currency value={value} currencySymbol={currencySymbol} /> : '';
   };
 
-  const renderDate = (value) => {
+  const renderDate = value => {
     return value ? dayjs(value).format('DD/MM/YYYY') : '';
   };
 
@@ -110,9 +102,7 @@ const InventoryHistoryModal = ({
       {
         accessorKey: 'unitCost',
         header: strings.UnitCost || 'Unit Cost',
-        cell: ({ getValue }) => (
-          <div className="text-right">{renderUnitCost(getValue())}</div>
-        ),
+        cell: ({ getValue }) => <div className="text-right">{renderUnitCost(getValue())}</div>,
       },
       {
         accessorKey: 'unitSellingPrice',
@@ -158,11 +148,7 @@ const InventoryHistoryModal = ({
                     </Button>
                   </div>
                   <div>
-                    <PDFExport
-                      ref={pdfExportComponent}
-                      scale={0.8}
-                      paperSize="A4"
-                    >
+                    <PDFExport ref={pdfExportComponent} scale={0.8} paperSize="A4">
                       <CardHeader>
                         <Row>
                           <Col lg={12}>
@@ -176,11 +162,7 @@ const InventoryHistoryModal = ({
                         </Row>
                       </CardHeader>
                       <CardBody id="section-to-print">
-                        <PDFExport
-                          ref={pdfExportComponent}
-                          scale={0.8}
-                          paperSize="A4"
-                        >
+                        <PDFExport ref={pdfExportComponent} scale={0.8} paperSize="A4">
                           <div>
                             <Form name="simpleForm">
                               <div className="flex-wrap d-flex justify-content-end">
@@ -263,11 +245,7 @@ const InventoryHistoryModal = ({
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button
-            color="secondary"
-            className="btn-square"
-            onClick={() => closeModal(false)}
-          >
+          <Button color="secondary" className="btn-square" onClick={() => closeModal(false)}>
             <i className="fa fa-ban"></i> {strings.Cancel || 'Cancel'}
           </Button>
         </ModalFooter>

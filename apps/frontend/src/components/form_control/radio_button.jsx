@@ -3,12 +3,7 @@ import { HelpCircle } from 'lucide-react';
 
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 /**
  * Modern Radio Button Component
@@ -28,7 +23,7 @@ function RadioButton(props) {
         )}
         <RadioGroup
           value={selected ? 'true' : 'false'}
-          onValueChange={(value) => onChange(value === 'true')}
+          onValueChange={value => onChange(value === 'true')}
           className="flex gap-6"
         >
           <div className="flex items-center space-x-2">

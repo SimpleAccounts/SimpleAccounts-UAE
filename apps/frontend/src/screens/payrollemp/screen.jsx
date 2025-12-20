@@ -77,10 +77,10 @@ const PayrollEmployee = () => {
       });
   };
 
-  const toggleActionButton = (index) => {
+  const toggleActionButton = index => {
     setActionButtons(prev => ({
       ...prev,
-      [index]: !prev[index]
+      [index]: !prev[index],
     }));
   };
 
@@ -107,7 +107,7 @@ const PayrollEmployee = () => {
     }
   };
 
-  const removeBulk = (ids) => {
+  const removeBulk = ids => {
     setDialog(null);
     let obj = {
       ids: ids,
@@ -125,89 +125,97 @@ const PayrollEmployee = () => {
       });
   };
 
-  const columns = useMemo(() => [
-    {
-      accessorKey: 'employeeCode',
-      header: strings.EmployeeCode,
-    },
-    {
-      accessorKey: 'fullName',
-      header: strings.FullName,
-      cell: ({ row }) => (
-        <label
-          className="mb-0 label-bank cursor-pointer text-primary"
-          onClick={() => navigate('/admin/master/employee/viewEmployee', { state: { id: row.original.id } })}
-        >
-          {row.original.fullName}
-        </label>
-      ),
-    },
-    {
-      accessorKey: 'email',
-      header: strings.Email,
-    },
-    {
-      accessorKey: 'mobileNumber',
-      header: strings.MobileNumber,
-      cell: ({ getValue }) => (getValue() ? '+' + getValue() : ''),
-    },
-    {
-      accessorKey: 'dob',
-      header: strings.DateOfBirth,
-      cell: ({ getValue }) => (getValue() ? dayjs(getValue()).format('DD-MM-YYYY') : ''),
-    },
-    {
-      accessorKey: 'isActive',
-      header: strings.Status,
-      cell: ({ getValue }) => (
-        <span className={`badge ${getValue() ? 'label-success' : 'label-due'} mb-0`} style={{ color: 'white' }}>
-          {getValue() ? 'Active' : 'InActive'}
-        </span>
-      ),
-    },
-    {
-      id: 'actions',
-      header: '',
-      cell: ({ row }) => (
-        <div>
-        <ButtonDropdown
-          isOpen={actionButtons[row.original.id]}
-          toggle={() => toggleActionButton(row.original.id)}
-        >
-          <DropdownToggle size="sm" color="primary" className="btn-brand icon">
-            {actionButtons[row.original.id] === true ? (
-              <i className="fas fa-chevron-up" />
-            ) : (
-              <i className="fas fa-chevron-down" />
-            )}
-          </DropdownToggle>
-          <DropdownMenu right>
-            <DropdownItem
-              onClick={() =>
-                navigate('/admin/payroll/employee/detail', { state: { id: row.original.id } })
-              }
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'employeeCode',
+        header: strings.EmployeeCode,
+      },
+      {
+        accessorKey: 'fullName',
+        header: strings.FullName,
+        cell: ({ row }) => (
+          <label
+            className="mb-0 label-bank cursor-pointer text-primary"
+            onClick={() =>
+              navigate('/admin/master/employee/viewEmployee', { state: { id: row.original.id } })
+            }
+          >
+            {row.original.fullName}
+          </label>
+        ),
+      },
+      {
+        accessorKey: 'email',
+        header: strings.Email,
+      },
+      {
+        accessorKey: 'mobileNumber',
+        header: strings.MobileNumber,
+        cell: ({ getValue }) => (getValue() ? '+' + getValue() : ''),
+      },
+      {
+        accessorKey: 'dob',
+        header: strings.DateOfBirth,
+        cell: ({ getValue }) => (getValue() ? dayjs(getValue()).format('DD-MM-YYYY') : ''),
+      },
+      {
+        accessorKey: 'isActive',
+        header: strings.Status,
+        cell: ({ getValue }) => (
+          <span
+            className={`badge ${getValue() ? 'label-success' : 'label-due'} mb-0`}
+            style={{ color: 'white' }}
+          >
+            {getValue() ? 'Active' : 'InActive'}
+          </span>
+        ),
+      },
+      {
+        id: 'actions',
+        header: '',
+        cell: ({ row }) => (
+          <div>
+            <ButtonDropdown
+              isOpen={actionButtons[row.original.id]}
+              toggle={() => toggleActionButton(row.original.id)}
             >
-              <i className="fas fa-edit" /> {strings.Edit}
-            </DropdownItem>
-
-            <DropdownItem
-              onClick={() =>
-                navigate('/admin/payroll/employee/salarySlip', {
-                  state: {
-                    id: row.original.id,
-                    monthNo: 4,
+              <DropdownToggle size="sm" color="primary" className="btn-brand icon">
+                {actionButtons[row.original.id] === true ? (
+                  <i className="fas fa-chevron-up" />
+                ) : (
+                  <i className="fas fa-chevron-down" />
+                )}
+              </DropdownToggle>
+              <DropdownMenu right>
+                <DropdownItem
+                  onClick={() =>
+                    navigate('/admin/payroll/employee/detail', { state: { id: row.original.id } })
                   }
-                })
-              }
-            >
-              <i className="fas fa-eye" /> {strings.SalarySlip}
-            </DropdownItem>
-          </DropdownMenu>
-        </ButtonDropdown>
-      </div>
-      )
-    }
-  ], [navigate, actionButtons]);
+                >
+                  <i className="fas fa-edit" /> {strings.Edit}
+                </DropdownItem>
+
+                <DropdownItem
+                  onClick={() =>
+                    navigate('/admin/payroll/employee/salarySlip', {
+                      state: {
+                        id: row.original.id,
+                        monthNo: 4,
+                      },
+                    })
+                  }
+                >
+                  <i className="fas fa-eye" /> {strings.SalarySlip}
+                </DropdownItem>
+              </DropdownMenu>
+            </ButtonDropdown>
+          </div>
+        ),
+      },
+    ],
+    [navigate, actionButtons]
+  );
 
   return loading ? (
     <Loader />
@@ -262,13 +270,16 @@ const PayrollEmployee = () => {
                       columns={columns}
                       manualPagination={true}
                       manualSorting={true}
-                      pageCount={payroll_employee_list?.totalPages || Math.ceil((payroll_employee_list?.count || 0) / pagination.pageSize)}
+                      pageCount={
+                        payroll_employee_list?.totalPages ||
+                        Math.ceil((payroll_employee_list?.count || 0) / pagination.pageSize)
+                      }
                       onPaginationChange={setPagination}
                       onSortingChange={setSorting}
                       enableRowSelection={true}
                       rowSelection={selectedRows}
                       onRowSelectionChange={setSelectedRows}
-                      getRowId={(row) => row.id}
+                      getRowId={row => row.id}
                     />
                   </div>
                 </Col>

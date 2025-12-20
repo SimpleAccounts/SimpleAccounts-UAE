@@ -17,20 +17,11 @@ jest.mock('../select', () => ({
       {children}
     </div>
   ),
-  SelectTrigger: ({ children }) => (
-    <div data-testid="select-trigger">{children}</div>
-  ),
-  SelectValue: ({ placeholder }) => (
-    <div data-testid="select-value">{placeholder}</div>
-  ),
-  SelectContent: ({ children }) => (
-    <div data-testid="select-content">{children}</div>
-  ),
+  SelectTrigger: ({ children }) => <div data-testid="select-trigger">{children}</div>,
+  SelectValue: ({ placeholder }) => <div data-testid="select-value">{placeholder}</div>,
+  SelectContent: ({ children }) => <div data-testid="select-content">{children}</div>,
   SelectItem: ({ children, value, onClick }) => (
-    <div
-      data-testid={`select-item-${value}`}
-      onClick={() => onClick && onClick(value)}
-    >
+    <div data-testid={`select-item-${value}`} onClick={() => onClick && onClick(value)}>
       {children}
     </div>
   ),
@@ -201,4 +192,3 @@ describe('DataTablePagination', () => {
     expect(setPageIndexSpy).toHaveBeenCalledWith(4);
   });
 });
-

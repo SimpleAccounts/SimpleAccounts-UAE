@@ -57,7 +57,7 @@ const passwordSchema = z
       ),
     confirmPassword: z.string().min(1, 'Confirm password is required'),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine(data => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
     path: ['confirmPassword'],
   });
@@ -110,7 +110,7 @@ const selectStyles = {
       borderColor: 'hsl(var(--primary))',
     },
   }),
-  menu: (base) => ({
+  menu: base => ({
     ...base,
     backgroundColor: 'hsl(var(--background))',
     border: '1px solid hsl(var(--border))',
@@ -120,11 +120,11 @@ const selectStyles = {
     backgroundColor: state.isFocused ? 'hsl(var(--accent))' : 'transparent',
     color: 'hsl(var(--foreground))',
   }),
-  singleValue: (base) => ({
+  singleValue: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
   }),
-  input: (base) => ({
+  input: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
   }),
@@ -139,11 +139,11 @@ function Profile() {
   const dispatch = useDispatch();
 
   // Redux state
-  const currency_list = useSelector((state) => state.profile.currency_list);
-  const country_list = useSelector((state) => state.profile.country_list);
-  const role_list = useSelector((state) => state.profile.role_list);
-  const invoicing_state_list = useSelector((state) => state.profile.invoicing_state_list);
-  const company_state_list = useSelector((state) => state.profile.company_state_list);
+  const currency_list = useSelector(state => state.profile.currency_list);
+  const country_list = useSelector(state => state.profile.country_list);
+  const role_list = useSelector(state => state.profile.role_list);
+  const invoicing_state_list = useSelector(state => state.profile.invoicing_state_list);
+  const company_state_list = useSelector(state => state.profile.company_state_list);
 
   // Actions
   const profileActions = useMemo(() => bindActionCreators(ProfileActions, dispatch), [dispatch]);
@@ -249,7 +249,7 @@ function Profile() {
     try {
       // Get timezone list
       const tzResponse = await authActions.getTimeZoneList();
-      const tzOptions = tzResponse.data.map((value) => ({ label: value, value: value }));
+      const tzOptions = tzResponse.data.map(value => ({ label: value, value: value }));
       setTimezone(tzOptions);
 
       // Get user by ID
@@ -357,7 +357,7 @@ function Profile() {
 
   useEffect(() => {
     getUserData();
-    profileActions.getCompanyTypeList2().then((res) => {
+    profileActions.getCompanyTypeList2().then(res => {
       if (res.status === 200) {
         setCompanyTypeList(res.data);
       }
@@ -365,7 +365,7 @@ function Profile() {
   }, []);
 
   // Tab change handler
-  const handleTabChange = (value) => {
+  const handleTabChange = value => {
     setActiveTab(value);
     if (value === 'company' && !companyDataLoaded) {
       getCompanyData();
@@ -386,7 +386,7 @@ function Profile() {
   };
 
   // Submit handlers
-  const handleUserSubmit = async (data) => {
+  const handleUserSubmit = async data => {
     const formData = new FormData();
     formData.append('id', userId);
     formData.append('firstName', data.firstName);
@@ -419,7 +419,7 @@ function Profile() {
     }
   };
 
-  const handlePasswordSubmit = async (data) => {
+  const handlePasswordSubmit = async data => {
     const formData = new FormData();
     formData.append('id', userId);
     formData.append('password', data.password);
@@ -443,9 +443,9 @@ function Profile() {
     }
   };
 
-  const handleCompanySubmit = async (data) => {
+  const handleCompanySubmit = async data => {
     const formData = new FormData();
-    Object.keys(data).forEach((key) => {
+    Object.keys(data).forEach(key => {
       formData.append(key, data[key] ?? '');
     });
     formData.append('isSame', isSame);
@@ -593,10 +593,8 @@ function Profile() {
                               role_list,
                               'Role'
                             )}
-                            value={
-                              role_list.find((r) => r.value?.toString() === field.value) || null
-                            }
-                            onChange={(option) => field.onChange(option?.value?.toString() || '')}
+                            value={role_list.find(r => r.value?.toString() === field.value) || null}
+                            onChange={option => field.onChange(option?.value?.toString() || '')}
                           />
                         )}
                       />
@@ -620,8 +618,8 @@ function Profile() {
                             styles={selectStyles}
                             placeholder={strings.SelectTimeZone}
                             options={timezone}
-                            value={timezone.find((tz) => tz.value === field.value) || null}
-                            onChange={(option) => field.onChange(option?.value || '')}
+                            value={timezone.find(tz => tz.value === field.value) || null}
+                            onChange={option => field.onChange(option?.value || '')}
                           />
                         )}
                       />
@@ -753,13 +751,13 @@ function Profile() {
                                 'Currency'
                               )}
                               value={
-                                currency_list.find((c) => c.currencyCode === field.value) || null
+                                currency_list.find(c => c.currencyCode === field.value) || null
                               }
-                              onChange={(option) => field.onChange(option?.currencyCode || 0)}
-                              getOptionLabel={(opt) =>
+                              onChange={option => field.onChange(option?.currencyCode || 0)}
+                              getOptionLabel={opt =>
                                 opt.currencyName || opt.label || `${opt.currencyCode}`
                               }
-                              getOptionValue={(opt) => opt.currencyCode || opt.value}
+                              getOptionValue={opt => opt.currencyCode || opt.value}
                             />
                           )}
                         />
@@ -822,11 +820,10 @@ function Profile() {
                                 'Company Type'
                               )}
                               value={
-                                companyTypeList.find(
-                                  (c) => c.value?.toString() === field.value
-                                ) || null
+                                companyTypeList.find(c => c.value?.toString() === field.value) ||
+                                null
                               }
-                              onChange={(option) => field.onChange(option?.value?.toString() || '')}
+                              onChange={option => field.onChange(option?.value?.toString() || '')}
                             />
                           )}
                         />
@@ -876,10 +873,8 @@ function Profile() {
                                   country_list,
                                   'Country'
                                 )}
-                                value={
-                                  country_list.find((c) => c.value === field.value) || null
-                                }
-                                onChange={(option) => {
+                                value={country_list.find(c => c.value === field.value) || null}
+                                onChange={option => {
                                   field.onChange(option?.value || 0);
                                   if (option?.value) {
                                     profileActions.getStateList(option.value, 'invoicing');
@@ -962,7 +957,7 @@ function Profile() {
                         placeholder="Enter New Password"
                         className="pr-10 input-transition"
                         {...passwordForm.register('password', {
-                          onChange: (e) => setDisplayRules(e.target.value.length > 0),
+                          onChange: e => setDisplayRules(e.target.value.length > 0),
                         })}
                       />
                       <button

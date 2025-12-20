@@ -1,10 +1,10 @@
 /**
  * Environment variable utilities for Vite
- * 
+ *
  * Vite uses import.meta.env instead of process.env
  * This module provides a consistent interface for accessing environment variables
  * with fallbacks and type safety.
- * 
+ *
  * In Jest tests, import.meta is mocked via setupTests.js
  */
 
@@ -111,14 +111,14 @@ export const env = {
   mode: getEnvMode(),
   isProduction: isProduction(),
   isDevelopment: isDevelopment(),
-  
+
   // Base URL (replaces PUBLIC_URL)
   baseUrl: getBaseUrl(),
-  
+
   // Dev server
   dev: metaEnv.DEV,
   prod: metaEnv.PROD,
-  
+
   // SSR
   ssr: metaEnv.SSR,
 };

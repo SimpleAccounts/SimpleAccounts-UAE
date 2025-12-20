@@ -48,7 +48,7 @@ function LogIn() {
 
   const rememberValue = watch('remember');
 
-  const onSubmit = async (data) => {
+  const onSubmit = async data => {
     // Handle login logic here
     console.log('Login data:', data);
     // Example: await authActions.login(data);
@@ -78,9 +78,7 @@ function LogIn() {
                   autoFocus
                   {...register('email')}
                 />
-                {errors.email && (
-                  <p className="text-sm text-destructive">{errors.email.message}</p>
-                )}
+                {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
               </div>
 
               {/* Password Field */}
@@ -106,38 +104,25 @@ function LogIn() {
                 <Checkbox
                   id="remember"
                   checked={rememberValue}
-                  onCheckedChange={(checked) => setValue('remember', checked)}
+                  onCheckedChange={checked => setValue('remember', checked)}
                 />
-                <Label
-                  htmlFor="remember"
-                  className="text-sm font-normal cursor-pointer"
-                >
+                <Label htmlFor="remember" className="text-sm font-normal cursor-pointer">
                   Remember me
                 </Label>
               </div>
 
               {/* Submit Button */}
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
                 <LogInIcon className="mr-2 h-4 w-4" />
                 {isSubmitting ? 'Signing in...' : 'Sign In'}
               </Button>
 
               {/* Links */}
               <div className="flex flex-col space-y-2 text-sm text-center">
-                <a
-                  href="#"
-                  className="text-primary hover:underline"
-                >
+                <a href="#" className="text-primary hover:underline">
                   Forgot password?
                 </a>
-                <a
-                  href="#"
-                  className="text-primary hover:underline"
-                >
+                <a href="#" className="text-primary hover:underline">
                   Don't have an account? Sign Up
                 </a>
               </div>

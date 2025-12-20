@@ -32,18 +32,9 @@ const regExAlpha = /^[a-zA-Z ]+$/;
 // Zod validation schema
 const createEmployeeSchema = z
   .object({
-    firstName: z
-      .string()
-      .min(1, 'First name is required')
-      .max(100, 'First name is too long'),
-    middleName: z
-      .string()
-      .min(1, 'Middle name is required')
-      .max(100, 'Middle name is too long'),
-    lastName: z
-      .string()
-      .min(1, 'Last name is required')
-      .max(100, 'Last name is too long'),
+    firstName: z.string().min(1, 'First name is required').max(100, 'First name is too long'),
+    middleName: z.string().min(1, 'Middle name is required').max(100, 'Middle name is too long'),
+    lastName: z.string().min(1, 'Last name is required').max(100, 'Last name is too long'),
     email: z
       .string()
       .min(1, 'Email is required')
@@ -81,18 +72,18 @@ const createEmployeeSchema = z
       .optional(),
     poBoxNumber: z.string().max(8, 'Contract PO number is too long').optional(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine(data => data.password === data.confirmPassword, {
     message: 'Passwords must match',
     path: ['confirmPassword'],
   });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     currency_list: state.employee.currency_list,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     employeeActions: bindActionCreators(EmployeeActions, dispatch),
@@ -143,7 +134,7 @@ const CreateEmployee = ({
     employeeActions.getCurrencyList();
   }, [employeeActions]);
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     let postData = Object.assign({}, data);
     if (postData.currencyCode && postData.currencyCode.value) {
       postData = { ...postData, currencyCode: postData.currencyCode.value };
@@ -157,7 +148,7 @@ const CreateEmployee = ({
 
     employeeCreateActions
       .createEmployee(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert(
             'success',
@@ -173,7 +164,7 @@ const CreateEmployee = ({
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert(
           'error',
           err && err.data ? err.data.message : 'New Employee Created Unsuccessfully'
@@ -222,7 +213,7 @@ const CreateEmployee = ({
                                     id="referenceCode"
                                     placeholder="Enter Reference Code"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       const value = e.target.value;
                                       if (value === '' || regExBoth.test(value)) {
                                         field.onChange(e);
@@ -251,7 +242,7 @@ const CreateEmployee = ({
                                     id="title"
                                     placeholder="Enter Title"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       const value = e.target.value;
                                       if (value === '' || regExAlpha.test(value)) {
                                         field.onChange(e);
@@ -307,7 +298,7 @@ const CreateEmployee = ({
                                     id="firstName"
                                     placeholder="Enter First Name"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       const value = e.target.value;
                                       if (value === '' || regExAlpha.test(value)) {
                                         field.onChange(e);
@@ -318,9 +309,7 @@ const CreateEmployee = ({
                                 )}
                               />
                               {errors.firstName && (
-                                <div className="invalid-feedback">
-                                  {errors.firstName.message}
-                                </div>
+                                <div className="invalid-feedback">{errors.firstName.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -339,7 +328,7 @@ const CreateEmployee = ({
                                     id="middleName"
                                     placeholder="Enter Middle Name"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       const value = e.target.value;
                                       if (value === '' || regExAlpha.test(value)) {
                                         field.onChange(e);
@@ -350,9 +339,7 @@ const CreateEmployee = ({
                                 )}
                               />
                               {errors.middleName && (
-                                <div className="invalid-feedback">
-                                  {errors.middleName.message}
-                                </div>
+                                <div className="invalid-feedback">{errors.middleName.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -371,7 +358,7 @@ const CreateEmployee = ({
                                     id="lastName"
                                     placeholder="Enter Last Name"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       const value = e.target.value;
                                       if (value === '' || regExAlpha.test(value)) {
                                         field.onChange(e);
@@ -382,9 +369,7 @@ const CreateEmployee = ({
                                 )}
                               />
                               {errors.lastName && (
-                                <div className="invalid-feedback">
-                                  {errors.lastName.message}
-                                </div>
+                                <div className="invalid-feedback">{errors.lastName.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -454,9 +439,7 @@ const CreateEmployee = ({
                                 control={control}
                                 render={({ field }) => (
                                   <DatePicker
-                                    className={`form-control ${
-                                      errors.dob ? 'is-invalid' : ''
-                                    }`}
+                                    className={`form-control ${errors.dob ? 'is-invalid' : ''}`}
                                     id="dob"
                                     placeholderText="Select Date of Birth"
                                     showMonthDropdown
@@ -465,14 +448,12 @@ const CreateEmployee = ({
                                     dropdownMode="select"
                                     selected={field.value}
                                     maxDate={new Date()}
-                                    onChange={(date) => field.onChange(date)}
+                                    onChange={date => field.onChange(date)}
                                   />
                                 )}
                               />
                               {errors.dob && (
-                                <div className="invalid-feedback d-block">
-                                  {errors.dob.message}
-                                </div>
+                                <div className="invalid-feedback d-block">{errors.dob.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -517,7 +498,7 @@ const CreateEmployee = ({
                                     id="poBoxNumber"
                                     placeholder="Enter Contract PO Number"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       const value = e.target.value;
                                       if (value === '' || regExBoth.test(value)) {
                                         field.onChange(e);
@@ -528,9 +509,7 @@ const CreateEmployee = ({
                                 )}
                               />
                               {errors.poBoxNumber && (
-                                <div className="invalid-feedback">
-                                  {errors.poBoxNumber.message}
-                                </div>
+                                <div className="invalid-feedback">{errors.poBoxNumber.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -549,7 +528,7 @@ const CreateEmployee = ({
                                     id="vatRegestationNo"
                                     placeholder="Enter Tax Registration Number"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       const value = e.target.value;
                                       if (value === '' || regExBoth.test(value)) {
                                         field.onChange(e);

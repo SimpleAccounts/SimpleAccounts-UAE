@@ -64,7 +64,7 @@ const selectStyles = {
       borderColor: 'hsl(var(--ring))',
     },
   }),
-  menu: (base) => ({
+  menu: base => ({
     ...base,
     backgroundColor: 'hsl(var(--background))',
     border: '1px solid hsl(var(--border))',
@@ -74,15 +74,15 @@ const selectStyles = {
     backgroundColor: state.isSelected
       ? 'hsl(var(--primary))'
       : state.isFocused
-      ? 'hsl(var(--accent))'
-      : 'transparent',
+        ? 'hsl(var(--accent))'
+        : 'transparent',
     color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
   }),
-  singleValue: (base) => ({
+  singleValue: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
   }),
-  placeholder: (base) => ({
+  placeholder: base => ({
     ...base,
     color: 'hsl(var(--muted-foreground))',
   }),
@@ -120,11 +120,11 @@ function RequestForQuotation() {
   const dispatch = useDispatch();
 
   // Redux state
-  const supplier_list = useSelector((state) => state.request_for_quotation.supplier_list);
+  const supplier_list = useSelector(state => state.request_for_quotation.supplier_list);
   const request_for_quotation_list = useSelector(
-    (state) => state.request_for_quotation.request_for_quotation_list
+    state => state.request_for_quotation.request_for_quotation_list
   );
-  const universal_currency_list = useSelector((state) => state.common.universal_currency_list);
+  const universal_currency_list = useSelector(state => state.common.universal_currency_list);
 
   // Actions
   const requestForQuotationAction = useMemo(
@@ -188,12 +188,12 @@ function RequestForQuotation() {
 
     requestForQuotationAction
       .getRFQList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setLoading(false);
       });
@@ -202,7 +202,7 @@ function RequestForQuotation() {
   useEffect(() => {
     requestForQuotationAction.getStatusList();
     requestForQuotationAction.getSupplierList(filterData.contactType);
-    purchaseOrderCreateAction.getPoNo().then((response) => {
+    purchaseOrderCreateAction.getPoNo().then(response => {
       setPrefixData(response.data);
     });
     initializeData();
@@ -217,7 +217,7 @@ function RequestForQuotation() {
     (id, status) => {
       requestForQuotationAction
         .changeStatus(id, status)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             commonActions.tostifyAlert(
               'success',
@@ -226,7 +226,7 @@ function RequestForQuotation() {
             initializeData();
           }
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err?.data?.message || 'Status Changed Unsuccessfully'
@@ -238,14 +238,15 @@ function RequestForQuotation() {
 
   // Send mail handler
   const sendMail = useCallback(
-    (row) => {
+    row => {
       setLoading(true);
       setLoadingMsg('Sending Request For Quotation...');
       const postingRequestModel = {
         postingRefId: row.id,
-        amountInWords: upperCase(
-          row.currencyName + ' ' + toWords.convert(row.totalAmount)
-        ).replace('POINT', 'AND'),
+        amountInWords: upperCase(row.currencyName + ' ' + toWords.convert(row.totalAmount)).replace(
+          'POINT',
+          'AND'
+        ),
         vatInWords: row.totalVatAmount
           ? upperCase(row.currencyName + ' ' + toWords.convert(row.totalVatAmount)).replace(
               'POINT',
@@ -255,7 +256,7 @@ function RequestForQuotation() {
       };
       requestForQuotationAction
         .sendMail(postingRequestModel)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             commonActions.tostifyAlert(
               'success',
@@ -265,7 +266,7 @@ function RequestForQuotation() {
             initializeData();
           }
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err?.data?.message || 'Request For Quotation Sent Unsuccessfully'
@@ -278,10 +279,10 @@ function RequestForQuotation() {
 
   // Open PO modal
   const renderActionForState = useCallback(
-    (id) => {
+    id => {
       purchaseOrderAction.getVatList();
       purchaseOrderAction.getProductList();
-      requestForQuotationDetailsAction.getRFQeById(id).then((res) => {
+      requestForQuotationDetailsAction.getRFQeById(id).then(res => {
         setSelectedData(res.data);
         setRowId(id);
         setOpenPurchaseOrder(true);
@@ -294,7 +295,7 @@ function RequestForQuotation() {
 
   // Get next PO number
   const getNextTemplateNo = useCallback(() => {
-    purchaseOrderCreateAction.getPoNo().then((response) => {
+    purchaseOrderCreateAction.getPoNo().then(response => {
       setPrefixData(response.data);
     });
   }, [purchaseOrderCreateAction]);
@@ -307,11 +308,11 @@ function RequestForQuotation() {
 
   // Filter handlers
   const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
+    setFilterData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     initializeData();
   };
 
@@ -320,14 +321,14 @@ function RequestForQuotation() {
       supplierId: '',
       contactType: 1,
     });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     setTimeout(() => initializeData(), 0);
   };
 
   // Transform supplier list for select
   const supplierOptions = useMemo(() => {
     if (!supplier_list) return [];
-    return supplier_list.map((item) => ({
+    return supplier_list.map(item => ({
       label: item.label?.contactName || item.label,
       value: item.value,
     }));
@@ -406,9 +407,7 @@ function RequestForQuotation() {
           const actions = [];
 
           // Edit (Draft only)
-          if (
-            !['Sent', 'Closed', 'Approved', 'Rejected', 'Invoiced'].includes(rfq.status)
-          ) {
+          if (!['Sent', 'Closed', 'Approved', 'Rejected', 'Invoiced'].includes(rfq.status)) {
             actions.push({
               label: strings.Edit,
               icon: Edit,
@@ -518,7 +517,7 @@ function RequestForQuotation() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!request_for_quotation_list?.data?.data) return [];
-    return request_for_quotation_list.data.data.map((supplier) => ({
+    return request_for_quotation_list.data.data.map(supplier => ({
       id: supplier.id,
       status: supplier.status || '',
       supplierName: supplier.supplierName || '',
@@ -579,7 +578,7 @@ function RequestForQuotation() {
                       : []
                   }
                   value={filterData.supplierId}
-                  onChange={(option) => {
+                  onChange={option => {
                     handleFilterChange('supplierId', option || '');
                   }}
                 />

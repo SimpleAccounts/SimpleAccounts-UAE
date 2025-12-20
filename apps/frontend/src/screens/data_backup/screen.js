@@ -1,51 +1,36 @@
-import React from 'react'
-import {connect} from 'react-redux'
+import React from 'react';
+import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux'
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  Row,
-  Col,
-  Table
-} from 'reactstrap'
-import { ToastContainer } from 'sonner'
-import { Loader } from 'components'
+import { Card, CardHeader, CardBody, Button, Row, Col, Table } from 'reactstrap';
+import { ToastContainer } from 'sonner';
+import { Loader } from 'components';
 
-import './style.scss'
+import './style.scss';
 
-const mapStateToProps = (state) => {
-  return ({
-    
-  })
-}
-const mapDispatchToProps = (dispatch) => {
-  return ({
-    
-  })
-}
+const mapStateToProps = state => {
+  return {};
+};
+const mapDispatchToProps = dispatch => {
+  return {};
+};
 
 class DataBackup extends React.Component {
-  
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       loading: false,
-    }
+    };
   }
 
   render() {
     const { loading } = this.state;
     const containerStyle = {
-      zIndex: 1999
+      zIndex: 1999,
     };
 
     return (
       <div className="data-backup-screen">
         <div className="animated fadeIn">
-          
-
           <Card>
             <CardHeader>
               <div className="h4 mb-0 d-flex align-items-center">
@@ -54,33 +39,25 @@ class DataBackup extends React.Component {
               </div>
             </CardHeader>
             <CardBody>
-            {
-              loading ?
-                <Loader></Loader>: 
+              {loading ? (
+                <Loader></Loader>
+              ) : (
                 <Row>
-                  <Col lg='12' className="mx-auto">
+                  <Col lg="12" className="mx-auto">
                     <p>Backup entire data and download emails</p>
-                    <Button color='danger' className="btn-square">Backup Your Data</Button>
+                    <Button color="danger" className="btn-square">
+                      Backup Your Data
+                    </Button>
                     <div className="mt-5">
                       <h4>Backup History</h4>
                       <Table responsive>
                         <thead>
                           <tr>
-                            <th>
-                              Backup Time
-                            </th>
-                            <th>
-                              User Name
-                            </th>
-                            <th>
-                              File Type
-                            </th>
-                            <th>
-                              Export Status
-                            </th>
-                            <th>
-                              Download
-                            </th>
+                            <th>Backup Time</th>
+                            <th>User Name</th>
+                            <th>File Type</th>
+                            <th>Export Status</th>
+                            <th>Download</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -89,27 +66,37 @@ class DataBackup extends React.Component {
                             <td>admin</td>
                             <td>CSV</td>
                             <td>Completed</td>
-                            <td><button className="btn"><i className="cui-cloud-download icons mr-2" />Download</button></td>
+                            <td>
+                              <button className="btn">
+                                <i className="cui-cloud-download icons mr-2" />
+                                Download
+                              </button>
+                            </td>
                           </tr>
                           <tr>
                             <td>10/01/2019</td>
                             <td>admin</td>
                             <td>CSV</td>
                             <td>Completed</td>
-                            <td><button className="btn"><i className="cui-cloud-download icons mr-2" />Download</button></td>
+                            <td>
+                              <button className="btn">
+                                <i className="cui-cloud-download icons mr-2" />
+                                Download
+                              </button>
+                            </td>
                           </tr>
                         </tbody>
                       </Table>
                     </div>
                   </Col>
                 </Row>
-            }
+              )}
             </CardBody>
           </Card>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DataBackup)
+export default connect(mapStateToProps, mapDispatchToProps)(DataBackup);

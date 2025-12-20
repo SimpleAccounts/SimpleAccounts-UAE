@@ -33,7 +33,7 @@ function Currency() {
   const dispatch = useDispatch();
 
   // Redux state
-  const currency_list = useSelector((state) => state.currency.currency_list);
+  const currency_list = useSelector(state => state.currency.currency_list);
 
   // Actions
   const actions = useMemo(() => bindActionCreators(currenciesActions, dispatch), [dispatch]);
@@ -50,7 +50,7 @@ function Currency() {
 
   // Initialize data
   useEffect(() => {
-    actions.getCurrencyList().then((res) => {
+    actions.getCurrencyList().then(res => {
       if (res.status === 200) {
         setLoading(false);
       }
@@ -76,7 +76,7 @@ function Currency() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!currency_list || currency_list.length === 0) return [];
-    return currency_list.map((item) => ({
+    return currency_list.map(item => ({
       id: item.id || item.currencyCode,
       name: item.currencyName || '',
       symbol: item.currencySymbol || '',
@@ -90,7 +90,7 @@ function Currency() {
 
   // Handle form change
   const handleFormChange = (name, value) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   // Handle save
@@ -135,11 +135,7 @@ function Currency() {
             </div>
           </CardHeader>
           <CardContent>
-            <DataTable
-              columns={columns}
-              data={tableData}
-              onRowClick={handleRowClick}
-            />
+            <DataTable columns={columns} data={tableData} onRowClick={handleRowClick} />
           </CardContent>
         </Card>
 
@@ -148,9 +144,7 @@ function Currency() {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Create & Update Currency</DialogTitle>
-              <DialogDescription>
-                Add or update currency information
-              </DialogDescription>
+              <DialogDescription>Add or update currency information</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
@@ -159,7 +153,7 @@ function Currency() {
                   styles={selectStyles}
                   placeholder="Select Currency Code"
                   options={[]}
-                  onChange={(option) => handleFormChange('currencyCode', option?.value || '')}
+                  onChange={option => handleFormChange('currencyCode', option?.value || '')}
                 />
               </div>
               <div className="space-y-2">
@@ -170,7 +164,7 @@ function Currency() {
                   id="currencyName"
                   placeholder="Enter Name"
                   value={formData.currencyName}
-                  onChange={(e) => handleFormChange('currencyName', e.target.value)}
+                  onChange={e => handleFormChange('currencyName', e.target.value)}
                   className="input-transition"
                 />
               </div>
@@ -182,7 +176,7 @@ function Currency() {
                   id="currencySymbol"
                   placeholder="Enter Symbol"
                   value={formData.currencySymbol}
-                  onChange={(e) => handleFormChange('currencySymbol', e.target.value)}
+                  onChange={e => handleFormChange('currencySymbol', e.target.value)}
                   className="input-transition"
                 />
               </div>

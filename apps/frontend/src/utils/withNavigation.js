@@ -1,13 +1,13 @@
 /**
  * Higher-Order Component for React Router v6 navigation in class components.
- * 
+ *
  * This HOC provides a v5-compatible history API for class components that
  * haven't been migrated to functional components yet.
- * 
+ *
  * Usage:
  *   import { withNavigation } from 'utils/withNavigation';
  *   export default withNavigation(MyComponent);
- * 
+ *
  * The component will receive:
  *   - this.props.history.push(path, state?)
  *   - this.props.history.replace(path, state?)
@@ -31,7 +31,7 @@ export function withNavigation(Component) {
     const navigate = useNavigate();
     const params = useParams();
     const location = useLocation();
-    
+
     // Create a history-like object compatible with v5 API
     const history = {
       push: (path, state) => {
@@ -40,7 +40,7 @@ export function withNavigation(Component) {
       replace: (path, state) => {
         navigate(path, { replace: true, state });
       },
-      go: (n) => {
+      go: n => {
         navigate(n);
       },
       goBack: () => {
@@ -54,7 +54,7 @@ export function withNavigation(Component) {
       action: 'PUSH',
       location: location,
     };
-    
+
     // Create match object compatible with v5 API
     const match = {
       params: params,
@@ -62,15 +62,8 @@ export function withNavigation(Component) {
       url: location.pathname,
       isExact: true,
     };
-    
-    return (
-      <Component
-        {...props}
-        history={history}
-        match={match}
-        location={location}
-      />
-    );
+
+    return <Component {...props} history={history} match={match} location={location} />;
   };
 }
 
@@ -82,12 +75,12 @@ export function useNavigation() {
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
-  
+
   return {
     history: {
       push: (path, state) => navigate(path, { state }),
       replace: (path, state) => navigate(path, { replace: true, state }),
-      go: (n) => navigate(n),
+      go: n => navigate(n),
       goBack: () => navigate(-1),
       goForward: () => navigate(1),
       length: window.history.length,
@@ -103,4 +96,3 @@ export function useNavigation() {
     location: location,
   };
 }
-

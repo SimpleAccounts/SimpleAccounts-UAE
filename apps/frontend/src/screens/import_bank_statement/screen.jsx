@@ -74,7 +74,7 @@ function ImportBankStatement() {
     if (location.state?.bankAccountId) {
       setBankAccountId(location.state.bankAccountId);
 
-      importBankStatementActions.getTemplateList().then((res) => {
+      importBankStatementActions.getTemplateList().then(res => {
         if (res.status === 200) {
           setTemplateList(res.data);
         }
@@ -82,11 +82,11 @@ function ImportBankStatement() {
 
       detailBankAccountActions
         .getBankAccountByID(location.state.bankAccountId)
-        .then((res) => {
+        .then(res => {
           setDate(res.openingDate || '');
           setReconciledDate(res.lastReconcileDate || '');
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         });
     } else {
@@ -98,13 +98,13 @@ function ImportBankStatement() {
   const exportSample = () => {
     importBankStatementActions
       .downloadcsv()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           const blob = new Blob([res.data], { type: 'application/csv' });
           download(blob, 'Sample Transaction.csv');
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
@@ -115,7 +115,7 @@ function ImportBankStatement() {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (evt) => {
+    reader.onload = evt => {
       const bstr = evt.target.result;
       setDataString(bstr);
       navigate('/admin/banking/upload-statement/transaction', {
@@ -139,7 +139,7 @@ function ImportBankStatement() {
 
     importBankStatementActions
       .importTransaction(postData)
-      .then((res) => {
+      .then(res => {
         if (res.data.includes('Transactions Imported 0')) {
           commonActions.tostifyAlert(
             'error',
@@ -155,7 +155,7 @@ function ImportBankStatement() {
           });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
@@ -206,7 +206,7 @@ function ImportBankStatement() {
                     ref={uploadFileRef}
                     type="file"
                     accept=".csv,.xlsx"
-                    onChange={(e) => {
+                    onChange={e => {
                       setFileName(e.target.value.split('\\').pop());
                       handleFileUpload();
                     }}
@@ -219,7 +219,7 @@ function ImportBankStatement() {
                   <span className="text-muted-foreground">Download: </span>
                   <a
                     href="#"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.preventDefault();
                       exportSample();
                     }}

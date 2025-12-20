@@ -13,7 +13,7 @@ const currencySlice = createSlice({
       state.currency_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder.addCase(CURRENCY.CURRENCY_LIST, (state, action) => {
       state.currency_list = action.payload?.data || action.payload || [];
     });
@@ -22,4 +22,3 @@ const currencySlice = createSlice({
 
 export const { setCurrencyList } = currencySlice.actions;
 export default currencySlice.reducer;
-

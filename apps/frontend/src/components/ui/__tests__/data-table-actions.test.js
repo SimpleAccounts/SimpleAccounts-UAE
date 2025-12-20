@@ -28,12 +28,7 @@ describe('DataTableRowActions', () => {
 
   describe('Basic Rendering', () => {
     it('renders action button with menu trigger', () => {
-      render(
-        <DataTableRowActions
-          row={mockRow}
-          onView={() => {}}
-        />
-      );
+      render(<DataTableRowActions row={mockRow} onView={() => {}} />);
 
       expect(screen.getByRole('button')).toBeInTheDocument();
       expect(screen.getByTestId('more-icon')).toBeInTheDocument();
@@ -76,24 +71,13 @@ describe('DataTableRowActions', () => {
 
   describe('Disabled State', () => {
     it('disables button when disabled prop is true', () => {
-      render(
-        <DataTableRowActions
-          row={mockRow}
-          onView={() => {}}
-          disabled
-        />
-      );
+      render(<DataTableRowActions row={mockRow} onView={() => {}} disabled />);
 
       expect(screen.getByRole('button')).toBeDisabled();
     });
 
     it('button is enabled by default', () => {
-      render(
-        <DataTableRowActions
-          row={mockRow}
-          onView={() => {}}
-        />
-      );
+      render(<DataTableRowActions row={mockRow} onView={() => {}} />);
 
       expect(screen.getByRole('button')).not.toBeDisabled();
     });

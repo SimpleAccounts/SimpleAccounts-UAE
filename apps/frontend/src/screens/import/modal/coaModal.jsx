@@ -29,13 +29,13 @@ import { Loader } from 'components';
 import * as ChartOfAccountActions from '../../chart_account/actions';
 import * as CreateChartOfAccountActions from '../../chart_account/screens/create/actions';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     sub_transaction_type_list: state.chart_account.sub_transaction_type_list,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     ChartOfAccountActions: bindActionCreators(ChartOfAccountActions, dispatch),
     createChartOfAccountActions: bindActionCreators(CreateChartOfAccountActions, dispatch),
@@ -59,15 +59,17 @@ const strings = new LocalizedStrings(data);
 // Zod validation schema
 const chartOfAccountSchema = z.object({
   transactionCategoryName: z.string().optional(),
-  chartOfAccount: z.object({
-    value: z.any(),
-    label: z.string().optional(),
-  }).refine((val) => val && val.value, {
-    message: 'Type is required',
-  }),
+  chartOfAccount: z
+    .object({
+      value: z.any(),
+      label: z.string().optional(),
+    })
+    .refine(val => val && val.value, {
+      message: 'Type is required',
+    }),
 });
 
-const AddEmployeesModal = (props) => {
+const AddEmployeesModal = props => {
   const {
     openModal,
     closeModal,
@@ -108,11 +110,11 @@ const AddEmployeesModal = (props) => {
   }, []);
 
   const initializeData = () => {
-    ChartOfAccountActions.getSubTransactionTypes().then((res) => {
+    ChartOfAccountActions.getSubTransactionTypes().then(res => {
       if (res.status === 200) {
         const val = Object.assign({}, res.data);
         const temp = [];
-        Object.keys(val).forEach((item) => {
+        Object.keys(val).forEach(item => {
           temp.push({
             label: item,
             options: val[`${item}`],
@@ -123,12 +125,12 @@ const AddEmployeesModal = (props) => {
     });
   };
 
-  const validationCheck = (value) => {
+  const validationCheck = value => {
     const data = {
       moduleType: 16,
       name: value,
     };
-    createChartOfAccountActions.checkValidation(data).then((response) => {
+    createChartOfAccountActions.checkValidation(data).then(response => {
       if (response.data === 'Transaction Category Name Already Exists') {
         setExist(true);
       } else {
@@ -137,7 +139,7 @@ const AddEmployeesModal = (props) => {
     });
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     if (exist) {
       commonActions.tostifyAlert('error', 'Chart Of Account Name already exists');
       return;
@@ -151,7 +153,7 @@ const AddEmployeesModal = (props) => {
 
     createChartOfAccountActions
       .createTransactionCategory(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setDisabled(false);
           commonActions.tostifyAlert('success', 'New Chart of Account Created Successfully');
@@ -163,7 +165,7 @@ const AddEmployeesModal = (props) => {
           }
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         commonActions.tostifyAlert(
           'error',
@@ -200,7 +202,8 @@ const AddEmployeesModal = (props) => {
                     <Form onSubmit={handleSubmit(onSubmit)} name="simpleForm">
                       <FormGroup>
                         <Label htmlFor="name">
-                          <span className="text-danger">* </span>{strings.Name}
+                          <span className="text-danger">* </span>
+                          {strings.Name}
                         </Label>
                         <Controller
                           name="transactionCategoryName"
@@ -215,21 +218,31 @@ const AddEmployeesModal = (props) => {
                               disabled={true}
                               value={coaName}
                               className={
-                                (errors.transactionCategoryName && touchedFields.transactionCategoryName) || exist
+                                (errors.transactionCategoryName &&
+                                  touchedFields.transactionCategoryName) ||
+                                exist
                                   ? 'is-invalid'
                                   : ''
                               }
                             />
                           )}
                         />
-                        {errors.transactionCategoryName && touchedFields.transactionCategoryName && (
-                          <div className="invalid-feedback">{errors.transactionCategoryName.message}</div>
+                        {errors.transactionCategoryName &&
+                          touchedFields.transactionCategoryName && (
+                            <div className="invalid-feedback">
+                              {errors.transactionCategoryName.message}
+                            </div>
+                          )}
+                        {exist && (
+                          <div className="invalid-feedback">
+                            Chart Of Account Name is already exist
+                          </div>
                         )}
-                        {exist && <div className="invalid-feedback">Chart Of Account Name is already exist</div>}
                       </FormGroup>
                       <FormGroup>
                         <Label htmlFor="name">
-                          <span className="text-danger">* </span>{strings.Type}
+                          <span className="text-danger">* </span>
+                          {strings.Type}
                         </Label>
                         <Controller
                           name="chartOfAccount"
@@ -243,7 +256,9 @@ const AddEmployeesModal = (props) => {
                               placeholder={strings.Select + strings.Type}
                               options={chartOfAccountCategory}
                               className={
-                                errors.chartOfAccount && touchedFields.chartOfAccount ? 'is-invalid' : ''
+                                errors.chartOfAccount && touchedFields.chartOfAccount
+                                  ? 'is-invalid'
+                                  : ''
                               }
                             />
                           )}

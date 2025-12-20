@@ -43,7 +43,7 @@ const regDecimal = /^[0-9]*\.?[0-9]*$/;
 
 // Custom styles for react-select
 const customStyles = {
-  control: (provided) => ({
+  control: provided => ({
     ...provided,
     maxHeight: '50px',
   }),
@@ -63,11 +63,12 @@ const FILE_SIZE = 1024 * 1024 * 5; // 5MB
 // Validation schema
 const createValidationSchema = (coaCategoryId, expenseCategory, payrollListIds) => {
   return z.object({
-    transactionDate: z.any().refine((val) => val, { message: 'Transaction Date is Required' }),
-    amount: z.string()
+    transactionDate: z.any().refine(val => val, { message: 'Transaction Date is Required' }),
+    amount: z
+      .string()
       .min(1, 'Transaction Amount is Required')
-      .refine((val) => parseFloat(val) > 0, { message: 'Transaction Amount Must Be Greater Than 0' }),
-    coaCategoryId: z.any().refine((val) => val, { message: 'Transaction Type is Required' }),
+      .refine(val => parseFloat(val) > 0, { message: 'Transaction Amount Must Be Greater Than 0' }),
+    coaCategoryId: z.any().refine(val => val, { message: 'Transaction Type is Required' }),
     vendorId: z.any().optional(),
     customerId: z.any().optional(),
     employeeId: z.any().optional(),
@@ -85,16 +86,23 @@ const createValidationSchema = (coaCategoryId, expenseCategory, payrollListIds) 
     isReverseChargeEnabled: z.boolean().optional(),
     exclusiveVat: z.boolean().optional(),
     expenseType: z.boolean().optional(),
-    attachment: z.any()
+    attachment: z
+      .any()
       .optional()
-      .refine((file) => {
-        if (!file) return true;
-        return SUPPORTED_FORMAT.includes(file.type);
-      }, { message: '*Unsupported File Format' })
-      .refine((file) => {
-        if (!file) return true;
-        return file.size <= FILE_SIZE;
-      }, { message: '*File Size is too large' }),
+      .refine(
+        file => {
+          if (!file) return true;
+          return SUPPORTED_FORMAT.includes(file.type);
+        },
+        { message: '*Unsupported File Format' }
+      )
+      .refine(
+        file => {
+          if (!file) return true;
+          return file.size <= FILE_SIZE;
+        },
+        { message: '*File Size is too large' }
+      ),
   });
 };
 
@@ -114,12 +122,16 @@ const ExplainTransactionDetail = ({
   const commonActions = bindActionCreators(CommonActions, dispatch);
 
   // Redux state
-  const expense_categories_list = useSelector((state) => state.bank_account?.expense_categories_list || []);
-  const vat_list = useSelector((state) => state.bank_account?.vat_list || []);
-  const vendor_list = useSelector((state) => state.bank_account?.vendor_list || []);
-  const currency_list = useSelector((state) => state.bank_account?.currency_list || []);
-  const currency_convert_list = useSelector((state) => state.currencyConvert?.currency_convert_list || []);
-  const UnPaidPayrolls_List = useSelector((state) => state.bank_account?.UnPaidPayrolls_List || []);
+  const expense_categories_list = useSelector(
+    state => state.bank_account?.expense_categories_list || []
+  );
+  const vat_list = useSelector(state => state.bank_account?.vat_list || []);
+  const vendor_list = useSelector(state => state.bank_account?.vendor_list || []);
+  const currency_list = useSelector(state => state.bank_account?.currency_list || []);
+  const currency_convert_list = useSelector(
+    state => state.currencyConvert?.currency_convert_list || []
+  );
+  const UnPaidPayrolls_List = useSelector(state => state.bank_account?.UnPaidPayrolls_List || []);
 
   // Local state
   const [language] = useState(window.localStorage.getItem('language'));
@@ -130,7 +142,10 @@ const ExplainTransactionDetail = ({
 
   // Form-related state
   const [chartOfAccountCategoryList, setChartOfAccountCategoryList] = useState([]);
-  const [transactionCategoryList, setTransactionCategoryList] = useState({ categoriesList: [], dataList: [] });
+  const [transactionCategoryList, setTransactionCategoryList] = useState({
+    categoriesList: [],
+    dataList: [],
+  });
   const [moneyCategoryList, setMoneyCategoryList] = useState([]);
   const [customer_invoice_list_state, setCustomerInvoiceListState] = useState([]);
   const [supplier_invoice_list_state, setSupplierInvoiceListState] = useState([]);
@@ -235,7 +250,7 @@ const ExplainTransactionDetail = ({
     }
   };
 
-  const getChartOfAccountCategoryList = async (type) => {
+  const getChartOfAccountCategoryList = async type => {
     try {
       const res = await transactionsActions.getChartOfCategoryList(type);
       if (res.status === 200) {
@@ -271,7 +286,9 @@ const ExplainTransactionDetail = ({
           description: data.description || '',
           amount: data.amount || 0,
           dueAmount: data.dueAmount || 0,
-          coaCategoryId: data.coaCategoryId ? { value: data.coaCategoryId, label: data.coaCategoryLabel } : '',
+          coaCategoryId: data.coaCategoryId
+            ? { value: data.coaCategoryId, label: data.coaCategoryLabel }
+            : '',
           transactionCategoryId: data.transactionCategoryId || '',
           vendorId: data.vendorId || '',
           customerId: data.customerId || '',
@@ -308,7 +325,7 @@ const ExplainTransactionDetail = ({
     }
   };
 
-  const getVatReportListForBank = async (type) => {
+  const getVatReportListForBank = async type => {
     try {
       const res = await transactionsActions.getVatReportListForBank(type);
       if (res.status === 200) {
@@ -325,7 +342,7 @@ const ExplainTransactionDetail = ({
     }
   };
 
-  const getTransactionCategoryList = async (type) => {
+  const getTransactionCategoryList = async type => {
     setValue('coaCategoryId', type, { shouldValidate: true });
     setTransactionCategoryList({ categoriesList: [], dataList: [] });
 
@@ -333,12 +350,15 @@ const ExplainTransactionDetail = ({
       getVendorList();
     } else {
       try {
-        const res = await transactionsActions.getTransactionCategoryListForExplain(type.value, initValue.bankId);
+        const res = await transactionsActions.getTransactionCategoryListForExplain(
+          type.value,
+          initValue.bankId
+        );
         if (res.status === 200) {
-          let categoryList = res.data.categoriesList?.map((category) => {
+          let categoryList = res.data.categoriesList?.map(category => {
             let newOption = category.options;
             if (category.label === 'Other Current Liability') {
-              newOption = category.options.filter((obj) => obj.label !== 'Payroll Liability');
+              newOption = category.options.filter(obj => obj.label !== 'Payroll Liability');
             }
             return { label: category.label, options: newOption };
           });
@@ -357,14 +377,14 @@ const ExplainTransactionDetail = ({
   const getExpensesCategoriesList = () => {
     transactionsActions.getExpensesCategoriesList();
     transactionsActions.getVatList();
-    currencyConvertActions.getCurrencyConversionList().then((response) => {
+    currencyConvertActions.getCurrencyConversionList().then(response => {
       if (response.data?.length > 0) {
         setValue('currency', parseInt(response.data[0].currencyCode));
       }
     });
   };
 
-  const getMoneyPaidToUserlist = async (option) => {
+  const getMoneyPaidToUserlist = async option => {
     try {
       const res = await transactionsActions.getMoneyCategoryList(option.value);
       if (res.status === 200) {
@@ -437,14 +457,14 @@ const ExplainTransactionDetail = ({
   };
 
   const getExchangeRate = () => {
-    const result = currency_convert_list.filter((obj) => {
+    const result = currency_convert_list.filter(obj => {
       return obj.currencyCode === bankCurrency?.bankAccountCurrency;
     });
     return result[0];
   };
 
-  const setExchange = (value) => {
-    const result = currency_convert_list.filter((obj) => {
+  const setExchange = value => {
+    const result = currency_convert_list.filter(obj => {
       return obj.currencyCode === value;
     });
     if (result[0]) {
@@ -453,8 +473,8 @@ const ExplainTransactionDetail = ({
     }
   };
 
-  const setCurrency = (value) => {
-    const result = currency_convert_list.filter((obj) => {
+  const setCurrency = value => {
+    const result = currency_convert_list.filter(obj => {
       return obj.currencyCode === value;
     });
     if (result[0]?.currencyIsoCode) {
@@ -465,8 +485,8 @@ const ExplainTransactionDetail = ({
   const expense_categories_list_generate = () => {
     const categoriesList = [...expense_categories_list];
     const grouped = [];
-    categoriesList.forEach((i) => {
-      const category = grouped.findIndex((g) => g.label === i.transactionCategoryDescription);
+    categoriesList.forEach(i => {
+      const category = grouped.findIndex(g => g.label === i.transactionCategoryDescription);
       if (category > -1) {
         grouped[category].options = [
           ...grouped[category].options,
@@ -482,14 +502,20 @@ const ExplainTransactionDetail = ({
     return grouped;
   };
 
-  const expenceconvert = (amount) => {
+  const expenceconvert = amount => {
     return amount * exchangeRate;
   };
 
   const setexcessorshortamount = () => {
     const invoiceIdList = getValues('invoiceIdList') || [];
-    const totalexpainedamount = invoiceIdList.reduce((accu, curr) => accu + (curr.explainedAmount || 0), 0);
-    const totalconvetedamount = invoiceIdList.reduce((accu, curr) => accu + (curr.convertedInvoiceAmount || 0), 0);
+    const totalexpainedamount = invoiceIdList.reduce(
+      (accu, curr) => accu + (curr.explainedAmount || 0),
+      0
+    );
+    const totalconvetedamount = invoiceIdList.reduce(
+      (accu, curr) => accu + (curr.convertedInvoiceAmount || 0),
+      0
+    );
     const transactionAmount = getValues('amount') || 0;
     const isppselected = invoiceIdList.reduce((a, c) => a + (c.pp ? 1 : 0), 0);
 
@@ -504,10 +530,13 @@ const ExplainTransactionDetail = ({
     }
 
     return {
-      value: `${bankCurrency?.bankAccountCurrencyIsoCode} ${final.toLocaleString(navigator.language, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}`,
+      value: `${bankCurrency?.bankAccountCurrencyIsoCode} ${final.toLocaleString(
+        navigator.language,
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }
+      )}`,
       data: final.toFixed(2),
     };
   };
@@ -518,7 +547,7 @@ const ExplainTransactionDetail = ({
       bankCurrency?.bankAccountCurrency === basecurrency?.currencyCode
         ? customerinvoice
         : bankCurrency?.bankAccountCurrency;
-    const result = currency_convert_list.filter((obj) => obj.currencyCode === convertor);
+    const result = currency_convert_list.filter(obj => obj.currencyCode === convertor);
     const ex = exrate || result[0]?.exchangeRate || 1;
     setValue('exchangeRate', ex);
 
@@ -532,10 +561,10 @@ const ExplainTransactionDetail = ({
     return exchange;
   };
 
-  const basecurrencyconvertor = (customerinvoice) => {
+  const basecurrencyconvertor = customerinvoice => {
     let exchange;
     if (customerinvoice !== basecurrency?.currencyCode) {
-      const result = currency_convert_list.filter((obj) => obj.currencyCode === customerinvoice);
+      const result = currency_convert_list.filter(obj => obj.currencyCode === customerinvoice);
       exchange = result[0]?.exchangeRate || 1;
     } else {
       exchange = 1;
@@ -548,7 +577,7 @@ const ExplainTransactionDetail = ({
       const transactionAmount = amount || getValues('transactionAmount');
       const invoicelist = [...option];
       let remainingcredit = transactionAmount;
-      const finaldata = invoicelist.map((i) => {
+      const finaldata = invoicelist.map(i => {
         let localexe = setcustomexchnage(i.currencyCode, exrate);
         let finalcredit = 0;
         let localremainamount = remainingcredit;
@@ -594,23 +623,29 @@ const ExplainTransactionDetail = ({
     const shortAmount = transactionAmount - total;
 
     let updatedfinaldata = [];
-    const temp = finaldata.reduce((a, c) => (c.convertedInvoiceAmount >= transactionAmount ? a + 1 : a + 0), 0);
+    const temp = finaldata.reduce(
+      (a, c) => (c.convertedInvoiceAmount >= transactionAmount ? a + 1 : a + 0),
+      0
+    );
     const amountislessthanallinvoice = temp === finaldata.length;
 
     let tempdata;
     if (amountislessthanallinvoice) {
       if (value) {
-        tempdata = finaldata.map((i) => {
+        tempdata = finaldata.map(i => {
           const basecurrencyVal = basecurrencyconvertor(i.currencyCode);
           return {
             ...i,
             pp: value,
             explainedAmount: transactionAmount / finaldata.length,
-            convertedToBaseCurrencyAmount: ((transactionAmount / finaldata.length) * basecurrencyVal).toFixed(2),
+            convertedToBaseCurrencyAmount: (
+              (transactionAmount / finaldata.length) *
+              basecurrencyVal
+            ).toFixed(2),
           };
         });
       } else {
-        const temp = finaldata.map((i) => ({ ...i, pp: value }));
+        const temp = finaldata.map(i => ({ ...i, pp: value }));
         tempdata = setexchnagedamount(temp);
       }
       finaldata = [...tempdata];
@@ -628,7 +663,7 @@ const ExplainTransactionDetail = ({
         updatedfinaldata.push(local);
       });
 
-      updatedfinaldata = updatedfinaldata.map((i) => {
+      updatedfinaldata = updatedfinaldata.map(i => {
         const basecurrencyVal = basecurrencyconvertor(i.currencyCode);
         return {
           ...i,
@@ -639,7 +674,7 @@ const ExplainTransactionDetail = ({
     }
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     e.preventDefault();
     const file = e.target.files[0];
     if (file) {
@@ -651,7 +686,7 @@ const ExplainTransactionDetail = ({
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     let {
       transactionDate,
       reference,
@@ -678,8 +713,11 @@ const ExplainTransactionDetail = ({
     }
 
     let result;
-    if ((invoiceIdList && coaCategoryId.label === 'Sales') || (invoiceIdList && coaCategoryId.label === 'Supplier Invoice')) {
-      result = invoiceIdList.map((o) => ({
+    if (
+      (invoiceIdList && coaCategoryId.label === 'Sales') ||
+      (invoiceIdList && coaCategoryId.label === 'Supplier Invoice')
+    ) {
+      result = invoiceIdList.map(o => ({
         id: o.value,
         remainingInvoiceAmount: 0,
         type: o.type,
@@ -688,7 +726,7 @@ const ExplainTransactionDetail = ({
 
     let result1;
     if (payrollListIds && expenseCategory && expenseCategory === 34) {
-      result1 = payrollListIds.map((o) => ({
+      result1 = payrollListIds.map(o => ({
         payrollId: o.value,
       }));
     }
@@ -708,7 +746,7 @@ const ExplainTransactionDetail = ({
     formData.append('exchangeRate', exchangeRate || 1);
 
     if (coaCategoryId?.label === 'Vat Payment' || coaCategoryId?.label === 'Vay Claim') {
-      const info = VATlist.find((i) => i.id === VATReportId?.value);
+      const info = VATlist.find(i => i.id === VATReportId?.value);
       if (info) {
         delete info.taxFiledOn;
         formData.append('explainedVatPaymentListString', JSON.stringify([info]));
@@ -723,7 +761,9 @@ const ExplainTransactionDetail = ({
     if (transactionCategoryId) {
       formData.append(
         'transactionCategoryId',
-        transactionCategoryId?.value !== undefined ? transactionCategoryId.value : transactionCategoryId
+        transactionCategoryId?.value !== undefined
+          ? transactionCategoryId.value
+          : transactionCategoryId
       );
     }
 
@@ -741,7 +781,12 @@ const ExplainTransactionDetail = ({
       formData.append('currencyCode', currencyCode);
     }
 
-    if (expenseCategory && ['Expense', 'Admin Expense', 'Other Expense', 'Cost Of Goods Sold'].includes(coaCategoryId?.label)) {
+    if (
+      expenseCategory &&
+      ['Expense', 'Admin Expense', 'Other Expense', 'Cost Of Goods Sold'].includes(
+        coaCategoryId?.label
+      )
+    ) {
       formData.append('expenseCategory', expenseCategory || '');
     }
 
@@ -757,7 +802,10 @@ const ExplainTransactionDetail = ({
       formData.append('employeeId', employeeId?.value || employeeId || '');
     }
 
-    if ((invoiceIdList && coaCategoryId?.label === 'Sales') || (invoiceIdList && coaCategoryId?.label === 'Supplier Invoice')) {
+    if (
+      (invoiceIdList && coaCategoryId?.label === 'Sales') ||
+      (invoiceIdList && coaCategoryId?.label === 'Supplier Invoice')
+    ) {
       formData.append('explainParamListStr', invoiceIdList ? JSON.stringify(result) : '');
     }
 
@@ -765,7 +813,7 @@ const ExplainTransactionDetail = ({
       'explainedInvoiceListString',
       invoiceIdList
         ? JSON.stringify(
-            invoiceIdList.map((i) => ({
+            invoiceIdList.map(i => ({
               invoiceId: i.value,
               invoiceAmount: i.amount,
               convertedInvoiceAmount: i.convertedInvoiceAmount,
@@ -780,7 +828,10 @@ const ExplainTransactionDetail = ({
     );
 
     const excessResult = setexcessorshortamount();
-    formData.append('exchangeGainOrLossId', excessResult.data < 0 ? 103 : excessResult.data > 0 ? 79 : 0);
+    formData.append(
+      'exchangeGainOrLossId',
+      excessResult.data < 0 ? 103 : excessResult.data > 0 ? 79 : 0
+    );
     formData.append('exchangeGainOrLoss', excessResult.data);
     formData.append('reference', reference || '');
 
@@ -796,14 +847,14 @@ const ExplainTransactionDetail = ({
 
     transactionDetailActions
       .updateTransaction(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert('success', 'Transaction Detail Explained Successfully.');
           closeExplainTransactionModal(selectedData.id);
           getbankdetails();
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
@@ -825,19 +876,19 @@ const ExplainTransactionDetail = ({
 
     transactionDetailActions
       .UnexplainTransaction(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert('success', 'Transaction Detail Updated Successfully.');
           closeExplainTransactionModal(selectedData.id);
           getbankdetails();
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
 
-  const closeTransaction = (id) => {
+  const closeTransaction = id => {
     setDialog(
       <ConfirmDeleteModal
         isOpen={true}
@@ -849,7 +900,7 @@ const ExplainTransactionDetail = ({
     );
   };
 
-  const removeTransaction = (id) => {
+  const removeTransaction = id => {
     removeDialog();
     transactionsActions
       .deleteTransactionById(id)
@@ -858,7 +909,7 @@ const ExplainTransactionDetail = ({
         closeExplainTransactionModal(selectedData.id);
         getbankdetails();
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || null);
       });
   };
@@ -868,7 +919,7 @@ const ExplainTransactionDetail = ({
   };
 
   // Validation function
-  const validateForm = (values) => {
+  const validateForm = values => {
     const errors = {};
     calculateVAT(values.amount, values.vatId, values.exclusiveVat);
 
@@ -888,7 +939,7 @@ const ExplainTransactionDetail = ({
         errors.invoiceIdList = 'Please Select Invoice';
       } else {
         let isExplainAmountZero = false;
-        values.invoiceIdList.forEach((i) => {
+        values.invoiceIdList.forEach(i => {
           if (i.explainedAmount === 0) {
             isExplainAmountZero = true;
           }
@@ -899,7 +950,11 @@ const ExplainTransactionDetail = ({
       }
     }
 
-    if (values.vatId === '' && values.coaCategoryId?.label === 'Expense' && values.expenseCategory !== 34) {
+    if (
+      values.vatId === '' &&
+      values.coaCategoryId?.label === 'Expense' &&
+      values.expenseCategory !== 34
+    ) {
       errors.vatId = 'Please select Vat';
     }
 
@@ -911,14 +966,17 @@ const ExplainTransactionDetail = ({
       errors.payrollListIds = 'Please select Payroll';
     }
 
-    if ((values.expenseCategory === '' || !values.expenseCategory) && values.coaCategoryId?.label === 'Expense') {
+    if (
+      (values.expenseCategory === '' || !values.expenseCategory) &&
+      values.coaCategoryId?.label === 'Expense'
+    ) {
       errors.expenseCategory = 'Please select Expense Category';
     }
 
     return errors;
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = e => {
     e?.preventDefault();
     const values = getValues();
     const validationErrors = validateForm(values);
@@ -943,7 +1001,7 @@ const ExplainTransactionDetail = ({
   const ExchangeChangeList = getExchangeRate();
 
   // Prepare supplier list
-  const tmpSupplier_list = vendor_list.map((item) => ({
+  const tmpSupplier_list = vendor_list.map(item => ({
     label: item.label?.contactName,
     value: item.value,
   }));
@@ -952,13 +1010,13 @@ const ExplainTransactionDetail = ({
   let transactionCategoryValue = { label: 'Select Category' };
   if (transactionCategoryList?.categoriesList) {
     let allCategories = [];
-    transactionCategoryList.categoriesList.forEach((cat) => {
+    transactionCategoryList.categoriesList.forEach(cat => {
       if (cat.options && Array.isArray(cat.options)) {
-        cat.options.forEach((opt) => allCategories.push(opt));
+        cat.options.forEach(opt => allCategories.push(opt));
       }
     });
     if (transactionCategoryId) {
-      const labelObj = allCategories.find((ac) => ac.value == transactionCategoryId);
+      const labelObj = allCategories.find(ac => ac.value == transactionCategoryId);
       if (labelObj) {
         transactionCategoryValue = { label: labelObj.label, value: labelObj.value };
       }
@@ -1013,20 +1071,27 @@ const ExplainTransactionDetail = ({
                                             {
                                               ...chartOfAccountCategoryList[0],
                                               options: explainedstatus
-                                                ? chartOfAccountCategoryList[0]?.options?.filter((i) => i.value !== 6)
+                                                ? chartOfAccountCategoryList[0]?.options?.filter(
+                                                    i => i.value !== 6
+                                                  )
                                                 : chartOfAccountCategoryList[0]?.options?.filter(
-                                                    (i) => i.value !== 16 && i.value !== 17
+                                                    i => i.value !== 16 && i.value !== 17
                                                   ),
                                             },
                                           ]
                                         : []
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       field.onChange(option);
                                       const result = getExchangeRate();
                                       if (result) setValue('exchangeRate', result.exchangeRate);
 
-                                      if (option?.label !== 'Expense' && option?.label !== 'Supplier Invoice' && option?.label !== 'Vat Payment' && option?.label !== 'Vat Claim') {
+                                      if (
+                                        option?.label !== 'Expense' &&
+                                        option?.label !== 'Supplier Invoice' &&
+                                        option?.label !== 'Vat Payment' &&
+                                        option?.label !== 'Vat Claim'
+                                      ) {
                                         getTransactionCategoryList(option);
                                       }
                                       if (option?.label === 'Expense') {
@@ -1048,7 +1113,9 @@ const ExplainTransactionDetail = ({
                                 )}
                               />
                               {errors.coaCategoryId && (
-                                <div className="invalid-feedback">{errors.coaCategoryId.message}</div>
+                                <div className="invalid-feedback">
+                                  {errors.coaCategoryId.message}
+                                </div>
                               )}
                             </FormGroup>
                           </Col>
@@ -1071,13 +1138,15 @@ const ExplainTransactionDetail = ({
                                     dateFormat="DD-MM-YYYY"
                                     dropdownMode="select"
                                     selected={field.value ? new Date(field.value) : null}
-                                    onChange={(date) => field.onChange(date)}
+                                    onChange={date => field.onChange(date)}
                                     className={`form-control ${errors.transactionDate ? 'is-invalid' : ''}`}
                                   />
                                 )}
                               />
                               {errors.transactionDate && (
-                                <div className="invalid-feedback">{errors.transactionDate.message}</div>
+                                <div className="invalid-feedback">
+                                  {errors.transactionDate.message}
+                                </div>
                               )}
                             </FormGroup>
                           </Col>
@@ -1097,7 +1166,7 @@ const ExplainTransactionDetail = ({
                                     min="0"
                                     placeholder={strings.Amount}
                                     readOnly={creationMode !== 'MANUAL'}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       if (e.target.value === '' || regEx.test(e.target.value)) {
                                         field.onChange(e.target.value);
                                       }
@@ -1113,7 +1182,9 @@ const ExplainTransactionDetail = ({
                                   />
                                 )}
                               />
-                              {errors.amount && <div className="invalid-feedback">{errors.amount.message}</div>}
+                              {errors.amount && (
+                                <div className="invalid-feedback">{errors.amount.message}</div>
+                              )}
                             </FormGroup>
                           </Col>
                         </Row>

@@ -73,7 +73,7 @@ function NotesSettings() {
   useEffect(() => {
     notesSettingsAction
       .getNoteSettingsInfo()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setValue('defaultNotes', res.data.defaultNotes || '');
           setValue('defaultTermsAndConditions', res.data.defaultTermsAndConditions || '');
@@ -81,17 +81,14 @@ function NotesSettings() {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
-        commonActions.tostifyAlert(
-          'error',
-          err?.data?.message || 'Failed to load settings'
-        );
+        commonActions.tostifyAlert('error', err?.data?.message || 'Failed to load settings');
       });
   }, [notesSettingsAction, commonActions, setValue]);
 
   // Form submit
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     setLoading(true);
     setDisableLeavePage(true);
 
@@ -102,13 +99,13 @@ function NotesSettings() {
 
     notesSettingsAction
       .saveNoteSettingsInfo(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert('success', 'Default Notes Saved Successfully');
           navigate(config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice');
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         setDisableLeavePage(false);
         commonActions.tostifyAlert('error', 'Save Unsuccessful');
@@ -190,7 +187,9 @@ function NotesSettings() {
                   type="button"
                   variant="secondary"
                   onClick={() =>
-                    navigate(config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice')
+                    navigate(
+                      config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice'
+                    )
                   }
                 >
                   <X className="mr-2 h-4 w-4" />

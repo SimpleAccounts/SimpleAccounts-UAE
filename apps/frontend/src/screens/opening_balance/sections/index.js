@@ -1,7 +1,4 @@
-import Temp from './temp'
-import OpeningBalance from './opening_balance_modal.jsx'
+import Temp from './temp';
+import OpeningBalance from './opening_balance_modal.jsx';
 
-export {
-  Temp,
-  OpeningBalance
-}
+export { Temp, OpeningBalance };

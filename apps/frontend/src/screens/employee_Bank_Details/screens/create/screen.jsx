@@ -19,9 +19,7 @@ import {
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { ImageUploader } from 'components';
-import {
-  CommonActions
-} from 'services/global';
+import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory, selectStyles } from 'utils';
 import * as EmployeeActions from '../../actions';
 import * as EmployeeCreateActions from './actions';
@@ -29,20 +27,20 @@ import * as EmployeeCreateActions from './actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 
-const mapStateToProps = (state) => {
-  return ({
+const mapStateToProps = state => {
+  return {
     currency_list: state.employee.currency_list,
     country_list: state.contact.country_list,
     state_list: state.contact.state_list,
-  });
+  };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return ({
+const mapDispatchToProps = dispatch => {
+  return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     employeeActions: bindActionCreators(EmployeeActions, dispatch),
-    employeeCreateActions: bindActionCreators(EmployeeCreateActions, dispatch)
-  });
+    employeeCreateActions: bindActionCreators(EmployeeCreateActions, dispatch),
+  };
 };
 
 // Zod validation schema
@@ -52,13 +50,8 @@ const createEmployeeFinancialSchema = z.object({
     .min(1, 'Account Holder Name is required')
     .max(100, 'Account Holder Name is too long')
     .regex(/^[a-zA-Z ]+$/, 'Only alphabets and spaces are allowed'),
-  accountNumber: z
-    .string()
-    .optional(),
-  ibanNumber: z
-    .string()
-    .max(23, 'IBAN Number cannot exceed 23 characters')
-    .optional(),
+  accountNumber: z.string().optional(),
+  ibanNumber: z.string().max(23, 'IBAN Number cannot exceed 23 characters').optional(),
   bankName: z
     .string()
     .max(100, 'Bank Name is too long')
@@ -77,23 +70,14 @@ const createEmployeeFinancialSchema = z.object({
     .max(11, 'Swift Code cannot exceed 11 characters')
     .optional()
     .or(z.literal('')),
-  routingCode: z
-    .string()
-    .optional()
-    .or(z.literal('')),
-  passportExpiryDate: z
-    .date()
-    .nullable()
-    .optional(),
+  routingCode: z.string().optional().or(z.literal('')),
+  passportExpiryDate: z.date().nullable().optional(),
   visaNumber: z
     .string()
     .max(16, 'Visa Number cannot exceed 16 characters')
     .optional()
     .or(z.literal('')),
-  visaExpiryDate: z
-    .date()
-    .nullable()
-    .optional(),
+  visaExpiryDate: z.date().nullable().optional(),
 });
 
 const regExAlpha = /^[a-zA-Z ]+$/;
@@ -129,7 +113,13 @@ const CreateEmployeeFinancial = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, reset, watch } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    watch,
+  } = form;
 
   useEffect(() => {
     initializeData();
@@ -139,7 +129,7 @@ const CreateEmployeeFinancial = ({
     // employeeActions.getCountryList();
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     setDisabled(true);
 
     const {
@@ -157,22 +147,13 @@ const CreateEmployeeFinancial = ({
 
     const formData = new FormData();
 
-    formData.append(
-      'accountHolderName',
-      accountHolderName !== null ? accountHolderName : '',
-    );
-    formData.append(
-      'dateOfJoining',
-      dateOfJoining !== null ? dateOfJoining : '',
-    );
-    formData.append(
-      'contractType',
-      contractType !== null ? contractType : '',
-    );
+    formData.append('accountHolderName', accountHolderName !== null ? accountHolderName : '');
+    formData.append('dateOfJoining', dateOfJoining !== null ? dateOfJoining : '');
+    formData.append('contractType', contractType !== null ? contractType : '');
 
     employeeCreateActions
       .createEmployee(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert(
             'success',
@@ -187,7 +168,7 @@ const CreateEmployeeFinancial = ({
         }
         setDisabled(false);
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert(
           'error',
           err && err.data ? err.data.message : 'Employee Created Unsuccessfully'
@@ -196,7 +177,7 @@ const CreateEmployeeFinancial = ({
       });
   };
 
-  const getStateList = (countryCode) => {
+  const getStateList = countryCode => {
     employeeActions.getStateList(countryCode);
   };
 
@@ -244,13 +225,15 @@ const CreateEmployeeFinancial = ({
                                       id="accountHolderName"
                                       placeholder="Enter accountHolderName"
                                       {...field}
-                                      onChange={(e) => handleAlphaChange(e, field.onChange)}
-                                      className={errors.accountHolderName ? "is-invalid" : ""}
+                                      onChange={e => handleAlphaChange(e, field.onChange)}
+                                      className={errors.accountHolderName ? 'is-invalid' : ''}
                                     />
                                   )}
                                 />
                                 {errors.accountHolderName && (
-                                  <div className="invalid-feedback">{errors.accountHolderName.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.accountHolderName.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -267,13 +250,15 @@ const CreateEmployeeFinancial = ({
                                       id="accountNumber"
                                       placeholder="Enter account Number"
                                       {...field}
-                                      onChange={(e) => handleAlphaChange(e, field.onChange)}
-                                      className={errors.accountNumber ? "is-invalid" : ""}
+                                      onChange={e => handleAlphaChange(e, field.onChange)}
+                                      className={errors.accountNumber ? 'is-invalid' : ''}
                                     />
                                   )}
                                 />
                                 {errors.accountNumber && (
-                                  <div className="invalid-feedback">{errors.accountNumber.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.accountNumber.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -293,13 +278,15 @@ const CreateEmployeeFinancial = ({
                                       id="ibanNumber"
                                       placeholder="Enter IBAN Number"
                                       {...field}
-                                      onChange={(e) => handleAlphaChange(e, field.onChange)}
-                                      className={errors.ibanNumber ? "is-invalid" : ""}
+                                      onChange={e => handleAlphaChange(e, field.onChange)}
+                                      className={errors.ibanNumber ? 'is-invalid' : ''}
                                     />
                                   )}
                                 />
                                 {errors.ibanNumber && (
-                                  <div className="invalid-feedback">{errors.ibanNumber.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.ibanNumber.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -316,15 +303,13 @@ const CreateEmployeeFinancial = ({
                                       id="bankName"
                                       placeholder="Enter bank Name"
                                       {...field}
-                                      onChange={(e) => handleAlphaChange(e, field.onChange)}
-                                      className={errors.bankName ? "is-invalid" : ""}
+                                      onChange={e => handleAlphaChange(e, field.onChange)}
+                                      className={errors.bankName ? 'is-invalid' : ''}
                                     />
                                   )}
                                 />
                                 {errors.bankName && (
-                                  <div className="invalid-feedback">
-                                    {errors.bankName.message}
-                                  </div>
+                                  <div className="invalid-feedback">{errors.bankName.message}</div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -344,8 +329,8 @@ const CreateEmployeeFinancial = ({
                                       id="branch"
                                       placeholder="Enter branch"
                                       {...field}
-                                      onChange={(e) => handleAlphaChange(e, field.onChange)}
-                                      className={errors.branch ? "is-invalid" : ""}
+                                      onChange={e => handleAlphaChange(e, field.onChange)}
+                                      className={errors.branch ? 'is-invalid' : ''}
                                     />
                                   )}
                                 />
@@ -363,13 +348,13 @@ const CreateEmployeeFinancial = ({
                                   render={({ field }) => (
                                     <Input
                                       type="text"
-                                      minLength='8'
+                                      minLength="8"
                                       maxLength="11"
                                       id="swiftCode"
                                       placeholder="Enter swift Code"
                                       {...field}
-                                      onChange={(e) => handleAlphaChange(e, field.onChange)}
-                                      className={errors.swiftCode ? "is-invalid" : ""}
+                                      onChange={e => handleAlphaChange(e, field.onChange)}
+                                      className={errors.swiftCode ? 'is-invalid' : ''}
                                     />
                                   )}
                                 />
@@ -393,12 +378,14 @@ const CreateEmployeeFinancial = ({
                                       id="routingCode"
                                       placeholder="Enter Routing Code"
                                       {...field}
-                                      className={errors.routingCode ? "is-invalid" : ""}
+                                      className={errors.routingCode ? 'is-invalid' : ''}
                                     />
                                   )}
                                 />
                                 {errors.routingCode && (
-                                  <div className="invalid-feedback">{errors.routingCode.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.routingCode.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -412,7 +399,7 @@ const CreateEmployeeFinancial = ({
                                   control={control}
                                   render={({ field }) => (
                                     <DatePicker
-                                      className={`form-control ${errors.passportExpiryDate ? "is-invalid" : ""}`}
+                                      className={`form-control ${errors.passportExpiryDate ? 'is-invalid' : ''}`}
                                       id="passportExpiryDate"
                                       placeholderText="Select passportExpiryDate"
                                       showMonthDropdown
@@ -420,12 +407,14 @@ const CreateEmployeeFinancial = ({
                                       dateFormat="dd-MM-yyyy"
                                       dropdownMode="select"
                                       selected={field.value}
-                                      onChange={(date) => field.onChange(date)}
+                                      onChange={date => field.onChange(date)}
                                     />
                                   )}
                                 />
                                 {errors.passportExpiryDate && (
-                                  <div className="invalid-feedback">{errors.passportExpiryDate.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.passportExpiryDate.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -445,12 +434,14 @@ const CreateEmployeeFinancial = ({
                                       id="visaNumber"
                                       placeholder="Enter Visa Number"
                                       {...field}
-                                      className={errors.visaNumber ? "is-invalid" : ""}
+                                      className={errors.visaNumber ? 'is-invalid' : ''}
                                     />
                                   )}
                                 />
                                 {errors.visaNumber && (
-                                  <div className="invalid-feedback">{errors.visaNumber.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.visaNumber.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -464,7 +455,7 @@ const CreateEmployeeFinancial = ({
                                   control={control}
                                   render={({ field }) => (
                                     <DatePicker
-                                      className={`form-control ${errors.visaExpiryDate ? "is-invalid" : ""}`}
+                                      className={`form-control ${errors.visaExpiryDate ? 'is-invalid' : ''}`}
                                       id="visaExpiryDate"
                                       placeholderText="Select visa Expiry Date"
                                       showMonthDropdown
@@ -472,12 +463,14 @@ const CreateEmployeeFinancial = ({
                                       dateFormat="dd-MM-yyyy"
                                       dropdownMode="select"
                                       selected={field.value}
-                                      onChange={(date) => field.onChange(date)}
+                                      onChange={date => field.onChange(date)}
                                     />
                                   )}
                                 />
                                 {errors.visaExpiryDate && (
-                                  <div className="invalid-feedback">{errors.visaExpiryDate.message}</div>
+                                  <div className="invalid-feedback">
+                                    {errors.visaExpiryDate.message}
+                                  </div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -510,7 +503,9 @@ const CreateEmployeeFinancial = ({
                               type="button"
                               color="secondary"
                               className="btn-square"
-                              onClick={() => { history.push('/admin/payroll/employee') }}
+                              onClick={() => {
+                                history.push('/admin/payroll/employee');
+                              }}
                             >
                               <i className="fa fa-ban"></i> Cancel
                             </Button>

@@ -2,16 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
-import {
-  Button,
-  Row,
-  Col,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  CardBody,
-  ModalHeader,
-} from 'reactstrap';
+import { Button, Row, Col, Modal, ModalBody, ModalFooter, CardBody, ModalHeader } from 'reactstrap';
 import dayjs from '@/utils/date';
 import { CommonActions } from 'services/global';
 import { Loader } from 'components';
@@ -28,17 +19,18 @@ function AddEmployeesModal({ openModal, closeModal, employee_list }) {
   const navigate = useNavigate();
 
   // Redux state
-  const payroll_employee_list = useSelector(
-    (state) => state.payrollEmployee.payroll_employee_list
-  );
+  const payroll_employee_list = useSelector(state => state.payrollEmployee.payroll_employee_list);
 
   // Actions
-  const payrollEmployeeActions = useMemo(() => bindActionCreators(PayrollEmployeeActions, dispatch), [dispatch]);
+  const payrollEmployeeActions = useMemo(
+    () => bindActionCreators(PayrollEmployeeActions, dispatch),
+    [dispatch]
+  );
 
   const [language] = useState(() => window.localStorage.getItem('language') || 'en');
   const [loading, setLoading] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  
+
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
@@ -72,21 +64,21 @@ function AddEmployeesModal({ openModal, closeModal, employee_list }) {
 
     payrollEmployeeActions
       .getPayrollEmployeeList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
       });
   };
 
-  const renderDOB = (value) => {
+  const renderDOB = value => {
     return dayjs(value).format('DD/MM/YYYY');
   };
 
-  const fullnameRenderer = (row) => {
+  const fullnameRenderer = row => {
     return (
       <label
         className="mb-0 label-bank cursor-pointer text-primary hover:underline"
@@ -99,7 +91,7 @@ function AddEmployeesModal({ openModal, closeModal, employee_list }) {
     );
   };
 
-  const renderStatus = (isActive) => {
+  const renderStatus = isActive => {
     let classname = isActive === true ? 'label-success' : 'label-due';
     return (
       <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
@@ -108,31 +100,34 @@ function AddEmployeesModal({ openModal, closeModal, employee_list }) {
     );
   };
 
-  const columns = useMemo(() => [
-    {
-      accessorKey: 'employeeCode',
-      header: strings.EmployeeCode,
-    },
-    {
-      accessorKey: 'fullName',
-      header: strings.FullName,
-      cell: ({ row }) => fullnameRenderer(row.original),
-    },
-    {
-      accessorKey: 'mobileNumber',
-      header: strings.MobileNumber,
-    },
-    {
-      accessorKey: 'dob',
-      header: strings.DateOfBirth,
-      cell: ({ getValue }) => renderDOB(getValue()),
-    },
-    {
-      accessorKey: 'isActive',
-      header: strings.Status,
-      cell: ({ getValue }) => renderStatus(getValue()),
-    },
-  ], [navigate]);
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'employeeCode',
+        header: strings.EmployeeCode,
+      },
+      {
+        accessorKey: 'fullName',
+        header: strings.FullName,
+        cell: ({ row }) => fullnameRenderer(row.original),
+      },
+      {
+        accessorKey: 'mobileNumber',
+        header: strings.MobileNumber,
+      },
+      {
+        accessorKey: 'dob',
+        header: strings.DateOfBirth,
+        cell: ({ getValue }) => renderDOB(getValue()),
+      },
+      {
+        accessorKey: 'isActive',
+        header: strings.Status,
+        cell: ({ getValue }) => renderStatus(getValue()),
+      },
+    ],
+    [navigate]
+  );
 
   return (
     <div className="contact-modal-screen">
@@ -152,32 +147,28 @@ function AddEmployeesModal({ openModal, closeModal, employee_list }) {
                 data={payroll_employee_list?.data || []}
                 columns={columns}
                 manualPagination={true}
-                pageCount={payroll_employee_list?.count ? Math.ceil(payroll_employee_list.count / pagination.pageSize) : 0}
+                pageCount={
+                  payroll_employee_list?.count
+                    ? Math.ceil(payroll_employee_list.count / pagination.pageSize)
+                    : 0
+                }
                 onPaginationChange={setPagination}
                 pagination={pagination}
                 manualSorting={true}
                 onSortingChange={setSorting}
                 sorting={sorting}
                 rowSelection={true}
-                onRowSelectionChange={(rows) => setSelectedRows(rows.map(r => r.id))}
+                onRowSelectionChange={rows => setSelectedRows(rows.map(r => r.id))}
               />
             )}
           </CardBody>
         </ModalBody>
         <ModalFooter>
-          <Button
-            color="primary"
-            className="btn-square"
-            disabled={selectedRows.length === 0}
-          >
+          <Button color="primary" className="btn-square" disabled={selectedRows.length === 0}>
             <i className="fas fa-check-double mr-1"></i>
             Add employees
           </Button>
-          <Button
-            color="secondary"
-            className="btn-square"
-            onClick={() => closeModal(false)}
-          >
+          <Button color="secondary" className="btn-square" onClick={() => closeModal(false)}>
             <i className="fa fa-ban"></i> {strings.Cancel}
           </Button>
         </ModalFooter>

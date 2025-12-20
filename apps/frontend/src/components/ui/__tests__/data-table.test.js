@@ -6,8 +6,7 @@ import { DataTable } from '../data-table';
 jest.mock('../data-table-pagination', () => ({
   DataTablePagination: ({ table }) => (
     <div data-testid="pagination">
-      Page {table.getState().pagination.pageIndex + 1} of{' '}
-      {table.getPageCount()}
+      Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
     </div>
   ),
 }));
@@ -49,9 +48,7 @@ describe('DataTable', () => {
   });
 
   it('renders search input when searchKey is provided', () => {
-    render(
-      <DataTable columns={mockColumns} data={mockData} searchKey="name" />
-    );
+    render(<DataTable columns={mockColumns} data={mockData} searchKey="name" />);
 
     const searchInput = screen.getByPlaceholderText('Search name...');
     expect(searchInput).toBeInTheDocument();
@@ -65,9 +62,7 @@ describe('DataTable', () => {
   });
 
   it('filters data when search input changes', () => {
-    render(
-      <DataTable columns={mockColumns} data={mockData} searchKey="name" />
-    );
+    render(<DataTable columns={mockColumns} data={mockData} searchKey="name" />);
 
     const searchInput = screen.getByPlaceholderText('Search name...');
     fireEvent.change(searchInput, { target: { value: 'John Doe' } });
@@ -78,9 +73,7 @@ describe('DataTable', () => {
   });
 
   it('displays "No results" when filtered data is empty', () => {
-    render(
-      <DataTable columns={mockColumns} data={mockData} searchKey="name" />
-    );
+    render(<DataTable columns={mockColumns} data={mockData} searchKey="name" />);
 
     const searchInput = screen.getByPlaceholderText('Search name...');
     fireEvent.change(searchInput, { target: { value: 'NonExistent' } });
@@ -150,4 +143,3 @@ describe('DataTable', () => {
     expect(firstCheckbox).not.toBeChecked();
   });
 });
-

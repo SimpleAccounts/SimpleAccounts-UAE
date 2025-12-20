@@ -1,5 +1,3 @@
-import configureStore from './store'
+import configureStore from './store';
 
-export {
-  configureStore
-}
+export { configureStore };

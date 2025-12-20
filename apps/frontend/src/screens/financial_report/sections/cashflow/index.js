@@ -1,5 +1,5 @@
-import screen from '../cashflow/screen'
+import screen from '../cashflow/screen';
 
 export default {
   screen,
-}
+};

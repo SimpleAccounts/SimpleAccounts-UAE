@@ -32,7 +32,7 @@ import { ViewBankAccount } from './sections';
 import { data } from '../../../../../Language/index';
 import LocalizedStrings from 'react-localization';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     transaction_category_list: state.bank_account.transaction_category_list,
     transaction_type_list: state.bank_account.transaction_type_list,
@@ -40,7 +40,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     transactionActions: bindActionCreators(transactionActions, dispatch),
     transactionDetailActions: bindActionCreators(transactionDetailActions, dispatch),
@@ -68,10 +68,7 @@ const detailTransactionSchema = z.object({
     invalid_type_error: 'Transaction Date is Required',
   }),
   transactionAmount: z.string().min(1, 'Transaction Amount is Required'),
-  chartOfAccountId: z.union([
-    z.number(),
-    z.string().min(1, 'Transaction Type is Required'),
-  ]),
+  chartOfAccountId: z.union([z.number(), z.string().min(1, 'Transaction Type is Required')]),
   transactionDescription: z.string().optional(),
   transactionCategoryId: z.union([z.number(), z.string()]).optional(),
   projectId: z.union([z.number(), z.string()]).optional(),
@@ -81,7 +78,7 @@ const detailTransactionSchema = z.object({
     .any()
     .optional()
     .refine(
-      (file) => {
+      file => {
         const supported_format = [
           'image/png',
           'image/jpeg',
@@ -99,7 +96,7 @@ const detailTransactionSchema = z.object({
       { message: 'Unsupported File Format' }
     )
     .refine(
-      (file) => {
+      file => {
         const file_size = 1024000;
         if (!file || (file && file.size <= file_size)) {
           return true;
@@ -178,7 +175,7 @@ const DetailBankTransaction = ({
     if (location.state && location.state.id) {
       transactionDetailActions
         .getTransactionDetail(location.state.id)
-        .then((res) => {
+        .then(res => {
           setTransactionId(location.state.id);
           reset({
             bankAccountId: res.data.bankAccountId ? res.data.bankAccountId : '',
@@ -187,8 +184,7 @@ const DetailBankTransaction = ({
               ? res.data.transactionDescription
               : '',
             transactionAmount: res.data.transactionAmount ? res.data.transactionAmount : '',
-            chartOfAccountId:
-              res.data.chartOfAccountId !== null ? res.data.chartOfAccountId : '',
+            chartOfAccountId: res.data.chartOfAccountId !== null ? res.data.chartOfAccountId : '',
             transactionCategoryId:
               res.data.transactionCategoryId !== null ? res.data.transactionCategoryId : '',
             projectId: res.data.projectId ? res.data.projectId : '',
@@ -197,16 +193,14 @@ const DetailBankTransaction = ({
               ? res.data.attachementDescription
               : '',
             attachment: res.data.attachment ? res.data.attachment : '',
-            fileName: res.data.receiptAttachmentFileName
-              ? res.data.receiptAttachmentFileName
-              : '',
+            fileName: res.data.receiptAttachmentFileName ? res.data.receiptAttachmentFileName : '',
             filePath: res.data.receiptAttachmentPath ? res.data.receiptAttachmentPath : '',
           });
 
           setView(location.state && location.state.view ? true : false);
           setLoading(false);
         })
-        .catch((err) => {
+        .catch(err => {
           history.push('/admin/banking/bank-account');
         });
     } else {
@@ -214,7 +208,7 @@ const DetailBankTransaction = ({
     }
   }, [location.state, history, transactionActions, transactionDetailActions, reset]);
 
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -226,7 +220,7 @@ const DetailBankTransaction = ({
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     setDisableLeavePage(true);
     setLoading(true);
 
@@ -271,7 +265,7 @@ const DetailBankTransaction = ({
 
     transactionDetailActions
       .updateTransaction(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert('success', 'Transaction Detail Updated Successfully.');
           history.push('/admin/banking/bank-account/transaction', {
@@ -279,7 +273,7 @@ const DetailBankTransaction = ({
           });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         commonActions.tostifyAlert(
           'error',
@@ -364,9 +358,9 @@ const DetailBankTransaction = ({
                                           transaction_type_list,
                                           'Type'
                                         )
-                                        .find((option) => option.value === field.value)
+                                        .find(option => option.value === field.value)
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       field.onChange(option ? option.value : '');
                                     }}
                                     placeholder={strings.Select + ' ' + strings.TransactionType}
@@ -406,7 +400,7 @@ const DetailBankTransaction = ({
                                           : field.value
                                         : null
                                     }
-                                    onChange={(value) => field.onChange(value)}
+                                    onChange={value => field.onChange(value)}
                                     className={`form-control ${
                                       errors.transactionDate ? 'is-invalid' : ''
                                     }`}
@@ -436,7 +430,7 @@ const DetailBankTransaction = ({
                                     id="transactionAmount"
                                     placeholder={strings.Amount}
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       if (e.target.value === '' || regEx.test(e.target.value)) {
                                         field.onChange(e);
                                       }
@@ -485,9 +479,9 @@ const DetailBankTransaction = ({
                                           transaction_category_list.data,
                                           'Category'
                                         )
-                                        .find((option) => option.value === field.value)
+                                        .find(option => option.value === field.value)
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       field.onChange(option ? option.value : '');
                                     }}
                                   />
@@ -510,7 +504,7 @@ const DetailBankTransaction = ({
                                     rows="6"
                                     placeholder={strings.Description}
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       if (!e.target.value.includes('=')) field.onChange(e);
                                     }}
                                   />
@@ -543,9 +537,9 @@ const DetailBankTransaction = ({
                                     id="projectId"
                                     value={
                                       project_list &&
-                                      project_list.find((option) => option.value === +field.value)
+                                      project_list.find(option => option.value === +field.value)
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       field.onChange(option ? option.value : '');
                                     }}
                                   />
@@ -570,7 +564,7 @@ const DetailBankTransaction = ({
                                         id="receiptNumber"
                                         placeholder={strings.ReceiptNumber}
                                         {...field}
-                                        onChange={(e) => {
+                                        onChange={e => {
                                           if (
                                             e.target.value === '' ||
                                             regExBoth.test(e.target.value)
@@ -625,12 +619,12 @@ const DetailBankTransaction = ({
                                     </Button>
                                     <input
                                       id="fileInput"
-                                      ref={(ref) => {
+                                      ref={ref => {
                                         setUploadFileRef(ref);
                                       }}
                                       type="file"
                                       style={{ display: 'none' }}
-                                      onChange={(e) => {
+                                      onChange={e => {
                                         handleFileChange(e);
                                       }}
                                     />
@@ -667,11 +661,7 @@ const DetailBankTransaction = ({
                         <Row>
                           <Col lg={12} className="mt-5">
                             <FormGroup className="text-right">
-                              <Button
-                                type="submit"
-                                color="primary"
-                                className="btn-square mr-3"
-                              >
+                              <Button type="submit" color="primary" className="btn-square mr-3">
                                 <i className="fa fa-dot-circle-o"></i> {strings.Update}
                               </Button>
                               <Button

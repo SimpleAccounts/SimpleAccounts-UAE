@@ -13,7 +13,7 @@ const importSlice = createSlice({
       state.file_data_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder.addCase(IMPORT.FILE_DATA_LIST, (state, action) => {
       state.file_data_list = action.payload || [];
     });
@@ -22,4 +22,3 @@ const importSlice = createSlice({
 
 export const { setFileDataList } = importSlice.actions;
 export default importSlice.reducer;
-

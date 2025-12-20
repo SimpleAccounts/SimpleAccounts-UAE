@@ -2,7 +2,16 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
-import { Upload, Download, ChevronRight, ChevronLeft, Lock, Plus, Trash2, ArrowUpDown } from 'lucide-react';
+import {
+  Upload,
+  Download,
+  ChevronRight,
+  ChevronLeft,
+  Lock,
+  Plus,
+  Trash2,
+  ArrowUpDown,
+} from 'lucide-react';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -99,14 +108,14 @@ function Import() {
     const formData = { fileNames: selectedRows.length > 0 ? selectedRows : '' };
     migrationActions
       .deleteFiles(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setDisabled(false);
           setMigrationList(res.data === 'No Files Available' ? [] : res.data);
           commonActions.tostifyAlert('success', 'Files Deleted Successfully.');
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
@@ -114,19 +123,19 @@ function Import() {
 
   // Export handlers
   const exportAll = () => {
-    csvFileNamesData.forEach((item) => exportFile(item.fileName));
+    csvFileNamesData.forEach(item => exportFile(item.fileName));
   };
 
-  const exportFile = (filename) => {
+  const exportFile = filename => {
     migrationActions
       .downloadcsv(filename)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           const blob = new Blob([res.data], { type: 'application/csv' });
           download(blob, filename);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
@@ -143,7 +152,7 @@ function Import() {
 
     migrationActions
       .saveAccountStartDate(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setDisabled(false);
           commonActions.tostifyAlert('success', 'Date Saved Successfully.');
@@ -151,14 +160,14 @@ function Import() {
           getProductList();
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
 
   // Upload files
-  const uploadFiles = (files) => {
+  const uploadFiles = files => {
     setLoading(true);
     setDisabled(true);
 
@@ -169,14 +178,14 @@ function Import() {
 
     migrationActions
       .uploadFolder(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setDisabled(false);
           setMigrationList(res.data);
           commonActions.tostifyAlert('success', 'Files Uploaded Successfully.');
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         commonActions.tostifyAlert('error', err?.data?.message || 'Please Select .CSV File');
       })
@@ -187,26 +196,26 @@ function Import() {
   const getProductList = () => {
     migrationActions
       .migrationProduct()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setProductList(res.data);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
 
   // Get version list
-  const getVersionList = (name) => {
+  const getVersionList = name => {
     migrationActions
       .getVersionListByPrioductName(name)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setVersionList(res.data);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
@@ -215,26 +224,26 @@ function Import() {
   const listOfFiles = () => {
     migrationActions
       .getListOfAllFiles()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setTabs(res.data);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
 
   // Get file data
-  const getFileData = (value) => {
+  const getFileData = value => {
     migrationActions
       .getFileData({ fileName: value })
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setFileDataList(res.data);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
@@ -243,13 +252,13 @@ function Import() {
   const listOfTransactionCategory = () => {
     migrationActions
       .listOfTransactionCategory()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setListOfExist(res.data.listOfExist);
           setDummylistOfExist(res.data.listOfExist);
           setDummylistOfNotExist(res.data.listOfNotExist);
 
-          let newData = res.data.listOfExist.map((item) => ({
+          let newData = res.data.listOfExist.map(item => ({
             ...item,
             effectiveDate: effectiveDate,
             openingBalance: openingBalance,
@@ -262,7 +271,7 @@ function Import() {
           }
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
@@ -278,21 +287,21 @@ function Import() {
 
     migrationActions
       .addOpeningBalance(formData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setDisabled(false);
           commonActions.tostifyAlert('success', 'Migration Data Saved Successfully.');
           navigate('/admin/settings/migrate', { state: { name: productName, version } });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
 
   // Handle file input change
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     const files = e.target.files;
     if (!files || files.length === 0) {
       setValidFiles([]);
@@ -346,16 +355,16 @@ function Import() {
   // Row selection handler
   const handleRowSelect = (fileName, isSelected) => {
     if (isSelected) {
-      setSelectedRows((prev) => [...prev, fileName]);
+      setSelectedRows(prev => [...prev, fileName]);
     } else {
-      setSelectedRows((prev) => prev.filter((item) => item !== fileName));
+      setSelectedRows(prev => prev.filter(item => item !== fileName));
     }
   };
 
   // Select all handler
   const handleSelectAll = (isSelected, rows) => {
     if (isSelected) {
-      setSelectedRows(rows.map((item) => item.fileName));
+      setSelectedRows(rows.map(item => item.fileName));
     } else {
       setSelectedRows([]);
     }
@@ -363,8 +372,8 @@ function Import() {
 
   // Update date in opening balances
   const setDateForRow = (row, value) => {
-    setListOfExist4((prev) =>
-      prev.map((item) =>
+    setListOfExist4(prev =>
+      prev.map(item =>
         item.transactionId === row.transactionId ? { ...item, effectiveDate: value } : item
       )
     );
@@ -372,8 +381,8 @@ function Import() {
 
   // Update opening balance value
   const setOpeningBalanceForRow = (row, value) => {
-    setListOfExist4((prev) =>
-      prev.map((item) =>
+    setListOfExist4(prev =>
+      prev.map(item =>
         item.transactionId === row.transactionId ? { ...item, openingBalance: value } : item
       )
     );
@@ -386,7 +395,7 @@ function Import() {
   };
 
   // Show header formatted
-  const showHeader = (s) => upperFirst(s.replace(/([a-z])([A-Z])/g, '$1 $2'));
+  const showHeader = s => upperFirst(s.replace(/([a-z])([A-Z])/g, '$1 $2'));
 
   // Migration list columns
   const migrationColumns = useMemo(
@@ -396,15 +405,18 @@ function Import() {
         header: ({ table }) => (
           <Checkbox
             checked={table.getIsAllRowsSelected()}
-            onCheckedChange={(value) =>
-              handleSelectAll(value, table.getRowModel().rows.map((r) => r.original))
+            onCheckedChange={value =>
+              handleSelectAll(
+                value,
+                table.getRowModel().rows.map(r => r.original)
+              )
             }
           />
         ),
         cell: ({ row }) => (
           <Checkbox
             checked={selectedRows.includes(row.original.fileName)}
-            onCheckedChange={(value) => handleRowSelect(row.original.fileName, value)}
+            onCheckedChange={value => handleRowSelect(row.original.fileName, value)}
           />
         ),
       },
@@ -467,7 +479,7 @@ function Import() {
             showYearDropdown
             dropdownMode="select"
             selected={row.original.effectiveDate}
-            onChange={(value) => setDateForRow(row.original, value)}
+            onChange={value => setDateForRow(row.original, value)}
           />
         ),
       },
@@ -479,7 +491,7 @@ function Import() {
             type="number"
             className="input-transition"
             value={row.original.openingBalance || 0}
-            onChange={(e) => setOpeningBalanceForRow(row.original, parseInt(e.target.value) || 0)}
+            onChange={e => setOpeningBalanceForRow(row.original, parseInt(e.target.value) || 0)}
           />
         ),
       },
@@ -531,7 +543,7 @@ function Import() {
   const renderNotExistList = () => {
     if (!dummylistOfNotExist) return null;
 
-    const listObject = dummylistOfNotExist.map((name) => ({ transactionName: name }));
+    const listObject = dummylistOfNotExist.map(name => ({ transactionName: name }));
     const mergedList = [...dummylistOfExist, ...listObject];
 
     return (
@@ -621,7 +633,7 @@ function Import() {
               <TabsContent value="import">
                 {/* Step Indicator */}
                 <div className="flex justify-center gap-4 mb-6">
-                  {[1, 2, 3, 4].map((step) => (
+                  {[1, 2, 3, 4].map(step => (
                     <div
                       key={step}
                       className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
@@ -653,7 +665,7 @@ function Import() {
                         dropdownMode="select"
                         selected={date}
                         maxDate={new Date()}
-                        onChange={(value) => setDate(value)}
+                        onChange={value => setDate(value)}
                       />
                     </div>
                     <div className="text-center text-sm text-muted-foreground">
@@ -690,7 +702,7 @@ function Import() {
                             productList,
                             'Products list'
                           )}
-                          onChange={(option) => {
+                          onChange={option => {
                             if (option?.value) {
                               setProductName(option.label);
                               getVersionList(option.label);
@@ -712,7 +724,7 @@ function Import() {
                             versionList,
                             'Version'
                           )}
-                          onChange={(option) => {
+                          onChange={option => {
                             if (option?.label) {
                               setVersion(option.label);
                             }
@@ -725,7 +737,9 @@ function Import() {
                       <>
                         <div className="border-2 border-dashed rounded-lg p-8 text-center">
                           <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                          <p className="text-lg mb-4">{strings.drag || 'Drag file to upload, or'}</p>
+                          <p className="text-lg mb-4">
+                            {strings.drag || 'Drag file to upload, or'}
+                          </p>
                           <input
                             ref={uploadFileRef}
                             type="file"
@@ -792,7 +806,7 @@ function Import() {
                       >
                         {strings.ca || 'Chart of Accounts'}
                       </Button>
-                      {tabs.map((tab) => (
+                      {tabs.map(tab => (
                         <Button
                           key={tab}
                           variant={nestedActiveDefaultTab ? 'outline' : 'ghost'}
@@ -861,11 +875,7 @@ function Import() {
           </CardContent>
         </Card>
 
-        <ChartOfAccountsModal
-          openModal={openModal}
-          closeModal={closeModal}
-          coaName={coaName}
-        />
+        <ChartOfAccountsModal openModal={openModal} closeModal={closeModal} coaName={coaName} />
       </div>
     </div>
   );

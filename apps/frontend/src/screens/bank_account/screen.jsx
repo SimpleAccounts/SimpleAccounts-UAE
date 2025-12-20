@@ -31,10 +31,10 @@ function BankAccount() {
   const dispatch = useDispatch();
 
   // Redux state
-  const account_type_list = useSelector((state) => state.bank_account.account_type_list);
-  const currency_list = useSelector((state) => state.bank_account.currency_list);
-  const bank_account_list = useSelector((state) => state.bank_account.bank_account_list);
-  const universal_currency_list = useSelector((state) => state.common.universal_currency_list);
+  const account_type_list = useSelector(state => state.bank_account.account_type_list);
+  const currency_list = useSelector(state => state.bank_account.currency_list);
+  const bank_account_list = useSelector(state => state.bank_account.bank_account_list);
+  const universal_currency_list = useSelector(state => state.common.universal_currency_list);
 
   // Actions
   const bankAccountActions = useMemo(
@@ -82,12 +82,12 @@ function BankAccount() {
 
     bankAccountActions
       .getBankAccountList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setLoading(false);
       });
@@ -105,7 +105,7 @@ function BankAccount() {
 
   // Delete handler
   const deleteBankAccount = useCallback(
-    (id) => {
+    id => {
       setDialog(
         <ConfirmDeleteModal
           isOpen={true}
@@ -114,14 +114,14 @@ function BankAccount() {
             setLoading(true);
             bankAccountActions
               .deleteBankAccount(id)
-              .then((res) => {
+              .then(res => {
                 commonActions.tostifyAlert(
                   'success',
                   res.data?.message || 'Bank Account Deleted Successfully'
                 );
                 initializeData();
               })
-              .catch((err) => {
+              .catch(err => {
                 commonActions.tostifyAlert(
                   'error',
                   err?.data?.message || 'Bank Account Deleted Unsuccessfully'
@@ -140,11 +140,11 @@ function BankAccount() {
 
   // Filter handlers
   const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
+    setFilterData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     initializeData();
   };
 
@@ -156,7 +156,7 @@ function BankAccount() {
       accountNumber: '',
       currencyCode: '',
     });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     setTimeout(() => initializeData(), 0);
   };
 
@@ -166,9 +166,7 @@ function BankAccount() {
       {
         accessorKey: 'bankName',
         header: strings.BANKNAME,
-        cell: ({ row }) => (
-          <span className="font-medium">{row.original.bankName}</span>
-        ),
+        cell: ({ row }) => <span className="font-medium">{row.original.bankName}</span>,
       },
       {
         accessorKey: 'bankAccountName',
@@ -181,9 +179,7 @@ function BankAccount() {
       {
         accessorKey: 'accountTypeName',
         header: strings.ACCOUNTTYPE,
-        cell: ({ row }) => (
-          <Badge variant="secondary">{row.original.accountTypeName}</Badge>
-        ),
+        cell: ({ row }) => <Badge variant="secondary">{row.original.accountTypeName}</Badge>,
       },
       {
         accessorKey: 'openingBalance',
@@ -262,7 +258,7 @@ function BankAccount() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!bank_account_list?.data) return [];
-    return bank_account_list.data.map((account) => ({
+    return bank_account_list.data.map(account => ({
       id: account.bankAccountId,
       bankName: account.bankName || '',
       bankAccountName: account.bankAccountName || '',
@@ -308,19 +304,19 @@ function BankAccount() {
                   value={filterData.bankName}
                   placeholder={`${strings.Enter} ${strings.BankName}`}
                   className="input-transition"
-                  onChange={(e) => handleFilterChange('bankName', e.target.value)}
+                  onChange={e => handleFilterChange('bankName', e.target.value)}
                 />
                 <Input
                   value={filterData.bankAccountName}
                   placeholder={`${strings.Enter} ${strings.AccountName}`}
                   className="input-transition"
-                  onChange={(e) => handleFilterChange('bankAccountName', e.target.value)}
+                  onChange={e => handleFilterChange('bankAccountName', e.target.value)}
                 />
                 <Input
                   value={filterData.accountNumber}
                   placeholder={`${strings.Enter} ${strings.AccountNumber}`}
                   className="input-transition"
-                  onChange={(e) => handleFilterChange('accountNumber', e.target.value)}
+                  onChange={e => handleFilterChange('accountNumber', e.target.value)}
                 />
                 <div className="flex gap-2">
                   <Button onClick={handleSearch} variant="default" size="icon">

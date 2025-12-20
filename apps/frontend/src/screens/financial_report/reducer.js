@@ -12,7 +12,7 @@ const initState = {
   setting_list: [],
   payment_history: [],
   ctReport_list: [],
-}
+};
 
 const ReportsReducer = (state = initState, action) => {
   const { type, payload } = action;
@@ -76,8 +76,8 @@ const ReportsReducer = (state = initState, action) => {
         ctReport_list: Object.assign([], payload.data),
       };
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default ReportsReducer
+export default ReportsReducer;

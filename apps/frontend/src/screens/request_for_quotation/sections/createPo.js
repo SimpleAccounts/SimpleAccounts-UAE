@@ -135,7 +135,7 @@ const CreatePurchaseOrder = ({
   }, [language]);
 
   const onSubmit = useCallback(
-    async (formData) => {
+    async formData => {
       if (!prefixData) {
         toast.error('PO Number prefix is required');
         return;
@@ -241,9 +241,7 @@ const CreatePurchaseOrder = ({
                   )}
                 />
                 {errors.poApproveDate && (
-                  <div className="invalid-feedback d-block">
-                    {errors.poApproveDate.message}
-                  </div>
+                  <div className="invalid-feedback d-block">{errors.poApproveDate.message}</div>
                 )}
               </FormGroup>
             </Col>
@@ -264,9 +262,7 @@ const CreatePurchaseOrder = ({
                   )}
                 />
                 {errors.poReceiveDate && (
-                  <div className="invalid-feedback d-block">
-                    {errors.poReceiveDate.message}
-                  </div>
+                  <div className="invalid-feedback d-block">{errors.poReceiveDate.message}</div>
                 )}
               </FormGroup>
             </Col>
@@ -280,11 +276,7 @@ const CreatePurchaseOrder = ({
                   name="supplierReferenceNumber"
                   control={control}
                   render={({ field }) => (
-                    <Input
-                      type="text"
-                      placeholder="Enter supplier reference"
-                      {...field}
-                    />
+                    <Input type="text" placeholder="Enter supplier reference" {...field} />
                   )}
                 />
               </FormGroup>
@@ -339,17 +331,23 @@ const CreatePurchaseOrder = ({
               <Table bordered>
                 <tbody>
                   <tr>
-                    <td><strong>{strings.SubTotal || 'Sub Total'}</strong></td>
+                    <td>
+                      <strong>{strings.SubTotal || 'Sub Total'}</strong>
+                    </td>
                     <td className="text-right">
                       {Number(totalAmount - totalVatAmount).toFixed(2)}
                     </td>
                   </tr>
                   <tr>
-                    <td><strong>{strings.TotalVAT || 'Total VAT'}</strong></td>
+                    <td>
+                      <strong>{strings.TotalVAT || 'Total VAT'}</strong>
+                    </td>
                     <td className="text-right">{Number(totalVatAmount).toFixed(2)}</td>
                   </tr>
                   <tr>
-                    <td><strong>{strings.TotalAmount || 'Total Amount'}</strong></td>
+                    <td>
+                      <strong>{strings.TotalAmount || 'Total Amount'}</strong>
+                    </td>
                     <td className="text-right">{Number(totalAmount).toFixed(2)}</td>
                   </tr>
                 </tbody>
@@ -366,12 +364,7 @@ const CreatePurchaseOrder = ({
                   name="notes"
                   control={control}
                   render={({ field }) => (
-                    <Input
-                      type="textarea"
-                      rows={3}
-                      placeholder="Enter notes..."
-                      {...field}
-                    />
+                    <Input type="textarea" rows={3} placeholder="Enter notes..." {...field} />
                   )}
                 />
               </FormGroup>

@@ -1,12 +1,6 @@
 import React, { useMemo } from 'react';
 import { DataTable } from '@/components/ui/data-table';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 
 /**
  * Example DataTable component demonstrating TanStack Table + shadcn/ui integration
@@ -148,9 +142,7 @@ export function ExampleDataTable() {
             Inactive: 'text-red-600',
             Pending: 'text-yellow-600',
           };
-          return (
-            <span className={statusColors[status] || ''}>{status}</span>
-          );
+          return <span className={statusColors[status] || ''}>{status}</span>;
         },
       },
       {
@@ -173,8 +165,8 @@ export function ExampleDataTable() {
         <CardHeader>
           <CardTitle>Example DataTable</CardTitle>
           <CardDescription>
-            Demonstrating TanStack Table with shadcn/ui styling. Features include
-            sorting, filtering, pagination, and search.
+            Demonstrating TanStack Table with shadcn/ui styling. Features include sorting,
+            filtering, pagination, and search.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -189,4 +181,3 @@ export function ExampleDataTable() {
     </div>
   );
 }
-

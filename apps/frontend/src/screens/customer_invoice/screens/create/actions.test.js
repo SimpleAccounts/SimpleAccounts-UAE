@@ -1,9 +1,4 @@
-import {
-  createInvoice,
-  getInvoiceNo,
-  checkValidation,
-  getProductById,
-} from './actions';
+import { createInvoice, getInvoiceNo, checkValidation, getProductById } from './actions';
 
 import { authApi, authFileUploadApi } from 'utils';
 
@@ -59,7 +54,9 @@ describe('customer invoice create actions', () => {
     const boom = new Error('boom');
     authApi.mockRejectedValue(boom);
 
-    await expect(checkValidation({ name: 'INV', moduleType: 'INVOICE' })(dispatch)).rejects.toThrow('boom');
+    await expect(checkValidation({ name: 'INV', moduleType: 'INVOICE' })(dispatch)).rejects.toThrow(
+      'boom'
+    );
   });
 
   it('getProductById calls product endpoint with supplied id', async () => {
@@ -73,8 +70,3 @@ describe('customer invoice create actions', () => {
     });
   });
 });
-
-
-
-
-

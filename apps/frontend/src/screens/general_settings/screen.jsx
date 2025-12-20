@@ -12,12 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 import { Loader, LeavePage } from 'components';
 import { CommonActions, AuthActions } from 'services/global';
@@ -98,7 +93,7 @@ function GeneralSettings() {
   const initializeData = useCallback(() => {
     generalSettingActions
       .getGeneralSettingDetail()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           const data = res.data;
           setValue('id', data.id || '');
@@ -117,13 +112,13 @@ function GeneralSettings() {
             data.loggedInUserEmailFlag
               ? 'loginUser'
               : !data.fromEmailAddress || data.fromEmailAddress === ''
-              ? 'defaultEmail'
-              : 'anotherEmail'
+                ? 'defaultEmail'
+                : 'anotherEmail'
           );
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         navigate(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
@@ -134,12 +129,12 @@ function GeneralSettings() {
     initializeData();
     authActions
       .checkAuthStatus()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setUserId(res.data.userId);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         navigate(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
@@ -148,7 +143,7 @@ function GeneralSettings() {
 
   // Test mail
   const testMail = () => {
-    generalSettingActions.getTestUserMailById(userId || 1).then((res) => {
+    generalSettingActions.getTestUserMailById(userId || 1).then(res => {
       if (res.status === 200) {
         commonActions.tostifyAlert('success', 'Test Mail Sent Successfully');
       }
@@ -156,7 +151,7 @@ function GeneralSettings() {
   };
 
   // Form submit
-  const onSubmit = (formData) => {
+  const onSubmit = formData => {
     setLoading(true);
     setDisableLeavePage(true);
 
@@ -164,8 +159,8 @@ function GeneralSettings() {
       emailUsed === 'DefaultEmailId'
         ? false
         : emailUsed === 'anotherEmail'
-        ? false
-        : emailUsed === 'loginUser';
+          ? false
+          : emailUsed === 'loginUser';
 
     const postData = {
       id: formData.id,
@@ -185,20 +180,20 @@ function GeneralSettings() {
 
     generalSettingActions
       .updateGeneralSettings(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert('success', 'General Setting Updated Successfully');
           navigate(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
       });
   };
 
   // Handle email type change
-  const handleEmailTypeChange = (value) => {
+  const handleEmailTypeChange = value => {
     setEmailUsed(value);
     if (value !== 'anotherEmail') {
       setValue('fromEmailAddress', '');
@@ -301,7 +296,7 @@ function GeneralSettings() {
                   <Label>{strings.MailingSMTPAuthorization}</Label>
                   <RadioGroup
                     value={smtpAuth ? 'yes' : 'no'}
-                    onValueChange={(val) => setSmtpAuth(val === 'yes')}
+                    onValueChange={val => setSmtpAuth(val === 'yes')}
                     className="flex gap-4"
                   >
                     <div className="flex items-center space-x-2">
@@ -324,7 +319,7 @@ function GeneralSettings() {
                   <Label>{strings.MailingSMTPStartTLSEnable}</Label>
                   <RadioGroup
                     value={smtpEnable ? 'yes' : 'no'}
-                    onValueChange={(val) => setSmtpEnable(val === 'yes')}
+                    onValueChange={val => setSmtpEnable(val === 'yes')}
                     className="flex gap-4"
                   >
                     <div className="flex items-center space-x-2">
@@ -383,7 +378,10 @@ function GeneralSettings() {
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="defaultEmail" id="email-default" />
-                    <Label htmlFor="email-default" className="font-normal cursor-pointer flex items-center gap-1">
+                    <Label
+                      htmlFor="email-default"
+                      className="font-normal cursor-pointer flex items-center gap-1"
+                    >
                       {strings.DefaultEmailId}
                       <TooltipProvider>
                         <Tooltip>
@@ -415,7 +413,9 @@ function GeneralSettings() {
                         {...register('fromEmailAddress')}
                       />
                       {errors.fromEmailAddress && (
-                        <p className="text-sm text-destructive">{errors.fromEmailAddress.message}</p>
+                        <p className="text-sm text-destructive">
+                          {errors.fromEmailAddress.message}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -437,7 +437,9 @@ function GeneralSettings() {
                     type="button"
                     variant="secondary"
                     onClick={() =>
-                      navigate(config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice')
+                      navigate(
+                        config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice'
+                      )
                     }
                   >
                     <X className="mr-2 h-4 w-4" />

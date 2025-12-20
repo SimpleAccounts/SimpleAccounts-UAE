@@ -36,7 +36,7 @@ const selectStyles = {
       borderColor: 'hsl(var(--ring))',
     },
   }),
-  menu: (base) => ({
+  menu: base => ({
     ...base,
     backgroundColor: 'hsl(var(--background))',
     border: '1px solid hsl(var(--border))',
@@ -46,19 +46,19 @@ const selectStyles = {
     backgroundColor: state.isSelected
       ? 'hsl(var(--primary))'
       : state.isFocused
-      ? 'hsl(var(--accent))'
-      : 'transparent',
+        ? 'hsl(var(--accent))'
+        : 'transparent',
     color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
   }),
-  singleValue: (base) => ({
+  singleValue: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
   }),
-  placeholder: (base) => ({
+  placeholder: base => ({
     ...base,
     color: 'hsl(var(--muted-foreground))',
   }),
-  input: (base) => ({
+  input: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
   }),
@@ -73,14 +73,11 @@ function Receipt() {
   const dispatch = useDispatch();
 
   // Redux state
-  const receipt_list = useSelector((state) => state.receipt.receipt_list);
-  const contact_list = useSelector((state) => state.receipt.contact_list);
+  const receipt_list = useSelector(state => state.receipt.receipt_list);
+  const contact_list = useSelector(state => state.receipt.contact_list);
 
   // Actions
-  const receiptActions = useMemo(
-    () => bindActionCreators(ReceiptActions, dispatch),
-    [dispatch]
-  );
+  const receiptActions = useMemo(() => bindActionCreators(ReceiptActions, dispatch), [dispatch]);
   const commonActions = useMemo(() => bindActionCreators(CommonActions, dispatch), [dispatch]);
 
   // Local state
@@ -121,12 +118,12 @@ function Receipt() {
 
     receiptActions
       .getReceiptList(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setLoading(false);
       });
@@ -144,11 +141,11 @@ function Receipt() {
 
   // Filter handlers
   const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
+    setFilterData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     initializeData();
   };
 
@@ -160,14 +157,14 @@ function Receipt() {
       receiptDate: '',
       contactType: 2,
     });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
     setTimeout(() => initializeData(), 0);
   };
 
   // Transform contact list for select
   const customerOptions = useMemo(() => {
     if (!contact_list) return [];
-    return contact_list.map((item) => ({
+    return contact_list.map(item => ({
       label: item.label?.contactName || item.label,
       value: item.value,
     }));
@@ -180,9 +177,7 @@ function Receipt() {
         accessorKey: 'receiptDate',
         header: strings.ReceivedDate,
         cell: ({ row }) =>
-          row.original.receiptDate
-            ? dayjs(row.original.receiptDate).format('DD-MM-YYYY')
-            : '',
+          row.original.receiptDate ? dayjs(row.original.receiptDate).format('DD-MM-YYYY') : '',
       },
       {
         accessorKey: 'invoiceNumber',
@@ -221,7 +216,7 @@ function Receipt() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!receipt_list?.data) return [];
-    return receipt_list.data.map((item) => ({
+    return receipt_list.data.map(item => ({
       receiptId: item.receiptId,
       invoiceNumber: item.invoiceNumber || '',
       customerName: item.customerName || '',
@@ -233,7 +228,7 @@ function Receipt() {
   }, [receipt_list]);
 
   // Row click handler
-  const handleRowClick = (row) => {
+  const handleRowClick = row => {
     navigate('/admin/income/viewCustomerInvoice/detail', {
       state: { id: row.receiptId },
     });
@@ -276,7 +271,7 @@ function Receipt() {
                       : []
                   }
                   value={filterData.contactId}
-                  onChange={(option) => {
+                  onChange={option => {
                     handleFilterChange('contactId', option || '');
                   }}
                 />
@@ -291,7 +286,7 @@ function Receipt() {
                   autoComplete="off"
                   dateFormat="dd-MM-yyyy"
                   dropdownMode="select"
-                  onChange={(value) => {
+                  onChange={value => {
                     handleFilterChange('receiptDate', value);
                   }}
                 />

@@ -33,7 +33,14 @@ import {
 } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
-import { renderList, selectOptionsFactory, InputValidation, DropdownLists, Lists, selectStyles } from 'utils';
+import {
+  renderList,
+  selectOptionsFactory,
+  InputValidation,
+  DropdownLists,
+  Lists,
+  selectStyles,
+} from 'utils';
 import Switch from 'react-switch';
 import './style.scss';
 import dayjs from '@/utils/date';
@@ -82,20 +89,27 @@ const createSupplierInvoiceSchema = z.object({
   invoice_number: z.string().min(1, 'Invoice number is required'),
   contactId: z.union([
     z.string().min(1, 'Supplier Name is required'),
-    z.object({ value: z.union([z.string(), z.number()]), label: z.string() })
+    z.object({ value: z.union([z.string(), z.number()]), label: z.string() }),
   ]),
-  term: z.union([
-    z.string().min(1, 'Term is required'),
-    z.object({ value: z.string(), label: z.string() })
-  ]).refine((val) => {
-    if (typeof val === 'object' && val.label === 'Select Terms') return false;
-    return true;
-  }, { message: 'Term is required' }),
+  term: z
+    .union([
+      z.string().min(1, 'Term is required'),
+      z.object({ value: z.string(), label: z.string() }),
+    ])
+    .refine(
+      val => {
+        if (typeof val === 'object' && val.label === 'Select Terms') return false;
+        return true;
+      },
+      { message: 'Term is required' }
+    ),
   currencyCode: z.union([
     z.string().min(1, 'Currency is required'),
-    z.object({ value: z.string(), label: z.string() })
+    z.object({ value: z.string(), label: z.string() }),
   ]),
-  invoiceDate: z.union([z.string(), z.date()]).refine((val) => val !== '', { message: 'Invoice date is required' }),
+  invoiceDate: z
+    .union([z.string(), z.date()])
+    .refine(val => val !== '', { message: 'Invoice date is required' }),
   invoiceDueDate: z.string().optional(),
   // placeOfSupplyId: z.union([z.string(), z.object({ value: z.string(), label: z.string() })]).optional(),
   // changeShippingAddress: z.boolean().optional(),
@@ -108,26 +122,24 @@ const createSupplierInvoiceSchema = z.object({
   //   telephone: z.string().optional(),
   //   fax: z.string().optional(),
   // }).optional(),
-  lineItemsString: z.array(
-    z.object({
-      quantity: z.union([z.string(), z.number()]).refine(
-        value => parseFloat(value) > 0,
-        { message: 'Quantity must be greater than 0' }
-      ),
-      unitPrice: z.union([z.string(), z.number()]).refine(
-        value => parseFloat(value) > 0,
-        { message: 'Unit price must be greater than 0' }
-      ),
-      vatCategoryId: z.union([z.string(), z.number()]).refine(
-        value => value !== '',
-        { message: 'VAT is required' }
-      ),
-      productId: z.union([z.string(), z.number()]).refine(
-        value => value !== '',
-        { message: 'Product is required' }
-      ),
-    })
-  ).min(1, 'At least one invoice line item is required'),
+  lineItemsString: z
+    .array(
+      z.object({
+        quantity: z
+          .union([z.string(), z.number()])
+          .refine(value => parseFloat(value) > 0, { message: 'Quantity must be greater than 0' }),
+        unitPrice: z
+          .union([z.string(), z.number()])
+          .refine(value => parseFloat(value) > 0, { message: 'Unit price must be greater than 0' }),
+        vatCategoryId: z
+          .union([z.string(), z.number()])
+          .refine(value => value !== '', { message: 'VAT is required' }),
+        productId: z
+          .union([z.string(), z.number()])
+          .refine(value => value !== '', { message: 'Product is required' }),
+      })
+    )
+    .min(1, 'At least one invoice line item is required'),
   attachmentFile: z.any().optional(),
   receiptAttachmentDescription: z.string().optional(),
   receiptNumber: z.string().optional(),
@@ -252,7 +264,16 @@ const CreateSupplierInvoice = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, reset, setValue, watch, setError, clearErrors } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+    watch,
+    setError,
+    clearErrors,
+  } = form;
   const watchInvoiceNumber = watch('invoice_number');
 
   useEffect(() => {
@@ -261,7 +282,7 @@ const CreateSupplierInvoice = ({
     }
   }, [watchInvoiceNumber]);
 
-  const setDateHandler = (value) => {
+  const setDateHandler = value => {
     const val = term ? term.value.split('_') : '';
     const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 
@@ -285,24 +306,27 @@ const CreateSupplierInvoice = ({
     }
   };
 
-  const validationCheck = useCallback((value) => {
-    const validationData = {
-      moduleType: 6, // Check if this module type is correct for Supplier Invoice
-      name: value,
-    };
-    supplierInvoiceCreateActions.checkValidation(validationData).then(response => {
-      if (response.data === 'Invoice Number Already Exists') {
-        setExist(true);
-        setError('invoice_number', {
-          type: 'manual',
-          message: 'Invoice number already exists',
-        });
-      } else {
-        setExist(false);
-        clearErrors('invoice_number');
-      }
-    });
-  }, [supplierInvoiceCreateActions, setError, clearErrors]);
+  const validationCheck = useCallback(
+    value => {
+      const validationData = {
+        moduleType: 6, // Check if this module type is correct for Supplier Invoice
+        name: value,
+      };
+      supplierInvoiceCreateActions.checkValidation(validationData).then(response => {
+        if (response.data === 'Invoice Number Already Exists') {
+          setExist(true);
+          setError('invoice_number', {
+            type: 'manual',
+            message: 'Invoice number already exists',
+          });
+        } else {
+          setExist(false);
+          clearErrors('invoice_number');
+        }
+      });
+    },
+    [supplierInvoiceCreateActions, setError, clearErrors]
+  );
 
   const getDefaultNotes = () => {
     commonActions.getNoteSettingsInfo().then(res => {
@@ -320,7 +344,7 @@ const CreateSupplierInvoice = ({
     await supplierInvoiceActions.getExciseList();
     await supplierInvoiceActions.getProductList();
     await productActions.getProductCategoryList();
-   
+
     await supplierInvoiceActions
       .getTaxTreatment()
       .then(res => {
@@ -339,8 +363,12 @@ const CreateSupplierInvoice = ({
     await supplierInvoiceActions.getVatList();
 
     if (companyDetails) {
-      const { currencyCode, isRegisteredVat: regVat, isDesignatedZone: desZone, vatRegistrationDate } =
-        companyDetails;
+      const {
+        currencyCode,
+        isRegisteredVat: regVat,
+        isDesignatedZone: desZone,
+        vatRegistrationDate,
+      } = companyDetails;
       setValue('currencyCode', currencyCode);
       setCompanyVATRegistrationDate(new Date(dayjs(vatRegistrationDate)));
       setIsDesignatedZone(desZone);
@@ -378,7 +406,7 @@ const CreateSupplierInvoice = ({
         if (isRegisteredVat && !invoiceBeforeVatRegistration) {
           // Logic for VAT type based on product type and tax treatment
           // Simplified for now, similar to customer invoice but adapted for supplier if needed
-             if (isDesignatedZone) {
+          if (isDesignatedZone) {
             if (product.productType === 'GOODS') {
               if (
                 taxTreatmentId === 'UAE VAT REGISTERED' ||
@@ -419,7 +447,7 @@ const CreateSupplierInvoice = ({
               }
             }
           } else {
-             if (
+            if (
               taxTreatmentId === 'UAE VAT REGISTERED' ||
               taxTreatmentId === 'UAE NON-VAT REGISTERED' ||
               taxTreatmentId === 'UAE VAT REGISTERED FREEZONE' ||
@@ -427,7 +455,7 @@ const CreateSupplierInvoice = ({
             ) {
               vt = vat_list;
             }
-             if (
+            if (
               taxTreatmentId === 'GCC VAT REGISTERED' ||
               taxTreatmentId === 'GCC NON-VAT REGISTERED' ||
               taxTreatmentId === 'NON GCC'
@@ -475,7 +503,7 @@ const CreateSupplierInvoice = ({
     updateAmount(newData);
   };
 
-  const updateAmount = (dataToUpdate) => {
+  const updateAmount = dataToUpdate => {
     const list = ProductTableCalculation.updateAmount(dataToUpdate, vat_list, taxType);
     setData(list.data ? list.data : []);
     setValue('totalNet', list.totalNet ? list.totalNet : 0);
@@ -485,7 +513,7 @@ const CreateSupplierInvoice = ({
     setValue('totalExciseAmount', list.totalExciseAmount ? list.totalExciseAmount : 0);
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -496,7 +524,7 @@ const CreateSupplierInvoice = ({
     }
   };
 
-  const onSubmit = (formData) => {
+  const onSubmit = formData => {
     if (exist) {
       return;
     }
@@ -510,13 +538,22 @@ const CreateSupplierInvoice = ({
     );
     postFormData.append('invoiceDueDate', formData.invoiceDueDate ? formData.invoiceDueDate : null);
     postFormData.append('invoiceDate', formData.invoiceDate ? formData.invoiceDate : null);
-    postFormData.append('receiptNumber', formData.receiptNumber !== null ? formData.receiptNumber : '');
+    postFormData.append(
+      'receiptNumber',
+      formData.receiptNumber !== null ? formData.receiptNumber : ''
+    );
     postFormData.append(
       'receiptAttachmentDescription',
       formData.receiptAttachmentDescription !== null ? formData.receiptAttachmentDescription : ''
     );
-    postFormData.append('exchangeRate', formData.exchangeRate !== null ? formData.exchangeRate : '');
-    postFormData.append('contactPoNumber', formData.contact_po_number !== null ? formData.contact_po_number : '');
+    postFormData.append(
+      'exchangeRate',
+      formData.exchangeRate !== null ? formData.exchangeRate : ''
+    );
+    postFormData.append(
+      'contactPoNumber',
+      formData.contact_po_number !== null ? formData.contact_po_number : ''
+    );
 
     postFormData.append('notes', formData.notes !== null ? formData.notes : '');
     postFormData.append('footNote', formData.footNote ? formData.footNote : '');
@@ -528,12 +565,18 @@ const CreateSupplierInvoice = ({
     postFormData.append('totalExciseAmount', watch('totalExciseAmount'));
     postFormData.append('discount', watch('discount'));
     postFormData.append('term', term ? (term.value ?? term) : '');
-    postFormData.append('contactId', formData.contactId ? (formData.contactId.value ?? formData.contactId) : '');
+    postFormData.append(
+      'contactId',
+      formData.contactId ? (formData.contactId.value ?? formData.contactId) : ''
+    );
     // postFormData.append(
     //   'placeOfSupplyId',
     //   formData.placeOfSupplyId ? (formData.placeOfSupplyId.value ?? formData.placeOfSupplyId) : ''
     // );
-    postFormData.append('currencyCode', formData.currencyCode ? (formData.currencyCode.value ?? formData.currencyCode) : '');
+    postFormData.append(
+      'currencyCode',
+      formData.currencyCode ? (formData.currencyCode.value ?? formData.currencyCode) : ''
+    );
 
     if (uploadFile.current && uploadFile.current.files && uploadFile.current.files[0]) {
       postFormData.append('attachmentFile', uploadFile.current.files[0]);
@@ -628,7 +671,9 @@ const CreateSupplierInvoice = ({
       const vatList = getProductType(newProduct.id);
       data.map(obj => {
         if (!obj.productId) {
-          obj['unitPrice'] = (parseFloat(newProduct.unitPrice) * (1 / exchangeRateValue)).toFixed(2);
+          obj['unitPrice'] = (parseFloat(newProduct.unitPrice) * (1 / exchangeRateValue)).toFixed(
+            2
+          );
           obj['exciseTaxId'] = newProduct.exciseTaxId;
           obj['description'] = newProduct.description;
           obj['discountType'] = newProduct.discountType;
@@ -640,10 +685,7 @@ const CreateSupplierInvoice = ({
           obj['productId'] = newProduct.id;
           obj['quantity'] = '1';
           obj.vat_list = vatList;
-          obj['vatCategoryId'] = getVatCategoryId(
-            parseInt(newProduct.vatCategoryId),
-            vatList
-          );
+          obj['vatCategoryId'] = getVatCategoryId(parseInt(newProduct.vatCategoryId), vatList);
         }
         return obj;
       });
@@ -672,7 +714,7 @@ const CreateSupplierInvoice = ({
     });
   };
 
-  const setContactDetails = (customerID) => {
+  const setContactDetails = customerID => {
     setValue('contactId', customerID, { shouldValidate: true });
     const customer = supplier_list_dropdown.find(obj => obj.value === customerID);
     if (customer) {
@@ -792,31 +834,29 @@ const CreateSupplierInvoice = ({
                               {errors.contactId && (
                                 <div className="invalid-feedback d-block">
                                   {errors.contactId.message}
-                                  </div>
+                                </div>
                               )}
                             </FormGroup>
                           </Col>
-                          
-                            <Col lg={3}>
-                              <Label htmlFor="contactId" style={{ display: 'block' }}>
-                                {strings.AddNewSupplier}
-                              </Label>
-                              <Button
-                                type="button"
-                                color="primary"
-                                className="btn-square mr-3 mb-3"
-                                onClick={openSupplierModalHandler}
-                              >
-                                <i className="fa fa-plus"></i> {strings.AddASupplier}
-                              </Button>
-                            </Col>
-                          
+
+                          <Col lg={3}>
+                            <Label htmlFor="contactId" style={{ display: 'block' }}>
+                              {strings.AddNewSupplier}
+                            </Label>
+                            <Button
+                              type="button"
+                              color="primary"
+                              className="btn-square mr-3 mb-3"
+                              onClick={openSupplierModalHandler}
+                            >
+                              <i className="fa fa-plus"></i> {strings.AddASupplier}
+                            </Button>
+                          </Col>
+
                           {isRegisteredVat && (
                             <Col lg={3}>
                               <FormGroup className="mb-3">
-                                <Label htmlFor="taxTreatmentId">
-                                  {strings.TaxTreatment}
-                                </Label>
+                                <Label htmlFor="taxTreatmentId">{strings.TaxTreatment}</Label>
                                 <Controller
                                   name="taxTreatmentId"
                                   control={control}
@@ -840,9 +880,7 @@ const CreateSupplierInvoice = ({
                                         taxTreatmentList &&
                                         selectOptionsFactory
                                           .renderOptions('name', 'id', taxTreatmentList, 'VAT')
-                                          .find(
-                                            option => option.label === field.value
-                                          )
+                                          .find(option => option.label === field.value)
                                       }
                                       styles={selectStyles}
                                       className={errors.taxTreatmentId ? 'is-invalid' : ''}
@@ -857,7 +895,6 @@ const CreateSupplierInvoice = ({
                               </FormGroup>
                             </Col>
                           )}
-                          
                         </Row>
                         <hr />
                         <Row>
@@ -897,9 +934,7 @@ const CreateSupplierInvoice = ({
                             onChange={(field, value) => {
                               if (field === 'term') setTerm(value);
                               else if (field === 'invoiceDate') {
-                                if (
-                                  dayjs(value).isBefore(dayjs(companyVATRegistrationDate))
-                                ) {
+                                if (dayjs(value).isBefore(dayjs(companyVATRegistrationDate))) {
                                   setInvoiceBeforeVatRegistration(true);
                                   resetProductTableValues();
                                 } else {
@@ -949,7 +984,7 @@ const CreateSupplierInvoice = ({
                           </Col>
                         </Row>
                         <hr />
-                        
+
                         <CurrencyExchangeRate
                           strings={strings}
                           currencyName={watch('currencyName')}
@@ -961,15 +996,13 @@ const CreateSupplierInvoice = ({
                         />
                         <Row className="mb-3">
                           <Col lg={8} className="mb-3">
-                            
-                              <Button
-                                color="primary"
-                                className="btn-square mr-3"
-                                onClick={openProductModalHandler}
-                              >
-                                <i className="fa fa-plus"></i> {strings.Addproduct}
-                              </Button>
-                            
+                            <Button
+                              color="primary"
+                              className="btn-square mr-3"
+                              onClick={openProductModalHandler}
+                            >
+                              <i className="fa fa-plus"></i> {strings.Addproduct}
+                            </Button>
                           </Col>
 
                           <Col>
@@ -1117,39 +1150,38 @@ const CreateSupplierInvoice = ({
                                 <i className="fa fa-dot-circle-o"></i>{' '}
                                 {disabled ? 'Creating...' : strings.Create}
                               </Button>
-                              
-                                <Button
-                                  type="submit"
-                                  color="primary"
-                                  className="btn-square mr-3"
-                                  disabled={disabled}
-                                  onClick={() => {
-                                    if (data.length === 1) {
-                                      if (errors && Object.keys(errors).length != 0) {
-                                        commonActions.fillManDatoryDetails();
-                                      }
-                                    } else {
-                                      let newData = [];
-                                      newData = data.filter(obj => obj.productId !== '');
-                                      setValue('lineItemsString', newData, { shouldValidate: true });
-                                      updateAmount(newData);
+
+                              <Button
+                                type="submit"
+                                color="primary"
+                                className="btn-square mr-3"
+                                disabled={disabled}
+                                onClick={() => {
+                                  if (data.length === 1) {
+                                    if (errors && Object.keys(errors).length != 0) {
+                                      commonActions.fillManDatoryDetails();
                                     }
-                                    setCreateMore(true);
-                                  }}
-                                >
-                                  <i className="fa fa-refresh mr-1"></i>
-                                  {disabled ? 'Creating...' : strings.CreateandMore}
-                                </Button>
-                              
+                                  } else {
+                                    let newData = [];
+                                    newData = data.filter(obj => obj.productId !== '');
+                                    setValue('lineItemsString', newData, { shouldValidate: true });
+                                    updateAmount(newData);
+                                  }
+                                  setCreateMore(true);
+                                }}
+                              >
+                                <i className="fa fa-refresh mr-1"></i>
+                                {disabled ? 'Creating...' : strings.CreateandMore}
+                              </Button>
+
                               <Button
                                 color="secondary"
                                 className="btn-square"
                                 onClick={() => {
                                   if (location?.state?.renderURL) {
-                                    history.push(
-                                      `${location?.state?.renderURL}`,
-                                      { id: location?.state?.renderID }
-                                    );
+                                    history.push(`${location?.state?.renderURL}`, {
+                                      id: location?.state?.renderID,
+                                    });
                                   } else {
                                     history.push('/admin/expense/supplier-invoice');
                                   }
@@ -1199,7 +1231,6 @@ const CreateSupplierInvoice = ({
           purchaseCategory={purchaseCategory}
         />
       </div>
-      
     </div>
   );
 };

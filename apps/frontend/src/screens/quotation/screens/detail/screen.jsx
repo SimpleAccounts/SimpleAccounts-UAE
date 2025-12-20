@@ -89,39 +89,43 @@ if (localStorage.getItem('language') == null) {
 // Zod validation schema
 const updateQuotationSchema = z.object({
   quotationNumber: z.string().optional(),
-  customerId: z.union([
-    z.string().min(1, 'Customer name is required'),
-    z.object({ value: z.union([z.string(), z.number()]), label: z.string() })
-  ]).optional(),
+  customerId: z
+    .union([
+      z.string().min(1, 'Customer name is required'),
+      z.object({ value: z.union([z.string(), z.number()]), label: z.string() }),
+    ])
+    .optional(),
   quotationdate: z.union([z.string(), z.date()]).optional(),
-  quotaionExpiration: z.union([z.string(), z.date()]).refine((val) => val !== null && val !== '', {
-    message: 'Expiry date is required'
+  quotaionExpiration: z.union([z.string(), z.date()]).refine(val => val !== null && val !== '', {
+    message: 'Expiry date is required',
   }),
-  currencyCode: z.union([
-    z.string().min(1, 'Currency is required'),
-    z.object({ value: z.string(), label: z.string() })
-  ]).optional(),
-  placeOfSupplyId: z.union([z.string(), z.object({ value: z.string(), label: z.string() })]).optional(),
-  lineItemsString: z.array(
-    z.object({
-      quantity: z.union([z.string(), z.number()]).refine(
-        value => parseFloat(value) > 0,
-        { message: 'Quantity must be greater than 0' }
-      ),
-      unitPrice: z.union([z.string(), z.number()]).refine(
-        value => parseFloat(value) > 0,
-        { message: 'Unit price must be greater than 0' }
-      ),
-      vatCategoryId: z.union([z.string(), z.number()]).refine(
-        value => value !== '',
-        { message: 'VAT is required' }
-      ),
-      productId: z.union([z.string(), z.number()]).refine(
-        value => value !== '',
-        { message: 'Product is required' }
-      ),
-    })
-  ).min(1, 'At least one quotation line item is required'),
+  currencyCode: z
+    .union([
+      z.string().min(1, 'Currency is required'),
+      z.object({ value: z.string(), label: z.string() }),
+    ])
+    .optional(),
+  placeOfSupplyId: z
+    .union([z.string(), z.object({ value: z.string(), label: z.string() })])
+    .optional(),
+  lineItemsString: z
+    .array(
+      z.object({
+        quantity: z
+          .union([z.string(), z.number()])
+          .refine(value => parseFloat(value) > 0, { message: 'Quantity must be greater than 0' }),
+        unitPrice: z
+          .union([z.string(), z.number()])
+          .refine(value => parseFloat(value) > 0, { message: 'Unit price must be greater than 0' }),
+        vatCategoryId: z
+          .union([z.string(), z.number()])
+          .refine(value => value !== '', { message: 'VAT is required' }),
+        productId: z
+          .union([z.string(), z.number()])
+          .refine(value => value !== '', { message: 'Product is required' }),
+      })
+    )
+    .min(1, 'At least one quotation line item is required'),
   attachmentFile: z.any().optional(),
   receiptAttachmentDescription: z.string().optional(),
   receiptNumber: z.string().optional(),
@@ -231,87 +235,102 @@ const DetailQuotation = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, reset, setValue, watch, setError, clearErrors, trigger } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+    watch,
+    setError,
+    clearErrors,
+    trigger,
+  } = form;
 
   const initializeData = () => {
     if (location.state && location.state.id) {
-      quotationDetailsAction
-        .getQuotationById(location.state.id)
-        .then(res => {
-          if (res.status === 200) {
-            setQuotationId(location.state.id);
+      quotationDetailsAction.getQuotationById(location.state.id).then(res => {
+        if (res.status === 200) {
+          setQuotationId(location.state.id);
 
-            // Set form values
-            setValue('quotaionExpiration', res.data.quotaionExpiration
+          // Set form values
+          setValue(
+            'quotaionExpiration',
+            res.data.quotaionExpiration
               ? dayjs(res.data.quotaionExpiration).format('DD-MM-YYYY')
-              : '');
-            setValue('quotationdate', res.data.quotationdate
-              ? dayjs(res.data.quotationdate).format('DD-MM-YYYY')
-              : '');
-            setValue('attachmentDescription', res.data.attachmentDescription || '');
-            setValue('customerId', res.data.customerId || '');
-            setValue('quotationNumber', res.data.quotationNumber || '');
-            setValue('receiptNumber', res.data.receiptNumber || '');
-            setValue('totalVatAmount', res.data.totalVatAmount || 0);
-            setValue('totalAmount', res.data.totalAmount || 0);
-            setValue('total_net', 0);
-            setValue('notes', res.data.notes || '');
-            setValue('placeOfSupplyId', res.data.placeOfSupplyId || '');
-            setValue('total_excise', res.data.totalExciseAmount || '');
-            setValue('discount', res.data.discount || 0);
-            setValue('exchangeRate', res.data.exchangeRate || 1);
-            setValue('discountPercentage', res.data.discountPercentage || 0);
-            setValue('discountType', res.data.discountType || '');
-            setValue('currencyCode', res.data.currencyCode || '');
+              : ''
+          );
+          setValue(
+            'quotationdate',
+            res.data.quotationdate ? dayjs(res.data.quotationdate).format('DD-MM-YYYY') : ''
+          );
+          setValue('attachmentDescription', res.data.attachmentDescription || '');
+          setValue('customerId', res.data.customerId || '');
+          setValue('quotationNumber', res.data.quotationNumber || '');
+          setValue('receiptNumber', res.data.receiptNumber || '');
+          setValue('totalVatAmount', res.data.totalVatAmount || 0);
+          setValue('totalAmount', res.data.totalAmount || 0);
+          setValue('total_net', 0);
+          setValue('notes', res.data.notes || '');
+          setValue('placeOfSupplyId', res.data.placeOfSupplyId || '');
+          setValue('total_excise', res.data.totalExciseAmount || '');
+          setValue('discount', res.data.discount || 0);
+          setValue('exchangeRate', res.data.exchangeRate || 1);
+          setValue('discountPercentage', res.data.discountPercentage || 0);
+          setValue('discountType', res.data.discountType || '');
+          setValue('currencyCode', res.data.currencyCode || '');
 
-            setTaxType(res.data.taxType || false);
-            setTaxTreatmentId(res.data.taxtreatment || '');
-            setPlaceOfSupplyId(res.data.placeOfSupplyId || '');
-            setData(res.data.poQuatationLineItemRequestModelList || []);
-            setQuotationBeforeVatRegistration(
-              res.data.quotationdate
-                ? dayjs(res.data.quotationdate).isBefore(dayjs(companyVATRegistrationDate))
-                : false
-            );
-            setContactId(res.data.customerId || '');
-            setDiscountEnabled(res.data.discount > 0);
-            setLoading(false);
+          setTaxType(res.data.taxType || false);
+          setTaxTreatmentId(res.data.taxtreatment || '');
+          setPlaceOfSupplyId(res.data.placeOfSupplyId || '');
+          setData(res.data.poQuatationLineItemRequestModelList || []);
+          setQuotationBeforeVatRegistration(
+            res.data.quotationdate
+              ? dayjs(res.data.quotationdate).isBefore(dayjs(companyVATRegistrationDate))
+              : false
+          );
+          setContactId(res.data.customerId || '');
+          setDiscountEnabled(res.data.discount > 0);
+          setLoading(false);
 
-            if (res.data.poQuatationLineItemRequestModelList && res.data.poQuatationLineItemRequestModelList.length > 0) {
-              const lineItems = res.data.poQuatationLineItemRequestModelList;
-              setValue('lineItemsString', lineItems);
-              updateAmount(lineItems);
+          if (
+            res.data.poQuatationLineItemRequestModelList &&
+            res.data.poQuatationLineItemRequestModelList.length > 0
+          ) {
+            const lineItems = res.data.poQuatationLineItemRequestModelList;
+            setValue('lineItemsString', lineItems);
+            updateAmount(lineItems);
 
-              const calculatedIdCount =
-                lineItems.length > 0
-                  ? Math.max.apply(
-                      Math,
-                      lineItems.map(item => {
-                        if (item['productId']) getProductType(item['productId']);
-                        return item.id;
-                      })
-                    )
-                  : 0;
-              setIdCount(calculatedIdCount);
-              addRow(lineItems);
-            } else {
-              setIdCount(0);
-            }
-
-            requestForQuotationAction.getSupplierList(contactType);
-            requestForQuotationAction.getExciseList();
-            requestForQuotationAction.getCountryList();
-            requestForQuotationAction.getProductList();
-            purchaseCategoryInit();
-            salesCategoryInit();
+            const calculatedIdCount =
+              lineItems.length > 0
+                ? Math.max.apply(
+                    Math,
+                    lineItems.map(item => {
+                      if (item['productId']) getProductType(item['productId']);
+                      return item.id;
+                    })
+                  )
+                : 0;
+            setIdCount(calculatedIdCount);
+            addRow(lineItems);
+          } else {
+            setIdCount(0);
           }
-        });
+
+          requestForQuotationAction.getSupplierList(contactType);
+          requestForQuotationAction.getExciseList();
+          requestForQuotationAction.getCountryList();
+          requestForQuotationAction.getProductList();
+          purchaseCategoryInit();
+          salesCategoryInit();
+        }
+      });
     } else {
       history.push('/admin/income/quotation');
     }
   };
 
-  const addRow = (currentData) => {
+  const addRow = currentData => {
     const dataToUse = currentData || data;
     const hasEmptyRow = dataToUse.some(obj => obj.productId === '');
     if (!hasEmptyRow) {
@@ -349,8 +368,11 @@ const DetailQuotation = ({
 
   const getCompanyType = () => {
     if (companyDetails) {
-      const { isRegisteredVat: regVat, isDesignatedZone: desZone, vatRegistrationDate } =
-        companyDetails;
+      const {
+        isRegisteredVat: regVat,
+        isDesignatedZone: desZone,
+        vatRegistrationDate,
+      } = companyDetails;
       setCompanyVATRegistrationDate(new Date(dayjs(vatRegistrationDate)));
       setIsDesignatedZone(desZone);
       setIsRegisteredVat(regVat);
@@ -463,7 +485,7 @@ const DetailQuotation = ({
     }
   };
 
-  const updateAmount = (dataToUpdate) => {
+  const updateAmount = dataToUpdate => {
     const list = ProductTableCalculation.updateAmount(dataToUpdate, vat_list, taxType);
     setData(list.data ? list.data : []);
     setValue('total_net', list.totalNet ? list.totalNet : 0);
@@ -473,7 +495,7 @@ const DetailQuotation = ({
     setValue('total_excise', list.totalExciseAmount ? list.totalExciseAmount : 0);
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -484,7 +506,7 @@ const DetailQuotation = ({
     }
   };
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async formData => {
     // Trigger validation
     const isValid = await trigger();
     if (!isValid) {
@@ -500,7 +522,10 @@ const DetailQuotation = ({
     postFormData.append('quotaionExpiration', formData.quotaionExpiration || null);
     postFormData.append('quotationdate', formData.quotationdate || null);
     postFormData.append('receiptNumber', formData.receiptNumber || '');
-    postFormData.append('receiptAttachmentDescription', formData.receiptAttachmentDescription || '');
+    postFormData.append(
+      'receiptAttachmentDescription',
+      formData.receiptAttachmentDescription || ''
+    );
     postFormData.append('exchangeRate', formData.exchangeRate || '');
     postFormData.append('contactPoNumber', formData.contact_po_number || '');
     postFormData.append('notes', formData.notes || '');
@@ -513,9 +538,18 @@ const DetailQuotation = ({
     postFormData.append('totalAmount', watch('totalAmount'));
     postFormData.append('totalExciseAmount', watch('total_excise'));
     postFormData.append('discount', watch('discount'));
-    postFormData.append('customerId', formData.customerId ? (formData.customerId.value ?? formData.customerId) : '');
-    postFormData.append('placeOfSupplyId', formData.placeOfSupplyId ? (formData.placeOfSupplyId.value ?? formData.placeOfSupplyId) : '');
-    postFormData.append('currencyCode', formData.currencyCode ? (formData.currencyCode.value ?? formData.currencyCode) : '');
+    postFormData.append(
+      'customerId',
+      formData.customerId ? (formData.customerId.value ?? formData.customerId) : ''
+    );
+    postFormData.append(
+      'placeOfSupplyId',
+      formData.placeOfSupplyId ? (formData.placeOfSupplyId.value ?? formData.placeOfSupplyId) : ''
+    );
+    postFormData.append(
+      'currencyCode',
+      formData.currencyCode ? (formData.currencyCode.value ?? formData.currencyCode) : ''
+    );
 
     if (uploadFile.current && uploadFile.current.files && uploadFile.current.files[0]) {
       postFormData.append('attachmentFile', uploadFile.current.files[0]);
@@ -565,7 +599,9 @@ const DetailQuotation = ({
       const vatList = getProductType(newProduct.id);
       data.map(obj => {
         if (!obj.productId) {
-          obj['unitPrice'] = (parseFloat(newProduct.unitPrice) * (1 / exchangeRateValue)).toFixed(2);
+          obj['unitPrice'] = (parseFloat(newProduct.unitPrice) * (1 / exchangeRateValue)).toFixed(
+            2
+          );
           obj['exciseTaxId'] = newProduct.exciseTaxId;
           obj['description'] = newProduct.description;
           obj['discountType'] = newProduct.discountType;
@@ -577,10 +613,7 @@ const DetailQuotation = ({
           obj['productId'] = newProduct.id;
           obj['quantity'] = '1';
           obj.vat_list = vatList;
-          obj['vatCategoryId'] = getVatCategoryId(
-            parseInt(newProduct.vatCategoryId),
-            vatList
-          );
+          obj['vatCategoryId'] = getVatCategoryId(parseInt(newProduct.vatCategoryId), vatList);
         }
         return obj;
       });
@@ -604,12 +637,18 @@ const DetailQuotation = ({
       .deleteQuotation(quotationId)
       .then(res => {
         setLoading(false);
-        commonActions.tostifyAlert('success', res.data ? res.data.message : 'Quotation Deleted Successfully');
+        commonActions.tostifyAlert(
+          'success',
+          res.data ? res.data.message : 'Quotation Deleted Successfully'
+        );
         history.push('/admin/income/quotation');
       })
       .catch(err => {
         setLoading(false);
-        commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Quotation Deletion Failed');
+        commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Quotation Deletion Failed'
+        );
       });
   };
 
@@ -652,28 +691,19 @@ const DetailQuotation = ({
                         <Row>
                           <Col lg={3}>
                             <FormGroup className="mb-3">
-                              <Label htmlFor="quotationNumber">
-                                {strings.QuotationNumber}
-                              </Label>
+                              <Label htmlFor="quotationNumber">{strings.QuotationNumber}</Label>
                               <Controller
                                 name="quotationNumber"
                                 control={control}
                                 render={({ field }) => (
-                                  <Input
-                                    {...field}
-                                    type="text"
-                                    id="quotationNumber"
-                                    disabled
-                                  />
+                                  <Input {...field} type="text" id="quotationNumber" disabled />
                                 )}
                               />
                             </FormGroup>
                           </Col>
                           <Col lg={3}>
                             <FormGroup className="mb-3">
-                              <Label htmlFor="customerId">
-                                {strings.CustomerName}
-                              </Label>
+                              <Label htmlFor="customerId">{strings.CustomerName}</Label>
                               <Controller
                                 name="customerId"
                                 control={control}
@@ -682,11 +712,9 @@ const DetailQuotation = ({
                                     {...field}
                                     id="customerId"
                                     options={customer_list_dropdown}
-                                    value={
-                                      customer_list_dropdown.find(
-                                        option => option.value == field.value
-                                      )
-                                    }
+                                    value={customer_list_dropdown.find(
+                                      option => option.value == field.value
+                                    )}
                                     isDisabled={true}
                                     styles={selectStyles}
                                   />
@@ -699,19 +727,12 @@ const DetailQuotation = ({
                         <Row>
                           <Col lg={3}>
                             <FormGroup className="mb-3">
-                              <Label htmlFor="quotationdate">
-                                {strings.QuotationDate}
-                              </Label>
+                              <Label htmlFor="quotationdate">{strings.QuotationDate}</Label>
                               <Controller
                                 name="quotationdate"
                                 control={control}
                                 render={({ field }) => (
-                                  <Input
-                                    {...field}
-                                    type="text"
-                                    id="quotationdate"
-                                    disabled
-                                  />
+                                  <Input {...field} type="text" id="quotationdate" disabled />
                                 )}
                               />
                             </FormGroup>

@@ -14,7 +14,7 @@ import {
   Form,
   FormGroup,
   Input,
-  Label
+  Label,
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
@@ -22,9 +22,7 @@ import dayjs from '@/utils/date';
 
 import { Loader, ConfirmDeleteModal } from 'components';
 
-import {
-  CommonActions
-} from 'services/global';
+import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory, selectStyles } from 'utils';
 import * as EmployeeActions from '../../actions';
 import * as EmployeeDetailActions from './actions';
@@ -32,79 +30,79 @@ import * as EmployeeDetailActions from './actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 
-const mapStateToProps = (state) => {
-  return ({
-    currency_list: state.employee.currency_list
-  });
+const mapStateToProps = state => {
+  return {
+    currency_list: state.employee.currency_list,
+  };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return ({
+const mapDispatchToProps = dispatch => {
+  return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     employeeActions: bindActionCreators(EmployeeActions, dispatch),
-    employeeDetailActions: bindActionCreators(EmployeeDetailActions, dispatch)
-  });
+    employeeDetailActions: bindActionCreators(EmployeeDetailActions, dispatch),
+  };
 };
 
 // Zod validation schema
-const detailEmployeePayrollSchema = z.object({
-  firstName: z
-    .string()
-    .min(1, 'First name is required')
-    .max(100, 'First name is too long')
-    .regex(/^[a-zA-Z ]+$/, 'Only alphabets and spaces are allowed'),
-  middleName: z
-    .string()
-    .min(1, 'Middle name is required')
-    .max(100, 'Middle name is too long')
-    .regex(/^[a-zA-Z ]+$/, 'Only alphabets and spaces are allowed'),
-  lastName: z
-    .string()
-    .min(1, 'Last name is required')
-    .max(100, 'Last name is too long')
-    .regex(/^[a-zA-Z ]+$/, 'Only alphabets and spaces are allowed'),
-  email: z
-    .string()
-    .optional()
-    .or(z.literal('')),
-  password: z
-    .string()
-    .regex(
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-      'Must contain 8 characters, one uppercase, one lowercase, one number and one special case character'
-    )
-    .optional()
-    .or(z.literal('')),
-  confirmPassword: z
-    .string()
-    .optional()
-    .or(z.literal('')),
-  dob: z
-    .date({
+const detailEmployeePayrollSchema = z
+  .object({
+    firstName: z
+      .string()
+      .min(1, 'First name is required')
+      .max(100, 'First name is too long')
+      .regex(/^[a-zA-Z ]+$/, 'Only alphabets and spaces are allowed'),
+    middleName: z
+      .string()
+      .min(1, 'Middle name is required')
+      .max(100, 'Middle name is too long')
+      .regex(/^[a-zA-Z ]+$/, 'Only alphabets and spaces are allowed'),
+    lastName: z
+      .string()
+      .min(1, 'Last name is required')
+      .max(100, 'Last name is too long')
+      .regex(/^[a-zA-Z ]+$/, 'Only alphabets and spaces are allowed'),
+    email: z.string().optional().or(z.literal('')),
+    password: z
+      .string()
+      .regex(
+        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+        'Must contain 8 characters, one uppercase, one lowercase, one number and one special case character'
+      )
+      .optional()
+      .or(z.literal('')),
+    confirmPassword: z.string().optional().or(z.literal('')),
+    dob: z.date({
       required_error: 'DOB is required',
       invalid_type_error: 'Invalid date',
     }),
-  referenceCode: z.string().optional().or(z.literal('')),
-  title: z.string().optional().or(z.literal('')),
-  billingEmail: z.string().optional().or(z.literal('')),
-  vatRegestationNo: z.string().optional().or(z.literal('')),
-  currencyCode: z.union([
-    z.string(),
-    z.object({
-      value: z.number(),
-      label: z.string(),
-    })
-  ]).optional(),
-  poBoxNumber: z.string().optional().or(z.literal('')),
-}).refine((data) => {
-  if (data.password && data.confirmPassword) {
-    return data.password === data.confirmPassword;
-  }
-  return true;
-}, {
-  message: 'Passwords must match',
-  path: ['confirmPassword'],
-});
+    referenceCode: z.string().optional().or(z.literal('')),
+    title: z.string().optional().or(z.literal('')),
+    billingEmail: z.string().optional().or(z.literal('')),
+    vatRegestationNo: z.string().optional().or(z.literal('')),
+    currencyCode: z
+      .union([
+        z.string(),
+        z.object({
+          value: z.number(),
+          label: z.string(),
+        }),
+      ])
+      .optional(),
+    poBoxNumber: z.string().optional().or(z.literal('')),
+  })
+  .refine(
+    data => {
+      if (data.password && data.confirmPassword) {
+        return data.password === data.confirmPassword;
+      }
+      return true;
+    },
+    {
+      message: 'Passwords must match',
+      path: ['confirmPassword'],
+    }
+  );
 
 const regEx = /^[0-9]+$/;
 const regExBoth = /[a-zA-Z0-9]+$/;
@@ -143,36 +141,48 @@ const DetailEmployeePayroll = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, reset, watch } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    watch,
+  } = form;
 
   const initializeData = useCallback(() => {
     if (location.state && location.state.id) {
       employeeActions.getCurrencyList();
-      employeeDetailActions.getEmployeeDetail(location.state.id).then((res) => {
-        if (res.status === 200) {
-          setCurrentEmployeeId(location.state.id);
-          reset({
-            id: res.data.id !== '' ? res.data.id : '',
-            firstName: res.data.firstName !== '' ? res.data.firstName : '',
-            middleName: res.data.middleName !== '' ? res.data.middleName : '',
-            lastName: res.data.lastName !== '' ? res.data.lastName : '',
-            email: res.data.email !== '' ? res.data.email : '',
-            password: res.data.password !== '' ? res.data.password : '',
-            dob: res.data.dob !== '' ? new Date(res.data.dob) : new Date(),
-            referenceCode: res.data.referenceCode !== '' ? res.data.referenceCode : '',
-            title: res.data.title !== '' ? res.data.title : '',
-            billingEmail: res.data.billingEmail !== '' ? res.data.billingEmail : '',
-            vatRegestationNo: res.data.vatRegestationNo !== '' ? res.data.vatRegestationNo : '',
-            currencyCode: res.data.currencyCode !== '' ? res.data.currencyCode : '',
-            poBoxNumber: res.data.poBoxNumber !== '' ? res.data.poBoxNumber : '',
-            confirmPassword: '',
-          });
+      employeeDetailActions
+        .getEmployeeDetail(location.state.id)
+        .then(res => {
+          if (res.status === 200) {
+            setCurrentEmployeeId(location.state.id);
+            reset({
+              id: res.data.id !== '' ? res.data.id : '',
+              firstName: res.data.firstName !== '' ? res.data.firstName : '',
+              middleName: res.data.middleName !== '' ? res.data.middleName : '',
+              lastName: res.data.lastName !== '' ? res.data.lastName : '',
+              email: res.data.email !== '' ? res.data.email : '',
+              password: res.data.password !== '' ? res.data.password : '',
+              dob: res.data.dob !== '' ? new Date(res.data.dob) : new Date(),
+              referenceCode: res.data.referenceCode !== '' ? res.data.referenceCode : '',
+              title: res.data.title !== '' ? res.data.title : '',
+              billingEmail: res.data.billingEmail !== '' ? res.data.billingEmail : '',
+              vatRegestationNo: res.data.vatRegestationNo !== '' ? res.data.vatRegestationNo : '',
+              currencyCode: res.data.currencyCode !== '' ? res.data.currencyCode : '',
+              poBoxNumber: res.data.poBoxNumber !== '' ? res.data.poBoxNumber : '',
+              confirmPassword: '',
+            });
+            setLoading(false);
+          }
+        })
+        .catch(err => {
+          commonActions.tostifyAlert(
+            'error',
+            err && err.data ? err.data.message : 'Something Went Wrong'
+          );
           setLoading(false);
-        }
-      }).catch((err) => {
-        commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
-        setLoading(false);
-      });
+        });
     } else {
       history.push('/admin/master/employee');
     }
@@ -182,25 +192,28 @@ const DetailEmployeePayroll = ({
     initializeData();
   }, [initializeData]);
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     const postData = Object.assign({}, data);
     if (typeof postData.currencyCode === 'object') {
       postData.currencyCode = data.currencyCode.value;
     }
-    employeeDetailActions.updateEmployee(postData).then((res) => {
-      if (res.status === 200) {
+    employeeDetailActions
+      .updateEmployee(postData)
+      .then(res => {
+        if (res.status === 200) {
+          commonActions.tostifyAlert(
+            'success',
+            res.data ? res.data.message : 'Employee Updated Successfully'
+          );
+          history.push('/admin/master/employee');
+        }
+      })
+      .catch(err => {
         commonActions.tostifyAlert(
-          'success',
-          res.data ? res.data.message : 'Employee Updated Successfully'
+          'error',
+          err && err.data ? err.data.message : 'Employee Updated Unsuccessfully'
         );
-        history.push('/admin/master/employee');
-      }
-    }).catch((err) => {
-      commonActions.tostifyAlert(
-        'error',
-        err && err.data ? err.data.message : 'Employee Updated Unsuccessfully'
-      );
-    });
+      });
   };
 
   const deleteEmployee = () => {
@@ -222,20 +235,23 @@ const DetailEmployeePayroll = ({
   };
 
   const removeEmployee = () => {
-    employeeDetailActions.deleteEmployee(currentEmployeeId).then((res) => {
-      if (res.status === 200) {
+    employeeDetailActions
+      .deleteEmployee(currentEmployeeId)
+      .then(res => {
+        if (res.status === 200) {
+          commonActions.tostifyAlert(
+            'success',
+            res.data ? res.data.message : 'Employee Deleted Successfully'
+          );
+          history.push('/admin/master/employee');
+        }
+      })
+      .catch(err => {
         commonActions.tostifyAlert(
-          'success',
-          res.data ? res.data.message : 'Employee Deleted Successfully'
+          'error',
+          err && err.data ? err.data.message : 'Employee Deleted Unsuccessfully'
         );
-        history.push('/admin/master/employee');
-      }
-    }).catch((err) => {
-      commonActions.tostifyAlert(
-        'error',
-        err && err.data ? err.data.message : 'Employee Deleted Unsuccessfully'
-      );
-    });
+      });
   };
 
   const removeDialog = () => {
@@ -296,7 +312,7 @@ const DetailEmployeePayroll = ({
                                     id="referenceCode"
                                     placeholder="Enter Reference Code"
                                     {...field}
-                                    onChange={(e) => handleBothChange(e, field.onChange)}
+                                    onChange={e => handleBothChange(e, field.onChange)}
                                   />
                                 )}
                               />
@@ -314,7 +330,7 @@ const DetailEmployeePayroll = ({
                                     id="title"
                                     placeholder="Enter Title"
                                     {...field}
-                                    onChange={(e) => handleAlphaChange(e, field.onChange)}
+                                    onChange={e => handleAlphaChange(e, field.onChange)}
                                   />
                                 )}
                               />
@@ -358,8 +374,8 @@ const DetailEmployeePayroll = ({
                                     id="firstName"
                                     placeholder="Enter First Name"
                                     {...field}
-                                    onChange={(e) => handleAlphaChange(e, field.onChange)}
-                                    className={errors.firstName ? "is-invalid" : ""}
+                                    onChange={e => handleAlphaChange(e, field.onChange)}
+                                    className={errors.firstName ? 'is-invalid' : ''}
                                   />
                                 )}
                               />
@@ -383,8 +399,8 @@ const DetailEmployeePayroll = ({
                                     id="middleName"
                                     placeholder="Enter Middle Name"
                                     {...field}
-                                    onChange={(e) => handleAlphaChange(e, field.onChange)}
-                                    className={errors.middleName ? "is-invalid" : ""}
+                                    onChange={e => handleAlphaChange(e, field.onChange)}
+                                    className={errors.middleName ? 'is-invalid' : ''}
                                   />
                                 )}
                               />
@@ -408,8 +424,8 @@ const DetailEmployeePayroll = ({
                                     id="lastName"
                                     placeholder="Enter Last Name"
                                     {...field}
-                                    onChange={(e) => handleAlphaChange(e, field.onChange)}
-                                    className={errors.lastName ? "is-invalid" : ""}
+                                    onChange={e => handleAlphaChange(e, field.onChange)}
+                                    className={errors.lastName ? 'is-invalid' : ''}
                                   />
                                 )}
                               />
@@ -433,7 +449,7 @@ const DetailEmployeePayroll = ({
                                     id="password"
                                     placeholder="Enter Password"
                                     {...field}
-                                    className={errors.password ? "is-invalid" : ""}
+                                    className={errors.password ? 'is-invalid' : ''}
                                   />
                                 )}
                               />
@@ -441,7 +457,8 @@ const DetailEmployeePayroll = ({
                                 <div className="invalid-feedback">{errors.password.message}</div>
                               ) : (
                                 <span className="password-msg">
-                                  Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character.
+                                  Must Contain 8 Characters, One Uppercase, One Lowercase, One
+                                  Number and one special case Character.
                                 </span>
                               )}
                             </FormGroup>
@@ -458,12 +475,14 @@ const DetailEmployeePayroll = ({
                                     id="confirmPassword"
                                     placeholder="Enter Confirm Password"
                                     {...field}
-                                    className={errors.confirmPassword ? "is-invalid" : ""}
+                                    className={errors.confirmPassword ? 'is-invalid' : ''}
                                   />
                                 )}
                               />
                               {errors.confirmPassword && (
-                                <div className="invalid-feedback">{errors.confirmPassword.message}</div>
+                                <div className="invalid-feedback">
+                                  {errors.confirmPassword.message}
+                                </div>
                               )}
                             </FormGroup>
                           </Col>
@@ -475,7 +494,7 @@ const DetailEmployeePayroll = ({
                                 control={control}
                                 render={({ field }) => (
                                   <DatePicker
-                                    className={`form-control ${errors.dob ? "is-invalid" : ""}`}
+                                    className={`form-control ${errors.dob ? 'is-invalid' : ''}`}
                                     id="dob"
                                     showMonthDropdown
                                     showYearDropdown
@@ -484,7 +503,7 @@ const DetailEmployeePayroll = ({
                                     placeholderText="Select Date of Birth"
                                     selected={field.value}
                                     maxDate={new Date()}
-                                    onChange={(date) => field.onChange(date)}
+                                    onChange={date => field.onChange(date)}
                                   />
                                 )}
                               />
@@ -511,12 +530,14 @@ const DetailEmployeePayroll = ({
                                     id="billingEmail"
                                     placeholder="Enter Billing Email Address"
                                     {...field}
-                                    className={errors.billingEmail ? "is-invalid" : ""}
+                                    className={errors.billingEmail ? 'is-invalid' : ''}
                                   />
                                 )}
                               />
                               {errors.billingEmail && (
-                                <div className="invalid-feedback">{errors.billingEmail.message}</div>
+                                <div className="invalid-feedback">
+                                  {errors.billingEmail.message}
+                                </div>
                               )}
                             </FormGroup>
                           </Col>
@@ -533,8 +554,8 @@ const DetailEmployeePayroll = ({
                                     id="poBoxNumber"
                                     placeholder="Enter Contract PO Number"
                                     {...field}
-                                    onChange={(e) => handleBothChange(e, field.onChange)}
-                                    className={errors.poBoxNumber ? "is-invalid" : ""}
+                                    onChange={e => handleBothChange(e, field.onChange)}
+                                    className={errors.poBoxNumber ? 'is-invalid' : ''}
                                   />
                                 )}
                               />
@@ -559,13 +580,15 @@ const DetailEmployeePayroll = ({
                                     id="vatRegestationNo"
                                     placeholder="Enter Tax Registration Number"
                                     {...field}
-                                    onChange={(e) => handleBothChange(e, field.onChange)}
-                                    className={errors.vatRegestationNo ? "is-invalid" : ""}
+                                    onChange={e => handleBothChange(e, field.onChange)}
+                                    className={errors.vatRegestationNo ? 'is-invalid' : ''}
                                   />
                                 )}
                               />
                               {errors.vatRegestationNo && (
-                                <div className="invalid-feedback">{errors.vatRegestationNo.message}</div>
+                                <div className="invalid-feedback">
+                                  {errors.vatRegestationNo.message}
+                                </div>
                               )}
                             </FormGroup>
                           </Col>
@@ -578,9 +601,34 @@ const DetailEmployeePayroll = ({
                                 render={({ field }) => (
                                   <Select
                                     {...field}
-                                    options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                                    value={currency_list && selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === (typeof field.value === 'object' ? field.value.value : +field.value))}
-                                    onChange={(option) => {
+                                    options={
+                                      currency_list
+                                        ? selectCurrencyFactory.renderOptions(
+                                            'currencyName',
+                                            'currencyCode',
+                                            currency_list,
+                                            'Currency'
+                                          )
+                                        : []
+                                    }
+                                    value={
+                                      currency_list &&
+                                      selectCurrencyFactory
+                                        .renderOptions(
+                                          'currencyName',
+                                          'currencyCode',
+                                          currency_list,
+                                          'Currency'
+                                        )
+                                        .find(
+                                          option =>
+                                            option.value ===
+                                            (typeof field.value === 'object'
+                                              ? field.value.value
+                                              : +field.value)
+                                        )
+                                    }
+                                    onChange={option => {
                                       if (option && option.value) {
                                         field.onChange(option);
                                       } else {
@@ -590,19 +638,24 @@ const DetailEmployeePayroll = ({
                                     placeholder="Select Currency"
                                     id="currencyCode"
                                     styles={selectStyles}
-                                    className={errors.currencyCode ? "is-invalid" : ""}
+                                    className={errors.currencyCode ? 'is-invalid' : ''}
                                   />
                                 )}
                               />
                               {errors.currencyCode && (
-                                <div className="invalid-feedback">{errors.currencyCode.message}</div>
+                                <div className="invalid-feedback">
+                                  {errors.currencyCode.message}
+                                </div>
                               )}
                             </FormGroup>
                           </Col>
                         </Row>
 
                         <Row>
-                          <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                          <Col
+                            lg={12}
+                            className="d-flex align-items-center justify-content-between flex-wrap mt-5"
+                          >
                             <FormGroup>
                               <Button
                                 type="button"
@@ -615,14 +668,21 @@ const DetailEmployeePayroll = ({
                               </Button>
                             </FormGroup>
                             <FormGroup className="text-right">
-                              <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
+                              <Button
+                                type="submit"
+                                name="submit"
+                                color="primary"
+                                className="btn-square mr-3"
+                              >
                                 <i className="fa fa-dot-circle-o"></i> Update
                               </Button>
                               <Button
                                 type="button"
                                 color="secondary"
                                 className="btn-square"
-                                onClick={() => { history.push('/admin/master/employee') }}
+                                onClick={() => {
+                                  history.push('/admin/master/employee');
+                                }}
                               >
                                 <i className="fa fa-ban"></i> Cancel
                               </Button>

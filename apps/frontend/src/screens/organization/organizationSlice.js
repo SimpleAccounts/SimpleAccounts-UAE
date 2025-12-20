@@ -17,7 +17,7 @@ const organizationSlice = createSlice({
       state.industry_type_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(ORGANIZATION.COUNTRY_LIST, (state, action) => {
         state.country_list = action.payload || [];
@@ -30,4 +30,3 @@ const organizationSlice = createSlice({
 
 export const { setCountryList, setIndustryTypeList } = organizationSlice.actions;
 export default organizationSlice.reducer;
-

@@ -61,7 +61,7 @@ const createBankAccountSchema = z
         label: z.string(),
       })
       .nullable()
-      .refine((val) => val !== null, 'Bank name is required'),
+      .refine(val => val !== null, 'Bank name is required'),
     account_number: z
       .string()
       .min(1, 'Account number is required')
@@ -74,7 +74,7 @@ const createBankAccountSchema = z
     newBankName: z.string().optional(),
   })
   .refine(
-    (data) => {
+    data => {
       if (data.bankId?.value === 999) {
         return data.newBankName && data.newBankName.trim().length > 0;
       }
@@ -86,7 +86,7 @@ const createBankAccountSchema = z
     }
   );
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     account_type_list: state.bank_account.account_type_list,
     currency_list: state.bank_account.currency_list,
@@ -95,7 +95,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
@@ -165,21 +165,21 @@ const CreateBankAccount = ({
 
   useEffect(() => {
     initializeData();
-    createBankAccountActions.getBankList().then((response) => {
+    createBankAccountActions.getBankList().then(response => {
       setBankList(response.data);
     });
   }, []);
 
   const initializeData = useCallback(() => {
     createBankAccountActions.getAccountTypeList();
-    commonActions.getCurrencyConversionList().then((action) => {
+    commonActions.getCurrencyConversionList().then(action => {
       if (action && action.type && action.type.includes('fulfilled')) {
         if (action.payload && action.payload.length > 0) {
           setValue('currency', parseInt(action.payload[0].currencyCode));
         }
       }
     });
-    createBankAccountActions.getCurrencyList().then((response) => {
+    createBankAccountActions.getCurrencyList().then(response => {
       if (response.data && response.data.length > 0) {
         setValue('currency', parseInt(response.data[0].currencyCode));
         setValue('account_is_for', 'Corporate');
@@ -189,12 +189,12 @@ const CreateBankAccount = ({
   }, [createBankAccountActions, commonActions, setValue]);
 
   const validationCheck = useCallback(
-    (value) => {
+    value => {
       const data = {
         moduleType: 5,
         name: value,
       };
-      createBankAccountActions.checkValidation(data).then((response) => {
+      createBankAccountActions.checkValidation(data).then(response => {
         if (response.data === 'Bank Account Already Exists') {
           setExist(true);
           setError('account_number', {
@@ -210,7 +210,7 @@ const CreateBankAccount = ({
     [createBankAccountActions, setError, clearErrors]
   );
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     if (exist) {
       setError('account_number', {
         type: 'manual',
@@ -242,7 +242,7 @@ const CreateBankAccount = ({
 
     createBankAccountActions
       .createBankAccount(obj)
-      .then((res) => {
+      .then(res => {
         setDisabled(false);
         setLoading(false);
         commonActions.tostifyAlert(
@@ -272,7 +272,7 @@ const CreateBankAccount = ({
           history.push('/admin/banking/bank-account');
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         setLoading(false);
         commonActions.tostifyAlert(
@@ -325,7 +325,7 @@ const CreateBankAccount = ({
                                     autoComplete="off"
                                     placeholder={strings.Enter + strings.AccountName}
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       if (
                                         e.target.value === '' ||
                                         regExAlpha.test(e.target.value)
@@ -376,9 +376,9 @@ const CreateBankAccount = ({
                                           currency_convert_list,
                                           'Currency'
                                         )
-                                        .find((option) => option.value === +field.value)
+                                        .find(option => option.value === +field.value)
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       field.onChange(option ? option.value : '');
                                     }}
                                     styles={selectStyles}
@@ -387,9 +387,7 @@ const CreateBankAccount = ({
                                 )}
                               />
                               {errors.currency && (
-                                <div className="invalid-feedback">
-                                  {errors.currency.message}
-                                </div>
+                                <div className="invalid-feedback">{errors.currency.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -410,7 +408,7 @@ const CreateBankAccount = ({
                                     autoComplete="off"
                                     placeholder={strings.Enter + strings.OpeningBalance}
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       if (
                                         e.target.value === '' ||
                                         regDecimal.test(e.target.value)
@@ -466,14 +464,12 @@ const CreateBankAccount = ({
                                     dropdownMode="select"
                                     dateFormat="dd-MM-yyyy"
                                     maxDate={new Date()}
-                                    onChange={(value) => field.onChange(value)}
+                                    onChange={value => field.onChange(value)}
                                   />
                                 )}
                               />
                               {errors.openingDate && (
-                                <div className="invalid-feedback">
-                                  {errors.openingDate.message}
-                                </div>
+                                <div className="invalid-feedback">{errors.openingDate.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -509,9 +505,9 @@ const CreateBankAccount = ({
                                           account_type_list,
                                           'Account Type'
                                         )
-                                        .find((option) => option.value === +field.value)
+                                        .find(option => option.value === +field.value)
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       field.onChange(option ? option.value : '');
                                     }}
                                     styles={selectStyles}
@@ -532,8 +528,7 @@ const CreateBankAccount = ({
                           <Col md="4">
                             <FormGroup>
                               <Label htmlFor="bankId">
-                                <span className="text-danger">* </span>{' '}
-                                {strings.BankName}{' '}
+                                <span className="text-danger">* </span> {strings.BankName}{' '}
                               </Label>
                               <Controller
                                 name="bankId"
@@ -560,9 +555,7 @@ const CreateBankAccount = ({
                                 )}
                               />
                               {errors.bankId && (
-                                <div className="invalid-feedback">
-                                  {errors.bankId.message}
-                                </div>
+                                <div className="invalid-feedback">{errors.bankId.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -583,11 +576,8 @@ const CreateBankAccount = ({
                                     autoComplete="off"
                                     placeholder={strings.Enter + strings.AccountNumber}
                                     {...field}
-                                    onChange={(e) => {
-                                      if (
-                                        e.target.value === '' ||
-                                        regEx.test(e.target.value)
-                                      ) {
+                                    onChange={e => {
+                                      if (e.target.value === '' || regEx.test(e.target.value)) {
                                         field.onChange(e);
                                       }
                                       validationCheck(e.target.value);
@@ -624,7 +614,7 @@ const CreateBankAccount = ({
                                           )
                                         : []
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       field.onChange(option ? option.value : '');
                                     }}
                                     value={
@@ -636,16 +626,14 @@ const CreateBankAccount = ({
                                           country_list,
                                           'Country'
                                         )
-                                        .find((option) => option.value === +field.value)
+                                        .find(option => option.value === +field.value)
                                     }
                                     className={errors.countrycode ? 'is-invalid' : ''}
                                   />
                                 )}
                               />
                               {errors.countrycode && (
-                                <div className="invalid-feedback">
-                                  {errors.countrycode.message}
-                                </div>
+                                <div className="invalid-feedback">{errors.countrycode.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -711,9 +699,9 @@ const CreateBankAccount = ({
                                           account_for,
                                           'Account is for'
                                         )
-                                        .find((option) => option.value === field.value)
+                                        .find(option => option.value === field.value)
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       field.onChange(option ? option.value : '');
                                     }}
                                     styles={selectStyles}

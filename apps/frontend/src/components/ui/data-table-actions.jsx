@@ -61,11 +61,7 @@ export function DataTableRowActions({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="h-8 w-8 p-0 hover:bg-muted"
-          disabled={disabled}
-        >
+        <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-muted" disabled={disabled}>
           <span className="sr-only">Open menu</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
@@ -117,13 +113,9 @@ export function DataTableRowActions({
 
           const Icon = action.icon;
           const isDisabled =
-            typeof action.disabled === 'function'
-              ? action.disabled(row.original)
-              : action.disabled;
+            typeof action.disabled === 'function' ? action.disabled(row.original) : action.disabled;
           const isHidden =
-            typeof action.hidden === 'function'
-              ? action.hidden(row.original)
-              : action.hidden;
+            typeof action.hidden === 'function' ? action.hidden(row.original) : action.hidden;
 
           if (isHidden) {
             return null;
@@ -174,33 +166,33 @@ export function createActionsColumn(options = {}) {
  * Commonly used action configurations
  */
 export const commonActions = {
-  view: (onClick) => ({
+  view: onClick => ({
     label: 'View',
     icon: Eye,
     onClick,
   }),
-  edit: (onClick) => ({
+  edit: onClick => ({
     label: 'Edit',
     icon: Edit,
     onClick,
   }),
-  delete: (onClick) => ({
+  delete: onClick => ({
     label: 'Delete',
     icon: Trash2,
     onClick,
     destructive: true,
   }),
-  duplicate: (onClick) => ({
+  duplicate: onClick => ({
     label: 'Duplicate',
     icon: Copy,
     onClick,
   }),
-  send: (onClick) => ({
+  send: onClick => ({
     label: 'Send',
     icon: Send,
     onClick,
   }),
-  download: (onClick) => ({
+  download: onClick => ({
     label: 'Download',
     icon: FileText,
     onClick,

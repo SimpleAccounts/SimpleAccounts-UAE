@@ -58,17 +58,13 @@ const CreateJournal = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const {
-    transaction_category_list,
-    currency_list,
-    contact_list,
-    universal_currency_list,
-  } = useSelector((state) => ({
-    transaction_category_list: state.journal.transaction_category_list,
-    currency_list: state.journal.currency_list,
-    contact_list: state.journal.contact_list,
-    universal_currency_list: state.common.universal_currency_list,
-  }));
+  const { transaction_category_list, currency_list, contact_list, universal_currency_list } =
+    useSelector(state => ({
+      transaction_category_list: state.journal.transaction_category_list,
+      currency_list: state.journal.currency_list,
+      contact_list: state.journal.contact_list,
+      universal_currency_list: state.common.universal_currency_list,
+    }));
 
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(false);
@@ -215,117 +211,122 @@ const CreateJournal = () => {
     });
   };
 
-  const columns = useMemo(() => [
-    {
-      id: 'actions',
-      header: '',
-      size: 50,
-      cell: ({ row }) => (
-        <Button
-          size="sm"
-          className="btn-twitter btn-brand icon"
-          disabled={data.length <= 2}
-          onClick={e => deleteRow(e, row.original)}
-        >
-          <i className="fas fa-trash"></i>
-        </Button>
-      ),
-    },
-    {
-      accessorKey: 'transactionCategoryId',
-      header: strings.ACCOUNT,
-      size: 300,
-      cell: ({ row }) => {
-        const idx = data.findIndex(obj => obj.id === row.original.id);
-        let transactionCategoryList = transaction_category_list || [];
-        // Filtering logic ... (omitted for brevity, assume full logic from original)
-        return (
-          <Select
-            options={transactionCategoryList}
-            onChange={e => selectItem(e.value, row.original, 'transactionCategoryId', idx)}
-            placeholder={strings.Select + strings.Account}
-            className={errors.journalLineItems?.[idx]?.transactionCategoryId ? 'is-invalid' : ''}
-          />
-        );
-      },
-    },
-    {
-      accessorKey: 'description',
-      header: strings.DESCRIPTION,
-      cell: ({ row }) => {
-        const idx = data.findIndex(obj => obj.id === row.original.id);
-        return (
-          <Input
-            type="text"
-            value={row.original.description || ''}
-            onChange={e => selectItem(e.target.value, row.original, 'description', idx)}
-            placeholder={strings.Description}
-          />
-        );
-      },
-    },
-    {
-      accessorKey: 'contactId',
-      header: strings.CONTACT,
-      cell: ({ row }) => {
-        const idx = data.findIndex(obj => obj.id === row.original.id);
-        return (
-          <Input
-            type="select"
-            value={row.original.contactId || ''}
-            onChange={e => selectItem(e.target.value, row.original, 'contactId', idx)}
+  const columns = useMemo(
+    () => [
+      {
+        id: 'actions',
+        header: '',
+        size: 50,
+        cell: ({ row }) => (
+          <Button
+            size="sm"
+            className="btn-twitter btn-brand icon"
+            disabled={data.length <= 2}
+            onClick={e => deleteRow(e, row.original)}
           >
-            <option value="">Select Contact</option>
-            {contact_list?.map(obj => (
-              <option value={obj.value} key={obj.value}>{obj.label.contactName}</option>
-            ))}
-          </Input>
-        );
+            <i className="fas fa-trash"></i>
+          </Button>
+        ),
       },
-    },
-    {
-      accessorKey: 'debitAmount',
-      header: strings.DEBIT,
-      cell: ({ row }) => {
-        const idx = data.findIndex(obj => obj.id === row.original.id);
-        return (
-          <Input
-            type="number"
-            value={row.original.debitAmount || 0}
-            onChange={e => selectItem(e.target.value, row.original, 'debitAmount', idx)}
-          />
-        );
+      {
+        accessorKey: 'transactionCategoryId',
+        header: strings.ACCOUNT,
+        size: 300,
+        cell: ({ row }) => {
+          const idx = data.findIndex(obj => obj.id === row.original.id);
+          let transactionCategoryList = transaction_category_list || [];
+          // Filtering logic ... (omitted for brevity, assume full logic from original)
+          return (
+            <Select
+              options={transactionCategoryList}
+              onChange={e => selectItem(e.value, row.original, 'transactionCategoryId', idx)}
+              placeholder={strings.Select + strings.Account}
+              className={errors.journalLineItems?.[idx]?.transactionCategoryId ? 'is-invalid' : ''}
+            />
+          );
+        },
       },
-    },
-    {
-      accessorKey: 'creditAmount',
-      header: strings.CREDIT,
-      cell: ({ row }) => {
-        const idx = data.findIndex(obj => obj.id === row.original.id);
-        return (
-          <Input
-            type="number"
-            value={row.original.creditAmount || 0}
-            onChange={e => selectItem(e.target.value, row.original, 'creditAmount', idx)}
-          />
-        );
+      {
+        accessorKey: 'description',
+        header: strings.DESCRIPTION,
+        cell: ({ row }) => {
+          const idx = data.findIndex(obj => obj.id === row.original.id);
+          return (
+            <Input
+              type="text"
+              value={row.original.description || ''}
+              onChange={e => selectItem(e.target.value, row.original, 'description', idx)}
+              placeholder={strings.Description}
+            />
+          );
+        },
       },
-    },
-  ], [data, transaction_category_list, contact_list]);
+      {
+        accessorKey: 'contactId',
+        header: strings.CONTACT,
+        cell: ({ row }) => {
+          const idx = data.findIndex(obj => obj.id === row.original.id);
+          return (
+            <Input
+              type="select"
+              value={row.original.contactId || ''}
+              onChange={e => selectItem(e.target.value, row.original, 'contactId', idx)}
+            >
+              <option value="">Select Contact</option>
+              {contact_list?.map(obj => (
+                <option value={obj.value} key={obj.value}>
+                  {obj.label.contactName}
+                </option>
+              ))}
+            </Input>
+          );
+        },
+      },
+      {
+        accessorKey: 'debitAmount',
+        header: strings.DEBIT,
+        cell: ({ row }) => {
+          const idx = data.findIndex(obj => obj.id === row.original.id);
+          return (
+            <Input
+              type="number"
+              value={row.original.debitAmount || 0}
+              onChange={e => selectItem(e.target.value, row.original, 'debitAmount', idx)}
+            />
+          );
+        },
+      },
+      {
+        accessorKey: 'creditAmount',
+        header: strings.CREDIT,
+        cell: ({ row }) => {
+          const idx = data.findIndex(obj => obj.id === row.original.id);
+          return (
+            <Input
+              type="number"
+              value={row.original.creditAmount || 0}
+              onChange={e => selectItem(e.target.value, row.original, 'creditAmount', idx)}
+            />
+          );
+        },
+      },
+    ],
+    [data, transaction_category_list, contact_list]
+  );
 
   const onSubmit = values => {
     // Check equality
     if (amounts.totalCreditAmount !== amounts.totalDebitAmount) {
-        toast.error('Total Credit Amount and Total Debit Amount Should be Equal');
-        return;
+      toast.error('Total Credit Amount and Total Debit Amount Should be Equal');
+      return;
     }
 
     const processedData = data.map(item => {
       const { id, ...rest } = item;
       return {
-          ...rest,
-          transactionCategoryId: rest.transactionCategoryId || '',
-          contactId: rest.contactId || '',
+        ...rest,
+        transactionCategoryId: rest.transactionCategoryId || '',
+        contactId: rest.contactId || '',
       };
     });
 
@@ -346,12 +347,16 @@ const CreateJournal = () => {
         if (res.status === 200) {
           toast.success(res.data?.message || 'New Journal Created Successfully');
           if (createMore) {
-              // Reset logic
-              reset();
-              setData([/* initial data */]);
-              setAmounts({/* zero amounts */});
+            // Reset logic
+            reset();
+            setData([
+              /* initial data */
+            ]);
+            setAmounts({
+              /* zero amounts */
+            });
           } else {
-              navigate('/admin/accountant/journal');
+            navigate('/admin/accountant/journal');
           }
         }
         setLoading(false);
@@ -381,7 +386,10 @@ const CreateJournal = () => {
               <Row>
                 <Col lg={4}>
                   <FormGroup className="mb-3">
-                    <Label htmlFor="date"><span className="text-danger">* </span>{strings.JournalDate}</Label>
+                    <Label htmlFor="date">
+                      <span className="text-danger">* </span>
+                      {strings.JournalDate}
+                    </Label>
                     <Controller
                       name="journalDate"
                       control={control}
@@ -405,9 +413,7 @@ const CreateJournal = () => {
                     <Controller
                       name="journalReferenceNo"
                       control={control}
-                      render={({ field }) => (
-                        <Input id="journalReferenceNo" {...field} />
-                      )}
+                      render={({ field }) => <Input id="journalReferenceNo" {...field} />}
                     />
                   </FormGroup>
                 </Col>
@@ -420,24 +426,20 @@ const CreateJournal = () => {
                   </Button>
                 </Col>
               </Row>
-              
-              <DataTable
-                data={data}
-                columns={columns}
-                manualPagination={false}
-              />
+
+              <DataTable data={data} columns={columns} manualPagination={false} />
 
               <Row className="mt-4">
                 <Col lg={4} className="ml-auto">
-                    <div className="p-3 bg-muted/20 rounded-lg space-y-2">
-                        <div className="flex justify-between font-bold">
-                            <span>{strings.Total}</span>
-                            <div className="flex gap-8">
-                                <span>{amounts.totalDebitAmount.toFixed(2)}</span>
-                                <span>{amounts.totalCreditAmount.toFixed(2)}</span>
-                            </div>
-                        </div>
+                  <div className="p-3 bg-muted/20 rounded-lg space-y-2">
+                    <div className="flex justify-between font-bold">
+                      <span>{strings.Total}</span>
+                      <div className="flex gap-8">
+                        <span>{amounts.totalDebitAmount.toFixed(2)}</span>
+                        <span>{amounts.totalCreditAmount.toFixed(2)}</span>
+                      </div>
                     </div>
+                  </div>
                 </Col>
               </Row>
 
@@ -446,7 +448,12 @@ const CreateJournal = () => {
                   <Button type="submit" color="primary" className="btn-square mr-3">
                     {strings.Create}
                   </Button>
-                  <Button type="button" color="secondary" className="btn-square" onClick={() => navigate('/admin/accountant/journal')}>
+                  <Button
+                    type="button"
+                    color="secondary"
+                    className="btn-square"
+                    onClick={() => navigate('/admin/accountant/journal')}
+                  >
                     {strings.Cancel}
                   </Button>
                 </Col>

@@ -1,7 +1,4 @@
-import Temp from './temp'
-import RFQTemplate from './invoice_template'
+import Temp from './temp';
+import RFQTemplate from './invoice_template';
 
-export {
-  Temp,
-  RFQTemplate
-}
+export { Temp, RFQTemplate };

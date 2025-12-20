@@ -1,6 +1,3 @@
+import InventoryHistoryModal from './invetoryHistorymodal';
 
-import InventoryHistoryModal from './invetoryHistorymodal'
-
-export {
-    InventoryHistoryModal
-}
+export { InventoryHistoryModal };

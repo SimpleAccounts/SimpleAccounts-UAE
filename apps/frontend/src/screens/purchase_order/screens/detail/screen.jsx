@@ -37,7 +37,7 @@ import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     project_list: state.request_for_quotation.project_list,
     contact_list: state.request_for_quotation.contact_list,
@@ -52,7 +52,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     supplierInvoiceActions: bindActionCreators(SupplierInvoiceActions, dispatch),
     ProductActions: bindActionCreators(ProductActions, dispatch),
@@ -72,20 +72,16 @@ const detailPurchaseOrderSchema = z.object({
   lineItemsString: z
     .array(
       z.object({
-        grnReceivedQuantity: z
-          .union([z.string(), z.number()])
-          .refine((val) => Number(val) > 0, {
-            message: 'Quantity should be greater than 0',
-          }),
-        unitPrice: z
-          .union([z.string(), z.number()])
-          .refine((val) => Number(val) > 0, {
-            message: 'Unit price should be greater than 1',
-          }),
-        vatCategoryId: z.union([z.string(), z.number()]).refine((val) => val !== '' && val !== null, {
+        grnReceivedQuantity: z.union([z.string(), z.number()]).refine(val => Number(val) > 0, {
+          message: 'Quantity should be greater than 0',
+        }),
+        unitPrice: z.union([z.string(), z.number()]).refine(val => Number(val) > 0, {
+          message: 'Unit price should be greater than 1',
+        }),
+        vatCategoryId: z.union([z.string(), z.number()]).refine(val => val !== '' && val !== null, {
           message: 'Value is required',
         }),
-        productId: z.union([z.string(), z.number()]).refine((val) => val !== '' && val !== null, {
+        productId: z.union([z.string(), z.number()]).refine(val => val !== '' && val !== null, {
           message: 'Product is required',
         }),
         description: z.string().optional(),
@@ -167,13 +163,20 @@ const DetailPurchaseOrder = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors, touchedFields }, watch, setValue, getValues } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, touchedFields },
+    watch,
+    setValue,
+    getValues,
+  } = form;
 
   strings.setLanguage(language);
 
   const purchaseCategoryFetch = useCallback(() => {
     try {
-      ProductActions.getTransactionCategoryListForPurchaseProduct('10').then((res) => {
+      ProductActions.getTransactionCategoryListForPurchaseProduct('10').then(res => {
         if (res.status === 200) {
           setPurchaseCategory(res.data);
         }
@@ -183,32 +186,38 @@ const DetailPurchaseOrder = ({
     }
   }, [ProductActions]);
 
-  const calTotalNet = useCallback((dataItems) => {
-    let total_net = 0;
-    dataItems.forEach((obj) => {
-      total_net = +(total_net + (+obj.unitPrice + +obj.exciseAmount) * obj.grnReceivedQuantity);
-    });
-    setValue('total_net', total_net);
-  }, [setValue]);
+  const calTotalNet = useCallback(
+    dataItems => {
+      let total_net = 0;
+      dataItems.forEach(obj => {
+        total_net = +(total_net + (+obj.unitPrice + +obj.exciseAmount) * obj.grnReceivedQuantity);
+      });
+      setValue('total_net', total_net);
+    },
+    [setValue]
+  );
 
-  const getCurrency = useCallback((opt) => {
-    let supplier_currencyCode = 0;
+  const getCurrency = useCallback(
+    opt => {
+      let supplier_currencyCode = 0;
 
-    supplier_list.forEach(item => {
-      if (item.label.contactId == opt) {
-        setSupplierCurrency(item.label.currency.currencyCode);
-        setSupplierCurrencyDes(item.label.currency.currencyName);
-        setSupplierCurrencySymbol(item.label.currency.currencyIsoCode);
-        supplier_currencyCode = item.label.currency.currencyCode;
-      }
-    });
+      supplier_list.forEach(item => {
+        if (item.label.contactId == opt) {
+          setSupplierCurrency(item.label.currency.currencyCode);
+          setSupplierCurrencyDes(item.label.currency.currencyName);
+          setSupplierCurrencySymbol(item.label.currency.currencyIsoCode);
+          supplier_currencyCode = item.label.currency.currencyCode;
+        }
+      });
 
-    return supplier_currencyCode;
-  }, [supplier_list]);
+      return supplier_currencyCode;
+    },
+    [supplier_list]
+  );
 
   const initializeData = useCallback(() => {
     if (location.state && location.state.id) {
-      goodsReceivedNoteDetailsAction.getPOById(location.state.id).then((res) => {
+      goodsReceivedNoteDetailsAction.getPOById(location.state.id).then(res => {
         if (res.status === 200) {
           getCompanyCurrency();
           requestForQuotationAction.getVatList();
@@ -221,7 +230,10 @@ const DetailPurchaseOrder = ({
           const lineItems = res.data.poQuatationLineItemRequestModelList || [];
 
           setCurrentGrnId(location.state.id);
-          setValue('poApproveDate', res.data.poApproveDate ? dayjs(res.data.poApproveDate).format('DD-MM-YYYY') : '');
+          setValue(
+            'poApproveDate',
+            res.data.poApproveDate ? dayjs(res.data.poApproveDate).format('DD-MM-YYYY') : ''
+          );
           setValue('poApproveDate1', res.data.poApproveDate || '');
           setValue('supplierId', res.data.supplierId || '');
           setValue('grnNumber', res.data.grnNumber || '');
@@ -243,7 +255,7 @@ const DetailPurchaseOrder = ({
 
           if (lineItems.length > 0) {
             calTotalNet(lineItems);
-            const maxId = Math.max(...lineItems.map((item) => item.id), 0);
+            const maxId = Math.max(...lineItems.map(item => item.id), 0);
             setIdCount(maxId);
             addRow();
           } else {
@@ -257,17 +269,34 @@ const DetailPurchaseOrder = ({
     } else {
       history.push('/admin/expense/goods-received-note');
     }
-  }, [location.state, goodsReceivedNoteDetailsAction, requestForQuotationAction, currencyConvertActions, purchaseCategoryFetch, calTotalNet, getCurrency, setValue, contactType, history]);
+  }, [
+    location.state,
+    goodsReceivedNoteDetailsAction,
+    requestForQuotationAction,
+    currencyConvertActions,
+    purchaseCategoryFetch,
+    calTotalNet,
+    getCurrency,
+    setValue,
+    contactType,
+    history,
+  ]);
 
   const getCompanyCurrency = useCallback(() => {
-    currencyConvertActions.getCompanyCurrency().then((res) => {
-      if (res.status === 200) {
-        setBasecurrency(res.data);
-      }
-    }).catch((err) => {
-      commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
-      setLoading(false);
-    });
+    currencyConvertActions
+      .getCompanyCurrency()
+      .then(res => {
+        if (res.status === 200) {
+          setBasecurrency(res.data);
+        }
+      })
+      .catch(err => {
+        commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong'
+        );
+        setLoading(false);
+      });
   }, [currencyConvertActions, commonActions]);
 
   useEffect(() => {
@@ -294,13 +323,18 @@ const DetailPurchaseOrder = ({
 
   const selectItem = (e, row, name) => {
     const newData = [...data];
-    const idx = newData.findIndex((obj) => obj.id === row.id);
+    const idx = newData.findIndex(obj => obj.id === row.id);
 
     if (idx !== -1) {
       newData[idx][name] = e;
       setData(newData);
 
-      if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity' || name === 'grnReceivedQuantity') {
+      if (
+        name === 'unitPrice' ||
+        name === 'vatCategoryId' ||
+        name === 'quantity' ||
+        name === 'grnReceivedQuantity'
+      ) {
         updateAmount(newData);
       }
 
@@ -308,14 +342,15 @@ const DetailPurchaseOrder = ({
     }
   };
 
-  const updateAmount = (dataItems) => {
+  const updateAmount = dataItems => {
     let total_net = 0;
     let total_excise = 0;
     let total_vat = 0;
     let discount = 0;
 
-    dataItems.forEach((obj) => {
-      const index = obj.vatCategoryId !== '' ? vat_list.findIndex((item) => item.id === +obj.vatCategoryId) : '';
+    dataItems.forEach(obj => {
+      const index =
+        obj.vatCategoryId !== '' ? vat_list.findIndex(item => item.id === +obj.vatCategoryId) : '';
       const vat = index !== '' && index !== -1 ? vat_list[index].vat : 0;
 
       let net_value = 0;
@@ -357,7 +392,8 @@ const DetailPurchaseOrder = ({
       let val1 = 0;
 
       if (obj.discountType === 'PERCENTAGE') {
-        val = ((+net_value - +(net_value * obj.discount) / 100) * vat * obj.grnReceivedQuantity) / 100;
+        val =
+          ((+net_value - +(net_value * obj.discount) / 100) * vat * obj.grnReceivedQuantity) / 100;
         val1 = (+net_value - +(net_value * obj.discount) / 100) * obj.grnReceivedQuantity;
       } else if (obj.discountType === 'FIXED') {
         val = (net_value * obj.grnReceivedQuantity - obj.discount) * (vat / 100);
@@ -386,9 +422,9 @@ const DetailPurchaseOrder = ({
   };
 
   const prductValue = (e, row) => {
-    const result = product_list.find((item) => item.id === parseInt(e));
+    const result = product_list.find(item => item.id === parseInt(e));
     const newData = [...data];
-    const idx = newData.findIndex((obj) => obj.id === row.id);
+    const idx = newData.findIndex(obj => obj.id === row.id);
 
     if (idx !== -1 && result) {
       newData[idx]['unitPrice'] = parseInt(result.unitPrice);
@@ -410,13 +446,13 @@ const DetailPurchaseOrder = ({
 
   const deleteRow = (e, row) => {
     e.preventDefault();
-    const newData = data.filter((obj) => obj.id !== row.id);
+    const newData = data.filter(obj => obj.id !== row.id);
     setValue('lineItemsString', newData);
     setData(newData);
     updateAmount(newData);
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     e.preventDefault();
     let file = e.target.files[0];
     if (file) {
@@ -425,7 +461,7 @@ const DetailPurchaseOrder = ({
     }
   };
 
-  const setDate = (value) => {
+  const setDate = value => {
     setDateChanged(true);
     const values1 = value || watch('poApproveDate1');
     if (values1) {
@@ -434,7 +470,7 @@ const DetailPurchaseOrder = ({
     }
   };
 
-  const onSubmit = (formData) => {
+  const onSubmit = formData => {
     setDisabled(true);
     setLoading(true);
     setDisableLeavePage(true);
@@ -446,9 +482,15 @@ const DetailPurchaseOrder = ({
     submitData.append('grnNumber', formData.grnNumber || '');
 
     if (dateChanged === true) {
-      submitData.append('poApproveDate', typeof formData.poApproveDate === 'string' ? poApproveDate : formData.poApproveDate);
+      submitData.append(
+        'poApproveDate',
+        typeof formData.poApproveDate === 'string' ? poApproveDate : formData.poApproveDate
+      );
     } else {
-      submitData.append('poApproveDate', typeof formData.poApproveDate === 'string' ? poApproveDateNotChanged : '');
+      submitData.append(
+        'poApproveDate',
+        typeof formData.poApproveDate === 'string' ? poApproveDateNotChanged : ''
+      );
     }
 
     submitData.append('grnRemarks', formData.grnRemarks || '');
@@ -465,15 +507,24 @@ const DetailPurchaseOrder = ({
       submitData.append('currencyCode', supplierCurrency);
     }
 
-    goodsReceivedNoteDetailsAction.updatePO(submitData).then((res) => {
-      commonActions.tostifyAlert('success', res.data ? res.data.message : 'Goods Received Note Updated Successfully');
-      history.push('/admin/expense/goods-received-note');
-      setLoading(false);
-    }).catch((err) => {
-      commonActions.tostifyAlert('error', err.data ? err.data.message : 'Goods Received Note Updated Unsuccessfully');
-      setDisabled(false);
-      setLoading(false);
-    });
+    goodsReceivedNoteDetailsAction
+      .updatePO(submitData)
+      .then(res => {
+        commonActions.tostifyAlert(
+          'success',
+          res.data ? res.data.message : 'Goods Received Note Updated Successfully'
+        );
+        history.push('/admin/expense/goods-received-note');
+        setLoading(false);
+      })
+      .catch(err => {
+        commonActions.tostifyAlert(
+          'error',
+          err.data ? err.data.message : 'Goods Received Note Updated Unsuccessfully'
+        );
+        setDisabled(false);
+        setLoading(false);
+      });
   };
 
   const deleterfq = () => {
@@ -499,17 +550,26 @@ const DetailPurchaseOrder = ({
     setLoading(true);
     setLoadingMsg('Deleting Goods Received Note...');
 
-    goodsReceivedNoteDetailsAction.deletegrn(currentGrnId).then((res) => {
-      if (res.status === 200) {
-        commonActions.tostifyAlert('success', res.data ? res.data.message : 'Goods Received Note Deleted Successfully');
-        history.push('/admin/expense/goods-received-note');
+    goodsReceivedNoteDetailsAction
+      .deletegrn(currentGrnId)
+      .then(res => {
+        if (res.status === 200) {
+          commonActions.tostifyAlert(
+            'success',
+            res.data ? res.data.message : 'Goods Received Note Deleted Successfully'
+          );
+          history.push('/admin/expense/goods-received-note');
+          setLoading(false);
+        }
+      })
+      .catch(err => {
+        commonActions.tostifyAlert(
+          'error',
+          err.data ? err.data.message : 'Goods Received Note Deleted Unsuccessfully'
+        );
+        setDisabled1(false);
         setLoading(false);
-      }
-    }).catch((err) => {
-      commonActions.tostifyAlert('error', err.data ? err.data.message : 'Goods Received Note Deleted Unsuccessfully');
-      setDisabled1(false);
-      setLoading(false);
-    });
+      });
   };
 
   const removeDialog = () => {
@@ -520,7 +580,7 @@ const DetailPurchaseOrder = ({
     setOpenProductModal(false);
   };
 
-  const closeSupplierModal = (res) => {
+  const closeSupplierModal = res => {
     if (res) {
       requestForQuotationAction.getSupplierList(contactType);
     }
@@ -529,162 +589,183 @@ const DetailPurchaseOrder = ({
 
   const columns = useMemo(() => {
     return [
-        {
-            accessorKey: 'action',
-            header: '',
-            size: 50,
-            cell: ({ row }) => (row.original['productId'] != '' ? (
-                <Button
-                    size="sm"
-                    className="btn-twitter btn-brand icon"
-                    onClick={(e) => {
-                        deleteRow(e, row.original);
+      {
+        accessorKey: 'action',
+        header: '',
+        size: 50,
+        cell: ({ row }) =>
+          row.original['productId'] != '' ? (
+            <Button
+              size="sm"
+              className="btn-twitter btn-brand icon"
+              onClick={e => {
+                deleteRow(e, row.original);
+              }}
+            >
+              <i className="fas fa-trash"></i>
+            </Button>
+          ) : (
+            ''
+          ),
+      },
+      {
+        accessorKey: 'productId',
+        header: strings.PRODUCT,
+        size: 200,
+        cell: ({ row }) => {
+          const idx = data.findIndex(obj => obj.id === row.original.id);
+          return (
+            <>
+              <Select
+                options={
+                  product_list
+                    ? selectOptionsFactory.renderOptions('name', 'id', product_list, 'Product')
+                    : []
+                }
+                value={
+                  product_list &&
+                  selectOptionsFactory
+                    .renderOptions('name', 'id', product_list, 'Product')
+                    .find(option => option.value === +row.original.productId)
+                }
+                onChange={e => {
+                  if (e && e.label !== 'Select Product') {
+                    selectItem(e.value, row.original, 'productId');
+                    prductValue(e.value, row.original);
+                    addRow();
+                  }
+                }}
+                className={`${
+                  errors.lineItemsString &&
+                  errors.lineItemsString[parseInt(idx, 10)] &&
+                  errors.lineItemsString[parseInt(idx, 10)].productId
+                    ? 'is-invalid'
+                    : ''
+                }`}
+              />
+              {errors.lineItemsString &&
+                errors.lineItemsString[parseInt(idx, 10)] &&
+                errors.lineItemsString[parseInt(idx, 10)].productId && (
+                  <div className="invalid-feedback">
+                    {errors.lineItemsString[parseInt(idx, 10)].productId.message}
+                  </div>
+                )}
+              {row.original['productId'] != '' ? (
+                <div className="mt-1">
+                  <Input
+                    type="text"
+                    maxLength="250"
+                    value={row.original['description'] || ''}
+                    onChange={e => {
+                      selectItem(e.target.value, row.original, 'description');
                     }}
-                >
-                    <i className="fas fa-trash"></i>
-                </Button>
-            ) : '')
+                    placeholder={strings.Description}
+                    className={`form-control ${
+                      errors.lineItemsString &&
+                      errors.lineItemsString[parseInt(idx, 10)] &&
+                      errors.lineItemsString[parseInt(idx, 10)].description
+                        ? 'is-invalid'
+                        : ''
+                    }`}
+                  />
+                </div>
+              ) : (
+                ''
+              )}
+            </>
+          );
         },
-        {
-            accessorKey: 'productId',
-            header: strings.PRODUCT,
-            size: 200,
-            cell: ({ row }) => {
-                const idx = data.findIndex((obj) => obj.id === row.original.id);
-                return (
-                    <>
-                        <Select
-                            options={product_list ? selectOptionsFactory.renderOptions('name', 'id', product_list, 'Product') : []}
-                            value={
-                                product_list &&
-                                selectOptionsFactory
-                                    .renderOptions('name', 'id', product_list, 'Product')
-                                    .find((option) => option.value === +row.original.productId)
-                            }
-                            onChange={(e) => {
-                                if (e && e.label !== 'Select Product') {
-                                    selectItem(e.value, row.original, 'productId');
-                                    prductValue(e.value, row.original);
-                                    addRow();
-                                }
-                            }}
-                            className={`${
-                                errors.lineItemsString &&
-                                errors.lineItemsString[parseInt(idx, 10)] &&
-                                errors.lineItemsString[parseInt(idx, 10)].productId
-                                    ? 'is-invalid'
-                                    : ''
-                            }`}
-                        />
-                        {errors.lineItemsString &&
-                            errors.lineItemsString[parseInt(idx, 10)] &&
-                            errors.lineItemsString[parseInt(idx, 10)].productId && (
-                                <div className="invalid-feedback">
-                                    {errors.lineItemsString[parseInt(idx, 10)].productId.message}
-                                </div>
-                            )}
-                        {row.original['productId'] != '' ? (
-                            <div className="mt-1">
-                                <Input
-                                    type="text"
-                                    maxLength="250"
-                                    value={row.original['description'] || ''}
-                                    onChange={(e) => {
-                                        selectItem(e.target.value, row.original, 'description');
-                                    }}
-                                    placeholder={strings.Description}
-                                    className={`form-control ${
-                                        errors.lineItemsString &&
-                                        errors.lineItemsString[parseInt(idx, 10)] &&
-                                        errors.lineItemsString[parseInt(idx, 10)].description
-                                            ? 'is-invalid'
-                                            : ''
-                                    }`}
-                                />
-                            </div>
-                        ) : ''}
-                    </>
-                );
-            }
+      },
+      {
+        accessorKey: 'grnReceivedQuantity',
+        header: strings.RECEIVEDQUANTITY,
+        size: 150,
+        cell: ({ row }) => {
+          const idx = data.findIndex(obj => obj.id === row.original.id);
+          return (
+            <div>
+              <div className="input-group">
+                <Input
+                  type="text"
+                  maxLength="10"
+                  min="0"
+                  value={row.original['grnReceivedQuantity'] || 0}
+                  onChange={e => {
+                    if (e.target.value === '' || regEx.test(e.target.value)) {
+                      selectItem(e.target.value, row.original, 'grnReceivedQuantity');
+                    }
+                  }}
+                  placeholder={strings.Quantity}
+                  className={`form-control w-50 ${
+                    errors.lineItemsString &&
+                    errors.lineItemsString[parseInt(idx, 10)] &&
+                    errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity
+                      ? 'is-invalid'
+                      : ''
+                  }`}
+                />
+                {row.original['productId'] != '' ? (
+                  <Input value={row.original['unitType']} disabled />
+                ) : (
+                  ''
+                )}
+              </div>
+              {errors.lineItemsString &&
+                errors.lineItemsString[parseInt(idx, 10)] &&
+                errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity && (
+                  <div className="invalid-feedback">
+                    {errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity.message}
+                  </div>
+                )}
+            </div>
+          );
         },
-        {
-            accessorKey: 'grnReceivedQuantity',
-            header: strings.RECEIVEDQUANTITY,
-            size: 150,
-            cell: ({ row }) => {
-                const idx = data.findIndex((obj) => obj.id === row.original.id);
-                return (
-                    <div>
-                        <div className="input-group">
-                            <Input
-                                type="text"
-                                maxLength="10"
-                                min="0"
-                                value={row.original['grnReceivedQuantity'] || 0}
-                                onChange={(e) => {
-                                    if (e.target.value === '' || regEx.test(e.target.value)) {
-                                        selectItem(e.target.value, row.original, 'grnReceivedQuantity');
-                                    }
-                                }}
-                                placeholder={strings.Quantity}
-                                className={`form-control w-50 ${
-                                    errors.lineItemsString &&
-                                    errors.lineItemsString[parseInt(idx, 10)] &&
-                                    errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity
-                                        ? 'is-invalid'
-                                        : ''
-                                }`}
-                            />
-                            {row.original['productId'] != '' ? <Input value={row.original['unitType']} disabled /> : ''}
-                        </div>
-                        {errors.lineItemsString &&
-                            errors.lineItemsString[parseInt(idx, 10)] &&
-                            errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity && (
-                                <div className="invalid-feedback">{errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity.message}</div>
-                            )}
-                    </div>
-                )
-            }
+      },
+      {
+        accessorKey: 'quantity',
+        header: strings.POQUANTITY,
+        size: 150,
+        cell: ({ row }) => {
+          const idx = data.findIndex(obj => obj.id === row.original.id);
+          return (
+            <div>
+              <div className="input-group">
+                <Input
+                  disabled
+                  type="number"
+                  min="0"
+                  value={row.original['quantity'] || 0}
+                  onChange={e => {
+                    if (e.target.value === '' || regEx.test(e.target.value)) {
+                      selectItem(e.target.value, row.original, 'quantity');
+                    }
+                  }}
+                  placeholder={strings.Quantity}
+                  className={`form-control w-50 ${
+                    errors.lineItemsString &&
+                    errors.lineItemsString[parseInt(idx, 10)] &&
+                    errors.lineItemsString[parseInt(idx, 10)].quantity
+                      ? 'is-invalid'
+                      : ''
+                  }`}
+                />
+                {row.original['productId'] != '' ? (
+                  <Input value={row.original['unitType']} disabled />
+                ) : (
+                  ''
+                )}
+              </div>
+              {errors.lineItemsString &&
+                errors.lineItemsString[parseInt(idx, 10)] &&
+                errors.lineItemsString[parseInt(idx, 10)].quantity && (
+                  <div className="invalid-feedback">
+                    {errors.lineItemsString[parseInt(idx, 10)].quantity.message}
+                  </div>
+                )}
+            </div>
+          );
         },
-        {
-            accessorKey: 'quantity',
-            header: strings.POQUANTITY,
-            size: 150,
-            cell: ({ row }) => {
-                const idx = data.findIndex((obj) => obj.id === row.original.id);
-                return (
-                    <div>
-                        <div className="input-group">
-                            <Input
-                                disabled
-                                type="number"
-                                min="0"
-                                value={row.original['quantity'] || 0}
-                                onChange={(e) => {
-                                    if (e.target.value === '' || regEx.test(e.target.value)) {
-                                        selectItem(e.target.value, row.original, 'quantity');
-                                    }
-                                }}
-                                placeholder={strings.Quantity}
-                                className={`form-control w-50 ${
-                                    errors.lineItemsString &&
-                                    errors.lineItemsString[parseInt(idx, 10)] &&
-                                    errors.lineItemsString[parseInt(idx, 10)].quantity
-                                        ? 'is-invalid'
-                                        : ''
-                                }`}
-                            />
-                            {row.original['productId'] != '' ? <Input value={row.original['unitType']} disabled /> : ''}
-                        </div>
-                        {errors.lineItemsString &&
-                            errors.lineItemsString[parseInt(idx, 10)] &&
-                            errors.lineItemsString[parseInt(idx, 10)].quantity && (
-                                <div className="invalid-feedback">{errors.lineItemsString[parseInt(idx, 10)].quantity.message}</div>
-                            )}
-                    </div>
-                )
-            }
-        }
+      },
     ];
   }, [data, product_list, errors, touchedFields, strings]);
 
@@ -739,7 +820,9 @@ const DetailPurchaseOrder = ({
                                     />
                                   )}
                                 />
-                                {errors.poNumber && <div className="invalid-feedback">{errors.poNumber.message}</div>}
+                                {errors.poNumber && (
+                                  <div className="invalid-feedback">{errors.poNumber.message}</div>
+                                )}
                               </FormGroup>
                             </Col>
                           )}
@@ -764,7 +847,9 @@ const DetailPurchaseOrder = ({
                                   />
                                 )}
                               />
-                              {errors.grnNumber && <div className="invalid-feedback">{errors.grnNumber.message}</div>}
+                              {errors.grnNumber && (
+                                <div className="invalid-feedback">{errors.grnNumber.message}</div>
+                              )}
                             </FormGroup>
                           </Col>
                         </Row>
@@ -783,19 +868,35 @@ const DetailPurchaseOrder = ({
                                     isDisabled={true}
                                     styles={selectStyles}
                                     id="supplierId"
-                                    options={tmpSupplier_list ? selectOptionsFactory.renderOptions('label', 'value', tmpSupplier_list, 'Supplier Name') : []}
-                                    value={tmpSupplier_list && tmpSupplier_list.find((option) => option.value === +field.value)}
-                                    onChange={(option) => field.onChange(option ? option.value : '')}
+                                    options={
+                                      tmpSupplier_list
+                                        ? selectOptionsFactory.renderOptions(
+                                            'label',
+                                            'value',
+                                            tmpSupplier_list,
+                                            'Supplier Name'
+                                          )
+                                        : []
+                                    }
+                                    value={
+                                      tmpSupplier_list &&
+                                      tmpSupplier_list.find(option => option.value === +field.value)
+                                    }
+                                    onChange={option => field.onChange(option ? option.value : '')}
                                     className={errors.supplierId ? 'is-invalid' : ''}
                                   />
                                 )}
                               />
-                              {errors.supplierId && <div className="invalid-feedback">{errors.supplierId.message}</div>}
+                              {errors.supplierId && (
+                                <div className="invalid-feedback">{errors.supplierId.message}</div>
+                              )}
                             </FormGroup>
                           </Col>
                           <Col lg={3}>
                             <FormGroup className="mb-3">
-                              <Label htmlFor="supplierReferenceNumber">{strings.SupplierReferenceNumber}</Label>
+                              <Label htmlFor="supplierReferenceNumber">
+                                {strings.SupplierReferenceNumber}
+                              </Label>
                               <Controller
                                 name="supplierReferenceNumber"
                                 control={control}
@@ -811,7 +912,9 @@ const DetailPurchaseOrder = ({
                                 )}
                               />
                               {errors.supplierReferenceNumber && (
-                                <div className="invalid-feedback">{errors.supplierReferenceNumber.message}</div>
+                                <div className="invalid-feedback">
+                                  {errors.supplierReferenceNumber.message}
+                                </div>
                               )}
                             </FormGroup>
                           </Col>
@@ -837,7 +940,7 @@ const DetailPurchaseOrder = ({
                                     minDate={new Date()}
                                     dropdownMode="select"
                                     selected={field.value ? new Date(field.value) : null}
-                                    onChange={(value) => {
+                                    onChange={value => {
                                       field.onChange(value);
                                       setDate(value);
                                     }}
@@ -846,7 +949,9 @@ const DetailPurchaseOrder = ({
                                 )}
                               />
                               {errors.poApproveDate && (
-                                <div className="invalid-feedback">{errors.poApproveDate.message}</div>
+                                <div className="invalid-feedback">
+                                  {errors.poApproveDate.message}
+                                </div>
                               )}
                             </FormGroup>
                           </Col>
@@ -878,25 +983,28 @@ const DetailPurchaseOrder = ({
                                     value={
                                       currency_convert_list &&
                                       selectCurrencyFactory
-                                        .renderOptions('currencyName', 'currencyCode', currency_convert_list, 'Currency')
-                                        .find((option) => option.value === supplierCurrency)
+                                        .renderOptions(
+                                          'currencyName',
+                                          'currencyCode',
+                                          currency_convert_list,
+                                          'Currency'
+                                        )
+                                        .find(option => option.value === supplierCurrency)
                                     }
-                                    onChange={(option) => field.onChange(option)}
+                                    onChange={option => field.onChange(option)}
                                     className={`${errors.currency ? 'is-invalid' : ''}`}
                                   />
                                 )}
                               />
-                              {errors.currency && <div className="invalid-feedback">{errors.currency.message}</div>}
+                              {errors.currency && (
+                                <div className="invalid-feedback">{errors.currency.message}</div>
+                              )}
                             </FormGroup>
                           </Col>
                         </Row>
                         <Row>
                           <Col lg={8}>
-                            <DataTable
-                                data={data}
-                                columns={columns}
-                                manualPagination={false}
-                            />
+                            <DataTable data={data} columns={columns} manualPagination={false} />
                           </Col>
                         </Row>
                         {data.length > 0 && (
@@ -921,7 +1029,9 @@ const DetailPurchaseOrder = ({
                                       )}
                                     />
                                     {errors.grnRemarks && (
-                                      <div className="invalid-feedback">{errors.grnRemarks.message}</div>
+                                      <div className="invalid-feedback">
+                                        {errors.grnRemarks.message}
+                                      </div>
                                     )}
                                   </FormGroup>
                                 </Col>
@@ -951,20 +1061,28 @@ const DetailPurchaseOrder = ({
                                           />
                                           {fileName && (
                                             <div>
-                                              <i className="fa fa-close" onClick={() => setFileName('')}></i> {fileName}
+                                              <i
+                                                className="fa fa-close"
+                                                onClick={() => setFileName('')}
+                                              ></i>{' '}
+                                              {fileName}
                                             </div>
                                           )}
                                         </div>
                                       )}
                                     />
                                     {errors.attachmentFile && (
-                                      <div className="invalid-file">{errors.attachmentFile.message}</div>
+                                      <div className="invalid-file">
+                                        {errors.attachmentFile.message}
+                                      </div>
                                     )}
                                   </FormGroup>
                                 </Col>
                               </Row>
                               <FormGroup className="mb-3 hideAttachment">
-                                <Label htmlFor="receiptAttachmentDescription">{strings.AttachmentDescription}</Label>
+                                <Label htmlFor="receiptAttachmentDescription">
+                                  {strings.AttachmentDescription}
+                                </Label>
                                 <br />
                                 <Controller
                                   name="receiptAttachmentDescription"
@@ -985,7 +1103,10 @@ const DetailPurchaseOrder = ({
                           </Row>
                         )}
                         <Row>
-                          <Col lg={8} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
+                          <Col
+                            lg={8}
+                            className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
+                          >
                             <FormGroup>
                               <Button
                                 type="button"
@@ -994,12 +1115,19 @@ const DetailPurchaseOrder = ({
                                 disabled={disabled1}
                                 onClick={deleterfq}
                               >
-                                <i className="fa fa-trash"></i> {disabled1 ? 'Deleting...' : strings.Delete}
+                                <i className="fa fa-trash"></i>{' '}
+                                {disabled1 ? 'Deleting...' : strings.Delete}
                               </Button>
                             </FormGroup>
                             <FormGroup className="text-right">
-                              <Button type="submit" color="primary" className="btn-square mr-3" disabled={disabled}>
-                                <i className="fa fa-dot-circle-o"></i> {disabled ? 'Updating...' : strings.Update}
+                              <Button
+                                type="submit"
+                                color="primary"
+                                className="btn-square mr-3"
+                                disabled={disabled}
+                              >
+                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                {disabled ? 'Updating...' : strings.Update}
                               </Button>
                               <Button
                                 type="button"
@@ -1024,10 +1152,10 @@ const DetailPurchaseOrder = ({
         </div>
         <SupplierModal
           openSupplierModal={openSupplierModal}
-          closeSupplierModal={(e) => {
+          closeSupplierModal={e => {
             closeSupplierModal(e);
           }}
-          getCurrentUser={(e) => {}}
+          getCurrentUser={e => {}}
           createSupplier={requestForQuotationAction.createSupplier}
           currency_list={currency_convert_list}
           country_list={country_list}
@@ -1035,10 +1163,10 @@ const DetailPurchaseOrder = ({
         />
         <ProductModal
           openProductModal={openProductModal}
-          closeProductModal={(e) => {
+          closeProductModal={e => {
             closeProductModal(e);
           }}
-          getCurrentProduct={(e) => {}}
+          getCurrentProduct={e => {}}
           createProduct={ProductActions.createAndSaveProduct}
           vat_list={vat_list}
           product_category_list={product_category_list}

@@ -38,15 +38,9 @@ function BankTransactions() {
   const dispatch = useDispatch();
 
   // Redux state
-  const bank_transaction_list = useSelector(
-    (state) => state.bank_account.bank_transaction_list
-  );
-  const transaction_type_list = useSelector(
-    (state) => state.bank_account.transaction_type_list
-  );
-  const universal_currency_list = useSelector(
-    (state) => state.common.universal_currency_list
-  );
+  const bank_transaction_list = useSelector(state => state.bank_account.bank_transaction_list);
+  const transaction_type_list = useSelector(state => state.bank_account.transaction_type_list);
+  const universal_currency_list = useSelector(state => state.common.universal_currency_list);
 
   // Actions
   const transactionsActions = useMemo(
@@ -61,10 +55,7 @@ function BankTransactions() {
     () => bindActionCreators(transactionDetailActions, dispatch),
     [dispatch]
   );
-  const commonActions = useMemo(
-    () => bindActionCreators(CommonActions, dispatch),
-    [dispatch]
-  );
+  const commonActions = useMemo(() => bindActionCreators(CommonActions, dispatch), [dispatch]);
 
   // Local state
   const [language] = useState(() => window.localStorage.getItem('language') || 'en');
@@ -104,7 +95,7 @@ function BankTransactions() {
     if (location.state && location.state.bankAccountId) {
       detailBankAccountActions
         .getBankAccountByID(location.state.bankAccountId)
-        .then((res) => {
+        .then(res => {
           setBankAccountCurrencySymbol(res.bankAccountCurrencySymbol);
           setBankAccountCurrencyIsoCode(res.bankAccountCurrencyIsoCode);
           setCurrentBalance(res.currentBalance);
@@ -113,7 +104,7 @@ function BankTransactions() {
           setAccountName(res.bankAccountName);
           setTransactionCount(res.transactionCount);
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
@@ -140,12 +131,12 @@ function BankTransactions() {
       };
       transactionsActions
         .getTransactionList(postData)
-        .then((res) => {
+        .then(res => {
           const array = [];
           if (res.status === 200) {
             setLoading(false);
             setTransationData(res.data.data);
-            res.data.data.forEach((item) => {
+            res.data.data.forEach(item => {
               if (item.creationMode === 'POTENTIAL_DUPLICATE') {
                 array.push(item.id);
               }
@@ -153,7 +144,7 @@ function BankTransactions() {
             setNonexpand(array);
           }
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
@@ -177,7 +168,7 @@ function BankTransactions() {
     if (location.state && location.state.bankAccountId) {
       detailBankAccountActions
         .getBankAccountByID(location.state.bankAccountId)
-        .then((res) => {
+        .then(res => {
           setBankAccountCurrencySymbol(res.bankAccountCurrencySymbol);
           setBankAccountCurrencyIsoCode(res.bankAccountCurrencyIsoCode);
           setCurrentBalance(res.currentBalance);
@@ -186,7 +177,7 @@ function BankTransactions() {
           setAccountName(res.bankAccountName);
           setTransactionCount(res.transactionCount);
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
@@ -194,7 +185,7 @@ function BankTransactions() {
           navigate('/admin/banking/bank-account');
         });
       toggle(0, 'all');
-      commonActions.getCompanyDetails().then((action) => {
+      commonActions.getCompanyDetails().then(action => {
         if (action && action.type && action.type.includes('fulfilled')) {
           const isRegisteredVat = action.payload.isRegisteredVat;
           // Update location state
@@ -209,8 +200,8 @@ function BankTransactions() {
     initializeData();
   }, [pagination]);
 
-  const toggleActionButton = useCallback((row) => {
-    setActionButtons((prev) => ({
+  const toggleActionButton = useCallback(row => {
+    setActionButtons(prev => ({
       ...prev,
       [row]: !prev[row],
     }));
@@ -229,7 +220,7 @@ function BankTransactions() {
   );
 
   const handleChange = useCallback((val, name) => {
-    setFilterData((prev) => ({
+    setFilterData(prev => ({
       ...prev,
       [name]: val,
     }));
@@ -239,42 +230,35 @@ function BankTransactions() {
     initializeData();
   }, [initializeData]);
 
-  const closeTransaction = useCallback(
-    (id) => {
-      const message1 = (
-        <text>
-          <b>Delete Transaction?</b>
-        </text>
-      );
-      const message =
-        'This Transaction will be deleted permanently and cannot be recovered.';
-      setDialog(
-        <ConfirmDeleteModal
-          isOpen={true}
-          okHandler={() => removeTransaction(id)}
-          cancelHandler={removeDialog}
-          message1={message1}
-          message={message}
-        />
-      );
-    },
-    []
-  );
+  const closeTransaction = useCallback(id => {
+    const message1 = (
+      <text>
+        <b>Delete Transaction?</b>
+      </text>
+    );
+    const message = 'This Transaction will be deleted permanently and cannot be recovered.';
+    setDialog(
+      <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={() => removeTransaction(id)}
+        cancelHandler={removeDialog}
+        message1={message1}
+        message={message}
+      />
+    );
+  }, []);
 
   const removeTransaction = useCallback(
-    (id) => {
+    id => {
       removeDialog();
       transactionsActions
         .deleteTransactionById(id)
-        .then((res) => {
+        .then(res => {
           commonActions.tostifyAlert('success', 'Transaction Deleted Successfully');
           initializeData();
         })
-        .catch((err) => {
-          commonActions.tostifyAlert(
-            'error',
-            err && err.data ? err.data.message : null
-          );
+        .catch(err => {
+          commonActions.tostifyAlert('error', err && err.data ? err.data.message : null);
         });
     },
     [transactionsActions, commonActions, initializeData]
@@ -293,7 +277,7 @@ function BankTransactions() {
   }, []);
 
   const onRowSelect = useCallback(
-    (row) => {
+    row => {
       const tempList = [...selectedIdList, row];
       setSelectedIdList(tempList);
 
@@ -307,7 +291,7 @@ function BankTransactions() {
           initializeData();
           setSelectedIdList([]);
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
@@ -429,7 +413,7 @@ function BankTransactions() {
     [actionButtons, onRowSelect, closeTransaction]
   );
 
-  const handlePaginationChange = useCallback((newPagination) => {
+  const handlePaginationChange = useCallback(newPagination => {
     setPagination(newPagination);
   }, []);
 
@@ -586,7 +570,7 @@ function BankTransactions() {
                     </div>
                   </div>
                   <div className="flex justify-between items-center mb-4">
-                    <Tabs value={activeTab[0]} onValueChange={(value) => toggle(0, value)}>
+                    <Tabs value={activeTab[0]} onValueChange={value => toggle(0, value)}>
                       <TabsList>
                         <TabsTrigger value="all">{strings.All}</TabsTrigger>
                         <TabsTrigger value="not_explain">{strings.NotExplained}</TabsTrigger>

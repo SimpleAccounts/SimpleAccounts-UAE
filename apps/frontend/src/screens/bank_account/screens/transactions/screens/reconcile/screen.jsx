@@ -46,7 +46,7 @@ function ReconcileTransaction() {
   const dispatch = useDispatch();
 
   // Redux state
-  const reconcile_list = useSelector((state) => state.bank_account.reconcile_list);
+  const reconcile_list = useSelector(state => state.bank_account.reconcile_list);
 
   // Actions
   const transactionActionsObj = useMemo(
@@ -108,12 +108,12 @@ function ReconcileTransaction() {
       };
       transactionReconcileActionsObj
         .getReconcileList(postData)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             setLoading(false);
           }
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
@@ -123,13 +123,7 @@ function ReconcileTransaction() {
     } else {
       navigate('/admin/banking/bank-account');
     }
-  }, [
-    location.state,
-    pagination,
-    transactionReconcileActionsObj,
-    commonActions,
-    navigate,
-  ]);
+  }, [location.state, pagination, transactionReconcileActionsObj, commonActions, navigate]);
 
   useEffect(() => {
     initializeData();
@@ -140,7 +134,7 @@ function ReconcileTransaction() {
   }, [pagination]);
 
   const onSubmit = useCallback(
-    (data) => {
+    data => {
       setDisabled(true);
       setLoading(true);
       setDisableLeavePage(true);
@@ -155,7 +149,7 @@ function ReconcileTransaction() {
 
       transactionReconcileActionsObj
         .reconcilenow(formData)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             setDisabled(false);
             reset();
@@ -171,49 +165,40 @@ function ReconcileTransaction() {
             }
           }
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
           );
         });
     },
-    [
-      location.state,
-      transactionReconcileActionsObj,
-      commonActions,
-      initializeData,
-      reset,
-    ]
+    [location.state, transactionReconcileActionsObj, commonActions, initializeData, reset]
   );
 
   const editDetails = useCallback(() => {
     setView(false);
   }, []);
 
-  const closeReconciled = useCallback(
-    (_id) => {
-      const message1 = (
-        <text>
-          <b>Delete Bank Reconciliation?</b>
-        </text>
-      );
-      const message = 'The bank reconciliation of the transaction will be undone. ';
-      setDialog(
-        <ConfirmDeleteModal
-          isOpen={true}
-          okHandler={() => removeReconciled(_id)}
-          cancelHandler={removeDialog}
-          message1={message1}
-          message={message}
-        />
-      );
-    },
-    []
-  );
+  const closeReconciled = useCallback(_id => {
+    const message1 = (
+      <text>
+        <b>Delete Bank Reconciliation?</b>
+      </text>
+    );
+    const message = 'The bank reconciliation of the transaction will be undone. ';
+    setDialog(
+      <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={() => removeReconciled(_id)}
+        cancelHandler={removeDialog}
+        message1={message1}
+        message={message}
+      />
+    );
+  }, []);
 
   const removeReconciled = useCallback(
-    (_id) => {
+    _id => {
       removeDialog();
       let obj = {
         ids: [_id],
@@ -224,7 +209,7 @@ function ReconcileTransaction() {
           commonActions.tostifyAlert('success', 'Deleted Successfully');
           initializeData();
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
@@ -238,8 +223,8 @@ function ReconcileTransaction() {
     setDialog(null);
   }, []);
 
-  const toggleActionButton = useCallback((index) => {
-    setActionButtons((prev) => ({
+  const toggleActionButton = useCallback(index => {
+    setActionButtons(prev => ({
       ...prev,
       [index]: !prev[index],
     }));
@@ -296,7 +281,7 @@ function ReconcileTransaction() {
     [actionButtons, closeReconciled]
   );
 
-  const handlePaginationChange = useCallback((newPagination) => {
+  const handlePaginationChange = useCallback(newPagination => {
     setPagination(newPagination);
   }, []);
 
@@ -349,19 +334,15 @@ function ReconcileTransaction() {
                                 render={({ field }) => (
                                   <DatePicker
                                     id="date"
-                                    placeholderText={
-                                      strings.Select + ' ' + strings.BankClosingDate
-                                    }
+                                    placeholderText={strings.Select + ' ' + strings.BankClosingDate}
                                     showMonthDropdown
                                     showYearDropdown
                                     dateFormat="dd-MM-yyyy"
                                     dropdownMode="select"
                                     maxDate={new Date()}
                                     selected={field.value}
-                                    onChange={(value) => field.onChange(value)}
-                                    className={`form-control ${
-                                      errors.date ? 'is-invalid' : ''
-                                    }`}
+                                    onChange={value => field.onChange(value)}
+                                    className={`form-control ${errors.date ? 'is-invalid' : ''}`}
                                   />
                                 )}
                               />
@@ -387,7 +368,7 @@ function ReconcileTransaction() {
                                     id="closingBalance"
                                     placeholder={strings.Amount}
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       if (
                                         e.target.value === '' ||
                                         regDecimal.test(e.target.value)

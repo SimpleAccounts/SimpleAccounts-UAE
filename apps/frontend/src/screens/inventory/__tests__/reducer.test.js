@@ -172,9 +172,7 @@ describe('Inventory Reducer', () => {
   });
 
   it('should handle inventory with negative values', () => {
-    const negativeStockData = [
-      { productId: 1, productName: 'Negative Stock', stockInHand: -10 },
-    ];
+    const negativeStockData = [{ productId: 1, productName: 'Negative Stock', stockInHand: -10 }];
 
     const action = {
       type: INVENTORY.SUMMARY_LIST,

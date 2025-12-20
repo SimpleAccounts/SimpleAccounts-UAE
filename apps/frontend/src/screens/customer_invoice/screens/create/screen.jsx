@@ -33,7 +33,14 @@ import {
 } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
-import { renderList, selectOptionsFactory, InputValidation, DropdownLists, Lists, selectStyles } from 'utils';
+import {
+  renderList,
+  selectOptionsFactory,
+  InputValidation,
+  DropdownLists,
+  Lists,
+  selectStyles,
+} from 'utils';
 import Switch from 'react-switch';
 import './style.scss';
 import dayjs from '@/utils/date';
@@ -78,81 +85,97 @@ if (localStorage.getItem('language') == null) {
 }
 
 // Zod validation schema
-const createCustomerInvoiceSchema = z.object({
-  invoice_number: z.string().min(1, 'Invoice number is required'),
-  contactId: z.union([
-    z.string().min(1, 'Customer Name is required'),
-    z.object({ value: z.union([z.string(), z.number()]), label: z.string() })
-  ]),
-  term: z.union([
-    z.string().min(1, 'Term is required'),
-    z.object({ value: z.string(), label: z.string() })
-  ]).refine((val) => {
-    if (typeof val === 'object' && val.label === 'Select Terms') return false;
-    return true;
-  }, { message: 'Term is required' }),
-  currencyCode: z.union([
-    z.string().min(1, 'Currency is required'),
-    z.object({ value: z.string(), label: z.string() })
-  ]),
-  invoiceDate: z.union([z.string(), z.date()]).refine((val) => val !== '', { message: 'Invoice date is required' }),
-  invoiceDueDate: z.string().optional(),
-  placeOfSupplyId: z.union([z.string(), z.object({ value: z.string(), label: z.string() })]).optional(),
-  changeShippingAddress: z.boolean().optional(),
-  shippingAddress: z.object({
-    address: z.string().optional(),
-    city: z.string().optional(),
-    countryId: z.string().optional(),
-    stateId: z.string().optional(),
-    postZipCode: z.string().optional(),
-    telephone: z.string().optional(),
-    fax: z.string().optional(),
-  }).optional(),
-  lineItemsString: z.array(
-    z.object({
-      quantity: z.union([z.string(), z.number()]).refine(
-        value => parseFloat(value) > 0,
-        { message: 'Quantity must be greater than 0' }
+const createCustomerInvoiceSchema = z
+  .object({
+    invoice_number: z.string().min(1, 'Invoice number is required'),
+    contactId: z.union([
+      z.string().min(1, 'Customer Name is required'),
+      z.object({ value: z.union([z.string(), z.number()]), label: z.string() }),
+    ]),
+    term: z
+      .union([
+        z.string().min(1, 'Term is required'),
+        z.object({ value: z.string(), label: z.string() }),
+      ])
+      .refine(
+        val => {
+          if (typeof val === 'object' && val.label === 'Select Terms') return false;
+          return true;
+        },
+        { message: 'Term is required' }
       ),
-      unitPrice: z.union([z.string(), z.number()]).refine(
-        value => parseFloat(value) > 0,
-        { message: 'Unit price must be greater than 0' }
-      ),
-      vatCategoryId: z.union([z.string(), z.number()]).refine(
-        value => value !== '',
-        { message: 'VAT is required' }
-      ),
-      productId: z.union([z.string(), z.number()]).refine(
-        value => value !== '',
-        { message: 'Product is required' }
-      ),
-    })
-  ).min(1, 'At least one invoice line item is required'),
-  attachmentFile: z.any().optional(),
-  receiptAttachmentDescription: z.string().optional(),
-  receiptNumber: z.string().optional(),
-  contact_po_number: z.string().optional(),
-  exchangeRate: z.union([z.string(), z.number()]).optional(),
-  notes: z.string().optional(),
-  footNote: z.string().optional(),
-  discount: z.union([z.string(), z.number()]).optional(),
-  discountPercentage: z.string().optional(),
-  discountType: z.string().optional(),
-  totalNet: z.number().optional(),
-  totalVatAmount: z.number().optional(),
-  totalAmount: z.number().optional(),
-  totalExciseAmount: z.number().optional(),
-  currencyName: z.string().optional(),
-}).refine((data) => {
-  if (data.changeShippingAddress === true && data.shippingAddress) {
-    const errors = InputValidation.addressValidation(data.shippingAddress);
-    return !errors || Object.keys(errors).length === 0;
-  }
-  return true;
-}, {
-  message: 'Shipping address validation failed',
-  path: ['shippingAddress']
-});
+    currencyCode: z.union([
+      z.string().min(1, 'Currency is required'),
+      z.object({ value: z.string(), label: z.string() }),
+    ]),
+    invoiceDate: z
+      .union([z.string(), z.date()])
+      .refine(val => val !== '', { message: 'Invoice date is required' }),
+    invoiceDueDate: z.string().optional(),
+    placeOfSupplyId: z
+      .union([z.string(), z.object({ value: z.string(), label: z.string() })])
+      .optional(),
+    changeShippingAddress: z.boolean().optional(),
+    shippingAddress: z
+      .object({
+        address: z.string().optional(),
+        city: z.string().optional(),
+        countryId: z.string().optional(),
+        stateId: z.string().optional(),
+        postZipCode: z.string().optional(),
+        telephone: z.string().optional(),
+        fax: z.string().optional(),
+      })
+      .optional(),
+    lineItemsString: z
+      .array(
+        z.object({
+          quantity: z
+            .union([z.string(), z.number()])
+            .refine(value => parseFloat(value) > 0, { message: 'Quantity must be greater than 0' }),
+          unitPrice: z
+            .union([z.string(), z.number()])
+            .refine(value => parseFloat(value) > 0, {
+              message: 'Unit price must be greater than 0',
+            }),
+          vatCategoryId: z
+            .union([z.string(), z.number()])
+            .refine(value => value !== '', { message: 'VAT is required' }),
+          productId: z
+            .union([z.string(), z.number()])
+            .refine(value => value !== '', { message: 'Product is required' }),
+        })
+      )
+      .min(1, 'At least one invoice line item is required'),
+    attachmentFile: z.any().optional(),
+    receiptAttachmentDescription: z.string().optional(),
+    receiptNumber: z.string().optional(),
+    contact_po_number: z.string().optional(),
+    exchangeRate: z.union([z.string(), z.number()]).optional(),
+    notes: z.string().optional(),
+    footNote: z.string().optional(),
+    discount: z.union([z.string(), z.number()]).optional(),
+    discountPercentage: z.string().optional(),
+    discountType: z.string().optional(),
+    totalNet: z.number().optional(),
+    totalVatAmount: z.number().optional(),
+    totalAmount: z.number().optional(),
+    totalExciseAmount: z.number().optional(),
+    currencyName: z.string().optional(),
+  })
+  .refine(
+    data => {
+      if (data.changeShippingAddress === true && data.shippingAddress) {
+        const errors = InputValidation.addressValidation(data.shippingAddress);
+        return !errors || Object.keys(errors).length === 0;
+      }
+      return true;
+    },
+    {
+      message: 'Shipping address validation failed',
+      path: ['shippingAddress'],
+    }
+  );
 
 const regExInvNum = /[a-zA-Z0-9-/]+$/;
 const regExAlpha = /^[a-zA-Z ]+$/;
@@ -296,7 +319,16 @@ const CreateCustomerInvoice = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, reset, setValue, watch, setError, clearErrors } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+    watch,
+    setError,
+    clearErrors,
+  } = form;
   const watchInvoiceNumber = watch('invoice_number');
 
   useEffect(() => {
@@ -305,7 +337,7 @@ const CreateCustomerInvoice = ({
     }
   }, [watchInvoiceNumber]);
 
-  const setDateHandler = (value) => {
+  const setDateHandler = value => {
     const val = term ? term.value.split('_') : '';
     const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 
@@ -329,26 +361,29 @@ const CreateCustomerInvoice = ({
     }
   };
 
-  const validationCheck = useCallback((value) => {
-    const validationData = {
-      moduleType: 6,
-      name: value,
-    };
-    customerInvoiceCreateActions.checkValidation(validationData).then(response => {
-      if (response.data === 'Invoice Number Already Exists') {
-        setExist(true);
-        setError('invoice_number', {
-          type: 'manual',
-          message: 'Invoice number already exists',
-        });
-      } else {
-        setExist(false);
-        clearErrors('invoice_number');
-      }
-    });
-  }, [customerInvoiceCreateActions, setError, clearErrors]);
+  const validationCheck = useCallback(
+    value => {
+      const validationData = {
+        moduleType: 6,
+        name: value,
+      };
+      customerInvoiceCreateActions.checkValidation(validationData).then(response => {
+        if (response.data === 'Invoice Number Already Exists') {
+          setExist(true);
+          setError('invoice_number', {
+            type: 'manual',
+            message: 'Invoice number already exists',
+          });
+        } else {
+          setExist(false);
+          clearErrors('invoice_number');
+        }
+      });
+    },
+    [customerInvoiceCreateActions, setError, clearErrors]
+  );
 
-  const getQuotationDetails = async (quotationIdParam) => {
+  const getQuotationDetails = async quotationIdParam => {
     customerInvoiceCreateActions.getQuotationById(quotationIdParam).then(res => {
       if (res.status === 200) {
         const invoiceData = renderList.mapInvoiceListFromQuotation(res.data);
@@ -357,7 +392,7 @@ const CreateCustomerInvoice = ({
     });
   };
 
-  const populateData = (invoiceData) => {
+  const populateData = invoiceData => {
     delete invoiceData.initValue.invoiceNumber;
 
     Object.entries(invoiceData.initValue).forEach(([name, value]) => {
@@ -371,7 +406,7 @@ const CreateCustomerInvoice = ({
     getVatListForProducts(renderList.addRow(populatedData, invoiceData.state.idCount));
   };
 
-  const getParentInvoiceDetails = (parentInvoiceIdParam) => {
+  const getParentInvoiceDetails = parentInvoiceIdParam => {
     customerInvoiceCreateActions.getInvoiceById(parentInvoiceIdParam).then(res => {
       if (res.status === 200) {
         const invoiceData = renderList.mapInvoiceList(res.data);
@@ -417,8 +452,12 @@ const CreateCustomerInvoice = ({
     await customerInvoiceActions.getVatList();
 
     if (companyDetails) {
-      const { currencyCode, isRegisteredVat: regVat, isDesignatedZone: desZone, vatRegistrationDate } =
-        companyDetails;
+      const {
+        currencyCode,
+        isRegisteredVat: regVat,
+        isDesignatedZone: desZone,
+        vatRegistrationDate,
+      } = companyDetails;
       setValue('currencyCode', currencyCode);
       setCompanyVATRegistrationDate(new Date(dayjs(vatRegistrationDate)));
       setIsDesignatedZone(desZone);
@@ -455,21 +494,19 @@ const CreateCustomerInvoice = ({
   const getContactShippingAddress = (customerID, taxID) => {
     const { placeList } = Lists;
     if (enablePlaceOfSupply) {
-      customerInvoiceCreateActions
-        .getCustomerShippingAddressbyID(customerID)
-        .then(res => {
-          if (res.status === 200) {
-            var PlaceofSupply =
-              placeList &&
-              placeList.find(
-                option => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase()
-              );
-            if (PlaceofSupply) {
-              setPlaceOfSupplyId(PlaceofSupply);
-              setValue('placeOfSupplyId', PlaceofSupply.value, { shouldValidate: true });
-            }
+      customerInvoiceCreateActions.getCustomerShippingAddressbyID(customerID).then(res => {
+        if (res.status === 200) {
+          var PlaceofSupply =
+            placeList &&
+            placeList.find(
+              option => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase()
+            );
+          if (PlaceofSupply) {
+            setPlaceOfSupplyId(PlaceofSupply);
+            setValue('placeOfSupplyId', PlaceofSupply.value, { shouldValidate: true });
           }
-        });
+        }
+      });
     }
   };
 
@@ -477,11 +514,13 @@ const CreateCustomerInvoice = ({
     let taxTreatmentIdValue = '';
     taxTreatmentIdValue = e.taxTreatment;
     setTaxTreatmentId(taxTreatmentIdValue);
-    setEnablePlaceOfSupply(!!(
-      taxTreatmentIdValue !== 'GCC VAT REGISTERED' &&
-      taxTreatmentIdValue !== 'GCC NON-VAT REGISTERED' &&
-      taxTreatmentIdValue !== 'NON GCC'
-    ));
+    setEnablePlaceOfSupply(
+      !!(
+        taxTreatmentIdValue !== 'GCC VAT REGISTERED' &&
+        taxTreatmentIdValue !== 'GCC NON-VAT REGISTERED' &&
+        taxTreatmentIdValue !== 'NON GCC'
+      )
+    );
     setValue('taxTreatmentId', taxTreatmentIdValue, { shouldValidate: true });
 
     getContactShippingAddress(e.id, taxTreatmentIdValue);
@@ -591,7 +630,7 @@ const CreateCustomerInvoice = ({
     updateAmount(newData);
   };
 
-  const updateAmount = (dataToUpdate) => {
+  const updateAmount = dataToUpdate => {
     const list = ProductTableCalculation.updateAmount(dataToUpdate, vat_list, taxType);
     setData(list.data ? list.data : []);
     setValue('totalNet', list.totalNet ? list.totalNet : 0);
@@ -601,7 +640,7 @@ const CreateCustomerInvoice = ({
     setValue('totalExciseAmount', list.totalExciseAmount ? list.totalExciseAmount : 0);
   };
 
-  const getVatListForProducts = (dataToProcess) => {
+  const getVatListForProducts = dataToProcess => {
     if (dataToProcess && dataToProcess.length > 0) {
       let newData = [];
       dataToProcess.map(obj => {
@@ -618,7 +657,7 @@ const CreateCustomerInvoice = ({
     }
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -629,7 +668,7 @@ const CreateCustomerInvoice = ({
     }
   };
 
-  const onSubmit = (formData) => {
+  const onSubmit = formData => {
     if (exist) {
       return;
     }
@@ -644,16 +683,28 @@ const CreateCustomerInvoice = ({
     );
     postFormData.append('invoiceDueDate', formData.invoiceDueDate ? formData.invoiceDueDate : null);
     postFormData.append('invoiceDate', formData.invoiceDate ? formData.invoiceDate : null);
-    postFormData.append('receiptNumber', formData.receiptNumber !== null ? formData.receiptNumber : '');
+    postFormData.append(
+      'receiptNumber',
+      formData.receiptNumber !== null ? formData.receiptNumber : ''
+    );
     postFormData.append(
       'receiptAttachmentDescription',
       formData.receiptAttachmentDescription !== null ? formData.receiptAttachmentDescription : ''
     );
-    postFormData.append('exchangeRate', formData.exchangeRate !== null ? formData.exchangeRate : '');
-    postFormData.append('contactPoNumber', formData.contact_po_number !== null ? formData.contact_po_number : '');
+    postFormData.append(
+      'exchangeRate',
+      formData.exchangeRate !== null ? formData.exchangeRate : ''
+    );
+    postFormData.append(
+      'contactPoNumber',
+      formData.contact_po_number !== null ? formData.contact_po_number : ''
+    );
 
     if (formData.changeShippingAddress && formData.changeShippingAddress === true) {
-      postFormData.append('changeShippingAddress', formData.changeShippingAddress !== null ? formData.changeShippingAddress : '');
+      postFormData.append(
+        'changeShippingAddress',
+        formData.changeShippingAddress !== null ? formData.changeShippingAddress : ''
+      );
       postFormData.append('shippingAddress', formData.shippingAddress.address ?? '');
       postFormData.append('shippingCountry', formData.shippingAddress.countryId ?? '');
       postFormData.append('shippingState', formData.shippingAddress.stateId ?? '');
@@ -673,12 +724,18 @@ const CreateCustomerInvoice = ({
     postFormData.append('totalExciseAmount', watch('totalExciseAmount'));
     postFormData.append('discount', watch('discount'));
     postFormData.append('term', term ? (term.value ?? term) : '');
-    postFormData.append('contactId', formData.contactId ? (formData.contactId.value ?? formData.contactId) : '');
+    postFormData.append(
+      'contactId',
+      formData.contactId ? (formData.contactId.value ?? formData.contactId) : ''
+    );
     postFormData.append(
       'placeOfSupplyId',
       formData.placeOfSupplyId ? (formData.placeOfSupplyId.value ?? formData.placeOfSupplyId) : ''
     );
-    postFormData.append('currencyCode', formData.currencyCode ? (formData.currencyCode.value ?? formData.currencyCode) : '');
+    postFormData.append(
+      'currencyCode',
+      formData.currencyCode ? (formData.currencyCode.value ?? formData.currencyCode) : ''
+    );
 
     if (uploadFile.current && uploadFile.current.files && uploadFile.current.files[0]) {
       postFormData.append('attachmentFile', uploadFile.current.files[0]);
@@ -778,7 +835,9 @@ const CreateCustomerInvoice = ({
       const vatList = getProductType(newProduct.id);
       data.map(obj => {
         if (!obj.productId) {
-          obj['unitPrice'] = (parseFloat(newProduct.unitPrice) * (1 / exchangeRateValue)).toFixed(2);
+          obj['unitPrice'] = (parseFloat(newProduct.unitPrice) * (1 / exchangeRateValue)).toFixed(
+            2
+          );
           obj['exciseTaxId'] = newProduct.exciseTaxId;
           obj['description'] = newProduct.description;
           obj['discountType'] = newProduct.discountType;
@@ -790,10 +849,7 @@ const CreateCustomerInvoice = ({
           obj['productId'] = newProduct.id;
           obj['quantity'] = '1';
           obj.vat_list = vatList;
-          obj['vatCategoryId'] = getVatCategoryId(
-            parseInt(newProduct.vatCategoryId),
-            vatList
-          );
+          obj['vatCategoryId'] = getVatCategoryId(parseInt(newProduct.vatCategoryId), vatList);
         }
         return obj;
       });
@@ -822,7 +878,7 @@ const CreateCustomerInvoice = ({
     });
   };
 
-  const setContactDetails = (customerID) => {
+  const setContactDetails = customerID => {
     setValue('contactId', customerID, { shouldValidate: true });
     const customer = customer_list_dropdown.find(obj => obj.value === customerID);
     if (customer) {
@@ -830,11 +886,13 @@ const CreateCustomerInvoice = ({
       const taxTreatment = customer.label.taxTreatment.taxTreatment;
       setContactId(customerID);
       setTaxTreatmentId(taxTreatment);
-      setEnablePlaceOfSupply(!!(
-        taxTreatment !== 'GCC VAT REGISTERED' &&
-        taxTreatment !== 'GCC NON-VAT REGISTERED' &&
-        taxTreatment !== 'NON GCC'
-      ));
+      setEnablePlaceOfSupply(
+        !!(
+          taxTreatment !== 'GCC VAT REGISTERED' &&
+          taxTreatment !== 'GCC NON-VAT REGISTERED' &&
+          taxTreatment !== 'NON GCC'
+        )
+      );
       setValue('taxTreatmentId', taxTreatment, { shouldValidate: true });
       setCurrency(currencyCode);
       getContactShippingAddress(customerID, taxTreatment);
@@ -968,9 +1026,7 @@ const CreateCustomerInvoice = ({
                           {isRegisteredVat && (
                             <Col lg={3}>
                               <FormGroup className="mb-3">
-                                <Label htmlFor="taxTreatmentId">
-                                  {strings.TaxTreatment}
-                                </Label>
+                                <Label htmlFor="taxTreatmentId">{strings.TaxTreatment}</Label>
                                 <Controller
                                   name="taxTreatmentId"
                                   control={control}
@@ -994,9 +1050,7 @@ const CreateCustomerInvoice = ({
                                         taxTreatmentList &&
                                         selectOptionsFactory
                                           .renderOptions('name', 'id', taxTreatmentList, 'VAT')
-                                          .find(
-                                            option => option.label === field.value
-                                          )
+                                          .find(option => option.label === field.value)
                                       }
                                       styles={selectStyles}
                                       className={errors.taxTreatmentId ? 'is-invalid' : ''}
@@ -1031,9 +1085,7 @@ const CreateCustomerInvoice = ({
                                       value={
                                         field.value?.value
                                           ? field.value
-                                          : placeList.find(
-                                              option => option.value == field.value
-                                            )
+                                          : placeList.find(option => option.value == field.value)
                                       }
                                       onChange={option => {
                                         field.onChange(option.value);
@@ -1092,9 +1144,7 @@ const CreateCustomerInvoice = ({
                             onChange={(field, value) => {
                               if (field === 'term') setTerm(value);
                               else if (field === 'invoiceDate') {
-                                if (
-                                  dayjs(value).isBefore(dayjs(companyVATRegistrationDate))
-                                ) {
+                                if (dayjs(value).isBefore(dayjs(companyVATRegistrationDate))) {
                                   setInvoiceBeforeVatRegistration(true);
                                   resetProductTableValues();
                                 } else {
@@ -1387,7 +1437,9 @@ const CreateCustomerInvoice = ({
                                     } else {
                                       let newData = [];
                                       newData = data.filter(obj => obj.productId !== '');
-                                      setValue('lineItemsString', newData, { shouldValidate: true });
+                                      setValue('lineItemsString', newData, {
+                                        shouldValidate: true,
+                                      });
                                       updateAmount(newData);
                                     }
                                     setCreateMore(true);
@@ -1402,10 +1454,9 @@ const CreateCustomerInvoice = ({
                                 className="btn-square"
                                 onClick={() => {
                                   if (location?.state?.renderURL) {
-                                    history.push(
-                                      `${location?.state?.renderURL}`,
-                                      { id: location?.state?.renderID }
-                                    );
+                                    history.push(`${location?.state?.renderURL}`, {
+                                      id: location?.state?.renderID,
+                                    });
                                   } else {
                                     history.push('/admin/income/customer-invoice');
                                   }

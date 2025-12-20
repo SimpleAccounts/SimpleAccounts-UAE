@@ -34,18 +34,9 @@ const regExAlpha = /^[a-zA-Z ]+$/;
 const detailEmployeeSchema = z
   .object({
     id: z.number().or(z.string()),
-    firstName: z
-      .string()
-      .min(1, 'First name is required')
-      .max(100, 'First name is too long'),
-    middleName: z
-      .string()
-      .min(1, 'Middle name is required')
-      .max(100, 'Middle name is too long'),
-    lastName: z
-      .string()
-      .min(1, 'Last name is required')
-      .max(100, 'Last name is too long'),
+    firstName: z.string().min(1, 'First name is required').max(100, 'First name is too long'),
+    middleName: z.string().min(1, 'Middle name is required').max(100, 'Middle name is too long'),
+    lastName: z.string().min(1, 'Last name is required').max(100, 'Last name is too long'),
     email: z.string().optional(),
     password: z
       .string()
@@ -80,7 +71,7 @@ const detailEmployeeSchema = z
     poBoxNumber: z.string().max(8, 'Contract PO number is too long').optional(),
   })
   .refine(
-    (data) => {
+    data => {
       if (data.password && data.password !== '') {
         return data.password === data.confirmPassword;
       }
@@ -92,13 +83,13 @@ const detailEmployeeSchema = z
     }
   );
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     currency_list: state.employee.currency_list,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     employeeActions: bindActionCreators(EmployeeActions, dispatch),
@@ -152,7 +143,7 @@ const DetailEmployee = ({
       employeeActions.getCurrencyList();
       employeeDetailActions
         .getEmployeeDetail(location.state.id)
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             setCurrentEmployeeId(location.state.id);
             reset({
@@ -174,7 +165,7 @@ const DetailEmployee = ({
             setLoading(false);
           }
         })
-        .catch((err) => {
+        .catch(err => {
           commonActions.tostifyAlert(
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
@@ -190,7 +181,7 @@ const DetailEmployee = ({
     initializeData();
   }, [initializeData]);
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     const postData = Object.assign({}, data);
     if (typeof postData.currencyCode === 'object') {
       postData.currencyCode = data.currencyCode.value;
@@ -201,7 +192,7 @@ const DetailEmployee = ({
 
     employeeDetailActions
       .updateEmployee(postData)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert(
             'success',
@@ -211,7 +202,7 @@ const DetailEmployee = ({
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert(
           'error',
           err && err.data ? err.data.message : 'Employee Updated Unsuccessfully'
@@ -226,8 +217,7 @@ const DetailEmployee = ({
         <b>Delete Employee?</b>
       </text>
     );
-    const message =
-      'This Employee will be deleted permanently and cannot be recovered. ';
+    const message = 'This Employee will be deleted permanently and cannot be recovered. ';
     setDialog(
       <ConfirmDeleteModal
         isOpen={true}
@@ -244,7 +234,7 @@ const DetailEmployee = ({
     setLoadingMsg('Deleting Employee...');
     employeeDetailActions
       .deleteEmployee(currentEmployeeId)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert(
             'success',
@@ -254,7 +244,7 @@ const DetailEmployee = ({
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         commonActions.tostifyAlert(
           'error',
           err && err.data ? err.data.message : 'Employee Deleted Unsuccessfully'
@@ -307,7 +297,7 @@ const DetailEmployee = ({
                                     id="referenceCode"
                                     placeholder="Enter Reference Code"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       const value = e.target.value;
                                       if (value === '' || regExBoth.test(value)) {
                                         field.onChange(e);
@@ -336,7 +326,7 @@ const DetailEmployee = ({
                                     id="title"
                                     placeholder="Enter Title"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       const value = e.target.value;
                                       if (value === '' || regExAlpha.test(value)) {
                                         field.onChange(e);
@@ -392,7 +382,7 @@ const DetailEmployee = ({
                                     id="firstName"
                                     placeholder="Enter First Name"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       const value = e.target.value;
                                       if (value === '' || regExAlpha.test(value)) {
                                         field.onChange(e);
@@ -403,9 +393,7 @@ const DetailEmployee = ({
                                 )}
                               />
                               {errors.firstName && (
-                                <div className="invalid-feedback">
-                                  {errors.firstName.message}
-                                </div>
+                                <div className="invalid-feedback">{errors.firstName.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -424,7 +412,7 @@ const DetailEmployee = ({
                                     id="middleName"
                                     placeholder="Enter Middle Name"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       const value = e.target.value;
                                       if (value === '' || regExAlpha.test(value)) {
                                         field.onChange(e);
@@ -435,9 +423,7 @@ const DetailEmployee = ({
                                 )}
                               />
                               {errors.middleName && (
-                                <div className="invalid-feedback">
-                                  {errors.middleName.message}
-                                </div>
+                                <div className="invalid-feedback">{errors.middleName.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -456,7 +442,7 @@ const DetailEmployee = ({
                                     id="lastName"
                                     placeholder="Enter Last Name"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       const value = e.target.value;
                                       if (value === '' || regExAlpha.test(value)) {
                                         field.onChange(e);
@@ -467,9 +453,7 @@ const DetailEmployee = ({
                                 )}
                               />
                               {errors.lastName && (
-                                <div className="invalid-feedback">
-                                  {errors.lastName.message}
-                                </div>
+                                <div className="invalid-feedback">{errors.lastName.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -532,9 +516,7 @@ const DetailEmployee = ({
                                 control={control}
                                 render={({ field }) => (
                                   <DatePicker
-                                    className={`form-control ${
-                                      errors.dob ? 'is-invalid' : ''
-                                    }`}
+                                    className={`form-control ${errors.dob ? 'is-invalid' : ''}`}
                                     id="dob"
                                     showMonthDropdown
                                     showYearDropdown
@@ -543,14 +525,12 @@ const DetailEmployee = ({
                                     placeholderText="Select Date of Birth"
                                     selected={field.value}
                                     maxDate={new Date()}
-                                    onChange={(date) => field.onChange(date)}
+                                    onChange={date => field.onChange(date)}
                                   />
                                 )}
                               />
                               {errors.dob && (
-                                <div className="invalid-feedback d-block">
-                                  {errors.dob.message}
-                                </div>
+                                <div className="invalid-feedback d-block">{errors.dob.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -595,7 +575,7 @@ const DetailEmployee = ({
                                     id="poBoxNumber"
                                     placeholder="Enter Contract PO Number"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       const value = e.target.value;
                                       if (value === '' || regExBoth.test(value)) {
                                         field.onChange(e);
@@ -606,9 +586,7 @@ const DetailEmployee = ({
                                 )}
                               />
                               {errors.poBoxNumber && (
-                                <div className="invalid-feedback">
-                                  {errors.poBoxNumber.message}
-                                </div>
+                                <div className="invalid-feedback">{errors.poBoxNumber.message}</div>
                               )}
                             </FormGroup>
                           </Col>
@@ -627,7 +605,7 @@ const DetailEmployee = ({
                                     id="vatRegestationNo"
                                     placeholder="Enter Tax Registration Number"
                                     {...field}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                       const value = e.target.value;
                                       if (value === '' || regExBoth.test(value)) {
                                         field.onChange(e);
@@ -672,10 +650,10 @@ const DetailEmployee = ({
                                               currency_list,
                                               'Currency'
                                             )
-                                            .find((option) => option.value === +field.value)
+                                            .find(option => option.value === +field.value)
                                         : field.value
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       field.onChange(option);
                                     }}
                                     placeholder="Select Currency"
@@ -710,11 +688,7 @@ const DetailEmployee = ({
                               </Button>
                             </FormGroup>
                             <FormGroup className="text-right">
-                              <Button
-                                type="submit"
-                                color="primary"
-                                className="btn-square mr-3"
-                              >
+                              <Button type="submit" color="primary" className="btn-square mr-3">
                                 <i className="fa fa-dot-circle-o"></i> Update
                               </Button>
                               <Button

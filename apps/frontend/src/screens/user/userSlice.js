@@ -29,7 +29,7 @@ const userSlice = createSlice({
       state.designation_dropdown = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(USER.USER_LIST, (state, action) => {
         state.user_list = action.payload || [];
@@ -57,4 +57,3 @@ export const {
   setDesignationDropdown,
 } = userSlice.actions;
 export default userSlice.reducer;
-

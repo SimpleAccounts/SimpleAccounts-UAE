@@ -1,5 +1,5 @@
-import screen from '../balance_sheet/screen'
+import screen from '../balance_sheet/screen';
 
 export default {
-  screen
-}
+  screen,
+};

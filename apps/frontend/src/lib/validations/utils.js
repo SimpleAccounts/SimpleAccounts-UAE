@@ -10,7 +10,7 @@
  * @example
  * <FormMessage>{getFieldError(fieldState)}</FormMessage>
  */
-export const getFieldError = (fieldState) => {
+export const getFieldError = fieldState => {
   return fieldState?.error?.message || null;
 };
 
@@ -23,7 +23,7 @@ export const getFieldError = (fieldState) => {
  * const hasError = hasFieldError(fieldState);
  * <Input className={hasError ? 'border-red-500' : ''} />
  */
-export const hasFieldError = (fieldState) => {
+export const hasFieldError = fieldState => {
   return !!fieldState?.error;
 };
 
@@ -42,7 +42,7 @@ export const getFieldValue = (formState, fieldName) => {
  * @param {Object} formState - Form state from react-hook-form
  * @returns {boolean} True if form is currently submitting
  */
-export const isSubmitting = (formState) => {
+export const isSubmitting = formState => {
   return formState?.isSubmitting || false;
 };
 
@@ -51,7 +51,7 @@ export const isSubmitting = (formState) => {
  * @param {Object} formState - Form state from react-hook-form
  * @returns {boolean} True if form has no errors
  */
-export const isFormValid = (formState) => {
+export const isFormValid = formState => {
   return Object.keys(formState?.errors || {}).length === 0;
 };
 
@@ -60,11 +60,11 @@ export const isFormValid = (formState) => {
  * @param {Object} formState - Form state from react-hook-form
  * @returns {Object} Object with field names as keys and error messages as values
  */
-export const getAllErrors = (formState) => {
+export const getAllErrors = formState => {
   const errors = {};
   const formErrors = formState?.errors || {};
 
-  Object.keys(formErrors).forEach((key) => {
+  Object.keys(formErrors).forEach(key => {
     if (formErrors[key]?.message) {
       errors[key] = formErrors[key].message;
     }
@@ -72,4 +72,3 @@ export const getAllErrors = (formState) => {
 
   return errors;
 };
-

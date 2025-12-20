@@ -47,7 +47,7 @@ const VatReports = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { version } = useSelector((state) => ({
+  const { version } = useSelector(state => ({
     version: state.common.version,
   }));
 
@@ -86,7 +86,7 @@ const VatReports = () => {
   }, [pagination, sorting]);
 
   const getVRNPrefix = () => {
-    dispatch(Vatreport.getVRNPrefix()).then((res) => {
+    dispatch(Vatreport.getVRNPrefix()).then(res => {
       if (res.status === 200) {
         setPrefix(res.data);
       }
@@ -104,20 +104,20 @@ const VatReports = () => {
       sortingCol: sorting.length > 0 ? sorting[0].id : '',
     };
     const postData = { ...filterData, ...paginationData, ...sortingData };
-    
+
     // Using dispatch directly for actions
     dispatch(Vatreport.getVatReportList(postData))
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setVatReportDataList(res.data);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         toast.error(err && err.data ? err.data.message : 'Something Went Wrong');
       });
   };
 
-  const markItUnfiled = (row) => {
+  const markItUnfiled = row => {
     const postingRequestModel = {
       postingRefId: row.id,
       postingRefType: 'VAT_REPORT_FILED',
@@ -125,39 +125,43 @@ const VatReports = () => {
     setLoading(true);
     setLoadingMsg('VAT UnFiling...');
     dispatch(Vatreport.markItUnfiled(postingRequestModel))
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
-          toast.success(res.data && res.data.message ? res.data.message : ' VAT UnFiled Successfully');
+          toast.success(
+            res.data && res.data.message ? res.data.message : ' VAT UnFiled Successfully'
+          );
           getInitialData();
           setLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         toast.error(err && err.data ? err.data.message : 'Something Went Wrong');
         setLoading(false);
       });
   };
 
-  const deleteReport = (id) => {
+  const deleteReport = id => {
     dispatch(Vatreport.deleteReportById(id))
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
-          toast.success(res.data && res.data.message ? res.data.message : 'VAT Report File Deleted Successfully');
+          toast.success(
+            res.data && res.data.message ? res.data.message : 'VAT Report File Deleted Successfully'
+          );
           setDialog(null);
           getInitialData();
         }
       })
-      .catch((err) => {
+      .catch(err => {
         toast.error(err.data ? err.data.message : 'VAT Report File Deleted Unsuccessfully');
         setDialog(null);
       });
   };
 
-  const renderDate = (cell) => {
+  const renderDate = cell => {
     return cell ? dayjs(cell).format('DD-MM-YYYY') : '-';
   };
 
-  const renderTaxReturns = (cell) => {
+  const renderTaxReturns = cell => {
     let dateArr = cell ? cell.split('-') : [];
     return <>{dateArr[0].replaceAll('/', '-')}</>;
   };
@@ -172,49 +176,33 @@ const VatReports = () => {
     else return '---';
   };
 
-  const renderStatus = (params) => {
+  const renderStatus = params => {
     return (
       <>
-        {params === 'UnFiled' ? (
-          <label className="badge label-draft"> {params}</label>
-        ) : (
-          ''
-        )}
-        {params === 'Filed' ? (
-          <label className="badge label-due"> {params}</label>
-        ) : (
-          ''
-        )}
+        {params === 'UnFiled' ? <label className="badge label-draft"> {params}</label> : ''}
+        {params === 'Filed' ? <label className="badge label-due"> {params}</label> : ''}
         {params === 'Partially Paid' ? (
           <label className="badge label-PartiallyPaid"> {params}</label>
         ) : (
           ''
         )}
-        {params === 'Paid' ? (
-          <label className="badge label-paid">{params}</label>
-        ) : (
-          ''
-        )}
+        {params === 'Paid' ? <label className="badge label-paid">{params}</label> : ''}
         {params === 'claimed' ? (
           <label className="badge label-paid text-capitalize">{params}</label>
         ) : (
           ''
         )}
-        {params === 'Reclaimed' ? (
-          <label className="badge label-sent"> {params}</label>
-        ) : (
-          ''
-        )}
+        {params === 'Reclaimed' ? <label className="badge label-sent"> {params}</label> : ''}
       </>
     );
   };
 
-  const getActionButtons = (row) => {
+  const getActionButtons = row => {
     return (
       <ShadcnDropdownMenu>
         <ShadcnDropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-             <i className="fas fa-chevron-down" />
+            <i className="fas fa-chevron-down" />
           </Button>
         </ShadcnDropdownMenuTrigger>
         <ShadcnDropdownMenuContent align="end">
@@ -222,15 +210,12 @@ const VatReports = () => {
             onClick={() => {
               setCurrentReportId(row.id);
               let dateArr = row.taxReturns ? row.taxReturns.split('-') : [];
-              navigate(
-                `/admin/report/vatreports/view?id=${row.id}`,
-                {
-                  state: {
-                    startDate: dateArr[0] ? dateArr[0] : '',
-                    endDate: dateArr[1] ? dateArr[1] : '',
-                  }
-                }
-              );
+              navigate(`/admin/report/vatreports/view?id=${row.id}`, {
+                state: {
+                  startDate: dateArr[0] ? dateArr[0] : '',
+                  endDate: dateArr[1] ? dateArr[1] : '',
+                },
+              });
             }}
           >
             <i className="fas fa-eye mr-2" /> View
@@ -254,28 +239,22 @@ const VatReports = () => {
               onClick={() => {
                 setCurrentReportId(row.id);
                 if (row.totalTaxReclaimable != 0)
-                  navigate(
-                    '/admin/report/vatreports/recordclaimtax',
-                    {
-                        state: {
-                            id: row.id,
-                            totalTaxReclaimable: row.totalTaxReclaimable,
-                            taxReturns: row.taxReturns,
-                        }
-                    }
-                  );
+                  navigate('/admin/report/vatreports/recordclaimtax', {
+                    state: {
+                      id: row.id,
+                      totalTaxReclaimable: row.totalTaxReclaimable,
+                      taxReturns: row.taxReturns,
+                    },
+                  });
                 else
-                  navigate(
-                    '/admin/report/vatreports/recordtaxpayment',
-                    {
-                        state: {
-                            id: row.id,
-                            taxReturns: row.taxReturns,
-                            totalTaxPayable: row.totalTaxPayable,
-                            balanceDue: row.balanceDue,
-                        }
-                    }
-                  );
+                  navigate('/admin/report/vatreports/recordtaxpayment', {
+                    state: {
+                      id: row.id,
+                      taxReturns: row.taxReturns,
+                      totalTaxPayable: row.totalTaxPayable,
+                      balanceDue: row.balanceDue,
+                    },
+                  });
               }}
             >
               {' '}
@@ -318,47 +297,62 @@ const VatReports = () => {
     );
   };
 
-  const columns = useMemo(() => [
-    {
-      accessorKey: 'vatNumber',
-      header: 'VAT Report No.',
-    },
-    {
-      accessorKey: 'taxReturns',
-      header: 'VAT Return',
-      cell: ({ row }) => renderTaxReturns(row.original.taxReturns),
-    },
-    {
-      accessorKey: 'totalTaxPayable',
-      header: 'Total VAT Payable',
-      cell: ({ row }) => <div className="text-right">{renderAmount(row.original.totalTaxPayable, row.original.currency)}</div>,
-    },
-    {
-      accessorKey: 'totalTaxReclaimable',
-      header: 'Total VAT Reclaimable',
-      cell: ({ row }) => <div className="text-right">{renderAmount(row.original.totalTaxReclaimable, row.original.currency)}</div>,
-    },
-    {
-      accessorKey: 'filedOn',
-      header: 'Filed On',
-      cell: ({ row }) => renderDate(row.original.filedOn),
-    },
-    {
-      accessorKey: 'status',
-      header: strings.Status,
-      cell: ({ row }) => renderStatus(row.original.status),
-    },
-    {
-      accessorKey: 'balanceDue',
-      header: strings.BalanceDue,
-      cell: ({ row }) => <div className="text-right">{renderAmount(row.original.balanceDue, row.original.currency)}</div>,
-    },
-    {
-      id: 'actions',
-      header: '',
-      cell: ({ row }) => <div className="text-right">{getActionButtons(row.original)}</div>,
-    },
-  ], []);
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'vatNumber',
+        header: 'VAT Report No.',
+      },
+      {
+        accessorKey: 'taxReturns',
+        header: 'VAT Return',
+        cell: ({ row }) => renderTaxReturns(row.original.taxReturns),
+      },
+      {
+        accessorKey: 'totalTaxPayable',
+        header: 'Total VAT Payable',
+        cell: ({ row }) => (
+          <div className="text-right">
+            {renderAmount(row.original.totalTaxPayable, row.original.currency)}
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'totalTaxReclaimable',
+        header: 'Total VAT Reclaimable',
+        cell: ({ row }) => (
+          <div className="text-right">
+            {renderAmount(row.original.totalTaxReclaimable, row.original.currency)}
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'filedOn',
+        header: 'Filed On',
+        cell: ({ row }) => renderDate(row.original.filedOn),
+      },
+      {
+        accessorKey: 'status',
+        header: strings.Status,
+        cell: ({ row }) => renderStatus(row.original.status),
+      },
+      {
+        accessorKey: 'balanceDue',
+        header: strings.BalanceDue,
+        cell: ({ row }) => (
+          <div className="text-right">
+            {renderAmount(row.original.balanceDue, row.original.currency)}
+          </div>
+        ),
+      },
+      {
+        id: 'actions',
+        header: '',
+        cell: ({ row }) => <div className="text-right">{getActionButtons(row.original)}</div>,
+      },
+    ],
+    []
+  );
 
   const closeDeleteModal = () => {
     setDeleteModal(false);
@@ -370,147 +364,149 @@ const VatReports = () => {
     getInitialData();
   };
 
-  return (
-    loading ? (
-      <Loader loadingMsg={loadingMsg} />
-    ) : (
-      <div className="import-bank-statement-screen">
-        <div className="animated fadeIn">
-          <Card>
-            <CardHeader>
-              {dialog}
-              <Row>
-                <Col lg={12}>
-                  <div
-                    className="h4 mb-0 d-flex align-items-center"
-                    style={{ justifyContent: 'space-between' }}
-                  >
-                    <div>
-                      <p
-                        className="mb-0"
-                        style={{
-                          cursor: 'pointer',
-                          fontSize: '1.3rem',
-                          paddingLeft: '15px',
-                        }}
-                      >
-                        VAT Report
-                      </p>
-                    </div>
-                    <div>
-                      <Button
-                        className="mr-2 btn btn-danger"
-                        onClick={() => {
-                          navigate('/admin/report/reports-page');
-                        }}
-                        style={{
-                          cursor: 'pointer',
-                        }}
-                      >
-                        <span>X</span>
-                      </Button>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-            </CardHeader>
+  return loading ? (
+    <Loader loadingMsg={loadingMsg} />
+  ) : (
+    <div className="import-bank-statement-screen">
+      <div className="animated fadeIn">
+        <Card>
+          <CardHeader>
             {dialog}
-
-            <CardBody>
-              <Row>
-                <Col lg={12} className="mb-5">
-                  <div className="table-wrapper">
-                    <FormGroup className="text-center">
-                      <Button
-                        color="primary"
-                        className="btn-square  pull-right"
-                        onClick={() => {
-                          navigate('/admin/report/vatreports/vatpaymentrecordhistory');
-                        }}
-                      >
-                        <i className="fas fa-history"></i> VAT Payment Record
-                      </Button>
-
-                      <Button
-                        name="button"
-                        color="primary"
-                        className="btn-square pull-right "
-                        onClick={() => {
-                          setOpenModal(true);
-                        }}
-                      >
-                        <i className="fas fa-plus"></i> Generate VAT Report
-                      </Button>
-                    </FormGroup>
+            <Row>
+              <Col lg={12}>
+                <div
+                  className="h4 mb-0 d-flex align-items-center"
+                  style={{ justifyContent: 'space-between' }}
+                >
+                  <div>
+                    <p
+                      className="mb-0"
+                      style={{
+                        cursor: 'pointer',
+                        fontSize: '1.3rem',
+                        paddingLeft: '15px',
+                      }}
+                    >
+                      VAT Report
+                    </p>
                   </div>
-                </Col>
-              </Row>
+                  <div>
+                    <Button
+                      className="mr-2 btn btn-danger"
+                      onClick={() => {
+                        navigate('/admin/report/reports-page');
+                      }}
+                      style={{
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <span>X</span>
+                    </Button>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </CardHeader>
+          {dialog}
 
-              <div>
-                <DataTable
-                  data={vatReportDataList?.data || []}
-                  columns={columns}
-                  manualPagination={true}
-                  pageCount={vatReportDataList?.count ? Math.ceil(vatReportDataList.count / pagination.pageSize) : 0}
-                  onPaginationChange={setPagination}
-                  pagination={pagination}
-                  manualSorting={true}
-                  onSortingChange={setSorting}
-                  sorting={sorting}
-                />
-              </div>
-            </CardBody>
-          </Card>
-        </div>
-        <GenerateVatReportModal
-          openModal={openModal}
-          setState={(e) => {
-              // This prop implementation in original was weird: `setState={(e) => this.setState(e)}`
-              // I'll assume it updates local state of parent? 
-              // For now, I'll pass a no-op or specific setters if needed.
-              // Actually, GenerateVatReportModal might rely on this heavily.
-              // Let's inspect GenerateVatReportModal in another turn if needed.
-              // For now, I'll just log.
-              console.log("GenerateVatReportModal requested state update", e);
-          }}
-          vatReportDataList={vatReportDataList}
-          state={{
-              monthOption
-          }} // Passing minimal state
-          monthOption={monthOption}
-          closeModal={(e) => {
-            setOpenModal(false);
-            getInitialData();
-          }}
-        />
-        <VatSettingModal
-          openModal={openVatSettingModal}
-          closeModal={(e) => {
-            setOpenVatSettingModal(false);
-            getInitialData();
-          }}
-        />
+          <CardBody>
+            <Row>
+              <Col lg={12} className="mb-5">
+                <div className="table-wrapper">
+                  <FormGroup className="text-center">
+                    <Button
+                      color="primary"
+                      className="btn-square  pull-right"
+                      onClick={() => {
+                        navigate('/admin/report/vatreports/vatpaymentrecordhistory');
+                      }}
+                    >
+                      <i className="fas fa-history"></i> VAT Payment Record
+                    </Button>
 
-        {openFileTaxRetrunModal &&
-          <FileTaxReturnModal
-            openModal={openFileTaxRetrunModal}
-            current_report_id={current_report_id}
-            endDate={currentEndDate} // Was this.state.endDate in original but not defined in state init? Assuming it comes from somewhere.
-            taxReturns={currentTaxReturns}
-            closeModal={(e) => {
-              closeFileTaxRetrunModal(e);
-            }}
-          />
-        }
-        <DeleteModal
-          openModal={deleteModal}
-          current_report_id={current_report_id}
-          closeModal={(e) => {
-            closeDeleteModal(e);
-          }}
-        />
+                    <Button
+                      name="button"
+                      color="primary"
+                      className="btn-square pull-right "
+                      onClick={() => {
+                        setOpenModal(true);
+                      }}
+                    >
+                      <i className="fas fa-plus"></i> Generate VAT Report
+                    </Button>
+                  </FormGroup>
+                </div>
+              </Col>
+            </Row>
+
+            <div>
+              <DataTable
+                data={vatReportDataList?.data || []}
+                columns={columns}
+                manualPagination={true}
+                pageCount={
+                  vatReportDataList?.count
+                    ? Math.ceil(vatReportDataList.count / pagination.pageSize)
+                    : 0
+                }
+                onPaginationChange={setPagination}
+                pagination={pagination}
+                manualSorting={true}
+                onSortingChange={setSorting}
+                sorting={sorting}
+              />
+            </div>
+          </CardBody>
+        </Card>
       </div>
-    )
+      <GenerateVatReportModal
+        openModal={openModal}
+        setState={e => {
+          // This prop implementation in original was weird: `setState={(e) => this.setState(e)}`
+          // I'll assume it updates local state of parent?
+          // For now, I'll pass a no-op or specific setters if needed.
+          // Actually, GenerateVatReportModal might rely on this heavily.
+          // Let's inspect GenerateVatReportModal in another turn if needed.
+          // For now, I'll just log.
+          console.log('GenerateVatReportModal requested state update', e);
+        }}
+        vatReportDataList={vatReportDataList}
+        state={{
+          monthOption,
+        }} // Passing minimal state
+        monthOption={monthOption}
+        closeModal={e => {
+          setOpenModal(false);
+          getInitialData();
+        }}
+      />
+      <VatSettingModal
+        openModal={openVatSettingModal}
+        closeModal={e => {
+          setOpenVatSettingModal(false);
+          getInitialData();
+        }}
+      />
+
+      {openFileTaxRetrunModal && (
+        <FileTaxReturnModal
+          openModal={openFileTaxRetrunModal}
+          current_report_id={current_report_id}
+          endDate={currentEndDate} // Was this.state.endDate in original but not defined in state init? Assuming it comes from somewhere.
+          taxReturns={currentTaxReturns}
+          closeModal={e => {
+            closeFileTaxRetrunModal(e);
+          }}
+        />
+      )}
+      <DeleteModal
+        openModal={deleteModal}
+        current_report_id={current_report_id}
+        closeModal={e => {
+          closeDeleteModal(e);
+        }}
+      />
+    </div>
   );
 };
 

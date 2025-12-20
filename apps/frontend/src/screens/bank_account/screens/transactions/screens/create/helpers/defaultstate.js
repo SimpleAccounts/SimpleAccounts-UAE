@@ -1,139 +1,139 @@
 export const defaultState = (currency, isRegisteredVat) => {
   return {
-    language: window["localStorage"].getItem("language"),
+    language: window['localStorage'].getItem('language'),
     createMore: false,
     disabled: false,
-    fileName: "",
+    fileName: '',
     initValue: {
-      transactionId: "",
-      bankAccountId: "",
+      transactionId: '',
+      bankAccountId: '',
       transactionDate: new Date(),
-      description: "",
-      transactionAmount: "",
-      coaCategoryId: "",
-      transactionCategoryId: "",
-      projectId: "",
-      reference: "",
-      attachementDescription: "",
-      attachment: "",
-      customerId: "",
+      description: '',
+      transactionAmount: '',
+      coaCategoryId: '',
+      transactionCategoryId: '',
+      projectId: '',
+      reference: '',
+      attachementDescription: '',
+      attachment: '',
+      customerId: '',
       invoiceIdList: [],
       payrollListIds: [],
-      vatId: "",
-      expenseCategory: "",
-      vendorId: "",
-      employeeId: "",
-      currencyCode: "",
-      currencyName: "",
+      vatId: '',
+      expenseCategory: '',
+      vendorId: '',
+      employeeId: '',
+      currencyCode: '',
+      currencyName: '',
       exchangeRate: null,
       exclusiveVat: false,
       isReverseChargeEnabled: false,
-      ct_taxPeriod:'',
-      ct_taxPeriodList:'',
-      corporateTaxList:[],
+      ct_taxPeriod: '',
+      ct_taxPeriodList: '',
+      corporateTaxList: [],
     },
-    transactionVatAmount: "",
-    transactionExpenseAmount: "",
+    transactionVatAmount: '',
+    transactionExpenseAmount: '',
     expenseType: true,
-    loadingMsg: "Loading...",
+    loadingMsg: 'Loading...',
     disableLeavePage: false,
     transactionCategoryList: [],
     moneyCategoryList: [],
     VATlist: [],
-    totalAmount: "",
+    totalAmount: '',
     categoriesList: [
       {
-        label: "Money Spent",
+        label: 'Money Spent',
         options: [
           {
             value: 11,
-            label: "Transfered To",
+            label: 'Transfered To',
           },
           {
             value: 12,
-            label: "Money Paid To Employee",
+            label: 'Money Paid To Employee',
           },
           {
             value: 13,
-            label: "Purchase Of Capital Asset",
+            label: 'Purchase Of Capital Asset',
           },
           {
             value: 14,
-            label: "Money Spent Others",
+            label: 'Money Spent Others',
           },
           {
             value: 10,
-            label: "Expense",
+            label: 'Expense',
           },
           {
             value: 100,
-            label: "Supplier Invoice",
+            label: 'Supplier Invoice',
           },
           {
-            ...((currency === "AED" && isRegisteredVat == true)
+            ...(currency === 'AED' && isRegisteredVat == true
               ? {
                   value: 16,
-                  label: "VAT Payment",
+                  label: 'VAT Payment',
                 }
               : {}),
           },
           {
-            ...(currency === "AED"
+            ...(currency === 'AED'
               ? {
                   value: 18,
-                  label: "Corporate Tax Payment",
+                  label: 'Corporate Tax Payment',
                 }
               : {}),
           },
-        ].filter((i) => i.label),
+        ].filter(i => i.label),
       },
       {
-        label: "Money Received",
+        label: 'Money Received',
         options: [
           {
             value: 2,
-            label: "Sales",
+            label: 'Sales',
           },
           {
             value: 3,
-            label: "Transfered From",
+            label: 'Transfered From',
           },
           {
             value: 4,
-            label: "Refund Received",
+            label: 'Refund Received',
           },
           {
             value: 5,
-            label: "Interest Received",
+            label: 'Interest Received',
           },
           {
             value: 6,
-            label: "Money Received From Employee",
+            label: 'Money Received From Employee',
           },
           {
             value: 7,
-            label: "Disposal Of Capital Asset",
+            label: 'Disposal Of Capital Asset',
           },
           {
             value: 8,
-            label: "Money Received Others",
+            label: 'Money Received Others',
           },
           {
-            ...((currency === "AED" && isRegisteredVat == true)
+            ...(currency === 'AED' && isRegisteredVat == true
               ? {
                   value: 17,
-                  label: "VAT Claim",
+                  label: 'VAT Claim',
                 }
               : {}),
           },
-        ].filter((i) => i.value),
+        ].filter(i => i.value),
       },
     ],
-    cat_label: "",
-    cat1_label: "",
-    id: "",
+    cat_label: '',
+    cat1_label: '',
+    id: '',
     conversionDetails: [],
     selectedPayrollListBank: [],
-    companyDetails : [],   
+    companyDetails: [],
   };
 };

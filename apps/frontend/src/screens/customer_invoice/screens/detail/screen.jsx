@@ -26,7 +26,15 @@ import { CustomerModal, ProductModal } from '../../sections';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
-import { optionFactory, selectCurrencyFactory, selectOptionsFactory, InputValidation, DropdownLists, Lists, selectStyles } from 'utils';
+import {
+  optionFactory,
+  selectCurrencyFactory,
+  selectOptionsFactory,
+  InputValidation,
+  DropdownLists,
+  Lists,
+  selectStyles,
+} from 'utils';
 import './style.scss';
 import { AddressComponent } from 'screens/contact/sections';
 import dayjs from '@/utils/date';
@@ -34,7 +42,7 @@ import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import Switch from 'react-switch';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     project_list: state.customer_invoice.project_list,
     contact_list: state.customer_invoice.contact_list,
@@ -49,7 +57,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
     customerInvoiceActions: bindActionCreators(CustomerInvoiceActions, dispatch),
@@ -68,68 +76,71 @@ if (localStorage.getItem('language') == null) {
 }
 
 // Zod validation schema
-const detailCustomerInvoiceSchema = z.object({
-  invoice_number: z.string().min(1, 'Invoice number is required'),
-  contactId: z.union([
-    z.string().min(1, 'Customer name is required'),
-    z.number()
-  ]),
-  term: z.string().min(1, 'Terms is required'),
-  invoiceDate: z.string().min(1, 'Invoice date is required'),
-  invoiceDueDate: z.string().min(1, 'Invoice due date is required'),
-  currencyCode: z.string().min(1, 'Currency is required'),
-  placeOfSupplyId: z.union([
-    z.string(),
-    z.object({ value: z.string(), label: z.string() })
-  ]).optional(),
-  changeShippingAddress: z.boolean().optional(),
-  shippingAddress: z.object({
-    address: z.string().optional(),
-    city: z.string().optional(),
-    countryId: z.string().optional(),
-    stateId: z.string().optional(),
-    postZipCode: z.string().optional(),
-    telephone: z.string().optional(),
-    fax: z.string().optional(),
-  }).optional(),
-  lineItemsString: z.array(
-    z.object({
-      quantity: z.union([z.string(), z.number()]).refine(
-        value => parseFloat(value) > 0,
-        { message: 'Quantity must be greater than 0' }
-      ),
-      unitPrice: z.union([z.string(), z.number()]).refine(
-        value => parseFloat(value) > 0,
-        { message: 'Unit price must be greater than 0' }
-      ),
-      vatCategoryId: z.union([z.string(), z.number()]).refine(
-        value => value !== '',
-        { message: 'VAT is required' }
-      ),
-      productId: z.union([z.string(), z.number()]).refine(
-        value => value !== '',
-        { message: 'Product is required' }
-      ),
-    })
-  ).min(1, 'At least one invoice line item is required'),
-  attachmentFile: z.any().optional(),
-  receiptAttachmentDescription: z.string().optional(),
-  receiptNumber: z.string().optional(),
-  contact_po_number: z.string().optional(),
-  exchangeRate: z.union([z.string(), z.number()]).optional(),
-  notes: z.string().optional(),
-  footNote: z.string().optional(),
-  project: z.union([z.string(), z.number()]).optional(),
-}).refine((data) => {
-  if (data.changeShippingAddress === true && data.shippingAddress) {
-    const errors = InputValidation.addressValidation(data.shippingAddress);
-    return !errors || Object.keys(errors).length === 0;
-  }
-  return true;
-}, {
-  message: 'Shipping address validation failed',
-  path: ['shippingAddress']
-});
+const detailCustomerInvoiceSchema = z
+  .object({
+    invoice_number: z.string().min(1, 'Invoice number is required'),
+    contactId: z.union([z.string().min(1, 'Customer name is required'), z.number()]),
+    term: z.string().min(1, 'Terms is required'),
+    invoiceDate: z.string().min(1, 'Invoice date is required'),
+    invoiceDueDate: z.string().min(1, 'Invoice due date is required'),
+    currencyCode: z.string().min(1, 'Currency is required'),
+    placeOfSupplyId: z
+      .union([z.string(), z.object({ value: z.string(), label: z.string() })])
+      .optional(),
+    changeShippingAddress: z.boolean().optional(),
+    shippingAddress: z
+      .object({
+        address: z.string().optional(),
+        city: z.string().optional(),
+        countryId: z.string().optional(),
+        stateId: z.string().optional(),
+        postZipCode: z.string().optional(),
+        telephone: z.string().optional(),
+        fax: z.string().optional(),
+      })
+      .optional(),
+    lineItemsString: z
+      .array(
+        z.object({
+          quantity: z
+            .union([z.string(), z.number()])
+            .refine(value => parseFloat(value) > 0, { message: 'Quantity must be greater than 0' }),
+          unitPrice: z
+            .union([z.string(), z.number()])
+            .refine(value => parseFloat(value) > 0, {
+              message: 'Unit price must be greater than 0',
+            }),
+          vatCategoryId: z
+            .union([z.string(), z.number()])
+            .refine(value => value !== '', { message: 'VAT is required' }),
+          productId: z
+            .union([z.string(), z.number()])
+            .refine(value => value !== '', { message: 'Product is required' }),
+        })
+      )
+      .min(1, 'At least one invoice line item is required'),
+    attachmentFile: z.any().optional(),
+    receiptAttachmentDescription: z.string().optional(),
+    receiptNumber: z.string().optional(),
+    contact_po_number: z.string().optional(),
+    exchangeRate: z.union([z.string(), z.number()]).optional(),
+    notes: z.string().optional(),
+    footNote: z.string().optional(),
+    project: z.union([z.string(), z.number()]).optional(),
+  })
+  .refine(
+    data => {
+      if (data.changeShippingAddress === true && data.shippingAddress) {
+        const errors = InputValidation.addressValidation(data.shippingAddress);
+        return !errors || Object.keys(errors).length === 0;
+      }
+      return true;
+    },
+    {
+      message: 'Shipping address validation failed',
+      path: ['shippingAddress'],
+    }
+  );
 
 const regEx = /^[0-9\b]+$/;
 const regExBoth = /[a-zA-Z0-9]+$/;
@@ -278,111 +289,125 @@ const DetailCustomerInvoice = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, reset, setValue, watch, setError, clearErrors } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+    watch,
+    setError,
+    clearErrors,
+  } = form;
 
   const initializeData = useCallback(() => {
     if (location.state && location.state.id) {
-      customerInvoiceDetailActions
-        .getInvoiceById(location.state.id)
-        .then((res) => {
-          if (res.status === 200) {
-            getCompanyCurrency();
-            customerInvoiceActions.getCustomerList(contactType);
-            customerInvoiceActions.getExciseList();
-            customerInvoiceActions.getCountryList();
-            productActions.getProductCategoryList();
+      customerInvoiceDetailActions.getInvoiceById(location.state.id).then(res => {
+        if (res.status === 200) {
+          getCompanyCurrency();
+          customerInvoiceActions.getCustomerList(contactType);
+          customerInvoiceActions.getExciseList();
+          customerInvoiceActions.getCountryList();
+          productActions.getProductCategoryList();
 
-            setCurrentCustomerId(location.state.id);
-            setDiscountEnabled(res.data.discount > 0);
-            setCustomerTaxTreatmentDes(res.data.taxTreatment ? res.data.taxTreatment : '');
-            setInvoiceDateNoChange(res.data.invoiceDate ? dayjs(res.data.invoiceDate) : '');
-            setTaxType(res.data.taxType ? true : false);
-            setInvoiceDueDateNoChange(res.data.invoiceDueDate ? dayjs(res.data.invoiceDueDate) : '');
-            setInvoiceDate(res.data.invoiceDate ? res.data.invoiceDate : '');
-            setInvoiceDueDate(res.data.invoiceDueDate ? res.data.invoiceDueDate : '');
-            setInvoiceDateForVatValidation(res.data.invoiceDate ? new Date(res.data.invoiceDate) : '');
-            setDiscountAmount(res.data.discount ? res.data.discount : 0);
-            setDiscountPercentage(res.data.discountPercentage ? res.data.discountPercentage : '');
-            setData(res.data.invoiceLineItems ? res.data.invoiceLineItems : []);
-            setSelectedContact(res.data.contactId ? res.data.contactId : '');
-            setTerm(res.data.term ? res.data.term : '');
-            setPlaceOfSupplyId(res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '');
-            setCustomerCurrency(res.data.currencyCode ? res.data.currencyCode : '');
-            setCustomerCurrencyDes(res.data.currencyName ? res.data.currencyName : '');
-            setCustomerCurrencySymbol(res.data.currencyIsoCode ? res.data.currencyIsoCode : '');
-            setCustomerCurrencyCode(res.data.currencyCode ? res.data.currencyCode : '');
+          setCurrentCustomerId(location.state.id);
+          setDiscountEnabled(res.data.discount > 0);
+          setCustomerTaxTreatmentDes(res.data.taxTreatment ? res.data.taxTreatment : '');
+          setInvoiceDateNoChange(res.data.invoiceDate ? dayjs(res.data.invoiceDate) : '');
+          setTaxType(res.data.taxType ? true : false);
+          setInvoiceDueDateNoChange(res.data.invoiceDueDate ? dayjs(res.data.invoiceDueDate) : '');
+          setInvoiceDate(res.data.invoiceDate ? res.data.invoiceDate : '');
+          setInvoiceDueDate(res.data.invoiceDueDate ? res.data.invoiceDueDate : '');
+          setInvoiceDateForVatValidation(
+            res.data.invoiceDate ? new Date(res.data.invoiceDate) : ''
+          );
+          setDiscountAmount(res.data.discount ? res.data.discount : 0);
+          setDiscountPercentage(res.data.discountPercentage ? res.data.discountPercentage : '');
+          setData(res.data.invoiceLineItems ? res.data.invoiceLineItems : []);
+          setSelectedContact(res.data.contactId ? res.data.contactId : '');
+          setTerm(res.data.term ? res.data.term : '');
+          setPlaceOfSupplyId(res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '');
+          setCustomerCurrency(res.data.currencyCode ? res.data.currencyCode : '');
+          setCustomerCurrencyDes(res.data.currencyName ? res.data.currencyName : '');
+          setCustomerCurrencySymbol(res.data.currencyIsoCode ? res.data.currencyIsoCode : '');
+          setCustomerCurrencyCode(res.data.currencyCode ? res.data.currencyCode : '');
 
-            reset({
-              receiptAttachmentDescription: res.data.receiptAttachmentDescription || '',
-              receiptNumber: res.data.receiptNumber || '',
-              contact_po_number: res.data.contactPoNumber || '',
-              currencyCode: res.data.currencyCode || '',
-              exchangeRate: res.data.exchangeRate || '',
-              currencyName: res.data.currencyName || '',
-              invoiceDueDate: res.data.invoiceDueDate ? dayjs(res.data.invoiceDueDate).format('DD-MM-YYYY') : '',
-              invoiceDate: res.data.invoiceDate ? dayjs(res.data.invoiceDate).format('DD-MM-YYYY') : '',
-              invoiceDate1: res.data.invoiceDate || '',
-              contactId: res.data.contactId || '',
-              project: res.data.projectId || '',
-              invoice_number: res.data.referenceNumber || '',
-              total_net: 0,
-              invoiceVATAmount: res.data.totalVatAmount || 0,
-              totalAmount: res.data.totalAmount || 0,
-              notes: res.data.notes || '',
-              changeShippingAddress: res.data.changeShippingAddress || false,
-              shippingAddress: {
-                city: res.data.shippingCity ?? '',
-                countryId: res.data.shippingCountry ?? '',
-                address: res.data.shippingAddress ?? '',
-                postZipCode: res.data.shippingPostZipCode ?? '',
-                stateId: res.data.shippingState ?? '',
-                telephone: res.data.shippingTelephone ?? '',
-                fax: res.data.shippingFax ?? '',
-              },
-              lineItemsString: res.data.invoiceLineItems || [],
-              discount: res.data.discount || 0,
-              term: res.data.term || '',
-              placeOfSupplyId: res.data.placeOfSupplyId || '',
-              fileName: res.data.fileName || '',
-              filePath: res.data.filePath || '',
-              total_excise: res.data.totalExciseAmount || 0,
-              taxType: res.data.taxType ? true : false,
-              footNote: res.data.footNote || '',
+          reset({
+            receiptAttachmentDescription: res.data.receiptAttachmentDescription || '',
+            receiptNumber: res.data.receiptNumber || '',
+            contact_po_number: res.data.contactPoNumber || '',
+            currencyCode: res.data.currencyCode || '',
+            exchangeRate: res.data.exchangeRate || '',
+            currencyName: res.data.currencyName || '',
+            invoiceDueDate: res.data.invoiceDueDate
+              ? dayjs(res.data.invoiceDueDate).format('DD-MM-YYYY')
+              : '',
+            invoiceDate: res.data.invoiceDate
+              ? dayjs(res.data.invoiceDate).format('DD-MM-YYYY')
+              : '',
+            invoiceDate1: res.data.invoiceDate || '',
+            contactId: res.data.contactId || '',
+            project: res.data.projectId || '',
+            invoice_number: res.data.referenceNumber || '',
+            total_net: 0,
+            invoiceVATAmount: res.data.totalVatAmount || 0,
+            totalAmount: res.data.totalAmount || 0,
+            notes: res.data.notes || '',
+            changeShippingAddress: res.data.changeShippingAddress || false,
+            shippingAddress: {
+              city: res.data.shippingCity ?? '',
+              countryId: res.data.shippingCountry ?? '',
+              address: res.data.shippingAddress ?? '',
+              postZipCode: res.data.shippingPostZipCode ?? '',
+              stateId: res.data.shippingState ?? '',
+              telephone: res.data.shippingTelephone ?? '',
+              fax: res.data.shippingFax ?? '',
+            },
+            lineItemsString: res.data.invoiceLineItems || [],
+            discount: res.data.discount || 0,
+            term: res.data.term || '',
+            placeOfSupplyId: res.data.placeOfSupplyId || '',
+            fileName: res.data.fileName || '',
+            filePath: res.data.filePath || '',
+            total_excise: res.data.totalExciseAmount || 0,
+            taxType: res.data.taxType ? true : false,
+            footNote: res.data.footNote || '',
+          });
+
+          if (res.data.changeShippingAddress) {
+            setValue('shippingAddress', {
+              city: res.data.shippingCity ?? '',
+              countryId: res.data.shippingCountry ?? '',
+              address: res.data.shippingAddress ?? '',
+              postZipCode: res.data.shippingPostZipCode ?? '',
+              stateId: res.data.shippingState ?? '',
+              telephone: res.data.shippingTelephone ?? '',
+              fax: res.data.shippingFax ?? '',
             });
+          }
 
-            if (res.data.changeShippingAddress) {
-              setValue('shippingAddress', {
-                city: res.data.shippingCity ?? '',
-                countryId: res.data.shippingCountry ?? '',
-                address: res.data.shippingAddress ?? '',
-                postZipCode: res.data.shippingPostZipCode ?? '',
-                stateId: res.data.shippingState ?? '',
-                telephone: res.data.shippingTelephone ?? '',
-                fax: res.data.shippingFax ?? '',
-              });
-            }
-
-            if (res.data.invoiceLineItems && res.data.invoiceLineItems.length > 0) {
-              updateAmount(res.data.invoiceLineItems);
-              const dataItems = res.data.invoiceLineItems;
-              const calculatedIdCount = dataItems.length > 0
+          if (res.data.invoiceLineItems && res.data.invoiceLineItems.length > 0) {
+            updateAmount(res.data.invoiceLineItems);
+            const dataItems = res.data.invoiceLineItems;
+            const calculatedIdCount =
+              dataItems.length > 0
                 ? Math.max.apply(
                     Math,
-                    dataItems.map((item) => {
+                    dataItems.map(item => {
                       if (item['productId']) getProductType(item['productId']);
                       return item.id;
-                    }),
+                    })
                   )
                 : 0;
-              setIdCount(calculatedIdCount);
-              addRow();
-            } else {
-              setIdCount(0);
-            }
-
-            setLoading(false);
+            setIdCount(calculatedIdCount);
+            addRow();
+          } else {
+            setIdCount(0);
           }
-        });
+
+          setLoading(false);
+        }
+      });
     } else {
       history.push('/admin/income/customer-invoice');
     }
@@ -392,21 +417,21 @@ const DetailCustomerInvoice = ({
     customerInvoiceActions.getProductList();
     customerInvoiceActions
       .getTaxTreatment()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           let array = [];
-          res.data.map((row) => {
+          res.data.map(row => {
             if (row.id !== 8) array.push(row);
           });
           setTaxTreatmentList(array);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         commonActions.tostifyAlert('error', err.data ? err.data.message : 'ERROR');
       });
 
-    customerInvoiceActions.getVatList().then((res) => {
+    customerInvoiceActions.getVatList().then(res => {
       if (res.status == 200) setVatList(res.data);
     });
 
@@ -416,7 +441,7 @@ const DetailCustomerInvoice = ({
 
   const salesCategoryHandler = () => {
     try {
-      productActions.getTransactionCategoryListForSalesProduct('2').then((res) => {
+      productActions.getTransactionCategoryListForSalesProduct('2').then(res => {
         if (res.status === 200) {
           setSalesCategory(res.data);
         }
@@ -426,9 +451,9 @@ const DetailCustomerInvoice = ({
     }
   };
 
-  const calTotalNet = (dataItems) => {
+  const calTotalNet = dataItems => {
     let total_net = 0;
-    dataItems.map((obj) => {
+    dataItems.map(obj => {
       if (obj.isExciseTaxExclusive === false) {
         total_net = +(total_net + +obj.unitPrice * obj.quantity);
       } else {
@@ -442,34 +467,50 @@ const DetailCustomerInvoice = ({
 
   const addRow = () => {
     const currentData = [...data];
-    const currentIdCount = idCount ? idCount : currentData.length > 0 ? Math.max.apply(Math, currentData.map((item) => item.id)) : 0;
-    setData(currentData.concat({
-      id: currentIdCount + 1,
-      description: '',
-      quantity: 1,
-      unitPrice: '',
-      vatCategoryId: '',
-      subTotal: 0,
-      exciseTaxId: '',
-      discountType: 'FIXED',
-      vatAmount: 0,
-      discount: 0,
-      productId: '',
-    }));
+    const currentIdCount = idCount
+      ? idCount
+      : currentData.length > 0
+        ? Math.max.apply(
+            Math,
+            currentData.map(item => item.id)
+          )
+        : 0;
+    setData(
+      currentData.concat({
+        id: currentIdCount + 1,
+        description: '',
+        quantity: 1,
+        unitPrice: '',
+        vatCategoryId: '',
+        subTotal: 0,
+        exciseTaxId: '',
+        discountType: 'FIXED',
+        vatAmount: 0,
+        discount: 0,
+        productId: '',
+      })
+    );
     setIdCount(currentIdCount + 1);
-    setValue('lineItemsString', [...currentData, {
-      id: currentIdCount + 1,
-      description: '',
-      quantity: 1,
-      unitPrice: '',
-      vatCategoryId: '',
-      subTotal: 0,
-      exciseTaxId: '',
-      discountType: 'FIXED',
-      vatAmount: 0,
-      discount: 0,
-      productId: '',
-    }], { shouldValidate: true });
+    setValue(
+      'lineItemsString',
+      [
+        ...currentData,
+        {
+          id: currentIdCount + 1,
+          description: '',
+          quantity: 1,
+          unitPrice: '',
+          vatCategoryId: '',
+          subTotal: 0,
+          exciseTaxId: '',
+          discountType: 'FIXED',
+          vatAmount: 0,
+          discount: 0,
+          productId: '',
+        },
+      ],
+      { shouldValidate: true }
+    );
   };
 
   const selectItem = (e, row, name) => {
@@ -483,7 +524,12 @@ const DetailCustomerInvoice = ({
       return obj;
     });
 
-    if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity' || name === 'exciseTaxId') {
+    if (
+      name === 'unitPrice' ||
+      name === 'vatCategoryId' ||
+      name === 'quantity' ||
+      name === 'exciseTaxId'
+    ) {
       setValue(`lineItemsString.${idx}.${name}`, e, { shouldValidate: true });
       updateAmount(currentData);
     } else {
@@ -494,11 +540,15 @@ const DetailCustomerInvoice = ({
 
   const getContactShippingAddress = (customerID, taxID) => {
     if (taxID !== 5 && taxID !== 6 && taxID !== 7) {
-      customerInvoiceDetailActions.getCustomerShippingAddressbyID(customerID).then((res) => {
+      customerInvoiceDetailActions.getCustomerShippingAddressbyID(customerID).then(res => {
         if (res.status === 200) {
-          var PlaceofSupply = placelist &&
-            selectOptionsFactory.renderOptions('label', 'value', placelist, 'Place of Supply')
-              .find((option) => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase());
+          var PlaceofSupply =
+            placelist &&
+            selectOptionsFactory
+              .renderOptions('label', 'value', placelist, 'Place of Supply')
+              .find(
+                option => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase()
+              );
           if (PlaceofSupply) {
             setValue('placeOfSupplyId', PlaceofSupply);
             setPlaceOfSupplyId(PlaceofSupply);
@@ -511,19 +561,21 @@ const DetailCustomerInvoice = ({
   const getCompanyType = () => {
     customerInvoiceDetailActions
       .getCompanyById()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setIsDesignatedZone(res.data.isDesignatedZone);
-          setCompanyVATRegistrationDate(new Date(dayjs(res.data.vatRegistrationDate).format('MM DD YYYY')));
+          setCompanyVATRegistrationDate(
+            new Date(dayjs(res.data.vatRegistrationDate).format('MM DD YYYY'))
+          );
           setIsRegisteredVat(res.data.isRegisteredVat);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err, 'Get Company Type Error');
       });
   };
 
-  const getProductType = (id) => {
+  const getProductType = id => {
     if (customerTaxTreatmentDes) {
       const product = product_list.find(obj => obj.id === id);
       if (product) {
@@ -532,10 +584,17 @@ const DetailCustomerInvoice = ({
         pt.id = product.id;
         pt.type = product.productType;
 
-        if (isRegisteredVat && (invoiceDateForVatValidation > companyVATRegistrationDate)) {
+        if (isRegisteredVat && invoiceDateForVatValidation > companyVATRegistrationDate) {
           if (isDesignatedZone) {
             if (product.productType === 'GOODS') {
-              if (customerTaxTreatmentDes === 'UAE VAT REGISTERED' || customerTaxTreatmentDes === 'UAE VAT REGISTERED FREEZONE' || customerTaxTreatmentDes === 'UAE NON-VAT REGISTERED FREEZONE' || customerTaxTreatmentDes === 'GCC VAT REGISTERED' || customerTaxTreatmentDes === 'GCC NON-VAT REGISTERED' || customerTaxTreatmentDes === 'NON GCC') {
+              if (
+                customerTaxTreatmentDes === 'UAE VAT REGISTERED' ||
+                customerTaxTreatmentDes === 'UAE VAT REGISTERED FREEZONE' ||
+                customerTaxTreatmentDes === 'UAE NON-VAT REGISTERED FREEZONE' ||
+                customerTaxTreatmentDes === 'GCC VAT REGISTERED' ||
+                customerTaxTreatmentDes === 'GCC NON-VAT REGISTERED' ||
+                customerTaxTreatmentDes === 'NON GCC'
+              ) {
                 vatList.map(element => {
                   if (element.name == 'OUT OF SCOPE') {
                     vt.push(element);
@@ -546,10 +605,19 @@ const DetailCustomerInvoice = ({
                 vt = vatList;
               }
             } else if (product.productType === 'SERVICE') {
-              if (customerTaxTreatmentDes === 'UAE VAT REGISTERED' || customerTaxTreatmentDes === 'UAE NON-VAT REGISTERED' || customerTaxTreatmentDes === 'UAE VAT REGISTERED FREEZONE' || customerTaxTreatmentDes === 'UAE NON-VAT REGISTERED FREEZONE') {
+              if (
+                customerTaxTreatmentDes === 'UAE VAT REGISTERED' ||
+                customerTaxTreatmentDes === 'UAE NON-VAT REGISTERED' ||
+                customerTaxTreatmentDes === 'UAE VAT REGISTERED FREEZONE' ||
+                customerTaxTreatmentDes === 'UAE NON-VAT REGISTERED FREEZONE'
+              ) {
                 vt = vatList;
               }
-              if (customerTaxTreatmentDes === 'GCC VAT REGISTERED' || customerTaxTreatmentDes === 'GCC NON-VAT REGISTERED' || customerTaxTreatmentDes === 'NON GCC') {
+              if (
+                customerTaxTreatmentDes === 'GCC VAT REGISTERED' ||
+                customerTaxTreatmentDes === 'GCC NON-VAT REGISTERED' ||
+                customerTaxTreatmentDes === 'NON GCC'
+              ) {
                 vatList.map(element => {
                   if (element.name == 'ZERO RATED TAX (0%)') {
                     vt.push(element);
@@ -558,10 +626,19 @@ const DetailCustomerInvoice = ({
               }
             }
           } else {
-            if (customerTaxTreatmentDes === 'UAE VAT REGISTERED' || customerTaxTreatmentDes === 'UAE NON-VAT REGISTERED' || customerTaxTreatmentDes === 'UAE VAT REGISTERED FREEZONE' || customerTaxTreatmentDes === 'UAE NON-VAT REGISTERED FREEZONE') {
+            if (
+              customerTaxTreatmentDes === 'UAE VAT REGISTERED' ||
+              customerTaxTreatmentDes === 'UAE NON-VAT REGISTERED' ||
+              customerTaxTreatmentDes === 'UAE VAT REGISTERED FREEZONE' ||
+              customerTaxTreatmentDes === 'UAE NON-VAT REGISTERED FREEZONE'
+            ) {
               vt = vatList;
             }
-            if (customerTaxTreatmentDes === 'GCC VAT REGISTERED' || customerTaxTreatmentDes === 'GCC NON-VAT REGISTERED' || customerTaxTreatmentDes === 'NON GCC') {
+            if (
+              customerTaxTreatmentDes === 'GCC VAT REGISTERED' ||
+              customerTaxTreatmentDes === 'GCC NON-VAT REGISTERED' ||
+              customerTaxTreatmentDes === 'NON GCC'
+            ) {
               vatList.map(element => {
                 if (element.name == 'ZERO RATED TAX (0%)') {
                   vt.push(element);
@@ -570,11 +647,13 @@ const DetailCustomerInvoice = ({
             }
           }
         } else {
-          vt = [{
-            'id': 10,
-            'vat': 0,
-            'name': 'N/A'
-          }];
+          vt = [
+            {
+              id: 10,
+              vat: 0,
+              name: 'N/A',
+            },
+          ];
         }
 
         pt.vat_list = vt;
@@ -599,14 +678,14 @@ const DetailCustomerInvoice = ({
     updateAmount(newData);
   };
 
-  const exchangeRaterevalidate = (exc) => {
+  const exchangeRaterevalidate = exc => {
     let local = [...data];
 
     let local2 = local.map((obj, index) => {
-      const result = product_list.find((item) => item.id === obj.productId);
+      const result = product_list.find(item => item.id === obj.productId);
       return {
         ...obj,
-        unitPrice: result ? (parseFloat(result.unitPrice) * (1 / exc)).toFixed(2) : 0
+        unitPrice: result ? (parseFloat(result.unitPrice) * (1 / exc)).toFixed(2) : 0,
       };
     });
 
@@ -616,10 +695,11 @@ const DetailCustomerInvoice = ({
 
   const prductValue = (e, row, name) => {
     let currentData = data;
-    const result = product_list.find((item) => item.id === parseInt(e));
+    const result = product_list.find(item => item.id === parseInt(e));
     const producttypeItem = getProductType(parseInt(e));
     let idx;
-    let exchangeRate = watch('exchangeRate') > 0 && watch('exchangeRate') !== '' ? watch('exchangeRate') : 1;
+    let exchangeRate =
+      watch('exchangeRate') > 0 && watch('exchangeRate') !== '' ? watch('exchangeRate') : 1;
 
     currentData.map((obj, index) => {
       if (obj.id === row.id) {
@@ -647,10 +727,14 @@ const DetailCustomerInvoice = ({
       return obj;
     });
 
-    setValue(`lineItemsString.${idx}.vatCategoryId`, result.vatCategoryId, { shouldValidate: true });
+    setValue(`lineItemsString.${idx}.vatCategoryId`, result.vatCategoryId, {
+      shouldValidate: true,
+    });
     setValue(`lineItemsString.${idx}.unitPrice`, result.unitPrice, { shouldValidate: true });
     setValue(`lineItemsString.${idx}.description`, result.description, { shouldValidate: true });
-    setValue(`lineItemsString.${idx}.exciseTaxId`, parseInt(result.exciseTaxId), { shouldValidate: true });
+    setValue(`lineItemsString.${idx}.exciseTaxId`, parseInt(result.exciseTaxId), {
+      shouldValidate: true,
+    });
     updateAmount(currentData);
   };
 
@@ -659,7 +743,7 @@ const DetailCustomerInvoice = ({
     let newData = [];
     e.preventDefault();
     const currentData = data;
-    newData = currentData.filter((obj) => obj.id !== id);
+    newData = currentData.filter(obj => obj.id !== id);
     setValue('lineItemsString', newData, { shouldValidate: true });
     updateAmount(newData);
   };
@@ -678,28 +762,32 @@ const DetailCustomerInvoice = ({
     }
   };
 
-  const updateAmount = (dataItems) => {
+  const updateAmount = dataItems => {
     let total_net = 0;
     let total_excise = 0;
     let total = 0;
     let total_vat = 0;
     let net_value = 0;
     let discount_total = 0;
-    let exchangeRate = watch('exchangeRate') > 0 && watch('exchangeRate') !== '' ? watch('exchangeRate') : 1;
+    let exchangeRate =
+      watch('exchangeRate') > 0 && watch('exchangeRate') !== '' ? watch('exchangeRate') : 1;
 
-    dataItems.map((obj) => {
+    dataItems.map(obj => {
       let unitprice = obj.unitPrice;
-      const index = obj.vatCategoryId !== '' && vatList ? vatList.findIndex((item) => item.id === +obj.vatCategoryId) : '';
+      const index =
+        obj.vatCategoryId !== '' && vatList
+          ? vatList.findIndex(item => item.id === +obj.vatCategoryId)
+          : '';
       const vat = index !== '' && index >= 0 ? vatList[`${index}`].vat : 0;
 
       // Exclusive case
       if (taxType === false) {
         if (obj.discountType === 'PERCENTAGE') {
-          net_value = ((+unitprice - (+((unitprice * obj.discount)) / 100)) * obj.quantity);
-          var discount = (unitprice * obj.quantity) - net_value;
+          net_value = (+unitprice - +(unitprice * obj.discount) / 100) * obj.quantity;
+          var discount = unitprice * obj.quantity - net_value;
           if (obj.exciseTaxId != 0) {
             if (obj.exciseTaxId === 1) {
-              const value = +(net_value) / 2;
+              const value = +net_value / 2;
               net_value = parseFloat(net_value) + parseFloat(value);
               obj.exciseAmount = parseFloat(value);
             } else if (obj.exciseTaxId === 2) {
@@ -710,13 +798,13 @@ const DetailCustomerInvoice = ({
           } else {
             obj.exciseAmount = 0;
           }
-          var vat_amount = vat === 0 ? 0 : ((+net_value * vat) / 100);
+          var vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
         } else {
-          net_value = ((unitprice * obj.quantity) - obj.discount);
-          var discount = (unitprice * obj.quantity) - net_value;
+          net_value = unitprice * obj.quantity - obj.discount;
+          var discount = unitprice * obj.quantity - net_value;
           if (obj.exciseTaxId != 0) {
             if (obj.exciseTaxId === 1) {
-              const value = +(net_value) / 2;
+              const value = +net_value / 2;
               net_value = parseFloat(net_value) + parseFloat(value);
               obj.exciseAmount = parseFloat(value);
             } else if (obj.exciseTaxId === 2) {
@@ -727,15 +815,15 @@ const DetailCustomerInvoice = ({
           } else {
             obj.exciseAmount = 0;
           }
-          var vat_amount = vat === 0 ? 0 : ((+net_value * vat) / 100);
+          var vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
         }
       }
       // Inclusive case
       else {
         if (obj.discountType === 'PERCENTAGE') {
-          net_value = ((+unitprice - (+((unitprice * obj.discount)) / 100)) * obj.quantity);
-          var discount = (unitprice * obj.quantity) - net_value;
-          var vat_amount = (vat === 0 ? 0 : ((+net_value * (vat / (100 + vat) * 100)) / 100));
+          net_value = (+unitprice - +(unitprice * obj.discount) / 100) * obj.quantity;
+          var discount = unitprice * obj.quantity - net_value;
+          var vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
           net_value = net_value - vat_amount;
 
           if (obj.exciseTaxId != 0) {
@@ -752,9 +840,9 @@ const DetailCustomerInvoice = ({
             obj.exciseAmount = 0;
           }
         } else {
-          net_value = ((unitprice * obj.quantity) - obj.discount);
-          var discount = (unitprice * obj.quantity) - net_value;
-          var vat_amount = (vat === 0 ? 0 : ((+net_value * (vat / (100 + vat) * 100)) / 100));
+          net_value = unitprice * obj.quantity - obj.discount;
+          var discount = unitprice * obj.quantity - net_value;
+          var vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
           net_value = net_value - vat_amount;
 
           if (obj.exciseTaxId != 0) {
@@ -792,7 +880,7 @@ const DetailCustomerInvoice = ({
     setValue('total_excise', total_excise);
   };
 
-  const setDateHandler = (value) => {
+  const setDateHandler = value => {
     setDatesChanged(true);
     const val = term.split('_');
     const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
@@ -807,7 +895,7 @@ const DetailCustomerInvoice = ({
     }
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -818,17 +906,23 @@ const DetailCustomerInvoice = ({
     }
   };
 
-  const onSubmit = (formData) => {
+  const onSubmit = formData => {
     setDisabled(true);
 
     let postFormData = new FormData();
     postFormData.append('type', 2);
     postFormData.append('taxType', taxType);
     postFormData.append('invoiceId', currentCustomerId);
-    postFormData.append('referenceNumber', formData.invoice_number !== null ? formData.invoice_number : '');
+    postFormData.append(
+      'referenceNumber',
+      formData.invoice_number !== null ? formData.invoice_number : ''
+    );
 
     if (formData.changeShippingAddress && formData.changeShippingAddress == true) {
-      postFormData.append('changeShippingAddress', formData.changeShippingAddress !== null ? formData.changeShippingAddress : '');
+      postFormData.append(
+        'changeShippingAddress',
+        formData.changeShippingAddress !== null ? formData.changeShippingAddress : ''
+      );
       postFormData.append('shippingAddress', formData.shippingAddress.address ?? '');
       postFormData.append('shippingCountry', formData.shippingAddress.countryId ?? '');
       postFormData.append('shippingState', formData.shippingAddress.stateId ?? '');
@@ -839,17 +933,41 @@ const DetailCustomerInvoice = ({
     }
 
     if (datesChanged === true) {
-      postFormData.append('invoiceDate', typeof formData.invoiceDate === 'string' ? invoiceDate : formData.invoiceDate);
-      postFormData.append('invoiceDueDate', typeof formData.invoiceDueDate === 'string' ? invoiceDueDate : formData.invoiceDueDate);
+      postFormData.append(
+        'invoiceDate',
+        typeof formData.invoiceDate === 'string' ? invoiceDate : formData.invoiceDate
+      );
+      postFormData.append(
+        'invoiceDueDate',
+        typeof formData.invoiceDueDate === 'string' ? invoiceDueDate : formData.invoiceDueDate
+      );
     } else {
-      postFormData.append('invoiceDate', typeof formData.invoiceDate === 'string' ? invoiceDateNoChange : '');
-      postFormData.append('invoiceDueDate', typeof formData.invoiceDueDate === 'string' ? invoiceDueDateNoChange : '');
+      postFormData.append(
+        'invoiceDate',
+        typeof formData.invoiceDate === 'string' ? invoiceDateNoChange : ''
+      );
+      postFormData.append(
+        'invoiceDueDate',
+        typeof formData.invoiceDueDate === 'string' ? invoiceDueDateNoChange : ''
+      );
     }
 
-    postFormData.append('exchangeRate', formData.exchangeRate !== null ? formData.exchangeRate : '');
-    postFormData.append('receiptNumber', formData.receiptNumber !== null ? formData.receiptNumber : '');
-    postFormData.append('contactPoNumber', formData.contact_po_number !== null ? formData.contact_po_number : '');
-    postFormData.append('receiptAttachmentDescription', formData.receiptAttachmentDescription !== null ? formData.receiptAttachmentDescription : '');
+    postFormData.append(
+      'exchangeRate',
+      formData.exchangeRate !== null ? formData.exchangeRate : ''
+    );
+    postFormData.append(
+      'receiptNumber',
+      formData.receiptNumber !== null ? formData.receiptNumber : ''
+    );
+    postFormData.append(
+      'contactPoNumber',
+      formData.contact_po_number !== null ? formData.contact_po_number : ''
+    );
+    postFormData.append(
+      'receiptAttachmentDescription',
+      formData.receiptAttachmentDescription !== null ? formData.receiptAttachmentDescription : ''
+    );
     postFormData.append('notes', formData.notes !== null ? formData.notes : '');
     postFormData.append('footNote', formData.footNote ? formData.footNote : '');
     postFormData.append('lineItemsString', JSON.stringify(data));
@@ -866,7 +984,10 @@ const DetailCustomerInvoice = ({
       postFormData.append('currencyCode', formData.currencyCode);
     }
     if (formData.placeOfSupplyId) {
-      postFormData.append('placeOfSupplyId', formData.placeOfSupplyId.value ? formData.placeOfSupplyId.value : formData.placeOfSupplyId);
+      postFormData.append(
+        'placeOfSupplyId',
+        formData.placeOfSupplyId.value ? formData.placeOfSupplyId.value : formData.placeOfSupplyId
+      );
     }
     if (formData.project) {
       postFormData.append('projectId', formData.project);
@@ -881,20 +1002,26 @@ const DetailCustomerInvoice = ({
 
     customerInvoiceDetailActions
       .updateInvoice(postFormData)
-      .then((res) => {
+      .then(res => {
         setDisabled(false);
-        commonActions.tostifyAlert('success', res.data ? strings.InvoiceUpdatedSuccessfully : res.data.message);
+        commonActions.tostifyAlert(
+          'success',
+          res.data ? strings.InvoiceUpdatedSuccessfully : res.data.message
+        );
         history.push('/admin/income/customer-invoice');
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(err => {
         setDisabled(false);
         setLoading(false);
-        commonActions.tostifyAlert('error', err.data ? err.data.message : 'Invoice Updated Unsuccessfully!');
+        commonActions.tostifyAlert(
+          'error',
+          err.data ? err.data.message : 'Invoice Updated Unsuccessfully!'
+        );
       });
   };
 
-  const openCustomerModalHandler = (e) => {
+  const openCustomerModalHandler = e => {
     e.preventDefault();
     setOpenCustomerModal(true);
   };
@@ -903,7 +1030,7 @@ const DetailCustomerInvoice = ({
     setOpenProductModal(true);
   };
 
-  const getCurrentUser = (newData) => {
+  const getCurrentUser = newData => {
     let option;
     if (newData.label || newData.value) {
       option = newData;
@@ -916,7 +1043,7 @@ const DetailCustomerInvoice = ({
     setValue('contactId', option.value, { shouldValidate: true });
   };
 
-  const closeCustomerModal = (res) => {
+  const closeCustomerModal = res => {
     if (res) {
       customerInvoiceActions.getCustomerList(contactType);
     }
@@ -927,45 +1054,52 @@ const DetailCustomerInvoice = ({
     setOpenProductModal(false);
   };
 
-  const getCurrentProduct = (newProduct) => {
+  const getCurrentProduct = newProduct => {
     if (newProduct) {
       let newData = [];
-      newData = data.filter((obj) => obj.productId !== '');
-      let exchangeRate = watch('exchangeRate') > 0 && watch('exchangeRate') !== '' ? watch('exchangeRate') : 1;
+      newData = data.filter(obj => obj.productId !== '');
+      let exchangeRate =
+        watch('exchangeRate') > 0 && watch('exchangeRate') !== '' ? watch('exchangeRate') : 1;
 
-      setData([...newData, {
-        id: idCount + 1,
-        description: newProduct.description,
-        quantity: 1,
-        discount: 0,
-        unitPrice: (parseFloat(newProduct.unitPrice) * (1 / exchangeRate)).toFixed(2),
-        vatCategoryId: isRegisteredVat ? '' : 10,
-        exciseTaxId: newProduct.exciseTaxId,
-        vatAmount: newProduct.vatAmount ? newProduct.vatAmount : 0,
-        subTotal: newProduct.unitPrice,
-        productId: newProduct.id,
-        discountType: newProduct.discountType,
-        unitType: newProduct.unitType,
-        unitTypeId: newProduct.unitTypeId,
-      }]);
+      setData([
+        ...newData,
+        {
+          id: idCount + 1,
+          description: newProduct.description,
+          quantity: 1,
+          discount: 0,
+          unitPrice: (parseFloat(newProduct.unitPrice) * (1 / exchangeRate)).toFixed(2),
+          vatCategoryId: isRegisteredVat ? '' : 10,
+          exciseTaxId: newProduct.exciseTaxId,
+          vatAmount: newProduct.vatAmount ? newProduct.vatAmount : 0,
+          subTotal: newProduct.unitPrice,
+          productId: newProduct.id,
+          discountType: newProduct.discountType,
+          unitType: newProduct.unitType,
+          unitTypeId: newProduct.unitTypeId,
+        },
+      ]);
 
       setIdCount(idCount + 1);
       const values = { values: watch() };
-      updateAmount([...newData, {
-        id: idCount + 1,
-        description: newProduct.description,
-        quantity: 1,
-        discount: 0,
-        unitPrice: (parseFloat(newProduct.unitPrice) * (1 / exchangeRate)).toFixed(2),
-        vatCategoryId: isRegisteredVat ? '' : 10,
-        exciseTaxId: newProduct.exciseTaxId,
-        vatAmount: newProduct.vatAmount ? newProduct.vatAmount : 0,
-        subTotal: newProduct.unitPrice,
-        productId: newProduct.id,
-        discountType: newProduct.discountType,
-        unitType: newProduct.unitType,
-        unitTypeId: newProduct.unitTypeId,
-      }]);
+      updateAmount([
+        ...newData,
+        {
+          id: idCount + 1,
+          description: newProduct.description,
+          quantity: 1,
+          discount: 0,
+          unitPrice: (parseFloat(newProduct.unitPrice) * (1 / exchangeRate)).toFixed(2),
+          vatCategoryId: isRegisteredVat ? '' : 10,
+          exciseTaxId: newProduct.exciseTaxId,
+          vatAmount: newProduct.vatAmount ? newProduct.vatAmount : 0,
+          subTotal: newProduct.unitPrice,
+          productId: newProduct.id,
+          discountType: newProduct.discountType,
+          unitType: newProduct.unitType,
+          unitTypeId: newProduct.unitTypeId,
+        },
+      ]);
       addRow();
       getProductType(newProduct.id);
 
@@ -974,7 +1108,9 @@ const DetailCustomerInvoice = ({
       setValue(`lineItemsString.${0}.quantity`, 1, { shouldValidate: true });
       setValue(`lineItemsString.${0}.discount`, 1, { shouldValidate: true });
       setValue(`lineItemsString.${0}.discountType`, 1, { shouldValidate: true });
-      setValue(`lineItemsString.${0}.vatCategoryId`, newProduct.vatCategoryId, { shouldValidate: true });
+      setValue(`lineItemsString.${0}.vatCategoryId`, newProduct.vatCategoryId, {
+        shouldValidate: true,
+      });
       setValue(`lineItemsString.${0}.exciseTaxId`, 1, { shouldValidate: true });
       setValue(`lineItemsString.${0}.productId`, newProduct.id, { shouldValidate: true });
     }
@@ -983,19 +1119,22 @@ const DetailCustomerInvoice = ({
   const getCompanyCurrency = () => {
     currencyConvertActions
       .getCompanyCurrency()
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           setBasecurrency(res.data);
         }
       })
-      .catch((err) => {
-        commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
+      .catch(err => {
+        commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong'
+        );
         setLoading(false);
       });
   };
 
-  const setExchange = (value) => {
-    let result = currency_convert_list.filter((obj) => {
+  const setExchange = value => {
+    let result = currency_convert_list.filter(obj => {
       return obj.currencyCode === value;
     });
     if (result[0]) {
@@ -1007,8 +1146,8 @@ const DetailCustomerInvoice = ({
     }
   };
 
-  const setCurrency = (value) => {
-    let result = currency_convert_list.filter((obj) => {
+  const setCurrency = value => {
+    let result = currency_convert_list.filter(obj => {
       return obj.currencyCode === value;
     });
     setCustomerCurrencyDes(result[0].currencyName);
@@ -1040,15 +1179,21 @@ const DetailCustomerInvoice = ({
     setLoadingMsg('Deleting Invoice...');
     customerInvoiceDetailActions
       .deleteInvoice(currentCustomerId)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
-          commonActions.tostifyAlert('success', res.data ? strings.InvoiceDeletedSuccessfully : res.data.message);
+          commonActions.tostifyAlert(
+            'success',
+            res.data ? strings.InvoiceDeletedSuccessfully : res.data.message
+          );
           history.push('/admin/income/customer-invoice');
           setLoading(false);
         }
       })
-      .catch((err) => {
-        commonActions.tostifyAlert('error', err.data ? err.data.message : 'Invoice Deleted Unsuccessfully!');
+      .catch(err => {
+        commonActions.tostifyAlert(
+          'error',
+          err.data ? err.data.message : 'Invoice Deleted Unsuccessfully!'
+        );
       });
   };
 
@@ -1056,7 +1201,7 @@ const DetailCustomerInvoice = ({
     setDialog(null);
   };
 
-  const getCurrency = (opt) => {
+  const getCurrency = opt => {
     let customer_currencyCode = 0;
     let customer_item_currency = '';
     customer_list.map(item => {
@@ -1071,7 +1216,7 @@ const DetailCustomerInvoice = ({
     return customer_currencyCode;
   };
 
-  const getTaxTreatment = (opt) => {
+  const getTaxTreatment = opt => {
     let customer_taxTreatmentId = 0;
     let customer_item_taxTreatment = '';
     customer_list.map(item => {
@@ -1085,19 +1230,21 @@ const DetailCustomerInvoice = ({
   };
 
   const rendertotalexcise = () => {
-    let val = watch('total_excise').toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    let val = watch('total_excise').toLocaleString(navigator.language, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
     return parseFloat(val).toFixed(2);
   };
 
-  const getStateList = (countryCode) => {
+  const getStateList = countryCode => {
     customerInvoiceActions.getStateList(countryCode);
   };
 
-  const getStateListForShippingAddress = (countryCode) => {
-    customerInvoiceActions.getStateListForShippingAddress(countryCode)
-      .then((res) => {
-        setStateListForShipping(res);
-      });
+  const getStateListForShippingAddress = countryCode => {
+    customerInvoiceActions.getStateListForShippingAddress(countryCode).then(res => {
+      setStateListForShipping(res);
+    });
   };
 
   if (loading) {
@@ -1112,7 +1259,9 @@ const DetailCustomerInvoice = ({
 
   let hasExciseTax = false;
   if (watch()) {
-    hasExciseTax = data.some(row => (row.exciseTaxId !== null && row.exciseTaxId !== '' && row.exciseTaxId !== 0));
+    hasExciseTax = data.some(
+      row => row.exciseTaxId !== null && row.exciseTaxId !== '' && row.exciseTaxId !== 0
+    );
   }
 
   return (
@@ -1194,19 +1343,26 @@ const DetailCustomerInvoice = ({
                                     }
                                     value={
                                       tmpCustomer_list &&
-                                      tmpCustomer_list.find((option) => option.value === +field.value)
+                                      tmpCustomer_list.find(option => option.value === +field.value)
                                     }
-                                    onChange={(option) => {
+                                    onChange={option => {
                                       resetVatId();
                                       if (option && option.value) {
-                                        setValue('currencyCode', getCurrency(option.value), { shouldValidate: true });
-                                        setValue('taxTreatmentid', getTaxTreatment(option.value), { shouldValidate: true });
+                                        setValue('currencyCode', getCurrency(option.value), {
+                                          shouldValidate: true,
+                                        });
+                                        setValue('taxTreatmentid', getTaxTreatment(option.value), {
+                                          shouldValidate: true,
+                                        });
                                         setExchange(getCurrency(option.value));
                                         field.onChange(option.value);
                                       } else {
                                         field.onChange('');
                                       }
-                                      getContactShippingAddress(option.value, getTaxTreatment(option.value));
+                                      getContactShippingAddress(
+                                        option.value,
+                                        getTaxTreatment(option.value)
+                                      );
                                     }}
                                     styles={selectStyles}
                                     className={errors.contactId ? 'is-invalid' : ''}
@@ -1224,13 +1380,16 @@ const DetailCustomerInvoice = ({
                           {isRegisteredVat && (
                             <Col lg={3}>
                               <FormGroup className="mb-3">
-                                <Label htmlFor="taxTreatmentid">
-                                  {strings.TaxTreatment}
-                                </Label>
+                                <Label htmlFor="taxTreatmentid">{strings.TaxTreatment}</Label>
                                 <Select
                                   options={
                                     taxTreatmentList
-                                      ? selectOptionsFactory.renderOptions('name', 'id', taxTreatmentList, 'VAT')
+                                      ? selectOptionsFactory.renderOptions(
+                                          'name',
+                                          'id',
+                                          taxTreatmentList,
+                                          'VAT'
+                                        )
                                       : []
                                   }
                                   isDisabled={true}
@@ -1240,7 +1399,7 @@ const DetailCustomerInvoice = ({
                                     taxTreatmentList &&
                                     selectOptionsFactory
                                       .renderOptions('name', 'id', taxTreatmentList, 'VAT')
-                                      .find((option) => option.label === customerTaxTreatmentDes)
+                                      .find(option => option.label === customerTaxTreatmentDes)
                                   }
                                   styles={selectStyles}
                                 />
@@ -1269,9 +1428,9 @@ const DetailCustomerInvoice = ({
                                         value={
                                           field.value?.value
                                             ? field.value
-                                            : placelist.find((option) => option.value == field.value)
+                                            : placelist.find(option => option.value == field.value)
                                         }
-                                        onChange={(option) => {
+                                        onChange={option => {
                                           field.onChange(option);
                                           setPlaceOfSupplyId(option);
                                         }}
@@ -1291,7 +1450,10 @@ const DetailCustomerInvoice = ({
                         </Row>
 
                         <Row>
-                          <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                          <Col
+                            lg={12}
+                            className="d-flex align-items-center justify-content-between flex-wrap mt-5"
+                          >
                             <FormGroup>
                               <Button
                                 type="button"
@@ -1300,7 +1462,8 @@ const DetailCustomerInvoice = ({
                                 disabled={disabled1}
                                 onClick={deleteInvoice}
                               >
-                                <i className="fa fa-trash"></i> {disabled1 ? 'Deleting...' : strings.Delete}
+                                <i className="fa fa-trash"></i>{' '}
+                                {disabled1 ? 'Deleting...' : strings.Delete}
                               </Button>
                             </FormGroup>
                             <FormGroup className="text-right">
@@ -1310,7 +1473,8 @@ const DetailCustomerInvoice = ({
                                 className="btn-square mr-3"
                                 disabled={disabled}
                               >
-                                <i className="fa fa-dot-circle-o"></i> {disabled ? 'Updating...' : strings.Update}
+                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                {disabled ? 'Updating...' : strings.Update}
                               </Button>
                               <Button
                                 type="button"
@@ -1342,7 +1506,7 @@ const DetailCustomerInvoice = ({
         <ProductModal
           openProductModal={openProductModal}
           closeProductModal={closeProductModal}
-          getCurrentProduct={(e) => {
+          getCurrentProduct={e => {
             customerInvoiceActions.getProductList().then(res => {
               if (res.status === 200) getCurrentProduct(res.data[0]);
             });

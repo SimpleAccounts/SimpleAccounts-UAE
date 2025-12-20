@@ -14,7 +14,7 @@ import {
   Col,
   Form,
   FormGroup,
-  Label
+  Label,
 } from 'reactstrap';
 
 import ImageUploader from 'react-images-upload';
@@ -29,18 +29,24 @@ import config from 'constants/config';
 // Zod validation schema
 const organizationSchema = z.object({
   name: z.string().min(1, 'Company Name is required'),
-  industryTypeCode: z.object({
-    value: z.string(),
-    label: z.string(),
-  }).nullable().refine((val) => val !== null, 'Industry Type is required'),
+  industryTypeCode: z
+    .object({
+      value: z.string(),
+      label: z.string(),
+    })
+    .nullable()
+    .refine(val => val !== null, 'Industry Type is required'),
   addressLine1: z.string().optional(),
   addressLine2: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
-  countryCode: z.object({
-    value: z.string(),
-    label: z.string(),
-  }).nullable().refine((val) => val !== null, 'Country is required'),
+  countryCode: z
+    .object({
+      value: z.string(),
+      label: z.string(),
+    })
+    .nullable()
+    .refine(val => val !== null, 'Country is required'),
   postZipCode: z.string().optional(),
   contactPersonName: z.string().optional(),
   contactEmailAddress: z.string().email('Invalid email address').optional().or(z.literal('')),
@@ -50,18 +56,18 @@ const organizationSchema = z.object({
   vatNumber: z.string().min(1, 'VAT Number is required'),
 });
 
-const mapStateToProps = (state) => {
-  return ({
+const mapStateToProps = state => {
+  return {
     country_list: state.organization.country_list,
-    industry_type_list: state.organization.industry_type_list
-  });
+    industry_type_list: state.organization.industry_type_list,
+  };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return ({
+const mapDispatchToProps = dispatch => {
+  return {
     organizationActions: bindActionCreators(OrganizationActions, dispatch),
-    commonActions: bindActionCreators(CommonActions, dispatch)
-  });
+    commonActions: bindActionCreators(CommonActions, dispatch),
+  };
 };
 
 const Organization = ({
@@ -69,7 +75,7 @@ const Organization = ({
   commonActions,
   country_list,
   industry_type_list,
-  history
+  history,
 }) => {
   const [loading, setLoading] = useState(false);
   const [pictures, setPictures] = useState([]);
@@ -95,7 +101,12 @@ const Organization = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, register } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    register,
+  } = form;
 
   useEffect(() => {
     initializeData();
@@ -106,45 +117,51 @@ const Organization = ({
     organizationActions.getIndustryTypeList();
   }, [organizationActions]);
 
-  const uploadImage = (picture) => {
+  const uploadImage = picture => {
     setPictures(picture);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     const formData = new FormData();
-    formData.append("name", data.name || '');
-    formData.append("industryTypeCode", data.industryTypeCode?.value || '');
-    formData.append("addressLine1", data.addressLine1 || '');
-    formData.append("addressLine2", data.addressLine2 || '');
-    formData.append("city", data.city || '');
-    formData.append("state", data.state || '');
-    formData.append("countryCode", data.countryCode?.value || '');
-    formData.append("postZipCode", data.postZipCode || '');
-    formData.append("contactPersonName", data.contactPersonName || '');
-    formData.append("contactEmailAddress", data.contactEmailAddress || '');
-    formData.append("contactPhoneNumber", data.contactPhoneNumber || '');
-    formData.append("phoneNumber", data.phoneNumber || '');
-    formData.append("companyRegistrationId", data.companyRegistrationId || '');
-    formData.append("vatNumber", data.vatNumber || '');
+    formData.append('name', data.name || '');
+    formData.append('industryTypeCode', data.industryTypeCode?.value || '');
+    formData.append('addressLine1', data.addressLine1 || '');
+    formData.append('addressLine2', data.addressLine2 || '');
+    formData.append('city', data.city || '');
+    formData.append('state', data.state || '');
+    formData.append('countryCode', data.countryCode?.value || '');
+    formData.append('postZipCode', data.postZipCode || '');
+    formData.append('contactPersonName', data.contactPersonName || '');
+    formData.append('contactEmailAddress', data.contactEmailAddress || '');
+    formData.append('contactPhoneNumber', data.contactPhoneNumber || '');
+    formData.append('phoneNumber', data.phoneNumber || '');
+    formData.append('companyRegistrationId', data.companyRegistrationId || '');
+    formData.append('vatNumber', data.vatNumber || '');
 
     if (pictures.length > 0) {
-      formData.append("companyLogo ", pictures[0]);
+      formData.append('companyLogo ', pictures[0]);
     }
 
-    organizationActions.createOrganization(formData).then((res) => {
-      if (res.status === 200) {
-        commonActions.tostifyAlert('success', 'New Company Created Successfully');
-        history.push(config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice');
-      }
-    }).catch((err) => {
-      commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
-    });
+    organizationActions
+      .createOrganization(formData)
+      .then(res => {
+        if (res.status === 200) {
+          commonActions.tostifyAlert('success', 'New Company Created Successfully');
+          history.push(config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice');
+        }
+      })
+      .catch(err => {
+        commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong'
+        );
+      });
   };
 
   const containerStyle = {
     zIndex: 1999,
     closeOnClick: true,
-    draggable: true
+    draggable: true,
   };
 
   if (loading) {
@@ -155,7 +172,6 @@ const Organization = ({
     <div>
       <div className="organization-screen">
         <div className="animated fadeIn">
-
           <Card>
             <CardHeader>
               <div className="h4 mb-0 d-flex align-items-center">
@@ -165,16 +181,18 @@ const Organization = ({
             </CardHeader>
             <CardBody>
               <Row>
-                <Col lg='12'>
+                <Col lg="12">
                   <Form name="simpleForm" className="mt-3" onSubmit={handleSubmit(onSubmit)}>
                     <FormGroup row>
                       <Col md="2" className="text-right">
-                        <Label htmlFor="categoryName" className="mt-3">Company Logo</Label>
+                        <Label htmlFor="categoryName" className="mt-3">
+                          Company Logo
+                        </Label>
                       </Col>
                       <Col xs="12" md="8" lg="2">
                         <ImageUploader
                           withIcon={true}
-                          buttonText='Choose images'
+                          buttonText="Choose images"
                           onChange={uploadImage}
                           imgExtension={['jpg', 'gif', 'png', 'jpeg']}
                           maxFileSize={1048576}
@@ -200,9 +218,7 @@ const Organization = ({
                           className={errors.name ? 'is-invalid' : ''}
                         />
                         {errors.name && (
-                          <div className="invalid-feedback d-block">
-                            {errors.name.message}
-                          </div>
+                          <div className="invalid-feedback d-block">{errors.name.message}</div>
                         )}
                       </Col>
                     </FormGroup>
@@ -220,7 +236,15 @@ const Organization = ({
                           render={({ field }) => (
                             <Select
                               {...field}
-                              options={industry_type_list ? selectOptionsFactory.renderOptions('label', 'value', industry_type_list) : []}
+                              options={
+                                industry_type_list
+                                  ? selectOptionsFactory.renderOptions(
+                                      'label',
+                                      'value',
+                                      industry_type_list
+                                    )
+                                  : []
+                              }
                               placeholder="Select Industry"
                               id="industryTypeCode"
                               styles={selectStyles}
@@ -268,7 +292,16 @@ const Organization = ({
                               render={({ field }) => (
                                 <Select
                                   {...field}
-                                  options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
+                                  options={
+                                    country_list
+                                      ? selectOptionsFactory.renderOptions(
+                                          'countryName',
+                                          'countryCode',
+                                          country_list,
+                                          'Country'
+                                        )
+                                      : []
+                                  }
                                   placeholder="Select Country"
                                   id="countryCode"
                                   styles={selectStyles}
@@ -284,12 +317,7 @@ const Organization = ({
                             )}
                           </Col>
                           <Col xs="12" md="3">
-                            <Input
-                              type="text"
-                              id="city"
-                              placeholder="City"
-                              {...register('city')}
-                            />
+                            <Input type="text" id="city" placeholder="City" {...register('city')} />
                           </Col>
                           <Col xs="12" md="3">
                             <Input
@@ -412,9 +440,7 @@ const Organization = ({
                           className={errors.vatNumber ? 'is-invalid' : ''}
                         />
                         {errors.vatNumber && (
-                          <div className="invalid-feedback d-block">
-                            {errors.vatNumber.message}
-                          </div>
+                          <div className="invalid-feedback d-block">{errors.vatNumber.message}</div>
                         )}
                       </Col>
                     </FormGroup>
@@ -422,11 +448,7 @@ const Organization = ({
                     <FormGroup row>
                       <Col md="2"></Col>
                       <Col xs="12" md="8">
-                        <Button
-                          type="submit"
-                          color="primary"
-                          className="btn-square mt-5"
-                        >
+                        <Button type="submit" color="primary" className="btn-square mt-5">
                           <i className="fas fa-save mr-2"></i>Save
                         </Button>
                       </Col>

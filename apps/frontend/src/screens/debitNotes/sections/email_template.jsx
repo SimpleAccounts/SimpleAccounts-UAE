@@ -1,16 +1,16 @@
 import React, { useState, useRef } from 'react';
 import {
-	Button,
-	Row,
-	Col,
-	Form,
-	FormGroup,
-	Input,
-	Label,
-	Modal,
-	CardHeader,
-	ModalBody,
-	ModalFooter,
+  Button,
+  Row,
+  Col,
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  Modal,
+  CardHeader,
+  ModalBody,
+  ModalFooter,
 } from 'reactstrap';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,196 +19,176 @@ import { Editor } from 'react-draft-wysiwyg';
 
 // Zod validation schema
 const emailModalSchema = z.object({
-	invoiceMailingFrom: z.string().optional(),
-	invoiceMailingTo: z.string().email('Invalid email format').optional().or(z.literal('')),
-	invoiceMailingSubject: z.string().optional(),
-	invoiceMailingBody: z.string().optional(),
+  invoiceMailingFrom: z.string().optional(),
+  invoiceMailingTo: z.string().email('Invalid email format').optional().or(z.literal('')),
+  invoiceMailingSubject: z.string().optional(),
+  invoiceMailingBody: z.string().optional(),
 });
 
 const EmailModal = ({ openEmailModal, closeEmailModal, sendEmail, id }) => {
-	const [message, setMessage] = useState('');
-	const [contentState, setContentState] = useState({});
+  const [message, setMessage] = useState('');
+  const [contentState, setContentState] = useState({});
 
-	const content = {
-		entityMap: {},
-		blocks: [
-			{
-				key: '637gr',
-				text: message,
-				type: 'unstyled',
-				depth: 0,
-				inlineStyleRanges: [],
-				entityRanges: [],
-				data: {},
-			},
-		],
-	};
+  const content = {
+    entityMap: {},
+    blocks: [
+      {
+        key: '637gr',
+        text: message,
+        type: 'unstyled',
+        depth: 0,
+        inlineStyleRanges: [],
+        entityRanges: [],
+        data: {},
+      },
+    ],
+  };
 
-	const {
-		control,
-		handleSubmit,
-		formState: { errors, touchedFields },
-	} = useForm({
-		resolver: zodResolver(emailModalSchema),
-		defaultValues: {
-			invoiceMailingBody: '',
-			invoiceMailingSubject: '',
-			invoiceMailingFrom: '',
-			invoiceMailingTo: '',
-		},
-		mode: 'onChange',
-	});
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, touchedFields },
+  } = useForm({
+    resolver: zodResolver(emailModalSchema),
+    defaultValues: {
+      invoiceMailingBody: '',
+      invoiceMailingSubject: '',
+      invoiceMailingFrom: '',
+      invoiceMailingTo: '',
+    },
+    mode: 'onChange',
+  });
 
-	const onContentStateChange = (newContentState) => {
-		setContentState(newContentState);
-		if (newContentState.blocks && newContentState.blocks[0]) {
-			setMessage(newContentState.blocks[0].text);
-		}
-	};
+  const onContentStateChange = newContentState => {
+    setContentState(newContentState);
+    if (newContentState.blocks && newContentState.blocks[0]) {
+      setMessage(newContentState.blocks[0].text);
+    }
+  };
 
-	const onSubmit = (data) => {
-		sendEmail(id);
-	};
+  const onSubmit = data => {
+    sendEmail(id);
+  };
 
-	return (
-		<div className="contact-modal-screen">
-			<Modal isOpen={openEmailModal} className="modal-success contact-modal">
-				<Form
-					name="simpleForm"
-					onSubmit={handleSubmit(onSubmit)}
-					className="create-contact-screen"
-				>
-					<CardHeader>
-						<Row>
-							<Col lg={12}>
-								<div className="h4 mb-0 d-flex align-items-center">
-									<i className="nav-icon fas fa-id-card-alt" />
-									<span className="ml-2">Email Invoice</span>
-								</div>
-							</Col>
-						</Row>
-					</CardHeader>
-					<ModalBody>
-						<Row className="row-rapper">
-							<Col sm="8">
-								<FormGroup>
-									<Label htmlFor="invoiceMailingFrom">From</Label>
-									<Controller
-										name="invoiceMailingFrom"
-										control={control}
-										render={({ field }) => (
-											<Input
-												{...field}
-												type="text"
-												id="invoiceMailingFrom"
-												placeholder="From"
-												className={
-													errors.invoiceMailingFrom &&
-													touchedFields.invoiceMailingFrom
-														? 'is-invalid'
-														: ''
-												}
-											/>
-										)}
-									/>
-									{errors.invoiceMailingFrom &&
-										touchedFields.invoiceMailingFrom && (
-											<div className="invalid-feedback">
-												{errors.invoiceMailingFrom.message}
-											</div>
-										)}
-								</FormGroup>
-								<FormGroup>
-									<Label htmlFor="invoiceMailingTo">To</Label>
-									<Controller
-										name="invoiceMailingTo"
-										control={control}
-										render={({ field }) => (
-											<Input
-												{...field}
-												type="text"
-												id="invoiceMailingTo"
-												placeholder="To"
-												className={
-													errors.invoiceMailingTo &&
-													touchedFields.invoiceMailingTo
-														? 'is-invalid'
-														: ''
-												}
-											/>
-										)}
-									/>
-									{errors.invoiceMailingTo &&
-										touchedFields.invoiceMailingTo && (
-											<div className="invalid-feedback">
-												{errors.invoiceMailingTo.message}
-											</div>
-										)}
-								</FormGroup>
-								<FormGroup>
-									<Label htmlFor="invoiceMailingSubject">Subject</Label>
-									<Controller
-										name="invoiceMailingSubject"
-										control={control}
-										render={({ field }) => (
-											<Input
-												{...field}
-												type="text"
-												id="invoiceMailingSubject"
-												placeholder="Enter the Subject"
-												className={
-													errors.invoiceMailingSubject &&
-													touchedFields.invoiceMailingSubject
-														? 'is-invalid'
-														: ''
-												}
-											/>
-										)}
-									/>
-									{errors.invoiceMailingSubject &&
-										touchedFields.invoiceMailingSubject && (
-											<div className="invalid-feedback">
-												{errors.invoiceMailingSubject.message}
-											</div>
-										)}
-								</FormGroup>
-								<FormGroup>
-									<Label htmlFor="text-input">Content</Label>
-									<Editor
-										initialContentState={content}
-										editorContent={contentState}
-										toolbarClassName="editor-toolbar"
-										wrapperClassName="wrapperClassName"
-										editorClassName="massage-editor"
-										onContentStateChange={onContentStateChange}
-									/>
-								</FormGroup>
-							</Col>
-						</Row>
-					</ModalBody>
-					<ModalFooter>
-						<Button
-							color="primary"
-							type="submit"
-							className="btn-square"
-						>
-							<i className="fa fa-dot-circle-o"></i> Send Email
-						</Button>
-						&nbsp;
-						<Button
-							color="secondary"
-							className="btn-square"
-							onClick={() => {
-								closeEmailModal(false);
-							}}
-						>
-							<i className="fa fa-ban"></i> Cancel
-						</Button>
-					</ModalFooter>
-				</Form>
-			</Modal>
-		</div>
-	);
+  return (
+    <div className="contact-modal-screen">
+      <Modal isOpen={openEmailModal} className="modal-success contact-modal">
+        <Form name="simpleForm" onSubmit={handleSubmit(onSubmit)} className="create-contact-screen">
+          <CardHeader>
+            <Row>
+              <Col lg={12}>
+                <div className="h4 mb-0 d-flex align-items-center">
+                  <i className="nav-icon fas fa-id-card-alt" />
+                  <span className="ml-2">Email Invoice</span>
+                </div>
+              </Col>
+            </Row>
+          </CardHeader>
+          <ModalBody>
+            <Row className="row-rapper">
+              <Col sm="8">
+                <FormGroup>
+                  <Label htmlFor="invoiceMailingFrom">From</Label>
+                  <Controller
+                    name="invoiceMailingFrom"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="text"
+                        id="invoiceMailingFrom"
+                        placeholder="From"
+                        className={
+                          errors.invoiceMailingFrom && touchedFields.invoiceMailingFrom
+                            ? 'is-invalid'
+                            : ''
+                        }
+                      />
+                    )}
+                  />
+                  {errors.invoiceMailingFrom && touchedFields.invoiceMailingFrom && (
+                    <div className="invalid-feedback">{errors.invoiceMailingFrom.message}</div>
+                  )}
+                </FormGroup>
+                <FormGroup>
+                  <Label htmlFor="invoiceMailingTo">To</Label>
+                  <Controller
+                    name="invoiceMailingTo"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="text"
+                        id="invoiceMailingTo"
+                        placeholder="To"
+                        className={
+                          errors.invoiceMailingTo && touchedFields.invoiceMailingTo
+                            ? 'is-invalid'
+                            : ''
+                        }
+                      />
+                    )}
+                  />
+                  {errors.invoiceMailingTo && touchedFields.invoiceMailingTo && (
+                    <div className="invalid-feedback">{errors.invoiceMailingTo.message}</div>
+                  )}
+                </FormGroup>
+                <FormGroup>
+                  <Label htmlFor="invoiceMailingSubject">Subject</Label>
+                  <Controller
+                    name="invoiceMailingSubject"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="text"
+                        id="invoiceMailingSubject"
+                        placeholder="Enter the Subject"
+                        className={
+                          errors.invoiceMailingSubject && touchedFields.invoiceMailingSubject
+                            ? 'is-invalid'
+                            : ''
+                        }
+                      />
+                    )}
+                  />
+                  {errors.invoiceMailingSubject && touchedFields.invoiceMailingSubject && (
+                    <div className="invalid-feedback">{errors.invoiceMailingSubject.message}</div>
+                  )}
+                </FormGroup>
+                <FormGroup>
+                  <Label htmlFor="text-input">Content</Label>
+                  <Editor
+                    initialContentState={content}
+                    editorContent={contentState}
+                    toolbarClassName="editor-toolbar"
+                    wrapperClassName="wrapperClassName"
+                    editorClassName="massage-editor"
+                    onContentStateChange={onContentStateChange}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" type="submit" className="btn-square">
+              <i className="fa fa-dot-circle-o"></i> Send Email
+            </Button>
+            &nbsp;
+            <Button
+              color="secondary"
+              className="btn-square"
+              onClick={() => {
+                closeEmailModal(false);
+              }}
+            >
+              <i className="fa fa-ban"></i> Cancel
+            </Button>
+          </ModalFooter>
+        </Form>
+      </Modal>
+    </div>
+  );
 };
 
 export default EmailModal;

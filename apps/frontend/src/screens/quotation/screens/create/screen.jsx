@@ -89,75 +89,84 @@ if (localStorage.getItem('language') == null) {
 }
 
 // Zod validation schema
-const createQuotationSchema = z.object({
-  quotation_Number: z.string().min(1, 'Quotation number is required'),
-  customerId: z.union([
-    z.string().min(1, 'Customer name is required'),
-    z.object({ value: z.union([z.string(), z.number()]), label: z.string() })
-  ]),
-  quotationdate: z.union([z.string(), z.date()]).refine((val) => val !== '', {
-    message: 'Quotation date is required'
-  }),
-  quotaionExpiration: z.union([z.string(), z.date()]).refine((val) => val !== '', {
-    message: 'Expiry date is required'
-  }),
-  currencyCode: z.union([
-    z.string().min(1, 'Currency is required'),
-    z.object({ value: z.string(), label: z.string() })
-  ]),
-  placeOfSupplyId: z.union([z.string(), z.object({ value: z.string(), label: z.string() })]).optional(),
-  lineItemsString: z.array(
-    z.object({
-      quantity: z.union([z.string(), z.number()]).refine(
-        value => parseFloat(value) > 0,
-        { message: 'Quantity must be greater than 0' }
-      ),
-      unitPrice: z.union([z.string(), z.number()]).refine(
-        value => parseFloat(value) > 0,
-        { message: 'Unit price must be greater than 0' }
-      ),
-      vatCategoryId: z.union([z.string(), z.number()]).refine(
-        value => value !== '',
-        { message: 'VAT is required' }
-      ),
-      productId: z.union([z.string(), z.number()]).refine(
-        value => value !== '',
-        { message: 'Product is required' }
-      ),
-    })
-  ).min(1, 'At least one quotation line item is required'),
-  attachmentFile: z.any().optional(),
-  receiptAttachmentDescription: z.string().optional(),
-  receiptNumber: z.string().optional(),
-  contact_po_number: z.string().optional(),
-  exchangeRate: z.union([z.string(), z.number()]).optional(),
-  notes: z.string().optional(),
-  footNote: z.string().optional(),
-  discount: z.union([z.string(), z.number()]).optional(),
-  discountPercentage: z.string().optional(),
-  discountType: z.string().optional(),
-  total_net: z.number().optional(),
-  totalVatAmount: z.number().optional(),
-  totalAmount: z.number().optional(),
-  total_excise: z.number().optional(),
-  currencyName: z.string().optional(),
-}).refine((formData) => {
-  // Validate expiration date is after quotation date
-  if (formData.quotationdate && formData.quotaionExpiration) {
-    const quotDate = typeof formData.quotationdate === 'string'
-      ? dayjs(formData.quotationdate, 'DD-MM-YYYY')
-      : dayjs(formData.quotationdate);
-    const expDate = typeof formData.quotaionExpiration === 'string'
-      ? dayjs(formData.quotaionExpiration, 'DD-MM-YYYY')
-      : dayjs(formData.quotaionExpiration);
+const createQuotationSchema = z
+  .object({
+    quotation_Number: z.string().min(1, 'Quotation number is required'),
+    customerId: z.union([
+      z.string().min(1, 'Customer name is required'),
+      z.object({ value: z.union([z.string(), z.number()]), label: z.string() }),
+    ]),
+    quotationdate: z.union([z.string(), z.date()]).refine(val => val !== '', {
+      message: 'Quotation date is required',
+    }),
+    quotaionExpiration: z.union([z.string(), z.date()]).refine(val => val !== '', {
+      message: 'Expiry date is required',
+    }),
+    currencyCode: z.union([
+      z.string().min(1, 'Currency is required'),
+      z.object({ value: z.string(), label: z.string() }),
+    ]),
+    placeOfSupplyId: z
+      .union([z.string(), z.object({ value: z.string(), label: z.string() })])
+      .optional(),
+    lineItemsString: z
+      .array(
+        z.object({
+          quantity: z
+            .union([z.string(), z.number()])
+            .refine(value => parseFloat(value) > 0, { message: 'Quantity must be greater than 0' }),
+          unitPrice: z
+            .union([z.string(), z.number()])
+            .refine(value => parseFloat(value) > 0, {
+              message: 'Unit price must be greater than 0',
+            }),
+          vatCategoryId: z
+            .union([z.string(), z.number()])
+            .refine(value => value !== '', { message: 'VAT is required' }),
+          productId: z
+            .union([z.string(), z.number()])
+            .refine(value => value !== '', { message: 'Product is required' }),
+        })
+      )
+      .min(1, 'At least one quotation line item is required'),
+    attachmentFile: z.any().optional(),
+    receiptAttachmentDescription: z.string().optional(),
+    receiptNumber: z.string().optional(),
+    contact_po_number: z.string().optional(),
+    exchangeRate: z.union([z.string(), z.number()]).optional(),
+    notes: z.string().optional(),
+    footNote: z.string().optional(),
+    discount: z.union([z.string(), z.number()]).optional(),
+    discountPercentage: z.string().optional(),
+    discountType: z.string().optional(),
+    total_net: z.number().optional(),
+    totalVatAmount: z.number().optional(),
+    totalAmount: z.number().optional(),
+    total_excise: z.number().optional(),
+    currencyName: z.string().optional(),
+  })
+  .refine(
+    formData => {
+      // Validate expiration date is after quotation date
+      if (formData.quotationdate && formData.quotaionExpiration) {
+        const quotDate =
+          typeof formData.quotationdate === 'string'
+            ? dayjs(formData.quotationdate, 'DD-MM-YYYY')
+            : dayjs(formData.quotationdate);
+        const expDate =
+          typeof formData.quotaionExpiration === 'string'
+            ? dayjs(formData.quotaionExpiration, 'DD-MM-YYYY')
+            : dayjs(formData.quotaionExpiration);
 
-    return expDate.isAfter(quotDate) || expDate.isSame(quotDate);
-  }
-  return true;
-}, {
-  message: 'Expiry date should be on or after quotation date',
-  path: ['quotaionExpiration']
-});
+        return expDate.isAfter(quotDate) || expDate.isSame(quotDate);
+      }
+      return true;
+    },
+    {
+      message: 'Expiry date should be on or after quotation date',
+      path: ['quotaionExpiration'],
+    }
+  );
 
 const regExInvNum = /[a-zA-Z0-9,-/ ]+$/;
 const file_size = 1024000;
@@ -283,7 +292,17 @@ const CreateQuotation = ({
     mode: 'onChange',
   });
 
-  const { control, handleSubmit, formState: { errors }, reset, setValue, watch, setError, clearErrors, trigger } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+    watch,
+    setError,
+    clearErrors,
+    trigger,
+  } = form;
   const watchQuotationNumber = watch('quotation_Number');
 
   useEffect(() => {
@@ -292,24 +311,27 @@ const CreateQuotation = ({
     }
   }, [watchQuotationNumber]);
 
-  const validationCheck = useCallback((value) => {
-    const validationData = {
-      moduleType: 12,
-      name: value,
-    };
-    quotationCreateAction.checkValidation(validationData).then(response => {
-      if (response.data === 'Quotation Number Already Exists') {
-        setExist(true);
-        setError('quotation_Number', {
-          type: 'manual',
-          message: 'Quotation number already exists',
-        });
-      } else {
-        setExist(false);
-        clearErrors('quotation_Number');
-      }
-    });
-  }, [quotationCreateAction, setError, clearErrors]);
+  const validationCheck = useCallback(
+    value => {
+      const validationData = {
+        moduleType: 12,
+        name: value,
+      };
+      quotationCreateAction.checkValidation(validationData).then(response => {
+        if (response.data === 'Quotation Number Already Exists') {
+          setExist(true);
+          setError('quotation_Number', {
+            type: 'manual',
+            message: 'Quotation number already exists',
+          });
+        } else {
+          setExist(false);
+          clearErrors('quotation_Number');
+        }
+      });
+    },
+    [quotationCreateAction, setError, clearErrors]
+  );
 
   const setCurrency = (value, exchangeRateValue) => {
     if (currency_convert_list) {
@@ -323,7 +345,7 @@ const CreateQuotation = ({
     }
   };
 
-  const getParentQuotationDetails = (parentIdParam) => {
+  const getParentQuotationDetails = parentIdParam => {
     quotationCreateAction.getQuotationById(parentIdParam).then(res => {
       if (res.status === 200) {
         const quotationData = renderList.mapQuotationList(res.data);
@@ -332,7 +354,7 @@ const CreateQuotation = ({
     });
   };
 
-  const populateData = (quotationData) => {
+  const populateData = quotationData => {
     delete quotationData.initValue.quotationNumber;
 
     Object.entries(quotationData.initValue).forEach(([name, value]) => {
@@ -383,8 +405,12 @@ const CreateQuotation = ({
       });
 
     if (companyDetails) {
-      const { currencyCode, isRegisteredVat: regVat, isDesignatedZone: desZone, vatRegistrationDate } =
-        companyDetails;
+      const {
+        currencyCode,
+        isRegisteredVat: regVat,
+        isDesignatedZone: desZone,
+        vatRegistrationDate,
+      } = companyDetails;
       setValue('currencyCode', currencyCode);
       setCompanyVATRegistrationDate(new Date(dayjs(vatRegistrationDate)));
       setIsDesignatedZone(desZone);
@@ -407,21 +433,19 @@ const CreateQuotation = ({
   const getContactShippingAddress = (customerID, taxID) => {
     const { placeList } = Lists;
     if (enablePlaceOfSupply) {
-      quotationCreateAction
-        .getCustomerShippingAddressbyID(customerID)
-        .then(res => {
-          if (res.status === 200) {
-            var PlaceofSupply =
-              placeList &&
-              placeList.find(
-                option => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase()
-              );
-            if (PlaceofSupply) {
-              setPlaceOfSupplyId(PlaceofSupply);
-              setValue('placeOfSupplyId', PlaceofSupply.value, { shouldValidate: true });
-            }
+      quotationCreateAction.getCustomerShippingAddressbyID(customerID).then(res => {
+        if (res.status === 200) {
+          var PlaceofSupply =
+            placeList &&
+            placeList.find(
+              option => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase()
+            );
+          if (PlaceofSupply) {
+            setPlaceOfSupplyId(PlaceofSupply);
+            setValue('placeOfSupplyId', PlaceofSupply.value, { shouldValidate: true });
           }
-        });
+        }
+      });
     }
   };
 
@@ -429,11 +453,13 @@ const CreateQuotation = ({
     let taxTreatmentIdValue = '';
     taxTreatmentIdValue = e.taxTreatment;
     setTaxTreatmentId(taxTreatmentIdValue);
-    setEnablePlaceOfSupply(!!(
-      taxTreatmentIdValue !== 'GCC VAT REGISTERED' &&
-      taxTreatmentIdValue !== 'GCC NON-VAT REGISTERED' &&
-      taxTreatmentIdValue !== 'NON GCC'
-    ));
+    setEnablePlaceOfSupply(
+      !!(
+        taxTreatmentIdValue !== 'GCC VAT REGISTERED' &&
+        taxTreatmentIdValue !== 'GCC NON-VAT REGISTERED' &&
+        taxTreatmentIdValue !== 'NON GCC'
+      )
+    );
     setValue('taxTreatmentId', taxTreatmentIdValue, { shouldValidate: true });
 
     getContactShippingAddress(e.id, taxTreatmentIdValue);
@@ -543,7 +569,7 @@ const CreateQuotation = ({
     updateAmount(newData);
   };
 
-  const updateAmount = (dataToUpdate) => {
+  const updateAmount = dataToUpdate => {
     const list = ProductTableCalculation.updateAmount(dataToUpdate, vat_list, taxType);
     setData(list.data ? list.data : []);
     setValue('total_net', list.totalNet ? list.totalNet : 0);
@@ -553,7 +579,7 @@ const CreateQuotation = ({
     setValue('total_excise', list.totalExciseAmount ? list.totalExciseAmount : 0);
   };
 
-  const getVatListForProducts = (dataToProcess) => {
+  const getVatListForProducts = dataToProcess => {
     if (dataToProcess && dataToProcess.length > 0) {
       let newData = [];
       dataToProcess.map(obj => {
@@ -570,7 +596,7 @@ const CreateQuotation = ({
     }
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -581,7 +607,7 @@ const CreateQuotation = ({
     }
   };
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async formData => {
     if (exist) {
       return;
     }
@@ -601,15 +627,27 @@ const CreateQuotation = ({
       'quotationNumber',
       formData.quotation_Number !== null ? prefix + formData.quotation_Number : ''
     );
-    postFormData.append('quotaionExpiration', formData.quotaionExpiration ? formData.quotaionExpiration : null);
+    postFormData.append(
+      'quotaionExpiration',
+      formData.quotaionExpiration ? formData.quotaionExpiration : null
+    );
     postFormData.append('quotationdate', formData.quotationdate ? formData.quotationdate : null);
-    postFormData.append('receiptNumber', formData.receiptNumber !== null ? formData.receiptNumber : '');
+    postFormData.append(
+      'receiptNumber',
+      formData.receiptNumber !== null ? formData.receiptNumber : ''
+    );
     postFormData.append(
       'receiptAttachmentDescription',
       formData.receiptAttachmentDescription !== null ? formData.receiptAttachmentDescription : ''
     );
-    postFormData.append('exchangeRate', formData.exchangeRate !== null ? formData.exchangeRate : '');
-    postFormData.append('contactPoNumber', formData.contact_po_number !== null ? formData.contact_po_number : '');
+    postFormData.append(
+      'exchangeRate',
+      formData.exchangeRate !== null ? formData.exchangeRate : ''
+    );
+    postFormData.append(
+      'contactPoNumber',
+      formData.contact_po_number !== null ? formData.contact_po_number : ''
+    );
     postFormData.append('notes', formData.notes !== null ? formData.notes : '');
     postFormData.append('footNote', formData.footNote ? formData.footNote : '');
     postFormData.append('type', 2);
@@ -620,12 +658,18 @@ const CreateQuotation = ({
     postFormData.append('totalAmount', watch('totalAmount'));
     postFormData.append('totalExciseAmount', watch('total_excise'));
     postFormData.append('discount', watch('discount'));
-    postFormData.append('customerId', formData.customerId ? (formData.customerId.value ?? formData.customerId) : '');
+    postFormData.append(
+      'customerId',
+      formData.customerId ? (formData.customerId.value ?? formData.customerId) : ''
+    );
     postFormData.append(
       'placeOfSupplyId',
       formData.placeOfSupplyId ? (formData.placeOfSupplyId.value ?? formData.placeOfSupplyId) : ''
     );
-    postFormData.append('currencyCode', formData.currencyCode ? (formData.currencyCode.value ?? formData.currencyCode) : '');
+    postFormData.append(
+      'currencyCode',
+      formData.currencyCode ? (formData.currencyCode.value ?? formData.currencyCode) : ''
+    );
 
     if (uploadFile.current && uploadFile.current.files && uploadFile.current.files[0]) {
       postFormData.append('attachmentFile', uploadFile.current.files[0]);
@@ -723,7 +767,9 @@ const CreateQuotation = ({
       const vatList = getProductType(newProduct.id);
       data.map(obj => {
         if (!obj.productId) {
-          obj['unitPrice'] = (parseFloat(newProduct.unitPrice) * (1 / exchangeRateValue)).toFixed(2);
+          obj['unitPrice'] = (parseFloat(newProduct.unitPrice) * (1 / exchangeRateValue)).toFixed(
+            2
+          );
           obj['exciseTaxId'] = newProduct.exciseTaxId;
           obj['description'] = newProduct.description;
           obj['discountType'] = newProduct.discountType;
@@ -735,10 +781,7 @@ const CreateQuotation = ({
           obj['productId'] = newProduct.id;
           obj['quantity'] = '1';
           obj.vat_list = vatList;
-          obj['vatCategoryId'] = getVatCategoryId(
-            parseInt(newProduct.vatCategoryId),
-            vatList
-          );
+          obj['vatCategoryId'] = getVatCategoryId(parseInt(newProduct.vatCategoryId), vatList);
         }
         return obj;
       });
@@ -767,7 +810,7 @@ const CreateQuotation = ({
     });
   };
 
-  const setContactDetails = (customerID) => {
+  const setContactDetails = customerID => {
     setValue('customerId', customerID, { shouldValidate: true });
     const customer = customer_list_dropdown.find(obj => obj.value === customerID);
     if (customer) {
@@ -775,11 +818,13 @@ const CreateQuotation = ({
       const taxTreatment = customer.label.taxTreatment.taxTreatment;
       setContactId(customerID);
       setTaxTreatmentId(taxTreatment);
-      setEnablePlaceOfSupply(!!(
-        taxTreatment !== 'GCC VAT REGISTERED' &&
-        taxTreatment !== 'GCC NON-VAT REGISTERED' &&
-        taxTreatment !== 'NON GCC'
-      ));
+      setEnablePlaceOfSupply(
+        !!(
+          taxTreatment !== 'GCC VAT REGISTERED' &&
+          taxTreatment !== 'GCC NON-VAT REGISTERED' &&
+          taxTreatment !== 'NON GCC'
+        )
+      );
       setValue('taxTreatmentId', taxTreatment, { shouldValidate: true });
       setCurrency(currencyCode);
       getContactShippingAddress(customerID, taxTreatment);
@@ -910,9 +955,7 @@ const CreateQuotation = ({
                           {isRegisteredVat && (
                             <Col lg={3}>
                               <FormGroup className="mb-3">
-                                <Label htmlFor="taxTreatmentId">
-                                  {strings.TaxTreatment}
-                                </Label>
+                                <Label htmlFor="taxTreatmentId">{strings.TaxTreatment}</Label>
                                 <Controller
                                   name="taxTreatmentId"
                                   control={control}
@@ -936,9 +979,7 @@ const CreateQuotation = ({
                                         taxTreatmentList &&
                                         selectOptionsFactory
                                           .renderOptions('name', 'id', taxTreatmentList, 'VAT')
-                                          .find(
-                                            option => option.label === field.value
-                                          )
+                                          .find(option => option.label === field.value)
                                       }
                                       styles={selectStyles}
                                     />
@@ -966,9 +1007,7 @@ const CreateQuotation = ({
                                       value={
                                         field.value?.value
                                           ? field.value
-                                          : placeList.find(
-                                              option => option.value == field.value
-                                            )
+                                          : placeList.find(option => option.value == field.value)
                                       }
                                       onChange={option => {
                                         field.onChange(option.value);
@@ -1011,9 +1050,7 @@ const CreateQuotation = ({
                                     }
                                     onChange={date => {
                                       field.onChange(date);
-                                      if (
-                                        dayjs(date).isBefore(dayjs(companyVATRegistrationDate))
-                                      ) {
+                                      if (dayjs(date).isBefore(dayjs(companyVATRegistrationDate))) {
                                         setQuotationBeforeVatRegistration(true);
                                         resetProductTableValues();
                                       } else {
@@ -1279,7 +1316,9 @@ const CreateQuotation = ({
                                     } else {
                                       let newData = [];
                                       newData = data.filter(obj => obj.productId !== '');
-                                      setValue('lineItemsString', newData, { shouldValidate: true });
+                                      setValue('lineItemsString', newData, {
+                                        shouldValidate: true,
+                                      });
                                       updateAmount(newData);
                                     }
                                     setCreateMore(true);
@@ -1294,10 +1333,9 @@ const CreateQuotation = ({
                                 className="btn-square"
                                 onClick={() => {
                                   if (location?.state?.renderURL) {
-                                    history.push(
-                                      `${location?.state?.renderURL}`,
-                                      { id: location?.state?.renderID }
-                                    );
+                                    history.push(`${location?.state?.renderURL}`, {
+                                      id: location?.state?.renderID,
+                                    });
                                   } else {
                                     history.push('/admin/income/quotation');
                                   }
