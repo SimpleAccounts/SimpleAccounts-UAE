@@ -27,7 +27,6 @@ const ar = {
   RFQ: 'طلب عرض أسعار',
   GRN: 'البضائع المستلمة ملاحظات',
   Accountant: 'محاسب',
-  ACCOUNT: 'حساب',
   Journals: 'المجلات',
   IncomeReceipts: 'إيصالات الدخل',
   BankAccount: 'حساب البنك',
@@ -115,14 +114,12 @@ const ar = {
 
   //Expenses
   ExpenseNumber: 'رقم المصروفات ',
-  CurrencyIsRequired: 'العملة مطلوبة',
 
   //Customer invoice
   SelectPlaceOfSupply: 'اختر مكان التوريد',
   ApplyLineItemDiscount: ' تطبيق خصم بند البند',
   DeleteCustomerInvoice: 'حذف فاتورة العميل؟',
   Credit_Note_Created: 'تم إنشاء مذكرة ائتمان',
-  Import: 'يستورد',
   CustomerInvoices: 'فواتير العملاء',
   Overdue: 'المتاخره',
   DueWithinThisWeek: 'مستحق خلال هذا الأسبوع',
@@ -130,7 +127,6 @@ const ar = {
   Filter: 'راووق',
   INVOICENUMBER: 'رقم فاتورة',
   CUSTOMERNAME: 'اسم العميل',
-  STATUS: 'الحالة',
   INVOICEDATE: 'تاريخ الفاتورة',
   DUEDATE: 'تاريخ الاستحقاق',
   DueDate: 'تاريخ الاستحقاق',
@@ -141,7 +137,6 @@ const ar = {
   CreateInvoice: 'إنشاء فاتورة',
   InvoiceNumber: 'رقم الفاتورة',
   CustomerName: 'اسم العميل',
-  Customer: 'عميل',
   AddNewCustomer: 'إضافة عميل جديد',
   PlaceofSupply: 'مكان التوريد',
   Terms: 'مصطلحات',
@@ -155,7 +150,6 @@ const ar = {
   Unit: 'الوحدات',
   UnitType: 'الوحدات',
   UNITPRICE: 'سعر الوحدة',
-  UnitPrice: 'سعر الوحدة',
   VAT: 'ضريبة القيمة المضافة (٪)',
   Vat: 'ضريبة القيمة المضافة',
   SUBTOTAL: 'المجموع الفرعي',
@@ -164,7 +158,6 @@ const ar = {
   DiscountType: 'نوع الخصم',
   Excise: 'ضريبة',
   ExciseAmount: 'مبلغ الضريبة',
-  ReferenceNumber: 'رقم المرجع',
   ReceiptNumber: 'على سبيل المثال عدد إيصال',
   ReceiptAttachment: ' مرفق',
   DiscountAmount: 'مبلغ الخصم',
@@ -203,9 +196,6 @@ const ar = {
   AddressLine2: 'سطر العنوان 2',
   AddressLine3: 'سطر العنوان 3',
   Country: 'بلد',
-  StateRegion: 'منطقة الولاية ',
-  Emirates: 'الإمارات',
-  Emirate: 'الإمارة',
   City: 'مدينة',
   Location: 'على سبيل المثال موقع',
   PostZipCode: 'الرمز البريدي',
@@ -284,7 +274,6 @@ const ar = {
 
   //Create invoice
   SupplierName: 'اسم المورد',
-  Supplier: 'المورد',
   AddNewSupplier: 'إضافة مورد جديد',
   AddASupplier: 'إضافة مورد',
 
@@ -352,9 +341,7 @@ const ar = {
   BankAccounts: 'الحسابات المصرفية',
   BANKNAME: 'اسم البنك',
   Bank: 'بنك',
-  ACCOUNTNAME: 'اسم الحساب',
   ACCOUNTNUMBER: 'رقم الحساب',
-  ACCOUNTTYPE: 'نوع الحساب',
   BANKBALANCE: 'الرصيد المصرفي',
   LASTRECONCILED: 'آخر تسوية',
   Reconciled: 'التوفيق بين',
@@ -446,7 +433,6 @@ const ar = {
   CONTACTTYPE: 'نوع الاتصال',
   Contact: 'الاتصال',
   EMAIL: 'البريد الإلكتروني',
-  Addnewcontact: 'إضافة جهة اتصال جديدة',
   TaxTreatment: 'المعاملة الضريبية',
   STATUS: 'حالة',
   BillingAddress: 'عنوان إرسال الفواتير',
@@ -461,7 +447,6 @@ const ar = {
   Emirates: 'الامارات',
   Emirate: 'الإمارة',
   inactive: 'كسلان',
-  MOBILENUMBER: 'رقم الهاتف المحمول',
   Addnewcontact: 'إضافة جهة اتصال جديدة',
   TRN: 'تي آر إن',
 
@@ -731,7 +716,6 @@ const ar = {
   RoleName: 'اسم الدور',
 
   //general settings
-  TestMail: ' اختبار البريد ',
 
   //Mail Theams
   Theme1: 'الموضوع1',
@@ -783,7 +767,6 @@ const ar = {
   CreateCN: 'CN قم بإنشاء',
 
   //Payroll
-  NewEmployee: 'إضافة موظف جديد',
   Employees: 'الموظفين',
   NewEmployee: 'موظف جديد',
   CreateEmployee: 'أنشئ موظفًا',
@@ -1066,7 +1049,6 @@ const ar = {
   create_company_details: 'إنشاء تفاصيل الشركة',
   pay_date: 'تاريخ كشوف المرتبات',
   pay_subject: 'موضوع كشوف المرتبات',
-  pay_period: 'فترة الدفع',
   emp_count: 'عدد الموظفين',
   generated_by: 'تم إنشاؤها بواسطة',
   approver: 'الموافق',

@@ -71,12 +71,10 @@ export const updateAmount = (data, vat_list, taxType) => {
           if (obj.exciseTaxId != 0) {
             if (obj.exciseTaxId === 1) {
               const value = net_value / 3;
-              net_value = net_value;
               obj.exciseAmount = parseFloat(value);
             } else if (obj.exciseTaxId === 2) {
               const value = net_value / 2;
               obj.exciseAmount = parseFloat(value);
-              net_value = net_value;
             }
           } else {
             obj.exciseAmount = 0;
@@ -99,12 +97,10 @@ export const updateAmount = (data, vat_list, taxType) => {
           if (obj.exciseTaxId != 0) {
             if (obj.exciseTaxId === 1) {
               const value = net_value / 3;
-              net_value = net_value;
               obj.exciseAmount = parseFloat(value);
             } else if (obj.exciseTaxId === 2) {
               const value = net_value / 2;
               obj.exciseAmount = parseFloat(value);
-              net_value = net_value;
             }
           } else {
             obj.exciseAmount = 0;

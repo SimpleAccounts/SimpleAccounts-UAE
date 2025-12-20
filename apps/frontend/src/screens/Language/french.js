@@ -20,16 +20,11 @@ const fr = {
   ContactUs: 'Nous contacter',
   DepositFrom: 'Dépôt De',
   Vat: 'T.V.A',
-  ACCOUNT: 'Compte',
   RecieptNumber: 'Numéro de reçu',
   Hey: ' hé !',
 
   //sidebar
-  Import: 'Importer',
-  Dashboard: 'Tableau de bord',
   Report: 'Signaler',
-  CreateCN: 'create CN',
-  Inventory: 'Inventaire',
   Income: 'Revenu',
   Expense: 'Frais',
   RFQ: 'Demande de devis',
@@ -48,7 +43,6 @@ const fr = {
   PayrollRun: 'Exécution de la paie',
   SalaryRoles: 'Rôles salariaux',
   SalaryTemplates: 'Modèles de salaire',
-  SalaryStructure: 'Structure salariale',
   EmployeeDesignation: 'Désignation des employés',
   EmployementDetails: "Détails de l'emploi",
   EducationDetails: "Détails sur l'éducation",
@@ -162,10 +156,8 @@ const fr = {
 
   //Expenses
   ExpenseNumber: 'Numéro de dépense ',
-  CurrencyIsRequired: 'La devise est requise',
 
   //Customer invoice
-  SelectPlaceOfSupply: 'Sélectionnez le lieu de fourniture',
   ApplyLineItemDiscount: ' Appliquer une remise sur les postes',
   DeleteCustomerInvoice: 'Supprimer la facture client ?',
   Credit_Note_Created: '( Note de crédit créée)',
@@ -176,18 +168,14 @@ const fr = {
   Filter: 'Filtre',
   INVOICENUMBER: 'NUMÉRO DE FACTURE',
   CUSTOMERNAME: 'NOM DU CLIENT',
-  STATUS: 'Statut',
   INVOICEDATE: 'DATE DE LA FACTURE',
   DUEDATE: "DATE D'ÉCHÉANCE",
   DueDate: "Date d'échéance",
   AddNewInvoice: 'Ajouter une nouvelle facture',
   InvoiceAmount: 'Montant de la facture',
-  VatAmount: 'Montant de la TVA',
-  DueAmount: 'Montant dû',
   CreateInvoice: 'Créer une facture',
   InvoiceNumber: 'Numéro de facture',
   CustomerName: 'Nom du client',
-  Customer: 'Cliente',
   AddNewCustomer: 'Ajouter un nouveau client',
   PlaceofSupply: 'Lieu d’approvisionnement',
   Terms: 'Petits caractères',
@@ -201,7 +189,6 @@ const fr = {
   UnitType: 'Unités',
   Unit: 'UNITÉS',
   UNITPRICE: 'PRIX UNITAIRE',
-  UnitPrice: 'Prix unitaire',
   VAT: 'TVA (%)',
   SUBTOTAL: 'SOUS-TOTAL',
   Notes: 'Bons de livraisonNotes',
@@ -209,7 +196,6 @@ const fr = {
   DiscountType: 'Type d’escompte',
   Excise: 'Exciser',
   ExciseAmount: "Montant d'accise",
-  ReferenceNumber: 'Numéro de réference',
   ReceiptNumber: 'par exemple. Numéro de reçu',
   ReceiptAttachment: 'Attachement',
   DiscountAmount: 'Montant de l’escompte',
@@ -249,8 +235,6 @@ const fr = {
   AddressLine3: 'Adresse Ligne 3 ',
   Country: 'Pays',
   StateRegion: 'Région de l’État ',
-  Emirates: 'Émirats',
-  Emirate: 'Émirat',
   City: 'Ville',
   Location: 'par exemple. Emplacement',
   PostZipCode: 'Code postal / Zip',
@@ -263,7 +247,6 @@ const fr = {
   EmailIsRequired: 'Le-mail est requis',
   FirstNameRequired: 'Le prénom est requis',
   LastNameRequired: 'Le nom de famille est requis',
-  InvoiceNumberRequired: 'Le numéro de facture est requis',
   InvoiceDateRequired: 'La date de facturation est obligatoire',
 
   //Income receipts
@@ -331,7 +314,6 @@ const fr = {
 
   //Supplier Invoice
   SupplierInvoices: 'Factures fournisseur',
-  SUPPLIERNAME: 'NOM DU FOURNISSEUR',
   INVOICEAMOUNT: 'MONTANT DE LA FACTURE',
   SupplierInvoice: 'Facture fournisseur',
   InvoiceNumberRequired: 'Le numéro de facture est requis',
@@ -339,7 +321,6 @@ const fr = {
 
   //Create invoice
   SupplierName: 'Nom du fournisseur',
-  Supplier: 'Le fournisseur',
   AddNewSupplier: 'Ajouter un nouveau fournisseur',
   AddASupplier: 'Ajouter Un Fournisseur',
 
@@ -366,7 +347,6 @@ const fr = {
 
   //Create RFQ
   CreateRequestForQuotation: 'Créer une demande de devis',
-  RFQNumber: 'Demande de numéro de devis ',
   IssueDate: 'Date d’émission',
   ExpiryDate: 'échéance',
 
@@ -409,9 +389,7 @@ const fr = {
   BankAccounts: 'Comptes bancaires',
   BANKNAME: 'NOM DE BANQUE',
   Bank: 'Banque',
-  ACCOUNTNAME: 'NOM DU COMPTE',
   ACCOUNTNUMBER: 'Numéro de compte',
-  ACCOUNTTYPE: 'TYPE DE COMPTE',
   BANKBALANCE: 'SOLDE BANCAIRE',
   LASTRECONCILED: 'DERNIER RÉCONCILIÉ',
   Reconciled: 'Réconcilier',
@@ -487,7 +465,6 @@ const fr = {
   Code: 'Code',
   AccountCode: 'Code de compte',
   ACCOUNTNAME: 'NOM DU COMPTE',
-  AddnewAccount: 'Ajouter un nouveau compte',
   ACCOUNTTYPE: 'TYPE DE COMPTE',
   NAME: 'NOM',
   AddnewAccount: 'Ajouter un nouveau compte',
@@ -531,11 +508,7 @@ const fr = {
 
   //Product
   Products: 'Produits',
-  PRODUCTCODE: 'CODE PRODUIT',
-  VATPERCENTAGE: 'POURCENTAGE DE TVA',
   AddnewProduct: 'Ajouter un nouveau produit',
-  ProductType: 'Type de produit',
-  Inventory: 'INVENTAIRE',
   VATTYPE: 'TYPE DE TVA',
   VATType: 'Type de TVA',
   excise_slab: 'DALLE D’ACCISE',
@@ -564,7 +537,6 @@ const fr = {
   PurchasePrice: 'Prix d’achat',
   unit_type: 'Type d’unité',
   EnableInventory: 'Activer l’inventaire',
-  InventoryAccount: 'Compte d’inventaire',
   OpeningBalanceQuantity: "Quantité du solde d'ouverture",
   ReOrderLevel: 'Niveau de ré-ordre',
   excise_tax_type: 'Type de taxe d’accise',
@@ -659,7 +631,6 @@ const fr = {
   PaymentMode: 'Mode de paiement',
   DepositTo: 'Déposer à',
   ReceivedThrough: 'Reçu par',
-  RecordPayment: 'Enregistrer le paiement',
 
   //RecordSupplierPayment
   PaidThrough: 'Payé par',
@@ -729,7 +700,6 @@ const fr = {
   RefundPayment: 'Paiement de remboursement',
   UpdateChartAccount: 'Mettre à jour le compte graphique',
   UpdateContact: 'Mise à jour contact',
-  CurrencyCode: 'Code de devise',
   UpdateProduct: 'Mise à jour du produit',
   QuantitySold: 'Quantité vendue',
   Category: 'Catégorie',
@@ -777,7 +747,6 @@ const fr = {
   // CompanyAddressIsSameAsInvoicingAddress:"Company Address Is Same As Invoicing Address",
   CompanyVatRegistered: 'Entreprise enregistrée à la TVA ?',
   CompanyLoatedInDesignatedZone: 'Entreprise située dans la zone désignée ?',
-  Profile: 'Profil',
   CompanyAddressLine1: 'Adresse de l’entreprise Ligne 1',
   CompanyAddressLine2: 'Adresse de l’entreprise Ligne 2',
   CompanyAddressLine3: 'Adresse de l’entreprise Ligne 3',
@@ -787,7 +756,6 @@ const fr = {
 
   //Header DropDown//
   Profile: 'Profil',
-  GeneralSettings: 'Réglages généraux',
   User: 'Utilisatrice',
   Help: 'Aider',
   LogOut: 'Se déconnecter',
@@ -825,7 +793,6 @@ const fr = {
   CreateCN: 'Créer un CN',
 
   //Payroll
-  NewEmployee: 'Ajouter un nouvel employé',
   Employees: 'Des employés',
   NewEmployee: 'Nouvel employé',
   CreateEmployee: 'Créer un employé',
@@ -889,7 +856,6 @@ const fr = {
   AnnualCTC: 'Annuel CTC',
   CreateSalaryRole: 'Créer un rôle salarial',
   UpdateSalaryRole: 'Mettre à jour le rôle salarial',
-  CreateDesignation: 'Créer Désignation',
   DesignationName: 'Désignation Nom',
   CreateDeductionComponent: 'Créer composant de déduction',
   Component: 'Composant',
@@ -952,7 +918,6 @@ const fr = {
   FinancialReports: 'Rapports financiers',
   ProfitandLoss: 'Profit et Perte',
   BalanceSheet: 'Bilan',
-  HorizontalBalanceSheet: 'Bilan horizontal',
   TrailBalances: 'Soldes des Sentiers',
   CorporateTax: 'Impôt sur les sociétés',
   CorporateTaxSetting: "Paramètres d'impôt sur les sociétés",
@@ -1108,7 +1073,6 @@ const fr = {
   create_company_details: 'Créer des détails sur l’entreprise',
   pay_date: 'Date de paie',
   pay_subject: 'Sujet de la paie',
-  pay_period: 'Période de paie',
   emp_count: 'Nombre d’employés',
   generated_by: 'Généré par',
   approver: 'Approbateur',
@@ -1130,7 +1094,6 @@ const fr = {
   action: 'Actions',
 
   //Line Item
-  ProductIsRequired: 'Le produit est requis',
   QuantityGreaterThan0: 'La quantité doit être supérieure à 0',
   UnitPriceGreaterThan1: 'Le prix unitaire doit être supérieur à 1',
   VATIsRequired: 'VAT est requis',

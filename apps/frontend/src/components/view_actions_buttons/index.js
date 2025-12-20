@@ -24,7 +24,6 @@ class ActionButtons extends React.Component {
     super(props);
     this.state = {
       language: window['localStorage'].getItem('language'),
-      dialog: '',
       sentInvoice: false,
       sendAgain: false,
     };
