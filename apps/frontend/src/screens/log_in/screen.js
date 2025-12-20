@@ -143,37 +143,39 @@ const LogIn = () => {
 
   if (initialLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-neu-bg dark:bg-neu-bg-dark p-4">
         <SkeletonCard />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 via-slate-50 to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-black p-4 transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-neu-bg dark:bg-neu-bg-dark p-4 transition-colors duration-300">
       {/* Theme Toggle - Fixed position */}
       <div className="fixed top-4 right-4 z-50">
         <ThemeToggle />
       </div>
 
-      <Card className="w-full max-w-md animate-slide-up shadow-2xl shadow-blue-900/5 dark:shadow-blue-900/20 backdrop-blur-sm bg-white/95 dark:bg-slate-900/95 border-slate-200/60 dark:border-slate-800 rounded-2xl overflow-hidden">
-        <CardHeader className="space-y-6 text-center pb-8 border-b border-border/40 bg-slate-50/50 dark:bg-slate-900/50">
+      <Card className="w-full max-w-md animate-slide-up shadow-neu-out dark:shadow-neu-out-dark bg-neu-bg dark:bg-neu-bg-dark border-none rounded-[2rem] overflow-hidden">
+        <CardHeader className="space-y-6 text-center pb-8">
           <div className="flex justify-center animate-fade-in">
-            <img src={logo} alt="SimpleAccounts Logo" className="h-20 w-auto drop-shadow-sm" />
+            <div className="p-4 rounded-full shadow-neu-out dark:shadow-neu-out-dark bg-neu-bg dark:bg-neu-bg-dark">
+              <img src={logo} alt="SimpleAccounts Logo" className="h-16 w-auto drop-shadow-sm" />
+            </div>
           </div>
           <div className="animate-fade-in space-y-2" style={{ animationDelay: '100ms' }}>
-            <CardTitle className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+            <CardTitle className="text-3xl font-bold tracking-tight text-foreground/80">
               Welcome Back
             </CardTitle>
-            <CardDescription className="text-base">
+            <CardDescription className="text-base font-medium">
               Enter your credentials to access your account
             </CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="animate-fade-in pt-8" style={{ animationDelay: '200ms' }}>
+        <CardContent className="animate-fade-in px-8 pb-10" style={{ animationDelay: '200ms' }}>
           {subscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
             <div
-              className="mb-4 p-3 bg-destructive/10 text-destructive text-sm rounded-md animate-shake"
+              className="mb-6 p-3 shadow-neu-in dark:shadow-neu-in-dark bg-neu-bg dark:bg-neu-bg-dark text-destructive text-sm rounded-xl animate-shake text-center font-medium"
               role="alert"
               aria-live="polite"
             >
@@ -184,7 +186,7 @@ const LogIn = () => {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4"
+              className="space-y-6"
               noValidate
               aria-label="Login form"
             >
@@ -193,7 +195,7 @@ const LogIn = () => {
                 name="username"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel className="font-semibold" htmlFor="email-input">
+                    <FormLabel className="font-bold ml-1" htmlFor="email-input">
                       Email
                     </FormLabel>
                     <Input
@@ -203,11 +205,11 @@ const LogIn = () => {
                       autoComplete="email"
                       aria-describedby={fieldState.error ? 'email-error' : undefined}
                       aria-invalid={!!fieldState.error}
-                      className={`input-transition focus-ring-animate ${fieldState.error ? 'border-destructive animate-shake' : ''}`}
+                      className={`h-12 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] dark:focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.4),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50' : ''}`}
                       {...field}
                     />
                     {fieldState.error && (
-                      <FormMessage id="email-error" role="alert">
+                      <FormMessage id="email-error" role="alert" className="ml-1">
                         {fieldState.error.message}
                       </FormMessage>
                     )}
@@ -220,7 +222,7 @@ const LogIn = () => {
                 name="password"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel className="font-semibold" htmlFor="password-input">
+                    <FormLabel className="font-bold ml-1" htmlFor="password-input">
                       Password
                     </FormLabel>
                     <div className="relative">
@@ -232,7 +234,7 @@ const LogIn = () => {
                         autoComplete="current-password"
                         aria-describedby={fieldState.error ? 'password-error' : undefined}
                         aria-invalid={!!fieldState.error}
-                        className={`input-transition focus-ring-animate pr-10 ${fieldState.error ? 'border-destructive animate-shake' : ''}`}
+                        className={`h-12 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark pr-12 focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] dark:focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.4),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50' : ''}`}
                         onPaste={e => e.preventDefault()}
                         onCopy={e => e.preventDefault()}
                         {...field}
@@ -240,7 +242,7 @@ const LogIn = () => {
                       <button
                         type="button"
                         onClick={togglePasswordVisibility}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors duration-200 focus:outline-none p-2 rounded-full active:shadow-neu-in dark:active:shadow-neu-in-dark"
                         aria-label={isPasswordShown ? 'Hide password' : 'Show password'}
                         aria-pressed={isPasswordShown}
                       >
@@ -252,7 +254,7 @@ const LogIn = () => {
                       </button>
                     </div>
                     {fieldState.error && (
-                      <FormMessage id="password-error" role="alert">
+                      <FormMessage id="password-error" role="alert" className="ml-1">
                         {fieldState.error.message}
                       </FormMessage>
                     )}
@@ -271,10 +273,11 @@ const LogIn = () => {
                         checked={field.value}
                         onCheckedChange={field.onChange}
                         aria-label="Remember my email"
+                        className="border-none shadow-neu-in dark:shadow-neu-in-dark data-[state=checked]:shadow-neu-out dark:data-[state=checked]:shadow-neu-out-dark data-[state=checked]:bg-primary text-white rounded-md h-5 w-5"
                       />
                       <Label
                         htmlFor="remember-me"
-                        className="text-sm font-normal cursor-pointer select-none"
+                        className="text-sm font-medium cursor-pointer select-none text-muted-foreground"
                       >
                         Remember me
                       </Label>
@@ -284,7 +287,7 @@ const LogIn = () => {
                 <Button
                   type="button"
                   variant="link"
-                  className="px-0 h-auto text-sm"
+                  className="px-0 h-auto text-sm text-primary font-semibold hover:text-primary/80"
                   onClick={() => navigate('/reset-password')}
                 >
                   Forgot password?
@@ -293,7 +296,7 @@ const LogIn = () => {
 
               <Button
                 type="submit"
-                className="w-full transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-bold text-lg shadow-neu-out dark:shadow-neu-out-dark hover:translate-y-[-2px] active:translate-y-[1px] active:shadow-neu-in dark:active:shadow-neu-in-dark transition-all duration-200"
                 disabled={loading}
                 aria-busy={loading}
               >
@@ -304,30 +307,43 @@ const LogIn = () => {
                   </>
                 ) : (
                   <>
-                    <LogInIcon className="h-4 w-4 mr-2" aria-hidden="true" />
+                    <LogInIcon className="h-5 w-5 mr-2" aria-hidden="true" />
                     Log In
                   </>
                 )}
               </Button>
 
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-muted-foreground/20" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-neu-bg dark:bg-neu-bg-dark px-2 text-muted-foreground font-semibold">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+
               <SocialLoginButtons
                 onGoogleClick={() => handleSocialLogin('Google')}
                 onMicrosoftClick={() => handleSocialLogin('Microsoft')}
                 disabled={loading}
+                className="grid grid-cols-2 gap-4"
+                buttonClassName="w-full h-10 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-out dark:shadow-neu-out-dark hover:translate-y-[-1px] active:shadow-neu-in dark:active:shadow-neu-in-dark transition-all duration-200"
               />
 
               {companyCount < 1 && (
-                <p className="text-center text-sm text-muted-foreground pt-2">
-                  Don't have an account?{' '}
+                <div className="text-center pt-2">
+                  <p className="text-sm text-muted-foreground mb-2">Don't have an account?</p>
                   <Button
                     type="button"
-                    variant="link"
-                    className="px-0 h-auto"
+                    variant="outline"
+                    className="w-full h-10 rounded-xl border-primary/50 text-primary hover:bg-primary/5 hover:text-primary shadow-neu-out dark:shadow-neu-out-dark hover:shadow-neu-in dark:hover:shadow-neu-in-dark transition-all"
                     onClick={() => navigate('/register')}
                   >
                     Register Here
                   </Button>
-                </p>
+                </div>
               )}
             </form>
           </Form>

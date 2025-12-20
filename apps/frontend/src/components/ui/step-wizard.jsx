@@ -18,8 +18,8 @@ export function StepWizard({ steps, currentStep, onStepClick, className }) {
               {index < steps.length - 1 && (
                 <div
                   className={cn(
-                    'absolute top-5 left-1/2 w-full h-[3px] transition-colors duration-500 ease-in-out',
-                    isCompleted ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'
+                    'absolute top-5 left-1/2 w-full h-[6px] rounded-full transition-all duration-500 ease-in-out shadow-neu-in dark:shadow-neu-in-dark',
+                    isCompleted ? 'bg-primary/20' : 'bg-transparent'
                   )}
                   aria-hidden="true"
                 />
@@ -40,15 +40,13 @@ export function StepWizard({ steps, currentStep, onStepClick, className }) {
                 {/* Circle */}
                 <span
                   className={cn(
-                    'relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all duration-300 shadow-sm',
+                    'relative z-10 flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300',
                     isCompleted
-                      ? 'bg-primary border-primary text-primary-foreground shadow-primary/25'
+                      ? 'bg-neu-bg dark:bg-neu-bg-dark text-primary shadow-neu-in dark:shadow-neu-in-dark'
                       : isCurrent
-                        ? 'bg-background border-primary text-primary ring-4 ring-primary/10 shadow-lg scale-110'
-                        : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-400',
-                    isClickable &&
-                      !isCompleted &&
-                      'group-hover:border-primary/50 group-hover:text-primary/70'
+                        ? 'bg-primary text-primary-foreground shadow-neu-out dark:shadow-neu-out-dark scale-110'
+                        : 'bg-neu-bg dark:bg-neu-bg-dark text-muted-foreground shadow-neu-out dark:shadow-neu-out-dark',
+                    isClickable && !isCompleted && 'group-hover:translate-y-[-1px]'
                   )}
                 >
                   {isCompleted ? (
@@ -61,7 +59,7 @@ export function StepWizard({ steps, currentStep, onStepClick, className }) {
                 {/* Label */}
                 <span
                   className={cn(
-                    'mt-3 text-xs font-semibold uppercase tracking-wider text-center transition-colors duration-200 hidden sm:block',
+                    'mt-3 text-xs font-bold uppercase tracking-wider text-center transition-colors duration-200 hidden sm:block',
                     isCurrent
                       ? 'text-primary'
                       : isCompleted
@@ -113,9 +111,9 @@ export function StepNavigation({
         onClick={onPrevious}
         disabled={isFirstStep}
         className={cn(
-          'px-6 py-2 rounded-md font-medium transition-all duration-200',
-          'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
+          'px-6 py-2 rounded-xl font-bold transition-all duration-200',
+          'bg-neu-bg dark:bg-neu-bg-dark text-foreground border-none shadow-neu-out dark:shadow-neu-out-dark hover:shadow-neu-in dark:hover:shadow-neu-in-dark',
+          'disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
         )}
         aria-label={`Go to previous step`}
@@ -129,11 +127,10 @@ export function StepNavigation({
           onClick={onSubmit}
           disabled={!canProceed || isSubmitting}
           className={cn(
-            'px-6 py-2 rounded-md font-medium transition-all duration-200',
-            'bg-primary text-primary-foreground hover:bg-primary/90',
+            'px-6 py-2 rounded-xl font-bold transition-all duration-200',
+            'bg-primary text-primary-foreground shadow-neu-out dark:shadow-neu-out-dark hover:translate-y-[-1px] active:shadow-neu-in dark:active:shadow-neu-in-dark',
             'disabled:opacity-50 disabled:cursor-not-allowed',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-            'hover:scale-[1.02] active:scale-[0.98]'
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
           )}
           aria-label="Submit registration"
         >
@@ -145,11 +142,10 @@ export function StepNavigation({
           onClick={onNext}
           disabled={!canProceed}
           className={cn(
-            'px-6 py-2 rounded-md font-medium transition-all duration-200',
-            'bg-primary text-primary-foreground hover:bg-primary/90',
+            'px-6 py-2 rounded-xl font-bold transition-all duration-200',
+            'bg-primary text-primary-foreground shadow-neu-out dark:shadow-neu-out-dark hover:translate-y-[-1px] active:shadow-neu-in dark:active:shadow-neu-in-dark',
             'disabled:opacity-50 disabled:cursor-not-allowed',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-            'hover:scale-[1.02] active:scale-[0.98]'
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
           )}
           aria-label={`Go to next step`}
         >

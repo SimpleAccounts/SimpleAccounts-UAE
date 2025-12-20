@@ -1,228 +1,134 @@
-# SimpleAccounts UAE - Design System & Theme Documentation
+# SimpleAccounts UAE - Neumorphic Design System & Theme Documentation
 
-This document outlines the standardized design system and theme guidelines for the SimpleAccounts UAE application. These standards are based on the modernized Registration and Login screens and should be applied consistently across all new and refactored pages.
+This document outlines the standardized **Neumorphic (Soft UI)** design system for the SimpleAccounts UAE application. This aesthetic combines modern minimalism with tactile depth, creating elements that appear to be extruded from or pressed into the background.
 
 ## 1. Core Principles
 
-- **Modern & Professional**: Clean lines, generous whitespace, and a polished look suitable for financial software.
-- **Glassmorphism**: Subtle transparency and blur effects to create depth and hierarchy.
-- **Interactive Feedback**: clear hover, focus, and active states for all interactive elements.
-- **Dark Mode First**: All components must be fully compatible with dark mode, using Slate color palette.
+- **Soft UI (Neumorphism)**: Elements mimic physical objects using subtle light and shadow to create depth.
+- **Low Contrast, High Depth**: Distinctions are made via shadows (`neu-out`, `neu-in`) rather than harsh borders.
+- **Monochromatic Base**: A specific off-white (`#e0e5ec`) and dark grey (`#2b2d33`) background is crucial for the effect.
+- **Rounded Geometry**: Generous border radii (typically `1rem` to `2rem`) are essential to the soft look.
+- **Tactile Interaction**: Buttons and inputs should physically respond (press in/pop out) on interaction.
 
 ## 2. Layout & Backgrounds
 
-### Page Container
+### Global Background
 
-Authentication and landing pages should use a rich radial gradient background that adapts to dark mode.
+The application background must match the component base color to maintain the illusion of continuity.
+
+**Light Mode:** `#e0e5ec`
+**Dark Mode:** `#2b2d33` (approximate, adjusted for shadows)
 
 ```jsx
-<div className="min-h-screen flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 via-slate-50 to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-black p-4 py-8 transition-colors duration-300">
+<div className="min-h-screen bg-neu-bg dark:bg-neu-bg-dark text-foreground transition-colors duration-300">
   {/* Content */}
 </div>
 ```
 
-### Main Card (Glassmorphism)
+### Main Card (The "Extruded" Surface)
 
-The primary content container (forms, dashboards) should use a glassmorphism effect with a large shadow and rounded corners.
+The primary container uses an "outer" shadow to appear raised from the background.
 
 ```jsx
-<Card className="w-full max-w-4xl animate-slide-up shadow-2xl shadow-blue-900/5 dark:shadow-blue-900/20 backdrop-blur-sm bg-white/95 dark:bg-slate-900/95 border-slate-200/60 dark:border-slate-800 rounded-2xl overflow-hidden">
-  {/* Card Content */}
+<Card className="w-full shadow-neu-out dark:shadow-neu-out-dark bg-neu-bg dark:bg-neu-bg-dark border-none rounded-[2rem]">
+  <CardContent>{/* Content */}</CardContent>
 </Card>
 ```
+
+**Tailwind Utilities:**
+
+- `shadow-neu-out`: Light mode raised effect.
+- `shadow-neu-out-dark`: Dark mode raised effect.
 
 ## 3. Typography
 
 ### Headings
 
 - **Font**: Inter (default sans).
-- **Page Title**: `text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent`
-- **Section Headers**: `text-xl font-semibold tracking-tight text-foreground`
+- **Style**: High contrast against the soft background, often using the primary color or strong foreground color.
+- **Page Title**: `text-3xl font-bold tracking-tight text-foreground/80`
 
 ### Body Text
 
-- **Default**: `text-sm text-foreground`
-- **Muted/Description**: `text-sm text-muted-foreground`
+- **Default**: `text-sm font-medium text-muted-foreground`
+- **Link/Action**: `text-primary font-bold hover:text-primary/80`
 
 ## 4. Components & Interactive Elements
 
 ### Buttons
 
-Primary buttons should include a subtle scale effect on hover and active states.
+Buttons appear raised (`neu-out`) by default and pressed (`neu-in`) when clicked.
 
 ```jsx
-<Button
-  className="w-full transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-  disabled={loading}
->
-  {loading ? <ButtonSpinner /> : 'Action Label'}
+<Button className="h-12 rounded-xl bg-primary text-primary-foreground font-bold shadow-neu-out dark:shadow-neu-out-dark hover:translate-y-[-2px] active:translate-y-[1px] active:shadow-neu-in dark:active:shadow-neu-in-dark transition-all duration-200">
+  Action Label
 </Button>
 ```
 
-### Input Fields (Modern Filled Look)
+### Input Fields (The "Pressed" Surface)
 
-Inputs use a custom SCSS class `.input-transition` to provide a "filled" appearance that lifts on hover/focus.
-
-**SCSS Definition (add to component style.scss or global):**
-
-```scss
-.input-transition {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
-
-  &:hover {
-    background-color: #ffffff;
-    border-color: #94a3b8;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
-
-  &:focus {
-    background-color: #ffffff;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-    transform: translateY(-1px);
-  }
-}
-
-:global(.dark) .input-transition {
-  background-color: rgba(30, 41, 59, 0.5);
-  border-color: rgba(51, 65, 85, 0.6);
-  color: white;
-
-  &:hover {
-    background-color: rgba(30, 41, 59, 0.8);
-    border-color: #64748b;
-  }
-
-  &:focus {
-    background-color: rgba(15, 23, 42, 1);
-    border-color: #3b82f6;
-  }
-}
-```
-
-**Usage:**
+Inputs use an "inner" shadow (`neu-in`) to appear recessed into the background.
 
 ```jsx
-<Input className="input-transition" {...props} />
+<Input
+  className="h-12 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300"
+  placeholder="Type here..."
+/>
 ```
 
-### Form Labels
+**Focus State**: The inner shadow is often sharpened or tinted to indicate focus, avoiding default browser rings.
 
-Labels should be semibold and clearly associated with their inputs.
+### Select & Dropdowns
 
-```jsx
-<FormLabel className="font-semibold">
-  Label Text <span className="text-destructive">*</span>
-</FormLabel>
+Custom styling (e.g., for `react-select`) is required to match the native input look.
+
+```javascript
+const customSelectStyles = {
+  control: (base, state) => ({
+    ...base,
+    backgroundColor: '#e0e5ec', // neu-bg
+    boxShadow: state.isFocused
+      ? 'inset 2px 2px 5px rgba(0,0,0,0.1), inset -2px -2px 5px rgba(255,255,255,0.7)' // Pressed look
+      : '9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255, 0.5)', // Raised look
+    border: 'none',
+    borderRadius: '0.75rem',
+  }),
+  // ... menu and option styles
+};
 ```
 
-### Section Headers (Icon + Text)
+## 5. Shadow System (Tailwind Config)
 
-For multi-step forms or segmented content, use icon-based headers.
+These custom utilities are defined in `tailwind.config.js`:
 
-```jsx
-<div className="flex items-center gap-3 mb-6 pb-4 border-b border-border/50">
-  <div className="p-2.5 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-primary shadow-sm">
-    <IconName className="h-6 w-6" />
-  </div>
-  <div>
-    <h3 className="text-xl font-semibold tracking-tight text-foreground">Section Title</h3>
-    <p className="text-sm text-muted-foreground">Helper text for this section</p>
-  </div>
-</div>
+```javascript
+colors: {
+  neu: {
+    bg: '#e0e5ec',
+    'bg-dark': '#2b2d33',
+  },
+},
+boxShadow: {
+  'neu-out': '9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255, 0.5)',
+  'neu-in': 'inset 6px 6px 10px 0 rgba(163,177,198, 0.7), inset -6px -6px 10px 0 rgba(255,255,255, 0.8)',
+  'neu-out-dark': '5px 5px 10px #1e1f23, -5px -5px 10px #383b43',
+  'neu-in-dark': 'inset 5px 5px 10px #1e1f23, inset -5px -5px 10px #383b43',
+},
 ```
 
-## 5. Animations
+## 6. Implementation Checklist
 
-Use utility classes to add polish to entering elements.
+When converting a page to Neumorphism:
 
-- **Fade In**: `animate-fade-in`
-- **Slide Up**: `animate-slide-up` (useful for cards/modals)
-- **Scale In**: `animate-scale-in` (useful for success states/icons)
-- **Shake**: `animate-shake` (for errors)
+1.  [ ] Set the **Page Background** to `bg-neu-bg dark:bg-neu-bg-dark`.
+2.  [ ] Replace standard Cards with **Neumorphic Cards** (no border, `shadow-neu-out`).
+3.  [ ] Update all **Inputs** to use `shadow-neu-in` and remove borders.
+4.  [ ] Style **Buttons** with `shadow-neu-out` and add `active:shadow-neu-in` for the click effect.
+5.  [ ] Ensure **Icons** (Lucide) are used consistently and sized appropriately.
+6.  [ ] Remove harsh dividers or borders; use spacing or subtle shadow insets (`neu-in`) to separate content.
 
-## 6. Iconography
+## 7. Branding & Colors
 
-Use `lucide-react` for all icons.
-
-- **Standard Size**: `h-4 w-4` (buttons/small inputs), `h-5 w-5` (standard), `h-6 w-6` (section headers).
-- **Stroke**: Default.
-
-## 7. Implementation Checklist
-
-When creating or refactoring a page:
-
-1.  [ ] Wrap page in the **Radial Gradient Container**.
-2.  [ ] Use the **Glassmorphism Card** for main content.
-3.  [ ] Apply `.input-transition` class to all inputs/selects.
-4.  [ ] Ensure **Dark Mode** contrast is sufficient (test with `dark` class).
-5.  [ ] Add **Micro-interactions** (hover scale, focus rings).
-6.  [ ] Use **Skeleton Loaders** (`<SkeletonCard />`) for initial data fetching states.
-
-## 8. Technology Stack & Dependencies
-
-### Core Frameworks
-
-- **Frontend Library**: React (v18+)
-- **Build Tool**: Vite (Migration from CRA)
-- **State Management**: Redux Toolkit (Slices, Thunks)
-- **Routing**: React Router Dom (v6)
-
-### UI & Styling
-
-- **Styling Engine**: Tailwind CSS (v3.4+)
-- **Component Primitives**: Radix UI (via Shadcn/UI patterns)
-- **Icons**: Lucide React (Preferred), FontAwesome (Legacy support)
-- **CSS Preprocessor**: SASS/SCSS (for legacy styles & complex animations)
-- **UI Components**:
-  - `@radix-ui/*`: Accessible primitives for dialogs, dropdowns, etc.
-  - `react-select`: Advanced select inputs.
-  - `react-datepicker`: Date selection.
-  - `sonner`: Modern toast notifications.
-
-### Form Handling & Validation
-
-- **Form Library**: React Hook Form (v7+)
-- **Validation**: Zod (Schema-based validation)
-- **Legacy Support**: Formik + Yup (Do not use for new features)
-
-### Utilities
-
-- **HTTP Client**: Axios
-- **Date Formatting**: Day.js (Preferred), Date-fns (Legacy)
-- **Charts**: ApexCharts, Chart.js
-- **PDF Generation**: @react-pdf/renderer, jspdf
-
-### Branding Guidelines
-
-#### Logo Usage
-
-- **Primary Logo**: `assets/images/brand/logo.png`
-- Ensure adequate whitespace around the logo.
-- Use the transparent version on colored backgrounds.
-
-#### Color Palette
-
-The application uses a primary Blue/Teal theme.
-
-| Color Name       | Hex Code  | Usage                                |
-| :--------------- | :-------- | :----------------------------------- |
-| **Primary Blue** | `#2064d8` | Main actions, Headers, Active states |
-| **Hover Blue**   | `#21d8aa` | Hover states for primary buttons     |
-| **Success**      | `#1bc852` | Success badges, Completed steps      |
-| **Danger**       | `#f83245` | Error messages, Delete actions       |
-| **Warning**      | `#fe7c18` | Alerts, Partially paid statuses      |
-| **Background**   | `#f8fafc` | Page background (Light mode)         |
-| **Surface**      | `#ffffff` | Card backgrounds                     |
-
-#### Typography
-
-- **Font Family**: Inter (System sans-serif stack as fallback).
-- **Weights**:
-  - Regular (400): Body text.
-  - Medium (500): Navigation, Buttons.
-  - Semibold (600): Section headers, Labels.
-  - Bold (700): Page titles, Important numbers.
+- **Neu Base**: `#e0e5ec` (Light), `#2b2d33` (Dark)
+- **Primary Blue**: `#2064d8` (Main Actions)
+- **Text**: Slate/Gray scale for softness. Black is rarely used pure.

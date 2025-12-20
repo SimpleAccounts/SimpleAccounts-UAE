@@ -21,6 +21,127 @@
 // temp fixes
 @import 'fixes';
 
+// If you want to override variables do it here
+@import 'variables';
+
+// Import styles with default layout.
+// If you are going to use dark layout please comment next line
+@import '@coreui/coreui-pro/scss/coreui.scss';
+
+// Import styles with dark layout
+// If you want to use dark layout uncomment next line
+//@import "@coreui/coreui-pro/scss/themes/dark/coreui-dark.scss";
+
+// Temp fix for reactstrap
+@import '@coreui/coreui-pro/scss/_dropdown-menu-right.scss';
+
+// If you want to add something do it here
+@import 'custom';
+
+// ie fixes
+@import 'ie-fix';
+
+// temp fixes
+@import 'fixes';
+
+// --- Neumorphic Global Overrides ---
+
+body {
+  background-color: #e0e5ec !important;
+  color: #44476a;
+}
+
+// Cards
+.card {
+  background-color: #e0e5ec;
+  border: none !important;
+  border-radius: 1.5rem !important;
+  box-shadow:
+    9px 9px 16px rgb(163, 177, 198, 0.6),
+    -9px -9px 16px rgba(255, 255, 255, 0.5) !important;
+  margin-bottom: 2rem;
+
+  .card-header {
+    background-color: transparent !important;
+    border-bottom: 1px solid rgba(163, 177, 198, 0.2) !important;
+    font-weight: 700;
+    color: #2064d8 !important;
+  }
+}
+
+// Buttons
+.btn {
+  border: none !important;
+  border-radius: 0.75rem !important;
+  box-shadow:
+    6px 6px 10px 0 rgba(163, 177, 198, 0.5),
+    -6px -6px 10px 0 rgba(255, 255, 255, 0.5) !important;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      8px 8px 12px 0 rgba(163, 177, 198, 0.6),
+      -8px -8px 12px 0 rgba(255, 255, 255, 0.6) !important;
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow:
+      inset 4px 4px 8px 0 rgba(163, 177, 198, 0.5),
+      inset -4px -4px 8px 0 rgba(255, 255, 255, 0.6) !important;
+  }
+}
+
+.btn-primary {
+  background-color: #2064d8 !important; // Keep primary branding
+  color: white !important;
+  // For primary, we use a colored shadow
+  box-shadow:
+    6px 6px 10px 0 rgba(32, 100, 216, 0.3),
+    -6px -6px 10px 0 rgba(255, 255, 255, 0.8) !important;
+
+  &:hover {
+    background-color: #21d8aa !important;
+    box-shadow:
+      8px 8px 12px 0 rgba(33, 216, 170, 0.3),
+      -8px -8px 12px 0 rgba(255, 255, 255, 0.8) !important;
+  }
+}
+
+// Inputs
+.form-control {
+  background-color: #e0e5ec !important;
+  border: none !important;
+  border-radius: 0.75rem !important;
+  box-shadow:
+    inset 4px 4px 8px 0 rgba(163, 177, 198, 0.5),
+    inset -4px -4px 8px 0 rgba(255, 255, 255, 0.6) !important;
+  color: #44476a !important;
+  transition: all 0.2s ease;
+
+  &:focus {
+    box-shadow:
+      inset 2px 2px 5px rgba(163, 177, 198, 0.7),
+      inset -2px -2px 5px rgba(255, 255, 255, 0.8),
+      0 0 5px rgba(32, 100, 216, 0.2) !important; // Subtle glow
+  }
+}
+
+// Tables
+.table {
+  background-color: transparent !important;
+
+  thead th {
+    border-bottom: 2px solid rgba(163, 177, 198, 0.2) !important;
+    color: #2064d8;
+  }
+
+  td {
+    border-top: 1px solid rgba(163, 177, 198, 0.1) !important;
+  }
+}
+
 // Spinkit removed - using Tailwind animate-spin with lucide-react
 
 .card-header {

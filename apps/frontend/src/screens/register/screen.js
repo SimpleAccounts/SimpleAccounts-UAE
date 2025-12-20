@@ -405,25 +405,35 @@ const Register = () => {
   const customSelectStyles = {
     control: (base, state) => ({
       ...base,
-      minHeight: '40px',
-      borderColor: state.isFocused ? 'hsl(var(--ring))' : 'hsl(var(--input))',
-      boxShadow: state.isFocused ? '0 0 0 2px hsl(var(--ring) / 0.2)' : 'none',
-      backgroundColor: 'hsl(var(--background))',
-      '&:hover': { borderColor: 'hsl(var(--ring))' },
+      minHeight: '44px',
+      borderRadius: '0.75rem',
+      borderColor: 'transparent',
+      boxShadow: state.isFocused
+        ? 'inset 2px 2px 5px rgba(0,0,0,0.1), inset -2px -2px 5px rgba(255,255,255,0.7)'
+        : '9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255, 0.5)',
+      backgroundColor: '#e0e5ec', // using neu-bg hex directly as react-select handles styles in JS
+      '&:hover': { borderColor: 'transparent' },
+      transition: 'all 0.3s ease',
     }),
     menu: base => ({
       ...base,
-      backgroundColor: 'hsl(var(--background))',
-      border: '1px solid hsl(var(--border))',
+      backgroundColor: '#e0e5ec',
+      borderRadius: '1rem',
+      boxShadow: '9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255, 0.5)',
+      padding: '0.5rem',
+      zIndex: 50,
     }),
     option: (base, state) => ({
       ...base,
-      backgroundColor: state.isFocused ? 'hsl(var(--accent))' : 'transparent',
-      color: 'hsl(var(--foreground))',
-      '&:active': { backgroundColor: 'hsl(var(--accent))' },
+      backgroundColor: state.isFocused ? '#cbd5e1' : 'transparent',
+      color: '#334155',
+      borderRadius: '0.5rem',
+      '&:active': { backgroundColor: '#94a3b8' },
+      cursor: 'pointer',
     }),
-    singleValue: base => ({ ...base, color: 'hsl(var(--foreground))' }),
-    input: base => ({ ...base, color: 'hsl(var(--foreground))' }),
+    singleValue: base => ({ ...base, color: '#334155', fontWeight: 500 }),
+    input: base => ({ ...base, color: '#334155' }),
+    placeholder: base => ({ ...base, color: '#94a3b8' }),
   };
 
   if (loading) {
@@ -437,14 +447,14 @@ const Register = () => {
 
   if (registrationSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4 transition-colors duration-300">
+      <div className="min-h-screen flex items-center justify-center bg-neu-bg dark:bg-neu-bg-dark p-4 transition-colors duration-300">
         <div className="fixed top-4 right-4 z-50">
           <ThemeToggle />
         </div>
-        <Card className="w-full max-w-md animate-scale-in shadow-lg dark:shadow-2xl">
+        <Card className="w-full max-w-md animate-scale-in shadow-neu-out dark:shadow-neu-out-dark bg-neu-bg dark:bg-neu-bg-dark border-none rounded-[2rem]">
           <CardContent className="flex flex-col items-center gap-6 py-12">
-            <div className="h-20 w-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center animate-scale-in">
-              <CheckCircle2 className="h-12 w-12 text-green-600 dark:text-green-400" />
+            <div className="h-24 w-24 rounded-full bg-neu-bg dark:bg-neu-bg-dark flex items-center justify-center animate-scale-in shadow-neu-out dark:shadow-neu-out-dark text-green-600 dark:text-green-400">
+              <CheckCircle2 className="h-12 w-12" />
             </div>
             <div className="text-center space-y-2">
               <h2 className="text-2xl font-bold text-foreground">Registration Successful!</h2>
@@ -459,7 +469,7 @@ const Register = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 via-slate-50 to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-black p-4 py-8 transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-neu-bg dark:bg-neu-bg-dark p-4 py-8 transition-colors duration-300">
       <div className="fixed top-4 right-4 z-50">
         <ThemeToggle />
       </div>
@@ -468,22 +478,24 @@ const Register = () => {
           variant="ghost"
           size="sm"
           onClick={() => navigate('/login')}
-          className="gap-2 hover:bg-white/20 hover:text-primary transition-all"
+          className="gap-2 hover:bg-transparent hover:text-primary transition-all shadow-neu-out dark:shadow-neu-out-dark rounded-xl px-4 py-2 bg-neu-bg dark:bg-neu-bg-dark text-foreground border-none active:shadow-neu-in dark:active:shadow-neu-in-dark"
         >
           <ArrowLeft className="h-4 w-4" /> Back to Login
         </Button>
       </div>
 
-      <Card className="w-full max-w-4xl animate-slide-up shadow-2xl shadow-blue-900/5 dark:shadow-blue-900/20 backdrop-blur-sm bg-white/95 dark:bg-slate-900/95 border-slate-200/60 dark:border-slate-800 rounded-2xl overflow-hidden">
-        <CardHeader className="space-y-6 text-center pb-8 border-b border-border/40 bg-slate-50/50 dark:bg-slate-900/50">
+      <Card className="w-full max-w-4xl animate-slide-up shadow-neu-out dark:shadow-neu-out-dark bg-neu-bg dark:bg-neu-bg-dark border-none rounded-[2rem] overflow-visible">
+        <CardHeader className="space-y-6 text-center pb-8 border-b border-muted/10">
           <div className="flex justify-center animate-fade-in">
-            <img src={logo} alt="SimpleAccounts Logo" className="h-20 w-auto drop-shadow-sm" />
+            <div className="p-4 rounded-full shadow-neu-out dark:shadow-neu-out-dark bg-neu-bg dark:bg-neu-bg-dark">
+              <img src={logo} alt="SimpleAccounts Logo" className="h-16 w-auto drop-shadow-sm" />
+            </div>
           </div>
           <div className="animate-fade-in space-y-2" style={{ animationDelay: '100ms' }}>
-            <CardTitle className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+            <CardTitle className="text-3xl font-bold tracking-tight text-foreground/80">
               Create Your Account
             </CardTitle>
-            <CardDescription className="text-base">
+            <CardDescription className="text-base font-medium">
               Complete the steps below to get started
             </CardDescription>
           </div>
@@ -491,11 +503,14 @@ const Register = () => {
             steps={WIZARD_STEPS}
             currentStep={currentStep}
             onStepClick={handleStepClick}
-            className="pt-4"
+            className="pt-6"
           />
         </CardHeader>
 
-        <CardContent className="animate-fade-in" style={{ animationDelay: '200ms' }}>
+        <CardContent
+          className="animate-fade-in pt-8 px-8 pb-10"
+          style={{ animationDelay: '200ms' }}
+        >
           <Form {...form}>
             <form
               onSubmit={e => {
@@ -503,40 +518,38 @@ const Register = () => {
                 if (currentStep < 3) {
                   handleNext();
                 } else {
-                  // Only submit if triggered by Create Account button click
-                  // step3Submitted is set in the button's onClick handler
                   if (step3Submitted) {
                     form.handleSubmit(onSubmit)(e);
                   }
                 }
               }}
-              className="space-y-6"
+              className="space-y-8"
               noValidate
               aria-label="Registration form"
             >
               {/* Step 1: Company Details */}
               <StepContent isActive={currentStep === 1}>
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border/50">
-                    <div className="p-2.5 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-primary shadow-sm">
+                <div className="space-y-8">
+                  <div className="flex items-center gap-4 mb-6 pb-4 border-b border-muted/10">
+                    <div className="p-3 bg-neu-bg dark:bg-neu-bg-dark rounded-xl text-primary shadow-neu-out dark:shadow-neu-out-dark">
                       <Building2 className="h-6 w-6" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold tracking-tight text-foreground">
+                      <h3 className="text-xl font-bold tracking-tight text-foreground">
                         {strings.CompanyDetails}
                       </h3>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground font-medium">
                         Enter your business information below
                       </p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
                       name="companyName"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel htmlFor="companyName">
+                          <FormLabel htmlFor="companyName" className="font-bold ml-1">
                             <span className="text-destructive" aria-hidden="true">
                               *{' '}
                             </span>
@@ -548,11 +561,13 @@ const Register = () => {
                             maxLength={100}
                             aria-required="true"
                             aria-invalid={!!fieldState.error}
-                            className={`input-transition ${fieldState.error ? 'border-destructive animate-shake' : ''}`}
+                            className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50' : ''}`}
                             {...field}
                           />
                           {fieldState.error && (
-                            <FormMessage role="alert">{fieldState.error.message}</FormMessage>
+                            <FormMessage role="alert" className="ml-1">
+                              {fieldState.error.message}
+                            </FormMessage>
                           )}
                         </FormItem>
                       )}
@@ -562,7 +577,7 @@ const Register = () => {
                       name="companyTypeCode"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel>
+                          <FormLabel className="font-bold ml-1">
                             <span className="text-destructive" aria-hidden="true">
                               *{' '}
                             </span>
@@ -584,22 +599,23 @@ const Register = () => {
                             value={company_type_list?.find(option => option.value === +field.value)}
                             onChange={option => field.onChange(option?.value?.toString() || '')}
                             placeholder="Select Business Type"
-                            className={fieldState.error ? 'border-destructive rounded-md' : ''}
                           />
                           {fieldState.error && (
-                            <FormMessage role="alert">{fieldState.error.message}</FormMessage>
+                            <FormMessage role="alert" className="ml-1">
+                              {fieldState.error.message}
+                            </FormMessage>
                           )}
                         </FormItem>
                       )}
                     />
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
                       name="companyAddress1"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel htmlFor="companyAddress1">
+                          <FormLabel htmlFor="companyAddress1" className="font-bold ml-1">
                             <span className="text-destructive" aria-hidden="true">
                               *{' '}
                             </span>
@@ -611,11 +627,13 @@ const Register = () => {
                             maxLength={250}
                             aria-required="true"
                             aria-invalid={!!fieldState.error}
-                            className={`input-transition ${fieldState.error ? 'border-destructive animate-shake' : ''}`}
+                            className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50' : ''}`}
                             {...field}
                           />
                           {fieldState.error && (
-                            <FormMessage role="alert">{fieldState.error.message}</FormMessage>
+                            <FormMessage role="alert" className="ml-1">
+                              {fieldState.error.message}
+                            </FormMessage>
                           )}
                         </FormItem>
                       )}
@@ -625,27 +643,27 @@ const Register = () => {
                       name="companyAddress2"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel htmlFor="companyAddress2">
+                          <FormLabel htmlFor="companyAddress2" className="font-bold ml-1">
                             {strings.CompanyAddressLine2}
                           </FormLabel>
                           <Input
                             id="companyAddress2"
                             placeholder="Enter Company Address (Optional)"
                             maxLength={250}
-                            className="input-transition"
+                            className="h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300"
                             {...field}
                           />
                         </FormItem>
                       )}
                     />
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
                       name="currencyCode"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{strings.Currency}</FormLabel>
+                          <FormLabel className="font-bold ml-1">{strings.Currency}</FormLabel>
                           <Select
                             isDisabled
                             styles={customSelectStyles}
@@ -681,7 +699,9 @@ const Register = () => {
                       name="timeZone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{strings.TimeZonePreference}</FormLabel>
+                          <FormLabel className="font-bold ml-1">
+                            {strings.TimeZonePreference}
+                          </FormLabel>
                           <Select
                             styles={customSelectStyles}
                             options={timezone}
@@ -698,27 +718,27 @@ const Register = () => {
 
               {/* Step 2: Location & VAT */}
               <StepContent isActive={currentStep === 2}>
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border/50">
-                    <div className="p-2.5 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-primary shadow-sm">
+                <div className="space-y-8">
+                  <div className="flex items-center gap-4 mb-6 pb-4 border-b border-muted/10">
+                    <div className="p-3 bg-neu-bg dark:bg-neu-bg-dark rounded-xl text-primary shadow-neu-out dark:shadow-neu-out-dark">
                       <MapPin className="h-6 w-6" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold tracking-tight text-foreground">
+                      <h3 className="text-xl font-bold tracking-tight text-foreground">
                         Location & VAT Details
                       </h3>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground font-medium">
                         Set up your company location and tax info
                       </p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
                       name="countryId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{strings.Country}</FormLabel>
+                          <FormLabel className="font-bold ml-1">{strings.Country}</FormLabel>
                           <Select
                             isDisabled
                             styles={customSelectStyles}
@@ -742,7 +762,7 @@ const Register = () => {
                       name="stateId"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel>
+                          <FormLabel className="font-bold ml-1">
                             <span className="text-destructive" aria-hidden="true">
                               *{' '}
                             </span>
@@ -769,10 +789,11 @@ const Register = () => {
                             )}
                             onChange={option => field.onChange(option)}
                             placeholder="Select Emirate"
-                            className={fieldState.error ? 'border-destructive rounded-md' : ''}
                           />
                           {fieldState.error && (
-                            <FormMessage role="alert">{fieldState.error.message}</FormMessage>
+                            <FormMessage role="alert" className="ml-1">
+                              {fieldState.error.message}
+                            </FormMessage>
                           )}
                         </FormItem>
                       )}
@@ -783,7 +804,7 @@ const Register = () => {
                     name="phoneNumber"
                     render={({ field, fieldState }) => (
                       <FormItem>
-                        <FormLabel>
+                        <FormLabel className="font-bold ml-1">
                           <span className="text-destructive" aria-hidden="true">
                             *{' '}
                           </span>
@@ -798,17 +819,21 @@ const Register = () => {
                             field.onChange(value);
                             setCheckPhoneNumberParam(value.length !== 12);
                           }}
-                          inputClass={fieldState.error ? 'border-destructive' : ''}
-                          containerClass="phone-input-container"
+                          inputClass={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 w-full pl-12 transition-all duration-300 ${fieldState.error ? 'text-destructive' : ''}`}
+                          containerClass="phone-input-container rounded-xl overflow-hidden shadow-neu-in dark:shadow-neu-in-dark"
+                          buttonClass="bg-transparent border-none"
+                          dropdownClass="shadow-neu-out dark:shadow-neu-out-dark bg-neu-bg dark:bg-neu-bg-dark border-none rounded-xl"
                         />
                         {fieldState.error && (
-                          <FormMessage role="alert">{fieldState.error.message}</FormMessage>
+                          <FormMessage role="alert" className="ml-1">
+                            {fieldState.error.message}
+                          </FormMessage>
                         )}
                       </FormItem>
                     )}
                   />
-                  <div className="space-y-4 pt-4">
-                    <Label className="block font-medium">Company Location Type</Label>
+                  <div className="space-y-6 pt-4">
+                    <Label className="block font-bold ml-1">Company Location Type</Label>
                     <FormField
                       control={form.control}
                       name="isDesignatedZone"
@@ -816,17 +841,25 @@ const Register = () => {
                         <RadioGroup
                           value={field.value ? 'freezone' : 'mainland'}
                           onValueChange={value => field.onChange(value === 'freezone')}
-                          className="flex flex-wrap gap-4"
+                          className="flex flex-wrap gap-6"
                         >
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="mainland" id="mainland" />
-                            <Label htmlFor="mainland" className="font-normal cursor-pointer">
+                          <div className="flex items-center space-x-3">
+                            <RadioGroupItem
+                              value="mainland"
+                              id="mainland"
+                              className="border-none shadow-neu-out dark:shadow-neu-out-dark data-[state=checked]:shadow-neu-in dark:data-[state=checked]:shadow-neu-in-dark data-[state=checked]:text-primary"
+                            />
+                            <Label htmlFor="mainland" className="font-medium cursor-pointer">
                               {strings.Mainland}
                             </Label>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="freezone" id="freezone" />
-                            <Label htmlFor="freezone" className="font-normal cursor-pointer">
+                          <div className="flex items-center space-x-3">
+                            <RadioGroupItem
+                              value="freezone"
+                              id="freezone"
+                              className="border-none shadow-neu-out dark:shadow-neu-out-dark data-[state=checked]:shadow-neu-in dark:data-[state=checked]:shadow-neu-in-dark data-[state=checked]:text-primary"
+                            />
+                            <Label htmlFor="freezone" className="font-medium cursor-pointer">
                               {strings.Freezone}
                             </Label>
                           </div>
@@ -837,14 +870,15 @@ const Register = () => {
                       control={form.control}
                       name="IsRegistered"
                       render={({ field }) => (
-                        <div className="flex items-center space-x-2 pt-2">
+                        <div className="flex items-center space-x-3 pt-2">
                           <Checkbox
                             id="IsRegistered"
                             checked={field.value}
                             onCheckedChange={field.onChange}
                             aria-label="Is VAT registered"
+                            className="border-none shadow-neu-out dark:shadow-neu-out-dark data-[state=checked]:shadow-neu-in dark:data-[state=checked]:shadow-neu-in-dark data-[state=checked]:bg-primary text-white"
                           />
-                          <Label htmlFor="IsRegistered" className="font-normal cursor-pointer">
+                          <Label htmlFor="IsRegistered" className="font-medium cursor-pointer">
                             Is VAT Registered?
                           </Label>
                         </div>
@@ -852,13 +886,13 @@ const Register = () => {
                     />
                   </div>
                   {isVatRegistered && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
                       <FormField
                         control={form.control}
                         name="TaxRegistrationNumber"
                         render={({ field, fieldState }) => (
                           <FormItem>
-                            <FormLabel htmlFor="trn">
+                            <FormLabel htmlFor="trn" className="font-bold ml-1">
                               <span className="text-destructive" aria-hidden="true">
                                 *{' '}
                               </span>
@@ -871,7 +905,7 @@ const Register = () => {
                               maxLength={15}
                               aria-required="true"
                               aria-invalid={!!fieldState.error}
-                              className={`input-transition ${fieldState.error ? 'border-destructive animate-shake' : ''}`}
+                              className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50' : ''}`}
                               {...field}
                               onChange={e => {
                                 if (e.target.value === '' || /^[0-9]+$/.test(e.target.value))
@@ -879,13 +913,15 @@ const Register = () => {
                               }}
                             />
                             {fieldState.error && (
-                              <FormMessage role="alert">{fieldState.error.message}</FormMessage>
+                              <FormMessage role="alert" className="ml-1">
+                                {fieldState.error.message}
+                              </FormMessage>
                             )}
                             <a
                               href="https://tax.gov.ae/en/default.aspx"
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-xs text-primary hover:underline"
+                              className="text-xs text-primary hover:underline ml-1"
                             >
                               Verify TRN
                             </a>
@@ -897,7 +933,7 @@ const Register = () => {
                         name="vatRegistrationDate"
                         render={({ field, fieldState }) => (
                           <FormItem>
-                            <FormLabel>
+                            <FormLabel className="font-bold ml-1">
                               <span className="text-destructive" aria-hidden="true">
                                 *{' '}
                               </span>
@@ -914,10 +950,12 @@ const Register = () => {
                               placeholderText="Select Date"
                               selected={field.value}
                               onChange={date => field.onChange(date)}
-                              className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm input-transition ${fieldState.error ? 'border-destructive' : ''}`}
+                              className={`flex h-11 w-full rounded-xl border-none bg-neu-bg dark:bg-neu-bg-dark px-3 py-2 text-sm shadow-neu-in dark:shadow-neu-in-dark focus:outline-none transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive' : ''}`}
                             />
                             {fieldState.error && (
-                              <FormMessage role="alert">{fieldState.error.message}</FormMessage>
+                              <FormMessage role="alert" className="ml-1">
+                                {fieldState.error.message}
+                              </FormMessage>
                             )}
                           </FormItem>
                         )}
@@ -929,31 +967,31 @@ const Register = () => {
 
               {/* Step 3: Admin Account */}
               <StepContent isActive={currentStep === 3}>
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border/50">
-                    <div className="p-2.5 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-primary shadow-sm">
+                <div className="space-y-8">
+                  <div className="flex items-center gap-4 mb-6 pb-4 border-b border-muted/10">
+                    <div className="p-3 bg-neu-bg dark:bg-neu-bg-dark rounded-xl text-primary shadow-neu-out dark:shadow-neu-out-dark">
                       <User className="h-6 w-6" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold tracking-tight text-foreground">
+                      <h3 className="text-xl font-bold tracking-tight text-foreground">
                         Super Admin Account
                       </h3>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground font-medium">
                         Create the main administrator for this account
                       </p>
                     </div>
                   </div>
-                  <p className="text-sm text-amber-600 dark:text-amber-500 bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg border border-amber-200 dark:border-amber-800 mb-6 flex items-start gap-2">
+                  <p className="text-sm text-amber-600 dark:text-amber-500 bg-amber-50 dark:bg-amber-900/20 p-4 rounded-xl border border-amber-200 dark:border-amber-800 mb-6 flex items-start gap-3 shadow-sm">
                     <span className="mt-0.5">⚠️</span> This account will have full administrative
                     access. Details cannot be changed easily after registration.
                   </p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
                       name="firstName"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel htmlFor="firstName">
+                          <FormLabel htmlFor="firstName" className="font-bold ml-1">
                             <span className="text-destructive" aria-hidden="true">
                               *{' '}
                             </span>
@@ -965,7 +1003,7 @@ const Register = () => {
                             maxLength={100}
                             aria-required="true"
                             aria-invalid={!!fieldState.error}
-                            className={`input-transition ${shouldShowStep3Error('firstName', fieldState) ? 'border-destructive animate-shake' : ''}`}
+                            className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${shouldShowStep3Error('firstName', fieldState) ? 'text-destructive placeholder:text-destructive/50' : ''}`}
                             {...field}
                             onChange={e => {
                               if (e.target.value === '' || /^[a-zA-Z ]+$/.test(e.target.value))
@@ -977,7 +1015,9 @@ const Register = () => {
                             }}
                           />
                           {shouldShowStep3Error('firstName', fieldState) && (
-                            <FormMessage role="alert">{fieldState.error.message}</FormMessage>
+                            <FormMessage role="alert" className="ml-1">
+                              {fieldState.error.message}
+                            </FormMessage>
                           )}
                         </FormItem>
                       )}
@@ -987,7 +1027,7 @@ const Register = () => {
                       name="lastName"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel htmlFor="lastName">
+                          <FormLabel htmlFor="lastName" className="font-bold ml-1">
                             <span className="text-destructive" aria-hidden="true">
                               *{' '}
                             </span>
@@ -999,7 +1039,7 @@ const Register = () => {
                             maxLength={100}
                             aria-required="true"
                             aria-invalid={!!fieldState.error}
-                            className={`input-transition ${shouldShowStep3Error('lastName', fieldState) ? 'border-destructive animate-shake' : ''}`}
+                            className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${shouldShowStep3Error('lastName', fieldState) ? 'text-destructive placeholder:text-destructive/50' : ''}`}
                             {...field}
                             onChange={e => {
                               if (e.target.value === '' || /^[a-zA-Z ]+$/.test(e.target.value))
@@ -1011,7 +1051,9 @@ const Register = () => {
                             }}
                           />
                           {shouldShowStep3Error('lastName', fieldState) && (
-                            <FormMessage role="alert">{fieldState.error.message}</FormMessage>
+                            <FormMessage role="alert" className="ml-1">
+                              {fieldState.error.message}
+                            </FormMessage>
                           )}
                         </FormItem>
                       )}
@@ -1022,7 +1064,7 @@ const Register = () => {
                     name="email"
                     render={({ field, fieldState }) => (
                       <FormItem>
-                        <FormLabel htmlFor="email">
+                        <FormLabel htmlFor="email" className="font-bold ml-1">
                           <span className="text-destructive" aria-hidden="true">
                             *{' '}
                           </span>
@@ -1036,7 +1078,7 @@ const Register = () => {
                           autoComplete="email"
                           aria-required="true"
                           aria-invalid={!!fieldState.error}
-                          className={`input-transition ${shouldShowStep3Error('email', fieldState) ? 'border-destructive animate-shake' : ''}`}
+                          className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${shouldShowStep3Error('email', fieldState) ? 'text-destructive placeholder:text-destructive/50' : ''}`}
                           {...field}
                           onBlur={e => {
                             field.onBlur(e);
@@ -1044,18 +1086,20 @@ const Register = () => {
                           }}
                         />
                         {shouldShowStep3Error('email', fieldState) && (
-                          <FormMessage role="alert">{fieldState.error.message}</FormMessage>
+                          <FormMessage role="alert" className="ml-1">
+                            {fieldState.error.message}
+                          </FormMessage>
                         )}
                       </FormItem>
                     )}
                   />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
                       name="password"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel htmlFor="reg-password">
+                          <FormLabel htmlFor="reg-password" className="font-bold ml-1">
                             <span className="text-destructive" aria-hidden="true">
                               *{' '}
                             </span>
@@ -1070,7 +1114,7 @@ const Register = () => {
                               aria-required="true"
                               aria-invalid={!!fieldState.error}
                               aria-describedby="password-strength"
-                              className={`input-transition pr-10 ${shouldShowStep3Error('password', fieldState) ? 'border-destructive animate-shake' : ''}`}
+                              className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark pr-12 focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${shouldShowStep3Error('password', fieldState) ? 'text-destructive placeholder:text-destructive/50' : ''}`}
                               onPaste={e => e.preventDefault()}
                               onCopy={e => e.preventDefault()}
                               {...field}
@@ -1082,7 +1126,7 @@ const Register = () => {
                             <button
                               type="button"
                               onClick={() => setIsPasswordShown(!isPasswordShown)}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring rounded"
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors focus:outline-none p-2 rounded-full active:shadow-neu-in dark:active:shadow-neu-in-dark"
                               aria-label={isPasswordShown ? 'Hide password' : 'Show password'}
                               aria-pressed={isPasswordShown}
                             >
@@ -1094,7 +1138,9 @@ const Register = () => {
                             </button>
                           </div>
                           {shouldShowStep3Error('password', fieldState) && (
-                            <FormMessage role="alert">{fieldState.error.message}</FormMessage>
+                            <FormMessage role="alert" className="ml-1">
+                              {fieldState.error.message}
+                            </FormMessage>
                           )}
                           <div id="password-strength">
                             <PasswordStrengthMeter password={password} />
@@ -1107,7 +1153,7 @@ const Register = () => {
                       name="confirmPassword"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel htmlFor="confirmPassword">
+                          <FormLabel htmlFor="confirmPassword" className="font-bold ml-1">
                             <span className="text-destructive" aria-hidden="true">
                               *{' '}
                             </span>
@@ -1121,7 +1167,7 @@ const Register = () => {
                               autoComplete="new-password"
                               aria-required="true"
                               aria-invalid={!!fieldState.error}
-                              className={`input-transition pr-10 ${shouldShowStep3Error('confirmPassword', fieldState) ? 'border-destructive animate-shake' : ''}`}
+                              className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark pr-12 focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${shouldShowStep3Error('confirmPassword', fieldState) ? 'text-destructive placeholder:text-destructive/50' : ''}`}
                               onPaste={e => e.preventDefault()}
                               onCopy={e => e.preventDefault()}
                               {...field}
@@ -1133,7 +1179,7 @@ const Register = () => {
                             <button
                               type="button"
                               onClick={() => setIsConfirmPasswordShown(!isConfirmPasswordShown)}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring rounded"
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors focus:outline-none p-2 rounded-full active:shadow-neu-in dark:active:shadow-neu-in-dark"
                               aria-label={
                                 isConfirmPasswordShown ? 'Hide password' : 'Show password'
                               }
@@ -1147,10 +1193,12 @@ const Register = () => {
                             </button>
                           </div>
                           {shouldShowStep3Error('confirmPassword', fieldState) && (
-                            <FormMessage role="alert">{fieldState.error.message}</FormMessage>
+                            <FormMessage role="alert" className="ml-1">
+                              {fieldState.error.message}
+                            </FormMessage>
                           )}
                           {password && confirmPassword && password === confirmPassword && (
-                            <p className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1 mt-1 animate-fade-in">
+                            <p className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1 mt-1 animate-fade-in ml-1">
                               <CheckCircle2 className="h-3 w-3" /> Passwords match
                             </p>
                           )}
@@ -1178,7 +1226,7 @@ const Register = () => {
                   href="https://www.simpleaccounts.io/privacy-policy/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline"
+                  className="text-primary hover:underline font-semibold"
                 >
                   Privacy Policy
                 </a>
