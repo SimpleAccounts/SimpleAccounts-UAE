@@ -1,30 +1,29 @@
-import { EMPLOYEE } from 'constants/types'
+import { EMPLOYEE } from 'constants/types';
 
 const initState = {
   employee_list: [],
-  currency_list: []
-}
+  currency_list: [],
+};
 
 const EmployeeReducer = (state = initState, action) => {
-  const { type, payload} = action
-  
-  switch(type) {
+  const { type, payload } = action;
 
-    case EMPLOYEE.EMPLOYEE_LIST: 
+  switch (type) {
+    case EMPLOYEE.EMPLOYEE_LIST:
       return {
         ...state,
-        employee_list: Object.assign([],payload)
-      }
+        employee_list: Object.assign([], payload),
+      };
 
-      case EMPLOYEE.CURRENCY_LIST: 
+    case EMPLOYEE.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([],payload.data)
-      }
+        currency_list: Object.assign([], payload.data),
+      };
 
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default EmployeeReducer
+export default EmployeeReducer;

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -261,13 +262,14 @@ class CoacTransactionCategoryDaoImplTest {
     // Arrange
     mockMaxIdQuery(null);
     mockCoaCategoryQuery(Collections.singletonList(1));
+    mockChartOfAccountCategoryService(Collections.singletonList(1));
 
-    // Act & Assert
-    assertThatThrownBy(
-            () ->
-                coacTransactionCategoryDao.addCoacTransactionCategory(
-                    testChartOfAccount, testTransactionCategory))
-        .isInstanceOf(NullPointerException.class);
+    // Act - null maxId is now handled gracefully (set to 0), no exception thrown
+    coacTransactionCategoryDao.addCoacTransactionCategory(
+        testChartOfAccount, testTransactionCategory);
+
+    // Assert - verify that processing continues normally with id = 0
+    verify(entityManager, atLeastOnce()).persist(any(CoacTransactionCategory.class));
   }
 
   @Test

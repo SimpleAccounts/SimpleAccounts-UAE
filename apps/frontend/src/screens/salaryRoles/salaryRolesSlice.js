@@ -21,14 +21,12 @@ const salaryRolesSlice = createSlice({
       state.country_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder.addCase(SALARY_ROLES.SALARY_ROLES_LIST, (state, action) => {
       state.salaryRole_list = action.payload || [];
     });
   },
 });
 
-export const { setSalaryRoleList, setCurrencyList, setCountryList } =
-  salaryRolesSlice.actions;
+export const { setSalaryRoleList, setCurrencyList, setCountryList } = salaryRolesSlice.actions;
 export default salaryRolesSlice.reducer;
-

@@ -17,7 +17,7 @@ const transactionCategorySlice = createSlice({
       state.transaction_row = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(TRANSACTION.TRANSACTION_LIST, (state, action) => {
         state.transaction_list = action.payload || [];
@@ -30,4 +30,3 @@ const transactionCategorySlice = createSlice({
 
 export const { setTransactionList, setTransactionRow } = transactionCategorySlice.actions;
 export default transactionCategorySlice.reducer;
-

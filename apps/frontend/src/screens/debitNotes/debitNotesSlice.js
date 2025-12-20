@@ -45,7 +45,7 @@ const debitNotesSlice = createSlice({
       state.invoice_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(DEBIT_NOTE.DEBIT_NOTE_LIST, (state, action) => {
         state.debit_note_list = action.payload?.data || action.payload || [];
@@ -86,4 +86,3 @@ export const {
   setInvoiceList,
 } = debitNotesSlice.actions;
 export default debitNotesSlice.reducer;
-

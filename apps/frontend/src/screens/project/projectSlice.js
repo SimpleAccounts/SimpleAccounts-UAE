@@ -29,7 +29,7 @@ const projectSlice = createSlice({
       state.contact_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(PROJECT.PROJECT_LIST, (state, action) => {
         state.project_list = action.payload || [];
@@ -49,12 +49,6 @@ const projectSlice = createSlice({
   },
 });
 
-export const {
-  setProjectList,
-  setCurrencyList,
-  setCountryList,
-  setTitleList,
-  setContactList,
-} = projectSlice.actions;
+export const { setProjectList, setCurrencyList, setCountryList, setTitleList, setContactList } =
+  projectSlice.actions;
 export default projectSlice.reducer;
-

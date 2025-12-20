@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { api, authApi } from 'utils';
 import axios from 'axios';
 import config from 'constants/config';
@@ -168,24 +168,21 @@ export const getCurrencylist = createAsyncThunk(
   }
 );
 
-export const getCompany = createAsyncThunk(
-  'common/getCompany',
-  async (_, { rejectWithValue }) => {
-    try {
-      const data = {
-        method: 'get',
-        url: 'rest/company/getById?id=10000',
-      };
-      const res = await authApi(data);
-      if (res.status === 200) {
-        return res.data;
-      }
-      return rejectWithValue('Failed to get company');
-    } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
+export const getCompany = createAsyncThunk('common/getCompany', async (_, { rejectWithValue }) => {
+  try {
+    const data = {
+      method: 'get',
+      url: 'rest/company/getById?id=10000',
+    };
+    const res = await authApi(data);
+    if (res.status === 200) {
+      return res.data;
     }
+    return rejectWithValue('Failed to get company');
+  } catch (err) {
+    return rejectWithValue(err.response?.data || err.message);
   }
-);
+});
 
 export const getTaxTreatmentList = createAsyncThunk(
   'common/getTaxTreatmentList',
@@ -203,24 +200,21 @@ export const getTaxTreatmentList = createAsyncThunk(
   }
 );
 
-export const getVatList = createAsyncThunk(
-  'common/getVatList',
-  async (_, { rejectWithValue }) => {
-    try {
-      const data = {
-        method: 'get',
-        url: '/rest/datalist/vatCategory',
-      };
-      const res = await authApi(data);
-      if (res.status === 200) {
-        return res.data;
-      }
-      return rejectWithValue('Failed to get VAT list');
-    } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
+export const getVatList = createAsyncThunk('common/getVatList', async (_, { rejectWithValue }) => {
+  try {
+    const data = {
+      method: 'get',
+      url: '/rest/datalist/vatCategory',
+    };
+    const res = await authApi(data);
+    if (res.status === 200) {
+      return res.data;
     }
+    return rejectWithValue('Failed to get VAT list');
+  } catch (err) {
+    return rejectWithValue(err.response?.data || err.message);
   }
-);
+});
 
 export const getProductList = createAsyncThunk(
   'common/getProductList',
@@ -336,19 +330,19 @@ export const getSalaryComponentList = createAsyncThunk(
 
 // Non-thunk actions (utility functions that don't need state updates)
 export const getNoteSettingsInfo = () => {
-  return (dispatch) => {
+  return dispatch => {
     const data = {
       method: 'get',
       url: '/rest/datalist/getNoteSettingsInfo',
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           return res;
         }
         return res;
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
@@ -366,35 +360,35 @@ export const fillManDatoryDetails = () => {
   };
 };
 
-export const checkValidation = (obj) => {
-  return (dispatch) => {
+export const checkValidation = obj => {
+  return dispatch => {
     const data = {
       method: 'get',
       url: `/rest/validation/validate?name=${obj.name}&moduleType=${obj.moduleType}`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         if (res.status === 200) {
           return res;
         }
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
 };
 
-export const getByNoteListByInvoiceId = (id) => {
-  return (dispatch) => {
+export const getByNoteListByInvoiceId = id => {
+  return dispatch => {
     const data = {
       method: 'GET',
       url: `/rest/creditNote/getCreditNoteByInvoiceId?id=${id}`,
     };
     return authApi(data)
-      .then((res) => {
+      .then(res => {
         return res;
       })
-      .catch((err) => {
+      .catch(err => {
         throw err;
       });
   };
@@ -431,10 +425,10 @@ const commonSlice = createSlice({
   name: 'common',
   initialState,
   reducers: {
-    startLoading: (state) => {
+    startLoading: state => {
       state.is_loading = true;
     },
-    endLoading: (state) => {
+    endLoading: state => {
       state.is_loading = false;
     },
     setTostifyAlertFunc: (state, action) => {
@@ -449,11 +443,11 @@ const commonSlice = createSlice({
         message: action.payload.message,
       };
     },
-    clearError: (state) => {
+    clearError: state => {
       state.error = null;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       // getSimpleAccountsVersion
       .addCase(getSimpleAccountsVersion.fulfilled, (state, action) => {
@@ -529,10 +523,10 @@ const commonSlice = createSlice({
         state.salary_component_list = action.payload;
       })
       // Backward compatibility with old action types
-      .addCase(COMMON.START_LOADING, (state) => {
+      .addCase(COMMON.START_LOADING, state => {
         state.is_loading = true;
       })
-      .addCase(COMMON.END_LOADING, (state) => {
+      .addCase(COMMON.END_LOADING, state => {
         state.is_loading = false;
       })
       .addCase(COMMON.GET_SIMPLE_ACCOUNTS_RELEASE, (state, action) => {
@@ -604,12 +598,6 @@ const commonSlice = createSlice({
   },
 });
 
-export const {
-  startLoading,
-  endLoading,
-  setTostifyAlertFunc,
-  tostifyAlert,
-  clearError,
-} = commonSlice.actions;
+export const { startLoading, endLoading, setTostifyAlertFunc, tostifyAlert, clearError } =
+  commonSlice.actions;
 export default commonSlice.reducer;
-

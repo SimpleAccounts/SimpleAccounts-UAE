@@ -30,10 +30,10 @@ function tableToSheetData(tableElement) {
   const rows = [];
   const tableRows = tableElement.querySelectorAll('tr');
 
-  tableRows.forEach((tr) => {
+  tableRows.forEach(tr => {
     const rowData = [];
     const cells = tr.querySelectorAll('th, td');
-    cells.forEach((cell) => {
+    cells.forEach(cell => {
       // Get text content and try to convert to number if applicable
       let value = cell.textContent.trim();
       const numValue = parseFloat(value.replace(/,/g, ''));
@@ -63,7 +63,7 @@ function createWorkbook() {
     _workbook: new ExcelJS.Workbook(),
     _sheets: [],
     Sheets: {},
-    SheetNames: []
+    SheetNames: [],
   };
 }
 
@@ -98,7 +98,7 @@ function addSheetToWorkbook(workbook, sheetData, sheetName) {
 async function writeFile(workbook, filename) {
   const buffer = await workbook._workbook.xlsx.writeBuffer();
   const blob = new Blob([buffer], {
-    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
 
   // Create download link
@@ -151,41 +151,41 @@ const ExcelExport = {
     /**
      * Convert JSON array to sheet data (xlsx-compatible)
      */
-    json_to_sheet: function(jsonData) {
+    json_to_sheet: function (jsonData) {
       return jsonToSheetData(jsonData);
     },
 
     /**
      * Create new workbook (xlsx-compatible)
      */
-    book_new: function() {
+    book_new: function () {
       return createWorkbook();
     },
 
     /**
      * Append sheet to workbook (xlsx-compatible)
      */
-    book_append_sheet: function(workbook, sheetData, sheetName) {
+    book_append_sheet: function (workbook, sheetData, sheetName) {
       addSheetToWorkbook(workbook, sheetData, sheetName);
     },
 
     /**
      * Convert HTML table to workbook (xlsx-compatible)
      */
-    table_to_book: function(tableElement, options = {}) {
+    table_to_book: function (tableElement, options = {}) {
       const workbook = createWorkbook();
       const sheetData = tableToSheetData(tableElement);
       const sheetName = options.sheet || 'Sheet1';
       addSheetToWorkbook(workbook, sheetData, sheetName);
       return workbook;
-    }
+    },
   },
 
   /**
    * Write workbook to file (xlsx-compatible)
    * Handles both .xlsx and .csv based on filename
    */
-  writeFile: function(workbook, filename) {
+  writeFile: function (workbook, filename) {
     if (filename.endsWith('.csv')) {
       return writeCSV(workbook, filename);
     }
@@ -195,13 +195,13 @@ const ExcelExport = {
   /**
    * Write workbook to buffer/base64 (xlsx-compatible)
    */
-  write: function(workbook, options = {}) {
+  write: function (workbook, options = {}) {
     if (options.type === 'base64') {
       return writeToBase64(workbook);
     }
     // Return buffer for other types
     return workbook._workbook.xlsx.writeBuffer();
-  }
+  },
 };
 
 export default ExcelExport;

@@ -1,6 +1,6 @@
-import React from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import {
   Card,
   CardHeader,
@@ -12,21 +12,20 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from "reactstrap";
+} from 'reactstrap';
 import dayjs from '@/utils/date';
-import { PDFExport } from "@progress/kendo-react-pdf";
+import { PDFExport } from '@progress/kendo-react-pdf';
 import { ExcelExport as XLSX } from 'utils';
-import { Loader, Currency } from "components";
-import * as FinancialReportActions from "../../actions";
-import { ReportTables } from 'screens/financial_report/sections'
-import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
-import "./style.scss";
-import logo from "assets/images/brand/logo.png";
-import { data } from "../../../Language/index";
-import LocalizedStrings from "react-localization";
-import FilterComponent3 from "../filterComponent3";
+import { Loader, Currency } from 'components';
+import * as FinancialReportActions from '../../actions';
+import { ReportTables } from 'screens/financial_report/sections';
+import './style.scss';
+import logo from 'assets/images/brand/logo.png';
+import { data } from '../../../Language/index';
+import LocalizedStrings from 'react-localization';
+import FilterComponent3 from '../filterComponent3';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     profile: state.auth.profile,
     universal_currency_list: state.common.universal_currency_list,
@@ -34,12 +33,9 @@ const mapStateToProps = (state) => {
     sales_by_item: state.reports.sales_by_item,
   };
 };
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    financialReportActions: bindActionCreators(
-      FinancialReportActions,
-      dispatch
-    ),
+    financialReportActions: bindActionCreators(FinancialReportActions, dispatch),
   };
 };
 
@@ -48,15 +44,15 @@ class SalesByProduct extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      language: window["localStorage"].getItem("language"),
+      language: window['localStorage'].getItem('language'),
       loading: true,
-      customPeriod: "customRange",
+      customPeriod: 'customRange',
       dropdownOpen: false,
       hideAsOn: true,
       view: false,
       initValue: {
-        startDate: dayjs().startOf("month").format("DD/MM/YYYY"),
-        endDate: dayjs().endOf("month").format("DD/MM/YYYY"),
+        startDate: dayjs().startOf('month').format('DD/MM/YYYY'),
+        endDate: dayjs().endOf('month').format('DD/MM/YYYY'),
       },
       csvData: [],
       activePage: 1,
@@ -64,18 +60,18 @@ class SalesByProduct extends React.Component {
       totalCount: 0,
       sort: {
         column: null,
-        direction: "desc",
+        direction: 'desc',
       },
       data: [],
     };
   }
 
-  generateReport = (value) => {
+  generateReport = value => {
     this.setState(
       {
         initValue: {
-          startDate: dayjs(value.startDate).format("DD/MM/YYYY"),
-          endDate: dayjs(value.endDate).format("DD/MM/YYYY"),
+          startDate: dayjs(value.startDate).format('DD/MM/YYYY'),
+          endDate: dayjs(value.endDate).format('DD/MM/YYYY'),
         },
         loading: true,
         view: !this.state.view,
@@ -99,11 +95,17 @@ class SalesByProduct extends React.Component {
     };
     this.props.financialReportActions
       .getSalesByProduct(postData)
-      .then(async (res) => {
+      .then(async res => {
         if (res.status === 200) {
           const sbproductList = res.data.salesByProductModelList;
-		  const totalAmount = await sbproductList.reduce((sum, product) => sum + product.totalAmountForAProduct, 0);
-		  const averageAmount = await sbproductList.reduce((sum, product) => sum + product.averageAmount, 0);
+          const totalAmount = await sbproductList.reduce(
+            (sum, product) => sum + product.totalAmountForAProduct,
+            0
+          );
+          const averageAmount = await sbproductList.reduce(
+            (sum, product) => sum + product.averageAmount,
+            0
+          );
           sbproductList.push({
             productName: strings.Total,
             totalAmountForAProduct: totalAmount,
@@ -111,7 +113,7 @@ class SalesByProduct extends React.Component {
             averageAmount: averageAmount,
             isTotalRow: true,
           });
-         const salesByProductList = sbproductList.map((row, i) => {
+          const salesByProductList = sbproductList.map((row, i) => {
             row.id = i + 1;
             return row;
           });
@@ -122,7 +124,7 @@ class SalesByProduct extends React.Component {
           });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.setState({ loading: false });
       });
   };
@@ -133,23 +135,23 @@ class SalesByProduct extends React.Component {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sales By Product');
     XLSX.writeFile(workbook, 'Sales By Product.csv');
-};
+  };
 
-exportExcelFile = () => {
-  const { salesByProductList } = this.state;
-  const worksheet = XLSX.utils.json_to_sheet(salesByProductList);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sales By Product');
-  XLSX.writeFile(workbook, 'Sales By Product.xlsx');
-};
+  exportExcelFile = () => {
+    const { salesByProductList } = this.state;
+    const worksheet = XLSX.utils.json_to_sheet(salesByProductList);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sales By Product');
+    XLSX.writeFile(workbook, 'Sales By Product.xlsx');
+  };
 
   toggle = () =>
-    this.setState((prevState) => {
+    this.setState(prevState => {
       return { dropdownOpen: !prevState.dropdownOpen };
     });
 
   viewFilter = () =>
-    this.setState((prevState) => {
+    this.setState(prevState => {
       return { view: !prevState.view };
     });
 
@@ -160,12 +162,12 @@ exportExcelFile = () => {
     return row.totalAmountForAProduct === 0 ? (
       <Currency
         value={row.totalAmountForAProduct}
-        currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : "USD"}
+        currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
       />
     ) : (
       <Currency
         value={row.totalAmountForAProduct}
-        currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : "USD"}
+        currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
       />
     );
   };
@@ -173,33 +175,25 @@ exportExcelFile = () => {
     return row.averageAmount === 0 ? (
       <Currency
         value={row.averageAmount}
-        currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : "USD"}
+        currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
       />
     ) : (
       <Currency
         value={row.averageAmount}
-        currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : "USD"}
+        currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
       />
     );
   };
 
-  hideExportOptionsFunctionality = (val) => {
+  hideExportOptionsFunctionality = val => {
     this.setState({ hideExportOptions: val });
   };
 
   render() {
     strings.setLanguage(this.state.language);
-    const {
-      loading,
-      initValue,
-      dropdownOpen,
-      salesByProductList,
-      view,
-      hideAsOn,
-      customPeriod,
-    } = this.state;
-    const { profile, universal_currency_list, company_profile, sales_by_item } =
-      this.props;
+    const { loading, initValue, dropdownOpen, salesByProductList, view, hideAsOn, customPeriod } =
+      this.state;
+    const { profile, universal_currency_list, company_profile, sales_by_item } = this.props;
     return (
       <div className="transactions-report-screen">
         <div className="animated fadeIn">
@@ -209,9 +203,9 @@ exportExcelFile = () => {
                 <div
                   className="h4 mb-0 d-flex align-items-center pull-right"
                   style={{
-                    justifyContent: "space-between",
-                    marginRight: "20px",
-                    marginTop: "55px",
+                    justifyContent: 'space-between',
+                    marginRight: '20px',
+                    marginTop: '55px',
                   }}
                 >
                   <div className="d-flex">
@@ -227,7 +221,7 @@ exportExcelFile = () => {
                             style={{
                               border: 0,
                               padding: 0,
-                              backgroundColor: "white !important",
+                              backgroundColor: 'white !important',
                             }}
                           >
                             CSV (Comma Separated Value)
@@ -242,15 +236,13 @@ exportExcelFile = () => {
                             style={{
                               border: 0,
                               padding: 0,
-                              backgroundColor: "white !important",
+                              backgroundColor: 'white !important',
                             }}
                           >
                             Excel
                           </span>
                         </DropdownItem>
-                        <DropdownItem onClick={this.exportPDFWithComponent}>
-                          Pdf
-                        </DropdownItem>
+                        <DropdownItem onClick={this.exportPDFWithComponent}>Pdf</DropdownItem>
                         {/* <DropdownItem
 															onClick={() => {
 																this.exportFile(csvData, 'profitloss', 'xls');
@@ -272,7 +264,7 @@ exportExcelFile = () => {
                       className="mr-2 print-btn-cont"
                       onClick={() => window.print()}
                       style={{
-                        cursor: "pointer",
+                        cursor: 'pointer',
                       }}
                     >
                       <i className="fa fa-print"></i>
@@ -291,10 +283,10 @@ exportExcelFile = () => {
                     <div
                       className="mr-2 print-btn-cont"
                       onClick={() => {
-                        this.props.history.push("/admin/report/reports-page");
+                        this.props.history.push('/admin/report/reports-page');
                       }}
                       style={{
-                        cursor: "pointer",
+                        cursor: 'pointer',
                       }}
                     >
                       <span>X</span>
@@ -304,22 +296,20 @@ exportExcelFile = () => {
               )}
               <CardHeader>
                 <FilterComponent3
-                  hideExportOptionsFunctionality={(val) =>
-                    this.hideExportOptionsFunctionality(val)
-                  }
+                  hideExportOptionsFunctionality={val => this.hideExportOptionsFunctionality(val)}
                   customPeriod={customPeriod}
                   hideAsOn={hideAsOn}
                   viewFilter={this.viewFilter}
-                  generateReport={(value) => {
+                  generateReport={value => {
                     this.generateReport(value);
                   }}
-                  setCutomPeriod={(value) => {
+                  setCutomPeriod={value => {
                     this.setState({ customPeriod: value });
                   }}
                   handleCancel={() => {
-                    if (customPeriod === "customRange") {
+                    if (customPeriod === 'customRange') {
                       const currentDate = dayjs();
-                      this.setState((prevState) => ({
+                      this.setState(prevState => ({
                         initValue: {
                           ...prevState.initValue,
                           endDate: currentDate,
@@ -327,60 +317,53 @@ exportExcelFile = () => {
                       }));
                       this.generateReport({ endDate: currentDate });
                     }
-                    this.setState({ customPeriod: "customRange" });
+                    this.setState({ customPeriod: 'customRange' });
                   }}
                 />
               </CardHeader>
               <CardBody id="section-to-print">
                 <PDFExport
-                  ref={(component) => (this.pdfExportComponent = component)}
+                  ref={component => (this.pdfExportComponent = component)}
                   scale={1}
                   paperSize="auto"
                   fileName="Sales By Product.pdf"
-                  margin={{top:0 , bottom:0 , left: 30 , right: 31 }}
+                  margin={{ top: 0, bottom: 0, left: 30, right: 31 }}
                 >
                   <div
                     style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginBottom: "1rem",
-                      marginTop: "5rem",
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      marginBottom: '1rem',
+                      marginTop: '5rem',
                     }}
                   >
                     <div>
                       <img
                         src={
-                          company_profile &&
-                          company_profile.companyLogoByteArray
-                            ? "data:image/jpg;base64," +
-                              company_profile.companyLogoByteArray
+                          company_profile && company_profile.companyLogoByteArray
+                            ? 'data:image/jpg;base64,' + company_profile.companyLogoByteArray
                             : logo
                         }
                         className=""
                         alt=""
-                        style={{ width: " 150px" }}
+                        style={{ width: ' 150px' }}
                       ></img>
                     </div>
-                    <div style={{ textAlign: "center" }}>
+                    <div style={{ textAlign: 'center' }}>
                       <h2>
-                        {company_profile && company_profile["companyName"]
-                          ? company_profile["companyName"]
-                          : ""}
+                        {company_profile && company_profile['companyName']
+                          ? company_profile['companyName']
+                          : ''}
                       </h2>
-                      <br style={{ marginBottom: "5px" }} />
-                      <b style={{ fontSize: "18px" }}>
-                        {strings.SalesByProduct}
-                      </b>
-                      <br style={{ marginBottom: "5px" }} />
-                      {customPeriod === "asOn"
-                        ? `${strings.Ason} ${initValue.endDate.replaceAll(
-                            "/",
-                            "-"
-                          )}`
+                      <br style={{ marginBottom: '5px' }} />
+                      <b style={{ fontSize: '18px' }}>{strings.SalesByProduct}</b>
+                      <br style={{ marginBottom: '5px' }} />
+                      {customPeriod === 'asOn'
+                        ? `${strings.Ason} ${initValue.endDate.replaceAll('/', '-')}`
                         : `${strings.From} ${initValue.startDate.replaceAll(
-                            "/",
-                            "-"
-                          )} to ${initValue.endDate.replaceAll("/", "-")}`}
+                            '/',
+                            '-'
+                          )} to ${initValue.endDate.replaceAll('/', '-')}`}
                     </div>
                     <div></div>
                   </div>
@@ -390,14 +373,14 @@ exportExcelFile = () => {
                     <>
                       <ReportTables
                         reportDataList={salesByProductList}
-                        reportName={"Sales By Product"}
+                        reportName={'Sales By Product'}
                         id={15}
                         rowHeight={50}
                       />
                     </>
                   )}
-                  <div style={{ textAlignLast: "center" }}>
-                    {" "}
+                  <div style={{ textAlignLast: 'center' }}>
+                    {' '}
                     {strings.PoweredBy} <b>SimpleAccounts</b>
                   </div>
                 </PDFExport>

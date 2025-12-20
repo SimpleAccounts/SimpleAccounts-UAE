@@ -1,78 +1,77 @@
-
 .transactions-report-screen {
-    .card-header {
-      color: #2064d8;
-      padding: 0.2rem !important;
+  .card-header {
+    color: #2064d8;
+    padding: 0.2rem !important;
+  }
+  .date-select {
+    button {
+      background: white;
     }
-    .date-select {
-      button {
-        background: white;
-      }
-    }
-    .header-row {
-			color: white;
-			//background-color: #6a4bc4;
-			background-color: #2064d8
-		}
-    .footer-row{
-			color: white;
-			//background-color: #6a4bc4;
-			background-color: grey
-		}
-    .data-column  {
-      tr {
-        cursor: pointer;
-        td{
-          vertical-align: middle !important;
-          p{
-            margin-bottom: 0 !important;
-            cursor: pointer;
-            color: #428bca;
-            &:hover {
-              text-decoration: underline;
-            }
-          }
-        }
-        .amount-col {
+  }
+  .header-row {
+    color: white;
+    //background-color: #6a4bc4;
+    background-color: #2064d8;
+  }
+  .footer-row {
+    color: white;
+    //background-color: #6a4bc4;
+    background-color: grey;
+  }
+  .data-column {
+    tr {
+      cursor: pointer;
+      td {
+        vertical-align: middle !important;
+        p {
+          margin-bottom: 0 !important;
           cursor: pointer;
           color: #428bca;
-          width: 15%!important;
           &:hover {
             text-decoration: underline;
           }
         }
       }
-    }
-
-    .data-column > tr:last-child {
-      border-bottom: 1px solid lightgray!important;
-  }
-    .badge {
-      padding: 0.4em 0.6em;
-      font-size: 90%;
-    }
-    .expense-table {  
-      .my-link {
-        text-decoration: none;
+      .amount-col {
         cursor: pointer;
+        color: #428bca;
+        width: 15% !important;
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
-    button.dropdown-toggle {
-      background: #acb5bc;
+  }
+
+  .data-column > tr:last-child {
+    border-bottom: 1px solid lightgray !important;
+  }
+  .badge {
+    padding: 0.4em 0.6em;
+    font-size: 90%;
+  }
+  .expense-table {
+    .my-link {
+      text-decoration: none;
+      cursor: pointer;
     }
-    button.dropdown-toggle:hover {
-      background-color: #21d8aa;
-      border-color: #21d8aa;
-    }
-    .csv-btn{
-      color: #23282c;
-    }
-    .panel {
-      position: absolute;
-      height: 50vh;
-      width: 100%;
-      top: -200%;
-      transition: 0.9s top;
+  }
+  button.dropdown-toggle {
+    background: #acb5bc;
+  }
+  button.dropdown-toggle:hover {
+    background-color: #21d8aa;
+    border-color: #21d8aa;
+  }
+  .csv-btn {
+    color: #23282c;
+  }
+  .panel {
+    position: absolute;
+    height: 50vh;
+    width: 100%;
+    top: -200%;
+    transition: 0.9s top;
   }
   .view-panel {
     top: 0%;
@@ -83,40 +82,46 @@
     border: 1px solid #ddd;
     border-radius: 3px;
     background: #f5f5f5;
-    i{
+    i {
       color: #212529;
     }
-    span{
+    span {
       color: #212529;
     }
   }
-  .print-btn-cont:hover{
+  .print-btn-cont:hover {
     background-color: #21d8aa;
     border-color: #21d8aa;
-    i{
+    i {
       color: #f5f5f5;
     }
-    span{
+    span {
       color: #f5f5f5;
     }
   }
 
   @media print {
-    
-    html, body { height: initial !important; overflow: initial !important; visibility: hidden;position: relative;}
-  
-    #section-to-print, #section-to-print * {
+    html,
+    body {
+      height: initial !important;
+      overflow: initial !important;
+      visibility: hidden;
+      position: relative;
+    }
+
+    #section-to-print,
+    #section-to-print * {
       visibility: visible;
     }
 
     .transactions-report-screen {
-      position: absolute!important;
-      left: 0!important;
-      top: 0!important;
+      position: absolute !important;
+      left: 0 !important;
+      top: 0 !important;
     }
-  
+
     #section-to-print {
-      margin: 0!important;
+      margin: 0 !important;
     }
   }
 
@@ -141,7 +146,7 @@
         left: -3px;
         bottom: 1.5px;
       }
-      
+
       &.desc {
         border-bottom: 5px solid black;
         left: -3px;
@@ -150,8 +155,8 @@
     }
   }
 }
-.table-header-color{
+.table-header-color {
   background-color: #2064d8 !important;
-border-color: #2064d8 !important;
-color: #fff;
+  border-color: #2064d8 !important;
+  color: #fff;
 }

@@ -13,7 +13,7 @@ import authReducer from '../../services/global/auth/authSlice';
 
 // Mock withNavigation HOC
 jest.mock('../../utils/withNavigation', () => ({
-  withNavigation: (Component) => Component,
+  withNavigation: Component => Component,
 }));
 
 // Mock auth actions
@@ -112,7 +112,7 @@ describe('Header Component', () => {
       const img = btn.querySelector('img');
       return img !== null;
     });
-    
+
     if (avatarButton) {
       fireEvent.click(avatarButton);
       // Wait for dropdown to open - Profile menu item should appear
@@ -155,7 +155,7 @@ describe('Header Component', () => {
       const avatarDiv = btn.querySelector('[class*="avatar"]');
       return img !== null || avatarDiv !== null;
     });
-    
+
     if (avatarButton) {
       fireEvent.click(avatarButton);
       try {
@@ -181,7 +181,7 @@ describe('Header Component', () => {
       const img = btn.querySelector('img');
       return img !== null;
     });
-    
+
     if (avatarButton) {
       fireEvent.click(avatarButton);
       try {
@@ -200,4 +200,3 @@ describe('Header Component', () => {
     }
   });
 });
-

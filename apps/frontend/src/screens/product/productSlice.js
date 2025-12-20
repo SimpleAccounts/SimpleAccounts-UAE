@@ -75,7 +75,7 @@ export const getProductVatCategoryList = createAsyncThunk(
       };
       const res = await authApi(data);
       const array = [];
-      res.data.map((item) => {
+      res.data.map(item => {
         if (item.id != 4 && item.id != 10) array.push(item);
       });
       return array;
@@ -136,7 +136,7 @@ export const getInventoryHistory = createAsyncThunk(
 );
 
 // Non-thunk actions (utility functions)
-export const createWarehouse = (warehouse) => {
+export const createWarehouse = warehouse => {
   const data = {
     method: 'POST',
     url: '/rest/productwarehouse/saveWareHouse',
@@ -153,7 +153,7 @@ export const getExciseTaxList = () => {
   return authApi(data);
 };
 
-export const getTransactionCategoryListForInventory = (id) => {
+export const getTransactionCategoryListForInventory = id => {
   const data = {
     method: 'get',
     url: '/rest/product/getTransactionCategoryListForInventory',
@@ -161,7 +161,7 @@ export const getTransactionCategoryListForInventory = (id) => {
   return authApi(data);
 };
 
-export const getTransactionCategoryListForSalesProduct = (id) => {
+export const getTransactionCategoryListForSalesProduct = id => {
   const data = {
     method: 'get',
     url: '/rest/product/getTransactionCategoryListForSalesProduct',
@@ -169,7 +169,7 @@ export const getTransactionCategoryListForSalesProduct = (id) => {
   return authApi(data);
 };
 
-export const getTransactionCategoryListForPurchaseProduct = (id) => {
+export const getTransactionCategoryListForPurchaseProduct = id => {
   const data = {
     method: 'get',
     url: '/rest/product/getTransactionCategoryListForPurchaseProduct',
@@ -177,7 +177,7 @@ export const getTransactionCategoryListForPurchaseProduct = (id) => {
   return authApi(data);
 };
 
-export const removeBulk = (obj) => {
+export const removeBulk = obj => {
   const data = {
     method: 'delete',
     url: '/rest/product/deletes',
@@ -186,7 +186,7 @@ export const removeBulk = (obj) => {
   return authApi(data);
 };
 
-export const getInventoryById = (id) => {
+export const getInventoryById = id => {
   const data = {
     method: 'GET',
     url: `/rest/inventory/getInventoryById?id=${id}`,
@@ -194,7 +194,7 @@ export const getInventoryById = (id) => {
   return authApi(data);
 };
 
-export const updateInventory = (obj) => {
+export const updateInventory = obj => {
   const data = {
     method: 'POST',
     url: '/rest/inventory/update',
@@ -235,7 +235,7 @@ export const getUnitTypeList = () => {
   return authApi(data);
 };
 
-export const checkValidation = (obj) => {
+export const checkValidation = obj => {
   const data = {
     method: 'get',
     url: `/rest/validation/validate?name=${obj.name}&moduleType=${obj.moduleType}`,
@@ -243,7 +243,7 @@ export const checkValidation = (obj) => {
   return authApi(data);
 };
 
-export const checkProductNameValidation = (obj) => {
+export const checkProductNameValidation = obj => {
   const data = {
     method: 'get',
     url: `/rest/validation/validate?moduleType=${obj.moduleType}&productCode=${obj.productCode}`,
@@ -251,7 +251,7 @@ export const checkProductNameValidation = (obj) => {
   return authApi(data);
 };
 
-export const getInvoicesCountProduct = (id) => {
+export const getInvoicesCountProduct = id => {
   const data = {
     method: 'get',
     url: `/rest/product/getInvoicesCountForProduct/?productId=${id}`,
@@ -298,11 +298,11 @@ const productSlice = createSlice({
     setInventoryHistoryList: (state, action) => {
       state.inventory_history_list = action.payload;
     },
-    clearError: (state) => {
+    clearError: state => {
       state.error = null;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       // getProductList
       .addCase(getProductList.fulfilled, (state, action) => {
@@ -366,4 +366,3 @@ export const {
   clearError,
 } = productSlice.actions;
 export default productSlice.reducer;
-

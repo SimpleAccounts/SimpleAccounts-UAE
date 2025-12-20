@@ -57,7 +57,7 @@ const customerInvoiceSlice = createSlice({
       state.excise_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       // Backward compatibility with old action types
       .addCase(CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST, (state, action) => {
@@ -114,4 +114,3 @@ export const {
   setExciseList,
 } = customerInvoiceSlice.actions;
 export default customerInvoiceSlice.reducer;
-

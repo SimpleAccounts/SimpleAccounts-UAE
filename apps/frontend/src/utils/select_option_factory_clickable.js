@@ -1,18 +1,11 @@
-import React from "react";
-export const renderOptions = (
-  label_key,
-  value_key,
-  data,
-  placeholder,
-  clickableValue,
-  onClick
-) => {
-  const result = [{ value: "", label: `Select ${placeholder}` }];
-  data.map((item) => {
+import React from 'react';
+export const renderOptions = (label_key, value_key, data, placeholder, clickableValue, onClick) => {
+  const result = [{ value: '', label: `Select ${placeholder}` }];
+  data.map(item => {
     const option = {
       name: item[`${label_key}`],
       value: item[`${value_key}`],
-      label : (
+      label: (
         <div className="d-flex justify-content-between">
           <div>{item[`${label_key}`]}</div>
           <div
@@ -22,7 +15,7 @@ export const renderOptions = (
             }}
           ></div>
         </div>
-      )
+      ),
     };
     // if (item[`${value_key}`] >= 10000) {
     //   option.label = (

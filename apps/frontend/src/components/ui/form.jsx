@@ -26,9 +26,7 @@ export const FormField = ({ name, control, render, ...props }) => {
   const fieldControl = control || formContext?.control;
 
   if (!fieldControl) {
-    throw new Error(
-      'FormField must be used within a Form component or provide control prop'
-    );
+    throw new Error('FormField must be used within a Form component or provide control prop');
   }
 
   return (
@@ -57,6 +55,21 @@ export const FormField = ({ name, control, render, ...props }) => {
 export const FormItem = ({ className, children, ...props }) => {
   return (
     <div className={cn('space-y-2', className)} {...props}>
+      {children}
+    </div>
+  );
+};
+
+/**
+ * FormControl component - Wrapper for form input elements
+ * Provides styling and accessibility attributes
+ *
+ * @param {string} props.className - Additional CSS classes
+ * @param {React.ReactNode} props.children - Input element
+ */
+export const FormControl = ({ className, children, ...props }) => {
+  return (
+    <div className={cn('', className)} {...props}>
       {children}
     </div>
   );
@@ -92,10 +105,7 @@ export const FormLabel = ({ className, children, ...props }) => {
  */
 export const FormDescription = ({ className, children, ...props }) => {
   return (
-    <p
-      className={cn('text-sm text-muted-foreground', className)}
-      {...props}
-    >
+    <p className={cn('text-sm text-muted-foreground', className)} {...props}>
       {children}
     </p>
   );
@@ -112,10 +122,7 @@ export const FormMessage = ({ className, children, ...props }) => {
   // If children provided, use them (for custom messages)
   if (children) {
     return (
-      <p
-        className={cn('text-sm font-medium text-destructive', className)}
-        {...props}
-      >
+      <p className={cn('text-sm font-medium text-destructive', className)} {...props}>
         {children}
       </p>
     );
@@ -123,4 +130,3 @@ export const FormMessage = ({ className, children, ...props }) => {
 
   return null;
 };
-

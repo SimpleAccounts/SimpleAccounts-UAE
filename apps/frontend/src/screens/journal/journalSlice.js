@@ -37,7 +37,7 @@ const journalSlice = createSlice({
       state.cancel_flag = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(JOURNAL.JOURNAL_LIST, (state, action) => {
         state.journal_list = action.payload || [];
@@ -73,4 +73,3 @@ export const {
   setCancelFlag,
 } = journalSlice.actions;
 export default journalSlice.reducer;
-

@@ -1,6 +1,3 @@
+import ViewPaySlip from './viewPayslip';
 
-import ViewPaySlip from './viewPayslip'
-
-export {
- ViewPaySlip
-}
+export { ViewPaySlip };

@@ -1,16 +1,14 @@
 // import { HELP } from 'constants/types'
 
-const initState = {
-}
+const initState = {};
 
 const HelpReducer = (state = initState, action) => {
-  const { type } = action || {}
+  const { type } = action || {};
 
-  switch(type) {
-
+  switch (type) {
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default HelpReducer
+export default HelpReducer;

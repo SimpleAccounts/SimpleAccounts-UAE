@@ -9,4 +9,3 @@ const notificationSlice = createSlice({
 });
 
 export default notificationSlice.reducer;
-

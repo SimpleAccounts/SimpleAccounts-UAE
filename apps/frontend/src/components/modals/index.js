@@ -1,2 +1,2 @@
-import EmployeeModal from "./employee_modal";
+import EmployeeModal from './employee_modal';
 export { EmployeeModal };

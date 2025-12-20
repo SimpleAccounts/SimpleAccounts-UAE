@@ -234,11 +234,11 @@ const dashboardSlice = createSlice({
     setExpenseGraph: (state, action) => {
       state.expense_graph = action.payload;
     },
-    clearError: (state) => {
+    clearError: state => {
       state.error = null;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       // getCashFlowGraphData
       .addCase(getCashFlowGraphData.fulfilled, (state, action) => {
@@ -316,4 +316,3 @@ export const {
   clearError,
 } = dashboardSlice.actions;
 export default dashboardSlice.reducer;
-

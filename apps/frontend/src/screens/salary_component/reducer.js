@@ -1,29 +1,28 @@
-import { EMPLOYEE_DESIGNATION } from 'constants/types'
+import { EMPLOYEE_DESIGNATION } from 'constants/types';
 
 const initState = {
   designation_list: [],
-  designationType_list:[],
-}
+  designationType_list: [],
+};
 
 const DesignationReducer = (state = initState, action) => {
-  const { type, payload} = action
-  
-  switch(type) {
+  const { type, payload } = action;
 
-    case EMPLOYEE_DESIGNATION.EMPLOYEE_DESIGNATION_LIST: 
+  switch (type) {
+    case EMPLOYEE_DESIGNATION.EMPLOYEE_DESIGNATION_LIST:
       return {
         ...state,
-        designation_list: Object.assign([],payload)
-      }
-      case EMPLOYEE_DESIGNATION.EMPLOYEE_DESIGNATION_TYPE_LIST: 
+        designation_list: Object.assign([], payload),
+      };
+    case EMPLOYEE_DESIGNATION.EMPLOYEE_DESIGNATION_TYPE_LIST:
       return {
         ...state,
-        designationType_list: Object.assign([],payload)
-      }
- 
+        designationType_list: Object.assign([], payload),
+      };
+
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default DesignationReducer
+export default DesignationReducer;

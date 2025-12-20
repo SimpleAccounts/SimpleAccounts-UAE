@@ -21,7 +21,7 @@ const salaryStructureSlice = createSlice({
       state.country_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder.addCase(SALARY_STRUCTURE.SALARY_STRUCTURE_LIST, (state, action) => {
       state.salaryStructure_list = action.payload || [];
     });
@@ -31,4 +31,3 @@ const salaryStructureSlice = createSlice({
 export const { setSalaryStructureList, setCurrencyList, setCountryList } =
   salaryStructureSlice.actions;
 export default salaryStructureSlice.reducer;
-

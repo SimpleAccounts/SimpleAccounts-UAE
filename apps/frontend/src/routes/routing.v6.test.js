@@ -8,7 +8,15 @@
 
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useParams, useLocation } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useParams,
+  useLocation,
+} from 'react-router-dom';
 import { MemoryRouter } from 'react-router-dom';
 
 // Sample components for testing
@@ -276,9 +284,7 @@ describe('React Router v6 Migration Verification', () => {
     });
 
     it('should pass props to element components', () => {
-      const ComponentWithProps = ({ title }) => (
-        <div data-testid="with-props">{title}</div>
-      );
+      const ComponentWithProps = ({ title }) => <div data-testid="with-props">{title}</div>;
 
       render(
         <MemoryRouter initialEntries={['/']}>
@@ -337,17 +343,11 @@ describe('React Router v6 Migration Verification', () => {
       render(
         <MemoryRouter initialEntries={['/login']}>
           <Routes>
-            <Route
-              path="/login"
-              element={<LoginFlow onLogin={handleLogin} />}
-            />
+            <Route path="/login" element={<LoginFlow onLogin={handleLogin} />} />
             <Route
               path="/dashboard"
               element={
-                <ProtectedRoute
-                  element={<DashboardPage />}
-                  isAuthenticated={isAuthenticated}
-                />
+                <ProtectedRoute element={<DashboardPage />} isAuthenticated={isAuthenticated} />
               }
             />
           </Routes>
@@ -378,11 +378,7 @@ describe('React Router v6 Migration Verification', () => {
       const QueryComponent = () => {
         const location = useLocation();
         const searchParams = new URLSearchParams(location.search);
-        return (
-          <div data-testid="query">
-            Query: {searchParams.get('q')}
-          </div>
-        );
+        return <div data-testid="query">Query: {searchParams.get('q')}</div>;
       };
 
       render(
@@ -397,4 +393,3 @@ describe('React Router v6 Migration Verification', () => {
     });
   });
 });
-

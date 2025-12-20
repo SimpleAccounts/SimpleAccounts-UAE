@@ -9,8 +9,8 @@ export default defineConfig({
       name: 'treat-js-files-as-jsx',
       enforce: 'pre', // Run before other plugins
       async transform(code, id) {
-        // Only process .js files in src directory, skip node_modules and test files
-        if (!id.match(/src\/.*\.js$/) || id.includes('node_modules') || id.includes('.test.')) {
+        // Only process .js files in src directory, skip node_modules (but include test files for Vitest)
+        if (!id.match(/src\/.*\.js$/) || id.includes('node_modules')) {
           return null;
         }
 
@@ -33,7 +33,7 @@ export default defineConfig({
       fastRefresh: true,
     }),
   ],
-  
+
   // Optimize dependencies to handle JSX in .js files
   optimizeDeps: {
     esbuildOptions: {
@@ -47,16 +47,14 @@ export default defineConfig({
     },
     // Include React and react-is to ensure proper module resolution
     include: [
-      'react', 
-      'react-dom', 
-      'react/jsx-runtime', 
-      'react-is', 
-      'hoist-non-react-statics', 
+      'react',
+      'react-dom',
+      'react/jsx-runtime',
+      'react-is',
+      'hoist-non-react-statics',
       'prop-types',
       'react-router-dom', // Ensure React Router is properly bundled
       'to-words', // CJS module that needs pre-bundling
-      '@material-ui/core/styles', // Include to handle CJS require() calls
-      '@material-ui/core',
     ],
     // Exclude large dependencies from optimization to save memory
     exclude: [
@@ -77,32 +75,35 @@ export default defineConfig({
     force: false, // Don't force re-optimization
     entries: [], // Let Vite auto-discover entries
   },
-  
+
   // Resolve path aliases (matching jsconfig.json)
   resolve: {
     alias: {
       // Map '@' to src directory for absolute imports
       '@': path.resolve(__dirname, './src'),
       // Replace react-router-navigation-prompt with our v6-compatible shim
-      'react-router-navigation-prompt': path.resolve(__dirname, './src/utils/react-router-navigation-prompt-shim.js'),
+      'react-router-navigation-prompt': path.resolve(
+        __dirname,
+        './src/utils/react-router-navigation-prompt-shim.js'
+      ),
       // Support existing imports without '@' prefix (e.g., 'assets/css/global.scss')
-      'assets': path.resolve(__dirname, './src/assets'),
-      'components': path.resolve(__dirname, './src/components'),
-      'constants': path.resolve(__dirname, './src/constants'),
-      'layouts': path.resolve(__dirname, './src/layouts'),
-      'routes': path.resolve(__dirname, './src/routes'),
-      'screens': path.resolve(__dirname, './src/screens'),
-      'services': path.resolve(__dirname, './src/services'),
-      'utils': path.resolve(__dirname, './src/utils'),
-      'app': path.resolve(__dirname, './src/app'),
-      'serviceWorker': path.resolve(__dirname, './src/serviceWorker'),
-      'polyfill': path.resolve(__dirname, './src/polyfill'),
+      assets: path.resolve(__dirname, './src/assets'),
+      components: path.resolve(__dirname, './src/components'),
+      constants: path.resolve(__dirname, './src/constants'),
+      layouts: path.resolve(__dirname, './src/layouts'),
+      routes: path.resolve(__dirname, './src/routes'),
+      screens: path.resolve(__dirname, './src/screens'),
+      services: path.resolve(__dirname, './src/services'),
+      utils: path.resolve(__dirname, './src/utils'),
+      app: path.resolve(__dirname, './src/app'),
+      serviceWorker: path.resolve(__dirname, './src/serviceWorker'),
+      polyfill: path.resolve(__dirname, './src/polyfill'),
     },
     // Ensure proper resolution of CJS modules in ESM context
     // Deduplicate React to prevent multiple instances (fixes "Invalid hook call" errors)
     dedupe: ['react', 'react-dom', 'react-is', 'hoist-non-react-statics', 'prop-types'],
   },
-  
+
   // Dev server configuration
   server: {
     port: 3000,
@@ -116,7 +117,7 @@ export default defineConfig({
       allow: ['..'],
     },
   },
-  
+
   // Build configuration
   build: {
     outDir: 'dist',
@@ -129,7 +130,7 @@ export default defineConfig({
     rollupOptions: {
       input: path.resolve(__dirname, 'index.html'),
       output: {
-        manualChunks: (id) => {
+        manualChunks: id => {
           // More granular chunking to reduce chunk sizes and memory usage
           if (id.includes('node_modules')) {
             // React core
@@ -164,16 +165,25 @@ export default defineConfig({
             if (id.includes('@coreui/icons')) {
               return 'coreui-icons';
             }
-            // Other UI libraries
-            if (id.includes('reactstrap') || id.includes('bootstrap')) {
+            // Bootstrap libraries
+            if (id.includes('bootstrap')) {
               return 'bootstrap-vendor';
             }
             // Chart libraries
-            if (id.includes('chart.js') || id.includes('apexcharts') || id.includes('react-chartjs')) {
+            if (
+              id.includes('chart.js') ||
+              id.includes('apexcharts') ||
+              id.includes('react-chartjs')
+            ) {
               return 'charts';
             }
             // PDF/Excel libraries (large)
-            if (id.includes('jspdf') || id.includes('@react-pdf') || id.includes('exceljs') || id.includes('@progress/kendo')) {
+            if (
+              id.includes('jspdf') ||
+              id.includes('@react-pdf') ||
+              id.includes('exceljs') ||
+              id.includes('@progress/kendo')
+            ) {
               return 'document-vendor';
             }
             // AG Grid (large)
@@ -185,7 +195,11 @@ export default defineConfig({
               return 'forms';
             }
             // Date/time libraries
-            if (id.includes('moment') || id.includes('react-datepicker') || id.includes('daterangepicker')) {
+            if (
+              id.includes('moment') ||
+              id.includes('react-datepicker') ||
+              id.includes('daterangepicker')
+            ) {
               return 'date-vendor';
             }
             // Large utility libraries
@@ -207,10 +221,10 @@ export default defineConfig({
     // Use terser for production builds (better compression, but can use more memory)
     // For now, keep esbuild for lower memory usage
   },
-  
+
   // Public directory (assets served at root)
   publicDir: 'public',
-  
+
   // CSS preprocessor options
   css: {
     preprocessorOptions: {
@@ -222,7 +236,7 @@ export default defineConfig({
     // Suppress CSS warnings (like unknown properties from SCSS variables)
     devSourcemap: true,
   },
-  
+
   // Suppress build warnings
   logLevel: 'warn',
 });

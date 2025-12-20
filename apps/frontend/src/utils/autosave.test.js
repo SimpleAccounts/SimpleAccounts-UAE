@@ -10,11 +10,11 @@ describe('Autosave Tests', () => {
   const localStorageMock = (() => {
     let store = {};
     return {
-      getItem: jest.fn((key) => store[key] || null),
+      getItem: jest.fn(key => store[key] || null),
       setItem: jest.fn((key, value) => {
         store[key] = value;
       }),
-      removeItem: jest.fn((key) => {
+      removeItem: jest.fn(key => {
         delete store[key];
       }),
       clear: jest.fn(() => {
@@ -94,11 +94,11 @@ describe('Autosave Tests', () => {
         }
       }, [load]);
 
-      const handleChange = (field) => (e) => {
+      const handleChange = field => e => {
         setFormData({ ...formData, [field]: e.target.value });
       };
 
-      const handleSubmit = (e) => {
+      const handleSubmit = e => {
         e.preventDefault();
         clear();
       };
@@ -132,9 +132,7 @@ describe('Autosave Tests', () => {
           </button>
           {isSaving && <span data-testid="saving-indicator">Saving...</span>}
           {lastSaved && (
-            <span data-testid="last-saved">
-              Last saved: {lastSaved.toLocaleTimeString()}
-            </span>
+            <span data-testid="last-saved">Last saved: {lastSaved.toLocaleTimeString()}</span>
           )}
         </form>
       );
@@ -225,9 +223,7 @@ describe('Autosave Tests', () => {
       await waitFor(() => {
         expect(screen.getByTestId('title-input')).toHaveValue('Saved Title');
       });
-      expect(screen.getByTestId('description-input')).toHaveValue(
-        'Saved Description'
-      );
+      expect(screen.getByTestId('description-input')).toHaveValue('Saved Description');
       expect(screen.getByTestId('amount-input')).toHaveValue('1000');
     });
 
@@ -339,7 +335,7 @@ describe('Autosave Tests', () => {
         }
       };
 
-      const handleChange = (e) => {
+      const handleChange = e => {
         setFormData({ content: e.target.value });
       };
 
@@ -351,12 +347,8 @@ describe('Autosave Tests', () => {
             onChange={handleChange}
             onBlur={saveDraft}
           />
-          {!isOnline && (
-            <span data-testid="offline-indicator">Offline - Draft saved locally</span>
-          )}
-          {pendingSync && (
-            <span data-testid="pending-sync">Changes pending sync</span>
-          )}
+          {!isOnline && <span data-testid="offline-indicator">Offline - Draft saved locally</span>}
+          {pendingSync && <span data-testid="pending-sync">Changes pending sync</span>}
         </div>
       );
     };
@@ -458,12 +450,8 @@ describe('Autosave Tests', () => {
       );
 
       expect(screen.getByTestId('conflict-dialog')).toBeInTheDocument();
-      expect(screen.getByTestId('local-content')).toHaveTextContent(
-        'Local changes'
-      );
-      expect(screen.getByTestId('server-content')).toHaveTextContent(
-        'Server changes'
-      );
+      expect(screen.getByTestId('local-content')).toHaveTextContent('Local changes');
+      expect(screen.getByTestId('server-content')).toHaveTextContent('Server changes');
     });
 
     test('should resolve conflict by choosing local version', () => {

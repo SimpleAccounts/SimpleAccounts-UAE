@@ -1,7 +1,4 @@
-import Temp from './temp'
-import ViewExpenseDetails from './view_expense_detail'
+import Temp from './temp';
+import ViewExpenseDetails from './view_expense_detail';
 
-export {
-  Temp,
-  ViewExpenseDetails
-}
+export { Temp, ViewExpenseDetails };

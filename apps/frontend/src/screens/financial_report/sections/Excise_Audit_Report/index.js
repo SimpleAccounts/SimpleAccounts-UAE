@@ -1,6 +1,5 @@
-import screen from './screen'
-
+import screen from './screen';
 
 export default {
   screen,
-}
+};

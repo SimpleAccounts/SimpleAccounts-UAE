@@ -9,10 +9,7 @@ import { z } from 'zod';
  * Email validation schema
  * Validates that the field is a non-empty string and a valid email address
  */
-export const emailSchema = z
-  .string()
-  .min(1, 'Email is required')
-  .email('Invalid email address');
+export const emailSchema = z.string().min(1, 'Email is required').email('Invalid email address');
 
 /**
  * Password validation schema
@@ -48,8 +45,7 @@ export const phoneSchema = z
  * @param {string} message - Custom error message
  * @returns {z.ZodString} Zod string schema
  */
-export const requiredString = (message = 'This field is required') =>
-  z.string().min(1, message);
+export const requiredString = (message = 'This field is required') => z.string().min(1, message);
 
 /**
  * Required number validation helper
@@ -60,7 +56,7 @@ export const requiredString = (message = 'This field is required') =>
  */
 export const requiredNumber = (message = 'This field is required') =>
   z.preprocess(
-    (val) => {
+    val => {
       // Reject null and undefined for required fields
       if (val === null || val === undefined) {
         return undefined; // This will trigger required_error
@@ -102,4 +98,3 @@ export const optionalString = (schema = z.string()) => schema.optional();
  * @returns {z.ZodOptional} Optional Zod number schema with coercion
  */
 export const optionalNumber = (schema = z.coerce.number()) => schema.optional();
-

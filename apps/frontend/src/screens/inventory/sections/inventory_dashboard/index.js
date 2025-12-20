@@ -8,7 +8,6 @@ import * as FileSaver from 'file-saver';
 import { ExcelExport as XLSX } from 'utils';
 import { Currency } from 'components';
 import * as InventoryActions from '../../actions';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import { Bar } from 'react-chartjs-2';
 import { selectOptionsFactory } from 'utils';

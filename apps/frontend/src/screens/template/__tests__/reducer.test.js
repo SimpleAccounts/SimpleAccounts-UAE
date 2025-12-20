@@ -249,10 +249,13 @@ describe('Template Reducer', () => {
       }
     };
 
-    let state = mockReducer({ currentTheme: null }, {
-      type: 'UPDATE_TEMPLATE_THEME',
-      payload: { theme: 'classic' },
-    });
+    let state = mockReducer(
+      { currentTheme: null },
+      {
+        type: 'UPDATE_TEMPLATE_THEME',
+        payload: { theme: 'classic' },
+      }
+    );
 
     expect(state.currentTheme).toBe('classic');
 
@@ -292,7 +295,7 @@ describe('Template Reducer', () => {
 
     const state = mockReducer({ template_list: [] }, action);
     expect(state.template_list).toHaveLength(4);
-    expect(state.template_list.filter((t) => t.type === 'invoice')).toHaveLength(1);
+    expect(state.template_list.filter(t => t.type === 'invoice')).toHaveLength(1);
   });
 
   it('should handle template preferences', () => {

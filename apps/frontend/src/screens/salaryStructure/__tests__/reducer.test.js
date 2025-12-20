@@ -77,9 +77,7 @@ describe('Salary Structure Reducer', () => {
   it('should replace existing salary structure list data', () => {
     const stateWithData = {
       ...initialState,
-      salaryStructure_list: [
-        { salaryStructureId: 1, structureName: 'Old Structure' },
-      ],
+      salaryStructure_list: [{ salaryStructureId: 1, structureName: 'Old Structure' }],
     };
 
     const newStructureData = [
@@ -257,11 +255,9 @@ describe('Salary Structure Reducer', () => {
 
     const newState = EmployeeReducer(initialState, action);
 
-    expect(Object.keys(newState).sort()).toEqual([
-      'country_list',
-      'currency_list',
-      'salaryStructure_list',
-    ].sort());
+    expect(Object.keys(newState).sort()).toEqual(
+      ['country_list', 'currency_list', 'salaryStructure_list'].sort()
+    );
     expect(Array.isArray(newState.salaryStructure_list)).toBe(true);
   });
 
@@ -271,7 +267,7 @@ describe('Salary Structure Reducer', () => {
         salaryStructureId: 1,
         structureName: 'Decimal Structure',
         basicSalary: 5500.75,
-        allowances: 1250.50,
+        allowances: 1250.5,
         totalSalary: 6751.25,
       },
     ];
@@ -284,6 +280,6 @@ describe('Salary Structure Reducer', () => {
     const newState = EmployeeReducer(initialState, action);
 
     expect(newState.salaryStructure_list[0].basicSalary).toBe(5500.75);
-    expect(newState.salaryStructure_list[0].allowances).toBe(1250.50);
+    expect(newState.salaryStructure_list[0].allowances).toBe(1250.5);
   });
 });

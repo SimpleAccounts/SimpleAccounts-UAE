@@ -11,17 +11,17 @@ jest.mock('react-select', () => ({
     // Filter out non-DOM props to avoid React warnings
     const domProps = { ...rest };
     delete domProps.isDisabled; // Remove isDisabled as it's not a valid DOM attribute
-    
+
     return (
       <select
         data-testid="term-select"
         value={value?.value ?? ''}
-        onChange={(event) => onChange({ value: event.target.value })}
+        onChange={event => onChange({ value: event.target.value })}
         disabled={isDisabled} // Use standard disabled attribute
         {...domProps}
       >
         <option value="">--</option>
-        {options.map((option) => (
+        {options.map(option => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
@@ -38,7 +38,7 @@ jest.mock('react-datepicker', () => ({
       data-testid={id}
       type="date"
       value={selected ? selected.toISOString().substring(0, 10) : ''}
-      onChange={(event) => onChange(new Date(event.target.value))}
+      onChange={event => onChange(new Date(event.target.value))}
     />
   ),
 }));
@@ -71,7 +71,7 @@ const baseFields = {
   },
 };
 
-const createStore = (state) => ({
+const createStore = state => ({
   getState: () => state,
   subscribe: () => () => {},
   dispatch: jest.fn(),
@@ -87,7 +87,7 @@ const renderComponent = (override = {}) => {
         onChange={override.onChange || jest.fn()}
         fields={{ ...baseFields, ...override.fields }}
       />
-    </Provider>,
+    </Provider>
   );
 };
 
@@ -102,9 +102,7 @@ describe('TermDateInput', () => {
     });
 
     expect(onChange).toHaveBeenCalledWith('term', 'NET_10');
-    const dueDateCall = onChange.mock.calls.find(
-      ([field]) => field === 'invoiceDueDate',
-    );
+    const dueDateCall = onChange.mock.calls.find(([field]) => field === 'invoiceDueDate');
     expect(dueDateCall).toBeDefined();
     const updatedDate = dueDateCall[1];
     expect(updatedDate).toBeInstanceOf(Date);
@@ -120,10 +118,7 @@ describe('TermDateInput', () => {
     });
 
     expect(onChange).toHaveBeenCalledWith('invoiceDate', expect.any(Date));
-    const dueDateCall = onChange.mock.calls.filter(
-      ([field]) => field === 'invoiceDueDate',
-    ).pop();
+    const dueDateCall = onChange.mock.calls.filter(([field]) => field === 'invoiceDueDate').pop();
     expect(dueDateCall[1].toISOString().substring(0, 10)).toBe('2024-01-12');
   });
 });
-

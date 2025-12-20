@@ -4,30 +4,32 @@
  */
 
 describe('shadcn/ui Components Import Test', () => {
-  it('should import all core components without errors', () => {
-    expect(() => {
-      require('@/components/ui/alert');
-      require('@/components/ui/alert-dialog');
-      require('@/components/ui/avatar');
-      require('@/components/ui/badge');
-      require('@/components/ui/button');
-      require('@/components/ui/card');
-      require('@/components/ui/checkbox');
-      require('@/components/ui/dialog');
-      require('@/components/ui/dropdown-menu');
-      require('@/components/ui/input');
-      require('@/components/ui/label');
-      require('@/components/ui/popover');
-      require('@/components/ui/radio-group');
-      require('@/components/ui/select');
-      require('@/components/ui/separator');
-      require('@/components/ui/skeleton');
-      require('@/components/ui/sonner');
-      require('@/components/ui/switch');
-      require('@/components/ui/tabs');
-      require('@/components/ui/textarea');
-      require('@/components/ui/tooltip');
-    }).not.toThrow();
+  it('should import all core components without errors', async () => {
+    // Use dynamic imports for Vitest ESM compatibility
+    await expect(
+      Promise.all([
+        import('@/components/ui/alert'),
+        import('@/components/ui/alert-dialog'),
+        import('@/components/ui/avatar'),
+        import('@/components/ui/badge'),
+        import('@/components/ui/button'),
+        import('@/components/ui/card'),
+        import('@/components/ui/checkbox'),
+        import('@/components/ui/dialog'),
+        import('@/components/ui/dropdown-menu'),
+        import('@/components/ui/input'),
+        import('@/components/ui/label'),
+        import('@/components/ui/popover'),
+        import('@/components/ui/radio-group'),
+        import('@/components/ui/select'),
+        import('@/components/ui/separator'),
+        import('@/components/ui/skeleton'),
+        import('@/components/ui/sonner'),
+        import('@/components/ui/switch'),
+        import('@/components/ui/tabs'),
+        import('@/components/ui/textarea'),
+        import('@/components/ui/tooltip'),
+      ])
+    ).resolves.toBeDefined();
   });
 });
-

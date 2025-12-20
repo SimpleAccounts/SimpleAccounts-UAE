@@ -1,32 +1,30 @@
-import React from "react";
-import { connect } from "react-redux";
-import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
+import React from 'react';
+import { connect } from 'react-redux';
+import { Card, CardHeader, CardBody, Row, Col } from 'reactstrap';
 
-import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
-import "react-toastify/dist/ReactToastify.css";
 // import 'react-select/dist/react-select.css'
-import "./style.scss";
-import { data } from "../Language/index";
-import LocalizedStrings from "react-localization";
-import config from "constants/config";
+import './style.scss';
+import { data } from '../Language/index';
+import LocalizedStrings from 'react-localization';
+import config from 'constants/config';
 // Use import instead of require for Vite compatibility
-import Financial from "assets/images/reports/Out line.png";
-import Vat from "assets/images/reports/vat.png";
-import Journal from "assets/images/reports/journal.png";
-import Sales from "assets/images/reports/sales.png";
-import Purchase from "assets/images/reports/pay.png";
-import Receivables from "assets/images/reports/inbox.png";
-import Credit from "assets/images/reports/credit.png";
-import Debit from "assets/images/reports/debit.png";
-import Payables from "assets/images/reports/Payables Icon.png";
-import Expenses from "assets/images/reports/Expense icon.png";
+import Financial from 'assets/images/reports/Out line.png';
+import Vat from 'assets/images/reports/vat.png';
+import Journal from 'assets/images/reports/journal.png';
+import Sales from 'assets/images/reports/sales.png';
+import Purchase from 'assets/images/reports/pay.png';
+import Receivables from 'assets/images/reports/inbox.png';
+import Credit from 'assets/images/reports/credit.png';
+import Debit from 'assets/images/reports/debit.png';
+import Payables from 'assets/images/reports/Payables Icon.png';
+import Expenses from 'assets/images/reports/Expense icon.png';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     companyDetails: state.common.company_details,
   };
 };
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {};
 };
 
@@ -35,8 +33,8 @@ class FinancialReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      language: window["localStorage"].getItem("language"),
-      activeTab: new Array(4).fill("3"),
+      language: window['localStorage'].getItem('language'),
+      activeTab: new Array(4).fill('3'),
     };
   }
 
@@ -139,31 +137,27 @@ class FinancialReport extends React.Component {
                     <div
                       className="d-flex"
                       style={{
-                        backgroundColor: "#e8effb",
-                        height: "37px",
-                        width: "350px",
+                        backgroundColor: '#e8effb',
+                        height: '37px',
+                        width: '350px',
                       }}
                     >
                       <img
                         className="ml-2 mr-2 mt-2 mb-2 "
                         src={Financial}
-                        style={{ height: "25px" }}
-                      ></img>{" "}
+                        style={{ height: '25px' }}
+                      ></img>{' '}
                       <h5 className="mb-3 mt-2">{strings.FinancialReports}</h5>
                     </div>
                     <div className="mt-2 ml-4">
                       {config.REPORTS_PAL && (
                         <h6>
                           <a
-                            style={{ fontWeight: "400" }}
+                            style={{ fontWeight: '400' }}
                             href="#"
-                            onClick={() =>
-                              this.props.history.push(
-                                "/admin/report/profitandloss"
-                              )
-                            }
+                            onClick={() => this.props.history.push('/admin/report/profitandloss')}
                           >
-                            {" "}
+                            {' '}
                             {strings.ProfitandLoss}
                           </a>
                         </h6>
@@ -171,13 +165,9 @@ class FinancialReport extends React.Component {
                       {config.REPORTS_BS && (
                         <h6>
                           <a
-                            style={{ fontWeight: "400" }}
+                            style={{ fontWeight: '400' }}
                             href="#"
-                            onClick={() =>
-                              this.props.history.push(
-                                "/admin/report/balancesheet"
-                              )
-                            }
+                            onClick={() => this.props.history.push('/admin/report/balancesheet')}
                           >
                             {strings.BalanceSheet}
                           </a>
@@ -186,12 +176,10 @@ class FinancialReport extends React.Component {
                       {config.REPORTS_HBS && (
                         <h6>
                           <a
-                            style={{ fontWeight: "400" }}
+                            style={{ fontWeight: '400' }}
                             href="#"
                             onClick={() =>
-                              this.props.history.push(
-                                "/admin/report/horizontalbalancesheet"
-                              )
+                              this.props.history.push('/admin/report/horizontalbalancesheet')
                             }
                           >
                             {strings.HorizontalBalanceSheet}
@@ -201,13 +189,9 @@ class FinancialReport extends React.Component {
                       {config.REPORTS_TB && (
                         <h6>
                           <a
-                            style={{ fontWeight: "400" }}
+                            style={{ fontWeight: '400' }}
                             href="#"
-                            onClick={() =>
-                              this.props.history.push(
-                                "/admin/report/trailbalances"
-                              )
-                            }
+                            onClick={() => this.props.history.push('/admin/report/trailbalances')}
                           >
                             {strings.TrailBalances}
                           </a>
@@ -216,11 +200,9 @@ class FinancialReport extends React.Component {
                       {config.REPORTS_CF && (
                         <h6>
                           <a
-                            style={{ fontWeight: "400" }}
+                            style={{ fontWeight: '400' }}
                             href="#"
-                            onClick={() =>
-                              this.props.history.push("/admin/report/cash-flow")
-                            }
+                            onClick={() => this.props.history.push('/admin/report/cash-flow')}
                           >
                             {strings.Cash_flow}
                           </a>
@@ -235,15 +217,15 @@ class FinancialReport extends React.Component {
                     <div
                       className="d-flex"
                       style={{
-                        backgroundColor: "#e8effb",
-                        height: "37px",
-                        width: "350px",
+                        backgroundColor: '#e8effb',
+                        height: '37px',
+                        width: '350px',
                       }}
                     >
                       <img
                         className="ml-2 mr-2 mt-2 mb-2 "
                         src={Vat}
-                        style={{ height: "25px" }}
+                        style={{ height: '25px' }}
                       ></img>
                       <h5 className="mb-3 mt-2">{strings.VatReports}</h5>
                     </div>
@@ -251,13 +233,9 @@ class FinancialReport extends React.Component {
                       {config.REPORTS_VAT_REPORTS && isRegisteredVat && (
                         <h6>
                           <a
-                            style={{ fontWeight: "400" }}
+                            style={{ fontWeight: '400' }}
                             href="#"
-                            onClick={() =>
-                              this.props.history.push(
-                                "/admin/report/vatreports"
-                              )
-                            }
+                            onClick={() => this.props.history.push('/admin/report/vatreports')}
                           >
                             {strings.VatReports}
                           </a>
@@ -266,13 +244,9 @@ class FinancialReport extends React.Component {
                       {config.REPORTS_FTA_AUDIT && isRegisteredVat && (
                         <h6>
                           <a
-                            style={{ fontWeight: "400" }}
+                            style={{ fontWeight: '400' }}
                             href="#"
-                            onClick={() =>
-                              this.props.history.push(
-                                "/admin/report/ftaAuditReports"
-                              )
-                            }
+                            onClick={() => this.props.history.push('/admin/report/ftaAuditReports')}
                           >
                             {strings.FTA_Audit_Report}
                           </a>
@@ -281,12 +255,10 @@ class FinancialReport extends React.Component {
                       {config.REPORTS_EXCISE_TAX && (
                         <h6>
                           <a
-                            style={{ fontWeight: "400" }}
+                            style={{ fontWeight: '400' }}
                             href="#"
                             onClick={() =>
-                              this.props.history.push(
-                                "/admin/report/exciseTaxAuditReports"
-                              )
+                              this.props.history.push('/admin/report/exciseTaxAuditReports')
                             }
                           >
                             {strings.Excise_Tax_Report}
@@ -301,27 +273,25 @@ class FinancialReport extends React.Component {
                     <div
                       className="d-flex"
                       style={{
-                        backgroundColor: "#e8effb",
-                        height: "37px",
-                        width: "350px",
+                        backgroundColor: '#e8effb',
+                        height: '37px',
+                        width: '350px',
                       }}
                     >
                       <img
                         className="ml-2 mr-2 mt-2 mb-2 "
                         src={Journal}
-                        style={{ height: "25px" }}
-                      ></img>{" "}
+                        style={{ height: '25px' }}
+                      ></img>{' '}
                       <h5 className="mb-3 mt-2">{strings.Detailed}</h5>
                     </div>
                     <div className="mt-2 ml-4">
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
                           onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/detailed-general-ledger"
-                            )
+                            this.props.history.push('/admin/report/detailed-general-ledger')
                           }
                         >
                           {strings.DetailedGeneralLedger}
@@ -338,42 +308,34 @@ class FinancialReport extends React.Component {
                     <div
                       className="d-flex"
                       style={{
-                        backgroundColor: "#e8effb",
-                        height: "37px",
-                        width: "350px",
+                        backgroundColor: '#e8effb',
+                        height: '37px',
+                        width: '350px',
                       }}
                     >
                       <img
                         className="ml-2 mr-2 mt-2 mb-2 "
                         src={Sales}
-                        style={{ height: "25px" }}
-                      ></img>{" "}
+                        style={{ height: '25px' }}
+                      ></img>{' '}
                       <h5 className="mb-3 mt-2">{strings.Sales}</h5>
                     </div>
                     <div className="mt-2 ml-4">
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
-                          onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/salesbycustomer"
-                            )
-                          }
+                          onClick={() => this.props.history.push('/admin/report/salesbycustomer')}
                         >
-                          {" "}
+                          {' '}
                           {strings.SalesByCustomer}
                         </a>
                       </h6>
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
-                          onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/salesbyproduct"
-                            )
-                          }
+                          onClick={() => this.props.history.push('/admin/report/salesbyproduct')}
                         >
                           {strings.SalesByProduct}
                         </a>
@@ -385,26 +347,24 @@ class FinancialReport extends React.Component {
                   <div
                     className="d-flex"
                     style={{
-                      backgroundColor: "#e8effb",
-                      height: "37px",
-                      width: "350px",
+                      backgroundColor: '#e8effb',
+                      height: '37px',
+                      width: '350px',
                     }}
                   >
                     <img
                       className="ml-2 mr-2 mt-2 mb-2 "
                       src={Vat}
-                      style={{ height: "25px" }}
+                      style={{ height: '25px' }}
                     ></img>
                     <h5 className="mb-3 mt-2">{strings.CorporateTax}</h5>
                   </div>
                   <div className="mt-2 ml-4">
                     <h6>
                       <a
-                        style={{ fontWeight: "400" }}
+                        style={{ fontWeight: '400' }}
                         href="#"
-                        onClick={() =>
-                          this.props.history.push("/admin/report/corporate-tax")
-                        }
+                        onClick={() => this.props.history.push('/admin/report/corporate-tax')}
                       >
                         {strings.CorporateTax}
                       </a>
@@ -417,47 +377,37 @@ class FinancialReport extends React.Component {
                     <div
                       className="d-flex"
                       style={{
-                        backgroundColor: "#e8effb",
-                        height: "37px",
-                        width: "350px",
+                        backgroundColor: '#e8effb',
+                        height: '37px',
+                        width: '350px',
                       }}
                     >
                       <img
                         className="ml-2 mr-2 mt-2 mb-2 "
                         src={Expenses}
-                        style={{ height: "25px" }}
-                      ></img>{" "}
+                        style={{ height: '25px' }}
+                      ></img>{' '}
                       <h5 className="mb-3 mt-2">{strings.Expense}</h5>
                     </div>
                     <div className="mt-2 ml-4">
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
-                          onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/expense-details"
-                            )
-                          }
+                          onClick={() => this.props.history.push('/admin/report/expense-details')}
                         >
-                          {strings.Expense + " " + strings.Details}
+                          {strings.Expense + ' ' + strings.Details}
                         </a>
                       </h6>
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
                           onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/expense-by-category"
-                            )
+                            this.props.history.push('/admin/report/expense-by-category')
                           }
                         >
-                          {strings.Expense +
-                            " " +
-                            strings.By +
-                            " " +
-                            strings.Category}
+                          {strings.Expense + ' ' + strings.By + ' ' + strings.Category}
                         </a>
                       </h6>
                     </div>
@@ -470,27 +420,25 @@ class FinancialReport extends React.Component {
                     <div
                       className="d-flex"
                       style={{
-                        backgroundColor: "#e8effb",
-                        height: "37px",
-                        width: "350px",
+                        backgroundColor: '#e8effb',
+                        height: '37px',
+                        width: '350px',
                       }}
                     >
                       <img
                         className="ml-2 mr-2 mt-2 mb-2 "
                         src={Receivables}
-                        style={{ height: "25px" }}
-                      ></img>{" "}
+                        style={{ height: '25px' }}
+                      ></img>{' '}
                       <h5 className="mb-3 mt-2">{strings.Receivables}</h5>
                     </div>
                     <div className="mt-2 ml-4">
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
                           onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/receivable-invoice-summary"
-                            )
+                            this.props.history.push('/admin/report/receivable-invoice-summary')
                           }
                         >
                           {strings.ReceivableInvoiceSummary}
@@ -498,19 +446,13 @@ class FinancialReport extends React.Component {
                       </h6>
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
                           onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/receivable-invoice-details"
-                            )
+                            this.props.history.push('/admin/report/receivable-invoice-details')
                           }
                         >
-                          {strings.Receivable +
-                            " " +
-                            strings.Invoice +
-                            " " +
-                            strings.Details}
+                          {strings.Receivable + ' ' + strings.Invoice + ' ' + strings.Details}
                         </a>
                       </h6>
                     </div>
@@ -521,42 +463,34 @@ class FinancialReport extends React.Component {
                     <div
                       className="d-flex"
                       style={{
-                        backgroundColor: "#e8effb",
-                        height: "37px",
-                        width: "350px",
+                        backgroundColor: '#e8effb',
+                        height: '37px',
+                        width: '350px',
                       }}
                     >
                       <img
                         className="ml-2 mr-2 mt-2 mb-2 "
                         src={Purchase}
-                        style={{ height: "25px" }}
-                      ></img>{" "}
+                        style={{ height: '25px' }}
+                      ></img>{' '}
                       <h5 className="mb-3 mt-2">{strings.Purchase}</h5>
                     </div>
                     <div className="mt-2 ml-4">
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
-                          onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/purchasebyvendor"
-                            )
-                          }
+                          onClick={() => this.props.history.push('/admin/report/purchasebyvendor')}
                         >
-                          {" "}
+                          {' '}
                           {strings.PurhaseByVendor}
                         </a>
                       </h6>
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
-                          onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/purchasebyitem"
-                            )
-                          }
+                          onClick={() => this.props.history.push('/admin/report/purchasebyitem')}
                         >
                           {strings.PurhaseByProduct}
                         </a>
@@ -569,27 +503,25 @@ class FinancialReport extends React.Component {
                     <div
                       className="d-flex"
                       style={{
-                        backgroundColor: "#e8effb",
-                        height: "37px",
-                        width: "350px",
+                        backgroundColor: '#e8effb',
+                        height: '37px',
+                        width: '350px',
                       }}
                     >
                       <img
                         className="ml-2 mr-2 mt-2 mb-2 "
                         src={Credit}
-                        style={{ height: "25px" }}
-                      ></img>{" "}
+                        style={{ height: '25px' }}
+                      ></img>{' '}
                       <h5 className="mb-3 mt-2">{strings.CreditNote}</h5>
                     </div>
                     <div className="mt-2 ml-4">
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
                           onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/credit-note-details"
-                            )
+                            this.props.history.push('/admin/report/credit-note-details')
                           }
                         >
                           {strings.CreditNoteDetails}
@@ -608,28 +540,24 @@ class FinancialReport extends React.Component {
                     <div
                       className="d-flex"
                       style={{
-                        backgroundColor: "#e8effb",
-                        height: "37px",
-                        width: "350px",
+                        backgroundColor: '#e8effb',
+                        height: '37px',
+                        width: '350px',
                       }}
                     >
                       <img
                         className="ml-2 mr-2 mt-2 mb-2 "
                         src={Receivables}
-                        style={{ height: "25px" }}
-                      ></img>{" "}
+                        style={{ height: '25px' }}
+                      ></img>{' '}
                       <h5 className="mb-3 mt-2">{strings.Invoices}</h5>
                     </div>
                     <div className="mt-2 ml-4">
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
-                          onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/invoice-details"
-                            )
-                          }
+                          onClick={() => this.props.history.push('/admin/report/invoice-details')}
                         >
                           {strings.InvoiceDetails}
                         </a>
@@ -644,27 +572,25 @@ class FinancialReport extends React.Component {
                     <div
                       className="d-flex"
                       style={{
-                        backgroundColor: "#e8effb",
-                        height: "37px",
-                        width: "350px",
+                        backgroundColor: '#e8effb',
+                        height: '37px',
+                        width: '350px',
                       }}
                     >
                       <img
                         className="ml-2 mr-2 mt-2 mb-2 "
                         src={Payables}
-                        style={{ height: "25px" }}
-                      ></img>{" "}
+                        style={{ height: '25px' }}
+                      ></img>{' '}
                       <h5 className="mb-3 mt-2">{strings.Payables}</h5>
                     </div>
                     <div className="mt-2 ml-4">
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
                           onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/payable-invoice-summary"
-                            )
+                            this.props.history.push('/admin/report/payable-invoice-summary')
                           }
                         >
                           {strings.PayablesInvoiceSummary}
@@ -672,15 +598,13 @@ class FinancialReport extends React.Component {
                       </h6>
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
                           onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/payable-invoice-details"
-                            )
+                            this.props.history.push('/admin/report/payable-invoice-details')
                           }
                         >
-                          {" "}
+                          {' '}
                           {strings.PayableInvoiceDetails}
                         </a>
                       </h6>
@@ -692,27 +616,25 @@ class FinancialReport extends React.Component {
                     <div
                       className="d-flex"
                       style={{
-                        backgroundColor: "#e8effb",
-                        height: "37px",
-                        width: "350px",
+                        backgroundColor: '#e8effb',
+                        height: '37px',
+                        width: '350px',
                       }}
                     >
                       <img
                         className="ml-2 mr-2 mt-2 mb-2 "
                         src={Debit}
-                        style={{ height: "25px" }}
-                      ></img>{" "}
+                        style={{ height: '25px' }}
+                      ></img>{' '}
                       <h5 className="mb-3 mt-2">{strings.DebitNotes}</h5>
                     </div>
                     <div className="mt-2 ml-4">
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
                           onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/debit-note-details"
-                            )
+                            this.props.history.push('/admin/report/debit-note-details')
                           }
                         >
                           {strings.DebitNoteDetails}
@@ -775,28 +697,24 @@ class FinancialReport extends React.Component {
                     <div
                       className="d-flex"
                       style={{
-                        backgroundColor: "#e8effb",
-                        height: "37px",
-                        width: "350px",
+                        backgroundColor: '#e8effb',
+                        height: '37px',
+                        width: '350px',
                       }}
                     >
                       <img
                         className="ml-2 mr-2 mt-2 mb-2 "
                         src={Sales}
-                        style={{ height: "25px" }}
-                      ></img>{" "}
+                        style={{ height: '25px' }}
+                      ></img>{' '}
                       <h5 className="mb-3 mt-2">{strings.ARAgingReport}</h5>
                     </div>
                     <div className="mt-2 ml-4">
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
-                          onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/arAgingReport"
-                            )
-                          }
+                          onClick={() => this.props.history.push('/admin/report/arAgingReport')}
                         >
                           {strings.ARAgingReport}
                         </a>
@@ -809,30 +727,26 @@ class FinancialReport extends React.Component {
                     <div
                       className="d-flex"
                       style={{
-                        backgroundColor: "#e8effb",
-                        height: "37px",
-                        width: "350px",
+                        backgroundColor: '#e8effb',
+                        height: '37px',
+                        width: '350px',
                       }}
                     >
                       <img
                         className="ml-2 mr-2 mt-2 mb-2 "
                         src={Vat}
-                        style={{ height: "25px" }}
-                      ></img>{" "}
-                      <h5 className="mb-3 mt-2">{strings.Payroll + "s"}</h5>
+                        style={{ height: '25px' }}
+                      ></img>{' '}
+                      <h5 className="mb-3 mt-2">{strings.Payroll + 's'}</h5>
                     </div>
                     <div className="mt-2 ml-4">
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
-                          onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/payroll-summary"
-                            )
-                          }
+                          onClick={() => this.props.history.push('/admin/report/payroll-summary')}
                         >
-                          {strings.Payroll + "s  " + strings.Summary}
+                          {strings.Payroll + 's  ' + strings.Summary}
                         </a>
                       </h6>
                     </div>
@@ -843,27 +757,25 @@ class FinancialReport extends React.Component {
                     <div
                       className="d-flex"
                       style={{
-                        backgroundColor: "#e8effb",
-                        height: "37px",
-                        width: "350px",
+                        backgroundColor: '#e8effb',
+                        height: '37px',
+                        width: '350px',
                       }}
                     >
                       <img
                         className="ml-2 mr-2 mt-2 mb-2 "
                         src={Debit}
-                        style={{ height: "25px" }}
-                      ></img>{" "}
+                        style={{ height: '25px' }}
+                      ></img>{' '}
                       <h5 className="mb-3 mt-2">Account Statement</h5>
                     </div>
                     <div className="mt-2 ml-4">
                       <h6>
                         <a
-                          style={{ fontWeight: "400" }}
+                          style={{ fontWeight: '400' }}
                           href="#"
                           onClick={() =>
-                            this.props.history.push(
-                              "/admin/report/customer-account-statement"
-                            )
+                            this.props.history.push('/admin/report/customer-account-statement')
                           }
                         >
                           Customer Account Statement

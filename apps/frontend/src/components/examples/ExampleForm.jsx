@@ -4,13 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import {
   Form,
   FormField,
@@ -41,7 +35,7 @@ const exampleSchema = z
       ),
     confirmPassword: z.string().min(1, 'Please confirm your password'),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine(data => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ['confirmPassword'],
   });
@@ -64,7 +58,7 @@ export const ExampleForm = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     console.log('Form data:', data);
     // In a real application, you would:
     // 1. Call an API endpoint
@@ -79,8 +73,8 @@ export const ExampleForm = () => {
         <CardHeader>
           <CardTitle>React Hook Form + Zod Example</CardTitle>
           <CardDescription>
-            This form demonstrates the integration of React Hook Form with Zod
-            validation and shadcn/ui components.
+            This form demonstrates the integration of React Hook Form with Zod validation and
+            shadcn/ui components.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -91,11 +85,7 @@ export const ExampleForm = () => {
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
-                    <Input
-                      type="email"
-                      placeholder="Enter your email"
-                      {...field}
-                    />
+                    <Input type="email" placeholder="Enter your email" {...field} />
                     <FormMessage>{getFieldError(fieldState)}</FormMessage>
                     <FormDescription>
                       We'll never share your email with anyone else.
@@ -109,15 +99,11 @@ export const ExampleForm = () => {
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel>Password</FormLabel>
-                    <Input
-                      type="password"
-                      placeholder="Enter your password"
-                      {...field}
-                    />
+                    <Input type="password" placeholder="Enter your password" {...field} />
                     <FormMessage>{getFieldError(fieldState)}</FormMessage>
                     <FormDescription>
-                      Must be at least 8 characters with uppercase, lowercase,
-                      number, and special character.
+                      Must be at least 8 characters with uppercase, lowercase, number, and special
+                      character.
                     </FormDescription>
                   </FormItem>
                 )}
@@ -128,11 +114,7 @@ export const ExampleForm = () => {
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel>Confirm Password</FormLabel>
-                    <Input
-                      type="password"
-                      placeholder="Confirm your password"
-                      {...field}
-                    />
+                    <Input type="password" placeholder="Confirm your password" {...field} />
                     <FormMessage>{getFieldError(fieldState)}</FormMessage>
                   </FormItem>
                 )}
@@ -142,11 +124,7 @@ export const ExampleForm = () => {
                 <Button type="submit" className="flex-1">
                   Submit
                 </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => form.reset()}
-                >
+                <Button type="button" variant="outline" onClick={() => form.reset()}>
                   Reset
                 </Button>
               </div>
@@ -159,4 +137,3 @@ export const ExampleForm = () => {
 };
 
 export default ExampleForm;
-

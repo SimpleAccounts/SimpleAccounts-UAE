@@ -8,11 +8,10 @@
   }
 
   .info-block {
-
     h4 {
       color: #73818f;
     }
-    p{
+    p {
       margin-bottom: 0;
     }
 
@@ -31,7 +30,6 @@
       margin: 0px 10px;
 
       label {
-        
         padding: 2px;
         margin-right: 10px;
       }
@@ -40,7 +38,7 @@
         display: block !important;
       }
     }
-    
+
     .date-range {
       button {
         min-width: 200px;
@@ -62,7 +60,7 @@
     .react-bs-table-tool-bar {
       margin-bottom: 10px;
     }
-    
+
     table {
       th {
         input {

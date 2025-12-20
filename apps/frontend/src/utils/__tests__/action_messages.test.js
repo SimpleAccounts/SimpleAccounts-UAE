@@ -17,14 +17,14 @@ describe('Action Messages List', () => {
     });
 
     it('should have Sent, Delete, and UnPost actions', () => {
-      const actions = InvoiceMessagesList.map((item) => item.action);
+      const actions = InvoiceMessagesList.map(item => item.action);
       expect(actions).toContain('Sent');
       expect(actions).toContain('Delete');
       expect(actions).toContain('UnPost');
     });
 
     it('should have list arrays for each action', () => {
-      InvoiceMessagesList.forEach((item) => {
+      InvoiceMessagesList.forEach(item => {
         expect(Array.isArray(item.list)).toBe(true);
         expect(item.list.length).toBeGreaterThan(0);
       });
@@ -37,7 +37,7 @@ describe('Action Messages List', () => {
     });
 
     it('should have expected actions', () => {
-      const actions = CreditNoteMessagesList.map((item) => item.action);
+      const actions = CreditNoteMessagesList.map(item => item.action);
       expect(actions).toContain('Sent');
       expect(actions).toContain('Delete');
       expect(actions).toContain('UnPost');
@@ -50,7 +50,7 @@ describe('Action Messages List', () => {
     });
 
     it('should have multiple actions including Status Change', () => {
-      const actions = QuotationMessagesList.map((item) => item.action);
+      const actions = QuotationMessagesList.map(item => item.action);
       expect(actions).toContain('Sent');
       expect(actions).toContain('Delete');
       expect(actions).toContain('Status Change');
@@ -66,7 +66,7 @@ describe('Action Messages List', () => {
     });
 
     it('should have expected actions', () => {
-      const actions = ExpenseMessagesList.map((item) => item.action);
+      const actions = ExpenseMessagesList.map(item => item.action);
       expect(actions).toContain('Sent');
       expect(actions).toContain('Delete');
       expect(actions).toContain('UnPost');
@@ -79,11 +79,10 @@ describe('Action Messages List', () => {
     });
 
     it('should have expected actions', () => {
-      const actions = SupplierInvoiceMessagesList.map((item) => item.action);
+      const actions = SupplierInvoiceMessagesList.map(item => item.action);
       expect(actions).toContain('Sent');
       expect(actions).toContain('Delete');
       expect(actions).toContain('UnPost');
     });
   });
 });
-

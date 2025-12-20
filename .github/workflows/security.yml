@@ -78,5 +78,6 @@ jobs:
           fail-on-severity: high
           deny-licenses: GPL-3.0, AGPL-3.0
           # jszip is dual-licensed (MIT OR GPL-3.0) - we use it under MIT license
-          # itextpdf AGPL-3.0 is a pre-existing dependency used for PDF generation
-          allow-dependencies-licenses: pkg:npm/jszip, pkg:maven/com.itextpdf/itextpdf
+          # iText 8.x AGPL-3.0 is a pre-existing dependency used for PDF generation
+          # Updated to match new iText 8.x artifacts: itext-core and html2pdf
+          allow-dependencies-licenses: pkg:npm/jszip, pkg:maven/com.itextpdf/itext-core, pkg:maven/com.itextpdf/html2pdf

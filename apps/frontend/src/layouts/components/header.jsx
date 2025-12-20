@@ -41,7 +41,7 @@ const defaultProps = {
   pathname: '',
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     profile: state.auth.profile,
   };
@@ -100,16 +100,8 @@ class Header extends Component {
 
           {/* Logo */}
           <NavLink to={baseRoute} className="mr-4 flex items-center space-x-2">
-            <img
-              src={logo}
-              alt="SimpleAccounts Logo"
-              className="h-8 w-auto hidden lg:block"
-            />
-            <img
-              src={sygnet}
-              alt="SimpleAccounts"
-              className="h-6 w-6 lg:hidden"
-            />
+            <img src={logo} alt="SimpleAccounts Logo" className="h-8 w-auto hidden lg:block" />
+            <img src={sygnet} alt="SimpleAccounts" className="h-6 w-6 lg:hidden" />
           </NavLink>
 
           {/* Desktop sidebar toggle */}
@@ -222,4 +214,3 @@ Header.propTypes = propTypes;
 Header.defaultProps = defaultProps;
 
 export default connect(mapStateToProps, null)(Header);
-

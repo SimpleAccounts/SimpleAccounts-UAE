@@ -1,24 +1,22 @@
-import { CURRENCY } from 'constants/types'
+import { CURRENCY } from 'constants/types';
 
 const initState = {
-  currency_list : []
-}
+  currency_list: [],
+};
 
 const CurrencyReducer = (state = initState, action) => {
-  const { type, payload} = action
-  
-  switch(type) {
+  const { type, payload } = action;
 
-
+  switch (type) {
     case CURRENCY.CURRENCY_LIST:
-    return {
-      ...state,
-      currency_list: Object.assign([], payload.data)
-    }
+      return {
+        ...state,
+        currency_list: Object.assign([], payload.data),
+      };
 
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default CurrencyReducer
+export default CurrencyReducer;

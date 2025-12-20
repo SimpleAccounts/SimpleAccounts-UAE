@@ -57,7 +57,7 @@ const supplierInvoiceSlice = createSlice({
       state.country_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       // Backward compatibility with old action types
       .addCase(SUPPLIER_INVOICE.SUPPLIER_INVOICE_LIST, (state, action) => {
@@ -114,4 +114,3 @@ export const {
   setCountryList,
 } = supplierInvoiceSlice.actions;
 export default supplierInvoiceSlice.reducer;
-

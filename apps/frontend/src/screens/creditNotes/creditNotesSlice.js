@@ -57,7 +57,7 @@ const creditNotesSlice = createSlice({
       state.invoice_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST, (state, action) => {
         state.customer_invoice_list = action.payload?.data || action.payload || [];
@@ -113,4 +113,3 @@ export const {
   setInvoiceList,
 } = creditNotesSlice.actions;
 export default creditNotesSlice.reducer;
-

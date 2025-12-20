@@ -1,6 +1,3 @@
+import ChartOfAccountsModal from './coaModal.jsx';
 
-import ChartOfAccountsModal from './coaModal'
-
-export {
-    ChartOfAccountsModal
-}
+export { ChartOfAccountsModal };

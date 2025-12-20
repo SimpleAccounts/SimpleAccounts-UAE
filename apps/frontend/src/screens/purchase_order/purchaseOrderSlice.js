@@ -61,7 +61,7 @@ const purchaseOrderSlice = createSlice({
       state.excise_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(PURCHASE_ORDER.PROJECT_LIST, (state, action) => {
         state.project_list = action.payload?.data || action.payload || [];
@@ -121,4 +121,3 @@ export const {
   setExciseList,
 } = purchaseOrderSlice.actions;
 export default purchaseOrderSlice.reducer;
-

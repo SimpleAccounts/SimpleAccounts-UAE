@@ -11,7 +11,8 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'sonner';
+import { Toaster } from '@/components/ui/sonner';
 import { adminRoutes } from 'routes';
 import { AuthActions, CommonActions } from 'services/global';
 import PrivateRoute from '../private';
@@ -104,13 +105,13 @@ class AdminLayout extends React.Component {
             if (userData?.role?.roleCode) {
               await this.props.commonActions.getRoleList(userData.role.roleCode);
             }
-          await this.props.commonActions.getCompanyCurrency();
-          await this.props.commonActions.getCurrencyConversionList();
-          await this.props.commonActions.getVatList();
-          await this.props.commonActions.getCurrencyList();
-          this.setState({
-            loading: false,
-          });
+            await this.props.commonActions.getCompanyCurrency();
+            await this.props.commonActions.getCurrencyConversionList();
+            await this.props.commonActions.getVatList();
+            await this.props.commonActions.getCurrencyList();
+            this.setState({
+              loading: false,
+            });
           } else {
             // Auth check failed - user not authenticated
             this.props.commonActions.tostifyAlert('error', 'Session Timed out');
@@ -301,13 +302,7 @@ class AdminLayout extends React.Component {
             </div>
             <div className="p-6">
               <Suspense fallback={Loading()}>
-                <ToastContainer
-                  position="top-right"
-                  autoClose={1700}
-                  style={containerStyle}
-                  closeOnClick
-                  draggable
-                />
+                <Toaster position="top-right" duration={1700} />
                 <Routes>
                   {adminRoutes?.map((prop, key) => {
                     if (prop?.redirect) {

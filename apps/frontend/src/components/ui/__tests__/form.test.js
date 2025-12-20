@@ -6,14 +6,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { useForm } from 'react-hook-form';
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from '../form';
+import { Form, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '../form';
 import { Input } from '../input';
 
 // Test component that uses the form
@@ -72,4 +65,3 @@ describe('Form Components (Phase 2)', () => {
     expect(formItem).toBeInTheDocument();
   });
 });
-

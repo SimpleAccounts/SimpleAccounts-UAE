@@ -21,7 +21,7 @@ const receiptSlice = createSlice({
       state.invoice_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       // Backward compatibility with old action types
       .addCase(RECEIPT.RECEIPT_LIST, (state, action) => {
@@ -36,10 +36,5 @@ const receiptSlice = createSlice({
   },
 });
 
-export const {
-  setReceiptList,
-  setContactList,
-  setInvoiceList,
-} = receiptSlice.actions;
+export const { setReceiptList, setContactList, setInvoiceList } = receiptSlice.actions;
 export default receiptSlice.reducer;
-

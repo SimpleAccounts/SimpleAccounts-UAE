@@ -33,7 +33,7 @@ const transactionsReportSlice = createSlice({
       state.transaction_category_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(TEMP.ACCOUNT_BALANCE_REPORT, (state, action) => {
         state.account_balance_report = action.payload?.data || action.payload || [];
@@ -65,4 +65,3 @@ export const {
   setTransactionCategoryList,
 } = transactionsReportSlice.actions;
 export default transactionsReportSlice.reducer;
-

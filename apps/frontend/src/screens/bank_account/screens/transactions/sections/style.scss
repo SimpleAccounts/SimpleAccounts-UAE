@@ -1,15 +1,15 @@
 .explain-transaction-modal {
-  max-width: 50%!important;
+  max-width: 50% !important;
   .modal-content {
-    border-radius: 4px!important;
+    border-radius: 4px !important;
   }
   .modal-header {
     padding: 0.5rem;
-   .modal-title {
-    width: 100%;
-    .text {
-      display: flex;
-      justify-content: space-between;
+    .modal-title {
+      width: 100%;
+      .text {
+        display: flex;
+        justify-content: space-between;
       }
     }
     .close-btn {
@@ -21,41 +21,41 @@
 
   .modal-body {
     .content-details {
-      .label{
+      .label {
         font-size: 0.75rem;
         color: #9b9393;
         display: block;
         margin-bottom: 0.2rem;
       }
-      .value{
+      .value {
         color: #23282c;
         display: block;
         font-size: 0.75rem;
       }
-      .details-container{
+      .details-container {
         height: 310px;
         padding-right: 10px;
         overflow-y: auto;
         .detail-row {
           justify-content: space-between;
-          .sub-container{
+          .sub-container {
             display: flex;
             width: 100%;
           }
           .remove-row {
             width: 5%;
             display: flex;
-          button {
-            width: 100%;
-            padding: 0;
-            .fa-close {
+            button {
               width: 100%;
-              display: flex;
-              justify-content: flex-end;
-              align-items: center;
-              color: darkgray;
+              padding: 0;
+              .fa-close {
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                color: darkgray;
+              }
             }
-          }
           }
         }
       }
@@ -63,5 +63,5 @@
   }
 }
 .hideAttachment {
-	display: none;
+  display: none;
 }

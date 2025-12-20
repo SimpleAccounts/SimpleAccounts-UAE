@@ -18,6 +18,42 @@ import * as StatusActionList from './status_action_list';
 import ExcelExport from './excelExport';
 //import * as InvoiceList from './invoice_list';
 
+// Custom styles for react-select to match shadcn/ui
+const selectStyles = {
+  control: (base, state) => ({
+    ...base,
+    minHeight: '40px',
+    borderColor: state.isFocused ? 'hsl(var(--ring))' : 'hsl(var(--input))',
+    backgroundColor: 'hsl(var(--background))',
+    boxShadow: state.isFocused ? '0 0 0 2px hsl(var(--ring))' : 'none',
+    '&:hover': {
+      borderColor: 'hsl(var(--ring))',
+    },
+  }),
+  menu: base => ({
+    ...base,
+    backgroundColor: 'hsl(var(--background))',
+    border: '1px solid hsl(var(--border))',
+  }),
+  option: (base, state) => ({
+    ...base,
+    backgroundColor: state.isSelected
+      ? 'hsl(var(--primary))'
+      : state.isFocused
+        ? 'hsl(var(--accent))'
+        : 'transparent',
+    color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
+  }),
+  singleValue: base => ({
+    ...base,
+    color: 'hsl(var(--foreground))',
+  }),
+  placeholder: base => ({
+    ...base,
+    color: 'hsl(var(--muted-foreground))',
+  }),
+};
+
 export {
   api,
   authApi,
@@ -37,4 +73,5 @@ export {
   renderList,
   StatusActionList,
   ExcelExport,
+  selectStyles,
 };

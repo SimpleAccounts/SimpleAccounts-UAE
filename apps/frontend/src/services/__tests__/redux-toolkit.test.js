@@ -36,7 +36,7 @@ const testSlice = createSlice({
   name: 'test',
   initialState,
   reducers: {
-    reset: (state) => {
+    reset: state => {
       state.loading = false;
       state.data = null;
       state.error = null;
@@ -45,9 +45,9 @@ const testSlice = createSlice({
       state.data = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(fetchDataAsync.pending, (state) => {
+      .addCase(fetchDataAsync.pending, state => {
         state.loading = true;
         state.error = null;
       })
@@ -204,7 +204,7 @@ describe('Redux Toolkit Migration Verification', () => {
         name: 'custom',
         initialState: { count: 0 },
         reducers: {
-          increment: (state) => {
+          increment: state => {
             state.count += 1; // This looks like mutation but is safe
           },
         },
@@ -227,7 +227,7 @@ describe('Redux Toolkit Migration Verification', () => {
         name: 'counter',
         initialState: { count: 0 },
         reducers: {
-          increment: (state) => {
+          increment: state => {
             state.count += 1;
           },
         },
@@ -307,18 +307,15 @@ describe('Redux Toolkit Migration Verification', () => {
 
   describe('Error Handling', () => {
     it('should handle errors in async thunks', async () => {
-      const failingThunk = createAsyncThunk(
-        'test/failing',
-        async (_, { rejectWithValue }) => {
-          return rejectWithValue('Test error');
-        }
-      );
+      const failingThunk = createAsyncThunk('test/failing', async (_, { rejectWithValue }) => {
+        return rejectWithValue('Test error');
+      });
 
       const errorSlice = createSlice({
         name: 'error',
         initialState: { error: null },
         reducers: {},
-        extraReducers: (builder) => {
+        extraReducers: builder => {
           builder.addCase(failingThunk.rejected, (state, action) => {
             state.error = action.payload;
           });
@@ -334,4 +331,3 @@ describe('Redux Toolkit Migration Verification', () => {
     });
   });
 });
-

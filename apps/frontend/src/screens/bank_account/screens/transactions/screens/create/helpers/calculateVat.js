@@ -1,9 +1,5 @@
-export const calculateVAT = (
-  transactionAmount,
-  vatId,
-  exclusiveVat,
-) => {
-  let list='';
+export const calculateVAT = (transactionAmount, vatId, exclusiveVat) => {
+  let list = '';
   if (transactionAmount && vatId === 1 && exclusiveVat) {
     let transactionVatAmount = 0;
     let transactionExpenseAmount = 0;
@@ -14,7 +10,7 @@ export const calculateVAT = (
       transactionAmount: transactionAmount,
       transactionVatAmount: transactionVatAmount,
       transactionExpenseAmount: transactionExpenseAmount,
-    }
+    };
   } else if (transactionAmount && vatId === 1 && !exclusiveVat) {
     let transactionVatAmount = 0;
     let transactionExpenseAmount = 0;
@@ -24,14 +20,13 @@ export const calculateVAT = (
       transactionAmount: transactionAmount,
       transactionVatAmount: transactionVatAmount,
       transactionExpenseAmount: transactionExpenseAmount,
-    }
-  }
-  else {
+    };
+  } else {
     list = {
       transactionAmount: transactionAmount,
       transactionVatAmount: 0,
       transactionExpenseAmount: 0,
-    }
+    };
   }
   return list;
 };

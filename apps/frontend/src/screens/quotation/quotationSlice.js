@@ -57,7 +57,7 @@ const quotationSlice = createSlice({
       state.excise_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(QUOTATION.PROJECT_LIST, (state, action) => {
         state.project_list = action.payload?.data || action.payload || [];
@@ -113,4 +113,3 @@ export const {
   setExciseList,
 } = quotationSlice.actions;
 export default quotationSlice.reducer;
-

@@ -21,7 +21,7 @@ const chartAccountSlice = createSlice({
       state.sub_transaction_type_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(CHART_ACCOUNT.TRANSACTION_CATEGORY_LIST, (state, action) => {
         state.transaction_category_list = action.payload || [];
@@ -35,10 +35,6 @@ const chartAccountSlice = createSlice({
   },
 });
 
-export const {
-  setTransactionCategoryList,
-  setTransactionTypeList,
-  setSubTransactionTypeList,
-} = chartAccountSlice.actions;
+export const { setTransactionCategoryList, setTransactionTypeList, setSubTransactionTypeList } =
+  chartAccountSlice.actions;
 export default chartAccountSlice.reducer;
-

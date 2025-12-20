@@ -1,11 +1,5 @@
 import { z } from 'zod';
-import {
-  emailSchema,
-  requiredString,
-  positiveNumber,
-  phoneSchema,
-  dateSchema,
-} from './common';
+import { emailSchema, requiredString, positiveNumber, phoneSchema, dateSchema } from './common';
 
 /**
  * Example validation schemas for common forms
@@ -23,25 +17,30 @@ export const loginSchema = z.object({
 /**
  * User registration/creation form validation schema
  */
-export const userSchema = z.object({
-  firstName: requiredString('First name is required'),
-  lastName: requiredString('Last name is required'),
-  middleName: requiredString('Middle name is required').optional(),
-  email: emailSchema,
-  roleId: requiredString('Role is required'),
-  timezone: requiredString('Timezone is required'),
-  password: z.string().min(8, 'Password must be at least 8 characters').optional(),
-  confirmPassword: z.string().optional(),
-}).refine((data) => {
-  // If password is provided, confirmPassword must match
-  if (data.password && data.password !== data.confirmPassword) {
-    return false;
-  }
-  return true;
-}, {
-  message: "Passwords don't match",
-  path: ['confirmPassword'],
-});
+export const userSchema = z
+  .object({
+    firstName: requiredString('First name is required'),
+    lastName: requiredString('Last name is required'),
+    middleName: requiredString('Middle name is required').optional(),
+    email: emailSchema,
+    roleId: requiredString('Role is required'),
+    timezone: requiredString('Timezone is required'),
+    password: z.string().min(8, 'Password must be at least 8 characters').optional(),
+    confirmPassword: z.string().optional(),
+  })
+  .refine(
+    data => {
+      // If password is provided, confirmPassword must match
+      if (data.password && data.password !== data.confirmPassword) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Passwords don't match",
+      path: ['confirmPassword'],
+    }
+  );
 
 /**
  * Invoice form validation schema
@@ -80,7 +79,7 @@ export const contactSchema = z
     addressLine2: z.string().optional(),
   })
   .refine(
-    (data) => {
+    data => {
       // Conditional validation: stateId required if countryId is set
       if (data.countryId && !data.stateId) {
         return false;
@@ -100,23 +99,18 @@ export const contactSchema = z
 export const expenseSchema = z
   .object({
     expenseCategory: z.object({ value: z.string() }).optional(),
-    payMode: z
-      .object({ value: z.string() })
-      .refine((val) => val && val.value, {
-        message: 'Pay Through is required',
-      }),
+    payMode: z.object({ value: z.string() }).refine(val => val && val.value, {
+      message: 'Pay Through is required',
+    }),
     bankAccountId: z.string().optional(),
     vatCategoryId: z.string().optional(),
-    placeOfSupplyId: z
-      .object({ value: z.string() })
-      .or(z.string())
-      .optional(),
+    placeOfSupplyId: z.object({ value: z.string() }).or(z.string()).optional(),
     taxTreatmentId: z.string().optional(),
     amount: positiveNumber('Amount must be positive'),
     description: z.string().optional(),
   })
   .refine(
-    (data) => {
+    data => {
       // Bank account required when payment mode is BANK
       if (data.payMode?.value === 'BANK' && !data.bankAccountId) {
         return false;
@@ -129,7 +123,7 @@ export const expenseSchema = z
     }
   )
   .refine(
-    (data) => {
+    data => {
       // VAT category required for registered VAT (except category 34)
       const categoryValue =
         typeof data.expenseCategory === 'object'
@@ -175,4 +169,3 @@ export const paymentSchema = z.object({
   description: z.string().optional(),
   reference: z.string().optional(),
 });
-

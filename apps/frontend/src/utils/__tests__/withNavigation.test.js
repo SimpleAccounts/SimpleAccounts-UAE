@@ -6,7 +6,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { withNavigation } from '../withNavigation';
+import { withNavigation, useNavigation } from '../withNavigation';
 
 // Test component that uses history
 class TestComponent extends React.Component {
@@ -33,6 +33,7 @@ class TestComponent extends React.Component {
   };
 
   render() {
+    // eslint-disable-next-line no-unused-vars
     const { match, location, history } = this.props;
     return (
       <div>
@@ -219,18 +220,13 @@ describe('withNavigation HOC', () => {
   });
 
   it('should provide useNavigation hook alternative', () => {
-    const { useNavigation } = require('../withNavigation');
-    
     // Hook can be used in functional components
     const FunctionalComponent = () => {
       const navigation = useNavigation();
       return (
         <div>
           <div data-testid="hook-pathname">{navigation.location.pathname}</div>
-          <button
-            data-testid="hook-push"
-            onClick={() => navigation.history.push('/test')}
-          >
+          <button data-testid="hook-push" onClick={() => navigation.history.push('/test')}>
             Push
           </button>
         </div>
@@ -249,11 +245,7 @@ describe('withNavigation HOC', () => {
   it('should provide history.length property', () => {
     class LengthComponent extends React.Component {
       render() {
-        return (
-          <div data-testid="history-length">
-            {this.props.history.length}
-          </div>
-        );
+        return <div data-testid="history-length">{this.props.history.length}</div>;
       }
     }
 
@@ -271,11 +263,7 @@ describe('withNavigation HOC', () => {
   it('should provide history.action property', () => {
     class ActionComponent extends React.Component {
       render() {
-        return (
-          <div data-testid="history-action">
-            {this.props.history.action}
-          </div>
-        );
+        return <div data-testid="history-action">{this.props.history.action}</div>;
       }
     }
 
@@ -290,4 +278,3 @@ describe('withNavigation HOC', () => {
     expect(screen.getByTestId('history-action')).toHaveTextContent('PUSH');
   });
 });
-

@@ -37,7 +37,7 @@ const paymentSlice = createSlice({
       state.country_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       // Backward compatibility with old action types
       .addCase(PAYMENT.PAYMENT_LIST, (state, action) => {
@@ -74,4 +74,3 @@ export const {
   setCountryList,
 } = paymentSlice.actions;
 export default paymentSlice.reducer;
-

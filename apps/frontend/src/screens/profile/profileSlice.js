@@ -37,7 +37,7 @@ const profileSlice = createSlice({
       state.company_state_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(PROFILE.CURRENCY_LIST, (state, action) => {
         state.currency_list = action.payload || [];
@@ -73,4 +73,3 @@ export const {
   setCompanyStateList,
 } = profileSlice.actions;
 export default profileSlice.reducer;
-

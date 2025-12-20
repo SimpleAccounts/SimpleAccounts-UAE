@@ -1,7 +1,4 @@
-import Temp from './temp'
-import InvoiceTemplate from './invoice_template'
+import Temp from './temp';
+import InvoiceTemplate from './invoice_template';
 
-export {
-  Temp,
-  InvoiceTemplate
-}
+export { Temp, InvoiceTemplate };

@@ -1,19 +1,19 @@
-import {
-  authApi
-} from 'utils'
+import { authApi } from 'utils';
 
-export const createAndSaveProject = (project) => {
-  return (dispatch) => {
+export const createAndSaveProject = project => {
+  return dispatch => {
     let data = {
       method: 'POST',
       url: `/rest/project/save`,
-      data: project
-    }
+      data: project,
+    };
 
-    return authApi(data).then((res) => {
-      return res
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
+    return authApi(data)
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        throw err;
+      });
+  };
+};
