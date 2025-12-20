@@ -1,10 +1,7 @@
-import {
-  // api,
-  // authApi
-} from 'utils'
+import {} from // api,
+// authApi
+'utils';
 
-export const initialData = (obj) => {
-  return (dispatch) => {
-    
-  }
-}
+export const initialData = obj => {
+  return dispatch => {};
+};

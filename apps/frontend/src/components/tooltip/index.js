@@ -1,28 +1,25 @@
 import React from 'react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
-import { UncontrolledTooltip } from 'reactstrap';
+class ToolTip extends React.Component {
+  render() {
+    const { id, content, placement } = this.props;
 
-import './style.scss';
-
-class TooltipComponent extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
-
-	// onToggleTooltip = () => {
-	// 	const { isTooltipOpen } = this.props;
-	// 	this.setState({ isTooltipOpen: !isTooltipOpen });
-	// };
-
-	render() {
-		const { msg } = this.props;
-		return (
-			<div className="tooltip">
-				<UncontrolledTooltip placement="top">{msg}</UncontrolledTooltip>
-			</div>
-		);
-	}
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div id={id} style={{ display: 'inline-block' }}>
+              {this.props.children}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent side={placement || 'top'}>
+            <p>{content}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
 }
 
-export default TooltipComponent;
+export default ToolTip;

@@ -1,16 +1,14 @@
 // import { USERS_ROLES } from 'constants/types'
 
-const initState = {
-}
+const initState = {};
 
 const UsersRolesReducer = (state = initState, action) => {
-  const { type } = action || {}
+  const { type } = action || {};
 
-  switch(type) {
-
+  switch (type) {
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default UsersRolesReducer
+export default UsersRolesReducer;

@@ -1,4 +1,4 @@
-import { JOURNAL } from 'constants/types'
+import { JOURNAL } from 'constants/types';
 
 const initState = {
   journal_list: [],
@@ -7,57 +7,56 @@ const initState = {
   contact_list: [],
   vat_list: [],
   page_num: 1,
-  cancel_flag: false
-}
+  cancel_flag: false,
+};
 
 const JournalReducer = (state = initState, action) => {
-  const { type, payload } = action
+  const { type, payload } = action;
   switch (type) {
-
-    case JOURNAL.JOURNAL_LIST:    
+    case JOURNAL.JOURNAL_LIST:
       return {
         ...state,
-        journal_list: Object.assign([], payload)
-      }
+        journal_list: Object.assign([], payload),
+      };
 
     case JOURNAL.TRANSACTION_CATEGORY_LIST:
       return {
         ...state,
-        transaction_category_list: Object.assign([], payload.data)
-      }
+        transaction_category_list: Object.assign([], payload.data),
+      };
 
     case JOURNAL.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Object.assign([], payload.data)
-      }
+        contact_list: Object.assign([], payload.data),
+      };
 
     case JOURNAL.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload.data)
-      }
+        currency_list: Object.assign([], payload.data),
+      };
 
     case JOURNAL.VAT_LIST:
       return {
         ...state,
-        vat_list: Object.assign([], payload.data)
-      }
+        vat_list: Object.assign([], payload.data),
+      };
 
     case JOURNAL.PAGE_NUM:
       return {
         ...state,
-        page_num: payload
-      }
+        page_num: payload,
+      };
     case JOURNAL.CANCEL_FLAG:
       return {
         ...state,
-        cancel_flag: payload
-      }
+        cancel_flag: payload,
+      };
 
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default JournalReducer
+export default JournalReducer;

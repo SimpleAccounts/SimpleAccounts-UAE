@@ -19,7 +19,7 @@ export function MobileNav({ items = [], pathname = '' }) {
   return (
     <ScrollArea className="h-full">
       <nav className="flex flex-col space-y-1 p-4">
-        {items.map((item) => (
+        {items.map(item => (
           <NavItem key={item.url || item.name} item={item} pathname={pathname} />
         ))}
       </nav>
@@ -29,7 +29,7 @@ export function MobileNav({ items = [], pathname = '' }) {
 
 function NavItem({ item, pathname }) {
   const [isOpen, setIsOpen] = React.useState(
-    item.children?.some((child) => child?.url && pathname.startsWith(child.url))
+    item.children?.some(child => child?.url && pathname.startsWith(child.url))
   );
 
   if (Array.isArray(item.children) && item.children.length > 0) {
@@ -52,7 +52,7 @@ function NavItem({ item, pathname }) {
         </button>
         {isOpen && (
           <div className="ml-4 space-y-1 border-l pl-4">
-            {item.children.map((child) => (
+            {item.children.map(child => (
               <NavItem key={child.url || child.name} item={child} pathname={pathname} />
             ))}
           </div>
@@ -77,4 +77,3 @@ function NavItem({ item, pathname }) {
 }
 
 export default MobileNav;
-

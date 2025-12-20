@@ -3,7 +3,8 @@ import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'sonner';
+import { Toaster } from '@/components/ui/sonner';
 import { adminRoutes } from 'routes';
 import { AuthActions, CommonActions } from 'services/global';
 import PrivateRoute from '../private';
@@ -409,13 +410,7 @@ class AdminLayout extends React.Component {
               </div>
               <Container fluid className="p-20">
                 <Suspense fallback={Loading()}>
-                  <ToastContainer
-                    position="top-right"
-                    autoClose={1700}
-                    style={containerStyle}
-                    closeOnClick
-                    draggable
-                  />
+                  <Toaster position="top-right" duration={1700} />
                   <Routes>
                     {adminRoutes?.map((prop, key) => {
                       if (!prop || !prop.path) {

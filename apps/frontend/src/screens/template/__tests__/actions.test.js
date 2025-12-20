@@ -148,22 +148,21 @@ describe('Template Actions', () => {
 
   describe('template CRUD operations', () => {
     it('should create new template successfully', async () => {
-      const mockCreateTemplate = (templateData) => {
-        return (dispatch) => {
+      const mockCreateTemplate = templateData => {
+        return dispatch => {
           const data = {
             method: 'POST',
             url: '/rest/templates/create',
             data: templateData,
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'CREATE_TEMPLATE_SUCCESS',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'CREATE_TEMPLATE_SUCCESS',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -186,21 +185,20 @@ describe('Template Actions', () => {
 
     it('should update existing template successfully', async () => {
       const mockUpdateTemplate = (templateId, templateData) => {
-        return (dispatch) => {
+        return dispatch => {
           const data = {
             method: 'PUT',
             url: `/rest/templates/update/${templateId}`,
             data: templateData,
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'UPDATE_TEMPLATE_SUCCESS',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'UPDATE_TEMPLATE_SUCCESS',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -221,21 +219,20 @@ describe('Template Actions', () => {
     });
 
     it('should delete template successfully', async () => {
-      const mockDeleteTemplate = (templateId) => {
-        return (dispatch) => {
+      const mockDeleteTemplate = templateId => {
+        return dispatch => {
           const data = {
             method: 'DELETE',
             url: `/rest/templates/delete/${templateId}`,
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'DELETE_TEMPLATE_SUCCESS',
-                payload: templateId,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'DELETE_TEMPLATE_SUCCESS',
+              payload: templateId,
             });
+            return res;
+          });
         };
       };
 
@@ -254,21 +251,20 @@ describe('Template Actions', () => {
 
   describe('template filtering and search', () => {
     it('should filter templates by type', async () => {
-      const mockFilterTemplates = (type) => {
-        return (dispatch) => {
+      const mockFilterTemplates = type => {
+        return dispatch => {
           const data = {
             method: 'GET',
             url: `/rest/templates/filter?type=${type}`,
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'SET_FILTERED_TEMPLATES',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'SET_FILTERED_TEMPLATES',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -286,25 +282,24 @@ describe('Template Actions', () => {
 
       const actionsDispatched = store.getActions();
       expect(actionsDispatched[0].type).toBe('SET_FILTERED_TEMPLATES');
-      expect(actionsDispatched[0].payload.every((t) => t.type === 'invoice')).toBe(true);
+      expect(actionsDispatched[0].payload.every(t => t.type === 'invoice')).toBe(true);
     });
 
     it('should search templates by name', async () => {
-      const mockSearchTemplates = (searchTerm) => {
-        return (dispatch) => {
+      const mockSearchTemplates = searchTerm => {
+        return dispatch => {
           const data = {
             method: 'GET',
             url: `/rest/templates/search?q=${searchTerm}`,
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'SET_SEARCH_RESULTS',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'SET_SEARCH_RESULTS',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -322,22 +317,21 @@ describe('Template Actions', () => {
 
   describe('template validation', () => {
     it('should validate template content successfully', async () => {
-      const mockValidateTemplate = (templateContent) => {
-        return (dispatch) => {
+      const mockValidateTemplate = templateContent => {
+        return dispatch => {
           const data = {
             method: 'POST',
             url: '/rest/templates/validate',
             data: { content: templateContent },
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'TEMPLATE_VALIDATION_SUCCESS',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'TEMPLATE_VALIDATION_SUCCESS',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -354,22 +348,21 @@ describe('Template Actions', () => {
     });
 
     it('should handle invalid template content', async () => {
-      const mockValidateTemplate = (templateContent) => {
-        return (dispatch) => {
+      const mockValidateTemplate = templateContent => {
+        return dispatch => {
           const data = {
             method: 'POST',
             url: '/rest/templates/validate',
             data: { content: templateContent },
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'TEMPLATE_VALIDATION_FAILURE',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'TEMPLATE_VALIDATION_FAILURE',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -389,21 +382,20 @@ describe('Template Actions', () => {
   describe('template preview', () => {
     it('should generate template preview successfully', async () => {
       const mockGeneratePreview = (templateId, previewData) => {
-        return (dispatch) => {
+        return dispatch => {
           const data = {
             method: 'POST',
             url: `/rest/templates/preview/${templateId}`,
             data: previewData,
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'SET_TEMPLATE_PREVIEW',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'SET_TEMPLATE_PREVIEW',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -423,17 +415,16 @@ describe('Template Actions', () => {
 
   describe('template export/import', () => {
     it('should export template successfully', async () => {
-      const mockExportTemplate = (templateId) => {
-        return (dispatch) => {
+      const mockExportTemplate = templateId => {
+        return dispatch => {
           const data = {
             method: 'GET',
             url: `/rest/templates/export/${templateId}`,
           };
 
-          return authApi(data)
-            .then((res) => {
-              return res;
-            });
+          return authApi(data).then(res => {
+            return res;
+          });
         };
       };
 
@@ -448,22 +439,21 @@ describe('Template Actions', () => {
     });
 
     it('should import template successfully', async () => {
-      const mockImportTemplate = (templateData) => {
-        return (dispatch) => {
+      const mockImportTemplate = templateData => {
+        return dispatch => {
           const data = {
             method: 'POST',
             url: '/rest/templates/import',
             data: templateData,
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'IMPORT_TEMPLATE_SUCCESS',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'IMPORT_TEMPLATE_SUCCESS',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -482,21 +472,20 @@ describe('Template Actions', () => {
   describe('template cloning', () => {
     it('should clone template successfully', async () => {
       const mockCloneTemplate = (templateId, newName) => {
-        return (dispatch) => {
+        return dispatch => {
           const data = {
             method: 'POST',
             url: `/rest/templates/clone/${templateId}`,
             data: { name: newName },
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'CLONE_TEMPLATE_SUCCESS',
-                payload: res.data,
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'CLONE_TEMPLATE_SUCCESS',
+              payload: res.data,
             });
+            return res;
+          });
         };
       };
 
@@ -516,21 +505,20 @@ describe('Template Actions', () => {
   describe('template defaults', () => {
     it('should set default template successfully', async () => {
       const mockSetDefaultTemplate = (templateId, templateType) => {
-        return (dispatch) => {
+        return dispatch => {
           const data = {
             method: 'POST',
             url: '/rest/templates/setDefault',
             data: { templateId, type: templateType },
           };
 
-          return authApi(data)
-            .then((res) => {
-              dispatch({
-                type: 'SET_DEFAULT_TEMPLATE',
-                payload: { templateId, type: templateType },
-              });
-              return res;
+          return authApi(data).then(res => {
+            dispatch({
+              type: 'SET_DEFAULT_TEMPLATE',
+              payload: { templateId, type: templateType },
             });
+            return res;
+          });
         };
       };
 

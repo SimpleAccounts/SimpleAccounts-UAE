@@ -96,7 +96,10 @@ describe('CommonReducer', () => {
 
   describe('Currency lists', () => {
     it('should handle UNIVERSAL_CURRENCY_LIST', () => {
-      const currencies = [{ id: 1, code: 'USD' }, { id: 2, code: 'AED' }];
+      const currencies = [
+        { id: 1, code: 'USD' },
+        { id: 2, code: 'AED' },
+      ];
       const action = {
         type: COMMON.UNIVERSAL_CURRENCY_LIST,
         payload: { data: currencies },

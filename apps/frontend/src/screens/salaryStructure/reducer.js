@@ -1,26 +1,24 @@
-import { SALARY_STRUCTURE } from 'constants/types'
+import { SALARY_STRUCTURE } from 'constants/types';
 
 const initState = {
   salaryStructure_list: [],
   currency_list: [],
   country_list: [],
-
-}
+};
 
 const EmployeeReducer = (state = initState, action) => {
-  const { type, payload} = action
-  
-  switch(type) {
+  const { type, payload } = action;
 
-    case SALARY_STRUCTURE.SALARY_STRUCTURE_LIST: 
+  switch (type) {
+    case SALARY_STRUCTURE.SALARY_STRUCTURE_LIST:
       return {
         ...state,
-        salaryStructure_list: Object.assign([],payload)
-      }
+        salaryStructure_list: Object.assign([], payload),
+      };
 
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default EmployeeReducer
+export default EmployeeReducer;

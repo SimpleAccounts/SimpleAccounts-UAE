@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-// import { bindActionCreators } from 'redux'
 import {
-  DropdownItem,
   DropdownMenu,
-  DropdownToggle,
-  Nav,
-  NavItem,
-  UncontrolledDropdown,
-  // Badge
-} from 'reactstrap';
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 import PropTypes from 'prop-types';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
@@ -18,7 +16,6 @@ import sygnet from 'assets/images/brand/sygnet.png';
 import avatar from 'assets/images/avatars/default-avatar.jpg';
 import { data } from '../../screens/Language/index';
 import LocalizedStrings from 'react-localization';
-// import avatar from 'assets/images/avatars/6.jpg'
 import config from '../../constants/config';
 const propTypes = {
   children: PropTypes.node,
@@ -36,10 +33,6 @@ const mapStateToProps = state => {
     profile: state.auth.profile,
   };
 };
-
-// mapDispatchToProps = (dispatch) => {(
-//   authAction: BindActionCreators(AuthAction,dispatch)
-// )}
 
 let strings = new LocalizedStrings(data);
 class Header extends Component {
@@ -63,6 +56,7 @@ class Header extends Component {
   render() {
     strings.setLanguage(this.state.language);
     const { profile } = this.props;
+    const { language } = this.state;
     return (
       <React.Fragment>
         <button
@@ -98,86 +92,102 @@ class Header extends Component {
         >
           <i className="fa fa-bars header-sidebar-icon"></i>
         </button>
-        <Nav className="ml-auto" navbar>
-          {/* <NavItem>
-						<button type="button" className="d-md-down-none navbar-toggler">
-							<i className="fa fa-bell header-icon"></i>
-						</button>
-					</NavItem> */}
-          <img
-            src={
-              profile && profile.profileImageBinary !== null
-                ? 'data:image/jpg;base64,' + profile.profileImageBinary
-                : avatar
-            }
-            className="img-avatar mr-2"
-            alt=""
-          />
-          <UncontrolledDropdown nav direction="down">
-            <DropdownToggle nav>
-              {strings.Hey} <i>{profile && profile.firstName + ' ' + profile.lastName}</i>
-              <i className="fas fa-angle-down ml-2 mr-3"></i>
-            </DropdownToggle>
-            <DropdownMenu end>
-              <DropdownItem onClick={() => this.props.history.push('/admin/profile')}>
-                <i className="fas fa-user"></i> {strings.Profile}
-              </DropdownItem>
-              <DropdownItem onClick={() => this.props.history.push('/admin/settings/general')}>
-                <i className="fas fa-envelope"></i> {strings.GeneralSettings}
-              </DropdownItem>
-              {/* <DropdownItem onClick={() => this.props.history.push('/admin/settings/transaction-category')}>
-									<i className="icon-graph"></i> Transaction Category
-								</DropdownItem> */}
-              <DropdownItem onClick={() => this.props.history.push('/admin/settings/user')}>
-                <i className="fas fa-user-tag"></i> {strings.User}
-              </DropdownItem>
-              <DropdownItem onClick={() => this.props.history.push('/admin/settings/user-role')}>
-                <i className="fas fa-users"></i> {strings.Role}
-              </DropdownItem>
-              <DropdownItem
+        <div className="ml-auto flex items-center">
+          {/* Language Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="nav-link" style={{ border: 'none' }}>
+                <i
+                  className={
+                    language === 'en' ? 'flag-icon flag-icon-us' : 'flag-icon flag-icon-ae'
+                  }
+                  title="us"
+                  id="us"
+                ></i>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => this.changeLanguage('en')}>
+                <i className="flag-icon flag-icon-us mr-2" /> English
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => this.changeLanguage('ar')}>
+                <i className="flag-icon flag-icon-ae mr-2" /> Arabic
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* User Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="nav-link flex items-center gap-2"
+                style={{ border: 'none' }}
+              >
+                <img
+                  src={
+                    profile && profile.profileImageBinary !== null
+                      ? 'data:image/jpg;base64,' + profile.profileImageBinary
+                      : avatar
+                  }
+                  className="img-avatar"
+                  alt=""
+                  style={{ height: '35px', width: '35px' }}
+                />
+                <span className="hidden md:inline-block">
+                  {strings.Hey} <i>{profile && profile.firstName + ' ' + profile.lastName}</i>
+                  <i className="fas fa-angle-down ml-2"></i>
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => this.props.history.push('/admin/profile')}>
+                <i className="fas fa-user mr-2"></i> {strings.Profile}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => this.props.history.push('/admin/settings/general')}>
+                <i className="fas fa-envelope mr-2"></i> {strings.GeneralSettings}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => this.props.history.push('/admin/settings/user')}>
+                <i className="fas fa-user-tag mr-2"></i> {strings.User}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => this.props.history.push('/admin/settings/user-role')}
+              >
+                <i className="fas fa-users mr-2"></i> {strings.Role}
+              </DropdownMenuItem>
+              <DropdownMenuItem
                 onClick={() => this.props.history.push('/admin/settings/payrollsettings')}
               >
-                <i className="fas fa-money-check-alt"></i> {strings.PayrollSettings}
-              </DropdownItem>
+                <i className="fas fa-money-check-alt mr-2"></i> {strings.PayrollSettings}
+              </DropdownMenuItem>
               {config.SETTING_THEME && (
-                <DropdownItem onClick={() => this.props.history.push('/admin/settings/template')}>
-                  <i className="fas fa-palette"></i> {strings.MailThemes}
-                </DropdownItem>
+                <DropdownMenuItem
+                  onClick={() => this.props.history.push('/admin/settings/template')}
+                >
+                  <i className="fas fa-palette mr-2"></i> {strings.MailThemes}
+                </DropdownMenuItem>
               )}
-              <DropdownItem
+              <DropdownMenuItem
                 onClick={() => this.props.history.push('/admin/settings/notesSettings')}
               >
-                <i className="fas fa-info-circle"></i> {strings.Notes_Settings}
-              </DropdownItem>
+                <i className="fas fa-info-circle mr-2"></i> {strings.Notes_Settings}
+              </DropdownMenuItem>
               {config.SETTING_IMPORT && (
-                <DropdownItem onClick={() => this.props.history.push('/admin/settings/import')}>
-                  <i className="fas fa-palette"></i>
+                <DropdownMenuItem onClick={() => this.props.history.push('/admin/settings/import')}>
+                  <i className="fas fa-palette mr-2"></i>
                   {strings.Import}
-                </DropdownItem>
+                </DropdownMenuItem>
               )}
-              {/* <DropdownItem
-								onClick={() =>
-									this.props.history.push('/admin/settings/notification')
-								}
-							>
-								<i className="fas fa-bell"></i> Notifications
-							</DropdownItem> */}
-              {/* <DropdownItem
-								onClick={() =>
-									this.props.history.push('/admin/settings/data-backup')
-								}
-							>
-								<i className="fas fa-hdd-o"></i> Data Backup
-							</DropdownItem> */}
-              <DropdownItem onClick={() => this.props.history.push('/admin/settings/help')}>
-                <i className="fas fa-info-circle"></i> {strings.Help}
-              </DropdownItem>
-              <DropdownItem onClick={() => this.props.history.push('/logout')}>
-                <i className="fa fa-sign-out header-icon mr-1"></i> {strings.LogOut}
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
-        </Nav>
+              <DropdownMenuItem onClick={() => this.props.history.push('/admin/settings/help')}>
+                <i className="fas fa-info-circle mr-2"></i> {strings.Help}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => this.props.history.push('/logout')}>
+                <i className="fa fa-sign-out header-icon mr-2"></i> {strings.LogOut}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </React.Fragment>
     );
   }

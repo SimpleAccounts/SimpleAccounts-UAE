@@ -17,7 +17,7 @@ const vatCodeSlice = createSlice({
       state.vat_row = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(VAT.VAT_LIST, (state, action) => {
         state.vat_list = action.payload || [];
@@ -30,4 +30,3 @@ const vatCodeSlice = createSlice({
 
 export const { setVatList, setVatRow } = vatCodeSlice.actions;
 export default vatCodeSlice.reducer;
-

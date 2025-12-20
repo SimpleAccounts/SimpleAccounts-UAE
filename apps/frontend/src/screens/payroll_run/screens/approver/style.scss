@@ -1,21 +1,20 @@
 .create-employee-screen {
-    .card-header {
-      color: #2064d8;
-    }
-    .total-item {
-      border-bottom: 1px solid #ccc;
-    }
+  .card-header {
+    color: #2064d8;
   }
-  .react-datepicker-wrapper{
-    width: 100%;
+  .total-item {
+    border-bottom: 1px solid #ccc;
   }
+}
+.react-datepicker-wrapper {
+  width: 100%;
+}
 
-  
-.payroll-List .react-bs-table.react-bs-table-bordered thead th:first-child input{
+.payroll-List .react-bs-table.react-bs-table-bordered thead th:first-child input {
   position: absolute;
   margin-top: -51px;
   border: none;
 }
-.payroll-List .react-bs-table.react-bs-table-bordered thead th:first-child{
+.payroll-List .react-bs-table.react-bs-table-bordered thead th:first-child {
   border: none;
 }

@@ -70,7 +70,10 @@ describe('expense create actions', () => {
     const params = { moduleType: 'EXPENSE', name: 'Travel' };
     authApi.mockResolvedValue({ status: 200, data: {} });
 
-    await expect(checkExpenseCodeValidation(params)(dispatch)).resolves.toEqual({ status: 200, data: {} });
+    await expect(checkExpenseCodeValidation(params)(dispatch)).resolves.toEqual({
+      status: 200,
+      data: {},
+    });
 
     expect(authApi).toHaveBeenCalledWith({
       method: 'get',
@@ -78,8 +81,3 @@ describe('expense create actions', () => {
     });
   });
 });
-
-
-
-
-

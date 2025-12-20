@@ -1,7 +1,4 @@
-import Temp from './temp'
-import ExpenseTemplate from './expense_template'
+import Temp from './temp';
+import ExpenseTemplate from './expense_template';
 
-export {
-  Temp,
-  ExpenseTemplate
-}
+export { Temp, ExpenseTemplate };

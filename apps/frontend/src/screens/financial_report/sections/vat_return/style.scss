@@ -23,7 +23,6 @@
       margin: 5px 10px;
 
       label {
-        
         padding: 2px;
         margin-right: 10px;
       }
@@ -32,7 +31,7 @@
         display: block !important;
       }
     }
-    
+
     .date-range {
       button {
         min-width: 200px;
@@ -50,10 +49,11 @@
       min-width: 200px;
     }
   }
-  .ft00{
-    font-size:50px;
-    font-family:Helvetica;
-    color:#2064d8;}
+  .ft00 {
+    font-size: 50px;
+    font-family: Helvetica;
+    color: #2064d8;
+  }
 
   .info-block {
     margin: 10px 0;
@@ -61,7 +61,7 @@
     h4 {
       color: #73818f;
     }
-    p{
+    p {
       margin-bottom: 0;
     }
 
@@ -92,16 +92,15 @@
       }
 
       tr.total {
-        background:#eee;
+        background: #eee;
         margin-bottom: 20px !important;
-      
+
         td {
-          color: #873736  !important;
+          color: #873736 !important;
           font-weight: bold !important;
-          
         }
       }
-      
+
       tr.type {
         border-bottom: 2px solid blue !important;
         td {
@@ -110,19 +109,18 @@
           padding-top: 20px;
           font-weight: 600 !important;
         }
-        
       }
-      
+
       tr.item {
         td:first-child {
           padding-left: 30px;
         }
-      
+
         td {
           font-size: 12px !important;
         }
       }
-      
+
       td.bold {
         color: #873736 !important;
       }
@@ -130,20 +128,19 @@
   }
 }
 
-
 .logo-container {
   text-align: center;
- 
+
   img {
     width: 15%;
   }
 }
-.table-header-color{
+.table-header-color {
   background-color: #2064d8 !important;
-border-color: #2064d8 !important;
+  border-color: #2064d8 !important;
 }
 
-.table-internal-header{
+.table-internal-header {
   background-color: #d1f7ed !important;
-  border-color: #d1f7ed !important; 
+  border-color: #d1f7ed !important;
 }

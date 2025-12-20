@@ -19,9 +19,7 @@ describe('PrivateRoute Component', () => {
         <Routes>
           <Route
             path="/test"
-            element={
-              <PrivateRoute element={<TestComponent />} name="TestModule" node={node} />
-            }
+            element={<PrivateRoute element={<TestComponent />} name="TestModule" node={node} />}
           />
         </Routes>
       </MemoryRouter>
@@ -38,9 +36,7 @@ describe('PrivateRoute Component', () => {
         <Routes>
           <Route
             path="/test"
-            element={
-              <PrivateRoute element={<TestComponent />} name="TestModule" node={node} />
-            }
+            element={<PrivateRoute element={<TestComponent />} name="TestModule" node={node} />}
           />
         </Routes>
       </MemoryRouter>
@@ -58,9 +54,7 @@ describe('PrivateRoute Component', () => {
         <Routes>
           <Route
             path="/test"
-            element={
-              <PrivateRoute element={<TestComponent />} name="TestModule" node={node} />
-            }
+            element={<PrivateRoute element={<TestComponent />} name="TestModule" node={node} />}
           />
         </Routes>
       </MemoryRouter>
@@ -82,9 +76,7 @@ describe('PrivateRoute Component', () => {
         <Routes>
           <Route
             path="/test"
-            element={
-              <PrivateRoute element={<TestComponent />} name="TestModule" node={node} />
-            }
+            element={<PrivateRoute element={<TestComponent />} name="TestModule" node={node} />}
           />
         </Routes>
       </MemoryRouter>
@@ -94,19 +86,14 @@ describe('PrivateRoute Component', () => {
   });
 
   it('should handle case where module name does not match', () => {
-    const node = [
-      { moduleName: 'Module1' },
-      { moduleName: 'Module2' },
-    ];
+    const node = [{ moduleName: 'Module1' }, { moduleName: 'Module2' }];
 
     render(
       <MemoryRouter initialEntries={['/test']}>
         <Routes>
           <Route
             path="/test"
-            element={
-              <PrivateRoute element={<TestComponent />} name="TestModule" node={node} />
-            }
+            element={<PrivateRoute element={<TestComponent />} name="TestModule" node={node} />}
           />
         </Routes>
       </MemoryRouter>
@@ -115,4 +102,3 @@ describe('PrivateRoute Component', () => {
     expect(screen.getByText('You Are Not Allowed to view this page')).toBeInTheDocument();
   });
 });
-

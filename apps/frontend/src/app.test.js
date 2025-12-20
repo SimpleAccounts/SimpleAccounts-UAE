@@ -1,9 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { vi } from 'vitest';
 import App from './app';
 
 // Mock routes
-jest.mock('routes', () => ({
+vi.mock('routes', () => ({
   mainRoutes: [
     {
       path: '/admin',
@@ -19,12 +20,12 @@ jest.mock('routes', () => ({
 }));
 
 // Mock services
-jest.mock('services', () => {
+vi.mock('services', () => {
   const mockStore = {
-    dispatch: jest.fn(),
-    getState: jest.fn(() => ({})),
-    subscribe: jest.fn(),
-    replaceReducer: jest.fn(),
+    dispatch: vi.fn(),
+    getState: vi.fn(() => ({})),
+    subscribe: vi.fn(),
+    replaceReducer: vi.fn(),
   };
   return {
     configureStore: () => mockStore,
@@ -32,8 +33,9 @@ jest.mock('services', () => {
 });
 
 // Mock components
-jest.mock('components', () => ({
+vi.mock('components', () => ({
   Loading: () => <div data-testid="loading">Loading...</div>,
+  RouteLoading: () => <div data-testid="route-loading">Route Loading...</div>,
 }));
 
 describe('App Component', () => {

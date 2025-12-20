@@ -24,15 +24,15 @@ dayjs.extend(duration);
 
 /**
  * Day.js utility wrapper
- * 
+ *
  * This module provides a configured Day.js instance with all required plugins
  * for replacing Moment.js throughout the application.
- * 
+ *
  * Usage:
  *   import dayjs from '@/utils/date';
  *   dayjs().format('YYYY-MM-DD');
  *   dayjs(date).fromNow();
- * 
+ *
  * Available plugins:
  * - customParseFormat: Parse dates with format strings (dayjs(date, format))
  * - relativeTime: Relative time formatting (.fromNow())
@@ -44,7 +44,7 @@ dayjs.extend(duration);
  * - weekOfYear: Week calculations
  * - isoWeek: ISO week calculations
  * - duration: Duration calculations
- * 
+ *
  * API Compatibility:
  * Most Moment.js APIs are compatible with Day.js:
  * - dayjs() - Create date instance
@@ -62,7 +62,7 @@ dayjs.extend(duration);
  * - .endOf(unit) - End of period
  * - .clone() - Clone instance
  * - .isValid() - Check validity
- * 
+ *
  * @module utils/date
  * @see https://day.js.org/ for full documentation
  */

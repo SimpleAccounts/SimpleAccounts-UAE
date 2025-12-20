@@ -1,16 +1,14 @@
 // import { DATA_BACKUP } from 'constants/types'
 
-const initState = {
-}
+const initState = {};
 
 const DataBackupReducer = (state = initState, action) => {
-  const { type } = action || {}
+  const { type } = action || {};
 
-  switch(type) {
-
+  switch (type) {
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default DataBackupReducer
+export default DataBackupReducer;

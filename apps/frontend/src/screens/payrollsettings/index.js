@@ -1,7 +1,7 @@
-import screen from './screen'
-import * as actions from './actions'
+import screen from './screen.jsx';
+import * as actions from './actions';
 
 export default {
   screen,
   actions,
-}
+};

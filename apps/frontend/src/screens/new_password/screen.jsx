@@ -15,8 +15,7 @@ import {
   Row,
 } from 'reactstrap';
 import { api } from 'utils';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'sonner';
 import './style.scss';
 import { Message } from 'components';
 import PasswordChecklist from 'react-password-checklist';
@@ -119,7 +118,6 @@ const NewPassword = ({ history, location }) => {
 
   return (
     <div className="reset-password-screen">
-      <ToastContainer autoClose={5000} closeOnClick draggable position="top-right" />
       <div className="animated fadeIn">
         <div className="app flex-row align-items-center">
           <Container>

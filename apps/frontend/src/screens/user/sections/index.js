@@ -1,3 +1,3 @@
-import EmployeeModal from './employee_modal';
+import EmployeeModal from './employee_modal.jsx';
 
-export { EmployeeModal};
+export { EmployeeModal };

@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import logo from 'assets/images/brand/logo.png';
 
 const propTypes = {
@@ -17,7 +23,7 @@ class Footer extends Component {
     };
   }
 
-  handleLanguageChange = (value) => {
+  handleLanguageChange = value => {
     localStorage.setItem('language', value);
     this.setState({ language: value });
     window.location.reload(false);
@@ -53,4 +59,3 @@ Footer.propTypes = propTypes;
 Footer.defaultProps = defaultProps;
 
 export default Footer;
-

@@ -3,12 +3,7 @@
  * Verifies Phase 3: Validation Schema Patterns
  */
 
-import {
-  loginSchema,
-  userSchema,
-  invoiceSchema,
-  contactSchema,
-} from '../schemas';
+import { loginSchema, userSchema, invoiceSchema, contactSchema } from '../schemas';
 
 describe('Example Validation Schemas (Phase 3)', () => {
   describe('loginSchema', () => {
@@ -78,7 +73,7 @@ describe('Example Validation Schemas (Phase 3)', () => {
     test('validates correct invoice data', () => {
       const validData = {
         customerName: 'Test Customer',
-        amount: 100.50,
+        amount: 100.5,
         dueDate: new Date('2024-12-31'),
         items: [
           {
@@ -94,7 +89,7 @@ describe('Example Validation Schemas (Phase 3)', () => {
     test('rejects invoice without items', () => {
       const invalidData = {
         customerName: 'Test Customer',
-        amount: 100.50,
+        amount: 100.5,
         dueDate: new Date('2024-12-31'),
         items: [],
       };
@@ -154,8 +149,9 @@ describe('Example Validation Schemas (Phase 3)', () => {
         countryId: '1',
         // stateId is missing
       };
-      expect(() => contactSchema.parse(invalidData)).toThrow('State is required when country is selected');
+      expect(() => contactSchema.parse(invalidData)).toThrow(
+        'State is required when country is selected'
+      );
     });
   });
 });
-

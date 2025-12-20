@@ -17,20 +17,16 @@ const designationSlice = createSlice({
       state.designationType_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(EMPLOYEE_DESIGNATION.EMPLOYEE_DESIGNATION_LIST, (state, action) => {
         state.designation_list = action.payload || [];
       })
-      .addCase(
-        EMPLOYEE_DESIGNATION.EMPLOYEE_DESIGNATION_TYPE_LIST,
-        (state, action) => {
-          state.designationType_list = action.payload || [];
-        }
-      );
+      .addCase(EMPLOYEE_DESIGNATION.EMPLOYEE_DESIGNATION_TYPE_LIST, (state, action) => {
+        state.designationType_list = action.payload || [];
+      });
   },
 });
 
 export const { setDesignationList, setDesignationTypeList } = designationSlice.actions;
 export default designationSlice.reducer;
-

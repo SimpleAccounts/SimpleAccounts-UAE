@@ -22,6 +22,6 @@ export {
 } from './dashboardSlice';
 
 // Legacy empty function
-export const initialData = (obj) => {
-  return (dispatch) => {};
+export const initialData = obj => {
+  return dispatch => {};
 };

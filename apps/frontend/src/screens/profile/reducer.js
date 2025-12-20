@@ -1,4 +1,4 @@
-import { PROFILE } from 'constants/types'
+import { PROFILE } from 'constants/types';
 
 const initState = {
   currency_list: [],
@@ -7,61 +7,58 @@ const initState = {
   company_type_list: [],
   role_list: [],
   invoicing_state_list: [],
-  company_state_list: []
-}
+  company_state_list: [],
+};
 
 const ProfileReducer = (state = initState, action) => {
-  const { type, payload} = action
-  
-  switch(type) {
+  const { type, payload } = action;
 
+  switch (type) {
     case PROFILE.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload)
-      }
+        currency_list: Object.assign([], payload),
+      };
 
     case PROFILE.COUNTRY_LIST:
-
       return {
         ...state,
-        country_list: Object.assign([], payload)
-      }
+        country_list: Object.assign([], payload),
+      };
 
     case PROFILE.INDUSTRY_TYPE_LIST:
-
       return {
         ...state,
-        industry_type_list: Object.assign([], payload)
-      }
+        industry_type_list: Object.assign([], payload),
+      };
 
-      case PROFILE.ROLE_LIST:
-        return {
-          ...state,
-          role_list: Object.assign([], payload)
-        }
+    case PROFILE.ROLE_LIST:
+      return {
+        ...state,
+        role_list: Object.assign([], payload),
+      };
 
     case PROFILE.COMPANY_TYPE_LIST:
       return {
         ...state,
-        company_type_list: Object.assign([], payload)
-      }
+        company_type_list: Object.assign([], payload),
+      };
 
-      case PROFILE.INVOICING_STATE_LIST:
-        return {
-          ...state,
-          invoicing_state_list: Object.assign([], payload)
-        }
+    case PROFILE.INVOICING_STATE_LIST:
+      return {
+        ...state,
+        invoicing_state_list: Object.assign([], payload),
+      };
 
-        case PROFILE.COMPANY_STATE_LIST:
-        return {
-          ...state,
-          company_state_list: Object.assign([], payload)
-        }
+    case PROFILE.COMPANY_STATE_LIST:
+      return {
+        ...state,
+        company_state_list: Object.assign([], payload),
+      };
 
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default ProfileReducer
+export default ProfileReducer;

@@ -1,6 +1,3 @@
-import PayrollModal from './payrollModal';
-import CreateCompanyDetails from './createCompanyDetailsModal';
-export { 
-    PayrollModal,
-    CreateCompanyDetails
-};
+import PayrollModal from './payrollModal.jsx';
+import CreateCompanyDetails from './createCompanyDetailsModal.jsx';
+export { PayrollModal, CreateCompanyDetails };

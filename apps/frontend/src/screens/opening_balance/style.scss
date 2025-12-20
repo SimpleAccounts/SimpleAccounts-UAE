@@ -21,28 +21,28 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     text-indent: 1px;
-    text-overflow: "";
+    text-overflow: '';
   }
   option:disabled {
     background-color: lightgray !important;
     color: black;
   }
-  .selectField{
-    .css-1fhf3k1-control{
+  .selectField {
+    .css-1fhf3k1-control {
       border-color: transparent;
       background-color: transparent;
-      .css-107lb6w-singleValue{
+      .css-107lb6w-singleValue {
         color: hsl(207, 11%, 16%);
       }
-      .css-1hb7zxy-IndicatorsContainer{
+      .css-1hb7zxy-IndicatorsContainer {
         display: none;
       }
     }
   }
-  .is-invalid{
+  .is-invalid {
     border-color: #f86c6b;
   }
 }
-.table-header-bg{
+.table-header-bg {
   background-color: #dfe9f7;
 }

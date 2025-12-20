@@ -29,7 +29,7 @@ export function Sidebar({ className, items = [], pathname = '', minimized = fals
     >
       <ScrollArea className="h-full">
         <nav className="flex flex-col space-y-1 p-4">
-          {items.map((item) => (
+          {items.map(item => (
             <NavItem
               key={item.url || item.name}
               item={item}
@@ -45,7 +45,7 @@ export function Sidebar({ className, items = [], pathname = '', minimized = fals
 
 function NavItem({ item, pathname, minimized }) {
   const [isOpen, setIsOpen] = useState(
-    item.children?.some((child) => child?.url && pathname.startsWith(child.url))
+    item.children?.some(child => child?.url && pathname.startsWith(child.url))
   );
 
   if (Array.isArray(item.children) && item.children.length > 0) {
@@ -68,16 +68,13 @@ function NavItem({ item, pathname, minimized }) {
           </div>
           {!minimized && (
             <ChevronDown
-              className={cn(
-                'h-4 w-4 transition-transform',
-                isOpen && 'transform rotate-180'
-              )}
+              className={cn('h-4 w-4 transition-transform', isOpen && 'transform rotate-180')}
             />
           )}
         </button>
         {isOpen && !minimized && (
           <div className="ml-4 space-y-1 border-l pl-4">
-            {item.children.map((child) => (
+            {item.children.map(child => (
               <NavItem
                 key={child.url || child.name}
                 item={child}
@@ -111,4 +108,3 @@ function NavItem({ item, pathname, minimized }) {
 }
 
 export default Sidebar;
-

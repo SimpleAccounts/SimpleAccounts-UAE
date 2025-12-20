@@ -13,7 +13,7 @@ const inventorySlice = createSlice({
       state.summary_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder.addCase(INVENTORY.SUMMARY_LIST, (state, action) => {
       state.summary_list = action.payload || [];
     });
@@ -22,4 +22,3 @@ const inventorySlice = createSlice({
 
 export const { setSummaryList } = inventorySlice.actions;
 export default inventorySlice.reducer;
-

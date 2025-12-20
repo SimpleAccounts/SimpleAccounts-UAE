@@ -17,7 +17,7 @@ const employeeSlice = createSlice({
       state.currency_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(EMPLOYEE.EMPLOYEE_LIST, (state, action) => {
         state.employee_list = action.payload || [];
@@ -30,4 +30,3 @@ const employeeSlice = createSlice({
 
 export const { setEmployeeList, setCurrencyList } = employeeSlice.actions;
 export default employeeSlice.reducer;
-

@@ -21,7 +21,7 @@ const salaryTemplateSlice = createSlice({
       state.salary_role_dropdown = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(SALARY_TEMPLATE.TEMPLATE_LIST, (state, action) => {
         state.template_list = action.payload || [];
@@ -35,10 +35,6 @@ const salaryTemplateSlice = createSlice({
   },
 });
 
-export const {
-  setTemplateList,
-  setSalaryStructureDropdown,
-  setSalaryRoleDropdown,
-} = salaryTemplateSlice.actions;
+export const { setTemplateList, setSalaryStructureDropdown, setSalaryRoleDropdown } =
+  salaryTemplateSlice.actions;
 export default salaryTemplateSlice.reducer;
-

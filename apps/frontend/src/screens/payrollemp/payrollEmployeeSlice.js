@@ -53,7 +53,7 @@ const payrollEmployeeSlice = createSlice({
       state.incompleteEmployeeList = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(EMPLOYEEPAYROLL.PAYROLL_EMPLOYEE_LIST, (state, action) => {
         state.payroll_employee_list = action.payload || [];
@@ -76,24 +76,15 @@ const payrollEmployeeSlice = createSlice({
       .addCase(EMPLOYEEPAYROLL.SALARY_STRUCTURE_DROPDOWN, (state, action) => {
         state.salary_structure_dropdown = action.payload || [];
       })
-      .addCase(
-        EMPLOYEEPAYROLL.SALARY_COMPONENT_FIXED_DROPDOWN,
-        (state, action) => {
-          state.salary_component_fixed_dropdown = action.payload || [];
-        }
-      )
-      .addCase(
-        EMPLOYEEPAYROLL.SALARY_COMPONENT_VARAIBLE_DROPDOWN,
-        (state, action) => {
-          state.salary_component_varaible_dropdown = action.payload || [];
-        }
-      )
-      .addCase(
-        EMPLOYEEPAYROLL.SALARY_COMPONENT_DEDUCTION_DROPDOWN,
-        (state, action) => {
-          state.salary_component_deduction_dropdown = action.payload || [];
-        }
-      )
+      .addCase(EMPLOYEEPAYROLL.SALARY_COMPONENT_FIXED_DROPDOWN, (state, action) => {
+        state.salary_component_fixed_dropdown = action.payload || [];
+      })
+      .addCase(EMPLOYEEPAYROLL.SALARY_COMPONENT_VARAIBLE_DROPDOWN, (state, action) => {
+        state.salary_component_varaible_dropdown = action.payload || [];
+      })
+      .addCase(EMPLOYEEPAYROLL.SALARY_COMPONENT_DEDUCTION_DROPDOWN, (state, action) => {
+        state.salary_component_deduction_dropdown = action.payload || [];
+      })
       .addCase(EMPLOYEEPAYROLL.INCOMPLETED_EMPLOYEE_LIST, (state, action) => {
         state.incompleteEmployeeList = action.payload || [];
       });
@@ -114,4 +105,3 @@ export const {
   setIncompleteEmployeeList,
 } = payrollEmployeeSlice.actions;
 export default payrollEmployeeSlice.reducer;
-

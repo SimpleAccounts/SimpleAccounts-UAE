@@ -55,8 +55,6 @@ export default defineConfig({
       'prop-types',
       'react-router-dom', // Ensure React Router is properly bundled
       'to-words', // CJS module that needs pre-bundling
-      '@material-ui/core/styles', // Include to handle CJS require() calls
-      '@material-ui/core',
     ],
     // Exclude large dependencies from optimization to save memory
     exclude: [
@@ -167,8 +165,8 @@ export default defineConfig({
             if (id.includes('@coreui/icons')) {
               return 'coreui-icons';
             }
-            // Other UI libraries
-            if (id.includes('reactstrap') || id.includes('bootstrap')) {
+            // Bootstrap libraries
+            if (id.includes('bootstrap')) {
               return 'bootstrap-vendor';
             }
             // Chart libraries

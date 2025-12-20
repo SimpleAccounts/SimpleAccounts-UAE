@@ -17,7 +17,7 @@ const openingBalanceSlice = createSlice({
       state.opening_balance_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(OPENING_BALANCE.TRANSACTION_CATEGORY_LIST, (state, action) => {
         state.transaction_category_list = action.payload?.data || action.payload || [];
@@ -28,7 +28,5 @@ const openingBalanceSlice = createSlice({
   },
 });
 
-export const { setTransactionCategoryList, setOpeningBalanceList } =
-  openingBalanceSlice.actions;
+export const { setTransactionCategoryList, setOpeningBalanceList } = openingBalanceSlice.actions;
 export default openingBalanceSlice.reducer;
-

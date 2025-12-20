@@ -13,7 +13,7 @@ const vatTransactionsSlice = createSlice({
       state.vat_transaction_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder.addCase(VAT_TRANSACTIONS.VAT_TRANSACTION_LIST, (state, action) => {
       state.vat_transaction_list = action.payload?.data || action.payload || [];
     });
@@ -22,4 +22,3 @@ const vatTransactionsSlice = createSlice({
 
 export const { setVatTransactionList } = vatTransactionsSlice.actions;
 export default vatTransactionsSlice.reducer;
-

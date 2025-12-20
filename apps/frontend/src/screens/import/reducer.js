@@ -1,24 +1,22 @@
-import { IMPORT } from 'constants/types'
+import { IMPORT } from 'constants/types';
 
 const initState = {
   file_data_list: [],
-}
+};
 
 const ImportReducer = (state = initState, action) => {
-  const { type, payload} = action
-  
-  switch(type) {
+  const { type, payload } = action;
 
+  switch (type) {
     case IMPORT.FILE_DATA_LIST:
-       
       return {
         ...state,
-        file_data_list: Object.assign([], payload)
-      }
+        file_data_list: Object.assign([], payload),
+      };
 
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default ImportReducer
+export default ImportReducer;

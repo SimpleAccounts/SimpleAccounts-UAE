@@ -1,5 +1,5 @@
-import screen from '../vat_return/screen'
+import screen from '../vat_return/screen';
 
 export default {
   screen,
-}
+};

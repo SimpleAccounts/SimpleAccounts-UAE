@@ -3,30 +3,36 @@
 ## Project Folder Structure
 
 ### assets
+
 In this folder, you have to save all resource files like images, icons and so forth as well as the scss and css files.
 
 ### components
+
 In this folder, you have to save all the global components which are used for many times in the project.
 
 ### constants
+
 In this folder, you have to save all constants and settings for this project.
 
 ### layouts
+
 In this folder, you have to save the layouts of the project.
 
 ### routes
+
 In this folder, you have to save the router information.
 
 ### screens
+
 In this folder, you have to save the main pages.
 
 ### services
+
 In this folder, you have to manage the redux store.
 
 ### utils
+
 In this folder, you have to save the all global functions.
-
-
 
 ## Available Scripts
 
@@ -77,12 +83,12 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
-
 ## Troubleshooting
 
 ### Build Issues
 
 If you encounter build issues:
+
 1. Clear node_modules and reinstall: `rm -rf node_modules package-lock.json && npm install`
 2. Clear build cache: `rm -rf dist build .vite`
 3. Check Node.js version: Requires Node 20+ (`node --version`)
@@ -90,6 +96,7 @@ If you encounter build issues:
 ### Legacy CRA Build
 
 If you need to use the CRA build system:
+
 - Use `npm run build:cra` instead of `npm run build`
 - CRA outputs to `build/` directory, Vite outputs to `dist/`
 

@@ -1,15 +1,17 @@
 .profile-screen {
-    .card-header {
-      color: #2064d8;
-    }
-    .password-msg {
-      font-size: 0.7rem;
-    }
+  .card-header {
+    color: #2064d8;
   }
-.showButton , .showLabel{
+  .password-msg {
+    font-size: 0.7rem;
+  }
+}
+.showButton,
+.showLabel {
   display: block;
 }
-.hideButton , .hideLabel{
+.hideButton,
+.hideLabel {
   display: none;
 }
 .tooltip-icon {
@@ -34,7 +36,7 @@
 }
 
 .tooltip-icon .tooltiptext::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 100%;
   left: 10%;

@@ -42,14 +42,14 @@ describe('Lists Utility', () => {
     });
 
     it('should have all terms with label and value', () => {
-      termList.forEach((term) => {
+      termList.forEach(term => {
         expect(term).toHaveProperty('label');
         expect(term).toHaveProperty('value');
       });
     });
 
     it('should include common payment terms', () => {
-      const labels = termList.map((t) => t.label);
+      const labels = termList.map(t => t.label);
       expect(labels).toContain('Net 7 Days');
       expect(labels).toContain('Net 30 Days');
       expect(labels).toContain('Due on Receipt');
@@ -68,18 +68,17 @@ describe('Lists Utility', () => {
     });
 
     it('should include UAE emirates', () => {
-      const labels = placeList.map((p) => p.label);
+      const labels = placeList.map(p => p.label);
       expect(labels).toContain('Abu Dhabi');
       expect(labels).toContain('Dubai');
       expect(labels).toContain('Sharjah');
     });
 
     it('should have all places with label and value', () => {
-      placeList.forEach((place) => {
+      placeList.forEach(place => {
         expect(place).toHaveProperty('label');
         expect(place).toHaveProperty('value');
       });
     });
   });
 });
-

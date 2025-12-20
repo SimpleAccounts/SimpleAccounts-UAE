@@ -66,7 +66,8 @@ jobs:
             exit 0
           fi
 
-          git diff --name-only "$BASE_SHA" "$HEAD_SHA" > /tmp/changed_files.txt
+          # Exclude deleted files (--diff-filter=d) to avoid prettier errors on non-existent files
+          git diff --name-only --diff-filter=d "$BASE_SHA" "$HEAD_SHA" > /tmp/changed_files.txt
 
           grep -E '\.(js|jsx|ts|tsx|json|yml|yaml|md|css|scss)$' /tmp/changed_files.txt \
             | grep -v '^apps/backend/src/main/resources/MailTemplates/' \

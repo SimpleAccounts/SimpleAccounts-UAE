@@ -1,6 +1,3 @@
-import Temp from './temp'
-import SalaryComponentScreen from './screen_component'
-export {
-  Temp,
-  SalaryComponentScreen,
-}
+import Temp from './temp';
+import SalaryComponentScreen from './screen_component/index.jsx';
+export { Temp, SalaryComponentScreen };

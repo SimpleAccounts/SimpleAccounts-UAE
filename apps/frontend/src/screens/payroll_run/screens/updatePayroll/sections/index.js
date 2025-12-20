@@ -1,6 +1,3 @@
+import AddEmployeesModal from './addEmployees';
 
-import AddEmployeesModal from './addEmployees'
-
-export {
-    AddEmployeesModal
-}
+export { AddEmployeesModal };

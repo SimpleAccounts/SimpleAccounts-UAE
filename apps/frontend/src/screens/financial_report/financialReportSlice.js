@@ -53,7 +53,7 @@ const financialReportSlice = createSlice({
       state.ctReport_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(REPORTS.COMPANY_PROFILE, (state, action) => {
         state.company_profile = action.payload?.data || action.payload || [];
@@ -105,4 +105,3 @@ export const {
   setCtReportList,
 } = financialReportSlice.actions;
 export default financialReportSlice.reducer;
-

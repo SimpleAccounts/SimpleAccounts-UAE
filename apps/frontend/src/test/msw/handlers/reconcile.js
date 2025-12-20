@@ -1,9 +1,7 @@
 const { http, HttpResponse } = require('msw');
 
 const baseUrl =
-  (typeof window !== 'undefined' &&
-    window._env_ &&
-    window._env_.SIMPLEACCOUNTS_HOST) ||
+  (typeof window !== 'undefined' && window._env_ && window._env_.SIMPLEACCOUNTS_HOST) ||
   'http://localhost:8080';
 
 const sampleList = {
@@ -32,4 +30,3 @@ export const reconcileHandlers = [
     return HttpResponse.json({ status: 'OK' });
   }),
 ];
-

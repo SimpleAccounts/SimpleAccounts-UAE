@@ -77,7 +77,7 @@ const bankAccountSlice = createSlice({
       state.bank_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(BANK_ACCOUNT.BANK_ACCOUNT_LIST, (state, action) => {
         state.bank_account_list = action.payload?.data || action.payload || [];
@@ -156,4 +156,3 @@ export const {
   setBankList,
 } = bankAccountSlice.actions;
 export default bankAccountSlice.reducer;
-

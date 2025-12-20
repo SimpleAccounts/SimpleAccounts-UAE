@@ -21,7 +21,7 @@ let localStorageStore = { language: 'en' };
 
 // Create mock functions that will be restored after clearAllMocks
 const createLocalStorageMock = () => ({
-  getItem: jest.fn((key) => {
+  getItem: jest.fn(key => {
     return localStorageStore[key] || null;
   }),
   setItem: jest.fn((key, value) => {
@@ -30,7 +30,7 @@ const createLocalStorageMock = () => ({
   clear: jest.fn(() => {
     localStorageStore = { language: 'en' };
   }),
-  removeItem: jest.fn((key) => {
+  removeItem: jest.fn(key => {
     delete localStorageStore[key];
   }),
 });
@@ -73,9 +73,9 @@ describe('Footer Component', () => {
   test('displays current language from localStorage', () => {
     // Set language in store before rendering
     localStorageStore['language'] = 'it';
-    
+
     render(<Footer />);
-    
+
     // The component reads from localStorage in constructor
     // Verify the component rendered (which means it read from localStorage)
     expect(screen.getByText(/change language/i)).toBeInTheDocument();
@@ -87,21 +87,21 @@ describe('Footer Component', () => {
 
   test('changes language when selector value changes', async () => {
     render(<Footer />);
-    
+
     // The Select component from shadcn/ui might render differently in tests
     // Find any button that might be the select trigger
     const selectButtons = screen.queryAllByRole('button');
-    
+
     if (selectButtons.length > 0) {
       // Try clicking the last button (likely the select trigger)
       const selectTrigger = selectButtons[selectButtons.length - 1];
       fireEvent.click(selectTrigger);
-      
+
       try {
         // Wait for dropdown to open and find Arabic option
         const arabicOption = await screen.findByText('Arabic', {}, { timeout: 2000 });
         fireEvent.click(arabicOption);
-        
+
         // Language should be saved to localStorage
         expect(localStorageMock.setItem).toHaveBeenCalled();
       } catch (e) {
@@ -116,16 +116,16 @@ describe('Footer Component', () => {
 
   test('renders all language options', async () => {
     render(<Footer />);
-    
+
     // The Select component from shadcn/ui might render differently in tests
     // Find any button that might be the select trigger
     const selectButtons = screen.queryAllByRole('button');
-    
+
     if (selectButtons.length > 0) {
       // Try clicking the last button (likely the select trigger)
       const selectTrigger = selectButtons[selectButtons.length - 1];
       fireEvent.click(selectTrigger);
-      
+
       try {
         // Wait for options to appear
         await screen.findByText('English', {}, { timeout: 2000 });
@@ -142,4 +142,3 @@ describe('Footer Component', () => {
     }
   });
 });
-

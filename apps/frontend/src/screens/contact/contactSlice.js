@@ -33,7 +33,7 @@ const contactSlice = createSlice({
       state.contact_type_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(CONTACT.CONTACT_LIST, (state, action) => {
         state.contact_list = action.payload || [];
@@ -65,4 +65,3 @@ export const {
   setContactTypeList,
 } = contactSlice.actions;
 export default contactSlice.reducer;
-

@@ -61,7 +61,7 @@ const expenseSlice = createSlice({
       state.user_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(EXPENSE.EXPENSE_LIST, (state, action) => {
         state.expense_list = action.payload || [];
@@ -135,4 +135,3 @@ export const {
   setUserList,
 } = expenseSlice.actions;
 export default expenseSlice.reducer;
-

@@ -1,3 +1,4 @@
+/* global globalThis */
 import '@testing-library/jest-dom';
 import { TextDecoder, TextEncoder } from 'util';
 const {
@@ -74,16 +75,16 @@ Object.defineProperty(globalThis, 'import', {
 // Mock localStorage with default language for react-localization
 const localStorageMock = {
   store: { language: 'en' },
-  getItem: jest.fn(function(key) {
+  getItem: jest.fn(function (key) {
     return this.store[key] || null;
   }),
-  setItem: jest.fn(function(key, value) {
+  setItem: jest.fn(function (key, value) {
     this.store[key] = value;
   }),
-  removeItem: jest.fn(function(key) {
+  removeItem: jest.fn(function (key) {
     delete this.store[key];
   }),
-  clear: jest.fn(function() {
+  clear: jest.fn(function () {
     this.store = { language: 'en' };
   }),
 };

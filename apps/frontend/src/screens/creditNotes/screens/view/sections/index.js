@@ -1,7 +1,4 @@
-import Temp from './temp'
-import CreditNoteTemplate from './credit_note_template';
+import Temp from './temp';
+import CreditNoteTemplate from './credit_note_template.jsx';
 
-export {
-  Temp,
-  CreditNoteTemplate
-}
+export { Temp, CreditNoteTemplate };

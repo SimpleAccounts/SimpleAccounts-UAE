@@ -1,6 +1,6 @@
 /**
  * Tests for React Router v5 patterns (LEGACY - FOR DOCUMENTATION ONLY).
- * 
+ *
  * These tests document v5 patterns for reference. The application has been
  * migrated to React Router v6. For v6 tests, see routing.v6.test.js
  *
@@ -9,7 +9,7 @@
  * IMPORTANT: These tests are kept for documentation purposes only.
  * They use v5 patterns (Switch, Redirect, component prop) which are deprecated in v6.
  * All active routing now uses v6 patterns (Routes, Navigate, element prop).
- * 
+ *
  * See: apps/frontend/src/routes/routing.v6.test.js for v6 test suite
  */
 import React from 'react';
@@ -28,20 +28,12 @@ const DashboardPage = () => <div data-testid="dashboard">Dashboard</div>;
 const ProtectedRoute = ({ component: Component, isAuthenticated, ...rest }) => (
   <Route
     {...rest}
-    render={(props) =>
-      isAuthenticated ? (
-        <Component {...props} />
-      ) : (
-        <Redirect to="/login" />
-      )
-    }
+    render={props => (isAuthenticated ? <Component {...props} /> : <Redirect to="/login" />)}
   />
 );
 
 // Component with route params (v5 pattern)
-const UserProfile = ({ match }) => (
-  <div data-testid="user-profile">User ID: {match.params.id}</div>
-);
+const UserProfile = ({ match }) => <div data-testid="user-profile">User ID: {match.params.id}</div>;
 
 // NOTE: These tests document v5 patterns but cannot run with v6
 // They are kept for reference. See routing.v6.test.js for v6 tests.
@@ -149,11 +141,7 @@ describe.skip('React Router v5 Patterns (LEGACY - DOCUMENTATION ONLY)', () => {
         <MemoryRouter initialEntries={['/dashboard']}>
           <Switch>
             <Route path="/login" component={LoginPage} />
-            <ProtectedRoute
-              path="/dashboard"
-              component={DashboardPage}
-              isAuthenticated={true}
-            />
+            <ProtectedRoute path="/dashboard" component={DashboardPage} isAuthenticated={true} />
           </Switch>
         </MemoryRouter>
       );
@@ -166,11 +154,7 @@ describe.skip('React Router v5 Patterns (LEGACY - DOCUMENTATION ONLY)', () => {
         <MemoryRouter initialEntries={['/dashboard']}>
           <Switch>
             <Route path="/login" component={LoginPage} />
-            <ProtectedRoute
-              path="/dashboard"
-              component={DashboardPage}
-              isAuthenticated={false}
-            />
+            <ProtectedRoute path="/dashboard" component={DashboardPage} isAuthenticated={false} />
           </Switch>
         </MemoryRouter>
       );
@@ -245,7 +229,9 @@ describe.skip('React Router v5 Patterns (LEGACY - DOCUMENTATION ONLY)', () => {
     it('should render Link with correct href', () => {
       render(
         <MemoryRouter>
-          <Link to="/about" data-testid="about-link">Go to About</Link>
+          <Link to="/about" data-testid="about-link">
+            Go to About
+          </Link>
         </MemoryRouter>
       );
 
@@ -256,10 +242,7 @@ describe.skip('React Router v5 Patterns (LEGACY - DOCUMENTATION ONLY)', () => {
     it('should support Link with state', () => {
       render(
         <MemoryRouter>
-          <Link
-            to={{ pathname: '/about', state: { from: 'home' } }}
-            data-testid="about-link"
-          >
+          <Link to={{ pathname: '/about', state: { from: 'home' } }} data-testid="about-link">
             Go to About
           </Link>
         </MemoryRouter>

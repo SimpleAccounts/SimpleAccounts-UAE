@@ -13,7 +13,7 @@ const invoiceViewJournalSlice = createSlice({
       state.invoice_journal_list = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder.addCase(INVOICE_VIEW_JOURNAL.JOURNAL_LIST, (state, action) => {
       state.invoice_journal_list = action.payload || [];
     });
@@ -22,4 +22,3 @@ const invoiceViewJournalSlice = createSlice({
 
 export const { setInvoiceJournalList } = invoiceViewJournalSlice.actions;
 export default invoiceViewJournalSlice.reducer;
-

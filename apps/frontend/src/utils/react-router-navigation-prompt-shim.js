@@ -1,10 +1,10 @@
 /**
  * Runtime shim for react-router-navigation-prompt
- * 
+ *
  * This library is incompatible with React Router v6 because it uses withRouter
  * which was removed in v6. This shim provides a v6-compatible replacement
  * using the useBlocker hook (React Router v6.4+).
- * 
+ *
  * Note: This is a temporary solution. For production, consider migrating
  * to a v6-compatible navigation prompt solution.
  */
@@ -16,7 +16,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
  * NavigationPrompt component compatible with React Router v6
  * Provides similar API to react-router-navigation-prompt
  */
-export default function NavigationPrompt({ when, children, beforeConfirm, beforeCancel, afterConfirm, allowGoBack, renderIfNotActive }) {
+export default function NavigationPrompt({
+  when,
+  children,
+  beforeConfirm,
+  beforeCancel,
+  afterConfirm,
+  allowGoBack,
+  renderIfNotActive,
+}) {
   const location = useLocation();
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
@@ -29,11 +37,9 @@ export default function NavigationPrompt({ when, children, beforeConfirm, before
       return;
     }
 
-    const handleBeforeUnload = (e) => {
-      const shouldBlock = typeof when === 'function' 
-        ? when(location, location, 'POP')
-        : !!when;
-      
+    const handleBeforeUnload = e => {
+      const shouldBlock = typeof when === 'function' ? when(location, location, 'POP') : !!when;
+
       if (shouldBlock) {
         e.preventDefault();
         e.returnValue = '';
@@ -43,11 +49,9 @@ export default function NavigationPrompt({ when, children, beforeConfirm, before
     };
 
     // Handle browser back/forward
-    const handlePopState = (e) => {
-      const shouldBlock = typeof when === 'function'
-        ? when(location, location, 'POP')
-        : !!when;
-      
+    const handlePopState = e => {
+      const shouldBlock = typeof when === 'function' ? when(location, location, 'POP') : !!when;
+
       if (shouldBlock) {
         window.history.pushState(null, '', window.location.href);
         setIsActive(true);
@@ -119,4 +123,3 @@ export default function NavigationPrompt({ when, children, beforeConfirm, before
 
   return children;
 }
-
