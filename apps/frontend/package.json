@@ -6,8 +6,6 @@
     "@coreui/coreui-pro": "^2.1.14",
     "@coreui/icons": "0.3.0",
     "@coreui/react": "^5.9.2",
-    "@emotion/react": "^11.7.1",
-    "@emotion/styled": "^11.6.0",
     "@hookform/resolvers": "^5.2.2",
     "@progress/kendo-drawing": "^1.6.0",
     "@progress/kendo-react-pdf": "^3.11.0",
@@ -53,7 +51,6 @@
     "lucide-react": "^0.561.0",
     "next-themes": "^0.4.6",
     "papaparse": "^5.3.2",
-    "playwright": "^1.57.0",
     "prop-types": "^15.7.2",
     "react": "^18.2.0",
     "react-autosuggest": "^9.4.3",
@@ -67,7 +64,6 @@
     "react-draft-wysiwyg": "^1.15.0",
     "react-hook-form": "^7.68.0",
     "react-images-upload": "^1.2.7",
-    "react-ladda": "^6.0.0",
     "react-loader-spinner": "^8.0.0",
     "react-localization": "^1.0.16",
     "react-multi-email": "^1.0.6",
@@ -81,7 +77,6 @@
     "react-select": "^3.1.0",
     "react-sidebar": "^3.0.2",
     "react-switch": "^6.0.0",
-    "react-test-renderer": "^19.2.3",
     "react-to-print": "^2.12.4",
     "react-toastify": "^11.0.5",
     "reactstrap": "^8.10.0",
@@ -89,7 +84,6 @@
     "redux-thunk": "^2.3.0",
     "sass": "^1.96.0",
     "sonner": "^2.0.7",
-    "styled-components": "^5.3.11",
     "tailwind-merge": "^3.4.0",
     "to-words": "^4.9.0",
     "zod": "^4.2.0"
@@ -115,7 +109,8 @@
     "typescript": "^5.4.5",
     "vite": "^5.4.21",
     "vitest": "^4.0.16",
-    "web-streams-polyfill": "^4.2.0"
+    "web-streams-polyfill": "^4.2.0",
+    "react-test-renderer": "^18.2.0"
   },
   "scripts": {
     "start": "NODE_OPTIONS=--max-old-space-size=4096 vite",
