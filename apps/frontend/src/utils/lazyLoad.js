@@ -31,14 +31,35 @@ const retry = (importFunc, retries = 3, interval = 1000) => {
  * Enhanced lazy loading function with retry logic
  * Use this instead of React.lazy() directly for better error handling
  *
+ * This function returns an object with a `screen` property for backwards
+ * compatibility with routes that access components as `ModuleName.screen`.
+ * It handles modules that export { screen, actions, ... } by extracting
+ * just the screen component.
+ *
  * @param {Function} importFunc - The dynamic import function
- * @returns {React.LazyExoticComponent} - Lazy loaded component
+ * @returns {Object} - Object with screen property containing lazy loaded component
  *
  * @example
  * const Dashboard = lazyLoad(() => import('./screens/dashboard'));
+ * // Use as Dashboard.screen in routes, or Dashboard directly
  */
 export const lazyLoad = importFunc => {
-  return lazy(() => retry(importFunc));
+  const LazyComponent = lazy(() =>
+    retry(importFunc).then(module => {
+      // Handle modules that export { screen, actions, ... }
+      // by extracting just the screen component
+      const component = module.default?.screen || module.default;
+      return { default: component };
+    })
+  );
+
+  // Return an object with a screen property for backwards compatibility
+  // with routes that use ModuleName.screen pattern
+  return {
+    screen: LazyComponent,
+    // Also expose as default for direct usage
+    default: LazyComponent,
+  };
 };
 
 /**
