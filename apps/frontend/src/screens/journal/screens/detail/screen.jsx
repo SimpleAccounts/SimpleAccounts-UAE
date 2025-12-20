@@ -96,6 +96,7 @@ const DetailJournal = ({
 }) => {
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(true);
+  const [loadingMsg, setLoadingMsg] = useState('Loading...');
   const [currentJournalId, setCurrentJournalId] = useState(null);
   const [data, setData] = useState([]);
   const [submitJournal, setSubmitJournal] = useState(false);

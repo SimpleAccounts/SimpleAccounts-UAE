@@ -20,7 +20,6 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { toast } from 'sonner';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import { Button } from '@/components/ui/button';
 import { ChevronUp } from 'lucide-react';
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';

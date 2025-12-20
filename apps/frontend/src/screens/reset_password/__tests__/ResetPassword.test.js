@@ -45,7 +45,7 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const emailInput = screen.getByPlaceholderText('Please Enter Your Email Address');
+    const emailInput = screen.getByPlaceholderText('Enter your email address');
     expect(emailInput).toBeInTheDocument();
   });
 
@@ -56,7 +56,7 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const sendButton = screen.getByText('Send Verification Email');
+    const sendButton = screen.getByText('Send Reset Link');
     expect(sendButton).toBeInTheDocument();
   });
 
@@ -67,7 +67,7 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const backButton = screen.getByText('Back To Login');
+    const backButton = screen.getByText('Back to Login');
     expect(backButton).toBeInTheDocument();
   });
 
@@ -78,7 +78,7 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const sendButton = screen.getByText('Send Verification Email');
+    const sendButton = screen.getByText('Send Reset Link');
     fireEvent.click(sendButton);
 
     await waitFor(() => {
@@ -95,10 +95,10 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const emailInput = screen.getByPlaceholderText('Please Enter Your Email Address');
+    const emailInput = screen.getByPlaceholderText('Enter your email address');
     fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
 
-    const sendButton = screen.getByText('Send Verification Email');
+    const sendButton = screen.getByText('Send Reset Link');
     fireEvent.click(sendButton);
 
     await waitFor(() => {
@@ -115,10 +115,10 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const emailInput = screen.getByPlaceholderText('Please Enter Your Email Address');
+    const emailInput = screen.getByPlaceholderText('Enter your email address');
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
 
-    const sendButton = screen.getByText('Send Verification Email');
+    const sendButton = screen.getByText('Send Reset Link');
     fireEvent.click(sendButton);
 
     await waitFor(() => {
@@ -143,10 +143,10 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const emailInput = screen.getByPlaceholderText('Please Enter Your Email Address');
+    const emailInput = screen.getByPlaceholderText('Enter your email address');
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
 
-    const sendButton = screen.getByText('Send Verification Email');
+    const sendButton = screen.getByText('Send Reset Link');
     fireEvent.click(sendButton);
 
     await waitFor(() => {
@@ -167,10 +167,10 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const emailInput = screen.getByPlaceholderText('Please Enter Your Email Address');
+    const emailInput = screen.getByPlaceholderText('Enter your email address');
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
 
-    const sendButton = screen.getByText('Send Verification Email');
+    const sendButton = screen.getByText('Send Reset Link');
     fireEvent.click(sendButton);
 
     // Note: In v6, navigation is handled differently. The component will call history.push
@@ -189,10 +189,10 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const emailInput = screen.getByPlaceholderText('Please Enter Your Email Address');
+    const emailInput = screen.getByPlaceholderText('Enter your email address');
     fireEvent.change(emailInput, { target: { value: 'invalid@example.com' } });
 
-    const sendButton = screen.getByText('Send Verification Email');
+    const sendButton = screen.getByText('Send Reset Link');
     fireEvent.click(sendButton);
 
     await waitFor(() => {
@@ -209,7 +209,7 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const backButton = screen.getByText('Back To Login');
+    const backButton = screen.getByText('Back to Login');
     fireEvent.click(backButton);
 
     // Note: In v6, navigation is handled by withNavigation HOC
@@ -267,7 +267,7 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const logoImage = screen.getByAltText('logo');
+    const logoImage = screen.getByAltText('SimpleAccounts Logo');
     expect(logoImage).toBeInTheDocument();
   });
 
@@ -278,7 +278,7 @@ describe('ResetPassword Screen Component', () => {
       </MemoryRouter>
     );
 
-    const emailInput = screen.getByPlaceholderText('Please Enter Your Email Address');
+    const emailInput = screen.getByPlaceholderText('Enter your email address');
     fireEvent.change(emailInput, { target: { value: 'user@test.com' } });
 
     expect(emailInput.value).toBe('user@test.com');

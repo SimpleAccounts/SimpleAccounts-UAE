@@ -180,6 +180,7 @@ const CreateEmployeePayroll = () => {
     country_list,
     salary_role_dropdown,
     designationType_list,
+    bankList,
   } = useSelector(state => ({
     designation_dropdown: state.payrollEmployee.designation_dropdown,
     employee_list_dropdown: state.payrollEmployee.employee_list_dropdown,
@@ -187,6 +188,7 @@ const CreateEmployeePayroll = () => {
     country_list: state.payrollEmployee.country_list,
     salary_role_dropdown: state.payrollEmployee.salary_role_dropdown,
     designationType_list: state.employeeDesignation.designationType_list,
+    bankList: state.payrollEmployee.bankList,
   }));
 
   // Local State
@@ -1362,7 +1364,7 @@ const CreateEmployeePayroll = () => {
                                 {strings.BankName} <span className="text-danger">*</span>
                               </FormLabel>
                               <ReactSelect
-                                options={useSelector(state => state.payrollEmployee.bankList)} // Assumed bankList is in redux from fetchInitialData
+                                options={bankList}
                                 getOptionLabel={option => option.bankName}
                                 getOptionValue={option => option.bankId}
                                 value={field.value}

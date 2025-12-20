@@ -1100,21 +1100,6 @@ const DetailSupplierInvoice = ({
                             }}
                             onChange={(field, value) => {
                               if (field === 'term') setTerm(value);
-                              else if (field === 'invoiceDate') {
-                                if (dayjs(value).isBefore(dayjs(companyVATRegistrationDate))) {
-                                  // setInvoiceBeforeVatRegistration(true);
-                                  resetProductTableValues(
-                                    watch('exchangeRate'),
-                                    watch('exchangeRate')
-                                  );
-                                } else {
-                                  // setInvoiceBeforeVatRegistration(false);
-                                  resetProductTableValues(
-                                    watch('exchangeRate'),
-                                    watch('exchangeRate')
-                                  );
-                                }
-                              }
                               setValue(field, value);
                             }}
                           />

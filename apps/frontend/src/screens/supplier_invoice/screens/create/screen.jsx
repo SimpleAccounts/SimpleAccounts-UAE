@@ -597,8 +597,6 @@ const CreateSupplierInvoice = ({
 
         if (createMore) {
           setCreateMore(false);
-          setExchangeRate('');
-          setProducttype([]);
           setData([
             {
               id: 0,

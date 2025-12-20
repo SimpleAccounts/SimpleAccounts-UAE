@@ -19,7 +19,7 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { LeavePage, Loader, EmployeeModal } from 'components';
+import { LeavePage, Loader, EmployeeModal, ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import * as EmployeeActions from '../../actions';
