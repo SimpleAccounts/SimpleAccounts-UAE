@@ -43,7 +43,7 @@ const mapDispatchToProps = (dispatch) => {
 
 let strings = new LocalizedStrings(data);
 
-const regEx = /^[0-9\d]+$/;
+const regEx = /^[0-9]+$/;
 const regExBoth = /[a-zA-Z0-9]+$/;
 const regExAlpha = /^[a-zA-Z ]+$/;
 

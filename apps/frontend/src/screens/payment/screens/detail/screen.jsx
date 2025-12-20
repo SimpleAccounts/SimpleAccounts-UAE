@@ -112,7 +112,7 @@ const DetailPayment = ({
 		setValue,
 	} = form;
 
-	const regEx = /^[0-9\d]+$/;
+	const regEx = /^[0-9]+$/;
 
 	useEffect(() => {
 		strings.setLanguage(language);

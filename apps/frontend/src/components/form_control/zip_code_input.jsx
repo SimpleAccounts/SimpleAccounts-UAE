@@ -50,7 +50,7 @@ function ZipCodeInput(props) {
         placeholder={`${strings.Enter} ${placeholder}`}
         value={zipCodeValue || ''}
         onChange={(e) => {
-          const regEx = /^[0-9-\d]+$/;
+          const regEx = /^[0-9-]+$/;
           if (e.target.value === '' || regEx.test(e.target.value)) {
             onChange(zipCodeName, e);
           }

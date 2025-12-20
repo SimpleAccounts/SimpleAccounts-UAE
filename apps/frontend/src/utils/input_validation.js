@@ -10,14 +10,14 @@ strings.setLanguage(language ?? 'en');
 
 export const postZipCodeError = (value, countryID) => {
     const ZipCodeInputValitiona = {
-        229: { maxLength: 6, minLength: 3, regEx: /^[0-9\d]+$/ },
+        229: { maxLength: 6, minLength: 3, regEx: /^[0-9]+$/ },
         191: { maxLength: 6, minLength: 4, regEx: /^\d{5}(?:-\d{4})?$/ },
         21: { maxLength: 4, minLength: 4, regEx: /^[1-9]\d{3}$/ },
     }
     countryID = countryID ? countryID.value ? countryID.value : countryID : '';
     const maxLength = ZipCodeInputValitiona[countryID]?.maxLength ?? '6';
     const minLength = ZipCodeInputValitiona[countryID]?.minLength ?? '6';
-    const regEx = ZipCodeInputValitiona[countryID]?.regEx ?? /^[0-9-\d]+$/;
+    const regEx = ZipCodeInputValitiona[countryID]?.regEx ?? /^[0-9-]+$/;
 
     if (countryID) {
         if (countryID === 229) {

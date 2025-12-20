@@ -209,7 +209,7 @@ const DetailProduct = ({
   const [ProductExist, setProductExist] = useState(false);
   const [productNameExist, setProductNameExist] = useState(false);
 
-  const regEx = /^[0-9\d]+$/;
+  const regEx = /^[0-9]+$/;
   const regExBoth = /[a-zA-Z0-9-.\/\\|]+$/;
   const regDecimal5 = /^\d{0,10}$/;
   const regExAlpha = /[ +a-zA-Z0-9-.\/\\|!@#$%^&*()_<>,]+$/;

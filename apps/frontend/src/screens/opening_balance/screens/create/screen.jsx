@@ -82,7 +82,7 @@ const CreateOpeningBalance = ({
   const [isRegisteredVat, setIsRegisteredVat] = useState(false);
   const [companyDetails, setCompanyDetails] = useState(null);
 
-  const regEx = /^[0-9\d]+$/;
+  const regEx = /^[0-9]+$/;
 
   const form = useForm({
     resolver: zodResolver(createOpeningBalanceSchema),

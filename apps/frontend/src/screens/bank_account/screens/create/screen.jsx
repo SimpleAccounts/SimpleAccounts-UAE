@@ -104,7 +104,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const regExAlpha = /^[a-zA-Z ]+$/;
-const regEx = /^[0-9\d]+$/;
+const regEx = /^[0-9]+$/;
 const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 
 const account_for = [

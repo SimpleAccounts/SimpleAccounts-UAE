@@ -75,7 +75,7 @@ const SupplierModal = ({
 
   const regExAlpha = /^[a-zA-Z]+$/;
   const regExBoth = /[a-zA-Z0-9]+$/;
-  const regEx = /^[0-9\d]+$/;
+  const regEx = /^[0-9]+$/;
 
   const form = useForm({
     resolver: zodResolver(supplierSchema),

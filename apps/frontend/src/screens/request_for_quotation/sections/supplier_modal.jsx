@@ -67,7 +67,7 @@ const SupplierModal = ({
 	const [stateList, setStateList] = useState([]);
 	const [mobileNumberError, setMobileNumberError] = useState('');
 
-	const regEx = /^[0-9\d]+$/;
+	const regEx = /^[0-9]+$/;
 	const regExBoth = /[a-zA-Z0-9]+$/;
 	const regExAlpha = /^[a-zA-Z ]+$/;
 	const regExAddress = /^[a-zA-Z0-9\s,'-]+$/;

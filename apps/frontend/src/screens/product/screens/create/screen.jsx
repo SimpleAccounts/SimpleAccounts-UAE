@@ -179,7 +179,7 @@ const CreateProduct = ({
 	const [inventoryAccount, setInventoryAccount] = useState([]);
 	const [companyDetails, setCompanyDetails] = useState(null);
 
-	const regEx = /^[0-9\d]+$/;
+	const regEx = /^[0-9]+$/;
 	const regExBoth = /[ +a-zA-Z0-9-./\\|!@#$%^&*()_<>,]+$/;
 	const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	const regDecimal5 = /^\d{1,10}$/;

@@ -364,10 +364,7 @@ const EmailPopUpModal = ({
                                                 id="from"
                                                 name="from"
                                                 placeholder="From"
-                                                value={
-                                                    currentEntityEmailDetails.fromEmailAddress &&
-                                                    currentEntityEmailDetails.fromEmailAddress
-                                                }
+                                                value={currentEntityEmailDetails.fromEmailAddress || ''}
                                             />
                                         </Col>
                                     </Row>
@@ -389,10 +386,7 @@ const EmailPopUpModal = ({
                                                             id="to_emails"
                                                             name="to_emails"
                                                             placeholder="Input your email"
-                                                            emails={
-                                                                currentEntityEmailDetails.billingEmail &&
-                                                                currentEntityEmailDetails.billingEmail
-                                                            }
+                                                            emails={currentEntityEmailDetails.billingEmail ? [currentEntityEmailDetails.billingEmail] : []}
                                                             onChange={(_to_emails) => {
                                                                 toEmailError.current = 0;
                                                                 field.onChange(_to_emails);
@@ -575,7 +569,7 @@ const EmailPopUpModal = ({
                                                             field.onChange(e);
                                                             updateState(e, 'subject', e.target.value);
                                                         }}
-                                                        value={currentEntityEmailDetails.subject && currentEntityEmailDetails.subject}
+                                                        value={currentEntityEmailDetails.subject || ''}
                                                     />
                                                 )}
                                             />

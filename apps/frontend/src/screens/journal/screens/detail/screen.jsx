@@ -113,7 +113,7 @@ const DetailJournal = ({
   });
   const [postingReferenceType, setPostingReferenceType] = useState('');
 
-  const regEx = /^[0-9\d]+$/;
+  const regEx = /^[0-9]+$/;
   const regExBoth = /[a-zA-Z0-9]+$/;
   const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 

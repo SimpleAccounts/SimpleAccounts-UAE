@@ -57,7 +57,7 @@ function PayrollModal({
   const [currentNetPay, setCurrentNetPay] = useState(netPay || 0);
   const [currentSelectedData, setCurrentSelectedData] = useState(selectedData || {});
 
-  const regEx = /^[0-9\d]+$/;
+  const regEx = /^[0-9]+$/;
 
   // Form setup
   const {

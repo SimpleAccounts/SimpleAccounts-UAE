@@ -102,7 +102,7 @@ const SalaryComponent = ({
         ],
     });
 
-    const regEx = /^[0-9\d]+$/;
+    const regEx = /^[0-9]+$/;
     const regDec1 = /^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
     const componentTypeOptions = [
         { label: 'Flat Amount', value: 1 },

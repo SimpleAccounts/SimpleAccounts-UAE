@@ -38,7 +38,7 @@ const DesignationModal = ({
 	const [language] = useState(window['localStorage'].getItem('language'));
 	const [disabled, setDisabled] = useState(false);
 
-	const regEx = /^[0-9\d]+$/;
+	const regEx = /^[0-9]+$/;
 	const regExAlpha = /^[a-zA-Z ]+$/;
 
 	strings.setLanguage(language);

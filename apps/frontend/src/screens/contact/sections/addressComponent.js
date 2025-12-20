@@ -37,7 +37,7 @@ class AddressComponent extends React.Component {
             language: window['localStorage'].getItem('language'),
             state_list: [],
         };
-        this.regEx = /^[0-9\d]+$/;
+        this.regEx = /^[0-9]+$/;
         this.regExTelephone = /^[0-9-]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExAlpha = /^[a-zA-Z ]+$/;

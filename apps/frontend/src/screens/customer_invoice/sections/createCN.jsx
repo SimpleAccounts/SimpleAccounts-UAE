@@ -124,7 +124,7 @@ const CreateCreditNoteModal = (props) => {
 
 	const uploadFileRef = useRef(null);
 	const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-	const regEx = /^[0-9\d]+$/;
+	const regEx = /^[0-9]+$/;
 
 	const { control, handleSubmit, formState: { errors }, setValue, reset } = useForm({
 		resolver: zodResolver(createCreditNoteSchema),

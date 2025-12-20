@@ -88,7 +88,7 @@ const InventoryEdit = ({
 	const [openInventoryModel, setOpenInventoryModel] = useState(false);
 	const [inventoryAccount, setInventoryAccount] = useState([]);
 
-	const regEx = /^[0-9\d]+$/;
+	const regEx = /^[0-9]+$/;
 	const regExBoth = /[a-zA-Z0-9]+$/;
 	const regExAlpha = /^[a-zA-Z ]+$/;
 	const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;

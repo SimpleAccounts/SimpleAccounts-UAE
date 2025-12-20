@@ -70,7 +70,7 @@ const detailProjectSchema = z.object({
     .optional(),
 });
 
-const regEx = /^[0-9\d]+$/;
+const regEx = /^[0-9]+$/;
 const regExAlpha = /^[a-zA-Z ]+$/;
 
 const DetailProject = ({

@@ -82,7 +82,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const regEx = /^[0-9\d]+$/;
+const regEx = /^[0-9]+$/;
 const regExAlpha = /^[a-zA-Z ]+$/;
 
 const DetailDesignation = ({

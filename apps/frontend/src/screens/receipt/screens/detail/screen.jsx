@@ -71,7 +71,7 @@ const detailReceiptSchema = z.object({
   unusedAmount: z.string().optional(),
 });
 
-const regEx = /^[0-9\d]+$/;
+const regEx = /^[0-9]+$/;
 const regExBoth = /[a-zA-Z0-9]+$/;
 
 const DetailReceipt = ({

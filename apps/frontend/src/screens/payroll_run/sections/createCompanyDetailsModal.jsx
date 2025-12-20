@@ -145,7 +145,7 @@ function CreateCompanyDetails({ openModal, closeModal }) {
                         className={errors.companyNumber ? 'is-invalid' : ''}
                         onChange={(e) => {
                           const value = e.target.value;
-                          if (value === '' || /^[0-9\d]+$/.test(value)) {
+                          if (value === '' || /^[0-9]+$/.test(value)) {
                             field.onChange(value);
                           }
                         }}
@@ -181,7 +181,7 @@ function CreateCompanyDetails({ openModal, closeModal }) {
                         className={errors.companyBankCode ? 'is-invalid' : ''}
                         onChange={(e) => {
                           const value = e.target.value;
-                          if (value === '' || /^[0-9\d]+$/.test(value)) {
+                          if (value === '' || /^[0-9]+$/.test(value)) {
                             field.onChange(value);
                           }
                         }}

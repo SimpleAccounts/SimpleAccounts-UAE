@@ -128,7 +128,7 @@ const ProductModal = ({
 	const [isActive, setIsActive] = useState(true);
 	const [selectedStatus, setSelectedStatus] = useState(true);
 
-	const regEx = /^[0-9\d]+$/;
+	const regEx = /^[0-9]+$/;
 	const regExBoth = /[ +a-zA-Z0-9-./\\|!@#$%^&*()_<>,]+$/;
 	const regExAlpha = /^[a-zA-Z ]+$/;
 	const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$/;

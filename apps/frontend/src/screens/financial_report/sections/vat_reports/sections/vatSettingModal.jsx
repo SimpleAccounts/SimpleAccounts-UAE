@@ -62,7 +62,7 @@ const createValidationSchema = () => z.object({
 	}, { message: "Tax agency name must contain only alphabets" }),
 	taxAgentApprovalNumber: z.string().optional().refine((val) => {
 		if (!val) return true;
-		if (!/^[0-9\d]+$/.test(val)) return false;
+		if (!/^[0-9]+$/.test(val)) return false;
 		if (val.length !== 8) return false;
 		return true;
 	}, { message: "The TAAN must consist of an 8-digit number" }),
@@ -92,7 +92,7 @@ function VatSettingModalForm({ onSubmit, closeModal, commonActions, initValue })
 		defaultValues: initValue,
 	});
 
-	const regEx = /^[0-9\d]+$/;
+	const regEx = /^[0-9]+$/;
 	const regExBoth = /[a-zA-Z0-9]+$/;
 	const regExAlpha = /^[a-zA-Z ]+$/;
 

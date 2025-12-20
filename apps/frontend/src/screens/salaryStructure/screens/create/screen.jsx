@@ -25,7 +25,7 @@ import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 
-const regEx = /^[0-9\d]+$/;
+const regEx = /^[0-9]+$/;
 const regExAlpha = /^[a-zA-Z ]+$/;
 
 const strings = new LocalizedStrings(data);

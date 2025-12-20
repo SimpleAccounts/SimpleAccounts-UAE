@@ -46,7 +46,7 @@ let strings = new LocalizedStrings(data);
 
 const regExNum = /^[0-9]+$/;
 const regExAlpha = /^[a-zA-Z ]+$/;
-const regEx = /^[0-9\d]+$/;
+const regEx = /^[0-9]+$/;
 const regExBoth = /[a-zA-Z0-9]+$/;
 
 // Zod validation schema
@@ -66,7 +66,7 @@ const updateEmployeeBankSchema = z.object({
         .refine((val) => !/^0+$/.test(val), "Please enter a valid IBAN Number"),
     swiftCode: z.string().optional(),
     agentId: z.string().min(1, "Agent ID is required")
-        .regex(/^[0-9\d]+$/, "Only numbers are allowed")
+        .regex(/^[0-9]+$/, "Only numbers are allowed")
         .min(9, "Agent ID must be 9 digits")
         .max(9, "Agent ID must be 9 digits"),
 });

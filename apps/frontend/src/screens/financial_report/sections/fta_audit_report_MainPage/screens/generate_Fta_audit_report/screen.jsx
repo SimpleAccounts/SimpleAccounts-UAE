@@ -45,7 +45,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const regEx = /^[0-9\d]+$/;
+const regEx = /^[0-9]+$/;
 const regExTelephone = /^[0-9-]+$/;
 const regExBoth = /[a-zA-Z0-9]+$/;
 

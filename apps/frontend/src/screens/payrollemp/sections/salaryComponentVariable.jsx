@@ -37,7 +37,7 @@ const SalaryComponentVariable = ({
 	const [selectDisable, setSelectDisable] = useState(true);
 	const [addNewDisabled, setAddNewDisabled] = useState(false);
 
-	const regEx = /^[0-9\d]+$/;
+	const regEx = /^[0-9]+$/;
 	const regExAlpha = /^[a-zA-Z][a-zA-Z ]*$/;
 	const regDec1 = /^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 	const type = [

@@ -128,7 +128,7 @@ const CreateContact = ({
 	const [trnExist, setTrnExist] = useState(false);
 	const [emailExist, setEmailExist] = useState(false);
 
-	const regEx = /^[0-9\d]+$/;
+	const regEx = /^[0-9]+$/;
 	const regExTelephone = /^[0-9-]+$/;
 	const regExAlpha = /^[a-zA-Z ]+$/;
 	const regExAddress = /^[a-zA-Z0-9\s\D,'-/]+$/;

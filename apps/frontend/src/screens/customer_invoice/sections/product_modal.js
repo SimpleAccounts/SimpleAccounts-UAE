@@ -66,7 +66,7 @@ class ProductModal extends React.Component {
 			selectedStatus:true,
 		};
 		this.formRef = React.createRef();       
-		this.regEx = /^[0-9\d]+$/;
+		this.regEx = /^[0-9]+$/;
 		this.regExBoth = /[ +a-zA-Z0-9-./\\|!@#$%^&*()_<>,]+$/;
 		// this.regExBoth = /[a-zA-Z0-9 ]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;

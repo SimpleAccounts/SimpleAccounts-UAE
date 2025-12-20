@@ -70,7 +70,7 @@ function OpeningBalance() {
   });
   const [sorting, setSorting] = useState([]);
 
-  const regEx = /^[0-9\d]+$/;
+  const regEx = /^[0-9]+$/;
 
   useEffect(() => {
     strings.setLanguage(language);

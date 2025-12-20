@@ -44,7 +44,7 @@ const openingBalanceSchema = z.object({
 	currency: z.string().optional(),
 });
 
-const regEx = /^[0-9\d]+$/;
+const regEx = /^[0-9]+$/;
 
 const OpeningBalanceModal = ({
 	showOpeningBalanceModal,
