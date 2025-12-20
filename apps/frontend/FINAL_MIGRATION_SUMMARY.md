@@ -11,6 +11,7 @@ This document summarizes ALL files that have been migrated from Formik/Yup to Re
 ### 1. Import Screens
 
 #### 1.1 Import Migrate Section
+
 - **Original:** `src/screens/import/sections/migrate/screen.js`
 - **Migrated:** `src/screens/import/sections/migrate/screen.jsx`
 - **Updated:** `src/screens/import/sections/migrate/index.js`
@@ -22,6 +23,7 @@ This document summarizes ALL files that have been migrated from Formik/Yup to Re
   - Maintained all existing functionality
 
 #### 1.2 Import COA Modal
+
 - **Original:** `src/screens/import/modal/coaModal.js`
 - **Migrated:** `src/screens/import/modal/coaModal.jsx`
 - **Updated:** `src/screens/import/modal/index.js`
@@ -40,24 +42,29 @@ This document summarizes ALL files that have been migrated from Formik/Yup to Re
 ## Previously Migrated Files (Already Complete)
 
 ### 2. Import Screens (Main)
+
 - **File:** `src/screens/import/screen.jsx` ✅
 - **Index:** `src/screens/import/index.js` (already updated)
 
 ### 3. Import Bank Statement
+
 - **File:** `src/screens/import_bank_statement/screen.jsx` ✅
 - **Index:** `src/screens/import_bank_statement/index.js` (already updated)
 
 ### 4. Import Transaction
+
 - **File:** `src/screens/import_transaction/screen.jsx` ✅
 - **Index:** `src/screens/import_transaction/index.js` (already updated)
 
 ### 5. Salary Component Screens
 
 #### 5.1 Salary Component - Create/Detail
+
 - **File:** `src/screens/salary_component/screens/create/screen.jsx` ✅
 - **File:** `src/screens/salary_component/screens/detail/screen.jsx` ✅
 
 #### 5.2 Salary Component - Screen Component
+
 - **File:** `src/screens/salary_component/sections/screen_component/index.jsx` ✅
 - **Status:** Already migrated with React Hook Form + Zod
 - **Features:**
@@ -67,16 +74,19 @@ This document summarizes ALL files that have been migrated from Formik/Yup to Re
   - Conditional validation based on calculation type
 
 ### 6. Salary Roles Screens
+
 - **Create:** `src/screens/salaryRoles/screens/create/screen.jsx` ✅
 - **Detail:** `src/screens/salaryRoles/screens/detail/screen.jsx` ✅
 - **Index files:** Already updated
 
 ### 7. Salary Structure Screens
+
 - **Create:** `src/screens/salaryStructure/screens/create/screen.jsx` ✅
 - **Detail:** `src/screens/salaryStructure/screens/detail/screen.jsx` ✅
 - **Index files:** Already updated
 
 ### 8. Salary Template Screens
+
 - **Create:** `src/screens/salaryTemplate/screens/create/screen.jsx` ✅
 - **Detail:** `src/screens/salaryTemplate/screens/detail/screen.jsx` ✅
 - **Index files:** Already updated
@@ -86,6 +96,7 @@ This document summarizes ALL files that have been migrated from Formik/Yup to Re
 ## Migration Patterns Used
 
 ### 1. Class to Functional Component
+
 ```javascript
 // Before
 class ComponentName extends React.Component {
@@ -102,6 +113,7 @@ const ComponentName = (props) => {
 ```
 
 ### 2. Formik to React Hook Form
+
 ```javascript
 // Before (Formik)
 <Formik
@@ -124,6 +136,7 @@ const { control, handleSubmit, formState: { errors } } = useForm({
 ```
 
 ### 3. Form Field Implementation
+
 ```javascript
 // Before (Formik)
 <Input
@@ -169,6 +182,7 @@ const { control, handleSubmit, formState: { errors } } = useForm({
 ## Files That Don't Need Migration
 
 The following files were checked and either:
+
 - Already migrated (screen.jsx exists)
 - Don't contain forms (no Formik usage)
 - Are configuration/utility files

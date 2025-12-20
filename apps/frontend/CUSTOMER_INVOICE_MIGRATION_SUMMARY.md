@@ -1,14 +1,17 @@
 # Customer Invoice Migration Summary
 
 ## Overview
+
 Successfully migrated all remaining files in the `customer_invoice` screen directory from Formik/Yup to React Hook Form/Zod.
 
 ## Migration Date
+
 December 19, 2025
 
 ## Files Migrated
 
 ### Already Migrated (✓)
+
 1. **screens/create/screen.jsx** - Already using React Hook Form/Zod
 2. **screens/detail/screen.jsx** - Already using React Hook Form/Zod
 3. **screens/record_payment/screen.jsx** - Already using React Hook Form/Zod
@@ -16,10 +19,12 @@ December 19, 2025
 ### Newly Migrated Files
 
 #### 1. sections/createCN.jsx
+
 **Original:** `sections/createCN.js`
 **Status:** ✓ Migrated
 
 **Key Changes:**
+
 - Converted from class component to functional component
 - Replaced Formik with `useForm` hook from React Hook Form
 - Replaced Yup validation with Zod schema
@@ -29,6 +34,7 @@ December 19, 2025
 - Maintained all business logic for credit note creation
 
 **Zod Schema:**
+
 ```javascript
 const createCreditNoteSchema = z.object({
   creditNoteDate: z.date({
@@ -50,10 +56,12 @@ const createCreditNoteSchema = z.object({
 ```
 
 #### 2. sections/email_template.jsx
+
 **Original:** `sections/email_template.js`
 **Status:** ✓ Migrated
 
 **Key Changes:**
+
 - Converted from class component to functional component
 - Replaced Formik with `useForm` hook
 - Replaced Yup validation with Zod schema
@@ -62,6 +70,7 @@ const createCreditNoteSchema = z.object({
 - Maintained WYSIWYG editor integration
 
 **Zod Schema:**
+
 ```javascript
 const emailSchema = z.object({
   id: z.string().optional(),
@@ -73,10 +82,12 @@ const emailSchema = z.object({
 ```
 
 #### 3. sections/invoiceNum_model.jsx
+
 **Original:** `sections/invoiceNum_model.js`
 **Status:** ✓ Migrated
 
 **Key Changes:**
+
 - Converted from class component to functional component
 - Replaced Formik with `useForm` hook
 - Replaced Yup validation with Zod schema
@@ -85,6 +96,7 @@ const emailSchema = z.object({
 - Maintained prefix/suffix validation logic
 
 **Zod Schema:**
+
 ```javascript
 const invoiceNumberSchema = z.object({
   prefix: z.string().optional(),
@@ -95,10 +107,12 @@ const invoiceNumberSchema = z.object({
 ```
 
 #### 4. sections/multisupplier_product_modal.jsx
+
 **Original:** `sections/multisupplier_product_modal.js`
 **Status:** ✓ Migrated
 
 **Key Changes:**
+
 - Converted from class component to functional component
 - Replaced Formik with `useForm` hook
 - Replaced Yup validation with Zod schema
@@ -106,6 +120,7 @@ const invoiceNumberSchema = z.object({
 - Maintained Bootstrap Table integration
 
 **Zod Schema:**
+
 ```javascript
 const supplierModalSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
@@ -114,6 +129,7 @@ const supplierModalSchema = z.object({
 ```
 
 ### Updated Index File
+
 **File:** `sections/index.js`
 **Changes:** Updated imports to point to new `.jsx` files
 
@@ -126,7 +142,9 @@ import CreateCreditNoteModal from './createCN.jsx';
 ## Migration Patterns Used
 
 ### 1. Form Initialization
+
 **Before (Formik):**
+
 ```javascript
 <Formik
   initialValues={initValue}
@@ -138,6 +156,7 @@ import CreateCreditNoteModal from './createCN.jsx';
 ```
 
 **After (React Hook Form):**
+
 ```javascript
 const { control, handleSubmit, formState: { errors }, setValue, watch, reset } = useForm({
   resolver: zodResolver(schema),
@@ -146,14 +165,16 @@ const { control, handleSubmit, formState: { errors }, setValue, watch, reset } =
 ```
 
 ### 2. Form Fields
+
 **Before (Formik Field):**
+
 ```javascript
 <Field
   name="creditNoteDate"
   render={({ field, form }) => (
     <DatePicker
       value={props.values.creditNoteDate}
-      onChange={(value) => {
+      onChange={value => {
         props.handleChange('creditNoteDate')(value);
       }}
     />
@@ -162,22 +183,21 @@ const { control, handleSubmit, formState: { errors }, setValue, watch, reset } =
 ```
 
 **After (React Hook Form Controller):**
+
 ```javascript
 <Controller
   name="creditNoteDate"
   control={control}
   render={({ field }) => (
-    <DatePicker
-      {...field}
-      selected={field.value}
-      onChange={(date) => field.onChange(date)}
-    />
+    <DatePicker {...field} selected={field.value} onChange={date => field.onChange(date)} />
   )}
 />
 ```
 
 ### 3. Validation
+
 **Before (Yup):**
+
 ```javascript
 validationSchema={Yup.object().shape({
   creditNoteDate: Yup.date().required("Tax credit note date is required"),
@@ -185,6 +205,7 @@ validationSchema={Yup.object().shape({
 ```
 
 **After (Zod):**
+
 ```javascript
 const schema = z.object({
   creditNoteDate: z.date({
@@ -194,22 +215,25 @@ const schema = z.object({
 ```
 
 ### 4. Error Handling
+
 **Before (Formik):**
+
 ```javascript
-{props.errors.creditNoteDate && props.touched.creditNoteDate && (
-  <div className="invalid-feedback">
-    {props.errors.creditNoteDate}
-  </div>
-)}
+{
+  props.errors.creditNoteDate && props.touched.creditNoteDate && (
+    <div className="invalid-feedback">{props.errors.creditNoteDate}</div>
+  );
+}
 ```
 
 **After (React Hook Form):**
+
 ```javascript
-{errors.creditNoteDate && (
-  <div className="invalid-feedback d-block">
-    {errors.creditNoteDate.message}
-  </div>
-)}
+{
+  errors.creditNoteDate && (
+    <div className="invalid-feedback d-block">{errors.creditNoteDate.message}</div>
+  );
+}
 ```
 
 ## Benefits of Migration
@@ -283,4 +307,5 @@ src/screens/customer_invoice/
 5. Run integration tests to ensure everything works together
 
 ## Migration Completed By
+
 Claude Code - Anthropic's Official CLI for Claude

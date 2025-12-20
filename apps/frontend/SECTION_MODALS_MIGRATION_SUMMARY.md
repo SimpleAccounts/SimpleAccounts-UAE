@@ -1,11 +1,13 @@
 # Section Modals Migration Summary
 
 ## Overview
+
 This document summarizes the migration of section modal files from Formik/Yup to React Hook Form/Zod in the Request for Quotation and Purchase Order modules.
 
 ## Files Migrated
 
 ### Request for Quotation Module
+
 **Location**: `src/screens/request_for_quotation/sections/`
 
 1. ✅ **supplier_modal.js → supplier_modal.jsx**
@@ -36,6 +38,7 @@ This document summarizes the migration of section modal files from Formik/Yup to
    - **See**: `MIGRATION_NOTES.md` for detailed migration strategy
 
 ### Purchase Order Module
+
 **Location**: `src/screens/purchase_order/sections/`
 
 3. ✅ **supplier_modal.js → supplier_modal.jsx**
@@ -78,6 +81,7 @@ Updated the following index files to import from new .jsx files:
 ### Fully Migrated Files (Supplier Modals)
 
 #### React Hook Form Setup
+
 ```javascript
 const {
   control,
@@ -87,11 +91,14 @@ const {
   formState: { errors },
 } = useForm({
   resolver: zodResolver(supplierSchema),
-  defaultValues: { /* ... */ },
+  defaultValues: {
+    /* ... */
+  },
 });
 ```
 
 #### Zod Schema
+
 ```javascript
 const supplierSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
@@ -101,16 +108,12 @@ const supplierSchema = z.object({
 ```
 
 #### Controller Pattern
+
 ```javascript
 <Controller
   name="firstName"
   control={control}
-  render={({ field }) => (
-    <Input
-      {...field}
-      className={errors.firstName ? 'is-invalid' : ''}
-    />
-  )}
+  render={({ field }) => <Input {...field} className={errors.firstName ? 'is-invalid' : ''} />}
 />
 ```
 
@@ -127,9 +130,11 @@ const supplierSchema = z.object({
 ## Files Requiring Future Work
 
 ### High Priority
+
 Both `createPo.jsx` and `createGRN.jsx` need full migration:
 
 **Recommended Migration Strategy**:
+
 1. **Phase 1**: Convert class to functional component
 2. **Phase 2**: Replace Formik with React Hook Form
 3. **Phase 3**: Migrate table row logic to useFieldArray
@@ -138,6 +143,7 @@ Both `createPo.jsx` and `createGRN.jsx` need full migration:
 6. **Phase 6**: Test thoroughly with real data
 
 **Complexity Factors**:
+
 - Redux connection (consider migrating to Redux Toolkit)
 - Dynamic table rows with per-field validation
 - Complex amount calculations
@@ -147,6 +153,7 @@ Both `createPo.jsx` and `createGRN.jsx` need full migration:
 ## Testing Recommendations
 
 ### For Migrated Files (Supplier Modals)
+
 - [ ] Test form submission with valid data
 - [ ] Test validation error display
 - [ ] Test phone number validation (12 digits)
@@ -157,6 +164,7 @@ Both `createPo.jsx` and `createGRN.jsx` need full migration:
 - [ ] Test modal open/close behavior
 
 ### For Placeholder Files (createPo/createGRN)
+
 - [ ] Verify existing functionality still works
 - [ ] Plan comprehensive migration approach
 - [ ] Create unit tests before migration
@@ -167,6 +175,7 @@ Both `createPo.jsx` and `createGRN.jsx` need full migration:
 ## Benefits of Migration
 
 ### Completed Migrations
+
 1. **Better TypeScript Support**: Zod schemas provide better type inference
 2. **Improved Performance**: React Hook Form reduces re-renders
 3. **Cleaner Code**: Functional components are more maintainable
@@ -174,7 +183,9 @@ Both `createPo.jsx` and `createGRN.jsx` need full migration:
 5. **Better Error Handling**: More granular control over validation
 
 ### Pending Migrations
+
 The complex table components will benefit from:
+
 1. **useFieldArray**: Better array field management
 2. **Custom Hooks**: Separation of calculation logic
 3. **Component Composition**: Breaking into smaller components
@@ -183,6 +194,7 @@ The complex table components will benefit from:
 ## Dependencies
 
 All migrated files use:
+
 - `react-hook-form`: ^7.x
 - `@hookform/resolvers`: ^3.x
 - `zod`: ^3.x

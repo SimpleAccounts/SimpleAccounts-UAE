@@ -7,6 +7,7 @@ This document outlines the current migration status of currency and currencyConv
 ## Currency Convert Screens ✅ ALREADY MIGRATED
 
 ### 1. Create Currency Convert
+
 - **Path**: `apps/frontend/src/screens/currencyConvert/screens/create/`
 - **Status**: ✅ FULLY MIGRATED
 - **File**: `screen.jsx`
@@ -20,6 +21,7 @@ This document outlines the current migration status of currency and currencyConv
   - Leave page detection
 
 ### 2. Detail Currency Convert
+
 - **Path**: `apps/frontend/src/screens/currencyConvert/screens/detail/`
 - **Status**: ✅ FULLY MIGRATED
 - **File**: `screen.jsx`
@@ -35,6 +37,7 @@ This document outlines the current migration status of currency and currencyConv
 ## Currency Screens - Analysis
 
 ### 1. Main Currency List Screen
+
 - **Path**: `apps/frontend/src/screens/currency/`
 - **Status**: ⚠️ PARTIALLY MIGRATED
 - **Files**:
@@ -44,6 +47,7 @@ This document outlines the current migration status of currency and currencyConv
   - The new `screen.jsx` has a modal but with minimal form implementation
 
 ### 2. Currency Create Screen
+
 - **Path**: `apps/frontend/src/screens/currency/screens/create/`
 - **Status**: ❌ EMPTY STUB
 - **Files**:
@@ -52,6 +56,7 @@ This document outlines the current migration status of currency and currencyConv
 - **Note**: This appears to be a placeholder that was never implemented. The create functionality is in the main screen modal.
 
 ### 3. Currency Detail Screen
+
 - **Path**: `apps/frontend/src/screens/currency/screens/detail/`
 - **Status**: ❌ EMPTY STUB
 - **Files**:
@@ -71,13 +76,16 @@ This is a valid design pattern. The currency list is simpler and works well with
 ## Migration Status
 
 ### Already Complete ✅
+
 1. ✅ currencyConvert/screens/create - React Hook Form + Zod
 2. ✅ currencyConvert/screens/detail - React Hook Form + Zod
 
 ### Already Partially Done ⚠️
+
 3. ⚠️ currency main screen - Has new shadcn/ui version but form needs React Hook Form + Zod
 
 ### Not Applicable ❌
+
 4. ❌ currency/screens/create - Empty stub, never implemented
 5. ❌ currency/screens/detail - Empty stub, never implemented
 
@@ -86,13 +94,16 @@ This is a valid design pattern. The currency list is simpler and works well with
 The currency create/detail screens are empty stubs and were never meant to contain functionality. The actual currency create/update logic should be migrated in the main currency screen's modal.
 
 ### What's Already Done ✅
+
 - **currencyConvert/screens/create** - Fully migrated to React Hook Form + Zod (see CURRENCY_CONVERT_MIGRATION_SUMMARY.md)
 - **currencyConvert/screens/detail** - Fully migrated to React Hook Form + Zod (see CURRENCY_CONVERT_MIGRATION_SUMMARY.md)
 
 ### What Needs to be Done
+
 - **currency/screen.jsx** modal - Enhance the modal to use React Hook Form + Zod for the currency create/update form
 
 ### What's Not Applicable ❌
+
 - **currency/screens/create** - Empty stub, no functionality to migrate
 - **currency/screens/detail** - Empty stub, no functionality to migrate
 

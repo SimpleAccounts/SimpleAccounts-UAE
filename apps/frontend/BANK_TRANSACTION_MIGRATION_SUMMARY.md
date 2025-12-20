@@ -10,10 +10,12 @@
 ### screen.jsx (Create Transaction)
 
 **Imports Changed:**
+
 - ❌ `import { Checkbox } from '@material-ui/core';`
 - ✅ `import { Checkbox } from "@/components/ui/checkbox";`
 
 **Component Changes:**
+
 - `<Checkbox checked={...} onChange={...} />` → `<Checkbox checked={...} onCheckedChange={...} />`
 - Changed `onChange` to `onCheckedChange` for shadcn/ui Checkbox compatibility
 
@@ -22,6 +24,7 @@
 ### explain_transaction_detail.jsx
 
 **Imports Changed:**
+
 - ❌ `import IconButton from "@material-ui/core/IconButton";`
 - ❌ `import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";`
 - ❌ `import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";`
@@ -31,6 +34,7 @@
 - ✅ `import { Checkbox } from "@/components/ui/checkbox";`
 
 **Component Changes:**
+
 1. **IconButton → ShadcnButton**
    - `<IconButton size="medium" aria-label="delete" onClick={...}>` → `<ShadcnButton variant="ghost" size="icon" aria-label="delete" onClick={...}>`
    - Aliased as `ShadcnButton` to avoid conflict with reactstrap's `Button`
@@ -42,7 +46,8 @@
 3. **Checkbox**
    - Changed `onChange` to `onCheckedChange` for shadcn/ui Checkbox compatibility
 
-**Instances Updated:** 
+**Instances Updated:**
+
 - 1 IconButton component
 - 2 Material icons (ArrowUpward, ArrowDownward)
 - 1 Checkbox component
@@ -50,6 +55,7 @@
 ## Key Migration Patterns
 
 ### Checkbox Migration
+
 ```jsx
 // Before (Material-UI)
 <Checkbox
@@ -67,6 +73,7 @@
 ```
 
 ### IconButton Migration
+
 ```jsx
 // Before (Material-UI)
 <IconButton

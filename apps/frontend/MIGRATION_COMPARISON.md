@@ -3,6 +3,7 @@
 ## 1. Invoice Additional Information Component
 
 ### Before (Material-UI):
+
 ```javascript
 import { TextField } from '@material-ui/core';
 
@@ -15,12 +16,13 @@ import { TextField } from '@material-ui/core';
   id="notes"
   maxRows="4"
   placeholder={notesPlaceholder}
-  onChange={(option) => onChange('notes', option)}
+  onChange={option => onChange('notes', option)}
   value={notesValue ?? ''}
-/>
+/>;
 ```
 
 ### After (shadcn/ui):
+
 ```javascript
 import { Textarea } from '@/components/ui/textarea';
 
@@ -31,12 +33,13 @@ import { Textarea } from '@/components/ui/textarea';
   name="notes"
   id="notes"
   placeholder={notesPlaceholder}
-  onChange={(option) => onChange('notes', option)}
+  onChange={option => onChange('notes', option)}
   value={notesValue ?? ''}
-/>
+/>;
 ```
 
 **Key Changes:**
+
 - Replaced `TextField` with `Textarea`
 - Removed `inputProps` prop - use direct props instead
 - Replaced `multiline` with `rows` prop
@@ -48,6 +51,7 @@ import { Textarea } from '@/components/ui/textarea';
 ## 2. Profile Screen
 
 ### Before (Material-UI):
+
 ```javascript
 import { Message } from '@material-ui/icons';
 import { ThemeProvider } from '@material-ui/core';
@@ -55,7 +59,7 @@ import { ThemeProvider } from '@material-ui/core';
 // Class component with Formik
 class Profile extends React.Component {
   // ... state and methods
-  
+
   render() {
     return (
       <Card>
@@ -71,6 +75,7 @@ class Profile extends React.Component {
 ```
 
 ### After (shadcn/ui):
+
 ```javascript
 import { User, Building2, Lock, Eye, EyeOff, Save, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -109,6 +114,7 @@ function Profile() {
 ```
 
 **Key Changes:**
+
 - Converted class component to functional component
 - Replaced Formik with React Hook Form + Zod
 - Replaced Material-UI icons with lucide-react
@@ -122,6 +128,7 @@ function Profile() {
 ## 3. Import Transaction Screen
 
 ### Before (Material-UI):
+
 ```javascript
 import { ThreeSixty } from '@material-ui/icons';
 import { ThemeProvider } from '@material-ui/core';
@@ -152,6 +159,7 @@ class ImportTransaction extends React.Component {
 ```
 
 ### After (shadcn/ui):
+
 ```javascript
 import { Upload, Check, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -160,7 +168,7 @@ import { Table, TableBody, TableCell, TableHead } from '@/components/ui/table';
 
 function ImportTransaction() {
   const [isHeaderRow, setIsHeaderRow] = useState(false);
-  
+
   // Modern hooks-based logic
 
   return (
@@ -175,12 +183,10 @@ function ImportTransaction() {
         <Checkbox
           id="isHeaderRow"
           checked={isHeaderRow}
-          onCheckedChange={(checked) => setIsHeaderRow(checked)}
+          onCheckedChange={checked => setIsHeaderRow(checked)}
         />
-        
-        <Table>
-          {/* Modern table structure */}
-        </Table>
+
+        <Table>{/* Modern table structure */}</Table>
       </CardContent>
     </Card>
   );
@@ -188,6 +194,7 @@ function ImportTransaction() {
 ```
 
 **Key Changes:**
+
 - Converted class component to functional component
 - Replaced Material-UI icons with lucide-react
 - Replaced native checkbox with shadcn/ui Checkbox
@@ -202,52 +209,56 @@ function ImportTransaction() {
 
 ### Checkbox Component
 
-| Aspect | Material-UI | shadcn/ui |
-|--------|-------------|-----------|
-| Import | `import { Checkbox } from '@material-ui/core'` | `import { Checkbox } from '@/components/ui/checkbox'` |
-| Event Handler | `onChange={(e) => setValue(e.target.checked)}` | `onCheckedChange={(checked) => setValue(checked)}` |
-| Checked Prop | `checked={value}` | `checked={value}` (same) |
-| Value Access | `e.target.checked` | Direct boolean parameter |
+| Aspect        | Material-UI                                    | shadcn/ui                                             |
+| ------------- | ---------------------------------------------- | ----------------------------------------------------- |
+| Import        | `import { Checkbox } from '@material-ui/core'` | `import { Checkbox } from '@/components/ui/checkbox'` |
+| Event Handler | `onChange={(e) => setValue(e.target.checked)}` | `onCheckedChange={(checked) => setValue(checked)}`    |
+| Checked Prop  | `checked={value}`                              | `checked={value}` (same)                              |
+| Value Access  | `e.target.checked`                             | Direct boolean parameter                              |
 
 ### TextField/Textarea Component
 
-| Aspect | Material-UI | shadcn/ui |
-|--------|-------------|-----------|
-| Import | `import { TextField } from '@material-ui/core'` | `import { Textarea } from '@/components/ui/textarea'` |
-| Multiline | `multiline` prop | Use `Textarea` component |
-| Max Length | `inputProps={{ maxLength: 255 }}` | `maxLength={255}` |
-| Rows | `maxRows="4"` | `rows={4}` |
-| Styling | Material-UI classes | Tailwind CSS utilities |
+| Aspect     | Material-UI                                     | shadcn/ui                                             |
+| ---------- | ----------------------------------------------- | ----------------------------------------------------- |
+| Import     | `import { TextField } from '@material-ui/core'` | `import { Textarea } from '@/components/ui/textarea'` |
+| Multiline  | `multiline` prop                                | Use `Textarea` component                              |
+| Max Length | `inputProps={{ maxLength: 255 }}`               | `maxLength={255}`                                     |
+| Rows       | `maxRows="4"`                                   | `rows={4}`                                            |
+| Styling    | Material-UI classes                             | Tailwind CSS utilities                                |
 
 ### Icon Components
 
-| Material-UI | lucide-react | Usage |
-|-------------|--------------|-------|
-| `Message` | `MessageSquare` | Messaging icon |
-| `ThreeSixty` | `Upload`, `RotateCw` | Upload/rotate icons |
-| Font Awesome classes | lucide-react components | All icons |
+| Material-UI          | lucide-react            | Usage               |
+| -------------------- | ----------------------- | ------------------- |
+| `Message`            | `MessageSquare`         | Messaging icon      |
+| `ThreeSixty`         | `Upload`, `RotateCw`    | Upload/rotate icons |
+| Font Awesome classes | lucide-react components | All icons           |
 
 ---
 
 ## Benefits Summary
 
 ### Performance
+
 - **Bundle Size:** ~70% reduction by removing Material-UI
 - **Runtime:** Faster component rendering with Radix UI primitives
 - **Tree Shaking:** Better dead code elimination
 
 ### Developer Experience
+
 - **TypeScript:** Full type safety out of the box
 - **Customization:** Easier to customize with Tailwind CSS
 - **Documentation:** Better component documentation
 - **Copy-Paste:** Can copy components directly from shadcn/ui
 
 ### Accessibility
+
 - **ARIA:** Built-in ARIA attributes with Radix UI
 - **Keyboard:** Full keyboard navigation support
 - **Screen Readers:** Better screen reader compatibility
 
 ### Maintenance
+
 - **Dependencies:** Fewer dependencies to manage
 - **Updates:** Components are in your codebase (no breaking changes from library updates)
 - **Consistency:** Unified design system with Tailwind CSS

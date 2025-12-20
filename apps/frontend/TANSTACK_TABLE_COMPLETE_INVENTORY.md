@@ -33,6 +33,7 @@ These are the primary data listing screens that should be migrated first:
 ## Medium Priority - Supporting Screens (30+ files)
 
 ### Invoice/Note Detail & Create Screens
+
 - `/apps/frontend/src/screens/customer_invoice/screens/detail/screen.js`
 - `/apps/frontend/src/screens/customer_invoice/screens/detail/screen.jsx`
 - `/apps/frontend/src/screens/supplier_invoice/screens/create/screen.js`
@@ -49,6 +50,7 @@ These are the primary data listing screens that should be migrated first:
 - `/apps/frontend/src/screens/debitNotes/screens/detail/screen.jsx`
 
 ### Quotation Related
+
 - `/apps/frontend/src/screens/quotation/screens/create/screen.js`
 - `/apps/frontend/src/screens/quotation/screens/detail/screen.js`
 - `/apps/frontend/src/screens/quotation/screens/detail/screen.jsx`
@@ -56,6 +58,7 @@ These are the primary data listing screens that should be migrated first:
 - `/apps/frontend/src/screens/quotation/screens/view/screen.jsx`
 
 ### Purchase Order & RFQ
+
 - `/apps/frontend/src/screens/purchase_order/screens/create/screen.js`
 - `/apps/frontend/src/screens/purchase_order/screens/create/screen.jsx`
 - `/apps/frontend/src/screens/purchase_order/screens/detail/screen.js`
@@ -67,17 +70,20 @@ These are the primary data listing screens that should be migrated first:
 - `/apps/frontend/src/screens/request_for_quotation/screens/detail/screen.jsx`
 
 ### Goods Received Note
+
 - `/apps/frontend/src/screens/goods_received_note/screens/create/screen.js`
 - `/apps/frontend/src/screens/goods_received_note/screens/create/screen.jsx`
 - `/apps/frontend/src/screens/goods_received_note/screens/detail/screen.js`
 - `/apps/frontend/src/screens/goods_received_note/screens/detail/screen.jsx`
 
 ### Receipt & Payment
+
 - `/apps/frontend/src/screens/receipt/screens/create/screen.js`
 - `/apps/frontend/src/screens/receipt/screens/create/screen.jsx`
 - `/apps/frontend/src/screens/payment/screens/create/screen.jsx`
 
 ### Product & Inventory
+
 - `/apps/frontend/src/screens/product/screens/detail/screen.js`
 - `/apps/frontend/src/screens/product/screens/detail/screen.jsx`
 - `/apps/frontend/src/screens/product/screens/inventory_edit/screen.js`
@@ -89,6 +95,7 @@ These are the primary data listing screens that should be migrated first:
 ## Lower Priority - Supporting Components & Modals (40+ files)
 
 ### Modal Components
+
 - `/apps/frontend/src/screens/customer_invoice/sections/createCN.js`
 - `/apps/frontend/src/screens/customer_invoice/sections/createCN.jsx`
 - `/apps/frontend/src/screens/customer_invoice/sections/multisupplier_product_modal.js`
@@ -102,6 +109,7 @@ These are the primary data listing screens that should be migrated first:
 - `/apps/frontend/src/screens/inventory/sections/inventory_summary/sections/invetoryHistorymodal.js`
 
 ### Financial Reports
+
 - `/apps/frontend/src/screens/financial_report/sections/ar_aging_report/screen.js`
 - `/apps/frontend/src/screens/financial_report/sections/corporate_tax/screens/payment_history/screen.js`
 - `/apps/frontend/src/screens/financial_report/sections/corporate_tax/sections/deleteModal.js`
@@ -115,11 +123,13 @@ These are the primary data listing screens that should be migrated first:
 - `/apps/frontend/src/screens/financial_report/sections/vat_reports/sections/vatSettingModal.js`
 
 ### Transaction Reports
+
 - `/apps/frontend/src/screens/transactions_report/sections/account_balance/index.js`
 - `/apps/frontend/src/screens/transactions_report/sections/customer_report/index.js`
 - `/apps/frontend/src/screens/transactions_report/sections/expense_report/index.js`
 
 ### Payroll Screens
+
 - `/apps/frontend/src/screens/payroll_configurations/screen.js`
 - `/apps/frontend/src/screens/payroll_configurations/screen.jsx`
 - `/apps/frontend/src/screens/payroll_run/screen.js`
@@ -146,6 +156,7 @@ These are the primary data listing screens that should be migrated first:
 - `/apps/frontend/src/screens/salaryTemplate/screen.js`
 
 ### Settings & Configuration
+
 - `/apps/frontend/src/screens/currency/screen.js`
 - `/apps/frontend/src/screens/currencyConvert/screen.js`
 - `/apps/frontend/src/screens/transaction_category/screen.js`
@@ -157,6 +168,7 @@ These are the primary data listing screens that should be migrated first:
 - `/apps/frontend/src/screens/opening_balance/screen.js`
 
 ### Import & Bank
+
 - `/apps/frontend/src/screens/import/screen.js`
 - `/apps/frontend/src/screens/import/sections/migrate/screen.js`
 - `/apps/frontend/src/screens/import/sections/migrate/screen.jsx`
@@ -166,6 +178,7 @@ These are the primary data listing screens that should be migrated first:
 - `/apps/frontend/src/screens/bank_account/screens/transactions/screens/reconcile/screen.js`
 
 ### Other
+
 - `/apps/frontend/src/screens/journal/screens/create/screen.jsx`
 - `/apps/frontend/src/screens/journal/screens/detail/screen.jsx`
 - `/apps/frontend/src/screens/organization/screen.js`
@@ -177,11 +190,14 @@ These are the primary data listing screens that should be migrated first:
 ## Migration Strategy
 
 ### Phase 1: Core Invoice Screens (Completed)
+
 - [x] customer_invoice/screen.js
 - [x] supplier_invoice/screen.js
 
 ### Phase 2: High Priority Listing Screens (4-6 hours)
+
 Focus on main listing screens that users interact with most:
+
 1. creditNotes, debitNotes
 2. quotation, purchase_order
 3. receipt, payment
@@ -190,7 +206,9 @@ Focus on main listing screens that users interact with most:
 6. bank_account, goods_received_note
 
 ### Phase 3: Supporting Detail/Create Screens (6-8 hours)
+
 Migrate detail and create screens for migrated listing screens:
+
 - Invoice detail screens
 - Note detail screens
 - Order create/detail screens
@@ -198,18 +216,21 @@ Migrate detail and create screens for migrated listing screens:
 - Product detail/inventory screens
 
 ### Phase 4: Reports & Financial Screens (4-6 hours)
+
 - Financial reports
 - Transaction reports
 - VAT reports
 - Tax reports
 
 ### Phase 5: Payroll Screens (6-8 hours)
+
 - Payroll configurations
 - Payroll run screens
 - Employee screens
 - Salary component screens
 
 ### Phase 6: Settings & Modals (4-6 hours)
+
 - Currency, VAT codes
 - User management
 - Import screens
@@ -241,7 +262,7 @@ Given the scope of this migration:
 - Some files appear multiple times (e.g., screen.js and screen.jsx) - these are duplicates
 - Many modal components use tables for selection - these may be lower priority
 - Report screens may have different requirements than CRUD screens
-- Backup files (_backup.js) should be excluded from migration
+- Backup files (\_backup.js) should be excluded from migration
 
 ---
 

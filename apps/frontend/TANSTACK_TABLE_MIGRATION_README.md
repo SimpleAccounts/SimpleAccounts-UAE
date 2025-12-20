@@ -16,6 +16,7 @@ This is a comprehensive migration from `react-bootstrap-table-next` to `@tanstac
 ## Current Status
 
 **Completed**: 2 of 118 files (1.7%)
+
 - ✅ Customer Invoice listing screen
 - ✅ Supplier Invoice listing screen
 
@@ -90,9 +91,11 @@ This is a comprehensive migration from `react-bootstrap-table-next` to `@tanstac
 ### New Components Created
 
 #### ServerDataTable
+
 **Location**: `/apps/frontend/src/components/ui/server-data-table.jsx`
 
 Main table component supporting:
+
 - Server-side pagination
 - Server-side sorting
 - Row selection
@@ -100,6 +103,7 @@ Main table component supporting:
 - Empty states
 
 **Usage**:
+
 ```jsx
 <ServerDataTable
   columns={this.getColumns()}
@@ -107,13 +111,13 @@ Main table component supporting:
   pageCount={Math.ceil(totalCount / pageSize)}
   totalCount={totalCount}
   pagination={{ pageIndex: 0, pageSize: 10 }}
-  onPaginationChange={(newPagination) => {
+  onPaginationChange={newPagination => {
     this.setState({ pagination: newPagination }, () => {
       this.initializeData();
     });
   }}
   sorting={sorting}
-  onSortingChange={(newSorting) => {
+  onSortingChange={newSorting => {
     this.setState({ sorting: newSorting }, () => {
       this.initializeData();
     });
@@ -122,9 +126,11 @@ Main table component supporting:
 ```
 
 #### ServerDataTablePagination
+
 **Location**: `/apps/frontend/src/components/ui/server-data-table-pagination.jsx`
 
 Pagination UI component with:
+
 - First/Previous/Next/Last navigation
 - Page size selector
 - Page indicator
@@ -140,19 +146,18 @@ Pagination UI component with:
 ## Migration Pattern Overview
 
 ### Before (BootstrapTable)
+
 ```jsx
-<BootstrapTable
-  data={data}
-  options={this.options}
-  remote
-  pagination
->
-  <TableHeaderColumn dataField="id" isKey>ID</TableHeaderColumn>
+<BootstrapTable data={data} options={this.options} remote pagination>
+  <TableHeaderColumn dataField="id" isKey>
+    ID
+  </TableHeaderColumn>
   <TableHeaderColumn dataField="name">Name</TableHeaderColumn>
 </BootstrapTable>
 ```
 
 ### After (TanStack Table)
+
 ```jsx
 <ServerDataTable
   columns={[
@@ -169,14 +174,14 @@ Pagination UI component with:
 
 ## Key Differences
 
-| Feature | BootstrapTable | TanStack Table |
-|---------|----------------|----------------|
-| Page Index | 1-based | 0-based |
-| Sorting | Separate props | Array of objects |
-| Columns | JSX children | Array of objects |
-| Pagination | Built-in UI | Custom component |
-| Architecture | Monolithic | Headless |
-| Bundle Size | Larger | Smaller |
+| Feature      | BootstrapTable | TanStack Table   |
+| ------------ | -------------- | ---------------- |
+| Page Index   | 1-based        | 0-based          |
+| Sorting      | Separate props | Array of objects |
+| Columns      | JSX children   | Array of objects |
+| Pagination   | Built-in UI    | Custom component |
+| Architecture | Monolithic     | Headless         |
+| Bundle Size  | Larger         | Smaller          |
 
 ## Migration Workflow
 
@@ -190,6 +195,7 @@ Pagination UI component with:
 ## Testing Requirements
 
 For each migrated screen, verify:
+
 - [ ] Initial data load
 - [ ] Pagination (all buttons and page size)
 - [ ] Sorting (ascending/descending/clear)
@@ -204,11 +210,14 @@ See `TANSTACK_TABLE_MIGRATION_CHECKLIST.md` for detailed testing checklist.
 ## Priority Order
 
 ### Phase 1: Core Screens (Completed ✅)
+
 - Customer Invoice
 - Supplier Invoice
 
 ### Phase 2: High Priority (4-6 hours)
+
 Main listing screens users interact with daily:
+
 1. Credit Notes & Debit Notes
 2. Quotations & Purchase Orders
 3. Receipts & Payments
@@ -217,24 +226,31 @@ Main listing screens users interact with daily:
 6. Bank Accounts & Goods Received Notes
 
 ### Phase 3+: See Complete Inventory
+
 Refer to `TANSTACK_TABLE_COMPLETE_INVENTORY.md` for full migration plan.
 
 ## Team Collaboration
 
 ### Assigning Work
+
 Use `TANSTACK_TABLE_MIGRATION_CHECKLIST.md` to:
+
 - Assign screens to team members
 - Track individual progress
 - Coordinate testing efforts
 
 ### Parallel Development
+
 Multiple developers can work simultaneously on:
+
 - Different main screens
 - Different sections (invoices vs. payroll vs. reports)
 - Detail screens vs. listing screens
 
 ### Code Review Focus
+
 When reviewing migrated screens, verify:
+
 1. Column definitions match original functionality
 2. Pagination state is 0-based (not 1-based)
 3. Sorting properly converts to backend format
@@ -247,6 +263,7 @@ When reviewing migrated screens, verify:
 If issues are discovered:
 
 ### Single Screen Rollback
+
 ```bash
 cd /apps/frontend/src/screens/[screen-name]
 mv screen.js screen-tanstack.js.failed
@@ -254,6 +271,7 @@ mv screen-bootstrap-table.js.bak screen.js
 ```
 
 ### Git Rollback
+
 ```bash
 git log --oneline  # Find commit
 git revert <commit-hash>
@@ -262,10 +280,13 @@ git revert <commit-hash>
 ## Dependencies
 
 ### Already Installed ✅
+
 - `@tanstack/react-table` v8.21.3
 
 ### Can Be Removed Later
+
 Once all migrations complete:
+
 - `react-bootstrap-table`
 - `react-bootstrap-table-next`
 - `react-bootstrap-table2-paginator`
@@ -275,6 +296,7 @@ Don't remove until all 118 files are migrated!
 ## Getting Help
 
 ### Documentation Order
+
 1. Start with: `TANSTACK_TABLE_QUICK_REFERENCE.md`
 2. For details: `TANSTACK_TABLE_MIGRATION_GUIDE.md`
 3. Check examples: Customer/Supplier Invoice screen files
@@ -297,6 +319,7 @@ Don't remove until all 118 files are migrated!
 ## Success Metrics
 
 Track these metrics before/after complete migration:
+
 - Bundle size reduction (expected: 50-100KB)
 - Initial load time
 - Time to interactive
@@ -306,6 +329,7 @@ Track these metrics before/after complete migration:
 ## Timeline
 
 Based on completed work:
+
 - **Phase 1** (2 screens): 1 hour ✅
 - **Phase 2** (12 screens): 4-6 hours
 - **Phase 3** (30 screens): 6-8 hours

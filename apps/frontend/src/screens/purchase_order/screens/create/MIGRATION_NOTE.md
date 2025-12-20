@@ -5,6 +5,7 @@
 This file (screen.js - 3258 lines) is being migrated from Formik/Yup to React Hook Form/Zod.
 
 ## Complexity Analysis
+
 - Class-based component with 20+ render methods
 - Complex BootstrapTable integration with custom cell renderers
 - Extensive state management (20+ state variables)
@@ -14,7 +15,9 @@ This file (screen.js - 3258 lines) is being migrated from Formik/Yup to React Ho
 - Supplier and product modals
 
 ## Migration Strategy
+
 Due to the extreme size and complexity, this migration requires:
+
 1. Converting class component to function component with hooks
 2. Replacing Formik with useForm hook
 3. Converting Yup schema to Zod schema
@@ -23,6 +26,7 @@ Due to the extreme size and complexity, this migration requires:
 6. Maintaining all business logic and calculations
 
 ## Key Validation Rules (from Yup schema)
+
 - po_number: Required string
 - supplierId: Required string
 - poApproveDate: Required date

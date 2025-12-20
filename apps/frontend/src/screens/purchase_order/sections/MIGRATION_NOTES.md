@@ -1,6 +1,7 @@
 # Migration Notes for Purchase Order Sections
 
 ## Files Migrated
+
 - ✅ `supplier_modal.js` → `supplier_modal.jsx` (Completed)
 - ⚠️ `createGRN.js` → `createGRN.jsx` (Needs manual review)
 
@@ -28,6 +29,7 @@ Due to the complexity, this file requires:
 ### Recommended Approach
 
 This file should be migrated in phases:
+
 1. Convert class to functional component
 2. Replace Formik with React Hook Form
 3. Migrate validation schema to Zod

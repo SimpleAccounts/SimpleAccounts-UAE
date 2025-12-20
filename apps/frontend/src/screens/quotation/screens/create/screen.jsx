@@ -115,11 +115,9 @@ const createQuotationSchema = z
           quantity: z
             .union([z.string(), z.number()])
             .refine(value => parseFloat(value) > 0, { message: 'Quantity must be greater than 0' }),
-          unitPrice: z
-            .union([z.string(), z.number()])
-            .refine(value => parseFloat(value) > 0, {
-              message: 'Unit price must be greater than 0',
-            }),
+          unitPrice: z.union([z.string(), z.number()]).refine(value => parseFloat(value) > 0, {
+            message: 'Unit price must be greater than 0',
+          }),
           vatCategoryId: z
             .union([z.string(), z.number()])
             .refine(value => value !== '', { message: 'VAT is required' }),

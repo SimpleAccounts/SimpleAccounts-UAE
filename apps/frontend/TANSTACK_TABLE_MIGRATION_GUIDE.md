@@ -9,9 +9,11 @@ The codebase is being migrated from `react-bootstrap-table-next` to TanStack Tab
 ## New Components Created
 
 ### 1. ServerDataTable Component
+
 Location: `/apps/frontend/src/components/ui/server-data-table.jsx`
 
 A server-side data table component that handles:
+
 - Server-side pagination
 - Server-side sorting
 - Row selection (optional)
@@ -19,6 +21,7 @@ A server-side data table component that handles:
 - Empty states
 
 **Props:**
+
 - `columns` - Column definitions (TanStack format)
 - `data` - Current page data array
 - `pageCount` - Total number of pages
@@ -34,9 +37,11 @@ A server-side data table component that handles:
 - `emptyMessage` - Message when no data
 
 ### 2. ServerDataTablePagination Component
+
 Location: `/apps/frontend/src/components/ui/server-data-table-pagination.jsx`
 
 Provides pagination UI with:
+
 - First/Previous/Next/Last page navigation
 - Page size selector (10, 20, 30, 40, 50)
 - Current page indicator
@@ -69,17 +74,17 @@ this.options = {
   fetchInfo={{ dataTotalSize: invoice_list.count }}
   options={this.options}
 >
-  <TableHeaderColumn dataField="id" isKey hidden>ID</TableHeaderColumn>
+  <TableHeaderColumn dataField="id" isKey hidden>
+    ID
+  </TableHeaderColumn>
   <TableHeaderColumn dataField="invoiceNumber" dataSort>
     Invoice Number
   </TableHeaderColumn>
   <TableHeaderColumn dataField="status" dataFormat={this.renderStatus}>
     Status
   </TableHeaderColumn>
-  <TableHeaderColumn dataFormat={this.renderActions}>
-    Actions
-  </TableHeaderColumn>
-</BootstrapTable>
+  <TableHeaderColumn dataFormat={this.renderActions}>Actions</TableHeaderColumn>
+</BootstrapTable>;
 ```
 
 ### After (TanStack Table)
@@ -90,7 +95,7 @@ import { ServerDataTable } from '@/components/ui/server-data-table';
 // In component state
 this.state = {
   pagination: {
-    pageIndex: 0,  // Note: 0-based index
+    pageIndex: 0, // Note: 0-based index
     pageSize: 10,
   },
   sorting: [],
@@ -131,16 +136,14 @@ const pageCount = Math.ceil(invoice_list.count / pagination.pageSize);
   pageCount={pageCount}
   totalCount={invoice_list.count || 0}
   pagination={pagination}
-  onPaginationChange={(updater) => {
-    const newPagination = typeof updater === 'function'
-      ? updater(pagination)
-      : updater;
+  onPaginationChange={updater => {
+    const newPagination = typeof updater === 'function' ? updater(pagination) : updater;
     this.setState({ pagination: newPagination }, () => {
       this.initializeData();
     });
   }}
   sorting={sorting}
-  onSortingChange={(newSorting) => {
+  onSortingChange={newSorting => {
     this.setState({ sorting: newSorting }, () => {
       this.initializeData();
     });
@@ -148,16 +151,17 @@ const pageCount = Math.ceil(invoice_list.count / pagination.pageSize);
   enableRowSelection={false}
   loading={false}
   emptyMessage="No invoices found."
-/>
+/>;
 ```
 
 ## Key Changes in initializeData()
 
 ### Before
+
 ```jsx
 initializeData = () => {
   const paginationData = {
-    pageNo: this.options.page - 1,  // Convert 1-based to 0-based
+    pageNo: this.options.page - 1, // Convert 1-based to 0-based
     pageSize: this.options.sizePerPage,
   };
   const sortingData = {
@@ -169,11 +173,12 @@ initializeData = () => {
 ```
 
 ### After
+
 ```jsx
 initializeData = () => {
   let { filterData, pagination, sorting } = this.state;
   const paginationData = {
-    pageNo: pagination.pageIndex,  // Already 0-based
+    pageNo: pagination.pageIndex, // Already 0-based
     pageSize: pagination.pageSize,
   };
   const sortingData = {
@@ -188,6 +193,7 @@ initializeData = () => {
 ## Column Definition Patterns
 
 ### Simple Text Column
+
 ```jsx
 {
   accessorKey: 'invoiceNumber',
@@ -198,6 +204,7 @@ initializeData = () => {
 ```
 
 ### Formatted Column
+
 ```jsx
 {
   accessorKey: 'invoiceDate',
@@ -208,6 +215,7 @@ initializeData = () => {
 ```
 
 ### Custom Rendered Column (with JSX)
+
 ```jsx
 {
   accessorKey: 'status',
@@ -225,6 +233,7 @@ initializeData = () => {
 ```
 
 ### Complex Column with Multiple Fields
+
 ```jsx
 {
   accessorKey: 'totalAmount',
@@ -257,6 +266,7 @@ initializeData = () => {
 ```
 
 ### Actions Column
+
 ```jsx
 {
   id: 'actions',
@@ -278,27 +288,31 @@ initializeData = () => {
 ## Important Notes
 
 ### Page Index
+
 - **BootstrapTable**: Uses 1-based page indexing
 - **TanStack Table**: Uses 0-based page indexing
 - **Backend API**: Expects 0-based page indexing
 
 When migrating, ensure you:
+
 1. Initialize pagination with `pageIndex: 0` (not `page: 1`)
 2. Don't subtract 1 when sending to backend (it's already 0-based)
 3. Update any search/filter reset logic to use `pageIndex: 0`
 
 ### Sorting Format
+
 BootstrapTable provides `sortName` and `sortOrder` as separate values.
 TanStack Table uses an array of sorting objects:
 
 ```jsx
 // TanStack sorting format
-sorting = [{ id: 'invoiceNumber', desc: false }]  // Ascending
-sorting = [{ id: 'invoiceNumber', desc: true }]   // Descending
-sorting = []  // No sorting
+sorting = [{ id: 'invoiceNumber', desc: false }]; // Ascending
+sorting = [{ id: 'invoiceNumber', desc: true }]; // Descending
+sorting = []; // No sorting
 ```
 
 Convert to backend format:
+
 ```jsx
 const sortingData = {
   order: sorting.length > 0 ? (sorting[0].desc ? 'desc' : 'asc') : '',
@@ -307,6 +321,7 @@ const sortingData = {
 ```
 
 ### State Management
+
 Keep pagination, sorting, and rowSelection in component state:
 
 ```jsx
@@ -319,7 +334,9 @@ this.state = {
 ```
 
 ### Imports
+
 Remove old imports:
+
 ```jsx
 // REMOVE
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -327,6 +344,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 ```
 
 Add new imports:
+
 ```jsx
 // ADD
 import { ServerDataTable } from '@/components/ui/server-data-table';
@@ -364,6 +382,7 @@ For each screen file:
 ## Remaining Files to Migrate
 
 High Priority (Main listing screens):
+
 - [ ] creditNotes/screen.js
 - [ ] debitNotes/screen.js
 - [ ] quotation/screen.js
@@ -390,20 +409,25 @@ High Priority (Main listing screens):
 ## Troubleshooting
 
 ### Issue: Table not updating after data fetch
+
 **Solution**: Ensure you're calling `this.initializeData()` after state changes
 
 ### Issue: Sorting not working
+
 **Solution**: Verify `onSortingChange` callback updates state and calls `initializeData()`
 
 ### Issue: Page index mismatch
+
 **Solution**: Remember TanStack uses 0-based indexing, not 1-based
 
 ### Issue: Actions dropdown state not working
+
 **Solution**: Keep `actionButtons` state separate from table state, indexed by row ID
 
 ## Testing Recommendations
 
 After migration, test:
+
 1. Initial page load
 2. Pagination (next, previous, first, last, page size change)
 3. Sorting (ascending, descending, clear)

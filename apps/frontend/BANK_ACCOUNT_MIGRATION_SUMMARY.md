@@ -1,6 +1,7 @@
 # Bank Account Screen Migration Summary
 
 ## Overview
+
 This document summarizes the migration of bank_account screen files from Formik/Yup to React Hook Form/Zod validation.
 
 ## Migration Status
@@ -8,6 +9,7 @@ This document summarizes the migration of bank_account screen files from Formik/
 ### ✅ Completed Migrations
 
 #### 1. **Create Bank Account** (`screens/create/screen.jsx`)
+
 - **Status:** Already migrated
 - **Framework:** React Hook Form + Zod
 - **Key Features:**
@@ -17,6 +19,7 @@ This document summarizes the migration of bank_account screen files from Formik/
   - Proper error handling and display
 
 #### 2. **Detail Bank Account** (`screens/detail/screen.jsx`)
+
 - **Status:** Already migrated
 - **Framework:** React Hook Form + Zod
 - **Key Features:**
@@ -26,6 +29,7 @@ This document summarizes the migration of bank_account screen files from Formik/
   - Delete functionality with transaction count validation
 
 #### 3. **Reconcile Transaction** (`screens/transactions/screens/reconcile/screen.jsx`)
+
 - **Status:** ✅ Newly migrated
 - **Framework:** React Hook Form + Zod
 - **Changes Made:**
@@ -46,6 +50,7 @@ This document summarizes the migration of bank_account screen files from Formik/
   ```
 
 #### 4. **Detail Bank Transaction** (`screens/transactions/screens/detail/screen.jsx`)
+
 - **Status:** ✅ Newly migrated
 - **Framework:** React Hook Form + Zod
 - **Changes Made:**
@@ -65,6 +70,7 @@ This document summarizes the migration of bank_account screen files from Formik/
 ### 📋 Files Not Requiring Migration
 
 These files were already using the new .jsx extension and modern patterns:
+
 - `/screens/bank_account/screen.jsx`
 - `/screens/bank_account/screens/create/screen.jsx`
 - `/screens/bank_account/screens/detail/screen.jsx`
@@ -75,6 +81,7 @@ These files were already using the new .jsx extension and modern patterns:
 The following files are extremely complex (1000+ lines) and would require extensive refactoring beyond simple Formik to React Hook Form migration:
 
 #### 1. **Create Bank Transaction** (`screens/transactions/screens/create/screen.js`)
+
 - **Size:** ~1,000+ lines
 - **Complexity:** Very High
 - **Issues:**
@@ -86,6 +93,7 @@ The following files are extremely complex (1000+ lines) and would require extens
   - **Recommendation:** Requires complete architectural refactoring into smaller, reusable components
 
 #### 2. **Explain Transaction Detail** (`screens/transactions/sections/explain_transaction_detail.js`)
+
 - **Size:** ~1,500+ lines
 - **Complexity:** Very High
 - **Issues:**
@@ -96,6 +104,7 @@ The following files are extremely complex (1000+ lines) and would require extens
   - **Recommendation:** Should be broken down into multiple sub-components before migration
 
 #### 3. **Explain Div** (`screens/transactions/sections/explainDiv.js`)
+
 - **Size:** ~900 lines
 - **Complexity:** High
 - **Issues:**
@@ -107,24 +116,31 @@ The following files are extremely complex (1000+ lines) and would require extens
 ## Migration Patterns Used
 
 ### 1. Zod Schema Definition
+
 ```javascript
-const schema = z.object({
-  fieldName: z.string().min(1, 'Error message'),
-  dateField: z.date({
-    required_error: 'Date is required',
-    invalid_type_error: 'Date is required',
-  }),
-  // Conditional validation
-}).refine((data) => {
-  // Custom validation logic
-  return true;
-}, {
-  message: 'Error message',
-  path: ['fieldName'],
-});
+const schema = z
+  .object({
+    fieldName: z.string().min(1, 'Error message'),
+    dateField: z.date({
+      required_error: 'Date is required',
+      invalid_type_error: 'Date is required',
+    }),
+    // Conditional validation
+  })
+  .refine(
+    data => {
+      // Custom validation logic
+      return true;
+    },
+    {
+      message: 'Error message',
+      path: ['fieldName'],
+    }
+  );
 ```
 
 ### 2. Form Initialization
+
 ```javascript
 const form = useForm({
   resolver: zodResolver(schema),
@@ -145,6 +161,7 @@ const {
 ```
 
 ### 3. Controller Usage
+
 ```javascript
 <Controller
   name="fieldName"
@@ -152,7 +169,7 @@ const {
   render={({ field }) => (
     <Input
       {...field}
-      onChange={(e) => {
+      onChange={e => {
         // Custom validation
         if (condition) {
           field.onChange(e);
@@ -165,6 +182,7 @@ const {
 ```
 
 ### 4. DatePicker Integration
+
 ```javascript
 <Controller
   name="date"
@@ -172,7 +190,7 @@ const {
   render={({ field }) => (
     <DatePicker
       selected={field.value}
-      onChange={(value) => field.onChange(value)}
+      onChange={value => field.onChange(value)}
       className={`form-control ${errors.date ? 'is-invalid' : ''}`}
     />
   )}
@@ -180,6 +198,7 @@ const {
 ```
 
 ### 5. Select (react-select) Integration
+
 ```javascript
 <Controller
   name="selectField"
@@ -187,8 +206,8 @@ const {
   render={({ field }) => (
     <Select
       options={options}
-      value={options.find((option) => option.value === field.value)}
-      onChange={(option) => field.onChange(option ? option.value : '')}
+      value={options.find(option => option.value === field.value)}
+      onChange={option => field.onChange(option ? option.value : '')}
       className={errors.selectField ? 'is-invalid' : ''}
     />
   )}
@@ -198,7 +217,9 @@ const {
 ## File Structure Updates
 
 ### Index.js Updates
+
 All main index.js files have been updated to import from `.jsx` files:
+
 - ✅ `/screens/bank_account/screens/create/index.js`
 - ✅ `/screens/bank_account/screens/detail/index.js`
 - ✅ `/screens/bank_account/screens/transactions/screens/reconcile/index.js`
@@ -216,11 +237,13 @@ All main index.js files have been updated to import from `.jsx` files:
 ## Recommendations for Remaining Files
 
 ### Short Term
+
 1. Keep the complex files (`create/screen.js`, `explain_transaction_detail.js`, `explainDiv.js`) as-is
 2. Focus on stability and bug fixes for these components
 3. Document their behavior and business logic
 
 ### Long Term
+
 1. **Refactor `create/screen.js`:**
    - Extract VAT calculation logic into custom hooks
    - Split invoice selection into separate component
@@ -242,6 +265,7 @@ All main index.js files have been updated to import from `.jsx` files:
 ## Testing Recommendations
 
 After migration, ensure to test:
+
 1. ✅ Form validation (all fields)
 2. ✅ Error message display
 3. ✅ Form submission
@@ -262,6 +286,7 @@ After migration, ensure to test:
 ## Conclusion
 
 The migration of bank_account screens to React Hook Form/Zod is **partially complete**:
+
 - ✅ Simple to moderate complexity screens: Migrated
 - ⚠️ Complex screens: Require architectural refactoring before migration
 - ✅ All index.js files: Updated to use .jsx imports

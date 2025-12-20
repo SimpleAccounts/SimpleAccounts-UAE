@@ -3,6 +3,7 @@
 ## Cheat Sheet for Common Patterns
 
 ### Import Statements
+
 ```javascript
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +11,7 @@ import { z } from 'zod';
 ```
 
 ### Basic Form Setup
+
 ```javascript
 // Define schema
 const schema = z.object({
@@ -18,91 +20,85 @@ const schema = z.object({
 });
 
 // Initialize form
-const { control, handleSubmit, formState: { errors }, setValue, watch } = useForm({
+const {
+  control,
+  handleSubmit,
+  formState: { errors },
+  setValue,
+  watch,
+} = useForm({
   resolver: zodResolver(schema),
   defaultValues: { email: '', name: '' },
 });
 
 // Submit handler
-const onSubmit = (data) => {
+const onSubmit = data => {
   console.log(data);
 };
 
 // In JSX
-<Form onSubmit={handleSubmit(onSubmit)}>
-  {/* fields */}
-</Form>
+<Form onSubmit={handleSubmit(onSubmit)}>{/* fields */}</Form>;
 ```
 
 ### Common Field Types
 
 #### Text Input
+
 ```javascript
 <Controller
   name="firstName"
   control={control}
   render={({ field }) => (
-    <Input
-      {...field}
-      type="text"
-      className={errors.firstName ? "is-invalid" : ""}
-    />
+    <Input {...field} type="text" className={errors.firstName ? 'is-invalid' : ''} />
   )}
-/>
-{errors.firstName && <div className="invalid-feedback">{errors.firstName.message}</div>}
+/>;
+{
+  errors.firstName && <div className="invalid-feedback">{errors.firstName.message}</div>;
+}
 ```
 
 #### Select (react-select)
+
 ```javascript
 <Controller
   name="country"
   control={control}
-  render={({ field }) => (
-    <Select {...field} options={options} />
-  )}
+  render={({ field }) => <Select {...field} options={options} />}
 />
 ```
 
 #### DatePicker
+
 ```javascript
 <Controller
   name="dob"
   control={control}
   render={({ field }) => (
-    <DatePicker
-      selected={field.value}
-      onChange={(date) => field.onChange(date)}
-    />
+    <DatePicker selected={field.value} onChange={date => field.onChange(date)} />
   )}
 />
 ```
 
 #### Checkbox
+
 ```javascript
 <Controller
   name="terms"
   control={control}
   render={({ field }) => (
-    <Input
-      type="checkbox"
-      checked={field.value}
-      onChange={(e) => field.onChange(e.target.checked)}
-    />
+    <Input type="checkbox" checked={field.value} onChange={e => field.onChange(e.target.checked)} />
   )}
 />
 ```
 
 #### PhoneInput
+
 ```javascript
 <Controller
   name="phone"
   control={control}
   render={({ field }) => (
-    <PhoneInput
-      {...field}
-      country={'ae'}
-      onChange={(value) => field.onChange(value)}
-    />
+    <PhoneInput {...field} country={'ae'} onChange={value => field.onChange(value)} />
   )}
 />
 ```
@@ -178,22 +174,21 @@ clearErrors(); // all errors
 
 ```javascript
 class MyComponent extends React.Component {
-  handleSubmit = (data) => {
+  handleSubmit = data => {
     // Handle submission
   };
 
   render() {
-    return (
-      <MyForm
-        onSubmit={this.handleSubmit}
-        initialValues={this.state.initValue}
-      />
-    );
+    return <MyForm onSubmit={this.handleSubmit} initialValues={this.state.initValue} />;
   }
 }
 
 function MyForm({ onSubmit, initialValues }) {
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(schema),
     defaultValues: initialValues,
   });
@@ -205,13 +200,14 @@ function MyForm({ onSubmit, initialValues }) {
 ### Before/After Comparison
 
 #### Formik
+
 ```javascript
 <Formik
   initialValues={{ name: '' }}
   validationSchema={Yup.object({ name: Yup.string().required() })}
-  onSubmit={(values) => console.log(values)}
+  onSubmit={values => console.log(values)}
 >
-  {(props) => (
+  {props => (
     <Form>
       <Input
         value={props.values.name}
@@ -224,22 +220,25 @@ function MyForm({ onSubmit, initialValues }) {
 ```
 
 #### React Hook Form
+
 ```javascript
 const schema = z.object({ name: z.string().min(1) });
-const { control, handleSubmit, formState: { errors } } = useForm({
+const {
+  control,
+  handleSubmit,
+  formState: { errors },
+} = useForm({
   resolver: zodResolver(schema),
   defaultValues: { name: '' },
 });
 
-<Form onSubmit={handleSubmit((data) => console.log(data))}>
+<Form onSubmit={handleSubmit(data => console.log(data))}>
   <Controller
     name="name"
     control={control}
-    render={({ field }) => (
-      <Input {...field} className={errors.name ? 'is-invalid' : ''} />
-    )}
+    render={({ field }) => <Input {...field} className={errors.name ? 'is-invalid' : ''} />}
   />
-</Form>
+</Form>;
 ```
 
 ### Custom Validation with Input Constraints
@@ -252,7 +251,7 @@ const { control, handleSubmit, formState: { errors } } = useForm({
     <Input
       {...field}
       type="number"
-      onChange={(e) => {
+      onChange={e => {
         const value = e.target.value;
         // Only allow numbers
         if (value === '' || /^\d+$/.test(value)) {
@@ -268,31 +267,35 @@ const { control, handleSubmit, formState: { errors } } = useForm({
 
 ```javascript
 // Simple
-{errors.fieldName && <div className="invalid-feedback">{errors.fieldName.message}</div>}
+{
+  errors.fieldName && <div className="invalid-feedback">{errors.fieldName.message}</div>;
+}
 
 // With touched state (add mode: 'onBlur' to useForm options)
-{errors.fieldName && <div className="invalid-feedback">{errors.fieldName.message}</div>}
+{
+  errors.fieldName && <div className="invalid-feedback">{errors.fieldName.message}</div>;
+}
 
 // Inline
-<Input className={errors.fieldName ? 'is-invalid' : ''} />
+<Input className={errors.fieldName ? 'is-invalid' : ''} />;
 ```
 
 ## Common Migrations
 
 ### Yup → Zod
 
-| Yup | Zod |
-|-----|-----|
-| `Yup.string().required('msg')` | `z.string().min(1, 'msg')` |
-| `Yup.string().email('msg')` | `z.string().email('msg')` |
-| `Yup.string().min(5, 'msg')` | `z.string().min(5, 'msg')` |
-| `Yup.string().max(10, 'msg')` | `z.string().max(10, 'msg')` |
+| Yup                            | Zod                                   |
+| ------------------------------ | ------------------------------------- |
+| `Yup.string().required('msg')` | `z.string().min(1, 'msg')`            |
+| `Yup.string().email('msg')`    | `z.string().email('msg')`             |
+| `Yup.string().min(5, 'msg')`   | `z.string().min(5, 'msg')`            |
+| `Yup.string().max(10, 'msg')`  | `z.string().max(10, 'msg')`           |
 | `Yup.number().required('msg')` | `z.number({ required_error: 'msg' })` |
-| `Yup.number().positive('msg')` | `z.number().positive('msg')` |
-| `Yup.date().required('msg')` | `z.date({ required_error: 'msg' })` |
-| `Yup.boolean()` | `z.boolean()` |
-| `Yup.string().nullable()` | `z.string().nullable()` |
-| `Yup.string().optional()` | `z.string().optional()` |
+| `Yup.number().positive('msg')` | `z.number().positive('msg')`          |
+| `Yup.date().required('msg')`   | `z.date({ required_error: 'msg' })`   |
+| `Yup.boolean()`                | `z.boolean()`                         |
+| `Yup.string().nullable()`      | `z.string().nullable()`               |
+| `Yup.string().optional()`      | `z.string().optional()`               |
 
 ## Tips
 

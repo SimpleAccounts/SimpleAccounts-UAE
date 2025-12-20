@@ -1,4 +1,5 @@
 # Remaining Payroll Migrations Guide
+
 ## Formik + Yup to React Hook Form + Zod
 
 This guide provides detailed migration instructions for the remaining 7 payroll-related files.
@@ -6,15 +7,18 @@ This guide provides detailed migration instructions for the remaining 7 payroll-
 ## Files to Migrate
 
 ### High Priority (Large Complex Files)
+
 1. `/screens/payrollemp/screens/create/screen.js` (3,842 lines)
 2. `/screens/payrollemp/screens/update_emp_personal/screen.js` (2,257 lines)
 
 ### Medium Priority
+
 3. `/screens/payroll_run/screens/updatePayroll/sections/addEmployees.js`
 4. `/screens/payroll_run/screens/createPayrollList/sections/addEmployees.js`
 5. `/screens/salary_component/sections/screen_component/index.js`
 
 ### Lower Priority (Simpler Forms)
+
 6. `/screens/salaryTemplate/screens/detail/screen.js`
 7. `/screens/salaryTemplate/screens/create/screen.js`
 8. `/screens/salaryStructure/screens/create/screen.js`
@@ -27,12 +31,14 @@ This guide provides detailed migration instructions for the remaining 7 payroll-
 ### Step 1: Update Imports
 
 Replace:
+
 ```javascript
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 ```
 
 With:
+
 ```javascript
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -44,12 +50,13 @@ import { z } from 'zod';
 For large files like `create/screen.js` and `update_emp_personal/screen.js`, you have two options:
 
 #### Option A: Hybrid Approach (Easier)
+
 Keep the class component structure but extract the form into a separate functional component:
 
 ```javascript
 class CreateEmployeePayroll extends React.Component {
   // Keep all existing methods and lifecycle
-  
+
   render() {
     return (
       <EmployeeForm
@@ -67,12 +74,12 @@ function EmployeeForm({ onSubmit, initialValues, ... }) {
     firstName: z.string().min(1, 'First Name is required'),
     // ... other fields
   });
-  
+
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
     defaultValues: initialValues,
   });
-  
+
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       {/* Form fields */}
@@ -82,7 +89,9 @@ function EmployeeForm({ onSubmit, initialValues, ... }) {
 ```
 
 #### Option B: Full Conversion (More Work)
+
 Convert the entire class to a functional component using hooks:
+
 - `constructor` → `useState` declarations
 - `componentDidMount` → `useEffect` with `[]` dependency
 - `componentDidUpdate` → `useEffect` with specific dependencies
@@ -112,9 +121,9 @@ Yup.date().required('Message') → z.date({ required_error: 'Message' })
 Yup.string().required('Message') → z.object({ label: z.string(), value: z.any() }, { required_error: 'Message' })
 
 // CONDITIONAL VALIDATIONS
-Yup.string().when('otherField', { 
-  is: 'value', 
-  then: Yup.string().required('Message') 
+Yup.string().when('otherField', {
+  is: 'value',
+  then: Yup.string().required('Message')
 })
 
 →
@@ -156,18 +165,14 @@ Replace Formik component with useForm hook:
     this.handleSubmit(values, resetForm);
   }}
   validationSchema={schema}
-  validate={(values) => {
+  validate={values => {
     let errors = {};
     // Custom validation
     return errors;
   }}
 >
-  {(props) => (
-    <Form onSubmit={props.handleSubmit}>
-      {/* Fields */}
-    </Form>
-  )}
-</Formik>
+  {props => <Form onSubmit={props.handleSubmit}>{/* Fields */}</Form>}
+</Formik>;
 
 // AFTER (React Hook Form)
 const formMethods = useForm({
@@ -175,14 +180,19 @@ const formMethods = useForm({
   defaultValues: initValue,
 });
 
-const { control, handleSubmit, formState: { errors }, getValues, setValue, reset } = formMethods;
+const {
+  control,
+  handleSubmit,
+  formState: { errors },
+  getValues,
+  setValue,
+  reset,
+} = formMethods;
 
 // For custom validation, use schema's superRefine or refine
 // Or use validate in register options
 
-<Form onSubmit={handleSubmit(onSubmit)}>
-  {/* Fields */}
-</Form>
+<Form onSubmit={handleSubmit(onSubmit)}>{/* Fields */}</Form>;
 ```
 
 ### Step 5: Migrate Form Fields
@@ -190,6 +200,7 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue, reset
 For each input type:
 
 #### Standard Input Fields
+
 ```javascript
 // BEFORE
 <Input
@@ -198,31 +209,29 @@ For each input type:
   name="firstName"
   value={props.values.firstName}
   onChange={props.handleChange('firstName')}
-  className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
-/>
-{props.errors.firstName && props.touched.firstName && (
-  <div className="invalid-feedback">{props.errors.firstName}</div>
-)}
+  className={props.errors.firstName && props.touched.firstName ? 'is-invalid' : ''}
+/>;
+{
+  props.errors.firstName && props.touched.firstName && (
+    <div className="invalid-feedback">{props.errors.firstName}</div>
+  );
+}
 
 // AFTER
 <Controller
   name="firstName"
   control={control}
   render={({ field }) => (
-    <Input
-      {...field}
-      type="text"
-      id="firstName"
-      className={errors.firstName ? "is-invalid" : ""}
-    />
+    <Input {...field} type="text" id="firstName" className={errors.firstName ? 'is-invalid' : ''} />
   )}
-/>
-{errors.firstName && (
-  <div className="invalid-feedback">{errors.firstName.message}</div>
-)}
+/>;
+{
+  errors.firstName && <div className="invalid-feedback">{errors.firstName.message}</div>;
+}
 ```
 
 #### React-Select Fields
+
 ```javascript
 // BEFORE
 <Select
@@ -247,6 +256,7 @@ For each input type:
 ```
 
 #### DatePicker Fields
+
 ```javascript
 // BEFORE
 <DatePicker
@@ -271,6 +281,7 @@ For each input type:
 ```
 
 #### PhoneInput Fields
+
 ```javascript
 // BEFORE
 <PhoneInput
@@ -294,6 +305,7 @@ For each input type:
 ```
 
 #### Checkbox/Radio with Formik Field
+
 ```javascript
 // BEFORE
 <Field
@@ -322,33 +334,36 @@ For each input type:
 ### Step 6: Handle Dynamic Form Values
 
 #### Setting Values Programmatically
+
 ```javascript
 // BEFORE (Formik)
-this.formRef.current.setFieldValue('employeeDesignationId', value, true)
+this.formRef.current.setFieldValue('employeeDesignationId', value, true);
 
 // AFTER (React Hook Form)
-setValue('employeeDesignationId', value, { shouldValidate: true })
+setValue('employeeDesignationId', value, { shouldValidate: true });
 ```
 
 #### Getting Values
+
 ```javascript
 // BEFORE (Formik)
-props.values.employeeDesignationId
+props.values.employeeDesignationId;
 
 // AFTER (React Hook Form)
-getValues('employeeDesignationId')
+getValues('employeeDesignationId');
 // or use watch for reactive updates
-const employeeDesignationId = watch('employeeDesignationId')
+const employeeDesignationId = watch('employeeDesignationId');
 ```
 
 #### Resetting Form
+
 ```javascript
 // BEFORE (Formik)
-resetForm()
+resetForm();
 
 // AFTER (React Hook Form)
-reset() // Reset to default values
-reset({ firstName: 'New Value' }) // Reset with new values
+reset(); // Reset to default values
+reset({ firstName: 'New Value' }); // Reset with new values
 ```
 
 ### Step 7: Handle Form Submission
@@ -385,13 +400,13 @@ const formRef = useRef();
 // In child component, use forwardRef and useImperativeHandle
 const FormComponent = forwardRef((props, ref) => {
   const formMethods = useForm({...});
-  
+
   useImperativeHandle(ref, () => ({
     submit: formMethods.handleSubmit(onSubmit),
     reset: formMethods.reset,
     setValue: formMethods.setValue,
   }));
-  
+
   return <Form>...</Form>;
 });
 ```

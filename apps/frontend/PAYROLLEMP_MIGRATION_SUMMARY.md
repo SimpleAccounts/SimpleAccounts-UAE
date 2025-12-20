@@ -1,22 +1,27 @@
 # Payroll Employee Screens Migration Summary
 
 ## Overview
+
 This document summarizes the migration of payroll employee screens from Formik/Yup to React Hook Form/Zod validation.
 
 ## Migration Date
+
 December 19, 2025
 
 ## Migrated Screens
 
 ### 1. Update Employee Bank Details
+
 **Location:** `/apps/frontend/src/screens/payrollemp/screens/update_emp_bank/`
 
 **Files:**
+
 - `screen.js` (Original Formik/Yup implementation - preserved)
 - `screen.jsx` (New React Hook Form/Zod implementation)
 - `index.js` (Updated to import from screen.jsx)
 
 **Key Changes:**
+
 - Converted from class component to functional component
 - Replaced Formik with `useForm` hook from React Hook Form
 - Replaced Yup validation with Zod schema
@@ -29,38 +34,55 @@ December 19, 2025
   - Error handling and loading states
 
 **Zod Schema:**
+
 ```javascript
 const updateEmployeeBankSchema = z.object({
-    accountHolderName: z.string().min(1, "Account holder name is required")
-        .regex(/^[A-Za-z\s]+$/, "Only alphabets and spaces are allowed"),
-    accountNumber: z.string().min(1, "Account number is required")
-        .regex(/^[0-9]+$/, "Only numbers are allowed")
-        .refine((val) => !/^0+$/.test(val), "Please enter a valid Account number"),
-    bankId: z.object({
-        value: z.number().or(z.string()),
-        label: z.string()
-    }).nullable().refine((val) => val !== null, "Bank name is required"),
-    branch: z.string().min(1, "Branch is required")
-        .regex(/^[a-zA-Z ]+$/, "Only alphabets and spaces are allowed"),
-    iban: z.string().min(1, "IBAN Number is required")
-        .refine((val) => !/^0+$/.test(val), "Please enter a valid IBAN Number"),
-    swiftCode: z.string().optional(),
-    agentId: z.string().min(1, "Agent ID is required")
-        .regex(/^[0-9\d]+$/, "Only numbers are allowed")
-        .min(9, "Agent ID must be 9 digits")
-        .max(9, "Agent ID must be 9 digits"),
+  accountHolderName: z
+    .string()
+    .min(1, 'Account holder name is required')
+    .regex(/^[A-Za-z\s]+$/, 'Only alphabets and spaces are allowed'),
+  accountNumber: z
+    .string()
+    .min(1, 'Account number is required')
+    .regex(/^[0-9]+$/, 'Only numbers are allowed')
+    .refine(val => !/^0+$/.test(val), 'Please enter a valid Account number'),
+  bankId: z
+    .object({
+      value: z.number().or(z.string()),
+      label: z.string(),
+    })
+    .nullable()
+    .refine(val => val !== null, 'Bank name is required'),
+  branch: z
+    .string()
+    .min(1, 'Branch is required')
+    .regex(/^[a-zA-Z ]+$/, 'Only alphabets and spaces are allowed'),
+  iban: z
+    .string()
+    .min(1, 'IBAN Number is required')
+    .refine(val => !/^0+$/.test(val), 'Please enter a valid IBAN Number'),
+  swiftCode: z.string().optional(),
+  agentId: z
+    .string()
+    .min(1, 'Agent ID is required')
+    .regex(/^[0-9\d]+$/, 'Only numbers are allowed')
+    .min(9, 'Agent ID must be 9 digits')
+    .max(9, 'Agent ID must be 9 digits'),
 });
 ```
 
 ### 2. Update Employee Employment Details
+
 **Location:** `/apps/frontend/src/screens/payrollemp/screens/update_emp_employemet/`
 
 **Files:**
+
 - `screen.js` (Original Formik/Yup implementation - preserved)
 - `screen.jsx` (New React Hook Form/Zod implementation)
 - `index.js` (Updated to import from screen.jsx)
 
 **Key Changes:**
+
 - Converted from class component to functional component
 - Replaced Formik with `useForm` hook from React Hook Form
 - Replaced Yup validation with Zod schema
@@ -73,36 +95,46 @@ const updateEmployeeBankSchema = z.object({
   - Form submission with FormData
 
 **Zod Schema:**
+
 ```javascript
 const updateEmployeeEmploymentSchema = z.object({
-    employeeCode: z.string().min(1, "Employee unique id is required")
-        .max(14, "Employee unique id must be at most 14 characters"),
-    labourCard: z.string().min(1, "Labour card id is required")
-        .max(14, "Labour card id must be at most 14 characters")
-        .regex(/[a-zA-Z0-9]+$/, "Invalid labour card id"),
-    dateOfJoining: z.date({
-        required_error: 'Date of joining is required',
-        invalid_type_error: 'Date of joining is required',
-    }),
-    department: z.string().optional(),
-    passportNumber: z.string().max(9, "Passport number is too long")
-        .regex(/[a-zA-Z0-9]*$/, "Invalid passport number")
-        .optional()
-        .or(z.literal('')),
-    passportExpiryDate: z.date().nullable().optional(),
-    salaryRoleId: z.string().optional(),
+  employeeCode: z
+    .string()
+    .min(1, 'Employee unique id is required')
+    .max(14, 'Employee unique id must be at most 14 characters'),
+  labourCard: z
+    .string()
+    .min(1, 'Labour card id is required')
+    .max(14, 'Labour card id must be at most 14 characters')
+    .regex(/[a-zA-Z0-9]+$/, 'Invalid labour card id'),
+  dateOfJoining: z.date({
+    required_error: 'Date of joining is required',
+    invalid_type_error: 'Date of joining is required',
+  }),
+  department: z.string().optional(),
+  passportNumber: z
+    .string()
+    .max(9, 'Passport number is too long')
+    .regex(/[a-zA-Z0-9]*$/, 'Invalid passport number')
+    .optional()
+    .or(z.literal('')),
+  passportExpiryDate: z.date().nullable().optional(),
+  salaryRoleId: z.string().optional(),
 });
 ```
 
 ### 3. Update Salary Component
+
 **Location:** `/apps/frontend/src/screens/payrollemp/screens/update_salary_component/`
 
 **Files:**
+
 - `screen.js` (Original class component - preserved)
 - `screen.jsx` (New functional component)
 - `index.js` (Updated to import from screen.jsx)
 
 **Key Changes:**
+
 - Converted from class component to functional component
 - No form migration needed as this screen delegates form handling to `SalaryComponent` section
 - Simplified state management using useState hooks
@@ -114,14 +146,17 @@ const updateEmployeeEmploymentSchema = z.object({
 **Note:** This screen doesn't use Formik/Yup or React Hook Form/Zod directly as it delegates form handling to a child component (`SalaryComponent`).
 
 ### 4. View Employee
+
 **Location:** `/apps/frontend/src/screens/payrollemp/screens/view/`
 
 **Files:**
+
 - `screen.js` (Original class component - preserved)
 - `screen.jsx` (New functional component)
 - `index.js` (Updated to import from screen.jsx)
 
 **Key Changes:**
+
 - Converted from class component to functional component
 - No form migration needed as this is a view-only screen
 - Replaced class lifecycle methods with useEffect hooks
@@ -139,81 +174,82 @@ const updateEmployeeEmploymentSchema = z.object({
 ## Common Migration Patterns
 
 ### 1. Form Hook Setup
+
 ```javascript
 const form = useForm({
-    resolver: zodResolver(validationSchema),
-    defaultValues: { /* initial values */ },
-    mode: 'onChange',
+  resolver: zodResolver(validationSchema),
+  defaultValues: {
+    /* initial values */
+  },
+  mode: 'onChange',
 });
 
 const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    watch,
+  control,
+  handleSubmit,
+  formState: { errors },
+  setValue,
+  watch,
 } = form;
 ```
 
 ### 2. Controller Usage
+
 ```javascript
 <Controller
-    name="fieldName"
-    control={control}
-    render={({ field }) => (
-        <Input
-            {...field}
-            type="text"
-            onChange={(e) => {
-                // Custom validation/formatting
-                field.onChange(e);
-            }}
-            className={errors.fieldName ? "is-invalid" : ""}
-        />
-    )}
-/>
-{errors.fieldName && (
-    <div className="invalid-feedback d-block">
-        {errors.fieldName.message}
-    </div>
-)}
+  name="fieldName"
+  control={control}
+  render={({ field }) => (
+    <Input
+      {...field}
+      type="text"
+      onChange={e => {
+        // Custom validation/formatting
+        field.onChange(e);
+      }}
+      className={errors.fieldName ? 'is-invalid' : ''}
+    />
+  )}
+/>;
+{
+  errors.fieldName && <div className="invalid-feedback d-block">{errors.fieldName.message}</div>;
+}
 ```
 
 ### 3. Select Component with Controller
+
 ```javascript
 <Controller
-    name="selectField"
-    control={control}
-    render={({ field }) => (
-        <Select
-            {...field}
-            options={optionsList}
-            className={errors.selectField ? 'is-invalid' : ''}
-        />
-    )}
+  name="selectField"
+  control={control}
+  render={({ field }) => (
+    <Select {...field} options={optionsList} className={errors.selectField ? 'is-invalid' : ''} />
+  )}
 />
 ```
 
 ### 4. DatePicker with Controller
+
 ```javascript
 <Controller
-    name="dateField"
-    control={control}
-    render={({ field }) => (
-        <DatePicker
-            {...field}
-            selected={field.value}
-            onChange={(date) => field.onChange(date)}
-            dateFormat="dd-MM-yyyy"
-            className={errors.dateField ? "is-invalid" : ""}
-        />
-    )}
+  name="dateField"
+  control={control}
+  render={({ field }) => (
+    <DatePicker
+      {...field}
+      selected={field.value}
+      onChange={date => field.onChange(date)}
+      dateFormat="dd-MM-yyyy"
+      className={errors.dateField ? 'is-invalid' : ''}
+    />
+  )}
 />
 ```
 
 ## Preserved Functionality
 
 All screens maintain 100% of their original functionality:
+
 - ✅ Form validation (now with Zod)
 - ✅ Custom validation checks (duplicate checking)
 - ✅ API integration
@@ -228,6 +264,7 @@ All screens maintain 100% of their original functionality:
 ## File Organization
 
 The migration follows a non-destructive approach:
+
 - Original `screen.js` files are preserved
 - New `screen.jsx` files contain the migrated code
 - `index.js` files import from `screen.jsx`
@@ -263,6 +300,7 @@ The migration follows a non-destructive approach:
 ## Dependencies
 
 All migrated screens use:
+
 - `react-hook-form` - Form state management
 - `@hookform/resolvers` - Zod resolver
 - `zod` - Schema validation

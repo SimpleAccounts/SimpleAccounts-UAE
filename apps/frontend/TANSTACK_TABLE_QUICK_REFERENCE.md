@@ -3,6 +3,7 @@
 ## Quick Migration Steps
 
 ### 1. Update Imports
+
 ```diff
 - import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 - import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -10,6 +11,7 @@
 ```
 
 ### 2. Update State
+
 ```diff
   this.state = {
 +   pagination: { pageIndex: 0, pageSize: 10 },
@@ -21,6 +23,7 @@
 ```
 
 ### 3. Remove Old Options Object
+
 ```diff
 - this.options = {
 -   page: 1,
@@ -34,6 +37,7 @@
 ```
 
 ### 4. Create Column Definitions
+
 ```javascript
 getColumns = () => {
   return [
@@ -56,6 +60,7 @@ getColumns = () => {
 ```
 
 ### 5. Update initializeData()
+
 ```diff
   initializeData = () => {
 -   let { filterData, currentPage } = this.state;
@@ -77,6 +82,7 @@ getColumns = () => {
 ```
 
 ### 6. Update Search/Filter Reset
+
 ```diff
   handleSearch = () => {
 -   this.setState({ currentPage: 1 }, () => {
@@ -97,6 +103,7 @@ getColumns = () => {
 ```
 
 ### 7. Replace Table Component
+
 ```diff
 + const { pagination, sorting } = this.state;
 + const pageCount = Math.ceil(list.count / pagination.pageSize);
@@ -139,6 +146,7 @@ getColumns = () => {
 ```
 
 ### 8. Remove Old Pagination Handlers
+
 ```diff
 - onSizePerPageList = (sizePerPage) => {
 -   if (this.options.sizePerPage !== sizePerPage) {
@@ -164,6 +172,7 @@ getColumns = () => {
 ## Column Types Cheat Sheet
 
 ### Text Column
+
 ```javascript
 {
   accessorKey: 'name',
@@ -174,6 +183,7 @@ getColumns = () => {
 ```
 
 ### Date Column
+
 ```javascript
 {
   accessorKey: 'createdDate',
@@ -184,6 +194,7 @@ getColumns = () => {
 ```
 
 ### Badge/Status Column
+
 ```javascript
 {
   accessorKey: 'status',
@@ -198,6 +209,7 @@ getColumns = () => {
 ```
 
 ### Currency Column
+
 ```javascript
 {
   accessorKey: 'amount',
@@ -212,6 +224,7 @@ getColumns = () => {
 ```
 
 ### Actions Column
+
 ```javascript
 {
   id: 'actions',
@@ -235,6 +248,7 @@ getColumns = () => {
 ## Common Patterns
 
 ### Keep Action Button State
+
 ```javascript
 // State remains the same
 this.state = {
@@ -243,7 +257,7 @@ this.state = {
 };
 
 // Toggle method stays the same
-toggleActionButton = (index) => {
+toggleActionButton = index => {
   let temp = Object.assign({}, this.state.actionButtons);
   temp[parseInt(index, 10)] = !temp[parseInt(index, 10)];
   this.setState({ actionButtons: temp });
@@ -251,20 +265,22 @@ toggleActionButton = (index) => {
 ```
 
 ### Multiple Row Selection
+
 ```javascript
 // Enable in ServerDataTable
 <ServerDataTable
   enableRowSelection={true}
   rowSelection={rowSelection}
-  onRowSelectionChange={(newSelection) => {
+  onRowSelectionChange={newSelection => {
     this.setState({ rowSelection: newSelection });
   }}
   // ... other props
-/>
+/>;
 
 // Access selected rows
-const selectedRowIds = Object.keys(this.state.rowSelection)
-  .filter(key => this.state.rowSelection[key]);
+const selectedRowIds = Object.keys(this.state.rowSelection).filter(
+  key => this.state.rowSelection[key]
+);
 ```
 
 ## Testing Checklist
@@ -299,6 +315,7 @@ After migration, test these features:
 ## Example Files
 
 Reference these migrated files:
+
 - `/apps/frontend/src/screens/customer_invoice/screen.js`
 - `/apps/frontend/src/screens/supplier_invoice/screen.js`
 

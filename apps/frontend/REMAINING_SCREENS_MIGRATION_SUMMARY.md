@@ -1,4 +1,5 @@
 # Remaining Screens Migration Summary
+
 ## Formik/Yup to React Hook Form/Zod Migration
 
 **Date**: December 19, 2024
@@ -15,15 +16,18 @@ All requested screen directories have been successfully migrated from Formik/Yup
 ## Migration Status by Screen
 
 ### 1. Designation Screens ✅
+
 **Location**: `src/screens/designation/screens/`
 
 #### Create Screen
+
 - **Old File**: `create/screen.js` (Formik/Yup - deprecated)
 - **New File**: `create/screen.jsx` (React Hook Form/Zod)
 - **Index Import**: ✅ Updated to import from `screen.jsx`
 - **Status**: Fully migrated
 
 **Key Changes**:
+
 - Migrated from Formik to `useForm` hook
 - Zod schema: `createDesignationSchema`
 - Validation fields:
@@ -34,12 +38,14 @@ All requested screen directories have been successfully migrated from Formik/Yup
 - Functional component with React hooks
 
 #### Detail Screen
+
 - **Old File**: `detail/screen.js` (Formik/Yup - deprecated)
 - **New File**: `detail/screen.jsx` (React Hook Form/Zod)
 - **Index Import**: ✅ Updated to import from `screen.jsx`
 - **Status**: Fully migrated
 
 **Key Changes**:
+
 - Migrated from Formik to `useForm` hook
 - Zod schema: `detailDesignationSchema`
 - Same validation as create screen
@@ -49,15 +55,18 @@ All requested screen directories have been successfully migrated from Formik/Yup
 ---
 
 ### 2. Employment Screens ✅
+
 **Location**: `src/screens/employment/screens/`
 
 #### Create Screen
+
 - **Old File**: `create/screen.js` (Formik/Yup - deprecated)
 - **New File**: `create/screen.jsx` (React Hook Form/Zod)
 - **Index Import**: ✅ Updated to import from `screen.jsx`
 - **Status**: Fully migrated
 
 **Key Changes**:
+
 - Migrated from Formik to `useForm` hook
 - Zod schema: `createEmploymentSchema`
 - Validation fields (all optional):
@@ -76,6 +85,7 @@ All requested screen directories have been successfully migrated from Formik/Yup
 - Functional component with React hooks
 
 #### Detail Screen
+
 - **Old File**: `detail/screen.js` (Formik/Yup - deprecated)
 - **New File**: `detail/screen.jsx` (React Hook Form/Zod)
 - **Index Import**: ✅ Updated to import from `screen.jsx`
@@ -84,15 +94,18 @@ All requested screen directories have been successfully migrated from Formik/Yup
 ---
 
 ### 3. Employee Bank Details Screens ✅
+
 **Location**: `src/screens/employee_Bank_Details/screens/`
 
 #### Create Screen
+
 - **Old File**: `create/screen.js` (Formik/Yup - deprecated)
 - **New File**: `create/screen.jsx` (React Hook Form/Zod)
 - **Index Import**: ✅ Updated to import from `screen.jsx`
 - **Status**: Fully migrated
 
 **Key Changes**:
+
 - Migrated from Formik to `useForm` hook
 - Zod schema: `createEmployeeFinancialSchema`
 - Validation fields:
@@ -109,6 +122,7 @@ All requested screen directories have been successfully migrated from Formik/Yup
 - Functional component with React hooks
 
 #### Detail Screen
+
 - **Old File**: `detail/screen.js` (Formik/Yup - deprecated)
 - **New File**: `detail/screen.jsx` (React Hook Form/Zod)
 - **Index Import**: ✅ Updated to import from `screen.jsx`
@@ -117,15 +131,18 @@ All requested screen directories have been successfully migrated from Formik/Yup
 ---
 
 ### 4. Currency Convert Screens ✅
+
 **Location**: `src/screens/currencyConvert/screens/`
 
 #### Create Screen
+
 - **Old File**: `create/screen.js` (Formik/Yup - deprecated)
 - **New File**: `create/screen.jsx` (React Hook Form/Zod)
 - **Index Import**: ✅ Updated to import from `screen.jsx`
 - **Status**: Fully migrated
 
 **Key Changes**:
+
 - Migrated from Formik to `useForm` hook
 - Zod schema: `createCurrencyConvertSchema`
 - Validation fields:
@@ -136,6 +153,7 @@ All requested screen directories have been successfully migrated from Formik/Yup
 - Functional component with React hooks
 
 #### Detail Screen
+
 - **Old File**: `detail/screen.js` (Formik/Yup - deprecated)
 - **New File**: `detail/screen.jsx` (React Hook Form/Zod)
 - **Index Import**: ✅ Updated to import from `screen.jsx`
@@ -144,15 +162,18 @@ All requested screen directories have been successfully migrated from Formik/Yup
 ---
 
 ### 5. VAT Code Screens ✅
+
 **Location**: `src/screens/vat_code/screens/`
 
 #### Create Screen
+
 - **Old File**: `create/screen.js` (Formik/Yup - deprecated)
 - **New File**: `create/screen.jsx` (React Hook Form/Zod)
 - **Index Import**: ✅ Updated to import from `screen.jsx`
 - **Status**: Fully migrated
 
 **Key Changes**:
+
 - Migrated from Formik to `useForm` hook
 - Zod schema: `createVatCodeSchema`
 - Validation fields:
@@ -162,6 +183,7 @@ All requested screen directories have been successfully migrated from Formik/Yup
 - Functional component with React hooks
 
 #### Detail Screen
+
 - **Old File**: `detail/screen.js` (Formik/Yup - deprecated)
 - **New File**: `detail/screen.jsx` (React Hook Form/Zod)
 - **Index Import**: ✅ Updated to import from `screen.jsx`
@@ -170,15 +192,18 @@ All requested screen directories have been successfully migrated from Formik/Yup
 ---
 
 ### 6. Product Category Screens ✅
+
 **Location**: `src/screens/product_category/screens/`
 
 #### Create Screen
+
 - **Old File**: `create/screen.js` (Formik/Yup - deprecated)
 - **New File**: `create/screen.jsx` (React Hook Form/Zod)
 - **Index Import**: ✅ Updated to import from `screen.jsx`
 - **Status**: Fully migrated
 
 **Key Changes**:
+
 - Migrated from Formik to `useForm` hook
 - Zod schema: `createProductCategorySchema`
 - Validation fields:
@@ -188,6 +213,7 @@ All requested screen directories have been successfully migrated from Formik/Yup
 - Functional component with React hooks
 
 #### Detail Screen
+
 - **Old File**: `detail/screen.js` (Formik/Yup - deprecated)
 - **New File**: `detail/screen.jsx` (React Hook Form/Zod)
 - **Index Import**: ✅ Updated to import from `screen.jsx`
@@ -267,6 +293,7 @@ const { control, handleSubmit, formState: { errors } } = form;
 ### Total Files Migrated: 12 screens (24 files - create & detail for each)
 
 #### Deprecated Files (Old - DO NOT USE):
+
 - `/src/screens/designation/screens/create/screen.js`
 - `/src/screens/designation/screens/detail/screen.js`
 - `/src/screens/employment/screens/create/screen.js`
@@ -281,6 +308,7 @@ const { control, handleSubmit, formState: { errors } } = form;
 - `/src/screens/product_category/screens/detail/screen.js`
 
 #### Active Files (New - IN USE):
+
 - `/src/screens/designation/screens/create/screen.jsx` ✅
 - `/src/screens/designation/screens/detail/screen.jsx` ✅
 - `/src/screens/employment/screens/create/screen.jsx` ✅
@@ -295,7 +323,9 @@ const { control, handleSubmit, formState: { errors } } = form;
 - `/src/screens/product_category/screens/detail/screen.jsx` ✅
 
 #### Index Files (All Updated):
+
 All 12 index.js files have been updated to import from `.jsx` files:
+
 - `/src/screens/designation/screens/create/index.js` ✅
 - `/src/screens/designation/screens/detail/index.js` ✅
 - `/src/screens/employment/screens/create/index.js` ✅
@@ -387,6 +417,7 @@ All screens now require these packages:
 ```
 
 Deprecated dependencies (can be removed after all migrations complete):
+
 ```json
 {
   "formik": "^x.x.x",
@@ -409,5 +440,6 @@ All requested screen directories have been successfully migrated from Formik/Yup
 ## Contact & Support
 
 For questions or issues related to this migration, please contact the development team or refer to:
+
 - React Hook Form docs: https://react-hook-form.com/
 - Zod docs: https://zod.dev/

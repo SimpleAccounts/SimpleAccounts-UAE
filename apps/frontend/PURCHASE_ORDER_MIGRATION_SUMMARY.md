@@ -1,11 +1,13 @@
 # Purchase Order Migration Summary
 
 ## Overview
+
 Successfully migrated purchase_order screens from Formik/Yup to React Hook Form/Zod and converted from class components to functional components.
 
 ## Files Migrated
 
 ### 1. View Screen
+
 - **File**: `src/screens/purchase_order/screens/view/screen.js` → `screen.jsx`
 - **Status**: ✅ Fully migrated manually
 - **Changes**:
@@ -15,6 +17,7 @@ Successfully migrated purchase_order screens from Formik/Yup to React Hook Form/
   - Modernized code structure
 
 ### 2. Create Screen
+
 - **File**: `src/screens/purchase_order/screens/create/screen.js` → `screen.jsx`
 - **Status**: ⚠️ Auto-migrated from GRN template - Requires review
 - **Changes**:
@@ -36,6 +39,7 @@ Successfully migrated purchase_order screens from Formik/Yup to React Hook Form/
   - Create and "Create & More" functionality
 
 ### 3. Detail Screen
+
 - **File**: `src/screens/purchase_order/screens/detail/screen.js` → `screen.jsx`
 - **Status**: ⚠️ Auto-migrated from GRN template - Requires review
 - **Changes**:
@@ -54,7 +58,9 @@ Successfully migrated purchase_order screens from Formik/Yup to React Hook Form/
   - Delete functionality
 
 ### 4. Index Files Updated
+
 All three index.js files updated to import from screen.jsx:
+
 - ✅ `src/screens/purchase_order/screens/create/index.js`
 - ✅ `src/screens/purchase_order/screens/detail/index.js`
 - ✅ `src/screens/purchase_order/screens/view/index.js`
@@ -76,24 +82,44 @@ Due to the extreme complexity of the original files (100KB+ each with intricate 
 ## Zod Validation Schema
 
 ### Create Purchase Order Schema
+
 ```javascript
 const createPurchaseOrderSchema = z.object({
   po_number: z.string().min(1, 'PO number is required'),
-  supplierId: z.object({
-    value: z.union([z.string(), z.number()]),
-    label: z.string(),
-  }).nullable().refine((val) => val !== null, 'Supplier is required'),
-  poApproveDate: z.union([z.string(), z.date()]).refine((val) => val !== '', 'Order date is required'),
-  poReceiveDate: z.union([z.string(), z.date()]).refine((val) => val !== '', 'Order due date is required'),
+  supplierId: z
+    .object({
+      value: z.union([z.string(), z.number()]),
+      label: z.string(),
+    })
+    .nullable()
+    .refine(val => val !== null, 'Supplier is required'),
+  poApproveDate: z
+    .union([z.string(), z.date()])
+    .refine(val => val !== '', 'Order date is required'),
+  poReceiveDate: z
+    .union([z.string(), z.date()])
+    .refine(val => val !== '', 'Order due date is required'),
   placeOfSupplyId: z.any().optional(),
   rfqNumber: z.any().optional(),
-  lineItemsString: z.array(z.object({
-    quantity: z.union([z.string(), z.number()]).refine((val) => Number(val) > 0, 'Quantity should be greater than 0'),
-    unitPrice: z.union([z.string(), z.number()]).refine((val) => Number(val) > 0, 'Unit price should be greater than 0'),
-    vatCategoryId: z.union([z.string(), z.number()]).refine((val) => val !== '', 'VAT is required'),
-    productId: z.union([z.string(), z.number()]).refine((val) => val !== '', 'Product is required'),
-    // ... other fields
-  })).min(1, 'At least one purchase order line item is required'),
+  lineItemsString: z
+    .array(
+      z.object({
+        quantity: z
+          .union([z.string(), z.number()])
+          .refine(val => Number(val) > 0, 'Quantity should be greater than 0'),
+        unitPrice: z
+          .union([z.string(), z.number()])
+          .refine(val => Number(val) > 0, 'Unit price should be greater than 0'),
+        vatCategoryId: z
+          .union([z.string(), z.number()])
+          .refine(val => val !== '', 'VAT is required'),
+        productId: z
+          .union([z.string(), z.number()])
+          .refine(val => val !== '', 'Product is required'),
+        // ... other fields
+      })
+    )
+    .min(1, 'At least one purchase order line item is required'),
   // ... other fields
 });
 ```
@@ -101,28 +127,34 @@ const createPurchaseOrderSchema = z.object({
 ## Key Differences from Original
 
 ### React Hook Form vs Formik
+
 - **Before**: `<Formik>` with render props pattern
 - **After**: `useForm()` hook with `Controller` components
 
 ### Validation
+
 - **Before**: Yup schema with `.test()` methods
 - **After**: Zod schema with `.refine()` methods
 
 ### State Management
+
 - **Before**: Class component with `this.state` and `this.setState()`
 - **After**: Functional component with `useState()` hooks
 
 ### Form References
+
 - **Before**: `this.formRef.current.setFieldValue()`
 - **After**: `setValue()` from `useForm()`
 
 ### Form Values Access
+
 - **Before**: `props.values`
 - **After**: `watch()` from `useForm()`
 
 ## Testing Checklist
 
 ### Create Screen
+
 - [ ] PO number generation and validation
 - [ ] Supplier selection
 - [ ] RFQ selection (if applicable)
@@ -146,6 +178,7 @@ const createPurchaseOrderSchema = z.object({
 - [ ] Form validation errors display correctly
 
 ### Detail Screen
+
 - [ ] Load existing PO data
 - [ ] Edit PO fields
 - [ ] Modify line items
@@ -156,6 +189,7 @@ const createPurchaseOrderSchema = z.object({
 - [ ] Form validation on edit
 
 ### View Screen
+
 - [ ] Display PO details
 - [ ] PDF export
 - [ ] Print functionality
@@ -165,6 +199,7 @@ const createPurchaseOrderSchema = z.object({
 ## Backup Files
 
 All original files have been backed up with `.backup` extension:
+
 - `screen.js.backup` files contain the original class-based Formik implementations
 - Can be restored if needed: `mv screen.js.backup screen.js && rm screen.jsx`
 

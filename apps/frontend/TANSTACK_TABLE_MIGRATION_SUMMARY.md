@@ -9,6 +9,7 @@ Successfully migrated from `react-bootstrap-table-next` to `@tanstack/react-tabl
 ### Completed Components
 
 #### 1. Core Infrastructure
+
 - **ServerDataTable Component** (`/apps/frontend/src/components/ui/server-data-table.jsx`)
   - Server-side pagination support
   - Server-side sorting support
@@ -23,6 +24,7 @@ Successfully migrated from `react-bootstrap-table-next` to `@tanstack/react-tabl
   - Selected rows count display
 
 #### 2. Migrated Screens
+
 - **Customer Invoice** (`/apps/frontend/src/screens/customer_invoice/screen.js`)
   - ✅ Fully migrated to TanStack Table
   - ✅ All features preserved (pagination, sorting, filtering, actions)
@@ -41,6 +43,7 @@ Successfully migrated from `react-bootstrap-table-next` to `@tanstack/react-tabl
 The following screens still use `react-bootstrap-table-next` and should be migrated using the same pattern:
 
 #### High Priority - Main Listing Screens
+
 1. `/apps/frontend/src/screens/creditNotes/screen.js`
 2. `/apps/frontend/src/screens/debitNotes/screen.js`
 3. `/apps/frontend/src/screens/quotation/screen.js`
@@ -57,17 +60,20 @@ The following screens still use `react-bootstrap-table-next` and should be migra
 ## Key Implementation Details
 
 ### State Structure
+
 All migrated screens now use this state structure:
+
 ```javascript
 this.state = {
   pagination: { pageIndex: 0, pageSize: 10 },
   sorting: [],
   rowSelection: {},
   // ... existing state
-}
+};
 ```
 
 ### Data Flow
+
 1. User interacts with table (page change, sort, filter)
 2. State updates trigger `initializeData()`
 3. API call with pagination/sorting parameters
@@ -75,7 +81,9 @@ this.state = {
 5. Table re-renders with new data
 
 ### Column Definitions
+
 Columns are now defined as a method `getColumns()` that returns an array of column objects:
+
 ```javascript
 getColumns = () => {
   return [
@@ -132,10 +140,13 @@ getColumns = () => {
 ## Dependencies
 
 ### Already Installed
+
 - `@tanstack/react-table` (v8.21.3) - Already in package.json
 
 ### Can Be Removed Eventually
+
 Once all screens are migrated, these can be removed:
+
 - `react-bootstrap-table` (v4.3.1)
 - `react-bootstrap-table-next` (v4.0.1)
 - `react-bootstrap-table2-paginator` (v2.1.2)
@@ -143,6 +154,7 @@ Once all screens are migrated, these can be removed:
 ## Testing Recommendations
 
 For each migrated screen, verify:
+
 - ✅ Initial page load displays data correctly
 - ✅ Pagination works (next, previous, first, last pages)
 - ✅ Page size selector works (10, 20, 30, 40, 50)
@@ -156,6 +168,7 @@ For each migrated screen, verify:
 ## Migration Time Estimate
 
 Based on the completed migrations:
+
 - **Per Screen**: 15-30 minutes (depending on complexity)
 - **Remaining 12 Screens**: ~4-6 hours total
 - **Testing**: 1-2 hours

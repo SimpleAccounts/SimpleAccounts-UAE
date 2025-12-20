@@ -5,6 +5,7 @@ This document tracks the migration of all remaining files from Formik + Yup to R
 ## Migration Status
 
 ### ✅ Already Migrated (Confirmed)
+
 1. `/apps/frontend/src/screens/vat_code/screens/create/screen.jsx` - Migrated to React Hook Form + Zod
 2. `/apps/frontend/src/screens/vat_code/screens/detail/screen.jsx` - Migrated to React Hook Form + Zod
 
@@ -13,6 +14,7 @@ This document tracks the migration of all remaining files from Formik + Yup to R
 The following 56 files still need to be migrated from Formik + Yup to React Hook Form + Zod:
 
 #### User & Role Management (6 files)
+
 - [ ] `/apps/frontend/src/screens/users_roles/screens/detail/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/users_roles/screens/create/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/user/sections/employee_modal.js` → `employee_modal.jsx`
@@ -21,11 +23,13 @@ The following 56 files still need to be migrated from Formik + Yup to React Hook
 - [ ] `/apps/frontend/src/screens/profile/screen.js` → `screen.jsx`
 
 #### Project Management (3 files)
+
 - [ ] `/apps/frontend/src/screens/project/sections/contact_modal.js` → `contact_modal.jsx`
 - [ ] `/apps/frontend/src/screens/project/screens/detail/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/project/screens/create/screen.js` → `screen.jsx`
 
 #### Product & Category (9 files)
+
 - [ ] `/apps/frontend/src/screens/product_category/screens/create/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/product_category/screens/detail/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/product/sections/warehouse_modal.js` → `warehouse_modal.jsx`
@@ -37,20 +41,24 @@ The following 56 files still need to be migrated from Formik + Yup to React Hook
 - [ ] `/apps/frontend/src/screens/product/sections/warehouse_modal.js` → `warehouse_modal.jsx`
 
 #### Payment & Opening Balance (4 files)
+
 - [ ] `/apps/frontend/src/screens/payment/sections/supplier_modal.js` → `supplier_modal.jsx`
 - [ ] `/apps/frontend/src/screens/opening_balance/screens/detail/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/opening_balance/sections/opening_balance_modal.js` → `opening_balance_modal.jsx`
 - [ ] `/apps/frontend/src/screens/opening_balance/screens/create/screen.js` → `screen.jsx`
 
 #### Settings & Configuration (3 files)
+
 - [ ] `/apps/frontend/src/screens/organization/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/notesSetting/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/general_settings/screen.js` → `screen.jsx`
 
 #### Authentication & Security (1 file)
+
 - [ ] `/apps/frontend/src/screens/new_password/sections/reset_new_password.js` → `reset_new_password.jsx`
 
 #### Import & Data Management (5 files)
+
 - [ ] `/apps/frontend/src/screens/import_transaction/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/import_bank_statement/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/import/screen.js` → `screen.jsx`
@@ -58,21 +66,25 @@ The following 56 files still need to be migrated from Formik + Yup to React Hook
 - [ ] `/apps/frontend/src/screens/import/modal/coaModal.js` → `coaModal.jsx`
 
 #### Expense & Employment (4 files)
+
 - [ ] `/apps/frontend/src/screens/expense/screens/detail/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/expense/screens/create/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/employment/screens/create/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/employment/screens/detail/screen.js` → `screen.jsx`
 
 #### Employee Banking (2 files)
+
 - [ ] `/apps/frontend/src/screens/employee_Bank_Details/screens/detail/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/employee_Bank_Details/screens/create/screen.js` → `screen.jsx`
 
 #### Reports (3 files)
+
 - [ ] `/apps/frontend/src/screens/detailed_general_ledger_report/sections/filterComponent.js` → `filterComponent.jsx`
 - [ ] `/apps/frontend/src/screens/detailed_general_ledger_report/sections/FilterComponent3.js` → `FilterComponent3.jsx`
 - [ ] `/apps/frontend/src/screens/under_const/screen-two.js` → `screen-two.jsx`
 
 #### Master Data (8 files)
+
 - [ ] `/apps/frontend/src/screens/designation/screens/detail/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/designation/screens/create/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/currencyConvert/screens/detail/screen.js` → `screen.jsx`
@@ -83,6 +95,7 @@ The following 56 files still need to be migrated from Formik + Yup to React Hook
 - [ ] `/apps/frontend/src/screens/chart_account/screens/create/screen.js` → `screen.jsx`
 
 #### Banking & Transactions (8 files)
+
 - [ ] `/apps/frontend/src/screens/bank_account/screens/transactions/sections/explain_transaction_detail.js` → `explain_transaction_detail.jsx`
 - [ ] `/apps/frontend/src/screens/bank_account/screens/transactions/screens/reconcile/screen.js` → `screen.jsx`
 - [ ] `/apps/frontend/src/screens/bank_account/screens/transactions/sections/explainDiv.js` → `explainDiv.jsx`
@@ -97,6 +110,7 @@ The following 56 files still need to be migrated from Formik + Yup to React Hook
 Each file migration follows this standard pattern:
 
 ### 1. Import Changes
+
 ```javascript
 // OLD (Formik + Yup)
 import { Formik } from 'formik';
@@ -109,6 +123,7 @@ import { z } from 'zod';
 ```
 
 ### 2. Validation Schema Conversion
+
 ```javascript
 // OLD (Yup)
 const validationSchema = Yup.object().shape({
@@ -124,6 +139,7 @@ const schema = z.object({
 ```
 
 ### 3. Form Hook Setup
+
 ```javascript
 // NEW (React Hook Form)
 const {
@@ -144,6 +160,7 @@ const {
 ```
 
 ### 4. Form Field Binding
+
 ```javascript
 // OLD (Formik)
 <Formik initialValues={...} onSubmit={...} validationSchema={...}>

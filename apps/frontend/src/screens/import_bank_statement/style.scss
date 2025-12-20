@@ -14,26 +14,26 @@
   .align-template {
     flex-direction: row;
     align-items: center;
-    label{
+    label {
       margin-bottom: 0 !important;
     }
   }
-  .invalid{
+  .invalid {
     background: #f86c6b;
   }
   .table-responsive {
-    max-height:300px;
-}
-.myClickableThingy {
-  cursor: pointer;
-}
-.import-table {
-  .my-link {
-    text-decoration: none;
+    max-height: 300px;
+  }
+  .myClickableThingy {
     cursor: pointer;
   }
+  .import-table {
+    .my-link {
+      text-decoration: none;
+      cursor: pointer;
+    }
+  }
 }
-}
-.table-header-bg{
+.table-header-bg {
   background-color: #dfe9f7;
 }

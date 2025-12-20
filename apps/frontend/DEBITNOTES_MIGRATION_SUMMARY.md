@@ -1,9 +1,11 @@
 # DebitNotes Migration Summary
 
 ## Migration Date
+
 December 19, 2025
 
 ## Overview
+
 All files in the `debitNotes` screen directory have been successfully migrated from Formik/Yup to React Hook Form/Zod.
 
 ## Migrated Files
@@ -60,6 +62,7 @@ All files in the `debitNotes` screen directory have been successfully migrated f
 ### Index Files (All Updated)
 
 All index.js files correctly point to their .jsx counterparts:
+
 - `screens/applyToInvoice/index.js` → imports `screen.jsx`
 - `screens/create/index.js` → imports `screen.jsx`
 - `screens/detail/index.js` → imports `screen.jsx`
@@ -70,7 +73,9 @@ All index.js files correctly point to their .jsx counterparts:
 ## Migration Patterns Applied
 
 ### 1. Form Initialization
+
 **Before (Formik):**
+
 ```javascript
 <Formik
   initialValues={initValue}
@@ -80,6 +85,7 @@ All index.js files correctly point to their .jsx counterparts:
 ```
 
 **After (React Hook Form + Zod):**
+
 ```javascript
 const form = useForm({
   resolver: zodResolver(schema),
@@ -89,7 +95,9 @@ const form = useForm({
 ```
 
 ### 2. Validation Schema
+
 **Before (Yup):**
+
 ```javascript
 validationSchema={Yup.object().shape({
   field: Yup.string().required('Error message')
@@ -97,65 +105,67 @@ validationSchema={Yup.object().shape({
 ```
 
 **After (Zod):**
+
 ```javascript
 const schema = z.object({
-  field: z.string().min(1, 'Error message')
+  field: z.string().min(1, 'Error message'),
 });
 ```
 
 ### 3. Controlled Inputs
+
 **Before (Formik):**
+
 ```javascript
-<Input
-  value={props.values.fieldName}
-  onChange={props.handleChange('fieldName')}
-/>
+<Input value={props.values.fieldName} onChange={props.handleChange('fieldName')} />
 ```
 
 **After (React Hook Form):**
+
 ```javascript
-<Controller
-  name="fieldName"
-  control={control}
-  render={({ field }) => (
-    <Input {...field} />
-  )}
-/>
+<Controller name="fieldName" control={control} render={({ field }) => <Input {...field} />} />
 ```
 
 ### 4. Form Submission
+
 **Before (Formik):**
+
 ```javascript
 onSubmit={props.handleSubmit}
 ```
 
 **After (React Hook Form):**
+
 ```javascript
 onSubmit={handleSubmit(onSubmit)}
 ```
 
 ### 5. Error Handling
+
 **Before (Formik):**
+
 ```javascript
-{props.errors.field && props.touched.field && (
-  <div className="invalid-feedback">
-    {props.errors.field}
-  </div>
-)}
+{
+  props.errors.field && props.touched.field && (
+    <div className="invalid-feedback">{props.errors.field}</div>
+  );
+}
 ```
 
 **After (React Hook Form):**
+
 ```javascript
-{errors.field && touchedFields.field && (
-  <div className="invalid-feedback">
-    {errors.field.message}
-  </div>
-)}
+{
+  errors.field && touchedFields.field && (
+    <div className="invalid-feedback">{errors.field.message}</div>
+  );
+}
 ```
 
 ## Key Features Implemented
 
 ### All Screens
+
 - ✅ React Hook Form `useForm` hook
 - ✅ Zod validation schemas
 - ✅ `Controller` component for controlled inputs
@@ -168,11 +178,13 @@ onSubmit={handleSubmit(onSubmit)}
 ### Specific Implementations
 
 #### applyToInvoice Screen
+
 - Checkbox selection for invoices
 - Complex credit application logic
 - Bootstrap table integration
 
 #### create Screen
+
 - Product line items table
 - Dynamic row addition/deletion
 - VAT and excise calculations
@@ -181,12 +193,14 @@ onSubmit={handleSubmit(onSubmit)}
 - Tax type switching (Inclusive/Exclusive)
 
 #### detail Screen
+
 - Update functionality
 - Read-only fields for locked data
 - Delete confirmation modal
 - Transaction category selection
 
 #### refund Screen
+
 - Payment mode selection
 - Deposit account selection
 - File upload with validation
@@ -194,6 +208,7 @@ onSubmit={handleSubmit(onSubmit)}
 - Receipt attachment support
 
 #### email_template Component
+
 - Email validation
 - Rich text editor integration
 - Modal form implementation
@@ -201,24 +216,27 @@ onSubmit={handleSubmit(onSubmit)}
 ## Validation Enhancements
 
 ### File Upload Validation
+
 ```javascript
 z.any()
-  .refine((file) => {
+  .refine(file => {
     if (!file) return true;
     return SUPPORTED_FORMATS.includes(file.type);
   }, '*Unsupported File Format')
-  .refine((file) => {
+  .refine(file => {
     if (!file) return true;
     return file.size <= FILE_SIZE;
-  }, '*File Size is too large')
+  }, '*File Size is too large');
 ```
 
 ### Email Validation
+
 ```javascript
-z.string().email('Invalid email format').optional().or(z.literal(''))
+z.string().email('Invalid email format').optional().or(z.literal(''));
 ```
 
 ### Union Type Validation
+
 ```javascript
 z.union([
   z.string().min(1, 'Field is required'),
@@ -226,16 +244,16 @@ z.union([
     value: z.union([z.string(), z.number()]),
     label: z.string(),
   }),
-])
+]);
 ```
 
 ### Number Validation with Custom Logic
+
 ```javascript
-z.union([z.string(), z.number()])
-  .refine((val) => {
-    const num = typeof val === 'string' ? parseFloat(val) : val;
-    return !isNaN(num) && num > 0;
-  }, 'Value must be greater than 0')
+z.union([z.string(), z.number()]).refine(val => {
+  const num = typeof val === 'string' ? parseFloat(val) : val;
+  return !isNaN(num) && num > 0;
+}, 'Value must be greater than 0');
 ```
 
 ## Testing Recommendations
@@ -270,6 +288,7 @@ z.union([z.string(), z.number()])
 ## Files Summary
 
 ### Total Files Migrated: 6
+
 - ✅ screens/applyToInvoice/screen.jsx
 - ✅ screens/create/screen.jsx
 - ✅ screens/detail/screen.jsx
@@ -278,11 +297,13 @@ z.union([z.string(), z.number()])
 - ✅ sections/email_template.jsx
 
 ### Index Files Updated: 6
+
 - ✅ All index.js files point to .jsx versions
 
 ## Migration Status: COMPLETE ✅
 
 All files in the debitNotes screen directory have been successfully migrated from Formik/Yup to React Hook Form/Zod. The migration maintains all existing functionality while improving:
+
 - Type safety with Zod schemas
 - Performance with React Hook Form's minimal re-renders
 - Developer experience with better error messages

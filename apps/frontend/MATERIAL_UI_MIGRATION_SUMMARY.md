@@ -1,14 +1,17 @@
 # Material-UI to shadcn/ui Migration Summary
 
 ## Overview
+
 Successfully migrated all `@material-ui/core` components to shadcn/ui equivalents across the entire frontend codebase.
 
 ## Migration Date
+
 December 19, 2025
 
 ## Components Migrated
 
 ### 1. TextField → shadcn/ui Textarea
+
 - **Files affected**: 19 files
 - **Import change**: `import { TextField } from '@material-ui/core'` → `import { Textarea } from '@/components/ui/textarea'`
 - **Component changes**:
@@ -19,6 +22,7 @@ December 19, 2025
   - Props are now standard HTML textarea props
 
 ### 2. TextareaAutosize → shadcn/ui Textarea
+
 - **Files affected**: 15 files
 - **Import change**: `import { TextareaAutosize } from '@material-ui/core'` → `import { Textarea } from '@/components/ui/textarea'`
 - **Component changes**:
@@ -26,6 +30,7 @@ December 19, 2025
   - `rows="2"` → `rows={2}` (string to number)
 
 ### 3. Checkbox → shadcn/ui Checkbox
+
 - **Files affected**: 11 files
 - **Import change**: `import { Checkbox } from '@material-ui/core'` → `import { Checkbox } from '@/components/ui/checkbox'`
 - **Component changes**:
@@ -35,11 +40,13 @@ December 19, 2025
   - No need for `checked={value}` pattern changes
 
 ### 4. Table → Standard HTML/div
+
 - **Files affected**: 1 file (payroll_run/screen.js)
 - **Change**: Replaced Material-UI `<Table>` with standard `<div>` element
 - Material-UI Table was only being used as a wrapper, not for actual table functionality
 
 ### 5. ThemeProvider → Removed
+
 - **Files affected**: 2 files (index.js, import_transaction/screen.js)
 - **Change**:
   - Removed `MuiThemeProvider` and `createTheme` from index.js
@@ -47,6 +54,7 @@ December 19, 2025
   - App now uses only `next-themes` ThemeProvider for dark mode support
 
 ### 6. IconButton → Removed Imports
+
 - **Files affected**: 8 files
 - **Change**: Removed unused `IconButton` imports
 - Note: IconButton functionality can be implemented using shadcn/ui Button component with icon-only styling if needed
@@ -54,6 +62,7 @@ December 19, 2025
 ## Files Modified
 
 ### Manually Migrated (High-complexity files)
+
 1. `/src/components/form_control/zip_code_input.js` - Removed unused TextField import
 2. `/src/components/form_control/invoice_additional_information.js` - Migrated TextField to Textarea (2 instances)
 3. `/src/components/product_table/index.js` - Migrated TextField to Textarea in table description field
@@ -67,7 +76,9 @@ December 19, 2025
 11. `/src/screens/under_const/screen-two.js` - Complete rewrite using shadcn/ui components with Tailwind CSS
 
 ### Auto-Migrated (Via Python script)
+
 44 files were automatically migrated using a Python script that:
+
 - Replaced TextField imports with Textarea
 - Replaced TextareaAutosize imports with Textarea
 - Replaced Checkbox imports with shadcn Checkbox
@@ -75,6 +86,7 @@ December 19, 2025
 - Handled combined imports (e.g., `import { TextField, Checkbox }`)
 
 **Categories of auto-migrated files:**
+
 - Quotation screens (4 files)
 - Customer invoice screens (3 files)
 - Debit notes screens (4 files)
@@ -93,6 +105,7 @@ December 19, 2025
 ### Component Usage Changes
 
 #### Textarea (was TextField/TextareaAutosize)
+
 ```jsx
 // Before (Material-UI)
 <TextField
@@ -122,6 +135,7 @@ December 19, 2025
 ```
 
 #### Checkbox
+
 ```jsx
 // Before (Material-UI)
 <Checkbox
@@ -137,6 +151,7 @@ December 19, 2025
 ```
 
 ### Label + Input Pattern
+
 For fields that need labels, use the Label component from shadcn/ui:
 
 ```jsx
@@ -146,10 +161,11 @@ import { Textarea } from '@/components/ui/textarea';
 <div>
   <Label htmlFor="notes">Notes</Label>
   <Textarea id="notes" name="notes" />
-</div>
+</div>;
 ```
 
 ### Styling
+
 - Material-UI specific styling (like `variant`, `color` props) has been removed
 - Use Tailwind CSS classes or the `className` prop for styling
 - shadcn/ui components are designed to work seamlessly with Tailwind
@@ -157,7 +173,9 @@ import { Textarea } from '@/components/ui/textarea';
 ## Remaining Material-UI Dependencies
 
 ### @material-ui/icons
+
 10 files still use Material-UI icons:
+
 - src/constants/navigation.js
 - src/screens/quotation/sections/supplier_modal.js
 - src/screens/purchase_order/sections/supplier_modal.js
@@ -173,13 +191,17 @@ import { Textarea } from '@/components/ui/textarea';
 ## Verification
 
 ### Build Status
+
 ✅ Project builds successfully without Material-UI core errors
 
 ### Import Verification
+
 ✅ Zero files contain `@material-ui/core` imports
 
 ### Component Verification
+
 All migrated components follow shadcn/ui patterns:
+
 - Proper prop usage
 - Correct event handling
 - Tailwind CSS compatible styling
@@ -226,11 +248,13 @@ All migrated components follow shadcn/ui patterns:
 ## Migration Script
 
 The migration was performed using a combination of:
+
 1. Manual edits for complex components and files
 2. A Python script for bulk simple replacements
 3. Careful verification of each change
 
 The Python script used pattern matching and regex to:
+
 - Identify Material-UI imports
 - Replace with appropriate shadcn/ui imports
 - Handle both simple and combined import statements

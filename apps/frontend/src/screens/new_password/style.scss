@@ -1,20 +1,20 @@
-.reset-password-screen{
-  background-color:  #ffffffc7;;
-    .register-header{
+.reset-password-screen {
+  background-color: #ffffffc7;
+  .register-header {
     border-bottom: 1px solid lightgray !important;
-    i{
-      display: flex!important;
+    i {
+      display: flex !important;
       align-items: center;
       padding-right: 5px;
       font-size: 1.3rem;
       color: #1985ac;
     }
-   h5{
-    font-size: 1.3rem!important;
-    color: #1985ac;
-   }
+    h5 {
+      font-size: 1.3rem !important;
+      color: #1985ac;
+    }
   }
-  .button-group{
+  .button-group {
     margin-bottom: 1rem;
     .submit-btn {
       border: 1px solid transparent;
@@ -22,7 +22,7 @@
       padding: 10px;
       font-size: 1rem;
     }
-    .close-btn{
+    .close-btn {
       border: 1px solid #2064d8;
       border-radius: 5px;
       background: white;
@@ -38,24 +38,24 @@
     }
   }
 }
-.main-banner_container{
-	position: relative;
-    left: 0;
-    top: 0;
+.main-banner_container {
+  position: relative;
+  left: 0;
+  top: 0;
 }
-.login_banckground{
-	position: relative;
-    top: 0px;
-    left: 0;
-	float: left;
-	width: 100%;
+.login_banckground {
+  position: relative;
+  top: 0px;
+  left: 0;
+  float: left;
+  width: 100%;
   max-width: 1000px;
   height: auto;
 }
-.login_banner{
-	position: absolute;
-    top: 60px;
-    left: 0;
-	float: left;
-	margin-left: 4%;
+.login_banner {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  float: left;
+  margin-left: 4%;
 }

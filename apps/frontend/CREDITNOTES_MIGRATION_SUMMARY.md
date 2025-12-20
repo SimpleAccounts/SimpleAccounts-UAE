@@ -1,11 +1,13 @@
 # Credit Notes Migration Summary
 
 ## Overview
+
 Successfully migrated all remaining creditNotes screens from Formik/Yup to React Hook Form/Zod validation.
 
 ## Files Migrated
 
 ### 1. applyToInvoice Screen
+
 - **File**: `apps/frontend/src/screens/creditNotes/screens/applyToInvoice/screen.js` → `screen.jsx`
 - **Migration Type**: Minimal form handling (checkbox selection logic)
 - **Key Changes**:
@@ -14,7 +16,8 @@ Successfully migrated all remaining creditNotes screens from Formik/Yup to React
   - Removed Formik imports and usage
   - Updated form submission to use native form onSubmit
 
-### 2. refund Screen  
+### 2. refund Screen
+
 - **File**: `apps/frontend/src/screens/creditNotes/screens/refund/screen.js` → `screen.jsx`
 - **Migration Type**: Complete form migration with validation
 - **Key Changes**:
@@ -27,6 +30,7 @@ Successfully migrated all remaining creditNotes screens from Formik/Yup to React
   - Added proper error handling and display
 
 ### 3. view Screen
+
 - **File**: `apps/frontend/src/screens/creditNotes/screens/view/screen.js` → `screen.jsx`
 - **Migration Type**: Simple rename (no forms)
 - **Key Changes**:
@@ -37,6 +41,7 @@ Successfully migrated all remaining creditNotes screens from Formik/Yup to React
 ## Index File Updates
 
 All index.js files updated to import from screen.jsx:
+
 - `apps/frontend/src/screens/creditNotes/screens/applyToInvoice/index.js`
 - `apps/frontend/src/screens/creditNotes/screens/refund/index.js`
 - `apps/frontend/src/screens/creditNotes/screens/view/index.js`
@@ -44,6 +49,7 @@ All index.js files updated to import from screen.jsx:
 ## Validation Schema Details
 
 ### Refund Screen Zod Schema
+
 ```javascript
 const refundSchema = (maxAmount) => z.object({
   receiptNo: z.string().optional(),
@@ -65,6 +71,7 @@ const refundSchema = (maxAmount) => z.object({
 ## Pattern Consistency
 
 All migrations follow the established pattern:
+
 1. Import React Hook Form and Zod dependencies
 2. Define Zod validation schema at file level
 3. Create functional wrapper component with useForm hook

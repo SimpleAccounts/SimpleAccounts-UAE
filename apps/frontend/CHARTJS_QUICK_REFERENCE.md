@@ -3,6 +3,7 @@
 ## Installation & Setup
 
 Chart.js is already configured in this project. The setup is in:
+
 - `/src/utils/chartRegistry.js` - Registers all Chart.js components
 - `/src/index.js` - Imports the registry before app renders
 
@@ -64,7 +65,7 @@ const options = {
   },
 };
 
-<Line data={data} options={options} height={300} />
+<Line data={data} options={options} height={300} />;
 ```
 
 ### 2. Bar Chart
@@ -95,7 +96,7 @@ const options = {
   },
 };
 
-<Bar data={data} options={options} />
+<Bar data={data} options={options} />;
 ```
 
 ### 3. Horizontal Bar Chart
@@ -173,7 +174,7 @@ const options = {
   },
 };
 
-<Pie data={data} options={options} />
+<Pie data={data} options={options} />;
 ```
 
 ### 6. Doughnut Chart
@@ -182,7 +183,7 @@ const options = {
 import { Doughnut } from 'react-chartjs-2';
 
 // Same as Pie chart, but displays as doughnut
-<Doughnut data={data} options={options} />
+<Doughnut data={data} options={options} />;
 ```
 
 ### 7. Mixed Chart (Bar + Line)
@@ -213,7 +214,7 @@ const data = {
 };
 
 // Use Bar component for mixed charts
-<Bar data={data} options={options} />
+<Bar data={data} options={options} />;
 ```
 
 ## Standard Color Palette
@@ -221,13 +222,13 @@ const data = {
 ```javascript
 // Use these colors for consistency across the app
 const COLORS = {
-  primary: '#2064d8',      // Blue - Income/Inflow/Primary data
-  secondary: '#f4772e',    // Orange - Expenses/Outflow/Secondary data
-  success: '#a1b86d',      // Green - Positive metrics
-  danger: '#f86c6b',       // Red - Negative metrics/Overdue
-  info: '#4191ff',         // Light Blue - Customer data
-  warning: '#FFCE56',      // Yellow - Due items
-  neutral: '#7a7b97',      // Gray - Neutral data
+  primary: '#2064d8', // Blue - Income/Inflow/Primary data
+  secondary: '#f4772e', // Orange - Expenses/Outflow/Secondary data
+  success: '#a1b86d', // Green - Positive metrics
+  danger: '#f86c6b', // Red - Negative metrics/Overdue
+  info: '#4191ff', // Light Blue - Customer data
+  warning: '#FFCE56', // Yellow - Due items
+  neutral: '#7a7b97', // Gray - Neutral data
 };
 ```
 
@@ -341,20 +342,20 @@ const options = {
       mode: 'index',
       intersect: false,
       callbacks: {
-        label: function(context) {
+        label: function (context) {
           let label = context.dataset.label || '';
           if (label) {
             label += ': ';
           }
           label += context.parsed.y.toLocaleString('en-US', {
             style: 'currency',
-            currency: 'USD'
+            currency: 'USD',
           });
           return label;
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };
 ```
 
@@ -363,11 +364,7 @@ const options = {
 ### 1. Use datasetKeyProvider for Dynamic Updates
 
 ```javascript
-<Bar
-  data={data}
-  options={options}
-  datasetKeyProvider={() => Math.random()}
-/>
+<Bar data={data} options={options} datasetKeyProvider={() => Math.random()} />
 ```
 
 ### 2. Disable Animations for Large Datasets
@@ -377,8 +374,8 @@ const options = {
   animation: false, // Disable animations
   // or
   animation: {
-    duration: 0 // Set to 0ms
-  }
+    duration: 0, // Set to 0ms
+  },
 };
 ```
 
@@ -392,8 +389,8 @@ const options = {
     decimation: {
       enabled: true,
       algorithm: 'lttb', // Largest Triangle Three Buckets
-    }
-  }
+    },
+  },
 };
 ```
 
@@ -419,18 +416,23 @@ const options = {
 ## Common Issues and Solutions
 
 ### Issue: Chart not displaying
+
 **Solution:** Ensure Chart.js components are registered in `/src/utils/chartRegistry.js`
 
 ### Issue: Chart not responsive
+
 **Solution:** Set `responsive: true` and wrap chart in a sized container
 
 ### Issue: Legend items not clickable
+
 **Solution:** Ensure `legend.onClick` is not set to `null`
 
 ### Issue: Tooltip not showing
+
 **Solution:** Check `tooltip.enabled` is `true` and `intersect` is set correctly
 
 ### Issue: Data not updating
+
 **Solution:** Use `datasetKeyProvider` or ensure state updates trigger re-render
 
 ## Examples in Codebase

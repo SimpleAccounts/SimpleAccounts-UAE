@@ -1,19 +1,23 @@
 # Payroll Module Migration Status - Formik + Yup to React Hook Form + Zod
 
 ## Migration Date
+
 December 19, 2025
 
 ## Overview
+
 This document tracks the migration status of all payroll-related files from Formik + Yup to React Hook Form + Zod.
 
 ## Completed Migrations ✅
 
 ### Payroll Employee Sections
+
 - ✅ `/screens/payrollemp/sections/salaryComponentVariable.jsx`
 - ✅ `/screens/payrollemp/sections/designation_modal.jsx`
 - ✅ `/screens/payrollemp/sections/salaryComponent.jsx`
 
-### Payroll Employee Screens  
+### Payroll Employee Screens
+
 - ✅ `/screens/payrollemp/screens/update_emp_bank/screen.jsx`
 - ✅ `/screens/payrollemp/screens/update_emp_employemet/screen.jsx`
 - ✅ `/screens/payrollemp/screens/update_salary_component/screen.jsx`
@@ -21,10 +25,12 @@ This document tracks the migration status of all payroll-related files from Form
 - ✅ `/screens/payrollemp/screen.jsx`
 
 ### Payroll Run Sections
+
 - ✅ `/screens/payroll_run/sections/createCompanyDetailsModal.jsx`
 - ✅ `/screens/payroll_run/sections/payrollModal.jsx`
 
 ### Payroll Run Screens
+
 - ✅ `/screens/payroll_run/screen.jsx`
 - ✅ `/screens/payroll_run/screens/approver/screen.jsx`
 - ✅ `/screens/payroll_run/screens/approver/sections/addEmployees.jsx`
@@ -32,20 +38,24 @@ This document tracks the migration status of all payroll-related files from Form
 - ✅ `/screens/payroll_run/screens/updatePayroll/screen.jsx`
 
 ### Payroll Configuration
+
 - ✅ `/screens/payroll_configurations/screen.jsx`
 - ✅ `/screens/payrollsettings/screen.jsx`
 
 ## Pending Migrations 🔄
 
 ### Payroll Employee Screens
+
 - ⏳ `/screens/payrollemp/screens/update_emp_personal/screen.js` - Needs migration
 - ⏳ `/screens/payrollemp/screens/create/screen.js` - Needs migration
 
 ### Payroll Run Screens
+
 - ⏳ `/screens/payroll_run/screens/updatePayroll/sections/addEmployees.js` - Needs migration
 - ⏳ `/screens/payroll_run/screens/createPayrollList/sections/addEmployees.js` - Needs migration
 
 ### Salary Management Screens
+
 - ⏳ `/screens/salary_component/sections/screen_component/index.js` - Needs migration
 - ⏳ `/screens/salaryTemplate/screens/detail/screen.js` - Needs migration
 - ⏳ `/screens/salaryTemplate/screens/create/screen.js` - Needs migration
@@ -65,6 +75,7 @@ This document tracks the migration status of all payroll-related files from Form
 All migrations follow this pattern:
 
 ### 1. Import Changes
+
 ```javascript
 // Before (Formik + Yup)
 import { Formik } from 'formik';
@@ -77,6 +88,7 @@ import { z } from 'zod';
 ```
 
 ### 2. Schema Conversion
+
 ```javascript
 // Before (Yup)
 validationSchema={Yup.object().shape({
@@ -92,28 +104,32 @@ const schema = z.object({
 ```
 
 ### 3. Form Hook
+
 ```javascript
 // Before (Formik)
 <Formik
-    initialValues={initValue}
-    onSubmit={(values) => handleSubmit(values)}
-    validationSchema={schema}
+  initialValues={initValue}
+  onSubmit={values => handleSubmit(values)}
+  validationSchema={schema}
 >
-    {(props) => (
-        <Form>...</Form>
-    )}
-</Formik>
+  {props => <Form>...</Form>}
+</Formik>;
 
 // After (React Hook Form)
-const { control, handleSubmit, formState: { errors } } = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: initValue,
+const {
+  control,
+  handleSubmit,
+  formState: { errors },
+} = useForm({
+  resolver: zodResolver(schema),
+  defaultValues: initValue,
 });
 
-<Form onSubmit={handleSubmit(onSubmit)}>...</Form>
+<Form onSubmit={handleSubmit(onSubmit)}>...</Form>;
 ```
 
 ### 4. Field Registration
+
 ```javascript
 // Before (Formik)
 <Input

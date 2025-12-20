@@ -1,9 +1,11 @@
 # Supplier Invoice Migration Guide: Formik/Yup to React Hook Form/Zod
 
 ## Overview
+
 Migrating supplier_invoice create and detail screens (~3800 and ~3200 lines respectively) from Class Components with Formik/Yup to Functional Components with React Hook Form/Zod.
 
 ## Files to Migrate
+
 - `src/screens/supplier_invoice/screens/create/screen.js` → `screen.jsx`
 - `src/screens/supplier_invoice/screens/detail/screen.js` → `screen.jsx`
 
@@ -12,6 +14,7 @@ Migrating supplier_invoice create and detail screens (~3800 and ~3200 lines resp
 ### 1. Update Imports
 
 **OLD (Formik/Yup):**
+
 ```javascript
 import React from 'react';
 import { Formik, Field } from 'formik';
@@ -19,6 +22,7 @@ import * as Yup from 'yup';
 ```
 
 **NEW (React Hook Form/Zod):**
+
 ```javascript
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -29,6 +33,7 @@ import { z } from 'zod';
 ### 2. Convert Class Component to Functional Component
 
 **OLD:**
+
 ```javascript
 class CreateSupplierInvoice extends React.Component {
   constructor(props) {
@@ -52,6 +57,7 @@ class CreateSupplierInvoice extends React.Component {
 ```
 
 **NEW:**
+
 ```javascript
 const CreateSupplierInvoice = ({
   supplierInvoiceActions,
@@ -84,6 +90,7 @@ const CreateSupplierInvoice = ({
 ### 3. Create Zod Validation Schema
 
 **OLD (Yup):**
+
 ```javascript
 validationSchema={Yup.object().shape({
   invoice_number: Yup.string().required('Invoice number is required'),
@@ -109,47 +116,55 @@ validationSchema={Yup.object().shape({
 ```
 
 **NEW (Zod):**
+
 ```javascript
 const createSupplierInvoiceSchema = z.object({
   invoice_number: z.string().min(1, 'Invoice number is required'),
   contactId: z.union([
     z.string().min(1, 'Supplier Name is required'),
-    z.object({ value: z.union([z.string(), z.number()]), label: z.string() })
+    z.object({ value: z.union([z.string(), z.number()]), label: z.string() }),
   ]),
-  term: z.union([
-    z.string().min(1, 'Term is required'),
-    z.object({ value: z.string(), label: z.string() })
-  ]).refine((val) => {
-    if (typeof val === 'object' && val.label === 'Select Terms') return false;
-    return true;
-  }, { message: 'Term is required' }),
+  term: z
+    .union([
+      z.string().min(1, 'Term is required'),
+      z.object({ value: z.string(), label: z.string() }),
+    ])
+    .refine(
+      val => {
+        if (typeof val === 'object' && val.label === 'Select Terms') return false;
+        return true;
+      },
+      { message: 'Term is required' }
+    ),
   currencyCode: z.union([
     z.string().min(1, 'Currency is required'),
-    z.object({ value: z.string(), label: z.string() })
+    z.object({ value: z.string(), label: z.string() }),
   ]),
-  invoiceDate: z.union([z.string(), z.date()]).refine((val) => val !== '', { message: 'Invoice date is required' }),
+  invoiceDate: z
+    .union([z.string(), z.date()])
+    .refine(val => val !== '', { message: 'Invoice date is required' }),
   invoiceDueDate: z.string().optional(),
-  placeOfSupplyId: z.union([z.string(), z.object({ value: z.string(), label: z.string() })]).optional(),
-  lineItemsString: z.array(
-    z.object({
-      quantity: z.union([z.string(), z.number()]).refine(
-        value => parseFloat(value) > 0,
-        { message: 'Quantity must be greater than 0' }
-      ),
-      unitPrice: z.union([z.string(), z.number()]).refine(
-        value => parseFloat(value) > 0,
-        { message: 'Unit price must be greater than 0' }
-      ),
-      vatCategoryId: z.union([z.string(), z.number()]).refine(
-        value => value !== '',
-        { message: 'VAT is required' }
-      ),
-      productId: z.union([z.string(), z.number()]).refine(
-        value => value !== '',
-        { message: 'Product is required' }
-      ),
-    })
-  ).min(1, 'At least one invoice line item is required'),
+  placeOfSupplyId: z
+    .union([z.string(), z.object({ value: z.string(), label: z.string() })])
+    .optional(),
+  lineItemsString: z
+    .array(
+      z.object({
+        quantity: z
+          .union([z.string(), z.number()])
+          .refine(value => parseFloat(value) > 0, { message: 'Quantity must be greater than 0' }),
+        unitPrice: z
+          .union([z.string(), z.number()])
+          .refine(value => parseFloat(value) > 0, { message: 'Unit price must be greater than 0' }),
+        vatCategoryId: z
+          .union([z.string(), z.number()])
+          .refine(value => value !== '', { message: 'VAT is required' }),
+        productId: z
+          .union([z.string(), z.number()])
+          .refine(value => value !== '', { message: 'Product is required' }),
+      })
+    )
+    .min(1, 'At least one invoice line item is required'),
   exchangeRate: z.union([z.string(), z.number()]).optional(),
   notes: z.string().optional(),
   discount: z.union([z.string(), z.number()]).optional(),
@@ -163,6 +178,7 @@ const createSupplierInvoiceSchema = z.object({
 ### 4. Convert Formik render prop to Form submission
 
 **OLD:**
+
 ```javascript
 <Formik
   ref={this.formRef}
@@ -184,10 +200,9 @@ const createSupplierInvoiceSchema = z.object({
 ```
 
 **NEW:**
+
 ```javascript
-<Form onSubmit={handleSubmit(onSubmit)}>
-  {/* form fields */}
-</Form>
+<Form onSubmit={handleSubmit(onSubmit)}>{/* form fields */}</Form>
 ```
 
 ### 5. Convert Field Components
@@ -195,13 +210,14 @@ const createSupplierInvoiceSchema = z.object({
 **For complex inputs (Select, DatePicker) - use Controller:**
 
 **OLD:**
+
 ```javascript
 <Field
   name="contactId"
   render={({ field, form }) => (
     <Select
       value={field.value}
-      onChange={(e) => {
+      onChange={e => {
         form.setFieldValue('contactId', e.value);
       }}
       options={supplier_list}
@@ -211,6 +227,7 @@ const createSupplierInvoiceSchema = z.object({
 ```
 
 **NEW:**
+
 ```javascript
 <Controller
   name="contactId"
@@ -219,11 +236,9 @@ const createSupplierInvoiceSchema = z.object({
     <Select
       {...field}
       value={
-        field.value?.value
-          ? field.value
-          : supplier_list.find(option => option.value == field.value)
+        field.value?.value ? field.value : supplier_list.find(option => option.value == field.value)
       }
-      onChange={(option) => {
+      onChange={option => {
         field.onChange(option);
         setContactDetails(option.value);
       }}
@@ -231,17 +246,16 @@ const createSupplierInvoiceSchema = z.object({
       className={errors.contactId ? 'is-invalid' : ''}
     />
   )}
-/>
-{errors.contactId && (
-  <div className="invalid-feedback d-block">
-    {errors.contactId.message}
-  </div>
-)}
+/>;
+{
+  errors.contactId && <div className="invalid-feedback d-block">{errors.contactId.message}</div>;
+}
 ```
 
 **For simple text inputs - use Controller or register():**
 
 **OLD:**
+
 ```javascript
 <Field
   name="invoice_number"
@@ -249,7 +263,7 @@ const createSupplierInvoiceSchema = z.object({
     <Input
       {...field}
       type="text"
-      onChange={(e) => {
+      onChange={e => {
         form.setFieldValue('invoice_number', e.target.value);
       }}
     />
@@ -258,28 +272,24 @@ const createSupplierInvoiceSchema = z.object({
 ```
 
 **NEW:**
+
 ```javascript
 <Controller
   name="invoice_number"
   control={control}
   render={({ field }) => (
-    <Input
-      {...field}
-      type="text"
-      className={errors.invoice_number ? 'is-invalid' : ''}
-    />
+    <Input {...field} type="text" className={errors.invoice_number ? 'is-invalid' : ''} />
   )}
-/>
-{errors.invoice_number && (
-  <div className="invalid-feedback">
-    {errors.invoice_number.message}
-  </div>
-)}
+/>;
+{
+  errors.invoice_number && <div className="invalid-feedback">{errors.invoice_number.message}</div>;
+}
 ```
 
 ### 6. Convert State Management
 
 **OLD:**
+
 ```javascript
 this.setState({ loading: true });
 this.formRef.current.setFieldValue('contactId', value);
@@ -287,6 +297,7 @@ const values = this.formRef.current.values;
 ```
 
 **NEW:**
+
 ```javascript
 setLoading(true);
 setValue('contactId', value, { shouldValidate: true });
@@ -296,13 +307,15 @@ const values = watch();
 ### 7. Convert Form Submission
 
 **OLD:**
+
 ```javascript
 createSupplierInvoice = (values, actions) => {
   const formData = new FormData();
   formData.append('contactId', values.contactId);
   // ... build formData
 
-  this.props.supplierInvoiceCreateActions.createInvoice(formData)
+  this.props.supplierInvoiceCreateActions
+    .createInvoice(formData)
     .then(res => {
       actions.setSubmitting(false);
       // handle success
@@ -315,19 +328,26 @@ createSupplierInvoice = (values, actions) => {
 ```
 
 **NEW:**
+
 ```javascript
-const onSubmit = (formData) => {
+const onSubmit = formData => {
   setDisabled(true);
   const postFormData = new FormData();
-  postFormData.append('contactId', formData.contactId ? (formData.contactId.value ?? formData.contactId) : '');
+  postFormData.append(
+    'contactId',
+    formData.contactId ? (formData.contactId.value ?? formData.contactId) : ''
+  );
   // ... build formData
 
-  supplierInvoiceCreateActions.createInvoice(postFormData)
+  supplierInvoiceCreateActions
+    .createInvoice(postFormData)
     .then(res => {
       setDisabled(false);
       // handle success
       if (createMore) {
-        reset({ /* default values */ });
+        reset({
+          /* default values */
+        });
       } else {
         history.push('/admin/expense/supplier-invoice');
       }
@@ -351,7 +371,7 @@ The supplier_invoice screens use a dynamic product table similar to customer_inv
 ### 9. Handle Supplier Selection and VAT Logic
 
 ```javascript
-const setContactDetails = (supplierID) => {
+const setContactDetails = supplierID => {
   setValue('contactId', supplierID, { shouldValidate: true });
   const supplier = supplier_list.find(obj => obj.value === supplierID);
   if (supplier) {
@@ -370,10 +390,10 @@ After creating screen.jsx files:
 
 ```javascript
 // Before
-import screen from './screen'
+import screen from './screen';
 
 // After
-import screen from './screen.jsx'
+import screen from './screen.jsx';
 ```
 
 ## Key Differences from Customer Invoice

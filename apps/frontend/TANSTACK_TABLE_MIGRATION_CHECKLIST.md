@@ -121,6 +121,7 @@ Last Updated: December 19, 2025
 ## Testing Progress
 
 ### Completed Screens
+
 - [ ] Customer Invoice
   - [ ] Pagination (all functions)
   - [ ] Sorting (all columns)
@@ -142,6 +143,7 @@ Last Updated: December 19, 2025
   - [ ] Loading state
 
 ### Pending Screens
+
 (Add testing checkboxes for each screen as they are migrated)
 
 ## Post-Migration Tasks
@@ -161,6 +163,7 @@ Last Updated: December 19, 2025
 If issues are discovered:
 
 1. **Individual Screen**: Restore from `.bak` file
+
    ```bash
    cd /apps/frontend/src/screens/[screen-name]
    mv screen.js screen-tanstack.js.failed
@@ -168,6 +171,7 @@ If issues are discovered:
    ```
 
 2. **Multiple Screens**: Use git to revert specific commits
+
    ```bash
    git log --oneline  # Find commit hash
    git revert <commit-hash>
@@ -192,20 +196,22 @@ Assign team members to migrate specific screens:
 
 ## Known Issues & Solutions
 
-| Issue | Screen | Solution | Status |
-|-------|--------|----------|--------|
-| None yet | - | - | - |
+| Issue    | Screen | Solution | Status |
+| -------- | ------ | -------- | ------ |
+| None yet | -      | -        | -      |
 
 ## Performance Metrics
 
 Record bundle size and performance before/after:
 
 ### Before Migration
+
 - Bundle size: TBD
 - Initial load time: TBD
 - Time to interactive: TBD
 
 ### After Migration
+
 - Bundle size: TBD (Expected: -50KB to -100KB)
 - Initial load time: TBD (Expected: Similar or better)
 - Time to interactive: TBD (Expected: Better)
@@ -213,6 +219,7 @@ Record bundle size and performance before/after:
 ## Migration Notes
 
 ### Common Gotchas
+
 1. Page index is 0-based (not 1-based like BootstrapTable)
 2. Sorting is an array, not separate name/order variables
 3. Actions dropdown state remains separate from table state
@@ -220,6 +227,7 @@ Record bundle size and performance before/after:
 5. Test pagination reset on filter/search
 
 ### Best Practices
+
 1. Follow the pattern from customer_invoice/supplier_invoice
 2. Use the Quick Reference guide for common patterns
 3. Test thoroughly before marking complete

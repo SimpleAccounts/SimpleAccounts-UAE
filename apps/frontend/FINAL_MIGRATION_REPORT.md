@@ -1,4 +1,5 @@
 # Final Migration Report: Formik/Yup to React Hook Form/Zod
+
 **Date**: December 19, 2024
 **Status**: ✅ COMPLETED
 
@@ -16,6 +17,7 @@ All 6 requested screen directories (12 files total) have been successfully migra
 - ✅ Product Category screens (create & detail)
 
 **Total Files Affected**: 24 files
+
 - 12 new `.jsx` files created with React Hook Form/Zod
 - 12 old `.js` files deprecated (still present for backup)
 - 12 `index.js` files already updated to import from `.jsx`
@@ -27,40 +29,45 @@ All 6 requested screen directories (12 files total) have been successfully migra
 ### 1. Designation Screens
 
 #### Files
+
 - **Create**: `/src/screens/designation/screens/create/screen.jsx`
 - **Detail**: `/src/screens/designation/screens/detail/screen.jsx`
 
 #### Validation Schema (Zod)
+
 ```javascript
-const createDesignationSchema = z.object({
-  designationName: z
-    .string()
-    .min(1, 'Designation name is required')
-    .max(30, 'Designation name is too long'),
-  designationType: z
-    .object({
-      value: z.union([z.number(), z.string()]),
-      label: z.string(),
-    })
-    .nullable()
-    .refine((val) => val !== null, strings.DesignationTypeIsRequired),
-  designationId: z
-    .string()
-    .min(1, 'Designation id is required')
-    .max(9, 'Designation id is too long'),
-}).refine(
-  (data) => {
-    const id = parseInt(data.designationId);
-    return id !== 0;
-  },
-  {
-    message: 'Enter valid designation ID',
-    path: ['designationId'],
-  }
-);
+const createDesignationSchema = z
+  .object({
+    designationName: z
+      .string()
+      .min(1, 'Designation name is required')
+      .max(30, 'Designation name is too long'),
+    designationType: z
+      .object({
+        value: z.union([z.number(), z.string()]),
+        label: z.string(),
+      })
+      .nullable()
+      .refine(val => val !== null, strings.DesignationTypeIsRequired),
+    designationId: z
+      .string()
+      .min(1, 'Designation id is required')
+      .max(9, 'Designation id is too long'),
+  })
+  .refine(
+    data => {
+      const id = parseInt(data.designationId);
+      return id !== 0;
+    },
+    {
+      message: 'Enter valid designation ID',
+      path: ['designationId'],
+    }
+  );
 ```
 
 #### Features
+
 - Custom validation for duplicate ID/name
 - Functional component with hooks
 - Delete functionality (detail screen)
@@ -72,10 +79,12 @@ const createDesignationSchema = z.object({
 ### 2. Employment Screens
 
 #### Files
+
 - **Create**: `/src/screens/employment/screens/create/screen.jsx`
 - **Detail**: `/src/screens/employment/screens/detail/screen.jsx`
 
 #### Validation Schema (Zod)
+
 ```javascript
 const createEmploymentSchema = z.object({
   department: z.string().optional(),
@@ -94,6 +103,7 @@ const createEmploymentSchema = z.object({
 ```
 
 #### Features
+
 - All fields optional for flexibility
 - Date picker integration
 - React Select integration
@@ -105,10 +115,12 @@ const createEmploymentSchema = z.object({
 ### 3. Employee Bank Details Screens
 
 #### Files
+
 - **Create**: `/src/screens/employee_Bank_Details/screens/create/screen.jsx`
 - **Detail**: `/src/screens/employee_Bank_Details/screens/detail/screen.jsx`
 
 #### Validation Schema (Zod)
+
 ```javascript
 const createEmployeeFinancialSchema = z.object({
   accountHolderName: z
@@ -116,13 +128,8 @@ const createEmployeeFinancialSchema = z.object({
     .min(1, 'Account Holder Name is required')
     .max(100, 'Account Holder Name is too long')
     .regex(/^[a-zA-Z ]+$/, 'Only alphabets and spaces are allowed'),
-  accountNumber: z
-    .string()
-    .optional(),
-  ibanNumber: z
-    .string()
-    .max(23, 'IBAN Number cannot exceed 23 characters')
-    .optional(),
+  accountNumber: z.string().optional(),
+  ibanNumber: z.string().max(23, 'IBAN Number cannot exceed 23 characters').optional(),
   bankName: z
     .string()
     .max(100, 'Bank Name is too long')
@@ -141,27 +148,19 @@ const createEmployeeFinancialSchema = z.object({
     .max(11, 'Swift Code cannot exceed 11 characters')
     .optional()
     .or(z.literal('')),
-  routingCode: z
-    .string()
-    .optional()
-    .or(z.literal('')),
-  passportExpiryDate: z
-    .date()
-    .nullable()
-    .optional(),
+  routingCode: z.string().optional().or(z.literal('')),
+  passportExpiryDate: z.date().nullable().optional(),
   visaNumber: z
     .string()
     .max(16, 'Visa Number cannot exceed 16 characters')
     .optional()
     .or(z.literal('')),
-  visaExpiryDate: z
-    .date()
-    .nullable()
-    .optional(),
+  visaExpiryDate: z.date().nullable().optional(),
 });
 ```
 
 #### Features
+
 - Complex validation for financial fields
 - IBAN validation (max 23 chars)
 - SWIFT code validation (8-11 chars)
@@ -173,26 +172,32 @@ const createEmployeeFinancialSchema = z.object({
 ### 4. Currency Convert Screens
 
 #### Files
+
 - **Create**: `/src/screens/currencyConvert/screens/create/screen.jsx`
 - **Detail**: `/src/screens/currencyConvert/screens/detail/screen.jsx`
 
 #### Validation Schema (Zod)
+
 ```javascript
 const createCurrencyConvertSchema = z.object({
-  currencyCode: z.number({
-    required_error: 'Exchange currency is required',
-    invalid_type_error: 'Exchange currency is required',
-  }).positive('Exchange currency is required'),
+  currencyCode: z
+    .number({
+      required_error: 'Exchange currency is required',
+      invalid_type_error: 'Exchange currency is required',
+    })
+    .positive('Exchange currency is required'),
   currencyIsoCode: z.string().optional(),
-  exchangeRate: z.string()
+  exchangeRate: z
+    .string()
     .min(1, 'Exchange rate is required')
-    .refine((val) => parseFloat(val) > 0, {
+    .refine(val => parseFloat(val) > 0, {
       message: 'Exchange rate should be greater than 0',
     }),
 });
 ```
 
 #### Features
+
 - Number validation for currency code
 - Custom validation for exchange rate
 - Decimal precision support (up to 6 decimals)
@@ -204,10 +209,12 @@ const createCurrencyConvertSchema = z.object({
 ### 5. VAT Code Screens
 
 #### Files
+
 - **Create**: `/src/screens/vat_code/screens/create/screen.jsx`
 - **Detail**: `/src/screens/vat_code/screens/detail/screen.jsx`
 
 #### Validation Schema (Zod)
+
 ```javascript
 const createVatCodeSchema = z.object({
   name: z
@@ -223,6 +230,7 @@ const createVatCodeSchema = z.object({
 ```
 
 #### Features
+
 - Percentage validation (0-100 with up to 2 decimals)
 - NumberFormat component integration
 - Alphanumeric name validation
@@ -234,10 +242,12 @@ const createVatCodeSchema = z.object({
 ### 6. Product Category Screens
 
 #### Files
+
 - **Create**: `/src/screens/product_category/screens/create/screen.jsx`
 - **Detail**: `/src/screens/product_category/screens/detail/screen.jsx`
 
 #### Validation Schema (Zod)
+
 ```javascript
 const createProductCategorySchema = z
   .object({
@@ -251,7 +261,7 @@ const createProductCategorySchema = z
       .max(50, 'Name is too long'),
   })
   .refine(
-    (data) => {
+    data => {
       return true; // Custom validation for duplicate code will be handled separately
     },
     {
@@ -262,6 +272,7 @@ const createProductCategorySchema = z
 ```
 
 #### Features
+
 - Duplicate category code validation
 - Localized string support
 - Delete functionality
@@ -275,6 +286,7 @@ const createProductCategorySchema = z
 ### Form Initialization
 
 **Before (Formik)**:
+
 ```javascript
 <Formik
   initialValues={{
@@ -291,69 +303,72 @@ const createProductCategorySchema = z
 ```
 
 **After (React Hook Form)**:
+
 ```javascript
 const form = useForm({
   resolver: zodResolver(schema),
   defaultValues: {
     field1: '',
-    field2: ''
+    field2: '',
   },
   mode: 'onChange',
 });
 
-const { control, handleSubmit, formState: { errors } } = form;
+const {
+  control,
+  handleSubmit,
+  formState: { errors },
+} = form;
 ```
 
 ### Input Field Rendering
 
 **Before (Formik)**:
+
 ```javascript
 <Input
   name="fieldName"
   value={values.fieldName}
   onChange={handleChange}
   className={errors.fieldName ? 'is-invalid' : ''}
-/>
-{errors.fieldName && <div className="invalid-feedback">{errors.fieldName}</div>}
+/>;
+{
+  errors.fieldName && <div className="invalid-feedback">{errors.fieldName}</div>;
+}
 ```
 
 **After (React Hook Form)**:
+
 ```javascript
 <Controller
   name="fieldName"
   control={control}
-  render={({ field }) => (
-    <Input
-      {...field}
-      className={errors.fieldName ? 'is-invalid' : ''}
-    />
-  )}
-/>
-{errors.fieldName && <div className="invalid-feedback">{errors.fieldName.message}</div>}
+  render={({ field }) => <Input {...field} className={errors.fieldName ? 'is-invalid' : ''} />}
+/>;
+{
+  errors.fieldName && <div className="invalid-feedback">{errors.fieldName.message}</div>;
+}
 ```
 
 ### Select Component
 
 **Before (Formik)**:
+
 ```javascript
 <Select
   value={values.selectField}
-  onChange={(option) => setFieldValue('selectField', option)}
+  onChange={option => setFieldValue('selectField', option)}
   options={options}
 />
 ```
 
 **After (React Hook Form)**:
+
 ```javascript
 <Controller
   name="selectField"
   control={control}
-  render={({ field }) => (
-    <Select
-      {...field}
-      options={options}
-    />
-  )}
+  render={({ field }) => <Select {...field} options={options} />}
 />
 ```
 
@@ -362,6 +377,7 @@ const { control, handleSubmit, formState: { errors } } = form;
 ## Validation Improvements
 
 ### String Validation
+
 ```javascript
 // Zod provides more expressive syntax
 z.string()
@@ -369,40 +385,40 @@ z.string()
   .max(100, 'Too long')
   .regex(/^[a-zA-Z]+$/, 'Only letters allowed')
   .email('Invalid email')
-  .url('Invalid URL')
+  .url('Invalid URL');
 ```
 
 ### Number Validation
+
 ```javascript
 z.number()
   .positive('Must be positive')
   .int('Must be integer')
   .min(0, 'Minimum is 0')
-  .max(100, 'Maximum is 100')
+  .max(100, 'Maximum is 100');
 ```
 
 ### Date Validation
+
 ```javascript
 z.date({
   required_error: 'Date is required',
   invalid_type_error: 'Invalid date',
 })
-.nullable()
-.optional()
+  .nullable()
+  .optional();
 ```
 
 ### Custom Validation
+
 ```javascript
 z.object({
   password: z.string(),
   confirmPassword: z.string(),
-}).refine(
-  (data) => data.password === data.confirmPassword,
-  {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  }
-)
+}).refine(data => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ['confirmPassword'],
+});
 ```
 
 ---
@@ -410,26 +426,31 @@ z.object({
 ## Benefits of Migration
 
 ### 1. Performance
+
 - React Hook Form uses uncontrolled components
 - Reduces re-renders significantly
 - Better performance for large forms
 
 ### 2. Bundle Size
+
 - React Hook Form: ~8.5kb (minified + gzipped)
 - Formik: ~13kb (minified + gzipped)
 - 35% smaller bundle size
 
 ### 3. Type Safety
+
 - Zod provides runtime type validation
 - Better TypeScript support
 - Automatic type inference
 
 ### 4. Developer Experience
+
 - More intuitive API with hooks
 - Better error messages
 - Easier to test
 
 ### 5. Flexibility
+
 - More control over form behavior
 - Easier custom validation
 - Better integration with UI libraries
@@ -439,6 +460,7 @@ z.object({
 ## Files Status
 
 ### Active Files (In Use)
+
 All `.jsx` files are now active and being used by the application through their respective `index.js` files.
 
 ```
@@ -457,6 +479,7 @@ src/screens/product_category/screens/detail/screen.jsx ✅
 ```
 
 ### Deprecated Files (Can Be Removed)
+
 All `.js` files are deprecated and can be removed after testing.
 
 ```
@@ -479,6 +502,7 @@ src/screens/product_category/screens/detail/screen.js ⚠️
 ## Testing Checklist
 
 ### Functional Testing
+
 - [ ] All forms render correctly
 - [ ] All validation rules work as expected
 - [ ] Form submission works properly
@@ -488,6 +512,7 @@ src/screens/product_category/screens/detail/screen.js ⚠️
 - [ ] Disabled states work properly
 
 ### Create Screens
+
 - [ ] Required field validation
 - [ ] Format validation (email, numbers, etc.)
 - [ ] Duplicate entry validation
@@ -497,6 +522,7 @@ src/screens/product_category/screens/detail/screen.js ⚠️
 - [ ] LeavePage prompt
 
 ### Detail Screens
+
 - [ ] Data loads correctly
 - [ ] Update functionality
 - [ ] Delete functionality
@@ -505,6 +531,7 @@ src/screens/product_category/screens/detail/screen.js ⚠️
 - [ ] Navigation after update/delete
 
 ### Edge Cases
+
 - [ ] Empty form submission
 - [ ] Maximum length validation
 - [ ] Special character handling
@@ -517,6 +544,7 @@ src/screens/product_category/screens/detail/screen.js ⚠️
 ## Dependencies
 
 ### Required Packages
+
 ```json
 {
   "react-hook-form": "^7.x.x",
@@ -526,6 +554,7 @@ src/screens/product_category/screens/detail/screen.js ⚠️
 ```
 
 ### Can Be Removed (After Full Migration)
+
 ```json
 {
   "formik": "^x.x.x",
@@ -538,21 +567,25 @@ src/screens/product_category/screens/detail/screen.js ⚠️
 ## Next Steps
 
 ### 1. Testing Phase (Recommended: 1-2 weeks)
+
 - Thorough manual testing of all screens
 - Automated test updates
 - User acceptance testing
 
 ### 2. Monitoring Phase
+
 - Monitor for any runtime errors
 - Check for performance improvements
 - Gather user feedback
 
 ### 3. Cleanup Phase
+
 - Remove deprecated `.js` files
 - Update documentation
 - Remove Formik/Yup dependencies (if no longer used elsewhere)
 
 ### 4. Knowledge Transfer
+
 - Team training on React Hook Form/Zod
 - Update coding guidelines
 - Document best practices
@@ -590,6 +623,7 @@ All requested screen directories have been successfully migrated from Formik/Yup
 ## Support
 
 For questions or issues:
+
 - React Hook Form Documentation: https://react-hook-form.com/
 - Zod Documentation: https://zod.dev/
 - Migration Guide: See REMAINING_SCREENS_MIGRATION_SUMMARY.md

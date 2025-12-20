@@ -1,6 +1,7 @@
 # Chart Migration Implementation Guide
 
 ## Overview
+
 This guide provides step-by-step instructions for implementing the Chart.js consolidation in the SimpleAccounts frontend application.
 
 **Status:** Ready for Testing
@@ -11,6 +12,7 @@ This guide provides step-by-step instructions for implementing the Chart.js cons
 ## What Has Been Done
 
 ### Files Created
+
 The following new `.jsx` files have been created with Chart.js implementations:
 
 1. `/src/screens/dashboard/sections/profit_loss_report/index.jsx`
@@ -54,6 +56,7 @@ Before making any changes, review the migrated files to ensure they meet your re
 3. Verify styling matches design specifications
 
 **Files to Review:**
+
 - `/src/screens/dashboard/sections/profit_loss_report/index.jsx`
 - `/src/screens/dashboard/sections/paid_invoices/index.jsx`
 - `/src/screens/dashboard/screen-two.jsx`
@@ -70,12 +73,12 @@ Temporarily modify the imports in the parent components to use `.jsx` instead of
 
 ```javascript
 // Change these lines:
-import ProfitAndLossReport from './profit_loss_report'
-import PaidInvoices from './paid_invoices'
+import ProfitAndLossReport from './profit_loss_report';
+import PaidInvoices from './paid_invoices';
 
 // To use .jsx explicitly:
-import ProfitAndLossReport from './profit_loss_report/index.jsx'
-import PaidInvoices from './paid_invoices/index.jsx'
+import ProfitAndLossReport from './profit_loss_report/index.jsx';
+import PaidInvoices from './paid_invoices/index.jsx';
 ```
 
 **In `/src/screens/dashboard/index.js`:**
@@ -201,6 +204,7 @@ npm uninstall apexcharts react-apexcharts
 ```
 
 This will:
+
 - Remove the packages from `node_modules`
 - Update `package.json` and `package-lock.json`
 - Reduce bundle size by ~200KB
@@ -252,11 +256,13 @@ BREAKING CHANGE: ApexCharts removed from dependencies"
 ### Issue: Charts Not Rendering
 
 **Possible Causes:**
+
 1. Chart.js not registered
 2. Data format incorrect
 3. Container has no height
 
 **Solutions:**
+
 1. Verify `/src/utils/chartRegistry.js` is imported in `/src/index.js`
 2. Check console for data validation errors
 3. Set explicit height on chart container
@@ -264,10 +270,12 @@ BREAKING CHANGE: ApexCharts removed from dependencies"
 ### Issue: Tooltips Not Working
 
 **Possible Causes:**
+
 1. Tooltip configuration disabled
 2. Interaction mode incorrect
 
 **Solutions:**
+
 ```javascript
 plugins: {
   tooltip: {
@@ -281,9 +289,11 @@ plugins: {
 ### Issue: Legend Not Clickable
 
 **Possible Causes:**
+
 1. onClick handler overridden
 
 **Solutions:**
+
 ```javascript
 plugins: {
   legend: {
@@ -296,17 +306,15 @@ plugins: {
 ### Issue: Data Not Updating
 
 **Possible Causes:**
+
 1. State not updating correctly
 2. Chart not re-rendering
 
 **Solutions:**
+
 ```javascript
 // Use datasetKeyProvider
-<Bar
-  data={this.state.chartData}
-  options={options}
-  datasetKeyProvider={() => Math.random()}
-/>
+<Bar data={this.state.chartData} options={options} datasetKeyProvider={() => Math.random()} />
 ```
 
 ---
@@ -316,12 +324,14 @@ plugins: {
 Before declaring the migration complete:
 
 ### Code Quality
+
 - [ ] No console errors
 - [ ] No console warnings (excluding known third-party warnings)
 - [ ] All ESLint rules passing
 - [ ] Code follows project conventions
 
 ### Functionality
+
 - [ ] All charts render correctly
 - [ ] All interactive features work
 - [ ] Data updates properly
@@ -329,18 +339,21 @@ Before declaring the migration complete:
 - [ ] Export features work (if applicable)
 
 ### Visual Design
+
 - [ ] Colors match design specifications
 - [ ] Fonts and sizing correct
 - [ ] Spacing and alignment proper
 - [ ] Responsive behavior correct
 
 ### Performance
+
 - [ ] No performance degradation
 - [ ] Bundle size reduced
 - [ ] No memory leaks
 - [ ] Smooth animations
 
 ### Documentation
+
 - [ ] All documentation updated
 - [ ] Team informed of changes
 - [ ] README updated (if needed)
@@ -442,6 +455,7 @@ For questions or issues:
 ## Conclusion
 
 This migration consolidates the chart libraries to use only Chart.js, providing:
+
 - Reduced bundle size
 - Consistent API and styling
 - Improved maintainability

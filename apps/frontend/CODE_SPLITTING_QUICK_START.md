@@ -3,6 +3,7 @@
 ## What Changed?
 
 All route components now use **React.lazy()** for automatic code splitting. This means:
+
 - ✅ Faster initial page load
 - ✅ Smaller bundle sizes
 - ✅ Better performance
@@ -48,11 +49,13 @@ import { MyNewScreen } from 'screens';
 ### Common Patterns
 
 #### 1. Lazy Load a Screen
+
 ```javascript
 const Dashboard = lazyLoad(() => import('./screens/dashboard'));
 ```
 
 #### 2. Preload a Screen (for better UX)
+
 ```javascript
 import { preloadComponent } from 'utils/lazyLoad';
 
@@ -61,31 +64,36 @@ onMouseEnter={() => preloadComponent(() => import('./screens/dashboard'))}
 ```
 
 #### 3. Add Loading State
+
 ```javascript
 import { Suspense } from 'react';
 import { RouteLoading } from 'components';
 
 <Suspense fallback={<RouteLoading />}>
   <MyComponent />
-</Suspense>
+</Suspense>;
 ```
 
 ## Testing Your Changes
 
 ### 1. Build the App
+
 ```bash
 npm run build
 ```
 
 ### 2. Check Bundle Sizes
+
 Look for output showing chunk files in the build output.
 
 ### 3. Test Locally
+
 ```bash
 npm run dev
 ```
 
 ### 4. Verify in Browser
+
 1. Open DevTools → Network tab
 2. Navigate to different routes
 3. Look for JS chunks loading on demand
@@ -94,26 +102,31 @@ npm run dev
 ## Common Issues
 
 ### Issue: "Loading chunk failed"
+
 **Cause**: Network issue or cached old chunk
 **Solution**: Retry logic handles this automatically
 
 ### Issue: Component not loading
+
 **Cause**: Incorrect import path
 **Solution**: Double-check the import path matches the file location
 
 ### Issue: Blank screen
+
 **Cause**: Error in lazy-loaded component
 **Solution**: Check browser console for errors
 
 ## Best Practices
 
 ### ✅ DO:
+
 - Use `lazyLoad()` for all route-level components
 - Add `<Suspense>` boundaries with fallback UI
 - Test network throttling in DevTools
 - Monitor bundle sizes in CI/CD
 
 ### ❌ DON'T:
+
 - Lazy load tiny components (<10KB)
 - Lazy load frequently used shared components
 - Lazy load components needed on initial render
@@ -128,13 +141,13 @@ npm run dev
 
 ## Files to Know
 
-| File | Purpose |
-|------|---------|
-| `/src/utils/lazyLoad.js` | Lazy loading utility with retry logic |
-| `/src/screens/index.js` | All screen exports (lazy-loaded) |
-| `/src/layouts/index.js` | Layout exports (lazy-loaded) |
-| `/src/components/loading/RouteLoading.jsx` | Loading component for routes |
-| `/src/components/error-boundary/LazyLoadErrorBoundary.jsx` | Error handling for chunk failures |
+| File                                                       | Purpose                               |
+| ---------------------------------------------------------- | ------------------------------------- |
+| `/src/utils/lazyLoad.js`                                   | Lazy loading utility with retry logic |
+| `/src/screens/index.js`                                    | All screen exports (lazy-loaded)      |
+| `/src/layouts/index.js`                                    | Layout exports (lazy-loaded)          |
+| `/src/components/loading/RouteLoading.jsx`                 | Loading component for routes          |
+| `/src/components/error-boundary/LazyLoadErrorBoundary.jsx` | Error handling for chunk failures     |
 
 ## Need Help?
 
@@ -147,12 +160,14 @@ npm run dev
 Let's say you're adding a "Customer Portal" module:
 
 ### Step 1: Create the Screen
+
 ```bash
 mkdir src/screens/customer_portal
 # Create your screen files...
 ```
 
 ### Step 2: Add to screens/index.js
+
 ```javascript
 // Customer Portal Screens
 const CustomerPortal = lazyLoad(() => import('./customer_portal'));
@@ -168,6 +183,7 @@ export {
 ```
 
 ### Step 3: Add Routes
+
 ```javascript
 // In src/routes/admin.js
 import { CustomerPortal, CustomerPortalDashboard } from 'screens';
@@ -185,6 +201,7 @@ import { CustomerPortal, CustomerPortalDashboard } from 'screens';
 ```
 
 ### Step 4: Test
+
 ```bash
 npm run dev
 # Navigate to /admin/customer-portal

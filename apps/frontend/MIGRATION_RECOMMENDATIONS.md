@@ -3,12 +3,14 @@
 ## Current Status
 
 Out of 58 files requiring migration:
+
 - ✅ **2 files completed** (VAT code create/detail screens)
 - ⏳ **56 files remaining**
 
 ## Challenge
 
 The remaining 56 files are large and complex, averaging 500-1500 lines of code each. Many contain:
+
 - Complex form validation logic
 - Multiple form steps or sections
 - Custom validation rules
@@ -21,6 +23,7 @@ The remaining 56 files are large and complex, averaging 500-1500 lines of code e
 Given the scope and complexity, I recommend a **phased migration approach**:
 
 ### Phase 1: Critical User-Facing Forms (High Priority)
+
 Focus on forms that users interact with most frequently:
 
 1. **User Management** (6 files)
@@ -78,6 +81,7 @@ Focus on forms that users interact with most frequently:
 Based on the successfully migrated VAT code screens, here's the standard pattern:
 
 ### 1. Convert Class Component to Functional Component (if needed)
+
 ```javascript
 // Before
 class CreateScreen extends React.Component {
@@ -94,6 +98,7 @@ const CreateScreen = ({ ...props }) => {
 ```
 
 ### 2. Replace Formik with useForm Hook
+
 ```javascript
 // Before
 <Formik
@@ -115,6 +120,7 @@ const { control, handleSubmit, formState: { errors } } = useForm({
 ```
 
 ### 3. Replace Form Fields with Controller
+
 ```javascript
 // Before (Formik)
 <Input
@@ -133,16 +139,19 @@ const { control, handleSubmit, formState: { errors } } = useForm({
 ```
 
 ### 4. Update Error Handling
+
 ```javascript
 // Before
-{props.errors.fieldName && props.touched.fieldName && (
-  <div className="invalid-feedback">{props.errors.fieldName}</div>
-)}
+{
+  props.errors.fieldName && props.touched.fieldName && (
+    <div className="invalid-feedback">{props.errors.fieldName}</div>
+  );
+}
 
 // After
-{errors.fieldName && (
-  <div className="invalid-feedback">{errors.fieldName.message}</div>
-)}
+{
+  errors.fieldName && <div className="invalid-feedback">{errors.fieldName.message}</div>;
+}
 ```
 
 ## Automated Migration Tool Recommendation
@@ -166,6 +175,7 @@ After migrating each file:
 ## Estimated Timeline
 
 Based on complexity:
+
 - **Simple forms** (100-300 lines): 30-45 minutes each
 - **Medium forms** (300-800 lines): 1-2 hours each
 - **Complex forms** (800+ lines): 2-4 hours each
@@ -184,8 +194,9 @@ Based on complexity:
 ## Quick Win Strategy
 
 To show immediate progress, start with these 5 files (estimated 4-5 hours total):
+
 1. Product category create screen
-2. Product category detail screen  
+2. Product category detail screen
 3. Designation create screen
 4. Designation detail screen
 5. Currency convert create screen

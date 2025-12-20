@@ -1,6 +1,7 @@
 # Chart Library Consolidation Summary
 
 ## Overview
+
 This document summarizes the consolidation of chart libraries in the SimpleAccounts frontend application to use only Chart.js (via react-chartjs-2).
 
 **Date:** 2025-12-19
@@ -11,6 +12,7 @@ This document summarizes the consolidation of chart libraries in the SimpleAccou
 ## Current State Analysis
 
 ### Chart Libraries Found
+
 1. **react-chartjs-2** (^5.3.1) - Chart.js React wrapper ✅ KEEPING
 2. **chart.js** (^4.5.1) - Core charting library ✅ KEEPING
 3. **apexcharts** (^3.26.3) - Alternative charting library ⚠️ TO BE REMOVED
@@ -19,6 +21,7 @@ This document summarizes the consolidation of chart libraries in the SimpleAccou
 ### Components Using Charts
 
 #### Already Using Chart.js (react-chartjs-2)
+
 These components were already correctly implemented and require no changes:
 
 1. **Revenue & Expense** (`/src/screens/dashboard/sections/revenue_expense/index.js`)
@@ -46,6 +49,7 @@ These components were already correctly implemented and require no changes:
    - Status: ✅ No charts
 
 #### Migrated from ApexCharts to Chart.js
+
 These components were using ApexCharts and have been migrated:
 
 1. **Profit & Loss Report** (`/src/screens/dashboard/sections/profit_loss_report/`)
@@ -83,14 +87,18 @@ These components were using ApexCharts and have been migrated:
 ## Migration Approach
 
 ### Pattern Followed
+
 All migrated files follow the existing codebase pattern:
+
 - ✅ Created new `.jsx` files alongside original `.js` files
 - ✅ Did NOT remove original files
 - ✅ Preserved all functionality and data flow
 - ✅ Maintained consistent styling with existing Chart.js components
 
 ### Chart.js Configuration Registry
+
 The application uses a centralized Chart.js configuration:
+
 - Location: `/src/utils/chartRegistry.js`
 - Registers: CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend, Filler
 - Imported in: `/src/index.js` (before any charts render)
@@ -101,16 +109,17 @@ The application uses a centralized Chart.js configuration:
 
 ### ApexCharts → Chart.js Mappings
 
-| ApexCharts Type | Chart.js Equivalent | Notes |
-|----------------|---------------------|-------|
+| ApexCharts Type       | Chart.js Equivalent          | Notes                                            |
+| --------------------- | ---------------------------- | ------------------------------------------------ |
 | Mixed (column + line) | Bar with mixed dataset types | Use `type: 'bar'` and `type: 'line'` in datasets |
-| Line | Line | Direct equivalent |
-| Area | Line with `fill: true` | Set `backgroundColor` for fill color |
-| Column/Bar | Bar | Use `indexAxis: 'y'` for horizontal |
+| Line                  | Line                         | Direct equivalent                                |
+| Area                  | Line with `fill: true`       | Set `backgroundColor` for fill color             |
+| Column/Bar            | Bar                          | Use `indexAxis: 'y'` for horizontal              |
 
 ### Key Configuration Differences
 
 #### ApexCharts Config
+
 ```javascript
 {
   chart: { toolbar: { show: true } },
@@ -123,6 +132,7 @@ The application uses a centralized Chart.js configuration:
 ```
 
 #### Chart.js Equivalent
+
 ```javascript
 {
   plugins: { legend: { display: true } },
@@ -143,13 +153,13 @@ The application uses a centralized Chart.js configuration:
 ```javascript
 // Primary Colors
 const COLORS = {
-  primary: '#2064d8',      // Blue - Income/Inflow
-  secondary: '#f4772e',    // Orange - Expenses/Outflow
-  success: '#a1b86d',      // Green - Positive metrics
-  danger: '#f86c6b',       // Red - Negative metrics/Overdue
-  info: '#4191ff',         // Light Blue - Customer data
-  warning: '#FFCE56',      // Yellow - Due items
-  neutral: '#7a7b97',      // Gray - Neutral data
+  primary: '#2064d8', // Blue - Income/Inflow
+  secondary: '#f4772e', // Orange - Expenses/Outflow
+  success: '#a1b86d', // Green - Positive metrics
+  danger: '#f86c6b', // Red - Negative metrics/Overdue
+  info: '#4191ff', // Light Blue - Customer data
+  warning: '#FFCE56', // Yellow - Due items
+  neutral: '#7a7b97', // Gray - Neutral data
 };
 
 // Chart-Specific Colors
@@ -217,7 +227,7 @@ const STANDARD_TOOLTIP_CONFIG = {
 ```javascript
 const STANDARD_LINE_CONFIG = {
   borderWidth: 4,
-  tension: 0.4,              // Smooth curves
+  tension: 0.4, // Smooth curves
   pointRadius: 4,
   pointBorderWidth: 2,
   pointBackgroundColor: '#fff',
@@ -231,12 +241,14 @@ const STANDARD_LINE_CONFIG = {
 ## Files Created/Modified
 
 ### New Files Created
+
 1. `/apps/frontend/src/screens/dashboard/sections/profit_loss_report/index.jsx`
 2. `/apps/frontend/src/screens/dashboard/sections/paid_invoices/index.jsx`
 3. `/apps/frontend/src/screens/dashboard/screen-two.jsx`
 4. `/apps/frontend/CHART_LIBRARY_CONSOLIDATION_SUMMARY.md` (this file)
 
 ### Original Files Preserved
+
 1. `/apps/frontend/src/screens/dashboard/sections/profit_loss_report/index.js`
 2. `/apps/frontend/src/screens/dashboard/sections/paid_invoices/index.js`
 3. `/apps/frontend/src/screens/dashboard/screen-two.js`
@@ -260,6 +272,7 @@ const STANDARD_LINE_CONFIG = {
    - Test legend interactions
 
 3. **Remove ApexCharts Dependencies (After Testing)**
+
    ```bash
    npm uninstall apexcharts react-apexcharts
    ```
@@ -277,6 +290,7 @@ const STANDARD_LINE_CONFIG = {
 ## Testing Checklist
 
 ### Visual Testing
+
 - [ ] All charts render without errors
 - [ ] Charts display correct data
 - [ ] Colors match design specifications
@@ -284,6 +298,7 @@ const STANDARD_LINE_CONFIG = {
 - [ ] Animations are smooth
 
 ### Functional Testing
+
 - [ ] Tooltips display correct information
 - [ ] Legends are clickable and toggle datasets
 - [ ] Date range selectors update charts
@@ -291,12 +306,14 @@ const STANDARD_LINE_CONFIG = {
 - [ ] Export/print functionality works
 
 ### Cross-Browser Testing
+
 - [ ] Chrome
 - [ ] Firefox
 - [ ] Safari
 - [ ] Edge
 
 ### Performance Testing
+
 - [ ] Charts load quickly
 - [ ] No memory leaks
 - [ ] Smooth animations
@@ -335,6 +352,7 @@ const STANDARD_LINE_CONFIG = {
 ## Common Chart Patterns
 
 ### Mixed Bar + Line Chart
+
 ```javascript
 const data = {
   labels: ['Jan', 'Feb', 'Mar'],
@@ -361,6 +379,7 @@ const data = {
 ```
 
 ### Horizontal Stacked Bar
+
 ```javascript
 const options = {
   indexAxis: 'y',
@@ -372,6 +391,7 @@ const options = {
 ```
 
 ### Area Chart (Line with Fill)
+
 ```javascript
 const dataset = {
   fill: true,
@@ -386,16 +406,19 @@ const dataset = {
 ## Support and Resources
 
 ### Documentation
+
 - Chart.js Official Docs: https://www.chartjs.org/docs/latest/
 - react-chartjs-2 Docs: https://react-chartjs-2.js.org/
 
 ### Example Files
+
 - Revenue/Expense: Pie and Doughnut charts
 - Cash Flow: Grouped bar chart
 - Bank Account: Line chart with fills
 - Invoice: Horizontal stacked bar
 
 ### Getting Help
+
 - Check existing chart components for patterns
 - Refer to `/src/utils/chartRegistry.js` for registered components
 - Review this consolidation summary for styling guidelines
@@ -405,6 +428,7 @@ const dataset = {
 ## Conclusion
 
 The chart library consolidation successfully migrates all ApexCharts usage to Chart.js, providing:
+
 - ✅ Consistent charting API across the application
 - ✅ Reduced bundle size and dependencies
 - ✅ Standardized styling and configuration

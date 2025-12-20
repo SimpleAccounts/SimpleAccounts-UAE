@@ -19,6 +19,7 @@ const Dashboard = lazyLoad(() => import('./screens/dashboard'));
 ```
 
 **Features:**
+
 - Automatic retry on chunk loading failure (3 retries by default)
 - Configurable retry interval
 - Better error handling for network issues
@@ -52,21 +53,21 @@ A dedicated loading component provides visual feedback while chunks are being lo
 
 ```jsx
 <React.Suspense fallback={<RouteLoading />}>
-  <Routes>
-    {/* routes */}
-  </Routes>
+  <Routes>{/* routes */}</Routes>
 </React.Suspense>
 ```
 
 ## Bundle Optimization Benefits
 
 ### Before Code Splitting
+
 - Single large bundle containing all components
 - Long initial load time
 - Unnecessary code loaded for unauthenticated users
 - Poor cache invalidation (entire bundle invalidated on any change)
 
 ### After Code Splitting
+
 - Multiple smaller chunks loaded on-demand
 - Faster initial load time
 - Only authentication code loaded initially
@@ -104,6 +105,7 @@ const UpdatePayroll = lazyLoad(() => import('./payroll_run/screens/updatePayroll
 ### When to Lazy Load
 
 ✅ **DO lazy load:**
+
 - Route-level components (screens/pages)
 - Large admin sections
 - Components not needed on initial render
@@ -111,6 +113,7 @@ const UpdatePayroll = lazyLoad(() => import('./payroll_run/screens/updatePayroll
 - Heavy third-party libraries
 
 ❌ **DON'T lazy load:**
+
 - Small, frequently used components
 - Components needed on initial render
 - Shared UI components (buttons, inputs, etc.)
@@ -119,6 +122,7 @@ const UpdatePayroll = lazyLoad(() => import('./payroll_run/screens/updatePayroll
 ### Usage Examples
 
 #### Lazy Loading a Screen
+
 ```javascript
 import lazyLoad from 'utils/lazyLoad';
 
@@ -126,6 +130,7 @@ const Dashboard = lazyLoad(() => import('./screens/dashboard'));
 ```
 
 #### Preloading a Component
+
 ```javascript
 import { preloadComponent } from 'utils/lazyLoad';
 
@@ -134,13 +139,14 @@ preloadComponent(() => import('./screens/dashboard'));
 ```
 
 #### Using with Suspense
+
 ```javascript
 import { Suspense } from 'react';
 import { RouteLoading } from 'components';
 
 <Suspense fallback={<RouteLoading />}>
   <Dashboard />
-</Suspense>
+</Suspense>;
 ```
 
 ## Performance Monitoring

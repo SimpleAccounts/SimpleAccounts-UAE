@@ -3,11 +3,13 @@
 ## Quick Test Commands
 
 ### Start the development server
+
 ```bash
 npm run dev
 ```
 
 ### Navigate to Purchase Order screens
+
 1. Create: http://localhost:5173/admin/expense/purchase-order/create
 2. View List: http://localhost:5173/admin/expense/purchase-order
 3. Edit: Click edit on any PO from the list
@@ -16,6 +18,7 @@ npm run dev
 ## Critical Test Scenarios
 
 ### 1. Create Purchase Order
+
 - [ ] Form loads without errors
 - [ ] PO number is auto-generated
 - [ ] Can select supplier
@@ -35,6 +38,7 @@ npm run dev
 - [ ] Redirects to list after creation
 
 ### 2. Edit Purchase Order
+
 - [ ] Existing PO loads correctly
 - [ ] All fields populate with existing data
 - [ ] Can modify fields
@@ -43,6 +47,7 @@ npm run dev
 - [ ] Validation works on edit
 
 ### 3. View Purchase Order
+
 - [ ] PO details display correctly
 - [ ] PDF export works
 - [ ] Print function works
@@ -51,8 +56,9 @@ npm run dev
 ## Console Error Checks
 
 Open browser console (F12) and check for:
+
 - ❌ No import errors
-- ❌ No undefined variable errors  
+- ❌ No undefined variable errors
 - ❌ No validation schema errors
 - ❌ No React Hook errors
 

@@ -1,20 +1,25 @@
 # Modal Files Migration Summary
 
 ## Overview
+
 This document summarizes the migration of modal component files from Formik/Yup to React Hook Form/Zod.
 
 ## Migration Date
+
 December 19, 2025
 
 ## Files Migrated
 
 ### 1. User Section - Employee Modal
+
 **Location:** `src/screens/user/sections/`
+
 - **Old File:** `employee_modal.js` (Formik/Yup - Class Component)
 - **New File:** `employee_modal.jsx` (React Hook Form/Zod - Functional Component)
 - **Index Updated:** `index.js` - Updated to import from `.jsx`
 
 **Key Changes:**
+
 - Converted from class component to functional component
 - Replaced Formik with `useForm` hook from react-hook-form
 - Replaced Yup validation with Zod schema
@@ -24,6 +29,7 @@ December 19, 2025
 - Maintained regex validation for alpha-only fields
 
 **Schema:**
+
 ```javascript
 const employeeSchema = z.object({
   firstName: z.string().optional(),
@@ -35,12 +41,15 @@ const employeeSchema = z.object({
 ```
 
 ### 2. Project Section - Contact Modal
+
 **Location:** `src/screens/project/sections/`
+
 - **Old File:** `contact_modal.js` (Formik/Yup - Class Component)
 - **New File:** `contact_modal.jsx` (React Hook Form/Zod - Functional Component)
 - **Index Updated:** `index.js` - Updated to import from `.jsx`
 
 **Key Changes:**
+
 - Converted from class component to functional component
 - Replaced Formik with `useForm` hook from react-hook-form
 - Replaced Yup validation with Zod schema
@@ -51,6 +60,7 @@ const employeeSchema = z.object({
 - Added conditional validation for state field based on country selection
 
 **Schema:**
+
 ```javascript
 const contactSchema = z.object({
   contactType: z.number().default(2),
@@ -74,12 +84,15 @@ const contactSchema = z.object({
 ```
 
 ### 3. Opening Balance Section - Opening Balance Modal
+
 **Location:** `src/screens/opening_balance/sections/`
+
 - **Old File:** `opening_balance_modal.js` (Formik/Yup - Class Component)
 - **New File:** `opening_balance_modal.jsx` (React Hook Form/Zod - Functional Component)
 - **Index Updated:** `index.js` - Updated to import from `.jsx`
 
 **Key Changes:**
+
 - Converted from class component to functional component
 - Replaced Formik with `useForm` hook from react-hook-form
 - Replaced Yup validation with Zod schema
@@ -90,12 +103,16 @@ const contactSchema = z.object({
 - Preserved localization support with LocalizedStrings
 
 **Schema:**
+
 ```javascript
 const openingBalanceSchema = z.object({
-  accountName: z.object({
-    value: z.union([z.string(), z.number()]),
-    label: z.string(),
-  }).nullable().refine((val) => val !== null, 'Account name is required'),
+  accountName: z
+    .object({
+      value: z.union([z.string(), z.number()]),
+      label: z.string(),
+    })
+    .nullable()
+    .refine(val => val !== null, 'Account name is required'),
   openingBalance: z.string().min(1, 'Opening balance is required'),
   currency: z.string().optional(),
 });
@@ -150,18 +167,22 @@ All migrations followed this consistent pattern:
 The following screen files were already migrated to React Hook Form/Zod:
 
 ### User Screens
+
 - `/src/screens/user/screens/create/screen.jsx`
 - `/src/screens/user/screens/detail/screen.jsx`
 
 ### Users Roles Screens
+
 - `/src/screens/users_roles/screens/create/screen.jsx`
 - `/src/screens/users_roles/screens/detail/screen.jsx`
 
 ### Project Screens
+
 - `/src/screens/project/screens/create/screen.jsx`
 - `/src/screens/project/screens/detail/screen.jsx`
 
 ### Opening Balance Screens
+
 - `/src/screens/opening_balance/screens/create/screen.jsx`
 - `/src/screens/opening_balance/screens/detail/screen.jsx`
 

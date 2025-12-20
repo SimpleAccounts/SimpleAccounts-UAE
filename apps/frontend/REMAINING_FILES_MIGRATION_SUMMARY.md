@@ -11,6 +11,7 @@ This document summarizes the migration of remaining files from Formik/Yup to Rea
 ### 1. Supplier Modal Components (100% Complete)
 
 #### `goods_received_note/sections/supplier_modal.jsx`
+
 - **Status**: ✅ Fully migrated and production-ready
 - **Lines**: 866 lines
 - **Approach**: Manual migration from class component to functional component
@@ -27,6 +28,7 @@ This document summarizes the migration of remaining files from Formik/Yup to Rea
 - **Updated**: `src/screens/goods_received_note/sections/index.js` to import from `.jsx`
 
 #### `quotation/sections/supplier_modal.jsx`
+
 - **Status**: ✅ Fully migrated and production-ready
 - **Lines**: 866 lines
 - **Approach**: Copied from goods_received_note and modified contactType
@@ -37,6 +39,7 @@ This document summarizes the migration of remaining files from Formik/Yup to Rea
 ### 2. Supplier Invoice Screens (Automated Migration Created)
 
 #### `supplier_invoice/screens/create/screen.jsx`
+
 - **Status**: ⚠️ Automated migration complete, requires manual testing and fixes before production use
 - **Original**: 3,820 lines (Formik/Yup class component)
 - **Migrated**: 1,890 lines (React Hook Form/Zod functional component)
@@ -65,6 +68,7 @@ This document summarizes the migration of remaining files from Formik/Yup to Rea
   - ⚠️ Create vs Create & More button logic
 
 #### `supplier_invoice/screens/detail/screen.jsx`
+
 - **Status**: ⚠️ Automated migration complete, requires manual testing and fixes before production use
 - **Original**: 3,196 lines (Formik/Yup class component)
 - **Migrated**: 1,464 lines (React Hook Form/Zod functional component)
@@ -79,11 +83,13 @@ This document summarizes the migration of remaining files from Formik/Yup to Rea
 ### 3. Already Migrated (Pre-existing - No Changes Needed)
 
 #### `supplier_invoice/screens/record_payment/screen.jsx`
+
 - **Status**: ✅ Already migrated to React Hook Form/Zod
 - **Confirmed**: Uses `useForm`, `Controller`, `zodResolver`
 - **No action required**
 
 #### `supplier_invoice/screens/view/screen.jsx`
+
 - **Status**: ✅ Already migrated to functional component
 - **Note**: View screens typically don't require form libraries
 - **No action required**
@@ -93,6 +99,7 @@ This document summarizes the migration of remaining files from Formik/Yup to Rea
 ## Migration Tools Created
 
 ### `migrate-supplier-invoice-automated.js`
+
 - **Purpose**: Automated migration script for large supplier_invoice files
 - **Location**: `/Users/moshinhashmi/github/SimpleAccounts-UAE/apps/frontend/migrate-supplier-invoice-automated.js`
 - **Functionality**:
@@ -114,23 +121,25 @@ This document summarizes the migration of remaining files from Formik/Yup to Rea
 
 ## File Status Summary
 
-| File Path | Status | Migration | Index Updated | Production Ready |
-|-----------|--------|-----------|---------------|------------------|
-| `goods_received_note/sections/supplier_modal.jsx` | ✅ Complete | Manual | ✅ Yes | ✅ Yes |
-| `quotation/sections/supplier_modal.jsx` | ✅ Complete | Manual | ✅ Yes | ✅ Yes |
-| `supplier_invoice/screens/create/screen.jsx` | ⚠️ Needs Review | Automated | ❌ No | ❌ No |
-| `supplier_invoice/screens/detail/screen.jsx` | ⚠️ Needs Review | Automated | ❌ No | ❌ No |
-| `supplier_invoice/screens/record_payment/screen.jsx` | ✅ Complete | Pre-existing | ✅ Yes | ✅ Yes |
-| `supplier_invoice/screens/view/screen.jsx` | ✅ Complete | Pre-existing | ✅ Yes | ✅ Yes |
+| File Path                                            | Status          | Migration    | Index Updated | Production Ready |
+| ---------------------------------------------------- | --------------- | ------------ | ------------- | ---------------- |
+| `goods_received_note/sections/supplier_modal.jsx`    | ✅ Complete     | Manual       | ✅ Yes        | ✅ Yes           |
+| `quotation/sections/supplier_modal.jsx`              | ✅ Complete     | Manual       | ✅ Yes        | ✅ Yes           |
+| `supplier_invoice/screens/create/screen.jsx`         | ⚠️ Needs Review | Automated    | ❌ No         | ❌ No            |
+| `supplier_invoice/screens/detail/screen.jsx`         | ⚠️ Needs Review | Automated    | ❌ No         | ❌ No            |
+| `supplier_invoice/screens/record_payment/screen.jsx` | ✅ Complete     | Pre-existing | ✅ Yes        | ✅ Yes           |
+| `supplier_invoice/screens/view/screen.jsx`           | ✅ Complete     | Pre-existing | ✅ Yes        | ✅ Yes           |
 
 ---
 
 ## Next Steps for Production Deployment
 
 ### Step 1: Test Supplier Modals (Low Risk)
+
 These are fully migrated and ready for production.
 
 **Test Checklist:**
+
 - [ ] Navigate to Goods Received Note → Create
 - [ ] Click "Add Supplier" to open modal
 - [ ] Fill all required fields (First Name, Last Name, Email, Mobile, VAT Number, Currency)
@@ -147,6 +156,7 @@ These are fully migrated and ready for production.
 **Before updating index.js**, perform these reviews:
 
 1. **Review Zod Schema** (`screen.jsx` lines 43-79):
+
    ```javascript
    const supplierInvoiceSchema = z.object({
      // Verify each field has correct:
@@ -178,6 +188,7 @@ These are fully migrated and ready for production.
 3. **Fix Common Issues**:
 
    **Select Component Value Mismatches:**
+
    ```javascript
    // Common issue: value doesn't match options structure
    // Fix by ensuring value prop matches options
@@ -188,17 +199,16 @@ These are fully migrated and ready for production.
        <Select
          {...field}
          value={
-           field.value?.value
-             ? field.value
-             : supplier_list.find(opt => opt.value == field.value)
+           field.value?.value ? field.value : supplier_list.find(opt => opt.value == field.value)
          }
-         onChange={(option) => field.onChange(option)}
+         onChange={option => field.onChange(option)}
        />
      )}
    />
    ```
 
    **Date Picker Integration:**
+
    ```javascript
    // Ensure DatePicker works with Controller
    <Controller
@@ -207,7 +217,7 @@ These are fully migrated and ready for production.
      render={({ field }) => (
        <DatePicker
          selected={field.value}
-         onChange={(date) => field.onChange(date)}
+         onChange={date => field.onChange(date)}
          dateFormat="dd/MM/yyyy"
        />
      )}
@@ -215,6 +225,7 @@ These are fully migrated and ready for production.
    ```
 
    **Line Items Array Sync:**
+
    ```javascript
    // After updating line items, always call:
    setValue('lineItemsString', newData, { shouldValidate: true });
@@ -222,15 +233,16 @@ These are fully migrated and ready for production.
    ```
 
 4. **Update index.js** (only after testing):
+
    ```javascript
    // src/screens/supplier_invoice/screens/create/index.js
-   import screen from './screen.jsx'  // Change from './screen'
-   import * as actions from './actions'
+   import screen from './screen.jsx'; // Change from './screen'
+   import * as actions from './actions';
 
    export default {
      screen,
-     actions
-   }
+     actions,
+   };
    ```
 
 ### Step 3: Review Supplier Invoice Detail Screen (High Priority)
@@ -245,14 +257,16 @@ Follow same process as create screen, with additional checks:
 - [ ] Calculations remain correct after edits
 
 **Update index.js** (only after testing):
+
 ```javascript
 // src/screens/supplier_invoice/screens/detail/index.js
-import screen from './screen.jsx'
+import screen from './screen.jsx';
 ```
 
 ### Step 4: Remove Backup Files (After Confirmation)
 
 Once `.jsx` versions are confirmed working:
+
 ```bash
 # Remove backup files
 rm src/screens/supplier_invoice/screens/create/screen.js.backup
@@ -265,6 +279,7 @@ rm src/screens/supplier_invoice/screens/detail/screen.js.backup
 ## Testing Checklist
 
 ### Supplier Modal Testing
+
 - [x] Component renders without errors
 - [x] All required field validations work
 - [x] Optional field validations work
@@ -277,6 +292,7 @@ rm src/screens/supplier_invoice/screens/detail/screen.js.backup
 - [x] Error messages display correctly
 
 ### Supplier Invoice Create Testing
+
 - [ ] Page loads without errors
 - [ ] Supplier dropdown populates
 - [ ] Supplier selection updates currency
@@ -305,6 +321,7 @@ rm src/screens/supplier_invoice/screens/detail/screen.js.backup
 - [ ] Navigation after save works
 
 ### Supplier Invoice Detail Testing
+
 - [ ] Page loads with invoice data
 - [ ] All fields populate correctly
 - [ ] Supplier field is populated
@@ -323,9 +340,11 @@ rm src/screens/supplier_invoice/screens/detail/screen.js.backup
 ## Common Issues and Solutions
 
 ### Issue 1: Select Component Shows Blank Value
+
 **Symptom**: Select dropdown appears empty even though value is set
 
 **Solution**:
+
 ```javascript
 <Controller
   name="fieldName"
@@ -335,9 +354,7 @@ rm src/screens/supplier_invoice/screens/detail/screen.js.backup
       {...field}
       value={
         // Handle both object and primitive values
-        field.value?.value
-          ? field.value
-          : options.find(opt => opt.value == field.value)
+        field.value?.value ? field.value : options.find(opt => opt.value == field.value)
       }
     />
   )}
@@ -345,29 +362,33 @@ rm src/screens/supplier_invoice/screens/detail/screen.js.backup
 ```
 
 ### Issue 2: Validation Errors Don't Display
+
 **Symptom**: Form submits even with errors, or errors don't show
 
 **Solution**:
+
 ```javascript
 // Ensure error message path is correct
-{errors.fieldName && (
-  <div className="invalid-feedback d-block">
-    {errors.fieldName.message}
-  </div>
-)}
+{
+  errors.fieldName && <div className="invalid-feedback d-block">{errors.fieldName.message}</div>;
+}
 
 // For nested fields:
-{errors.lineItemsString?.[index]?.productId && (
-  <div className="invalid-feedback d-block">
-    {errors.lineItemsString[index].productId.message}
-  </div>
-)}
+{
+  errors.lineItemsString?.[index]?.productId && (
+    <div className="invalid-feedback d-block">
+      {errors.lineItemsString[index].productId.message}
+    </div>
+  );
+}
 ```
 
 ### Issue 3: Form Doesn't Recalculate Totals
+
 **Symptom**: Changing line items doesn't update totals
 
 **Solution**:
+
 ```javascript
 // After any line item change:
 const handleLineItemChange = (index, field, value) => {
@@ -380,9 +401,11 @@ const handleLineItemChange = (index, field, value) => {
 ```
 
 ### Issue 4: Date Picker Not Working
+
 **Symptom**: Date picker doesn't open or doesn't set value
 
 **Solution**:
+
 ```javascript
 <Controller
   name="invoiceDate"
@@ -390,7 +413,7 @@ const handleLineItemChange = (index, field, value) => {
   render={({ field }) => (
     <DatePicker
       selected={field.value ? new Date(field.value) : null}
-      onChange={(date) => field.onChange(date)}
+      onChange={date => field.onChange(date)}
       dateFormat="dd/MM/yyyy"
       className={errors.invoiceDate ? 'is-invalid' : ''}
     />
@@ -405,6 +428,7 @@ const handleLineItemChange = (index, field, value) => {
 ### Validation Schema Pattern
 
 **Yup (Old):**
+
 ```javascript
 validationSchema={Yup.object().shape({
   invoice_number: Yup.string().required('Invoice number is required'),
@@ -423,58 +447,70 @@ validationSchema={Yup.object().shape({
 ```
 
 **Zod (New):**
+
 ```javascript
 const supplierInvoiceSchema = z.object({
   invoice_number: z.string().min(1, 'Invoice number is required'),
-  contactId: z.object({
-    value: z.union([z.string(), z.number()]),
-    label: z.string(),
-  }).nullable().refine((val) => val !== null, 'Supplier is required'),
-  term: z.object({
-    value: z.string(),
-    label: z.string(),
-  }).nullable().refine((val) => val !== null, 'Term is required'),
-  invoiceDate: z.union([z.string(), z.date()])
-    .refine((val) => val !== '' && val !== null, 'Invoice date is required'),
-  lineItemsString: z.array(
-    z.object({
-      quantity: z.union([z.string(), z.number()])
-        .refine(val => Number(val) > 0, 'Quantity must be greater than 0'),
-      unitPrice: z.union([z.string(), z.number()])
-        .refine(val => Number(val) > 0, 'Unit price must be greater than 0'),
-      vatCategoryId: z.union([z.string(), z.number()])
-        .refine(val => val !== '' && val !== null, 'VAT is required'),
-      productId: z.union([z.string(), z.number()])
-        .refine(val => val !== '' && val !== null, 'Product is required'),
+  contactId: z
+    .object({
+      value: z.union([z.string(), z.number()]),
+      label: z.string(),
     })
-  ).min(1, 'At least one line item is required'),
+    .nullable()
+    .refine(val => val !== null, 'Supplier is required'),
+  term: z
+    .object({
+      value: z.string(),
+      label: z.string(),
+    })
+    .nullable()
+    .refine(val => val !== null, 'Term is required'),
+  invoiceDate: z
+    .union([z.string(), z.date()])
+    .refine(val => val !== '' && val !== null, 'Invoice date is required'),
+  lineItemsString: z
+    .array(
+      z.object({
+        quantity: z
+          .union([z.string(), z.number()])
+          .refine(val => Number(val) > 0, 'Quantity must be greater than 0'),
+        unitPrice: z
+          .union([z.string(), z.number()])
+          .refine(val => Number(val) > 0, 'Unit price must be greater than 0'),
+        vatCategoryId: z
+          .union([z.string(), z.number()])
+          .refine(val => val !== '' && val !== null, 'VAT is required'),
+        productId: z
+          .union([z.string(), z.number()])
+          .refine(val => val !== '' && val !== null, 'Product is required'),
+      })
+    )
+    .min(1, 'At least one line item is required'),
 });
 ```
 
 ### Form Hook Pattern
 
 **Formik (Old):**
+
 ```javascript
 <Formik
   ref={formikRef}
   initialValues={initValue}
   validationSchema={validationSchema}
-  validate={(values) => {
+  validate={values => {
     // custom validation
   }}
   onSubmit={(values, actions) => {
     createInvoice(values, actions);
   }}
 >
-  {(props) => (
-    <Form onSubmit={props.handleSubmit}>
-      {/* fields */}
-    </Form>
-  )}
+  {props => <Form onSubmit={props.handleSubmit}>{/* fields */}</Form>}
 </Formik>
 ```
 
 **React Hook Form (New):**
+
 ```javascript
 const form = useForm({
   resolver: zodResolver(supplierInvoiceSchema),
@@ -482,9 +518,16 @@ const form = useForm({
   mode: 'onChange', // Validate on change
 });
 
-const { control, handleSubmit, formState: { errors }, reset, setValue, watch } = form;
+const {
+  control,
+  handleSubmit,
+  formState: { errors },
+  reset,
+  setValue,
+  watch,
+} = form;
 
-const onSubmit = (formData) => {
+const onSubmit = formData => {
   setDisabled(true);
   createInvoice(formData)
     .then(() => {
@@ -496,41 +539,37 @@ const onSubmit = (formData) => {
     });
 };
 
-<Form onSubmit={handleSubmit(onSubmit)}>
-  {/* fields */}
-</Form>
+<Form onSubmit={handleSubmit(onSubmit)}>{/* fields */}</Form>;
 ```
 
 ### Field Component Pattern
 
 **Formik Field (Old):**
+
 ```javascript
 <Field
   name="contactId"
   render={({ field, form }) => (
     <Select
       value={field.value}
-      onChange={(option) => {
+      onChange={option => {
         form.setFieldValue('contactId', option.value);
         setContactDetails(option.value);
       }}
       options={supplier_list}
-      className={
-        form.errors.contactId && form.touched.contactId
-          ? 'is-invalid'
-          : ''
-      }
+      className={form.errors.contactId && form.touched.contactId ? 'is-invalid' : ''}
     />
   )}
-/>
-{formProps.errors.contactId && formProps.touched.contactId && (
-  <div className="invalid-feedback">
-    {formProps.errors.contactId}
-  </div>
-)}
+/>;
+{
+  formProps.errors.contactId && formProps.touched.contactId && (
+    <div className="invalid-feedback">{formProps.errors.contactId}</div>
+  );
+}
 ```
 
 **React Hook Form Controller (New):**
+
 ```javascript
 <Controller
   name="contactId"
@@ -538,12 +577,8 @@ const onSubmit = (formData) => {
   render={({ field }) => (
     <Select
       {...field}
-      value={
-        field.value?.value
-          ? field.value
-          : supplier_list.find(opt => opt.value == field.value)
-      }
-      onChange={(option) => {
+      value={field.value?.value ? field.value : supplier_list.find(opt => opt.value == field.value)}
+      onChange={option => {
         field.onChange(option);
         setContactDetails(option.value);
       }}
@@ -551,12 +586,10 @@ const onSubmit = (formData) => {
       className={errors.contactId ? 'is-invalid' : ''}
     />
   )}
-/>
-{errors.contactId && (
-  <div className="invalid-feedback d-block">
-    {errors.contactId.message}
-  </div>
-)}
+/>;
+{
+  errors.contactId && <div className="invalid-feedback d-block">{errors.contactId.message}</div>;
+}
 ```
 
 ---
@@ -564,18 +597,21 @@ const onSubmit = (formData) => {
 ## Statistics
 
 ### Migration Summary
+
 - **Total Files Migrated**: 4 files
   - **Fully Complete (Production Ready)**: 2 files (supplier modals)
   - **Automated (Needs Review)**: 2 files (supplier invoice create/detail)
   - **Pre-existing (No Changes)**: 2 files (record_payment, view)
 
 ### Code Reduction
+
 - **supplier_invoice/create**: 3,820 → 1,890 lines (-50%)
 - **supplier_invoice/detail**: 3,196 → 1,464 lines (-54%)
 - **supplier_modal (both)**: 968 → 866 lines each (-11%)
 - **Total Reduction**: 7,984 → 4,220 lines (-47% overall)
 
 ### Time Savings
+
 - **Automated Migration**: Saved ~40-50 hours of manual conversion
 - **Manual Fixes Required**: Estimated 8-12 hours for supplier_invoice screens
 - **Supplier Modals**: 4 hours manual migration (complete)
@@ -586,6 +622,7 @@ const onSubmit = (formData) => {
 ## Benefits of Migration
 
 ### Technical Benefits
+
 1. **Smaller Bundle Size**: React Hook Form is ~9KB vs Formik ~45KB
 2. **Better Performance**: Fewer re-renders, isolated field updates
 3. **Type Safety**: Zod provides runtime type validation
@@ -593,6 +630,7 @@ const onSubmit = (formData) => {
 5. **Modern Patterns**: Aligns with React 18+ best practices
 
 ### Code Quality Benefits
+
 1. **Reduced Complexity**: 47% reduction in lines of code
 2. **Better Maintainability**: Functional components are easier to test
 3. **Improved Readability**: Hooks-based code is more linear
@@ -613,23 +651,27 @@ const onSubmit = (formData) => {
 ## Conclusion
 
 ✅ **Supplier Modal Components (goods_received_note and quotation):**
+
 - Fully migrated, tested, and production-ready
 - Can be deployed immediately
 - Index files already updated
 
 ⚠️ **Supplier Invoice Screens (create and detail):**
+
 - Automated migration completed with 50%+ code reduction
 - Requires manual review and testing (8-12 hours estimated)
 - Not production-ready until manual fixes are applied
 - Index files should NOT be updated until testing is complete
 
 🎯 **Overall Progress:**
+
 - 4 out of 6 files fully migration (67% complete)
 - 2 files require manual review before production use
 - All foundational work completed
 - Clear path forward for completion
 
 ### Recommended Next Actions
+
 1. ✅ Deploy supplier modal changes (low risk)
 2. ⚠️ Review and test supplier_invoice create screen
 3. ⚠️ Review and test supplier_invoice detail screen

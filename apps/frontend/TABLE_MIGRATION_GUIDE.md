@@ -20,12 +20,14 @@ This document outlines the migration of 10 files from react-bootstrap-table to s
 ### 1. Import Changes
 
 **Before:**
+
 ```javascript
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 ```
 
 **After:**
+
 ```javascript
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge'; // For status badges
@@ -34,6 +36,7 @@ import { Badge } from '@/components/ui/badge'; // For status badges
 ### 2. State Changes
 
 **Before:**
+
 ```javascript
 this.state = {
   // ... other state
@@ -59,6 +62,7 @@ this.selectRowProp = {
 ```
 
 **After:**
+
 ```javascript
 this.state = {
   // ... other state
@@ -73,19 +77,21 @@ this.state = {
 ### 3. Method Changes
 
 **Remove these methods:**
+
 - `onSizePerPageList`
 - `onPageChange`
 - `sortColumn`
 
 **Add these methods:**
+
 ```javascript
-handlePaginationChange = (newPagination) => {
+handlePaginationChange = newPagination => {
   this.setState({ pagination: newPagination }, () => {
     this.initializeData();
   });
 };
 
-handleSortingChange = (newSorting) => {
+handleSortingChange = newSorting => {
   this.setState({ sorting: newSorting }, () => {
     this.initializeData();
   });
@@ -95,6 +101,7 @@ handleSortingChange = (newSorting) => {
 ### 4. initializeData Method
 
 **Before:**
+
 ```javascript
 initializeData = () => {
   const { filterData } = this.state;
@@ -111,6 +118,7 @@ initializeData = () => {
 ```
 
 **After:**
+
 ```javascript
 initializeData = () => {
   const { filterData, pagination, sorting } = this.state;
@@ -131,16 +139,13 @@ initializeData = () => {
 Convert `TableHeaderColumn` elements to column definition arrays:
 
 **Before:**
+
 ```jsx
 <BootstrapTable data={data} options={this.options}>
   <TableHeaderColumn dataField="productCode" dataSort>
     Product Code
   </TableHeaderColumn>
-  <TableHeaderColumn
-    dataField="isActive"
-    dataSort
-    dataFormat={this.renderStatus}
-  >
+  <TableHeaderColumn dataField="isActive" dataSort dataFormat={this.renderStatus}>
     Status
   </TableHeaderColumn>
   <TableHeaderColumn
@@ -154,6 +159,7 @@ Convert `TableHeaderColumn` elements to column definition arrays:
 ```
 
 **After:**
+
 ```javascript
 const columns = [
   {
@@ -191,6 +197,7 @@ const columns = [
 ### 6. DataTable Usage
 
 **Before:**
+
 ```jsx
 <BootstrapTable
   selectRow={this.selectRowProp}
@@ -212,6 +219,7 @@ const columns = [
 ```
 
 **After:**
+
 ```jsx
 <DataTable
   columns={columns}
@@ -233,38 +241,45 @@ const columns = [
 ## File-Specific Notes
 
 ### 1. product/screen.js
+
 - Has server-side pagination and sorting
 - Multiple custom formatters (renderType, renderInventory, unitPrice, exciseSlabFormatter, renderStatus)
 - All formatters should be converted to cell renderers in column definitions
 
 ### 2. inventory_history/screen.js
+
 - Has server-side pagination
 - Custom date formatter
 - Product information displayed above table
 
 ### 3. invetoryHistorymodal.js (both locations)
+
 - Displayed in a modal (Dialog component)
 - Has CSV export functionality via ButtonGroup
 - Custom renderDate, renderUnitCost, renderunitSellingPrice formatters
 - Product code and name displayed in table header rows
 
 ### 4. product_category/screen.js
+
 - Simple table with code and name columns
 - Server-side pagination
 - Bulk delete functionality (commented out)
 
 ### 5. currency/screen.js
+
 - Simple table with name and symbol columns
 - Client-side pagination (no remote flag)
 - Currency modal for create/edit
 
 ### 6. vat_code/screen.js
+
 - Server-side pagination
 - Custom vatPercentageFormat formatter (adds % symbol)
 - Filters data to exclude specific IDs (3, 4, 10)
 - Conditional "Add New VAT" button based on isRegisteredVat
 
 ### 7. chart_account/screen.js
+
 - Server-side pagination
 - Custom typeFormatter and editFormatter
 - Unselectable rows based on editableFlag
@@ -274,6 +289,7 @@ const columns = [
 ## Common Patterns
 
 ### Date Formatting
+
 ```javascript
 // Before (dataFormat)
 renderDate = (cell, rows) => dayjs(rows.date).format('DD-MM-YYYY');
@@ -287,6 +303,7 @@ renderDate = (cell, rows) => dayjs(rows.date).format('DD-MM-YYYY');
 ```
 
 ### Currency Formatting
+
 ```javascript
 // Before (dataFormat with formatExtraData)
 unitPrice(cell, row, extraData) {
@@ -312,6 +329,7 @@ unitPrice(cell, row, extraData) {
 ```
 
 ### Status Badges
+
 ```javascript
 // Before (dataFormat)
 renderStatus = (cell, row) => {

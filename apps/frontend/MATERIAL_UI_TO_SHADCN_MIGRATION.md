@@ -1,15 +1,18 @@
 # Material-UI to shadcn/ui Migration Summary
 
 ## Overview
+
 This document summarizes the migration of components and screens from Material-UI to shadcn/ui (Radix UI).
 
 ## Migrated Files
 
 ### 1. Zip Code Input Component
+
 - **Original:** `/apps/frontend/src/components/form_control/zip_code_input.js`
 - **Migrated:** `/apps/frontend/src/components/form_control/zip_code_input.jsx`
 
 #### Changes Made:
+
 - No Material-UI components were present in the original file
 - File was already using Reactstrap components
 - Created `.jsx` version for consistency with modern standards
@@ -20,10 +23,12 @@ This document summarizes the migration of components and screens from Material-U
 ---
 
 ### 2. Invoice Additional Information Component
+
 - **Original:** `/apps/frontend/src/components/form_control/invoice_additional_information.js`
 - **Migrated:** `/apps/frontend/src/components/form_control/invoice_additional_information.jsx`
 
 #### Changes Made:
+
 - **Replaced:** `TextField` (Material-UI) → `Textarea` (shadcn/ui)
 - **Key Changes:**
   - Material-UI's `TextField` with `multiline` prop replaced with `Textarea` component
@@ -35,10 +40,12 @@ This document summarizes the migration of components and screens from Material-U
 ---
 
 ### 3. Profile Screen
+
 - **Original:** `/apps/frontend/src/screens/profile/screen.js`
 - **Migrated:** `/apps/frontend/src/screens/profile/screen.jsx`
 
 #### Changes Made:
+
 - **Replaced:** `Message` icon (Material-UI) → `MessageSquare` (lucide-react)
 - **Complete Modernization:**
   - Converted from class component to functional component with hooks
@@ -66,10 +73,12 @@ This document summarizes the migration of components and screens from Material-U
 ---
 
 ### 4. Import Transaction Screen
+
 - **Original:** `/apps/frontend/src/screens/import_transaction/screen.js`
 - **Migrated:** `/apps/frontend/src/screens/import_transaction/screen.jsx`
 
 #### Changes Made:
+
 - **Replaced:** Material-UI icons (`ThreeSixty`) → lucide-react icons (`Upload`, `Check`, `X`)
 - **Complete Modernization:**
   - Converted from class component to functional component with hooks
@@ -98,13 +107,13 @@ This document summarizes the migration of components and screens from Material-U
 
 ### Material-UI to shadcn/ui Component Mapping:
 
-| Material-UI | shadcn/ui | Notes |
-|-------------|-----------|-------|
-| `TextField` | `Input` or `Textarea` | Use `Input` for single line, `Textarea` for multiline |
-| `TextareaAutosize` | `Textarea` | Use `rows` prop for height |
-| `Checkbox` | `Checkbox` | Use `onCheckedChange` instead of `onChange` |
-| `IconButton` | `Button` | Use `variant="ghost"` and `size="icon"` |
-| Material icons | lucide-react icons | Direct icon name mapping |
+| Material-UI        | shadcn/ui             | Notes                                                 |
+| ------------------ | --------------------- | ----------------------------------------------------- |
+| `TextField`        | `Input` or `Textarea` | Use `Input` for single line, `Textarea` for multiline |
+| `TextareaAutosize` | `Textarea`            | Use `rows` prop for height                            |
+| `Checkbox`         | `Checkbox`            | Use `onCheckedChange` instead of `onChange`           |
+| `IconButton`       | `Button`              | Use `variant="ghost"` and `size="icon"`               |
+| Material icons     | lucide-react icons    | Direct icon name mapping                              |
 
 ### Event Handler Changes:
 
@@ -146,26 +155,31 @@ This document summarizes the migration of components and screens from Material-U
 ## Benefits of Migration
 
 ### 1. **Reduced Bundle Size**
+
 - Removed heavy Material-UI dependency
 - shadcn/ui only includes components you use
 - Tree-shaking friendly
 
 ### 2. **Better TypeScript Support**
+
 - Full TypeScript support in shadcn/ui
 - Type-safe component props
 - Better IDE autocomplete
 
 ### 3. **Modern Design System**
+
 - Radix UI primitives for accessibility
 - Tailwind CSS for styling
 - Consistent design tokens
 
 ### 4. **Improved Performance**
+
 - Lighter component implementations
 - Better rendering performance
 - Reduced runtime overhead
 
 ### 5. **Enhanced Developer Experience**
+
 - Copy-paste friendly components
 - Easy customization
 - Better documentation

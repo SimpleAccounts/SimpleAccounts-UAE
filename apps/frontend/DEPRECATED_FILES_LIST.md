@@ -1,10 +1,12 @@
 # Deprecated Files List
+
 **Files Ready for Removal After Testing**
 
 These files have been replaced by their `.jsx` counterparts and are no longer in use.
 They can be safely removed after thorough testing of the new React Hook Form/Zod implementations.
 
 ## Designation Screens
+
 ```bash
 # Old Formik/Yup files (deprecated)
 rm /Users/moshinhashmi/github/SimpleAccounts-UAE/apps/frontend/src/screens/designation/screens/create/screen.js
@@ -12,6 +14,7 @@ rm /Users/moshinhashmi/github/SimpleAccounts-UAE/apps/frontend/src/screens/desig
 ```
 
 ## Employment Screens
+
 ```bash
 # Old Formik/Yup files (deprecated)
 rm /Users/moshinhashmi/github/SimpleAccounts-UAE/apps/frontend/src/screens/employment/screens/create/screen.js
@@ -19,6 +22,7 @@ rm /Users/moshinhashmi/github/SimpleAccounts-UAE/apps/frontend/src/screens/emplo
 ```
 
 ## Employee Bank Details Screens
+
 ```bash
 # Old Formik/Yup files (deprecated)
 rm /Users/moshinhashmi/github/SimpleAccounts-UAE/apps/frontend/src/screens/employee_Bank_Details/screens/create/screen.js
@@ -26,6 +30,7 @@ rm /Users/moshinhashmi/github/SimpleAccounts-UAE/apps/frontend/src/screens/emplo
 ```
 
 ## Currency Convert Screens
+
 ```bash
 # Old Formik/Yup files (deprecated)
 rm /Users/moshinhashmi/github/SimpleAccounts-UAE/apps/frontend/src/screens/currencyConvert/screens/create/screen.js
@@ -33,6 +38,7 @@ rm /Users/moshinhashmi/github/SimpleAccounts-UAE/apps/frontend/src/screens/curre
 ```
 
 ## VAT Code Screens
+
 ```bash
 # Old Formik/Yup files (deprecated)
 rm /Users/moshinhashmi/github/SimpleAccounts-UAE/apps/frontend/src/screens/vat_code/screens/create/screen.js
@@ -40,6 +46,7 @@ rm /Users/moshinhashmi/github/SimpleAccounts-UAE/apps/frontend/src/screens/vat_c
 ```
 
 ## Product Category Screens
+
 ```bash
 # Old Formik/Yup files (deprecated)
 rm /Users/moshinhashmi/github/SimpleAccounts-UAE/apps/frontend/src/screens/product_category/screens/create/screen.js
@@ -47,6 +54,7 @@ rm /Users/moshinhashmi/github/SimpleAccounts-UAE/apps/frontend/src/screens/produ
 ```
 
 ## Removal Script
+
 To remove all deprecated files at once (run after thorough testing):
 
 ```bash
@@ -90,7 +98,7 @@ echo "All deprecated screen.js files removed successfully!"
 4. **Git History**: Files will still be available in git history if needed
 
 ## Total Files to Remove
+
 - **12 files** (2 per screen directory)
 - All are `.js` files containing Formik/Yup code
 - All have been replaced by `.jsx` files with React Hook Form/Zod
-

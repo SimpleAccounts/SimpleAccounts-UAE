@@ -5,19 +5,23 @@
 This document outlines the additional migration work performed to replace remaining Material-UI components with Radix UI/shadcn equivalents. This work builds upon the previous migration documented in `MATERIAL_UI_MIGRATION_SUMMARY.md`.
 
 ## Migration Date
+
 December 19, 2025
 
 ## Newly Migrated Files
 
 ### 1. Email Popup Card Component
+
 **Original File**: `/apps/frontend/src/components/sent_document/email_popup_card.jsx`
 **Migrated File**: `/apps/frontend/src/components/sent_document/email_popup_card_migrated.jsx`
 
 **Components Replaced**:
+
 - `TextField` (Material-UI) → `Textarea` (shadcn/ui)
 - `Checkbox` (@mui/material) → `Checkbox` (Radix/shadcn)
 
 **Key Changes**:
+
 ```jsx
 // TextField Migration
 // Before
@@ -75,6 +79,7 @@ December 19, 2025
 ```
 
 **Improvements**:
+
 - Better accessibility with proper label associations
 - Cleaner API with `onCheckedChange` instead of `onClick`
 - Removed Material-UI specific props (`inputProps`, `multiline`, `maxRows`)
@@ -83,14 +88,17 @@ December 19, 2025
 ---
 
 ### 2. Customer Modal Component
+
 **Original File**: `/apps/frontend/src/screens/creditNotes/sections/customer_modal.jsx`
 **Migrated File**: `/apps/frontend/src/screens/creditNotes/sections/customer_modal_migrated.jsx`
 
 **Components Replaced**:
+
 - `IconButton` (Material-UI) → Native `button` with Tailwind
 - Font Awesome icon → `ChevronUp` (Lucide React)
 
 **Key Changes**:
+
 ```jsx
 // Before
 <IconButton aria-label="delete" size="medium" onClick={() => handleShowDetails(false)}>
@@ -108,6 +116,7 @@ December 19, 2025
 ```
 
 **Improvements**:
+
 - Replaced proprietary component with semantic HTML
 - Migrated to Lucide React icons (consistent with shadcn/ui)
 - Used Tailwind CSS for styling (no custom CSS needed)
@@ -117,13 +126,16 @@ December 19, 2025
 ---
 
 ### 3. Product Table Component
+
 **Original File**: `/apps/frontend/src/components/product_table/screen.jsx`
 **Migrated File**: `/apps/frontend/src/components/product_table/screen_migrated.jsx`
 
 **Components Replaced**:
+
 - `TextField` (Material-UI) → `Textarea` (shadcn/ui)
 
 **Key Changes**:
+
 ```jsx
 // Before
 <TextField
@@ -164,6 +176,7 @@ December 19, 2025
 ```
 
 **Improvements**:
+
 - Simplified props (removed Material-UI specific `inputProps`, `multiline`, `minRows`, `maxRows`)
 - Standard HTML textarea attributes
 - Better integration with React Hook Form
@@ -172,26 +185,25 @@ December 19, 2025
 ---
 
 ### 4. Quotation Supplier Modal Component
+
 **Original File**: `/apps/frontend/src/screens/quotation/sections/supplier_modal.jsx`
 **Migrated File**: `/apps/frontend/src/screens/quotation/sections/supplier_modal_migrated.jsx`
 
 **Components Replaced**:
+
 - `IconButton` (Material-UI) → Native `button` with Tailwind
 - `ArrowUpwardIcon` (Material-UI Icons) → `ChevronUp` (Lucide React)
 
 **Key Changes**:
+
 ```jsx
 // Before
 import IconButton from '@material-ui/core/IconButton';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
-<IconButton
-  aria-label="delete"
-  size="medium"
-  onClick={() => handleShowDetails(false)}
->
+<IconButton aria-label="delete" size="medium" onClick={() => handleShowDetails(false)}>
   <ArrowUpwardIcon fontSize="inherit" />
-</IconButton>
+</IconButton>;
 
 // After
 import { ChevronUp } from 'lucide-react';
@@ -203,10 +215,11 @@ import { ChevronUp } from 'lucide-react';
   aria-label="Collapse details"
 >
   <ChevronUp className="h-5 w-5" aria-hidden="true" />
-</button>
+</button>;
 ```
 
 **Improvements**:
+
 - Consistent icon library (Lucide React) across the app
 - Better accessibility with descriptive `aria-label`
 - Responsive sizing with Tailwind utilities
@@ -218,9 +231,11 @@ import { ChevronUp } from 'lucide-react';
 ## Common Migration Patterns
 
 ### Pattern 1: TextField to Textarea
+
 All Material-UI `TextField` components with multiline capabilities have been migrated to shadcn/ui `Textarea`:
 
 **Removed Props**:
+
 - `multiline` - Textarea is multiline by default
 - `inputProps={{ maxLength: X }}` - Use `maxLength={X}` directly
 - `minRows` - Use `rows` for fixed height
@@ -228,6 +243,7 @@ All Material-UI `TextField` components with multiline capabilities have been mig
 - `type="textarea"` - Not needed with Textarea component
 
 **Standard HTML Props**:
+
 - `rows={number}` - Number of visible text rows
 - `maxLength={number}` - Maximum character length
 - `disabled={boolean}` - Disable input
@@ -235,33 +251,33 @@ All Material-UI `TextField` components with multiline capabilities have been mig
 - `onChange`, `onBlur`, `onFocus` - Standard React events
 
 ### Pattern 2: Checkbox Event Handling
+
 Material-UI and Radix Checkbox have different event handling patterns:
 
 **Material-UI Pattern**:
+
 ```jsx
-<Checkbox
-  checked={value}
-  onClick={() => setValue(!value)}
-/>
+<Checkbox checked={value} onClick={() => setValue(!value)} />
 ```
 
 **Radix/shadcn Pattern**:
+
 ```jsx
-<Checkbox
-  checked={value}
-  onCheckedChange={(checked) => setValue(checked)}
-/>
+<Checkbox checked={value} onCheckedChange={checked => setValue(checked)} />
 ```
 
 **Key Differences**:
+
 - `onClick` → `onCheckedChange`
 - Handler receives boolean value directly (not event object)
 - More intuitive API for boolean state
 
 ### Pattern 3: IconButton to Native Button
+
 Replace Material-UI IconButton with semantic HTML button and Lucide icons:
 
 **Standard Pattern**:
+
 ```jsx
 import { IconName } from 'lucide-react';
 
@@ -272,10 +288,11 @@ import { IconName } from 'lucide-react';
   aria-label="Descriptive label"
 >
   <IconName className="h-4 w-4" aria-hidden="true" />
-</button>
+</button>;
 ```
 
 **Tailwind Classes Explained**:
+
 - `inline-flex items-center justify-center` - Flexbox centering
 - `gap-2` - Space between icon and text (if any)
 - `px-3 py-2` - Padding
@@ -287,6 +304,7 @@ import { IconName } from 'lucide-react';
 ## Import Changes Summary
 
 ### Add These Imports
+
 ```jsx
 // shadcn/ui components
 import { Textarea } from '@/components/ui/textarea';
@@ -298,6 +316,7 @@ import { ChevronUp, ChevronDown, Plus, Trash2 } from 'lucide-react';
 ```
 
 ### Remove These Imports
+
 ```jsx
 // Material-UI Core
 import { TextField } from '@material-ui/core';
@@ -313,6 +332,7 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 For each migrated file, verify:
 
 ### Functional Testing
+
 - [ ] Form submissions work correctly
 - [ ] Validation messages display as expected
 - [ ] Controlled components update state properly
@@ -321,6 +341,7 @@ For each migrated file, verify:
 - [ ] Required field validation works
 
 ### Visual Testing
+
 - [ ] Components render with correct styling
 - [ ] Spacing and alignment match original design
 - [ ] Hover states work as expected
@@ -329,6 +350,7 @@ For each migrated file, verify:
 - [ ] Responsive behavior on mobile
 
 ### Accessibility Testing
+
 - [ ] Keyboard navigation works (Tab, Enter, Space)
 - [ ] Screen reader labels are correct
 - [ ] ARIA attributes are present
@@ -336,6 +358,7 @@ For each migrated file, verify:
 - [ ] Form labels are properly associated
 
 ### Integration Testing
+
 - [ ] React Hook Form validation works
 - [ ] Zod schemas validate correctly
 - [ ] Form submission to backend succeeds
@@ -345,6 +368,7 @@ For each migrated file, verify:
 ## Remaining Material-UI Usage
 
 ### Files Still Using Material-UI Icons
+
 The following files still import Material-UI icons and should be migrated to Lucide React:
 
 1. `/apps/frontend/src/screens/goods_received_note/sections/supplier_modal.jsx`
@@ -353,38 +377,46 @@ The following files still import Material-UI icons and should be migrated to Luc
 4. `/apps/frontend/src/screens/payment/sections/supplier_modal.jsx`
 
 **Pattern for Migration**:
+
 - Replace `ArrowUpwardIcon` → `ChevronUp` (Lucide)
 - Replace `IconButton` → Native `button` with Tailwind
 - Apply same styling pattern as shown above
 
 ### Other Supplier Modal Files
+
 Similar patterns should be applied to:
+
 - `/apps/frontend/src/screens/creditNotes/sections/customer_modal.js` (already has .jsx migrated version)
 - Other modal components using IconButton
 
 ## Benefits of This Migration
 
 ### 1. Consistency
+
 All form components now use the same design system, making the codebase more maintainable and predictable.
 
 ### 2. Smaller Bundle Size
+
 - Removed Material-UI core dependency from these files
 - Lucide icons are tree-shakeable (only import what you use)
 - Radix primitives are lightweight
 
 ### 3. Better Developer Experience
+
 - Simpler, more intuitive component APIs
 - Better TypeScript support
 - Easier to customize with Tailwind CSS
 - Clear documentation
 
 ### 4. Improved Accessibility
+
 - Radix UI primitives are built with accessibility in mind
 - Better keyboard navigation
 - Proper ARIA attributes out of the box
 - Screen reader friendly
 
 ### 5. Modern React Patterns
+
 - Hooks-based API
 - Better integration with React 18+
 - Consistent with modern React ecosystem
@@ -392,16 +424,19 @@ All form components now use the same design system, making the codebase more mai
 ## Next Steps
 
 ### Immediate
+
 1. Test all migrated components thoroughly
 2. Update component documentation
 3. Notify QA team of changes for testing
 
 ### Short Term
+
 1. Migrate remaining supplier modal files (4 files)
 2. Replace Material-UI icons with Lucide React throughout
 3. Remove Material-UI dependencies from package.json
 
 ### Long Term
+
 1. Create component migration guide for team
 2. Update style guide with new patterns
 3. Consider migrating other UI libraries to shadcn/ui

@@ -14,11 +14,13 @@ import { Line, Bar, Pie, Doughnut } from 'react-chartjs-2';
 // 1. Prepare your data
 const data = {
   labels: ['Jan', 'Feb', 'Mar'],
-  datasets: [{
-    label: 'Sales',
-    data: [100, 200, 150],
-    backgroundColor: '#2064d8',
-  }],
+  datasets: [
+    {
+      label: 'Sales',
+      data: [100, 200, 150],
+      backgroundColor: '#2064d8',
+    },
+  ],
 };
 
 // 2. Configure options
@@ -30,21 +32,21 @@ const options = {
 };
 
 // 3. Render the chart
-<Bar data={data} options={options} />
+<Bar data={data} options={options} />;
 ```
 
 ## Standard Colors
 
 Use these colors for consistency:
 
-| Purpose | Color | Hex Code |
-|---------|-------|----------|
-| Income/Primary | Blue | `#2064d8` |
-| Expenses/Secondary | Orange | `#f4772e` |
-| Success/Positive | Green | `#a1b86d` |
-| Danger/Overdue | Red | `#f86c6b` |
-| Info/Customer | Light Blue | `#4191ff` |
-| Warning/Due | Yellow | `#FFCE56` |
+| Purpose            | Color      | Hex Code  |
+| ------------------ | ---------- | --------- |
+| Income/Primary     | Blue       | `#2064d8` |
+| Expenses/Secondary | Orange     | `#f4772e` |
+| Success/Positive   | Green      | `#a1b86d` |
+| Danger/Overdue     | Red        | `#f86c6b` |
+| Info/Customer      | Light Blue | `#4191ff` |
+| Warning/Due        | Yellow     | `#FFCE56` |
 
 ## Chart Types Available
 
@@ -56,13 +58,13 @@ Use these colors for consistency:
 
 ## Examples in Codebase
 
-| Chart Type | Location | Description |
-|------------|----------|-------------|
-| Line | `/src/screens/dashboard/sections/bank_account/` | Account balance over time |
-| Bar | `/src/screens/dashboard/sections/cash_flow/` | Inflow vs Outflow |
-| Pie/Doughnut | `/src/screens/dashboard/sections/revenue_expense/` | Top revenues/expenses |
-| Mixed | `/src/screens/dashboard/sections/profit_loss_report/` | Income (bar) + Expenses (line) |
-| Stacked Bar | `/src/screens/dashboard/sections/invoice/` | Invoice status timeline |
+| Chart Type   | Location                                              | Description                    |
+| ------------ | ----------------------------------------------------- | ------------------------------ |
+| Line         | `/src/screens/dashboard/sections/bank_account/`       | Account balance over time      |
+| Bar          | `/src/screens/dashboard/sections/cash_flow/`          | Inflow vs Outflow              |
+| Pie/Doughnut | `/src/screens/dashboard/sections/revenue_expense/`    | Top revenues/expenses          |
+| Mixed        | `/src/screens/dashboard/sections/profit_loss_report/` | Income (bar) + Expenses (line) |
+| Stacked Bar  | `/src/screens/dashboard/sections/invoice/`            | Invoice status timeline        |
 
 ## Documentation
 
@@ -75,16 +77,15 @@ Use these colors for consistency:
 ## Common Patterns
 
 ### Responsive Chart with Fixed Height
+
 ```javascript
 <div style={{ height: '300px' }}>
-  <Line
-    data={data}
-    options={{ maintainAspectRatio: false }}
-  />
+  <Line data={data} options={{ maintainAspectRatio: false }} />
 </div>
 ```
 
 ### Chart with Smooth Lines
+
 ```javascript
 const dataset = {
   tension: 0.4, // Makes curves smooth
@@ -94,6 +95,7 @@ const dataset = {
 ```
 
 ### Horizontal Bar Chart
+
 ```javascript
 const options = {
   indexAxis: 'y', // Makes it horizontal

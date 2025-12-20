@@ -1,11 +1,13 @@
 # Reactstrap to shadcn/ui Migration Summary
 
 ## Overview
+
 Successfully migrated all reactstrap component usages to shadcn/ui components across the entire frontend codebase.
 
 ## Migration Statistics
 
 ### Files Processed
+
 - **Total JavaScript/JSX files**: 1,407
 - **Files with reactstrap imports**: 298
 - **Files successfully migrated**: 287+
@@ -14,6 +16,7 @@ Successfully migrated all reactstrap component usages to shadcn/ui components ac
 ### Components Migrated
 
 #### Core Components
+
 1. **Modal Components** (55 files)
    - `Modal` → `Dialog`
    - `ModalHeader` → `DialogHeader` + `DialogTitle`
@@ -76,6 +79,7 @@ Successfully migrated all reactstrap component usages to shadcn/ui components ac
 ### Import Statements
 
 **Before:**
+
 ```javascript
 import {
   Button,
@@ -90,15 +94,22 @@ import {
   Form,
   FormGroup,
   Row,
-  Col
+  Col,
 } from 'reactstrap';
 ```
 
 **After:**
+
 ```javascript
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 ```
@@ -106,7 +117,9 @@ import { Label } from '@/components/ui/label';
 ### Usage Patterns
 
 #### Modal to Dialog
+
 **Before:**
+
 ```jsx
 <Modal isOpen={isOpen} centered>
   <ModalHeader toggle={handleClose}>
@@ -116,15 +129,20 @@ import { Label } from '@/components/ui/label';
     <p>Content</p>
   </ModalBody>
   <ModalFooter>
-    <Button color="primary" onClick={handleOk}>OK</Button>
-    <Button color="secondary" onClick={handleCancel}>Cancel</Button>
+    <Button color="primary" onClick={handleOk}>
+      OK
+    </Button>
+    <Button color="secondary" onClick={handleCancel}>
+      Cancel
+    </Button>
   </ModalFooter>
 </Modal>
 ```
 
 **After:**
+
 ```jsx
-<Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+<Dialog open={isOpen} onOpenChange={open => !open && handleClose()}>
   <DialogContent>
     <DialogHeader>
       <DialogTitle>
@@ -135,15 +153,21 @@ import { Label } from '@/components/ui/label';
       <p>Content</p>
     </div>
     <DialogFooter>
-      <Button variant="default" onClick={handleOk}>OK</Button>
-      <Button variant="secondary" onClick={handleCancel}>Cancel</Button>
+      <Button variant="default" onClick={handleOk}>
+        OK
+      </Button>
+      <Button variant="secondary" onClick={handleCancel}>
+        Cancel
+      </Button>
     </DialogFooter>
   </DialogContent>
 </Dialog>
 ```
 
 #### Card Components
+
 **Before:**
+
 ```jsx
 <Card>
   <CardHeader>Header</CardHeader>
@@ -153,6 +177,7 @@ import { Label } from '@/components/ui/label';
 ```
 
 **After:**
+
 ```jsx
 <Card>
   <CardHeader>Header</CardHeader>
@@ -162,7 +187,9 @@ import { Label } from '@/components/ui/label';
 ```
 
 #### Grid Layout
+
 **Before:**
+
 ```jsx
 <Container>
   <Row>
@@ -173,6 +200,7 @@ import { Label } from '@/components/ui/label';
 ```
 
 **After:**
+
 ```jsx
 <div className="container mx-auto">
   <div className="grid grid-cols-12 gap-4">
@@ -185,6 +213,7 @@ import { Label } from '@/components/ui/label';
 ## Key Files Migrated
 
 ### Common Components
+
 - `/src/components/confirm_delete_modal/index.js`
 - `/src/components/confirm_leave_page/index.js`
 - `/src/components/navigationPromtForLeavePage/index.js`
@@ -195,19 +224,23 @@ import { Label } from '@/components/ui/label';
 - `/src/components/product_table/index.js`
 
 ### Authentication Screens
+
 - `/src/screens/log_in/screen.jsx`
 - `/src/screens/register/screen.jsx`
 
 ### Layout Components
+
 - `/src/layouts/admin/index.js`
 - `/src/components/header/index.js`
 
 ### Dashboard Components
+
 - `/src/screens/dashboard/screen-two.js`
 - `/src/screens/dashboard/sections/revenue_expense/index.js`
 - `/src/screens/dashboard/sections/invoice/index.js`
 
 ### Business Screens
+
 - All invoice screens (customer_invoice, supplier_invoice, quotation, etc.)
 - All financial report screens
 - All transaction and bank account screens
@@ -217,7 +250,9 @@ import { Label } from '@/components/ui/label';
 ## Manual Adjustments Required
 
 ### ButtonGroup Component
+
 Files using `ButtonGroup` now have a comment:
+
 ```javascript
 // ButtonGroup removed - replace with: <div className="inline-flex rounded-md" role="group">
 ```
@@ -225,10 +260,12 @@ Files using `ButtonGroup` now have a comment:
 You may need to manually replace `<ButtonGroup>` usage in the JSX with the div element.
 
 ### Tab Components
+
 Tab components using `Nav`, `NavItem`, etc. have been replaced with shadcn `Tabs`.
 The usage pattern may need manual adjustment based on the specific implementation.
 
 ### UncontrolledDropdown
+
 The `UncontrolledDropdown` from reactstrap should be replaced with the shadcn `DropdownMenu`.
 A comment has been added where this was used.
 
