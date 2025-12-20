@@ -14,8 +14,6 @@ import {
 	DropdownItem,
 } from 'reactstrap';
 import dayjs from '@/utils/date';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import 'react-toastify/dist/ReactToastify.css';
 // import 'react-select/dist/react-select.css'
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';

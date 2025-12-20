@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -18,7 +18,6 @@ import {
   Badge,
 } from 'reactstrap';
 import Select from 'react-select';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import dayjs from '@/utils/date';
 import { CommonActions } from 'services/global';
@@ -26,10 +25,10 @@ import { selectCurrencyFactory, selectStyles } from 'utils';
 import * as JournalActions from '../../actions';
 import * as JournalDetailActions from './actions';
 import { Loader, LeavePage, ConfirmDeleteModal, Currency } from 'components';
+import { DataTable } from '@/components/ui/data-table';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
-import { data } from '../../../Language/index';
+import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { JOURNAL } from 'constants/types';
 
@@ -63,7 +62,7 @@ const customStyles = {
   }),
 };
 
-let strings = new LocalizedStrings(data);
+let strings = new LocalizedStrings(languageData);
 
 // Zod validation schema
 const journalLineItemSchema = z.object({
@@ -207,416 +206,375 @@ const DetailJournal = ({
     }
   };
 
-  const renderActions = (cell, rows) => {
-    const values = getValues();
-    return (
-      <Button
-        size="sm"
-        disabled={
-          values.postingReferenceType === 'MANUAL' || data.length > 2 ? false : true
-        }
-        className="btn-twitter btn-brand icon"
-        onClick={e => {
-          deleteRow(e, rows);
-        }}
-      >
-        <i className="fas fa-trash"></i>
-      </Button>
-    );
-  };
-
-  const renderAccount = (cell, row) => {
-    let transactionCategoryList =
-      transaction_category_list && transaction_category_list && transaction_category_list.length
-        ? [
-            {
-              transactionCategoryId: '',
-              transactionCategoryName: 'Select Account',
-            },
-            ...transaction_category_list,
-          ]
-        : [];
-
-    let idx;
-    data.map((obj, index) => {
-      if (obj.id === row.id) {
-        idx = index;
+  const columns = useMemo(() => [
+    {
+      accessorKey: 'action',
+      header: '',
+      size: 55,
+      cell: ({ row }) => {
+        const values = getValues();
+        return (
+          <Button
+            size="sm"
+            disabled={values.postingReferenceType === 'MANUAL' || data.length > 2 ? false : true}
+            className="btn-twitter btn-brand icon"
+            onClick={e => deleteRow(e, row.original)}
+          >
+            <i className="fas fa-trash"></i>
+          </Button>
+        );
       }
-      return obj;
-    });
+    },
+    {
+      accessorKey: 'transactionCategoryId',
+      header: strings.ACCOUNT,
+      size: 400,
+      cell: ({ row }) => {
+        let transactionCategoryList =
+          transaction_category_list && transaction_category_list && transaction_category_list.length
+            ? [
+                {
+                  transactionCategoryId: '',
+                  transactionCategoryName: 'Select Account',
+                },
+                ...transaction_category_list,
+              ]
+            : [];
 
-    const values = getValues();
+        const idx = row.index;
+        const item = row.original;
+        const values = getValues();
 
-    if (row && row.journalTransactionCategoryLabel === 'Bank') {
-      return (
-        <Controller
-          name={`journalLineItems.${idx}.transactionCategoryId`}
-          control={control}
-          render={({ field }) => (
-            <Input
-              id="transactionCategoryId"
-              disabled={true}
-              value={
-                row.journalTransactionCategoryLabel
-                  ? row.transactionCategoryName == JOURNAL.AMOUNT_IN_TRANSIT
-                    ? row.journalTransactionCategoryLabel
-                    : row.transactionCategoryName
-                  : ''
-              }
-              placeholder={strings.Select + strings.Account}
-            ></Input>
-          )}
-        />
-      );
-    } else if (row && row.transactionCategoryName === 'Petty Cash') {
-      return (
-        <Controller
-          name={`journalLineItems.${idx}.transactionCategoryId`}
-          control={control}
-          render={({ field }) => (
-            <Input
-              id="transactionCategoryId"
-              disabled={true}
-              value={
-                row.transactionCategoryName + (companyName ? ' - ' + companyName : '')
-                  ? row.transactionCategoryName + (companyName ? ' - ' + companyName : '')
-                  : ''
-              }
-              placeholder={strings.Select + strings.Account}
-            ></Input>
-          )}
-        />
-      );
-    } else {
-      return (
-        <Controller
-          name={`journalLineItems.${idx}.transactionCategoryId`}
-          control={control}
-          render={({ field }) => (
-            <Select
-              styles={{
-                menu: provided => ({ ...provided, zIndex: 9999 }),
-              }}
-              options={transactionCategoryList ? transactionCategoryList : []}
-              id="transactionCategoryId"
-              onChange={e => {
-                selectItem(e.value, row, 'transactionCategoryId', idx);
-              }}
-              isDisabled={values.postingReferenceType === 'MANUAL' ? false : true}
-              value={
-                transactionCategoryList &&
-                transactionCategoryList.length > 0 &&
-                row.transactionCategoryName
-                  ? transactionCategoryList
-                      .find(item => {
-                        return item.label === row.journalTransactionCategoryLabel;
-                      })
-                      ?.options?.find(i => {
-                        return i.value === row.transactionCategoryId;
-                      })
-                  : row.transactionCategoryName
-              }
-              placeholder={strings.Select + strings.Account}
-              className={`${
-                errors.journalLineItems &&
-                errors.journalLineItems[parseInt(idx, 10)] &&
-                errors.journalLineItems[parseInt(idx, 10)].transactionCategoryId &&
-                Object.keys(touchedFields).length > 0 &&
-                touchedFields.journalLineItems &&
-                touchedFields.journalLineItems[parseInt(idx, 10)] &&
-                touchedFields.journalLineItems[parseInt(idx, 10)].transactionCategoryId
-                  ? 'is-invalid'
-                  : ''
-              }`}
+        if (item && item.journalTransactionCategoryLabel === 'Bank') {
+          return (
+            <Controller
+              name={`journalLineItems.${idx}.transactionCategoryId`}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  id="transactionCategoryId"
+                  disabled={true}
+                  value={
+                    item.journalTransactionCategoryLabel
+                      ? item.transactionCategoryName == JOURNAL.AMOUNT_IN_TRANSIT
+                        ? item.journalTransactionCategoryLabel
+                        : item.transactionCategoryName
+                      : ''
+                  }
+                  placeholder={strings.Select + strings.Account}
+                ></Input>
+              )}
             />
-          )}
-        />
-      );
-    }
-  };
-
-  const renderDescription = (cell, row) => {
-    let idx;
-    data.map((obj, index) => {
-      if (obj.id === row.id) {
-        idx = index;
-      }
-      return obj;
-    });
-
-    const values = getValues();
-
-    return (
-      <Controller
-        name={`journalLineItems.${idx}.description`}
-        control={control}
-        render={({ field }) => (
-          <Input
-            type="text"
-            value={row['description'] !== '' ? row['description'] : ''}
-            disabled={values.postingReferenceType === 'MANUAL' ? false : true}
-            onChange={e => {
-              selectItem(e.target.value, row, 'description', idx);
-            }}
-            placeholder={strings.Description}
-            className={`form-control
-            ${
-              errors.journalLineItems &&
-              errors.journalLineItems[parseInt(idx, 10)] &&
-              errors.journalLineItems[parseInt(idx, 10)].description &&
-              Object.keys(touchedFields).length > 0 &&
-              touchedFields.journalLineItems &&
-              touchedFields.journalLineItems[parseInt(idx, 10)] &&
-              touchedFields.journalLineItems[parseInt(idx, 10)].description
-                ? 'is-invalid'
-                : ''
-            }`}
-          />
-        )}
-      />
-    );
-  };
-
-  const renderContact = (cell, row) => {
-    let contactList = contact_list.length
-      ? [{ value: '', label: 'Select Contact' }, ...contact_list]
-      : contact_list;
-    let idx;
-
-    if (data && data != undefined) {
-      data.map((obj, index) => {
-        if (obj.id === row.id) {
-          idx = index;
+          );
+        } else if (item && item.transactionCategoryName === 'Petty Cash') {
+          return (
+            <Controller
+              name={`journalLineItems.${idx}.transactionCategoryId`}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  id="transactionCategoryId"
+                  disabled={true}
+                  value={
+                    item.transactionCategoryName + (companyName ? ' - ' + companyName : '')
+                      ? item.transactionCategoryName + (companyName ? ' - ' + companyName : '')
+                      : ''
+                  }
+                  placeholder={strings.Select + strings.Account}
+                ></Input>
+              )}
+            />
+          );
+        } else {
+          return (
+            <Controller
+              name={`journalLineItems.${idx}.transactionCategoryId`}
+              control={control}
+              render={({ field }) => (
+                <Select
+                  styles={{
+                    menu: provided => ({ ...provided, zIndex: 9999 }),
+                  }}
+                  options={transactionCategoryList ? transactionCategoryList : []}
+                  id="transactionCategoryId"
+                  onChange={e => {
+                    selectItem(e.value, item, 'transactionCategoryId', idx);
+                  }}
+                  isDisabled={values.postingReferenceType === 'MANUAL' ? false : true}
+                  value={
+                    transactionCategoryList &&
+                    transactionCategoryList.length > 0 &&
+                    item.transactionCategoryName
+                      ? transactionCategoryList
+                          .find(c => {
+                            return c.label === item.journalTransactionCategoryLabel;
+                          })
+                          ?.options?.find(i => {
+                            return i.value === item.transactionCategoryId;
+                          })
+                      : item.transactionCategoryName
+                  }
+                  placeholder={strings.Select + strings.Account}
+                  className={`${
+                    errors.journalLineItems &&
+                    errors.journalLineItems[idx] &&
+                    errors.journalLineItems[idx].transactionCategoryId &&
+                    Object.keys(touchedFields).length > 0 &&
+                    touchedFields.journalLineItems &&
+                    touchedFields.journalLineItems[idx] &&
+                    touchedFields.journalLineItems[idx].transactionCategoryId
+                      ? 'is-invalid'
+                      : ''
+                  }`}
+                />
+              )}
+            />
+          );
         }
-        return obj;
-      });
-    }
-
-    const values = getValues();
-
-    switch (row && row.postingReferenceType ? row.postingReferenceType : '') {
-      case 'MANUAL':
+      }
+    },
+    {
+      accessorKey: 'description',
+      header: strings.DESCRIPTION,
+      cell: ({ row }) => {
+        const idx = row.index;
+        const item = row.original;
+        const values = getValues();
         return (
           <Controller
-            name={`journalLineItems.${idx}.contactId`}
+            name={`journalLineItems.${idx}.description`}
             control={control}
             render={({ field }) => (
               <Input
-                type="select"
+                type="text"
+                value={item['description'] !== '' ? item['description'] : ''}
+                disabled={values.postingReferenceType === 'MANUAL' ? false : true}
                 onChange={e => {
-                  selectItem(e.target.value, row, 'contactId', idx);
+                  selectItem(e.target.value, item, 'description', idx);
                 }}
-                disabled={values.postingReferenceType === 'MANUAL' ? false : true}
-                value={row.contactId}
-                placeholder={strings.Select + strings.Contact}
+                placeholder={strings.Description}
                 className={`form-control
-							${
-                errors.journalLineItems &&
-                errors.journalLineItems[parseInt(idx, 10)] &&
-                errors.journalLineItems[parseInt(idx, 10)].contactId &&
-                Object.keys(touchedFields).length > 0 &&
-                touchedFields.journalLineItems &&
-                touchedFields.journalLineItems[parseInt(idx, 10)] &&
-                touchedFields.journalLineItems[parseInt(idx, 10)].contactId
-                  ? 'is-invalid'
-                  : ''
-              }`}
-              >
-                {contactList
-                  ? contactList.map(obj => {
-                      return (
-                        <option value={obj.value} key={obj.value}>
-                          {obj && obj.label && obj.label.contactName ? obj.label.contactName : ''}
-                        </option>
-                      );
-                    })
-                  : ''}
-              </Input>
+                ${
+                  errors.journalLineItems &&
+                  errors.journalLineItems[idx] &&
+                  errors.journalLineItems[idx].description &&
+                  Object.keys(touchedFields).length > 0 &&
+                  touchedFields.journalLineItems &&
+                  touchedFields.journalLineItems[idx] &&
+                  touchedFields.journalLineItems[idx].description
+                    ? 'is-invalid'
+                    : ''
+                }`}
+              />
             )}
           />
         );
+      }
+    },
+    {
+      accessorKey: 'contactId',
+      header: strings.CONTACT,
+      cell: ({ row }) => {
+        const idx = row.index;
+        const item = row.original;
+        const values = getValues();
+        let contactList = contact_list.length
+          ? [{ value: '', label: 'Select Contact' }, ...contact_list]
+          : contact_list;
 
-      case 'BANK_ACCOUNT':
+        switch (item && item.postingReferenceType ? item.postingReferenceType : '') {
+          case 'MANUAL':
+            return (
+              <Controller
+                name={`journalLineItems.${idx}.contactId`}
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    type="select"
+                    onChange={e => {
+                      selectItem(e.target.value, item, 'contactId', idx);
+                    }}
+                    disabled={values.postingReferenceType === 'MANUAL' ? false : true}
+                    value={item.contactId}
+                    placeholder={strings.Select + strings.Contact}
+                    className={`form-control
+                                ${
+                                  errors.journalLineItems &&
+                                  errors.journalLineItems[idx] &&
+                                  errors.journalLineItems[idx].contactId &&
+                                  Object.keys(touchedFields).length > 0 &&
+                                  touchedFields.journalLineItems &&
+                                  touchedFields.journalLineItems[idx] &&
+                                  touchedFields.journalLineItems[idx].contactId
+                                    ? 'is-invalid'
+                                    : ''
+                                }`}
+                  >
+                    {contactList
+                      ? contactList.map(obj => {
+                          return (
+                            <option value={obj.value} key={obj.value}>
+                              {obj && obj.label && obj.label.contactName ? obj.label.contactName : ''}
+                            </option>
+                          );
+                        })
+                      : ''}
+                  </Input>
+                )}
+              />
+            );
+          case 'BANK_ACCOUNT':
+            return (
+              <Controller
+                name={`journalLineItems.${idx}.contactId`}
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    disabled={values.postingReferenceType === 'MANUAL' ? false : true}
+                    value={'-'}
+                    placeholder={strings.Select + strings.Contact}
+                    className={`form-control`}
+                  ></Input>
+                )}
+              />
+            );
+          default:
+            return (
+              <Controller
+                name={`journalLineItems.${idx}.contactId`}
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    disabled={values.postingReferenceType === 'MANUAL' ? false : true}
+                    value={item.contactId ? item.contactId : '-'}
+                    placeholder={strings.Select + strings.Contact}
+                    className={`form-control`}
+                  >
+                    {contactList
+                      ? contactList.map(obj => {
+                          return (
+                            <option value={obj.value} key={obj.value}>
+                              {obj && obj.label && obj.label.contactName ? obj.label.contactName : ''}
+                            </option>
+                          );
+                        })
+                      : '-'}
+                  </Input>
+                )}
+              />
+            );
+        }
+      }
+    },
+    {
+      accessorKey: 'debitAmount',
+      header: strings.DEBIT,
+      cell: ({ row }) => {
+        const idx = row.index;
+        const item = row.original;
+        const values = getValues();
         return (
           <Controller
-            name={`journalLineItems.${idx}.contactId`}
+            name={`journalLineItems.${idx}.debitAmount`}
             control={control}
             render={({ field }) => (
-              <Input
-                disabled={values.postingReferenceType === 'MANUAL' ? false : true}
-                value={'-'}
-                placeholder={strings.Select + strings.Contact}
-                className={`form-control
-				${
-          errors.journalLineItems &&
-          errors.journalLineItems[parseInt(idx, 10)] &&
-          errors.journalLineItems[parseInt(idx, 10)].contactId &&
-          Object.keys(touchedFields).length > 0 &&
-          touchedFields.journalLineItems &&
-          touchedFields.journalLineItems[parseInt(idx, 10)] &&
-          touchedFields.journalLineItems[parseInt(idx, 10)].contactId
-            ? 'is-invalid'
-            : ''
-        }`}
-              ></Input>
+              <>
+                <Input
+                  type="number"
+                  min="0"
+                  value={item['debitAmount'] !== 0 ? item['debitAmount'] : 0}
+                  disabled={values.postingReferenceType === 'MANUAL' ? false : true}
+                  onChange={e => {
+                    if (e.target.value === '' || regDecimal.test(e.target.value)) {
+                      selectItem(e.target.value, item, 'debitAmount', idx);
+                    }
+                  }}
+                  placeholder={strings.Debit + ' ' + strings.Amount}
+                  className={`form-control
+                ${
+                  errors.journalLineItems &&
+                  errors.journalLineItems[idx] &&
+                  errors.journalLineItems[idx].debitAmount &&
+                  Object.keys(touchedFields).length > 0 &&
+                  touchedFields.journalLineItems &&
+                  touchedFields.journalLineItems[idx] &&
+                  touchedFields.journalLineItems[idx].debitAmount
+                    ? 'is-invalid'
+                    : ''
+                }`}
+                />
+                {errors.journalLineItems &&
+                  errors.journalLineItems[idx] &&
+                  errors.journalLineItems[idx].debitAmount &&
+                  Object.keys(touchedFields).length > 0 &&
+                  touchedFields.journalLineItems &&
+                  touchedFields.journalLineItems[idx] &&
+                  touchedFields.journalLineItems[idx].debitAmount && (
+                    <div className="invalid-feedback">
+                      {errors.journalLineItems[idx].debitAmount.message}
+                    </div>
+                  )}
+              </>
             )}
           />
         );
-
-      default:
+      }
+    },
+    {
+      accessorKey: 'creditAmount',
+      header: strings.CREDIT,
+      cell: ({ row }) => {
+        const idx = row.index;
+        const item = row.original;
+        const values = getValues();
         return (
           <Controller
-            name={`journalLineItems.${idx}.contactId`}
+            name={`journalLineItems.${idx}.creditAmount`}
             control={control}
             render={({ field }) => (
-              <Input
-                disabled={values.postingReferenceType === 'MANUAL' ? false : true}
-                value={row.contactId ? row.contactId : '-'}
-                placeholder={strings.Select + strings.Contact}
-                className={`form-control
-			${
-        errors.journalLineItems &&
-        errors.journalLineItems[parseInt(idx, 10)] &&
-        errors.journalLineItems[parseInt(idx, 10)].contactId &&
-        Object.keys(touchedFields).length > 0 &&
-        touchedFields.journalLineItems &&
-        touchedFields.journalLineItems[parseInt(idx, 10)] &&
-        touchedFields.journalLineItems[parseInt(idx, 10)].contactId
-          ? 'is-invalid'
-          : ''
-      }`}
-              >
-                {contactList
-                  ? contactList.map(obj => {
-                      return (
-                        <option value={obj.value} key={obj.value}>
-                          {obj && obj.label && obj.label.contactName ? obj.label.contactName : ''}
-                        </option>
-                      );
-                    })
-                  : '-'}
-              </Input>
+              <>
+                <Input
+                  type="number"
+                  min="0"
+                  value={item['creditAmount'] !== 0 ? item['creditAmount'] : 0}
+                  disabled={values.postingReferenceType === 'MANUAL' ? false : true}
+                  onChange={e => {
+                    if (e.target.value === '' || regDecimal.test(e.target.value)) {
+                      selectItem(e.target.value, item, 'creditAmount', idx);
+                    }
+                  }}
+                  placeholder={strings.Credit + ' ' + strings.Amount}
+                  className={`form-control
+                ${
+                  errors.journalLineItems &&
+                  errors.journalLineItems[idx] &&
+                  errors.journalLineItems[idx].creditAmount &&
+                  Object.keys(touchedFields).length > 0 &&
+                  touchedFields.journalLineItems &&
+                  touchedFields.journalLineItems[idx] &&
+                  touchedFields.journalLineItems[idx].creditAmount
+                    ? 'is-invalid'
+                    : ''
+                }`}
+                />
+                {errors.journalLineItems &&
+                  errors.journalLineItems[idx] &&
+                  errors.journalLineItems[idx].creditAmount &&
+                  Object.keys(touchedFields).length > 0 &&
+                  touchedFields.journalLineItems &&
+                  touchedFields.journalLineItems[idx] &&
+                  touchedFields.journalLineItems[idx].creditAmount && (
+                    <div className="invalid-feedback">
+                      {errors.journalLineItems[idx].creditAmount.message}
+                    </div>
+                  )}
+              </>
             )}
           />
         );
+      }
     }
-  };
-
-  const renderDebits = (cell, row) => {
-    let idx;
-    data.map((obj, index) => {
-      if (obj.id === row.id) {
-        idx = index;
-      }
-      return obj;
-    });
-
-    const values = getValues();
-
-    return (
-      <Controller
-        name={`journalLineItems.${idx}.debitAmount`}
-        control={control}
-        render={({ field }) => (
-          <>
-            <Input
-              type="number"
-              min="0"
-              value={row['debitAmount'] !== 0 ? row['debitAmount'] : 0}
-              disabled={values.postingReferenceType === 'MANUAL' ? false : true}
-              onChange={e => {
-                if (e.target.value === '' || regDecimal.test(e.target.value)) {
-                  selectItem(e.target.value, row, 'debitAmount', idx);
-                }
-              }}
-              placeholder={strings.Debit + ' ' + strings.Amount}
-              className={`form-control
-            ${
-              errors.journalLineItems &&
-              errors.journalLineItems[parseInt(idx, 10)] &&
-              errors.journalLineItems[parseInt(idx, 10)].debitAmount &&
-              Object.keys(touchedFields).length > 0 &&
-              touchedFields.journalLineItems &&
-              touchedFields.journalLineItems[parseInt(idx, 10)] &&
-              touchedFields.journalLineItems[parseInt(idx, 10)].debitAmount
-                ? 'is-invalid'
-                : ''
-            }`}
-            />
-            {errors.journalLineItems &&
-              errors.journalLineItems[parseInt(idx, 10)] &&
-              errors.journalLineItems[parseInt(idx, 10)].debitAmount &&
-              Object.keys(touchedFields).length > 0 &&
-              touchedFields.journalLineItems &&
-              touchedFields.journalLineItems[parseInt(idx, 10)] &&
-              touchedFields.journalLineItems[parseInt(idx, 10)].debitAmount && (
-                <div className="invalid-feedback">
-                  {errors.journalLineItems[parseInt(idx, 10)].debitAmount.message}
-                </div>
-              )}
-          </>
-        )}
-      />
-    );
-  };
-
-  const renderCredits = (cell, row) => {
-    let idx;
-    data.map((obj, index) => {
-      if (obj.id === row.id) {
-        idx = index;
-      }
-      return obj;
-    });
-
-    const values = getValues();
-
-    return (
-      <Controller
-        name={`journalLineItems.${idx}.creditAmount`}
-        control={control}
-        render={({ field }) => (
-          <>
-            <Input
-              type="number"
-              min="0"
-              value={row['creditAmount'] !== 0 ? row['creditAmount'] : 0}
-              disabled={values.postingReferenceType === 'MANUAL' ? false : true}
-              onChange={e => {
-                if (e.target.value === '' || regDecimal.test(e.target.value)) {
-                  selectItem(e.target.value, row, 'creditAmount', idx);
-                }
-              }}
-              placeholder={strings.Credit + ' ' + strings.Amount}
-              className={`form-control
-            ${
-              errors.journalLineItems &&
-              errors.journalLineItems[parseInt(idx, 10)] &&
-              errors.journalLineItems[parseInt(idx, 10)].creditAmount &&
-              Object.keys(touchedFields).length > 0 &&
-              touchedFields.journalLineItems &&
-              touchedFields.journalLineItems[parseInt(idx, 10)] &&
-              touchedFields.journalLineItems[parseInt(idx, 10)].creditAmount
-                ? 'is-invalid'
-                : ''
-            }`}
-            />
-            {errors.journalLineItems &&
-              errors.journalLineItems[parseInt(idx, 10)] &&
-              errors.journalLineItems[parseInt(idx, 10)].creditAmount &&
-              Object.keys(touchedFields).length > 0 &&
-              touchedFields.journalLineItems &&
-              touchedFields.journalLineItems[parseInt(idx, 10)] &&
-              touchedFields.journalLineItems[parseInt(idx, 10)].creditAmount && (
-                <div className="invalid-feedback">
-                  {errors.journalLineItems[parseInt(idx, 10)].creditAmount.message}
-                </div>
-              )}
-          </>
-        )}
-      />
-    );
-  };
+  ], [data, transaction_category_list, contact_list, companyName, errors, touchedFields, postingReferenceType]);
 
   const addRow = () => {
     const newData = [...data];
@@ -1006,50 +964,11 @@ const DetailJournal = ({
 
                           <Row>
                             <Col lg={12}>
-                              <BootstrapTable
+                              <DataTable
                                 data={data}
-                                version="4"
-                                hover
-                                keyField="id"
-                                className="journal-create-table"
-                              >
-                                <TableHeaderColumn
-                                  width="55"
-                                  dataAlign="center"
-                                  dataFormat={(cell, rows) => renderActions(cell, rows)}
-                                ></TableHeaderColumn>
-                                <TableHeaderColumn
-                                  dataField="transactionCategoryId"
-                                  width="400"
-                                  dataFormat={(cell, rows) => renderAccount(cell, rows)}
-                                >
-                                  {strings.ACCOUNT}
-                                </TableHeaderColumn>
-                                <TableHeaderColumn
-                                  dataField="description"
-                                  dataFormat={(cell, rows) => renderDescription(cell, rows)}
-                                >
-                                  {strings.DESCRIPTION}
-                                </TableHeaderColumn>
-                                <TableHeaderColumn
-                                  dataField="contactId"
-                                  dataFormat={(cell, rows) => renderContact(cell, rows)}
-                                >
-                                  {strings.CONTACT}
-                                </TableHeaderColumn>
-                                <TableHeaderColumn
-                                  dataField="debitAmount"
-                                  dataFormat={(cell, rows) => renderDebits(cell, rows)}
-                                >
-                                  {strings.DEBIT}
-                                </TableHeaderColumn>
-                                <TableHeaderColumn
-                                  dataField="creditAmount"
-                                  dataFormat={(cell, rows) => renderCredits(cell, rows)}
-                                >
-                                  {strings.CREDIT}
-                                </TableHeaderColumn>
-                              </BootstrapTable>
+                                columns={columns}
+                                manualPagination={false}
+                              />
                             </Col>
                           </Row>
                           {data.length > 0 ? (

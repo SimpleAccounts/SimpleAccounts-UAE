@@ -63,6 +63,21 @@ export const FormItem = ({ className, children, ...props }) => {
 };
 
 /**
+ * FormControl component - Wrapper for form input elements
+ * Provides styling and accessibility attributes
+ *
+ * @param {string} props.className - Additional CSS classes
+ * @param {React.ReactNode} props.children - Input element
+ */
+export const FormControl = ({ className, children, ...props }) => {
+  return (
+    <div className={cn('', className)} {...props}>
+      {children}
+    </div>
+  );
+};
+
+/**
  * FormLabel component - Label for form fields
  * Styled label component compatible with shadcn/ui
  *

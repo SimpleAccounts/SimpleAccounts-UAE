@@ -19,7 +19,6 @@ import {
 import { Loader, LeavePage } from 'components';
 import Select from 'react-select';
 import { CommonActions } from 'services/global';
-import 'react-toastify/dist/ReactToastify.css';
 import * as DetailEmployeeBankAction from './actions';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';

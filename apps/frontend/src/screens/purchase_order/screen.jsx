@@ -1,612 +1,550 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
-  Plus,
-  Search,
-  RefreshCw,
-  ShoppingCart,
-  Edit,
-  Eye,
-  Send,
-  CheckCircle,
-  XCircle,
-  Copy,
-  FileText,
-  Package,
-} from 'lucide-react';
+	Card,
+	CardHeader,
+	CardBody,
+	Button,
+	Row,
+	Col,
+	ButtonGroup,
+	ButtonDropdown,
+	DropdownToggle,
+	DropdownMenu,
+	DropdownItem,
+} from 'reactstrap';
 import Select from 'react-select';
-import { ToWords } from 'to-words';
-import { upperCase } from 'lodash';
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { DataTable } from '@/components/ui/data-table';
-import { DataTableRowActions } from '@/components/ui/data-table-actions';
-
 import { Loader, ConfirmDeleteModal } from 'components';
-import { selectOptionsFactory } from 'utils';
-
+import 'react-datepicker/dist/react-datepicker.css';
 import * as PurchaseOrderAction from '../purchase_order/actions';
 import * as PurchaseOrderDetailsAction from './screens/detail/actions';
-import * as GoodsReceivedNoteCreateAction from '../goods_received_note/screens/create/actions';
+import * as GoodsReceivedNoteCreateAction from '../goods_received_note/screens/create/actions'
 import { CommonActions } from 'services/global';
-
-import CreateGoodsReceivedNote from './sections/createGRN';
-import { data } from '../Language/index';
-import LocalizedStrings from 'react-localization';
+import { selectOptionsFactory } from 'utils';
 import './style.scss';
-
-const strings = new LocalizedStrings(data);
+import CreateGoodsReceivedNote from './sections/createGRN';
+import { data as languageData } from '../Language/index'
+import LocalizedStrings from 'react-localization';
+import { upperCase } from 'lodash-es';
+import { ToWords } from 'to-words';
+import invoiceimage from 'assets/images/invoice/invoice.png';
+import { toast } from 'sonner';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const toWords = new ToWords({
-  localeCode: 'en-IN',
-  converterOptions: {
-    ignoreDecimal: false,
-    ignoreZeroCurrency: false,
-    doNotAddOnly: false,
-  },
-});
-
-// Custom styles for react-select to match shadcn/ui
-const selectStyles = {
-  control: (base, state) => ({
-    ...base,
-    minHeight: '40px',
-    borderColor: state.isFocused ? 'hsl(var(--ring))' : 'hsl(var(--input))',
-    backgroundColor: 'hsl(var(--background))',
-    boxShadow: state.isFocused ? '0 0 0 2px hsl(var(--ring))' : 'none',
-    '&:hover': {
-      borderColor: 'hsl(var(--ring))',
-    },
-  }),
-  menu: (base) => ({
-    ...base,
-    backgroundColor: 'hsl(var(--background))',
-    border: '1px solid hsl(var(--border))',
-  }),
-  option: (base, state) => ({
-    ...base,
-    backgroundColor: state.isSelected
-      ? 'hsl(var(--primary))'
-      : state.isFocused
-      ? 'hsl(var(--accent))'
-      : 'transparent',
-    color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
-  }),
-  singleValue: (base) => ({
-    ...base,
-    color: 'hsl(var(--foreground))',
-  }),
-  placeholder: (base) => ({
-    ...base,
-    color: 'hsl(var(--muted-foreground))',
-  }),
-};
-
-/**
- * Get status badge variant
- */
-function getStatusBadge(status) {
-  switch (status) {
-    case 'Approved':
-      return { variant: 'success', label: status };
-    case 'Draft':
-      return { variant: 'secondary', label: status };
-    case 'Closed':
-      return { variant: 'outline', label: status };
-    case 'Sent':
-      return { variant: 'default', label: status };
-    case 'Rejected':
-      return { variant: 'destructive', label: status };
-    case 'Invoiced':
-      return { variant: 'default', label: status };
-    default:
-      return { variant: 'warning', label: status };
-  }
-}
-
-/**
- * Modern Purchase Order List Screen
- * Uses functional components, shadcn/ui, and TanStack Table
- */
-function PurchaseOrder() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const dispatch = useDispatch();
-
-  // Redux state
-  const supplier_list = useSelector((state) => state.purchase_order.supplier_list);
-  const status_list = useSelector((state) => state.supplier_invoice.status_list);
-  const purchase_order_list = useSelector((state) => state.purchase_order.purchase_order_list);
-  const universal_currency_list = useSelector((state) => state.common.universal_currency_list);
-
-  // Actions
-  const purchaseOrderAction = useMemo(
-    () => bindActionCreators(PurchaseOrderAction, dispatch),
-    [dispatch]
-  );
-  const purchaseOrderDetailsAction = useMemo(
-    () => bindActionCreators(PurchaseOrderDetailsAction, dispatch),
-    [dispatch]
-  );
-  const goodsReceivedNoteCreateAction = useMemo(
-    () => bindActionCreators(GoodsReceivedNoteCreateAction, dispatch),
-    [dispatch]
-  );
-  const commonActions = useMemo(() => bindActionCreators(CommonActions, dispatch), [dispatch]);
-
-  // Local state
-  const [language] = useState(() => window.localStorage.getItem('language') || 'en');
-  const [loading, setLoading] = useState(true);
-  const [dialog, setDialog] = useState(null);
-  const [openGoodsReceivedNotes, setOpenGoodsReceivedNotes] = useState(false);
-  const [selectedData, setSelectedData] = useState({});
-  const [rowId, setRowId] = useState(null);
-  const [prefixData, setPrefixData] = useState(null);
-
-  // Pagination state
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [sorting, setSorting] = useState([]);
-
-  // Filter state
-  const [filterData, setFilterData] = useState({
-    supplierId: '',
-    contactType: 1,
+	localeCode: 'en-IN',
+	converterOptions: {
+	//   currency: true,
+	  ignoreDecimal: false,
+	  ignoreZeroCurrency: false,
+	  doNotAddOnly: false,
+	}
   });
 
-  useEffect(() => {
-    strings.setLanguage(language);
-  }, [language]);
+const strings = new LocalizedStrings(languageData);
 
-  // Initialize data
-  const initializeData = useCallback(() => {
-    const paginationData = {
-      pageNo: pagination.pageIndex,
-      pageSize: pagination.pageSize,
-    };
-    const sortingData = {
-      order: sorting[0]?.desc ? 'desc' : sorting[0]?.id ? 'asc' : '',
-      sortingCol: sorting[0]?.id || '',
-    };
-    const postData = { ...filterData, ...paginationData, ...sortingData };
+const PurchaseOrder = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    purchaseOrderAction
-      .getpoList(postData)
-      .then((res) => {
-        if (res.status === 200) {
-          setLoading(false);
-        }
-      })
-      .catch((err) => {
-        commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
-        setLoading(false);
-      });
-  }, [purchaseOrderAction, commonActions, filterData, pagination, sorting]);
+	const [language] = useState(window['localStorage'].getItem('language'));
+	const [loading, setLoading] = useState(true);
+	const [dialog, setDialog] = useState(null);
+	const [openGoodsReceivedNotes, setOpenGoodsReceivedNotes] = useState(false);
+	const [selectedData, setSelectedData] = useState({});
+	const [filterData, setFilterData] = useState({
+		supplierId: '',
+		referenceNumber: '',
+		invoiceDate: '',
+		invoiceDueDate: '',
+		amount: '',
+		status: '',
+		contactType: 1,
+	});
+	const [selectedRows, setSelectedRows] = useState({});
+    const [actionButtons, setActionButtons] = useState({});
+    const [prefixData, setPrefixData] = useState('');
+    const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
+    const [sorting, setSorting] = useState([]);
+    const [rowId, setRowId] = useState(null);
 
-  useEffect(() => {
-    purchaseOrderAction.getStatusList();
-    goodsReceivedNoteCreateAction.getInvoiceNo().then((response) => {
-      setPrefixData(response.data);
-    });
-    initializeData();
-  }, []);
+    const {
+		supplier_list,
+		status_list,
+		universal_currency_list,
+		purchase_order_list,
+	} = useSelector((state) => ({
+		supplier_list: state.purchase_order.supplier_list,
+		status_list: state.supplier_invoice.status_list,
+		universal_currency_list: state.common.universal_currency_list,
+		purchase_order_list: state.purchase_order.purchase_order_list,
+	}));
 
-  useEffect(() => {
-    initializeData();
-  }, [pagination, sorting]);
-
-  // Change status handler
-  const changeStatus = useCallback(
-    (id, status) => {
-      purchaseOrderAction
-        .changeStatus(id, status)
-        .then((res) => {
-          if (res.status === 200) {
-            commonActions.tostifyAlert(
-              'success',
-              res.data?.message || 'Status Changed Successfully'
-            );
-            initializeData();
-          }
-        })
-        .catch((err) => {
-          commonActions.tostifyAlert(
-            'error',
-            err?.data?.message || 'Status Changed Unsuccessfully'
-          );
+	useEffect(() => {
+        strings.setLanguage(language);
+		dispatch(PurchaseOrderAction.getStatusList());
+		dispatch(GoodsReceivedNoteCreateAction.getInvoiceNo()).then((response) => {
+			setPrefixData(response.data);
         });
-    },
-    [purchaseOrderAction, commonActions, initializeData]
-  );
+ 		initializeData();
+	}, [language]);
 
-  // Send mail handler
-  const sendMail = useCallback(
-    (row) => {
-      setLoading(true);
-      const postingRequestModel = {
-        postingRefId: row.id,
-        amountInWords: upperCase(
-          row.currencyName + ' ' + toWords.convert(row.totalAmount)
-        ).replace('POINT', 'AND'),
-        vatInWords: row.totalVatAmount
-          ? upperCase(row.currencyName + ' ' + toWords.convert(row.totalVatAmount)).replace(
-              'POINT',
-              'AND'
-            )
-          : '-',
-      };
-      purchaseOrderAction
-        .sendMail(postingRequestModel)
-        .then((res) => {
-          if (res.status === 200) {
-            commonActions.tostifyAlert(
-              'success',
-              res.data?.message || 'Purchase Order Sent Successfully'
+    useEffect(() => {
+        initializeData();
+    }, [pagination, sorting, filterData]);
+
+	const initializeData = () => {
+        setLoading(true);
+		const postData = {
+            ...filterData,
+			pageNo: pagination.pageIndex,
+			pageSize: pagination.pageSize,
+			order: sorting.length > 0 ? (sorting[0].desc ? 'desc' : 'asc') : '',
+			sortingCol: sorting.length > 0 ? sorting[0].id : '',
+		};
+		dispatch(PurchaseOrderAction.getpoList(postData))
+			.then((res) => {
+				if (res.status === 200) {
+					setLoading(false);
+                    // if (location.state && location.state.id) {
+					// 		openInvoicePreviewModal(location.state.id);
+					// }
+				}
+			})
+			.catch((err) => {
+				toast.error(err?.data?.message || 'Something Went Wrong');
+				setLoading(false);
+			});
+	};
+
+	const closeGoodsReceivedNotes = () => {
+		setOpenGoodsReceivedNotes(false);
+	};
+
+	const close = (id, status) => {
+		dispatch(PurchaseOrderAction.changeStatus(id, status))
+			.then((res) => {
+				if (res.status === 200) {
+					toast.success(res.data?.message || 'Status Changed Successfully');
+					initializeData();
+				}
+			})
+			.catch((err) => {
+				toast.error(err?.data?.message || 'Status Changed Unsuccessfully');
+			});
+	};
+
+	const renderRFQStatus = (status) => {
+		let classname = '';
+		if (status === 'Approved') {
+			classname = 'label-success';
+		} else if (status === 'Draft') {
+			classname = 'label-draft';
+		} else if (status === 'Closed') {
+			classname = 'label-closed';
+		}else if (status === 'Sent') {
+			classname = 'label-sent';
+		}else if(status === 'Rejected'){
+			classname = 'label-due'
+		}else if(status === 'Invoiced'){
+			classname = 'label-primary'
+		}else {
+			classname = 'label-overdue';
+		}
+		return (
+			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+				{status}
+			</span>
+		);
+	};
+
+    const sendMail = (row) => {
+		setLoading(true);
+		const postingRequestModel = {
+			postingRefId: row.id,
+			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
+			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
+		};
+		dispatch(PurchaseOrderAction.sendMail(postingRequestModel))
+			.then((res) => {
+				if (res.status === 200) {
+					toast.success(res.data ? res.data.message : 'Purchase Order Posted Successfully');
+					initializeData();
+				}
+			})
+			.catch((err) => {
+				toast.error(err.data ? err.data.message : 'Purchase Order Posted Unsuccessfully');
+				setLoading(false);
+                initializeData();
+			});
+	};
+
+    const changeStatus = (id, status) => {
+        dispatch(PurchaseOrderAction.changeStatus(id, status))
+            .then((res) => {
+                if (res.status === 200) {
+                    toast.success(res.data?.message || 'Status Changed Successfully');
+                    initializeData();
+                }
+            })
+            .catch((err) => {
+                toast.error(err?.data?.message || 'Status Changed Unsuccessfully');
+            });
+    };
+
+    const removeBulk = (ids) => {
+		setDialog(null);
+		let obj = {
+			ids: ids,
+		};
+		dispatch(PurchaseOrderAction.removeBulk(obj))
+			.then((res) => {
+				initializeData();
+				toast.success(res.data ? res.data.message : 'Purchase Order Deleted Successfully');
+                setSelectedRows({});
+			})
+			.catch((err) => {
+				toast.error(err.data ? err.data.message : 'Purchase Order Deleted Unsuccessfully');
+			});
+	};
+
+    const deletePurchaseOrder = () => {
+        const selectedIds = Object.keys(selectedRows).filter(k => selectedRows[k]);
+		if (selectedIds.length > 0) {
+            const message1 = (
+			<text>
+				<b>Delete Supplier Invoice?</b>
+			</text>
             );
+            const message = 'This Supplier Invoice will be deleted permanently and cannot be recovered. ';
+			setDialog(
+				<ConfirmDeleteModal
+					isOpen={true}
+					okHandler={() => removeBulk(selectedIds)}
+					cancelHandler={() => setDialog(null)}
+					message={message}
+					message1={message1}
+				/>
+			);
+		} else {
+			toast.info('Please select the rows of the table and try again.');
+		}
+	};
+
+    const handleChange = (val, name) => {
+        setFilterData(prev => ({ ...prev, [name]: val }));
+	};
+
+	const handleSearch = () => {
+        setPagination(prev => ({ ...prev, pageIndex: 0 }));
+	};
+
+    const clearAll = () => {
+		setFilterData({
+			supplierId: '',
+			referenceNumber: '',
+			invoiceDate: '',
+			invoiceDueDate: '',
+			amount: '',
+			status: '',
+			contactType: 1,
+		});
+        setPagination(prev => ({ ...prev, pageIndex: 0 }));
+	};
+
+    const toggleActionButton = (index) => {
+        setActionButtons(prev => ({
+            ...prev,
+            [index]: !prev[index]
+        }));
+    };
+
+    const renderActionForState = (id) => {
+		dispatch(PurchaseOrderDetailsAction.getPOById(id)).then((res) => {
+			setOpenGoodsReceivedNotes(true);
+            setRowId(id);
+            setSelectedData({
+                ...res.data,
+                supplierId: res.data.supplierId || '',
+                rfqNumber: res.data.rfqNumber || '',
+                totalVatAmount: res.data.totalVatAmount || 0,
+                totalAmount: res.data.totalAmount || 0,
+                total_net: 0,
+                notes: res.data.notes || '',
+                lineItemsString: res.data.poQuatationLineItemRequestModelList || [],
+                data: res.data.poQuatationLineItemRequestModelList || [],
+                selectedContact: res.data.supplierId || '',
+            });
             setLoading(false);
-            initializeData();
-          }
+		});
+	}
+
+    const columns = useMemo(() => [
+        {
+            accessorKey: 'poNumber',
+            header: strings.PONUMBER,
+            width: '10%',
+        },
+        {
+            accessorKey: 'supplierName',
+            header: strings.SUPPLIERNAME,
+            width: '15%',
+            cell: ({ getValue }) => <span style={{ whiteSpace: 'normal' }}>{getValue()}</span>,
+        },
+        {
+            accessorKey: 'poApproveDate',
+            header: strings.PODATE,
+            width: '10%',
+            cell: ({ getValue }) => getValue() || '',
+        },
+        {
+            accessorKey: 'poReceiveDate',
+            header: strings.POEXPIRYDATE,
+            width: '10%',
+            cell: ({ getValue }) => getValue() || '',
+        },
+        {
+            accessorKey: 'status',
+            header: strings.STATUS,
+            width: '10%',
+            cell: ({ getValue }) => renderRFQStatus(getValue()),
+        },
+        {
+            accessorKey: 'totalAmount',
+            header: strings.AMOUNT,
+            width: '25%',
+            cell: ({ row }) => (
+                <div className="text-right">
+					<div>
+						<label className="font-weight-bold mr-2">{strings.PurchaseOrder+" "+strings.Amount}: </label>
+						<label>
+							{row.original.totalAmount === 0 
+                                ? `${row.original.currencyCode} ${row.original.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
+                                : `${row.original.currencyCode} ${row.original.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                            }
+						</label>
+					</div>
+					{row.original.totalVatAmount !== 0 && (
+                        <div>
+                            <label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
+                            <label>
+                                {`${row.original.currencyCode} ${row.original.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                            </label>
+                        </div>
+                    )}
+			    </div>
+            )
+        },
+        {
+            id: 'actions',
+            header: '',
+            width: '5%',
+            cell: ({ row }) => (
+                <div className="text-right">
+                    <ButtonDropdown
+                        isOpen={actionButtons[row.original.id]}
+                        toggle={() => toggleActionButton(row.original.id)}
+                    >
+                        <DropdownToggle size="sm" color="primary" className="btn-brand icon">
+                            {actionButtons[row.original.id] ? <i className="fas fa-chevron-up" /> : <i className="fas fa-chevron-down" />}
+                        </DropdownToggle>
+                        <DropdownMenu right>
+                            {row.original.status === 'Draft' && (
+                                <DropdownItem onClick={() => navigate('/admin/expense/purchase-order/detail', { state: { id: row.original.id } })}>
+                                    <i className="fas fa-edit" /> {strings.Edit}
+                                </DropdownItem>
+                            )}
+                            {row.original.status === "Approved" && (
+                                <DropdownItem onClick={() => navigate('/admin/expense/goods-received-note/create', { state: { poId: row.original.id, poNumber: row.original.poNumber } })}>
+                                    <i className="fas fa-plus" /> {strings.CreateGRN}
+                                </DropdownItem>
+                            )}
+                            {row.original.status === 'Approved' && (
+                                <DropdownItem onClick={() => navigate('/admin/expense/supplier-invoice/create', { state: { poId: row.original.id } })}>
+                                    <i className="fas fa-plus" /> {strings.CreateSupplierInvoice}
+                                </DropdownItem>
+                            )}
+                            {row.original.status === "Draft" && (
+                                <DropdownItem onClick={() => sendMail(row.original)}>
+                                    <i className="fas fa-send" /> {strings.Send}
+                                </DropdownItem>
+                            )}
+                            {row.original.status === 'Draft' && (
+                                <DropdownItem onClick={() => changeStatus(row.original.id, "Sent")}>
+                                    <i className="far fa-arrow-alt-circle-right"></i>Mark As Sent
+                                </DropdownItem>
+                            )}
+                            {row.original.status === 'Sent' && (
+                                <DropdownItem onClick={() => sendMail(row.original)}>
+                                    <i className="fas fa-send" /> {strings.SendAgain}
+                                </DropdownItem>
+                            )}
+                            {row.original.status !== 'Draft' && row.original.status !== 'Approved' && row.original.status !== 'Closed' && row.original.status !== "Invoiced" && (
+                                <DropdownItem onClick={() => changeStatus(row.original.id, "Approved")}>
+                                    <i className="fa fa-check-circle-o" /> {strings.MarkAsApproved}
+                                </DropdownItem>
+                            )}
+                            {row.original.status !== 'Draft' && row.original.status !== 'Rejected' && row.original.status !== 'Closed' && row.original.status !== 'Invoiced' && (
+                                <DropdownItem onClick={() => changeStatus(row.original.id, "Rejected")}>
+                                    <i className="fa fa-ban" /> {strings.MarkAsRejected}
+                                </DropdownItem>
+                            )}
+                            <DropdownItem onClick={() => navigate(`/admin/expense/purchase-order/create`, { state: { parentId: row.original.id } })}>
+                                <i className="fas fa-copy" /> {strings.CreateADuplicate}
+                            </DropdownItem>
+                            <DropdownItem onClick={() => navigate('/admin/expense/purchase-order/view', { state: { id: row.original.id, status: row.original.status } })}>
+                                <i className="fas fa-eye" /> {strings.View}
+                            </DropdownItem>
+                            {(row.original.status === 'Approved' || row.original.status === 'Sent' || row.original.status === 'Rejected' || row.original.status === "Invoiced") && (
+                                <DropdownItem onClick={() => close(row.original.id, "Closed")}>
+                                    <i className="far fa-times-circle" /> {strings.Close}
+                                </DropdownItem>
+                            )}
+                        </DropdownMenu>
+                    </ButtonDropdown>
+                </div>
+            )
+        }
+    ], [navigate, actionButtons]);
+
+    let tmpSupplier_list = []
+    if(supplier_list) {
+        supplier_list.map(item => {
+            let obj = {label: item.label.contactName, value: item.value}
+            tmpSupplier_list.push(obj)
         })
-        .catch((err) => {
-          commonActions.tostifyAlert(
-            'error',
-            err?.data?.message || 'Purchase Order Sent Unsuccessfully'
-          );
-          setLoading(false);
-        });
-    },
-    [purchaseOrderAction, commonActions, initializeData]
-  );
+    }
 
-  // Open GRN modal
-  const renderActionForState = useCallback(
-    (id) => {
-      purchaseOrderDetailsAction.getPOById(id).then((res) => {
-        setSelectedData(res.data);
-        setRowId(id);
-        setOpenGoodsReceivedNotes(true);
-      });
-    },
-    [purchaseOrderDetailsAction]
-  );
-
-  // Get next GRN number
-  const getNextGrnNo = useCallback(() => {
-    goodsReceivedNoteCreateAction.getInvoiceNo().then((response) => {
-      setPrefixData(response.data);
-    });
-  }, [goodsReceivedNoteCreateAction]);
-
-  // Filter handlers
-  const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-    initializeData();
-  };
-
-  const clearAll = () => {
-    setFilterData({
-      supplierId: '',
-      contactType: 1,
-    });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-    setTimeout(() => initializeData(), 0);
-  };
-
-  // Transform supplier list for select
-  const supplierOptions = useMemo(() => {
-    if (!supplier_list) return [];
-    return supplier_list.map((item) => ({
-      label: item.label?.contactName || item.label,
-      value: item.value,
-    }));
-  }, [supplier_list]);
-
-  // Table columns
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: 'poNumber',
-        header: strings.PONUMBER,
-        cell: ({ row }) => (
-          <span className="font-medium text-primary">{row.original.poNumber}</span>
-        ),
-      },
-      {
-        accessorKey: 'supplierName',
-        header: strings.SUPPLIERNAME,
-      },
-      {
-        accessorKey: 'poApproveDate',
-        header: strings.PODATE,
-        cell: ({ row }) => row.original.poApproveDate || '',
-      },
-      {
-        accessorKey: 'poReceiveDate',
-        header: strings.POEXPIRYDATE,
-        cell: ({ row }) => row.original.poReceiveDate || '',
-      },
-      {
-        accessorKey: 'status',
-        header: strings.STATUS,
-        cell: ({ row }) => {
-          const { variant, label } = getStatusBadge(row.original.status);
-          return <Badge variant={variant}>{label}</Badge>;
-        },
-      },
-      {
-        accessorKey: 'totalAmount',
-        header: strings.AMOUNT,
-        cell: ({ row }) => {
-          const { totalAmount, totalVatAmount, currencyCode } = row.original;
-          return (
-            <div className="text-right">
-              <div>
-                <span className="font-medium mr-1">{strings.PurchaseOrder} {strings.Amount}:</span>
-                <span>
-                  {currencyCode}{' '}
-                  {(totalAmount || 0).toLocaleString(navigator.language, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </span>
-              </div>
-              {totalVatAmount > 0 && (
-                <div className="text-sm text-muted-foreground">
-                  <span className="font-medium mr-1">{strings.VatAmount}:</span>
-                  <span>
-                    {currencyCode}{' '}
-                    {totalVatAmount.toLocaleString(navigator.language, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </span>
-                </div>
-              )}
-            </div>
-          );
-        },
-      },
-      {
-        id: 'actions',
-        header: '',
-        cell: ({ row }) => {
-          const po = row.original;
-          const actions = [];
-
-          // Edit (Draft only)
-          if (po.status === 'Draft') {
-            actions.push({
-              label: strings.Edit,
-              icon: Edit,
-              onClick: () =>
-                navigate('/admin/expense/purchase-order/detail', {
-                  state: { id: po.id },
-                }),
-            });
-          }
-
-          // Create GRN (Approved only)
-          if (po.status === 'Approved') {
-            actions.push({
-              label: strings.CreateGRN,
-              icon: Package,
-              onClick: () =>
-                navigate('/admin/expense/goods-received-note/create', {
-                  state: { poId: po.id, poNumber: po.poNumber },
-                }),
-            });
-          }
-
-          // Create Supplier Invoice (Approved only)
-          if (po.status === 'Approved') {
-            actions.push({
-              label: strings.CreateSupplierInvoice,
-              icon: FileText,
-              onClick: () =>
-                navigate('/admin/expense/supplier-invoice/create', {
-                  state: { poId: po.id },
-                }),
-            });
-          }
-
-          // Send (Draft only)
-          if (po.status === 'Draft') {
-            actions.push({
-              label: strings.Send,
-              icon: Send,
-              onClick: () => sendMail(po),
-            });
-            actions.push({
-              label: 'Mark As Sent',
-              icon: Send,
-              onClick: () => changeStatus(po.id, 'Sent'),
-            });
-          }
-
-          // Send Again (Sent only)
-          if (po.status === 'Sent') {
-            actions.push({
-              label: strings.SendAgain,
-              icon: Send,
-              onClick: () => sendMail(po),
-            });
-          }
-
-          // Mark As Approved
-          if (!['Draft', 'Approved', 'Closed', 'Invoiced'].includes(po.status)) {
-            actions.push({
-              label: strings.MarkAsApproved,
-              icon: CheckCircle,
-              onClick: () => changeStatus(po.id, 'Approved'),
-            });
-          }
-
-          // Mark As Rejected
-          if (!['Draft', 'Rejected', 'Closed', 'Invoiced'].includes(po.status)) {
-            actions.push({
-              label: strings.MarkAsRejected,
-              icon: XCircle,
-              onClick: () => changeStatus(po.id, 'Rejected'),
-            });
-          }
-
-          // Create Duplicate
-          actions.push({
-            label: strings.CreateADuplicate,
-            icon: Copy,
-            onClick: () =>
-              navigate('/admin/expense/purchase-order/create', {
-                state: { parentId: po.id },
-              }),
-          });
-
-          // View
-          actions.push({
-            label: strings.View,
-            icon: Eye,
-            onClick: () =>
-              navigate('/admin/expense/purchase-order/view', {
-                state: { id: po.id, status: po.status },
-              }),
-          });
-
-          // Close
-          if (['Approved', 'Sent', 'Rejected', 'Invoiced'].includes(po.status)) {
-            actions.push({ type: 'separator' });
-            actions.push({
-              label: strings.Close,
-              icon: XCircle,
-              onClick: () => changeStatus(po.id, 'Closed'),
-              variant: 'destructive',
-            });
-          }
-
-          return <DataTableRowActions row={row} actions={actions} />;
-        },
-      },
-    ],
-    [navigate, sendMail, changeStatus]
-  );
-
-  // Transform data for table
-  const tableData = useMemo(() => {
-    if (!purchase_order_list?.data?.data) return [];
-    return purchase_order_list.data.data.map((supplier) => ({
-      id: supplier.id,
-      status: supplier.status,
-      supplierName: supplier.supplierName || '',
-      poNumber: supplier.poNumber || '',
-      poApproveDate: supplier.poApproveDate || '',
-      poReceiveDate: supplier.poReceiveDate || '',
-      totalAmount: supplier.totalAmount || 0,
-      totalVatAmount: supplier.totalVatAmount || 0,
-      currencyCode: supplier.currencyCode || '',
-      currencyName: supplier.currencyName || '',
-    }));
-  }, [purchase_order_list]);
-
-  if (loading) {
-    return <Loader />;
-  }
-
-  return (
-    <div className="purchase-order-screen">
-      <div className="space-y-6">
-        {dialog}
-
-        <Card>
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <ShoppingCart className="h-6 w-6 text-primary" />
-                <CardTitle className="text-xl">{strings.PurchaseOrder}</CardTitle>
-              </div>
-              <Button
-                onClick={() => navigate('/admin/expense/purchase-order/create')}
-                className="transition-all duration-200 hover:scale-[1.02]"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                {strings.AddNewPurchaseOrder}
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {/* Filters */}
-            <div className="mb-6 p-4 bg-muted/30 rounded-lg">
-              <h5 className="text-sm font-semibold mb-3">{strings.Filter}:</h5>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Select
-                  styles={selectStyles}
-                  className="input-transition"
-                  placeholder={`${strings.Select} ${strings.Supplier}`}
-                  isClearable
-                  options={
-                    supplierOptions
-                      ? selectOptionsFactory.renderOptions(
-                          'label',
-                          'value',
-                          supplierOptions,
-                          'Supplier Name'
-                        )
-                      : []
-                  }
-                  value={filterData.supplierId}
-                  onChange={(option) => {
-                    handleFilterChange('supplierId', option || '');
-                  }}
-                />
-                <div className="flex gap-2 lg:col-start-4">
-                  <Button onClick={handleSearch} variant="default" size="icon">
-                    <Search className="h-4 w-4" />
-                  </Button>
-                  <Button onClick={clearAll} variant="outline" size="icon">
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* Data Table */}
-            <DataTable
-              columns={columns}
-              data={tableData}
-              manualPagination
-              pageCount={Math.ceil(
-                (purchase_order_list?.data?.count || 0) / pagination.pageSize
-              )}
-              onPaginationChange={setPagination}
-              pagination={pagination}
-              manualSorting
-              onSortingChange={setSorting}
-              sorting={sorting}
-            />
-          </CardContent>
-        </Card>
-
-        <CreateGoodsReceivedNote
-          openGoodsReceivedNotes={openGoodsReceivedNotes}
-          closeGoodsReceivedNotes={() => setOpenGoodsReceivedNotes(false)}
-          id={rowId}
-          selectedData={selectedData}
-          prefixData={prefixData}
-          getVat={purchaseOrderAction.getVatList()}
-          getProductList={purchaseOrderAction.getProductList()}
-          getNextGrnNo={getNextGrnNo}
-          createGRN={goodsReceivedNoteCreateAction.createGNR}
-        />
-      </div>
-    </div>
-  );
+	return loading ? (
+        <Loader />
+    ) : (
+		<div>
+			<div className="supplier-invoice-screen">
+				<div className="animated fadeIn">
+					<Card>
+						<CardHeader>
+							<Row>
+								<Col lg={12}>
+									<div className="h4 mb-0 d-flex align-items-center">
+										<img
+											alt="invoiceimage"
+											src={invoiceimage}
+											style={{ width: '40px' }}
+										/>
+										<span className="ml-2">{strings.PurchaseOrder}</span>
+									</div>
+								</Col>
+							</Row>
+						</CardHeader>
+						<CardBody>
+							{dialog}
+							<Row>
+								<Col lg={12}>
+									<div className="d-flex justify-content-end">
+										<ButtonGroup size="sm">
+                                            {/* Buttons can go here */}
+										</ButtonGroup>
+									</div>
+									<div className="py-3">
+										<h5>{strings.Filter}: </h5>
+										<Row>
+											<Col lg={2} className="mb-1">
+												<Select
+													className="select-default-width"
+													placeholder={strings.Select+strings.Supplier}
+													id="supplier"
+													name="supplier"
+													options={
+														tmpSupplier_list
+															? selectOptionsFactory.renderOptions(
+																	'label',
+																	'value',
+																	tmpSupplier_list,
+																	'Supplier Name',
+															  )
+															: []
+													}
+													value={filterData.supplierId}
+													onChange={(option) => {
+														if (option && option.value) {
+															handleChange(option, 'supplierId');
+														} else {
+															handleChange('', 'supplierId');
+														}
+													}}
+												/>
+											</Col>
+											<Col lg={2} className="pl-0 pr-0">
+												<Button
+													type="button"
+													color="primary"
+													className="btn-square mr-1"
+													onClick={handleSearch}
+												>
+													<i className="fa fa-search"></i>
+												</Button>
+												<Button
+													type="button"
+													color="primary"
+													className="btn-square"
+													onClick={clearAll}
+												>
+													<i className="fa fa-refresh"></i>
+												</Button>
+											</Col>
+										</Row>
+									</div>
+									<Row>
+									<div style={{width:"1650px"}}>
+									<Button
+										color="primary"
+										style={{ marginBottom: '10px' }}
+										className="btn-square pull-right"
+										onClick={() =>
+											navigate(`/admin/expense/purchase-order/create`)
+										}
+									>
+										<i className="fas fa-plus mr-1" />
+										{strings.AddNewPurchaseOrder}
+									</Button>
+									</div>
+									</Row> 
+                                    
+                                    <DataTable
+                                        data={purchase_order_list?.data?.data || []}
+                                        columns={columns}
+                                        manualPagination={true}
+                                        manualSorting={true}
+                                        pageCount={purchase_order_list?.data?.count ? Math.ceil(purchase_order_list.data.count / pagination.pageSize) : 0}
+                                        onPaginationChange={setPagination}
+                                        onSortingChange={setSorting}
+                                    />
+                                    
+								</Col>
+							</Row>
+						</CardBody>
+					</Card>
+				</div>
+				<CreateGoodsReceivedNote
+					openGoodsReceivedNotes={openGoodsReceivedNotes}
+					closeGoodsReceivedNotes={closeGoodsReceivedNotes}
+					id={rowId}
+                    selectedData={selectedData}
+					prefixData={prefixData}
+					getVat={dispatch(PurchaseOrderAction.getVatList())} // Correct way to call? Original was prop
+					getProductList={dispatch(PurchaseOrderAction.getProductList())}
+					getNextGrnNo={()=>{
+						dispatch(GoodsReceivedNoteCreateAction.getInvoiceNo()).then((response) => {
+						    setPrefixData(response.data);
+						});
+                    }}
+					createGRN={(data) => dispatch(GoodsReceivedNoteCreateAction.createGNR(data))}
+				/>
+			</div>
+			</div>
+		);
 }
 
 export default PurchaseOrder;

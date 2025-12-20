@@ -1,304 +1,204 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect, useMemo } from 'react';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { DataTable } from '@/components/ui/data-table';
+import {
+	Button,
+	Row,
+	Col,
+	FormGroup,
+	Form,
+	Input,
+	ButtonGroup,
+} from 'reactstrap';
 import Select from 'react-select';
-import { DateRangePicker2, Currency } from 'components';
+import { DateRangePicker2, Currency, Loader } from 'components';
 import dayjs from '@/utils/date';
+import { DataTable } from '@/components/ui/data-table';
 import DatePicker from 'react-datepicker';
 import * as accountBalanceData from '../../actions';
-import { selectOptionsFactory } from 'utils';
-import 'react-toastify/dist/ReactToastify.css';
-import 'bootstrap-daterangepicker/daterangepicker.css';
+import { selectOptionsFactory, selectStyles } from 'utils';
 import './style.scss';
 
-const customStyles = {
-  control: (base, state) => ({
-    ...base,
-    borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-    boxShadow: state.isFocused ? null : null,
-    '&:hover': {
-      borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-    },
-  }),
-};
+const AccountBalances = () => {
+    const dispatch = useDispatch();
 
-const ranges = {
-  'Last 7 Days': [dayjs().subtract(6, 'days'), dayjs()],
-  'Last 30 Days': [dayjs().subtract(29, 'days'), dayjs()],
-  'This Week': [dayjs().startOf('week'), dayjs().endOf('week')],
-  'This Month': [dayjs().startOf('month'), dayjs().endOf('month')],
-  'Last Month': [
-    dayjs().subtract(1, 'month').startOf('month'),
-    dayjs().subtract(1, 'month').endOf('month'),
-  ],
-};
-
-function AccountBalances() {
-  const dispatch = useDispatch();
-  const tableRef = useRef();
-
-  // Redux state
-  const account_balance_report = useSelector(
-    (state) => state.transaction_data.account_balance_report
-  );
-  const account_type_list = useSelector((state) => state.transaction_data.account_type_list);
-  const universal_currency_list = useSelector((state) => state.common.universal_currency_list);
-
-  // Actions
-  const accountBalanceDataActions = useMemo(
-    () => bindActionCreators(accountBalanceData, dispatch),
-    [dispatch]
-  );
-
-  // Local state
-  const [filterData, setFilterData] = useState({
-    filter_type: '',
-    filter_category: '',
-    filter_account: '',
-    startDate: '',
-    endDate: '',
-  });
-  const [initValue] = useState({
-    startDate: dayjs().startOf('month').format('DD-MM-YYYY'),
-    endDate: dayjs().endOf('month').format('DD-MM-YYYY'),
-  });
-
-  useEffect(() => {
-    getAccountBalanceData();
-  }, []);
-
-  const getAccountBalanceData = useCallback(() => {
-    const postData = {
-      startDate: initValue.startDate,
-      endDate: initValue.endDate,
-    };
-    accountBalanceDataActions.getAccountBalanceReport(postData);
-    accountBalanceDataActions.getAccountTypeList();
-  }, [accountBalanceDataActions, initValue]);
-
-  const getSelectedData = useCallback(() => {
-    const postObj = {
-      filter_type: filterData.filter_type !== '' ? filterData.filter_type : '',
-      filter_category: filterData.filter_category !== '' ? filterData.filter_category : '',
-      filter_account: filterData.filter_account !== '' ? filterData.filter_account : '',
-      startDate:
-        filterData.startDate !== '' ? dayjs(filterData.startDate).format('DD-MM-YYYY') : '',
-      endDate: filterData.endDate !== '' ? dayjs(filterData.endDate).format('DD-MM-YYYY') : '',
-    };
-    accountBalanceDataActions.getAccountBalanceReport(postObj);
-  }, [filterData, accountBalanceDataActions]);
-
-  const handleChange = useCallback((val, name) => {
-    setFilterData((prev) => ({
-      ...prev,
-      [name]: val,
+    const {
+        account_balance_report,
+        account_type_list,
+        universal_currency_list,
+    } = useSelector((state) => ({
+        account_balance_report: state.transaction_data.account_balance_report,
+        account_type_list: state.transaction_data.account_type_list,
+        universal_currency_list: state.common.universal_currency_list,
     }));
-  }, []);
 
-  const handleSearch = useCallback(() => {
-    getSelectedData();
-  }, [getSelectedData]);
-
-  const clearAll = useCallback(() => {
-    setFilterData({
-      filter_type: '',
-      filter_category: '',
-      filter_account: '',
-      startDate: '',
-      endDate: '',
+    const [loading, setLoading] = useState(false);
+	const [filterData, setFilterData] = useState({
+		filter_account: '',
+		startDate: '',
+		endDate: '',
+	});
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: 10,
     });
-    getAccountBalanceData();
-  }, [getAccountBalanceData]);
 
-  // Transform data for table
-  const tableData = useMemo(() => {
-    return account_balance_report
-      ? account_balance_report.map((account) => ({
-          account: account.bankAccount,
-          transactionType: account.transactionType,
-          transactionDescription: account.transactionDescription,
-          transactionCategory: account.transactionCategory,
-          transactionAmount: account.transactionAmount,
-          transactionDate: dayjs(account.transactionDate).format('DD-MM-YYYY'),
-          transactionId: account.transactionId,
-        }))
-      : [];
-  }, [account_balance_report]);
+	useEffect(() => {
+		getAccountBalanceData();
+	}, []);
 
-  // Column definitions
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: 'transactionDate',
-        header: 'Transaction Date',
-        enableSorting: true,
-      },
-      {
-        accessorKey: 'account',
-        header: 'Account',
-        enableSorting: true,
-      },
-      {
-        accessorKey: 'transactionType',
-        header: 'Transaction Type',
-        enableSorting: true,
-      },
-      {
-        accessorKey: 'transactionCategory',
-        header: 'Transaction Category',
-        enableSorting: true,
-      },
-      {
-        accessorKey: 'transactionDescription',
-        header: 'Transaction Description',
-        enableSorting: true,
-      },
-      {
-        accessorKey: 'transactionAmount',
-        header: 'Transaction Amount',
-        enableSorting: true,
-        cell: ({ row }) => {
-          const amount = row.original.transactionAmount;
-          const currencyIsoCode = universal_currency_list[0]
-            ? universal_currency_list[0].currencyIsoCode
-            : 'USD';
-          return amount ? <Currency value={amount} currencySymbol={currencyIsoCode} /> : '';
+	const getAccountBalanceData = () => {
+		const postData = {
+			startDate: dayjs().startOf('month').format('DD-MM-YYYY'),
+			endDate: dayjs().endOf('month').format('DD-MM-YYYY'),
+		};
+		dispatch(accountBalanceData.getAccountBalanceReport(postData));
+		dispatch(accountBalanceData.getAccountTypeList());
+	};
+
+	const getSelectedData = () => {
+		const postObj = {
+			filter_account: filterData.filter_account?.value || '',
+			startDate: filterData.startDate ? dayjs(filterData.startDate).format('DD-MM-YYYY') : '',
+			endDate: filterData.endDate ? dayjs(filterData.endDate).format('DD-MM-YYYY') : '',
+		};
+		dispatch(accountBalanceData.getAccountBalanceReport(postObj));
+	};
+
+	const handleFilterChange = (val, name) => {
+		setFilterData(prev => ({ ...prev, [name]: val }));
+	};
+
+    const clearAll = () => {
+        setFilterData({ filter_account: '', startDate: '', endDate: '' });
+        setPagination(prev => ({ ...prev, pageIndex: 0 }));
+    };
+
+    const columns = useMemo(() => [
+        {
+            accessorKey: 'transactionDate',
+            header: 'Transaction Date',
         },
-      },
-    ],
-    [universal_currency_list]
-  );
+        {
+            accessorKey: 'account',
+            header: 'Account',
+        },
+        {
+            accessorKey: 'transactionType',
+            header: 'Transaction Type',
+        },
+        {
+            accessorKey: 'transactionCategory',
+            header: 'Transaction Category',
+        },
+        {
+            accessorKey: 'transactionDescription',
+            header: 'Transaction Description',
+        },
+        {
+            accessorKey: 'transactionAmount',
+            header: 'Transaction Amount',
+            cell: ({ getValue }) => (
+                <div className="text-right">
+                    <Currency
+                        value={getValue()}
+                        currencySymbol={universal_currency_list[0]?.currencyIsoCode || 'AED'}
+                    />
+                </div>
+            ),
+        },
+    ], [universal_currency_list]);
 
-  return (
-    <div className="transaction-report-section">
-      <div className="animated fadeIn">
-        <div className="grid grid-cols-12 gap-4">
-          <div lg={12}>
-            <div className="flex-wrap d-flex align-items-start justify-content-between">
-              <div className="info-block">
-                <h4>
-                  <small></small>
-                </h4>
-              </div>
-              <form onSubmit={(e) => e.preventDefault()} name="simpleForm">
-                <div className="flex-wrap d-flex align-items-center">
-                  <div>
-                    <div className="inline-flex rounded-md mr-3" role="group">
-                      <Button
-                        variant="default"
-                        className="btn-square"
-                        onClick={() => {
-                          // Export functionality would go here
-                          console.log('Export to CSV');
-                        }}
-                      >
-                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                        Export to CSV
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div className="py-3">
-              <h5>Filter : </h5>
-              <div className="grid grid-cols-12 gap-4">
-                <div lg={2} className="mb-1">
-                  <DatePicker
-                    className="form-control"
-                    id="startDate"
-                    name="startDate"
-                    placeholderText="Start Date"
-                    showMonthDropdown
-                    showYearDropdown
-                    autoComplete="off"
-                    dropdownMode="select"
-                    dateFormat="dd-MM-yyyy"
-                    selected={filterData.startDate}
-                    onChange={(value) => {
-                      handleChange(value, 'startDate');
-                    }}
-                  />
-                </div>
-                <div lg={2} className="mb-1">
-                  <DatePicker
-                    id="endDate"
-                    name="endDate"
-                    className="form-control"
-                    placeholderText="End Date"
-                    showMonthDropdown
-                    showYearDropdown
-                    dropdownMode="select"
-                    dateFormat="dd-MM-yyyy"
-                    selected={filterData.endDate}
-                    onChange={(value) => {
-                      handleChange(value, 'endDate');
-                    }}
-                  />
-                </div>
+    const accountBalanceTable = useMemo(() => {
+        if (!account_balance_report) return [];
+        return account_balance_report.map((account) => ({
+            account: account.bankAccount,
+            transactionType: account.transactionType,
+            transactionDescription: account.transactionDescription,
+            transactionCategory: account.transactionCategory,
+            transactionAmount: account.transactionAmount,
+            transactionDate: dayjs(account.transactionDate).format('DD-MM-YYYY'),
+            transactionId: account.transactionId,
+        }));
+    }, [account_balance_report]);
 
-                <div lg={2} className="mb-1">
-                  <Select
-                    styles={customStyles}
-                    className=""
-                    options={
-                      account_type_list
-                        ? selectOptionsFactory.renderOptions(
-                            'name',
-                            'id',
-                            account_type_list,
-                            'Account'
-                          )
-                        : []
-                    }
-                    placeholder="Account"
-                    value={filterData.filter_account}
-                    onChange={(option) => {
-                      if (option && option.value) {
-                        handleChange(option, 'filter_account');
-                      } else {
-                        handleChange('', 'filter_account');
-                      }
-                    }}
-                  />
-                </div>
-                <div lg={3} className="mb-1">
-                  <Button
-                    type="button"
-                    variant="default"
-                    className="btn-square mr-1"
-                    onClick={handleSearch}
-                  >
-                    <i className="fa fa-search"></i>
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="default"
-                    className="btn-square"
-                    onClick={clearAll}
-                  >
-                    <i className="fa fa-refresh"></i>
-                  </Button>
-                </div>
-              </div>
-            </div>
-            <div className="table-wrapper">
-              <DataTable
-                columns={columns}
-                data={tableData}
-                enableExport={true}
-                exportFileName="account_balance_table"
-                emptyMessage="No transactions found"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+	if (loading) return <Loader />;
 
-export default AccountBalances;
+	return (
+		<div className="transaction-report-section">
+			<div className="animated fadeIn">
+				<Row>
+					<Col lg={12}>
+						<div className="flex-wrap d-flex align-items-start justify-content-between">
+							<div className="info-block">
+								<h4><small></small></h4>
+							</div>
+							<Form onSubmit={(e) => e.preventDefault()} name="simpleForm">
+								<div className="flex-wrap d-flex align-items-center">
+									<FormGroup>
+										<ButtonGroup className="mr-3">
+											<Button color="primary" className="btn-square" onClick={() => {}}>
+												<i className="fa glyphicon glyphicon-export fa-download mr-1" />Export to CSV
+											</Button>
+										</ButtonGroup>
+									</FormGroup>
+								</div>
+							</Form>
+						</div>
+						<div className="py-3">
+							<h5>Filter : </h5>
+							<Row>
+								<Col lg={2} className="mb-1">
+									<DatePicker
+										className="form-control"
+										placeholderText="Start Date"
+										selected={filterData.startDate}
+										onChange={(value) => handleFilterChange(value, 'startDate')}
+										dateFormat="dd-MM-yyyy"
+									/>
+								</Col>
+								<Col lg={2} className="mb-1">
+									<DatePicker
+										className="form-control"
+										placeholderText="End Date"
+										selected={filterData.endDate}
+										onChange={(value) => handleFilterChange(value, 'endDate')}
+										dateFormat="dd-MM-yyyy"
+									/>
+								</Col>
+								<Col lg={2} className="mb-1">
+									<Select
+										styles={selectStyles}
+										options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list, 'Account') : []}
+										placeholder="Account"
+										value={filterData.filter_account}
+										onChange={(option) => handleFilterChange(option, 'filter_account')}
+									/>
+								</Col>
+								<Col lg={3} className="mb-1">
+									<Button type="button" color="primary" className="btn-square mr-1" onClick={getSelectedData}>
+										<i className="fa fa-search"></i>
+									</Button>
+									<Button type="button" color="primary" className="btn-square" onClick={clearAll}>
+										<i className="fa fa-refresh"></i>
+									</Button>
+								</Col>
+							</Row>
+						</div>
+						<div className="table-wrapper">
+                            <DataTable
+                                data={accountBalanceTable}
+                                columns={columns}
+                                manualPagination={false}
+                                pagination={pagination}
+                                onPaginationChange={setPagination}
+                            />
+						</div>
+					</Col>
+				</Row>
+			</div>
+		</div>
+	);
+};
+
+export default connect()(AccountBalances);

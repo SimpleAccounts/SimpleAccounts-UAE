@@ -4,8 +4,7 @@ import { bindActionCreators } from 'redux';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'sonner';
 
 import {
   Button,
@@ -162,7 +161,7 @@ const LogIn = ({ authActions, commonActions, history, version }) => {
 
   return (
     <div className="log-in-screen">
-      <ToastContainer position="top-right" autoClose={1700} closeOnClick draggable />
+      
       <div className="animated fadeIn">
         <div className="main-banner_container col-md-12 flex">
           {/* Background images can be added here if needed */}

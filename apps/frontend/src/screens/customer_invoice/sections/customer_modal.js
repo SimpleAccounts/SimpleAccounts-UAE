@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import 'react-phone-input-2/lib/style.css'
 import {data}  from '../../Language/index'
 import LocalizedStrings from 'react-localization';

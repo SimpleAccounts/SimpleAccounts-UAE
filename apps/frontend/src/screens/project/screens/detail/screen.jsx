@@ -22,7 +22,7 @@ import { ContactModal } from '../../sections';
 import { Loader, ConfirmDeleteModal } from 'components';
 
 import * as ProjectActions from '../../actions';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 import { CommonActions } from 'services/global';
 import * as DetailProjectActions from './actions';

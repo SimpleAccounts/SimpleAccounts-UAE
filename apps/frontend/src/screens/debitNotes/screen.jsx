@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Search, RefreshCw, CreditCard, Edit, Eye, FileText, University, Receipt } from 'lucide-react';
 import Select from 'react-select';
-import { upperCase } from 'lodash';
+import { upperCase } from 'lodash-es';
 import { ToWords } from 'to-words';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

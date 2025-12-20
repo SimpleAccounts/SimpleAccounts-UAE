@@ -5,8 +5,6 @@ import {
 } from 'reactstrap';
 import { bindActionCreators } from 'redux';
 import dayjs from '@/utils/date';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import 'react-toastify/dist/ReactToastify.css';
 import { data } from 'screens/Language/index'
 import LocalizedStrings from 'react-localization';
 import { SentInvoice, DeleteDocument, ChangeInvoiceStatus } from 'components';

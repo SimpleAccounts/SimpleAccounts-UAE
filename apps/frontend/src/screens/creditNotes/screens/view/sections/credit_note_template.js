@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { Card, CardBody, Row, Col, Table } from 'reactstrap';
+import { Card, CardBody, Row, Col, Table, Input } from 'reactstrap';
 import dayjs from '@/utils/date';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { Currency } from 'components';
 import { data } from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { TextareaAutosize } from '@material-ui/core';
 // Use import instead of require for Vite compatibility
 import { ToWords } from 'to-words';
 // Use import instead of require for Vite compatibility
@@ -711,7 +710,7 @@ class InvoiceTemplate extends Component {
 								</div>
 							</div>
 						</div><hr />
-						<TextareaAutosize
+						<Input
 							type="textarea"
 							disabled
 							className="textarea viewFootNote"

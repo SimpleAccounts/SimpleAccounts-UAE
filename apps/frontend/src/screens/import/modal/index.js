@@ -1,5 +1,5 @@
 
-import ChartOfAccountsModal from './coaModal'
+import ChartOfAccountsModal from './coaModal.jsx'
 
 export {
     ChartOfAccountsModal

@@ -20,7 +20,6 @@ import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import { CommonActions } from 'services/global';
-import 'react-toastify/dist/ReactToastify.css';
 import * as roleActions from '../create/actions';
 import * as roleCommonActions from '../../actions';
 import { data } from '../../../Language/index';

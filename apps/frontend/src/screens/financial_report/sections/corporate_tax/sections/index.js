@@ -1,7 +1,7 @@
-import CTReport from './ct_report'
-import CTSettingModal from './ctSettingModal'
-import FileCtReportModal from './file_ct_report'
-import DeleteModal from './deleteModal'
+import CTReport from './ct_report.jsx'
+import CTSettingModal from './ctSettingModal.jsx'
+import FileCtReportModal from './file_ct_report.jsx'
+import DeleteModal from './deleteModal.jsx'
 export {
     CTReport,
     CTSettingModal,

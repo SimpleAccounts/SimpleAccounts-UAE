@@ -1,11 +1,8 @@
 import React from 'react'
 
 import { motion } from 'framer-motion'
-//
-import { alpha, styled, useTheme } from '@mui/material/styles';
-import { Box, GlobalStyles } from '@mui/material';
 // Use import instead of require for Vite compatibility
-import loaderImage from 'assets/images/brand/loader-gif.gif';
+// import loaderImage from 'assets/images/brand/loader-gif.gif';
 // const loaderImage = require('assets/images/settings/thumbnail.png');
 // const newloaderImage = require('assets/images/settings/thumbnail.png');
 import oldloaderImage from 'assets/images/brand/loader-gif.gif';
@@ -41,8 +38,7 @@ export default function Loader({loadingMsg,NextloadingMsg}) {
           {/* <img style={{ width: 64, height: 64 }} src={newloaderImage} alt="logo" /> */}
         </motion.div>
 
-        <Box
-          component={motion.div}
+        <motion.div
           animate={{
             scale: [1.2, 1, 1, 1.2, 1.2],
             rotate: [270, 0, 0, 270, 270],
@@ -50,17 +46,16 @@ export default function Loader({loadingMsg,NextloadingMsg}) {
             borderRadius: ['25%', '25%', '50%', '50%', '25%']
           }}
           transition={{ ease: 'linear', duration: 3.2, repeat: Infinity }}
-          sx={{
+          style={{
             width: 100,
             height: 100,
             borderRadius: '25%',
             position: 'absolute',
-            border: (theme) => `solid 3px ${alpha(theme.palette.primary.dark, 0.24)}`
+            border: `solid 3px rgba(32, 100, 216, 0.24)`
           }}
         />
 
-        <Box
-          component={motion.div}
+        <motion.div
           animate={{
             scale: [1, 1.2, 1.2, 1, 1],
             rotate: [0, 270, 270, 0, 0],
@@ -72,12 +67,12 @@ export default function Loader({loadingMsg,NextloadingMsg}) {
             duration: 3.2,
             repeat: Infinity
           }}
-          sx={{
+          style={{
             width: 120,
             height: 120,
             borderRadius: '25%',
             position: 'absolute',
-            border: (theme) => `solid 8px ${alpha(theme.palette.primary.dark, 0.24)}`
+            border: `solid 8px rgba(32, 100, 216, 0.24)`
           }}
         />
       </div>

@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Card, CardBody, Table } from 'reactstrap';
+import { Card, CardBody, Table, Input } from 'reactstrap';
 import dayjs from '@/utils/date';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { TextField } from '@material-ui/core';
 
 // Use import instead of require for Vite compatibility
 import { ToWords } from 'to-words';
@@ -681,7 +680,7 @@ class RFQTemplate extends Component {
               </div>
             </div>
             <hr />
-            <TextField
+            <Input
               type="textarea"
               disabled
               className="textarea viewFootNote"

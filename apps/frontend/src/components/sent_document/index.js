@@ -1,15 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import 'react-toastify/dist/ReactToastify.css';
 import { data } from 'screens/Language/index'
 import LocalizedStrings from 'react-localization';
-import { upperCase } from 'lodash';
+import { upperCase } from 'lodash-es';
 import * as Actions from './actions';
 import { CommonActions } from 'services/global';
 import { bindActionCreators } from 'redux';
 import { ActionMessagesList } from 'utils';
-import EmailPopUpCard from './email_popup_card';
+import EmailPopUpCard from './email_popup_card.jsx';
 // Use import instead of require for Vite compatibility
 import { ToWords } from 'to-words';
 

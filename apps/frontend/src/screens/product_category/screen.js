@@ -4,11 +4,10 @@ import { bindActionCreators } from 'redux';
 import { CardHeader, CardContent, Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 // ButtonGroup removed - replace with: <div className="inline-flex rounded-md" role="group">
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { DataTable } from '@/components/ui/data-table';
 import { CommonActions } from 'services/global';
 import { Loader, ConfirmDeleteModal } from 'components';
-import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';

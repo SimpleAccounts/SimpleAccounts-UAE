@@ -1,5 +1,5 @@
 
-import InventoryHistoryModal from './invetoryHistorymodal';
+import InventoryHistoryModal from './invetoryHistorymodal.jsx';
 
 
 export {

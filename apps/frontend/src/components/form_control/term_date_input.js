@@ -13,7 +13,6 @@ import { selectOptionsFactory } from 'utils';
 import dayjs from '@/utils/date';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 const mapStateToProps = (state) => {
     return {

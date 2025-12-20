@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { api, authApi } from 'utils';
 import axios from 'axios';
 import config from 'constants/config';

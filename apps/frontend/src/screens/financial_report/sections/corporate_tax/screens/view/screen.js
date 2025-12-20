@@ -25,12 +25,10 @@ import * as CTReportActions from '../../actions';
 	import * as FinancialReportActions from '../../../../actions';
 import FilterComponent from '../../../filterComponent';
 import FilterComponent2 from '../../../filterComponet2';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { alertTitleClasses } from '@mui/material';
 
 const mapStateToProps = (state) => {
 	return {

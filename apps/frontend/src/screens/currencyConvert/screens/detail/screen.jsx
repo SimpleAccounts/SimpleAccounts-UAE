@@ -20,7 +20,6 @@ import {
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import Select from 'react-select';
 import { CommonActions, AuthActions } from 'services/global';
-import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import * as DetailCurrencyConvertAction from './actions';
 import * as CurrencyConvertActions from '../../actions';

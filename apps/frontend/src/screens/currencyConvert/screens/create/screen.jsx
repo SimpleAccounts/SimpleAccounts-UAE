@@ -19,7 +19,6 @@ import {
 import Select from 'react-select';
 import { LeavePage, Loader } from 'components';
 import { AuthActions, CommonActions } from 'services/global';
-import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import * as CreateCurrencyConvertActions from './actions';
 import * as CurrencyConvertActions from '../../actions';

@@ -25,11 +25,10 @@ import * as ExpenseActions from '../../actions';
 import * as ExpenseCreateActions from './actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { Checkbox } from '@material-ui/core';
+import { Checkbox } from '@/components/ui/checkbox';
 import Switch from 'react-switch';
 
 const SortExpenseCategory = list => {
@@ -1296,17 +1295,17 @@ const CreateExpense = ({
                                 (!isDesignatedZone &&
                                   taxTreatmentId !== 3 &&
                                   taxTreatmentId !== 8)) && (
-                                <Col>
+                                <Col className="flex items-center">
                                   <Checkbox
                                     id="isReverseChargeEnabled"
                                     checked={isReverseChargeEnabled}
-                                    onChange={() => {
-                                      setIsReverseChargeEnabled(!isReverseChargeEnabled);
+                                    onCheckedChange={(checked) => {
+                                      setIsReverseChargeEnabled(checked);
                                       setExclusiveVat(true);
                                       setValue('vatCategoryId', '');
                                     }}
                                   />
-                                  <Label>{strings.IsReverseCharge}</Label>
+                                  <Label htmlFor="isReverseChargeEnabled" className="ml-2 mb-0">{strings.IsReverseCharge}</Label>
                                 </Col>
                               )}
                           </Row>

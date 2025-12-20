@@ -32,7 +32,6 @@ import {
   TermDateInput,
 } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { renderList, selectOptionsFactory, InputValidation, DropdownLists, Lists, selectStyles } from 'utils';
 import Switch from 'react-switch';

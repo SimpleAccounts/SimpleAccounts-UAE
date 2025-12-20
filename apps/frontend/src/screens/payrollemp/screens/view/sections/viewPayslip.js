@@ -11,7 +11,7 @@ import {
 	CardBody,
 	Table,
 } from 'reactstrap';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { data } from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import '../style.scss';

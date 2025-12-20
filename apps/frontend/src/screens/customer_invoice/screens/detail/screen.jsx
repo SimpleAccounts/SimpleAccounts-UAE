@@ -17,7 +17,6 @@ import {
   Label,
 } from 'reactstrap';
 import Select from 'react-select';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import * as CustomerInvoiceDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
@@ -26,7 +25,6 @@ import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { CustomerModal, ProductModal } from '../../sections';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory, InputValidation, DropdownLists, Lists, selectStyles } from 'utils';
 import './style.scss';
@@ -35,7 +33,6 @@ import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import Switch from 'react-switch';
-import { TextField } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
   return {

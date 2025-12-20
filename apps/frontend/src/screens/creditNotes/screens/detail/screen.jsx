@@ -33,14 +33,13 @@ import {
   ProductTable,
 } from "components";
 import "react-datepicker/dist/react-datepicker.css";
-import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 import { CommonActions } from "services/global";
 import { selectCurrencyFactory, selectOptionsFactory, selectStyles } from "utils";
 import "./style.scss";
 import dayjs from '@/utils/date';
 import { data } from "../../../Language/index";
 import LocalizedStrings from "react-localization";
-import { TextareaAutosize, TextField } from "@material-ui/core";
+import { Textarea } from '@/components/ui/textarea';
 
 // Zod validation schema
 const detailCreditNoteSchema = z.object({
@@ -1382,16 +1381,13 @@ const DetailCreditNote = ({
                                     name="notes"
                                     control={control}
                                     render={({ field }) => (
-                                      <TextField
+                                      <Textarea
                                         {...field}
-                                        type="textarea"
-                                        multiline
                                         style={{ width: "500px" }}
                                         className="textarea"
-                                        inputProps={{ maxLength: 255 }}
+                                        maxLength={255}
                                         id="notes"
-                                        rows="1"
-                                        maxRows={4}
+                                        rows={4}
                                         placeholder={strings.DeliveryNotes}
                                       />
                                     )}
@@ -1486,14 +1482,13 @@ const DetailCreditNote = ({
                                     name="receiptAttachmentDescription"
                                     control={control}
                                     render={({ field }) => (
-                                      <TextareaAutosize
+                                      <Textarea
                                         {...field}
-                                        type="textarea"
-                                        className="textarea form-control"
-                                        maxLength="250"
+                                        className="textarea"
+                                        maxLength={250}
                                         style={{ width: "700px" }}
                                         id="receiptAttachmentDescription"
-                                        rows="2"
+                                        rows={2}
                                         placeholder={
                                           strings.ReceiptAttachmentDescription
                                         }
@@ -1532,13 +1527,12 @@ const DetailCreditNote = ({
                                     name="notes"
                                     control={control}
                                     render={({ field }) => (
-                                      <TextareaAutosize
+                                      <Textarea
                                         {...field}
-                                        type="textarea"
-                                        className="textarea form-control"
-                                        maxLength="255"
+                                        className="textarea"
+                                        maxLength={255}
                                         id="notes"
-                                        rows="2"
+                                        rows={2}
                                         placeholder={strings.DeliveryNotes}
                                       />
                                     )}

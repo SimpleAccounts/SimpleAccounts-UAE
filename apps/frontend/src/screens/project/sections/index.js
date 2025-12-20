@@ -1,5 +1,5 @@
 import Temp from './temp'
-import ContactModal from './contact_modal'
+import ContactModal from './contact_modal.jsx'
 
 export {
   Temp,

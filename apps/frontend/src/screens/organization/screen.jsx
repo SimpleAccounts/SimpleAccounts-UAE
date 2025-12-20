@@ -16,14 +16,12 @@ import {
   FormGroup,
   Label
 } from 'reactstrap';
-import { ToastContainer } from 'react-toastify';
+
 import ImageUploader from 'react-images-upload';
 import Select from 'react-select';
 import { Loader } from 'components';
 import { CommonActions } from 'services/global';
 import * as OrganizationActions from './actions';
-import 'react-toastify/dist/ReactToastify.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { selectOptionsFactory, selectStyles } from 'utils';
 import './style.scss';
 import config from 'constants/config';
@@ -157,13 +155,6 @@ const Organization = ({
     <div>
       <div className="organization-screen">
         <div className="animated fadeIn">
-          <ToastContainer
-            position="top-right"
-            autoClose={1700}
-            style={containerStyle}
-            closeOnClick
-            draggable
-          />
 
           <Card>
             <CardHeader>

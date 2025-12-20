@@ -17,10 +17,9 @@ import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import { ReportTables } from 'screens/financial_report/sections'
 import { ExcelExport as XLSX } from 'utils';
-import FilterComponent from './sections/filterComponent';
+import FilterComponent from './sections/filterComponent.jsx';
 import { Loader, Currency } from 'components';
 import * as DetailGeneralLedgerActions from './actions';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';

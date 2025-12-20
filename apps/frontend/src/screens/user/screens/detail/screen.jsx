@@ -28,8 +28,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { toast } from 'react-toastify';
-import { upperFirst } from 'lodash';
+import { toast } from 'sonner';
+import { upperFirst } from 'lodash-es';
 import eye from 'assets/images/settings/eye.png';
 
 const strings = new LocalizedStrings(data);

@@ -5,7 +5,6 @@ import {
     Label,
     Col,
 } from 'reactstrap';
-import { TextField } from '@material-ui/core';
 
 function InvoiceAdditionaNotesInformation(props) {
     const { onChange, notesValue, notesLabel, notesPlaceholder, referenceNumberLabel, referenceNumberPlaceholder, referenceNumberValue,
@@ -42,15 +41,14 @@ function InvoiceAdditionaNotesInformation(props) {
                 <Col lg={7}>
                     <FormGroup className="py-2">
                         <Label htmlFor="notes">{notesLabel}</Label><br />
-                        <TextField
+                        <Input
                             type="textarea"
                             //style={{ width: "500px" }}
                             className="textarea"
-                            inputProps={{ maxLength: 255 }}
-                            multiline
+                            maxLength={255}
                             name="notes"
                             id="notes"
-                            maxRows="4"
+                            rows="4"
                             placeholder={notesPlaceholder}
                             onChange={(option) =>
                                 onChange('notes', option)
@@ -67,14 +65,13 @@ function InvoiceAdditionaNotesInformation(props) {
                             {footNoteLabel}
                         </Label>
                         <br />
-                        <TextField
+                        <Input
                             type="textarea"
                             className="textarea"
-                            inputProps={{ maxLength: 255 }}
+                            maxLength={255}
                             name="footNote"
                             id="footNote"
-                            maxRows={4}
-                            multiline
+                            rows={4}
                             placeholder={footNotePlaceholder}
                             onChange={(option) =>
                                 onChange('footNote', option)

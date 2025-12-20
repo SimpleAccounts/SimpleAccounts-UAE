@@ -3,7 +3,7 @@ import {
 	Modal,
 } from 'reactstrap';
 import { SalaryComponentScreen } from '../../salary_component/sections';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { data } from '../../Language/index'
 import LocalizedStrings from 'react-localization';
 

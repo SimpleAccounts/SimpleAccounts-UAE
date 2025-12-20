@@ -2,8 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 
-import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
-import "react-toastify/dist/ReactToastify.css";
 // import 'react-select/dist/react-select.css'
 import "./style.scss";
 import { data } from "../Language/index";

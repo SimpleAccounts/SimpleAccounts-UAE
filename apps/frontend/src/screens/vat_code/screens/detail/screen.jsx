@@ -19,13 +19,12 @@ import {
 } from 'reactstrap';
 import { Loader, ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
-import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import * as VatDetailActions from './actions';
 import * as VatActions from '../../actions';
 import NumberFormat from 'react-number-format';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
+import { Input as ShadcnInput } from '@/components/ui/input';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 
@@ -292,28 +291,27 @@ const DetailVatCode = ({
 															name="vat"
 															control={control}
 															render={({ field }) => (
-																<TextField
-																	type="text"
-																	size="small"
-																	fullWidth
-																	variant="outlined"
-																	inputProps={{ maxLength: 5 }}
-																	id="vat"
-																	placeholder="Enter Tax Percentage"
-																	{...field}
-																	onChange={(e) => {
-																		if (
-																			e.target.value === '' ||
-																			regExPercentage.test(e.target.value)
-																		) {
-																			field.onChange(e);
-																		}
-																	}}
-																	className={errors.vat ? 'is-invalid' : ''}
-																	InputProps={{
-																		inputComponent: NumberFormatCustom,
-																	}}
-																/>
+																<div className="w-full">
+																	<NumberFormat
+																		customInput={ShadcnInput}
+																		type="text"
+																		id="vat"
+																		placeholder="Enter Tax Percentage"
+																		{...field}
+																		className={errors.vat ? 'border-red-500' : ''}
+																		onValueChange={(values) => {
+																			if (
+																				values.value === '' ||
+																				regExPercentage.test(values.value)
+																			) {
+																				field.onChange(values.value);
+																			}
+																		}}
+																		thousandSeparator
+																		suffix="%"
+																		maxLength={5}
+																	/>
+																</div>
 															)}
 														/>
 														{errors.vat && (

@@ -8,7 +8,6 @@ import * as QuotationDetailsAction from '../detail/actions';
 import * as PurchaseOrderDetailsAction from '../detail/actions';
 import ReactToPrint from 'react-to-print';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';

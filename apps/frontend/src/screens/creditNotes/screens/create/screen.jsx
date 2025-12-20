@@ -31,14 +31,13 @@ import {
   TotalCalculation,
 } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory, DropdownLists, selectStyles } from 'utils';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { TextField } from '@material-ui/core';
+import { Textarea } from '@/components/ui/textarea';
 // Use import instead of require for Vite compatibility
 import invoiceimage from 'assets/images/invoice/invoice.png';
 
@@ -1203,15 +1202,13 @@ const CreateCreditNote = ({
                                     name="notes"
                                     control={control}
                                     render={({ field }) => (
-                                      <TextField
+                                      <Textarea
                                         {...field}
-                                        type="textarea"
-                                        multiline
                                         style={{ width: '500px' }}
                                         className="textarea"
-                                        inputProps={{ maxLength: 255 }}
+                                        maxLength={255}
                                         id="notes"
-                                        maxRows={4}
+                                        rows={4}
                                         placeholder={strings.DeliveryNotes}
                                       />
                                     )}
@@ -1294,15 +1291,13 @@ const CreateCreditNote = ({
                                     name="receiptAttachmentDescription"
                                     control={control}
                                     render={({ field }) => (
-                                      <TextField
+                                      <Textarea
                                         {...field}
-                                        type="textarea"
-                                        multiline
                                         className="textarea"
-                                        maxLength="250"
+                                        maxLength={250}
                                         style={{ width: '700px' }}
                                         id="receiptAttachmentDescription"
-                                        rows="2"
+                                        rows={2}
                                         placeholder={strings.ReceiptAttachmentDescription}
                                       />
                                     )}
@@ -1331,15 +1326,13 @@ const CreateCreditNote = ({
                                     name="notes"
                                     control={control}
                                     render={({ field }) => (
-                                      <TextField
+                                      <Textarea
                                         {...field}
-                                        type="textarea"
-                                        multiline
                                         style={{ width: '700px' }}
                                         className="textarea"
-                                        maxLength="255"
+                                        maxLength={255}
                                         id="notes"
-                                        rows="2"
+                                        rows={2}
                                         placeholder={strings.DeliveryNotes}
                                       />
                                     )}

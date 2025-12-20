@@ -1,274 +1,284 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { useNavigate } from 'react-router-dom';
-import { Plus, Search, RefreshCw, Users, Edit, Eye } from 'lucide-react';
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Button,
+  Row,
+  Col,
+  ButtonGroup,
+  Input,
+  ButtonDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from 'reactstrap';
+import { Loader, ConfirmDeleteModal } from 'components';
 import { DataTable } from '@/components/ui/data-table';
-import { DataTableRowActions } from '@/components/ui/data-table-actions';
-
-import { Loader } from 'components';
-import dayjs from '@/utils/date';
-
 import * as PayrollEmployeeActions from './actions';
+import * as EmployeeActions from '../user/actions';
 import { CommonActions } from 'services/global';
-
-import { data } from '../Language/index';
-import LocalizedStrings from 'react-localization';
 import './style.scss';
+import dayjs from '@/utils/date';
+import { data as languageData } from '../Language/index';
+import LocalizedStrings from 'react-localization';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
-const strings = new LocalizedStrings(data);
+const strings = new LocalizedStrings(languageData);
 
-/**
- * Modern Payroll Employee Screen
- * Uses functional components, shadcn/ui, and TanStack Table
- */
-function PayrollEmployee() {
-  const navigate = useNavigate();
+const PayrollEmployee = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // Redux state
-  const payroll_employee_list = useSelector(
-    (state) => state.payrollEmployee.payroll_employee_list
-  );
-
-  // Actions
-  const payrollEmployeeActions = useMemo(
-    () => bindActionCreators(PayrollEmployeeActions, dispatch),
-    [dispatch]
-  );
-  const commonActions = useMemo(() => bindActionCreators(CommonActions, dispatch), [dispatch]);
-
-  // Local state
-  const [language] = useState(() => window.localStorage.getItem('language') || 'en');
+  const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(true);
-
-  // Pagination state
+  const [selectedRows, setSelectedRows] = useState({});
+  const [dialog, setDialog] = useState(null);
+  const [filterData, setFilterData] = useState({
+    name: '',
+    email: '',
+  });
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   });
   const [sorting, setSorting] = useState([]);
+  const [actionButtons, setActionButtons] = useState({});
 
-  // Filter state
-  const [filterData, setFilterData] = useState({
-    name: '',
-    email: '',
-  });
+  const { payroll_employee_list } = useSelector(state => ({
+    payroll_employee_list: state.payrollEmployee.payroll_employee_list,
+  }));
 
   useEffect(() => {
     strings.setLanguage(language);
-  }, [language]);
+    initializeData();
+  }, [language, pagination, sorting, filterData]);
 
-  // Initialize data
-  const initializeData = useCallback(() => {
-    const paginationData = {
+  const initializeData = () => {
+    setLoading(true);
+    const postData = {
+      ...filterData,
       pageNo: pagination.pageIndex,
       pageSize: pagination.pageSize,
+      order: sorting.length > 0 ? (sorting[0].desc ? 'desc' : 'asc') : '',
+      sortingCol: sorting.length > 0 ? sorting[0].id : '',
     };
-    const sortingData = {
-      order: sorting[0]?.desc ? 'desc' : sorting[0]?.id ? 'asc' : '',
-      sortingCol: sorting[0]?.id || '',
-    };
-    const postData = { ...filterData, ...paginationData, ...sortingData };
-
-    payrollEmployeeActions
-      .getPayrollEmployeeList(postData)
-      .then((res) => {
+    dispatch(PayrollEmployeeActions.getPayrollEmployeeList(postData))
+      .then(res => {
         if (res.status === 200) {
           setLoading(false);
         }
       })
-      .catch((err) => {
-        commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
+      .catch(err => {
         setLoading(false);
+        toast.error(err?.data?.message || 'Something Went Wrong');
       });
-  }, [payrollEmployeeActions, commonActions, filterData, pagination, sorting]);
-
-  useEffect(() => {
-    initializeData();
-  }, []);
-
-  useEffect(() => {
-    initializeData();
-  }, [pagination, sorting]);
-
-  // Filter handlers
-  const handleFilterChange = (name, value) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSearch = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-    initializeData();
-  };
-
-  const clearAll = () => {
-    setFilterData({
-      name: '',
-      email: '',
-    });
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-    setTimeout(() => initializeData(), 0);
-  };
-
-  // Row click handler
-  const handleRowClick = (row) => {
-    navigate('/admin/payroll/employee/viewEmployee', { state: { id: row.id } });
-  };
-
-  // Table columns
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: 'fullName',
-        header: strings.EmployeeName,
-        cell: ({ row }) => (
-          <span className="font-medium text-primary cursor-pointer">
-            {row.original.fullName}
-          </span>
-        ),
-      },
-      {
-        accessorKey: 'email',
-        header: strings.Email,
-      },
-      {
-        accessorKey: 'dateOfJoining',
-        header: strings.DateOfJoining,
-        cell: ({ row }) =>
-          row.original.dateOfJoining
-            ? dayjs(row.original.dateOfJoining).format('DD-MM-YYYY')
-            : '-',
-      },
-      {
-        accessorKey: 'department',
-        header: strings.Department,
-      },
-      {
-        accessorKey: 'designation',
-        header: strings.Designation,
-      },
-      {
-        id: 'actions',
-        header: '',
-        cell: ({ row }) => {
-          const emp = row.original;
-          const actions = [
-            {
-              label: strings.Edit,
-              icon: Edit,
-              onClick: () =>
-                navigate('/admin/payroll/employee/detail', {
-                  state: { id: emp.id },
-                }),
-            },
-            {
-              label: strings.SalarySlip,
-              icon: Eye,
-              onClick: () =>
-                navigate('/admin/payroll/employee/salarySlip', {
-                  state: { id: emp.id, monthNo: 4 },
-                }),
-            },
-          ];
-
-          return <DataTableRowActions row={row} actions={actions} />;
-        },
-      },
-    ],
-    [navigate]
-  );
-
-  // Transform data for table
-  const tableData = useMemo(() => {
-    if (!payroll_employee_list?.data) return [];
-    return payroll_employee_list.data.map((item) => ({
-      id: item.id,
-      fullName: item.fullName || '',
-      email: item.email || '',
-      dateOfJoining: item.dateOfJoining || '',
-      department: item.department || '',
-      designation: item.designation || '',
+  const toggleActionButton = (index) => {
+    setActionButtons(prev => ({
+      ...prev,
+      [index]: !prev[index]
     }));
-  }, [payroll_employee_list]);
+  };
 
-  if (loading) {
-    return <Loader />;
-  }
+  const deleteEmployee = () => {
+    const selectedIds = Object.keys(selectedRows).filter(k => selectedRows[k]);
+    if (selectedIds.length > 0) {
+      const message1 = (
+        <text>
+          <b>Delete Employee?</b>
+        </text>
+      );
+      const message = 'This Employee will be deleted permanently and cannot be recovered. ';
+      setDialog(
+        <ConfirmDeleteModal
+          isOpen={true}
+          okHandler={() => removeBulk(selectedIds)}
+          cancelHandler={() => setDialog(null)}
+          message={message}
+          message1={message1}
+        />
+      );
+    } else {
+      toast.info('Please select the rows of the table and try again.');
+    }
+  };
 
-  return (
-    <div className="payroll-employee-screen">
-      <div className="space-y-6">
-        <Card>
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Users className="h-6 w-6 text-primary" />
-                <CardTitle className="text-xl">{strings.PayrollEmployees}</CardTitle>
-              </div>
-              <Button
-                onClick={() => navigate('/admin/payroll/employee/create')}
-                className="transition-all duration-200 hover:scale-[1.02]"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                {strings.AddNewEmployee}
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {/* Filters */}
-            <div className="mb-6 p-4 bg-muted/30 rounded-lg">
-              <h5 className="text-sm font-semibold mb-3">{strings.Filter}:</h5>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Input
-                  type="text"
-                  placeholder={`${strings.Enter} ${strings.EmployeeName}`}
-                  value={filterData.name}
-                  onChange={(e) => handleFilterChange('name', e.target.value)}
-                  className="input-transition"
-                />
-                <Input
-                  type="text"
-                  placeholder={`${strings.Enter} ${strings.Email}`}
-                  value={filterData.email}
-                  onChange={(e) => handleFilterChange('email', e.target.value)}
-                  className="input-transition"
-                />
-                <div className="flex gap-2 lg:col-start-4">
-                  <Button onClick={handleSearch} variant="default" size="icon">
-                    <Search className="h-4 w-4" />
-                  </Button>
-                  <Button onClick={clearAll} variant="outline" size="icon">
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
+  const removeBulk = (ids) => {
+    setDialog(null);
+    let obj = {
+      ids: ids,
+    };
+    dispatch(EmployeeActions.removeBulkEmployee(obj))
+      .then(res => {
+        if (res.status === 200) {
+          toast.success('Employees Deleted Successfully');
+          initializeData();
+          setSelectedRows({});
+        }
+      })
+      .catch(err => {
+        toast.error(err?.data?.message || 'Something Went Wrong');
+      });
+  };
 
-            {/* Data Table */}
-            <DataTable
-              columns={columns}
-              data={tableData}
-              manualPagination
-              pageCount={Math.ceil(
-                (payroll_employee_list?.count || 0) / pagination.pageSize
-              )}
-              onPaginationChange={setPagination}
-              pagination={pagination}
-              manualSorting
-              onSortingChange={setSorting}
-              sorting={sorting}
-              onRowClick={handleRowClick}
-            />
-          </CardContent>
-        </Card>
+  const columns = useMemo(() => [
+    {
+      accessorKey: 'employeeCode',
+      header: strings.EmployeeCode,
+    },
+    {
+      accessorKey: 'fullName',
+      header: strings.FullName,
+      cell: ({ row }) => (
+        <label
+          className="mb-0 label-bank cursor-pointer text-primary"
+          onClick={() => navigate('/admin/master/employee/viewEmployee', { state: { id: row.original.id } })}
+        >
+          {row.original.fullName}
+        </label>
+      ),
+    },
+    {
+      accessorKey: 'email',
+      header: strings.Email,
+    },
+    {
+      accessorKey: 'mobileNumber',
+      header: strings.MobileNumber,
+      cell: ({ getValue }) => (getValue() ? '+' + getValue() : ''),
+    },
+    {
+      accessorKey: 'dob',
+      header: strings.DateOfBirth,
+      cell: ({ getValue }) => (getValue() ? dayjs(getValue()).format('DD-MM-YYYY') : ''),
+    },
+    {
+      accessorKey: 'isActive',
+      header: strings.Status,
+      cell: ({ getValue }) => (
+        <span className={`badge ${getValue() ? 'label-success' : 'label-due'} mb-0`} style={{ color: 'white' }}>
+          {getValue() ? 'Active' : 'InActive'}
+        </span>
+      ),
+    },
+    {
+      id: 'actions',
+      header: '',
+      cell: ({ row }) => (
+        <div>
+        <ButtonDropdown
+          isOpen={actionButtons[row.original.id]}
+          toggle={() => toggleActionButton(row.original.id)}
+        >
+          <DropdownToggle size="sm" color="primary" className="btn-brand icon">
+            {actionButtons[row.original.id] === true ? (
+              <i className="fas fa-chevron-up" />
+            ) : (
+              <i className="fas fa-chevron-down" />
+            )}
+          </DropdownToggle>
+          <DropdownMenu right>
+            <DropdownItem
+              onClick={() =>
+                navigate('/admin/payroll/employee/detail', { state: { id: row.original.id } })
+              }
+            >
+              <i className="fas fa-edit" /> {strings.Edit}
+            </DropdownItem>
+
+            <DropdownItem
+              onClick={() =>
+                navigate('/admin/payroll/employee/salarySlip', {
+                  state: {
+                    id: row.original.id,
+                    monthNo: 4,
+                  }
+                })
+              }
+            >
+              <i className="fas fa-eye" /> {strings.SalarySlip}
+            </DropdownItem>
+          </DropdownMenu>
+        </ButtonDropdown>
+      </div>
+      )
+    }
+  ], [navigate, actionButtons]);
+
+  return loading ? (
+    <Loader />
+  ) : (
+    <div>
+      <div className="employee-screen">
+        <div className="animated fadeIn">
+          {dialog}
+          <Card>
+            <CardHeader>
+              <Row>
+                <Col lg={12}>
+                  <div className="h4 mb-0 d-flex align-items-center">
+                    <i className="fnav-icon fas fa-user-plus" />
+                    <span className="ml-2"> {strings.Employees} </span>
+                  </div>
+                </Col>
+              </Row>
+            </CardHeader>
+            <CardBody>
+              <Row>
+                <Col lg={12}>
+                  <div className="d-flex justify-content-end">
+                    <ButtonGroup size="sm">
+                      <Row>
+                        <div style={{ width: '1650px' }}>
+                          <Button
+                            color="primary"
+                            className="btn-square pull-right mb-2 mr-4"
+                            style={{ marginBottom: '10px' }}
+                            // onClick={onBtnExport} // TODO: Implement export
+                          >
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                            {strings.export_csv}
+                          </Button>
+                          <Button
+                            color="primary"
+                            className="btn-square pull-right mb-2 mr-4"
+                            style={{ marginBottom: '10px' }}
+                            onClick={() => navigate(`/admin/master/employee/create`)}
+                          >
+                            <i className="fas fa-plus mr-1" />
+                            {strings.NewEmployee}
+                          </Button>
+                        </div>
+                      </Row>
+                    </ButtonGroup>
+                  </div>
+                  <div>
+                    <DataTable
+                      data={payroll_employee_list?.data || []}
+                      columns={columns}
+                      manualPagination={true}
+                      manualSorting={true}
+                      pageCount={payroll_employee_list?.totalPages || Math.ceil((payroll_employee_list?.count || 0) / pagination.pageSize)}
+                      onPaginationChange={setPagination}
+                      onSortingChange={setSorting}
+                      enableRowSelection={true}
+                      rowSelection={selectedRows}
+                      onRowSelectionChange={setSelectedRows}
+                      getRowId={(row) => row.id}
+                    />
+                  </div>
+                </Col>
+              </Row>
+            </CardBody>
+          </Card>
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default PayrollEmployee;

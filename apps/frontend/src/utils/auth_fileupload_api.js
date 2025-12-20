@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from 'constants/config';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 const authFileUploadApi = axios.create({
 	baseURL: config.API_ROOT_URL,

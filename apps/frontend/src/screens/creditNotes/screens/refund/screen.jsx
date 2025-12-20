@@ -23,14 +23,13 @@ import * as CnActions from '../../actions';
 import { CustomerModal } from '../../sections';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { TextareaAutosize } from '@material-ui/core';
+import { Textarea } from '@/components/ui/textarea';
 
 const mapStateToProps = (state) => {
 	return {
@@ -568,14 +567,13 @@ class RefundClass extends React.Component {
 																	name="notes"
 																	control={control}
 																	render={({ field }) => (
-																		<TextareaAutosize
+																		<Textarea
 																			{...field}
-																			type="textarea"
 																			style={{ width: "870px" }}
-																			className="textarea form-control"
-																			maxLength="255"
+																			className="textarea"
+																			maxLength={255}
 																			id="notes"
-																			rows="2"
+																			rows={2}
 																			placeholder={strings.RefundNotes}
 																		/>
 																	)}
@@ -666,14 +664,13 @@ class RefundClass extends React.Component {
 																	name="receiptAttachmentDescription"
 																	control={control}
 																	render={({ field }) => (
-																		<TextareaAutosize
+																		<Textarea
 																			{...field}
-																			type="textarea"
-																			className="textarea form-control"
-																			maxLength="250"
+																			className="textarea"
+																			maxLength={250}
 																			style={{ width: "870px" }}
 																			id="receiptAttachmentDescription"
-																			rows="2"
+																			rows={2}
 																			placeholder={strings.ReceiptAttachmentDescription}
 																		/>
 																	)}

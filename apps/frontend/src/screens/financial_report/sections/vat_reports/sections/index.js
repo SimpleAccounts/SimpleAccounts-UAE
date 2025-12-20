@@ -1,8 +1,8 @@
 
-import GenerateVatReportModal from './generateVatReportModal'
-import VatSettingModal from './vatSettingModal'
-import FileTaxReturnModal from './fileTaxReturnModal'
-import DeleteModal from './deleteModal'
+import GenerateVatReportModal from './generateVatReportModal.jsx'
+import VatSettingModal from './vatSettingModal.jsx'
+import FileTaxReturnModal from './fileTaxReturnModal.jsx'
+import DeleteModal from './deleteModal.jsx'
 export {
     GenerateVatReportModal,
     VatSettingModal,

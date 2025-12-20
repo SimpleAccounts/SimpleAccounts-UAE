@@ -30,7 +30,7 @@ import dayjs from '@/utils/date';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { upperFirst } from 'lodash';
+import { upperFirst } from 'lodash-es';
 import eye from 'assets/images/settings/eye.png';
 
 const strings = new LocalizedStrings(data);

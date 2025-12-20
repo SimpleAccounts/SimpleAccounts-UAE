@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { CardHeader, CardContent, Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,8 +18,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import DatePicker from 'react-datepicker';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
 import { CommonActions } from 'services/global';
 import dayjs from '@/utils/date';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
@@ -30,11 +31,19 @@ import LocalizedStrings from 'react-localization';
 
 let strings = new LocalizedStrings(data);
 
+// Zod validation schema
+const reconcileSchema = z.object({
+  date: z.date({
+    required_error: 'Date is Required',
+    invalid_type_error: 'Date is Required',
+  }),
+  closingBalance: z.string().min(1, 'Closing Balance is Required'),
+});
+
 function ReconcileTransaction() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const formRef = useRef();
 
   // Redux state
   const reconcile_list = useSelector((state) => state.bank_account.reconcile_list);
@@ -59,16 +68,29 @@ function ReconcileTransaction() {
   const [loadingMsg, setLoadingMsg] = useState('Loading...');
   const [disableLeavePage, setDisableLeavePage] = useState(false);
   const [actionButtons, setActionButtons] = useState({});
-  const [initValue, setInitValue] = useState({
-    closingBalance: '',
-    date: '',
-  });
 
   // Pagination state
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   });
+
+  // Form setup with React Hook Form
+  const form = useForm({
+    resolver: zodResolver(reconcileSchema),
+    defaultValues: {
+      closingBalance: '',
+      date: null,
+    },
+    mode: 'onChange',
+  });
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = form;
 
   useEffect(() => {
     strings.setLanguage(language);
@@ -117,8 +139,8 @@ function ReconcileTransaction() {
     initializeData();
   }, [pagination]);
 
-  const handleSubmit = useCallback(
-    (data, resetForm) => {
+  const onSubmit = useCallback(
+    (data) => {
       setDisabled(true);
       setLoading(true);
       setDisableLeavePage(true);
@@ -136,7 +158,7 @@ function ReconcileTransaction() {
         .then((res) => {
           if (res.status === 200) {
             setDisabled(false);
-            resetForm();
+            reset();
             if (res.data.status === 1) {
               commonActions.tostifyAlert('success', res.data.message);
               initializeData();
@@ -161,6 +183,7 @@ function ReconcileTransaction() {
       transactionReconcileActionsObj,
       commonActions,
       initializeData,
+      reset,
     ]
   );
 
@@ -289,7 +312,10 @@ function ReconcileTransaction() {
               <Loader />
             ) : view ? (
               <ViewBankAccount
-                initialVals={initValue}
+                initialVals={{
+                  closingBalance: '',
+                  date: '',
+                }}
                 editDetails={() => {
                   editDetails();
                 }}
@@ -309,29 +335,20 @@ function ReconcileTransaction() {
                 <CardContent>
                   <div className="grid grid-cols-12 gap-4">
                     <div lg={12}>
-                      <Formik
-                        initialValues={initValue}
-                        innerRef={formRef}
-                        onSubmit={(values, { resetForm }) => {
-                          handleSubmit(values, resetForm);
-                        }}
-                        validationSchema={Yup.object().shape({
-                          date: Yup.date().required('Date is Required'),
-                          closingBalance: Yup.string().required('Closing Balance is Required'),
-                        })}
-                      >
-                        {(props) => (
-                          <form onSubmit={props.handleSubmit}>
-                            <div className="grid grid-cols-12 gap-4">
-                              <div lg={4}>
-                                <div className="mb-3">
-                                  <Label htmlFor="date">
-                                    <span className="text-danger">* </span>
-                                    {strings.BankClosingDate}
-                                  </Label>
+                      <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="grid grid-cols-12 gap-4">
+                          <div lg={4}>
+                            <div className="mb-3">
+                              <Label htmlFor="date">
+                                <span className="text-danger">* </span>
+                                {strings.BankClosingDate}
+                              </Label>
+                              <Controller
+                                name="date"
+                                control={control}
+                                render={({ field }) => (
                                   <DatePicker
                                     id="date"
-                                    name="date"
                                     placeholderText={
                                       strings.Select + ' ' + strings.BankClosingDate
                                     }
@@ -340,91 +357,84 @@ function ReconcileTransaction() {
                                     dateFormat="dd-MM-yyyy"
                                     dropdownMode="select"
                                     maxDate={new Date()}
-                                    value={
-                                      props.values.date
-                                        ? dayjs(props.values.date).format('DD-MM-YYYY')
-                                        : ''
-                                    }
-                                    onChange={(value) => props.handleChange('date')(value)}
+                                    selected={field.value}
+                                    onChange={(value) => field.onChange(value)}
                                     className={`form-control ${
-                                      props.errors.date && props.touched.date
-                                        ? 'is-invalid'
-                                        : ''
+                                      errors.date ? 'is-invalid' : ''
                                     }`}
                                   />
-                                  {props.errors.date && props.touched.date && (
-                                    <div className="invalid-feedback">{props.errors.date}</div>
-                                  )}
-                                </div>
-                              </div>
-                              <div lg={4}>
-                                <div className="mb-3">
-                                  <Label htmlFor="closingBalance">
-                                    <span className="text-danger">* </span>
-                                    {strings.ClosingBalance}
-                                  </Label>
+                                )}
+                              />
+                              {errors.date && (
+                                <div className="invalid-feedback">{errors.date.message}</div>
+                              )}
+                            </div>
+                          </div>
+                          <div lg={4}>
+                            <div className="mb-3">
+                              <Label htmlFor="closingBalance">
+                                <span className="text-danger">* </span>
+                                {strings.ClosingBalance}
+                              </Label>
+                              <Controller
+                                name="closingBalance"
+                                control={control}
+                                render={({ field }) => (
                                   <Input
                                     type="text"
                                     maxLength="14,2"
                                     min="0"
                                     id="closingBalance"
-                                    name="closingBalance"
                                     placeholder={strings.Amount}
-                                    onChange={(option) => {
+                                    {...field}
+                                    onChange={(e) => {
                                       if (
-                                        option.target.value === '' ||
-                                        regDecimal.test(option.target.value)
+                                        e.target.value === '' ||
+                                        regDecimal.test(e.target.value)
                                       ) {
-                                        props.handleChange('closingBalance')(option);
+                                        field.onChange(e);
                                       }
                                     }}
-                                    value={props.values.closingBalance}
-                                    className={
-                                      props.errors.closingBalance &&
-                                      props.touched.closingBalance
-                                        ? 'is-invalid'
-                                        : ''
-                                    }
+                                    className={errors.closingBalance ? 'is-invalid' : ''}
                                   />
-                                  {props.errors.closingBalance &&
-                                    props.touched.closingBalance && (
-                                      <div className="invalid-feedback">
-                                        {props.errors.closingBalance}
-                                      </div>
-                                    )}
+                                )}
+                              />
+                              {errors.closingBalance && (
+                                <div className="invalid-feedback">
+                                  {errors.closingBalance.message}
                                 </div>
-                              </div>
+                              )}
                             </div>
-                            <div className="grid grid-cols-12 gap-4">
-                              <div lg={12} className="mt-5">
-                                <div className="text-right">
-                                  <Button
-                                    type="button"
-                                    variant="default"
-                                    className="btn-square mr-3"
-                                    disabled={disabled}
-                                    onClick={props.handleSubmit}
-                                  >
-                                    <i className="fa fa-dot-circle-o"></i>{' '}
-                                    {disabled ? 'Reconciling...' : strings.reconcile}
-                                  </Button>
-                                  <Button
-                                    variant="secondary"
-                                    className="btn-square"
-                                    onClick={() =>
-                                      navigate('/admin/banking/bank-account/transaction', {
-                                        bankAccountId: location.state.bankAccountId,
-                                      })
-                                    }
-                                  >
-                                    <i className="fa fa-ban"></i> {strings.Cancel}
-                                  </Button>
-                                </div>
-                              </div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-12 gap-4">
+                          <div lg={12} className="mt-5">
+                            <div className="text-right">
+                              <Button
+                                type="submit"
+                                variant="default"
+                                className="btn-square mr-3"
+                                disabled={disabled}
+                              >
+                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                {disabled ? 'Reconciling...' : strings.reconcile}
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                className="btn-square"
+                                onClick={() =>
+                                  navigate('/admin/banking/bank-account/transaction', {
+                                    bankAccountId: location.state.bankAccountId,
+                                  })
+                                }
+                              >
+                                <i className="fa fa-ban"></i> {strings.Cancel}
+                              </Button>
                             </div>
-                          </form>
-                        )}
-                      </Formik>
+                          </div>
+                        </div>
+                      </form>
                     </div>
                   </div>
                   <hr />

@@ -16,8 +16,6 @@ import {
 
 import { ExpenseReport, CustomerReport, AccountBalances } from './sections';
 
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import 'react-toastify/dist/ReactToastify.css';
 // import 'react-select/dist/react-select.css'
 import './style.scss';
 

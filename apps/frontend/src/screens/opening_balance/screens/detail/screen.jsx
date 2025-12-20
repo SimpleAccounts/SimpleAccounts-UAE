@@ -21,7 +21,6 @@ import Select from 'react-select';
 import { selectOptionsFactory, selectStyles } from 'utils';
 import DatePicker from 'react-datepicker';
 import { CommonActions, AuthActions } from 'services/global';
-import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import * as DetailOpeningBalancesAction from './actions';
 import * as OpeningBalanceActions from '../../actions';

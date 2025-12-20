@@ -20,7 +20,6 @@ import {
 import { LeavePage, ConfirmDeleteModal, Loader } from 'components';
 import { CommonActions } from 'services/global';
 import * as SalaryComponentActions from '../../actions';
-import 'react-toastify/dist/ReactToastify.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';

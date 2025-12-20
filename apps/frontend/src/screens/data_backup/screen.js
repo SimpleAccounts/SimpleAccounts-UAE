@@ -10,10 +10,9 @@ import {
   Col,
   Table
 } from 'reactstrap'
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer } from 'sonner'
 import { Loader } from 'components'
 
-import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
 
 const mapStateToProps = (state) => {
@@ -45,13 +44,7 @@ class DataBackup extends React.Component {
     return (
       <div className="data-backup-screen">
         <div className="animated fadeIn">
-          <ToastContainer
-            position="top-right"
-            autoClose={1700}
-            style={containerStyle}
-            closeOnClick
-            draggable
-          />
+          
 
           <Card>
             <CardHeader>

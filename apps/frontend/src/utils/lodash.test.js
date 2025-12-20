@@ -4,7 +4,7 @@
  *
  * Covers: lodash 4.17.15 → 4.17.21 upgrade (security patches)
  */
-import { upperFirst, capitalize, isEqual, cloneDeep, get, set, merge, debounce, throttle, isEmpty } from 'lodash';
+import { upperFirst, capitalize, isEqual, cloneDeep, get, set, merge, debounce, throttle, isEmpty } from 'lodash-es';
 
 describe('Lodash Utility Functions', () => {
   // ============ String Functions ============

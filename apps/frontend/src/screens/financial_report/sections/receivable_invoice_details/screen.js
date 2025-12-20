@@ -19,7 +19,6 @@ import FilterComponent from './sections/filterComponent';
 import { Loader, Currency } from 'components';
 import { ReportTables } from 'screens/financial_report/sections'
 import * as ReceivbaleInvoiceDetailsActions from './actions';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../Language/index'

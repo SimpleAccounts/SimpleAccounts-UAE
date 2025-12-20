@@ -16,12 +16,11 @@ import {
 	Row,
 	Col,
 } from 'reactstrap';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import Select from 'react-select';
 import Autosuggest from 'react-autosuggest';
 import { Loader } from 'components';
 
-import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 
 import * as TransactionActions from './actions';

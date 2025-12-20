@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Card, CardBody, Table } from 'reactstrap';
+import { Card, CardBody, Table, Input } from 'reactstrap';
 import dayjs from '@/utils/date';
 import '../style.scss';
 import '../../../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { TextField } from '@material-ui/core';
+
 // Use import instead of require for Vite compatibility
 import footer from 'assets/images/invoice/invoiceFooter.png';
 import { ToWords } from 'to-words';
@@ -683,13 +683,13 @@ class InvoiceTemplate extends Component {
 						{/* <hr />Data Innovation Technologies Limited Dubai company Was founded on August 13,2020 with identification number Avenue - South Zone, Dubai International Financial Center, Dubai, United Arab Emirates.<br /> */}
 						<hr />
 						{/* {invoiceData.footNote} */}
-						<TextField
+						<Input
 								type="textarea"
 								disabled
 								className="textarea viewFootNote"
 								maxLength="250"
 								style={{width: "1100px"}}
-								multiline
+								
 								// rows="5"
 								value={invoiceData.footNote}
 							/>

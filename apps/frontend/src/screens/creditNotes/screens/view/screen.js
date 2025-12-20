@@ -5,7 +5,6 @@ import { Button, Row, Col, Table, Card } from 'reactstrap';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import ReactToPrint from 'react-to-print';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { Currency, InvoiceViewJournalEntries } from 'components';
 import './style.scss';

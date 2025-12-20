@@ -19,7 +19,6 @@ import {
 } from 'reactstrap';
 import { Loader, LeavePage } from 'components';
 import { CommonActions } from 'services/global';
-import 'react-toastify/dist/ReactToastify.css';
 import DatePicker from 'react-datepicker';
 import * as DetailEmployeeEmployementAction from './actions';
 import * as CreatePayrollEmployeeActions from '../create/actions';

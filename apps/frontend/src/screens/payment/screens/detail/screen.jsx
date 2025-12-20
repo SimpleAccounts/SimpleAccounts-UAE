@@ -23,7 +23,6 @@ import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import { SupplierModal } from '../../sections';
 import dayjs from '@/utils/date';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import * as PaymentActions from '../../actions';
 import * as DetailPaymentActions from './actions';

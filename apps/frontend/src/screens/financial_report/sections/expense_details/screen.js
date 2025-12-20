@@ -21,7 +21,6 @@ import { Loader } from 'components';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import * as ExpenseDetailsActions from './actions';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import FilterComponent3 from '../filterComponent3';

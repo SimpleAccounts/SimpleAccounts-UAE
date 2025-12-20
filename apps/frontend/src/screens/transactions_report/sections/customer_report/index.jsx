@@ -1,262 +1,189 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect, useMemo } from 'react';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { DataTable } from '@/components/ui/data-table';
+import {
+	FormGroup,
+	Form,
+	Badge,
+	Row,
+	Col,
+	Input,
+	Button,
+	ButtonGroup,
+} from 'reactstrap';
 import Select from 'react-select';
 import * as customerReportData from '../../actions';
 import { DateRangePicker2 } from 'components';
 import dayjs from '@/utils/date';
+import { DataTable } from '@/components/ui/data-table';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
-import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap-daterangepicker/daterangepicker.css';
-import 'bootstrap/dist/css/bootstrap.css';
 import './style.scss';
 import { selectOptionsFactory } from 'utils';
 
 const ranges = {
-  'This Week': [dayjs().startOf('week'), dayjs().endOf('week')],
-  'This Month': [dayjs().startOf('month'), dayjs().endOf('month')],
-  'Last 7 Days': [dayjs().subtract(6, 'days'), dayjs()],
-  'Last 30 Days': [dayjs().subtract(29, 'days'), dayjs()],
-  'Last Month': [
-    dayjs().subtract(1, 'month').startOf('month'),
-    dayjs().subtract(1, 'month').endOf('month'),
-  ],
+	'This Week': [dayjs().startOf('week'), dayjs().endOf('week')],
+	'This Month': [dayjs().startOf('month'), dayjs().endOf('month')],
+	'Last 7 Days': [dayjs().subtract(6, 'days'), dayjs()],
+	'Last 30 Days': [dayjs().subtract(29, 'days'), dayjs()],
+	'Last Month': [
+		dayjs().subtract(1, 'month').startOf('month'),
+		dayjs().subtract(1, 'month').endOf('month'),
+	],
 };
 
-function CustomerReport() {
-  const dispatch = useDispatch();
+const CustomerReport = () => {
+    const dispatch = useDispatch();
 
-  // Redux state
-  const customer_invoice_report = useSelector(
-    (state) => state.transaction_data.customer_invoice_report
-  );
-  const contact_list = useSelector((state) => state.transaction_data.contact_list);
-
-  // Actions
-  const customerReportDataActions = useMemo(
-    () => bindActionCreators(customerReportData, dispatch),
-    [dispatch]
-  );
-
-  // Local state
-  const [filterData, setFilterData] = useState({
-    filter_refNumber: '',
-    filter_contactName: '',
-    startDate: '',
-    endDate: '',
-  });
-
-  useEffect(() => {
-    getCustomerInvoice();
-  }, []);
-
-  const getCustomerInvoice = useCallback(() => {
-    // customerReportDataActions.getCustomerInvoiceReport();
-    // customerReportDataActions.getContactNameList();
-  }, [customerReportDataActions]);
-
-  const getSelectedData = useCallback(() => {
-    const postObj = {
-      startDate: filterData.startDate !== '' ? filterData.startDate : '',
-      endDate: filterData.endDate !== '' ? filterData.endDate : '',
-      contactName: filterData.filter_contactName !== '' ? filterData.filter_contactName : '',
-      refNumber: filterData.filter_refNumber !== '' ? filterData.filter_refNumber : '',
-    };
-    customerReportDataActions.getCustomerInvoiceReport(postObj);
-  }, [filterData, customerReportDataActions]);
-
-  const inputHandler = useCallback((key, value) => {
-    setFilterData((prev) => ({
-      ...prev,
-      [key]: value,
+    const { customer_invoice_report, contact_list } = useSelector((state) => ({
+        customer_invoice_report: state.transaction_data.customer_invoice_report,
+        contact_list: state.transaction_data.contact_list,
     }));
-  }, []);
 
-  const handleChange = useCallback((e, picker) => {
-    let startingDate = picker ? dayjs(picker.startDate._d).format('L') : '';
-    let endingDate = picker ? dayjs(picker.endDate._d).format('L') : '';
-    setFilterData((prev) => ({
-      ...prev,
-      startDate: startingDate,
-      endDate: endingDate,
-    }));
-  }, []);
+	const [startDate, setStartDate] = useState('');
+	const [endDate, setEndDate] = useState('');
+	const [filter_refNumber, setFilterRefNumber] = useState('');
+	const [filter_contactName, setFilterContactName] = useState('');
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: 10,
+    });
 
-  // Transform data for table
-  const tableData = useMemo(() => {
-    return customer_invoice_report
-      ? customer_invoice_report.map((customer) => ({
-          status: customer.status,
-          referenceNumber: customer.refNumber,
-          date: dayjs(customer.invoiceDate).format('L'),
-          dueDate: dayjs(customer.invoiceDueDate).format('L'),
-          contactName: customer.contactName,
-          numberOfItems: customer.noOfItem,
-          totalCost: customer.totalCost,
-        }))
-      : [];
-  }, [customer_invoice_report]);
+	const getInvoiceStatus = (cell) => {
+		return <Badge color={cell === 'Paid' ? 'success' : 'danger'}>{cell}</Badge>;
+	};
 
-  // Column definitions
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        enableSorting: true,
-        size: 130,
-        cell: ({ row }) => {
-          const status = row.original.status;
-          return (
-            <Badge variant={status === 'Paid' ? 'success' : 'destructive'}>{status}</Badge>
-          );
+	const getSelectedData = () => {
+		const postObj = {
+			startDate: startDate || '',
+			endDate: endDate || '',
+			contactName: filter_contactName?.value || '',
+			refNumber: filter_refNumber || '',
+		};
+		dispatch(customerReportData.getCustomerInvoiceReport(postObj));
+	};
+
+	const handleDateChange = (e, picker) => {
+		let startingDate = picker ? dayjs(picker.startDate._d).format('L') : '';
+		let endingDate = picker ? dayjs(picker.endDate._d).format('L') : '';
+		setStartDate(startingDate);
+		setEndDate(endingDate);
+	};
+
+    const columns = useMemo(() => [
+        {
+            accessorKey: 'status',
+            header: 'Status',
+            cell: ({ getValue }) => getInvoiceStatus(getValue()),
         },
-      },
-      {
-        accessorKey: 'referenceNumber',
-        header: 'Ref. Number',
-        enableSorting: true,
-      },
-      {
-        accessorKey: 'date',
-        header: 'Date',
-        enableSorting: true,
-      },
-      {
-        accessorKey: 'dueDate',
-        header: 'Due Date',
-        enableSorting: true,
-      },
-      {
-        accessorKey: 'contactName',
-        header: 'Contact Name',
-        enableSorting: true,
-      },
-      {
-        accessorKey: 'numberOfItems',
-        header: 'No. of Items',
-        enableSorting: true,
-      },
-      {
-        accessorKey: 'totalCost',
-        header: 'Total Cost',
-        enableSorting: true,
-      },
-    ],
-    []
-  );
+        {
+            accessorKey: 'referenceNumber',
+            header: 'Ref. Number',
+        },
+        {
+            accessorKey: 'date',
+            header: 'Date',
+        },
+        {
+            accessorKey: 'dueDate',
+            header: 'Due Date',
+        },
+        {
+            accessorKey: 'contactName',
+            header: 'Contact Name',
+        },
+        {
+            accessorKey: 'numberOfItems',
+            header: 'No. of Items',
+        },
+        {
+            accessorKey: 'totalCost',
+            header: 'Total Cost',
+        },
+    ], []);
 
-  return (
-    <div className="invoice-report-section">
-      <div className="animated fadeIn">
-        <div className="grid grid-cols-12 gap-4">
-          <div lg={12}>
-            <div className="flex-wrap d-flex align-items-start justify-content-between">
-              <div className="info-block">
-                <h4>
-                  Company Name -{' '}
-                  <small>
-                    <i>Invoices</i>
-                  </small>
-                </h4>
-              </div>
-              <form onSubmit={(e) => e.preventDefault()} name="simpleForm">
-                <div className="flex-wrap d-flex align-items-center">
-                  <div>
-                    <div className="inline-flex rounded-md mr-3" role="group">
-                      <Button variant="default" className="btn-square" onClick={() => {}}>
-                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                        Export to CSV
-                      </Button>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="date-range">
-                      <DateRangePicker2 ranges={ranges} opens={'left'} />
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div className="py-3">
-              <h5>Filter : </h5>
-              <div className="grid grid-cols-12 gap-4">
-                <div lg={2} className="mb-1">
-                  <Input
-                    type="text"
-                    placeholder="Ref. Number"
-                    value={filterData.filter_refNumber}
-                    onChange={(e) => inputHandler('filter_refNumber', e.target.value)}
-                  />
-                </div>
-                <div lg={2} className="mb-1">
-                  <DateRangePicker
-                    id="payment_date"
-                    name="payment_date"
-                    onApply={handleChange}
-                  >
-                    <Input
-                      type="text"
-                      value={filterData.startDate}
-                      selected={filterData.startDate}
-                      placeholder="Start Date"
-                    />
-                  </DateRangePicker>
-                </div>
-                <div lg={2} className="mb-1">
-                  <Input
-                    type="number"
-                    min="0"
-                    value={filterData.endDate}
-                    selected={filterData.endDate}
-                    placeholder="End Date"
-                  />
-                </div>
-                <div lg={2} className="mb-1">
-                  <Select
-                    className=""
-                    options={
-                      contact_list
-                        ? selectOptionsFactory.renderOptions('firstName', 'contactId', contact_list)
-                        : []
-                    }
-                    value={filterData.filter_contactName}
-                    onChange={(option) => inputHandler('filter_contactName', option)}
-                    placeholder="contact Name"
-                  />
-                </div>
-                <div lg={2} className="mb-1">
-                  <Button
-                    variant="secondary"
-                    className="btn-square"
-                    type="submit"
-                    name="submit"
-                    onClick={getSelectedData}
-                  >
-                    <i className="fa glyphicon glyphicon-export fa-search mr-1" />
-                    Search
-                  </Button>
-                </div>
-              </div>
-            </div>
-            <div className="table-wrapper">
-              <DataTable
-                columns={columns}
-                data={tableData}
-                enableExport={true}
-                exportFileName="customerInvoice"
-                emptyMessage="No invoices found"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+    const customerInvoice = useMemo(() => {
+        if (!customer_invoice_report) return [];
+        return customer_invoice_report.map((customer) => ({
+            status: customer.status,
+            referenceNumber: customer.refNumber,
+            date: dayjs(customer.invoiceDate).format('L'),
+            dueDate: dayjs(customer.invoiceDueDate).format('L'),
+            contactName: customer.contactName,
+            numberOfItems: customer.noOfItem,
+            totalCost: customer.totalCost,
+        }));
+    }, [customer_invoice_report]);
 
-export default CustomerReport;
+	return (
+		<div className="invoice-report-section">
+			<div className="animated fadeIn">
+				<Row>
+					<Col lg={12}>
+						<div className="flex-wrap d-flex align-items-start justify-content-between">
+							<div className="info-block">
+								<h4>Company Name - <small><i>Invoices</i></small></h4>
+							</div>
+							<Form onSubmit={(e) => e.preventDefault()} name="simpleForm">
+								<div className="flex-wrap d-flex align-items-center">
+									<FormGroup>
+										<ButtonGroup className="mr-3">
+											<Button color="success" className="btn-square" onClick={() => {}}>
+												<i className="fa glyphicon glyphicon-export fa-download mr-1" />Export to CSV
+											</Button>
+										</ButtonGroup>
+									</FormGroup>
+									<FormGroup>
+										<div className="date-range">
+											<DateRangePicker2 ranges={ranges} opens={'left'} />
+										</div>
+									</FormGroup>
+								</div>
+							</Form>
+						</div>
+						<div className="py-3">
+							<h5>Filter : </h5>
+							<Row>
+								<Col lg={2} className="mb-1">
+									<Input type="text" placeholder="Ref. Number" value={filter_refNumber} onChange={(e) => setFilterRefNumber(e.target.value)} />
+								</Col>
+								<Col lg={2} className="mb-1">
+									<DateRangePicker onApply={handleDateChange}>
+										<Input type="text" value={startDate} placeholder="Start Date" readOnly />
+									</DateRangePicker>
+								</Col>
+								<Col lg={2} className="mb-1">
+									<Input type="text" value={endDate} placeholder="End Date" readOnly />
+								</Col>
+								<Col lg={2} className="mb-1">
+									<Select
+										options={contact_list ? selectOptionsFactory.renderOptions('firstName', 'contactId', contact_list) : []}
+										value={filter_contactName}
+										onChange={setFilterContactName}
+										placeholder="contact Name"
+									/>
+								</Col>
+								<Col lg={2} className="mb-1">
+									<Button color="secondary" className="btn-square" type="button" onClick={getSelectedData}>
+										<i className="fa glyphicon glyphicon-export fa-search mr-1" />Search
+									</Button>
+								</Col>
+							</Row>
+						</div>
+						<div className="table-wrapper">
+                            <DataTable
+                                data={customerInvoice}
+                                columns={columns}
+                                manualPagination={false}
+                                pagination={pagination}
+                                onPaginationChange={setPagination}
+                            />
+						</div>
+					</Col>
+				</Row>
+			</div>
+		</div>
+	);
+};
+
+export default connect()(CustomerReport);

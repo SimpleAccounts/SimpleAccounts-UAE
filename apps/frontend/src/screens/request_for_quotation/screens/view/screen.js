@@ -9,7 +9,6 @@ import * as RequestForQuotationViewAction from '../view/actions'
 import ReactToPrint from 'react-to-print';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 
 import './style.scss';

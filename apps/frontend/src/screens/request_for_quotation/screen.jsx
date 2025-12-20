@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import Select from 'react-select';
 import { ToWords } from 'to-words';
-import { upperCase } from 'lodash';
+import { upperCase } from 'lodash-es';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

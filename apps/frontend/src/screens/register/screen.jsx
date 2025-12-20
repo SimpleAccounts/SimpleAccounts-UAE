@@ -22,9 +22,8 @@ import DatePicker from 'react-datepicker';
 import { Loader } from 'components';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { AuthActions, CommonActions } from 'services/global';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'sonner';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-toastify/dist/ReactToastify.css';
 import PhoneInput from 'react-phone-input-2';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
@@ -553,7 +552,7 @@ const Register = ({
   return (
     <div>
       <div className="log-in-screen">
-        <ToastContainer autoClose={1700} closeOnClick draggable />
+        
         <div className="animated fadeIn">
           <div className="app flex-row ">
             <Container>

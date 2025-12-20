@@ -22,14 +22,13 @@ import * as DebitNotesRefundActions from './actions';
 import * as DebiteNoteActions from '../../actions';
 import { Loader, LeavePage } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { TextareaAutosize } from '@material-ui/core';
+import { Textarea } from '@/components/ui/textarea';
 
 const mapStateToProps = (state) => {
 	return {
@@ -548,13 +547,12 @@ const DebitNoteRefund = (props) => {
 																name="notes"
 																control={control}
 																render={({ field }) => (
-																	<TextareaAutosize
+																	<Textarea
 																		{...field}
-																		type="textarea"
-																		className="textarea form-control"
+																		className="form-control"
 																		maxLength="255"
 																		id="notes"
-																		minRows="2"
+																		rows={2}
 																		placeholder={strings.Enter + strings.Notes}
 																		onChange={(e) => {
 																			if ((!field.value && e.target.value !== ' ') || field.value) {
@@ -577,13 +575,12 @@ const DebitNoteRefund = (props) => {
 																name="receiptAttachmentDescription"
 																control={control}
 																render={({ field }) => (
-																	<TextareaAutosize
+																	<Textarea
 																		{...field}
-																		type="textarea"
-																		className="textarea form-control"
+																		className="form-control"
 																		maxLength="255"
 																		id="receiptAttachmentDescription"
-																		minRows="2"
+																		rows={2}
 																		placeholder={strings.ReceiptAttachmentDescription}
 																		onChange={(e) => {
 																			if ((!field.value && e.target.value !== ' ') || field.value) {

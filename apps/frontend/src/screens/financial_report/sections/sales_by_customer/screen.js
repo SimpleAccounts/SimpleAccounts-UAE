@@ -18,7 +18,6 @@ import { ExcelExport as XLSX } from 'utils';
 import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent2 from '../filterComponet2';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { ReportTables } from 'screens/financial_report/sections'
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';

@@ -18,7 +18,6 @@ import Select from 'react-select';
 import { selectOptionsFactory } from 'utils';
 import DatePicker from 'react-datepicker';
 import { Loader, ConfirmDeleteModal } from 'components';
-import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import * as TransactionsActions from './actions';
 import * as detailBankAccountActions from './../detail/actions';

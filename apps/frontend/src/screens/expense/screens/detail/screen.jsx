@@ -17,7 +17,6 @@ import {
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -33,7 +32,7 @@ import dayjs from '@/utils/date';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { Checkbox } from '@material-ui/core';
+import { Checkbox } from '@/components/ui/checkbox';
 import Switch from 'react-switch';
 
 const SortExpenseCategory = list => {
@@ -1337,17 +1336,17 @@ const DetailExpense = ({
                                   (!isDesignatedZone &&
                                     taxTreatmentId !== 3 &&
                                     taxTreatmentId !== 8)) && (
-                                  <Col>
+                                  <Col className="flex items-center">
                                     <Checkbox
                                       id="isReverseChargeEnabled"
                                       checked={isReverseChargeEnabled}
-                                      onChange={() => {
-                                        setIsReverseChargeEnabled(!isReverseChargeEnabled);
+                                      onCheckedChange={(checked) => {
+                                        setIsReverseChargeEnabled(checked);
                                         setExclusiveVat(true);
                                         setValue('vatCategoryId', '');
                                       }}
                                     />
-                                    <Label>{strings.IsReverseCharge}</Label>
+                                    <Label htmlFor="isReverseChargeEnabled" className="ml-2 mb-0">{strings.IsReverseCharge}</Label>
                                   </Col>
                                 )}
                             </Row>

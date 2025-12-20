@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -18,7 +17,6 @@ import {
 	Label,
 	UncontrolledTooltip,
 } from 'reactstrap';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { LeavePage, Loader, EmployeeModal } from 'components';
@@ -28,39 +26,19 @@ import * as EmployeeActions from '../../actions';
 import * as CreatePayrollActions from './actions';
 import * as CreatePayrollEmployeeActions from '../../../payrollemp/screens/create/actions';
 import * as PayrollEmployeeActions from '../../../payrollemp/actions';
+import { DataTable } from '@/components/ui/data-table';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
-import { data } from '../../../Language/index';
+import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import dayjs from '@/utils/date';
 import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
-const mapStateToProps = (state) => {
-	return {
-		currency_list: state.employee.currency_list,
-		country_list: state.contact.country_list,
-		state_list: state.contact.state_list,
-		employees_for_dropdown: state.payrollRun.employees_for_dropdown,
-		approver_dropdown_list: state.payrollRun.approver_dropdown_list,
-		employee_list: state.payrollEmployee.employee_list_dropdown,
-	};
-};
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-		commonActions: bindActionCreators(CommonActions, dispatch),
-		employeeActions: bindActionCreators(EmployeeActions, dispatch),
-		createPayrollActions: bindActionCreators(CreatePayrollActions, dispatch),
-		createPayrollEmployeeActions: bindActionCreators(
-			CreatePayrollEmployeeActions,
-			dispatch
-		),
-		payrollEmployeeActions: bindActionCreators(PayrollEmployeeActions, dispatch),
-	};
-};
+const strings = new LocalizedStrings(languageData);
 
 const customStyles = {
 	control: (base, state) => ({
@@ -72,8 +50,6 @@ const customStyles = {
 		},
 	}),
 };
-
-const strings = new LocalizedStrings(data);
 
 // Zod validation schema
 const createPayrollSchema = z.object({
@@ -94,21 +70,15 @@ const createPayrollSchema = z.object({
 	}),
 });
 
-const CreatePayrollList = ({
-	commonActions,
-	employeeActions,
-	createPayrollActions,
-	createPayrollEmployeeActions,
-	payrollEmployeeActions,
-	approver_dropdown_list,
-	employee_list,
-	history,
-}) => {
+const CreatePayrollList = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
 	const [language] = useState(window['localStorage'].getItem('language'));
 	const [loading, setLoading] = useState(false);
 	const [loadingMsg, setLoadingMsg] = useState('Loading...');
-	const [selectedRows, setSelectedRows] = useState([]);
-	const [selectedRows1, setSelectedRows1] = useState([]);
+	const [selectedRows, setSelectedRows] = useState({});
+    // selectedRows1 was storing the actual row objects. We can derive this.
 	const [allPayrollEmployee, setAllPayrollEmployee] = useState([]);
 	const [apiSelector, setApiSelector] = useState('');
 	const [submitButton, setSubmitButton] = useState(true);
@@ -120,6 +90,24 @@ const CreatePayrollList = ({
 	const [payrollApproverRequired, setPayrollApproverRequired] = useState(false);
 	const [payrollSubjectRequired, setPayrollSubjectRequired] = useState(false);
 	const [openEmployeeModal, setOpenEmployeeModal] = useState(false);
+    const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
+    const [sorting, setSorting] = useState([]);
+
+    const {
+		currency_list,
+		country_list,
+		state_list,
+		employees_for_dropdown,
+		approver_dropdown_list,
+		employee_list,
+	} = useSelector((state) => ({
+		currency_list: state.employee.currency_list,
+		country_list: state.contact.country_list,
+		state_list: state.contact.state_list,
+		employees_for_dropdown: state.payrollRun.employees_for_dropdown,
+		approver_dropdown_list: state.payrollRun.approver_dropdown_list,
+		employee_list: state.payrollEmployee.employee_list_dropdown,
+	}));
 
 	var date = new Date();
 	const {
@@ -149,15 +137,10 @@ const CreatePayrollList = ({
 
 	const regExAlphaNumeric = /^[a-zA-Z0-9\s]+$/;
 
-	const options = {
-		paginationPosition: 'bottom',
-		page: 1,
-		sizePerPage: 10,
-	};
-
 	useEffect(() => {
+        strings.setLanguage(language);
 		initializeData();
-	}, []);
+	}, [language]);
 
 	useEffect(() => {
 		if (startDate && endDate) {
@@ -197,8 +180,8 @@ const CreatePayrollList = ({
 	}, [payrollSubjectRequired, payrollSubject]);
 
 	const initializeData = () => {
-		createPayrollActions.getEmployeesForDropdown();
-		createPayrollActions.getApproversForDropdown();
+		dispatch(CreatePayrollActions.getEmployeesForDropdown());
+		dispatch(CreatePayrollActions.getApproversForDropdown());
 		const initialStartDate = dayjs(new Date(date.getFullYear(), date.getMonth(), 1));
 		const initialEndDate = dayjs(new Date(date.getFullYear(), date.getMonth() + 1, 0));
 		calculatePayperiod(initialStartDate, initialEndDate);
@@ -218,7 +201,7 @@ const CreatePayrollList = ({
 			moduleType: 27,
 			name: value,
 		};
-		commonActions.checkValidation(data).then((response) => {
+		dispatch(CommonActions.checkValidation(data)).then((response) => {
 			if (response.data === 'Payroll Subject already exists') {
 				setIsPayrollSubjectNameExist(true);
 			} else {
@@ -230,14 +213,13 @@ const CreatePayrollList = ({
 	const getAllPayrollEmployee = (startDate, endDate) => {
 		var employeePayPeriodlList = [];
 		var activeEmployee = [];
-		employeeActions.getEmployeeListWithDetails().then((response) => {
+		dispatch(EmployeeActions.getEmployeeListWithDetails()).then((response) => {
 			if (response.status === 200) {
 				employeePayPeriodlList = response.data;
 				let date = startDate;
 				endDate = endDate;
 				let month = dayjs(date).format('MMMM');
-				createPayrollActions
-					.getAllPayrollEmployee(dayjs(date).format('DD/MM/YYYY'))
+				dispatch(CreatePayrollActions.getAllPayrollEmployee(dayjs(date).format('DD/MM/YYYY')))
 					.then((res) => {
 						if (res.status === 200) {
 							let newData = [...res.data];
@@ -328,7 +310,21 @@ const CreatePayrollList = ({
 	const onFormSubmit = (data) => {
 		setDisableLeavePage(true);
 		const { payrollSubject, payrollDate, payrollApprover, startDate, endDate } = data;
-		let employeeListIds = selectedRows ? selectedRows : '';
+        
+        // Derive selected employee IDs
+        const selectedIds = Object.keys(selectedRows).filter(k => selectedRows[k]);
+		let employeeListIds = selectedIds.length ? selectedIds.map(id => allPayrollEmployee.find(emp => emp.id === parseInt(id))?.empId) : ''; // Mapping local ID to empId? Wait, previous code used empId.
+        // Original: tempList.push(row.empId);
+        
+        // Let's verify mapping. DataTable keys are row.id (if getRowId returns row.id).
+        // I will use getRowId={(row) => row.id} for DataTable.
+        // So keys are row.id.
+        // Original onRowSelect pushed row.empId to selectedRows.
+        // And selectedRows1 pushed row object.
+        
+        // So I need to map selected IDs (from row.id) to empIds.
+        const selectedEmployeeObjects = allPayrollEmployee.filter(emp => selectedIds.includes(String(emp.id)));
+        const selectedEmpIds = selectedEmployeeObjects.map(emp => emp.empId);
 
 		let diff =
 			Math.abs(parseInt((startDate - endDate) / (1000 * 60 * 60 * 24), 10)) + 1;
@@ -339,13 +335,13 @@ const CreatePayrollList = ({
 		const formData = new FormData();
 		formData.append('payrollSubject', payrollSubject || '');
 		formData.append('payPeriod', string);
-		formData.append('employeeListIds', employeeListIds);
+		formData.append('employeeListIds', selectedEmpIds);
 
 		if (payrollApprover && payrollApprover.value) {
 			formData.append('approverId', parseInt(payrollApprover.value));
 		}
 
-		const payrollEmployees = selectedRows1.map((i) => {
+		const payrollEmployees = selectedEmployeeObjects.map((i) => {
 			const { joiningDate, ...rest } = i;
 			return rest;
 		});
@@ -353,7 +349,7 @@ const CreatePayrollList = ({
 		formData.append('salaryDate', payrollDate);
 
 		let totalAmountPayroll = 0;
-		selectedRows1.map((row) => {
+		selectedEmployeeObjects.map((row) => {
 			totalAmountPayroll += parseFloat(row.netPay);
 		});
 		formData.append('totalAmountPayroll', totalAmountPayroll);
@@ -361,43 +357,32 @@ const CreatePayrollList = ({
 		if (apiSelector === 'createPayroll') {
 			setLoading(true);
 			setLoadingMsg('Creating Payroll...');
-			createPayrollActions
-				.createPayroll(formData)
+			dispatch(CreatePayrollActions.createPayroll(formData))
 				.then((res) => {
 					if (res.status === 200) {
-						commonActions.tostifyAlert('success', 'Payroll created Successfully');
-						history.push(`/admin/payroll/payrollrun`);
+						toast.success('Payroll created Successfully');
+						navigate(`/admin/payroll/payrollrun`);
 						setLoading(false);
 					}
 				})
 				.catch((err) => {
-					commonActions.tostifyAlert(
-						'error',
-						err && err.data ? err.data.message : 'Something Went Wrong'
-					);
+					toast.error(err?.data?.message || 'Something Went Wrong');
 					setLoading(false);
 				});
 		} else {
 			if (apiSelector === 'createAndSubmitPayroll') {
 				setLoading(true);
 				setLoadingMsg('Submitting Payroll...');
-				createPayrollActions
-					.createAndSubmitPayroll(formData)
+				dispatch(CreatePayrollActions.createAndSubmitPayroll(formData))
 					.then((res) => {
 						if (res.status === 200) {
-							commonActions.tostifyAlert(
-								'success',
-								'Payroll created And Submitted Successfully'
-							);
-							history.push(`/admin/payroll/payrollrun`);
+							toast.success('Payroll created And Submitted Successfully');
+							navigate(`/admin/payroll/payrollrun`);
 							setLoading(false);
 						}
 					})
 					.catch((err) => {
-						commonActions.tostifyAlert(
-							'error',
-							err && err.data ? err.data.message : 'Something Went Wrong'
-						);
+						toast.error(err?.data?.message || 'Something Went Wrong');
 						setLoading(false);
 					});
 			}
@@ -425,218 +410,83 @@ const CreatePayrollList = ({
 		setAllPayrollEmployee(newData);
 	};
 
-	const getPayrollEmployeeList = () => {
-		const selectRowProp = {
-			mode: 'checkbox',
-			bgColor: 'rgba(0,0,0, 0.05)',
-			clickToSelect: false,
-			onSelect: onRowSelect,
-			onSelectAll: onSelectAll,
-		};
+    const columns = useMemo(() => [
+        {
+            accessorKey: 'empCode',
+            header: 'Employee No',
+        },
+        {
+            accessorKey: 'empName',
+            header: 'Employee Name',
+        },
+        {
+            accessorKey: 'lopDay',
+            header: 'LOP',
+            width: '8%',
+            cell: ({ row, getValue }) => (
+                <Input
+                    className="spinboxDisable"
+                    type="number"
+                    min={0}
+                    step="0.5"
+                    max={paidDays - 1}
+                    id="lopDay"
+                    name="lopDay"
+                    value={getValue() || 0}
+                    onChange={(evt) => {
+                        let value = parseFloat(
+                            evt.target.value === '' ? '0' : evt.target.value
+                        );
 
-		const cols = [
-			{
-				label: 'Employee No',
-				width: '',
-				key: 'empCode',
-			},
-			{
-				label: 'Employee Name',
-				width: '',
-				key: 'empName',
-			},
-			{
-				label: 'LOP',
-				width: '8%',
-				key: 'lopDay',
-			},
-			{
-				label: 'Paid Days',
-				width: '12%',
-				key: 'noOfDays',
-			},
-			{
-				label: 'Gross Pay',
-				width: '',
-				key: 'grossPay',
-			},
-			{
-				label: 'Deductions',
-				width: '',
-				key: 'deduction',
-			},
-			{
-				label: 'Net Pay',
-				width: '12%',
-				key: 'netPay',
-			},
-		];
-
-		return (
-			<React.Fragment>
-				<Row>
-					<Button
-						color="primary"
-						className="btn-square mr-3 mb-3"
-						onClick={(e) => {
-							setOpenEmployeeModal(true);
-						}}
-					>
-						<i className="fa fa-plus"></i> {strings.AddEmployee}
-					</Button>
-				</Row>
-				<div>
-					<BootstrapTable
-						selectRow={selectRowProp}
-						search={false}
-						options={options}
-						data={allPayrollEmployee || []}
-						version="4"
-						hover
-						keyField="id"
-						remote
-						trClassName="cursor-pointer"
-						csvFileName="payroll_employee_list.csv"
-					>
-						{cols.map((col, index) => {
-							const format = (cell, row) => {
-								if (col.key === 'lopDay') {
-									return (
-										<Input
-											className="spinboxDisable"
-											type="number"
-											min={0}
-											step="0.5"
-											max={paidDays - 1}
-											id="lopDay"
-											name="lopDay"
-											value={cell || 0}
-											onChange={(evt) => {
-												let value = parseFloat(
-													evt.target.value === '' ? '0' : evt.target.value
-												);
-
-												if (
-													value > paidDays ||
-													value < 0 ||
-													value === paidDays
-												) {
-													return;
-												}
-												updateAmounts(row, value);
-											}}
-										/>
-									);
-								} else if (col.key === 'grossPay') {
-									let grossPay = parseFloat(cell);
-									return (
-										<div>
-											{currencyIsoCode ? currencyIsoCode : 'AED'}
-											{' ' +
-												grossPay.toLocaleString(navigator.language, {
-													minimumFractionDigits: 2,
-												})}
-										</div>
-									);
-								} else if (col.key === 'netPay') {
-									return (
-										<div>
-											{currencyIsoCode ? currencyIsoCode : 'AED'}
-											{' ' +
-												cell.toLocaleString(navigator.language, {
-													minimumFractionDigits: 2,
-												})}
-										</div>
-									);
-								} else if (col.key === 'deduction') {
-									return (
-										<div>
-											{currencyIsoCode ? currencyIsoCode : 'AED'}
-											{' ' +
-												cell.toLocaleString(navigator.language, {
-													minimumFractionDigits: 2,
-												})}
-										</div>
-									);
-								} else {
-									return <div>{cell}</div>;
-								}
-							};
-
-							if (
-								col.key === 'netPay' ||
-								col.key === 'deduction' ||
-								col.key === 'grossPay'
-							) {
-								return (
-									<TableHeaderColumn
-										key={index}
-										dataFormat={format}
-										dataField={col.key}
-										dataAlign="right"
-										className="table-header-bg"
-										dataSort={col.dataSort}
-										width={col.width}
-									>
-										{col.label}
-									</TableHeaderColumn>
-								);
-							} else {
-								return (
-									<TableHeaderColumn
-										key={index}
-										dataFormat={format}
-										dataField={col.key}
-										dataAlign="center"
-										className="table-header-bg"
-										dataSort={col.dataSort}
-										width={col.width}
-									>
-										{col.label}
-									</TableHeaderColumn>
-								);
-							}
-						})}
-					</BootstrapTable>
-				</div>
-			</React.Fragment>
-		);
-	};
-
-	const onRowSelect = (row, isSelected, e) => {
-		let tempList = [];
-		let tempList1 = [];
-		if (isSelected) {
-			tempList = Object.assign([], selectedRows);
-			tempList1 = Object.assign([], selectedRows1);
-			tempList.push(row.empId);
-			tempList1.push(row);
-		} else {
-			selectedRows1.map((item) => {
-				if (item.empId !== row.empId) {
-					tempList.push(item.empId);
-					tempList1.push(item);
-				}
-				return item;
-			});
-		}
-		setSelectedRows(tempList);
-		setSelectedRows1(tempList1);
-	};
-
-	const onSelectAll = (isSelected, rows) => {
-		let tempList = [];
-		let tempList1 = [];
-		if (isSelected) {
-			rows.map((item) => {
-				tempList.push(item.empId);
-				tempList1.push(item);
-				return item;
-			});
-		}
-		setSelectedRows(tempList);
-		setSelectedRows1(tempList1);
-	};
+                        if (
+                            value > paidDays ||
+                            value < 0 ||
+                            value === paidDays
+                        ) {
+                            return;
+                        }
+                        updateAmounts(row.original, value);
+                    }}
+                />
+            )
+        },
+        {
+            accessorKey: 'noOfDays',
+            header: 'Paid Days',
+            width: '12%',
+        },
+        {
+            accessorKey: 'grossPay',
+            header: 'Gross Pay',
+            cell: ({ getValue }) => (
+                <div>
+                    {currencyIsoCode ? currencyIsoCode : 'AED'}
+                    {' ' + parseFloat(getValue()).toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+                </div>
+            )
+        },
+        {
+            accessorKey: 'deduction',
+            header: 'Deductions',
+            cell: ({ getValue }) => (
+                <div>
+                    {currencyIsoCode ? currencyIsoCode : 'AED'}
+                    {' ' + parseFloat(getValue()).toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+                </div>
+            )
+        },
+        {
+            accessorKey: 'netPay',
+            header: 'Net Pay',
+            width: '12%',
+            cell: ({ getValue }) => (
+                <div>
+                    {currencyIsoCode ? currencyIsoCode : 'AED'}
+                    {' ' + parseFloat(getValue()).toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+                </div>
+            )
+        }
+    ], [paidDays, currencyIsoCode]);
 
 	const handleDatesChange = ({ startDate, endDate }) => {
 		setValue('startDate', startDate);
@@ -644,10 +494,6 @@ const CreatePayrollList = ({
 	};
 
 	const handleFocusChange = (focusedInput) => setFocusedInput(focusedInput);
-
-	strings.setLanguage(language);
-
-	var today = new Date();
 
 	return loading ? (
 		<Loader loadingMsg={loadingMsg} />
@@ -869,12 +715,37 @@ const CreatePayrollList = ({
 															<Col lg={3} className="pull-right mt-3"></Col>
 														</Row>
 
-														{getPayrollEmployeeList()}
+                                                        {/* Employee Table */}
+                                                        <React.Fragment>
+                                                            <Row>
+                                                                <Button
+                                                                    color="primary"
+                                                                    className="btn-square mr-3 mb-3"
+                                                                    onClick={(e) => {
+                                                                        setOpenEmployeeModal(true);
+                                                                    }}
+                                                                >
+                                                                    <i className="fa fa-plus"></i> {strings.AddEmployee}
+                                                                </Button>
+                                                            </Row>
+                                                            <div>
+                                                                <DataTable
+                                                                    data={allPayrollEmployee || []}
+                                                                    columns={columns}
+                                                                    enableRowSelection={true}
+                                                                    rowSelection={selectedRows}
+                                                                    onRowSelectionChange={setSelectedRows}
+                                                                    getRowId={(row) => row.id}
+                                                                    manualPagination={false}
+                                                                />
+                                                            </div>
+                                                        </React.Fragment>
+
 														<Row>
 															<Col>
-																{selectedRows && (
+																{selectedRows && Object.keys(selectedRows).length === 0 && (
 																	<div className="text-danger">
-																		{errors.selectedRows}
+																		{/* {errors.selectedRows} */}
 																	</div>
 																)}
 															</Col>
@@ -891,7 +762,7 @@ const CreatePayrollList = ({
 																	color="secondary"
 																	className="btn-square pull-right"
 																	onClick={() => {
-																		history.push('/admin/payroll/payrollrun');
+																		navigate('/admin/payroll/payrollrun');
 																	}}
 																>
 																	<i className="fa fa-ban"></i> {strings.Cancel}
@@ -907,13 +778,14 @@ const CreatePayrollList = ({
 																			!isValid ||
 																			Object.keys(errors).length != 0
 																		) {
-																			commonActions.fillManDatoryDetails();
+																			dispatch(CommonActions.fillManDatoryDetails());
 																		}
+
+                                                                        const hasSelectedRows = Object.keys(selectedRows).filter(k => selectedRows[k]).length > 0;
 
 																		if (
 																			!submitButton &&
-																			selectedRows &&
-																			selectedRows.length != 0
+																			hasSelectedRows
 																		) {
 																			setApiSelector('createAndSubmitPayroll');
 																			handleSubmit(onFormSubmit)();
@@ -922,8 +794,7 @@ const CreatePayrollList = ({
 																				`Please select approver for payroll submission !`
 																			);
 																		} else if (
-																			!selectedRows ||
-																			selectedRows.length === 0
+																			!hasSelectedRows
 																		) {
 																			toast.error(
 																				`Please select at least one employee for payroll creation !`
@@ -947,9 +818,10 @@ const CreatePayrollList = ({
 																		setPayrollApproverRequired(false);
 																		setPayrollSubjectRequired(true);
 																		const isValid = await trigger();
+                                                                        const hasSelectedRows = Object.keys(selectedRows).filter(k => selectedRows[k]).length > 0;
+
 																		if (
-																			selectedRows &&
-																			selectedRows.length != 0
+																			hasSelectedRows
 																		) {
 																			setApiSelector('createPayroll');
 																			handleSubmit(onFormSubmit)();
@@ -960,7 +832,7 @@ const CreatePayrollList = ({
 																		}
 																	}}
 																	title={
-																		selectedRows && selectedRows.length != 0
+																		Object.keys(selectedRows).filter(k => selectedRows[k]).length > 0
 																			? ''
 																			: `Please select at least one employee for payroll creation !`
 																	}
@@ -995,4 +867,4 @@ const CreatePayrollList = ({
 	);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreatePayrollList);
+export default CreatePayrollList;

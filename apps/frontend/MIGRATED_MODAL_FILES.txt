@@ -1,0 +1,62 @@
+MIGRATED MODAL FILES - React Hook Form + Zod
+================================================
+
+Migration Date: December 19, 2025
+
+NEW FILES CREATED (React Hook Form + Zod):
+------------------------------------------
+
+1. /src/screens/user/sections/employee_modal.jsx
+   - Functional component with React Hook Form
+   - Zod validation schema
+   - Original: employee_modal.js (Formik/Yup class component)
+
+2. /src/screens/project/sections/contact_modal.jsx
+   - Functional component with React Hook Form
+   - Zod validation schema with conditional validation
+   - Dynamic state loading based on country selection
+   - Original: contact_modal.js (Formik/Yup class component)
+
+3. /src/screens/opening_balance/sections/opening_balance_modal.jsx
+   - Functional component with React Hook Form
+   - Zod validation schema
+   - Localization support preserved
+   - Original: opening_balance_modal.js (Formik/Yup class component)
+
+UPDATED INDEX FILES:
+-------------------
+
+1. /src/screens/user/sections/index.js
+   - Updated import to: employee_modal.jsx
+
+2. /src/screens/project/sections/index.js
+   - Updated import to: contact_modal.jsx
+
+3. /src/screens/opening_balance/sections/index.js
+   - Updated import to: opening_balance_modal.jsx
+
+ALREADY MIGRATED (Screen Files):
+--------------------------------
+
+User Screens:
+- /src/screens/user/screens/create/screen.jsx
+- /src/screens/user/screens/detail/screen.jsx
+
+Users Roles Screens:
+- /src/screens/users_roles/screens/create/screen.jsx
+- /src/screens/users_roles/screens/detail/screen.jsx
+
+Project Screens:
+- /src/screens/project/screens/create/screen.jsx
+- /src/screens/project/screens/detail/screen.jsx
+
+Opening Balance Screens:
+- /src/screens/opening_balance/screens/create/screen.jsx
+- /src/screens/opening_balance/screens/detail/screen.jsx
+
+All screen index.js files are properly configured to import from .jsx files.
+
+MIGRATION COMPLETE
+==================
+All requested modal files have been successfully migrated from Formik/Yup 
+to React Hook Form/Zod with functional components and proper validation.

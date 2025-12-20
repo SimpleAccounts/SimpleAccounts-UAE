@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { Modal } from 'reactstrap';
 import * as ProductActions from '../../product/actions';
 import '../../product/screens/create/style.scss';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import {data}  from '../../Language/index'
 import LocalizedStrings from 'react-localization';
 import  CreateProduct  from '../../product/screens/create/screen';

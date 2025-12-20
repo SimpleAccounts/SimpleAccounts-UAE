@@ -1,7 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import 'react-toastify/dist/ReactToastify.css';
 import { data } from 'screens/Language/index'
 import LocalizedStrings from 'react-localization';
 import { ConfirmDeleteModal } from 'components';

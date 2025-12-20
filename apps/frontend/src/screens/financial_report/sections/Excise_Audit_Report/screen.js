@@ -18,7 +18,6 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import { ExcelExport as XLSX } from 'utils';
 import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import { CommonActions } from 'services/global';
 

@@ -10,7 +10,6 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Loader, ConfirmDeleteModal } from 'components';
 import { selectOptionsFactory } from 'utils';
-import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { CommonActions } from 'services/global';
 import * as ExpenseActions from './actions';

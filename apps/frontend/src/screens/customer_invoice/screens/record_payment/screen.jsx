@@ -23,14 +23,13 @@ import * as CustomerInvoiceActions from '../../actions';
 import { CustomerModal } from '../../sections';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { TextField } from '@material-ui/core';
+import { Textarea } from '@/components/ui/textarea';
 
 const mapStateToProps = state => {
   return {
@@ -567,14 +566,12 @@ const RecordCustomerPayment = (props) => {
                                   name="notes"
                                   control={control}
                                   render={({ field }) => (
-                                    <TextField
+                                    <Textarea
                                       {...field}
-                                      type="textarea"
                                       style={{ width: '870px' }}
-                                      className="textarea form-control"
-                                      maxLength="255"
+                                      maxLength={255}
                                       id="notes"
-                                      rows="2"
+                                      rows={2}
                                       placeholder={strings.DeliveryNotes}
                                     />
                                   )}
@@ -659,14 +656,12 @@ const RecordCustomerPayment = (props) => {
                                   name="receiptAttachmentDescription"
                                   control={control}
                                   render={({ field }) => (
-                                    <TextField
+                                    <Textarea
                                       {...field}
-                                      type="textarea"
-                                      className="textarea form-control"
-                                      maxLength="250"
+                                      maxLength={250}
                                       style={{ width: '870px' }}
                                       id="receiptAttachmentDescription"
-                                      rows="2"
+                                      rows={2}
                                       placeholder={strings.ReceiptAttachmentDescription}
                                     />
                                   )}

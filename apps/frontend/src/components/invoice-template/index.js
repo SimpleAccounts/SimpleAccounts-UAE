@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import './style.scss'
 import { authApi } from 'utils';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 function updateMailTheme(id, templateTitle) {
 

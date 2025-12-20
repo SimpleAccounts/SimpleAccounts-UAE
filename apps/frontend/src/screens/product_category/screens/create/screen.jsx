@@ -19,7 +19,6 @@ import {
 } from 'reactstrap';
 import { LeavePage, Loader } from 'components';
 import { CommonActions } from 'services/global';
-import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';

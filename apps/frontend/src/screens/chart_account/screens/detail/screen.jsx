@@ -17,7 +17,6 @@ import {
   Col,
 } from 'reactstrap';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
-import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import * as ChartOfAccontActions from '../../actions';
 import * as DetailChartOfAccontActions from './actions';

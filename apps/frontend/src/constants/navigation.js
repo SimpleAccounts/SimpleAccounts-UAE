@@ -1,6 +1,5 @@
 import { data } from '../screens/Language/index'
 import LocalizedStrings from 'react-localization';
-import { Dashboard } from '@material-ui/icons';
 import config from './config'
 let strings = new LocalizedStrings(data);
 // var language= window['localStorage'].getItem('language');

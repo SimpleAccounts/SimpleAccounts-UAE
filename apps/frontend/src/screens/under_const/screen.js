@@ -9,8 +9,7 @@ import {
 } from 'reactstrap';
 
 import { AuthActions, CommonActions } from 'services/global';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'sonner';
 
 import './style.scss';
 import config from 'constants/config';
@@ -119,11 +118,7 @@ class LogIn extends React.Component {
 
 		return (
 			<div className="log-in-screen">
-				<ToastContainer 	
-				 position="top-right"
-				 autoClose={1700}									
-				closeOnClick
-            	draggable/>
+				
 				<div className="animated fadeIn ">
 				<div className="main-banner_container col-md-12 flex">
 													{/* <img src={login_bg} alt="login_bg" className="login_bg" /> */}

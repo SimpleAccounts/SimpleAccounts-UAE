@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -17,7 +17,6 @@ import {
   Label,
 } from 'reactstrap';
 import Select from 'react-select';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
@@ -29,15 +28,14 @@ import { ProductModal } from '../../../customer_invoice/sections';
 import { Loader, ConfirmDeleteModal, LeavePage } from 'components';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
-import { TextareaAutosize } from '@material-ui/core';
+import { selectOptionsFactory, selectCurrencyFactory, selectStyles } from 'utils';
+import { Textarea } from '@/components/ui/textarea';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { selectStyles } from 'utils';
+import { DataTable } from '@/components/ui/data-table';
 
 const mapStateToProps = (state) => {
   return {
@@ -66,50 +64,11 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const customStyles = {
-  control: (base, state) => ({
-    ...base,
-    borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-    boxShadow: state.isFocused ? null : null,
-    '&:hover': {
-      borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-    },
-  }),
-};
-
 let strings = new LocalizedStrings(data);
 
 // Zod validation schema
 const detailPurchaseOrderSchema = z.object({
-  attachmentFile: z
-    .custom((value) => value instanceof File || value === undefined || value === null, {
-      message: 'Invalid file',
-    })
-    .refine(
-      (value) => {
-        if (!value) return true;
-        const supported_format = [
-          'image/png',
-          'image/jpeg',
-          'text/plain',
-          'application/pdf',
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          'application/vnd.ms-excel',
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        ];
-        return supported_format.includes(value.type);
-      },
-      { message: '*Unsupported File Format' }
-    )
-    .refine(
-      (value) => {
-        if (!value) return true;
-        const file_size = 1024000;
-        return value.size <= file_size;
-      },
-      { message: '*File Size is too large' }
-    )
-    .optional(),
+  attachmentFile: z.any().optional(),
   lineItemsString: z
     .array(
       z.object({
@@ -457,161 +416,6 @@ const DetailPurchaseOrder = ({
     updateAmount(newData);
   };
 
-  const renderDescription = (cell, row) => {
-    const idx = data.findIndex((obj) => obj.id === row.id);
-    if (idx === -1) return null;
-
-    return (
-      <Input
-        type="text"
-        maxLength="250"
-        value={row['description'] || ''}
-        onChange={(e) => {
-          selectItem(e.target.value, row, 'description');
-        }}
-        placeholder={strings.Description}
-        className={`form-control ${
-          errors.lineItemsString?.[idx]?.description && touchedFields.lineItemsString?.[idx]?.description
-            ? 'is-invalid'
-            : ''
-        }`}
-      />
-    );
-  };
-
-  const renderPOQuantity = (cell, row) => {
-    const idx = data.findIndex((obj) => obj.id === row.id);
-    if (idx === -1) return null;
-
-    return (
-      <div>
-        <div className="input-group">
-          <Input
-            type="text"
-            maxLength="10"
-            min="0"
-            value={row['grnReceivedQuantity'] || 0}
-            onChange={(e) => {
-              if (e.target.value === '' || regEx.test(e.target.value)) {
-                selectItem(e.target.value, row, 'grnReceivedQuantity');
-              }
-            }}
-            placeholder={strings.Quantity}
-            className={`form-control w-50 ${
-              errors.lineItemsString?.[idx]?.grnReceivedQuantity && touchedFields.lineItemsString?.[idx]?.grnReceivedQuantity
-                ? 'is-invalid'
-                : ''
-            }`}
-          />
-          {row['productId'] != '' ? <Input value={row['unitType']} disabled /> : ''}
-        </div>
-        {errors.lineItemsString?.[idx]?.grnReceivedQuantity && touchedFields.lineItemsString?.[idx]?.grnReceivedQuantity && (
-          <div className="invalid-feedback">{errors.lineItemsString[idx].grnReceivedQuantity.message}</div>
-        )}
-      </div>
-    );
-  };
-
-  const renderQuantity = (cell, row) => {
-    const idx = data.findIndex((obj) => obj.id === row.id);
-    if (idx === -1) return null;
-
-    return (
-      <div>
-        <div className="input-group">
-          <Input
-            disabled
-            type="number"
-            min="0"
-            value={row['quantity'] || 0}
-            onChange={(e) => {
-              if (e.target.value === '' || regEx.test(e.target.value)) {
-                selectItem(e.target.value, row, 'quantity');
-              }
-            }}
-            placeholder={strings.Quantity}
-            className={`form-control w-50 ${
-              errors.lineItemsString?.[idx]?.quantity && touchedFields.lineItemsString?.[idx]?.quantity
-                ? 'is-invalid'
-                : ''
-            }`}
-          />
-          {row['productId'] != '' ? <Input value={row['unitType']} disabled /> : ''}
-        </div>
-        {errors.lineItemsString?.[idx]?.quantity && touchedFields.lineItemsString?.[idx]?.quantity && (
-          <div className="invalid-feedback">{errors.lineItemsString[idx].quantity.message}</div>
-        )}
-      </div>
-    );
-  };
-
-  const renderProduct = (cell, row) => {
-    const idx = data.findIndex((obj) => obj.id === row.id);
-    if (idx === -1) return null;
-
-    return (
-      <>
-        <Select
-          options={product_list ? selectOptionsFactory.renderOptions('name', 'id', product_list, 'Product') : []}
-          value={
-            product_list &&
-            selectOptionsFactory
-              .renderOptions('name', 'id', product_list, 'Product')
-              .find((option) => option.value === +row.productId)
-          }
-          id="productId"
-          onChange={(e) => {
-            if (e && e.label !== 'Select Product') {
-              selectItem(e.value, row, 'productId');
-              prductValue(e.value, row);
-              addRow();
-            }
-          }}
-          className={`${
-            errors.lineItemsString?.[idx]?.productId && touchedFields.lineItemsString?.[idx]?.productId
-              ? 'is-invalid'
-              : ''
-          }`}
-        />
-        {errors.lineItemsString?.[idx]?.productId && touchedFields.lineItemsString?.[idx]?.productId && (
-          <div className="invalid-feedback">{errors.lineItemsString[idx].productId.message}</div>
-        )}
-        {row['productId'] != '' ? (
-          <div className="mt-1">
-            <Input
-              type="text"
-              maxLength="250"
-              value={row['description'] || ''}
-              onChange={(e) => {
-                selectItem(e.target.value, row, 'description');
-              }}
-              placeholder={strings.Description}
-              className={`form-control ${
-                errors.lineItemsString?.[idx]?.description && touchedFields.lineItemsString?.[idx]?.description
-                  ? 'is-invalid'
-                  : ''
-              }`}
-            />
-          </div>
-        ) : ''}
-      </>
-    );
-  };
-
-  const renderActions = (cell, rows) => {
-    return rows['productId'] != '' ? (
-      <Button
-        size="sm"
-        className="btn-twitter btn-brand icon"
-        onClick={(e) => {
-          deleteRow(e, rows);
-        }}
-      >
-        <i className="fas fa-trash"></i>
-      </Button>
-    ) : '';
-  };
-
   const handleFileChange = (e) => {
     e.preventDefault();
     let file = e.target.files[0];
@@ -722,6 +526,167 @@ const DetailPurchaseOrder = ({
     }
     setOpenSupplierModal(false);
   };
+
+  const columns = useMemo(() => {
+    return [
+        {
+            accessorKey: 'action',
+            header: '',
+            size: 50,
+            cell: ({ row }) => (row.original['productId'] != '' ? (
+                <Button
+                    size="sm"
+                    className="btn-twitter btn-brand icon"
+                    onClick={(e) => {
+                        deleteRow(e, row.original);
+                    }}
+                >
+                    <i className="fas fa-trash"></i>
+                </Button>
+            ) : '')
+        },
+        {
+            accessorKey: 'productId',
+            header: strings.PRODUCT,
+            size: 200,
+            cell: ({ row }) => {
+                const idx = data.findIndex((obj) => obj.id === row.original.id);
+                return (
+                    <>
+                        <Select
+                            options={product_list ? selectOptionsFactory.renderOptions('name', 'id', product_list, 'Product') : []}
+                            value={
+                                product_list &&
+                                selectOptionsFactory
+                                    .renderOptions('name', 'id', product_list, 'Product')
+                                    .find((option) => option.value === +row.original.productId)
+                            }
+                            onChange={(e) => {
+                                if (e && e.label !== 'Select Product') {
+                                    selectItem(e.value, row.original, 'productId');
+                                    prductValue(e.value, row.original);
+                                    addRow();
+                                }
+                            }}
+                            className={`${
+                                errors.lineItemsString &&
+                                errors.lineItemsString[parseInt(idx, 10)] &&
+                                errors.lineItemsString[parseInt(idx, 10)].productId
+                                    ? 'is-invalid'
+                                    : ''
+                            }`}
+                        />
+                        {errors.lineItemsString &&
+                            errors.lineItemsString[parseInt(idx, 10)] &&
+                            errors.lineItemsString[parseInt(idx, 10)].productId && (
+                                <div className="invalid-feedback">
+                                    {errors.lineItemsString[parseInt(idx, 10)].productId.message}
+                                </div>
+                            )}
+                        {row.original['productId'] != '' ? (
+                            <div className="mt-1">
+                                <Input
+                                    type="text"
+                                    maxLength="250"
+                                    value={row.original['description'] || ''}
+                                    onChange={(e) => {
+                                        selectItem(e.target.value, row.original, 'description');
+                                    }}
+                                    placeholder={strings.Description}
+                                    className={`form-control ${
+                                        errors.lineItemsString &&
+                                        errors.lineItemsString[parseInt(idx, 10)] &&
+                                        errors.lineItemsString[parseInt(idx, 10)].description
+                                            ? 'is-invalid'
+                                            : ''
+                                    }`}
+                                />
+                            </div>
+                        ) : ''}
+                    </>
+                );
+            }
+        },
+        {
+            accessorKey: 'grnReceivedQuantity',
+            header: strings.RECEIVEDQUANTITY,
+            size: 150,
+            cell: ({ row }) => {
+                const idx = data.findIndex((obj) => obj.id === row.original.id);
+                return (
+                    <div>
+                        <div className="input-group">
+                            <Input
+                                type="text"
+                                maxLength="10"
+                                min="0"
+                                value={row.original['grnReceivedQuantity'] || 0}
+                                onChange={(e) => {
+                                    if (e.target.value === '' || regEx.test(e.target.value)) {
+                                        selectItem(e.target.value, row.original, 'grnReceivedQuantity');
+                                    }
+                                }}
+                                placeholder={strings.Quantity}
+                                className={`form-control w-50 ${
+                                    errors.lineItemsString &&
+                                    errors.lineItemsString[parseInt(idx, 10)] &&
+                                    errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity
+                                        ? 'is-invalid'
+                                        : ''
+                                }`}
+                            />
+                            {row.original['productId'] != '' ? <Input value={row.original['unitType']} disabled /> : ''}
+                        </div>
+                        {errors.lineItemsString &&
+                            errors.lineItemsString[parseInt(idx, 10)] &&
+                            errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity && (
+                                <div className="invalid-feedback">{errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity.message}</div>
+                            )}
+                    </div>
+                )
+            }
+        },
+        {
+            accessorKey: 'quantity',
+            header: strings.POQUANTITY,
+            size: 150,
+            cell: ({ row }) => {
+                const idx = data.findIndex((obj) => obj.id === row.original.id);
+                return (
+                    <div>
+                        <div className="input-group">
+                            <Input
+                                disabled
+                                type="number"
+                                min="0"
+                                value={row.original['quantity'] || 0}
+                                onChange={(e) => {
+                                    if (e.target.value === '' || regEx.test(e.target.value)) {
+                                        selectItem(e.target.value, row.original, 'quantity');
+                                    }
+                                }}
+                                placeholder={strings.Quantity}
+                                className={`form-control w-50 ${
+                                    errors.lineItemsString &&
+                                    errors.lineItemsString[parseInt(idx, 10)] &&
+                                    errors.lineItemsString[parseInt(idx, 10)].quantity
+                                        ? 'is-invalid'
+                                        : ''
+                                }`}
+                            />
+                            {row.original['productId'] != '' ? <Input value={row.original['unitType']} disabled /> : ''}
+                        </div>
+                        {errors.lineItemsString &&
+                            errors.lineItemsString[parseInt(idx, 10)] &&
+                            errors.lineItemsString[parseInt(idx, 10)].quantity && (
+                                <div className="invalid-feedback">{errors.lineItemsString[parseInt(idx, 10)].quantity.message}</div>
+                            )}
+                    </div>
+                )
+            }
+        }
+    ];
+  }, [data, product_list, errors, touchedFields, strings]);
 
   if (loading) {
     return <Loader loadingMsg={loadingMsg} />;
@@ -927,34 +892,11 @@ const DetailPurchaseOrder = ({
                         </Row>
                         <Row>
                           <Col lg={8}>
-                            <BootstrapTable data={data} version="4" hover keyField="id" className="invoice-create-table">
-                              <TableHeaderColumn
-                                width="5%"
-                                dataAlign="center"
-                                dataFormat={(cell, rows) => renderActions(cell, rows)}
-                              ></TableHeaderColumn>
-                              <TableHeaderColumn
-                                width="12%"
-                                dataField="product"
-                                dataFormat={(cell, rows) => renderProduct(cell, rows)}
-                              >
-                                {strings.PRODUCT}
-                              </TableHeaderColumn>
-                              <TableHeaderColumn
-                                dataField="grnReceivedQuantity"
-                                width="10%"
-                                dataFormat={(cell, rows) => renderPOQuantity(cell, rows)}
-                              >
-                                {strings.RECEIVEDQUANTITY}
-                              </TableHeaderColumn>
-                              <TableHeaderColumn
-                                dataField="quantity"
-                                width="10%"
-                                dataFormat={(cell, rows) => renderQuantity(cell, rows)}
-                              >
-                                {strings.POQUANTITY}
-                              </TableHeaderColumn>
-                            </BootstrapTable>
+                            <DataTable
+                                data={data}
+                                columns={columns}
+                                manualPagination={false}
+                            />
                           </Col>
                         </Row>
                         {data.length > 0 && (
@@ -1028,13 +970,11 @@ const DetailPurchaseOrder = ({
                                   name="receiptAttachmentDescription"
                                   control={control}
                                   render={({ field }) => (
-                                    <TextareaAutosize
-                                      type="textarea"
-                                      className="textarea form-control"
-                                      maxLength="250"
+                                    <Textarea
+                                      maxLength={250}
                                       style={{ width: '700px' }}
                                       id="receiptAttachmentDescription"
-                                      rows="2"
+                                      rows={2}
                                       placeholder={strings.ReceiptAttachmentDescription}
                                       {...field}
                                     />

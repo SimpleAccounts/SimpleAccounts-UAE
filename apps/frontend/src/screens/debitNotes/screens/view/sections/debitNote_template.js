@@ -6,7 +6,7 @@ import logo from 'assets/images/brand/logo.png';
 import { Currency } from 'components';
 import { data } from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { TextareaAutosize } from '@material-ui/core';
+
 // Use import instead of require for Vite compatibility
 import { ToWords } from 'to-words';
 // Use import instead of require for Vite compatibility

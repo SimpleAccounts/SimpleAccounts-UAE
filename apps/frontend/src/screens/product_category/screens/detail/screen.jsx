@@ -18,7 +18,6 @@ import {
 } from 'reactstrap';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
-import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import * as DetailProductCategoryAction from './actions';
 import { data } from '../../../Language/index';

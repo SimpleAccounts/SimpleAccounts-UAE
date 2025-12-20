@@ -19,13 +19,12 @@ import {
 } from 'reactstrap';
 import { Loader } from 'components';
 import { CommonActions } from 'services/global';
-import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import * as VatCreateActions from './actions';
 import * as VatActions from '../../actions';
 import NumberFormat from 'react-number-format';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
+import { Input as ShadcnInput } from '@/components/ui/input';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 
@@ -254,20 +253,22 @@ const CreateVatCode = ({
 													name="vat"
 													control={control}
 													render={({ field }) => (
-														<TextField
-															type="text"
-															size="small"
-															fullWidth
-															variant="outlined"
-															inputProps={{ maxLength: 5 }}
-															id="vat"
-															placeholder="Enter VAT Percentage"
-															{...field}
-															className={errors.vat ? 'is-invalid' : ''}
-															InputProps={{
-																inputComponent: NumberFormatCustom,
-															}}
-														/>
+														<div className="w-full">
+															<NumberFormat
+																customInput={ShadcnInput}
+																type="text"
+																id="vat"
+																placeholder="Enter VAT Percentage"
+																{...field}
+																className={errors.vat ? 'border-red-500' : ''}
+																onValueChange={(values) => {
+																	field.onChange(values.value);
+																}}
+																thousandSeparator
+																suffix="%"
+																maxLength={5}
+															/>
+														</div>
 													)}
 												/>
 												{errors.vat && (

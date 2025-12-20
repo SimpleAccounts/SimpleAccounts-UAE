@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Card, CardBody, CardHeader, Col, Form, FormGroup, Label, Row } from 'reactstrap';
-import { ToastContainer } from 'react-toastify';
+
 import { CFormSwitch } from '@coreui/react';
 
 import { Loader } from 'components';
 
-import 'react-toastify/dist/ReactToastify.css';
 
 import './style.scss';
 
@@ -36,13 +35,7 @@ class Notification extends React.Component {
     return (
       <div className="notification-screen">
         <div className="animated fadeIn">
-          <ToastContainer
-            closeOnClick
-            draggable
-            position="top-right"
-            autoClose={1700}
-            style={containerStyle}
-          />
+          
 
           <Card>
             <CardHeader>
