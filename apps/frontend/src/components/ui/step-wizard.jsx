@@ -13,7 +13,7 @@ export function StepWizard({ steps, currentStep, onStepClick, className }) {
           const isClickable = stepNumber <= currentStep;
 
           return (
-            <li key={step.id} className="relative flex-1">
+            <li key={step.id} className="relative flex-1 flex justify-center">
               {/* Connector line */}
               {index < steps.length - 1 && (
                 <div
