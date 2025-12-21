@@ -208,8 +208,8 @@ test.describe('Customer Invoice Module', () => {
 
     // Check if dialog component is in the DOM (even if not visible)
     const dialog = page.locator('[role="dialog"]');
-    // Dialog might not be visible initially, but component should exist
-    await expect(dialog).toHaveCount(0); // Dialog not visible initially, but verify it exists in DOM structure
+    // Dialog might not be visible initially, but verify component exists in DOM structure
+    await expect(dialog).toHaveCount(0);
     expect(await page.locator('body').count()).toBeGreaterThan(0);
   });
 
