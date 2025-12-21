@@ -1,12 +1,91 @@
 import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardBody } from 'reactstrap';
+import { TrendingUp } from 'lucide-react';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 
 import './style.scss';
 
 let strings = new LocalizedStrings(data);
+
+const data4MultipleOptions = {
+  layout: {
+    padding: {
+      left: 10,
+      right: 10,
+      top: 10,
+      bottom: 10,
+    },
+  },
+  scales: {
+    y: {
+      ticks: {
+        display: true,
+        color: '#98afc2',
+        font: {
+          size: 11,
+        },
+      },
+      beginAtZero: true,
+      grid: {
+        display: true,
+        color: 'rgba(200, 210, 220, 0.3)',
+        drawBorder: false,
+      },
+      border: {
+        display: false,
+      },
+    },
+    x: {
+      ticks: {
+        display: true,
+        color: '#98afc2',
+        font: {
+          size: 11,
+        },
+      },
+      beginAtZero: true,
+      grid: {
+        display: false,
+      },
+      border: {
+        display: false,
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      display: true,
+      position: 'bottom',
+      labels: {
+        color: '#3d5a80',
+        font: {
+          size: 12,
+        },
+        usePointStyle: true,
+        pointStyle: 'circle',
+        padding: 20,
+      },
+    },
+    tooltip: {
+      backgroundColor: '#1e3a5f',
+      titleColor: '#ffffff',
+      bodyColor: '#ffffff',
+      borderColor: '#1e6eff',
+      borderWidth: 1,
+      cornerRadius: 8,
+      padding: 12,
+    },
+  },
+  responsive: true,
+  maintainAspectRatio: false,
+  elements: {
+    line: {
+      tension: 0.4,
+    },
+  },
+};
 
 const PaidInvoices = props => {
   const { DashboardActions } = props;
@@ -24,21 +103,25 @@ const PaidInvoices = props => {
       labels: data.labels || [],
       datasets: [
         {
-          backgroundColor: 'rgba(255, 255, 255, 0)',
-          borderCapStyle: 'round',
-          borderDash: [],
-          borderWidth: 4,
-          borderColor: '#4191ff',
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'round',
-          pointBorderColor: '#4191ff',
+          fill: true,
+          lineTension: 0.4,
+          backgroundColor: context => {
+            const ctx = context.chart.ctx;
+            const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+            gradient.addColorStop(0, 'rgba(30, 110, 255, 0.2)');
+            gradient.addColorStop(1, 'rgba(30, 110, 255, 0.02)');
+            return gradient;
+          },
+          borderWidth: 3,
+          borderColor: '#1e6eff',
+          pointBorderColor: '#1e6eff',
           pointBackgroundColor: '#ffffff',
-          pointBorderWidth: 3,
+          pointBorderWidth: 2,
           pointHoverRadius: 6,
-          pointHoverBorderWidth: 3,
+          pointHoverBorderWidth: 2,
           pointRadius: 4,
-          pointHoverBackgroundColor: '#ffffff',
-          pointHoverBorderColor: '#4191ff',
+          pointHoverBackgroundColor: '#1e6eff',
+          pointHoverBorderColor: '#ffffff',
           data: paidCustomerData.data || [],
           datalabels: {
             display: false,
@@ -46,21 +129,25 @@ const PaidInvoices = props => {
           label: (paidCustomerData.label || 'Paid Customer') + ' ',
         },
         {
-          backgroundColor: 'rgba(255, 255, 255, 0)',
-          borderCapStyle: 'round',
-          borderDash: [],
-          borderWidth: 4,
+          fill: true,
+          lineTension: 0.4,
+          backgroundColor: context => {
+            const ctx = context.chart.ctx;
+            const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+            gradient.addColorStop(0, 'rgba(244, 119, 46, 0.2)');
+            gradient.addColorStop(1, 'rgba(244, 119, 46, 0.02)');
+            return gradient;
+          },
+          borderWidth: 3,
           borderColor: '#f4772e',
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'round',
           pointBorderColor: '#f4772e',
           pointBackgroundColor: '#ffffff',
-          pointBorderWidth: 3,
+          pointBorderWidth: 2,
           pointHoverRadius: 6,
-          pointHoverBorderWidth: 3,
+          pointHoverBorderWidth: 2,
           pointRadius: 4,
-          pointHoverBackgroundColor: '#ffffff',
-          pointHoverBorderColor: '#f4772e',
+          pointHoverBackgroundColor: '#f4772e',
+          pointHoverBorderColor: '#ffffff',
           data: paidSupplierData.data || [],
           datalabels: {
             display: false,
@@ -91,69 +178,45 @@ const PaidInvoices = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
 
-  const data4MultipleOptions = {
-    layout: {
-      padding: {
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-      },
-    },
-    scales: {
-      y: {
-        ticks: {
-          display: true,
-        },
-        beginAtZero: true,
-        grid: {
-          display: true,
-          color: '#eeeff8',
-          drawBorder: true,
-        },
-      },
-      x: {
-        ticks: {
-          display: true,
-        },
-        beginAtZero: true,
-        grid: {
-          display: true,
-          color: '#eeeff8',
-          drawBorder: true,
-        },
-      },
-    },
-    plugins: {
-      legend: {
-        display: true,
-        position: 'bottom',
-      },
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-  };
-
   // Set language before using strings
   useEffect(() => {
     strings.setLanguage(language);
   }, [language]);
 
   return (
-    <div className="animated fadeIn mb-6">
-      <Card className="invoice-card">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold" style={{ color: '#2064d8' }}>
-            {strings.SupplierCustomerPaidInvoices || 'Paid Invoices'}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-6">
-          <div className="chart-wrapper" style={{ height: '300px' }}>
-            <Line data={invoice_graph_data} options={data4MultipleOptions} />
+    <Card className="invoice-card card-margin">
+      <CardBody className="tab-card">
+        <div className="flex-wrapper title-bottom-border">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'var(--neu-bg, #e8eef5)',
+                boxShadow:
+                  '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+              }}
+            >
+              <TrendingUp size={18} style={{ color: 'var(--neu-secondary, #00c896)' }} />
+            </div>
+            <h1 className="card-h1">
+              {strings.SupplierCustomerPaidInvoices || 'Supplier & Customer Paid Invoices'}
+            </h1>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+        <div className="chart-wrapper" style={{ height: '300px', marginTop: '20px' }}>
+          <Line
+            data={invoice_graph_data}
+            options={data4MultipleOptions}
+            datasetKeyProvider={() => Math.random()}
+          />
+        </div>
+      </CardBody>
+    </Card>
   );
 };
 
