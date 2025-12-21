@@ -259,6 +259,7 @@ test.describe('Customer Invoice Creation Flow', () => {
     const criticalErrors = errors.filter(
       err => !err.includes('defaultProps') && !err.includes('findDOMNode')
     );
+    expect(criticalErrors.length).toBe(0);
 
     // Page should load even if no invoices exist
     await expect(page.locator('body')).toBeVisible();
