@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   ChevronRight,
   ChevronLeft,
@@ -17,7 +24,16 @@ import {
   FileText,
   Briefcase,
   Wallet,
+  User,
+  Mail,
+  UserCog,
+  Users,
+  Info,
+  Palette,
+  HelpCircle,
+  Upload,
 } from 'lucide-react';
+import config from '../../constants/config';
 
 // Icon mapping for navigation items
 const iconMap = {
@@ -52,6 +68,7 @@ export function Sidebar({
   onLogout,
 }) {
   console.log('[Sidebar] Rendering with items:', items?.length, 'minimized:', minimized);
+  const navigate = useNavigate();
   const [expandedMenus, setExpandedMenus] = useState(() => {
     // Auto-expand menus that contain active items
     const expanded = {};
@@ -331,47 +348,151 @@ export function Sidebar({
         </nav>
       </ScrollArea>
 
-      {/* User Profile Section */}
+      {/* User Profile Section with Dropdown */}
       <div className="p-3 border-t" style={{ borderColor: theme.shadowDark }}>
-        <div
-          className={`flex items-center gap-3 p-2 rounded-xl ${minimized ? 'justify-center' : ''}`}
-          style={{
-            background: theme.bg,
-            boxShadow: shadows.raised.sm,
-          }}
-        >
-          {/* Avatar */}
-          <div
-            className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0"
-            style={{ background: gradients.primary, boxShadow: shadows.raised.xs }}
-          >
-            {user?.firstName?.[0] || user?.name?.[0] || 'U'}
-            {user?.lastName?.[0] || ''}
-          </div>
-          {!minimized && (
-            <>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate" style={{ color: theme.textPrimary }}>
-                  {user?.firstName
-                    ? `${user.firstName} ${user.lastName || ''}`
-                    : user?.name || 'User'}
-                </p>
-                <p className="text-xs truncate" style={{ color: theme.textMuted }}>
-                  {user?.role?.roleName || 'Administrator'}
-                </p>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className={`w-full flex items-center gap-3 p-2 rounded-xl cursor-pointer transition-all duration-200 hover:opacity-90 ${minimized ? 'justify-center' : ''}`}
+              style={{
+                background: theme.bg,
+                boxShadow: shadows.raised.sm,
+              }}
+            >
+              {/* Avatar */}
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0"
+                style={{ background: gradients.primary, boxShadow: shadows.raised.xs }}
+              >
+                {user?.firstName?.[0] || user?.name?.[0] || 'U'}
+                {user?.lastName?.[0] || ''}
               </div>
-              {onLogout && (
-                <button
-                  onClick={onLogout}
-                  className="p-2 rounded-lg transition-colors hover:bg-red-50"
-                  title="Logout"
-                >
-                  <LogOut className="w-4 h-4" style={{ color: '#ff4d6a' }} />
-                </button>
+              {!minimized && (
+                <>
+                  <div className="flex-1 min-w-0 text-left">
+                    <p
+                      className="text-sm font-medium truncate"
+                      style={{ color: theme.textPrimary }}
+                    >
+                      {user?.firstName
+                        ? `${user.firstName} ${user.lastName || ''}`
+                        : user?.name || 'User'}
+                    </p>
+                    <p className="text-xs truncate" style={{ color: theme.textMuted }}>
+                      {user?.role?.roleName || 'Administrator'}
+                    </p>
+                  </div>
+                  <ChevronUp className="w-4 h-4" style={{ color: theme.textMuted }} />
+                </>
               )}
-            </>
-          )}
-        </div>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align={minimized ? 'center' : 'end'}
+            side="top"
+            className="w-56 mb-2 border-0 rounded-xl p-2"
+            style={{
+              background: theme.bg,
+              boxShadow: shadows.raised.lg,
+            }}
+          >
+            <div className="px-3 py-2">
+              <p className="text-sm font-medium" style={{ color: theme.textPrimary }}>
+                Hey{' '}
+                <i style={{ color: theme.primary }}>
+                  {user?.firstName ? `${user.firstName} ${user.lastName || ''}` : 'User'}
+                </i>
+              </p>
+            </div>
+            <DropdownMenuSeparator style={{ background: theme.shadowDark }} />
+            <DropdownMenuItem
+              onClick={() => navigate('/admin/profile')}
+              className="rounded-lg my-1 cursor-pointer"
+              style={{ color: theme.textSecondary }}
+            >
+              <User className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate('/admin/settings/general')}
+              className="rounded-lg my-1 cursor-pointer"
+              style={{ color: theme.textSecondary }}
+            >
+              <Mail className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              General Settings
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate('/admin/settings/user')}
+              className="rounded-lg my-1 cursor-pointer"
+              style={{ color: theme.textSecondary }}
+            >
+              <UserCog className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              User
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate('/admin/settings/user-role')}
+              className="rounded-lg my-1 cursor-pointer"
+              style={{ color: theme.textSecondary }}
+            >
+              <Users className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              Role
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate('/admin/settings/payrollsettings')}
+              className="rounded-lg my-1 cursor-pointer"
+              style={{ color: theme.textSecondary }}
+            >
+              <Wallet className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              Payroll Settings
+            </DropdownMenuItem>
+            {config.SETTING_THEME && (
+              <DropdownMenuItem
+                onClick={() => navigate('/admin/settings/template')}
+                className="rounded-lg my-1 cursor-pointer"
+                style={{ color: theme.textSecondary }}
+              >
+                <Palette className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+                Mail Themes
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem
+              onClick={() => navigate('/admin/settings/notesSettings')}
+              className="rounded-lg my-1 cursor-pointer"
+              style={{ color: theme.textSecondary }}
+            >
+              <Info className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              Notes Settings
+            </DropdownMenuItem>
+            {config.SETTING_IMPORT && (
+              <DropdownMenuItem
+                onClick={() => navigate('/admin/settings/import')}
+                className="rounded-lg my-1 cursor-pointer"
+                style={{ color: theme.textSecondary }}
+              >
+                <Upload className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+                Import
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem
+              onClick={() => navigate('/admin/settings/help')}
+              className="rounded-lg my-1 cursor-pointer"
+              style={{ color: theme.textSecondary }}
+            >
+              <HelpCircle className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              Help
+            </DropdownMenuItem>
+            <DropdownMenuSeparator style={{ background: theme.shadowDark }} />
+            {onLogout && (
+              <DropdownMenuItem
+                onClick={onLogout}
+                className="rounded-lg my-1 cursor-pointer text-red-500 focus:text-red-500"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Log Out
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </aside>
   );

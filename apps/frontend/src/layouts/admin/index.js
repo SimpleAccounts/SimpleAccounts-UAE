@@ -2,17 +2,10 @@ import React, { Suspense } from 'react';
 import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from 'sonner';
 import { Toaster } from '@/components/ui/sonner';
+import { Home, ChevronRight } from 'lucide-react';
 import { adminRoutes } from 'routes';
 import { AuthActions, CommonActions } from 'services/global';
 import PrivateRoute from '../private';
@@ -282,31 +275,77 @@ class AdminLayout extends React.Component {
                 <AlertDescription>{SubscriptionMessage}</AlertDescription>
               </Alert>
             )}
-            <div className="px-6 py-4 border-b border-slate-200/50 dark:border-slate-700/50">
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink asChild>
-                      <NavLink
-                        to={config.BASE_ROUTE}
-                        className="text-primary hover:text-primary/80"
+            {/* Neumorphic Page Header with Breadcrumb */}
+            <div className="px-6 py-5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                {/* Page Title */}
+                <div>
+                  <h1
+                    className="text-2xl font-bold"
+                    style={{ color: 'var(--neu-text-primary, #1e3a5f)' }}
+                  >
+                    {breadcrumbName || 'Dashboard'}
+                  </h1>
+                  {/* Breadcrumb Trail */}
+                  <nav className="flex items-center gap-2 mt-2">
+                    <NavLink
+                      to={config.BASE_ROUTE}
+                      className="flex items-center gap-1.5 text-sm transition-colors hover:opacity-80"
+                      style={{ color: 'var(--neu-primary, #1e6eff)' }}
+                    >
+                      <div
+                        className="w-6 h-6 rounded-lg flex items-center justify-center"
+                        style={{
+                          background: 'var(--neu-bg, #e8eef5)',
+                          boxShadow:
+                            '2px 2px 4px var(--neu-shadow-dark, #c4c9cf), -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                        }}
                       >
-                        Home
-                      </NavLink>
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  {breadcrumbName && (
-                    <>
-                      <BreadcrumbSeparator />
-                      <BreadcrumbItem>
-                        <BreadcrumbPage className="text-slate-700 dark:text-slate-200 font-medium">
+                        <Home className="w-3.5 h-3.5" />
+                      </div>
+                      <span>Home</span>
+                    </NavLink>
+                    {breadcrumbName && (
+                      <>
+                        <ChevronRight
+                          className="w-4 h-4"
+                          style={{ color: 'var(--neu-text-muted, #98afc2)' }}
+                        />
+                        <span
+                          className="text-sm font-medium px-3 py-1 rounded-lg"
+                          style={{
+                            color: 'var(--neu-text-secondary, #3d5a80)',
+                            background: 'var(--neu-bg, #e8eef5)',
+                            boxShadow:
+                              'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                          }}
+                        >
                           {breadcrumbName}
-                        </BreadcrumbPage>
-                      </BreadcrumbItem>
-                    </>
-                  )}
-                </BreadcrumbList>
-              </Breadcrumb>
+                        </span>
+                      </>
+                    )}
+                  </nav>
+                </div>
+                {/* Optional: Date or other info on the right */}
+                <div
+                  className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl text-sm"
+                  style={{
+                    background: 'var(--neu-bg, #e8eef5)',
+                    boxShadow:
+                      '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+                    color: 'var(--neu-text-muted, #98afc2)',
+                  }}
+                >
+                  <span>
+                    {new Date().toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </span>
+                </div>
+              </div>
             </div>
             <div className="p-6">
               <Suspense fallback={Loading()}>
