@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Card, CardBody } from 'reactstrap';
-import { Scale } from 'lucide-react';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import './style.scss';
@@ -162,25 +161,8 @@ const ProfitAndLossReport = props => {
     <Card className="profit-loss-card card-margin">
       <CardBody className="tab-card">
         <div className="flex-wrapper title-bottom-border">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '10px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: 'var(--neu-bg, #e8eef5)',
-                boxShadow:
-                  '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
-              }}
-            >
-              <Scale size={18} style={{ color: 'var(--neu-warning, #f59e0b)' }} />
-            </div>
-            <h1 className="card-h1">{strings.ProfitLoss || 'Profit & Loss'}</h1>
-          </div>
-          <div className="card-header-actions ml-auto">
+          <h1 className="card-h1">{strings.ProfitLoss || 'PROFIT & LOSS'}</h1>
+          <div className="card-header-actions">
             <select
               className="form-control card-select"
               value={selectedMonths}

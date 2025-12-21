@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Card, CardBody } from 'reactstrap';
-import { TrendingUp } from 'lucide-react';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 
@@ -187,26 +186,9 @@ const PaidInvoices = props => {
     <Card className="invoice-card card-margin">
       <CardBody className="tab-card">
         <div className="flex-wrapper title-bottom-border">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '10px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: 'var(--neu-bg, #e8eef5)',
-                boxShadow:
-                  '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
-              }}
-            >
-              <TrendingUp size={18} style={{ color: 'var(--neu-secondary, #00c896)' }} />
-            </div>
-            <h1 className="card-h1">
-              {strings.SupplierCustomerPaidInvoices || 'Supplier & Customer Paid Invoices'}
-            </h1>
-          </div>
+          <h1 className="card-h1">
+            {strings.SupplierCustomerPaidInvoices || 'SUPPLIER & CUSTOMER PAID INVOICES'}
+          </h1>
         </div>
         <div className="chart-wrapper" style={{ height: '300px', marginTop: '20px' }}>
           <Line
