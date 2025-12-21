@@ -9,7 +9,9 @@ import commonReducer from '../../../services/global/common/commonSlice';
 
 // Mock the components that are used
 jest.mock('../../sections', () => ({
-  CreateCreditNoteModal: () => <div data-testid="create-credit-note-modal">Create Credit Note Modal</div>,
+  CreateCreditNoteModal: () => (
+    <div data-testid="create-credit-note-modal">Create Credit Note Modal</div>
+  ),
 }));
 
 // Mock createCN component to avoid Redux state dependencies
@@ -61,7 +63,8 @@ const createMockStore = (initialState = {}) => {
       customer_invoice: customerInvoiceReducer,
       common: commonReducer,
       // Add request_for_quotation reducer to prevent errors in createCN component
-      request_for_quotation: (state = { project_list: [], contact_list: [], currency_list: [] }) => state,
+      request_for_quotation: (state = { project_list: [], contact_list: [], currency_list: [] }) =>
+        state,
     },
     preloadedState: {
       customer_invoice: {
@@ -114,7 +117,7 @@ describe('CustomerInvoice Component', () => {
   test('renders without crashing', () => {
     const store = createMockStore();
     renderWithProviders(<CustomerInvoice history={mockHistory} />, store);
-    
+
     // Wait for initial render
     waitFor(() => {
       expect(screen.getByTestId('loader')).toBeInTheDocument();
@@ -166,4 +169,3 @@ describe('CustomerInvoice Component', () => {
     });
   });
 });
-

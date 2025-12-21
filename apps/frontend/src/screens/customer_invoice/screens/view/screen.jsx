@@ -30,7 +30,6 @@ const strings = new LocalizedStrings(data);
 
 const ViewCustomerInvoice = props => {
   const dispatch = useDispatch();
-  const profile = useSelector(state => state.auth.profile);
 
   const supplierInvoiceActions = useMemo(
     () => bindActionCreators(SupplierInvoiceActions, dispatch),

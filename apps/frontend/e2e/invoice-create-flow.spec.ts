@@ -7,21 +7,21 @@ const password = process.env.E2E_PASSWORD || 'Test@1234';
 // Helper function to perform login
 async function login(page: Page) {
   await page.goto(`${baseUrl}/login`, { waitUntil: 'domcontentloaded' });
-  
+
   // Wait for login form to be visible
-  await page.waitForSelector('input[name="username"], input#username, input#email-input', { 
+  await page.waitForSelector('input[name="username"], input#username, input#email-input', {
     timeout: 30000,
-    state: 'visible'
+    state: 'visible',
   });
 
   // Try different selectors for username field
   const usernameSelectors = [
     'input[name="username"]',
-    'input#username', 
+    'input#username',
     'input#email-input',
-    'input[type="email"]'
+    'input[type="email"]',
   ];
-  
+
   let usernameFilled = false;
   for (const selector of usernameSelectors) {
     try {
@@ -35,7 +35,7 @@ async function login(page: Page) {
       continue;
     }
   }
-  
+
   if (!usernameFilled) {
     throw new Error('Could not find username input field');
   }
@@ -45,9 +45,9 @@ async function login(page: Page) {
     'input[name="password"]',
     'input#password',
     'input#password-input',
-    'input[type="password"]'
+    'input[type="password"]',
   ];
-  
+
   let passwordFilled = false;
   for (const selector of passwordSelectors) {
     try {
@@ -61,11 +61,11 @@ async function login(page: Page) {
       continue;
     }
   }
-  
+
   if (!passwordFilled) {
     throw new Error('Could not find password input field');
   }
-  
+
   // Click login button
   const loginButton = page.getByRole('button', { name: /log in/i });
   await loginButton.click({ timeout: 30000 });
@@ -98,21 +98,29 @@ test.describe('Customer Invoice Creation Flow', () => {
 
     // Filter out non-critical warnings
     const criticalErrors = errors.filter(
-      err => 
-        !err.includes('defaultProps') && 
+      err =>
+        !err.includes('defaultProps') &&
         !err.includes('findDOMNode') &&
         !err.includes('currency is undefined') // We're fixing this
     );
 
+    // Verify no critical errors occurred
+    expect(criticalErrors.length).toBe(0);
+
     // Verify page loaded
     await expect(page.locator('body')).toBeVisible();
-    
+
     // Verify invoice list page elements exist (even if empty)
-    const pageTitle = page.locator('h1, h2, h3, h4').filter({ hasText: /invoice/i }).first();
-    await expect(pageTitle).toBeVisible({ timeout: 10000 }).catch(() => {
-      // If no title found, just verify the page loaded
-      console.log('No invoice title found, but page loaded');
-    });
+    const pageTitle = page
+      .locator('h1, h2, h3, h4')
+      .filter({ hasText: /invoice/i })
+      .first();
+    await expect(pageTitle)
+      .toBeVisible({ timeout: 10000 })
+      .catch(() => {
+        // If no title found, just verify the page loaded
+        console.log('No invoice title found, but page loaded');
+      });
   });
 
   test('should navigate to create invoice page', async ({ page }) => {
@@ -125,7 +133,9 @@ test.describe('Customer Invoice Creation Flow', () => {
     const createButton = page.getByRole('button', { name: /add.*invoice|create.*invoice/i });
     await createButton.click({ timeout: 10000 }).catch(async () => {
       // Try navigating directly if button not found
-      await page.goto(`${baseUrl}/admin/income/customer-invoice/create`, { waitUntil: 'domcontentloaded' });
+      await page.goto(`${baseUrl}/admin/income/customer-invoice/create`, {
+        waitUntil: 'domcontentloaded',
+      });
     });
 
     // Wait for create page to load
@@ -151,15 +161,19 @@ test.describe('Customer Invoice Creation Flow', () => {
 
     // Verify create invoice page loaded
     await expect(page.locator('body')).toBeVisible();
-    
+
     // Verify form fields exist
-    const invoiceNumberField = page.locator('input[id="invoice_number"], input[name="invoice_number"]').first();
+    const invoiceNumberField = page
+      .locator('input[id="invoice_number"], input[name="invoice_number"]')
+      .first();
     await expect(invoiceNumberField).toBeVisible({ timeout: 10000 });
   });
 
   test('should handle customer selection without errors', async ({ page }) => {
     // Navigate directly to create invoice page
-    await page.goto(`${baseUrl}/admin/income/customer-invoice/create`, { waitUntil: 'domcontentloaded' });
+    await page.goto(`${baseUrl}/admin/income/customer-invoice/create`, {
+      waitUntil: 'domcontentloaded',
+    });
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000); // Wait for form to fully load
 
@@ -172,8 +186,10 @@ test.describe('Customer Invoice Creation Flow', () => {
     });
 
     // Try to find and interact with customer dropdown
-    const customerSelect = page.locator('input[placeholder*="Customer"], input[id="contactId"]').first();
-    
+    const customerSelect = page
+      .locator('input[placeholder*="Customer"], input[id="contactId"]')
+      .first();
+
     try {
       if (await customerSelect.isVisible({ timeout: 5000 })) {
         await customerSelect.click({ timeout: 5000 });
@@ -184,11 +200,15 @@ test.describe('Customer Invoice Creation Flow', () => {
         if (await firstOption.isVisible({ timeout: 2000 })) {
           await firstOption.click();
           await page.waitForTimeout(3000); // Wait for selection to process and validation
-          
+
           // Check that no validation errors appeared
-          const validationErrors = page.locator('.invalid-feedback, [role="alert"]').filter({ hasText: /customer|required/i });
-          const hasValidationError = await validationErrors.isVisible({ timeout: 1000 }).catch(() => false);
-          
+          const validationErrors = page
+            .locator('.invalid-feedback, [role="alert"]')
+            .filter({ hasText: /customer|required/i });
+          const hasValidationError = await validationErrors
+            .isVisible({ timeout: 1000 })
+            .catch(() => false);
+
           expect(hasValidationError).toBe(false);
         }
       }
@@ -202,18 +222,18 @@ test.describe('Customer Invoice Creation Flow', () => {
 
     // Check for the specific errors we're fixing
     const currencyErrors = errors.filter(
-      err => 
-        err.includes('currency is undefined') || 
+      err =>
+        err.includes('currency is undefined') ||
         err.includes('customer.label.currency') ||
         err.includes('customer_list is not defined')
     );
 
     // Verify the errors don't occur
     expect(currencyErrors.length).toBe(0);
-    
+
     // Verify page is still functional
     await expect(page.locator('body')).toBeVisible();
-    
+
     // Verify form is still usable (check if invoice number field is visible)
     const invoiceNumberField = page.locator('input[id="invoice_number"]').first();
     await expect(invoiceNumberField).toBeVisible({ timeout: 5000 });
@@ -254,4 +274,3 @@ test.describe('Customer Invoice Creation Flow', () => {
     expect(tableVisible || emptyVisible || true).toBeTruthy(); // Page loads successfully
   });
 });
-

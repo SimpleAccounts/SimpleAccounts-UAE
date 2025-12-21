@@ -561,10 +561,10 @@ function CustomerInvoice() {
   // Transform data for table
   const tableData = useMemo(() => {
     // Handle both array and object with data property
-    const invoiceList = Array.isArray(customer_invoice_list) 
-      ? customer_invoice_list 
+    const invoiceList = Array.isArray(customer_invoice_list)
+      ? customer_invoice_list
       : customer_invoice_list?.data || [];
-    
+
     if (!invoiceList || invoiceList.length === 0) return [];
     return invoiceList.map(customer => ({
       id: customer.id,

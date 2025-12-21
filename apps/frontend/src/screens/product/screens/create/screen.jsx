@@ -317,7 +317,7 @@ const CreateProduct = ({
     // Dispatch async thunks directly using dispatch (RTK async thunks need to be dispatched)
     dispatch(getProductVatCategoryList());
     dispatch(getProductCategoryList());
-    
+
     // Regular async functions - call directly (not through bindActionCreators)
     // These are utility functions, not Redux actions, so don't dispatch them
     getExciseTaxList().then(res => {
@@ -330,7 +330,7 @@ const CreateProduct = ({
         setUnitTypeList(res.data);
       }
     });
-    
+
     supplierInvoiceActions.getSupplierList(contactType);
   };
 

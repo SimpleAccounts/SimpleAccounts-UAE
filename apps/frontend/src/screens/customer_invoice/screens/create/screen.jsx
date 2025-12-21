@@ -90,20 +90,23 @@ if (localStorage.getItem('language') == null) {
 const createCustomerInvoiceSchema = z
   .object({
     invoice_number: z.string().min(1, 'Invoice number is required'),
-    contactId: z.union([
-      z.string().min(1, 'Customer Name is required'),
-      z.number().positive('Customer Name is required'),
-      z.object({ value: z.union([z.string(), z.number()]), label: z.string() }),
-    ]).refine(
-      val => {
-        // Accept string, number, or object with value
-        if (typeof val === 'string') return val.length > 0;
-        if (typeof val === 'number') return val > 0;
-        if (typeof val === 'object' && val !== null) return val.value !== undefined && val.value !== null && val.value !== '';
-        return false;
-      },
-      { message: 'Customer Name is required' }
-    ),
+    contactId: z
+      .union([
+        z.string().min(1, 'Customer Name is required'),
+        z.number().positive('Customer Name is required'),
+        z.object({ value: z.union([z.string(), z.number()]), label: z.string() }),
+      ])
+      .refine(
+        val => {
+          // Accept string, number, or object with value
+          if (typeof val === 'string') return val.length > 0;
+          if (typeof val === 'number') return val > 0;
+          if (typeof val === 'object' && val !== null)
+            return val.value !== undefined && val.value !== null && val.value !== '';
+          return false;
+        },
+        { message: 'Customer Name is required' }
+      ),
     term: z
       .union([
         z.string().min(1, 'Term is required'),
@@ -894,27 +897,36 @@ const CreateCustomerInvoice = ({
 
   const setContactDetails = customerID => {
     if (!customerID) return;
-    
-    // Handle both number and object formats
-    const customerIdValue = typeof customerID === 'object' && customerID !== null ? customerID.value : customerID;
+
+    // Normalize customerID to a scalar value (handle both object and primitive formats)
+    // Use stricter check: only treat as object if it has a 'value' property
+    const customerIdValue =
+      customerID && typeof customerID === 'object' && 'value' in customerID
+        ? customerID.value
+        : customerID;
     setValue('contactId', customerIdValue, { shouldValidate: true });
-    
+
     // Find customer from original customer_list (not dropdown) to get full structure
     if (!customer_list || !Array.isArray(customer_list)) return;
-    
+
     const customer = customer_list.find(
-      obj => obj.value === customerIdValue || 
-             obj.contactId === customerIdValue ||
-             (obj.label && (obj.label.value === customerIdValue || obj.label.contactId === customerIdValue))
+      obj =>
+        obj.value === customerIdValue ||
+        obj.contactId === customerIdValue ||
+        (obj.label &&
+          (obj.label.value === customerIdValue || obj.label.contactId === customerIdValue))
     );
     if (customer) {
       // Safely access nested properties with optional chaining
       const customerLabel = customer.label || customer;
-      const currencyCode = customerLabel?.currency?.currencyCode || customerLabel?.currencyCode || null;
-      const taxTreatment = customerLabel?.taxTreatment?.taxTreatment || customerLabel?.taxTreatment || null;
-      
-      setContactId(customerID);
-      
+      const currencyCode =
+        customerLabel?.currency?.currencyCode || customerLabel?.currencyCode || null;
+      const taxTreatment =
+        customerLabel?.taxTreatment?.taxTreatment || customerLabel?.taxTreatment || null;
+
+      // Use normalized customerIdValue consistently
+      setContactId(customerIdValue);
+
       if (taxTreatment) {
         setTaxTreatmentId(taxTreatment);
         setEnablePlaceOfSupply(
@@ -925,11 +937,12 @@ const CreateCustomerInvoice = ({
           )
         );
         setValue('taxTreatmentId', taxTreatment, { shouldValidate: true });
-        getContactShippingAddress(customerID, taxTreatment);
+        // Use normalized customerIdValue consistently
+        getContactShippingAddress(customerIdValue, taxTreatment);
       } else {
         setValue('taxTreatmentId', '', { shouldValidate: true });
       }
-      
+
       if (currencyCode) {
         setCurrency(currencyCode);
       }
@@ -966,506 +979,481 @@ const CreateCustomerInvoice = ({
                     <Col lg={12}>
                       <FormProvider {...form}>
                         <Form onSubmit={handleSubmit(onSubmit)}>
-                        <Row>
-                          <Col lg={3}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="invoice_number">
-                                <span className="text-danger">* </span>
-                                {strings.InvoiceNumber}
-                              </Label>
-                              <Controller
-                                name="invoice_number"
-                                control={control}
-                                render={({ field }) => (
-                                  <Input
-                                    {...field}
-                                    type="text"
-                                    maxLength="50"
-                                    id="invoice_number"
-                                    placeholder={strings.InvoiceNumber}
-                                    onChange={option => {
-                                      if (
-                                        option.target.value === '' ||
-                                        regExInvNum.test(option.target.value)
-                                      ) {
-                                        field.onChange(option);
-                                      }
-                                    }}
-                                    className={errors.invoice_number ? 'is-invalid' : ''}
-                                  />
-                                )}
-                              />
-                              {errors.invoice_number && (
-                                <div className="invalid-feedback">
-                                  {errors.invoice_number.message}
-                                </div>
-                              )}
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                          <Col lg={3}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="contactId">
-                                <span className="text-danger">* </span>
-                                {strings.CustomerName}
-                              </Label>
-                              <Controller
-                                name="contactId"
-                                control={control}
-                                render={({ field }) => (
-                                  <Select
-                                    {...field}
-                                    isDisabled={isQuotationSelected}
-                                    id="contactId"
-                                    placeholder={strings.Select + strings.CustomerName}
-                                    options={customer_list_dropdown}
-                                    value={
-                                      field.value?.value
-                                        ? field.value
-                                        : customer_list_dropdown.find(
-                                            option => option.value == field.value
-                                          )
-                                    }
-                                    onChange={option => {
-                                      // Pass the full option object to field.onChange for validation
-                                      field.onChange(option);
-                                      // Pass the value (could be number) to setContactDetails
-                                      if (option) {
-                                        setContactDetails(option.value || option);
-                                      }
-                                    }}
-                                    styles={selectStyles}
-                                    className={errors.contactId ? 'is-invalid' : ''}
-                                  />
-                                )}
-                              />
-                              {errors.contactId && (
-                                <div className="invalid-feedback d-block">
-                                  {errors.contactId.message}
-                                </div>
-                              )}
-                            </FormGroup>
-                          </Col>
-                          {quotationId ? (
-                            ''
-                          ) : (
-                            <Col lg={3}>
-                              <Label htmlFor="contactId" style={{ display: 'block' }}>
-                                {strings.AddNewCustomer}
-                              </Label>
-                              <Button
-                                type="button"
-                                color="primary"
-                                className="btn-square mr-3 mb-3"
-                                onClick={openCustomerModalHandler}
-                              >
-                                <Plus className="h-4 w-4" /> {strings.AddACustomer}
-                              </Button>
-                            </Col>
-                          )}
-                          {isRegisteredVat && (
+                          <Row>
                             <Col lg={3}>
                               <FormGroup className="mb-3">
-                                <Label htmlFor="taxTreatmentId">{strings.TaxTreatment}</Label>
+                                <Label htmlFor="invoice_number">
+                                  <span className="text-danger">* </span>
+                                  {strings.InvoiceNumber}
+                                </Label>
                                 <Controller
-                                  name="taxTreatmentId"
+                                  name="invoice_number"
                                   control={control}
                                   render={({ field }) => (
-                                    <Select
+                                    <Input
                                       {...field}
-                                      options={
-                                        taxTreatmentList
-                                          ? selectOptionsFactory.renderOptions(
-                                              'name',
-                                              'id',
-                                              taxTreatmentList,
-                                              'VAT'
-                                            )
-                                          : []
-                                      }
-                                      isDisabled={true}
-                                      id="taxTreatmentId"
-                                      placeholder={strings.Select + strings.TaxTreatment}
-                                      value={
-                                        taxTreatmentList &&
-                                        selectOptionsFactory
-                                          .renderOptions('name', 'id', taxTreatmentList, 'VAT')
-                                          .find(option => option.label === field.value)
-                                      }
-                                      styles={selectStyles}
-                                      className={errors.taxTreatmentId ? 'is-invalid' : ''}
+                                      type="text"
+                                      maxLength="50"
+                                      id="invoice_number"
+                                      placeholder={strings.InvoiceNumber}
+                                      onChange={option => {
+                                        if (
+                                          option.target.value === '' ||
+                                          regExInvNum.test(option.target.value)
+                                        ) {
+                                          field.onChange(option);
+                                        }
+                                      }}
+                                      className={errors.invoice_number ? 'is-invalid' : ''}
                                     />
                                   )}
                                 />
-                                {errors.taxTreatmentId && (
-                                  <div className="invalid-feedback d-block">
-                                    {errors.taxTreatmentId.message}
+                                {errors.invoice_number && (
+                                  <div className="invalid-feedback">
+                                    {errors.invoice_number.message}
                                   </div>
                                 )}
                               </FormGroup>
                             </Col>
-                          )}
-                          <Col lg={3}>
-                            {enablePlaceOfSupply && (
+                          </Row>
+                          <hr />
+                          <Row>
+                            <Col lg={3}>
                               <FormGroup className="mb-3">
-                                <Label htmlFor="placeOfSupplyId">
+                                <Label htmlFor="contactId">
                                   <span className="text-danger">* </span>
-                                  {strings.PlaceofSupply}
+                                  {strings.CustomerName}
                                 </Label>
                                 <Controller
-                                  name="placeOfSupplyId"
+                                  name="contactId"
                                   control={control}
                                   render={({ field }) => (
                                     <Select
                                       {...field}
                                       isDisabled={isQuotationSelected}
-                                      id="placeOfSupplyId"
-                                      placeholder={strings.Select + strings.PlaceofSupply}
-                                      options={placeList}
+                                      id="contactId"
+                                      placeholder={strings.Select + strings.CustomerName}
+                                      options={customer_list_dropdown}
                                       value={
                                         field.value?.value
                                           ? field.value
-                                          : placeList.find(option => option.value == field.value)
+                                          : customer_list_dropdown.find(
+                                              option => option.value == field.value
+                                            )
                                       }
                                       onChange={option => {
-                                        field.onChange(option.value);
-                                        setPlaceOfSupplyId(option.value);
+                                        // Pass the full option object to field.onChange for validation
+                                        field.onChange(option);
+                                        // Pass the value (could be number) to setContactDetails
+                                        if (option) {
+                                          setContactDetails(option.value || option);
+                                        }
                                       }}
                                       styles={selectStyles}
-                                      className={errors.placeOfSupplyId ? 'is-invalid' : ''}
+                                      className={errors.contactId ? 'is-invalid' : ''}
                                     />
                                   )}
                                 />
-                                {errors.placeOfSupplyId && (
+                                {errors.contactId && (
                                   <div className="invalid-feedback d-block">
-                                    {errors.placeOfSupplyId.message}
+                                    {errors.contactId.message}
                                   </div>
                                 )}
                               </FormGroup>
-                            )}
-                          </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                          <TermDateInput
-                            fields={{
-                              term: {
-                                values: term ?? '',
-                                errors: errors.term,
-                                touched: true,
-                                label: strings.Terms,
-                                required: true,
-                                disabled: false,
-                                name: 'term',
-                                placeholder: strings.Terms,
-                              },
-                              invoiceDate: {
-                                values: watch('invoiceDate'),
-                                errors: errors.invoiceDate,
-                                touched: true,
-                                label: strings.InvoiceDate,
-                                required: true,
-                                disabled: false,
-                                name: 'invoiceDate',
-                                placeholder: strings.Select + strings.InvoiceDate,
-                                minDate: quotationDate,
-                              },
-                              invoiceDueDate: {
-                                values: watch('invoiceDueDate'),
-                                errors: errors.invoiceDueDate,
-                                touched: true,
-                                label: strings.InvoiceDueDate,
-                                required: true,
-                                disabled: true,
-                                name: 'invoiceDueDate',
-                                placeholder: strings.InvoiceDueDate,
-                              },
-                            }}
-                            onChange={(field, value) => {
-                              if (field === 'term') setTerm(value);
-                              else if (field === 'invoiceDate') {
-                                if (dayjs(value).isBefore(dayjs(companyVATRegistrationDate))) {
-                                  setInvoiceBeforeVatRegistration(true);
-                                  resetProductTableValues();
-                                } else {
-                                  setInvoiceBeforeVatRegistration(false);
-                                  resetProductTableValues();
-                                }
-                              }
-                              setValue(field, value);
-                            }}
-                          />
-                          <Col lg={3}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="currencyCode">
-                                <span className="text-danger">* </span>
-                                {strings.Currency}
-                              </Label>
-                              <Controller
-                                name="currencyCode"
-                                control={control}
-                                render={({ field }) => (
-                                  <Select
-                                    {...field}
-                                    placeholder={strings.Select + strings.Currency}
-                                    options={currency_list_dropdown}
-                                    value={
-                                      field.value?.values
-                                        ? field.value
-                                        : currency_list_dropdown.find(
-                                            option => option.value === field.value
-                                          )
-                                    }
-                                    onChange={option => {
-                                      field.onChange(option);
-                                      setCurrency(option.value, watch('exchangeRate'));
-                                    }}
-                                    styles={selectStyles}
-                                    className={errors.currencyCode ? 'is-invalid' : ''}
-                                  />
-                                )}
-                              />
-                              {errors.currencyCode && (
-                                <div className="invalid-feedback d-block">
-                                  {errors.currencyCode.message}
-                                </div>
-                              )}
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                          <Col>
-                            <FormGroup check inline className="mb-3">
-                              <div>
-                                <Controller
-                                  name="changeShippingAddress"
-                                  control={control}
-                                  render={({ field }) => (
-                                    <Input
-                                      {...field}
-                                      type="checkbox"
-                                      id="inline-radio1"
-                                      checked={field.value}
-                                      onChange={value => {
-                                        if (value !== null) {
-                                          field.onChange(value);
-                                        } else {
-                                          field.onChange('');
-                                        }
-                                      }}
-                                    />
-                                  )}
-                                />
-                                <label htmlFor="inline-radio1">
-                                  {strings.noteforchangeaddress}
-                                </label>
-                              </div>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-
-                        <Row
-                          style={{
-                            display: watch('changeShippingAddress') === true ? '' : 'none',
-                          }}
-                        >
-                          <AddressComponent
-                            values={watch('shippingAddress') || {}}
-                            errors={errors.shippingAddress || {}}
-                            touched={true}
-                            onChange={(field, value) => {
-                              setValue(`shippingAddress.${field}`, value);
-                            }}
-                            country_list={country_list}
-                            addressType={strings.Shipping}
-                            disabled={{
-                              email: false,
-                              city: false,
-                              countryId: false,
-                              address: false,
-                              postZipCode: false,
-                              stateId: false,
-                              telephone: false,
-                              fax: false,
-                            }}
-                          />
-                        </Row>
-                        <hr />
-                        <CurrencyExchangeRate
-                          strings={strings}
-                          currencyName={watch('currencyName')}
-                          exchangeRate={watch('exchangeRate')}
-                          onChange={value => {
-                            resetProductTableValues(value, watch('exchangeRate'));
-                            setValue('exchangeRate', value);
-                          }}
-                        />
-                        <Row className="mb-3">
-                          <Col lg={8} className="mb-3">
+                            </Col>
                             {quotationId ? (
                               ''
                             ) : (
-                              <Button
-                                color="primary"
-                                className="btn-square mr-3"
-                                onClick={openProductModalHandler}
-                              >
-                                <Plus className="h-4 w-4" /> {strings.Addproduct}
-                              </Button>
+                              <Col lg={3}>
+                                <Label htmlFor="contactId" style={{ display: 'block' }}>
+                                  {strings.AddNewCustomer}
+                                </Label>
+                                <Button
+                                  type="button"
+                                  color="primary"
+                                  className="btn-square mr-3 mb-3"
+                                  onClick={openCustomerModalHandler}
+                                >
+                                  <Plus className="h-4 w-4" /> {strings.AddACustomer}
+                                </Button>
+                              </Col>
                             )}
-                          </Col>
-
-                          <Col>
-                            {taxType === false ? (
-                              <span style={{ color: '#0069d9' }} className="mr-4">
-                                <b>{strings.Exclusive}</b>
-                              </span>
-                            ) : (
-                              <span className="mr-4">{strings.Exclusive}</span>
+                            {isRegisteredVat && (
+                              <Col lg={3}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="taxTreatmentId">{strings.TaxTreatment}</Label>
+                                  <Controller
+                                    name="taxTreatmentId"
+                                    control={control}
+                                    render={({ field }) => (
+                                      <Select
+                                        {...field}
+                                        options={
+                                          taxTreatmentList
+                                            ? selectOptionsFactory.renderOptions(
+                                                'name',
+                                                'id',
+                                                taxTreatmentList,
+                                                'VAT'
+                                              )
+                                            : []
+                                        }
+                                        isDisabled={true}
+                                        id="taxTreatmentId"
+                                        placeholder={strings.Select + strings.TaxTreatment}
+                                        value={
+                                          taxTreatmentList &&
+                                          selectOptionsFactory
+                                            .renderOptions('name', 'id', taxTreatmentList, 'VAT')
+                                            .find(option => option.label === field.value)
+                                        }
+                                        styles={selectStyles}
+                                        className={errors.taxTreatmentId ? 'is-invalid' : ''}
+                                      />
+                                    )}
+                                  />
+                                  {errors.taxTreatmentId && (
+                                    <div className="invalid-feedback d-block">
+                                      {errors.taxTreatmentId.message}
+                                    </div>
+                                  )}
+                                </FormGroup>
+                              </Col>
                             )}
-                            <Switch
-                              value={taxType}
-                              checked={taxType}
-                              onChange={newTaxType => {
-                                setTaxType(newTaxType);
-                                updateAmount(data);
+                            <Col lg={3}>
+                              {enablePlaceOfSupply && (
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="placeOfSupplyId">
+                                    <span className="text-danger">* </span>
+                                    {strings.PlaceofSupply}
+                                  </Label>
+                                  <Controller
+                                    name="placeOfSupplyId"
+                                    control={control}
+                                    render={({ field }) => (
+                                      <Select
+                                        {...field}
+                                        isDisabled={isQuotationSelected}
+                                        id="placeOfSupplyId"
+                                        placeholder={strings.Select + strings.PlaceofSupply}
+                                        options={placeList}
+                                        value={
+                                          field.value?.value
+                                            ? field.value
+                                            : placeList.find(option => option.value == field.value)
+                                        }
+                                        onChange={option => {
+                                          field.onChange(option.value);
+                                          setPlaceOfSupplyId(option.value);
+                                        }}
+                                        styles={selectStyles}
+                                        className={errors.placeOfSupplyId ? 'is-invalid' : ''}
+                                      />
+                                    )}
+                                  />
+                                  {errors.placeOfSupplyId && (
+                                    <div className="invalid-feedback d-block">
+                                      {errors.placeOfSupplyId.message}
+                                    </div>
+                                  )}
+                                </FormGroup>
+                              )}
+                            </Col>
+                          </Row>
+                          <hr />
+                          <Row>
+                            <TermDateInput
+                              fields={{
+                                term: {
+                                  values: term ?? '',
+                                  errors: errors.term,
+                                  touched: true,
+                                  label: strings.Terms,
+                                  required: true,
+                                  disabled: false,
+                                  name: 'term',
+                                  placeholder: strings.Terms,
+                                },
+                                invoiceDate: {
+                                  values: watch('invoiceDate'),
+                                  errors: errors.invoiceDate,
+                                  touched: true,
+                                  label: strings.InvoiceDate,
+                                  required: true,
+                                  disabled: false,
+                                  name: 'invoiceDate',
+                                  placeholder: strings.Select + strings.InvoiceDate,
+                                  minDate: quotationDate,
+                                },
+                                invoiceDueDate: {
+                                  values: watch('invoiceDueDate'),
+                                  errors: errors.invoiceDueDate,
+                                  touched: true,
+                                  label: strings.InvoiceDueDate,
+                                  required: true,
+                                  disabled: true,
+                                  name: 'invoiceDueDate',
+                                  placeholder: strings.InvoiceDueDate,
+                                },
                               }}
-                              onColor="#2064d8"
-                              onHandleColor="#2693e6"
-                              handleDiameter={25}
-                              uncheckedIcon={false}
-                              checkedIcon={false}
-                              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                              height={20}
-                              width={48}
-                              className="react-switch "
-                            />
-                            {taxType === true ? (
-                              <span style={{ color: '#0069d9' }} className="ml-4">
-                                <b>{strings.Inclusive}</b>
-                              </span>
-                            ) : (
-                              <span className="ml-4">{strings.Inclusive}</span>
-                            )}
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={12}>
-                            <ProductTable
-                              data={data}
-                              initValue={watch()}
-                              isRegisteredVat={isRegisteredVat}
-                              universal_currency_list={universal_currency_list}
-                              setData={newData => {
-                                setData(newData);
-                                setValue('lineItemsString', newData, { shouldValidate: true });
-                              }}
-                              setIdCount={newIdCount => {
-                                setIdCount(newIdCount);
-                              }}
-                              props={{ values: watch(), errors, touched: {} }}
-                              strings={strings}
-                              vat_list={vat_list}
-                              product_list={product_list}
-                              excise_list={excise_list}
-                              discountEnabled={discountEnabled}
-                              idCount={idCount}
-                              updateAmount={updateAmount}
-                              enableAccount={false}
-                              exchangeRate={watch('exchangeRate')}
-                              disableVat={invoiceBeforeVatRegistration || !isRegisteredVat}
-                              getProductType={id => {
-                                const vatList = getProductType(id);
-                                return vatList;
-                              }}
-                            />
-                          </Col>
-                        </Row>
-
-                        <Row className="ml-4 ">
-                          <Col className=" ml-4">
-                            <FormGroup className="pull-right">
-                              <Input
-                                type="checkbox"
-                                id="discountEnabled"
-                                checked={discountEnabled}
-                                onChange={() => {
-                                  if (watch('discount') > 0) {
-                                    setDiscountEnabled(true);
-                                  } else {
-                                    setDiscountEnabled(!discountEnabled);
-                                  }
-                                }}
-                              />
-                              <Label>{strings.ApplyLineItemDiscount}</Label>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={8}>
-                            <InvoiceAdditionaNotesInformation
-                              notesValue={watch('notes')}
-                              notesLabel={strings.Notes}
-                              notesPlaceholder={strings.DeliveryNotes}
                               onChange={(field, value) => {
+                                if (field === 'term') setTerm(value);
+                                else if (field === 'invoiceDate') {
+                                  if (dayjs(value).isBefore(dayjs(companyVATRegistrationDate))) {
+                                    setInvoiceBeforeVatRegistration(true);
+                                    resetProductTableValues();
+                                  } else {
+                                    setInvoiceBeforeVatRegistration(false);
+                                    resetProductTableValues();
+                                  }
+                                }
                                 setValue(field, value);
                               }}
-                              referenceNumberLabel={strings.ReferenceNumber}
-                              referenceNumberPlaceholder={strings.ReceiptNumber}
-                              referenceNumberValue={watch('receiptNumber')}
-                              referenceNumber={true}
-                              notes={true}
-                              footNotePlaceholder={strings.PaymentDetails}
-                              footNoteLabel={strings.Footnote}
-                              footNoteValue={watch('footNote')}
-                              footNote={true}
                             />
-                          </Col>
-                          <Col lg={4}>
-                            <TotalCalculation
-                              initValue={watch()}
-                              currency_symbol={watch('currencyIsoCode')}
-                              isRegisteredVat={isRegisteredVat}
-                              strings={strings}
-                              discountEnabled={discountEnabled}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col
-                            lg={12}
-                            className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
+                            <Col lg={3}>
+                              <FormGroup className="mb-3">
+                                <Label htmlFor="currencyCode">
+                                  <span className="text-danger">* </span>
+                                  {strings.Currency}
+                                </Label>
+                                <Controller
+                                  name="currencyCode"
+                                  control={control}
+                                  render={({ field }) => (
+                                    <Select
+                                      {...field}
+                                      placeholder={strings.Select + strings.Currency}
+                                      options={currency_list_dropdown}
+                                      value={
+                                        field.value?.values
+                                          ? field.value
+                                          : currency_list_dropdown.find(
+                                              option => option.value === field.value
+                                            )
+                                      }
+                                      onChange={option => {
+                                        field.onChange(option);
+                                        setCurrency(option.value, watch('exchangeRate'));
+                                      }}
+                                      styles={selectStyles}
+                                      className={errors.currencyCode ? 'is-invalid' : ''}
+                                    />
+                                  )}
+                                />
+                                {errors.currencyCode && (
+                                  <div className="invalid-feedback d-block">
+                                    {errors.currencyCode.message}
+                                  </div>
+                                )}
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                          <hr />
+                          <Row>
+                            <Col>
+                              <FormGroup check inline className="mb-3">
+                                <div>
+                                  <Controller
+                                    name="changeShippingAddress"
+                                    control={control}
+                                    render={({ field }) => (
+                                      <Input
+                                        {...field}
+                                        type="checkbox"
+                                        id="inline-radio1"
+                                        checked={field.value}
+                                        onChange={value => {
+                                          if (value !== null) {
+                                            field.onChange(value);
+                                          } else {
+                                            field.onChange('');
+                                          }
+                                        }}
+                                      />
+                                    )}
+                                  />
+                                  <label htmlFor="inline-radio1">
+                                    {strings.noteforchangeaddress}
+                                  </label>
+                                </div>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+
+                          <Row
+                            style={{
+                              display: watch('changeShippingAddress') === true ? '' : 'none',
+                            }}
                           >
-                            <FormGroup className="text-right w-100">
-                              <Button
-                                type="submit"
-                                color="primary"
-                                className="btn-square mr-3"
-                                disabled={disabled}
-                                onClick={() => {
-                                  if (data.length === 1) {
-                                    if (errors && Object.keys(errors).length != 0) {
-                                      commonActions.fillManDatoryDetails();
-                                    }
-                                  } else {
-                                    let newData = [];
-                                    newData = data.filter(obj => obj.productId !== '');
-                                    setValue('lineItemsString', newData, { shouldValidate: true });
-                                    updateAmount(newData);
-                                  }
-                                  setCreateMore(false);
-                                }}
-                              >
-                                <CircleDot className="h-4 w-4" />{' '}
-                                {disabled ? 'Creating...' : strings.Create}
-                              </Button>
-                              {quotationId || parentInvoiceId ? (
+                            <AddressComponent
+                              values={watch('shippingAddress') || {}}
+                              errors={errors.shippingAddress || {}}
+                              touched={true}
+                              onChange={(field, value) => {
+                                setValue(`shippingAddress.${field}`, value);
+                              }}
+                              country_list={country_list}
+                              addressType={strings.Shipping}
+                              disabled={{
+                                email: false,
+                                city: false,
+                                countryId: false,
+                                address: false,
+                                postZipCode: false,
+                                stateId: false,
+                                telephone: false,
+                                fax: false,
+                              }}
+                            />
+                          </Row>
+                          <hr />
+                          <CurrencyExchangeRate
+                            strings={strings}
+                            currencyName={watch('currencyName')}
+                            exchangeRate={watch('exchangeRate')}
+                            onChange={value => {
+                              resetProductTableValues(value, watch('exchangeRate'));
+                              setValue('exchangeRate', value);
+                            }}
+                          />
+                          <Row className="mb-3">
+                            <Col lg={8} className="mb-3">
+                              {quotationId ? (
                                 ''
                               ) : (
+                                <Button
+                                  color="primary"
+                                  className="btn-square mr-3"
+                                  onClick={openProductModalHandler}
+                                >
+                                  <Plus className="h-4 w-4" /> {strings.Addproduct}
+                                </Button>
+                              )}
+                            </Col>
+
+                            <Col>
+                              {taxType === false ? (
+                                <span style={{ color: '#0069d9' }} className="mr-4">
+                                  <b>{strings.Exclusive}</b>
+                                </span>
+                              ) : (
+                                <span className="mr-4">{strings.Exclusive}</span>
+                              )}
+                              <Switch
+                                value={taxType}
+                                checked={taxType}
+                                onChange={newTaxType => {
+                                  setTaxType(newTaxType);
+                                  updateAmount(data);
+                                }}
+                                onColor="#2064d8"
+                                onHandleColor="#2693e6"
+                                handleDiameter={25}
+                                uncheckedIcon={false}
+                                checkedIcon={false}
+                                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                                height={20}
+                                width={48}
+                                className="react-switch "
+                              />
+                              {taxType === true ? (
+                                <span style={{ color: '#0069d9' }} className="ml-4">
+                                  <b>{strings.Inclusive}</b>
+                                </span>
+                              ) : (
+                                <span className="ml-4">{strings.Inclusive}</span>
+                              )}
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col lg={12}>
+                              <ProductTable
+                                data={data}
+                                initValue={watch()}
+                                isRegisteredVat={isRegisteredVat}
+                                universal_currency_list={universal_currency_list}
+                                setData={newData => {
+                                  setData(newData);
+                                  setValue('lineItemsString', newData, { shouldValidate: true });
+                                }}
+                                setIdCount={newIdCount => {
+                                  setIdCount(newIdCount);
+                                }}
+                                props={{ values: watch(), errors, touched: {} }}
+                                strings={strings}
+                                vat_list={vat_list}
+                                product_list={product_list}
+                                excise_list={excise_list}
+                                discountEnabled={discountEnabled}
+                                idCount={idCount}
+                                updateAmount={updateAmount}
+                                enableAccount={false}
+                                exchangeRate={watch('exchangeRate')}
+                                disableVat={invoiceBeforeVatRegistration || !isRegisteredVat}
+                                getProductType={id => {
+                                  const vatList = getProductType(id);
+                                  return vatList;
+                                }}
+                              />
+                            </Col>
+                          </Row>
+
+                          <Row className="ml-4 ">
+                            <Col className=" ml-4">
+                              <FormGroup className="pull-right">
+                                <Input
+                                  type="checkbox"
+                                  id="discountEnabled"
+                                  checked={discountEnabled}
+                                  onChange={() => {
+                                    if (watch('discount') > 0) {
+                                      setDiscountEnabled(true);
+                                    } else {
+                                      setDiscountEnabled(!discountEnabled);
+                                    }
+                                  }}
+                                />
+                                <Label>{strings.ApplyLineItemDiscount}</Label>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col lg={8}>
+                              <InvoiceAdditionaNotesInformation
+                                notesValue={watch('notes')}
+                                notesLabel={strings.Notes}
+                                notesPlaceholder={strings.DeliveryNotes}
+                                onChange={(field, value) => {
+                                  setValue(field, value);
+                                }}
+                                referenceNumberLabel={strings.ReferenceNumber}
+                                referenceNumberPlaceholder={strings.ReceiptNumber}
+                                referenceNumberValue={watch('receiptNumber')}
+                                referenceNumber={true}
+                                notes={true}
+                                footNotePlaceholder={strings.PaymentDetails}
+                                footNoteLabel={strings.Footnote}
+                                footNoteValue={watch('footNote')}
+                                footNote={true}
+                              />
+                            </Col>
+                            <Col lg={4}>
+                              <TotalCalculation
+                                initValue={watch()}
+                                currency_symbol={watch('currencyIsoCode')}
+                                isRegisteredVat={isRegisteredVat}
+                                strings={strings}
+                                discountEnabled={discountEnabled}
+                              />
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col
+                              lg={12}
+                              className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
+                            >
+                              <FormGroup className="text-right w-100">
                                 <Button
                                   type="submit"
                                   color="primary"
@@ -1484,32 +1472,59 @@ const CreateCustomerInvoice = ({
                                       });
                                       updateAmount(newData);
                                     }
-                                    setCreateMore(true);
+                                    setCreateMore(false);
                                   }}
                                 >
-                                  <RefreshCw className="h-4 w-4" />
-                                  {disabled ? 'Creating...' : strings.CreateandMore}
+                                  <CircleDot className="h-4 w-4" />{' '}
+                                  {disabled ? 'Creating...' : strings.Create}
                                 </Button>
-                              )}
-                              <Button
-                                color="secondary"
-                                className="btn-square"
-                                onClick={() => {
-                                  if (location?.state?.renderURL) {
-                                    history.push(`${location?.state?.renderURL}`, {
-                                      id: location?.state?.renderID,
-                                    });
-                                  } else {
-                                    history.push('/admin/income/customer-invoice');
-                                  }
-                                }}
-                              >
-                                <Ban className="h-4 w-4" />
-                                {strings.Cancel}
-                              </Button>
-                            </FormGroup>
-                          </Col>
-                        </Row>
+                                {quotationId || parentInvoiceId ? (
+                                  ''
+                                ) : (
+                                  <Button
+                                    type="submit"
+                                    color="primary"
+                                    className="btn-square mr-3"
+                                    disabled={disabled}
+                                    onClick={() => {
+                                      if (data.length === 1) {
+                                        if (errors && Object.keys(errors).length != 0) {
+                                          commonActions.fillManDatoryDetails();
+                                        }
+                                      } else {
+                                        let newData = [];
+                                        newData = data.filter(obj => obj.productId !== '');
+                                        setValue('lineItemsString', newData, {
+                                          shouldValidate: true,
+                                        });
+                                        updateAmount(newData);
+                                      }
+                                      setCreateMore(true);
+                                    }}
+                                  >
+                                    <RefreshCw className="h-4 w-4" />
+                                    {disabled ? 'Creating...' : strings.CreateandMore}
+                                  </Button>
+                                )}
+                                <Button
+                                  color="secondary"
+                                  className="btn-square"
+                                  onClick={() => {
+                                    if (location?.state?.renderURL) {
+                                      history.push(`${location?.state?.renderURL}`, {
+                                        id: location?.state?.renderID,
+                                      });
+                                    } else {
+                                      history.push('/admin/income/customer-invoice');
+                                    }
+                                  }}
+                                >
+                                  <Ban className="h-4 w-4" />
+                                  {strings.Cancel}
+                                </Button>
+                              </FormGroup>
+                            </Col>
+                          </Row>
                         </Form>
                       </FormProvider>
                     </Col>

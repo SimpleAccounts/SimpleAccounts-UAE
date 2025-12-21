@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import * as ProductActions from '../../product/actions';
 import '../../product/screens/create/style.scss';
-import { toast } from 'sonner';
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
 import CreateProduct from '../../product/screens/create/screen';
