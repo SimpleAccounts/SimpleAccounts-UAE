@@ -275,7 +275,7 @@ class AdminLayout extends React.Component {
         />
         <div className="flex flex-1">
           <Sidebar items={finalArray.items} pathname={pathname} minimized={sidebarMinimized} />
-          <main className="flex-1 overflow-y-auto bg-gray-50">
+          <main className="flex-1 overflow-y-auto overflow-x-hidden" style={{ backgroundColor: '#dfe9f7' }}>
             {SubscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
               <Alert variant="destructive" className="m-4">
                 <AlertDescription>{SubscriptionMessage}</AlertDescription>
@@ -300,7 +300,7 @@ class AdminLayout extends React.Component {
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
-            <div className="p-6 bg-gray-50">
+            <div className="p-6" style={{ backgroundColor: '#dfe9f7' }}>
               <Suspense fallback={Loading()}>
                 <Toaster position="top-right" duration={1700} />
                 <Routes>

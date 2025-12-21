@@ -488,14 +488,14 @@ class Expense extends React.Component {
     return loading == true ? (
       <Loader loadingMsg={loadingMsg} />
     ) : (
-      <div>
-        <div className="expense-screen">
+      <div className="w-full">
+        <div className="expense-screen w-full">
           <div className="animated fadeIn">
             {dialog}
             <Card>
               <CardHeader>
-                <div className="grid grid-cols-12 gap-4">
-                  <div lg={12}>
+                <div className="grid grid-cols-12 gap-4 w-full">
+                  <div className="col-span-12">
                     <div className="h4 mb-0 d-flex align-items-center">
                       <i className="fab fa-stack-exchange" />
                       <span className="ml-2">{strings.Expenses}</span>
@@ -503,20 +503,20 @@ class Expense extends React.Component {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="w-full">
                 {loading && (
-                  <div className="grid grid-cols-12 gap-4">
-                    <div lg={12} className="rounded-loader">
+                  <div className="grid grid-cols-12 gap-4 w-full">
+                    <div className="col-span-12 rounded-loader">
                       <Loader />
                     </div>
                   </div>
                 )}
-                <div className="grid grid-cols-12 gap-4">
-                  <div lg={12}>
+                <div className="grid grid-cols-12 gap-4 w-full">
+                  <div className="col-span-12">
                     <div className="py-3">
                       <h5>{strings.Filter}: </h5>
-                      <div className="grid grid-cols-12 gap-4">
-                        <div lg={2} className="mb-1">
+                      <div className="grid grid-cols-12 gap-4 w-full">
+                        <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-2 mb-1">
                           <div className="mb-3">
                             <Select
                               styles={customStyles}
@@ -545,9 +545,9 @@ class Expense extends React.Component {
                             />
                           </div>
                         </div>
-                        <div lg={2} className="mb-1">
+                        <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-2 mb-1">
                           <DatePicker
-                            className="form-control"
+                            className="form-control w-full"
                             id="date"
                             name="expenseDate"
                             placeholderText={strings.Select + strings.ExpenseDate}
@@ -563,7 +563,7 @@ class Expense extends React.Component {
                           />
                         </div>
 
-                        <div lg={3} className="mb-1">
+                        <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 mb-1">
                           <div className="mb-3">
                             <Select
                               styles={customStyles}
@@ -592,7 +592,7 @@ class Expense extends React.Component {
                             />
                           </div>
                         </div>
-                        <div lg={3} className="pl-0 pr-0">
+                        <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 pl-0 pr-0">
                           <Button
                             type="button"
                             variant="default"

@@ -78,8 +78,8 @@ class Header extends Component {
     const baseRoute = config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE;
 
     return (
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 items-center px-4">
+      <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
+        <div className="flex h-14 items-center px-4 w-full">
           {/* Mobile menu trigger */}
           <Sheet>
             <SheetTrigger asChild>
@@ -116,7 +116,10 @@ class Header extends Component {
           </Button>
 
           {/* User menu */}
-          <div className="ml-auto flex items-center space-x-4">
+          <div className="ml-auto flex items-center space-x-2">
+            <span className="text-sm text-gray-700">
+              {strings.Hey} <i>{profile && `${profile.firstName} ${profile.lastName}`}</i>
+            </span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -137,7 +140,7 @@ class Header extends Component {
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuContent align="end" className="w-56 z-[100]">
                 <div className="px-2 py-1.5">
                   <p className="text-sm font-medium">
                     {strings.Hey} <i>{profile && `${profile.firstName} ${profile.lastName}`}</i>
