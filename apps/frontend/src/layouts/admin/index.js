@@ -2,16 +2,24 @@ import React, { Suspense } from 'react';
 import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from 'sonner';
 import { Toaster } from '@/components/ui/sonner';
 import { adminRoutes } from 'routes';
 import { AuthActions, CommonActions } from 'services/global';
 import PrivateRoute from '../private';
 import navigation from 'constants/navigation';
-import { Footer, Header, Loading, Loader } from 'components';
+import { Loading, Loader } from 'components';
+import Sidebar from '../components/sidebar';
 import { withNavigation } from 'utils/withNavigation';
-import './style.scss';
 import { data } from '../../screens/Language/index';
 import LocalizedStrings from 'react-localization';
 import config from '../../constants/config';
@@ -36,18 +44,17 @@ if (localStorage.getItem('language') == null) {
 } else {
   strings.setLanguage(localStorage.getItem('language'));
 }
+
 class AdminLayout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // language: window['localStorage'].getItem('language'),
       registeredVat: true,
       loading: true,
       loadingMsg: 'Loading...',
       SubscriptionMessage: '',
       sidebarShow: false,
       sidebarMinimized: false,
-      navDropdownOpen: {},
     };
   }
 
@@ -63,223 +70,117 @@ class AdminLayout extends React.Component {
     }));
   };
 
-  toggleNavDropdown = key => {
-    this.setState(prevState => ({
-      navDropdownOpen: {
-        ...prevState.navDropdownOpen,
-        [key]: !prevState.navDropdownOpen[key],
-      },
-    }));
-  };
-
-  getNavDropdownOpen = (item, pathname) => {
-    if (!item?.url) return false;
-
-    if (Object.prototype.hasOwnProperty.call(this.state.navDropdownOpen, item.url)) {
-      return Boolean(this.state.navDropdownOpen[item.url]);
-    }
-
-    return Boolean(item.children?.some(child => child?.url && pathname.startsWith(child.url)));
-  };
-
-  renderSidebarNavItems = (items, pathname) => {
-    if (!Array.isArray(items) || items.length === 0) return null;
-
-    return items.map(item => {
-      if (Array.isArray(item.children) && item.children.length > 0) {
-        const isOpen = this.getNavDropdownOpen(item, pathname);
-        return (
-          <li key={item.url} className={`nav-item nav-dropdown${isOpen ? ' open' : ''}`}>
-            <a
-              href="#/"
-              className="nav-link nav-dropdown-toggle"
-              onClick={event => {
-                event.preventDefault();
-                this.toggleNavDropdown(item.url);
-              }}
-            >
-              {item.icon && <i className={`nav-icon ${item.icon}`} />}
-              <span>{item.name}</span>
-            </a>
-            <ul className="nav-dropdown-items">
-              {this.renderSidebarNavItems(item.children, pathname)}
-            </ul>
-          </li>
-        );
-      }
-
-      return (
-        <li key={item.url} className="nav-item">
-          <NavLink
-            to={item.url}
-            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-            end
-          >
-            {item.icon && <i className={`nav-icon ${item.icon}`} />}
-            <span>{item.name}</span>
-          </NavLink>
-        </li>
-      );
-    });
-  };
-
   getBreadcrumbName = pathname => {
+    // Convert absolute pathname to relative path for matching
+    const relativePath = pathname.startsWith('/admin/')
+      ? pathname.slice('/admin/'.length)
+      : pathname.startsWith('/admin')
+        ? pathname.slice('/admin'.length) || ''
+        : pathname;
+
     const matched = adminRoutes.find(
-      route => !route.redirect && route.path && route.path === pathname
+      route => !route.redirect && route.path && route.path === relativePath
     );
     return matched?.name;
   };
 
   componentDidMount() {
-    // Check for accessToken immediately and redirect if not found
-    const accessToken = window['localStorage'].getItem('accessToken');
-    console.log('[AdminLayout] componentDidMount - accessToken exists:', !!accessToken);
-    if (!accessToken) {
-      console.log('[AdminLayout] No accessToken in componentDidMount, logging out and redirecting');
-      this.props.authActions.logOut(); // Ensure complete logout
-      window.sessionStorage.clear(); // Clear sessionStorage too
-      this.props.history.replace('/login'); // Use replace instead of push
-      return; // Exit early to prevent further execution
-    }
+    if (!window['localStorage'].getItem('accessToken')) {
+      this.props.history.push('/login');
+    } else {
+      this.props.authActions
+        .checkAuthStatus()
+        .then(async action => {
+          // Redux Toolkit thunks return action objects, check for fulfilled
+          if (action && action.type && action.type.includes('fulfilled')) {
+            const userData = action.payload;
 
-    // Only proceed if user is authenticated
-    this.props.authActions
-      .checkAuthStatus()
-      .then(async action => {
-        // Redux Toolkit thunks return action objects, check for fulfilled
-        if (action && action.type && action.type.includes('fulfilled')) {
-          const userData = action.payload;
-
-          const companyAction = await this.props.commonActions.getCompanyDetails();
-          if (companyAction && companyAction.type && companyAction.type.includes('fulfilled')) {
-            this.setState({ registeredVat: companyAction.payload?.isRegisteredVat ?? true });
-          }
-
-          if (userData?.role?.roleCode) {
-            const roleListAction = await this.props.commonActions.getRoleList(
-              userData.role.roleCode
-            );
-            console.log('[AdminLayout Debug] getRoleList action:', roleListAction);
-            if (
-              roleListAction &&
-              roleListAction.type &&
-              roleListAction.type.includes('fulfilled')
-            ) {
-              console.log(
-                '[AdminLayout Debug] getRoleList fulfilled, payload:',
-                roleListAction.payload
-              );
-            } else {
-              console.warn('[AdminLayout Debug] getRoleList rejected or pending:', roleListAction);
+            const companyAction = await this.props.commonActions.getCompanyDetails();
+            if (companyAction && companyAction.type && companyAction.type.includes('fulfilled')) {
+              this.setState({ registeredVat: companyAction.payload?.isRegisteredVat ?? true });
             }
+
+            if (userData?.role?.roleCode) {
+              await this.props.commonActions.getRoleList(userData.role.roleCode);
+            }
+            await this.props.commonActions.getCompanyCurrency();
+            await this.props.commonActions.getCurrencyConversionList();
+            await this.props.commonActions.getVatList();
+            await this.props.commonActions.getCurrencyList();
+            this.setState({
+              loading: false,
+            });
           } else {
-            console.warn('[AdminLayout Debug] No roleCode found in userData:', userData);
+            // Auth check failed - user not authenticated
+            this.props.commonActions.tostifyAlert('error', 'Session Timed out');
+            this.props.authActions.logOut();
+            this.props.history.push('/login');
           }
-          await this.props.commonActions.getCompanyCurrency();
-          await this.props.commonActions.getCurrencyConversionList();
-          await this.props.commonActions.getVatList();
-          await this.props.commonActions.getCurrencyList();
-          this.setState({
-            loading: false,
-          });
-        } else {
-          // Auth check failed - user not authenticated
+        })
+        .catch(err => {
+          console.error('Auth check error:', err);
           this.props.commonActions.tostifyAlert('error', 'Session Timed out');
           this.props.authActions.logOut();
           this.props.history.push('/login');
+        });
+      this.props.commonActions.getSimpleAccountsVersion();
+      const toastifyAlert = (status, message) => {
+        if (!message) {
+          message = 'Unexpected Error';
         }
-      })
-      .catch(err => {
-        console.error('Auth check error:', err);
-        this.props.commonActions.tostifyAlert('error', 'Session Timed out');
-        this.props.authActions.logOut();
-        this.props.history.push('/login');
-      });
-    this.props.commonActions.getSimpleAccountsVersion();
-    const toastifyAlert = (status, message) => {
-      if (!message) {
-        message = 'Unexpected Error';
-      }
-      if (status === 'success') {
-        toast.success(message, {
-          position: 'top-right',
-        });
-      } else if (status === 'error') {
-        toast.error(message, {
-          position: 'top-right',
-        });
-      } else if (status === 'warn') {
-        toast.warn(message, {
-          position: 'top-right',
-        });
-      } else if (status === 'info') {
-        toast.info(message, {
-          position: 'top-right',
-        });
-      }
-    };
-    this.props.commonActions.setTostifyAlertFunc(toastifyAlert);
-    this.props.authActions
-      .getUserSubscription()
-      .then(action => {
-        // This thunk may fail for local dev (no subscription service), that's OK
-        let message = null;
-        if (action && action.type && action.type.includes('fulfilled')) {
-          const data = action.payload;
-          if (
-            (data?.message && data.message.toLowerCase() === 'active') ||
-            (data?.status && data.status.toLowerCase() === 'active')
-          ) {
-            message = null;
-          } else {
-            message = strings.SubscriptionExpiredMessage;
+        if (status === 'success') {
+          toast.success(message, {
+            position: 'top-right',
+          });
+        } else if (status === 'error') {
+          toast.error(message, {
+            position: 'top-right',
+          });
+        } else if (status === 'warn') {
+          toast.warn(message, {
+            position: 'top-right',
+          });
+        } else if (status === 'info') {
+          toast.info(message, {
+            position: 'top-right',
+          });
+        }
+      };
+      this.props.commonActions.setTostifyAlertFunc(toastifyAlert);
+      this.props.authActions
+        .getUserSubscription()
+        .then(action => {
+          // This thunk may fail for local dev (no subscription service), that's OK
+          let message = null;
+          if (action && action.type && action.type.includes('fulfilled')) {
+            const data = action.payload;
+            if (
+              (data?.message && data.message.toLowerCase() === 'active') ||
+              (data?.status && data.status.toLowerCase() === 'active')
+            ) {
+              message = null;
+            } else {
+              message = strings.SubscriptionExpiredMessage;
+            }
           }
-        }
-        // Don't show error for subscription check failures in local dev
-        this.setState({ SubscriptionMessage: message });
-      })
-      .catch(err => {
-        // Subscription check is optional, don't break the app
-        this.setState({ SubscriptionMessage: null });
-      });
+          // Don't show error for subscription check failures in local dev
+          this.setState({ SubscriptionMessage: message });
+        })
+        .catch(err => {
+          // Subscription check is optional, don't break the app
+          this.setState({ SubscriptionMessage: null });
+        });
+    }
   }
 
   render() {
-    // Check for accessToken before rendering - redirect immediately if not authenticated
-    const accessToken = window['localStorage'].getItem('accessToken');
-    console.log('[AdminLayout] Render check - accessToken exists:', !!accessToken);
-    if (!accessToken) {
-      console.log('[AdminLayout] No accessToken found, redirecting to /login');
-      // Use Navigate component for immediate redirect
-      return <Navigate to="/login" replace />;
-    }
-
-    // strings.setLanguage(this.state.language);
     const containerStyle = {
       zIndex: 1999,
       closeOnClick: true,
       draggable: true,
     };
-    const { loading, loadingMsg, SubscriptionMessage, sidebarShow, sidebarMinimized } = this.state;
-    const { user_role_list, user_list } = this.props;
-    console.log('[AdminLayout Debug] Render - user_role_list:', user_role_list);
-    console.log('[AdminLayout Debug] Render - loading:', loading);
-    console.log('[AdminLayout Debug] Render - Config.DASHBOARD:', config.DASHBOARD);
-    console.log('[AdminLayout Debug] Render - adminRoutes length:', adminRoutes?.length);
-    const dashboardRoute = adminRoutes?.find(r => r?.path === '/admin/dashboard');
-    console.log('[AdminLayout Debug] Render - dashboard route:', dashboardRoute);
-    console.log(
-      '[AdminLayout Debug] Render - dashboard route type:',
-      typeof dashboardRoute,
-      dashboardRoute === false,
-      dashboardRoute === null,
-      dashboardRoute === undefined
-    );
-    console.log(
-      '[AdminLayout Debug] Render - first 5 routes:',
-      adminRoutes?.slice(0, 5).map(r => ({ path: r?.path, name: r?.name, hasPath: !!r?.path }))
-    );
-    var arr = [];
+    const { loading, loadingMsg, SubscriptionMessage, sidebarMinimized } = this.state;
+    const { user_role_list } = this.props;
 
     function parentPathPresent(arr, name) {
       return arr.items.find(path => path.name == name);
@@ -327,13 +228,6 @@ class AdminLayout extends React.Component {
             icon: item.icon,
           });
         }
-        //  if (moduleName === 'Template' && item.name === 'Template') {
-        // 	arr.items.push({
-        // 		name: item.name,
-        // 		url: item.url,
-        // 		icon: item.icon,
-        // 	});
-        //  }
       });
     }
 
@@ -369,97 +263,83 @@ class AdminLayout extends React.Component {
     return loading == true ? (
       <Loader loadingMsg={loadingMsg} />
     ) : (
-      <div className="admin-container">
-        <div
-          className={`app${sidebarShow ? ' sidebar-show' : ''}${
-            sidebarMinimized ? ' sidebar-minimized' : ''
-          }`}
-        >
-          <header className="app-header">
-            <Suspense fallback={Loading()}>
-              <Header
-                {...this.props}
-                onToggleSidebar={this.toggleSidebar}
-                onToggleSidebarMinimize={this.toggleSidebarMinimize}
-              />
-            </Suspense>
-          </header>
-          <div className="app-body">
-            <div className={`sidebar${sidebarShow ? ' show' : ''}`}>
-              <nav className="sidebar-nav">
-                <ul className="nav">{this.renderSidebarNavItems(finalArray.items, pathname)}</ul>
-              </nav>
-              <button
-                type="button"
-                className="sidebar-minimizer"
-                onClick={this.toggleSidebarMinimize}
-                aria-label="Toggle sidebar"
-              />
-            </div>
-            <main className="main">
-              {SubscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
-                <div className="alert alert-danger mt-3 ml-3 mr-3 mb-0">{SubscriptionMessage}</div>
-              )}
-              <div className="breadcrumb-container">
-                <Breadcrumb>
+      <div className="admin-container flex min-h-screen bg-neu-bg dark:bg-neu-bg-dark">
+        <div className="flex flex-1 p-4 gap-4">
+          <Sidebar
+            items={finalArray.items}
+            pathname={pathname}
+            minimized={sidebarMinimized}
+            onToggleMinimize={this.toggleSidebarMinimize}
+            user={this.props.user_list}
+            onLogout={() => {
+              this.props.authActions.logOut();
+              this.props.history.push('/login');
+            }}
+          />
+          <main className="flex-1 overflow-y-auto bg-neu-bg dark:bg-neu-bg-dark rounded-2xl shadow-neu-out dark:shadow-neu-out-dark">
+            {SubscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
+              <Alert variant="destructive" className="m-4">
+                <AlertDescription>{SubscriptionMessage}</AlertDescription>
+              </Alert>
+            )}
+            <div className="px-6 py-4 border-b border-slate-200/50 dark:border-slate-700/50">
+              <Breadcrumb>
+                <BreadcrumbList>
                   <BreadcrumbItem>
-                    <NavLink to={config.BASE_ROUTE}>Home</NavLink>
+                    <BreadcrumbLink asChild>
+                      <NavLink
+                        to={config.BASE_ROUTE}
+                        className="text-primary hover:text-primary/80"
+                      >
+                        Home
+                      </NavLink>
+                    </BreadcrumbLink>
                   </BreadcrumbItem>
-                  {breadcrumbName && <BreadcrumbItem active>{breadcrumbName}</BreadcrumbItem>}
-                </Breadcrumb>
-              </div>
-              <Container fluid className="p-20">
-                <Suspense fallback={Loading()}>
-                  <Toaster position="top-right" duration={1700} />
-                  <Routes>
-                    {adminRoutes?.map((prop, key) => {
-                      if (!prop || !prop.path) {
-                        console.log(
-                          '[AdminLayout Debug] Skipping invalid route at index',
-                          key,
-                          prop
-                        );
-                        return null;
-                      }
-                      if (prop?.redirect) {
-                        return (
-                          <Route
-                            path={prop.path}
-                            key={key}
-                            element={<Navigate to={prop.pathTo} replace />}
-                          />
-                        );
-                      }
-                      console.log(
-                        '[AdminLayout Debug] Rendering route:',
-                        prop?.path,
-                        prop?.name,
-                        prop?.component
-                      );
+                  {breadcrumbName && (
+                    <>
+                      <BreadcrumbSeparator />
+                      <BreadcrumbItem>
+                        <BreadcrumbPage className="text-slate-700 dark:text-slate-200 font-medium">
+                          {breadcrumbName}
+                        </BreadcrumbPage>
+                      </BreadcrumbItem>
+                    </>
+                  )}
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
+            <div className="p-6">
+              <Suspense fallback={Loading()}>
+                <Toaster position="top-right" duration={1700} />
+                <Routes>
+                  {adminRoutes?.map((prop, key) => {
+                    if (prop?.redirect) {
                       return (
                         <Route
                           path={prop.path}
                           key={key}
-                          element={
-                            <PrivateRoute
-                              element={<prop.component />}
-                              name={prop.name}
-                              node={user_role_list}
-                            />
-                          }
+                          element={<Navigate to={prop.pathTo} replace />}
                         />
                       );
-                    })}
-                  </Routes>
-                </Suspense>
-              </Container>
-            </main>
-          </div>
-          <footer className="app-footer">
-            <Suspense fallback={Loading()}>
-              <Footer {...this.props} />
-            </Suspense>
-          </footer>
+                    }
+                    return (
+                      <Route
+                        path={prop.path}
+                        key={key}
+                        element={
+                          <PrivateRoute
+                            element={<prop.component />}
+                            name={prop.name}
+                            node={user_role_list}
+                          />
+                        }
+                      />
+                    );
+                  })}
+                </Routes>
+              </Suspense>
+            </div>
+          </main>
         </div>
       </div>
     );
