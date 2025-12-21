@@ -31,6 +31,14 @@ jest.mock('../sections/email_template', () => ({
   default: () => <div data-testid="email-modal">Email Modal</div>,
 }));
 
+// Mock customer invoice actions to prevent unhandled promise rejections
+jest.mock('../actions', () => ({
+  getStatusList: jest.fn(() => () => Promise.resolve({ status: 200, data: [] })),
+  getCustomerList: jest.fn(() => () => Promise.resolve({ status: 200, data: [] })),
+  getCustomerInvoiceList: jest.fn(() => () => Promise.resolve({ status: 200, data: [] })),
+  getOverdueAmountDetails: jest.fn(() => () => Promise.resolve({ status: 200, data: {} })),
+}));
+
 // Mock DataTable component (the actual component used in screen.jsx)
 jest.mock('@/components/ui/data-table', () => ({
   DataTable: ({ data, columns }) => (
