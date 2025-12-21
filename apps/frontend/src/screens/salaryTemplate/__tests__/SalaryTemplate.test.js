@@ -280,7 +280,7 @@ describe('SalaryTemplate Screen Component', () => {
     );
 
     await waitFor(() => {
-      const icon = document.querySelector('.fas.fa-object-group');
+      const icon = document.querySelector('.lucide-layout-grid');
       expect(icon).toBeInTheDocument();
     });
   });

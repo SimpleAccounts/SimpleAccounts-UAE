@@ -52,6 +52,12 @@ describe('Dashboard Component', () => {
 
   beforeEach(() => {
     initialState = {
+      auth: {
+        profile: {
+          firstName: 'Test',
+          lastName: 'User',
+        }
+      },
       dashboard: {
         bank_account_type: 'Checking',
         bank_account_graph: { data: [100, 200, 300] },
@@ -91,24 +97,26 @@ describe('Dashboard Component', () => {
     expect(screen.getByTestId('paid-invoices')).toBeInTheDocument();
   });
 
-  test('renders with dashboard-screen class', () => {
+  test('renders with dashboard-page class', () => {
     const { container } = render(
       <Provider store={store}>
         <Dashboard />
       </Provider>
     );
 
-    expect(container.querySelector('.dashboard-screen')).toBeInTheDocument();
+    expect(container.querySelector('.dashboard-page')).toBeInTheDocument();
   });
 
-  test('renders with animated fadeIn class', () => {
+  test('renders welcome card', () => {
     const { container } = render(
       <Provider store={store}>
         <Dashboard />
       </Provider>
     );
 
-    expect(container.querySelector('.animated.fadeIn')).toBeInTheDocument();
+    expect(container.querySelector('.welcome-card')).toBeInTheDocument();
+    expect(screen.getByText(/Good/)).toBeInTheDocument(); // Matches Good Morning/Afternoon/Evening
+    expect(screen.getByText(/Test/)).toBeInTheDocument(); // Matches first name
   });
 
   test('passes bank_account_type prop to BankAccount component', () => {
@@ -160,6 +168,7 @@ describe('Dashboard Component', () => {
 
   test('renders correctly with empty dashboard data', () => {
     const emptyState = {
+      ...initialState,
       dashboard: {
         bank_account_type: null,
         bank_account_graph: null,
@@ -169,9 +178,6 @@ describe('Dashboard Component', () => {
         taxes: null,
         revenue_graph: null,
         expense_graph: null,
-      },
-      common: {
-        universal_currency_list: [],
       },
     };
 
@@ -189,33 +195,18 @@ describe('Dashboard Component', () => {
     expect(screen.getByTestId('paid-invoices')).toBeInTheDocument();
   });
 
-  test('renders CardColumns with cols-2 class', () => {
+  test('renders stats row', () => {
     const { container } = render(
       <Provider store={store}>
         <Dashboard />
       </Provider>
     );
 
-    expect(container.querySelector('.cols-2')).toBeInTheDocument();
-  });
-
-  test('BankAccount and CashFlow are rendered inside CardColumns', () => {
-    const { container } = render(
-      <Provider store={store}>
-        <Dashboard />
-      </Provider>
-    );
-
-    const cardColumns = container.querySelector('.cols-2');
-    const bankAccount = screen.getByTestId('bank-account');
-    const cashFlow = screen.getByTestId('cash-flow');
-
-    expect(cardColumns).toContainElement(bankAccount);
-    expect(cardColumns).toContainElement(cashFlow);
+    expect(container.querySelector('.stats-row')).toBeInTheDocument();
   });
 
   test('maps state to props correctly', () => {
-    const wrapper = render(
+    render(
       <Provider store={store}>
         <Dashboard />
       </Provider>
@@ -246,7 +237,7 @@ describe('Dashboard Component', () => {
       </Provider>
     );
 
-    expect(container.querySelector('.dashboard-screen')).toBeInTheDocument();
+    expect(container.querySelector('.dashboard-page')).toBeInTheDocument();
   });
 
   test('revenue_graph and expense_graph are available in state', () => {

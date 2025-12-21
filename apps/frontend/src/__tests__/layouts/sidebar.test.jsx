@@ -52,7 +52,7 @@ describe('Sidebar Component', () => {
     // The class might be 'bg-accent' or 'text-accent-foreground' or both
     const hasActiveClass =
       dashboardLink.className.includes('bg-accent') ||
-      dashboardLink.className.includes('text-accent-foreground') ||
+      dashboardLink.className.includes('text-primary') ||
       dashboardLink.className.includes('accent');
     expect(hasActiveClass).toBe(true);
   });
@@ -111,8 +111,8 @@ describe('Sidebar Component', () => {
 
     // When minimized, text is hidden but icons are still visible
     // Find the sidebar container by class name
-    const sidebarContainer = container.querySelector('[class*="w-16"]');
+    const sidebarContainer = container.querySelector('[class*="w-20"]');
     expect(sidebarContainer).toBeInTheDocument();
-    expect(sidebarContainer).toHaveClass('w-16');
+    expect(sidebarContainer).toHaveClass('w-20');
   });
 });
