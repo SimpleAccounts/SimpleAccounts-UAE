@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux'
 import { Card, CardHeader, CardBody, Button, Row, Col, Table } from 'reactstrap';
-import { ToastContainer } from 'sonner';
+// ToastContainer removed - sonner doesn't export it, and Toaster is already included globally in index.js
 import { Loader } from 'components';
 
 import './style.scss';
