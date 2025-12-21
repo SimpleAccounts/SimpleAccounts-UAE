@@ -236,12 +236,12 @@ class Dashboard extends React.Component {
         </div>
 
         <Row className="charts-row">
-          <Col lg={6}>
+          <Col xs={12} lg={6} className="mb-4 mb-lg-0">
             <div className="chart-card">
               <BankAccount {...this.props} />
             </div>
           </Col>
-          <Col lg={6}>
+          <Col xs={12} lg={6}>
             <div className="chart-card">
               <CashFlow {...this.props} />
             </div>
