@@ -38,19 +38,18 @@ jest.mock('@/components/ui/data-table', () => ({
       <table>
         <thead>
           <tr>
-            {columns && columns.map((col, idx) => (
-              <th key={idx}>{col.header || col.accessorKey}</th>
-            ))}
+            {columns &&
+              columns.map((col, idx) => <th key={idx}>{col.header || col.accessorKey}</th>)}
           </tr>
         </thead>
         <tbody>
-          {data && data.map((row, idx) => (
-            <tr key={idx}>
-              {columns && columns.map((col, colIdx) => (
-                <td key={colIdx}>{row[col.accessorKey] || ''}</td>
-              ))}
-            </tr>
-          ))}
+          {data &&
+            data.map((row, idx) => (
+              <tr key={idx}>
+                {columns &&
+                  columns.map((col, colIdx) => <td key={colIdx}>{row[col.accessorKey] || ''}</td>)}
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
