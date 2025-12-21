@@ -152,11 +152,13 @@ const ViewCustomerInvoice = props => {
           }
         });
 
-      commonActions.getByNoteListByInvoiceId(location.state.id).then(res => {
-        if (res.status === 200) {
-          setCreditNoteDataList(res.data);
-        }
-      });
+      if (location?.state?.id) {
+        commonActions.getByNoteListByInvoiceId(location.state.id).then(res => {
+          if (res.status === 200) {
+            setCreditNoteDataList(res.data);
+          }
+        });
+      }
     }
   };
 
