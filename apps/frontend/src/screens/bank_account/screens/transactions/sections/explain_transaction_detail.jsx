@@ -27,7 +27,8 @@ import { Checkbox } from 'components/ui/checkbox';
 import * as TransactionsActions from 'screens/bank_account/screens/transactions/actions';
 import * as TransactionDetailActions from 'screens/bank_account/screens/transactions/screens/detail/actions';
 import * as CurrencyConvertActions from 'screens/currencyConvert/actions';
-import { CommonActions, selectOptionsFactory, selectCurrencyFactory } from 'services/global';
+import { CommonActions } from 'services/global';
+import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
 import { ConfirmDeleteModal } from 'components';
 import { Loader } from 'components';
 

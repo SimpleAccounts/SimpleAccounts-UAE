@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === 'development') {
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
-  <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+  <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
     <App />
     <Toaster />
   </ThemeProvider>

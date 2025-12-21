@@ -1,4 +1,6 @@
+// Import all screen module objects (not lazy-loaded) to access .screen properties
 import {
+  // Dashboard
   Dashboard,
   DashboardTwo,
   // Account Screens
@@ -8,7 +10,6 @@ import {
   OpeningBalance,
   CreateOpeningBalance,
   DetailOpeningBalance,
-
   // Bank Screens
   BankAccount,
   CreateBankAccount,
@@ -19,7 +20,6 @@ import {
   ReconcileTransaction,
   ImportBankStatement,
   ImportTransaction,
-
   // Customer Screens
   CustomerInvoice,
   CreateCustomerInvoice,
@@ -36,38 +36,32 @@ import {
   CreateReceipt,
   DetailReceipt,
   PayrollRun,
-
   // SupplierInvoice Screens
   SupplierInvoice,
   CreateSupplierInvoice,
   DetailSupplierInvoice,
   ViewInvoice,
   RecordSupplierPayment,
-
   //Request For Quotation
   CreateRequestForQuotation,
   ViewRequestForQuotation,
   DetailRequestForQuotation,
   RequestForQuotation,
-
   //Purchase Order
   PurchaseOrder,
   CreatePurchaseOrder,
   DetailPurchaseOrder,
   ViewPurchaseOrder,
-
   //Goods Received Notes
   GoodsReceivedNote,
   CreateGoodsReceivedNote,
   DetailGoodsReceivedNote,
   ViewGoodsReceivedNote,
-
   //Quotation
   Quotation,
   CreateQuotation,
   DetailQuotation,
   ViewQuotation,
-
   // Expense Screens
   Expense,
   CreateExpense,
@@ -75,7 +69,6 @@ import {
   Payment,
   CreatePayment,
   DetailPayment,
-
   //Debit Notes Screens
   DebitNotes,
   CreateDebitNote,
@@ -83,11 +76,9 @@ import {
   DebitNoteRefund,
   ApplyToSupplierInvoice,
   ViewDebitNote,
-
   // Vat Screens
   VatTransactions,
   ReportsFiling,
-
   // Report Screens
   TransactionsReport,
   CustomerAccountStatement,
@@ -118,7 +109,6 @@ import {
   CorporateTaxPaymentRecord,
   ViewCorporateTax,
   DebitNoteDetailsReport,
-
   // Master Screens
   ChartAccount,
   CreateChartAccount,
@@ -145,24 +135,18 @@ import {
   ProductCategory,
   CreateProductCategory,
   DetailProductCategory,
-
   // Currency Screens
   Currency,
   CreateCurrency,
   DetailCurrency,
-
   // User Screens
   User,
   CreateUser,
   DetailUser,
   Organization,
-
   // Profile Screens
   Profile,
   GeneralSettings,
-  // TransactionCategory,
-  // CreateTransactionCategory,
-  // DetailTransactionCategory,
   UsersRoles,
   CreateRole,
   UpdateRole,
@@ -217,7 +201,7 @@ import {
   SubReports,
   NotesSettings,
   PayrollSettings,
-} from 'screens';
+} from 'screens/routes-admin';
 import Config from '../constants/config';
 const adminRoutes = [
   Config.DASHBOARD && {
