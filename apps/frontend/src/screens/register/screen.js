@@ -811,6 +811,8 @@ const Register = () => {
                         <PhoneInput
                           country="ae"
                           enableSearch
+                          disableSearchIcon
+                          searchPlaceholder="Search country..."
                           value={field.value}
                           placeholder="Enter Mobile Number"
                           onChange={value => {
@@ -818,9 +820,10 @@ const Register = () => {
                             setCheckPhoneNumberParam(value.length !== 12);
                           }}
                           inputClass={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 w-full pl-12 transition-all duration-300 ${fieldState.error ? 'text-destructive' : ''}`}
-                          containerClass="phone-input-container rounded-xl overflow-hidden shadow-neu-in dark:shadow-neu-in-dark"
+                          containerClass="phone-input-container rounded-xl shadow-neu-in dark:shadow-neu-in-dark"
                           buttonClass="bg-transparent border-none"
                           dropdownClass="shadow-neu-out dark:shadow-neu-out-dark bg-neu-bg dark:bg-neu-bg-dark border-none rounded-xl"
+                          searchClass="search-box"
                         />
                         {fieldState.error && (
                           <FormMessage role="alert" className="ml-1">
