@@ -1,0 +1,44 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-push checks..."
+
+# Run formatting check
+echo "📝 Checking formatting..."
+npm run format:check
+
+if [ $? -ne 0 ]; then
+  echo "❌ Formatting check failed. Run: npm run format"
+  exit 1
+fi
+
+# Run lint check
+echo "🔧 Checking linting..."
+cd apps/frontend && npm exec eslint -- --ext .js,.jsx src/ --quiet
+
+if [ $? -ne 0 ]; then
+  echo "❌ Linting check failed. Run: npm run lint -- --fix"
+  cd ../..
+  exit 1
+fi
+cd ../..
+
+# Run frontend tests (only if frontend files changed)
+CHANGED_FILES=$(git diff --name-only origin/develop 2>/dev/null || git diff --name-only HEAD~1 2>/dev/null || echo "")
+if echo "$CHANGED_FILES" | grep -q "apps/frontend/.*\.\(js\|jsx\|ts\|tsx\)$"; then
+  echo "🧪 Running frontend unit tests..."
+  cd apps/frontend
+  npm test -- --run --bail
+  
+  if [ $? -ne 0 ]; then
+    echo "❌ Tests failed. Push aborted."
+    cd ../..
+    exit 1
+  fi
+  cd ../..
+else
+  echo "⏭️  Skipping tests (no frontend files changed)"
+fi
+
+echo "✅ Pre-push checks passed"
+
