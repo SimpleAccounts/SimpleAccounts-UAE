@@ -1,40 +1,40 @@
 version: 2
 updates:
   # Frontend (npm)
-  - package-ecosystem: "npm"
-    directory: "/apps/frontend"
+  - package-ecosystem: 'npm'
+    directory: '/apps/frontend'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 10
     labels:
-      - "dependencies"
-      - "frontend"
+      - 'dependencies'
+      - 'frontend'
 
   # Root package.json
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 5
     labels:
-      - "dependencies"
+      - 'dependencies'
 
   # Backend (Maven)
-  - package-ecosystem: "maven"
-    directory: "/apps/backend"
+  - package-ecosystem: 'maven'
+    directory: '/apps/backend'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 10
     labels:
-      - "dependencies"
-      - "backend"
+      - 'dependencies'
+      - 'backend'
 
   # GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 5
     labels:
-      - "dependencies"
-      - "ci"
+      - 'dependencies'
+      - 'ci'

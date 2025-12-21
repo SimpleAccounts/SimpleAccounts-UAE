@@ -8,7 +8,7 @@
 
 **Security Considerations:**
 
-1. **In Transit:** 
+1. **In Transit:**
    - ✅ Passwords should be encrypted via HTTPS/TLS in production
    - ⚠️ Currently using HTTP in development (localhost) - acceptable for dev, but must use HTTPS in production
 
@@ -24,9 +24,9 @@
    - Implement rate limiting on registration endpoint to prevent brute force attacks
    - Add password strength validation on both frontend and backend
 
-**Location:** 
+**Location:**
+
 - Frontend: `apps/frontend/src/screens/register/screen.js` - FormData construction
 - Backend: `apps/backend/src/main/java/com/simpleaccounts/rest/companycontroller/CompanyController.java` - Password hashing
 
 **Priority:** Medium (acceptable for development, must address before production)
-

@@ -32,6 +32,7 @@ cd /Users/zecs/workspaces/SimpleAccounts-UAE/apps/backend
 2. Download macOS installer (.pkg)
 3. Install it
 4. Then run:
+
 ```bash
 export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 cd /Users/zecs/workspaces/SimpleAccounts-UAE/apps/backend
@@ -41,6 +42,7 @@ cd /Users/zecs/workspaces/SimpleAccounts-UAE/apps/backend
 ## What Changed
 
 The backend has been updated to:
+
 - Return `0` with status `200` for `getCompanyCount` on error (instead of 500)
 - Return empty list for `getTimeZoneList` on error
 - This fixes XML parsing errors and allows register screen to appear

@@ -54,30 +54,29 @@ npm run backend:build
 
 ## Key Features
 
-| Module | Features |
-|--------|----------|
-| **Customer Invoices** | Income Receipts, Quotations |
-| **Expenses** | Expenses, Supplier Invoices, Purchase Receipts |
-| **Banking** | Bank Accounts, Reconciliation |
-| **Accountant** | Opening Balance, Journals |
-| **Reports** | Profit & Loss, Balance Sheet, Trial Balance, VAT Reports, General Ledger |
-| **Master Data** | Chart of Accounts, Contacts, Products, VAT Categories, Currency Rates |
-| **Payroll** | Payroll Run, Payroll Configuration, Employee Management |
+| Module                | Features                                                                 |
+| --------------------- | ------------------------------------------------------------------------ |
+| **Customer Invoices** | Income Receipts, Quotations                                              |
+| **Expenses**          | Expenses, Supplier Invoices, Purchase Receipts                           |
+| **Banking**           | Bank Accounts, Reconciliation                                            |
+| **Accountant**        | Opening Balance, Journals                                                |
+| **Reports**           | Profit & Loss, Balance Sheet, Trial Balance, VAT Reports, General Ledger |
+| **Master Data**       | Chart of Accounts, Contacts, Products, VAT Categories, Currency Rates    |
+| **Payroll**           | Payroll Run, Payroll Configuration, Employee Management                  |
 
 ### Support
 
-|                     | Community Support     | Basic Support                      | Premium Support                    |
-|---------------------|-----------------------|------------------------------------|------------------------------------|
-| Price               | FREE                  | AED 490 (Paid Yearly)              | AED 990 (Paid Yearly)              |
-| Upgrades            | No Commitment         | Quarterly                          | Monthly                            |
-| Response Time       | N/A                   | 24 hours                           | 4 hours                            |
-| Channel             | Community             | Email + Chat                       | Email + Chat + Calls               |
-| Accountants         | N/A                   | N/A                                | Pool                               |
-| Training            | Community             | Online Material                    | Dedicated                          |
-| Integration         | N/A                   | Documentation Support              | Technical Support                  |
-| Addons              | N/A                   | Standard Addons                    | Customized Addons                  |
-| Customization       | N/A                   | Scheduled                          | Prioritized                        |
-
+|               | Community Support | Basic Support         | Premium Support       |
+| ------------- | ----------------- | --------------------- | --------------------- |
+| Price         | FREE              | AED 490 (Paid Yearly) | AED 990 (Paid Yearly) |
+| Upgrades      | No Commitment     | Quarterly             | Monthly               |
+| Response Time | N/A               | 24 hours              | 4 hours               |
+| Channel       | Community         | Email + Chat          | Email + Chat + Calls  |
+| Accountants   | N/A               | N/A                   | Pool                  |
+| Training      | Community         | Online Material       | Dedicated             |
+| Integration   | N/A               | Documentation Support | Technical Support     |
+| Addons        | N/A               | Standard Addons       | Customized Addons     |
+| Customization | N/A               | Scheduled             | Prioritized           |
 
 ## Installation
 
@@ -113,4 +112,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-*SimpleAccounts is a product of DataInn. For more information, visit our [website](https://www.datainn.io).*
+_SimpleAccounts is a product of DataInn. For more information, visit our [website](https://www.datainn.io)._

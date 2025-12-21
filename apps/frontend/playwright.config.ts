@@ -6,7 +6,7 @@ export default defineConfig({
   testDir: './e2e',
   timeout: 30 * 1000,
   expect: {
-    timeout: 10 * 1000
+    timeout: 10 * 1000,
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -21,21 +21,16 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
+      use: { ...devices['Desktop Chrome'] },
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] }
+      use: { ...devices['Desktop Firefox'] },
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] }
-    }
+      use: { ...devices['Desktop Safari'] },
+    },
   ],
-  outputDir: 'test-results/e2e'
+  outputDir: 'test-results/e2e',
 });
-
-
-
-
-
