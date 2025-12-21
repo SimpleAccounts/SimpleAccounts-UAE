@@ -39,7 +39,21 @@ import overduemonthly from 'assets/images/invoice/month.png';
 import overdue from 'assets/images/invoice/due1.png';
 import { ServerDataTable } from '@/components/ui/server-data-table';
 import { DataTableRowActions } from '@/components/ui/data-table-actions';
-import { ChevronUp, ChevronDown, Pencil, ArrowRightCircle, Send, File, Landmark, Copy, Plus, Eye, FileText, Search, RefreshCw } from 'lucide-react';
+import {
+  ChevronUp,
+  ChevronDown,
+  Pencil,
+  ArrowRightCircle,
+  Send,
+  File,
+  Landmark,
+  Copy,
+  Plus,
+  Eye,
+  FileText,
+  Search,
+  RefreshCw,
+} from 'lucide-react';
 
 const toWords = new ToWords({
   localeCode: 'en-IN',
@@ -530,11 +544,7 @@ class CustomerInvoice extends React.Component {
               }}
             >
               <DropdownToggle size="sm" color="primary" className="btn-brand icon">
-                {isOpen ? (
-                  <ChevronUp className="h-4 w-4" />
-                ) : (
-                  <ChevronDown className="h-4 w-4" />
-                )}
+                {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
               </DropdownToggle>
               <DropdownMenu right>
                 {rowData.statusEnum !== 'Paid' &&

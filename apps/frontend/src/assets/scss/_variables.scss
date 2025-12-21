@@ -46,35 +46,63 @@ $body-color: $text-dark;
 // ============================================
 
 // Soft shadows (raised/extruded effect)
-$shadow-soft-xs: 2px 2px 4px $neu-dark-shadow, -2px -2px 4px $neu-light-shadow;
-$shadow-soft-sm: 3px 3px 6px $neu-dark-shadow, -3px -3px 6px $neu-light-shadow;
-$shadow-soft: 6px 6px 12px $neu-dark-shadow, -6px -6px 12px $neu-light-shadow;
-$shadow-soft-md: 8px 8px 16px $neu-dark-shadow, -8px -8px 16px $neu-light-shadow;
-$shadow-soft-lg: 10px 10px 20px $neu-dark-shadow, -10px -10px 20px $neu-light-shadow;
-$shadow-soft-xl: 15px 15px 30px $neu-dark-shadow, -15px -15px 30px $neu-light-shadow;
+$shadow-soft-xs:
+  2px 2px 4px $neu-dark-shadow,
+  -2px -2px 4px $neu-light-shadow;
+$shadow-soft-sm:
+  3px 3px 6px $neu-dark-shadow,
+  -3px -3px 6px $neu-light-shadow;
+$shadow-soft:
+  6px 6px 12px $neu-dark-shadow,
+  -6px -6px 12px $neu-light-shadow;
+$shadow-soft-md:
+  8px 8px 16px $neu-dark-shadow,
+  -8px -8px 16px $neu-light-shadow;
+$shadow-soft-lg:
+  10px 10px 20px $neu-dark-shadow,
+  -10px -10px 20px $neu-light-shadow;
+$shadow-soft-xl:
+  15px 15px 30px $neu-dark-shadow,
+  -15px -15px 30px $neu-light-shadow;
 
 // Inset shadows (pressed/indented effect)
-$shadow-inset-xs: inset 1px 1px 2px $neu-dark-shadow, inset -1px -1px 2px $neu-light-shadow;
-$shadow-inset-sm: inset 2px 2px 4px $neu-dark-shadow, inset -2px -2px 4px $neu-light-shadow;
-$shadow-inset: inset 3px 3px 6px $neu-dark-shadow, inset -3px -3px 6px $neu-light-shadow;
-$shadow-inset-md: inset 4px 4px 8px $neu-dark-shadow, inset -4px -4px 8px $neu-light-shadow;
-$shadow-inset-lg: inset 6px 6px 12px $neu-dark-shadow, inset -6px -6px 12px $neu-light-shadow;
+$shadow-inset-xs:
+  inset 1px 1px 2px $neu-dark-shadow,
+  inset -1px -1px 2px $neu-light-shadow;
+$shadow-inset-sm:
+  inset 2px 2px 4px $neu-dark-shadow,
+  inset -2px -2px 4px $neu-light-shadow;
+$shadow-inset:
+  inset 3px 3px 6px $neu-dark-shadow,
+  inset -3px -3px 6px $neu-light-shadow;
+$shadow-inset-md:
+  inset 4px 4px 8px $neu-dark-shadow,
+  inset -4px -4px 8px $neu-light-shadow;
+$shadow-inset-lg:
+  inset 6px 6px 12px $neu-dark-shadow,
+  inset -6px -6px 12px $neu-light-shadow;
 
 // Dark mode shadows
-$shadow-soft-dark: 6px 6px 12px $neu-dark-shadow-dark, -6px -6px 12px $neu-light-shadow-dark;
-$shadow-soft-sm-dark: 3px 3px 6px $neu-dark-shadow-dark, -3px -3px 6px $neu-light-shadow-dark;
-$shadow-inset-dark: inset 3px 3px 6px $neu-dark-shadow-dark, inset -3px -3px 6px $neu-light-shadow-dark;
+$shadow-soft-dark:
+  6px 6px 12px $neu-dark-shadow-dark,
+  -6px -6px 12px $neu-light-shadow-dark;
+$shadow-soft-sm-dark:
+  3px 3px 6px $neu-dark-shadow-dark,
+  -3px -3px 6px $neu-light-shadow-dark;
+$shadow-inset-dark:
+  inset 3px 3px 6px $neu-dark-shadow-dark,
+  inset -3px -3px 6px $neu-light-shadow-dark;
 
 // ============================================
 // BORDER RADIUS
 // ============================================
-$border-radius-xs: 0.25rem;   // 4px
-$border-radius-sm: 0.5rem;    // 8px
-$border-radius: 0.75rem;      // 12px
-$border-radius-md: 1rem;      // 16px
-$border-radius-lg: 1.25rem;   // 20px
-$border-radius-xl: 1.5rem;    // 24px
-$border-radius-2xl: 2rem;     // 32px
+$border-radius-xs: 0.25rem; // 4px
+$border-radius-sm: 0.5rem; // 8px
+$border-radius: 0.75rem; // 12px
+$border-radius-md: 1rem; // 16px
+$border-radius-lg: 1.25rem; // 20px
+$border-radius-xl: 1.5rem; // 24px
+$border-radius-2xl: 2rem; // 32px
 $border-radius-pill: 50rem;
 $border-radius-circle: 50%;
 

@@ -127,9 +127,7 @@ class Header extends Component {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="nav-link" style={{ border: 'none' }}>
-                <span style={{ fontSize: '18px' }}>
-                  {language === 'en' ? '🇺🇸' : '🇦🇪'}
-                </span>
+                <span style={{ fontSize: '18px' }}>{language === 'en' ? '🇺🇸' : '🇦🇪'}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

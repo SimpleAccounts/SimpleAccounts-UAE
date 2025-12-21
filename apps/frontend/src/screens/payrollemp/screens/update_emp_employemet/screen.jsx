@@ -313,7 +313,10 @@ const UpdateEmployeeEmployment = ({
                                   <Label htmlFor="employeeCode">
                                     <span className="text-danger">* </span>
                                     {strings.EmployeeCode}
-                                    <HelpCircle id="employeeCodeTooltip" className="h-4 w-4 inline" />
+                                    <HelpCircle
+                                      id="employeeCodeTooltip"
+                                      className="h-4 w-4 inline"
+                                    />
                                     <UncontrolledTooltip
                                       placement="right"
                                       target="employeeCodeTooltip"

@@ -545,8 +545,7 @@ test.describe('Registration Complete Flow', () => {
     const errorToast = page.locator('[data-sonner-toast][data-type="error"]');
     const hasErrorToast = await errorToast.isVisible({ timeout: 10_000 }).catch(() => false);
     // Check response body for "Company Already Exist" (case-insensitive)
-    const hasCompanyExistsMessage =
-      responseBody && /company\s*already\s*exist/i.test(responseBody);
+    const hasCompanyExistsMessage = responseBody && /company\s*already\s*exist/i.test(responseBody);
     // Also check for info toasts (some UI might show this as info instead of error)
     const infoToast = page.locator('[data-sonner-toast]');
     const hasInfoToast = await infoToast.isVisible({ timeout: 5_000 }).catch(() => false);

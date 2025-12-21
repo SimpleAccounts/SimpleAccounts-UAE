@@ -56,7 +56,7 @@ describe('Dashboard Component', () => {
         profile: {
           firstName: 'Test',
           lastName: 'User',
-        }
+        },
       },
       dashboard: {
         bank_account_type: 'Checking',

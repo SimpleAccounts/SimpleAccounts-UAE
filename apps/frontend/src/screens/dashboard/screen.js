@@ -80,7 +80,9 @@ class Dashboard extends React.Component {
         <div className="welcome-card">
           <div className="welcome-content">
             <div className="welcome-text">
-              <h1 className="greeting">{this.getGreeting()}, {firstName}!</h1>
+              <h1 className="greeting">
+                {this.getGreeting()}, {firstName}!
+              </h1>
               <p className="date-display">{formattedDate}</p>
             </div>
             <div className="welcome-badge">
@@ -139,9 +141,7 @@ class Dashboard extends React.Component {
 
         {/* Invoice Chart Section */}
         <div className="section-header">
-          <h2 className="section-title">
-            📈 Key Performance Indicators
-          </h2>
+          <h2 className="section-title">📈 Key Performance Indicators</h2>
         </div>
 
         <div className="chart-card full-width">
@@ -150,9 +150,7 @@ class Dashboard extends React.Component {
 
         {/* Financial Overview Section */}
         <div className="section-header">
-          <h2 className="section-title">
-            🏦 Financial Overview
-          </h2>
+          <h2 className="section-title">🏦 Financial Overview</h2>
         </div>
 
         <Row className="charts-row">
@@ -170,9 +168,7 @@ class Dashboard extends React.Component {
 
         {/* Profit & Loss Section */}
         <div className="section-header">
-          <h2 className="section-title">
-            ⚖️ Profit & Loss Report
-          </h2>
+          <h2 className="section-title">⚖️ Profit & Loss Report</h2>
         </div>
 
         <div className="chart-card full-width">

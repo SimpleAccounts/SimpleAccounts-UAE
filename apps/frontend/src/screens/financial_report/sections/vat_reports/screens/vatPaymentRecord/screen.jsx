@@ -144,7 +144,8 @@ const VatPaymentRecord = () => {
                         paddingLeft: '15px',
                       }}
                     >
-                      <History className="h-4 w-4" />VAT Payment Record
+                      <History className="h-4 w-4" />
+                      VAT Payment Record
                     </p>
                   </div>
                   <div className="d-flex">

@@ -7,7 +7,9 @@ $neu-radius-sm: 12px;
 
 // Neumorphic Mixins
 @mixin neu-shadow-pressed {
-  box-shadow: inset 4px 4px 8px rgba(163, 177, 198, 0.6), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+  box-shadow:
+    inset 4px 4px 8px rgba(163, 177, 198, 0.6),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.8);
 }
 
 .header-component {
@@ -65,7 +67,7 @@ $neu-radius-sm: 12px;
 
     .input-group-text {
       padding: 0 8px;
-      
+
       i {
         color: #8898aa; // $neu-text-light
       }

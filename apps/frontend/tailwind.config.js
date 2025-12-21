@@ -72,7 +72,7 @@ module.exports = {
         // Neumorphic border radius
         'neu-xs': '0.25rem',
         'neu-sm': '0.5rem',
-        'neu': '0.75rem',
+        neu: '0.75rem',
         'neu-md': '1rem',
         'neu-lg': '1.25rem',
         'neu-xl': '1.5rem',
@@ -113,10 +113,10 @@ module.exports = {
       },
       // Transitions for neumorphic interactions
       transitionDuration: {
-        'neu': '200ms',
+        neu: '200ms',
       },
       transitionTimingFunction: {
-        'neu': 'ease',
+        neu: 'ease',
       },
     },
   },

@@ -59,7 +59,8 @@ function NavItem({ item, pathname, minimized, isSubItem = false }) {
   );
 
   const hasChildren = Array.isArray(item.children) && item.children.length > 0;
-  const isChildActive = hasChildren && item.children.some(child => child?.url && pathname.startsWith(child.url));
+  const isChildActive =
+    hasChildren && item.children.some(child => child?.url && pathname.startsWith(child.url));
 
   // Parent menu item with children
   if (hasChildren) {
@@ -98,7 +99,7 @@ function NavItem({ item, pathname, minimized, isSubItem = false }) {
                 className={cn(
                   item.icon,
                   'w-5 text-center transition-colors duration-200',
-                  (isOpen || isChildActive) ? 'text-primary' : 'text-slate-500 dark:text-slate-400',
+                  isOpen || isChildActive ? 'text-primary' : 'text-slate-500 dark:text-slate-400',
                   minimized && 'text-lg'
                 )}
               />
@@ -109,7 +110,7 @@ function NavItem({ item, pathname, minimized, isSubItem = false }) {
             <ChevronDown
               className={cn(
                 'h-4 w-4 transition-transform duration-200',
-                (isOpen || isChildActive) ? 'text-primary' : 'text-slate-400',
+                isOpen || isChildActive ? 'text-primary' : 'text-slate-400',
                 isOpen && 'rotate-180'
               )}
             />
@@ -145,31 +146,33 @@ function NavItem({ item, pathname, minimized, isSubItem = false }) {
           'transition-all duration-200 ease-out',
           'bg-neu-bg dark:bg-neu-bg-dark',
           // Submenu items have different styling
-          isSubItem ? [
-            // Submenu - lighter, more subtle
-            'py-2.5 px-3 rounded-lg',
-            'hover:text-primary hover:bg-primary/5',
-            isActive && [
-              'text-primary font-semibold',
-              'bg-primary/10',
-              'shadow-[inset_2px_2px_4px_rgba(163,177,198,0.3),inset_-2px_-2px_4px_rgba(255,255,255,0.5)]',
-              'dark:shadow-[inset_2px_2px_4px_#1e1f23,inset_-2px_-2px_4px_#383b43]',
-            ],
-          ] : [
-            // Main menu items - full neumorphic effect
-            'shadow-[3px_3px_6px_rgba(163,177,198,0.4),-3px_-3px_6px_rgba(255,255,255,0.7)]',
-            'dark:shadow-[3px_3px_6px_#1e1f23,-3px_-3px_6px_#383b43]',
-            // Hover - raised
-            'hover:shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]',
-            'dark:hover:shadow-[5px_5px_10px_#1e1f23,-5px_-5px_10px_#383b43]',
-            'hover:-translate-y-0.5',
-            // Active - pressed
-            isActive && [
-              'shadow-neu-in dark:shadow-neu-in-dark',
-              'text-primary',
-              'translate-y-0',
-            ],
-          ],
+          isSubItem
+            ? [
+                // Submenu - lighter, more subtle
+                'py-2.5 px-3 rounded-lg',
+                'hover:text-primary hover:bg-primary/5',
+                isActive && [
+                  'text-primary font-semibold',
+                  'bg-primary/10',
+                  'shadow-[inset_2px_2px_4px_rgba(163,177,198,0.3),inset_-2px_-2px_4px_rgba(255,255,255,0.5)]',
+                  'dark:shadow-[inset_2px_2px_4px_#1e1f23,inset_-2px_-2px_4px_#383b43]',
+                ],
+              ]
+            : [
+                // Main menu items - full neumorphic effect
+                'shadow-[3px_3px_6px_rgba(163,177,198,0.4),-3px_-3px_6px_rgba(255,255,255,0.7)]',
+                'dark:shadow-[3px_3px_6px_#1e1f23,-3px_-3px_6px_#383b43]',
+                // Hover - raised
+                'hover:shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]',
+                'dark:hover:shadow-[5px_5px_10px_#1e1f23,-5px_-5px_10px_#383b43]',
+                'hover:-translate-y-0.5',
+                // Active - pressed
+                isActive && [
+                  'shadow-neu-in dark:shadow-neu-in-dark',
+                  'text-primary',
+                  'translate-y-0',
+                ],
+              ],
           // Text colors
           !isActive && 'text-slate-700 dark:text-slate-200',
           minimized && 'justify-center px-3'

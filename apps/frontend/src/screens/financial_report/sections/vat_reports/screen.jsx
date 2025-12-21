@@ -39,7 +39,17 @@ import {
   DropdownMenuContent as ShadcnDropdownMenuContent,
   DropdownMenuItem as ShadcnDropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { ChevronDown, ChevronUp, Eye, History, Landmark, Link, Plus, Trash2, Unlink } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronUp,
+  Eye,
+  History,
+  Landmark,
+  Link,
+  Plus,
+  Trash2,
+  Unlink,
+} from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 

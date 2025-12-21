@@ -99,7 +99,9 @@ test.describe('Login Form', () => {
     await expect(passwordInput).toHaveAttribute('type', 'password');
 
     // Look for eye icon to toggle visibility
-    const eyeIcon = page.locator('button[aria-label*="password"], .fa-eye, .fa-eye-slash, [class*="eye"]').first();
+    const eyeIcon = page
+      .locator('button[aria-label*="password"], .fa-eye, .fa-eye-slash, [class*="eye"]')
+      .first();
     const iconExists = await eyeIcon.isVisible({ timeout: 3000 }).catch(() => false);
 
     if (iconExists) {

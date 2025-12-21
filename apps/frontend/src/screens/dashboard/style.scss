@@ -119,7 +119,7 @@ $radius-xl: 20px;
   .stats-row {
     margin-bottom: $space-lg;
 
-    > [class*="col-"] {
+    > [class*='col-'] {
       margin-bottom: $space-md;
     }
   }
@@ -343,7 +343,9 @@ $radius-xl: 20px;
     .form-control,
     .form-select {
       background: $card-bg !important;
-      box-shadow: inset 4px 4px 8px $shadow-dark, inset -4px -4px 8px $shadow-light !important;
+      box-shadow:
+        inset 4px 4px 8px $shadow-dark,
+        inset -4px -4px 8px $shadow-light !important;
       border: none !important;
       border-radius: $radius-sm !important;
       padding: $space-sm $space-md !important;
@@ -413,7 +415,7 @@ $radius-xl: 20px;
   // CHARTS ROW
   // ============================================
   .charts-row {
-    > [class*="col-"] {
+    > [class*='col-'] {
       margin-bottom: $space-lg;
     }
 
@@ -541,7 +543,7 @@ $radius-xl: 20px;
     margin-left: -$space-sm;
     margin-right: -$space-sm;
 
-    > [class*="col-"] {
+    > [class*='col-'] {
       padding-left: $space-sm;
       padding-right: $space-sm;
     }

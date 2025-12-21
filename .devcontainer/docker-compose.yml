@@ -27,7 +27,7 @@ services:
       POSTGRES_PASSWORD: simpleaccounts_dev
       POSTGRES_DB: simpleaccounts
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U simpleaccounts"]
+      test: ['CMD-SHELL', 'pg_isready -U simpleaccounts']
       interval: 10s
       timeout: 5s
       retries: 5

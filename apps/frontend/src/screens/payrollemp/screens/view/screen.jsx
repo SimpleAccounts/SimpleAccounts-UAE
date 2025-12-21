@@ -731,7 +731,8 @@ const ViewEmployee = () => {
                                   : ''
                               }
                             >
-                              <Pencil className="h-4 w-4 mr-1" />{strings.Edit}
+                              <Pencil className="h-4 w-4 mr-1" />
+                              {strings.Edit}
                             </Button>
                           </Col>
                         </Row>

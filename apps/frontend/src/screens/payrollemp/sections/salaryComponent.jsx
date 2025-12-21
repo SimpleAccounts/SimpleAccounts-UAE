@@ -935,8 +935,7 @@ const SalaryComponent = ({
                         }
                       }}
                     >
-                      <CircleDot className="h-4 w-4" />{' '}
-                      {disabled ? 'Updating...' : strings.Update}
+                      <CircleDot className="h-4 w-4" /> {disabled ? 'Updating...' : strings.Update}
                     </Button>
                     <Button
                       color="secondary"

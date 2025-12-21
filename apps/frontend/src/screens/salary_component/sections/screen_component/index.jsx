@@ -456,7 +456,10 @@ const SalaryComponentScreen = props => {
                                 <Label htmlFor="componentType">
                                   <span className="text-danger">* </span>
                                   {strings.ComponentType}
-                                  <HelpCircle id="componentTypeTooltip" className="h-4 w-4 inline" />
+                                  <HelpCircle
+                                    id="componentTypeTooltip"
+                                    className="h-4 w-4 inline"
+                                  />
                                   <UncontrolledTooltip
                                     placement="right"
                                     target="componentTypeTooltip"

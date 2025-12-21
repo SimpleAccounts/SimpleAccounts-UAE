@@ -206,7 +206,7 @@
   align-items: center;
   cursor: pointer;
 
-  input[type="checkbox"] {
+  input[type='checkbox'] {
     @include neu-pressed('xs');
     width: 20px;
     height: 20px;
@@ -235,7 +235,9 @@
     }
 
     &:focus {
-      box-shadow: $shadow-inset-sm, 0 0 0 3px rgba($primary, 0.15);
+      box-shadow:
+        $shadow-inset-sm,
+        0 0 0 3px rgba($primary, 0.15);
     }
   }
 
@@ -251,7 +253,7 @@
   align-items: center;
   cursor: pointer;
 
-  input[type="radio"] {
+  input[type='radio'] {
     @include neu-pressed('xs');
     width: 20px;
     height: 20px;
@@ -281,7 +283,9 @@
     }
 
     &:focus {
-      box-shadow: $shadow-inset-sm, 0 0 0 3px rgba($primary, 0.15);
+      box-shadow:
+        $shadow-inset-sm,
+        0 0 0 3px rgba($primary, 0.15);
     }
   }
 
@@ -312,7 +316,9 @@
     }
 
     &:focus + .switch-slider {
-      box-shadow: $shadow-inset-sm, 0 0 0 3px rgba($primary, 0.15);
+      box-shadow:
+        $shadow-inset-sm,
+        0 0 0 3px rgba($primary, 0.15);
     }
   }
 
@@ -420,7 +426,8 @@
 .modal-header-neu {
   margin-bottom: $spacer-lg;
 
-  h2, h3 {
+  h2,
+  h3 {
     font-weight: 700;
     color: $text-dark;
     margin: 0;
@@ -689,7 +696,9 @@
     border-radius: $border-radius-pill;
 
     &:focus {
-      box-shadow: $shadow-inset, 0 0 0 3px rgba($primary, 0.15);
+      box-shadow:
+        $shadow-inset,
+        0 0 0 3px rgba($primary, 0.15);
     }
   }
 }

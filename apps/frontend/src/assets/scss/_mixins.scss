@@ -81,7 +81,9 @@
 
   &:focus {
     outline: none;
-    box-shadow: $shadow-soft, 0 0 0 3px rgba($color, 0.25);
+    box-shadow:
+      $shadow-soft,
+      0 0 0 3px rgba($color, 0.25);
   }
 
   &:disabled {
@@ -112,13 +114,17 @@
   &:active,
   &.active {
     background: $primary-dark;
-    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2), inset -2px -2px 5px rgba(255, 255, 255, 0.1);
+    box-shadow:
+      inset 2px 2px 5px rgba(0, 0, 0, 0.2),
+      inset -2px -2px 5px rgba(255, 255, 255, 0.1);
     transform: translateY(0);
   }
 
   &:focus {
     outline: none;
-    box-shadow: $shadow-soft, 0 0 0 3px rgba($primary, 0.35);
+    box-shadow:
+      $shadow-soft,
+      0 0 0 3px rgba($primary, 0.35);
   }
 }
 
@@ -140,7 +146,9 @@
 
   &:focus {
     outline: none;
-    box-shadow: $shadow-inset, 0 0 0 3px rgba($primary, 0.15);
+    box-shadow:
+      $shadow-inset,
+      0 0 0 3px rgba($primary, 0.15);
   }
 
   &:disabled {
@@ -160,7 +168,9 @@
 
   &:focus {
     outline: none;
-    box-shadow: $shadow-inset, 0 0 0 3px rgba($primary, 0.15);
+    box-shadow:
+      $shadow-inset,
+      0 0 0 3px rgba($primary, 0.15);
   }
 }
 
@@ -499,11 +509,6 @@
 // Divider
 @mixin neu-divider {
   height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba($neu-dark-shadow, 0.3),
-    transparent
-  );
+  background: linear-gradient(to right, transparent, rgba($neu-dark-shadow, 0.3), transparent);
   margin: $spacer-md 0;
 }

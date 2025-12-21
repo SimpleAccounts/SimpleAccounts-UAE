@@ -630,7 +630,10 @@ const CreatePayrollList = () => {
                                   <Label htmlFor="payrollApprover">
                                     <span className="text-danger">* </span>
                                     {strings.payroll_approver}
-                                    <HelpCircle id="payrollApprovertip" className="h-4 w-4 inline" />
+                                    <HelpCircle
+                                      id="payrollApprovertip"
+                                      className="h-4 w-4 inline"
+                                    />
                                     <UncontrolledTooltip
                                       placement="right"
                                       target="payrollApprovertip"
@@ -772,8 +775,7 @@ const CreatePayrollList = () => {
                                       : ''
                                   }
                                 >
-                                  <CheckCheck className="h-4 w-4" />{' '}
-                                  {strings.create_submit}
+                                  <CheckCheck className="h-4 w-4" /> {strings.create_submit}
                                 </Button>
                                 <Button
                                   type="button"

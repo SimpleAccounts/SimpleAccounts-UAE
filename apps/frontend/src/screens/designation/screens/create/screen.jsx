@@ -339,7 +339,10 @@ const CreateDesignation = ({
                                 <Label htmlFor="designationType">
                                   <span className="text-danger">* </span>
                                   {strings.DesignationType}
-                                  <HelpCircle id="designationTypeTooltip" className="h-4 w-4 inline" />
+                                  <HelpCircle
+                                    id="designationTypeTooltip"
+                                    className="h-4 w-4 inline"
+                                  />
                                   <UncontrolledTooltip
                                     placement="right"
                                     target="designationTypeTooltip"

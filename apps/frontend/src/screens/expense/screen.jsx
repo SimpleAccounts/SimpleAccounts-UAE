@@ -22,7 +22,18 @@ import dayjs from '@/utils/date';
 import './style.scss';
 import { data } from '../Language/index';
 import LocalizedStrings from 'react-localization';
-import { ArrowUpDown, Copy, Eye, File, MoreVertical, Pencil, Plus, RefreshCw, Search, Send } from 'lucide-react';
+import {
+  ArrowUpDown,
+  Copy,
+  Eye,
+  File,
+  MoreVertical,
+  Pencil,
+  Plus,
+  RefreshCw,
+  Search,
+  Send,
+} from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

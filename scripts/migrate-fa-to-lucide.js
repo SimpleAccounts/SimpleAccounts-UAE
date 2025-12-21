@@ -2,10 +2,10 @@
 
 /**
  * Migration Script: Font Awesome to Lucide React Icons
- * 
+ *
  * This script automatically replaces Font Awesome icons with Lucide React equivalents
  * across the frontend codebase.
- * 
+ *
  * Usage: node scripts/migrate-fa-to-lucide.js
  */
 
@@ -31,7 +31,7 @@ const ICON_MAP = {
   'fa-angle-up': 'ChevronUp',
   'fa-angle-left': 'ChevronLeft',
   'fa-angle-right': 'ChevronRight',
-  
+
   // Common Actions
   'fa-plus': 'Plus',
   'fa-minus': 'Minus',
@@ -66,7 +66,7 @@ const ICON_MAP = {
   'fa-external-link': 'ExternalLink',
   'fa-expand': 'Expand',
   'fa-compress': 'Shrink',
-  
+
   // Files & Documents
   'fa-file': 'File',
   'fa-file-o': 'File',
@@ -79,7 +79,7 @@ const ICON_MAP = {
   'fa-folder': 'Folder',
   'fa-folder-open': 'FolderOpen',
   'fa-folder-plus': 'FolderPlus',
-  
+
   // Users & People
   'fa-user': 'User',
   'fa-user-o': 'User',
@@ -95,7 +95,7 @@ const ICON_MAP = {
   'fa-id-card-alt': 'IdCard',
   'fa-address-book': 'BookUser',
   'fa-address-card': 'Contact',
-  
+
   // Business & Finance
   'fa-money': 'Banknote',
   'fa-money-bill': 'Banknote',
@@ -121,7 +121,7 @@ const ICON_MAP = {
   'fa-donate': 'HandCoins',
   'fa-exchange': 'ArrowLeftRight',
   'fa-exchange-alt': 'ArrowLeftRight',
-  
+
   // Communication
   'fa-envelope': 'Mail',
   'fa-envelope-o': 'Mail',
@@ -131,7 +131,7 @@ const ICON_MAP = {
   'fa-comments': 'MessageCircle',
   'fa-bell': 'Bell',
   'fa-phone': 'Phone',
-  
+
   // UI Elements
   'fa-eye': 'Eye',
   'fa-eye-slash': 'EyeOff',
@@ -152,7 +152,7 @@ const ICON_MAP = {
   'fa-unlock': 'Unlock',
   'fa-key': 'Key',
   'fa-shield': 'Shield',
-  
+
   // Media & Display
   'fa-print': 'Printer',
   'fa-image': 'Image',
@@ -162,14 +162,14 @@ const ICON_MAP = {
   'fa-play': 'Play',
   'fa-pause': 'Pause',
   'fa-stop': 'Square',
-  
+
   // Time & Calendar
   'fa-calendar': 'Calendar',
   'fa-calendar-alt': 'Calendar',
   'fa-clock': 'Clock',
   'fa-clock-o': 'Clock',
   'fa-history': 'History',
-  
+
   // Status & Indicators
   'fa-circle': 'Circle',
   'fa-dot-circle': 'CircleDot',
@@ -182,7 +182,7 @@ const ICON_MAP = {
   'fa-thumbs-up': 'ThumbsUp',
   'fa-thumbs-down': 'ThumbsDown',
   'fa-flag': 'Flag',
-  
+
   // Misc
   'fa-home': 'Home',
   'fa-dashboard': 'LayoutDashboard',
@@ -275,14 +275,14 @@ function generateLucideImports(icons) {
     .filter((v, i, a) => a.indexOf(v) === i); // unique
 
   if (lucideIcons.length === 0) return null;
-  
+
   return `import { ${lucideIcons.join(', ')} } from 'lucide-react';`;
 }
 
 // Replace FA icon with Lucide in content
 function replaceFAWithLucide(content) {
   let newContent = content;
-  
+
   // Pattern to match FA icon elements with various formats
   const patterns = [
     // Self-closing with various FA prefixes
@@ -296,7 +296,7 @@ function replaceFAWithLucide(content) {
     /<i\s+id="[^"]+"\s+className=["'](?:fa[srb]?\s+)?fa-([a-z0-9-]+)(?:\s+[^"']*)?["']\s*><\/i>/gi,
     /<i\s+id="[^"]+"\s+className=["'](?:fa[srb]?\s+)?fa-([a-z0-9-]+)(?:\s+[^"']*)?["']\s*\/>/gi,
   ];
-  
+
   for (const pattern of patterns) {
     newContent = newContent.replace(pattern, (match, iconName) => {
       const lucideIcon = getLucideIcon(`fa-${iconName}`);
@@ -311,7 +311,7 @@ function replaceFAWithLucide(content) {
       return match; // Keep original if no mapping
     });
   }
-  
+
   return newContent;
 }
 
@@ -326,9 +326,9 @@ function addLucideImports(content, icons) {
     .map(icon => getLucideIcon(icon))
     .filter(Boolean)
     .filter((v, i, a) => a.indexOf(v) === i);
-  
+
   if (lucideIcons.length === 0) return content;
-  
+
   // If already has lucide import, merge
   if (hasLucideImport(content)) {
     const importMatch = content.match(/import\s*\{([^}]+)\}\s*from\s*['"]lucide-react['"]/);
@@ -339,7 +339,7 @@ function addLucideImports(content, icons) {
       return content.replace(importMatch[0], newImport);
     }
   }
-  
+
   // Add new import after existing imports
   const importInsertPoint = content.search(/^import\s/m);
   if (importInsertPoint !== -1) {
@@ -347,17 +347,19 @@ function addLucideImports(content, icons) {
     const lines = content.split('\n');
     let lastImportLine = 0;
     for (let i = 0; i < lines.length; i++) {
-      if (lines[i].trim().startsWith('import ') || 
-          (lines[i].includes("from '") && !lines[i].includes('export'))) {
+      if (
+        lines[i].trim().startsWith('import ') ||
+        (lines[i].includes("from '") && !lines[i].includes('export'))
+      ) {
         lastImportLine = i;
       }
     }
-    
+
     const lucideImport = `import { ${lucideIcons.join(', ')} } from 'lucide-react';`;
     lines.splice(lastImportLine + 1, 0, lucideImport);
     return lines.join('\n');
   }
-  
+
   return content;
 }
 
@@ -366,21 +368,21 @@ function processFile(filePath) {
   try {
     let content = fs.readFileSync(filePath, 'utf-8');
     const originalContent = content;
-    
+
     // Extract FA icons used
     const faIcons = extractFAIcons(content);
     if (faIcons.length === 0) return { file: filePath, changed: false };
-    
+
     // Replace FA icons with Lucide components
     content = replaceFAWithLucide(content);
-    
+
     // Add Lucide imports if content changed
     if (content !== originalContent) {
       content = addLucideImports(content, faIcons);
       fs.writeFileSync(filePath, content, 'utf-8');
       return { file: filePath, changed: true, icons: faIcons };
     }
-    
+
     return { file: filePath, changed: false };
   } catch (error) {
     return { file: filePath, error: error.message };
@@ -390,14 +392,14 @@ function processFile(filePath) {
 // Main execution
 function main() {
   const srcDir = path.join(__dirname, '../apps/frontend/src');
-  
+
   console.log('🔍 Finding files with Font Awesome icons...');
   const files = findFilesWithFAIcons(srcDir);
   console.log(`Found ${files.length} files with FA icons\n`);
-  
+
   let changedCount = 0;
   let errorCount = 0;
-  
+
   for (const file of files) {
     const result = processFile(file);
     if (result.error) {
@@ -408,7 +410,7 @@ function main() {
       changedCount++;
     }
   }
-  
+
   console.log(`\n📊 Summary:`);
   console.log(`   Files updated: ${changedCount}`);
   console.log(`   Errors: ${errorCount}`);
@@ -416,5 +418,3 @@ function main() {
 }
 
 main();
-
-

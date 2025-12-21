@@ -946,7 +946,10 @@ const CreateBankTransaction = () => {
                               />
                               {fileName && (
                                 <div>
-                                  <X className="h-4 w-4 cursor-pointer" onClick={() => setFileName('')} />{' '}
+                                  <X
+                                    className="h-4 w-4 cursor-pointer"
+                                    onClick={() => setFileName('')}
+                                  />{' '}
                                   {fileName}
                                 </div>
                               )}

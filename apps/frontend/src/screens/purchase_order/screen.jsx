@@ -31,7 +31,21 @@ import { ToWords } from 'to-words';
 import invoiceimage from 'assets/images/invoice/invoice.png';
 import { toast } from 'sonner';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ChevronUp, ChevronDown, Pencil, Plus, Send, ArrowRightCircle, CheckCircle, Ban, Copy, Eye, XCircle, Search, RefreshCw } from 'lucide-react';
+import {
+  ChevronUp,
+  ChevronDown,
+  Pencil,
+  Plus,
+  Send,
+  ArrowRightCircle,
+  CheckCircle,
+  Ban,
+  Copy,
+  Eye,
+  XCircle,
+  Search,
+  RefreshCw,
+} from 'lucide-react';
 
 const toWords = new ToWords({
   localeCode: 'en-IN',
@@ -403,7 +417,8 @@ const PurchaseOrder = () => {
                 )}
                 {row.original.status === 'Draft' && (
                   <DropdownItem onClick={() => changeStatus(row.original.id, 'Sent')}>
-                    <ArrowRightCircle className="h-4 w-4" />Mark As Sent
+                    <ArrowRightCircle className="h-4 w-4" />
+                    Mark As Sent
                   </DropdownItem>
                 )}
                 {row.original.status === 'Sent' && (

@@ -35,7 +35,9 @@
     color: #1e293b !important;
     font-weight: 500;
     background: #e8f0f8 !important;
-    box-shadow: inset 4px 4px 8px rgba(163, 177, 198, 0.6), inset -4px -4px 8px rgba(255, 255, 255, 0.9) !important;
+    box-shadow:
+      inset 4px 4px 8px rgba(163, 177, 198, 0.6),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.9) !important;
     border-radius: 8px !important;
     height: auto !important;
     min-height: 38px !important;
@@ -78,7 +80,9 @@
 .card-select {
   background: #e8f0f8 !important;
   border: none !important;
-  box-shadow: inset 4px 4px 8px rgba(163, 177, 198, 0.6), inset -4px -4px 8px rgba(255, 255, 255, 0.9) !important;
+  box-shadow:
+    inset 4px 4px 8px rgba(163, 177, 198, 0.6),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.9) !important;
   border-radius: 8px !important;
 }
 

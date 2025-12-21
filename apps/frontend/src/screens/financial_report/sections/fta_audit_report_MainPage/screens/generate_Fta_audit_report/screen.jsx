@@ -140,7 +140,8 @@ const GenerateAuditFile = ({ history, commonActions, vatreport, financialReportA
                 >
                   <div>
                     <h5>
-                      <History className="h-4 w-4" />FTA VAT AUDIT REPORT
+                      <History className="h-4 w-4" />
+                      FTA VAT AUDIT REPORT
                     </h5>
                   </div>
                   <div className="d-flex">

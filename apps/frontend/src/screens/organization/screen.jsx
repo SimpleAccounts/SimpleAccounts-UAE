@@ -450,7 +450,8 @@ const Organization = ({
                       <Col md="2"></Col>
                       <Col xs="12" md="8">
                         <Button type="submit" color="primary" className="btn-square mt-5">
-                          <Save className="h-4 w-4" />Save
+                          <Save className="h-4 w-4" />
+                          Save
                         </Button>
                       </Col>
                     </FormGroup>

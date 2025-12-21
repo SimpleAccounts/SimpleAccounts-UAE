@@ -286,14 +286,21 @@ class AdminLayout extends React.Component {
                 <BreadcrumbList>
                   <BreadcrumbItem>
                     <BreadcrumbLink asChild>
-                      <NavLink to={config.BASE_ROUTE} className="text-primary hover:text-primary/80">Home</NavLink>
+                      <NavLink
+                        to={config.BASE_ROUTE}
+                        className="text-primary hover:text-primary/80"
+                      >
+                        Home
+                      </NavLink>
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   {breadcrumbName && (
                     <>
                       <BreadcrumbSeparator />
                       <BreadcrumbItem>
-                        <BreadcrumbPage className="text-slate-700 dark:text-slate-200 font-medium">{breadcrumbName}</BreadcrumbPage>
+                        <BreadcrumbPage className="text-slate-700 dark:text-slate-200 font-medium">
+                          {breadcrumbName}
+                        </BreadcrumbPage>
                       </BreadcrumbItem>
                     </>
                   )}

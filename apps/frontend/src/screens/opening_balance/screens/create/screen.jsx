@@ -255,7 +255,8 @@ const CreateOpeningBalance = ({
                                 <Label htmlFor="transactionCategoryBalanceId">
                                   <span className="text-danger">* </span>
                                   {strings.TransactionCategory}
-                                  <div className="tooltip-icon ml-1"><HelpCircle className="h-4 w-4 inline" />
+                                  <div className="tooltip-icon ml-1">
+                                    <HelpCircle className="h-4 w-4 inline" />
                                     <span className="tooltiptext">
                                       This list will only include categories for which an opening
                                       balance has not been created.

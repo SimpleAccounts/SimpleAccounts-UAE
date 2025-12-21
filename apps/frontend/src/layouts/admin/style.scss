@@ -164,7 +164,7 @@ $radius-xl: 20px;
 
     // Dropdown buttons
     .nav-link,
-    button[class*="nav-link"] {
+    button[class*='nav-link'] {
       @include neu-flat;
       border: none !important;
       border-radius: $radius-md;
@@ -483,7 +483,7 @@ $radius-xl: 20px;
     }
 
     // Language selector
-    button[role="combobox"],
+    button[role='combobox'],
     select {
       @include neu-pressed;
       border: none !important;
@@ -509,7 +509,7 @@ $radius-xl: 20px;
   z-index: 1050;
 }
 
-[role="menu"],
+[role='menu'],
 .dropdown-menu {
   @include neu-raised;
   border: none !important;
@@ -517,7 +517,7 @@ $radius-xl: 20px;
   padding: $space-sm;
   min-width: 200px;
 
-  [role="menuitem"],
+  [role='menuitem'],
   .dropdown-item {
     display: flex;
     align-items: center;
@@ -544,7 +544,7 @@ $radius-xl: 20px;
     }
   }
 
-  [role="separator"],
+  [role='separator'],
   .dropdown-divider {
     height: 1px;
     background: rgba($text-light, 0.3);
