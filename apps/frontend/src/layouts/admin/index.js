@@ -328,12 +328,12 @@ class AdminLayout extends React.Component {
                 </div>
                 {/* Optional: Date or other info on the right */}
                 <div
-                  className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl text-sm"
+                  className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium"
                   style={{
                     background: 'var(--neu-bg, #e8eef5)',
                     boxShadow:
                       '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
-                    color: 'var(--neu-text-muted, #98afc2)',
+                    color: 'var(--neu-text-secondary, #3d5a80)',
                   }}
                 >
                   <span>
