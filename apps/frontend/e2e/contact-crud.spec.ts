@@ -66,9 +66,17 @@ test.describe('Contact List View', () => {
 
     // Look for create/new button
     const createButtonExists = await Promise.race([
-      page.getByRole('button', { name: /new|create|add/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /new|create|add/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /new|create|add/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /new|create|add/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(createButtonExists).toBeTruthy();
@@ -80,8 +88,12 @@ test.describe('Contact List View', () => {
 
     // Look for table or list structure
     const tableExists = await Promise.race([
-      page.locator('table, .table, [class*="grid"], [class*="list"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, .table, [class*="grid"], [class*="list"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(tableExists).toBeTruthy();
@@ -93,9 +105,17 @@ test.describe('Contact List View', () => {
 
     // Look for type filters
     const typeFilterExists = await Promise.race([
-      page.getByText(/customer|supplier|vendor/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('select[name*="type"], input[name*="type"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/customer|supplier|vendor/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('select[name*="type"], input[name*="type"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof typeFilterExists).toBe('boolean');
@@ -107,9 +127,17 @@ test.describe('Contact List View', () => {
 
     // Look for search input
     const searchExists = await Promise.race([
-      page.locator('input[type="search"], input[placeholder*="search" i], input[name*="search"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByPlaceholder(/search/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="search"], input[placeholder*="search" i], input[name*="search"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByPlaceholder(/search/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof searchExists).toBe('boolean');
@@ -121,8 +149,12 @@ test.describe('Contact List View', () => {
 
     // Look for contact names (table cells or list items)
     const nameExists = await Promise.race([
-      page.locator('td, .contact-name, [class*="name"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('td, .contact-name, [class*="name"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof nameExists).toBe('boolean');
@@ -134,8 +166,12 @@ test.describe('Contact List View', () => {
 
     // Look for common columns like email, phone
     const columnsExist = await Promise.race([
-      page.locator('th, .column-header').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('th, .column-header')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof columnsExist).toBe('boolean');
@@ -147,8 +183,12 @@ test.describe('Contact List View', () => {
 
     // Look for pagination controls
     const paginationExists = await Promise.race([
-      page.locator('[class*="pagination"], .pager').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="pagination"], .pager')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof paginationExists).toBe('boolean');
@@ -169,8 +209,12 @@ test.describe('Contact List View', () => {
 
     // Look for sortable column headers
     const sortableExists = await Promise.race([
-      page.locator('th[class*="sortable"], th[role="columnheader"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('th[class*="sortable"], th[role="columnheader"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof sortableExists).toBe('boolean');
@@ -217,10 +261,24 @@ test.describe('Contact Creation', () => {
 
     // Look for contact type selector
     const typeExists = await Promise.race([
-      page.locator('select[name*="type"], input[name*="type"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/customer|supplier|vendor/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('input[type="checkbox"][name*="customer"], input[type="checkbox"][name*="supplier"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="type"], input[name*="type"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/customer|supplier|vendor/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator(
+          'input[type="checkbox"][name*="customer"], input[type="checkbox"][name*="supplier"]'
+        )
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof typeExists).toBe('boolean');
@@ -232,9 +290,17 @@ test.describe('Contact Creation', () => {
 
     // Look for email field
     const emailExists = await Promise.race([
-      page.locator('input[type="email"], input[name*="email"], input[id*="email"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByLabel(/email/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="email"], input[name*="email"], input[id*="email"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByLabel(/email/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof emailExists).toBe('boolean');
@@ -246,9 +312,17 @@ test.describe('Contact Creation', () => {
 
     // Look for phone field
     const phoneExists = await Promise.race([
-      page.locator('input[type="tel"], input[name*="phone"], input[id*="phone"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByLabel(/phone|mobile|telephone/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="tel"], input[name*="phone"], input[id*="phone"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByLabel(/phone|mobile|telephone/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof phoneExists).toBe('boolean');
@@ -260,9 +334,17 @@ test.describe('Contact Creation', () => {
 
     // Look for address fields
     const addressExists = await Promise.race([
-      page.locator('input[name*="address"], textarea[name*="address"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByLabel(/address|street/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="address"], textarea[name*="address"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByLabel(/address|street/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof addressExists).toBe('boolean');
@@ -274,9 +356,17 @@ test.describe('Contact Creation', () => {
 
     // Look for tax/TRN fields (common in UAE)
     const taxExists = await Promise.race([
-      page.locator('input[name*="tax"], input[name*="trn"], input[name*="vat"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByLabel(/tax|trn|vat/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="tax"], input[name*="trn"], input[name*="vat"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByLabel(/tax|trn|vat/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof taxExists).toBe('boolean');
@@ -288,9 +378,17 @@ test.describe('Contact Creation', () => {
 
     // Look for company field
     const companyExists = await Promise.race([
-      page.locator('input[name*="company"], input[name*="business"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByLabel(/company|business|organization/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="company"], input[name*="business"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByLabel(/company|business|organization/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof companyExists).toBe('boolean');
@@ -302,9 +400,17 @@ test.describe('Contact Creation', () => {
 
     // Look for payment terms
     const paymentTermsExists = await Promise.race([
-      page.locator('input[name*="payment"], input[name*="credit"], select[name*="terms"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByLabel(/payment.*term|credit.*limit/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="payment"], input[name*="credit"], select[name*="terms"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByLabel(/payment.*term|credit.*limit/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof paymentTermsExists).toBe('boolean');
@@ -316,9 +422,17 @@ test.describe('Contact Creation', () => {
 
     // Look for notes/remarks field
     const notesExists = await Promise.race([
-      page.locator('textarea[name*="note"], textarea[name*="remark"], textarea[name*="comment"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByLabel(/note|remark|comment/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('textarea[name*="note"], textarea[name*="remark"], textarea[name*="comment"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByLabel(/note|remark|comment/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof notesExists).toBe('boolean');
@@ -330,8 +444,12 @@ test.describe('Contact Creation', () => {
 
     // Look for save/submit button
     const saveButtonExists = await Promise.race([
-      page.getByRole('button', { name: /save|submit|create/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /save|submit|create/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(saveButtonExists).toBeTruthy();
@@ -343,9 +461,17 @@ test.describe('Contact Creation', () => {
 
     // Look for cancel/back button
     const cancelButtonExists = await Promise.race([
-      page.getByRole('button', { name: /cancel|back|close/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /cancel|back|close/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /cancel|back|close/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /cancel|back|close/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof cancelButtonExists).toBe('boolean');
@@ -404,8 +530,12 @@ test.describe('Contact Read/View', () => {
 
     // Try to click on first contact if exists
     const firstContactLink = await Promise.race([
-      page.locator('table tbody tr:first-child, .contact-item:first-child').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table tbody tr:first-child, .contact-item:first-child')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof firstContactLink).toBe('boolean');
@@ -425,8 +555,12 @@ test.describe('Contact Read/View', () => {
 
       // Should show contact details
       const detailsVisible = await Promise.race([
-        page.locator('[class*="contact-detail"], [class*="view"]').first().isVisible({ timeout: 5000 }).then(() => true),
-        page.waitForTimeout(5000).then(() => false)
+        page
+          .locator('[class*="contact-detail"], [class*="view"]')
+          .first()
+          .isVisible({ timeout: 5000 })
+          .then(() => true),
+        page.waitForTimeout(5000).then(() => false),
       ]);
 
       expect(typeof detailsVisible).toBe('boolean');
@@ -447,9 +581,17 @@ test.describe('Contact Read/View', () => {
 
       // Look for transaction history section
       const historyExists = await Promise.race([
-        page.locator('[class*="transaction"], [class*="history"]').first().isVisible({ timeout: 5000 }).then(() => true),
-        page.getByText(/transaction|history|invoice|payment/i).first().isVisible({ timeout: 5000 }).then(() => true),
-        page.waitForTimeout(5000).then(() => false)
+        page
+          .locator('[class*="transaction"], [class*="history"]')
+          .first()
+          .isVisible({ timeout: 5000 })
+          .then(() => true),
+        page
+          .getByText(/transaction|history|invoice|payment/i)
+          .first()
+          .isVisible({ timeout: 5000 })
+          .then(() => true),
+        page.waitForTimeout(5000).then(() => false),
       ]);
 
       expect(typeof historyExists).toBe('boolean');
@@ -462,9 +604,17 @@ test.describe('Contact Read/View', () => {
 
     // Look for balance information in list or detail view
     const balanceExists = await Promise.race([
-      page.locator('[class*="balance"], [class*="outstanding"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/balance|outstanding|receivable|payable/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="balance"], [class*="outstanding"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/balance|outstanding|receivable|payable/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof balanceExists).toBe('boolean');
@@ -486,10 +636,22 @@ test.describe('Contact Update/Edit', () => {
 
     // Look for edit button or link
     const editExists = await Promise.race([
-      page.getByRole('button', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="edit"], button[title*="Edit"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="edit"], button[title*="Edit"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof editExists).toBe('boolean');
@@ -550,8 +712,12 @@ test.describe('Contact Update/Edit', () => {
       await page.waitForTimeout(3000);
 
       const updateButton = await Promise.race([
-        page.getByRole('button', { name: /update|save/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-        page.waitForTimeout(5000).then(() => false)
+        page
+          .getByRole('button', { name: /update|save/i })
+          .first()
+          .isVisible({ timeout: 5000 })
+          .then(() => true),
+        page.waitForTimeout(5000).then(() => false),
       ]);
 
       expect(typeof updateButton).toBe('boolean');
@@ -606,9 +772,17 @@ test.describe('Contact Delete', () => {
 
     // Look for delete button
     const deleteExists = await Promise.race([
-      page.getByRole('button', { name: /delete|remove/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="delete"], button[title*="Delete"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /delete|remove/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="delete"], button[title*="Delete"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof deleteExists).toBe('boolean');
@@ -630,7 +804,11 @@ test.describe('Contact Delete', () => {
       await page.waitForTimeout(1000);
 
       // If modal appears instead of browser dialog
-      const modalExists = await page.locator('.modal, [role="dialog"], [class*="confirm"]').first().isVisible({ timeout: 3000 }).catch(() => false);
+      const modalExists = await page
+        .locator('.modal, [role="dialog"], [class*="confirm"]')
+        .first()
+        .isVisible({ timeout: 3000 })
+        .catch(() => false);
 
       expect(typeof modalExists).toBe('boolean');
     }
@@ -652,8 +830,12 @@ test.describe('Contact Delete', () => {
 
       // If contact has transactions, should show error or warning
       const warningExists = await Promise.race([
-        page.locator('[class*="error"], [class*="warning"], [role="alert"]').first().isVisible({ timeout: 3000 }).then(() => true),
-        page.waitForTimeout(3000).then(() => false)
+        page
+          .locator('[class*="error"], [class*="warning"], [role="alert"]')
+          .first()
+          .isVisible({ timeout: 3000 })
+          .then(() => true),
+        page.waitForTimeout(3000).then(() => false),
       ]);
 
       // Warning might or might not appear depending on contact state
@@ -695,7 +877,9 @@ test.describe('Contact Search and Filter', () => {
     await page.waitForTimeout(3000);
 
     // Find search field
-    const searchField = page.locator('input[type="search"], input[placeholder*="search" i]').first();
+    const searchField = page
+      .locator('input[type="search"], input[placeholder*="search" i]')
+      .first();
     const searchExists = await searchField.isVisible({ timeout: 5000 }).catch(() => false);
 
     if (searchExists) {
@@ -703,7 +887,11 @@ test.describe('Contact Search and Filter', () => {
       await page.waitForTimeout(1000);
 
       // Results should update
-      const resultsVisible = await page.locator('table, .contact-list').first().isVisible({ timeout: 5000 }).catch(() => false);
+      const resultsVisible = await page
+        .locator('table, .contact-list')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .catch(() => false);
       expect(resultsVisible).toBeTruthy();
     }
   });

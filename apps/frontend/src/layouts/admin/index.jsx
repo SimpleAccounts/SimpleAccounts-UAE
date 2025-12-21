@@ -275,7 +275,10 @@ class AdminLayout extends React.Component {
         />
         <div className="flex flex-1">
           <Sidebar items={finalArray.items} pathname={pathname} minimized={sidebarMinimized} />
-          <main className="flex-1 overflow-y-auto overflow-x-hidden" style={{ backgroundColor: '#dfe9f7' }}>
+          <main
+            className="flex-1 overflow-y-auto overflow-x-hidden"
+            style={{ backgroundColor: '#dfe9f7' }}
+          >
             {SubscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
               <Alert variant="destructive" className="m-4">
                 <AlertDescription>{SubscriptionMessage}</AlertDescription>

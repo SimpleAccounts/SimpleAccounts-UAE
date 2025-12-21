@@ -2,8 +2,7 @@ import { test, expect } from '@playwright/test';
 
 const RUN_SMOKE = process.env.RUN_E2E_SMOKE === 'true';
 const LOGIN_PATH = process.env.E2E_LOGIN_PATH || '/login';
-const INVOICE_PATH =
-  process.env.E2E_INVOICE_PATH || '/admin/income/customer-invoice';
+const INVOICE_PATH = process.env.E2E_INVOICE_PATH || '/admin/income/customer-invoice';
 const POST_LOGIN_PATH = process.env.E2E_POST_LOGIN_PATH || '/admin';
 
 const describeSmoke = RUN_SMOKE ? test.describe : test.describe.skip;
@@ -17,7 +16,7 @@ describeSmoke('Auth & Invoice smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run the auth smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run the auth smoke test'
     );
 
     await page.goto(LOGIN_PATH);
@@ -45,10 +44,8 @@ describeSmoke('Auth & Invoice smoke journey', () => {
     await page.waitForSelector('.customer-invoice-screen', {
       timeout: 180_000,
     });
-    await expect(
-      page.locator('.customer-invoice-screen .h4 span'),
-    ).toContainText(/customer invoices/i);
+    await expect(page.locator('.customer-invoice-screen .h4 span')).toContainText(
+      /customer invoices/i
+    );
   });
 });
-
-

@@ -133,7 +133,10 @@ const CashFlow = props => {
               </div>
             </div>
           </div>
-          <div className="row data-item total mt-2" style={{ display: 'flex', alignItems: 'center' }}>
+          <div
+            className="row data-item total mt-2"
+            style={{ display: 'flex', alignItems: 'center' }}
+          >
             <div
               className="column"
               style={{
@@ -183,4 +186,3 @@ const CashFlow = props => {
 };
 
 export default CashFlow;
-

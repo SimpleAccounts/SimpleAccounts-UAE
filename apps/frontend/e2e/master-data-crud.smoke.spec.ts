@@ -37,7 +37,7 @@ describeSmoke('Master Data CRUD smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run master data smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run master data smoke test'
     );
 
     await login(page, username!, password!);
@@ -61,7 +61,7 @@ describeSmoke('Master Data CRUD smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run COA form smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run COA form smoke test'
     );
 
     await login(page, username!, password!);
@@ -87,7 +87,7 @@ describeSmoke('Master Data CRUD smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run products smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run products smoke test'
     );
 
     await login(page, username!, password!);
@@ -109,7 +109,7 @@ describeSmoke('Master Data CRUD smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run product form smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run product form smoke test'
     );
 
     await login(page, username!, password!);
@@ -131,7 +131,7 @@ describeSmoke('Master Data CRUD smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run VAT categories smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run VAT categories smoke test'
     );
 
     await login(page, username!, password!);

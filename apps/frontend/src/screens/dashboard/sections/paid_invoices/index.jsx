@@ -74,17 +74,19 @@ const PaidInvoices = props => {
 
   useEffect(() => {
     if (DashboardActions && DashboardActions.getInvoiceGraphData) {
-      DashboardActions.getInvoiceGraphData(12).then(action => {
-        // Redux Toolkit thunks return action objects
-        if (action && action.type && action.type.includes('fulfilled')) {
-          getInvoiceGraph(action.payload);
-        } else if (action && action.payload) {
-          // Handle unwrapped result
-          getInvoiceGraph(action.payload);
-        }
-      }).catch(err => {
-        console.error('Error loading invoice graph data:', err);
-      });
+      DashboardActions.getInvoiceGraphData(12)
+        .then(action => {
+          // Redux Toolkit thunks return action objects
+          if (action && action.type && action.type.includes('fulfilled')) {
+            getInvoiceGraph(action.payload);
+          } else if (action && action.payload) {
+            // Handle unwrapped result
+            getInvoiceGraph(action.payload);
+          }
+        })
+        .catch(err => {
+          console.error('Error loading invoice graph data:', err);
+        });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);

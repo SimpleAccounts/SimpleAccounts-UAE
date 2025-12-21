@@ -50,8 +50,12 @@ test.describe('Dashboard Navigation', () => {
   test('should display main navigation menu', async ({ page }) => {
     // Look for navigation menu
     const navExists = await Promise.race([
-      page.locator('nav, [role="navigation"], .sidebar, .menu, .nav').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('nav, [role="navigation"], .sidebar, .menu, .nav')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(navExists).toBeTruthy();
@@ -66,15 +70,23 @@ test.describe('Dashboard Navigation', () => {
       /invoice|income/i,
       /expense|purchase/i,
       /contact|customer|supplier/i,
-      /report/i
+      /report/i,
     ];
 
     let foundItems = 0;
     for (const pattern of navItems) {
       const linkExists = await Promise.race([
-        page.getByRole('link', { name: pattern }).first().isVisible({ timeout: 2000 }).then(() => true),
-        page.getByText(pattern).first().isVisible({ timeout: 2000 }).then(() => true),
-        page.waitForTimeout(2000).then(() => false)
+        page
+          .getByRole('link', { name: pattern })
+          .first()
+          .isVisible({ timeout: 2000 })
+          .then(() => true),
+        page
+          .getByText(pattern)
+          .first()
+          .isVisible({ timeout: 2000 })
+          .then(() => true),
+        page.waitForTimeout(2000).then(() => false),
       ]);
 
       if (linkExists) foundItems++;
@@ -114,8 +126,12 @@ test.describe('Dashboard Navigation', () => {
   test('should have header with branding or logo', async ({ page }) => {
     // Look for header elements
     const headerExists = await Promise.race([
-      page.locator('header, .header, .navbar, .app-header').first().isVisible({ timeout: 3000 }).then(() => true),
-      page.waitForTimeout(3000).then(() => false)
+      page
+        .locator('header, .header, .navbar, .app-header')
+        .first()
+        .isVisible({ timeout: 3000 })
+        .then(() => true),
+      page.waitForTimeout(3000).then(() => false),
     ]);
 
     expect(headerExists).toBeTruthy();
@@ -124,8 +140,12 @@ test.describe('Dashboard Navigation', () => {
   test('should display user menu or profile dropdown', async ({ page }) => {
     // Look for user profile/menu elements
     const userMenuExists = await Promise.race([
-      page.locator('[class*="user"], [class*="profile"], [class*="account"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="user"], [class*="profile"], [class*="account"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(userMenuExists).toBeTruthy();
@@ -138,8 +158,12 @@ test.describe('Dashboard Navigation', () => {
 
     // Look for breadcrumbs
     const breadcrumbExists = await Promise.race([
-      page.locator('[class*="breadcrumb"], nav[aria-label*="breadcrumb"]').first().isVisible({ timeout: 3000 }).then(() => true),
-      page.waitForTimeout(3000).then(() => false)
+      page
+        .locator('[class*="breadcrumb"], nav[aria-label*="breadcrumb"]')
+        .first()
+        .isVisible({ timeout: 3000 })
+        .then(() => true),
+      page.waitForTimeout(3000).then(() => false),
     ]);
 
     // Breadcrumbs are optional but good to check
@@ -210,8 +234,12 @@ test.describe('Dashboard Data Display', () => {
 
     // Look for dashboard widgets/cards
     const widgetExists = await Promise.race([
-      page.locator('.card, .widget, .panel, [class*="dashboard"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('.card, .widget, .panel, [class*="dashboard"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(widgetExists).toBeTruthy();
@@ -222,8 +250,12 @@ test.describe('Dashboard Data Display', () => {
 
     // Look for numbers, metrics, statistics
     const statsExists = await Promise.race([
-      page.locator('[class*="stat"], [class*="metric"], [class*="summary"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="stat"], [class*="metric"], [class*="summary"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     // Statistics are common on dashboards
@@ -247,8 +279,12 @@ test.describe('Dashboard Data Display', () => {
 
     // Look for chart elements (canvas, svg)
     const chartExists = await Promise.race([
-      page.locator('canvas, svg[class*="chart"], [class*="graph"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('canvas, svg[class*="chart"], [class*="graph"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     // Charts are optional but common
@@ -268,9 +304,17 @@ test.describe('Dashboard Data Display', () => {
 
     // Look for recent items, activities, or transaction lists
     const recentExists = await Promise.race([
-      page.locator('[class*="recent"], [class*="activity"], [class*="transaction"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('table, .table, .list').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="recent"], [class*="activity"], [class*="transaction"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('table, .table, .list')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     // Recent activities are optional
@@ -297,9 +341,17 @@ test.describe('Dashboard Data Display', () => {
     // Look for currency symbols or formatted numbers
     const currencyPattern = /AED|USD|EUR|£|€|\$|₹/;
     const currencyExists = await Promise.race([
-      page.locator('text=' + currencyPattern.toString()).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(currencyPattern).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('text=' + currencyPattern.toString())
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(currencyPattern)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     // Currency display is common in accounting software
@@ -331,8 +383,12 @@ test.describe('Dashboard Data Display', () => {
 
     // Look for loading indicators during initial load
     const loadingExists = await Promise.race([
-      page.locator('[class*="loading"], [class*="spinner"], .loader, [class*="skeleton"]').first().isVisible({ timeout: 2000 }).then(() => true),
-      page.waitForTimeout(2000).then(() => false)
+      page
+        .locator('[class*="loading"], [class*="spinner"], .loader, [class*="skeleton"]')
+        .first()
+        .isVisible({ timeout: 2000 })
+        .then(() => true),
+      page.waitForTimeout(2000).then(() => false),
     ]);
 
     // Loading states are optional but good UX
@@ -344,9 +400,17 @@ test.describe('Dashboard Data Display', () => {
 
     // Look for action buttons like "New Invoice", "Add Expense"
     const quickActionExists = await Promise.race([
-      page.getByRole('button', { name: /new|add|create/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /new|add|create/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /new|add|create/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /new|add|create/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     // Quick actions are common on dashboards

@@ -3,8 +3,7 @@ import { test, expect } from '@playwright/test';
 const RUN_SMOKE = process.env.RUN_E2E_SMOKE === 'true';
 const LOGIN_PATH = process.env.E2E_LOGIN_PATH || '/login';
 const POST_LOGIN_PATH = process.env.E2E_POST_LOGIN_PATH || '/admin';
-const CONTACTS_PATH =
-  process.env.E2E_CONTACTS_PATH || '/admin/master/contact';
+const CONTACTS_PATH = process.env.E2E_CONTACTS_PATH || '/admin/master/contact';
 
 const describeSmoke = RUN_SMOKE ? test.describe : test.describe.skip;
 
@@ -17,7 +16,7 @@ describeSmoke('Contact management smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run the contact smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run the contact smoke test'
     );
 
     // Login
@@ -62,7 +61,7 @@ describeSmoke('Contact management smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run the contact form smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run the contact form smoke test'
     );
 
     // Login

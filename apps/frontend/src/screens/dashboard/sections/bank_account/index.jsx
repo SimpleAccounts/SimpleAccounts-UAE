@@ -54,7 +54,8 @@ const backOption = {
 };
 
 const BankAccount = props => {
-  const { DashboardActions, bank_account_type, bank_account_graph, universal_currency_list } = props;
+  const { DashboardActions, bank_account_type, bank_account_graph, universal_currency_list } =
+    props;
   const [language] = useState(window['localStorage'].getItem('language'));
   const [totalBalance, setTotalBalance] = useState(0);
   const bankAccountSelect = useRef(null);
@@ -240,4 +241,3 @@ const BankAccount = props => {
 };
 
 export default BankAccount;
-

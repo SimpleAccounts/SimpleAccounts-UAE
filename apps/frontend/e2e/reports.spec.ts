@@ -52,8 +52,12 @@ test.describe('Reports Dashboard', () => {
 
     // Look for reports list or grid
     const reportsListExists = await Promise.race([
-      page.locator('[class*="report"], [class*="list"], [class*="grid"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="report"], [class*="list"], [class*="grid"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(reportsListExists).toBeTruthy();
@@ -65,8 +69,12 @@ test.describe('Reports Dashboard', () => {
 
     // Look for common report names
     const reportNamesExist = await Promise.race([
-      page.getByText(/profit.*loss|balance.*sheet|vat|cash.*flow/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/profit.*loss|balance.*sheet|vat|cash.*flow/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(reportNamesExist).toBeTruthy();
@@ -78,8 +86,12 @@ test.describe('Reports Dashboard', () => {
 
     // Look for report links
     const reportLinksExist = await Promise.race([
-      page.locator('a[href*="report"], button[class*="report"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('a[href*="report"], button[class*="report"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(reportLinksExist).toBeTruthy();
@@ -100,7 +112,8 @@ test.describe('Profit and Loss Report', () => {
     await page.waitForTimeout(2000);
 
     // Verify we're on P&L page
-    const isOnPNL = page.url().includes('profit') || page.url().includes('p-l') || page.url().includes('pnl');
+    const isOnPNL =
+      page.url().includes('profit') || page.url().includes('p-l') || page.url().includes('pnl');
     expect(isOnPNL || page.url().includes('report')).toBeTruthy();
   });
 
@@ -110,9 +123,17 @@ test.describe('Profit and Loss Report', () => {
 
     // Look for date range inputs
     const dateRangeExists = await Promise.race([
-      page.locator('input[type="date"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="date-picker"], [class*="daterange"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="date"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="date-picker"], [class*="daterange"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(dateRangeExists).toBeTruthy();
@@ -124,9 +145,17 @@ test.describe('Profit and Loss Report', () => {
 
     // Look for income/revenue section
     const incomeExists = await Promise.race([
-      page.getByText(/income|revenue|sales/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="income"], [class*="revenue"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/income|revenue|sales/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="income"], [class*="revenue"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof incomeExists).toBe('boolean');
@@ -138,9 +167,17 @@ test.describe('Profit and Loss Report', () => {
 
     // Look for expenses section
     const expensesExists = await Promise.race([
-      page.getByText(/expense|cost|expenditure/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="expense"], [class*="cost"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/expense|cost|expenditure/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="expense"], [class*="cost"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof expensesExists).toBe('boolean');
@@ -152,9 +189,17 @@ test.describe('Profit and Loss Report', () => {
 
     // Look for net profit/loss
     const netProfitExists = await Promise.race([
-      page.getByText(/net.*profit|net.*loss|bottom.*line/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="net-profit"], [class*="net-loss"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/net.*profit|net.*loss|bottom.*line/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="net-profit"], [class*="net-loss"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof netProfitExists).toBe('boolean');
@@ -166,9 +211,17 @@ test.describe('Profit and Loss Report', () => {
 
     // Look for export/PDF button
     const exportExists = await Promise.race([
-      page.getByRole('button', { name: /export|pdf|download/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="export"], [class*="pdf"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /export|pdf|download/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="export"], [class*="pdf"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof exportExists).toBe('boolean');
@@ -180,9 +233,17 @@ test.describe('Profit and Loss Report', () => {
 
     // Look for Excel export
     const excelExists = await Promise.race([
-      page.getByRole('button', { name: /excel|xlsx|csv/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="excel"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /excel|xlsx|csv/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="excel"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof excelExists).toBe('boolean');
@@ -194,9 +255,17 @@ test.describe('Profit and Loss Report', () => {
 
     // Look for comparison options
     const comparisonExists = await Promise.race([
-      page.locator('select, [class*="compare"], [id*="compare"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/compare|comparison|previous/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select, [class*="compare"], [id*="compare"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/compare|comparison|previous/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof comparisonExists).toBe('boolean');
@@ -208,9 +277,17 @@ test.describe('Profit and Loss Report', () => {
 
     // Look for gross profit
     const grossProfitExists = await Promise.race([
-      page.getByText(/gross.*profit|gross.*margin/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="gross-profit"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/gross.*profit|gross.*margin/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="gross-profit"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof grossProfitExists).toBe('boolean');
@@ -241,9 +318,17 @@ test.describe('Balance Sheet Report', () => {
 
     // Look for date selector
     const dateExists = await Promise.race([
-      page.locator('input[type="date"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/as of/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="date"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/as of/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof dateExists).toBe('boolean');
@@ -255,9 +340,17 @@ test.describe('Balance Sheet Report', () => {
 
     // Look for assets
     const assetsExists = await Promise.race([
-      page.getByText(/asset/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="asset"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/asset/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="asset"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof assetsExists).toBe('boolean');
@@ -269,9 +362,17 @@ test.describe('Balance Sheet Report', () => {
 
     // Look for liabilities
     const liabilitiesExists = await Promise.race([
-      page.getByText(/liabilit/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="liability"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/liabilit/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="liability"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof liabilitiesExists).toBe('boolean');
@@ -283,9 +384,17 @@ test.describe('Balance Sheet Report', () => {
 
     // Look for equity
     const equityExists = await Promise.race([
-      page.getByText(/equity|capital/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="equity"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/equity|capital/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="equity"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof equityExists).toBe('boolean');
@@ -297,8 +406,12 @@ test.describe('Balance Sheet Report', () => {
 
     // Look for total assets and total liabilities + equity
     const totalsExist = await Promise.race([
-      page.getByText(/total.*asset|total.*liabilit/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/total.*asset|total.*liabilit/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof totalsExist).toBe('boolean');
@@ -319,7 +432,8 @@ test.describe('VAT Report', () => {
     await page.waitForTimeout(2000);
 
     // Verify we're on VAT page
-    const isOnVAT = page.url().includes('vat') || page.url().includes('tax') || page.url().includes('report');
+    const isOnVAT =
+      page.url().includes('vat') || page.url().includes('tax') || page.url().includes('report');
     expect(isOnVAT).toBeTruthy();
   });
 
@@ -329,9 +443,17 @@ test.describe('VAT Report', () => {
 
     // Look for period selector (monthly, quarterly, annual)
     const periodExists = await Promise.race([
-      page.locator('select[name*="period"], [id*="period"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/period|quarter|month/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="period"], [id*="period"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/period|quarter|month/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof periodExists).toBe('boolean');
@@ -343,9 +465,17 @@ test.describe('VAT Report', () => {
 
     // Look for output VAT
     const outputVATExists = await Promise.race([
-      page.getByText(/output.*vat|sales.*vat|vat.*collected/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="output-vat"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/output.*vat|sales.*vat|vat.*collected/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="output-vat"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof outputVATExists).toBe('boolean');
@@ -357,9 +487,17 @@ test.describe('VAT Report', () => {
 
     // Look for input VAT
     const inputVATExists = await Promise.race([
-      page.getByText(/input.*vat|purchase.*vat|vat.*paid/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="input-vat"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/input.*vat|purchase.*vat|vat.*paid/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="input-vat"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof inputVATExists).toBe('boolean');
@@ -371,9 +509,17 @@ test.describe('VAT Report', () => {
 
     // Look for net VAT
     const netVATExists = await Promise.race([
-      page.getByText(/net.*vat|vat.*payable|vat.*refund/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="net-vat"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/net.*vat|vat.*payable|vat.*refund/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="net-vat"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof netVATExists).toBe('boolean');
@@ -385,9 +531,17 @@ test.describe('VAT Report', () => {
 
     // Look for VAT rate breakdown
     const rateBreakdownExists = await Promise.race([
-      page.getByText(/5%|0%|exempt|standard.*rate/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="rate"], table').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/5%|0%|exempt|standard.*rate/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="rate"], table')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof rateBreakdownExists).toBe('boolean');
@@ -399,9 +553,17 @@ test.describe('VAT Report', () => {
 
     // Look for file return button
     const fileReturnExists = await Promise.race([
-      page.getByRole('button', { name: /file.*return|submit.*return/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="file-return"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /file.*return|submit.*return/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="file-return"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof fileReturnExists).toBe('boolean');
@@ -413,9 +575,17 @@ test.describe('VAT Report', () => {
 
     // Look for history
     const historyExists = await Promise.race([
-      page.locator('table, [class*="history"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/history|previous.*return/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, [class*="history"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/history|previous.*return/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof historyExists).toBe('boolean');
@@ -427,9 +597,17 @@ test.describe('VAT Report', () => {
 
     // Look for download option
     const downloadExists = await Promise.race([
-      page.getByRole('button', { name: /download|export|pdf/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="download"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /download|export|pdf/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="download"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof downloadExists).toBe('boolean');
@@ -451,9 +629,17 @@ test.describe('Report Filters and Options', () => {
 
     // Look for basis selection
     const basisExists = await Promise.race([
-      page.locator('select[name*="basis"], input[name*="basis"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/cash.*basis|accrual.*basis/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="basis"], input[name*="basis"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/cash.*basis|accrual.*basis/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof basisExists).toBe('boolean');
@@ -465,9 +651,17 @@ test.describe('Report Filters and Options', () => {
 
     // Look for refresh button
     const refreshExists = await Promise.race([
-      page.getByRole('button', { name: /refresh|reload|update/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="refresh"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /refresh|reload|update/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="refresh"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof refreshExists).toBe('boolean');
@@ -479,9 +673,17 @@ test.describe('Report Filters and Options', () => {
 
     // Look for print button
     const printExists = await Promise.race([
-      page.getByRole('button', { name: /print/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="print"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /print/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="print"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof printExists).toBe('boolean');
@@ -493,9 +695,17 @@ test.describe('Report Filters and Options', () => {
 
     // Look for generated date
     const dateExists = await Promise.race([
-      page.getByText(/generated|created|as of|report date/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="generated"], [class*="date"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/generated|created|as of|report date/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="generated"], [class*="date"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof dateExists).toBe('boolean');

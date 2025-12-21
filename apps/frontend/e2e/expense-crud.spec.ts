@@ -66,9 +66,17 @@ test.describe('Expense List View', () => {
 
     // Look for create/new button
     const createButtonExists = await Promise.race([
-      page.getByRole('button', { name: /new|create|add/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /new|create|add/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /new|create|add/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /new|create|add/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(createButtonExists).toBeTruthy();
@@ -80,8 +88,12 @@ test.describe('Expense List View', () => {
 
     // Look for table or list structure
     const tableExists = await Promise.race([
-      page.locator('table, .table, [class*="grid"], [class*="list"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, .table, [class*="grid"], [class*="list"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(tableExists).toBeTruthy();
@@ -93,9 +105,17 @@ test.describe('Expense List View', () => {
 
     // Look for search input or filter options
     const searchExists = await Promise.race([
-      page.locator('input[type="search"], input[placeholder*="search" i], input[name*="search"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByPlaceholder(/search|filter/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="search"], input[placeholder*="search" i], input[name*="search"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByPlaceholder(/search|filter/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof searchExists).toBe('boolean');
@@ -107,9 +127,17 @@ test.describe('Expense List View', () => {
 
     // Look for category filters or columns
     const categoryExists = await Promise.race([
-      page.getByText(/category|type|classification/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="category"], [class*="type"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/category|type|classification/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="category"], [class*="type"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof categoryExists).toBe('boolean');
@@ -121,8 +149,12 @@ test.describe('Expense List View', () => {
 
     // Look for currency or amount displays
     const amountExists = await Promise.race([
-      page.locator('[class*="amount"], [class*="total"], td:has-text("AED"), td:has-text("$")').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="amount"], [class*="total"], td:has-text("AED"), td:has-text("$")')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof amountExists).toBe('boolean');
@@ -134,9 +166,17 @@ test.describe('Expense List View', () => {
 
     // Look for pagination controls
     const paginationExists = await Promise.race([
-      page.locator('[class*="pagination"], .pager, [aria-label*="pagination"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('navigation', { name: /pagination/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="pagination"], .pager, [aria-label*="pagination"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('navigation', { name: /pagination/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof paginationExists).toBe('boolean');
@@ -157,9 +197,17 @@ test.describe('Expense List View', () => {
 
     // Look for status badges or indicators (paid, pending, etc.)
     const statusExists = await Promise.race([
-      page.locator('[class*="status"], [class*="badge"], .label').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/paid|pending|draft|approved/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="status"], [class*="badge"], .label')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/paid|pending|draft|approved/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof statusExists).toBe('boolean');
@@ -188,8 +236,12 @@ test.describe('Expense Creation', () => {
 
     // Wait for form to appear
     const formExists = await Promise.race([
-      page.locator('form, .create-expense-screen, .supplier-invoice-create, [class*="expense-form"]').first().isVisible({ timeout: 30_000 }).then(() => true),
-      page.waitForTimeout(30_000).then(() => false)
+      page
+        .locator('form, .create-expense-screen, .supplier-invoice-create, [class*="expense-form"]')
+        .first()
+        .isVisible({ timeout: 30_000 })
+        .then(() => true),
+      page.waitForTimeout(30_000).then(() => false),
     ]);
 
     expect(formExists).toBeTruthy();
@@ -208,7 +260,11 @@ test.describe('Expense Creation', () => {
 
     let foundFields = 0;
     for (const selector of commonFields) {
-      const fieldExists = await page.locator(selector).first().isVisible({ timeout: 3000 }).catch(() => false);
+      const fieldExists = await page
+        .locator(selector)
+        .first()
+        .isVisible({ timeout: 3000 })
+        .catch(() => false);
       if (fieldExists) foundFields++;
     }
 
@@ -222,9 +278,17 @@ test.describe('Expense Creation', () => {
 
     // Look for category/type field
     const categoryExists = await Promise.race([
-      page.locator('select[name*="category"], select[name*="type"], input[name*="category"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByLabel(/category|type|classification/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="category"], select[name*="type"], input[name*="category"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByLabel(/category|type|classification/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof categoryExists).toBe('boolean');
@@ -236,9 +300,17 @@ test.describe('Expense Creation', () => {
 
     // Look for supplier/vendor field
     const supplierExists = await Promise.race([
-      page.locator('select[name*="supplier"], select[name*="vendor"], input[name*="supplier"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByLabel(/supplier|vendor/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="supplier"], select[name*="vendor"], input[name*="supplier"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByLabel(/supplier|vendor/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(supplierExists).toBeTruthy();
@@ -250,8 +322,12 @@ test.describe('Expense Creation', () => {
 
     // Look for amount field
     const amountExists = await Promise.race([
-      page.locator('input[name*="amount"], input[id*="amount"], input[type="number"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="amount"], input[id*="amount"], input[type="number"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(amountExists).toBeTruthy();
@@ -263,8 +339,12 @@ test.describe('Expense Creation', () => {
 
     // Look for date field
     const dateExists = await Promise.race([
-      page.locator('input[type="date"], input[name*="date"], input[id*="date"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="date"], input[name*="date"], input[id*="date"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(dateExists).toBeTruthy();
@@ -276,9 +356,19 @@ test.describe('Expense Creation', () => {
 
     // Look for description/notes field
     const descriptionExists = await Promise.race([
-      page.locator('textarea[name*="description"], textarea[name*="note"], input[name*="description"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByLabel(/description|note|memo/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator(
+          'textarea[name*="description"], textarea[name*="note"], input[name*="description"]'
+        )
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByLabel(/description|note|memo/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof descriptionExists).toBe('boolean');
@@ -290,9 +380,17 @@ test.describe('Expense Creation', () => {
 
     // Look for file upload
     const uploadExists = await Promise.race([
-      page.locator('input[type="file"], [class*="upload"], [class*="attach"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/upload|attach|receipt/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="file"], [class*="upload"], [class*="attach"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/upload|attach|receipt/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof uploadExists).toBe('boolean');
@@ -304,8 +402,12 @@ test.describe('Expense Creation', () => {
 
     // Look for save/submit button
     const saveButtonExists = await Promise.race([
-      page.getByRole('button', { name: /save|submit|create/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /save|submit|create/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(saveButtonExists).toBeTruthy();
@@ -317,9 +419,17 @@ test.describe('Expense Creation', () => {
 
     // Look for cancel/back button
     const cancelButtonExists = await Promise.race([
-      page.getByRole('button', { name: /cancel|back|close/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /cancel|back|close/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /cancel|back|close/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /cancel|back|close/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof cancelButtonExists).toBe('boolean');
@@ -348,9 +458,17 @@ test.describe('Expense Creation', () => {
 
     // Look for tax-related fields
     const taxExists = await Promise.race([
-      page.locator('input[name*="tax"], select[name*="tax"], [id*="tax"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/tax|vat|gst/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="tax"], select[name*="tax"], [id*="tax"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/tax|vat|gst/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof taxExists).toBe('boolean');
@@ -362,9 +480,17 @@ test.describe('Expense Creation', () => {
 
     // Look for payment method field
     const paymentMethodExists = await Promise.race([
-      page.locator('select[name*="payment"], input[name*="payment"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByLabel(/payment.*method|payment.*type/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="payment"], input[name*="payment"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByLabel(/payment.*method|payment.*type/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof paymentMethodExists).toBe('boolean');
@@ -386,8 +512,12 @@ test.describe('Expense Read/View', () => {
 
     // Try to click on first expense if exists
     const firstExpenseLink = await Promise.race([
-      page.locator('table tbody tr:first-child, .expense-item:first-child').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table tbody tr:first-child, .expense-item:first-child')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof firstExpenseLink).toBe('boolean');
@@ -407,8 +537,12 @@ test.describe('Expense Read/View', () => {
 
       // Should show expense details
       const detailsVisible = await Promise.race([
-        page.locator('[class*="expense-detail"], [class*="view"]').first().isVisible({ timeout: 5000 }).then(() => true),
-        page.waitForTimeout(5000).then(() => false)
+        page
+          .locator('[class*="expense-detail"], [class*="view"]')
+          .first()
+          .isVisible({ timeout: 5000 })
+          .then(() => true),
+        page.waitForTimeout(5000).then(() => false),
       ]);
 
       expect(typeof detailsVisible).toBe('boolean');
@@ -421,8 +555,12 @@ test.describe('Expense Read/View', () => {
 
     // Look for attachment indicators
     const attachmentExists = await Promise.race([
-      page.locator('[class*="attachment"], [class*="document"], [class*="receipt"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="attachment"], [class*="document"], [class*="receipt"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof attachmentExists).toBe('boolean');
@@ -444,10 +582,22 @@ test.describe('Expense Update/Edit', () => {
 
     // Look for edit button or link
     const editExists = await Promise.race([
-      page.getByRole('button', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="edit"], button[title*="Edit"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="edit"], button[title*="Edit"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof editExists).toBe('boolean');
@@ -488,7 +638,9 @@ test.describe('Expense Update/Edit', () => {
       await page.waitForTimeout(3000);
 
       // Form should have some pre-filled data
-      const inputsWithValues = await page.locator('input[value]:not([value=""]), select:has(option[selected])').count();
+      const inputsWithValues = await page
+        .locator('input[value]:not([value=""]), select:has(option[selected])')
+        .count();
 
       expect(inputsWithValues).toBeGreaterThanOrEqual(0);
     }
@@ -506,8 +658,12 @@ test.describe('Expense Update/Edit', () => {
       await page.waitForTimeout(3000);
 
       const updateButton = await Promise.race([
-        page.getByRole('button', { name: /update|save/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-        page.waitForTimeout(5000).then(() => false)
+        page
+          .getByRole('button', { name: /update|save/i })
+          .first()
+          .isVisible({ timeout: 5000 })
+          .then(() => true),
+        page.waitForTimeout(5000).then(() => false),
       ]);
 
       expect(typeof updateButton).toBe('boolean');
@@ -530,9 +686,17 @@ test.describe('Expense Delete', () => {
 
     // Look for delete button
     const deleteExists = await Promise.race([
-      page.getByRole('button', { name: /delete|remove/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="delete"], button[title*="Delete"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /delete|remove/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="delete"], button[title*="Delete"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof deleteExists).toBe('boolean');
@@ -554,7 +718,11 @@ test.describe('Expense Delete', () => {
       await page.waitForTimeout(1000);
 
       // If modal appears instead of browser dialog
-      const modalExists = await page.locator('.modal, [role="dialog"], [class*="confirm"]').first().isVisible({ timeout: 3000 }).catch(() => false);
+      const modalExists = await page
+        .locator('.modal, [role="dialog"], [class*="confirm"]')
+        .first()
+        .isVisible({ timeout: 3000 })
+        .catch(() => false);
 
       expect(typeof modalExists).toBe('boolean');
     }

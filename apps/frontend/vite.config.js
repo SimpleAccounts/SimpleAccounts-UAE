@@ -139,12 +139,12 @@ export default defineConfig({
           if (id.includes('node_modules')) {
             // DO NOT split React - keep it in main bundle to ensure it loads first
             // React, React-DOM, React Router, Redux stay in main bundle
-            
+
             // Only split very large libraries that don't have React dependencies at module level
             if (id.includes('ag-grid')) {
               return 'ag-grid';
             }
-            
+
             // Everything else from node_modules goes into vendor chunk
             // This ensures proper dependency resolution
             return 'vendor';

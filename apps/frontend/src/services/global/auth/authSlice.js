@@ -130,7 +130,7 @@ export const getUserSubscription = createAsyncThunk(
         // If validation is enabled but service not configured, this is an error
         return rejectWithValue('Subscription service not configured');
       }
-      
+
       const apiUrl = `${config.SIMPLE_SERVICES_HOST}/api/getSimpleAccountsSubscription`;
       const apiKey = config.SIMPLE_SERVICES_GET_SUBSCRIPTION_KEY;
       const domainUrl = window.location.origin;
@@ -147,19 +147,19 @@ export const getUserSubscription = createAsyncThunk(
         console.warn('Subscription validation disabled. Allowing access despite error.');
         return { status: 'active' };
       }
-      
+
       // If service is not configured, don't bypass subscription check
       if (!config.SIMPLE_SERVICES_HOST) {
         return rejectWithValue('Subscription service not configured');
       }
-      
+
       // For 404 errors, treat as service unavailable - don't assume active status
       // This prevents bypassing subscription enforcement during outages
       if (err.response?.status === 404) {
         console.error('Subscription service returned 404. Service may be misconfigured.');
         return rejectWithValue('Subscription service unavailable');
       }
-      
+
       // For other errors, propagate the error
       return rejectWithValue(err.response?.data || err.message);
     }

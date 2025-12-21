@@ -121,7 +121,10 @@ const expenseSlice = createSlice({
       .addCase(EXPENSE.PAY_TO_LIST, (state, action) => {
         const list = action.payload;
         // Create a new array instead of mutating the payload
-        state.pay_to_list = [{ value: 'Company Expense', label: 'Company Expense' }, ...(list || [])];
+        state.pay_to_list = [
+          { value: 'Company Expense', label: 'Company Expense' },
+          ...(list || []),
+        ];
       });
   },
 });
