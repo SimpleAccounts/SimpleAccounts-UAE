@@ -183,22 +183,24 @@ const PaidInvoices = props => {
   }, [language]);
 
   return (
-    <Card className="invoice-card card-margin">
-      <CardBody className="tab-card">
-        <div className="flex-wrapper title-bottom-border">
-          <h1 className="card-h1">
-            {strings.SupplierCustomerPaidInvoices || 'SUPPLIER & CUSTOMER PAID INVOICES'}
-          </h1>
-        </div>
-        <div className="chart-wrapper" style={{ height: '300px', marginTop: '20px' }}>
-          <Line
-            data={invoice_graph_data}
-            options={data4MultipleOptions}
-            datasetKeyProvider={() => Math.random()}
-          />
-        </div>
-      </CardBody>
-    </Card>
+    <div className="animated fadeIn">
+      <Card className="invoice-card card-margin">
+        <CardBody className="tab-card">
+          <div className="flex-wrapper title-bottom-border">
+            <h1 className="card-h1">
+              {strings.SupplierCustomerPaidInvoices || 'SUPPLIER & CUSTOMER PAID INVOICES'}
+            </h1>
+          </div>
+          <div className="chart-wrapper" style={{ height: '300px', marginTop: '20px' }}>
+            <Line
+              data={invoice_graph_data}
+              options={data4MultipleOptions}
+              datasetKeyProvider={() => Math.random()}
+            />
+          </div>
+        </CardBody>
+      </Card>
+    </div>
   );
 };
 

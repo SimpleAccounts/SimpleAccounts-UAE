@@ -158,27 +158,29 @@ const ProfitAndLossReport = props => {
   }, [language]);
 
   return (
-    <Card className="profit-loss-card card-margin">
-      <CardBody className="tab-card">
-        <div className="flex-wrapper title-bottom-border">
-          <h1 className="card-h1">{strings.ProfitLoss || 'PROFIT & LOSS'}</h1>
-          <div className="card-header-actions">
-            <select
-              className="form-control card-select"
-              value={selectedMonths}
-              onChange={handleRangeChange}
-            >
-              <option value="3">Last 3 Months</option>
-              <option value="6">Last 6 Months</option>
-              <option value="12">Last 12 Months</option>
-            </select>
+    <div className="animated fadeIn">
+      <Card className="cash-card card-margin">
+        <CardBody className="tab-card">
+          <div className="flex-wrapper title-bottom-border">
+            <h1 className="card-h1">{strings.ProfitLoss || 'PROFIT & LOSS'}</h1>
+            <div className="card-header-actions">
+              <select
+                className="form-control card-select"
+                value={selectedMonths}
+                onChange={handleRangeChange}
+              >
+                <option value="3">Last 3 Months</option>
+                <option value="6">Last 6 Months</option>
+                <option value="12">Last 12 Months</option>
+              </select>
+            </div>
           </div>
-        </div>
-        <div className="chart-wrapper" style={{ height: '300px', marginTop: '20px' }}>
-          <Bar data={profit_loss_report_data} options={chartOptions} />
-        </div>
-      </CardBody>
-    </Card>
+          <div className="chart-wrapper" style={{ height: '300px', marginTop: '20px' }}>
+            <Bar data={profit_loss_report_data} options={chartOptions} />
+          </div>
+        </CardBody>
+      </Card>
+    </div>
   );
 };
 
