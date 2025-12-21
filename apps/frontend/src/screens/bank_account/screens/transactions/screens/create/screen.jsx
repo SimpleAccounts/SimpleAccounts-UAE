@@ -28,7 +28,6 @@ import * as detailBankAccountActions from '../../../detail/actions';
 import * as AllPayrollActions from '../../../../../payroll_run/actions';
 import * as CurrencyConvertActions from '../../../../../currencyConvert/actions';
 import { CommonActions } from 'services/global';
-import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
 import { LeavePage, Loader } from 'components';
 import { Checkbox } from '@/components/ui/checkbox';
 import { defaultState } from './helpers/defaultstate';

@@ -28,7 +28,6 @@ import * as TransactionsActions from 'screens/bank_account/screens/transactions/
 import * as TransactionDetailActions from 'screens/bank_account/screens/transactions/screens/detail/actions';
 import * as CurrencyConvertActions from 'screens/currencyConvert/actions';
 import { CommonActions } from 'services/global';
-import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
 import { ConfirmDeleteModal } from 'components';
 import { Loader } from 'components';
 

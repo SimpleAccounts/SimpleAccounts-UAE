@@ -9,7 +9,7 @@ import './style.scss';
 let strings = new LocalizedStrings(data);
 
 const PaidInvoices = props => {
-  const { DashboardActions, invoice_graph } = props;
+  const { DashboardActions } = props;
   const [language] = useState(window['localStorage'].getItem('language'));
   const [invoice_graph_data, setInvoiceGraphData] = useState({
     labels: [],
