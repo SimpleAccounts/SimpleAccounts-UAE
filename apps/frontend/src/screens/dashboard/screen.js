@@ -235,14 +235,14 @@ class Dashboard extends React.Component {
           <h2 className="section-title">Financial Overview</h2>
         </div>
 
-        <Row className="charts-row">
-          <Col xs={12} lg={6} className="mb-4 mb-lg-0">
-            <div className="chart-card">
+        <Row className="charts-row" style={{ display: 'flex', alignItems: 'stretch' }}>
+          <Col xs={12} lg={6} className="mb-4 mb-lg-0 d-flex">
+            <div className="chart-card flex-grow-1">
               <BankAccount {...this.props} />
             </div>
           </Col>
-          <Col xs={12} lg={6}>
-            <div className="chart-card">
+          <Col xs={12} lg={6} className="d-flex">
+            <div className="chart-card flex-grow-1">
               <CashFlow {...this.props} />
             </div>
           </Col>
