@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,6 +25,17 @@ import LocalizedStrings from 'react-localization';
 import * as ProductActions from '../../actions';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { CommonActions } from 'services/global';
+import {
+  getProductVatCategoryList,
+  getProductCategoryList,
+  getExciseTaxList,
+  getUnitTypeList,
+  getCompanyDetails as getCompanyDetailsApi,
+  getProductCode as getProductCodeApi,
+  getTransactionCategoryListForSalesProduct,
+  getTransactionCategoryListForPurchaseProduct,
+  getTransactionCategoryListForInventory,
+} from '../../productSlice';
 import { WareHouseModal } from '../../sections';
 import { selectOptionsFactory, selectStyles } from 'utils';
 import config from '../../../../constants/config';
@@ -197,6 +208,7 @@ const CreateProduct = ({
   getCurrentProductData,
   closeModal,
 }) => {
+  const dispatch = useDispatch();
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(false);
   const [openWarehouseModal, setOpenWarehouseModal] = useState(false);
@@ -283,8 +295,8 @@ const CreateProduct = ({
   }, []);
 
   const getcompanyDetails = () => {
-    productActions
-      .getCompanyDetails()
+    // Call directly (not through bindActionCreators - this is a utility function, not a Redux action)
+    getCompanyDetailsApi()
       .then(res => {
         if (res.status === 200) {
           setCompanyDetails(res.data);
@@ -302,24 +314,30 @@ const CreateProduct = ({
   };
 
   const initializeData = () => {
-    productActions.getProductVatCategoryList();
-    productActions.getExciseTaxList().then(res => {
+    // Dispatch async thunks directly using dispatch (RTK async thunks need to be dispatched)
+    dispatch(getProductVatCategoryList());
+    dispatch(getProductCategoryList());
+
+    // Regular async functions - call directly (not through bindActionCreators)
+    // These are utility functions, not Redux actions, so don't dispatch them
+    getExciseTaxList().then(res => {
       if (res.status === 200) {
         setExciseTaxList(res.data);
       }
     });
-    productActions.getUnitTypeList().then(res => {
+    getUnitTypeList().then(res => {
       if (res.status === 200) {
         setUnitTypeList(res.data);
       }
     });
-    productActions.getProductCategoryList();
+
     supplierInvoiceActions.getSupplierList(contactType);
   };
 
   const salesCategoryFn = () => {
     try {
-      productActions.getTransactionCategoryListForSalesProduct('2').then(res => {
+      // Call directly (not through bindActionCreators - this is a utility function, not a Redux action)
+      getTransactionCategoryListForSalesProduct('2').then(res => {
         if (res.status === 200) {
           setSalesCategory(res.data);
         }
@@ -331,7 +349,8 @@ const CreateProduct = ({
 
   const purchaseCategoryFn = () => {
     try {
-      productActions.getTransactionCategoryListForPurchaseProduct('10').then(res => {
+      // Call directly (not through bindActionCreators - this is a utility function, not a Redux action)
+      getTransactionCategoryListForPurchaseProduct('10').then(res => {
         if (res.status === 200) {
           setPurchaseCategory(res.data);
         }
@@ -343,7 +362,8 @@ const CreateProduct = ({
 
   const inventoryAccountFn = () => {
     try {
-      productActions.getTransactionCategoryListForInventory().then(res => {
+      // Call directly (not through bindActionCreators - this is a utility function, not a Redux action)
+      getTransactionCategoryListForInventory().then(res => {
         if (res.status === 200) {
           setInventoryAccount(res.data);
         }
@@ -579,7 +599,8 @@ const CreateProduct = ({
   };
 
   const getProductCode = () => {
-    productActions.getProductCode().then(res => {
+    // Call directly (not through bindActionCreators - this is a utility function, not a Redux action)
+    getProductCodeApi().then(res => {
       if (res.status === 200) {
         setValue('productCode', res.data);
       }

@@ -1,7 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Row, Col, Card, Table } from 'reactstrap';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import ReactToPrint from 'react-to-print';
@@ -17,30 +27,40 @@ import { StatusActionList } from 'utils';
 import dayjs from '@/utils/date';
 import { FileText, Printer, X } from 'lucide-react';
 
-const mapStateToProps = state => {
-  return {
-    profile: state.auth.profile,
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    supplierInvoiceActions: bindActionCreators(SupplierInvoiceActions, dispatch),
-    supplierInvoiceDetailActions: bindActionCreators(SupplierInvoiceDetailActions, dispatch),
-    commonActions: bindActionCreators(CommonActions, dispatch),
-  };
-};
-
 const strings = new LocalizedStrings(data);
 
 const ViewCustomerInvoice = props => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Create history-like object for compatibility with components expecting React Router v5 API
+  const history = {
+    push: (path, state) => {
+      if (state) {
+        navigate(path, { state });
+      } else {
+        navigate(path);
+      }
+    },
+  };
+
+  const supplierInvoiceActions = useMemo(
+    () => bindActionCreators(SupplierInvoiceActions, dispatch),
+    [dispatch]
+  );
+  const supplierInvoiceDetailActions = useMemo(
+    () => bindActionCreators(SupplierInvoiceDetailActions, dispatch),
+    [dispatch]
+  );
+  const commonActions = useMemo(() => bindActionCreators(CommonActions, dispatch), [dispatch]);
   const [language] = useState(window.localStorage.getItem('language'));
   const [invoiceData, setInvoiceData] = useState({});
   const [isBillingAndShippingAddressSame, setIsBillingAndShippingAddressSame] = useState(false);
   const [totalNet, setTotalNet] = useState(0);
   const [currencyData, setCurrencyData] = useState({});
   const [invoiceStatus, setInvoiceStatus] = useState('');
-  const [id] = useState(props.location?.state?.id);
+  const [id] = useState(location?.state?.id);
   const [creditNoteDataList, setCreditNoteDataList] = useState([]);
   const [actionList, setActionList] = useState([]);
   const [contactData, setContactData] = useState({});
@@ -62,17 +82,17 @@ const ViewCustomerInvoice = props => {
   }, []);
 
   const initializeData = () => {
-    props.supplierInvoiceDetailActions.getCompanyDetails().then(res => {
+    supplierInvoiceDetailActions.getCompanyDetails().then(res => {
       if (res.status === 200) {
         setCompanyData(res.data);
       }
     });
 
-    if (props.location.state && props.location.state.id) {
-      props.supplierInvoiceDetailActions.getInvoiceById(props.location.state.id).then(res => {
+    if (location?.state?.id) {
+      supplierInvoiceDetailActions.getInvoiceById(location.state.id).then(res => {
         let val = 0;
-        if (!props.location.state.contactId)
-          props.supplierInvoiceDetailActions.getContactById(res.data.contactId).then(res => {
+        if (!location?.state?.contactId)
+          supplierInvoiceDetailActions.getContactById(res.data.contactId).then(res => {
             if (res.status === 200) {
               setContactData(res.data);
               setIsBillingAndShippingAddressSame(res.data.isBillingAndShippingAddressSame);
@@ -94,7 +114,7 @@ const ViewCustomerInvoice = props => {
         setActionList(statusActionList);
 
         if (res.data.contactId) {
-          props.supplierInvoiceDetailActions.getContactById(res.data.contactId).then(res => {
+          supplierInvoiceDetailActions.getContactById(res.data.contactId).then(res => {
             if (res.status === 200) {
               setContactData(res.data);
               setIsBillingAndShippingAddressSame(res.data.isBillingAndShippingAddressSame);
@@ -112,7 +132,7 @@ const ViewCustomerInvoice = props => {
           setTotalNet(val);
 
           if (res.data.currencyCode) {
-            props.supplierInvoiceActions.getCurrencyList().then(res => {
+            supplierInvoiceActions.getCurrencyList().then(res => {
               if (res.status === 200) {
                 const temp = res.data.filter(
                   item => item.currencyCode === invoiceData.currencyCode
@@ -124,21 +144,21 @@ const ViewCustomerInvoice = props => {
         }
       });
 
-      if (props.location.state.contactId)
-        props.supplierInvoiceDetailActions
-          .getContactById(props.location.state.contactId)
-          .then(res => {
-            if (res.status === 200) {
-              setContactData(res.data);
-              setIsBillingAndShippingAddressSame(res.data.isBillingAndShippingAddressSame);
-            }
-          });
+      if (location?.state?.contactId)
+        supplierInvoiceDetailActions.getContactById(location.state.contactId).then(res => {
+          if (res.status === 200) {
+            setContactData(res.data);
+            setIsBillingAndShippingAddressSame(res.data.isBillingAndShippingAddressSame);
+          }
+        });
 
-      props.commonActions.getByNoteListByInvoiceId(props.location.state.id).then(res => {
-        if (res.status === 200) {
-          setCreditNoteDataList(res.data);
-        }
-      });
+      if (location?.state?.id) {
+        commonActions.getByNoteListByInvoiceId(location.state.id).then(res => {
+          if (res.status === 200) {
+            setCreditNoteDataList(res.data);
+          }
+        });
+      }
     }
   };
 
@@ -148,17 +168,17 @@ const ViewCustomerInvoice = props => {
 
   const redirectToCreditNote = creditNote => {
     const commonParams = {
-      CI_id: props.location.state.id,
-      CI_status: props.location.state.status,
-      CI_contactId: props.location.state.contactId,
+      CI_id: location?.state?.id,
+      CI_status: location?.state?.status,
+      CI_contactId: location?.state?.contactId,
       id: creditNote.creditNoteId,
       isCNWithoutProduct: creditNote.isCreatedWithoutInvoice,
       status: creditNote.status,
     };
-    if (props.location.state && props.location.state.gotoReports) {
+    if (location?.state?.gotoReports) {
       commonParams.gotoReports = true;
     }
-    props.history.push('/admin/income/credit-notes/view', commonParams);
+    navigate('/admin/income/credit-notes/view', { state: commonParams });
   };
 
   strings.setLanguage(language);
@@ -166,150 +186,151 @@ const ViewCustomerInvoice = props => {
   return (
     <div className="view-invoice-screen">
       <div className="animated fadeIn">
-        <Row>
-          <Col lg={12} className="mx-auto">
-            <div className="pull-left">
-              <ActionButtons
-                id={id}
-                history={props.history}
-                URL={'/admin/income/customer-invoice'}
+        <div className="w-full max-w-7xl mx-auto">
+          <div className="pull-left">
+            <ActionButtons
+              id={id}
+              history={history}
+              URL={'/admin/income/customer-invoice'}
+              invoiceData={invoiceData}
+              postingRefType={'INVOICE'}
+              initializeData={() => {
+                initializeData();
+              }}
+              actionList={actionList}
+              invoiceStatus={invoiceStatus}
+              documentTitle={strings.CustomerInvoice}
+              documentCreated={creditNoteDataList && creditNoteDataList.creditNoteId}
+            />
+          </div>
+          <div className="pull-right">
+            <Button
+              className="btn-lg mb-1 print-btn-cont"
+              onClick={() => {
+                exportPDFWithComponent();
+              }}
+            >
+              <FileText className="h-4 w-4" />
+            </Button>
+            <ReactToPrint
+              trigger={() => (
+                <Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
+                  <Printer className="h-4 w-4" />
+                </Button>
+              )}
+              content={() => componentRef.current}
+            />
+            <Button
+              type="button"
+              className="close-btn mb-1 btn-lg print-btn-cont"
+              onClick={() => {
+                if (location?.state?.gotoReports) {
+                  navigate(location.state.gotoReports);
+                } else if (location?.state?.TCN_Id) {
+                  navigate('/admin/income/credit-notes/view', {
+                    state: {
+                      id: location.state.TCN_Id,
+                      status: location.state.TCN_Status,
+                      isCNWithoutProduct: location.state.TCN_WithoutPRoduct,
+                    },
+                  });
+                } else if (location?.state?.crossLinked === true) {
+                  navigate('/admin/report/vatreports/vatreturnsubreports', {
+                    state: {
+                      boxNo: location.state.description,
+                      description: location.state.description,
+                      startDate: location.state.startDate,
+                      endDate: location.state.endDate,
+                      placeOfSupplyId: location.state.placeOfSupplyId,
+                    },
+                  });
+                } else if (location?.state?.gotoDGLReport) {
+                  navigate('/admin/report/detailed-general-ledger');
+                } else {
+                  navigate('/admin/income/customer-invoice');
+                }
+              }}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          <div>
+            <PDFExport
+              ref={pdfExportComponent}
+              scale={0.8}
+              paperSize="A3"
+              fileName={invoiceData.referenceNumber + '.pdf'}
+            >
+              <InvoiceTemplate
                 invoiceData={invoiceData}
-                postingRefType={'INVOICE'}
-                initializeData={() => {
-                  initializeData();
-                }}
-                actionList={actionList}
-                invoiceStatus={invoiceStatus}
-                documentTitle={strings.CustomerInvoice}
-                documentCreated={creditNoteDataList && creditNoteDataList.creditNoteId}
+                contactData={contactData}
+                isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
+                status={location?.state?.status}
+                currencyData={currencyData}
+                ref={componentRef}
+                totalNet={totalNet}
+                companyData={companyData}
               />
-            </div>
-            <div className="pull-right">
-              <Button
-                className="btn-lg mb-1 print-btn-cont"
-                onClick={() => {
-                  exportPDFWithComponent();
-                }}
-              >
-                <FileText className="h-4 w-4" />
-              </Button>
-              <ReactToPrint
-                trigger={() => (
-                  <Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
-                    <Printer className="h-4 w-4" />
-                  </Button>
-                )}
-                content={() => componentRef.current}
-              />
-              <Button
-                type="button"
-                className="close-btn mb-1 btn-lg print-btn-cont"
-                onClick={() => {
-                  if (props.location && props.location.state && props.location.state.gotoReports) {
-                    props.history.push(props.location.state.gotoReports);
-                  } else if (props.location.state.TCN_Id) {
-                    props.history.push('/admin/income/credit-notes/view', {
-                      id: props.location.state.TCN_Id,
-                      status: props.location.state.TCN_Status,
-                      isCNWithoutProduct: props.location.state.TCN_WithoutPRoduct,
-                    });
-                  } else if (
-                    props.location.state &&
-                    props.location.state.crossLinked &&
-                    props.location.state.crossLinked === true
-                  ) {
-                    props.history.push('/admin/report/vatreports/vatreturnsubreports', {
-                      boxNo: props.location.state.description,
-                      description: props.location.state.description,
-                      startDate: props.location.state.startDate,
-                      endDate: props.location.state.endDate,
-                      placeOfSupplyId: props.location.state.placeOfSupplyId,
-                    });
-                  } else if (
-                    props.location &&
-                    props.location.state &&
-                    props.location.state.gotoDGLReport
-                  ) {
-                    props.history.push('/admin/report/detailed-general-ledger');
-                  } else {
-                    props.history.push('/admin/income/customer-invoice');
-                  }
-                }}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            <div>
-              <PDFExport
-                ref={pdfExportComponent}
-                scale={0.8}
-                paperSize="A3"
-                fileName={invoiceData.referenceNumber + '.pdf'}
-              >
-                <InvoiceTemplate
-                  invoiceData={invoiceData}
-                  contactData={contactData}
-                  isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
-                  status={props.location.state?.status}
-                  currencyData={currencyData}
-                  ref={componentRef}
-                  totalNet={totalNet}
-                  companyData={companyData}
-                />
-              </PDFExport>
-            </div>
-          </Col>
-        </Row>
+            </PDFExport>
+          </div>
+        </div>
         <div style={{ display: creditNoteDataList.creditNoteId ? '' : 'none' }}>
           <strong>{strings.CreditNoteIssuedonCustomerInvoice}</strong>
         </div>
         <Card>
-          <div style={{ display: creditNoteDataList.creditNoteId ? '' : 'none' }}>
-            <Table>
-              <thead style={{ backgroundColor: '#2064d8', color: 'white' }}>
-                <tr>
-                  <th className="center" style={{ padding: '0.5rem' }}>
-                    #
-                  </th>
-                  <th style={{ padding: '0.5rem' }}>{strings.CreditNoteNumber}</th>
-                  <th style={{ padding: '0.5rem' }}>{strings.CreditNoteDate}</th>
-                  <th style={{ padding: '0.5rem' }}>{strings.Status}</th>
-                  <th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.CreditAmount}</th>
-                </tr>
-              </thead>
-              <tbody className=" table-bordered table-hover">
-                <tr
-                  onClick={() => {
-                    redirectToCreditNote(creditNoteDataList);
-                  }}
-                >
-                  <td className="center">{1}</td>
-                  <td style={{ color: 'blue' }}>{creditNoteDataList.creditNoteNumber}</td>
-                  <td>
-                    {creditNoteDataList.creditNoteDate
-                      ? dayjs(creditNoteDataList.creditNoteDate).format('DD-MM-YYYY')
-                      : ''}
-                  </td>
-                  <td align="right">{creditNoteDataList?.status}</td>
-                  <td align="right">
-                    {creditNoteDataList.totalAmount ? (
-                      <Currency
-                        value={creditNoteDataList.totalAmount}
-                        currencySymbol={currencyData[0] ? currencyData[0].currencyIsoCode : 'AED'}
-                      />
-                    ) : (
-                      '0.00'
-                    )}
-                  </td>
-                </tr>
-              </tbody>
-            </Table>
-          </div>
+          <CardContent className="p-0">
+            <div style={{ display: creditNoteDataList.creditNoteId ? '' : 'none' }}>
+              <Table>
+                <TableHeader style={{ backgroundColor: '#2064d8', color: 'white' }}>
+                  <TableRow>
+                    <TableHead className="text-center" style={{ padding: '0.5rem' }}>
+                      #
+                    </TableHead>
+                    <TableHead style={{ padding: '0.5rem' }}>{strings.CreditNoteNumber}</TableHead>
+                    <TableHead style={{ padding: '0.5rem' }}>{strings.CreditNoteDate}</TableHead>
+                    <TableHead style={{ padding: '0.5rem' }}>{strings.Status}</TableHead>
+                    <TableHead style={{ padding: '0.5rem', textAlign: 'right' }}>
+                      {strings.CreditAmount}
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow
+                    className="cursor-pointer hover:bg-gray-50"
+                    onClick={() => {
+                      redirectToCreditNote(creditNoteDataList);
+                    }}
+                  >
+                    <TableCell className="text-center">{1}</TableCell>
+                    <TableCell style={{ color: 'blue' }}>
+                      {creditNoteDataList.creditNoteNumber}
+                    </TableCell>
+                    <TableCell>
+                      {creditNoteDataList.creditNoteDate
+                        ? dayjs(creditNoteDataList.creditNoteDate).format('DD-MM-YYYY')
+                        : ''}
+                    </TableCell>
+                    <TableCell className="text-right">{creditNoteDataList?.status}</TableCell>
+                    <TableCell className="text-right">
+                      {creditNoteDataList.totalAmount ? (
+                        <Currency
+                          value={creditNoteDataList.totalAmount}
+                          currencySymbol={currencyData[0] ? currencyData[0].currencyIsoCode : 'AED'}
+                        />
+                      ) : (
+                        '0.00'
+                      )}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
         </Card>
         <div>
           {invoiceStatus && invoiceStatus !== 'Draft' && (
             <InvoiceViewJournalEntries
-              history={props.history}
+              history={history}
               invoiceURL={'/admin/income/customer-invoice/view'}
               invoiceId={id}
               invoiceType={2}
@@ -321,4 +342,4 @@ const ViewCustomerInvoice = props => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewCustomerInvoice);
+export default ViewCustomerInvoice;
