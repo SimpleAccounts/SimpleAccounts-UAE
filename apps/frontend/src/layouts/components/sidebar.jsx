@@ -180,7 +180,7 @@ export function Sidebar({
       {/* Menu Items */}
       <ScrollArea className="flex-1">
         <nav className="p-3 space-y-2">
-          {items.map(item => {
+          {items.map((item, index) => {
             const Icon = getIcon(item.name);
             const hasChildren = Array.isArray(item.children) && item.children.length > 0;
             const isExpanded = expandedMenus[item.name];
@@ -189,13 +189,23 @@ export function Sidebar({
               hasChildren &&
               item.children.some(child => child?.url && pathname.startsWith(child.url));
 
+            // Animation delay for staggered entrance
+            const animationDelay = `${index * 50}ms`;
+
             return (
-              <div key={item.name}>
+              <div
+                key={item.name}
+                className="animate-fade-in-up"
+                style={{
+                  animationDelay,
+                  animationFillMode: 'backwards',
+                }}
+              >
                 {/* Main Menu Item */}
                 {hasChildren ? (
                   <button
                     onClick={() => toggleSubmenu(item.name)}
-                    className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all duration-200 ${
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all duration-200 hover:-translate-y-0.5 ${
                       minimized ? 'justify-center' : ''
                     }`}
                     style={{
@@ -239,7 +249,7 @@ export function Sidebar({
                 ) : (
                   <NavLink
                     to={item.url}
-                    className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all duration-200 ${
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all duration-200 hover:-translate-y-0.5 ${
                       minimized ? 'justify-center' : ''
                     }`}
                     style={{
@@ -302,7 +312,7 @@ export function Sidebar({
                             <NavLink
                               key={child.name || child.url}
                               to={child.url}
-                              className="flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200"
+                              className="flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 hover:-translate-y-0.5"
                               style={{
                                 background: isSubActive ? `${theme.primary}10` : 'transparent',
                                 border: isSubActive
