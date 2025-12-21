@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Button } from '@/components/ui/button';
@@ -29,6 +30,8 @@ import { FileText, Printer, X } from 'lucide-react';
 const strings = new LocalizedStrings(data);
 
 const ViewCustomerInvoice = props => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const supplierInvoiceActions = useMemo(
@@ -46,7 +49,7 @@ const ViewCustomerInvoice = props => {
   const [totalNet, setTotalNet] = useState(0);
   const [currencyData, setCurrencyData] = useState({});
   const [invoiceStatus, setInvoiceStatus] = useState('');
-  const [id] = useState(props.location?.state?.id);
+  const [id] = useState(location?.state?.id);
   const [creditNoteDataList, setCreditNoteDataList] = useState([]);
   const [actionList, setActionList] = useState([]);
   const [contactData, setContactData] = useState({});
@@ -74,10 +77,10 @@ const ViewCustomerInvoice = props => {
       }
     });
 
-    if (props.location.state && props.location.state.id) {
-      supplierInvoiceDetailActions.getInvoiceById(props.location.state.id).then(res => {
+    if (location?.state?.id) {
+      supplierInvoiceDetailActions.getInvoiceById(location.state.id).then(res => {
         let val = 0;
-        if (!props.location.state.contactId)
+        if (!location?.state?.contactId)
           supplierInvoiceDetailActions.getContactById(res.data.contactId).then(res => {
             if (res.status === 200) {
               setContactData(res.data);
@@ -130,15 +133,15 @@ const ViewCustomerInvoice = props => {
         }
       });
 
-      if (props.location.state.contactId)
-        supplierInvoiceDetailActions.getContactById(props.location.state.contactId).then(res => {
+      if (location?.state?.contactId)
+        supplierInvoiceDetailActions.getContactById(location.state.contactId).then(res => {
           if (res.status === 200) {
             setContactData(res.data);
             setIsBillingAndShippingAddressSame(res.data.isBillingAndShippingAddressSame);
           }
         });
 
-      commonActions.getByNoteListByInvoiceId(props.location.state.id).then(res => {
+      commonActions.getByNoteListByInvoiceId(location.state.id).then(res => {
         if (res.status === 200) {
           setCreditNoteDataList(res.data);
         }
@@ -152,17 +155,17 @@ const ViewCustomerInvoice = props => {
 
   const redirectToCreditNote = creditNote => {
     const commonParams = {
-      CI_id: props.location.state.id,
-      CI_status: props.location.state.status,
-      CI_contactId: props.location.state.contactId,
+      CI_id: location?.state?.id,
+      CI_status: location?.state?.status,
+      CI_contactId: location?.state?.contactId,
       id: creditNote.creditNoteId,
       isCNWithoutProduct: creditNote.isCreatedWithoutInvoice,
       status: creditNote.status,
     };
-    if (props.location.state && props.location.state.gotoReports) {
+    if (location?.state?.gotoReports) {
       commonParams.gotoReports = true;
     }
-    props.history.push('/admin/income/credit-notes/view', commonParams);
+    navigate('/admin/income/credit-notes/view', { state: commonParams });
   };
 
   strings.setLanguage(language);
@@ -174,7 +177,7 @@ const ViewCustomerInvoice = props => {
           <div className="pull-left">
             <ActionButtons
               id={id}
-              history={props.history}
+              history={navigate}
               URL={'/admin/income/customer-invoice'}
               invoiceData={invoiceData}
               postingRefType={'INVOICE'}
@@ -208,34 +211,30 @@ const ViewCustomerInvoice = props => {
               type="button"
               className="close-btn mb-1 btn-lg print-btn-cont"
               onClick={() => {
-                if (props.location && props.location.state && props.location.state.gotoReports) {
-                  props.history.push(props.location.state.gotoReports);
-                } else if (props.location.state.TCN_Id) {
-                  props.history.push('/admin/income/credit-notes/view', {
-                    id: props.location.state.TCN_Id,
-                    status: props.location.state.TCN_Status,
-                    isCNWithoutProduct: props.location.state.TCN_WithoutPRoduct,
+                if (location?.state?.gotoReports) {
+                  navigate(location.state.gotoReports);
+                } else if (location?.state?.TCN_Id) {
+                  navigate('/admin/income/credit-notes/view', {
+                    state: {
+                      id: location.state.TCN_Id,
+                      status: location.state.TCN_Status,
+                      isCNWithoutProduct: location.state.TCN_WithoutPRoduct,
+                    },
                   });
-                } else if (
-                  props.location.state &&
-                  props.location.state.crossLinked &&
-                  props.location.state.crossLinked === true
-                ) {
-                  props.history.push('/admin/report/vatreports/vatreturnsubreports', {
-                    boxNo: props.location.state.description,
-                    description: props.location.state.description,
-                    startDate: props.location.state.startDate,
-                    endDate: props.location.state.endDate,
-                    placeOfSupplyId: props.location.state.placeOfSupplyId,
+                } else if (location?.state?.crossLinked === true) {
+                  navigate('/admin/report/vatreports/vatreturnsubreports', {
+                    state: {
+                      boxNo: location.state.description,
+                      description: location.state.description,
+                      startDate: location.state.startDate,
+                      endDate: location.state.endDate,
+                      placeOfSupplyId: location.state.placeOfSupplyId,
+                    },
                   });
-                } else if (
-                  props.location &&
-                  props.location.state &&
-                  props.location.state.gotoDGLReport
-                ) {
-                  props.history.push('/admin/report/detailed-general-ledger');
+                } else if (location?.state?.gotoDGLReport) {
+                  navigate('/admin/report/detailed-general-ledger');
                 } else {
-                  props.history.push('/admin/income/customer-invoice');
+                  navigate('/admin/income/customer-invoice');
                 }
               }}
             >
@@ -253,7 +252,7 @@ const ViewCustomerInvoice = props => {
                 invoiceData={invoiceData}
                 contactData={contactData}
                 isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
-                status={props.location.state?.status}
+                status={location?.state?.status}
                 currencyData={currencyData}
                 ref={componentRef}
                 totalNet={totalNet}

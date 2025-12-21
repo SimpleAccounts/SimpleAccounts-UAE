@@ -11,9 +11,7 @@ import CreateProduct from '../../product/screens/create/screen';
 const strings = new LocalizedStrings(data);
 
 const ProductModal = props => {
-  const dispatch = useDispatch();
   const [language] = useState(() => window.localStorage.getItem('language') || 'en');
-  const productActions = useRef(bindActionCreators(ProductActions, dispatch));
 
   strings.setLanguage(language);
 

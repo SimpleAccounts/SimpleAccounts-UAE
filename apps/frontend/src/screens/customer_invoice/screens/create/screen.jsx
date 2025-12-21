@@ -900,10 +900,9 @@ const CreateCustomerInvoice = ({
 
     // Normalize customerID to a scalar value (handle both object and primitive formats)
     // Use stricter check: only treat as object if it has a 'value' property
+    // Note: customerID is guaranteed to be truthy due to early return above
     const customerIdValue =
-      customerID && typeof customerID === 'object' && 'value' in customerID
-        ? customerID.value
-        : customerID;
+      typeof customerID === 'object' && 'value' in customerID ? customerID.value : customerID;
     setValue('contactId', customerIdValue, { shouldValidate: true });
 
     // Find customer from original customer_list (not dropdown) to get full structure
