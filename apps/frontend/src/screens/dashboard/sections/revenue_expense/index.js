@@ -189,13 +189,7 @@ class RevenueAndExpense extends Component {
 									</div> */}
                 </div>
                 <div className="chart-wrapper">
-                  <Pie
-                    data={pie1}
-                    options={expenseOption}
-                    datasetKeyProvider={() => {
-                      return Math.random();
-                    }}
-                  />
+                  <Pie data={pie1} options={expenseOption} />
                 </div>
               </TabPane>
               <TabPane tabId="1">
@@ -221,13 +215,7 @@ class RevenueAndExpense extends Component {
 									</div> */}
                 </div>
                 <div className="chart-wrapper">
-                  <Doughnut
-                    data={pie2}
-                    options={expenseOption}
-                    datasetKeyProvider={() => {
-                      return Math.random();
-                    }}
-                  />
+                  <Doughnut data={pie2} options={expenseOption} />
                 </div>
               </TabPane>
               <TabPane tabId="2">

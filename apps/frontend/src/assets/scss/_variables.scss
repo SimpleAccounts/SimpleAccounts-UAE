@@ -1,16 +1,17 @@
 // ============================================
 // NEUMORPHIC DESIGN SYSTEM VARIABLES
 // Inspired by Themesberg Neumorphism UI
+// Updated to match sidebar theme (2024)
 // ============================================
 
 // ============================================
 // COLOR PALETTE
 // ============================================
 
-// Base Colors (Light Mode)
-$neu-bg: #e6e7ee;
+// Base Colors (Light Mode) - UPDATED to match sidebar
+$neu-bg: #e8eef5;
 $neu-bg-alt: #e0e5ec;
-$neu-dark-shadow: #b8b9be;
+$neu-dark-shadow: #c4c9cf;
 $neu-light-shadow: #ffffff;
 $neu-border: #d1d9e6;
 
@@ -21,20 +22,22 @@ $neu-dark-shadow-dark: #1e1f23;
 $neu-light-shadow-dark: #383b43;
 $neu-border-dark: #3d4049;
 
-// Brand Colors
-$primary: #2563eb;
-$primary-light: #3b82f6;
-$primary-dark: #1d4ed8;
-$secondary: #6366f1;
-$success: #10b981;
+// Brand Colors - UPDATED to match sidebar
+$primary: #1e6eff;
+$primary-light: #4d8bff;
+$primary-dark: #0052cc;
+$secondary: #00c896;
+$success: #00c896;
 $info: #06b6d4;
 $warning: #f59e0b;
-$danger: #ef4444;
+$danger: #ff4d6a;
 
-// Text Colors
-$text-dark: #31344b;
-$text-muted: #66799e;
-$text-light: #93a5be;
+// Text Colors - UPDATED to match sidebar
+$text-dark: #1e3a5f;
+$text-primary: #1e3a5f;
+$text-secondary: #3d5a80;
+$text-muted: #98afc2;
+$text-light: #98afc2;
 $text-white: #ffffff;
 
 // Body defaults

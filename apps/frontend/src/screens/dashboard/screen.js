@@ -2,16 +2,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col } from 'reactstrap';
+import {
+  LayoutDashboard,
+  TrendingUp,
+  Landmark,
+  Scale,
+  FileText,
+  ArrowUpCircle,
+  ArrowDownCircle,
+  Wallet,
+} from 'lucide-react';
 
 import { BankAccount, CashFlow, ProfitAndLossReport, PaidInvoices } from './sections';
 import * as DashboardActions from './actions';
 import './style.scss';
-
-// Import dashboard icons
-import bankIcon from 'assets/images/dashboard/bank.png';
-import incomeIcon from 'assets/images/dashboard/income.png';
-import outcomeIcon from 'assets/images/dashboard/outcome.png';
-import totalIcon from 'assets/images/dashboard/total.png';
 
 const mapStateToProps = state => {
   return {
@@ -86,7 +90,23 @@ class Dashboard extends React.Component {
               <p className="date-display">{formattedDate}</p>
             </div>
             <div className="welcome-badge">
-              <span>📊 Dashboard Overview</span>
+              <div
+                className="icon-container"
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'var(--neu-bg, #e8eef5)',
+                  boxShadow:
+                    '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+                }}
+              >
+                <LayoutDashboard size={18} style={{ color: 'var(--neu-primary, #1e6eff)' }} />
+              </div>
+              <span>Dashboard Overview</span>
             </div>
           </div>
         </div>
@@ -95,8 +115,15 @@ class Dashboard extends React.Component {
         <Row className="stats-row">
           <Col lg={3} md={6}>
             <div className="stat-card stat-primary">
-              <div className="stat-icon">
-                <img src={bankIcon} alt="Invoices" />
+              <div
+                className="stat-icon"
+                style={{
+                  background: 'var(--neu-bg, #e8eef5)',
+                  boxShadow:
+                    '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+                }}
+              >
+                <FileText size={24} style={{ color: 'var(--neu-primary, #1e6eff)' }} />
               </div>
               <div className="stat-info">
                 <span className="stat-label">Total Invoices</span>
@@ -106,8 +133,15 @@ class Dashboard extends React.Component {
           </Col>
           <Col lg={3} md={6}>
             <div className="stat-card stat-success">
-              <div className="stat-icon">
-                <img src={incomeIcon} alt="Income" />
+              <div
+                className="stat-icon"
+                style={{
+                  background: 'var(--neu-bg, #e8eef5)',
+                  boxShadow:
+                    '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+                }}
+              >
+                <ArrowUpCircle size={24} style={{ color: 'var(--neu-secondary, #00c896)' }} />
               </div>
               <div className="stat-info">
                 <span className="stat-label">Income</span>
@@ -117,8 +151,15 @@ class Dashboard extends React.Component {
           </Col>
           <Col lg={3} md={6}>
             <div className="stat-card stat-warning">
-              <div className="stat-icon">
-                <img src={outcomeIcon} alt="Expenses" />
+              <div
+                className="stat-icon"
+                style={{
+                  background: 'var(--neu-bg, #e8eef5)',
+                  boxShadow:
+                    '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+                }}
+              >
+                <ArrowDownCircle size={24} style={{ color: 'var(--neu-warning, #f59e0b)' }} />
               </div>
               <div className="stat-info">
                 <span className="stat-label">Expenses</span>
@@ -128,8 +169,15 @@ class Dashboard extends React.Component {
           </Col>
           <Col lg={3} md={6}>
             <div className="stat-card stat-info">
-              <div className="stat-icon">
-                <img src={totalIcon} alt="Balance" />
+              <div
+                className="stat-icon"
+                style={{
+                  background: 'var(--neu-bg, #e8eef5)',
+                  boxShadow:
+                    '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+                }}
+              >
+                <Wallet size={24} style={{ color: '#06b6d4' }} />
               </div>
               <div className="stat-info">
                 <span className="stat-label">Balance</span>
@@ -141,7 +189,24 @@ class Dashboard extends React.Component {
 
         {/* Invoice Chart Section */}
         <div className="section-header">
-          <h2 className="section-title">📈 Key Performance Indicators</h2>
+          <div
+            className="section-icon"
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'var(--neu-bg, #e8eef5)',
+              boxShadow:
+                '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+              marginRight: '12px',
+            }}
+          >
+            <TrendingUp size={20} style={{ color: 'var(--neu-secondary, #00c896)' }} />
+          </div>
+          <h2 className="section-title">Key Performance Indicators</h2>
         </div>
 
         <div className="chart-card full-width">
@@ -150,17 +215,55 @@ class Dashboard extends React.Component {
 
         {/* Financial Overview Section */}
         <div className="section-header">
-          <h2 className="section-title">🏦 Financial Overview</h2>
+          <div
+            className="section-icon"
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'var(--neu-bg, #e8eef5)',
+              boxShadow:
+                '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+              marginRight: '12px',
+            }}
+          >
+            <Landmark size={20} style={{ color: 'var(--neu-primary, #1e6eff)' }} />
+          </div>
+          <h2 className="section-title">Financial Overview</h2>
         </div>
 
-        <Row className="charts-row">
-          <Col lg={6}>
-            <div className="chart-card">
+        <Row
+          className="charts-row"
+          style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'stretch' }}
+        >
+          <Col xs={12} lg={6} className="mb-4 d-flex" style={{ minWidth: 0, display: 'flex' }}>
+            <div
+              className="chart-card flex-grow-1"
+              style={{
+                width: '100%',
+                minWidth: 0,
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
               <BankAccount {...this.props} />
             </div>
           </Col>
-          <Col lg={6}>
-            <div className="chart-card">
+          <Col xs={12} lg={6} className="mb-4 d-flex" style={{ minWidth: 0, display: 'flex' }}>
+            <div
+              className="chart-card flex-grow-1"
+              style={{
+                width: '100%',
+                minWidth: 0,
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
               <CashFlow {...this.props} />
             </div>
           </Col>
@@ -168,7 +271,24 @@ class Dashboard extends React.Component {
 
         {/* Profit & Loss Section */}
         <div className="section-header">
-          <h2 className="section-title">⚖️ Profit & Loss Report</h2>
+          <div
+            className="section-icon"
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'var(--neu-bg, #e8eef5)',
+              boxShadow:
+                '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+              marginRight: '12px',
+            }}
+          >
+            <Scale size={20} style={{ color: 'var(--neu-warning, #f59e0b)' }} />
+          </div>
+          <h2 className="section-title">Profit & Loss Report</h2>
         </div>
 
         <div className="chart-card full-width">

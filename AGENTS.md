@@ -56,15 +56,19 @@ From repo root:
 - Format with `npm run format`
 - Pre-commit hooks run `eslint --fix` and Prettier
 
-### Theme & Design System
+### Theme & Design System (Neumorphic)
 
-- **Strict Adherence Required**: All new screens and refactored UI components MUST strictly follow the design system documented in **[`docs/THEME.md`](./docs/THEME.md)**.
+- **Strict Adherence Required**: All new screens and UI components MUST follow the **Neumorphic (Soft UI)** design system.
+- **Live Reference**: Visit `/theme-reference` route for live component examples
 - **Key Requirements**:
-  - Use the Radial Gradient background for public/auth pages.
-  - Use Glassmorphism Cards for content containers.
-  - Apply `.input-transition` class to ALL inputs.
-  - Ensure Dark Mode compatibility.
-  - Use `lucide-react` icons and `shadcn/ui` components (via `@/components/ui`) instead of legacy `reactstrap`.
+  - Background color: `#e8eef5` (never use pure white)
+  - Dual shadows for raised elements (dark + light)
+  - Inset shadows for form inputs
+  - Rounded corners: `rounded-xl` (12px) or `rounded-2xl` (16px)
+  - Amber border (`#f59e0b`) for selected/active states
+  - Use `lucide-react` icons exclusively
+  - Use CSS variables: `var(--neu-bg)`, `var(--neu-primary)`, etc.
+  - See **[CLAUDE.md](./CLAUDE.md)** for complete theme documentation
 
 ### Backend
 
@@ -124,26 +128,55 @@ cd apps/backend
 
 ---
 
-## Design System & Theme
+## Neumorphic Design System
 
-**All UI work MUST strictly follow the theme guidelines defined in [docs/THEME.md](./docs/THEME.md).**
+**All UI work MUST strictly follow the Neumorphic theme. See [CLAUDE.md](./CLAUDE.md) for complete documentation.**
 
-### Mandatory Theme Requirements
+### Color Palette
 
-1. **Layout**: Use radial gradient backgrounds and glassmorphism cards for all pages
-2. **Inputs**: Apply `.input-transition` class to ALL form inputs and selects
-3. **Buttons**: Include hover scale effects (`hover:scale-[1.02] active:scale-[0.98]`)
-4. **Dark Mode**: All components must be fully dark mode compatible using Slate palette
-5. **Typography**: Use Inter font with gradient text for page titles
-6. **Icons**: Use `lucide-react` exclusively for new features
-7. **Animations**: Apply `animate-slide-up`, `animate-fade-in` for entering elements
+```
+Primary Blue:    #1e6eff (buttons, links, active icons)
+Secondary Green: #00c896 (success states)
+Warning Amber:   #f59e0b (selected/active borders)
+Danger Red:      #ff4d6a (errors, destructive actions)
+Background:      #e8eef5 (main bg - NEVER use white)
+Text Primary:    #1e3a5f (headings)
+Text Secondary:  #3d5a80 (body text)
+Text Muted:      #98afc2 (placeholders, hints)
+Shadow Dark:     #c4c9cf
+Shadow Light:    #ffffff
+```
+
+### Shadow Patterns
+
+```jsx
+// Raised elements (buttons, cards)
+boxShadow: '6px 6px 12px var(--neu-shadow-dark, #c4c9cf), -6px -6px 12px var(--neu-shadow-light, #ffffff)';
+
+// Pressed/inset elements (inputs, textareas)
+boxShadow: 'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)';
+```
+
+### Mandatory Requirements
+
+1. **Background**: Always use `#e8eef5` - never pure white
+2. **Shadows**: Use dual shadows (dark + light) for all raised elements
+3. **Inputs**: Use inset shadows for all form fields
+4. **Corners**: Use `rounded-xl` (12px) or `rounded-2xl` (16px)
+5. **Selection**: Use amber border (`#f59e0b`) for active/selected states
+6. **Icons**: Use Lucide React icons exclusively
+7. **Variables**: Use CSS variables (`var(--neu-*)`) for all colors
 
 ### Before Submitting UI Changes
 
-- [ ] Verify dark mode contrast and styling
-- [ ] Confirm `.input-transition` is applied to all inputs
-- [ ] Check hover/focus states on all interactive elements
-- [ ] Use skeleton loaders for data fetching states
+- [ ] Background is `#e8eef5` (not white)
+- [ ] All cards/buttons have dual raised shadows
+- [ ] All inputs have inset shadows
+- [ ] All elements have rounded corners (rounded-xl+)
+- [ ] Selected states use amber border
+- [ ] Icons are from Lucide React
+- [ ] Colors use CSS variables
+- [ ] Verified against `/theme-reference` page
 
 ---
 

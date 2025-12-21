@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Currency } from 'components';
 import { Card, CardBody, Row, Col } from 'reactstrap';
+import { Landmark, Wallet, Building2, Calendar } from 'lucide-react';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-
-import bankIcon from 'assets/images/dashboard/bank.png';
 
 import './style.scss';
 
@@ -14,33 +13,45 @@ let strings = new LocalizedStrings(data);
 const backOption = {
   layout: {
     padding: {
-      left: 0,
-      right: 0,
-      top: 0,
-      bottom: 0,
+      left: 10,
+      right: 10,
+      top: 10,
+      bottom: 10,
     },
   },
   scales: {
     y: {
       ticks: {
         display: true,
+        color: '#98afc2',
+        font: {
+          size: 11,
+        },
       },
       beginAtZero: true,
       grid: {
         display: true,
-        color: '#eeeff8',
-        drawBorder: true,
+        color: 'rgba(200, 210, 220, 0.3)',
+        drawBorder: false,
+      },
+      border: {
+        display: false,
       },
     },
     x: {
       ticks: {
         display: true,
+        color: '#98afc2',
+        font: {
+          size: 11,
+        },
       },
       beginAtZero: true,
       grid: {
-        display: true,
-        color: '#eeeff8',
-        drawBorder: true,
+        display: false,
+      },
+      border: {
+        display: false,
       },
     },
   },
@@ -48,9 +59,23 @@ const backOption = {
     legend: {
       display: false,
     },
+    tooltip: {
+      backgroundColor: '#1e3a5f',
+      titleColor: '#ffffff',
+      bodyColor: '#ffffff',
+      borderColor: '#1e6eff',
+      borderWidth: 1,
+      cornerRadius: 8,
+      padding: 12,
+    },
   },
   responsive: true,
   maintainAspectRatio: false,
+  elements: {
+    line: {
+      tension: 0.4,
+    },
+  },
 };
 
 class BankAccount extends Component {
@@ -119,21 +144,24 @@ class BankAccount extends Component {
       labels: graphData.labels || [],
       datasets: [
         {
-          label: 'Delta of ' + (graphData.account_name || '') + ' ',
+          label: 'Balance of ' + (graphData.account_name || '') + ' ',
           fill: true,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(32, 100, 216, 0.4)',
-          borderColor: 'rgba(32, 100, 216, 1)',
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: 'rgba(32, 100, 216, 1)',
-          pointBackgroundColor: '#fff',
+          lineTension: 0.4,
+          backgroundColor: context => {
+            const ctx = context.chart.ctx;
+            const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+            gradient.addColorStop(0, 'rgba(30, 110, 255, 0.3)');
+            gradient.addColorStop(1, 'rgba(30, 110, 255, 0.02)');
+            return gradient;
+          },
+          borderColor: '#1e6eff',
+          borderWidth: 3,
+          pointBorderColor: '#1e6eff',
+          pointBackgroundColor: '#ffffff',
           pointBorderWidth: 2,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(32, 100, 216, 1)',
-          pointHoverBorderColor: 'rgba(32, 100, 216, 1)',
+          pointHoverRadius: 6,
+          pointHoverBackgroundColor: '#1e6eff',
+          pointHoverBorderColor: '#ffffff',
           pointHoverBorderWidth: 2,
           pointRadius: 4,
           pointHitRadius: 20,
@@ -143,15 +171,25 @@ class BankAccount extends Component {
     };
     const { universal_currency_list } = this.props;
     return (
-      <div className="animated fadeIn  ">
-        <Card className="bank-card card-margin ">
+      <div className="animated fadeIn">
+        <Card className="bank-card card-margin">
           <CardBody className="tab-card">
             <div className="flex-wrapper title-bottom-border">
-              <h1 className="card-h1">{strings.BANKING}</h1>
-
+              <h1
+                className="card-h1"
+                style={{
+                  fontSize: '1.125rem',
+                  fontWeight: 700,
+                  color: '#1e6eff',
+                  margin: 0,
+                  textTransform: 'uppercase',
+                }}
+              >
+                {strings.BANKING}
+              </h1>
               <div className="mb-1 card-header-actions card-select-alignment">
                 <select
-                  className="form-control  card-select"
+                  className="form-control card-select"
                   ref={this.dateRangeSelect}
                   onChange={e => this.handleChange(e)}
                 >
@@ -161,92 +199,162 @@ class BankAccount extends Component {
                 </select>
               </div>
             </div>
-            {/* main Start */}
 
-            <Row className="data-info">
-              <div style={{ display: 'contents' }}>
-                <img
-                  alt="bankIcon ml-2"
-                  className="d-none d-lg-block"
-                  src={bankIcon}
-                  style={{ width: 40, marginRight: 10 }}
-                />
-                <select
-                  className="form-control bank-type-select card-select mt-2"
-                  ref={this.bankAccountSelect}
-                  onChange={e => this.handleChange(e)}
-                >
-                  {(this.props.bank_account_type || []).map((account, index) => (
-                    <option key={index} value={account.bankAccountId}>
-                      {account.name + '-' + account.accounName}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </Row>
-            <Row className="text-center mt-2" style={{ display: 'block' }}>
-              <p style={{ fontWeight: 500, textIndent: 5, marginTop: '-4px' }}>
-                {strings.Lastupdatedon} {graphData.updatedDate || ''}
-              </p>
-            </Row>
-            <Row style={{ marginBottom: '10px' }}>
-              <Col
-                className="data-item"
+            {/* Bank Selector with Icon */}
+            <div className="bank-selector-wrapper">
+              <div
+                className="bank-icon-container"
                 style={{
-                  width: '50%',
-                  textAlign: 'right',
-                  borderRight: '1px solid rgb(238 238 238)',
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'var(--neu-bg, #e8eef5)',
+                  boxShadow:
+                    '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+                  marginRight: '12px',
+                  flexShrink: 0,
                 }}
               >
-                <div>
-                  <p style={{ marginBottom: '6px' }} className="mr-1 data-item">
-                    {strings.BALANCE}
-                  </p>
-                  <h5>
-                    {universal_currency_list[0] && (
-                      <Currency
-                        value={
-                          this.props.bank_account_graph?.balance
-                            ? this.props.bank_account_graph.balance
-                            : 0
-                        }
-                        currencySymbol={
-                          universal_currency_list[0]
-                            ? universal_currency_list[0].currencyIsoCode
-                            : 'USD'
-                        }
-                      />
-                    )}
-                  </h5>
+                <Landmark size={22} style={{ color: 'var(--neu-primary, #1e6eff)' }} />
+              </div>
+              <select
+                className="form-control bank-type-select card-select"
+                ref={this.bankAccountSelect}
+                onChange={e => this.handleChange(e)}
+              >
+                {(this.props.bank_account_type || []).map((account, index) => (
+                  <option key={index} value={account.bankAccountId}>
+                    {account.name + ' - ' + account.accounName}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Last Updated */}
+            <div className="last-updated">
+              <Calendar
+                size={14}
+                style={{ color: 'var(--neu-text-muted, #98afc2)', marginRight: '6px' }}
+              />
+              <span>
+                {strings.Lastupdatedon} {graphData.updatedDate || '--'}
+              </span>
+            </div>
+
+            {/* Balance Cards */}
+            <div className="balance-cards">
+              <div
+                className="balance-card"
+                style={{
+                  background: 'var(--neu-bg, #e8eef5)',
+                  boxShadow:
+                    'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  textAlign: 'center',
+                }}
+              >
+                <div
+                  className="balance-icon"
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'var(--neu-bg, #e8eef5)',
+                    boxShadow:
+                      '2px 2px 4px var(--neu-shadow-dark, #c4c9cf), -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                    margin: '0 auto 8px',
+                  }}
+                >
+                  <Wallet size={18} style={{ color: 'var(--neu-primary, #1e6eff)' }} />
                 </div>
-              </Col>
-              <Col className="data-item">
-                <div>
-                  <p style={{ marginBottom: '6px' }}>{strings.ALLBANKACCOUNTS}</p>
-                  <h5>
-                    {universal_currency_list[0] && (
-                      <Currency
-                        value={this.state.totalBalance}
-                        currencySymbol={
-                          universal_currency_list[0]
-                            ? universal_currency_list[0].currencyIsoCode
-                            : 'USD'
-                        }
-                      />
-                    )}
-                  </h5>
+                <p
+                  style={{
+                    marginBottom: '4px',
+                    color: 'var(--neu-text-muted, #98afc2)',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {strings.BALANCE}
+                </p>
+                <h5
+                  style={{ margin: 0, color: 'var(--neu-text-primary, #1e3a5f)', fontWeight: 700 }}
+                >
+                  {universal_currency_list[0] && (
+                    <Currency
+                      value={this.props.bank_account_graph?.balance || 0}
+                      currencySymbol={universal_currency_list[0]?.currencyIsoCode || 'USD'}
+                    />
+                  )}
+                </h5>
+              </div>
+
+              <div
+                className="balance-card"
+                style={{
+                  background: 'var(--neu-bg, #e8eef5)',
+                  boxShadow:
+                    'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  textAlign: 'center',
+                }}
+              >
+                <div
+                  className="balance-icon"
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'var(--neu-bg, #e8eef5)',
+                    boxShadow:
+                      '2px 2px 4px var(--neu-shadow-dark, #c4c9cf), -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                    margin: '0 auto 8px',
+                  }}
+                >
+                  <Building2 size={18} style={{ color: 'var(--neu-secondary, #00c896)' }} />
                 </div>
-              </Col>
-            </Row>
+                <p
+                  style={{
+                    marginBottom: '4px',
+                    color: 'var(--neu-text-muted, #98afc2)',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {strings.ALLBANKACCOUNTS}
+                </p>
+                <h5
+                  style={{ margin: 0, color: 'var(--neu-text-primary, #1e3a5f)', fontWeight: 700 }}
+                >
+                  {universal_currency_list[0] && (
+                    <Currency
+                      value={this.state.totalBalance}
+                      currencySymbol={universal_currency_list[0]?.currencyIsoCode || 'USD'}
+                    />
+                  )}
+                </h5>
+              </div>
+            </div>
 
             <div className="chart-wrapper card-visibility">
               <Line
                 data={line}
                 options={backOption}
                 style={{ height: 200 }}
-                datasetKeyProvider={() => {
-                  return Math.random();
-                }}
+                datasetKeyProvider={() => Math.random()}
               />
             </div>
           </CardBody>

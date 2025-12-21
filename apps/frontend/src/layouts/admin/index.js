@@ -2,25 +2,16 @@ import React, { Suspense } from 'react';
 import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from 'sonner';
 import { Toaster } from '@/components/ui/sonner';
+import { Home, ChevronRight } from 'lucide-react';
 import { adminRoutes } from 'routes';
 import { AuthActions, CommonActions } from 'services/global';
 import PrivateRoute from '../private';
 import navigation from 'constants/navigation';
 import { Loading, Loader } from 'components';
-import Header from '../components/header';
 import Sidebar from '../components/sidebar';
-import Footer from '../components/footer';
 import { withNavigation } from 'utils/withNavigation';
 import { data } from '../../screens/Language/index';
 import LocalizedStrings from 'react-localization';
@@ -265,45 +256,98 @@ class AdminLayout extends React.Component {
     return loading == true ? (
       <Loader loadingMsg={loadingMsg} />
     ) : (
-      <div className="flex min-h-screen flex-col">
-        <Header
-          {...this.props}
-          onToggleSidebar={this.toggleSidebar}
-          onToggleSidebarMinimize={this.toggleSidebarMinimize}
-          navigationItems={finalArray.items}
-          pathname={pathname}
-        />
-        <div className="flex flex-1">
-          <Sidebar items={finalArray.items} pathname={pathname} minimized={sidebarMinimized} />
-          <main
-            className="flex-1 overflow-y-auto overflow-x-hidden"
-            style={{ backgroundColor: '#dfe9f7' }}
-          >
+      <div className="admin-container flex min-h-screen bg-neu-bg dark:bg-neu-bg-dark overflow-x-hidden">
+        <div className="flex flex-1 p-4 gap-4 w-full max-w-full">
+          <Sidebar
+            items={finalArray.items}
+            pathname={pathname}
+            minimized={sidebarMinimized}
+            onToggleMinimize={this.toggleSidebarMinimize}
+            user={this.props.user_list}
+            onLogout={() => {
+              this.props.authActions.logOut();
+              this.props.history.push('/login');
+            }}
+          />
+          <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto bg-neu-bg dark:bg-neu-bg-dark rounded-2xl shadow-neu-out dark:shadow-neu-out-dark">
             {SubscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
               <Alert variant="destructive" className="m-4">
                 <AlertDescription>{SubscriptionMessage}</AlertDescription>
               </Alert>
             )}
-            <div className="border-b bg-white px-6 py-4">
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink asChild>
-                      <NavLink to={config.BASE_ROUTE}>Home</NavLink>
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  {breadcrumbName && (
-                    <>
-                      <BreadcrumbSeparator />
-                      <BreadcrumbItem>
-                        <BreadcrumbPage>{breadcrumbName}</BreadcrumbPage>
-                      </BreadcrumbItem>
-                    </>
-                  )}
-                </BreadcrumbList>
-              </Breadcrumb>
+            {/* Neumorphic Page Header with Breadcrumb */}
+            <div className="px-6 py-5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                {/* Page Title */}
+                <div>
+                  <h1
+                    className="text-2xl font-bold"
+                    style={{ color: 'var(--neu-text-primary, #1e3a5f)' }}
+                  >
+                    {breadcrumbName || 'Dashboard'}
+                  </h1>
+                  {/* Breadcrumb Trail */}
+                  <nav className="flex items-center gap-2 mt-2">
+                    <NavLink
+                      to={config.BASE_ROUTE}
+                      className="flex items-center gap-1.5 text-sm transition-colors hover:opacity-80"
+                      style={{ color: 'var(--neu-primary, #1e6eff)' }}
+                    >
+                      <div
+                        className="w-6 h-6 rounded-lg flex items-center justify-center"
+                        style={{
+                          background: 'var(--neu-bg, #e8eef5)',
+                          boxShadow:
+                            '2px 2px 4px var(--neu-shadow-dark, #c4c9cf), -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                        }}
+                      >
+                        <Home className="w-3.5 h-3.5" />
+                      </div>
+                      <span>Home</span>
+                    </NavLink>
+                    {breadcrumbName && (
+                      <>
+                        <ChevronRight
+                          className="w-4 h-4"
+                          style={{ color: 'var(--neu-text-muted, #98afc2)' }}
+                        />
+                        <span
+                          className="text-sm font-medium px-3 py-1 rounded-lg"
+                          style={{
+                            color: 'var(--neu-text-secondary, #3d5a80)',
+                            background: 'var(--neu-bg, #e8eef5)',
+                            boxShadow:
+                              'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                          }}
+                        >
+                          {breadcrumbName}
+                        </span>
+                      </>
+                    )}
+                  </nav>
+                </div>
+                {/* Optional: Date or other info on the right */}
+                <div
+                  className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium"
+                  style={{
+                    background: 'var(--neu-bg, #e8eef5)',
+                    boxShadow:
+                      '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+                    color: 'var(--neu-text-secondary, #3d5a80)',
+                  }}
+                >
+                  <span>
+                    {new Date().toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="p-6" style={{ backgroundColor: '#dfe9f7' }}>
+            <div className="p-6">
               <Suspense fallback={Loading()}>
                 <Toaster position="top-right" duration={1700} />
                 <Routes>
@@ -336,7 +380,6 @@ class AdminLayout extends React.Component {
             </div>
           </main>
         </div>
-        <Footer {...this.props} />
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Home,
   Users,
@@ -672,6 +673,7 @@ function CollapsibleSidebarDemo({ theme, shadows, gradients }) {
 }
 
 export default function ComponentLibrary() {
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('overview');
   const [checked, setChecked] = useState(true);
   const [toggle, setToggle] = useState(true);
@@ -765,6 +767,20 @@ export default function ComponentLibrary() {
             </span>
           </div>
         </div>
+
+        {/* Back to Dashboard Button */}
+        <button
+          onClick={() => navigate('/admin/dashboard')}
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-xl mb-4 transition-all duration-200"
+          style={{
+            background: theme.bg,
+            boxShadow: shadows.raised.sm,
+            color: theme.primary,
+          }}
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-sm font-medium">Back to Dashboard</span>
+        </button>
 
         <div className="space-y-1">
           {sections.map(section => {

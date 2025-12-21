@@ -1,4 +1,4 @@
-import screen from './screen.jsx';
+import screen from './screen';
 import screenTwo from './screen-two.jsx';
 import * as actions from './actions';
 import reducer from './dashboardSlice';

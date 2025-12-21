@@ -48,13 +48,12 @@ describe('Sidebar Component', () => {
     );
 
     const dashboardLink = screen.getByText('Dashboard').closest('a');
-    // NavLink applies classes conditionally, check if it has the active styling
-    // The class might be 'bg-accent' or 'text-accent-foreground' or both
-    const hasActiveClass =
-      dashboardLink.className.includes('bg-accent') ||
-      dashboardLink.className.includes('text-primary') ||
-      dashboardLink.className.includes('accent');
-    expect(hasActiveClass).toBe(true);
+    // Neumorphic sidebar uses inline styles with amber border for active state
+    // Check for the amber border color (#f59e0b) in the style
+    const hasActiveBorder =
+      dashboardLink.style.border?.includes('#f59e0b') ||
+      dashboardLink.style.border?.includes('rgb(245, 158, 11)');
+    expect(hasActiveBorder).toBe(true);
   });
 
   test('renders collapsible menu items', () => {
@@ -99,7 +98,7 @@ describe('Sidebar Component', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/no navigation items available/i)).toBeInTheDocument();
+    expect(screen.getByText(/no navigation items/i)).toBeInTheDocument();
   });
 
   test('applies minimized class when minimized prop is true', () => {
