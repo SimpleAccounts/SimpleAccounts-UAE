@@ -1216,9 +1216,15 @@ const adminRoutes = [
 
   {
     redirect: true,
-    path: Config.DASHBOARD ? '' : 'income',
+    path: '',
     pathTo: Config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice',
-    name: Config.DASHBOARD ? 'Admin' : 'Income',
+    name: 'Index',
+  },
+  {
+    redirect: true,
+    path: '*',
+    pathTo: Config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice',
+    name: 'Catch All',
   },
 ].filter(i => i.path !== undefined && i.path !== false);
 

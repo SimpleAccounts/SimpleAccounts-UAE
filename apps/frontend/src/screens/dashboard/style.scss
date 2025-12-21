@@ -205,11 +205,17 @@ $radius-xl: 20px;
   // SECTION HEADERS
   // ============================================
   .section-header {
+    display: flex;
+    align-items: center;
     margin-bottom: $space-md;
     margin-top: $space-lg;
 
     &:first-of-type {
       margin-top: 0;
+    }
+
+    .section-icon {
+      flex-shrink: 0;
     }
 
     .section-title {
@@ -415,13 +421,46 @@ $radius-xl: 20px;
   // CHARTS ROW
   // ============================================
   .charts-row {
+    align-items: stretch;
+
     > [class*='col-'] {
       margin-bottom: $space-lg;
+      display: flex;
     }
 
     .chart-card {
-      height: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
       margin-bottom: 0;
+
+      // Handle the animated wrapper div
+      > .animated,
+      > div {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      // Override inner card styles for flex
+      .card {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card-body,
+      .tab-card {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      // Make chart wrapper fill remaining space
+      .chart-wrapper {
+        flex: 1;
+        min-height: 200px;
+      }
     }
   }
 }

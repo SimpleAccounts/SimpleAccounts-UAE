@@ -1,14 +1,180 @@
+/* ============================================
+   NEUMORPHIC DESIGN SYSTEM - CSS VARIABLES
+   ============================================ */
 
-.required::after{
-  content: " *";
+:root {
+  /* Background Colors */
+  --neu-bg: #e8eef5;
+  --neu-bg-alt: #e0e5ec;
+
+  /* Brand Colors */
+  --neu-primary: #1e6eff;
+  --neu-primary-dark: #0052cc;
+  --neu-secondary: #00c896;
+  --neu-warning: #f59e0b;
+  --neu-danger: #ff4d6a;
+
+  /* Text Colors */
+  --neu-text-primary: #1e3a5f;
+  --neu-text-secondary: #3d5a80;
+  --neu-text-muted: #98afc2;
+
+  /* Shadow Colors */
+  --neu-shadow-dark: #c4c9cf;
+  --neu-shadow-light: #ffffff;
+
+  /* Border Colors */
+  --neu-border: #d1d9e6;
+
+  /* Shadows - Raised (element pops out) */
+  --neu-shadow-raised-xs: 2px 2px 4px var(--neu-shadow-dark), -2px -2px 4px var(--neu-shadow-light);
+  --neu-shadow-raised-sm: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);
+  --neu-shadow-raised: 6px 6px 12px var(--neu-shadow-dark), -6px -6px 12px var(--neu-shadow-light);
+  --neu-shadow-raised-lg:
+    8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
+
+  /* Shadows - Pressed (element pushed in) */
+  --neu-shadow-pressed-sm:
+    inset 2px 2px 4px var(--neu-shadow-dark), inset -2px -2px 4px var(--neu-shadow-light);
+  --neu-shadow-pressed:
+    inset 3px 3px 6px var(--neu-shadow-dark), inset -3px -3px 6px var(--neu-shadow-light);
+
+  /* Gradients */
+  --neu-gradient-primary: linear-gradient(145deg, #1e6eff, #0052cc);
+  --neu-gradient-success: linear-gradient(145deg, #00c896, #00a67d);
+}
+
+/* Dark Mode Variables */
+.dark {
+  --neu-bg: #2b2d33;
+  --neu-bg-alt: #31343b;
+  --neu-shadow-dark: #1e1f23;
+  --neu-shadow-light: #383b43;
+  --neu-border: #3d4049;
+  --neu-text-primary: #e8eef5;
+  --neu-text-secondary: #b8c5d6;
+  --neu-text-muted: #6b7a8f;
+}
+
+/* ============================================
+   NEUMORPHIC UTILITY CLASSES
+   ============================================ */
+
+/* Backgrounds */
+.neu-bg {
+  background-color: var(--neu-bg);
+}
+
+/* Raised shadows */
+.neu-raised-xs {
+  box-shadow: var(--neu-shadow-raised-xs);
+}
+.neu-raised-sm {
+  box-shadow: var(--neu-shadow-raised-sm);
+}
+.neu-raised {
+  box-shadow: var(--neu-shadow-raised);
+}
+.neu-raised-lg {
+  box-shadow: var(--neu-shadow-raised-lg);
+}
+
+/* Pressed shadows */
+.neu-pressed-sm {
+  box-shadow: var(--neu-shadow-pressed-sm);
+}
+.neu-pressed {
+  box-shadow: var(--neu-shadow-pressed);
+}
+
+/* Selected/Active border */
+.neu-selected {
+  border: 2px solid var(--neu-warning);
+}
+
+/* Card style */
+.neu-card {
+  background-color: var(--neu-bg);
+  border-radius: 1rem;
+  box-shadow: var(--neu-shadow-raised);
+}
+
+/* Button style */
+.neu-btn {
+  background-color: var(--neu-bg);
+  border-radius: 0.75rem;
+  box-shadow: var(--neu-shadow-raised-sm);
+  border: none;
+  transition: all 200ms ease;
+}
+.neu-btn:hover {
+  box-shadow: var(--neu-shadow-raised);
+  transform: translateY(-1px);
+}
+.neu-btn:active {
+  box-shadow: var(--neu-shadow-pressed-sm);
+  transform: translateY(0);
+}
+
+/* Input style */
+.neu-input {
+  background-color: var(--neu-bg);
+  border-radius: 0.75rem;
+  box-shadow: var(--neu-shadow-pressed-sm);
+  border: none;
+  color: var(--neu-text-primary);
+}
+.neu-input:focus {
+  box-shadow: var(--neu-shadow-pressed);
+  outline: none;
+}
+.neu-input::placeholder {
+  color: var(--neu-text-muted);
+}
+
+/* Dropdown menu style */
+.neu-dropdown {
+  background-color: var(--neu-bg);
+  border-radius: 0.75rem;
+  box-shadow: var(--neu-shadow-raised);
+  border: none;
+}
+
+/* Text colors */
+.neu-text-primary {
+  color: var(--neu-text-primary);
+}
+.neu-text-secondary {
+  color: var(--neu-text-secondary);
+}
+.neu-text-muted {
+  color: var(--neu-text-muted);
+}
+
+/* Icon container */
+.neu-icon-container {
+  background-color: var(--neu-bg);
+  border-radius: 0.75rem;
+  box-shadow: var(--neu-shadow-raised-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================
+   LEGACY STYLES
+   ============================================ */
+
+.required::after {
+  content: ' *';
   color: red;
 }
 
-.filter-label{
+.filter-label {
   display: block !important;
 }
 
-.table thead th{
+.table thead th {
   vertical-align: top !important;
 }
 
@@ -36,50 +202,53 @@
   background-clip: padding-box;
   border: 1px solid #e4e7ea;
   border-radius: 0.25rem;
-  -webkit-transition: border-color 0.15s ease-in-out,
+  -webkit-transition:
+    border-color 0.15s ease-in-out,
     box-shadow 0.15s ease-in-out;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
-.create-bank-wrapper{
-    padding: 1.5rem;
+.create-bank-wrapper {
+  padding: 1.5rem;
 }
 
-.row-wrapper{
-    margin-bottom: 1rem !important;
+.row-wrapper {
+  margin-bottom: 1rem !important;
 }
 
-.bank-btn-wrapper{
-    padding: 1rem;
+.bank-btn-wrapper {
+  padding: 1rem;
 }
-.invoice{
-    margin-right: 10px;
-}
-.add-btn{
-    margin: 31px 0px 0px 0px;
-}
-
-.address{
-    margin-top: 30px;
-}
-.modal-header{
-  border: none !important;
-}
-.modal-footer{
-  border: none !important;
-}
-.submit-invoice{
+.invoice {
   margin-right: 10px;
 }
-.vat-includeInput{
+.add-btn {
+  margin: 31px 0px 0px 0px;
+}
+
+.address {
+  margin-top: 30px;
+}
+.modal-header {
+  border: none !important;
+}
+.modal-footer {
+  border: none !important;
+}
+.submit-invoice {
+  margin-right: 10px;
+}
+.vat-includeInput {
   margin: 33px 0px 0px 0px;
 }
-.vat-includeLable{
+.vat-includeLable {
   margin-top: 31px;
   margin-left: 25px;
 }
 
-.react-autosuggest__suggestions-list{
+.react-autosuggest__suggestions-list {
   min-height: auto;
   max-height: 10rem;
   overflow-y: scroll;
@@ -87,54 +256,54 @@
   z-index: 1000;
   background: white;
   width: 95%;
-  border: 1px solid rgba(0,0,0,0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.expense-items-table{
+.expense-items-table {
   margin: 1rem 0;
   width: 100%;
 }
 
-.expense-items-table th{
+.expense-items-table th {
   padding: 0.5rem;
 }
 
-.expense-table-footer{
+.expense-table-footer {
   border-bottom: none !important;
   border-left: none !important;
 }
 
-.expense-table-border{
-  border: 1px solid rgba(0,0,0,0.1) !important;
+.expense-table-border {
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
   padding: 0.3rem;
 }
 
-.expense-labels{
+.expense-labels {
   padding: 0 0.5rem;
 }
 
-.expense-headers{
+.expense-headers {
   font-weight: bold;
 }
 
 .expense-items-table thead,
 .expense-items-table tbody,
- .expense-items-table thead td ,
- .expense-items-table tbody td ,
- .expense-items-table thead th,
- .expense-items-table tbody th{
-  border: 1px solid rgba(0,0,0,0.1);
+.expense-items-table thead td,
+.expense-items-table tbody td,
+.expense-items-table thead th,
+.expense-items-table tbody th {
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.form-check-input{
+.form-check-input {
   margin-top: 31px !important;
   margin-left: 0 !important;
 }
 
-.product-cotact-input select{
+.product-cotact-input select {
   width: 89% !important;
 }
 
-.product-cotact-input button{
+.product-cotact-input button {
   margin: 0 !important;
 }

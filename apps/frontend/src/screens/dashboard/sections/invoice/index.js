@@ -163,13 +163,7 @@ class Invoice extends Component {
                   </div>
                 </div>
                 <div className="chart-wrapper invoices">
-                  <Bar
-                    data={invoiceBar}
-                    options={invoiceOption}
-                    datasetKeyProvider={() => {
-                      return Math.random();
-                    }}
-                  />
+                  <Bar data={invoiceBar} options={invoiceOption} />
                 </div>
               </TabPane>
             </TabContent>

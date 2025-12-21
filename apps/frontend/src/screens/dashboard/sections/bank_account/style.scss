@@ -1,14 +1,24 @@
-//Bank Card
+// Bank Card - Neumorphic Design
 .bank-card {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  margin-bottom: 0 !important;
+
   .bank-type {
-    color: #2064d8 !important;
+    color: var(--neu-primary, #1e6eff) !important;
     font-size: 18px;
   }
+
   h1 {
-    font-size: 25px;
-    margin-right: 50px;
-    color: #2064d8;
-    font-weight: bold;
+    font-size: 1.125rem;
+    color: var(--neu-primary, #1e6eff);
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .tab-card {
+    padding: 0 !important;
   }
 
   .data-item:not(:last-child),
@@ -28,61 +38,119 @@
     height: 250px !important;
   }
 
-  .bank-type-select {
-    border: none !important;
-    padding: 8px 32px 8px 12px !important;
-    font-size: 14px !important;
-    color: #1e293b !important;
-    font-weight: 500;
-    background: #e8f0f8 !important;
-    box-shadow:
-      inset 4px 4px 8px rgba(163, 177, 198, 0.6),
-      inset -4px -4px 8px rgba(255, 255, 255, 0.9) !important;
-    border-radius: 8px !important;
-    height: auto !important;
-    min-height: 38px !important;
+  // Bank Selector Wrapper
+  .bank-selector-wrapper {
+    display: flex;
+    align-items: center;
+    margin: 16px 0 12px;
   }
 
-  @media screen and (max-width: 480px) {
-    .data-item {
-      width: 100%;
+  .bank-type-select {
+    border: none !important;
+    padding: 10px 36px 10px 14px !important;
+    font-size: 14px !important;
+    color: var(--neu-text-primary, #1e3a5f) !important;
+    font-weight: 500;
+    background: var(--neu-bg, #e8eef5) !important;
+    box-shadow:
+      inset 3px 3px 6px var(--neu-shadow-dark, #c4c9cf),
+      inset -3px -3px 6px var(--neu-shadow-light, #ffffff) !important;
+    border-radius: 10px !important;
+    height: auto !important;
+    min-height: 44px !important;
+    flex: 1;
+  }
+
+  // Last Updated Section
+  .last-updated {
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--neu-text-muted, #98afc2);
+    margin-bottom: 16px;
+  }
+
+  // Balance Cards Layout
+  .balance-cards {
+    display: flex;
+    gap: 0;
+    margin-bottom: 16px;
+  }
+
+  .balance-card {
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
     }
   }
+
+  @media screen and (max-width: 576px) {
+    .bank-selector-wrapper {
+      flex-direction: column;
+      align-items: stretch;
+
+      .bank-icon-container {
+        margin-bottom: 10px;
+        margin-right: 0 !important;
+      }
+    }
+
+    .balance-cards {
+      flex-direction: column;
+    }
+
+    .balance-card {
+      margin-left: 0 !important;
+      margin-top: 10px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
   .data-info {
     margin-top: 10px;
   }
 }
+
 .card-body .form-control1:focus {
-  border: 1px solid #7d7d7d !important;
+  border: 1px solid var(--neu-primary, #1e6eff) !important;
   box-shadow: none !important;
 }
+
 .card-shadow {
-  background: #ffffff !important;
+  background: var(--neu-bg, #e8eef5) !important;
   box-shadow:
-    rgba(0, 0, 0, 0.2) 0px 2px 4px -1px,
-    rgba(0, 0, 0, 0.14) 0px 4px 5px 0px,
-    rgba(0, 0, 0, 0.12) 0px 1px 8px 0px;
+    6px 6px 12px var(--neu-shadow-dark, #c4c9cf),
+    -6px -6px 12px var(--neu-shadow-light, #ffffff);
 }
+
 .flex-color {
-  background-color: #dfe9f7;
+  background-color: var(--neu-bg, #e8eef5);
 }
+
 .card-h1 {
   margin-top: 2%;
   margin-left: 2%;
 }
+
 .card-margin {
   margin-bottom: 0px !important;
 }
+
 .card-select-alignment {
   margin-top: 0.7% !important;
   margin-right: 1% !important;
 }
+
 .card-select {
-  background: #e8f0f8 !important;
+  background: var(--neu-bg, #e8eef5) !important;
   border: none !important;
   box-shadow:
-    inset 4px 4px 8px rgba(163, 177, 198, 0.6),
-    inset -4px -4px 8px rgba(255, 255, 255, 0.9) !important;
+    inset 3px 3px 6px var(--neu-shadow-dark, #c4c9cf),
+    inset -3px -3px 6px var(--neu-shadow-light, #ffffff) !important;
   border-radius: 8px !important;
 }
 
@@ -90,6 +158,9 @@
   overflow: inherit !important;
   visibility: visible !important;
 }
+
 .title-bottom-border {
-  border-bottom: 1px solid #c8ced3;
+  border-bottom: 2px solid rgba(30, 110, 255, 0.1);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
 }
