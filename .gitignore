@@ -85,3 +85,4 @@ scripts/clear-database.sh
 scripts/clear-database-for-registration-test.sql
 scripts/check-database-counts.sql
 scripts/README-clear-database.md
+.gemini-clipboard/
