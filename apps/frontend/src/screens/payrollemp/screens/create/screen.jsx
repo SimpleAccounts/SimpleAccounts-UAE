@@ -47,6 +47,7 @@ import { data } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
 import { selectOptionsFactory } from 'utils';
 import { toast } from 'sonner';
+import { UserPlus, Plus, ArrowRightCircle, ArrowLeftCircle } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -180,6 +181,7 @@ const CreateEmployeePayroll = () => {
     country_list,
     salary_role_dropdown,
     designationType_list,
+    bankList,
   } = useSelector(state => ({
     designation_dropdown: state.payrollEmployee.designation_dropdown,
     employee_list_dropdown: state.payrollEmployee.employee_list_dropdown,
@@ -187,6 +189,7 @@ const CreateEmployeePayroll = () => {
     country_list: state.payrollEmployee.country_list,
     salary_role_dropdown: state.payrollEmployee.salary_role_dropdown,
     designationType_list: state.employeeDesignation.designationType_list,
+    bankList: state.payrollEmployee.bankList,
   }));
 
   // Local State
@@ -702,7 +705,7 @@ const CreateEmployeePayroll = () => {
         <Card>
           <CardHeader>
             <CardTitle className="h4 mb-0 d-flex align-items-center">
-              <i className="nav-icon fas fa-user-plus mr-2" />
+              <UserPlus className="h-4 w-4" />
               {strings.CreateEmployee}
             </CardTitle>
           </CardHeader>
@@ -948,7 +951,7 @@ const CreateEmployeePayroll = () => {
                           </div>
                           <div className="col-md-4 pt-4">
                             <Button type="button" onClick={() => setOpenDesignationModal(true)}>
-                              <i className="fa fa-plus mr-1"></i> {strings.AddDesignation}
+                              <Plus className="h-4 w-4" /> {strings.AddDesignation}
                             </Button>
                           </div>
                         </div>
@@ -1139,7 +1142,7 @@ const CreateEmployeePayroll = () => {
                               {strings.Cancel}
                             </Button>
                             <Button type="submit">
-                              {strings.Next} <i className="far fa-arrow-alt-circle-right ml-1"></i>
+                              {strings.Next} <ArrowRightCircle className="h-4 w-4" />
                             </Button>
                           </div>
                         </div>
@@ -1289,10 +1292,10 @@ const CreateEmployeePayroll = () => {
                     <div className="row mt-5">
                       <div className="col-lg-12 flex justify-between">
                         <Button type="button" variant="outline" onClick={() => setActiveTab('1')}>
-                          <i className="far fa-arrow-alt-circle-left mr-1"></i> {strings.back}
+                          <ArrowLeftCircle className="h-4 w-4" /> {strings.back}
                         </Button>
                         <Button type="submit">
-                          {strings.Next} <i className="far fa-arrow-alt-circle-right ml-1"></i>
+                          {strings.Next} <ArrowRightCircle className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
@@ -1362,7 +1365,7 @@ const CreateEmployeePayroll = () => {
                                 {strings.BankName} <span className="text-danger">*</span>
                               </FormLabel>
                               <ReactSelect
-                                options={useSelector(state => state.payrollEmployee.bankList)} // Assumed bankList is in redux from fetchInitialData
+                                options={bankList}
                                 getOptionLabel={option => option.bankName}
                                 getOptionValue={option => option.bankId}
                                 value={field.value}
@@ -1455,10 +1458,10 @@ const CreateEmployeePayroll = () => {
                     <div className="row mt-5">
                       <div className="col-lg-12 flex justify-between">
                         <Button type="button" variant="outline" onClick={() => setActiveTab('2')}>
-                          <i className="far fa-arrow-alt-circle-left mr-1"></i> {strings.back}
+                          <ArrowLeftCircle className="h-4 w-4" /> {strings.back}
                         </Button>
                         <Button type="submit">
-                          {strings.Next} <i className="far fa-arrow-alt-circle-right ml-1"></i>
+                          {strings.Next} <ArrowRightCircle className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>

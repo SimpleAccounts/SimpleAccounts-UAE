@@ -31,6 +31,7 @@ import API_ROOT_URL from '../../../../../../constants/config';
 import { ViewBankAccount } from './sections';
 import { data } from '../../../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Upload, X, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -615,7 +616,7 @@ const DetailBankTransaction = ({
                                       }}
                                       className="btn-square mr-3"
                                     >
-                                      <i className="fa fa-upload"></i> {strings.upload}
+                                      <Upload className="h-4 w-4" /> {strings.upload}
                                     </Button>
                                     <input
                                       id="fileInput"
@@ -630,10 +631,10 @@ const DetailBankTransaction = ({
                                     />
                                     {fileName && (
                                       <div>
-                                        <i
-                                          className="fa fa-close"
+                                        <X
+                                          className="h-4 w-4 cursor-pointer"
                                           onClick={() => setFileName('')}
-                                        ></i>{' '}
+                                        />{' '}
                                         {fileName}
                                       </div>
                                     )}
@@ -662,7 +663,7 @@ const DetailBankTransaction = ({
                           <Col lg={12} className="mt-5">
                             <FormGroup className="text-right">
                               <Button type="submit" color="primary" className="btn-square mr-3">
-                                <i className="fa fa-dot-circle-o"></i> {strings.Update}
+                                <CircleDot className="h-4 w-4" /> {strings.Update}
                               </Button>
                               <Button
                                 type="button"
@@ -675,7 +676,7 @@ const DetailBankTransaction = ({
                                   })
                                 }
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

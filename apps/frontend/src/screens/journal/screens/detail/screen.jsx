@@ -31,6 +31,7 @@ import './style.scss';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { JOURNAL } from 'constants/types';
+import { Trash2, Diamond, Plus, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -96,6 +97,7 @@ const DetailJournal = ({
 }) => {
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(true);
+  const [loadingMsg, setLoadingMsg] = useState('Loading...');
   const [currentJournalId, setCurrentJournalId] = useState(null);
   const [data, setData] = useState([]);
   const [submitJournal, setSubmitJournal] = useState(false);
@@ -221,7 +223,7 @@ const DetailJournal = ({
               className="btn-twitter btn-brand icon"
               onClick={e => deleteRow(e, row.original)}
             >
-              <i className="fas fa-trash"></i>
+              <Trash2 className="h-4 w-4" />
             </Button>
           );
         },
@@ -784,7 +786,7 @@ const DetailJournal = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fa fa-diamond" />
+                        <Diamond className="h-4 w-4" />
                         <span className="ml-2">
                           {postingReferenceType !== 'MANUAL'
                             ? strings.ViewJournal
@@ -939,7 +941,7 @@ const DetailJournal = ({
                                   className="btn-square mr-3"
                                   onClick={addRow}
                                 >
-                                  <i className="fa fa-plus"></i> {strings.Addmore}
+                                  <Plus className="h-4 w-4" /> {strings.Addmore}
                                 </Button>
                               )}
                             </Col>
@@ -1091,7 +1093,7 @@ const DetailJournal = ({
                                     disabled={disabled1}
                                     onClick={deleteJournal}
                                   >
-                                    <i className="fa fa-trash"></i>{' '}
+                                    <Trash2 className="h-4 w-4" />{' '}
                                     {disabled1 ? 'Deleting...' : strings.Delete}
                                   </Button>
                                 )}
@@ -1108,7 +1110,7 @@ const DetailJournal = ({
                                       handleSubmit(onSubmit)();
                                     }}
                                   >
-                                    <i className="fa fa-dot-circle-o"></i>{' '}
+                                    <CircleDot className="h-4 w-4" />{' '}
                                     {disabled2 ? 'Updating...' : strings.Update}
                                   </Button>
                                 )}
@@ -1127,7 +1129,7 @@ const DetailJournal = ({
                                     }
                                   }}
                                 >
-                                  <i className="fa fa-ban"></i>{' '}
+                                  <Ban className="h-4 w-4" />{' '}
                                   {disabled1 ? 'Deleting...' : strings.Cancel}
                                 </Button>
                               </FormGroup>

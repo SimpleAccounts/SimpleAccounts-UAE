@@ -20,6 +20,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import '../../product/screens/create/style.scss';
 import { toast } from 'sonner';
+import { IdCard, CircleDot, Ban } from 'lucide-react';
 
 const customStyles = {
   control: (base, state) => ({
@@ -127,7 +128,7 @@ const InvoiceNumberModel = props => {
             <Row>
               <Col lg={8}>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="nav-icon fas fa-id-card-alt" />
+                  <IdCard className="h-4 w-4" />
                   <span className="ml-2">Invoice Number</span>
                 </div>
               </Col>
@@ -207,7 +208,7 @@ const InvoiceNumberModel = props => {
           </ModalBody>
           <ModalFooter>
             <Button type="submit" color="primary" className="btn-square mr-3" disabled={disabled}>
-              <i className="fa fa-dot-circle-o"></i> Update
+              <CircleDot className="h-4 w-4" /> Update
             </Button>
             <Button
               color="secondary"
@@ -216,7 +217,7 @@ const InvoiceNumberModel = props => {
                 closeInvoiceNumberModel(false);
               }}
             >
-              <i className="fa fa-ban"></i> Cancel
+              <Ban className="h-4 w-4" /> Cancel
             </Button>
           </ModalFooter>
         </Form>

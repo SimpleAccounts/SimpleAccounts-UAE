@@ -17,10 +17,10 @@ import {
 } from 'reactstrap';
 import { bindActionCreators } from 'redux';
 import Select from 'react-select';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 import DatePicker from 'react-datepicker';
 import dayjs from 'dayjs';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Ban, ChevronDown, ChevronUp, CircleDot } from 'lucide-react';
 import { Button as ShadcnButton } from 'components/ui/button';
 import { Checkbox } from 'components/ui/checkbox';
 
@@ -1203,7 +1203,7 @@ const ExplainTransactionDetail = ({
                                       color="primary"
                                       className="btn-square mr-3"
                                     >
-                                      <i className="fa fa-dot-circle-o"></i> {strings.Explain}
+                                      <CircleDot className="h-4 w-4" /> {strings.Explain}
                                     </Button>
                                     {initValue.explinationStatusEnum !== null && (
                                       <Button
@@ -1211,7 +1211,7 @@ const ExplainTransactionDetail = ({
                                         className="btn-square"
                                         onClick={() => closeTransaction(initValue.transactionId)}
                                       >
-                                        <i className="fa fa-ban"></i> {strings.Delete}
+                                        <Ban className="h-4 w-4" /> {strings.Delete}
                                       </Button>
                                     )}
                                   </div>
@@ -1224,7 +1224,7 @@ const ExplainTransactionDetail = ({
                                       disabled={propData?.isCTNCreated}
                                       onClick={UnexplainTransaction}
                                     >
-                                      <i className="fa fa-dot-circle-o"></i> {strings.Unexplain}
+                                      <CircleDot className="h-4 w-4" /> {strings.Unexplain}
                                     </Button>
                                   </div>
                                 )}

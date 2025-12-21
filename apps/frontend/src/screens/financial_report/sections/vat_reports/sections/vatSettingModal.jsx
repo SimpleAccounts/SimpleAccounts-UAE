@@ -24,6 +24,7 @@ import LocalizedStrings from 'react-localization';
 import '../style.scss';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions';
 import * as VatreportActions from '../actions';
+import { CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -325,7 +326,7 @@ function VatSettingModalForm({ onSubmit, closeModal, commonActions, initValue })
             }
           }}
         >
-          <i className="fa fa-dot-circle-o"></i> {disabled ? 'Saving...' : strings.Save}
+          <CircleDot className="h-4 w-4" /> {disabled ? 'Saving...' : strings.Save}
         </Button>
         &nbsp;
         <Button
@@ -335,7 +336,7 @@ function VatSettingModalForm({ onSubmit, closeModal, commonActions, initValue })
             closeModal(false);
           }}
         >
-          <i className="fa fa-ban"></i> {strings.Cancel}
+          <Ban className="h-4 w-4" /> {strings.Cancel}
         </Button>
       </ModalFooter>
     </Form>

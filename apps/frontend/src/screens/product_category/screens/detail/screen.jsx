@@ -23,6 +23,7 @@ import * as DetailProductCategoryAction from './actions';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import * as ProductCategoryActions from '../../actions';
+import { Package, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -303,7 +304,7 @@ const DetailProductCategory = ({
               <Card>
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="nav-icon fas fa-boxes" />
+                    <Package className="h-4 w-4" />
                     <span className="ml-2"> {strings.UpdateProductCategory}</span>
                   </div>
                 </CardHeader>
@@ -379,7 +380,7 @@ const DetailProductCategory = ({
                                   disabled={disabled1}
                                   onClick={deleteProductCategory}
                                 >
-                                  <i className="fa fa-trash"></i>{' '}
+                                  <Trash2 className="h-4 w-4" />{' '}
                                   {disabled1 ? 'Deleting...' : strings.Delete}
                                 </Button>
                               )}
@@ -392,7 +393,7 @@ const DetailProductCategory = ({
                                 className="btn-square mr-3"
                                 disabled={disabled}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Updating...' : strings.Update}
                               </Button>
                               <Button
@@ -403,7 +404,7 @@ const DetailProductCategory = ({
                                   history.push('/admin/master/product-category');
                                 }}
                               >
-                                <i className="fa fa-ban mr-1"></i>
+                                <Ban className="h-4 w-4" />
                                 {strings.Cancel}
                               </Button>
                             </FormGroup>

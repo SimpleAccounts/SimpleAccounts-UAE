@@ -4,111 +4,104 @@ import { combineReducers } from 'redux';
 import authReducer from './global/auth/authSlice';
 import commonReducer from './global/common/commonSlice';
 
-// Import screen module objects (not lazy-loaded) for reducer access
-import {
-  Dashboard,
-  Journal,
-  BankAccount,
-  Employee,
-  Contact,
-  Expense,
-  GeneralSettings,
-  CustomerInvoice,
-  Receipt,
-  SupplierInvoice,
-  Product,
-  Project,
-  Payment,
-  TransactionCategory,
-  User,
-  VatCode,
-  Currency,
-  CurrencyConvert,
-  Help,
-  Notification,
-  Organization,
-  UsersRoles,
-  DataBackup,
-  TransactionsReport,
-  ChartAccount,
-  ProductCategory,
-  Profile,
-  ImportTransaction,
-  OpeningBalance,
-  VatTransactions,
-  Inventory,
-  Quotation,
-  RequestForQuotation,
-  PurchaseOrder,
-  GoodsReceivedNote,
-  FinancialReport,
-  SalaryRoles,
-  SalaryStucture,
-  SalaryTemplate,
-  Designation,
-  PayrollEmployee,
-  CreditNotes,
-  Import,
-  PayrollRun,
-  DebitNotes,
-} from 'screens/reducers';
+// Import reducers directly from their slice/reducer files
+import dashboardReducer from 'screens/dashboard/reducer';
+import journalReducer from 'screens/journal/reducer';
+import bankAccountReducer from 'screens/bank_account/reducer';
+import employeeReducer from 'screens/employee/reducer';
+import contactReducer from 'screens/contact/reducer';
+import expenseReducer from 'screens/expense/reducer';
+import generalSettingsReducer from 'screens/general_settings/reducer';
+import customerInvoiceReducer from 'screens/customer_invoice/reducer';
+import receiptReducer from 'screens/receipt/reducer';
+import supplierInvoiceReducer from 'screens/supplier_invoice/reducer';
+import productReducer from 'screens/product/reducer';
+import projectReducer from 'screens/project/reducer';
+import paymentReducer from 'screens/payment/reducer';
+import transactionCategoryReducer from 'screens/transaction_category/reducer';
+import userReducer from 'screens/user/userSlice';
+import vatCodeReducer from 'screens/vat_code/reducer';
+import currencyReducer from 'screens/currency/reducer';
+import currencyConvertReducer from 'screens/currencyConvert/reducer';
+import helpReducer from 'screens/help/reducer';
+import notificationReducer from 'screens/notification/reducer';
+import organizationReducer from 'screens/organization/reducer';
+import usersRolesReducer from 'screens/users_roles/reducer';
+import dataBackupReducer from 'screens/data_backup/reducer';
+import transactionsReportReducer from 'screens/transactions_report/reducer';
+import chartAccountReducer from 'screens/chart_account/reducer';
+import productCategoryReducer from 'screens/product_category/reducer';
+import profileReducer from 'screens/profile/reducer';
+import importTransactionReducer from 'screens/import_transaction/reducer';
+import openingBalanceReducer from 'screens/opening_balance/reducer';
+import vatTransactionsReducer from 'screens/vat_transactions/reducer';
+import inventoryReducer from 'screens/inventory/reducer';
+import quotationReducer from 'screens/quotation/reducer';
+import requestForQuotationReducer from 'screens/request_for_quotation/reducer';
+import purchaseOrderReducer from 'screens/purchase_order/reducer';
+import goodsReceivedNoteReducer from 'screens/goods_received_note/reducer';
+import financialReportReducer from 'screens/financial_report/reducer';
+import salaryRolesReducer from 'screens/salaryRoles/reducer';
+import salaryStructureReducer from 'screens/salaryStructure/reducer';
+import salaryTemplateReducer from 'screens/salaryTemplate/reducer';
+import designationReducer from 'screens/designation/reducer';
+import payrollEmployeeReducer from 'screens/payrollemp/reducer';
+import creditNotesReducer from 'screens/creditNotes/reducer';
+import importReducer from 'screens/import/reducer';
+import payrollRunReducer from 'screens/payroll_run/reducer';
+import debitNotesReducer from 'screens/debitNotes/reducer';
 
 import InvoiceViewJournalReducer from 'components/invoice_view_journal_entries/invoiceViewJournalSlice';
-
-// Helper function to safely get reducer (returns identity function if reducer is undefined)
-const getReducer = (module) => {
-  return module?.reducer || ((state = null) => state);
-};
 
 const reducer = combineReducers({
   common: commonReducer,
   auth: authReducer,
 
-  dashboard: getReducer(Dashboard),
-  journal: getReducer(Journal),
-  bank_account: getReducer(BankAccount),
-  employee: getReducer(Employee),
-  contact: getReducer(Contact),
-  expense: getReducer(Expense),
-  settings: getReducer(GeneralSettings),
-  customer_invoice: getReducer(CustomerInvoice),
-  vat_transactions: getReducer(VatTransactions),
-  receipt: getReducer(Receipt),
-  supplier_invoice: getReducer(SupplierInvoice),
-  debit_notes: getReducer(DebitNotes),
-  request_for_quotation: getReducer(RequestForQuotation),
-  purchase_order: getReducer(PurchaseOrder),
-  goods_received_note: getReducer(GoodsReceivedNote),
-  quotation: getReducer(Quotation),
-  product: getReducer(Product),
-  project: getReducer(Project),
-  payment: getReducer(Payment),
-  transaction: getReducer(TransactionCategory),
-  currencyConvert: getReducer(CurrencyConvert),
-  vat: getReducer(VatCode),
-  currency: getReducer(Currency),
-  help: getReducer(Help),
-  reports: getReducer(FinancialReport),
-  notification: getReducer(Notification),
-  organization: getReducer(Organization),
-  users_roles: getReducer(UsersRoles),
-  data_backup: getReducer(DataBackup),
-  transaction_data: getReducer(TransactionsReport),
-  chart_account: getReducer(ChartAccount),
-  product_category: getReducer(ProductCategory),
-  profile: getReducer(Profile),
-  import_transaction: getReducer(ImportTransaction),
-  opening_balance: getReducer(OpeningBalance),
-  inventory: getReducer(Inventory),
-  salaryRoles: getReducer(SalaryRoles),
-  salaryStructure: getReducer(SalaryStucture),
-  salarytemplate: getReducer(SalaryTemplate),
-  employeeDesignation: getReducer(Designation),
-  payrollEmployee: getReducer(PayrollEmployee),
-  user: getReducer(User),
-  creditNote: getReducer(CreditNotes),
-  payrollRun: getReducer(PayrollRun),
-  import: getReducer(Import),
+  dashboard: dashboardReducer,
+  journal: journalReducer,
+  bank_account: bankAccountReducer,
+  employee: employeeReducer,
+  contact: contactReducer,
+  expense: expenseReducer,
+  settings: generalSettingsReducer,
+  customer_invoice: customerInvoiceReducer,
+  vat_transactions: vatTransactionsReducer,
+  receipt: receiptReducer,
+  supplier_invoice: supplierInvoiceReducer,
+  debit_notes: debitNotesReducer,
+  request_for_quotation: requestForQuotationReducer,
+  purchase_order: purchaseOrderReducer,
+  goods_received_note: goodsReceivedNoteReducer,
+  quotation: quotationReducer,
+  product: productReducer,
+  project: projectReducer,
+  payment: paymentReducer,
+  transaction: transactionCategoryReducer,
+  currencyConvert: currencyConvertReducer,
+  vat: vatCodeReducer,
+  currency: currencyReducer,
+  help: helpReducer,
+  reports: financialReportReducer,
+  notification: notificationReducer,
+  organization: organizationReducer,
+  users_roles: usersRolesReducer,
+  data_backup: dataBackupReducer,
+  transaction_data: transactionsReportReducer,
+  chart_account: chartAccountReducer,
+  product_category: productCategoryReducer,
+  profile: profileReducer,
+  import_transaction: importTransactionReducer,
+  opening_balance: openingBalanceReducer,
+  inventory: inventoryReducer,
+  salaryRoles: salaryRolesReducer,
+  salaryStructure: salaryStructureReducer,
+  salarytemplate: salaryTemplateReducer,
+  employeeDesignation: designationReducer,
+  payrollEmployee: payrollEmployeeReducer,
+  user: userReducer,
+  creditNote: creditNotesReducer,
+  payrollRun: payrollRunReducer,
+  import: importReducer,
   invoice_view_journal: InvoiceViewJournalReducer,
 });
 

@@ -8,6 +8,7 @@ import * as VatReportActions from '../actions';
 import { data } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import '../style.scss';
+import { CheckCheck, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -104,7 +105,7 @@ class DeleteModal extends React.Component {
                 this.deleteById(current_report_id);
               }}
             >
-              <i className="fas fa-check-double mr-1"></i> Yes
+              <CheckCheck className="h-4 w-4" /> Yes
             </Button>
             <Button
               color="secondary"
@@ -113,7 +114,7 @@ class DeleteModal extends React.Component {
                 closeModal(false);
               }}
             >
-              <i className="fa fa-ban  mr-1"></i> No
+              <Ban className="h-4 w-4" /> No
             </Button>
           </ModalFooter>
         </Modal>

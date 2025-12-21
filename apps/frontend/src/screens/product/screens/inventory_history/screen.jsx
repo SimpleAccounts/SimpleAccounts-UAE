@@ -17,6 +17,7 @@ import dayjs from '@/utils/date';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
+import { History } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -130,7 +131,7 @@ const InventoryHistory = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fa fa-history fa-2x" />
+                        <History className="h-4 w-4" />
                         <span className="ml-2">{strings.InventoryHistory}</span>
                       </div>
                     </Col>

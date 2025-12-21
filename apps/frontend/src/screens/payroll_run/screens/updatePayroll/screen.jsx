@@ -19,7 +19,7 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { LeavePage, Loader, EmployeeModal } from 'components';
+import { LeavePage, Loader, EmployeeModal, ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import * as EmployeeActions from '../../actions';
@@ -37,6 +37,7 @@ import { DateRangePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 import { toast } from 'sonner';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Ban, CheckCheck, CircleDot, HelpCircle, Trash2, UserCircle } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -646,7 +647,7 @@ const UpdatePayroll = () => {
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-user-tie" />
+                        <UserCircle className="h-4 w-4" />
                         <span className="ml-2">Update Payroll</span>
                       </div>
                     </Col>
@@ -769,10 +770,7 @@ const UpdatePayroll = () => {
                                   <span className="text-danger">* </span>
                                   {strings.payroll_approver}
                                 </Label>
-                                <i
-                                  id="payrollApprovertip"
-                                  className="fa fa-question-circle ml-1"
-                                ></i>
+                                <HelpCircle id="payrollApprovertip" className="h-4 w-4 inline" />
                                 <UncontrolledTooltip placement="right" target="payrollApprovertip">
                                   It is mandatory to have an approver for payroll submission.
                                   Otherwise, it is not mandatory.
@@ -910,7 +908,7 @@ const UpdatePayroll = () => {
                                     className="btn-square"
                                     onClick={deletePayroll}
                                   >
-                                    <i className="fa fa-trash"></i> {strings.Delete}
+                                    <Trash2 className="h-4 w-4" /> {strings.Delete}
                                   </Button>
                                 </>
                               )}
@@ -922,7 +920,7 @@ const UpdatePayroll = () => {
                                   navigate('/admin/payroll/payrollrun');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                               {status &&
                               (status === 'Submitted' ||
@@ -959,7 +957,7 @@ const UpdatePayroll = () => {
                                         : ''
                                     }
                                   >
-                                    <i className="fas fa-check-double  mr-1"></i>
+                                    <CheckCheck className="h-4 w-4" />
                                     Update and Submit
                                   </Button>
                                   <Button
@@ -989,7 +987,7 @@ const UpdatePayroll = () => {
                                         : `Please select at least one employee for payroll update !`
                                     }
                                   >
-                                    <i className="fa fa-dot-circle-o  mr-1"></i> Update
+                                    <CircleDot className="h-4 w-4" /> Update
                                   </Button>
                                 </>
                               )}

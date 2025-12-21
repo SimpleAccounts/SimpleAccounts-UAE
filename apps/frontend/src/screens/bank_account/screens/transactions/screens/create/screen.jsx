@@ -18,7 +18,7 @@ import {
 } from 'reactstrap';
 import { bindActionCreators } from 'redux';
 import Select from 'react-select';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 import DatePicker from 'react-datepicker';
 import dayjs from '@/utils/date';
 
@@ -39,6 +39,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import { data } from '../../../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Upload, X, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 let strings = new LocalizedStrings(data);
 
@@ -935,7 +936,7 @@ const CreateBankTransaction = () => {
                                 onClick={() => document.getElementById('fileInput').click()}
                                 className="btn-square mr-3"
                               >
-                                <i className="fa fa-upload"></i> {strings.upload}
+                                <Upload className="h-4 w-4" /> {strings.upload}
                               </Button>
                               <input
                                 id="fileInput"
@@ -946,7 +947,10 @@ const CreateBankTransaction = () => {
                               />
                               {fileName && (
                                 <div>
-                                  <i className="fa fa-close" onClick={() => setFileName('')}></i>{' '}
+                                  <X
+                                    className="h-4 w-4 cursor-pointer"
+                                    onClick={() => setFileName('')}
+                                  />{' '}
                                   {fileName}
                                 </div>
                               )}
@@ -968,7 +972,7 @@ const CreateBankTransaction = () => {
                                 disabled={disabled}
                                 onClick={() => handleFormSubmit(false)}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Creating...' : strings.Create}
                               </Button>
                               <Button
@@ -978,7 +982,7 @@ const CreateBankTransaction = () => {
                                 disabled={disabled}
                                 onClick={() => handleFormSubmit(true)}
                               >
-                                <i className="fa fa-refresh"></i>{' '}
+                                <RefreshCw className="h-4 w-4" />{' '}
                                 {disabled ? 'Creating...' : strings.CreateandMore}
                               </Button>
                               <Button
@@ -993,7 +997,7 @@ const CreateBankTransaction = () => {
                                   });
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

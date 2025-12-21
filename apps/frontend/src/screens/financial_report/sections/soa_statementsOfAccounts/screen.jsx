@@ -31,6 +31,7 @@ import { CommonActions } from 'services/global';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { useNavigate } from 'react-router-dom';
+import { Settings, Printer, CircleDot } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -262,7 +263,7 @@ const SOAReport = () => {
                         }}
                         onClick={viewFilter}
                       >
-                        <i className="fa fa-cog mr-2"></i>
+                        <Settings className="h-4 w-4" />
                         {strings.CustomizeReport}
                       </p>
                     </div>
@@ -313,7 +314,7 @@ const SOAReport = () => {
                             cursor: 'pointer',
                           }}
                         >
-                          <i className="fa fa-print"></i>
+                          <Printer className="h-4 w-4" />
                         </div>
                         <div
                           className="mr-2 print-btn-cont"
@@ -410,7 +411,7 @@ const SOAReport = () => {
                           className="btn-square"
                           onClick={generateReport}
                         >
-                          <i className="fa fa-dot-circle-o"></i> {strings.RunReport}
+                          <CircleDot className="h-4 w-4" /> {strings.RunReport}
                         </Button>
                       </FormGroup>
                     </Col>

@@ -23,6 +23,7 @@ import './style.scss';
 import { connect } from 'react-redux';
 import { data } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
+import { IdCard, Plus, Send, Ban } from 'lucide-react';
 
 let strings = new LocalizedStrings(data);
 
@@ -352,7 +353,7 @@ const EmailPopUpModal = ({
             <Row>
               <Col lg={12}>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="nav-icon fas fa-id-card-alt" />
+                  <IdCard className="h-5 w-5" />
                   <span className="ml-2">Send This Email</span>
                 </div>
               </Col>
@@ -653,7 +654,7 @@ const EmailPopUpModal = ({
                               }}
                               className="btn-square mr-3"
                             >
-                              <i className="fa fa-plus"></i> Attach Files
+                              <Plus className="h-4 w-4 mr-1" /> Attach Files
                             </Button>
                             <input
                               id="fileInput"
@@ -688,7 +689,7 @@ const EmailPopUpModal = ({
           </ModalBody>
           <ModalFooter>
             <Button color="primary" type="submit" className="btn-square">
-              <i className="fas fa-send"></i> {strings.Send}
+              <Send className="h-4 w-4 mr-1" /> {strings.Send}
             </Button>
             &nbsp;
             <Button
@@ -702,7 +703,7 @@ const EmailPopUpModal = ({
                 removeDialog(false);
               }}
             >
-              <i className="fa fa-ban"></i> {strings.Cancel}
+              <Ban className="h-4 w-4 mr-1" /> {strings.Cancel}
             </Button>
           </ModalFooter>
         </Form>

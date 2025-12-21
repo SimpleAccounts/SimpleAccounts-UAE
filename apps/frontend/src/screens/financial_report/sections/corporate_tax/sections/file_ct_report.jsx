@@ -25,6 +25,7 @@ import '../style.scss';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions';
 import * as CTReportActions from '../actions';
 import dayjs from '@/utils/date';
+import { UserCircle, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -129,7 +130,7 @@ const FileCtReportModal = props => {
           <Row>
             <Col lg={12}>
               <div className="h4 mb-0 d-flex align-items-center">
-                <i className="nav-icon fas fa-user-tie" />
+                <UserCircle className="h-4 w-4" />
                 <span className="ml-2">File The Report For Tax Period ( {taxReturns} )</span>
               </div>
             </Col>
@@ -184,7 +185,7 @@ const FileCtReportModal = props => {
           </ModalBody>
           <ModalFooter>
             <Button color="primary" type="submit" className="btn-square" disabled={disabled}>
-              <i className="fa fa-dot-circle-o"></i> {disabled ? 'Saving...' : 'File'}
+              <CircleDot className="h-4 w-4" /> {disabled ? 'Saving...' : 'File'}
             </Button>
             &nbsp;
             <Button
@@ -194,7 +195,7 @@ const FileCtReportModal = props => {
                 closeModal(false);
               }}
             >
-              <i className="fa fa-ban"></i> {strings.Cancel}
+              <Ban className="h-4 w-4" /> {strings.Cancel}
             </Button>
           </ModalFooter>
         </Form>

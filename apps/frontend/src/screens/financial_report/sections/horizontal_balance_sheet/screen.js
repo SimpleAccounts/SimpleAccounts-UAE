@@ -23,7 +23,7 @@ import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';
 import { ExcelExport as XLSX } from 'utils';
-import { CSVLink } from 'react-csv';
+import { CSVLink } from '@/components/ui/csv-link';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';
@@ -33,6 +33,7 @@ import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 // import { StringStream } from 'codemirror'; // Removed: StringStream not available in CodeMirror 6
 import FilterComponent3 from '../filterComponent3';
+import { Settings, Printer, FileText } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -240,7 +241,7 @@ class HorizontalBalanceSheet extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
+													<Settings className="h-4 w-4" />{strings.CustomizeReport}
 												</p>
 											</div> */}
                     <div className="d-flex">
@@ -312,7 +313,7 @@ class HorizontalBalanceSheet extends React.Component {
                           marginTop: '15px',
                         }}
                       >
-                        <i className="fa fa-print"></i>
+                        <Printer className="h-4 w-4" />
                       </div>
                       {/* <div
 												className="mr-2 print-btn-cont"
@@ -323,7 +324,7 @@ class HorizontalBalanceSheet extends React.Component {
 													cursor: 'pointer',
 													}}
 												>
-												<i className="fa fa-file-pdf-o"></i>
+												<FileText className="h-4 w-4" />
 											</div> */}
                       <div
                         className="mr-2 print-btn-cont"

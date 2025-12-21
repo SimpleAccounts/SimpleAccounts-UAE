@@ -172,8 +172,7 @@ class BankAccount extends Component {
                   style={{ width: 40, marginRight: 10 }}
                 />
                 <select
-                  style={{ width: '45%', borderRadius: '0.25rem' }}
-                  className="form-control1 bank-type-select card-select mt-2"
+                  className="form-control bank-type-select card-select mt-2"
                   ref={this.bankAccountSelect}
                   onChange={e => this.handleChange(e)}
                 >

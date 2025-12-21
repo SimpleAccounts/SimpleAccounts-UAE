@@ -28,6 +28,7 @@ import dayjs from '@/utils/date';
 import { data } from '../../../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Currency } from 'components';
+import { History, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -139,7 +140,8 @@ const GenerateAuditFile = ({ history, commonActions, vatreport, financialReportA
                 >
                   <div>
                     <h5>
-                      <i className="fa fa-history mr-2"></i>FTA VAT AUDIT REPORT
+                      <History className="h-4 w-4" />
+                      FTA VAT AUDIT REPORT
                     </h5>
                   </div>
                   <div className="d-flex">
@@ -454,7 +456,7 @@ const GenerateAuditFile = ({ history, commonActions, vatreport, financialReportA
                   className="btn-square"
                   disabled={isSubmitting || disabled}
                 >
-                  <i className="fa fa-dot-circle-o"></i> {disabled ? 'Saving...' : strings.Save}
+                  <CircleDot className="h-4 w-4" /> {disabled ? 'Saving...' : strings.Save}
                 </Button>
                 &nbsp;
                 <Button
@@ -465,7 +467,7 @@ const GenerateAuditFile = ({ history, commonActions, vatreport, financialReportA
                     history.push('/admin/report/ftaAuditReports');
                   }}
                 >
-                  <i className="fa fa-ban"></i> {strings.Cancel}
+                  <Ban className="h-4 w-4" /> {strings.Cancel}
                 </Button>
               </ModalFooter>
             </Form>

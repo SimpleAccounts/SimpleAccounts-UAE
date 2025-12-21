@@ -29,6 +29,7 @@ import * as DetailPaymentActions from './actions';
 import { CommonActions } from 'services/global';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Wallet, CircleDot, Trash2, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -288,7 +289,7 @@ const DetailPayment = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fas fa-money-check" />
+                        <Wallet className="h-4 w-4" />
                         <span className="ml-2">{strings.Update + ' ' + strings.Payment}</span>
                       </div>
                     </Col>
@@ -346,7 +347,7 @@ const DetailPayment = ({
                               className="btn-square mr-3 mb-3"
                               onClick={openSupplierModalHandler}
                             >
-                              <i className="fa fa-dot-circle-o"></i> {strings.Supplier}
+                              <CircleDot className="h-4 w-4" /> {strings.Supplier}
                             </Button>
                           </Col>
                           <Col lg={4}>
@@ -622,7 +623,7 @@ const DetailPayment = ({
                             className="btn-square"
                             onClick={deletePayment}
                           >
-                            <i className="fa fa-trash"></i> {strings.Delete}
+                            <Trash2 className="h-4 w-4" /> {strings.Delete}
                           </Button>
                         </FormGroup>
                         <FormGroup className="text-right">
@@ -632,7 +633,7 @@ const DetailPayment = ({
                             color="primary"
                             className="btn-square mr-3"
                           >
-                            <i className="fa fa-dot-circle-o"></i> {strings.Update}
+                            <CircleDot className="h-4 w-4" /> {strings.Update}
                           </Button>
                           <Button
                             type="button"
@@ -643,7 +644,7 @@ const DetailPayment = ({
                               history.push('/admin/expense/payment');
                             }}
                           >
-                            <i className="fa fa-ban"></i> {strings.Cancel}
+                            <Ban className="h-4 w-4" /> {strings.Cancel}
                           </Button>
                         </FormGroup>
                       </Col>

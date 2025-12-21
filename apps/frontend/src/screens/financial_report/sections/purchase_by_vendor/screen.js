@@ -24,6 +24,7 @@ import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { ReportTables } from 'screens/financial_report/sections';
 import FilterComponent3 from '../filterComponent3';
+import { Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -216,7 +217,7 @@ class PurchaseByVendor extends React.Component {
                         cursor: 'pointer',
                       }}
                     >
-                      <i className="fa fa-print"></i>
+                      <Printer className="h-4 w-4" />
                     </div>
                     <div
                       className="mr-2 print-btn-cont"

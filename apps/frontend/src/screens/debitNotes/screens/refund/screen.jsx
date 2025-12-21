@@ -29,6 +29,7 @@ import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Textarea } from '@/components/ui/textarea';
+import { CreditCard, Upload, X, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -317,7 +318,7 @@ const DebitNoteRefund = props => {
                 <Row>
                   <Col lg={12}>
                     <div className="h4 mb-0 d-flex align-items-center">
-                      <i className="fa fa-credit-card" />
+                      <CreditCard className="h-4 w-4" />
                       <span className="ml-2">{strings.RecordRefundOnDebitNote}</span>
                     </div>
                   </Col>
@@ -593,11 +594,14 @@ const DebitNoteRefund = props => {
                                 }}
                                 className="btn-square mr-3"
                               >
-                                <i className="fa fa-upload"></i> {strings.upload}
+                                <Upload className="h-4 w-4" /> {strings.upload}
                               </Button>
                               {fileName && (
                                 <div>
-                                  <i className="fa fa-close" onClick={() => setFileName('')}></i>{' '}
+                                  <X
+                                    className="h-4 w-4 cursor-pointer"
+                                    onClick={() => setFileName('')}
+                                  />{' '}
                                   {fileName}
                                 </div>
                               )}
@@ -656,7 +660,7 @@ const DebitNoteRefund = props => {
                                   }
                                 }}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Refunding...' : strings.RefundPayment}
                               </Button>
                               <Button
@@ -673,7 +677,7 @@ const DebitNoteRefund = props => {
                                   }
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

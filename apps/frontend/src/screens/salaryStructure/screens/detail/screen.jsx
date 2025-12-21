@@ -24,6 +24,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { UserCircle, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const regEx = /^[0-9]+$/;
 const regExAlpha = /^[a-zA-Z ]+$/;
@@ -209,7 +210,7 @@ const DetailSalaryStructure = props => {
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-user-tie" />
+                        <UserCircle className="h-4 w-4" />
                         <span className="ml-2">{strings.UpdateSalaryStructure}</span>
                       </div>
                     </Col>
@@ -299,7 +300,7 @@ const DetailSalaryStructure = props => {
                                 className="btn-square"
                                 onClick={deleteEmployee}
                               >
-                                <i className="fa fa-trash"></i> {strings.Delete}
+                                <Trash2 className="h-4 w-4" /> {strings.Delete}
                               </Button>
                             </FormGroup> */}
                             <FormGroup className="text-right">
@@ -310,7 +311,7 @@ const DetailSalaryStructure = props => {
                                 disabled={disabled}
                                 onClick={handleUpdateClick}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Updating...' : strings.Update}
                               </Button>
                               <Button
@@ -321,7 +322,7 @@ const DetailSalaryStructure = props => {
                                   props.history.push('/admin/payroll/config', { tabNo: '2' });
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

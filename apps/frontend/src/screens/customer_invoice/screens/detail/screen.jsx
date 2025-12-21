@@ -40,7 +40,8 @@ import { AddressComponent } from 'screens/contact/sections';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
+import { FileText, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -1273,7 +1274,7 @@ const DetailCustomerInvoice = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fas fa-file-invoice" />
+                        <FileText className="h-4 w-4" />
                         <span className="ml-2">{strings.UpdateInvoice}</span>
                       </div>
                     </Col>
@@ -1460,7 +1461,7 @@ const DetailCustomerInvoice = ({
                                 disabled={disabled1}
                                 onClick={deleteInvoice}
                               >
-                                <i className="fa fa-trash"></i>{' '}
+                                <Trash2 className="h-4 w-4" />{' '}
                                 {disabled1 ? 'Deleting...' : strings.Delete}
                               </Button>
                             </FormGroup>
@@ -1471,7 +1472,7 @@ const DetailCustomerInvoice = ({
                                 className="btn-square mr-3"
                                 disabled={disabled}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Updating...' : strings.Update}
                               </Button>
                               <Button
@@ -1482,7 +1483,7 @@ const DetailCustomerInvoice = ({
                                   history.push('/admin/income/customer-invoice');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

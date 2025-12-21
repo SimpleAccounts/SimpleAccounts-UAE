@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Menu } from 'lucide-react';
+import { Info, LogOut, Mail, Menu, Palette, User, UserCog, Users, Wallet } from 'lucide-react';
 import { data } from '../../screens/Language/index';
 import LocalizedStrings from 'react-localization';
 import logo from 'assets/images/brand/logo.png';
@@ -148,60 +148,60 @@ class Header extends Component {
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => this.props.history?.push('/admin/profile')}>
-                  <i className="fas fa-user mr-2" />
+                  <User className="h-4 w-4" />
                   {strings.Profile}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => this.props.history?.push('/admin/settings/general')}
                 >
-                  <i className="fas fa-envelope mr-2" />
+                  <Mail className="h-4 w-4" />
                   {strings.GeneralSettings}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => this.props.history?.push('/admin/settings/user')}>
-                  <i className="fas fa-user-tag mr-2" />
+                  <UserCog className="h-4 w-4" />
                   {strings.User}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => this.props.history?.push('/admin/settings/user-role')}
                 >
-                  <i className="fas fa-users mr-2" />
+                  <Users className="h-4 w-4" />
                   {strings.Role}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => this.props.history?.push('/admin/settings/payrollsettings')}
                 >
-                  <i className="fas fa-money-check-alt mr-2" />
+                  <Wallet className="h-4 w-4" />
                   {strings.PayrollSettings}
                 </DropdownMenuItem>
                 {config.SETTING_THEME && (
                   <DropdownMenuItem
                     onClick={() => this.props.history?.push('/admin/settings/template')}
                   >
-                    <i className="fas fa-palette mr-2" />
+                    <Palette className="h-4 w-4" />
                     {strings.MailThemes}
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem
                   onClick={() => this.props.history?.push('/admin/settings/notesSettings')}
                 >
-                  <i className="fas fa-info-circle mr-2" />
+                  <Info className="h-4 w-4" />
                   {strings.Notes_Settings}
                 </DropdownMenuItem>
                 {config.SETTING_IMPORT && (
                   <DropdownMenuItem
                     onClick={() => this.props.history?.push('/admin/settings/import')}
                   >
-                    <i className="fas fa-palette mr-2" />
+                    <Palette className="h-4 w-4" />
                     {strings.Import}
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={() => this.props.history?.push('/admin/settings/help')}>
-                  <i className="fas fa-info-circle mr-2" />
+                  <Info className="h-4 w-4" />
                   {strings.Help}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={this.signOut}>
-                  <i className="fa fa-sign-out mr-2" />
+                  <LogOut className="h-4 w-4" />
                   {strings.LogOut}
                 </DropdownMenuItem>
               </DropdownMenuContent>

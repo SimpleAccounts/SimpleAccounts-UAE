@@ -13,6 +13,7 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import { RFQTemplate } from './sections';
 import ActionButtons from 'components/view_actions_buttons';
 import { StatusActionList } from 'utils';
+import { FileText, Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -122,12 +123,12 @@ const ViewQuotation = props => {
                   exportPDFWithComponent();
                 }}
               >
-                <i className="fa fa-file-pdf-o"></i>
+                <FileText className="h-4 w-4" />
               </Button>
               <ReactToPrint
                 trigger={() => (
                   <Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
-                    <i className="fa fa-print"></i>
+                    <Printer className="h-4 w-4" />
                   </Button>
                 )}
                 content={() => componentRef.current}

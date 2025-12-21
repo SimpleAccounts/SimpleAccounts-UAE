@@ -33,11 +33,12 @@ import { selectOptionsFactory, selectCurrencyFactory, selectStyles } from 'utils
 import { Textarea } from '@/components/ui/textarea';
 import './style.scss';
 import dayjs from '@/utils/date';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Trash2, BookUser } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -202,7 +203,7 @@ const DetailRequestForQuotation = () => {
                 setValue('lineItemsString', newData);
               }}
             >
-              <i className="fas fa-trash"></i>
+              <Trash2 className="h-4 w-4" />
             </Button>
           ),
       },
@@ -292,7 +293,7 @@ const DetailRequestForQuotation = () => {
         <Card>
           <CardHeader>
             <div className="h4 mb-0 d-flex align-items-center">
-              <i className="fas fa-address-book" />
+              <BookUser className="h-4 w-4" />
               <span className="ml-2">{strings.Update + ' ' + strings.RequestForQuotation}</span>
             </div>
           </CardHeader>

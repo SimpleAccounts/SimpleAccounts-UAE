@@ -27,6 +27,7 @@ import PropTypes from 'prop-types';
 import { Input as ShadcnInput } from '@/components/ui/input';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Ban, CircleDot, HelpCircle, RefreshCw } from 'lucide-react';
 
 function NumberFormatCustom(props) {
   const { inputRef, onChange, ...other } = props;
@@ -187,7 +188,7 @@ const CreateVatCode = ({ vatActions, vatCreateActions, commonActions, history })
                         <Label htmlFor="name">
                           <span className="text-danger">* </span>
                           {strings.VatCategoryName}
-                          <i id="VatCodeTooltip" className="fa fa-question-circle ml-1"></i>
+                          <HelpCircle id="VatCodeTooltip" className="h-4 w-4 inline" />
                           <UncontrolledTooltip placement="right" target="VatCodeTooltip">
                             VAT Category Name – Unique identifier VAT category name
                           </UncontrolledTooltip>
@@ -219,7 +220,7 @@ const CreateVatCode = ({ vatActions, vatCreateActions, commonActions, history })
                         <Label htmlFor="vat">
                           <span className="text-danger">* </span>
                           {strings.Percentage}
-                          <i id="VatPercentTooltip" className="fa fa-question-circle ml-1"></i>
+                          <HelpCircle id="VatPercentTooltip" className="h-4 w-4 inline" />
                           <UncontrolledTooltip placement="right" target="VatPercentTooltip">
                             Percentage – VAT percentage charged by your country
                           </UncontrolledTooltip>
@@ -262,7 +263,7 @@ const CreateVatCode = ({ vatActions, vatCreateActions, commonActions, history })
                             handleSubmit(onSubmit)();
                           }}
                         >
-                          <i className="fa fa-dot-circle-o"></i>{' '}
+                          <CircleDot className="h-4 w-4" />{' '}
                           {disabled ? 'Creating...' : strings.Create}
                         </Button>
                         <Button
@@ -275,7 +276,7 @@ const CreateVatCode = ({ vatActions, vatCreateActions, commonActions, history })
                             handleSubmit(onSubmit)();
                           }}
                         >
-                          <i className="fa fa-refresh"></i>{' '}
+                          <RefreshCw className="h-4 w-4" />{' '}
                           {disabled ? 'Creating...' : strings.CreateandMore}
                         </Button>
                         <Button
@@ -286,7 +287,7 @@ const CreateVatCode = ({ vatActions, vatCreateActions, commonActions, history })
                             history.push('/admin/master/vat-category');
                           }}
                         >
-                          <i className="fa fa-ban"></i> {strings.Cancel}
+                          <Ban className="h-4 w-4" /> {strings.Cancel}
                         </Button>
                       </FormGroup>
                     </Form>

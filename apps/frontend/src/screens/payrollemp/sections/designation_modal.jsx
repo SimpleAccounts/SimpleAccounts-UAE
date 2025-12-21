@@ -21,6 +21,7 @@ import { selectOptionsFactory } from 'utils';
 import { toast } from 'sonner';
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Ban, CircleDot, HelpCircle, IdCard } from 'lucide-react';
 
 let strings = new LocalizedStrings(data);
 
@@ -131,7 +132,7 @@ const DesignationModal = ({
             <Row>
               <Col lg={12}>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="nav-icon fas fa-id-card-alt" />
+                  <IdCard className="h-4 w-4" />
                   <span className="ml-2"> {strings.CreateDesignation} </span>
                 </div>
               </Col>
@@ -207,7 +208,7 @@ const DesignationModal = ({
                   <Label htmlFor="designationType">
                     <span className="text-danger">* </span>
                     {strings.DesignationType}
-                    <i id="designationTypeTooltip" className="fa fa-question-circle ml-1"></i>
+                    <HelpCircle id="designationTypeTooltip" className="h-4 w-4 inline" />
                     <UncontrolledTooltip placement="right" target="designationTypeTooltip">
                       Based on the designation type selected, the chart of accounts will be created
                       for the employee. This field will be locked once the designation has been
@@ -267,7 +268,7 @@ const DesignationModal = ({
           </ModalBody>
           <ModalFooter>
             <Button type="submit" color="primary" className="btn-square mr-3" disabled={disabled}>
-              <i className="fa fa-dot-circle-o"></i> {disabled ? 'Creating...' : strings.Create}
+              <CircleDot className="h-4 w-4" /> {disabled ? 'Creating...' : strings.Create}
             </Button>
             <Button
               color="secondary"
@@ -276,7 +277,7 @@ const DesignationModal = ({
                 closeDesignationModal(false);
               }}
             >
-              <i className="fa fa-ban"></i> {strings.Cancel}
+              <Ban className="h-4 w-4" /> {strings.Cancel}
             </Button>
           </ModalFooter>
         </Form>

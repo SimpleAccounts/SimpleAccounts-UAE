@@ -26,6 +26,7 @@ import LocalizedStrings from 'react-localization';
 import { ReportTables } from 'screens/financial_report/sections';
 import { useNavigate } from 'react-router-dom';
 import { CommonActions } from 'services/global';
+import { Settings, Printer } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -138,7 +139,7 @@ const ArAgingReport = () => {
                         }}
                         onClick={viewFilter}
                       >
-                        <i className="fa fa-cog mr-2"></i>
+                        <Settings className="h-4 w-4" />
                         {strings.CustomizeReport}
                       </p>
                     </div>
@@ -179,7 +180,7 @@ const ArAgingReport = () => {
                           cursor: 'pointer',
                         }}
                       >
-                        <i className="fa fa-print"></i>
+                        <Printer className="h-4 w-4" />
                       </div>
                       <div
                         className="mr-2 print-btn-cont"

@@ -26,6 +26,7 @@ import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { BookUser, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -239,7 +240,7 @@ const RecordTaxClaim = props => {
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fas fa-address-book" />
+                        <BookUser className="h-4 w-4" />
                         <span className="ml-2">Record VAT Claim For {headerValue}</span>
                       </div>
                     </Col>
@@ -415,7 +416,7 @@ const RecordTaxClaim = props => {
                                 className="btn-square mr-3"
                                 disabled={disabled}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Recording...' : strings.RecordPayment}
                               </Button>
                               <Button
@@ -425,7 +426,7 @@ const RecordTaxClaim = props => {
                                   props.history.push('/admin/report/vatreports');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

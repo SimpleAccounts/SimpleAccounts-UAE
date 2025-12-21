@@ -14,6 +14,7 @@ import * as CreateCurrencyConvertActions from './actions';
 import * as CurrencyConvertActions from '../../actions';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Banknote, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -227,7 +228,7 @@ const CreateCurrencyConvert = ({
               <Card>
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="nav-icon nav-icon fas fa-money" />
+                    <Banknote className="h-5 w-5" />
                     <span className="ml-2"> {strings.NewCurrencyConversion}</span>
                   </div>
                 </CardHeader>
@@ -427,7 +428,7 @@ const CreateCurrencyConvert = ({
                               }
                             }}
                           >
-                            <i className="fa fa-dot-circle-o"></i>{' '}
+                            <CircleDot className="h-4 w-4" />{' '}
                             {createDisabled ? 'Creating...' : strings.Create}
                           </Button>
 
@@ -439,7 +440,7 @@ const CreateCurrencyConvert = ({
                             disabled={createDisabled}
                             onClick={handleCreateAndMore}
                           >
-                            <i className="fa fa-refresh"></i>{' '}
+                            <RefreshCw className="h-4 w-4" />{' '}
                             {createDisabled ? 'Creating...' : strings.CreateandMore}
                           </Button>
 
@@ -451,7 +452,7 @@ const CreateCurrencyConvert = ({
                               history.push('/admin/master/CurrencyConvert');
                             }}
                           >
-                            <i className="fa fa-ban"></i> {strings.Cancel}
+                            <Ban className="h-4 w-4" /> {strings.Cancel}
                           </Button>
                         </FormGroup>
                       </form>

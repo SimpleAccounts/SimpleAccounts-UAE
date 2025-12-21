@@ -32,6 +32,7 @@ import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { upperFirst } from 'lodash-es';
 import eye from 'assets/images/settings/eye.png';
+import { Users, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -336,7 +337,7 @@ const CreateUser = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-users" />
+                        <Users className="h-4 w-4" />
                         <span className="ml-2">{strings.CreateUser}</span>
                       </div>
                     </Col>
@@ -675,7 +676,7 @@ const CreateUser = ({
                                   setCreateMore(false);
                                 }}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {createDisabled ? 'Creating...' : strings.Create}
                               </Button>
                               <Button
@@ -691,7 +692,7 @@ const CreateUser = ({
                                   setCreateMore(true);
                                 }}
                               >
-                                <i className="fa fa-refresh"></i>{' '}
+                                <RefreshCw className="h-4 w-4" />{' '}
                                 {createDisabled ? 'Creating...' : strings.CreateandMore}
                               </Button>
                               <Button
@@ -702,7 +703,7 @@ const CreateUser = ({
                                   history.push('/admin/settings/user');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

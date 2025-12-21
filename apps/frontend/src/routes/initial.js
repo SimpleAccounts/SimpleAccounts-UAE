@@ -12,7 +12,7 @@ const initialRoutes = [
   {
     path: '/logout',
     name: 'LogInTwo',
-    component: LogInTwo,
+    component: LogInTwo.screen,
   },
   {
     path: '/reset-password',

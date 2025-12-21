@@ -24,6 +24,7 @@ import * as roleActions from '../create/actions';
 import * as roleCommonActions from '../../actions';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Users, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -322,7 +323,7 @@ const UpdateRole = ({ commonActions, RoleActions, RoleCommonActions, history, lo
               <Card>
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="nav-icon fas fa-users" />
+                    <Users className="h-4 w-4" />
                     <span className="ml-2"> {strings.UpdateNewRole} </span>
                   </div>
                 </CardHeader>
@@ -459,7 +460,7 @@ const UpdateRole = ({ commonActions, RoleActions, RoleCommonActions, history, lo
                                     disabled={disabled1}
                                     onClick={deleteRole}
                                   >
-                                    <i className="fa fa-trash"></i>{' '}
+                                    <Trash2 className="h-4 w-4" />{' '}
                                     {disabled1 ? 'Deleting...' : strings.Delete}
                                   </Button>
                                 )}
@@ -473,7 +474,7 @@ const UpdateRole = ({ commonActions, RoleActions, RoleCommonActions, history, lo
                               disabled={disabled}
                               onClick={handleFormSubmit}
                             >
-                              <i className="fa fa-dot-circle-o"></i>
+                              <CircleDot className="h-4 w-4" />
                               {disabled ? 'Updating...' : strings.Update}
                             </Button>
 
@@ -485,7 +486,7 @@ const UpdateRole = ({ commonActions, RoleActions, RoleCommonActions, history, lo
                                 history.push('/admin/settings/user-role');
                               }}
                             >
-                              <i className="fa fa-ban"></i> {strings.Cancel}
+                              <Ban className="h-4 w-4" /> {strings.Cancel}
                             </Button>
                           </Row>
                         </FormGroup>

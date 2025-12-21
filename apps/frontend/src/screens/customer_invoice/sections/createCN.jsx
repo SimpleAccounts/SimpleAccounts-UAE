@@ -32,6 +32,7 @@ import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Textarea } from '@/components/ui/textarea';
 import { DataTable } from '@/components/ui/data-table';
+import { Trash2, HelpCircle, IdCard, Upload, X, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -368,7 +369,7 @@ const CreateCreditNoteModal = props => {
               disabled={selectedData.invoiceLineItems.length === 1}
               onClick={e => deleteRow(e, row.original)}
             >
-              <i className="fas fa-trash"></i>
+              <Trash2 className="h-4 w-4" />
             </Button>
           ) : null,
       },
@@ -464,7 +465,7 @@ const CreateCreditNoteModal = props => {
         header: () => (
           <>
             {strings.UNITPRICE}
-            <i id="UnitPriceToolTip" className="fa fa-question-circle ml-1"></i>
+            <HelpCircle id="UnitPriceToolTip" className="h-4 w-4 ml-1 inline" />
             <UncontrolledTooltip placement="right" target="UnitPriceToolTip">
               Unit Price – Price of a single product or service
             </UncontrolledTooltip>
@@ -543,7 +544,7 @@ const CreateCreditNoteModal = props => {
         header: () => (
           <>
             {strings.Excises}
-            <i id="ExiseTooltip" className="fa fa-question-circle ml-1"></i>
+            <HelpCircle id="ExiseTooltip" className="h-4 w-4 ml-1 inline" />
             <UncontrolledTooltip placement="right" target="ExiseTooltip">
               Excise dropdown will be enabled only for the excise products
             </UncontrolledTooltip>
@@ -710,7 +711,7 @@ const CreateCreditNoteModal = props => {
             <Row>
               <Col lg={12}>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="nav-icon fas fa-id-card-alt" />
+                  <IdCard className="h-4 w-4" />
                   <span className="ml-2">{strings.CreateCreditNote}</span>
                 </div>
               </Col>
@@ -919,7 +920,7 @@ const CreateCreditNoteModal = props => {
                           }}
                           className="btn-square mr-3"
                         >
-                          <i className="fa fa-upload"></i> {strings.upload}
+                          <Upload className="h-4 w-4" /> {strings.upload}
                         </Button>
                         <input
                           id="fileInput"
@@ -930,7 +931,7 @@ const CreateCreditNoteModal = props => {
                         />
                         {fileName && (
                           <div>
-                            <i className="fa fa-close" onClick={() => setFileName('')}></i>{' '}
+                            <X className="h-4 w-4 cursor-pointer" onClick={() => setFileName('')} />{' '}
                             {fileName}
                           </div>
                         )}
@@ -1071,7 +1072,7 @@ const CreateCreditNoteModal = props => {
               className="btn-square"
               disabled={disabled || !!remainingAmountError}
             >
-              <i className="fa fa-dot-circle-o mr-1"></i>
+              <CircleDot className="h-4 w-4" />
               {strings.Create}
             </Button>
             &nbsp;
@@ -1082,7 +1083,7 @@ const CreateCreditNoteModal = props => {
                 closeModal(false);
               }}
             >
-              <i className="fa fa-ban"></i> {strings.Cancel}
+              <Ban className="h-4 w-4" /> {strings.Cancel}
             </Button>
           </ModalFooter>
         </Form>

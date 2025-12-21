@@ -20,6 +20,7 @@ import LocalizedStrings from 'react-localization';
 import { toast } from 'sonner';
 import { CreateCompanyDetails } from './sections';
 import { useNavigate } from 'react-router-dom';
+import { Wallet, Plus } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -286,7 +287,7 @@ const PayrollRun = () => {
             <Row>
               <Col lg={12}>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="fas fa-money-check-alt"></i>
+                  <Wallet className="h-4 w-4" />
                   <span className="ml-2">{strings.payrolls}</span>
                 </div>
               </Col>
@@ -320,7 +321,7 @@ const PayrollRun = () => {
                               }
                             }}
                           >
-                            <i className="fas fa-plus mr-1" />
+                            <Plus className="h-4 w-4" />
                             {strings.Addpayroll}
                           </Button>
                         </Col>

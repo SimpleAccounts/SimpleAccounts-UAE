@@ -12,6 +12,7 @@ import './style.scss';
 import { data } from '../Language/index';
 import LocalizedStrings from 'react-localization';
 import * as ProductCategoryActions from './actions';
+import { Pencil, Package, Plus, Search, RefreshCw, Download, Trash2 } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -280,7 +281,7 @@ class ProductCategory extends React.Component {
           onClick={() => this.goToCategoryDetail(params.data.id)}
         >
           {' '}
-          <i className="fas fa-edit" />{' '}
+          <Pencil className="h-4 w-4" />{' '}
         </Button>
       </>
     );
@@ -318,7 +319,7 @@ class ProductCategory extends React.Component {
             <Card>
               <CardHeader>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="fas fa-boxes" />
+                  <Package className="h-4 w-4" />
                   <span className="ml-2">{strings.ProductCategory}</span>
                 </div>
               </CardHeader>
@@ -336,7 +337,7 @@ class ProductCategory extends React.Component {
 													className="btn-square mr-1"
 													onClick={() => this.getCsvData()}
 												>
-													<i className="fa glyphicon glyphicon-export fa-download mr-1" />
+													<Download className="h-4 w-4 mr-1" />
 													Export To CSV
 												</Button>
 												{view && (
@@ -354,7 +355,7 @@ class ProductCategory extends React.Component {
 													onClick={this.bulkDelete}
 													disabled={selectedRows.length === 0}
 												>
-													<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
+													<Trash2 className="h-4 w-4 mr-1" />
 													Bulk Delete
 												</Button> */}
                         </div>
@@ -366,7 +367,7 @@ class ProductCategory extends React.Component {
                             this.props.history.push(`/admin/master/product-category/create`)
                           }
                         >
-                          <i className="fas fa-plus mr-1" />
+                          <Plus className="h-4 w-4" />
                           {strings.AddNewProductCategory}
                         </Button>
                       </div>
@@ -413,7 +414,7 @@ class ProductCategory extends React.Component {
 															className="btn-square mr-1"
 															onClick={this.handleSearch}
 														>
-															<i className="fa fa-search"></i>
+															<Search className="h-4 w-4" />
 														</Button>
 														<Button
 															type="button"
@@ -421,7 +422,7 @@ class ProductCategory extends React.Component {
 															className="btn-square"
 															onClick={this.clearAll}
 														>
-															<i className="fa fa-refresh"></i>
+															<RefreshCw className="h-4 w-4" />
 														</Button>
 													</div>
 												</div>

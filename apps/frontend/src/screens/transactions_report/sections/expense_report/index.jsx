@@ -7,6 +7,7 @@ import { DataTable } from '@/components/ui/data-table';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import './style.scss';
+import { Download, Search } from 'lucide-react';
 
 const tempdata = [
   {
@@ -84,7 +85,7 @@ const ExpenseReport = () => {
                   <FormGroup>
                     <ButtonGroup className="mr-3">
                       <Button color="success" className="btn-square" onClick={() => {}}>
-                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                        <Download className="h-4 w-4 mr-1" />
                         Export to CSV
                       </Button>
                     </ButtonGroup>
@@ -110,7 +111,7 @@ const ExpenseReport = () => {
                 </Col>
                 <Col lg={2} className="mb-1">
                   <Button color="secondary" className="btn-square" type="button" onClick={() => {}}>
-                    <i className="fa glyphicon glyphicon-export fa-search mr-1" />
+                    <Search className="h-4 w-4 mr-1" />
                     Search
                   </Button>
                 </Col>

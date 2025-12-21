@@ -11,6 +11,7 @@ import LocalizedStrings from 'react-localization';
 import config from 'constants/config';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
+import { Banknote, Plus } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -142,7 +143,7 @@ const CurrencyConvert = () => {
         <Card>
           <CardHeader>
             <div className="h4 mb-0 d-flex align-items-center">
-              <i className="nav-icon fas fa-money" />
+              <Banknote className="h-4 w-4" />
               <span className="ml-2"> {strings.CurrencyRate}</span>
             </div>
           </CardHeader>
@@ -157,7 +158,7 @@ const CurrencyConvert = () => {
                       style={{ marginBottom: '10px' }}
                       onClick={() => navigate(`/admin/master/CurrencyConvert/create`)}
                     >
-                      <i className="fas fa-plus mr-1" />
+                      <Plus className="h-4 w-4" />
                       {strings.AddNewCurrencyConversion}
                     </Button>
                   )}

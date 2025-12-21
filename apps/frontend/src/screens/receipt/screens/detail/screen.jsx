@@ -28,6 +28,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { File, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -232,7 +233,7 @@ const DetailReceipt = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fa fa-file-o" />
+                        <File className="h-4 w-4" />
                         <span className="ml-2">{strings.UpdateReceipt}</span>
                       </div>
                     </Col>
@@ -496,7 +497,7 @@ const DetailReceipt = ({
                           >
                             <FormGroup>
                               <Button color="danger" className="btn-square" onClick={deleteReceipt}>
-                                <i className="fa fa-trash"></i>
+                                <Trash2 className="h-4 w-4" />
                                 {strings.Delete}
                               </Button>
                             </FormGroup>
@@ -507,7 +508,7 @@ const DetailReceipt = ({
                                 className="btn-square mr-3"
                                 disabled={disabled}
                               >
-                                <i className="fa fa-dot-circle-o"></i>
+                                <CircleDot className="h-4 w-4" />
                                 {strings.Update}
                               </Button>
                               <Button
@@ -517,7 +518,7 @@ const DetailReceipt = ({
                                   history.push('/admin/revenue/receipt');
                                 }}
                               >
-                                <i className="fa fa-ban"></i>
+                                <Ban className="h-4 w-4" />
                                 {strings.Cancel}
                               </Button>
                             </FormGroup>

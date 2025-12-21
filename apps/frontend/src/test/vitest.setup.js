@@ -140,40 +140,6 @@ vi.mock('react-router-navigation-prompt', () => {
   };
 });
 
-// Mock react-loader-spinner to avoid DOM API issues
-vi.mock('react-loader-spinner', () => ({
-  Circles: () => null,
-  ThreeDots: () => null,
-  Oval: () => null,
-  TailSpin: () => null,
-  Rings: () => null,
-  Puff: () => null,
-  Bars: () => null,
-  Audio: () => null,
-  BallTriangle: () => null,
-  Grid: () => null,
-  Hearts: () => null,
-  InfinitySpin: () => null,
-  LineWave: () => null,
-  MagnifyingGlass: () => null,
-  MutatingDots: () => null,
-  ProgressBar: () => null,
-  Radio: () => null,
-  RevolvingDot: () => null,
-  RotatingLines: () => null,
-  RotatingSquare: () => null,
-  RotatingTriangles: () => null,
-  Triangle: () => null,
-  Watch: () => null,
-  Dna: () => null,
-  FidgetSpinner: () => null,
-  ColorRing: () => null,
-  Discuss: () => null,
-  Vortex: () => null,
-  Comment: () => null,
-  FallingLines: () => null,
-}));
-
 // Mock CSS imports
 vi.mock('*.css', () => ({}));
 vi.mock('*.scss', () => ({}));

@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Settings, Plus, Edit } from 'lucide-react';
+import { CircleDot, Edit, Plus, Settings } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -439,7 +439,7 @@ function PayrollConfigurations() {
 
                     <div className="flex justify-center pt-6">
                       <Button type="submit" disabled={isSubmitting}>
-                        <i className="fa fa-dot-circle-o mr-2"></i>
+                        <CircleDot className="h-4 w-4" />
                         {isSubmitting ? 'Saving...' : strings.Save}
                       </Button>
                     </div>

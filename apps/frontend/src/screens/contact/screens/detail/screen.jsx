@@ -30,6 +30,7 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Ban, CircleDot, HelpCircle, IdCard, Trash2 } from 'lucide-react';
 
 const mapStateToProps = state => {
   const currencyList = state.common.currency_convert_list;
@@ -567,7 +568,7 @@ const DetailContact = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-id-card-alt" />
+                        <IdCard className="h-4 w-4" />
                         <span className="ml-2"> {strings.UpdateContact} </span>
                       </div>
                     </Col>
@@ -741,7 +742,7 @@ const DetailContact = ({
                               <Label htmlFor="contactType">
                                 <span className="text-danger">* </span>
                                 {strings.ContactType}
-                                <i id="Contacttyprtip" className="fa fa-question-circle ml-1"></i>
+                                <HelpCircle id="Contacttyprtip" className="h-4 w-4 inline" />
                                 <UncontrolledTooltip placement="right" target="Contacttyprtip">
                                   The contact type cannot be changed once a document has been
                                   created for this contact.
@@ -860,7 +861,7 @@ const DetailContact = ({
                               <Label htmlFor="currencyCode">
                                 <span className="text-danger">* </span>
                                 {strings.CurrencyCode}
-                                <i id="Currencytip" className="fa fa-question-circle ml-1"></i>
+                                <HelpCircle id="Currencytip" className="h-4 w-4 inline" />
                                 <UncontrolledTooltip placement="right" target="Currencytip">
                                   You cannot change the currency once a document is created for this
                                   contact.
@@ -1003,7 +1004,7 @@ const DetailContact = ({
                               <Label htmlFor="taxTreatmentId">
                                 <span className="text-danger">* </span>
                                 {strings.TaxTreatment}
-                                <i id="TaxTreatmenttip" className="fa fa-question-circle ml-1"></i>
+                                <HelpCircle id="TaxTreatmenttip" className="h-4 w-4 inline" />
                                 <UncontrolledTooltip placement="right" target="TaxTreatmenttip">
                                   Once any document has been created for this contact, you cannot
                                   change the Tax treatment.
@@ -1249,7 +1250,7 @@ const DetailContact = ({
                                 disabled={disabled1}
                                 onClick={deleteContact}
                               >
-                                <i className="fa fa-trash"></i>{' '}
+                                <Trash2 className="h-4 w-4" />{' '}
                                 {disabled1 ? 'Deleting...' : strings.Delete}
                               </Button>
                             </FormGroup>
@@ -1268,7 +1269,7 @@ const DetailContact = ({
                                   });
                                 }}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Updating...' : strings.Update}
                               </Button>
                               <Button
@@ -1280,7 +1281,7 @@ const DetailContact = ({
                                   history.push('/admin/master/contact');
                                 }}
                               >
-                                <i className="fa fa-ban"></i>{' '}
+                                <Ban className="h-4 w-4" />{' '}
                                 {disabled1 ? 'Deleting...' : strings.Cancel}
                               </Button>
                             </FormGroup>

@@ -11,6 +11,7 @@ import { data as languageData } from '../Language/index';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { LayoutGrid, Plus } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -98,7 +99,7 @@ const SalaryRoles = () => {
               <Row>
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="fas fa-object-group" />
+                    <LayoutGrid className="h-4 w-4" />
                     <span className="ml-2"> {strings.SalaryRole}</span>
                   </div>
                 </Col>
@@ -116,7 +117,7 @@ const SalaryRoles = () => {
                           style={{ marginBottom: '10px' }}
                           onClick={() => navigate(`/admin/payroll/config/createSalaryRoles`)}
                         >
-                          <i className="fas fa-plus mr-1" />
+                          <Plus className="h-4 w-4" />
                           {strings.NewSalaryRoles}
                         </Button>
                       </div>

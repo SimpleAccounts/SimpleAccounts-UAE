@@ -11,6 +11,7 @@ import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { LayoutGrid, Plus } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -100,7 +101,7 @@ const SalaryStructure = () => {
               <Row>
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="fas fa-object-group" />
+                    <LayoutGrid className="h-4 w-4" />
                     <span className="ml-2">{strings.SalaryStructure}</span>
                   </div>
                 </Col>
@@ -118,7 +119,7 @@ const SalaryStructure = () => {
                           style={{ marginBottom: '10px' }}
                           onClick={() => navigate(`/admin/payroll/config/createSalaryStructure`)}
                         >
-                          <i className="fas fa-plus mr-1" />
+                          <Plus className="h-4 w-4" />
                           {strings.NewSalaryStructure}
                         </Button>
                       </div>

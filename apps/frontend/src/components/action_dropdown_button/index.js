@@ -13,6 +13,23 @@ import { data } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
 import { SentInvoice, DeleteDocument, ChangeInvoiceStatus } from 'components';
 import { CommonActions } from 'services/global';
+import {
+  ChevronUp,
+  ChevronDown,
+  Pencil,
+  Send,
+  ArrowRightCircle,
+  File,
+  Plus,
+  Landmark,
+  FileText,
+  CheckCircle,
+  XCircle,
+  Ban,
+  Copy,
+  Trash2,
+  Eye,
+} from 'lucide-react';
 
 let strings = new LocalizedStrings(data);
 
@@ -97,9 +114,9 @@ class ActionDropdownButtons extends React.Component {
             >
               <DropdownToggle size="sm" color="primary" className="btn-brand icon">
                 {this.state.actionButtons[id] === true ? (
-                  <i className="fas fa-chevron-up" />
+                  <ChevronUp className="h-4 w-4" />
                 ) : (
-                  <i className="fas fa-chevron-down" />
+                  <ChevronDown className="h-4 w-4" />
                 )}
               </DropdownToggle>
               <DropdownMenu right>
@@ -124,7 +141,7 @@ class ActionDropdownButtons extends React.Component {
                               });
                           }}
                         >
-                          <i className="fas fa-edit" />
+                          <Pencil className="h-4 w-4 mr-2" />
                           {strings.Edit}
                         </DropdownItem>
                       );
@@ -136,7 +153,7 @@ class ActionDropdownButtons extends React.Component {
                             this.setState({ sentInvoice: true, markAsSent: false });
                           }}
                         >
-                          <i className="fas fa-send" />
+                          <Send className="h-4 w-4 mr-2" />
                           {strings.Send}
                         </DropdownItem>
                       );
@@ -148,7 +165,7 @@ class ActionDropdownButtons extends React.Component {
                             this.setState({ sentInvoice: true, markAsSent: true });
                           }}
                         >
-                          <i className="far fa-arrow-alt-circle-right" />
+                          <ArrowRightCircle className="h-4 w-4 mr-2" />
                           {strings.Mark_As_Sent}
                         </DropdownItem>
                       );
@@ -160,7 +177,7 @@ class ActionDropdownButtons extends React.Component {
                             this.setState({ sentInvoice: true, markAsSent: true });
                           }}
                         >
-                          <i className="far fa-arrow-alt-circle-right" />
+                          <ArrowRightCircle className="h-4 w-4 mr-2" />
                           {strings.MarkAsOpen}
                         </DropdownItem>
                       );
@@ -178,7 +195,7 @@ class ActionDropdownButtons extends React.Component {
                             this.setState({ sentInvoice: true, markAsSent: false });
                           }}
                         >
-                          <i className="fas fa-send" />
+                          <Send className="h-4 w-4 mr-2" />
                           {strings.Post}
                         </DropdownItem>
                       );
@@ -195,7 +212,7 @@ class ActionDropdownButtons extends React.Component {
                             else this.setState({ sentInvoice: true, unSent: true });
                           }}
                         >
-                          <i className="fas fa-file" />
+                          <File className="h-4 w-4 mr-2" />
                           {strings.Draft}
                         </DropdownItem>
                       );
@@ -218,7 +235,7 @@ class ActionDropdownButtons extends React.Component {
                               });
                           }}
                         >
-                          <i className="fas fa-plus" />
+                          <Plus className="h-4 w-4 mr-2" />
                           {strings.CreateInvoice}
                         </DropdownItem>
                       );
@@ -240,7 +257,7 @@ class ActionDropdownButtons extends React.Component {
                             });
                           }}
                         >
-                          <i className="fas fa-university" />
+                          <Landmark className="h-4 w-4 mr-2" />
                           {strings.RecordPayment}
                         </DropdownItem>
                       );
@@ -256,7 +273,7 @@ class ActionDropdownButtons extends React.Component {
                             });
                           }}
                         >
-                          <i className="fas fa-university" />
+                          <Landmark className="h-4 w-4 mr-2" />
                           {strings.RefundPayment}
                         </DropdownItem>
                       );
@@ -277,7 +294,7 @@ class ActionDropdownButtons extends React.Component {
                             });
                           }}
                         >
-                          <i className="fas fa-file-invoice" />
+                          <FileText className="h-4 w-4 mr-2" />
                           {strings.ApplyToInvoice}
                         </DropdownItem>
                       );
@@ -289,7 +306,7 @@ class ActionDropdownButtons extends React.Component {
                             this.setState({ statusChange: true, statusToChange: 'Approved' });
                           }}
                         >
-                          <i className="fa fa-check-circle-o" />
+                          <CheckCircle className="h-4 w-4 mr-2" />
                           {strings.MarkAsApproved}
                         </DropdownItem>
                       );
@@ -301,7 +318,7 @@ class ActionDropdownButtons extends React.Component {
                             this.setState({ statusChange: true, statusToChange: 'Closed' });
                           }}
                         >
-                          <i className="far fa-times-circle" />
+                          <XCircle className="h-4 w-4 mr-2" />
                           {strings.Close}
                         </DropdownItem>
                       );
@@ -313,7 +330,7 @@ class ActionDropdownButtons extends React.Component {
                             this.setState({ statusChange: true, statusToChange: 'Rejected' });
                           }}
                         >
-                          <i className="fa fa-ban" />
+                          <Ban className="h-4 w-4 mr-2" />
                           {strings.MarkAsRejected}
                         </DropdownItem>
                       );
@@ -329,7 +346,7 @@ class ActionDropdownButtons extends React.Component {
                             });
                           }}
                         >
-                          <i className="fas fa-copy" />
+                          <Copy className="h-4 w-4 mr-2" />
                           {strings.CreateADuplicate}
                         </DropdownItem>
                       );
@@ -346,7 +363,7 @@ class ActionDropdownButtons extends React.Component {
                             else this.setState({ deleteInvoice: true });
                           }}
                         >
-                          <i className="fa fa-trash-o" />
+                          <Trash2 className="h-4 w-4 mr-2" />
                           {strings.Delete}
                         </DropdownItem>
                       );
@@ -362,7 +379,7 @@ class ActionDropdownButtons extends React.Component {
                             });
                           }}
                         >
-                          <i className="fas fa-send" />
+                          <Send className="h-4 w-4 mr-2" />
                           {strings.SendAgain}
                         </DropdownItem>
                       );
@@ -378,7 +395,7 @@ class ActionDropdownButtons extends React.Component {
                             });
                           }}
                         >
-                          <i className="fas fa-plus" />
+                          <Plus className="h-4 w-4 mr-2" />
                           {strings.CreateCreditNote}
                         </DropdownItem>
                       );
@@ -394,14 +411,14 @@ class ActionDropdownButtons extends React.Component {
                             });
                           }}
                         >
-                          <i className="fas fa-plus" />
+                          <Plus className="h-4 w-4 mr-2" />
                           {strings.CreateDebitNote}
                         </DropdownItem>
                       );
                     }
                   })}
                 <DropdownItem onClick={() => this.props.history.push(`${URL}/view`, { id: id })}>
-                  <i className="fas fa-eye" />
+                  <Eye className="h-4 w-4 mr-2" />
                   {strings.View}
                 </DropdownItem>
               </DropdownMenu>

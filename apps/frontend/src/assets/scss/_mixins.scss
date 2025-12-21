@@ -1,0 +1,514 @@
+// ============================================
+// NEUMORPHIC MIXINS
+// Inspired by Themesberg Neumorphism UI
+// ============================================
+
+@import 'variables';
+
+// ============================================
+// BASE NEUMORPHIC MIXINS
+// ============================================
+
+// Raised/Extruded effect (element appears to pop out)
+@mixin neu-raised($size: 'default') {
+  background: $neu-bg;
+  border: none;
+
+  @if $size == 'xs' {
+    box-shadow: $shadow-soft-xs;
+  } @else if $size == 'sm' {
+    box-shadow: $shadow-soft-sm;
+  } @else if $size == 'md' {
+    box-shadow: $shadow-soft-md;
+  } @else if $size == 'lg' {
+    box-shadow: $shadow-soft-lg;
+  } @else if $size == 'xl' {
+    box-shadow: $shadow-soft-xl;
+  } @else {
+    box-shadow: $shadow-soft;
+  }
+}
+
+// Pressed/Inset effect (element appears pressed in)
+@mixin neu-pressed($size: 'default') {
+  background: $neu-bg;
+  border: none;
+
+  @if $size == 'xs' {
+    box-shadow: $shadow-inset-xs;
+  } @else if $size == 'sm' {
+    box-shadow: $shadow-inset-sm;
+  } @else if $size == 'md' {
+    box-shadow: $shadow-inset-md;
+  } @else if $size == 'lg' {
+    box-shadow: $shadow-inset-lg;
+  } @else {
+    box-shadow: $shadow-inset;
+  }
+}
+
+// Flat effect (subtle shadow)
+@mixin neu-flat {
+  background: $neu-bg;
+  border: none;
+  box-shadow: $shadow-soft-xs;
+}
+
+// ============================================
+// INTERACTIVE MIXINS
+// ============================================
+
+// Button with hover and active states
+@mixin neu-button($color: $primary) {
+  @include neu-raised('sm');
+  border-radius: $btn-border-radius;
+  padding: $btn-padding-y $btn-padding-x;
+  font-weight: $btn-font-weight;
+  color: $text-dark;
+  cursor: pointer;
+  transition: $transition-all;
+
+  &:hover {
+    box-shadow: $shadow-soft;
+    transform: translateY(-2px);
+  }
+
+  &:active,
+  &.active {
+    @include neu-pressed('sm');
+    transform: translateY(0);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow:
+      $shadow-soft,
+      0 0 0 3px rgba($color, 0.25);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: $shadow-soft-xs;
+  }
+}
+
+// Primary colored button
+@mixin neu-button-primary {
+  @include neu-raised('sm');
+  background: $primary;
+  color: $text-white;
+  border-radius: $btn-border-radius;
+  padding: $btn-padding-y $btn-padding-x;
+  font-weight: $btn-font-weight;
+  cursor: pointer;
+  transition: $transition-all;
+
+  &:hover {
+    background: $primary-light;
+    box-shadow: $shadow-soft;
+    transform: translateY(-2px);
+  }
+
+  &:active,
+  &.active {
+    background: $primary-dark;
+    box-shadow:
+      inset 2px 2px 5px rgba(0, 0, 0, 0.2),
+      inset -2px -2px 5px rgba(255, 255, 255, 0.1);
+    transform: translateY(0);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow:
+      $shadow-soft,
+      0 0 0 3px rgba($primary, 0.35);
+  }
+}
+
+// ============================================
+// FORM MIXINS
+// ============================================
+
+// Input field (pressed/inset style)
+@mixin neu-input {
+  @include neu-pressed('sm');
+  border-radius: $input-border-radius;
+  padding: $input-padding-y $input-padding-x;
+  color: $input-color;
+  transition: $transition-all;
+
+  &::placeholder {
+    color: $input-placeholder-color;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow:
+      $shadow-inset,
+      0 0 0 3px rgba($primary, 0.15);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Select dropdown trigger
+@mixin neu-select {
+  @include neu-pressed('sm');
+  border-radius: $input-border-radius;
+  padding: $input-padding-y $input-padding-x;
+  color: $input-color;
+  cursor: pointer;
+  transition: $transition-all;
+
+  &:focus {
+    outline: none;
+    box-shadow:
+      $shadow-inset,
+      0 0 0 3px rgba($primary, 0.15);
+  }
+}
+
+// Checkbox/Radio (unchecked)
+@mixin neu-checkbox {
+  @include neu-pressed('xs');
+  width: 20px;
+  height: 20px;
+  border-radius: $border-radius-xs;
+  cursor: pointer;
+  transition: $transition-all;
+
+  &:checked {
+    background: $primary;
+    box-shadow: $shadow-soft-xs;
+  }
+}
+
+// Toggle switch
+@mixin neu-switch {
+  @include neu-pressed('sm');
+  width: 48px;
+  height: 24px;
+  border-radius: $border-radius-pill;
+  position: relative;
+  cursor: pointer;
+  transition: $transition-all;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: $neu-bg;
+    box-shadow: $shadow-soft-xs;
+    transition: $transition-all;
+  }
+
+  &:checked {
+    background: $primary;
+
+    &::after {
+      left: calc(100% - 22px);
+    }
+  }
+}
+
+// ============================================
+// CARD MIXINS
+// ============================================
+
+@mixin neu-card {
+  @include neu-raised;
+  border-radius: $card-border-radius;
+  padding: $card-padding;
+}
+
+@mixin neu-card-hover {
+  @include neu-card;
+  transition: $transition-all;
+
+  &:hover {
+    box-shadow: $shadow-soft-lg;
+    transform: translateY(-4px);
+  }
+}
+
+// ============================================
+// NAVIGATION MIXINS
+// ============================================
+
+@mixin neu-nav-item {
+  @include neu-flat;
+  border-radius: $nav-link-border-radius;
+  padding: $nav-link-padding-y $nav-link-padding-x;
+  color: $text-muted;
+  transition: $transition-all;
+
+  &:hover {
+    box-shadow: $shadow-soft-sm;
+    color: $primary;
+    transform: translateY(-1px);
+  }
+
+  &.active,
+  &:active {
+    @include neu-pressed('sm');
+    color: $primary;
+    transform: translateY(0);
+  }
+}
+
+@mixin neu-nav-item-sub {
+  padding: $spacer-sm $spacer-md;
+  border-radius: $border-radius-sm;
+  color: $text-muted;
+  transition: $transition-all;
+
+  &:hover {
+    color: $primary;
+    background: rgba($primary, 0.05);
+  }
+
+  &.active {
+    color: $primary;
+    font-weight: 600;
+    background: rgba($primary, 0.1);
+  }
+}
+
+// ============================================
+// DROPDOWN MIXINS
+// ============================================
+
+@mixin neu-dropdown {
+  @include neu-raised('md');
+  border-radius: $dropdown-border-radius;
+  padding: $spacer-sm;
+  min-width: 200px;
+}
+
+@mixin neu-dropdown-item {
+  padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+  border-radius: $border-radius-sm;
+  color: $text-dark;
+  transition: $transition-all;
+
+  &:hover {
+    @include neu-flat;
+    color: $primary;
+  }
+
+  &.active {
+    @include neu-pressed('xs');
+    color: $primary;
+  }
+}
+
+// ============================================
+// MODAL MIXINS
+// ============================================
+
+@mixin neu-modal {
+  @include neu-raised('xl');
+  border-radius: $modal-border-radius;
+}
+
+@mixin neu-modal-overlay {
+  background: rgba($text-dark, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+// ============================================
+// TABLE MIXINS
+// ============================================
+
+@mixin neu-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  th {
+    background: $table-header-bg;
+    padding: $table-cell-padding;
+    font-weight: 600;
+    text-align: left;
+    color: $text-dark;
+
+    &:first-child {
+      border-radius: $table-border-radius 0 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 $table-border-radius 0 0;
+    }
+  }
+
+  td {
+    padding: $table-cell-padding;
+    border-bottom: 1px solid rgba($neu-border, 0.5);
+  }
+
+  tr:hover td {
+    background: $table-hover-bg;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+
+    &:first-child {
+      border-radius: 0 0 0 $table-border-radius;
+    }
+
+    &:last-child {
+      border-radius: 0 0 $table-border-radius 0;
+    }
+  }
+}
+
+// ============================================
+// BADGE MIXINS
+// ============================================
+
+@mixin neu-badge($color: $primary) {
+  display: inline-flex;
+  align-items: center;
+  padding: $badge-padding-y $badge-padding-x;
+  border-radius: $badge-border-radius;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba($color, 0.15);
+  color: $color;
+  box-shadow: $shadow-inset-xs;
+}
+
+// ============================================
+// ALERT MIXINS
+// ============================================
+
+@mixin neu-alert($color: $info) {
+  @include neu-raised('sm');
+  border-radius: $alert-border-radius;
+  padding: $spacer-md;
+  border-left: 4px solid $color;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: $color;
+    border-radius: $alert-border-radius 0 0 $alert-border-radius;
+  }
+}
+
+// ============================================
+// PROGRESS BAR MIXINS
+// ============================================
+
+@mixin neu-progress {
+  height: $progress-height;
+  border-radius: $progress-border-radius;
+  background: $progress-bg;
+  box-shadow: $progress-shadow;
+  overflow: hidden;
+
+  .progress-bar {
+    height: 100%;
+    border-radius: $progress-border-radius;
+    background: linear-gradient(90deg, $primary, $primary-light);
+    box-shadow: $shadow-soft-xs;
+    transition: width $transition-slow;
+  }
+}
+
+// ============================================
+// TOOLTIP MIXINS
+// ============================================
+
+@mixin neu-tooltip {
+  @include neu-raised('sm');
+  border-radius: $tooltip-border-radius;
+  padding: $spacer-xs $spacer-sm;
+  font-size: 0.75rem;
+  color: $text-dark;
+}
+
+// ============================================
+// TAB MIXINS
+// ============================================
+
+@mixin neu-tabs {
+  display: flex;
+  gap: $spacer-sm;
+  padding: $spacer-xs;
+  background: $neu-bg;
+  border-radius: $tab-border-radius;
+  box-shadow: $shadow-inset-sm;
+}
+
+@mixin neu-tab {
+  padding: $spacer-sm $spacer-md;
+  border-radius: $border-radius-sm;
+  color: $text-muted;
+  font-weight: 500;
+  transition: $transition-all;
+
+  &:hover {
+    color: $primary;
+  }
+
+  &.active {
+    @include neu-raised('xs');
+    color: $primary;
+  }
+}
+
+// ============================================
+// UTILITY MIXINS
+// ============================================
+
+// Scrollbar styling
+@mixin neu-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($text-light, 0.4);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba($text-light, 0.6);
+    }
+  }
+}
+
+// Focus ring
+@mixin neu-focus-ring($color: $primary) {
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($color, 0.25);
+  }
+}
+
+// Divider
+@mixin neu-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba($neu-dark-shadow, 0.3), transparent);
+  margin: $spacer-md 0;
+}

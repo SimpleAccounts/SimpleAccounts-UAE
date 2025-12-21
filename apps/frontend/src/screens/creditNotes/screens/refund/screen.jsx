@@ -30,6 +30,7 @@ import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Textarea } from '@/components/ui/textarea';
+import { BookUser, Upload, X, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -350,7 +351,7 @@ class RefundClass extends React.Component {
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fas fa-address-book" />
+                        <BookUser className="h-4 w-4" />
                         <span className="ml-2">{strings.RefundForCreditNote}</span>
                       </div>
                     </Col>
@@ -581,7 +582,7 @@ class RefundClass extends React.Component {
                                           }}
                                           className="btn-square mr-3"
                                         >
-                                          <i className="fa fa-upload"></i> {strings.upload}
+                                          <Upload className="h-4 w-4" /> {strings.upload}
                                         </Button>
                                         <input
                                           id="fileInput"
@@ -599,15 +600,15 @@ class RefundClass extends React.Component {
                                         />
                                         {fileName && (
                                           <div>
-                                            <i
-                                              className="fa fa-close"
+                                            <X
+                                              className="h-4 w-4 cursor-pointer"
                                               onClick={() => {
                                                 field.onChange(null);
                                                 if (this.uploadFile) {
                                                   this.uploadFile.value = '';
                                                 }
                                               }}
-                                            ></i>{' '}
+                                            />{' '}
                                             {fileName}
                                           </div>
                                         )}
@@ -661,7 +662,7 @@ class RefundClass extends React.Component {
                                   }
                                 }}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {this.state.disabled ? 'Refunding...' : strings.RefundPayment}
                               </Button>
                               <Button
@@ -680,7 +681,7 @@ class RefundClass extends React.Component {
                                   } else this.props.history.push('/admin/income/credit-notes');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

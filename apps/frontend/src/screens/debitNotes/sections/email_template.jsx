@@ -16,6 +16,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Editor } from 'react-draft-wysiwyg';
+import { IdCard, CircleDot, Ban } from 'lucide-react';
 
 // Zod validation schema
 const emailModalSchema = z.object({
@@ -78,7 +79,7 @@ const EmailModal = ({ openEmailModal, closeEmailModal, sendEmail, id }) => {
             <Row>
               <Col lg={12}>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="nav-icon fas fa-id-card-alt" />
+                  <IdCard className="h-4 w-4" />
                   <span className="ml-2">Email Invoice</span>
                 </div>
               </Col>
@@ -172,7 +173,7 @@ const EmailModal = ({ openEmailModal, closeEmailModal, sendEmail, id }) => {
           </ModalBody>
           <ModalFooter>
             <Button color="primary" type="submit" className="btn-square">
-              <i className="fa fa-dot-circle-o"></i> Send Email
+              <CircleDot className="h-4 w-4" /> Send Email
             </Button>
             &nbsp;
             <Button
@@ -182,7 +183,7 @@ const EmailModal = ({ openEmailModal, closeEmailModal, sendEmail, id }) => {
                 closeEmailModal(false);
               }}
             >
-              <i className="fa fa-ban"></i> Cancel
+              <Ban className="h-4 w-4" /> Cancel
             </Button>
           </ModalFooter>
         </Form>

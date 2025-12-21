@@ -25,6 +25,7 @@ import { data as languageData } from '../Language/index';
 import LocalizedStrings from 'react-localization';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { ChevronUp, ChevronDown, Pencil, Eye, UserPlus, Plus, Download } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -182,9 +183,9 @@ const PayrollEmployee = () => {
             >
               <DropdownToggle size="sm" color="primary" className="btn-brand icon">
                 {actionButtons[row.original.id] === true ? (
-                  <i className="fas fa-chevron-up" />
+                  <ChevronUp className="h-4 w-4" />
                 ) : (
-                  <i className="fas fa-chevron-down" />
+                  <ChevronDown className="h-4 w-4" />
                 )}
               </DropdownToggle>
               <DropdownMenu right>
@@ -193,7 +194,7 @@ const PayrollEmployee = () => {
                     navigate('/admin/payroll/employee/detail', { state: { id: row.original.id } })
                   }
                 >
-                  <i className="fas fa-edit" /> {strings.Edit}
+                  <Pencil className="h-4 w-4" /> {strings.Edit}
                 </DropdownItem>
 
                 <DropdownItem
@@ -206,7 +207,7 @@ const PayrollEmployee = () => {
                     })
                   }
                 >
-                  <i className="fas fa-eye" /> {strings.SalarySlip}
+                  <Eye className="h-4 w-4" /> {strings.SalarySlip}
                 </DropdownItem>
               </DropdownMenu>
             </ButtonDropdown>
@@ -229,7 +230,7 @@ const PayrollEmployee = () => {
               <Row>
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="fnav-icon fas fa-user-plus" />
+                    <UserPlus className="h-5 w-5" />
                     <span className="ml-2"> {strings.Employees} </span>
                   </div>
                 </Col>
@@ -248,7 +249,7 @@ const PayrollEmployee = () => {
                             style={{ marginBottom: '10px' }}
                             // onClick={onBtnExport} // TODO: Implement export
                           >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                            <Download className="h-4 w-4 mr-1" />
                             {strings.export_csv}
                           </Button>
                           <Button
@@ -257,7 +258,7 @@ const PayrollEmployee = () => {
                             style={{ marginBottom: '10px' }}
                             onClick={() => navigate(`/admin/master/employee/create`)}
                           >
-                            <i className="fas fa-plus mr-1" />
+                            <Plus className="h-4 w-4" />
                             {strings.NewEmployee}
                           </Button>
                         </div>

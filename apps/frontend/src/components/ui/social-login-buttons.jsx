@@ -34,43 +34,44 @@ const MicrosoftIcon = ({ className }) => (
   </svg>
 );
 
-export function SocialLoginButtons({ onGoogleClick, onMicrosoftClick, disabled, className }) {
+export function SocialLoginButtons({
+  onGoogleClick,
+  onMicrosoftClick,
+  disabled,
+  className,
+  buttonClassName,
+}) {
   return (
-    <div className={cn('space-y-3', className)}>
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-        </div>
-      </div>
+    <div className={cn('grid grid-cols-2 gap-4', className)}>
+      <Button
+        type="button"
+        variant="ghost"
+        onClick={onGoogleClick}
+        disabled={disabled}
+        className={cn(
+          'w-full h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-out dark:shadow-neu-out-dark hover:translate-y-[-1px] hover:bg-neu-bg dark:hover:bg-neu-bg-dark active:shadow-neu-in dark:active:shadow-neu-in-dark transition-all duration-200',
+          buttonClassName
+        )}
+        aria-label="Sign in with Google"
+      >
+        <GoogleIcon className="h-5 w-5 mr-2" />
+        Google
+      </Button>
 
-      <div className="grid grid-cols-2 gap-3">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onGoogleClick}
-          disabled={disabled}
-          className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-md active:scale-[0.98]"
-          aria-label="Sign in with Google"
-        >
-          <GoogleIcon className="h-5 w-5 mr-2" />
-          <span className="hidden sm:inline">Google</span>
-        </Button>
-
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onMicrosoftClick}
-          disabled={disabled}
-          className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-md active:scale-[0.98]"
-          aria-label="Sign in with Microsoft"
-        >
-          <MicrosoftIcon className="h-5 w-5 mr-2" />
-          <span className="hidden sm:inline">Microsoft</span>
-        </Button>
-      </div>
+      <Button
+        type="button"
+        variant="ghost"
+        onClick={onMicrosoftClick}
+        disabled={disabled}
+        className={cn(
+          'w-full h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-out dark:shadow-neu-out-dark hover:translate-y-[-1px] hover:bg-neu-bg dark:hover:bg-neu-bg-dark active:shadow-neu-in dark:active:shadow-neu-in-dark transition-all duration-200',
+          buttonClassName
+        )}
+        aria-label="Sign in with Microsoft"
+      >
+        <MicrosoftIcon className="h-5 w-5 mr-2" />
+        Microsoft
+      </Button>
     </div>
   );
 }

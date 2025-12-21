@@ -17,6 +17,7 @@ const en = {
   GotoFAQ: 'Go to FAQ',
   ContactUs: 'Contact Us',
   Hey: 'Hey',
+  Search: 'Search',
 
   //sideBar
   Dashboard: 'Dashboard',

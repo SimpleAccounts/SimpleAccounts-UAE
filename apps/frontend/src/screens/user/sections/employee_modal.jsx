@@ -18,6 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import dayjs from '@/utils/date';
+import { IdCard, CircleDot, Ban } from 'lucide-react';
 
 // Zod validation schema
 const employeeSchema = z.object({
@@ -91,7 +92,7 @@ const EmployeeModal = ({
             <Row>
               <Col lg={12}>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="nav-icon fas fa-id-card-alt" />
+                  <IdCard className="h-4 w-4" />
                   <span className="ml-2">Create Employee</span>
                 </div>
               </Col>
@@ -244,7 +245,7 @@ const EmployeeModal = ({
               className="btn-square mr-3"
               disabled={isSubmitting}
             >
-              <i className="fa fa-dot-circle-o"></i> Create
+              <CircleDot className="h-4 w-4" /> Create
             </Button>
             &nbsp;
             <Button
@@ -254,7 +255,7 @@ const EmployeeModal = ({
                 closeEmployeeModal(false);
               }}
             >
-              <i className="fa fa-ban"></i> Cancel
+              <Ban className="h-4 w-4" /> Cancel
             </Button>
           </ModalFooter>
         </Form>

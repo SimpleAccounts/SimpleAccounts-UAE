@@ -16,7 +16,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Ban, ChevronDown, ChevronUp, CircleDot, Trash2 } from 'lucide-react';
 import DatePicker from 'react-datepicker';
 import { CommonActions } from 'services/global';
 import dayjs from '@/utils/date';
@@ -270,7 +270,7 @@ function ReconcileTransaction() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => closeReconciled(row.original.reconcileId)}>
-                  <i className="fa fa-trash mr-2" /> {strings.Delete}
+                  <Trash2 className="h-4 w-4" /> {strings.Delete}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -397,7 +397,7 @@ function ReconcileTransaction() {
                                 className="btn-square mr-3"
                                 disabled={disabled}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Reconciling...' : strings.reconcile}
                               </Button>
                               <Button
@@ -410,7 +410,7 @@ function ReconcileTransaction() {
                                   })
                                 }
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </div>
                           </div>

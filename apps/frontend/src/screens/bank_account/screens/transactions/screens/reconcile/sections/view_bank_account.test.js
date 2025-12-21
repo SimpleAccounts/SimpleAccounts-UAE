@@ -47,7 +47,7 @@ describe('ViewBankAccount', () => {
   it('calls editDetails when edit icon is clicked', () => {
     render(<ViewBankAccount {...baseProps} />);
 
-    const editIcon = document.querySelector('.fa-edit');
+    const editIcon = document.querySelector('.lucide-pencil');
     fireEvent.click(editIcon);
 
     expect(baseProps.editDetails).toHaveBeenCalled();

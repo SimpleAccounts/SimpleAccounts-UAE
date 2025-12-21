@@ -20,6 +20,7 @@ import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
 import './style.scss';
 import { CommonActions } from 'services/global';
+import { Settings, Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -306,7 +307,7 @@ class ViewFtaAuditReport extends React.Component {
                               '  to  ' +
                               this.state.initValue.endDate?.replaceAll('/', '-')}
                           </b>
-                          {/* <i className="fa fa-cog mr-2"></i>CustomizeReport */}
+                          {/* <Settings className="h-4 w-4" />CustomizeReport */}
                         </p>
                       </div>
                       <div className="d-flex">
@@ -352,7 +353,7 @@ class ViewFtaAuditReport extends React.Component {
                             cursor: 'pointer',
                           }}
                         >
-                          <i className="fa fa-print"></i>
+                          <Printer className="h-4 w-4" />
                         </div>
                         <div
                           className="mr-2 print-btn-cont"

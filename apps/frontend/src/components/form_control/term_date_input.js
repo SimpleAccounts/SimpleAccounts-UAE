@@ -8,6 +8,7 @@ import { selectOptionsFactory } from 'utils';
 import dayjs from '@/utils/date';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { HelpCircle } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -48,7 +49,7 @@ function TermDateInput(props) {
         <FormGroup className="mb-3">
           <Label htmlFor="term">
             {term.required && <span className="text-danger">* </span>}
-            {term.label} <i id="UncontrolledTooltipTerm" className="fa fa-question-circle ml-1"></i>
+            {term.label} <HelpCircle id="UncontrolledTooltipTerm" className="h-4 w-4 inline" />
             <UncontrolledTooltip placement="right" target="UncontrolledTooltipTerm">
               <p> Terms- The duration given to a buyer for payment.</p>
 

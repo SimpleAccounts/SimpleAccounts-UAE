@@ -26,6 +26,7 @@ import { CommonActions } from 'services/global';
 import { data } from '../Language/index';
 import LocalizedStrings from 'react-localization';
 import FilterComponent3 from './sections/FilterComponent3';
+import { Settings, Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -392,7 +393,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
+													<Settings className="h-4 w-4" />{strings.CustomizeReport}
 												</p>
 											</div> */}
                     <div className="d-flex">
@@ -444,7 +445,7 @@ class DetailedGeneralLedgerReport extends React.Component {
                           cursor: 'pointer',
                         }}
                       >
-                        <i className="fa fa-print"></i>
+                        <Printer className="h-4 w-4" />
                       </div>
                       <div
                         className="mr-2 print-btn-cont"

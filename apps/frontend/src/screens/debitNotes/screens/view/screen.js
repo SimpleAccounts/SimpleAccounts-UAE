@@ -15,6 +15,7 @@ import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import ActionButtons from 'components/view_actions_buttons';
 import { StatusActionList } from 'utils';
+import { Pencil, FileText, Printer, X } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -214,7 +215,7 @@ class ViewDebitNote extends React.Component {
 										);
 									}}
 								>
-									<i className="fa fa-pencil"></i>
+									<Pencil className="h-4 w-4" />
 								</Button> */}
                 <Button
                   className="btn-lg mb-1 print-btn-cont"
@@ -222,12 +223,12 @@ class ViewDebitNote extends React.Component {
                     this.exportPDFWithComponent();
                   }}
                 >
-                  <i className="fa fa-file-pdf-o"></i>
+                  <FileText className="h-4 w-4" />
                 </Button>
                 <ReactToPrint
                   trigger={() => (
                     <Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
-                      <i className="fa fa-print"></i>
+                      <Printer className="h-4 w-4" />
                     </Button>
                   )}
                   content={() => this.componentRef}
@@ -252,7 +253,7 @@ class ViewDebitNote extends React.Component {
                     else this.props.history.push('/admin/expense/debit-notes');
                   }}
                 >
-                  <i className="fas fa-times"></i>
+                  <X className="h-4 w-4" />
                 </Button>
               </div>
               <div>

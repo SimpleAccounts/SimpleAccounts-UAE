@@ -23,6 +23,7 @@ import * as EmployeeCreateActions from './actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import { selectOptionsFactory, selectStyles } from 'utils';
+import { UserCircle, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const regExBoth = /[a-zA-Z0-9]+$/;
 
@@ -166,7 +167,7 @@ const CreateSalaryTemplate = props => {
                 <Row>
                   <Col lg={12}>
                     <div className="h4 mb-0 d-flex align-items-center">
-                      <i className="nav-icon fas fa-user-tie" />
+                      <UserCircle className="h-4 w-4" />
                       <span className="ml-2">Create Salary Template</span>
                     </div>
                   </Col>
@@ -322,7 +323,7 @@ const CreateSalaryTemplate = props => {
                                 setCreateMore(false);
                               }}
                             >
-                              <i className="fa fa-dot-circle-o"></i>{' '}
+                              <CircleDot className="h-4 w-4" />{' '}
                               {disabled ? 'Creating...' : 'Create'}
                             </Button>
                             <Button
@@ -334,7 +335,7 @@ const CreateSalaryTemplate = props => {
                                 setCreateMore(true);
                               }}
                             >
-                              <i className="fa fa-refresh"></i>{' '}
+                              <RefreshCw className="h-4 w-4" />{' '}
                               {disabled ? 'Creating...' : 'Create and More'}
                             </Button>
                             <Button
@@ -344,7 +345,7 @@ const CreateSalaryTemplate = props => {
                                 props.history.push('/admin/payroll/salaryTemplate');
                               }}
                             >
-                              <i className="fa fa-ban"></i> Cancel
+                              <Ban className="h-4 w-4" /> Cancel
                             </Button>
                           </FormGroup>
                         </Col>

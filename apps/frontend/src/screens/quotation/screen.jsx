@@ -27,6 +27,7 @@ import { data as languageData } from '../Language/index';
 import LocalizedStrings from 'react-localization';
 import { toast } from 'sonner';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Search, RefreshCw, Plus, PackageOpen } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -302,7 +303,7 @@ const Quatation = () => {
               <Row>
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="fas fa-box-open" />
+                    <PackageOpen className="h-5 w-5" />
                     <span className="ml-2">{strings.Quotation}</span>
                   </div>
                 </Col>
@@ -351,7 +352,7 @@ const Quatation = () => {
                           className="btn-square mr-1"
                           onClick={handleSearch}
                         >
-                          <i className="fa fa-search"></i>
+                          <Search className="h-4 w-4" />
                         </Button>
                         <Button
                           type="button"
@@ -359,7 +360,7 @@ const Quatation = () => {
                           className="btn-square"
                           onClick={clearAll}
                         >
-                          <i className="fa fa-refresh"></i>
+                          <RefreshCw className="h-4 w-4" />
                         </Button>
                       </Col>
                     </Row>
@@ -372,7 +373,7 @@ const Quatation = () => {
                         className="btn-square pull-right"
                         onClick={() => navigate(`/admin/income/quotation/create`)}
                       >
-                        <i className="fas fa-plus mr-1" />
+                        <Plus className="h-4 w-4" />
                         {strings.AddNewRequest}
                       </Button>
                     </div>

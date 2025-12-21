@@ -7,6 +7,20 @@ import { data } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
 import { SentInvoice, DeleteDocument, ChangeInvoiceStatus } from 'components';
 import { CommonActions } from 'services/global';
+import {
+  Pencil,
+  Send,
+  ArrowRightCircle,
+  File,
+  Plus,
+  Landmark,
+  FileText,
+  CheckCircle,
+  Ban,
+  Copy,
+  Trash2,
+  XCircle,
+} from 'lucide-react';
 
 let strings = new LocalizedStrings(data);
 
@@ -110,7 +124,7 @@ class ActionButtons extends React.Component {
                         }
                       }}
                     >
-                      <i className="fas fa-edit"></i>
+                      <Pencil className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Send') {
@@ -123,7 +137,7 @@ class ActionButtons extends React.Component {
                         this.setState({ sentInvoice: true, markAsSent: false });
                       }}
                     >
-                      <i className="fas fa-send"></i>
+                      <Send className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Mark As Sent') {
@@ -136,7 +150,7 @@ class ActionButtons extends React.Component {
                         this.setState({ sentInvoice: true, markAsSent: true });
                       }}
                     >
-                      <i className="far fa-arrow-alt-circle-right"></i>
+                      <ArrowRightCircle className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Mark As Open') {
@@ -149,7 +163,7 @@ class ActionButtons extends React.Component {
                         this.setState({ sentInvoice: true, markAsSent: true });
                       }}
                     >
-                      <i className="far fa-arrow-alt-circle-right"></i>
+                      <ArrowRightCircle className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Post') {
@@ -168,7 +182,7 @@ class ActionButtons extends React.Component {
                         this.setState({ sentInvoice: true, markAsSent: false });
                       }}
                     >
-                      <i className="fas fa-send"></i>
+                      <Send className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Draft') {
@@ -186,7 +200,7 @@ class ActionButtons extends React.Component {
                         else this.setState({ sentInvoice: true, unSent: true });
                       }}
                     >
-                      <i className="fas fa-file"></i>
+                      <File className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Create Invoice') {
@@ -210,7 +224,7 @@ class ActionButtons extends React.Component {
                           });
                       }}
                     >
-                      <i className="fas fa-plus"></i>
+                      <Plus className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Record Payment' && currencyIsoCode === 'AED') {
@@ -250,7 +264,7 @@ class ActionButtons extends React.Component {
                         );
                       }}
                     >
-                      <i className="fas fa-university"></i>
+                      <Landmark className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Refund Payment') {
@@ -295,7 +309,7 @@ class ActionButtons extends React.Component {
                         );
                       }}
                     >
-                      <i className="fas fa-university"></i>
+                      <Landmark className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Apply To Invoice') {
@@ -320,7 +334,7 @@ class ActionButtons extends React.Component {
                         });
                       }}
                     >
-                      <i className="fas fa-file-invoice"></i>
+                      <FileText className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Mark As Approved') {
@@ -333,7 +347,7 @@ class ActionButtons extends React.Component {
                         this.setState({ statusChange: true, statusToChange: 'Approved' });
                       }}
                     >
-                      <i className="fa fa-check-circle-o"></i>
+                      <CheckCircle className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Mark As Rejected') {
@@ -346,7 +360,7 @@ class ActionButtons extends React.Component {
                         this.setState({ statusChange: true, statusToChange: 'Rejected' });
                       }}
                     >
-                      <i className="fa fa-ban"></i>
+                      <Ban className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Create A Duplicate') {
@@ -364,7 +378,7 @@ class ActionButtons extends React.Component {
                         });
                       }}
                     >
-                      <i className="fas fa-copy"></i>
+                      <Copy className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Delete') {
@@ -382,7 +396,7 @@ class ActionButtons extends React.Component {
                         else this.setState({ deleteInvoice: true });
                       }}
                     >
-                      <i className="fa fa-trash-o"></i>
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Send Again') {
@@ -395,7 +409,7 @@ class ActionButtons extends React.Component {
                         this.setState({ sentInvoice: true, markAsSent: false, sendAgain: true });
                       }}
                     >
-                      <i className="fas fa-send"></i>
+                      <Send className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Create Tax Credit Note' && !documentCreated) {
@@ -412,7 +426,7 @@ class ActionButtons extends React.Component {
                         });
                       }}
                     >
-                      <i className="fas fa-plus"></i>
+                      <Plus className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Create Debit Note' && !documentCreated) {
@@ -429,7 +443,7 @@ class ActionButtons extends React.Component {
                         });
                       }}
                     >
-                      <i className="fas fa-plus"></i>
+                      <Plus className="h-4 w-4" />
                     </Button>
                   );
                 } else if (status === 'Close') {
@@ -442,7 +456,7 @@ class ActionButtons extends React.Component {
                         this.setState({ statusChange: true, statusToChange: 'Closed' });
                       }}
                     >
-                      <i className="far fa-times-circle" />
+                      <XCircle className="h-4 w-4" />
                     </Button>
                   );
                 }

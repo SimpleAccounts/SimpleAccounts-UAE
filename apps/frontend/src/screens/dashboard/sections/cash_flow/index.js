@@ -71,8 +71,8 @@ class CashFlow extends Component {
       datasets: [
         {
           label: inflow.label || 'Inflow',
-          backgroundColor: 'rgba(65, 145, 255, 0.85)',
-          hoverBackgroundColor: 'rgba(65, 145, 255, 0.85',
+          backgroundColor: 'rgba(32, 100, 216, 0.85)',
+          hoverBackgroundColor: 'rgba(32, 100, 216, 0.85)',
           data: inflow.data || [],
         },
         {

@@ -18,7 +18,7 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 import * as CreditNotesCreateActions from './actions';
 import * as CreditNotesActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
@@ -40,6 +40,7 @@ import LocalizedStrings from 'react-localization';
 import { Textarea } from '@/components/ui/textarea';
 // Use import instead of require for Vite compatibility
 import invoiceimage from 'assets/images/invoice/invoice.png';
+import { HandCoins, Upload, X, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 // Zod validation schema
 const createCreditNoteSchema = z
@@ -709,7 +710,7 @@ const CreateCreditNote = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-donate" />
+                        <HandCoins className="h-4 w-4" />
                         <span className="ml-2">{strings.CreateCreditNote}</span>
                       </div>
                     </Col>
@@ -1260,7 +1261,7 @@ const CreateCreditNote = ({
                                         }}
                                         className="btn-square mr-3"
                                       >
-                                        <i className="fa fa-upload"></i> {strings.upload}
+                                        <Upload className="h-4 w-4" /> {strings.upload}
                                       </Button>
                                       <input
                                         id="fileInput"
@@ -1271,10 +1272,10 @@ const CreateCreditNote = ({
                                       />
                                       {fileName && (
                                         <div>
-                                          <i
-                                            className="fa fa-close"
+                                          <X
+                                            className="h-4 w-4 cursor-pointer"
                                             onClick={() => setFileName('')}
-                                          ></i>{' '}
+                                          />{' '}
                                           {fileName}
                                         </div>
                                       )}
@@ -1368,7 +1369,7 @@ const CreateCreditNote = ({
                                     handleSubmit(onSubmit)();
                                   }}
                                 >
-                                  <i className="fa fa-dot-circle-o"></i>{' '}
+                                  <CircleDot className="h-4 w-4" />{' '}
                                   {disabled ? 'Creating...' : strings.Create}
                                 </Button>
 
@@ -1390,7 +1391,7 @@ const CreateCreditNote = ({
                                       handleSubmit(onSubmit)();
                                     }}
                                   >
-                                    <i className="fa fa-refresh"></i>{' '}
+                                    <RefreshCw className="h-4 w-4" />{' '}
                                     {disabled ? 'Creating...' : strings.CreateandMore}
                                   </Button>
                                 )}
@@ -1407,7 +1408,7 @@ const CreateCreditNote = ({
                                     else history.push('/admin/income/credit-notes');
                                   }}
                                 >
-                                  <i className="fa fa-ban"></i> {strings.Cancel}
+                                  <Ban className="h-4 w-4" /> {strings.Cancel}
                                 </Button>
                               </FormGroup>
                             </Col>

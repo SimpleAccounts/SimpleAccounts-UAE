@@ -32,6 +32,7 @@ import { LeavePage, Loader } from 'components';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { File } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -257,7 +258,7 @@ const CreateReceipt = () => {
             <Card>
               <CardHeader>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="fa fa-file-o" />
+                  <File className="h-4 w-4" />
                   <span className="ml-2">{strings.CreateIncomeReciept}</span>
                 </div>
               </CardHeader>

@@ -10,6 +10,7 @@ import { data as languageData } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { UserCircle, CheckCheck, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -127,7 +128,7 @@ const AddEmployeesModal = ({ openModal, closeModal, id, tableApiCallsOnStatus })
       <Modal isOpen={openModal} className="modal-success contact-modal" size="lg">
         <ModalHeader toggle={() => closeModal(false)}>
           <div className="h4 mb-0 d-flex align-items-center">
-            <i className="nav-icon fas fa-user-tie mr-2" />
+            <UserCircle className="h-4 w-4" />
             <span>Select Employees</span>
           </div>
         </ModalHeader>
@@ -157,10 +158,10 @@ const AddEmployeesModal = ({ openModal, closeModal, id, tableApiCallsOnStatus })
         </ModalBody>
         <ModalFooter>
           <Button color="primary" className="btn-square" onClick={addEmployees} disabled={loading}>
-            <i className="fas fa-check-double mr-1"></i> Add employees
+            <CheckCheck className="h-4 w-4" /> Add employees
           </Button>
           <Button color="secondary" className="btn-square" onClick={() => closeModal(false)}>
-            <i className="fa fa-ban mr-1"></i> {strings.Cancel}
+            <Ban className="h-4 w-4" /> {strings.Cancel}
           </Button>
         </ModalFooter>
       </Modal>
