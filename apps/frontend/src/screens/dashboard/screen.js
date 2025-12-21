@@ -235,14 +235,17 @@ class Dashboard extends React.Component {
           <h2 className="section-title">Financial Overview</h2>
         </div>
 
-        <Row className="charts-row" style={{ display: 'flex', alignItems: 'stretch' }}>
-          <Col xs={12} lg={6} className="mb-4 mb-lg-0 d-flex">
-            <div className="chart-card flex-grow-1">
+        <Row
+          className="charts-row"
+          style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'stretch' }}
+        >
+          <Col xs={12} lg={6} className="mb-4 d-flex" style={{ minWidth: 0 }}>
+            <div className="chart-card flex-grow-1" style={{ width: '100%', minWidth: 0 }}>
               <BankAccount {...this.props} />
             </div>
           </Col>
-          <Col xs={12} lg={6} className="d-flex">
-            <div className="chart-card flex-grow-1">
+          <Col xs={12} lg={6} className="mb-4 mb-lg-0 d-flex" style={{ minWidth: 0 }}>
+            <div className="chart-card flex-grow-1" style={{ width: '100%', minWidth: 0 }}>
               <CashFlow {...this.props} />
             </div>
           </Col>
