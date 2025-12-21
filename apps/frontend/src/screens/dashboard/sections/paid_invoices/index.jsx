@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
-import { Card, CardBody } from 'reactstrap';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 
@@ -8,35 +8,15 @@ import './style.scss';
 
 let strings = new LocalizedStrings(data);
 
-class PaidInvoices extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      language: window['localStorage'].getItem('language'),
-      invoice_graph_data: { labels: [], datasets: [] },
-    };
-    this.bankAccountSelect = React.createRef();
-    this.dateRangeSelect = React.createRef();
-  }
+const PaidInvoices = props => {
+  const { DashboardActions, invoice_graph } = props;
+  const [language] = useState(window['localStorage'].getItem('language'));
+  const [invoice_graph_data, setInvoiceGraphData] = useState({
+    labels: [],
+    datasets: [],
+  });
 
-  toggle = (tabPane, tab) => {
-    const newArray = this.state.activeTab.slice();
-    newArray[parseInt(tabPane, 10)] = tab;
-    this.setState({
-      activeTab: newArray,
-    });
-  };
-
-  componentDidMount = () => {
-    this.props.DashboardActions.getInvoiceGraphData(12).then(action => {
-      // Redux Toolkit thunks return action objects
-      if (action && action.type && action.type.includes('fulfilled')) {
-        this.getInvoiceGraph(action.payload);
-      }
-    });
-  };
-
-  getInvoiceGraph = data => {
+  const getInvoiceGraph = data => {
     if (!data) return;
     const paidCustomerData = data.paidCustomerData || {};
     const paidSupplierData = data.paidSupplierData || {};
@@ -89,73 +69,90 @@ class PaidInvoices extends Component {
         },
       ],
     };
-    this.setState({ invoice_graph_data: data4MultipleData });
+    setInvoiceGraphData(data4MultipleData);
   };
 
-  render() {
-    strings.setLanguage(this.state.language);
-    const data4MultipleOptions = {
-      layout: {
-        padding: {
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
-        },
-      },
-      scales: {
-        y: {
-          ticks: {
-            display: true,
-          },
-          beginAtZero: true,
-          grid: {
-            display: true,
-            color: '#eeeff8',
-            drawBorder: true,
-          },
-        },
-        x: {
-          ticks: {
-            display: true,
-          },
-          beginAtZero: true,
-          grid: {
-            display: true,
-            color: '#eeeff8',
-            drawBorder: true,
-          },
-        },
-      },
-      plugins: {
-        legend: {
-          display: true,
-          position: 'bottom',
-        },
-      },
-      responsive: true,
-      maintainAspectRatio: false,
-    };
+  useEffect(() => {
+    if (DashboardActions && DashboardActions.getInvoiceGraphData) {
+      DashboardActions.getInvoiceGraphData(12).then(action => {
+        // Redux Toolkit thunks return action objects
+        if (action && action.type && action.type.includes('fulfilled')) {
+          getInvoiceGraph(action.payload);
+        } else if (action && action.payload) {
+          // Handle unwrapped result
+          getInvoiceGraph(action.payload);
+        }
+      }).catch(err => {
+        console.error('Error loading invoice graph data:', err);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language]);
 
-    return (
-      <div className="animated fadeIn ">
-        <Card className="cash-card ">
-          <CardBody className="card-body-padding">
-            <div className="flex-wrapper title-bottom-border">
-              <h1 className="mb-2 card-h1">{strings.SupplierCustomerPaidInvoices}</h1>
-            </div>
-            <div className="d-block p-4">
-              <Line
-                data={this.state.invoice_graph_data}
-                height={300}
-                options={data4MultipleOptions}
-              />
-            </div>
-          </CardBody>
-        </Card>
-      </div>
-    );
-  }
-}
+  const data4MultipleOptions = {
+    layout: {
+      padding: {
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+      },
+    },
+    scales: {
+      y: {
+        ticks: {
+          display: true,
+        },
+        beginAtZero: true,
+        grid: {
+          display: true,
+          color: '#eeeff8',
+          drawBorder: true,
+        },
+      },
+      x: {
+        ticks: {
+          display: true,
+        },
+        beginAtZero: true,
+        grid: {
+          display: true,
+          color: '#eeeff8',
+          drawBorder: true,
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+      },
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+  };
+
+  // Set language before using strings
+  useEffect(() => {
+    strings.setLanguage(language);
+  }, [language]);
+
+  return (
+    <div className="animated fadeIn mb-6">
+      <Card className="invoice-card">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold" style={{ color: '#2064d8' }}>
+            {strings.SupplierCustomerPaidInvoices || 'Paid Invoices'}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="chart-wrapper" style={{ height: '300px' }}>
+            <Line data={invoice_graph_data} options={data4MultipleOptions} />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
 
 export default PaidInvoices;

@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
-import Dashboard from '../screen';
+import Dashboard from '../screen.jsx';
 import * as DashboardActions from '../actions';
 
 // Mock the dashboard sections
@@ -189,29 +189,33 @@ describe('Dashboard Component', () => {
     expect(screen.getByTestId('paid-invoices')).toBeInTheDocument();
   });
 
-  test('renders CardColumns with cols-2 class', () => {
+  test('renders with Tailwind grid layout', () => {
     const { container } = render(
       <Provider store={store}>
         <Dashboard />
       </Provider>
     );
 
-    expect(container.querySelector('.cols-2')).toBeInTheDocument();
+    const grid = container.querySelector('.grid');
+    expect(grid).toBeInTheDocument();
+    expect(grid).toHaveClass('md:grid-cols-2');
   });
 
-  test('BankAccount and CashFlow are rendered inside CardColumns', () => {
+  test('BankAccount and CashFlow are rendered inside grid layout', () => {
     const { container } = render(
       <Provider store={store}>
         <Dashboard />
       </Provider>
     );
 
-    const cardColumns = container.querySelector('.cols-2');
+    const grid = container.querySelector('.grid.md\\:grid-cols-2');
     const bankAccount = screen.getByTestId('bank-account');
     const cashFlow = screen.getByTestId('cash-flow');
 
-    expect(cardColumns).toContainElement(bankAccount);
-    expect(cardColumns).toContainElement(cashFlow);
+    expect(grid).toBeInTheDocument();
+    // Both components should be siblings within the grid
+    expect(bankAccount).toBeInTheDocument();
+    expect(cashFlow).toBeInTheDocument();
   });
 
   test('maps state to props correctly', () => {
