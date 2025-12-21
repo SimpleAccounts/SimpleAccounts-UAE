@@ -481,6 +481,14 @@ export function Sidebar({
               <HelpCircle className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
               Help
             </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate('/theme-reference')}
+              className="rounded-lg my-1 cursor-pointer"
+              style={{ color: theme.textSecondary }}
+            >
+              <Palette className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              Theme Reference
+            </DropdownMenuItem>
             <DropdownMenuSeparator style={{ background: theme.shadowDark }} />
             {onLogout && (
               <DropdownMenuItem
