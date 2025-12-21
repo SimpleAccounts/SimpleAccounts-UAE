@@ -219,7 +219,7 @@ describe('Dashboard Component', () => {
   });
 
   test('maps state to props correctly', () => {
-    const wrapper = render(
+    render(
       <Provider store={store}>
         <Dashboard />
       </Provider>

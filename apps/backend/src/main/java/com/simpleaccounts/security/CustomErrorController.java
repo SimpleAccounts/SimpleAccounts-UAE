@@ -21,13 +21,15 @@ public class CustomErrorController implements ErrorController {
 		// Get error status code
 		Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 		HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-		
+
 		if (status != null) {
-			int statusCode = Integer.parseInt(status.toString());
 			try {
+				int statusCode = Integer.parseInt(status.toString());
 				httpStatus = HttpStatus.valueOf(statusCode);
+			} catch (NumberFormatException e) {
+				log.warn("Non-numeric status attribute: {}", status, e);
 			} catch (Exception e) {
-				log.warn("Invalid status code: {}", statusCode);
+				log.warn("Invalid status code: {}", status);
 			}
 		}
 		
