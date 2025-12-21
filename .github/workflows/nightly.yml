@@ -316,7 +316,7 @@ jobs:
           retention-days: 30
 
       - name: Upload SARIF to GitHub Security
-        uses: github/codeql-action/upload-sarif@1b168cd39490f61582a9beae412bb7057a6b2c4e # v4
+        uses: github/codeql-action/upload-sarif@5d4e8d1aca955e8d8589aabd499c5cae939e33c7 # v4
         if: always()
         with:
           sarif_file: apps/backend/target/security-reports/dependency-check-report.sarif
