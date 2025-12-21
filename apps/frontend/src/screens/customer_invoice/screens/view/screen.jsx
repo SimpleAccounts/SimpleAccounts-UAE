@@ -34,6 +34,17 @@ const ViewCustomerInvoice = props => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // Create history-like object for compatibility with components expecting React Router v5 API
+  const history = {
+    push: (path, state) => {
+      if (state) {
+        navigate(path, { state });
+      } else {
+        navigate(path);
+      }
+    },
+  };
+
   const supplierInvoiceActions = useMemo(
     () => bindActionCreators(SupplierInvoiceActions, dispatch),
     [dispatch]
@@ -177,7 +188,7 @@ const ViewCustomerInvoice = props => {
           <div className="pull-left">
             <ActionButtons
               id={id}
-              history={navigate}
+              history={history}
               URL={'/admin/income/customer-invoice'}
               invoiceData={invoiceData}
               postingRefType={'INVOICE'}
@@ -317,7 +328,7 @@ const ViewCustomerInvoice = props => {
         <div>
           {invoiceStatus && invoiceStatus !== 'Draft' && (
             <InvoiceViewJournalEntries
-              history={props.history}
+              history={history}
               invoiceURL={'/admin/income/customer-invoice/view'}
               invoiceId={id}
               invoiceType={2}
