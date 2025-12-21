@@ -14,3 +14,9 @@ b99a813268c7503f2d72d66f1fef0a0e6e241771:apps/backend/src/test/java/com/simpleac
 b99a813268c7503f2d72d66f1fef0a0e6e241771:apps/backend/src/test/java/com/simpleaccounts/service/impl/UserServiceImplTest.java:generic-api-key:419
 b99a813268c7503f2d72d66f1fef0a0e6e241771:apps/backend/src/test/java/com/simpleaccounts/service/impl/UserServiceImplTest.java:generic-api-key:447
 77a7afbfa5eadc5abef047cdd91e74b666331a8c:apps/backend/src/test/java/com/simpleaccounts/integration/ExternalApiIntegrationTest.java:generic-api-key:286
+# Reset password flow documentation - contains example tokens for documentation only
+bb74a79b30c2704a39859182640f76ef6762b426:.reset-password-flow-documentation.md:generic-api-key:336
+bb74a79b30c2704a39859182640f76ef6762b426:.reset-password-flow-documentation.md:generic-api-key:545
+bb74a79b30c2704a39859182640f76ef6762b426:.reset-password-flow-documentation.md:generic-api-key:555
+bb74a79b30c2704a39859182640f76ef6762b426:.reset-password-flow-documentation.md:generic-api-key:559
+bb74a79b30c2704a39859182640f76ef6762b426:.reset-password-flow-documentation.md:generic-api-key:560
