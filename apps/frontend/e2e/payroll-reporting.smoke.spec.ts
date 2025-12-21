@@ -7,8 +7,7 @@ const PAYROLL_PATH = process.env.E2E_PAYROLL_PATH || '/admin/payroll';
 const PAYROLL_RUN_PATH = process.env.E2E_PAYROLL_RUN_PATH || '/admin/payroll/run';
 const REPORTS_PATH = process.env.E2E_REPORTS_PATH || '/admin/report';
 const PNL_REPORT_PATH = process.env.E2E_PNL_PATH || '/admin/report/profit-loss';
-const BALANCE_SHEET_PATH =
-  process.env.E2E_BALANCE_SHEET_PATH || '/admin/report/balance-sheet';
+const BALANCE_SHEET_PATH = process.env.E2E_BALANCE_SHEET_PATH || '/admin/report/balance-sheet';
 
 const describeSmoke = RUN_SMOKE ? test.describe : test.describe.skip;
 
@@ -40,7 +39,7 @@ describeSmoke('Payroll smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run payroll smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run payroll smoke test'
     );
 
     await login(page, username!, password!);
@@ -62,7 +61,7 @@ describeSmoke('Payroll smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run payroll run smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run payroll run smoke test'
     );
 
     await login(page, username!, password!);
@@ -86,7 +85,7 @@ describeSmoke('Payroll smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run payroll config smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run payroll config smoke test'
     );
 
     await login(page, username!, password!);
@@ -110,7 +109,7 @@ describeSmoke('Reporting smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run reports smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run reports smoke test'
     );
 
     await login(page, username!, password!);
@@ -132,7 +131,7 @@ describeSmoke('Reporting smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run P&L report smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run P&L report smoke test'
     );
 
     await login(page, username!, password!);
@@ -144,9 +143,7 @@ describeSmoke('Reporting smoke journey', () => {
     });
 
     // Verify report page is displayed
-    const reportContent = page.locator(
-      '[class*="report"], [class*="profit-loss"], main',
-    );
+    const reportContent = page.locator('[class*="report"], [class*="profit-loss"], main');
     await expect(reportContent.first()).toBeVisible({ timeout: 60_000 });
   });
 
@@ -158,7 +155,7 @@ describeSmoke('Reporting smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run Balance Sheet smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run Balance Sheet smoke test'
     );
 
     await login(page, username!, password!);
@@ -170,9 +167,7 @@ describeSmoke('Reporting smoke journey', () => {
     });
 
     // Verify report page is displayed
-    const reportContent = page.locator(
-      '[class*="report"], [class*="balance-sheet"], main',
-    );
+    const reportContent = page.locator('[class*="report"], [class*="balance-sheet"], main');
     await expect(reportContent.first()).toBeVisible({ timeout: 60_000 });
   });
 
@@ -184,7 +179,7 @@ describeSmoke('Reporting smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run report filters smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run report filters smoke test'
     );
 
     await login(page, username!, password!);
@@ -195,7 +190,7 @@ describeSmoke('Reporting smoke journey', () => {
 
     // Check for date filter controls (various possible selectors)
     const dateControls = page.locator(
-      'input[type="date"], [class*="date-picker"], [class*="daterange"], select',
+      'input[type="date"], [class*="date-picker"], [class*="daterange"], select'
     );
     const controlCount = await dateControls.count();
 
@@ -211,7 +206,7 @@ describeSmoke('Reporting smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run report export smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run report export smoke test'
     );
 
     await login(page, username!, password!);
@@ -222,7 +217,7 @@ describeSmoke('Reporting smoke journey', () => {
 
     // Look for export buttons (PDF, Excel, CSV)
     const exportButtons = page.locator(
-      'button:has-text("Export"), button:has-text("PDF"), button:has-text("Excel"), button:has-text("Download"), [class*="export"]',
+      'button:has-text("Export"), button:has-text("PDF"), button:has-text("Excel"), button:has-text("Download"), [class*="export"]'
     );
 
     // Export functionality may or may not be present on all reports

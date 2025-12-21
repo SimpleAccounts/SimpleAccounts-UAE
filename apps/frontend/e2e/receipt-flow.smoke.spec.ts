@@ -3,10 +3,8 @@ import { test, expect } from '@playwright/test';
 const RUN_SMOKE = process.env.RUN_E2E_SMOKE === 'true';
 const LOGIN_PATH = process.env.E2E_LOGIN_PATH || '/login';
 const POST_LOGIN_PATH = process.env.E2E_POST_LOGIN_PATH || '/admin';
-const RECEIPT_PATH =
-  process.env.E2E_RECEIPT_PATH || '/admin/income/customer-receipt';
-const PAYMENT_PATH =
-  process.env.E2E_PAYMENT_PATH || '/admin/expense/supplier-payment';
+const RECEIPT_PATH = process.env.E2E_RECEIPT_PATH || '/admin/income/customer-receipt';
+const PAYMENT_PATH = process.env.E2E_PAYMENT_PATH || '/admin/expense/supplier-payment';
 
 const describeSmoke = RUN_SMOKE ? test.describe : test.describe.skip;
 
@@ -19,7 +17,7 @@ describeSmoke('Receipt and Payment smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run the receipt smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run the receipt smoke test'
     );
 
     // Login
@@ -64,7 +62,7 @@ describeSmoke('Receipt and Payment smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run the payment smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run the payment smoke test'
     );
 
     // Login

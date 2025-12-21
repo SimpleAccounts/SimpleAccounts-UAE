@@ -8,9 +8,7 @@ const POST_LOGIN_PATH = process.env.E2E_POST_LOGIN_PATH || '/admin';
 const describeSmoke = RUN_SMOKE ? test.describe : test.describe.skip;
 
 test.describe('Accessibility tests - Login page', () => {
-  test('login page should not have critical accessibility violations', async ({
-    page,
-  }) => {
+  test('login page should not have critical accessibility violations', async ({ page }) => {
     await page.goto(LOGIN_PATH);
     await page.waitForSelector('input#username, input[name="username"]', {
       timeout: 30_000,
@@ -22,7 +20,7 @@ test.describe('Accessibility tests - Login page', () => {
       .analyze();
 
     const criticalViolations = accessibilityScanResults.violations.filter(
-      (v) => v.impact === 'critical' || v.impact === 'serious',
+      v => v.impact === 'critical' || v.impact === 'serious'
     );
 
     expect(criticalViolations).toEqual([]);
@@ -30,9 +28,7 @@ test.describe('Accessibility tests - Login page', () => {
 });
 
 describeSmoke('Accessibility tests - Authenticated pages', () => {
-  test('dashboard should not have critical accessibility violations', async ({
-    page,
-  }) => {
+  test('dashboard should not have critical accessibility violations', async ({ page }) => {
     test.setTimeout(240_000);
 
     const username = process.env.E2E_USERNAME;
@@ -40,7 +36,7 @@ describeSmoke('Accessibility tests - Authenticated pages', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run authenticated accessibility tests',
+      'Set E2E_USERNAME and E2E_PASSWORD to run authenticated accessibility tests'
     );
 
     // Login
@@ -72,7 +68,7 @@ describeSmoke('Accessibility tests - Authenticated pages', () => {
       .analyze();
 
     const criticalViolations = accessibilityScanResults.violations.filter(
-      (v) => v.impact === 'critical' || v.impact === 'serious',
+      v => v.impact === 'critical' || v.impact === 'serious'
     );
 
     // Log all violations for reporting
@@ -80,12 +76,12 @@ describeSmoke('Accessibility tests - Authenticated pages', () => {
       test.info().annotations.push({
         type: 'a11y-violations',
         description: JSON.stringify(
-          accessibilityScanResults.violations.map((v) => ({
+          accessibilityScanResults.violations.map(v => ({
             id: v.id,
             impact: v.impact,
             description: v.description,
             nodes: v.nodes.length,
-          })),
+          }))
         ),
       });
     }
@@ -93,9 +89,7 @@ describeSmoke('Accessibility tests - Authenticated pages', () => {
     expect(criticalViolations).toEqual([]);
   });
 
-  test('invoice page should not have critical accessibility violations', async ({
-    page,
-  }) => {
+  test('invoice page should not have critical accessibility violations', async ({ page }) => {
     test.setTimeout(240_000);
 
     const username = process.env.E2E_USERNAME;
@@ -104,7 +98,7 @@ describeSmoke('Accessibility tests - Authenticated pages', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run authenticated accessibility tests',
+      'Set E2E_USERNAME and E2E_PASSWORD to run authenticated accessibility tests'
     );
 
     // Login
@@ -139,7 +133,7 @@ describeSmoke('Accessibility tests - Authenticated pages', () => {
       .analyze();
 
     const criticalViolations = accessibilityScanResults.violations.filter(
-      (v) => v.impact === 'critical' || v.impact === 'serious',
+      v => v.impact === 'critical' || v.impact === 'serious'
     );
 
     expect(criticalViolations).toEqual([]);

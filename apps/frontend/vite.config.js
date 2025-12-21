@@ -55,6 +55,10 @@ export default defineConfig({
       'prop-types',
       'react-router-dom', // Ensure React Router is properly bundled
       'to-words', // CJS module that needs pre-bundling
+      'dayjs', // Pre-bundle dayjs to avoid initialization issues
+      'bootstrap', // Pre-bundle bootstrap to ensure jQuery is loaded first
+      '@emotion/react', // Pre-bundle emotion to ensure React is available
+      '@emotion/styled', // Pre-bundle emotion styled
     ],
     // Exclude large dependencies from optimization to save memory
     exclude: [
@@ -131,82 +135,18 @@ export default defineConfig({
       input: path.resolve(__dirname, 'index.html'),
       output: {
         manualChunks: id => {
-          // More granular chunking to reduce chunk sizes and memory usage
+          // Simplified chunking: Keep React in main bundle, only split large libraries
           if (id.includes('node_modules')) {
-            // React core
-            if (id.includes('react/') || id.includes('react-dom/') || id.includes('react-dom/')) {
-              return 'react-core';
-            }
-            // React Router
-            if (id.includes('react-router')) {
-              return 'react-router';
-            }
-            // Redux
-            if (id.includes('redux') || id.includes('react-redux')) {
-              return 'redux-vendor';
-            }
-            // Material UI - split into smaller chunks
-            if (id.includes('@mui/material')) {
-              return 'mui-material';
-            }
-            if (id.includes('@mui/x-data-grid')) {
-              return 'mui-data-grid';
-            }
-            if (id.includes('@emotion')) {
-              return 'emotion';
-            }
-            // CoreUI - split into smaller chunks
-            if (id.includes('@coreui/coreui-pro')) {
-              return 'coreui-pro';
-            }
-            if (id.includes('@coreui/react')) {
-              return 'coreui-react';
-            }
-            if (id.includes('@coreui/icons')) {
-              return 'coreui-icons';
-            }
-            // Bootstrap libraries
-            if (id.includes('bootstrap')) {
-              return 'bootstrap-vendor';
-            }
-            // Chart libraries
-            if (
-              id.includes('chart.js') ||
-              id.includes('apexcharts') ||
-              id.includes('react-chartjs')
-            ) {
-              return 'charts';
-            }
-            // PDF/Excel libraries (large)
-            if (
-              id.includes('jspdf') ||
-              id.includes('@react-pdf') ||
-              id.includes('exceljs') ||
-              id.includes('@progress/kendo')
-            ) {
-              return 'document-vendor';
-            }
-            // AG Grid (large)
+            // DO NOT split React - keep it in main bundle to ensure it loads first
+            // React, React-DOM, React Router, Redux stay in main bundle
+
+            // Only split very large libraries that don't have React dependencies at module level
             if (id.includes('ag-grid')) {
               return 'ag-grid';
             }
-            // Form libraries
-            if (id.includes('formik') || id.includes('yup')) {
-              return 'forms';
-            }
-            // Date/time libraries
-            if (
-              id.includes('moment') ||
-              id.includes('react-datepicker') ||
-              id.includes('daterangepicker')
-            ) {
-              return 'date-vendor';
-            }
-            // Large utility libraries
-            if (id.includes('lodash') || id.includes('axios')) {
-              return 'utils-vendor';
-            }
-            // Everything else from node_modules
+
+            // Everything else from node_modules goes into vendor chunk
+            // This ensures proper dependency resolution
             return 'vendor';
           }
         },

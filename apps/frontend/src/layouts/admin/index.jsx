@@ -265,7 +265,7 @@ class AdminLayout extends React.Component {
     return loading == true ? (
       <Loader loadingMsg={loadingMsg} />
     ) : (
-      <div className="admin-container flex min-h-screen flex-col bg-neu-bg dark:bg-neu-bg-dark">
+      <div className="flex min-h-screen flex-col">
         <Header
           {...this.props}
           onToggleSidebar={this.toggleSidebar}
@@ -273,41 +273,37 @@ class AdminLayout extends React.Component {
           navigationItems={finalArray.items}
           pathname={pathname}
         />
-        <div className="flex flex-1 p-4 pt-0 gap-4">
+        <div className="flex flex-1">
           <Sidebar items={finalArray.items} pathname={pathname} minimized={sidebarMinimized} />
-          <main className="flex-1 overflow-y-auto bg-neu-bg dark:bg-neu-bg-dark rounded-2xl shadow-neu-out dark:shadow-neu-out-dark">
+          <main
+            className="flex-1 overflow-y-auto overflow-x-hidden"
+            style={{ backgroundColor: '#dfe9f7' }}
+          >
             {SubscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
               <Alert variant="destructive" className="m-4">
                 <AlertDescription>{SubscriptionMessage}</AlertDescription>
               </Alert>
             )}
-            <div className="px-6 py-4 border-b border-slate-200/50 dark:border-slate-700/50">
+            <div className="border-b bg-white px-6 py-4">
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
                     <BreadcrumbLink asChild>
-                      <NavLink
-                        to={config.BASE_ROUTE}
-                        className="text-primary hover:text-primary/80"
-                      >
-                        Home
-                      </NavLink>
+                      <NavLink to={config.BASE_ROUTE}>Home</NavLink>
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   {breadcrumbName && (
                     <>
                       <BreadcrumbSeparator />
                       <BreadcrumbItem>
-                        <BreadcrumbPage className="text-slate-700 dark:text-slate-200 font-medium">
-                          {breadcrumbName}
-                        </BreadcrumbPage>
+                        <BreadcrumbPage>{breadcrumbName}</BreadcrumbPage>
                       </BreadcrumbItem>
                     </>
                   )}
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
-            <div className="p-6">
+            <div className="p-6" style={{ backgroundColor: '#dfe9f7' }}>
               <Suspense fallback={Loading()}>
                 <Toaster position="top-right" duration={1700} />
                 <Routes>

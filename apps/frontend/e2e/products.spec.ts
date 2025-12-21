@@ -54,8 +54,12 @@ test.describe('Products List', () => {
 
     // Look for products list or table
     const productsListExists = await Promise.race([
-      page.locator('table, .table, [class*="product"], [class*="list"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, .table, [class*="product"], [class*="list"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(productsListExists).toBeTruthy();
@@ -67,9 +71,17 @@ test.describe('Products List', () => {
 
     // Look for add/new/create button
     const addButtonExists = await Promise.race([
-      page.getByRole('button', { name: /new|create|add.*product/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /new|create|add.*product/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /new|create|add.*product/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /new|create|add.*product/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(addButtonExists).toBeTruthy();
@@ -81,9 +93,17 @@ test.describe('Products List', () => {
 
     // Look for search input
     const searchExists = await Promise.race([
-      page.locator('input[type="search"], input[placeholder*="search" i]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByPlaceholder(/search/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="search"], input[placeholder*="search" i]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByPlaceholder(/search/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(searchExists).toBeTruthy();
@@ -95,9 +115,17 @@ test.describe('Products List', () => {
 
     // Look for common product columns (name, code, price)
     const columnsExist = await Promise.race([
-      page.getByText(/name|code|price|sku/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('th, [class*="header"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/name|code|price|sku/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('th, [class*="header"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof columnsExist).toBe('boolean');
@@ -109,9 +137,17 @@ test.describe('Products List', () => {
 
     // Look for category filter
     const categoryFilterExists = await Promise.race([
-      page.locator('select[name*="category"], [id*="category"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/filter.*category|category.*filter/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="category"], [id*="category"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/filter.*category|category.*filter/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof categoryFilterExists).toBe('boolean');
@@ -123,9 +159,17 @@ test.describe('Products List', () => {
 
     // Look for status filter (active, inactive, out of stock)
     const statusFilterExists = await Promise.race([
-      page.locator('select[name*="status"], [id*="status"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/active|inactive|status/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="status"], [id*="status"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/active|inactive|status/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof statusFilterExists).toBe('boolean');
@@ -137,8 +181,12 @@ test.describe('Products List', () => {
 
     // Look for product images
     const imagesExist = await Promise.race([
-      page.locator('img[src*="product"], [class*="image"], [class*="thumbnail"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('img[src*="product"], [class*="image"], [class*="thumbnail"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof imagesExist).toBe('boolean');
@@ -150,9 +198,17 @@ test.describe('Products List', () => {
 
     // Look for bulk action controls
     const bulkActionsExist = await Promise.race([
-      page.locator('input[type="checkbox"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/bulk.*action|select.*all/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="checkbox"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/bulk.*action|select.*all/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof bulkActionsExist).toBe('boolean');
@@ -164,9 +220,17 @@ test.describe('Products List', () => {
 
     // Look for export functionality
     const exportExists = await Promise.race([
-      page.getByRole('button', { name: /export|download|csv|excel/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="export"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /export|download|csv|excel/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="export"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof exportExists).toBe('boolean');
@@ -203,7 +267,11 @@ test.describe('Product Creation and Editing', () => {
 
     let foundFields = 0;
     for (const selector of commonFields) {
-      const fieldExists = await page.locator(selector).first().isVisible({ timeout: 3000 }).catch(() => false);
+      const fieldExists = await page
+        .locator(selector)
+        .first()
+        .isVisible({ timeout: 3000 })
+        .catch(() => false);
       if (fieldExists) foundFields++;
     }
 
@@ -217,9 +285,17 @@ test.describe('Product Creation and Editing', () => {
 
     // Look for category selector
     const categoryExists = await Promise.race([
-      page.locator('select[name*="category"], [id*="category"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/category/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="category"], [id*="category"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/category/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof categoryExists).toBe('boolean');
@@ -231,9 +307,17 @@ test.describe('Product Creation and Editing', () => {
 
     // Look for product type (goods, services, etc.)
     const typeExists = await Promise.race([
-      page.locator('select[name*="type"], input[name*="type"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/good|service|type/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="type"], input[name*="type"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/good|service|type/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof typeExists).toBe('boolean');
@@ -245,9 +329,17 @@ test.describe('Product Creation and Editing', () => {
 
     // Look for price fields
     const priceFieldsExist = await Promise.race([
-      page.locator('input[name*="price"], input[name*="cost"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/price|cost/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="price"], input[name*="cost"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/price|cost/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(priceFieldsExist).toBeTruthy();
@@ -259,9 +351,17 @@ test.describe('Product Creation and Editing', () => {
 
     // Look for description field
     const descriptionExists = await Promise.race([
-      page.locator('textarea[name*="description"], input[name*="description"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/description/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('textarea[name*="description"], input[name*="description"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/description/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof descriptionExists).toBe('boolean');
@@ -273,9 +373,17 @@ test.describe('Product Creation and Editing', () => {
 
     // Look for image upload
     const uploadExists = await Promise.race([
-      page.locator('input[type="file"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/upload.*image|add.*image/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="file"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/upload.*image|add.*image/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof uploadExists).toBe('boolean');
@@ -287,9 +395,17 @@ test.describe('Product Creation and Editing', () => {
 
     // Look for tax/VAT field
     const taxExists = await Promise.race([
-      page.locator('select[name*="tax"], input[name*="tax"], select[name*="vat"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/tax|vat/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="tax"], input[name*="tax"], select[name*="vat"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/tax|vat/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof taxExists).toBe('boolean');
@@ -301,8 +417,12 @@ test.describe('Product Creation and Editing', () => {
 
     // Look for save button
     const saveButtonExists = await Promise.race([
-      page.getByRole('button', { name: /save|submit|create/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /save|submit|create/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(saveButtonExists).toBeTruthy();
@@ -314,10 +434,22 @@ test.describe('Product Creation and Editing', () => {
 
     // Look for edit button
     const editExists = await Promise.race([
-      page.getByRole('button', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="edit"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="edit"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof editExists).toBe('boolean');
@@ -348,8 +480,12 @@ test.describe('Product Categories', () => {
 
     // Look for categories list
     const categoriesExists = await Promise.race([
-      page.locator('table, [class*="category"], [class*="list"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, [class*="category"], [class*="list"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof categoriesExists).toBe('boolean');
@@ -361,9 +497,17 @@ test.describe('Product Categories', () => {
 
     // Look for add button
     const addButtonExists = await Promise.race([
-      page.getByRole('button', { name: /new|create|add.*category/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /new|create|add.*category/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /new|create|add.*category/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /new|create|add.*category/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(addButtonExists).toBeTruthy();
@@ -375,9 +519,17 @@ test.describe('Product Categories', () => {
 
     // Look for parent category selector
     const parentCategoryExists = await Promise.race([
-      page.locator('select[name*="parent"], [id*="parent"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/parent.*category/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="parent"], [id*="parent"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/parent.*category/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof parentCategoryExists).toBe('boolean');
@@ -388,7 +540,11 @@ test.describe('Product Categories', () => {
     await page.waitForTimeout(3000);
 
     // Look for name field
-    const nameExists = await page.locator('input[name*="name"], input[id*="name"]').first().isVisible({ timeout: 5000 }).catch(() => false);
+    const nameExists = await page
+      .locator('input[name*="name"], input[id*="name"]')
+      .first()
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
 
     expect(nameExists).toBeTruthy();
   });
@@ -399,9 +555,17 @@ test.describe('Product Categories', () => {
 
     // Look for edit functionality
     const editExists = await Promise.race([
-      page.getByRole('button', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof editExists).toBe('boolean');
@@ -413,9 +577,17 @@ test.describe('Product Categories', () => {
 
     // Look for delete functionality
     const deleteExists = await Promise.race([
-      page.getByRole('button', { name: /delete|remove/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="delete"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /delete|remove/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="delete"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof deleteExists).toBe('boolean');
@@ -446,9 +618,17 @@ test.describe('Inventory Management', () => {
 
     // Look for stock/quantity information
     const stockExists = await Promise.race([
-      page.getByText(/stock|quantity|qty|available/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="stock"], [class*="quantity"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/stock|quantity|qty|available/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="stock"], [class*="quantity"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof stockExists).toBe('boolean');
@@ -460,9 +640,17 @@ test.describe('Inventory Management', () => {
 
     // Look for low stock indicators
     const lowStockExists = await Promise.race([
-      page.getByText(/low.*stock|out.*of.*stock/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="low-stock"], [class*="warning"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/low.*stock|out.*of.*stock/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="low-stock"], [class*="warning"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof lowStockExists).toBe('boolean');
@@ -474,9 +662,17 @@ test.describe('Inventory Management', () => {
 
     // Look for stock adjustment functionality
     const adjustExists = await Promise.race([
-      page.getByRole('button', { name: /adjust|update.*stock/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="adjust"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /adjust|update.*stock/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="adjust"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof adjustExists).toBe('boolean');
@@ -488,9 +684,17 @@ test.describe('Inventory Management', () => {
 
     // Look for total inventory value
     const valuationExists = await Promise.race([
-      page.getByText(/total.*value|inventory.*value|valuation/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="value"], [class*="valuation"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/total.*value|inventory.*value|valuation/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="value"], [class*="valuation"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof valuationExists).toBe('boolean');
@@ -502,9 +706,17 @@ test.describe('Inventory Management', () => {
 
     // Look for stock movement history
     const movementsExist = await Promise.race([
-      page.locator('table, [class*="movement"], [class*="history"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/movement|transaction|history/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, [class*="movement"], [class*="history"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/movement|transaction|history/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof movementsExist).toBe('boolean');
@@ -516,9 +728,17 @@ test.describe('Inventory Management', () => {
 
     // Look for reorder level field
     const reorderExists = await Promise.race([
-      page.locator('input[name*="reorder"], input[id*="reorder"], input[name*="minimum"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/reorder.*level|minimum.*stock/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="reorder"], input[id*="reorder"], input[name*="minimum"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/reorder.*level|minimum.*stock/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof reorderExists).toBe('boolean');
@@ -530,9 +750,17 @@ test.describe('Inventory Management', () => {
 
     // Look for stock take/count feature
     const stockTakeExists = await Promise.race([
-      page.getByRole('button', { name: /stock.*take|stock.*count|physical.*count/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="stock-take"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /stock.*take|stock.*count|physical.*count/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="stock-take"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof stockTakeExists).toBe('boolean');

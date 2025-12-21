@@ -1,51 +1,34 @@
-import React, { Component } from 'react';
-import { Line, Bar } from 'react-chartjs-2';
-import { Card, CardBody } from 'reactstrap';
+import React, { useState, useEffect } from 'react';
+import { Bar } from 'react-chartjs-2';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import './style.scss';
 
 let strings = new LocalizedStrings(data);
 
-class ProfitAndLossReport extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      profit_loss_report_data: {
-        labels: [],
-        datasets: [],
-      },
-      language: window['localStorage'].getItem('language'),
-      selectedMonths: '6',
-    };
-    this.bankAccountSelect = React.createRef();
-    this.dateRangeSelect = React.createRef();
-  }
+const ProfitAndLossReport = props => {
+  const { DashboardActions } = props;
+  const [language] = useState(window['localStorage'].getItem('language'));
+  const [profit_loss_report_data, setProfitLossReportData] = useState({
+    labels: [],
+    datasets: [],
+  });
+  const [selectedMonths, setSelectedMonths] = useState('6');
 
-  toggle = (tabPane, tab) => {
-    const newArray = this.state.activeTab.slice();
-    newArray[parseInt(tabPane, 10)] = tab;
-    this.setState({
-      activeTab: newArray,
-    });
-  };
-
-  componentDidMount = () => {
-    this.loadProfitLossReport(this.state.selectedMonths);
-  };
-
-  getBankAccountGraphData = (account, dateRange) => {
-    if (account && dateRange) {
-      this.props.DashboardActions.getBankAccountGraphData({ account, daterange: dateRange });
+  useEffect(() => {
+    if (DashboardActions) {
+      loadProfitLossReport(selectedMonths);
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language]);
 
-  loadProfitLossReport = range => {
-    this.props.DashboardActions.getProfitLossReport(range)
+  const loadProfitLossReport = range => {
+    DashboardActions.getProfitLossReport(range)
       .then(action => {
         // Redux Toolkit thunks return action objects
         if (action && action.type && action.type.includes('fulfilled')) {
-          this.getProfitLossGraph(action.payload);
+          getProfitLossGraph(action.payload);
         }
       })
       .catch(err => {
@@ -55,13 +38,13 @@ class ProfitAndLossReport extends Component {
       });
   };
 
-  handleRangeChange = event => {
+  const handleRangeChange = event => {
     const { value } = event.currentTarget;
-    this.setState({ selectedMonths: value });
-    this.loadProfitLossReport(value);
+    setSelectedMonths(value);
+    loadProfitLossReport(value);
   };
 
-  getProfitLossGraph = data => {
+  const getProfitLossGraph = data => {
     // Convert ApexCharts format to Chart.js format
     const chartData = {
       labels: data.label.labels || [],
@@ -93,85 +76,86 @@ class ProfitAndLossReport extends Component {
       ],
     };
 
-    this.setState({ profit_loss_report_data: chartData });
+    setProfitLossReportData(chartData);
   };
 
-  render() {
-    strings.setLanguage(this.state.language);
+  // Set language before using strings
+  useEffect(() => {
+    strings.setLanguage(language);
+  }, [language]);
 
-    const chartOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: {
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+      mode: 'index',
+      intersect: false,
+    },
+    plugins: {
+      tooltip: {
+        enabled: true,
         mode: 'index',
         intersect: false,
       },
-      plugins: {
-        tooltip: {
-          enabled: true,
-          mode: 'index',
-          intersect: false,
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: {
+          usePointStyle: true,
+          padding: 15,
         },
-        legend: {
+      },
+    },
+    scales: {
+      x: {
+        grid: {
           display: true,
-          position: 'bottom',
-          labels: {
-            usePointStyle: true,
-            padding: 15,
-          },
+          color: 'rgba(125, 138, 156, 0.3)',
+          drawBorder: true,
+        },
+        ticks: {
+          display: true,
         },
       },
-      scales: {
-        x: {
-          grid: {
-            display: true,
-            color: 'rgba(125, 138, 156, 0.3)',
-            drawBorder: true,
-          },
-          ticks: {
-            display: true,
-          },
+      y: {
+        beginAtZero: true,
+        grid: {
+          display: true,
+          color: 'rgba(125, 138, 156, 0.3)',
+          drawBorder: true,
         },
-        y: {
-          beginAtZero: true,
-          grid: {
-            display: true,
-            color: 'rgba(125, 138, 156, 0.3)',
-            drawBorder: true,
-          },
-          ticks: {
-            display: true,
-          },
+        ticks: {
+          display: true,
         },
       },
-    };
+    },
+  };
 
-    return (
-      <div className="animated fadeIn ">
-        <Card className="cash-card card-margin">
-          <CardBody className="card-body-padding">
-            <div className="flex-wrapper title-bottom-border">
-              <h1 className="mb-2 card-h1">{strings.ProfitLoss}</h1>
-              <div className="card-header-actions ml-auto">
-                <select
-                  className="form-control"
-                  value={this.state.selectedMonths}
-                  onChange={this.handleRangeChange}
-                >
-                  <option value="3">Last 3 Months</option>
-                  <option value="6">Last 6 Months</option>
-                  <option value="12">Last 12 Months</option>
-                </select>
-              </div>
+  return (
+    <div className="animated fadeIn">
+      <Card className="cash-card card-margin">
+        <CardHeader>
+          <div className="flex-wrapper title-bottom-border pb-3">
+            <CardTitle className="text-xl font-bold" style={{ color: '#2064d8' }}>
+              {strings.ProfitLoss}
+            </CardTitle>
+            <div className="card-header-actions ml-auto">
+              <select className="form-control" value={selectedMonths} onChange={handleRangeChange}>
+                <option value="3">Last 3 Months</option>
+                <option value="6">Last 6 Months</option>
+                <option value="12">Last 12 Months</option>
+              </select>
             </div>
-            <div className="chart-wrapper" style={{ height: '320px' }}>
-              <Bar data={this.state.profit_loss_report_data} options={chartOptions} />
-            </div>
-          </CardBody>
-        </Card>
-      </div>
-    );
-  }
-}
+          </div>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="d-block" style={{ height: '320px' }}>
+            <Bar data={profit_loss_report_data} options={chartOptions} />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
 
 export default ProfitAndLossReport;
