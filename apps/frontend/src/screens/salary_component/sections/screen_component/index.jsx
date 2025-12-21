@@ -23,6 +23,7 @@ import * as SalaryComponentActions from '../../actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Ban, CircleDot, HelpCircle, RefreshCw, Trash2, Wallet } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -365,7 +366,7 @@ const SalaryComponentScreen = props => {
                 <Row>
                   <Col lg={12}>
                     <div className="h4 mb-0 d-flex align-items-center">
-                      <i className="nav-icon fas fa-money-check" />
+                      <Wallet className="h-4 w-4" />
                       <span className="ml-2">
                         {isCreated ? strings.UpdateSalaryComponent : strings.CreateSalaryComponent}
                       </span>
@@ -455,10 +456,10 @@ const SalaryComponentScreen = props => {
                                 <Label htmlFor="componentType">
                                   <span className="text-danger">* </span>
                                   {strings.ComponentType}
-                                  <i
+                                  <HelpCircle
                                     id="componentTypeTooltip"
-                                    className="fa fa-question-circle ml-1"
-                                  ></i>
+                                    className="h-4 w-4 inline"
+                                  />
                                   <UncontrolledTooltip
                                     placement="right"
                                     target="componentTypeTooltip"
@@ -642,7 +643,7 @@ const SalaryComponentScreen = props => {
                                 className="btn-square"
                                 onClick={deleteComponent}
                               >
-                                <i className="fa fa-trash"></i> {strings.Delete}
+                                <Trash2 className="h-4 w-4" /> {strings.Delete}
                               </Button>
                             )}
                           </FormGroup>
@@ -656,7 +657,7 @@ const SalaryComponentScreen = props => {
                                   onClick={handleCreateClick}
                                   disabled={disabled}
                                 >
-                                  <i className="fa fa-dot-circle-o"></i> {strings.Create}
+                                  <CircleDot className="h-4 w-4" /> {strings.Create}
                                 </Button>
                                 {!salaryStructureModalCard && (
                                   <Button
@@ -666,7 +667,7 @@ const SalaryComponentScreen = props => {
                                     onClick={handleCreateAndMoreClick}
                                     disabled={disabled}
                                   >
-                                    <i className="fa fa-refresh"></i> {strings.CreateandMore}
+                                    <RefreshCw className="h-4 w-4" /> {strings.CreateandMore}
                                   </Button>
                                 )}
                               </>
@@ -678,7 +679,7 @@ const SalaryComponentScreen = props => {
                                 onClick={handleUpdateClick}
                                 disabled={disabled}
                               >
-                                <i className="fa fa-dot-circle-o"></i> {strings.Update}
+                                <CircleDot className="h-4 w-4" /> {strings.Update}
                               </Button>
                             )}
                             <Button
@@ -689,7 +690,7 @@ const SalaryComponentScreen = props => {
                                 else history.push('/admin/payroll/config', { tabNo: '5' });
                               }}
                             >
-                              <i className="fa fa-ban"></i> {strings.Cancel}
+                              <Ban className="h-4 w-4" /> {strings.Cancel}
                             </Button>
                           </FormGroup>
                         </Col>

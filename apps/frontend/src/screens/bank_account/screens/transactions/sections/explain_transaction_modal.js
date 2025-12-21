@@ -20,6 +20,7 @@ import { CommonActions } from 'services/global';
 import './style.scss';
 import { data } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { X, Plus, CircleDot } from 'lucide-react';
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -324,10 +325,10 @@ class ExplainTransactionModal extends React.Component {
               <h2>
                 {strings.Explain + ' ' + strings.Transaction}# {`${selectedData.referenceNo}`}
               </h2>
-              <i
-                className="fa fa-close close-btn"
+              <X
+                className="h-4 w-4 cursor-pointer close-btn"
                 onClick={() => closeExplainTransactionModal()}
-              ></i>
+              />
             </div>
           </ModalHeader>
           <ModalBody>
@@ -356,7 +357,7 @@ class ExplainTransactionModal extends React.Component {
                       onClick={this.addRow}
                       disabled={currentBalance === 0 ? true : false}
                     >
-                      <i className="fa fa-plus"></i>
+                      <Plus className="h-4 w-4" />
                     </Button>
                   </div>
                 </Col>
@@ -463,7 +464,7 @@ class ExplainTransactionModal extends React.Component {
                             onClick={() => this.deleteRow(item.id)}
                             disabled={explainList.length === 1}
                           >
-                            <i className="fa fa-close"></i>
+                            <X className="h-4 w-4" />
                           </button>
                         </div>
                       </div>
@@ -522,7 +523,7 @@ class ExplainTransactionModal extends React.Component {
               }}
               disabled={currentBalance === transactionAmount ? true : false}
             >
-              <i className="fa fa-dot-circle-o"></i> {strings.Explain}
+              <CircleDot className="h-4 w-4" /> {strings.Explain}
             </Button>
           </ModalFooter>
         </Modal>

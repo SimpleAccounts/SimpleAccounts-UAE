@@ -18,6 +18,7 @@ import * as CreateOpeningBalancesActions from './actions';
 import { selectOptionsFactory, selectStyles } from 'utils';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { HelpCircle, CircleDot, Ban, Scale } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -233,7 +234,7 @@ const CreateOpeningBalance = ({
               <Card>
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="fas fa-balance-scale" />
+                    <Scale className="h-5 w-5" />
                     <span className="ml-2">{strings.NewOpeningBalance}</span>
                   </div>
                 </CardHeader>
@@ -254,7 +255,8 @@ const CreateOpeningBalance = ({
                                 <Label htmlFor="transactionCategoryBalanceId">
                                   <span className="text-danger">* </span>
                                   {strings.TransactionCategory}
-                                  <div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
+                                  <div className="tooltip-icon ml-1">
+                                    <HelpCircle className="h-4 w-4 inline" />
                                     <span className="tooltiptext">
                                       This list will only include categories for which an opening
                                       balance has not been created.
@@ -399,7 +401,7 @@ const CreateOpeningBalance = ({
                                   }
                                 }}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Creating...' : strings.Create}
                               </Button>
 
@@ -411,7 +413,7 @@ const CreateOpeningBalance = ({
                                   history.push('/admin/accountant/opening-balance');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Row>

@@ -8,6 +8,7 @@ import LocalizedStrings from 'react-localization';
 import '../style.scss';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions';
 import * as CTReportActions from '../actions';
+import { CheckCheck, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -91,7 +92,7 @@ const DeleteModal = props => {
               deleteById(current_report_id);
             }}
           >
-            <i className="fas fa-check-double mr-1"></i> Yes
+            <CheckCheck className="h-4 w-4" /> Yes
           </Button>
           <Button
             color="secondary"
@@ -100,7 +101,7 @@ const DeleteModal = props => {
               closeModal(false);
             }}
           >
-            <i className="fa fa-ban mr-1"></i> No
+            <Ban className="h-4 w-4" /> No
           </Button>
         </ModalFooter>
       </Modal>

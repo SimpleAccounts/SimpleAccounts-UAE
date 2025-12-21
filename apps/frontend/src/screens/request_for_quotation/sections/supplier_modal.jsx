@@ -21,7 +21,7 @@ import { toast } from 'sonner';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { Button as ShadcnButton } from '@/components/ui/button';
-import { ChevronUp } from 'lucide-react';
+import { Ban, ChevronUp, CircleDot, IdCard } from 'lucide-react';
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
 
@@ -183,7 +183,7 @@ const SupplierModal = ({
             <Row>
               <Col lg={12}>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="nav-icon fas fa-id-card-alt" />
+                  <IdCard className="h-4 w-4" />
                   <span className="ml-2">{strings.CreateSupplier}</span>
                 </div>
               </Col>
@@ -806,7 +806,7 @@ const SupplierModal = ({
           </ModalBody>
           <ModalFooter>
             <Button color="primary" type="submit" className="btn-square" disabled={isSubmitting}>
-              <i className="fa fa-dot-circle-o"></i>
+              <CircleDot className="h-4 w-4" />
               {isSubmitting ? 'Creating...' : strings.Create}
             </Button>
             &nbsp;
@@ -815,7 +815,7 @@ const SupplierModal = ({
               className="btn-square"
               onClick={() => closeSupplierModal(false)}
             >
-              <i className="fa fa-ban"></i>
+              <Ban className="h-4 w-4" />
               {strings.Cancel}
             </Button>
           </ModalFooter>

@@ -25,6 +25,7 @@ import { CommonActions } from 'services/global';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { selectStyles } from 'utils';
+import { AreaChart, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -304,7 +305,7 @@ const DetailChartAccount = ({
               <Card>
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="nav-icon fas fa-area-chart" />
+                    <AreaChart className="h-4 w-4" />
                     <span className="ml-2"> Update Chart Of Account </span>
                   </div>
                 </CardHeader>
@@ -387,7 +388,7 @@ const DetailChartAccount = ({
                                 disabled={disabled1}
                                 onClick={deleteChartAccount}
                               >
-                                <i className="fa fa-trash"></i>{' '}
+                                <Trash2 className="h-4 w-4" />{' '}
                                 {disabled1 ? 'Deleting...' : strings.Delete}
                               </Button>
                             </FormGroup>
@@ -399,7 +400,7 @@ const DetailChartAccount = ({
                                 className="btn-square mr-3"
                                 disabled={disabled}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Updating...' : strings.Update}
                               </Button>
                               <Button
@@ -411,7 +412,7 @@ const DetailChartAccount = ({
                                   history.push('/admin/master/chart-account');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

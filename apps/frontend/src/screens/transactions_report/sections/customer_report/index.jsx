@@ -11,6 +11,7 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import './style.scss';
 import { selectOptionsFactory } from 'utils';
+import { Download, Search } from 'lucide-react';
 
 const ranges = {
   'This Week': [dayjs().startOf('week'), dayjs().endOf('week')],
@@ -128,7 +129,7 @@ const CustomerReport = () => {
                   <FormGroup>
                     <ButtonGroup className="mr-3">
                       <Button color="success" className="btn-square" onClick={() => {}}>
-                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                        <Download className="h-4 w-4 mr-1" />
                         Export to CSV
                       </Button>
                     </ButtonGroup>
@@ -179,7 +180,7 @@ const CustomerReport = () => {
                     type="button"
                     onClick={getSelectedData}
                   >
-                    <i className="fa glyphicon glyphicon-export fa-search mr-1" />
+                    <Search className="h-4 w-4 mr-1" />
                     Search
                   </Button>
                 </Col>

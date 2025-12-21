@@ -18,6 +18,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
+import { MoreVertical } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {};
@@ -192,7 +193,7 @@ class ReportTables extends React.Component {
             boxShadow: 'none',
           }}
         >
-          <i className="fa fa-ellipsis-v" />
+          <MoreVertical className="h-4 w-4" />
         </DropdownToggle>
         <DropdownMenu>
           <div className="column-dropdown p-2">

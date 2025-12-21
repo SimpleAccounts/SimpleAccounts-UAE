@@ -36,6 +36,7 @@ import { DesignationModal } from 'screens/payrollemp/sections';
 import { data } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
 import { selectOptionsFactory } from 'utils';
+import { Plus, CircleDot, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -880,7 +881,7 @@ const UpdateEmployeePersonal = () => {
                                   />
                                 </div>
                                 <Button type="button" onClick={() => setOpenDesignationModal(true)}>
-                                  <i className="fa fa-plus"></i>
+                                  <Plus className="h-4 w-4" />
                                 </Button>
                               </div>
                             </div>
@@ -1189,7 +1190,7 @@ const UpdateEmployeePersonal = () => {
                 <div className="row mt-5">
                   <div className="col-lg-12 text-right">
                     <Button type="submit" className="mr-2">
-                      <i className="fa fa-dot-circle-o mr-1"></i> {strings.Update}
+                      <CircleDot className="h-4 w-4" /> {strings.Update}
                     </Button>
                     <Button
                       type="button"
@@ -1200,7 +1201,7 @@ const UpdateEmployeePersonal = () => {
                         })
                       }
                     >
-                      <i className="fa fa-ban mr-1"></i> {strings.Cancel}
+                      <Ban className="h-4 w-4" /> {strings.Cancel}
                     </Button>
                   </div>
                 </div>

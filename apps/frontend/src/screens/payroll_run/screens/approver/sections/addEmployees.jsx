@@ -11,6 +11,7 @@ import { data as languageData } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
 import '../style.scss';
+import { UserCircle, CheckCheck, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -134,7 +135,7 @@ function AddEmployeesModal({ openModal, closeModal, employee_list }) {
       <Modal isOpen={openModal} className="modal-success contact-modal">
         <ModalHeader toggle={() => closeModal(false)}>
           <div className="h4 mb-0 d-flex align-items-center">
-            <i className="nav-icon fas fa-user-tie" />
+            <UserCircle className="h-4 w-4" />
             <span className="ml-2">Select Employees</span>
           </div>
         </ModalHeader>
@@ -165,11 +166,11 @@ function AddEmployeesModal({ openModal, closeModal, employee_list }) {
         </ModalBody>
         <ModalFooter>
           <Button color="primary" className="btn-square" disabled={selectedRows.length === 0}>
-            <i className="fas fa-check-double mr-1"></i>
+            <CheckCheck className="h-4 w-4" />
             Add employees
           </Button>
           <Button color="secondary" className="btn-square" onClick={() => closeModal(false)}>
-            <i className="fa fa-ban"></i> {strings.Cancel}
+            <Ban className="h-4 w-4" /> {strings.Cancel}
           </Button>
         </ModalFooter>
       </Modal>

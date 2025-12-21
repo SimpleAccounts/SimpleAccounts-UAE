@@ -18,7 +18,7 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 import * as QuotationDetailsAction from './actions';
 import * as RequestForQuotationAction from '../../actions';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
@@ -47,6 +47,7 @@ import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { FileText, Trash2, Plus, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   const contact_list = state.request_for_quotation.contact_list;
@@ -670,7 +671,7 @@ const DetailQuotation = ({
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center justify-content-between">
                         <div className="d-flex align-items-center">
-                          <i className="fas fa-file-invoice" />
+                          <FileText className="h-4 w-4" />
                           <span className="ml-2">{strings.QuotationDetails}</span>
                         </div>
                         <Button
@@ -678,7 +679,7 @@ const DetailQuotation = ({
                           className="btn-square"
                           onClick={() => setDialog(true)}
                         >
-                          <i className="fa fa-trash"></i> {strings.Delete}
+                          <Trash2 className="h-4 w-4" /> {strings.Delete}
                         </Button>
                       </div>
                     </Col>
@@ -779,7 +780,7 @@ const DetailQuotation = ({
                               className="btn-square mr-3"
                               onClick={openProductModalHandler}
                             >
-                              <i className="fa fa-plus"></i> {strings.Addproduct}
+                              <Plus className="h-4 w-4" /> {strings.Addproduct}
                             </Button>
                           </Col>
 
@@ -792,22 +793,11 @@ const DetailQuotation = ({
                               <span className="mr-4">{strings.Exclusive}</span>
                             )}
                             <Switch
-                              value={taxType}
                               checked={taxType}
-                              onChange={newTaxType => {
+                              onCheckedChange={newTaxType => {
                                 setTaxType(newTaxType);
                                 updateAmount(data);
                               }}
-                              onColor="#2064d8"
-                              onHandleColor="#2693e6"
-                              handleDiameter={25}
-                              uncheckedIcon={false}
-                              checkedIcon={false}
-                              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                              height={20}
-                              width={48}
-                              className="react-switch "
                             />
                             {taxType === true ? (
                               <span style={{ color: '#0069d9' }} className="ml-4">
@@ -924,7 +914,7 @@ const DetailQuotation = ({
                                   }
                                 }}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Updating...' : strings.Update}
                               </Button>
                               <Button
@@ -934,7 +924,7 @@ const DetailQuotation = ({
                                   history.push('/admin/income/quotation');
                                 }}
                               >
-                                <i className="fa fa-ban mr-1"></i>
+                                <Ban className="h-4 w-4" />
                                 {strings.Cancel}
                               </Button>
                             </FormGroup>

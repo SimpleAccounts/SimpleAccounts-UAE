@@ -29,6 +29,7 @@ import './style.scss';
 import { data as languageData } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { UserCircle, HelpCircle, UserX, Ban, FileText, Target } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -347,7 +348,7 @@ const PayrollApproverScreen = () => {
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-user-tie" />
+                        <UserCircle className="h-4 w-4" />
                         <span className="ml-2"> Approve Payroll</span>
                       </div>
                     </Col>
@@ -432,7 +433,7 @@ const PayrollApproverScreen = () => {
                                       generateSifFile();
                                     }}
                                   >
-                                    <i className="fas fa-file-invoice-dollar"></i>
+                                    <FileText className="h-4 w-4" />
                                     {'  '}Download SIF file
                                   </Button>
                                 )}
@@ -442,7 +443,7 @@ const PayrollApproverScreen = () => {
                                 <hr />
                                 <div className="mb-2" style={{ marginLeft: '2.2rem' }}>
                                   {strings.SendPayslip}
-                                  <i id="sendMAilTip" className="fa fa-question-circle ml-1"></i>
+                                  <HelpCircle id="sendMAilTip" className="h-4 w-4 ml-1 inline" />
                                   <UncontrolledTooltip placement="right" target="sendMAilTip">
                                     {strings.APaySlipWillBeMailedToTheSelectedEmployees}
                                   </UncontrolledTooltip>
@@ -528,7 +529,7 @@ const PayrollApproverScreen = () => {
                                         }
                                       }}
                                     >
-                                      <i className="fas fa-user-times mr-1"></i>
+                                      <UserX className="h-4 w-4" />
                                       Reject Payroll
                                     </Button>
                                   )}
@@ -545,7 +546,7 @@ const PayrollApproverScreen = () => {
                                         }
                                       }}
                                     >
-                                      <i className="fas fa-user-times mr-1"></i>
+                                      <UserX className="h-4 w-4" />
                                       Void This Payroll
                                     </Button>
                                   )}
@@ -563,7 +564,7 @@ const PayrollApproverScreen = () => {
                                       className="btn-square mt-5 pull-right "
                                       onClick={() => approveAndRunPayroll()}
                                     >
-                                      <i className="fas fa-bullseye mr-1"></i>
+                                      <Target className="h-4 w-4 mr-1" />
                                       Approve & Run Payroll
                                     </Button>
                                   )}
@@ -578,7 +579,7 @@ const PayrollApproverScreen = () => {
                                     }
                                   }}
                                 >
-                                  <i className="fa fa-ban"></i> {strings.Cancel}
+                                  <Ban className="h-4 w-4" /> {strings.Cancel}
                                 </Button>
                               </ButtonGroup>
                             </Col>

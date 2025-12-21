@@ -23,6 +23,7 @@ import { data } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import '../style.scss';
 import * as FTAAuditReportActions from '../actions';
+import { CircleDot, Ban } from 'lucide-react';
 
 let strings = new LocalizedStrings(data);
 
@@ -395,7 +396,7 @@ const VatSettingModal = ({ openModal, closeModal }) => {
           </ModalBody>
           <ModalFooter>
             <Button color="primary" type="submit" className="btn-square" disabled={disabled}>
-              <i className="fa fa-dot-circle-o"></i> {disabled ? 'Saving...' : strings.Save}
+              <CircleDot className="h-4 w-4" /> {disabled ? 'Saving...' : strings.Save}
             </Button>
             &nbsp;
             <Button
@@ -406,7 +407,7 @@ const VatSettingModal = ({ openModal, closeModal }) => {
                 closeModal(false);
               }}
             >
-              <i className="fa fa-ban"></i> {strings.Cancel}
+              <Ban className="h-4 w-4" /> {strings.Cancel}
             </Button>
           </ModalFooter>
         </Form>

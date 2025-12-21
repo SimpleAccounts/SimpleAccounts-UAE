@@ -21,6 +21,7 @@ import { toast } from 'sonner';
 import { Button as ShadcnButton } from '@/components/ui/button';
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { IdCard, Plus, CircleDot, Ban, ChevronsUp } from 'lucide-react';
 
 let strings = new LocalizedStrings(data);
 
@@ -187,7 +188,7 @@ const SalaryComponentVariable = ({
             <Row>
               <Col lg={12}>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="nav-icon fas fa-id-card-alt" />
+                  <IdCard className="h-4 w-4" />
                   <span className="ml-2">{strings.CreateVariableComponent}</span>
                 </div>
               </Col>
@@ -235,7 +236,7 @@ const SalaryComponentVariable = ({
                     onClick={() => toggleShowDetails(true)}
                     disabled={showDetails === true}
                   >
-                    <i className="fa fa-plus"></i> {strings.AddNewComponent}
+                    <Plus className="h-4 w-4" /> {strings.AddNewComponent}
                   </Button>
                 </Col>
               </Row>
@@ -379,7 +380,7 @@ const SalaryComponentVariable = ({
                     aria-label="delete"
                     onClick={() => toggleShowDetails(false)}
                   >
-                    <i className="fa fa-angle-double-up" aria-hidden="true"></i>
+                    <ChevronsUp className="h-4 w-4" />
                   </ShadcnButton>
                 </Row>
               </div>
@@ -387,7 +388,7 @@ const SalaryComponentVariable = ({
           </ModalBody>
           <ModalFooter style={{ padding: '10px' }}>
             <Button type="submit" color="primary" className="btn-square mr-3" disabled={disabled}>
-              <i className="fa fa-dot-circle-o"></i> {disabled ? 'Creating...' : strings.Create}
+              <CircleDot className="h-4 w-4" /> {disabled ? 'Creating...' : strings.Create}
             </Button>
             <Button
               color="secondary"
@@ -396,7 +397,7 @@ const SalaryComponentVariable = ({
                 closeSalaryComponentVariable(false);
               }}
             >
-              <i className="fa fa-ban"></i> {strings.Cancel}
+              <Ban className="h-4 w-4" /> {strings.Cancel}
             </Button>
           </ModalFooter>
         </Form>

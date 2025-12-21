@@ -31,6 +31,7 @@ import LocalizedStrings from 'react-localization';
 import { InventoryHistoryModal } from './sections';
 import config from 'constants/config';
 import { DataTable } from '@/components/ui/data-table';
+import { Check, History } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -678,7 +679,7 @@ const DetailProduct = ({
                   updateReorderLevel(row);
                 }}
               >
-                <i className="fas fa-check"></i>
+                <Check className="h-4 w-4" />
               </Button>
             </div>
           )}
@@ -757,7 +758,7 @@ const DetailProduct = ({
               param([{ p_id: row.productId }, { s_id: row.supplierId }]);
             }}
           >
-            <i className="fa fa-history fa-lg"></i>
+            <History className="h-4 w-4" />
           </Button>
         </div>
       </Row>

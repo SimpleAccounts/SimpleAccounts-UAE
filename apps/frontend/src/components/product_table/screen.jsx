@@ -7,6 +7,7 @@ import { optionFactory, selectOptionsFactory, selectStyles } from 'utils';
 import './style.scss';
 import { Textarea } from '@/components/ui/textarea';
 import { DataTable } from '@/components/ui/data-table';
+import { Trash2 } from 'lucide-react';
 
 const ProductTable = ({
   data,
@@ -128,7 +129,7 @@ const ProductTable = ({
                 updateAmount(newData);
               }}
             >
-              <i className="fas fa-trash"></i>
+              <Trash2 className="h-4 w-4" />
             </Button>
           ),
       },

@@ -13,6 +13,7 @@ import { Currency, Loader } from 'components';
 import { DataTable } from '@/components/ui/data-table';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { History } from 'lucide-react';
 
 const VatPaymentRecord = () => {
   const dispatch = useDispatch();
@@ -143,7 +144,8 @@ const VatPaymentRecord = () => {
                         paddingLeft: '15px',
                       }}
                     >
-                      <i className="fa fa-history mr-2"></i>VAT Payment Record
+                      <History className="h-4 w-4" />
+                      VAT Payment Record
                     </p>
                   </div>
                   <div className="d-flex">

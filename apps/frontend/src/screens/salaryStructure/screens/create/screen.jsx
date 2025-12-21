@@ -24,6 +24,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { UserCircle, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const regEx = /^[0-9]+$/;
 const regExAlpha = /^[a-zA-Z ]+$/;
@@ -157,7 +158,7 @@ const CreateSalaryStructure = props => {
                 <Row>
                   <Col lg={12}>
                     <div className="h4 mb-0 d-flex align-items-center">
-                      <i className="nav-icon fas fa-user-tie" />
+                      <UserCircle className="h-4 w-4" />
                       <span className="ml-2">{strings.CreateSalaryStructure}</span>
                     </div>
                   </Col>
@@ -227,7 +228,7 @@ const CreateSalaryStructure = props => {
                               disabled={disabled}
                               onClick={handleCreateClick}
                             >
-                              <i className="fa fa-dot-circle-o"></i>{' '}
+                              <CircleDot className="h-4 w-4" />{' '}
                               {disabled ? 'Creating...' : strings.Create}
                             </Button>
                             <Button
@@ -237,7 +238,7 @@ const CreateSalaryStructure = props => {
                               disabled={disabled}
                               onClick={handleCreateAndMoreClick}
                             >
-                              <i className="fa fa-refresh"></i>{' '}
+                              <RefreshCw className="h-4 w-4" />{' '}
                               {disabled ? 'Creating...' : strings.CreateandMore}
                             </Button>
                             <Button
@@ -247,7 +248,7 @@ const CreateSalaryStructure = props => {
                                 props.history.push('/admin/payroll/config', { tabNo: '2' });
                               }}
                             >
-                              <i className="fa fa-ban"></i> {strings.Cancel}
+                              <Ban className="h-4 w-4" /> {strings.Cancel}
                             </Button>
                           </FormGroup>
                         </Col>

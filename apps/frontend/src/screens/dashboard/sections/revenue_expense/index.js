@@ -4,6 +4,7 @@ import { Nav, NavItem, NavLink, TabContent, TabPane, Card, CardBody, Button } fr
 // import { DateRangePicker2 } from 'components'
 // import dayjs from '@/utils/date'
 import './style.scss';
+import { Plus } from 'lucide-react';
 
 const expenseOption = {
   plugins: {
@@ -206,7 +207,7 @@ class RevenueAndExpense extends Component {
                       className="btn-square"
                       onClick={() => this.props.history.push(`/admin/expense/expense/create`)}
                     >
-                      <i className="fas fa-plus mr-1" />
+                      <Plus className="h-4 w-4" />
                       New Expense
                     </Button>
                   </div>

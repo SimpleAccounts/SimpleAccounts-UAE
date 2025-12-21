@@ -18,7 +18,7 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 import * as CreditNotesDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as CreditNotesActions from '../../actions';
@@ -40,6 +40,7 @@ import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Textarea } from '@/components/ui/textarea';
+import { HandCoins, Upload, X, Trash2, CircleDot, Ban } from 'lucide-react';
 
 // Zod validation schema
 const detailCreditNoteSchema = z
@@ -817,7 +818,7 @@ const DetailCreditNote = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-donate" />
+                        <HandCoins className="h-4 w-4" />
                         <span className="ml-2">{strings.UpdateCreditNote}</span>
                       </div>
                     </Col>
@@ -1323,7 +1324,7 @@ const DetailCreditNote = ({
                                         }}
                                         className="btn-square mr-3"
                                       >
-                                        <i className="fa fa-upload"></i> {strings.upload}
+                                        <Upload className="h-4 w-4" /> {strings.upload}
                                       </Button>
                                       <input
                                         id="fileInput"
@@ -1334,10 +1335,10 @@ const DetailCreditNote = ({
                                       />
                                       {fileName && (
                                         <div>
-                                          <i
-                                            className="fa fa-close"
+                                          <X
+                                            className="h-4 w-4 cursor-pointer"
                                             onClick={() => setFileName('')}
-                                          ></i>{' '}
+                                          />{' '}
                                           {fileName}
                                         </div>
                                       )}
@@ -1420,7 +1421,7 @@ const DetailCreditNote = ({
                                   disabled={disabled1}
                                   onClick={deleteInvoice}
                                 >
-                                  <i className="fa fa-trash"></i>{' '}
+                                  <Trash2 className="h-4 w-4" />{' '}
                                   {disabled1 ? 'Deleting...' : strings.Delete}
                                 </Button>
                               </FormGroup>
@@ -1435,7 +1436,7 @@ const DetailCreditNote = ({
                                       commonActions.fillManDatoryDetails();
                                   }}
                                 >
-                                  <i className="fa fa-dot-circle-o"></i>{' '}
+                                  <CircleDot className="h-4 w-4" />{' '}
                                   {disabled ? 'Updating...' : strings.Update}
                                 </Button>
                                 <Button
@@ -1450,7 +1451,7 @@ const DetailCreditNote = ({
                                     } else history.push('/admin/income/credit-notes');
                                   }}
                                 >
-                                  <i className="fa fa-ban"></i> {strings.Cancel}
+                                  <Ban className="h-4 w-4" /> {strings.Cancel}
                                 </Button>
                               </FormGroup>
                             </Col>

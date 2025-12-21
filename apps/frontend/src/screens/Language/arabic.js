@@ -17,6 +17,7 @@ const ar = {
   ContactUs: 'اتصل بنا',
   RecieptNumber: 'عدد إيصال',
   Hey: 'يا',
+  Search: 'بحث',
 
   //Sidebar
   Dashboard: 'لوحة القيادة',

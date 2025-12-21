@@ -28,6 +28,7 @@ import { Loader } from 'components';
 
 import * as ChartOfAccountActions from '../../chart_account/actions';
 import * as CreateChartOfAccountActions from '../../chart_account/screens/create/actions';
+import { UserCircle, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -181,7 +182,7 @@ const AddEmployeesModal = props => {
           <Row>
             <Col lg={12}>
               <div className="h4 mb-0 d-flex align-items-center">
-                <i className="nav-icon fas fa-user-tie" />
+                <UserCircle className="h-4 w-4" />
                 <span className="ml-2">Create Chart Of Account</span>
               </div>
             </Col>
@@ -275,7 +276,7 @@ const AddEmployeesModal = props => {
                           className="btn-square mr-3"
                           disabled={disabled}
                         >
-                          <i className="fa fa-dot-circle-o"></i>{' '}
+                          <CircleDot className="h-4 w-4" />{' '}
                           {disabled ? 'Creating...' : strings.Create}
                         </Button>
 
@@ -286,7 +287,7 @@ const AddEmployeesModal = props => {
                             closeModal(false);
                           }}
                         >
-                          <i className="fa fa-ban"></i> Cancel
+                          <Ban className="h-4 w-4" /> Cancel
                         </Button>
                       </FormGroup>
                     </Form>

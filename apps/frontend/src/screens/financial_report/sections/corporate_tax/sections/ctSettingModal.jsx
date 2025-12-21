@@ -23,6 +23,7 @@ import '../style.scss';
 import { Loader } from 'components';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions';
 import * as CTReportActions from '../actions';
+import { CheckCheck, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -205,7 +206,7 @@ const CTSettingModal = props => {
             <Col>
               {!props.ctReport && (
                 <Button color="primary" className="btn-square " onClick={saveCTSettings}>
-                  <i className="fas fa-check-double mr-1"></i>
+                  <CheckCheck className="h-4 w-4" />
                   {strings.Save}
                 </Button>
               )}
@@ -216,7 +217,7 @@ const CTSettingModal = props => {
                   closeModal(false);
                 }}
               >
-                <i className="fa fa-ban"></i> {strings.Cancel}
+                <Ban className="h-4 w-4" /> {strings.Cancel}
               </Button>
             </Col>
           </Row>

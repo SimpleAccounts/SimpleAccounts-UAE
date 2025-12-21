@@ -7,6 +7,7 @@ import './style.scss';
 import { data } from '../Language/index';
 import LocalizedStrings from 'react-localization';
 import config from 'constants/config';
+import { FileText } from 'lucide-react';
 // Use import instead of require for Vite compatibility
 import Financial from 'assets/images/reports/Out line.png';
 import Vat from 'assets/images/reports/vat.png';
@@ -59,7 +60,7 @@ class FinancialReport extends React.Component {
               <Row>
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="nav-icon fas fa-file-contract" />
+                    <FileText className="h-5 w-5" />
                     <span className="ml-2"> {strings.Reports}</span>
                   </div>
                 </Col>

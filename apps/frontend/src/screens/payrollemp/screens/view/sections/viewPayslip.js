@@ -11,6 +11,7 @@ import dayjs from '@/utils/date';
 import { Currency } from 'components';
 // Use import instead of require for Vite compatibility
 import { ToWords } from 'to-words';
+import { FileText, Printer, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -136,12 +137,12 @@ class PaySlipModal extends React.Component {
                           this.exportPDFWithComponent();
                         }}
                       >
-                        <i className="fa fa-file-pdf-o"></i>
+                        <FileText className="h-4 w-4" />
                       </Button>
                       {/* <ReactToPrint
 												trigger={() => (
 													<Button type="button" className=" print-btn-cont">
-														<i className="fa fa-print"></i>
+														<Printer className="h-4 w-4" />
 													</Button>
 												)}
 												content={() => this.componentRef}
@@ -154,7 +155,7 @@ class PaySlipModal extends React.Component {
                           cursor: 'pointer',
                         }}
                       >
-                        <i className="fa fa-print"></i>
+                        <Printer className="h-4 w-4" />
                       </Button>
                       <Button
                         size="lg"
@@ -724,7 +725,7 @@ class PaySlipModal extends React.Component {
                 closeModal(false);
               }}
             >
-              <i className="fa fa-ban"></i> {strings.Cancel}
+              <Ban className="h-4 w-4" /> {strings.Cancel}
             </Button>
           </ModalFooter>
         </Modal>

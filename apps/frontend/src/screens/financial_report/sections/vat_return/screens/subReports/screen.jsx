@@ -11,6 +11,7 @@ import { Currency, Loader } from 'components';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './style.scss';
+import { History, ArrowLeftCircle } from 'lucide-react';
 
 const SubReports = () => {
   const dispatch = useDispatch();
@@ -161,11 +162,11 @@ const SubReports = () => {
           <CardHeader>
             <div className="flex justify-between items-center w-full">
               <div className="flex items-center gap-2">
-                <i className="fa fa-history"></i>
+                <History className="h-4 w-4" />
                 <span>{location.state.description}</span>
               </div>
               <Button color="primary" onClick={() => navigate(-1)}>
-                Back <i className="far fa-arrow-alt-circle-left ml-1"></i>
+                Back <ArrowLeftCircle className="h-4 w-4" />
               </Button>
             </div>
           </CardHeader>

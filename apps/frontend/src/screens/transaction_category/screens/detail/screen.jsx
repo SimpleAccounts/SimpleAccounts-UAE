@@ -24,6 +24,7 @@ import { Loader } from 'components';
 import './style.scss';
 
 import * as TransactionActions from './actions';
+import { Trash2, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {};
@@ -465,12 +466,12 @@ const DetailTransactionCategory = ({ transactionActions, history, location }) =>
                           >
                             <FormGroup>
                               <Button type="button" color="danger" className="btn-square">
-                                <i className="fa fa-trash"></i> Delete
+                                <Trash2 className="h-4 w-4" /> Delete
                               </Button>
                             </FormGroup>
                             <FormGroup className="text-right">
                               <Button type="submit" color="primary" className="btn-square mr-3">
-                                <i className="fa fa-dot-circle-o"></i> Save
+                                <CircleDot className="h-4 w-4" /> Save
                               </Button>
                               <Button
                                 type="button"
@@ -480,7 +481,7 @@ const DetailTransactionCategory = ({ transactionActions, history, location }) =>
                                   history.push('/admin/settings/transaction-category');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> Cancel
+                                <Ban className="h-4 w-4" /> Cancel
                               </Button>
                             </FormGroup>
                           </Col>

@@ -7,6 +7,7 @@ import * as SalaryTemplateActions from './actions';
 import { CommonActions } from 'services/global';
 import './style.scss';
 import { toast } from 'sonner';
+import { LayoutGrid } from 'lucide-react';
 
 const SalaryTemplate = () => {
   const dispatch = useDispatch();
@@ -91,7 +92,7 @@ const SalaryTemplate = () => {
             <Row>
               <Col lg={12}>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="fas fa-object-group" />
+                  <LayoutGrid className="h-4 w-4" />
                   <span className="ml-2">Salary Templates</span>
                 </div>
               </Col>

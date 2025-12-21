@@ -18,6 +18,7 @@ import { DataTable } from '@/components/ui/data-table';
 import './style.scss';
 import { toast } from 'sonner';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
+import { History } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -142,7 +143,7 @@ const InventorySummary = () => {
             }
           }}
         >
-          <i className="fa fa-history fa-lg"></i>
+          <History className="h-4 w-4" />
         </Button>
       </div>
     );
@@ -235,7 +236,7 @@ const InventorySummary = () => {
                     <FormGroup>
                       <ButtonGroup className="mr-3">
                         <Button color="primary" className="btn-square" onClick={onBtnExport}>
-                          <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                          <Download className="h-4 w-4 mr-1" />
                           {strings.Export}
                         </Button>
                       </ButtonGroup>

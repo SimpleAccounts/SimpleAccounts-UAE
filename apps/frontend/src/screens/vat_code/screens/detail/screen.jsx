@@ -27,6 +27,7 @@ import PropTypes from 'prop-types';
 import { Input as ShadcnInput } from '@/components/ui/input';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Ban, CircleDot, HelpCircle, Trash2 } from 'lucide-react';
 
 function NumberFormatCustom(props) {
   const { inputRef, onChange, ...other } = props;
@@ -225,7 +226,7 @@ const DetailVatCode = ({ vatDetailActions, vatActions, commonActions, history, l
                             <Label htmlFor="name">
                               <span className="text-danger">* </span>
                               Tax Category Name
-                              <i id="VatCodeTooltip" className="fa fa-question-circle ml-1"></i>
+                              <HelpCircle id="VatCodeTooltip" className="h-4 w-4 inline" />
                               <UncontrolledTooltip placement="right" target="VatCodeTooltip">
                                 Tax Category Name – Unique identifier Tax category name
                               </UncontrolledTooltip>
@@ -257,7 +258,7 @@ const DetailVatCode = ({ vatDetailActions, vatActions, commonActions, history, l
                             <Label htmlFor="vat">
                               <span className="text-danger">* </span>
                               Percentage %
-                              <i id="VatPercentTooltip" className="fa fa-question-circle ml-1"></i>
+                              <HelpCircle id="VatPercentTooltip" className="h-4 w-4 inline" />
                               <UncontrolledTooltip placement="right" target="VatPercentTooltip">
                                 Percentage – Tx percentage charged by your country
                               </UncontrolledTooltip>
@@ -306,7 +307,7 @@ const DetailVatCode = ({ vatDetailActions, vatActions, commonActions, history, l
                                   disabled={disabled1}
                                   onClick={deleteVat}
                                 >
-                                  <i className="fa fa-trash"></i>{' '}
+                                  <Trash2 className="h-4 w-4" />{' '}
                                   {disabled1 ? 'Deleting...' : strings.Delete}
                                 </Button>
                               </FormGroup>
@@ -318,7 +319,7 @@ const DetailVatCode = ({ vatDetailActions, vatActions, commonActions, history, l
                                   className="btn-square mr-3"
                                   disabled={disabled}
                                 >
-                                  <i className="fa fa-dot-circle-o"></i>{' '}
+                                  <CircleDot className="h-4 w-4" />{' '}
                                   {disabled ? 'Updating...' : strings.Update}
                                 </Button>
                                 <Button
@@ -329,7 +330,7 @@ const DetailVatCode = ({ vatDetailActions, vatActions, commonActions, history, l
                                     history.push('/admin/master/vat-category');
                                   }}
                                 >
-                                  <i className="fa fa-ban"></i> {strings.Cancel}
+                                  <Ban className="h-4 w-4" /> {strings.Cancel}
                                 </Button>
                               </FormGroup>
                             </Col>

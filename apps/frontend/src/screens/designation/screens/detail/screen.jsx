@@ -27,6 +27,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Ban, CircleDot, HelpCircle, Trash2, UserCircle } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -350,7 +351,7 @@ const DetailDesignation = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-user-tie" />
+                        <UserCircle className="h-4 w-4" />
                         <span className="ml-2">{strings.UpdateDesignation}</span>
                       </div>
                     </Col>
@@ -427,10 +428,10 @@ const DetailDesignation = ({
                                   <Label htmlFor="designationType">
                                     <span className="text-danger">* </span>
                                     {strings.DesignationType}
-                                    <i
+                                    <HelpCircle
                                       id="designationTypeTooltip"
-                                      className="fa fa-question-circle ml-1"
-                                    ></i>
+                                      className="h-4 w-4 inline"
+                                    />
                                     <UncontrolledTooltip
                                       placement="right"
                                       target="designationTypeTooltip"
@@ -499,13 +500,13 @@ const DetailDesignation = ({
                                   className="btn-square"
                                   onClick={deleteDesignation}
                                 >
-                                  <i className="fa fa-trash"></i> {strings.Delete}
+                                  <Trash2 className="h-4 w-4" /> {strings.Delete}
                                 </Button>
                               )}
                             </FormGroup>
                             <FormGroup className="text-right">
                               <Button type="submit" color="primary" className="btn-square mr-3">
-                                <i className="fa fa-dot-circle-o"></i> {strings.Update}
+                                <CircleDot className="h-4 w-4" /> {strings.Update}
                               </Button>
                               <Button
                                 type="button"
@@ -517,7 +518,7 @@ const DetailDesignation = ({
                                   });
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

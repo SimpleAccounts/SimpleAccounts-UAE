@@ -1,7 +1,20 @@
 import React from 'react';
 import './style.css';
-import { Circles } from 'react-loader-spinner';
 import { withNavigation } from 'utils/withNavigation';
+
+// Simple inline spinner component to replace react-loader-spinner
+const Spinner = ({ color = '#2064d8', size = 50 }) => (
+  <div
+    style={{
+      width: size,
+      height: size,
+      border: `3px solid ${color}20`,
+      borderTop: `3px solid ${color}`,
+      borderRadius: '50%',
+      animation: 'spin 1s linear infinite',
+    }}
+  />
+);
 
 // const styles = {
 //   display: "flex",
@@ -240,7 +253,7 @@ class ImageUploader extends React.Component {
           {this.renderIcon()}
           {this.renderLabel()}
           <div className="errorsContainer">{this.renderErrors()}</div>
-          {loadFile ? <Circles color="#2064d8" height={50} width={50} /> : null}
+          {loadFile ? <Spinner color="#2064d8" size={50} /> : null}
           <button
             type={this.props.buttonType}
             className={'chooseFileButton ' + this.props.buttonClassName}

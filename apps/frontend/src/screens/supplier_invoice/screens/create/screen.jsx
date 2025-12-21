@@ -41,12 +41,13 @@ import {
   Lists,
   selectStyles,
 } from 'utils';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { AddressComponent } from 'screens/contact/sections';
+import { FileText, Plus, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   const contact_list = state.supplier_invoice.contact_list;
@@ -597,8 +598,6 @@ const CreateSupplierInvoice = ({
 
         if (createMore) {
           setCreateMore(false);
-          setExchangeRate('');
-          setProducttype([]);
           setData([
             {
               id: 0,
@@ -751,7 +750,7 @@ const CreateSupplierInvoice = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fas fa-file-invoice" />
+                        <FileText className="h-4 w-4" />
                         <span className="ml-2">{strings.CreateInvoice}</span>
                       </div>
                     </Col>
@@ -849,7 +848,7 @@ const CreateSupplierInvoice = ({
                               className="btn-square mr-3 mb-3"
                               onClick={openSupplierModalHandler}
                             >
-                              <i className="fa fa-plus"></i> {strings.AddASupplier}
+                              <Plus className="h-4 w-4" /> {strings.AddASupplier}
                             </Button>
                           </Col>
 
@@ -1001,7 +1000,7 @@ const CreateSupplierInvoice = ({
                               className="btn-square mr-3"
                               onClick={openProductModalHandler}
                             >
-                              <i className="fa fa-plus"></i> {strings.Addproduct}
+                              <Plus className="h-4 w-4" /> {strings.Addproduct}
                             </Button>
                           </Col>
 
@@ -1014,22 +1013,11 @@ const CreateSupplierInvoice = ({
                               <span className="mr-4">{strings.Exclusive}</span>
                             )}
                             <Switch
-                              value={taxType}
                               checked={taxType}
-                              onChange={newTaxType => {
+                              onCheckedChange={newTaxType => {
                                 setTaxType(newTaxType);
                                 updateAmount(data);
                               }}
-                              onColor="#2064d8"
-                              onHandleColor="#2693e6"
-                              handleDiameter={25}
-                              uncheckedIcon={false}
-                              checkedIcon={false}
-                              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                              height={20}
-                              width={48}
-                              className="react-switch "
                             />
                             {taxType === true ? (
                               <span style={{ color: '#0069d9' }} className="ml-4">
@@ -1147,7 +1135,7 @@ const CreateSupplierInvoice = ({
                                   setCreateMore(false);
                                 }}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Creating...' : strings.Create}
                               </Button>
 
@@ -1170,7 +1158,7 @@ const CreateSupplierInvoice = ({
                                   setCreateMore(true);
                                 }}
                               >
-                                <i className="fa fa-refresh mr-1"></i>
+                                <RefreshCw className="h-4 w-4" />
                                 {disabled ? 'Creating...' : strings.CreateandMore}
                               </Button>
 
@@ -1187,7 +1175,7 @@ const CreateSupplierInvoice = ({
                                   }
                                 }}
                               >
-                                <i className="fa fa-ban mr-1"></i>
+                                <Ban className="h-4 w-4" />
                                 {strings.Cancel}
                               </Button>
                             </FormGroup>

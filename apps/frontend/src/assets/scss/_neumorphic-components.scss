@@ -1,0 +1,740 @@
+// ============================================
+// NEUMORPHIC COMPONENT STYLES
+// Inspired by Themesberg Neumorphism UI
+// ============================================
+
+@import 'variables';
+@import 'mixins';
+
+// ============================================
+// BUTTONS
+// ============================================
+
+.btn-neu {
+  @include neu-button;
+}
+
+.btn-neu-primary {
+  @include neu-button-primary;
+}
+
+.btn-neu-secondary {
+  @include neu-button($secondary);
+  background: $secondary;
+  color: $text-white;
+
+  &:hover {
+    background: lighten($secondary, 5%);
+  }
+
+  &:active {
+    background: darken($secondary, 5%);
+  }
+}
+
+.btn-neu-success {
+  @include neu-button($success);
+  background: $success;
+  color: $text-white;
+
+  &:hover {
+    background: lighten($success, 5%);
+  }
+
+  &:active {
+    background: darken($success, 5%);
+  }
+}
+
+.btn-neu-danger {
+  @include neu-button($danger);
+  background: $danger;
+  color: $text-white;
+
+  &:hover {
+    background: lighten($danger, 5%);
+  }
+
+  &:active {
+    background: darken($danger, 5%);
+  }
+}
+
+.btn-neu-warning {
+  @include neu-button($warning);
+  background: $warning;
+  color: $text-dark;
+
+  &:hover {
+    background: lighten($warning, 5%);
+  }
+
+  &:active {
+    background: darken($warning, 5%);
+  }
+}
+
+.btn-neu-outline {
+  @include neu-raised('sm');
+  border-radius: $btn-border-radius;
+  padding: $btn-padding-y $btn-padding-x;
+  font-weight: $btn-font-weight;
+  color: $primary;
+  border: 2px solid $neu-border;
+  transition: $transition-all;
+
+  &:hover {
+    border-color: $primary;
+    box-shadow: $shadow-soft;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    @include neu-pressed('sm');
+    transform: translateY(0);
+  }
+}
+
+.btn-neu-icon {
+  @include neu-raised('xs');
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: $text-muted;
+  transition: $transition-all;
+
+  &:hover {
+    box-shadow: $shadow-soft-sm;
+    color: $primary;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    @include neu-pressed('xs');
+    transform: translateY(0);
+  }
+}
+
+// Button sizes
+.btn-neu-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.btn-neu-lg {
+  padding: 0.875rem 1.75rem;
+  font-size: 1.125rem;
+}
+
+// ============================================
+// FORM INPUTS
+// ============================================
+
+.input-neu {
+  @include neu-input;
+  width: 100%;
+}
+
+.select-neu {
+  @include neu-select;
+  width: 100%;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2366799e' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+.textarea-neu {
+  @include neu-input;
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+}
+
+// Input with icon
+.input-group-neu {
+  position: relative;
+
+  .input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $text-light;
+    pointer-events: none;
+  }
+
+  .input-neu {
+    padding-left: 2.75rem;
+  }
+
+  &.icon-right {
+    .input-icon {
+      left: auto;
+      right: 1rem;
+    }
+
+    .input-neu {
+      padding-left: $input-padding-x;
+      padding-right: 2.75rem;
+    }
+  }
+}
+
+// Form label
+.label-neu {
+  display: block;
+  margin-bottom: $spacer-sm;
+  font-weight: 600;
+  color: $text-dark;
+  font-size: 0.875rem;
+}
+
+// Form group
+.form-group-neu {
+  margin-bottom: $spacer-lg;
+}
+
+// Checkbox
+.checkbox-neu {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
+  input[type='checkbox'] {
+    @include neu-pressed('xs');
+    width: 20px;
+    height: 20px;
+    border-radius: $border-radius-xs;
+    appearance: none;
+    cursor: pointer;
+    margin-right: $spacer-sm;
+    position: relative;
+    transition: $transition-all;
+
+    &:checked {
+      background: $primary;
+      box-shadow: $shadow-soft-xs;
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 7px;
+        top: 3px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+    }
+
+    &:focus {
+      box-shadow:
+        $shadow-inset-sm,
+        0 0 0 3px rgba($primary, 0.15);
+    }
+  }
+
+  span {
+    color: $text-dark;
+    font-size: 0.875rem;
+  }
+}
+
+// Radio
+.radio-neu {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
+  input[type='radio'] {
+    @include neu-pressed('xs');
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    appearance: none;
+    cursor: pointer;
+    margin-right: $spacer-sm;
+    position: relative;
+    transition: $transition-all;
+
+    &:checked {
+      background: $neu-bg;
+      box-shadow: $shadow-inset-sm;
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: $primary;
+        box-shadow: $shadow-soft-xs;
+      }
+    }
+
+    &:focus {
+      box-shadow:
+        $shadow-inset-sm,
+        0 0 0 3px rgba($primary, 0.15);
+    }
+  }
+
+  span {
+    color: $text-dark;
+    font-size: 0.875rem;
+  }
+}
+
+// Toggle switch
+.switch-neu {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:checked + .switch-slider {
+      background: $primary;
+
+      &::before {
+        transform: translateX(24px);
+      }
+    }
+
+    &:focus + .switch-slider {
+      box-shadow:
+        $shadow-inset-sm,
+        0 0 0 3px rgba($primary, 0.15);
+    }
+  }
+
+  .switch-slider {
+    @include neu-pressed('sm');
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: $border-radius-pill;
+    transition: $transition-all;
+
+    &::before {
+      content: '';
+      position: absolute;
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: $neu-bg;
+      border-radius: 50%;
+      box-shadow: $shadow-soft-xs;
+      transition: $transition-all;
+    }
+  }
+}
+
+// ============================================
+// CARDS
+// ============================================
+
+.card-neu {
+  @include neu-card;
+}
+
+.card-neu-hover {
+  @include neu-card-hover;
+}
+
+.card-neu-flat {
+  @include neu-flat;
+  border-radius: $card-border-radius;
+  padding: $card-padding;
+}
+
+.card-neu-pressed {
+  @include neu-pressed;
+  border-radius: $card-border-radius;
+  padding: $card-padding;
+}
+
+.card-header-neu {
+  padding: $spacer-md $card-padding;
+  border-bottom: 1px solid rgba($neu-border, 0.5);
+  font-weight: 600;
+  color: $text-dark;
+}
+
+.card-footer-neu {
+  padding: $spacer-md $card-padding;
+  border-top: 1px solid rgba($neu-border, 0.5);
+}
+
+// ============================================
+// DROPDOWNS
+// ============================================
+
+.dropdown-neu {
+  @include neu-dropdown;
+}
+
+.dropdown-item-neu {
+  @include neu-dropdown-item;
+}
+
+.dropdown-divider-neu {
+  height: 1px;
+  background: rgba($neu-border, 0.5);
+  margin: $spacer-sm 0;
+}
+
+// ============================================
+// MODALS
+// ============================================
+
+.modal-neu {
+  @include neu-modal;
+  max-width: 500px;
+  width: 90%;
+  padding: $spacer-xl;
+}
+
+.modal-overlay-neu {
+  @include neu-modal-overlay;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-header-neu {
+  margin-bottom: $spacer-lg;
+
+  h2,
+  h3 {
+    font-weight: 700;
+    color: $text-dark;
+    margin: 0;
+  }
+}
+
+.modal-footer-neu {
+  margin-top: $spacer-xl;
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacer-md;
+}
+
+// ============================================
+// TABLES
+// ============================================
+
+.table-neu {
+  @include neu-table;
+}
+
+.table-container-neu {
+  @include neu-raised;
+  border-radius: $border-radius-md;
+  overflow: hidden;
+}
+
+// ============================================
+// NAVIGATION
+// ============================================
+
+.nav-neu {
+  display: flex;
+  gap: $spacer-sm;
+}
+
+.nav-item-neu {
+  @include neu-nav-item;
+}
+
+.nav-item-sub-neu {
+  @include neu-nav-item-sub;
+}
+
+// ============================================
+// TABS
+// ============================================
+
+.tabs-neu {
+  @include neu-tabs;
+}
+
+.tab-neu {
+  @include neu-tab;
+}
+
+// ============================================
+// BADGES
+// ============================================
+
+.badge-neu {
+  @include neu-badge;
+}
+
+.badge-neu-primary {
+  @include neu-badge($primary);
+}
+
+.badge-neu-success {
+  @include neu-badge($success);
+}
+
+.badge-neu-warning {
+  @include neu-badge($warning);
+}
+
+.badge-neu-danger {
+  @include neu-badge($danger);
+}
+
+.badge-neu-info {
+  @include neu-badge($info);
+}
+
+// ============================================
+// ALERTS
+// ============================================
+
+.alert-neu {
+  @include neu-alert($info);
+  position: relative;
+}
+
+.alert-neu-success {
+  @include neu-alert($success);
+}
+
+.alert-neu-warning {
+  @include neu-alert($warning);
+}
+
+.alert-neu-danger {
+  @include neu-alert($danger);
+}
+
+// ============================================
+// PROGRESS BARS
+// ============================================
+
+.progress-neu {
+  @include neu-progress;
+}
+
+// ============================================
+// TOOLTIPS
+// ============================================
+
+.tooltip-neu {
+  @include neu-tooltip;
+}
+
+// ============================================
+// AVATARS
+// ============================================
+
+.avatar-neu {
+  @include neu-raised('xs');
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &.avatar-sm {
+    width: 32px;
+    height: 32px;
+  }
+
+  &.avatar-lg {
+    width: 56px;
+    height: 56px;
+  }
+
+  &.avatar-xl {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+// ============================================
+// DIVIDERS
+// ============================================
+
+.divider-neu {
+  @include neu-divider;
+}
+
+// ============================================
+// PAGINATION
+// ============================================
+
+.pagination-neu {
+  display: flex;
+  gap: $spacer-sm;
+
+  .page-item {
+    @include neu-raised('xs');
+    width: 36px;
+    height: 36px;
+    border-radius: $border-radius-sm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $text-muted;
+    font-weight: 500;
+    cursor: pointer;
+    transition: $transition-all;
+
+    &:hover {
+      color: $primary;
+      box-shadow: $shadow-soft-sm;
+    }
+
+    &.active {
+      @include neu-pressed('xs');
+      color: $primary;
+      font-weight: 600;
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ============================================
+// BREADCRUMBS
+// ============================================
+
+.breadcrumb-neu {
+  @include neu-flat;
+  display: flex;
+  align-items: center;
+  gap: $spacer-sm;
+  padding: $spacer-sm $spacer-md;
+  border-radius: $border-radius;
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    color: $text-muted;
+    font-size: 0.875rem;
+
+    a {
+      color: $primary;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &.active {
+      color: $text-dark;
+      font-weight: 500;
+    }
+
+    &:not(:last-child)::after {
+      content: '/';
+      margin-left: $spacer-sm;
+      color: $text-light;
+    }
+  }
+}
+
+// ============================================
+// SEARCH BAR
+// ============================================
+
+.search-neu {
+  position: relative;
+
+  .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $text-light;
+    pointer-events: none;
+  }
+
+  input {
+    @include neu-pressed('sm');
+    width: 100%;
+    padding: $input-padding-y $input-padding-x;
+    padding-left: 2.75rem;
+    border-radius: $border-radius-pill;
+
+    &:focus {
+      box-shadow:
+        $shadow-inset,
+        0 0 0 3px rgba($primary, 0.15);
+    }
+  }
+}
+
+// ============================================
+// UTILITY CLASSES
+// ============================================
+
+.neu-bg {
+  background: $neu-bg;
+}
+
+.neu-raised {
+  @include neu-raised;
+}
+
+.neu-raised-sm {
+  @include neu-raised('sm');
+}
+
+.neu-raised-lg {
+  @include neu-raised('lg');
+}
+
+.neu-pressed {
+  @include neu-pressed;
+}
+
+.neu-pressed-sm {
+  @include neu-pressed('sm');
+}
+
+.neu-flat {
+  @include neu-flat;
+}
+
+.neu-scrollbar {
+  @include neu-scrollbar;
+}

@@ -49,7 +49,8 @@ import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
+import { FileText, Plus, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -933,7 +934,7 @@ const DetailSupplierInvoice = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fas fa-file-invoice" />
+                        <FileText className="h-4 w-4" />
                         <span className="ml-2">{strings.UpdateInvoice}</span>
                       </div>
                     </Col>
@@ -1100,21 +1101,6 @@ const DetailSupplierInvoice = ({
                             }}
                             onChange={(field, value) => {
                               if (field === 'term') setTerm(value);
-                              else if (field === 'invoiceDate') {
-                                if (dayjs(value).isBefore(dayjs(companyVATRegistrationDate))) {
-                                  // setInvoiceBeforeVatRegistration(true);
-                                  resetProductTableValues(
-                                    watch('exchangeRate'),
-                                    watch('exchangeRate')
-                                  );
-                                } else {
-                                  // setInvoiceBeforeVatRegistration(false);
-                                  resetProductTableValues(
-                                    watch('exchangeRate'),
-                                    watch('exchangeRate')
-                                  );
-                                }
-                              }
                               setValue(field, value);
                             }}
                           />
@@ -1175,7 +1161,7 @@ const DetailSupplierInvoice = ({
                               className="btn-square mr-3"
                               onClick={openProductModalHandler}
                             >
-                              <i className="fa fa-plus"></i> {strings.Addproduct}
+                              <Plus className="h-4 w-4" /> {strings.Addproduct}
                             </Button>
                           </Col>
 
@@ -1188,22 +1174,11 @@ const DetailSupplierInvoice = ({
                               <span className="mr-4">{strings.Exclusive}</span>
                             )}
                             <Switch
-                              value={taxType}
                               checked={taxType}
-                              onChange={newTaxType => {
+                              onCheckedChange={newTaxType => {
                                 setTaxType(newTaxType);
                                 updateAmount(data);
                               }}
-                              onColor="#2064d8"
-                              onHandleColor="#2693e6"
-                              handleDiameter={25}
-                              uncheckedIcon={false}
-                              checkedIcon={false}
-                              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                              height={20}
-                              width={48}
-                              className="react-switch "
                             />
                             {taxType === true ? (
                               <span style={{ color: '#0069d9' }} className="ml-4">
@@ -1312,7 +1287,7 @@ const DetailSupplierInvoice = ({
                                 disabled={disabled1}
                                 onClick={deleteInvoice}
                               >
-                                <i className="fa fa-trash"></i>{' '}
+                                <Trash2 className="h-4 w-4" />{' '}
                                 {disabled1 ? 'Deleting...' : strings.Delete}
                               </Button>
                             </FormGroup>
@@ -1323,7 +1298,7 @@ const DetailSupplierInvoice = ({
                                 className="btn-square mr-3"
                                 disabled={disabled}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Updating...' : strings.Update}
                               </Button>
                               <Button
@@ -1334,7 +1309,7 @@ const DetailSupplierInvoice = ({
                                   history.push('/admin/expense/supplier-invoice');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

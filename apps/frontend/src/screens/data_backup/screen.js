@@ -2,10 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux'
 import { Card, CardHeader, CardBody, Button, Row, Col, Table } from 'reactstrap';
-import { ToastContainer } from 'sonner';
 import { Loader } from 'components';
 
 import './style.scss';
+import { HardDrive } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {};
@@ -34,7 +34,7 @@ class DataBackup extends React.Component {
           <Card>
             <CardHeader>
               <div className="h4 mb-0 d-flex align-items-center">
-                <i className="nav-icon fas fa-hdd-o" />
+                <HardDrive className="h-4 w-4" />
                 <span className="ml-2">Data Backup</span>
               </div>
             </CardHeader>

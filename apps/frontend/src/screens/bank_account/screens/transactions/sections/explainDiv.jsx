@@ -10,6 +10,7 @@ import { CommonActions } from 'services/global';
 import './style.scss';
 import { Loader } from 'components';
 import dayjs from '@/utils/date';
+import { Upload, CircleDot } from 'lucide-react';
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -495,7 +496,7 @@ const ExplainDiv = props => {
                             }}
                             className="btn-square mr-3"
                           >
-                            <i className="fa fa-upload"></i> Upload File
+                            <Upload className="h-4 w-4" /> Upload File
                           </Button>
                           <input
                             ref={fileInputRef}
@@ -590,7 +591,7 @@ const ExplainDiv = props => {
             <div className="col-lg-6">
               <div className="row align-items-center justify-content-lg-between ml-0">
                 <Button type="button" color="primary" className="btn-square" onClick={handleSubmit}>
-                  <i className="fa fa-dot-circle-o"></i> Explain
+                  <CircleDot className="h-4 w-4" /> Explain
                 </Button>
                 {!moreDetails ? (
                   <p className="moreDetails" onClick={() => setMoreDetails(true)}>

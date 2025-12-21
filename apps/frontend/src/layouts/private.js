@@ -1,4 +1,5 @@
 import React from 'react';
+import { AlertTriangle } from 'lucide-react';
 
 const PrivateRoute = ({ element, name, node }) => {
   console.log('[PrivateRoute Debug] Rendering route:', name, 'element:', element);
@@ -39,7 +40,7 @@ const PrivateRoute = ({ element, name, node }) => {
   return (
     <center>
       <div>
-        <i className="fas fa-exclamation-triangle fa-8x"></i>
+        <AlertTriangle className="h-4 w-4" />
         <br></br>
         <br></br>
         <b>You Are Not Allowed to view this page</b>

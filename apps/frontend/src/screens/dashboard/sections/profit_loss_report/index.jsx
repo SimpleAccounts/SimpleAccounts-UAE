@@ -164,7 +164,7 @@ class ProfitAndLossReport extends Component {
                 </select>
               </div>
             </div>
-            <div className="d-block" style={{ height: '320px' }}>
+            <div className="chart-wrapper" style={{ height: '320px' }}>
               <Bar data={this.state.profit_loss_report_data} options={chartOptions} />
             </div>
           </CardBody>

@@ -9,6 +9,7 @@ import './style.scss';
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { optionFactory, selectOptionsFactory } from 'utils';
+import { CircleDot, Ban } from 'lucide-react';
 
 const customStyles = {
   control: (base, state) => ({
@@ -413,7 +414,7 @@ const FilterComponent3 = props => {
                 style={{ marginTop: '15px' }}
                 onClick={handleRunReport}
               >
-                <i className="fa fa-dot-circle-o"></i> {strings.RunReport}
+                <CircleDot className="h-4 w-4" /> {strings.RunReport}
               </Button>
               <Button
                 color="secondary"
@@ -421,7 +422,7 @@ const FilterComponent3 = props => {
                 style={{ marginTop: '15px' }}
                 onClick={handleCancelClick}
               >
-                <i className="fa fa-ban pull"></i> {strings.Cancel}
+                <Ban className="h-4 w-4" /> {strings.Cancel}
               </Button>
             </FormGroup>
           </Col>

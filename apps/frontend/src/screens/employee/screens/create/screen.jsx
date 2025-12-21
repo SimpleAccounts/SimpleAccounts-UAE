@@ -25,6 +25,7 @@ import * as EmployeeActions from '../../actions';
 import * as EmployeeCreateActions from './actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
+import { UserCircle, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const regExBoth = /[a-zA-Z0-9]+$/;
 const regExAlpha = /^[a-zA-Z ]+$/;
@@ -189,7 +190,7 @@ const CreateEmployee = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-user-tie" />
+                        <UserCircle className="h-4 w-4" />
                         <span className="ml-2">Create Employee</span>
                       </div>
                     </Col>
@@ -589,7 +590,7 @@ const CreateEmployee = ({
                                 className="btn-square mr-3"
                                 onClick={() => setCreateMore(false)}
                               >
-                                <i className="fa fa-dot-circle-o"></i> Create
+                                <CircleDot className="h-4 w-4" /> Create
                               </Button>
                               <Button
                                 type="submit"
@@ -597,7 +598,7 @@ const CreateEmployee = ({
                                 className="btn-square mr-3"
                                 onClick={() => setCreateMore(true)}
                               >
-                                <i className="fa fa-refresh"></i> Create and More
+                                <RefreshCw className="h-4 w-4" /> Create and More
                               </Button>
                               <Button
                                 type="button"
@@ -607,7 +608,7 @@ const CreateEmployee = ({
                                   history.push('/admin/master/employee');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> Cancel
+                                <Ban className="h-4 w-4" /> Cancel
                               </Button>
                             </FormGroup>
                           </Col>

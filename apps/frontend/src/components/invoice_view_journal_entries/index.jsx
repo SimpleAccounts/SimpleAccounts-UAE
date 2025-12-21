@@ -9,6 +9,7 @@ import { data as languageData } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
+import { BookOpen } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -140,7 +141,7 @@ const InvoiceViewJournalEntries = ({
       <Card>
         <CardHeader>
           <div className="h4 mb-0 d-flex align-items-center">
-            <i className="fa fa-diamond" />
+            <BookOpen className="h-5 w-5" />
             <span className="ml-2">{strings.Journal}</span>
           </div>
         </CardHeader>

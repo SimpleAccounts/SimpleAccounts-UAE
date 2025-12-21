@@ -231,6 +231,7 @@ const DetailTransactionCategory = lazyLoad(() => import('./transaction_category/
 const UsersRoles = lazyLoad(() => import('./users_roles'));
 const CreateRole = lazyLoad(() => import('./users_roles/screens/create'));
 const UpdateRole = lazyLoad(() => import('./users_roles/screens/detail'));
+const ComponentLibrary = lazyLoad(() => import('./theme_reference'));
 const UnderConstruction = lazyLoad(() => import('./under_const'));
 const Notification = lazyLoad(() => import('./notification'));
 const DataBackup = lazyLoad(() => import('./data_backup'));
@@ -484,4 +485,5 @@ export {
   ViewDebitNote,
   DebitNoteDetailsReport,
   PayrollSettings,
+  ComponentLibrary,
 };

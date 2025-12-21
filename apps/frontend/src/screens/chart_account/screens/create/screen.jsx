@@ -25,6 +25,7 @@ import * as ChartOfAccontActions from '../../actions';
 import * as CreateChartOfAccontActions from './actions';
 import Select from 'react-select';
 import { selectStyles } from 'utils';
+import { AreaChart, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -216,7 +217,7 @@ const CreateChartAccount = ({
               <Card>
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="nav-icon fas fa-area-chart" />
+                    <AreaChart className="h-4 w-4" />
                     <span className="ml-2">Create Chart Of Account</span>
                   </div>
                 </CardHeader>
@@ -294,7 +295,7 @@ const CreateChartAccount = ({
                             disabled={disabled}
                             onClick={() => setCreateMore(false)}
                           >
-                            <i className="fa fa-dot-circle-o"></i>{' '}
+                            <CircleDot className="h-4 w-4" />{' '}
                             {disabled ? 'Creating...' : strings.Create}
                           </Button>
                           <Button
@@ -305,7 +306,7 @@ const CreateChartAccount = ({
                             disabled={disabled}
                             onClick={() => setCreateMore(true)}
                           >
-                            <i className="fa fa-refresh"></i>{' '}
+                            <RefreshCw className="h-4 w-4" />{' '}
                             {disabled ? 'Creating...' : strings.CreateandMore}
                           </Button>
                           <Button
@@ -316,7 +317,7 @@ const CreateChartAccount = ({
                               history.push('/admin/master/chart-account');
                             }}
                           >
-                            <i className="fa fa-ban"></i> {strings.Cancel}
+                            <Ban className="h-4 w-4" /> {strings.Cancel}
                           </Button>
                         </FormGroup>
                       </Form>

@@ -33,7 +33,7 @@ import {
   DropdownMenuContent as ShadcnDropdownMenuContent,
   DropdownMenuItem as ShadcnDropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Eye, Plus, Trash2 } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -151,7 +151,7 @@ const FtaAuditReport = () => {
       <ShadcnDropdownMenu>
         <ShadcnDropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <i className="fas fa-chevron-down" />
+            <ChevronDown className="h-4 w-4" />
           </Button>
         </ShadcnDropdownMenuTrigger>
         <ShadcnDropdownMenuContent align="end">
@@ -170,7 +170,7 @@ const FtaAuditReport = () => {
               });
             }}
           >
-            <i className="fas fa-eye mr-2" /> View
+            <Eye className="h-4 w-4" /> View
           </ShadcnDropdownMenuItem>
 
           <ShadcnDropdownMenuItem
@@ -178,7 +178,7 @@ const FtaAuditReport = () => {
               deleteReport(row.id);
             }}
           >
-            <i className="fas fa-trash mr-2" /> Delete
+            <Trash2 className="h-4 w-4" /> Delete
           </ShadcnDropdownMenuItem>
         </ShadcnDropdownMenuContent>
       </ShadcnDropdownMenu>
@@ -275,7 +275,7 @@ const FtaAuditReport = () => {
                         setOpenGenerateModal(true);
                       }}
                     >
-                      <i className="fas fa-plus"></i> Create FTA Audit Report
+                      <Plus className="h-4 w-4" /> Create FTA Audit Report
                     </Button>
                     <Button
                       color="primary"

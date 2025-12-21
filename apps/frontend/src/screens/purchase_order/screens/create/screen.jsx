@@ -1549,7 +1549,6 @@ const CreatePurchaseOrder = ({
           }}
           getCurrentProduct={e => {
             supplierInvoiceActions.getProductList();
-            getCurrentProduct(e);
           }}
           createProduct={ProductActions.createAndSaveProduct}
           vat_list={vat_list}

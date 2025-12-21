@@ -26,6 +26,7 @@ import * as EmployeeCreateActions from './actions';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
+import { UserCircle, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -198,7 +199,7 @@ const CreateEmployeeFinancial = ({
                 <Row>
                   <Col lg={12}>
                     <div className="h4 mb-0 d-flex align-items-center">
-                      <i className="nav-icon fas fa-user-tie" />
+                      <UserCircle className="h-4 w-4" />
                       <span className="ml-2">Create Financial</span>
                     </div>
                   </Col>
@@ -488,7 +489,7 @@ const CreateEmployeeFinancial = ({
                               onClick={() => setCreateMore(false)}
                               disabled={disabled}
                             >
-                              <i className="fa fa-dot-circle-o"></i> Create
+                              <CircleDot className="h-4 w-4" /> Create
                             </Button>
                             <Button
                               type="submit"
@@ -497,7 +498,7 @@ const CreateEmployeeFinancial = ({
                               onClick={() => setCreateMore(true)}
                               disabled={disabled}
                             >
-                              <i className="fa fa-refresh"></i> Create and More
+                              <RefreshCw className="h-4 w-4" /> Create and More
                             </Button>
                             <Button
                               type="button"
@@ -507,7 +508,7 @@ const CreateEmployeeFinancial = ({
                                 history.push('/admin/payroll/employee');
                               }}
                             >
-                              <i className="fa fa-ban"></i> Cancel
+                              <Ban className="h-4 w-4" /> Cancel
                             </Button>
                           </FormGroup>
                         </Col>

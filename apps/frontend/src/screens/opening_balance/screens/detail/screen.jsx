@@ -26,6 +26,7 @@ import * as DetailOpeningBalancesAction from './actions';
 import * as OpeningBalanceActions from '../../actions';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { CircleDot, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -320,7 +321,7 @@ const DetailOpeningBalance = ({
                                   color="primary"
                                   className="btn-square mr-3"
                                 >
-                                  <i className="fa fa-dot-circle-o"></i> {strings.Update}
+                                  <CircleDot className="h-4 w-4" /> {strings.Update}
                                 </Button>
                                 <Button
                                   type="button"
@@ -330,7 +331,7 @@ const DetailOpeningBalance = ({
                                     history.push('/admin/accountant/opening-balance');
                                   }}
                                 >
-                                  <i className="fa fa-ban"></i> {strings.Cancel}
+                                  <Ban className="h-4 w-4" /> {strings.Cancel}
                                 </Button>
                               </FormGroup>
                             </Col>

@@ -11,6 +11,7 @@ import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { LayoutGrid, Plus } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -99,7 +100,7 @@ const Designation = () => {
               <Row>
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="fas fa-object-group" />
+                    <LayoutGrid className="h-4 w-4" />
                     <span className="ml-2">{strings.Designations}</span>
                   </div>
                 </Col>
@@ -116,7 +117,7 @@ const Designation = () => {
                         style={{ marginBottom: '10px' }}
                         onClick={() => navigate(`/admin/payroll/config/createEmployeeDesignation`)}
                       >
-                        <i className="fas fa-plus mr-1" />
+                        <Plus className="h-4 w-4" />
                         {strings.NewDesignation}
                       </Button>
                     </div>

@@ -17,6 +17,7 @@ import { DateRangePicker2 } from 'components';
 import dayjs from '@/utils/date';
 import { DataTable } from '@/components/ui/data-table';
 import './style.scss';
+import { Search } from 'lucide-react';
 
 const vatOptions = [
   { value: 'input', label: 'Input' },
@@ -114,7 +115,7 @@ const ReportsFiling = () => {
                 <FormGroup>
                   <ButtonGroup className="mr-3">
                     <Button color="success" className="btn-square" onClick={() => {}}>
-                      <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                      <Download className="h-4 w-4 mr-1" />
                       Export to CSV
                     </Button>
                   </ButtonGroup>
@@ -153,7 +154,7 @@ const ReportsFiling = () => {
                 </Col>
                 <Col lg={1} className="mb-1">
                   <Button type="button" color="primary" className="btn-square" onClick={() => {}}>
-                    <i className="fa fa-search"></i>
+                    <Search className="h-4 w-4" />
                   </Button>
                 </Col>
               </Row>

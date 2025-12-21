@@ -31,6 +31,7 @@ import LocalizedStrings from 'react-localization';
 import { toast } from 'sonner';
 import { upperFirst } from 'lodash-es';
 import eye from 'assets/images/settings/eye.png';
+import { Users, CircleDot, Mail, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -375,7 +376,7 @@ const DetailUser = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-users" />
+                        <Users className="h-4 w-4" />
                         <span className="ml-2">{strings.UpdateUser}</span>
                       </div>
                     </Col>
@@ -747,7 +748,7 @@ const DetailUser = ({
                                 }
                               }}
                             >
-                              <i className="fa fa-dot-circle-o"></i>{' '}
+                              <CircleDot className="h-4 w-4" />{' '}
                               {disabled ? 'Updating...' : strings.Update}
                             </Button>
                             <Button
@@ -757,7 +758,7 @@ const DetailUser = ({
                               disabled={disabled}
                               onClick={sendInviteMail}
                             >
-                              <i className="fas fa-envelope"></i> Resend Invite
+                              <Mail className="h-4 w-4" /> Resend Invite
                             </Button>
                             <Button
                               type="button"
@@ -767,7 +768,7 @@ const DetailUser = ({
                                 history.push('/admin/settings/user');
                               }}
                             >
-                              <i className="fa fa-ban"></i>{' '}
+                              <Ban className="h-4 w-4" />{' '}
                               {disabled1 ? 'Deleting...' : strings.Cancel}
                             </Button>
                           </FormGroup>

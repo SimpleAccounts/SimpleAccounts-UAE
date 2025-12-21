@@ -6,6 +6,7 @@ import dayjs from '@/utils/date';
 import './style.scss';
 import { data } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { CircleDot, Ban, X } from 'lucide-react';
 
 let strings = new LocalizedStrings(data);
 
@@ -94,11 +95,11 @@ function FilterComponentForm({ generateReport, viewFilter }) {
               className="btn-square mr-3"
               onClick={handleSubmit(onSubmit)}
             >
-              <i className="fa fa-dot-circle-o"></i> {strings.RunReport}
+              <CircleDot className="h-4 w-4" /> {strings.RunReport}
             </Button>
 
             <Button color="secondary" className="btn-square" onClick={viewFilter}>
-              <i className="fa fa-ban"></i> {strings.Cancel}
+              <Ban className="h-4 w-4" /> {strings.Cancel}
             </Button>
           </FormGroup>
         </Col>
@@ -123,11 +124,11 @@ class FilterComponent extends Component {
           <CardHeader className="d-flex" style={{ justifyContent: 'space-between' }}>
             <div style={{ fontSize: '1.3rem', paddingLeft: '15px' }}>{strings.CustomizeReport}</div>
             <div>
-              <i
-                className="fa fa-close"
+              <X
+                className="h-4 w-4"
                 style={{ cursor: 'pointer' }}
                 onClick={this.props.viewFilter}
-              ></i>
+              />
             </div>
           </CardHeader>
           <CardBody>

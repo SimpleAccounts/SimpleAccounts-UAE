@@ -31,6 +31,21 @@ import { ToWords } from 'to-words';
 import invoiceimage from 'assets/images/invoice/invoice.png';
 import { toast } from 'sonner';
 import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  ChevronUp,
+  ChevronDown,
+  Pencil,
+  Plus,
+  Send,
+  ArrowRightCircle,
+  CheckCircle,
+  Ban,
+  Copy,
+  Eye,
+  XCircle,
+  Search,
+  RefreshCw,
+} from 'lucide-react';
 
 const toWords = new ToWords({
   localeCode: 'en-IN',
@@ -356,9 +371,9 @@ const PurchaseOrder = () => {
             >
               <DropdownToggle size="sm" color="primary" className="btn-brand icon">
                 {actionButtons[row.original.id] ? (
-                  <i className="fas fa-chevron-up" />
+                  <ChevronUp className="h-4 w-4" />
                 ) : (
-                  <i className="fas fa-chevron-down" />
+                  <ChevronDown className="h-4 w-4" />
                 )}
               </DropdownToggle>
               <DropdownMenu right>
@@ -370,7 +385,7 @@ const PurchaseOrder = () => {
                       })
                     }
                   >
-                    <i className="fas fa-edit" /> {strings.Edit}
+                    <Pencil className="h-4 w-4" /> {strings.Edit}
                   </DropdownItem>
                 )}
                 {row.original.status === 'Approved' && (
@@ -381,7 +396,7 @@ const PurchaseOrder = () => {
                       })
                     }
                   >
-                    <i className="fas fa-plus" /> {strings.CreateGRN}
+                    <Plus className="h-4 w-4" /> {strings.CreateGRN}
                   </DropdownItem>
                 )}
                 {row.original.status === 'Approved' && (
@@ -392,22 +407,23 @@ const PurchaseOrder = () => {
                       })
                     }
                   >
-                    <i className="fas fa-plus" /> {strings.CreateSupplierInvoice}
+                    <Plus className="h-4 w-4" /> {strings.CreateSupplierInvoice}
                   </DropdownItem>
                 )}
                 {row.original.status === 'Draft' && (
                   <DropdownItem onClick={() => sendMail(row.original)}>
-                    <i className="fas fa-send" /> {strings.Send}
+                    <Send className="h-4 w-4" /> {strings.Send}
                   </DropdownItem>
                 )}
                 {row.original.status === 'Draft' && (
                   <DropdownItem onClick={() => changeStatus(row.original.id, 'Sent')}>
-                    <i className="far fa-arrow-alt-circle-right"></i>Mark As Sent
+                    <ArrowRightCircle className="h-4 w-4" />
+                    Mark As Sent
                   </DropdownItem>
                 )}
                 {row.original.status === 'Sent' && (
                   <DropdownItem onClick={() => sendMail(row.original)}>
-                    <i className="fas fa-send" /> {strings.SendAgain}
+                    <Send className="h-4 w-4" /> {strings.SendAgain}
                   </DropdownItem>
                 )}
                 {row.original.status !== 'Draft' &&
@@ -415,7 +431,7 @@ const PurchaseOrder = () => {
                   row.original.status !== 'Closed' &&
                   row.original.status !== 'Invoiced' && (
                     <DropdownItem onClick={() => changeStatus(row.original.id, 'Approved')}>
-                      <i className="fa fa-check-circle-o" /> {strings.MarkAsApproved}
+                      <CheckCircle className="h-4 w-4" /> {strings.MarkAsApproved}
                     </DropdownItem>
                   )}
                 {row.original.status !== 'Draft' &&
@@ -423,7 +439,7 @@ const PurchaseOrder = () => {
                   row.original.status !== 'Closed' &&
                   row.original.status !== 'Invoiced' && (
                     <DropdownItem onClick={() => changeStatus(row.original.id, 'Rejected')}>
-                      <i className="fa fa-ban" /> {strings.MarkAsRejected}
+                      <Ban className="h-4 w-4" /> {strings.MarkAsRejected}
                     </DropdownItem>
                   )}
                 <DropdownItem
@@ -433,7 +449,7 @@ const PurchaseOrder = () => {
                     })
                   }
                 >
-                  <i className="fas fa-copy" /> {strings.CreateADuplicate}
+                  <Copy className="h-4 w-4" /> {strings.CreateADuplicate}
                 </DropdownItem>
                 <DropdownItem
                   onClick={() =>
@@ -442,14 +458,14 @@ const PurchaseOrder = () => {
                     })
                   }
                 >
-                  <i className="fas fa-eye" /> {strings.View}
+                  <Eye className="h-4 w-4" /> {strings.View}
                 </DropdownItem>
                 {(row.original.status === 'Approved' ||
                   row.original.status === 'Sent' ||
                   row.original.status === 'Rejected' ||
                   row.original.status === 'Invoiced') && (
                   <DropdownItem onClick={() => close(row.original.id, 'Closed')}>
-                    <i className="far fa-times-circle" /> {strings.Close}
+                    <XCircle className="h-4 w-4" /> {strings.Close}
                   </DropdownItem>
                 )}
               </DropdownMenu>
@@ -529,7 +545,7 @@ const PurchaseOrder = () => {
                           className="btn-square mr-1"
                           onClick={handleSearch}
                         >
-                          <i className="fa fa-search"></i>
+                          <Search className="h-4 w-4" />
                         </Button>
                         <Button
                           type="button"
@@ -537,7 +553,7 @@ const PurchaseOrder = () => {
                           className="btn-square"
                           onClick={clearAll}
                         >
-                          <i className="fa fa-refresh"></i>
+                          <RefreshCw className="h-4 w-4" />
                         </Button>
                       </Col>
                     </Row>
@@ -550,7 +566,7 @@ const PurchaseOrder = () => {
                         className="btn-square pull-right"
                         onClick={() => navigate(`/admin/expense/purchase-order/create`)}
                       >
-                        <i className="fas fa-plus mr-1" />
+                        <Plus className="h-4 w-4" />
                         {strings.AddNewPurchaseOrder}
                       </Button>
                     </div>

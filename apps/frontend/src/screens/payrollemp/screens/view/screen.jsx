@@ -30,6 +30,7 @@ import avatar from 'assets/images/avatars/default-avatar.jpg';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { upperFirst } from 'lodash-es';
+import { Eye, Send, Mail, Pencil, User, Trash2, CalendarMinus, Network } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -297,7 +298,7 @@ const ViewEmployee = () => {
                 viewPaySlip();
               }}
             >
-              <i className="fas fa-eye" /> {strings.View}
+              <Eye className="h-4 w-4" /> {strings.View}
             </Button>
 
             <Button
@@ -323,7 +324,7 @@ const ViewEmployee = () => {
                 });
               }}
             >
-              <i className="fas fa-send" /> {strings.Send}
+              <Send className="h-4 w-4" /> {strings.Send}
             </Button>
           </div>
         ),
@@ -354,7 +355,7 @@ const ViewEmployee = () => {
                       getEmployeeInviteEmail();
                     }}
                   >
-                    <i className="fas fa-envelope"></i> Resend Invite
+                    <Mail className="h-4 w-4" /> Resend Invite
                   </Button>
                   <Button
                     onClick={() => {
@@ -425,7 +426,7 @@ const ViewEmployee = () => {
                                     })
                                   }
                                 >
-                                  <i className="far fa-edit"></i>
+                                  <Pencil className="h-4 w-4" />
                                 </Button>
                               </Col>
                             </Row>
@@ -457,7 +458,7 @@ const ViewEmployee = () => {
                               <div className="mt-2 mb-2">
                                 <span id="mail">
                                   {' '}
-                                  <i className="far fa-envelope"></i>
+                                  <Mail className="h-4 w-4" />
                                   <UncontrolledTooltip placement="left" target="mail">
                                     E-mail
                                   </UncontrolledTooltip>
@@ -466,7 +467,7 @@ const ViewEmployee = () => {
                               </div>
                               <div className="mt-2 mb-2">
                                 <span id="Gender">
-                                  <i className="far fa-user"></i>
+                                  <User className="h-4 w-4" />
                                   <UncontrolledTooltip placement="left" target="Gender">
                                     Gender
                                   </UncontrolledTooltip>
@@ -475,7 +476,7 @@ const ViewEmployee = () => {
                               </div>
                               <div className="mt-2 mb-2">
                                 <span id="dojTooltip">
-                                  <i className="far fa-calendar-minus"></i>
+                                  <CalendarMinus className="h-4 w-4" />
                                   <UncontrolledTooltip placement="left" target="dojTooltip">
                                     Date of Joining
                                   </UncontrolledTooltip>{' '}
@@ -492,7 +493,7 @@ const ViewEmployee = () => {
                                   </UncontrolledTooltip>
                                   <span id="department">
                                     {' '}
-                                    <i className="fas fa-network-wired"></i> &nbsp;
+                                    <Network className="h-4 w-4" /> &nbsp;
                                     {employeeDetails.department ? employeeDetails.department : '-'}
                                   </span>
                                 </div>
@@ -527,7 +528,7 @@ const ViewEmployee = () => {
                                       })
                                     }
                                   >
-                                    <i className="far fa-edit"></i>
+                                    <Pencil className="h-4 w-4" />
                                   </Button>
                                 </Col>
                               </Row>
@@ -611,7 +612,7 @@ const ViewEmployee = () => {
                                         })
                                       }
                                     >
-                                      <i className="far fa-edit"></i>
+                                      <Pencil className="h-4 w-4" />
                                     </Button>
                                   </Col>
                                 </Row>
@@ -730,7 +731,8 @@ const ViewEmployee = () => {
                                   : ''
                               }
                             >
-                              <i className="far fa-edit">{strings.Edit}</i>
+                              <Pencil className="h-4 w-4 mr-1" />
+                              {strings.Edit}
                             </Button>
                           </Col>
                         </Row>
@@ -907,7 +909,7 @@ const ViewEmployee = () => {
                       disabled={disabled1}
                       onClick={deleteEmployee}
                     >
-                      <i className="fa fa-trash"></i> {disabled1 ? 'Deleting...' : strings.Delete}
+                      <Trash2 className="h-4 w-4" /> {disabled1 ? 'Deleting...' : strings.Delete}
                     </Button>
                   </FormGroup>
                 )}

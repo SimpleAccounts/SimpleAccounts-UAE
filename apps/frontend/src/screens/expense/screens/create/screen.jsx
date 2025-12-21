@@ -29,7 +29,8 @@ import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@/components/ui/checkbox';
-import Switch from 'react-switch';
+import { Switch } from '@/components/ui/switch';
+import { ArrowUpDown, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const SortExpenseCategory = list => {
   if (list.length !== 0) {
@@ -789,7 +790,7 @@ const CreateExpense = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fab fa-stack-exchange" />
+                        <ArrowUpDown className="h-4 w-4" />
                         <span className="ml-2">{strings.CreateExpense} </span>
                       </div>
                     </Col>
@@ -1052,20 +1053,10 @@ const CreateExpense = ({
 
                                     <Switch
                                       checked={isVatClaimable}
-                                      onChange={expenseTypeValue => {
+                                      onCheckedChange={expenseTypeValue => {
                                         setExpenseType(expenseTypeValue);
                                         setIsVatClaimable(!isVatClaimable);
                                       }}
-                                      onColor="#2064d8"
-                                      onHandleColor="#2693e6"
-                                      handleDiameter={25}
-                                      uncheckedIcon={false}
-                                      checkedIcon={false}
-                                      boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                      activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                      height={20}
-                                      width={48}
-                                      className="react-switch"
                                     />
                                     {isVatClaimable === true ? (
                                       <span style={{ color: '#0069d9' }} className="ml-4">
@@ -1272,19 +1263,9 @@ const CreateExpense = ({
                                     <span className="mr-4">{strings.ExclusiveVAT}</span>
                                     <Switch
                                       checked={!exclusiveVat}
-                                      onChange={checked => {
+                                      onCheckedChange={checked => {
                                         setExclusiveVat(!checked);
                                       }}
-                                      onColor="#2064d8"
-                                      onHandleColor="#2693e6"
-                                      handleDiameter={25}
-                                      uncheckedIcon={false}
-                                      checkedIcon={false}
-                                      boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                      activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                      height={20}
-                                      width={48}
-                                      className="react-switch "
                                     />
                                     <span className="ml-4">{strings.InclusiveVAT}</span>
                                   </FormGroup>
@@ -1450,7 +1431,7 @@ const CreateExpense = ({
                                     setCreateMore(false);
                                   }}
                                 >
-                                  <i className="fa fa-dot-circle-o"></i>{' '}
+                                  <CircleDot className="h-4 w-4" />{' '}
                                   {disabled ? 'Creating...' : strings.Create}
                                 </Button>
                                 {location.state && location.state.parentId ? (
@@ -1465,7 +1446,7 @@ const CreateExpense = ({
                                       setCreateMore(true);
                                     }}
                                   >
-                                    <i className="fa fa-refresh"></i>{' '}
+                                    <RefreshCw className="h-4 w-4" />{' '}
                                     {disabled ? 'Creating...' : strings.CreateandMore}
                                   </Button>
                                 )}
@@ -1480,7 +1461,7 @@ const CreateExpense = ({
                                     } else history.push('/admin/expense/expense');
                                   }}
                                 >
-                                  <i className="fa fa-ban"></i> {strings.Cancel}
+                                  <Ban className="h-4 w-4" /> {strings.Cancel}
                                 </Button>
                               </FormGroup>
                             </Col>

@@ -17,6 +17,7 @@ import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
+import { CreditCard } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -145,7 +146,7 @@ const ApplyToSupplierInvoice = () => {
             <Card>
               <CardHeader>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="fa fa-credit-card" />
+                  <CreditCard className="h-4 w-4" />
                   <span className="ml-2">
                     {strings.ApplyDebitsfrom} <u>{debitNoteNumber}</u>
                   </span>

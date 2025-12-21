@@ -26,6 +26,7 @@ import '../style.scss';
 import { Loader } from 'components';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions';
 import * as VatReportActions from '../actions';
+import { UserCircle, CheckCheck, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -128,7 +129,7 @@ const GenerateVatReportModal = props => {
           <Row>
             <Col lg={12}>
               <div className="h4 mb-0 d-flex align-items-center">
-                <i className="nav-icon fas fa-user-tie" />
+                <UserCircle className="h-4 w-4" />
                 <span className="ml-2">{strings.GenerateVATReport}</span>
               </div>
             </Col>
@@ -245,7 +246,7 @@ const GenerateVatReportModal = props => {
                 onClick={generateReport}
                 disabled={monthOption === '' || !monthlyDate}
               >
-                <i className="fas fa-check-double mr-1"></i>
+                <CheckCheck className="h-4 w-4" />
                 Generate
               </Button>
               <Button
@@ -255,7 +256,7 @@ const GenerateVatReportModal = props => {
                   closeModal(false);
                 }}
               >
-                <i className="fa fa-ban"></i> {strings.Cancel}
+                <Ban className="h-4 w-4" /> {strings.Cancel}
               </Button>
             </Col>
           </Row>

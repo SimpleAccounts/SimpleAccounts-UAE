@@ -29,6 +29,7 @@ import * as EmployeeDetailActions from './actions';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
+import { UserCircle, Trash2, CircleDot, Ban } from 'lucide-react';
 
 // Zod validation schema
 const detailEmploymentSchema = z
@@ -240,7 +241,7 @@ const DetailEmployeePayroll = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-user-tie" />
+                        <UserCircle className="h-4 w-4" />
                         <span className="ml-2">Update Employee</span>
                       </div>
                     </Col>
@@ -652,7 +653,7 @@ const DetailEmployeePayroll = ({
                                 className="btn-square"
                                 onClick={deleteEmployee}
                               >
-                                <i className="fa fa-trash"></i> Delete
+                                <Trash2 className="h-4 w-4" /> Delete
                               </Button>
                             </FormGroup>
                             <FormGroup className="text-right">
@@ -662,7 +663,7 @@ const DetailEmployeePayroll = ({
                                 color="primary"
                                 className="btn-square mr-3"
                               >
-                                <i className="fa fa-dot-circle-o"></i> Update
+                                <CircleDot className="h-4 w-4" /> Update
                               </Button>
                               <Button
                                 type="button"
@@ -672,7 +673,7 @@ const DetailEmployeePayroll = ({
                                   history.push('/admin/master/employee');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> Cancel
+                                <Ban className="h-4 w-4" /> Cancel
                               </Button>
                             </FormGroup>
                           </Col>

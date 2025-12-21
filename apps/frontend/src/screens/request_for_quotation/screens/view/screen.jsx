@@ -15,6 +15,7 @@ import { Card, CardBody, Table } from 'reactstrap';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { FileText, Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -121,12 +122,12 @@ const ViewRequestForQuotation = props => {
                   exportPDFWithComponent();
                 }}
               >
-                <i className="fa fa-file-pdf-o"></i>
+                <FileText className="h-4 w-4" />
               </Button>
               <ReactToPrint
                 trigger={() => (
                   <Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
-                    <i className="fa fa-print"></i>
+                    <Printer className="h-4 w-4" />
                   </Button>
                 )}
                 content={() => componentRef.current}
