@@ -34,6 +34,7 @@ import {
   Upload,
 } from 'lucide-react';
 import config from '../../constants/config';
+import logo from 'assets/images/brand/logo.png';
 
 // Icon mapping for navigation items
 const iconMap = {
@@ -148,21 +149,15 @@ export function Sidebar({
     >
       {/* Logo Section */}
       <div
-        className="flex items-center justify-between p-4 border-b"
+        className="flex items-center justify-center p-4 border-b"
         style={{ borderColor: theme.shadowDark }}
       >
-        <div className={`flex items-center gap-3 ${minimized ? 'justify-center w-full' : ''}`}>
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold flex-shrink-0"
-            style={{ background: gradients.primary, boxShadow: shadows.raised.sm }}
-          >
-            S
-          </div>
-          {!minimized && (
-            <span className="font-bold text-lg" style={{ color: theme.textPrimary }}>
-              Simple<span style={{ color: theme.primary }}>Accounts</span>
-            </span>
-          )}
+        <div className={`flex items-center justify-center ${minimized ? 'w-full' : ''}`}>
+          <img
+            src={logo}
+            alt="SimpleAccounts Logo"
+            className={`drop-shadow-sm transition-all duration-200 ${minimized ? 'h-8 w-auto' : 'h-12 w-auto'}`}
+          />
         </div>
       </div>
 
