@@ -31,22 +31,22 @@ jest.mock('../sections/email_template', () => ({
   default: () => <div data-testid="email-modal">Email Modal</div>,
 }));
 
-// Mock ServerDataTable
-jest.mock('@/components/ui/server-data-table', () => ({
-  ServerDataTable: ({ data, columns }) => (
-    <div data-testid="server-data-table">
+// Mock DataTable component (the actual component used in screen.jsx)
+jest.mock('@/components/ui/data-table', () => ({
+  DataTable: ({ data, columns }) => (
+    <div data-testid="data-table">
       <table>
         <thead>
           <tr>
-            {columns.map((col, idx) => (
-              <th key={idx}>{col.header}</th>
+            {columns && columns.map((col, idx) => (
+              <th key={idx}>{col.header || col.accessorKey}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {data.map((row, idx) => (
+          {data && data.map((row, idx) => (
             <tr key={idx}>
-              {columns.map((col, colIdx) => (
+              {columns && columns.map((col, colIdx) => (
                 <td key={colIdx}>{row[col.accessorKey] || ''}</td>
               ))}
             </tr>
@@ -155,7 +155,7 @@ describe('CustomerInvoice Component', () => {
     renderWithProviders(<CustomerInvoice history={mockHistory} />, store);
 
     await waitFor(() => {
-      const dataTable = screen.queryByTestId('server-data-table');
+      const dataTable = screen.queryByTestId('data-table');
       expect(dataTable).toBeInTheDocument();
     });
   });
