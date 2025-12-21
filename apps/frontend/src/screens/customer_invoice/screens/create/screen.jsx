@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useLocation } from 'react-router-dom';
 import {
   Card,
   CardHeader,
@@ -91,8 +92,18 @@ const createCustomerInvoiceSchema = z
     invoice_number: z.string().min(1, 'Invoice number is required'),
     contactId: z.union([
       z.string().min(1, 'Customer Name is required'),
+      z.number().positive('Customer Name is required'),
       z.object({ value: z.union([z.string(), z.number()]), label: z.string() }),
-    ]),
+    ]).refine(
+      val => {
+        // Accept string, number, or object with value
+        if (typeof val === 'string') return val.length > 0;
+        if (typeof val === 'number') return val > 0;
+        if (typeof val === 'object' && val !== null) return val.value !== undefined && val.value !== null && val.value !== '';
+        return false;
+      },
+      { message: 'Customer Name is required' }
+    ),
     term: z
       .union([
         z.string().min(1, 'Term is required'),
@@ -198,6 +209,7 @@ const CreateCustomerInvoice = ({
   currency_list_dropdown,
   vat_list,
   product_list,
+  customer_list,
   customer_list_dropdown,
   excise_list,
   country_list,
@@ -206,8 +218,11 @@ const CreateCustomerInvoice = ({
   currency_convert_list,
   companyDetails,
   history,
-  location,
+  location: locationProp,
 }) => {
+  // Use useLocation hook for React Router v6 compatibility
+  const locationFromHook = useLocation();
+  const location = locationProp || locationFromHook;
   const [loading, setLoading] = useState(true);
   const [loadingMsg, setLoadingMsg] = useState('Loading...');
   const [disabled, setDisabled] = useState(false);
@@ -464,12 +479,12 @@ const CreateCustomerInvoice = ({
       setLoading(false);
     }
 
-    if (location.state && location.state.quotationId) {
+    if (location?.state?.quotationId) {
       setQuotationId(location.state.quotationId);
       getQuotationDetails(location.state.quotationId);
     }
 
-    if (location.state && location.state.parentInvoiceId) {
+    if (location?.state?.parentInvoiceId) {
       setParentInvoiceId(location.state.parentInvoiceId);
       getParentInvoiceDetails(location.state.parentInvoiceId);
     }
@@ -878,23 +893,46 @@ const CreateCustomerInvoice = ({
   };
 
   const setContactDetails = customerID => {
-    setValue('contactId', customerID, { shouldValidate: true });
-    const customer = customer_list_dropdown.find(obj => obj.value === customerID);
+    if (!customerID) return;
+    
+    // Handle both number and object formats
+    const customerIdValue = typeof customerID === 'object' && customerID !== null ? customerID.value : customerID;
+    setValue('contactId', customerIdValue, { shouldValidate: true });
+    
+    // Find customer from original customer_list (not dropdown) to get full structure
+    if (!customer_list || !Array.isArray(customer_list)) return;
+    
+    const customer = customer_list.find(
+      obj => obj.value === customerIdValue || 
+             obj.contactId === customerIdValue ||
+             (obj.label && (obj.label.value === customerIdValue || obj.label.contactId === customerIdValue))
+    );
     if (customer) {
-      const currencyCode = customer.label.currency.currencyCode;
-      const taxTreatment = customer.label.taxTreatment.taxTreatment;
+      // Safely access nested properties with optional chaining
+      const customerLabel = customer.label || customer;
+      const currencyCode = customerLabel?.currency?.currencyCode || customerLabel?.currencyCode || null;
+      const taxTreatment = customerLabel?.taxTreatment?.taxTreatment || customerLabel?.taxTreatment || null;
+      
       setContactId(customerID);
-      setTaxTreatmentId(taxTreatment);
-      setEnablePlaceOfSupply(
-        !!(
-          taxTreatment !== 'GCC VAT REGISTERED' &&
-          taxTreatment !== 'GCC NON-VAT REGISTERED' &&
-          taxTreatment !== 'NON GCC'
-        )
-      );
-      setValue('taxTreatmentId', taxTreatment, { shouldValidate: true });
-      setCurrency(currencyCode);
-      getContactShippingAddress(customerID, taxTreatment);
+      
+      if (taxTreatment) {
+        setTaxTreatmentId(taxTreatment);
+        setEnablePlaceOfSupply(
+          !!(
+            taxTreatment !== 'GCC VAT REGISTERED' &&
+            taxTreatment !== 'GCC NON-VAT REGISTERED' &&
+            taxTreatment !== 'NON GCC'
+          )
+        );
+        setValue('taxTreatmentId', taxTreatment, { shouldValidate: true });
+        getContactShippingAddress(customerID, taxTreatment);
+      } else {
+        setValue('taxTreatmentId', '', { shouldValidate: true });
+      }
+      
+      if (currencyCode) {
+        setCurrency(currencyCode);
+      }
     } else {
       setValue('taxTreatmentId', '', { shouldValidate: true });
     }
@@ -926,7 +964,8 @@ const CreateCustomerInvoice = ({
                 <CardBody>
                   <Row>
                     <Col lg={12}>
-                      <Form onSubmit={handleSubmit(onSubmit)}>
+                      <FormProvider {...form}>
+                        <Form onSubmit={handleSubmit(onSubmit)}>
                         <Row>
                           <Col lg={3}>
                             <FormGroup className="mb-3">
@@ -990,8 +1029,12 @@ const CreateCustomerInvoice = ({
                                           )
                                     }
                                     onChange={option => {
+                                      // Pass the full option object to field.onChange for validation
                                       field.onChange(option);
-                                      setContactDetails(option.value);
+                                      // Pass the value (could be number) to setContactDetails
+                                      if (option) {
+                                        setContactDetails(option.value || option);
+                                      }
                                     }}
                                     styles={selectStyles}
                                     className={errors.contactId ? 'is-invalid' : ''}
@@ -1467,7 +1510,8 @@ const CreateCustomerInvoice = ({
                             </FormGroup>
                           </Col>
                         </Row>
-                      </Form>
+                        </Form>
+                      </FormProvider>
                     </Col>
                   </Row>
                 </CardBody>
