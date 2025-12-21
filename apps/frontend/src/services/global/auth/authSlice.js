@@ -120,6 +120,12 @@ export const getUserSubscription = createAsyncThunk(
   'auth/getUserSubscription',
   async (_, { rejectWithValue }) => {
     try {
+      // Skip if SIMPLE_SERVICES_HOST is not configured
+      if (!config.SIMPLE_SERVICES_HOST || !config.SIMPLE_SERVICES_GET_SUBSCRIPTION_KEY) {
+        // Return a default subscription status when service is not configured
+        return { status: 'active' };
+      }
+      
       const apiUrl = `${config.SIMPLE_SERVICES_HOST}/api/getSimpleAccountsSubscription`;
       const apiKey = config.SIMPLE_SERVICES_GET_SUBSCRIPTION_KEY;
       const domainUrl = window.location.origin;
@@ -131,6 +137,11 @@ export const getUserSubscription = createAsyncThunk(
       const res = await api(data);
       return res.data;
     } catch (err) {
+      // Silently fail if service is not available - return default active status
+      // This prevents 404 errors from cluttering the console
+      if (err.response?.status === 404 || !config.SIMPLE_SERVICES_HOST) {
+        return { status: 'active' };
+      }
       return rejectWithValue(err.response?.data || err.message);
     }
   }
