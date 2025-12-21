@@ -433,6 +433,7 @@ $radius-xl: 20px;
       display: flex;
       flex-direction: column;
       margin-bottom: 0;
+      height: 100%;
 
       // Handle the animated wrapper div
       > .animated,
@@ -440,6 +441,7 @@ $radius-xl: 20px;
         flex: 1;
         display: flex;
         flex-direction: column;
+        height: 100%;
       }
 
       // Override inner card styles for flex
@@ -447,6 +449,7 @@ $radius-xl: 20px;
         flex: 1;
         display: flex;
         flex-direction: column;
+        height: 100%;
       }
 
       .card-body,

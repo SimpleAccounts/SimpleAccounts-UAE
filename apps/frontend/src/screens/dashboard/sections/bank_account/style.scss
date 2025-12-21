@@ -73,15 +73,49 @@
   // Balance Cards Layout
   .balance-cards {
     display: flex;
-    gap: 0;
+    flex-wrap: wrap;
+    gap: 12px;
     margin-bottom: 16px;
   }
 
   .balance-card {
     transition: transform 0.2s ease;
+    min-width: 100px;
+    flex: 1 1 auto;
 
     &:hover {
       transform: translateY(-2px);
+    }
+  }
+
+  // When cards are in smaller container (side-by-side layout)
+  @media screen and (max-width: 1200px) {
+    .balance-cards {
+      gap: 8px;
+    }
+
+    .balance-card {
+      padding: 12px !important;
+      min-width: 90px;
+
+      .balance-icon {
+        width: 30px !important;
+        height: 30px !important;
+        margin-bottom: 6px !important;
+
+        svg {
+          width: 14px;
+          height: 14px;
+        }
+      }
+
+      p {
+        font-size: 0.65rem !important;
+      }
+
+      h5 {
+        font-size: 0.85rem !important;
+      }
     }
   }
 
@@ -98,14 +132,25 @@
 
     .balance-cards {
       flex-direction: column;
+      gap: 10px;
     }
 
     .balance-card {
       margin-left: 0 !important;
-      margin-top: 10px;
+      padding: 16px !important;
+      min-width: 100%;
 
-      &:first-child {
-        margin-top: 0;
+      .balance-icon {
+        width: 36px !important;
+        height: 36px !important;
+      }
+
+      p {
+        font-size: 0.75rem !important;
+      }
+
+      h5 {
+        font-size: 1rem !important;
       }
     }
   }

@@ -254,7 +254,6 @@ class BankAccount extends Component {
                     'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
                   borderRadius: '12px',
                   padding: '16px',
-                  flex: 1,
                   textAlign: 'center',
                 }}
               >
@@ -306,9 +305,7 @@ class BankAccount extends Component {
                     'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
                   borderRadius: '12px',
                   padding: '16px',
-                  flex: 1,
                   textAlign: 'center',
-                  marginLeft: '12px',
                 }}
               >
                 <div
