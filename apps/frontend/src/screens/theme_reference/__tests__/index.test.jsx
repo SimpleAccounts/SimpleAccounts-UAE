@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
 import ComponentLibrary from '../index';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
@@ -21,9 +22,11 @@ vi.mock('recharts', () => {
 describe('ComponentLibrary (Theme Reference)', () => {
   it('renders without crashing', () => {
     render(
-      <TooltipProvider>
-        <ComponentLibrary />
-      </TooltipProvider>
+      <MemoryRouter>
+        <TooltipProvider>
+          <ComponentLibrary />
+        </TooltipProvider>
+      </MemoryRouter>
     );
     expect(screen.getByText('SimpleAccounts Neumorphism UI')).toBeInTheDocument();
   });
