@@ -217,7 +217,6 @@ import {
   SubReports,
   NotesSettings,
   PayrollSettings,
-  ComponentLibrary,
 } from 'screens';
 import Config from '../constants/config';
 const adminRoutes = [
@@ -278,11 +277,6 @@ const adminRoutes = [
     path: 'settings/template',
     name: 'Mail Themes',
     component: Template.screen,
-  },
-  {
-    path: 'settings/theme-reference',
-    name: 'Theme Reference',
-    component: ComponentLibrary.screen,
   },
   Config.ACCOUNTANT_OB && {
     redirect: true,
