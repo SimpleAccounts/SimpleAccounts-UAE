@@ -256,8 +256,8 @@ class AdminLayout extends React.Component {
     return loading == true ? (
       <Loader loadingMsg={loadingMsg} />
     ) : (
-      <div className="admin-container flex min-h-screen bg-neu-bg dark:bg-neu-bg-dark">
-        <div className="flex flex-1 p-4 gap-4">
+      <div className="admin-container flex min-h-screen bg-neu-bg dark:bg-neu-bg-dark overflow-x-hidden">
+        <div className="flex flex-1 p-4 gap-4 w-full max-w-full">
           <Sidebar
             items={finalArray.items}
             pathname={pathname}
@@ -269,7 +269,7 @@ class AdminLayout extends React.Component {
               this.props.history.push('/login');
             }}
           />
-          <main className="flex-1 overflow-y-auto bg-neu-bg dark:bg-neu-bg-dark rounded-2xl shadow-neu-out dark:shadow-neu-out-dark">
+          <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto bg-neu-bg dark:bg-neu-bg-dark rounded-2xl shadow-neu-out dark:shadow-neu-out-dark">
             {SubscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
               <Alert variant="destructive" className="m-4">
                 <AlertDescription>{SubscriptionMessage}</AlertDescription>
