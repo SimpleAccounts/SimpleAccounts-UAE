@@ -387,24 +387,28 @@ function CustomerInvoice() {
         header: strings.INVOICEAMOUNT,
         cell: ({ row }) => {
           const { invoiceAmount, vatAmount, dueAmount, currencySymbol } = row.original;
+          // Safely handle undefined/null values
+          const safeInvoiceAmount = invoiceAmount ?? 0;
+          const safeVatAmount = vatAmount ?? 0;
+          const safeCurrencySymbol = currencySymbol || '';
           return (
             <div className="text-right text-sm">
               <div>
                 <span className="font-semibold">{strings.InvoiceAmount}: </span>
                 <span>
-                  {currencySymbol}{' '}
-                  {invoiceAmount.toLocaleString(navigator.language, {
+                  {safeCurrencySymbol}{' '}
+                  {safeInvoiceAmount.toLocaleString(navigator.language, {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
                 </span>
               </div>
-              {vatAmount > 0 && (
+              {safeVatAmount > 0 && (
                 <div className="text-muted-foreground">
                   <span className="font-semibold">{strings.VatAmount}: </span>
                   <span>
-                    {currencySymbol}{' '}
-                    {vatAmount.toLocaleString(navigator.language, {
+                    {safeCurrencySymbol}{' '}
+                    {safeVatAmount.toLocaleString(navigator.language, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
