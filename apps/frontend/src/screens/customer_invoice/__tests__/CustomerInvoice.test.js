@@ -65,6 +65,8 @@ const createMockStore = (initialState = {}) => {
       // Add request_for_quotation reducer to prevent errors in createCN component
       request_for_quotation: (state = { project_list: [], contact_list: [], currency_list: [] }) =>
         state,
+      // Add product reducer to prevent errors in createCN component
+      product: (state = { product_category_list: [] }) => state,
     },
     preloadedState: {
       customer_invoice: {
@@ -81,7 +83,13 @@ const createMockStore = (initialState = {}) => {
         project_list: [],
         contact_list: [],
         currency_list: [],
+        supplier_list: [],
+        country_list: [],
         ...initialState.request_for_quotation,
+      },
+      product: {
+        product_category_list: [],
+        ...initialState.product,
       },
     },
   });
