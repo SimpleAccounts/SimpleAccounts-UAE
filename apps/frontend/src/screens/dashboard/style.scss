@@ -421,47 +421,48 @@ $radius-xl: 20px;
   // CHARTS ROW
   // ============================================
   .charts-row {
-    align-items: stretch;
+    align-items: stretch !important;
 
     > [class*='col-'] {
       margin-bottom: $space-lg;
-      display: flex;
+      display: flex !important;
+      flex-direction: column;
     }
 
     .chart-card {
-      flex: 1;
+      flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       margin-bottom: 0;
-      height: 100%;
+      min-height: 100%;
 
       // Handle the animated wrapper div
       > .animated,
       > div {
-        flex: 1;
+        flex: 1 1 auto;
         display: flex;
         flex-direction: column;
-        height: 100%;
+        min-height: 100%;
       }
 
       // Override inner card styles for flex
       .card {
-        flex: 1;
+        flex: 1 1 auto;
         display: flex;
         flex-direction: column;
-        height: 100%;
+        min-height: 100%;
       }
 
       .card-body,
       .tab-card {
-        flex: 1;
+        flex: 1 1 auto;
         display: flex;
         flex-direction: column;
       }
 
       // Make chart wrapper fill remaining space
       .chart-wrapper {
-        flex: 1;
+        flex: 1 1 auto;
         min-height: 200px;
       }
     }
