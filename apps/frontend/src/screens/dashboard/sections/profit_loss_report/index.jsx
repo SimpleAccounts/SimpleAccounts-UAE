@@ -1,11 +1,81 @@
 import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardBody } from 'reactstrap';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import './style.scss';
 
 let strings = new LocalizedStrings(data);
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  interaction: {
+    mode: 'index',
+    intersect: false,
+  },
+  plugins: {
+    tooltip: {
+      backgroundColor: '#1e3a5f',
+      titleColor: '#ffffff',
+      bodyColor: '#ffffff',
+      borderColor: '#1e6eff',
+      borderWidth: 1,
+      cornerRadius: 8,
+      padding: 12,
+    },
+    legend: {
+      display: true,
+      position: 'bottom',
+      labels: {
+        color: '#3d5a80',
+        font: {
+          size: 12,
+        },
+        usePointStyle: true,
+        pointStyle: 'circle',
+        padding: 20,
+      },
+    },
+  },
+  scales: {
+    x: {
+      grid: {
+        display: true,
+        color: 'rgba(200, 210, 220, 0.3)',
+        drawBorder: false,
+      },
+      border: {
+        display: false,
+      },
+      ticks: {
+        display: true,
+        color: '#98afc2',
+        font: {
+          size: 11,
+        },
+      },
+    },
+    y: {
+      beginAtZero: true,
+      grid: {
+        display: true,
+        color: 'rgba(200, 210, 220, 0.3)',
+        drawBorder: false,
+      },
+      border: {
+        display: false,
+      },
+      ticks: {
+        display: true,
+        color: '#98afc2',
+        font: {
+          size: 11,
+        },
+      },
+    },
+  },
+};
 
 const ProfitAndLossReport = props => {
   const { DashboardActions } = props;
@@ -52,8 +122,9 @@ const ProfitAndLossReport = props => {
         {
           type: 'bar',
           label: 'Income',
-          backgroundColor: '#2064d8',
-          borderColor: '#2064d8',
+          backgroundColor: '#1e6eff',
+          borderColor: '#1e6eff',
+          borderRadius: 4,
           data: data.income.incomeData || [],
           order: 2,
         },
@@ -62,14 +133,16 @@ const ProfitAndLossReport = props => {
           label: 'Expenses',
           backgroundColor: 'rgba(244, 119, 46, 0.1)',
           borderColor: '#f4772e',
-          borderWidth: 4,
+          borderWidth: 3,
           fill: false,
-          tension: 0.4, // smooth curve
+          tension: 0.4,
           pointRadius: 4,
-          pointBackgroundColor: '#f4772e',
-          pointBorderColor: '#fff',
+          pointBackgroundColor: '#ffffff',
+          pointBorderColor: '#f4772e',
           pointBorderWidth: 2,
           pointHoverRadius: 6,
+          pointHoverBackgroundColor: '#f4772e',
+          pointHoverBorderColor: '#ffffff',
           data: data.expense.expenseData || [],
           order: 1,
         },
@@ -84,75 +157,39 @@ const ProfitAndLossReport = props => {
     strings.setLanguage(language);
   }, [language]);
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: {
-      mode: 'index',
-      intersect: false,
-    },
-    plugins: {
-      tooltip: {
-        enabled: true,
-        mode: 'index',
-        intersect: false,
-      },
-      legend: {
-        display: true,
-        position: 'bottom',
-        labels: {
-          usePointStyle: true,
-          padding: 15,
-        },
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          display: true,
-          color: 'rgba(125, 138, 156, 0.3)',
-          drawBorder: true,
-        },
-        ticks: {
-          display: true,
-        },
-      },
-      y: {
-        beginAtZero: true,
-        grid: {
-          display: true,
-          color: 'rgba(125, 138, 156, 0.3)',
-          drawBorder: true,
-        },
-        ticks: {
-          display: true,
-        },
-      },
-    },
-  };
-
   return (
     <div className="animated fadeIn">
       <Card className="cash-card card-margin">
-        <CardHeader>
-          <div className="flex-wrapper title-bottom-border pb-3">
-            <CardTitle className="text-xl font-bold" style={{ color: '#2064d8' }}>
-              {strings.ProfitLoss}
-            </CardTitle>
-            <div className="card-header-actions ml-auto">
-              <select className="form-control" value={selectedMonths} onChange={handleRangeChange}>
+        <CardBody className="tab-card">
+          <div className="flex-wrapper title-bottom-border">
+            <h1
+              className="card-h1"
+              style={{
+                fontSize: '1.125rem',
+                fontWeight: 700,
+                color: '#1e6eff',
+                margin: 0,
+                textTransform: 'uppercase',
+              }}
+            >
+              {strings.ProfitLoss || 'PROFIT & LOSS'}
+            </h1>
+            <div className="card-header-actions">
+              <select
+                className="form-control card-select"
+                value={selectedMonths}
+                onChange={handleRangeChange}
+              >
                 <option value="3">Last 3 Months</option>
                 <option value="6">Last 6 Months</option>
                 <option value="12">Last 12 Months</option>
               </select>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="p-6">
-          <div className="d-block" style={{ height: '320px' }}>
+          <div className="chart-wrapper" style={{ height: '300px', marginTop: '20px' }}>
             <Bar data={profit_loss_report_data} options={chartOptions} />
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
     </div>
   );

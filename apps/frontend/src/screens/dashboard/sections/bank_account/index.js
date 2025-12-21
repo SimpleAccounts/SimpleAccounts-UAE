@@ -175,7 +175,18 @@ class BankAccount extends Component {
         <Card className="bank-card card-margin">
           <CardBody className="tab-card">
             <div className="flex-wrapper title-bottom-border">
-              <h1 className="card-h1">{strings.BANKING}</h1>
+              <h1
+                className="card-h1"
+                style={{
+                  fontSize: '1.125rem',
+                  fontWeight: 700,
+                  color: '#1e6eff',
+                  margin: 0,
+                  textTransform: 'uppercase',
+                }}
+              >
+                {strings.BANKING}
+              </h1>
               <div className="mb-1 card-header-actions card-select-alignment">
                 <select
                   className="form-control card-select"
@@ -243,7 +254,6 @@ class BankAccount extends Component {
                     'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
                   borderRadius: '12px',
                   padding: '16px',
-                  flex: 1,
                   textAlign: 'center',
                 }}
               >
@@ -295,9 +305,7 @@ class BankAccount extends Component {
                     'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
                   borderRadius: '12px',
                   padding: '16px',
-                  flex: 1,
                   textAlign: 'center',
-                  marginLeft: '12px',
                 }}
               >
                 <div

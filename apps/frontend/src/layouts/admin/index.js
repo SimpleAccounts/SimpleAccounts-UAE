@@ -256,8 +256,8 @@ class AdminLayout extends React.Component {
     return loading == true ? (
       <Loader loadingMsg={loadingMsg} />
     ) : (
-      <div className="admin-container flex min-h-screen bg-neu-bg dark:bg-neu-bg-dark">
-        <div className="flex flex-1 p-4 gap-4">
+      <div className="admin-container flex min-h-screen bg-neu-bg dark:bg-neu-bg-dark overflow-x-hidden">
+        <div className="flex flex-1 p-4 gap-4 w-full max-w-full">
           <Sidebar
             items={finalArray.items}
             pathname={pathname}
@@ -269,7 +269,7 @@ class AdminLayout extends React.Component {
               this.props.history.push('/login');
             }}
           />
-          <main className="flex-1 overflow-y-auto bg-neu-bg dark:bg-neu-bg-dark rounded-2xl shadow-neu-out dark:shadow-neu-out-dark">
+          <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto bg-neu-bg dark:bg-neu-bg-dark rounded-2xl shadow-neu-out dark:shadow-neu-out-dark">
             {SubscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
               <Alert variant="destructive" className="m-4">
                 <AlertDescription>{SubscriptionMessage}</AlertDescription>
@@ -328,12 +328,12 @@ class AdminLayout extends React.Component {
                 </div>
                 {/* Optional: Date or other info on the right */}
                 <div
-                  className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl text-sm"
+                  className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium"
                   style={{
                     background: 'var(--neu-bg, #e8eef5)',
                     boxShadow:
                       '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
-                    color: 'var(--neu-text-muted, #98afc2)',
+                    color: 'var(--neu-text-secondary, #3d5a80)',
                   }}
                 >
                   <span>

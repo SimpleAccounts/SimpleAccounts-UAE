@@ -34,6 +34,8 @@ import {
   Upload,
 } from 'lucide-react';
 import config from '../../constants/config';
+import logo from 'assets/images/brand/logo.png';
+import logoShort from 'assets/images/brand/sygnet.png';
 
 // Icon mapping for navigation items
 const iconMap = {
@@ -148,21 +150,15 @@ export function Sidebar({
     >
       {/* Logo Section */}
       <div
-        className="flex items-center justify-between p-4 border-b"
+        className="flex items-center justify-center p-4 border-b"
         style={{ borderColor: theme.shadowDark }}
       >
-        <div className={`flex items-center gap-3 ${minimized ? 'justify-center w-full' : ''}`}>
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold flex-shrink-0"
-            style={{ background: gradients.primary, boxShadow: shadows.raised.sm }}
-          >
-            S
-          </div>
-          {!minimized && (
-            <span className="font-bold text-lg" style={{ color: theme.textPrimary }}>
-              Simple<span style={{ color: theme.primary }}>Accounts</span>
-            </span>
-          )}
+        <div className={`flex items-center justify-center ${minimized ? 'w-full' : ''}`}>
+          <img
+            src={minimized ? logoShort : logo}
+            alt="SimpleAccounts Logo"
+            className={`drop-shadow-sm transition-all duration-200 ${minimized ? 'h-10 w-auto' : 'h-12 w-auto'}`}
+          />
         </div>
       </div>
 
@@ -184,7 +180,7 @@ export function Sidebar({
       {/* Menu Items */}
       <ScrollArea className="flex-1">
         <nav className="p-3 space-y-2">
-          {items.map(item => {
+          {items.map((item, index) => {
             const Icon = getIcon(item.name);
             const hasChildren = Array.isArray(item.children) && item.children.length > 0;
             const isExpanded = expandedMenus[item.name];
@@ -193,13 +189,23 @@ export function Sidebar({
               hasChildren &&
               item.children.some(child => child?.url && pathname.startsWith(child.url));
 
+            // Animation delay for staggered entrance
+            const animationDelay = `${index * 50}ms`;
+
             return (
-              <div key={item.name}>
+              <div
+                key={item.name}
+                className="animate-fade-in-up"
+                style={{
+                  animationDelay,
+                  animationFillMode: 'backwards',
+                }}
+              >
                 {/* Main Menu Item */}
                 {hasChildren ? (
                   <button
                     onClick={() => toggleSubmenu(item.name)}
-                    className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all duration-200 ${
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all duration-200 hover:-translate-y-0.5 ${
                       minimized ? 'justify-center' : ''
                     }`}
                     style={{
@@ -243,7 +249,7 @@ export function Sidebar({
                 ) : (
                   <NavLink
                     to={item.url}
-                    className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all duration-200 ${
+                    className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all duration-200 hover:-translate-y-0.5 ${
                       minimized ? 'justify-center' : ''
                     }`}
                     style={{
@@ -306,7 +312,7 @@ export function Sidebar({
                             <NavLink
                               key={child.name || child.url}
                               to={child.url}
-                              className="flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200"
+                              className="flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 hover:-translate-y-0.5"
                               style={{
                                 background: isSubActive ? `${theme.primary}10` : 'transparent',
                                 border: isSubActive

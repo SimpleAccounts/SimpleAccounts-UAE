@@ -4,6 +4,10 @@
   background: transparent !important;
   box-shadow: none !important;
   margin-bottom: 0 !important;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   h1 {
     font-size: 1.125rem;
@@ -27,29 +31,74 @@
   // Cashflow Cards Layout
   .cashflow-cards {
     display: flex;
-    gap: 0;
+    flex-wrap: wrap;
+    gap: 10px;
     margin: 16px 0;
   }
 
   .cashflow-card {
     transition: transform 0.2s ease;
+    min-width: 80px;
+    flex: 1 1 auto;
 
     &:hover {
       transform: translateY(-2px);
     }
   }
 
+  // When cards are in smaller container (side-by-side layout)
+  @media screen and (max-width: 1200px) {
+    .cashflow-cards {
+      gap: 8px;
+    }
+
+    .cashflow-card {
+      padding: 12px !important;
+      min-width: 70px;
+
+      .cashflow-icon {
+        width: 32px !important;
+        height: 32px !important;
+        margin-bottom: 6px !important;
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      p {
+        font-size: 0.6rem !important;
+      }
+
+      h5 {
+        font-size: 0.85rem !important;
+      }
+    }
+  }
+
   @media screen and (max-width: 576px) {
     .cashflow-cards {
       flex-direction: column;
+      gap: 10px;
     }
 
     .cashflow-card {
       margin-left: 0 !important;
-      margin-top: 10px;
+      padding: 16px !important;
+      min-width: 100%;
 
-      &:first-child {
-        margin-top: 0;
+      .cashflow-icon {
+        width: 40px !important;
+        height: 40px !important;
+      }
+
+      p {
+        font-size: 0.7rem !important;
+      }
+
+      h5 {
+        font-size: 1rem !important;
       }
     }
   }

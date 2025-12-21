@@ -421,44 +421,48 @@ $radius-xl: 20px;
   // CHARTS ROW
   // ============================================
   .charts-row {
-    align-items: stretch;
+    align-items: stretch !important;
 
     > [class*='col-'] {
       margin-bottom: $space-lg;
-      display: flex;
+      display: flex !important;
+      flex-direction: column;
     }
 
     .chart-card {
-      flex: 1;
+      flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       margin-bottom: 0;
+      min-height: 100%;
 
       // Handle the animated wrapper div
       > .animated,
       > div {
-        flex: 1;
+        flex: 1 1 auto;
         display: flex;
         flex-direction: column;
+        min-height: 100%;
       }
 
       // Override inner card styles for flex
       .card {
-        flex: 1;
+        flex: 1 1 auto;
         display: flex;
         flex-direction: column;
+        min-height: 100%;
       }
 
       .card-body,
       .tab-card {
-        flex: 1;
+        flex: 1 1 auto;
         display: flex;
         flex-direction: column;
       }
 
       // Make chart wrapper fill remaining space
       .chart-wrapper {
-        flex: 1;
+        flex: 1 1 auto;
         min-height: 200px;
       }
     }
@@ -480,6 +484,21 @@ $radius-xl: 20px;
       .welcome-badge {
         width: 100%;
         justify-content: center;
+      }
+    }
+
+    // Charts row - stack on medium screens
+    .charts-row {
+      flex-direction: column;
+
+      > [class*='col-'] {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+      }
+
+      .chart-card {
+        width: 100%;
       }
     }
 
