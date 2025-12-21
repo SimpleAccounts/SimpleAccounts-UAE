@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormGroup, UncontrolledTooltip, Label } from 'reactstrap';
+import { HelpCircle } from 'lucide-react';
 
 function RadioButton(props) {
   const { selected, label, onChange, radio1, radio1Tooltip, radio2Tooltip, radio2 } = props;
@@ -31,7 +32,7 @@ function RadioButton(props) {
               {radio1}
               {radio1Tooltip && (
                 <>
-                  <i id="inline-radio1" className="fa fa-question-circle ml-1"></i>
+                  <HelpCircle id="inline-radio1" className="h-4 w-4 inline" />
                   <UncontrolledTooltip placement="right" target="inline-radio1">
                     {radio1Tooltip}
                   </UncontrolledTooltip>
@@ -59,7 +60,7 @@ function RadioButton(props) {
               {radio2}
               {radio2Tooltip && (
                 <>
-                  <i id="inline-radio2" className="fa fa-question-circle ml-1"></i>
+                  <HelpCircle id="inline-radio2" className="h-4 w-4 inline" />
                   <UncontrolledTooltip placement="right" target="inline-radio2">
                     {radio2Tooltip}
                   </UncontrolledTooltip>

@@ -38,6 +38,7 @@ import { LeavePage, Loader } from 'components';
 import invoiceimage from 'assets/images/invoice/invoice.png';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
+import { Trash2, BookUser } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -253,7 +254,7 @@ const CreateRequestForQuotation = () => {
               disabled={data.length === 1}
               onClick={e => deleteRow(e, row.original)}
             >
-              <i className="fas fa-trash"></i>
+              <Trash2 className="h-4 w-4" />
             </Button>
           ),
       },
@@ -343,7 +344,7 @@ const CreateRequestForQuotation = () => {
         <Card>
           <CardHeader>
             <div className="h4 mb-0 d-flex align-items-center">
-              <i className="fas fa-address-book" />
+              <BookUser className="h-4 w-4" />
               <span className="ml-2">{strings.Create + ' ' + strings.RequestForQuotation}</span>
             </div>
           </CardHeader>

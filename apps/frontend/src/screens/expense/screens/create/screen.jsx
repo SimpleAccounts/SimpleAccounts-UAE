@@ -30,6 +30,7 @@ import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
+import { ArrowUpDown, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const SortExpenseCategory = list => {
   if (list.length !== 0) {
@@ -789,7 +790,7 @@ const CreateExpense = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fab fa-stack-exchange" />
+                        <ArrowUpDown className="h-4 w-4" />
                         <span className="ml-2">{strings.CreateExpense} </span>
                       </div>
                     </Col>
@@ -1430,7 +1431,7 @@ const CreateExpense = ({
                                     setCreateMore(false);
                                   }}
                                 >
-                                  <i className="fa fa-dot-circle-o"></i>{' '}
+                                  <CircleDot className="h-4 w-4" />{' '}
                                   {disabled ? 'Creating...' : strings.Create}
                                 </Button>
                                 {location.state && location.state.parentId ? (
@@ -1445,7 +1446,7 @@ const CreateExpense = ({
                                       setCreateMore(true);
                                     }}
                                   >
-                                    <i className="fa fa-refresh"></i>{' '}
+                                    <RefreshCw className="h-4 w-4" />{' '}
                                     {disabled ? 'Creating...' : strings.CreateandMore}
                                   </Button>
                                 )}
@@ -1460,7 +1461,7 @@ const CreateExpense = ({
                                     } else history.push('/admin/expense/expense');
                                   }}
                                 >
-                                  <i className="fa fa-ban"></i> {strings.Cancel}
+                                  <Ban className="h-4 w-4" /> {strings.Cancel}
                                 </Button>
                               </FormGroup>
                             </Col>

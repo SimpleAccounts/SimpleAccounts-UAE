@@ -37,6 +37,7 @@ import { DateRangePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { Ban, CheckCheck, CircleDot, HelpCircle, Plus, Wallet } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -502,7 +503,7 @@ const CreatePayrollList = () => {
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-money-check-alt" />
+                        <Wallet className="h-4 w-4" />
                         <span className="ml-2">{strings.create_payroll}</span>
                       </div>
                     </Col>
@@ -629,10 +630,7 @@ const CreatePayrollList = () => {
                                   <Label htmlFor="payrollApprover">
                                     <span className="text-danger">* </span>
                                     {strings.payroll_approver}
-                                    <i
-                                      id="payrollApprovertip"
-                                      className="fa fa-question-circle ml-1"
-                                    ></i>
+                                    <HelpCircle id="payrollApprovertip" className="h-4 w-4 inline" />
                                     <UncontrolledTooltip
                                       placement="right"
                                       target="payrollApprovertip"
@@ -700,7 +698,7 @@ const CreatePayrollList = () => {
                                     setOpenEmployeeModal(true);
                                   }}
                                 >
-                                  <i className="fa fa-plus"></i> {strings.AddEmployee}
+                                  <Plus className="h-4 w-4" /> {strings.AddEmployee}
                                 </Button>
                               </Row>
                               <div>
@@ -738,7 +736,7 @@ const CreatePayrollList = () => {
                                     navigate('/admin/payroll/payrollrun');
                                   }}
                                 >
-                                  <i className="fa fa-ban"></i> {strings.Cancel}
+                                  <Ban className="h-4 w-4" /> {strings.Cancel}
                                 </Button>
                                 <Button
                                   color="primary"
@@ -774,7 +772,7 @@ const CreatePayrollList = () => {
                                       : ''
                                   }
                                 >
-                                  <i className="fas fa-check-double  mr-1"></i>{' '}
+                                  <CheckCheck className="h-4 w-4" />{' '}
                                   {strings.create_submit}
                                 </Button>
                                 <Button
@@ -805,7 +803,7 @@ const CreatePayrollList = () => {
                                       : `Please select at least one employee for payroll creation !`
                                   }
                                 >
-                                  <i className="fa fa-dot-circle-o  mr-1"></i> {strings.create}
+                                  <CircleDot className="h-4 w-4" /> {strings.create}
                                 </Button>
                               </Col>
                             </Row>

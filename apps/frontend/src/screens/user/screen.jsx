@@ -14,6 +14,7 @@ import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Users, Search, RefreshCw, Plus } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -144,7 +145,7 @@ const User = () => {
         <Card>
           <CardHeader>
             <div className="h4 mb-0 d-flex align-items-center">
-              <i className="nav-icon fas fa-users" />
+              <Users className="h-4 w-4" />
               <span className="ml-2"> {strings.User} </span>
             </div>
           </CardHeader>
@@ -178,7 +179,7 @@ const User = () => {
                         className="btn-square mr-1"
                         onClick={handleSearch}
                       >
-                        <i className="fa fa-search"></i>
+                        <Search className="h-4 w-4" />
                       </Button>
                       <Button
                         type="button"
@@ -186,7 +187,7 @@ const User = () => {
                         className="btn-square"
                         onClick={clearAll}
                       >
-                        <i className="fa fa-refresh"></i>
+                        <RefreshCw className="h-4 w-4" />
                       </Button>
                     </Col>
                   </Row>
@@ -197,7 +198,7 @@ const User = () => {
                   className="btn-square pull-right mb-2"
                   onClick={() => navigate(`/admin/settings/user/create`)}
                 >
-                  <i className="fas fa-plus mr-1" />
+                  <Plus className="h-4 w-4" />
                   {strings.AddNewUsers}
                 </Button>
 

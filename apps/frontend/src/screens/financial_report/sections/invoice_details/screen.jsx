@@ -26,6 +26,7 @@ import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Link, useNavigate } from 'react-router-dom';
 import { CommonActions } from 'services/global';
+import { Settings, Printer } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -140,7 +141,7 @@ const InvoiceDetails = () => {
                         }}
                         onClick={viewFilter}
                       >
-                        <i className="fa fa-cog mr-2"></i>
+                        <Settings className="h-4 w-4" />
                         {strings.CustomizeReport}
                       </p>
                     </div>
@@ -181,7 +182,7 @@ const InvoiceDetails = () => {
                           cursor: 'pointer',
                         }}
                       >
-                        <i className="fa fa-print"></i>
+                        <Printer className="h-4 w-4" />
                       </div>
                       <div
                         className="mr-2 print-btn-cont"

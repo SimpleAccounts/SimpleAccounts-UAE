@@ -24,6 +24,7 @@ import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { selectOptionsFactory } from 'utils';
 import * as CreatePayrollEmployeeActions from '../create/actions';
+import { CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -545,7 +546,7 @@ const UpdateEmployeeBank = ({
                                 }
                               }}
                             >
-                              <i className="fa fa-dot-circle-o"></i>{' '}
+                              <CircleDot className="h-4 w-4" />{' '}
                               {disabled ? 'Updating...' : strings.Update}
                             </Button>
                             <Button
@@ -557,7 +558,7 @@ const UpdateEmployeeBank = ({
                                 });
                               }}
                             >
-                              <i className="fa fa-ban"></i> {strings.Cancel}
+                              <Ban className="h-4 w-4" /> {strings.Cancel}
                             </Button>
                           </FormGroup>
                         </Row>

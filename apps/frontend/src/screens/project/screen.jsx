@@ -10,6 +10,7 @@ import './style.scss';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Network, Plus, Search, RefreshCw, Download, Trash2 } from 'lucide-react';
 
 const Project = () => {
   const dispatch = useDispatch();
@@ -138,7 +139,7 @@ const Project = () => {
               <Row>
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="nav-icon fas fa-project-diagram" />
+                    <Network className="h-4 w-4" />
                     <span className="ml-2">Projects</span>
                   </div>
                 </Col>
@@ -150,7 +151,7 @@ const Project = () => {
                   <div className="d-flex justify-content-end">
                     <ButtonGroup size="sm">
                       <Button color="success" className="btn-square" onClick={getCsvData}>
-                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                        <Download className="h-4 w-4 mr-1" />
                         Export To CSV
                       </Button>
                       {view && (
@@ -167,7 +168,7 @@ const Project = () => {
                         className="btn-square"
                         onClick={() => navigate(`/admin/master/project/create`)}
                       >
-                        <i className="fas fa-plus mr-1" />
+                        <Plus className="h-4 w-4" />
                         New Project
                       </Button>
                       <Button
@@ -176,7 +177,7 @@ const Project = () => {
                         className="btn-square"
                         disabled={selectedRows.length === 0}
                       >
-                        <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
+                        <Trash2 className="h-4 w-4 mr-1" />
                         Bulk Delete
                       </Button>
                     </ButtonGroup>
@@ -226,7 +227,7 @@ const Project = () => {
                             className="btn-square mr-1"
                             onClick={handleSearch}
                           >
-                            <i className="fa fa-search"></i>
+                            <Search className="h-4 w-4" />
                           </Button>
                           <Button
                             type="button"
@@ -234,7 +235,7 @@ const Project = () => {
                             className="btn-square"
                             onClick={clearAll}
                           >
-                            <i className="fa fa-refresh"></i>
+                            <RefreshCw className="h-4 w-4" />
                           </Button>
                         </Col>
                       </Row>

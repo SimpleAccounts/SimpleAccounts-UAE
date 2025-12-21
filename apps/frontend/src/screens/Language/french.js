@@ -22,6 +22,7 @@ const fr = {
   Vat: 'T.V.A',
   RecieptNumber: 'Numéro de reçu',
   Hey: ' hé !',
+  Search: 'Rechercher',
 
   //sidebar
   Report: 'Signaler',

@@ -22,7 +22,7 @@ import dayjs from '@/utils/date';
 import './style.scss';
 import { data } from '../Language/index';
 import LocalizedStrings from 'react-localization';
-import { MoreVertical } from 'lucide-react';
+import { ArrowUpDown, Copy, Eye, File, MoreVertical, Pencil, Plus, RefreshCw, Search, Send } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -415,7 +415,7 @@ class Expense extends React.Component {
                         );
                     }}
                   >
-                    <i className="fas fa-edit mr-2" /> {strings.Edit}
+                    <Pencil className="h-4 w-4" /> {strings.Edit}
                   </DropdownMenuItem>
                 )}
                 {!expense.bankGenerated && (
@@ -426,7 +426,7 @@ class Expense extends React.Component {
                       })
                     }
                   >
-                    <i className="fas fa-copy mr-2" /> {strings.CreateADuplicate}
+                    <Copy className="h-4 w-4" /> {strings.CreateADuplicate}
                   </DropdownMenuItem>
                 )}
                 {expense.expenseStatus !== 'Posted' && (
@@ -440,7 +440,7 @@ class Expense extends React.Component {
                       } else this.postExpense(expense);
                     }}
                   >
-                    <i className="fas fa-send mr-2" /> {strings.Post}
+                    <Send className="h-4 w-4" /> {strings.Post}
                   </DropdownMenuItem>
                 )}
                 {expense.expenseStatus === 'Posted' && expense.bankAccountId === null && (
@@ -454,7 +454,7 @@ class Expense extends React.Component {
                         );
                     }}
                   >
-                    <i className="fas fa-file mr-2" /> {strings.Draft}
+                    <File className="h-4 w-4" /> {strings.Draft}
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem
@@ -464,7 +464,7 @@ class Expense extends React.Component {
                     });
                   }}
                 >
-                  <i className="fas fa-eye mr-2" /> {strings.View}
+                  <Eye className="h-4 w-4" /> {strings.View}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -497,7 +497,7 @@ class Expense extends React.Component {
                 <div className="grid grid-cols-12 gap-4">
                   <div lg={12}>
                     <div className="h4 mb-0 d-flex align-items-center">
-                      <i className="fab fa-stack-exchange" />
+                      <ArrowUpDown className="h-4 w-4" />
                       <span className="ml-2">{strings.Expenses}</span>
                     </div>
                   </div>
@@ -599,7 +599,7 @@ class Expense extends React.Component {
                             className="btn-square mr-1"
                             onClick={this.handleSearch}
                           >
-                            <i className="fa fa-search"></i>
+                            <Search className="h-4 w-4" />
                           </Button>
                           <Button
                             type="button"
@@ -607,7 +607,7 @@ class Expense extends React.Component {
                             className="btn-square"
                             onClick={this.clearAll}
                           >
-                            <i className="fa fa-refresh"></i>
+                            <RefreshCw className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>
@@ -619,7 +619,7 @@ class Expense extends React.Component {
                         className="btn-square pull-right"
                         onClick={() => this.props.history.push(`/admin/expense/expense/create`)}
                       >
-                        <i className="fas fa-plus mr-1" />
+                        <Plus className="h-4 w-4" />
                         {strings.AddNewExpense}
                       </Button>
                     </div>

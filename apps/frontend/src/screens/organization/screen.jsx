@@ -25,6 +25,7 @@ import * as OrganizationActions from './actions';
 import { selectOptionsFactory, selectStyles } from 'utils';
 import './style.scss';
 import config from 'constants/config';
+import { Network, Save } from 'lucide-react';
 
 // Zod validation schema
 const organizationSchema = z.object({
@@ -175,7 +176,7 @@ const Organization = ({
           <Card>
             <CardHeader>
               <div className="h4 mb-0 d-flex align-items-center">
-                <i className="nav-icon fas fa-sitemap" />
+                <Network className="h-4 w-4" />
                 <span className="ml-2">Organization</span>
               </div>
             </CardHeader>
@@ -449,7 +450,7 @@ const Organization = ({
                       <Col md="2"></Col>
                       <Col xs="12" md="8">
                         <Button type="submit" color="primary" className="btn-square mt-5">
-                          <i className="fas fa-save mr-2"></i>Save
+                          <Save className="h-4 w-4" />Save
                         </Button>
                       </Col>
                     </FormGroup>

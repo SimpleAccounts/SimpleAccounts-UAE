@@ -10,6 +10,7 @@ import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
+import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -116,7 +117,7 @@ const MigrateHistory = () => {
                       className="btn-square pull-left"
                       onClick={rollBackMigration}
                     >
-                      <i className="far fa-arrow-alt-circle-left"></i> RollBack Migration
+                      <ArrowLeftCircle className="h-4 w-4" /> RollBack Migration
                     </Button>
 
                     <Button
@@ -125,7 +126,7 @@ const MigrateHistory = () => {
                       className="btn-square pull-right mr-3"
                       onClick={finishMigration}
                     >
-                      Finish Migration <i className="far fa-arrow-alt-circle-right mr-1"></i>
+                      Finish Migration <ArrowRightCircle className="h-4 w-4" />
                     </Button>
                   </FormGroup>
                 </div>

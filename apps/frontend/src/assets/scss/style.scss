@@ -1,425 +1,854 @@
-// If you want to override variables do it here
+// ============================================
+// SIMPLEACCOUNTS UAE - MAIN STYLESHEET
+// Neumorphic Design System
+// ============================================
+
+// Neumorphic Variables (must be first)
 @import 'variables';
 
-// Import styles with default layout.
-// If you are going to use dark layout please comment next line
-@import '@coreui/coreui-pro/scss/coreui.scss';
+// Neumorphic Mixins
+@import 'mixins';
 
-// Import styles with dark layout
-// If you want to use dark layout uncomment next line
-//@import "@coreui/coreui-pro/scss/themes/dark/coreui-dark.scss";
+// Import CoreUI styles with default layout
+@import '@coreui/coreui-pro/scss/coreui.scss';
 
 // Temp fix for reactstrap
 @import '@coreui/coreui-pro/scss/_dropdown-menu-right.scss';
 
-// If you want to add something do it here
+// Neumorphic Component Styles
+@import 'neumorphic-components';
+
+// Custom overrides
 @import 'custom';
 
-// ie fixes
+// IE fixes
 @import 'ie-fix';
 
-// temp fixes
+// Temp fixes
 @import 'fixes';
 
-// If you want to override variables do it here
-@import 'variables';
-
-// Import styles with default layout.
-// If you are going to use dark layout please comment next line
-@import '@coreui/coreui-pro/scss/coreui.scss';
-
-// Import styles with dark layout
-// If you want to use dark layout uncomment next line
-//@import "@coreui/coreui-pro/scss/themes/dark/coreui-dark.scss";
-
-// Temp fix for reactstrap
-@import '@coreui/coreui-pro/scss/_dropdown-menu-right.scss';
-
-// If you want to add something do it here
-@import 'custom';
-
-// ie fixes
-@import 'ie-fix';
-
-// temp fixes
-@import 'fixes';
-
-// --- Neumorphic Global Overrides ---
+// ============================================
+// GLOBAL NEUMORPHIC STYLES
+// ============================================
 
 body {
-  background-color: #e0e5ec !important;
-  color: #44476a;
+  background-color: $neu-bg !important;
+  color: $text-dark;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-// Cards
+// ============================================
+// CARDS - Neumorphic Override
+// ============================================
+
 .card {
-  background-color: #e0e5ec;
+  background-color: $neu-bg;
   border: none !important;
-  border-radius: 1.5rem !important;
-  box-shadow:
-    9px 9px 16px rgb(163, 177, 198, 0.6),
-    -9px -9px 16px rgba(255, 255, 255, 0.5) !important;
-  margin-bottom: 2rem;
+  border-radius: $border-radius-xl !important;
+  box-shadow: $shadow-soft !important;
+  margin-bottom: $spacer-xl;
 
   .card-header {
     background-color: transparent !important;
-    border-bottom: 1px solid rgba(163, 177, 198, 0.2) !important;
+    border-bottom: 1px solid rgba($neu-border, 0.3) !important;
     font-weight: 700;
-    color: #2064d8 !important;
+    color: $primary !important;
+    padding: $spacer-md $card-padding;
+  }
+
+  .card-body {
+    padding: $card-padding;
+  }
+
+  .card-footer {
+    background-color: transparent !important;
+    border-top: 1px solid rgba($neu-border, 0.3) !important;
+    padding: $spacer-md $card-padding;
   }
 }
 
-// Buttons
+// ============================================
+// BUTTONS - Neumorphic Override
+// ============================================
+
 .btn {
   border: none !important;
-  border-radius: 0.75rem !important;
-  box-shadow:
-    6px 6px 10px 0 rgba(163, 177, 198, 0.5),
-    -6px -6px 10px 0 rgba(255, 255, 255, 0.5) !important;
-  transition: all 0.3s ease;
+  border-radius: $btn-border-radius !important;
+  box-shadow: $btn-shadow !important;
+  font-weight: $btn-font-weight;
+  transition: $transition-all;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow:
-      8px 8px 12px 0 rgba(163, 177, 198, 0.6),
-      -8px -8px 12px 0 rgba(255, 255, 255, 0.6) !important;
+    box-shadow: $btn-shadow-hover !important;
   }
 
-  &:active {
-    transform: translateY(1px);
-    box-shadow:
-      inset 4px 4px 8px 0 rgba(163, 177, 198, 0.5),
-      inset -4px -4px 8px 0 rgba(255, 255, 255, 0.6) !important;
+  &:active,
+  &.active {
+    transform: translateY(0);
+    box-shadow: $btn-shadow-active !important;
+  }
+
+  &:focus {
+    box-shadow: $btn-shadow, 0 0 0 3px rgba($primary, 0.25) !important;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    transform: none;
+    box-shadow: $shadow-soft-xs !important;
   }
 }
 
 .btn-primary {
-  background-color: #2064d8 !important; // Keep primary branding
-  color: white !important;
-  // For primary, we use a colored shadow
-  box-shadow:
-    6px 6px 10px 0 rgba(32, 100, 216, 0.3),
-    -6px -6px 10px 0 rgba(255, 255, 255, 0.8) !important;
+  background-color: $primary !important;
+  color: $text-white !important;
+  box-shadow: $shadow-soft-sm !important;
 
   &:hover {
-    background-color: #21d8aa !important;
-    box-shadow:
-      8px 8px 12px 0 rgba(33, 216, 170, 0.3),
-      -8px -8px 12px 0 rgba(255, 255, 255, 0.8) !important;
+    background-color: $primary-light !important;
+    box-shadow: $shadow-soft !important;
   }
-}
 
-// Inputs
-.form-control {
-  background-color: #e0e5ec !important;
-  border: none !important;
-  border-radius: 0.75rem !important;
-  box-shadow:
-    inset 4px 4px 8px 0 rgba(163, 177, 198, 0.5),
-    inset -4px -4px 8px 0 rgba(255, 255, 255, 0.6) !important;
-  color: #44476a !important;
-  transition: all 0.2s ease;
+  &:active {
+    background-color: $primary-dark !important;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2), inset -2px -2px 5px rgba(255, 255, 255, 0.1) !important;
+  }
 
   &:focus {
-    box-shadow:
-      inset 2px 2px 5px rgba(163, 177, 198, 0.7),
-      inset -2px -2px 5px rgba(255, 255, 255, 0.8),
-      0 0 5px rgba(32, 100, 216, 0.2) !important; // Subtle glow
+    box-shadow: $shadow-soft-sm, 0 0 0 3px rgba($primary, 0.35) !important;
   }
 }
 
-// Tables
+.btn-secondary {
+  background-color: $neu-bg !important;
+  color: $text-dark !important;
+
+  &:hover {
+    background-color: $primary !important;
+    color: $text-white !important;
+  }
+}
+
+.btn-success {
+  background-color: $success !important;
+  color: $text-white !important;
+}
+
+.btn-danger {
+  background-color: $danger !important;
+  color: $text-white !important;
+}
+
+.btn-warning {
+  background-color: $warning !important;
+  color: $text-dark !important;
+}
+
+.btn-info {
+  background-color: $info !important;
+  color: $text-white !important;
+}
+
+.btn-link {
+  color: $primary;
+  box-shadow: none !important;
+
+  &:hover {
+    transform: none;
+    box-shadow: none !important;
+  }
+}
+
+.btn-square,
+.btn-square1 {
+  background-color: $primary;
+  border-color: $primary;
+  border-radius: $border-radius !important;
+  margin: 0 4px;
+
+  &:hover {
+    background-color: $success;
+    border-color: $success;
+  }
+}
+
+.btn-square1 {
+  border-radius: $border-radius-pill !important;
+  margin-top: 27px;
+}
+
+// Icon button
+.btn-icon {
+  @include neu-raised('xs');
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50% !important;
+
+  &:hover {
+    box-shadow: $shadow-soft-sm !important;
+  }
+
+  &:active {
+    box-shadow: $shadow-inset-xs !important;
+  }
+}
+
+// ============================================
+// FORM INPUTS - Neumorphic Override
+// ============================================
+
+.form-control {
+  background-color: $neu-bg !important;
+  border: none !important;
+  border-radius: $input-border-radius !important;
+  box-shadow: $input-shadow !important;
+  color: $input-color !important;
+  padding: $input-padding-y $input-padding-x;
+  transition: $transition-all;
+
+  &::placeholder {
+    color: $input-placeholder-color;
+  }
+
+  &:focus {
+    box-shadow: $input-shadow-focus, 0 0 0 3px rgba($primary, 0.15) !important;
+    outline: none;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.form-control-lg {
+  padding: 0.875rem 1.25rem;
+  font-size: 1rem;
+}
+
+.form-control-sm {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+// Select
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2366799e' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+// Input groups
+.input-group {
+  .input-group-prepend,
+  .input-group-append {
+    .input-group-text {
+      background-color: $neu-bg;
+      border: none;
+      box-shadow: $shadow-inset-xs;
+      color: $text-muted;
+    }
+  }
+
+  .form-control {
+    &:first-child {
+      border-radius: $input-border-radius 0 0 $input-border-radius !important;
+    }
+
+    &:last-child {
+      border-radius: 0 $input-border-radius $input-border-radius 0 !important;
+    }
+  }
+}
+
+// Form labels
+label,
+.form-label {
+  font-weight: 600;
+  color: $text-dark;
+  margin-bottom: $spacer-sm;
+  font-size: 0.875rem;
+}
+
+// ============================================
+// TABLES - Neumorphic Override
+// ============================================
+
 .table {
   background-color: transparent !important;
+  border-collapse: separate;
+  border-spacing: 0;
 
   thead th {
-    border-bottom: 2px solid rgba(163, 177, 198, 0.2) !important;
-    color: #2064d8;
+    background-color: rgba($neu-dark-shadow, 0.1);
+    border-bottom: 2px solid rgba($neu-border, 0.3) !important;
+    color: $primary;
+    font-weight: 600;
+    padding: $spacer-md;
+
+    &:first-child {
+      border-radius: $border-radius 0 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 $border-radius 0 0;
+    }
   }
 
   td {
-    border-top: 1px solid rgba(163, 177, 198, 0.1) !important;
+    border-top: 1px solid rgba($neu-border, 0.2) !important;
+    padding: $spacer-md;
+    vertical-align: middle;
+  }
+
+  tbody tr:hover td {
+    background-color: rgba($primary, 0.03);
+  }
+
+  th {
+    font-weight: 600 !important;
   }
 }
 
-// Spinkit removed - using Tailwind animate-spin with lucide-react
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba($neu-dark-shadow, 0.03);
+}
 
-.card-header {
-  color: #2064d8 !important;
+// ============================================
+// DROPDOWNS - Neumorphic Override
+// ============================================
+
+.dropdown-menu {
+  background-color: $neu-bg;
+  border: none !important;
+  border-radius: $dropdown-border-radius !important;
+  box-shadow: $dropdown-shadow !important;
+  padding: $spacer-sm;
+
+  .dropdown-item {
+    border-radius: $border-radius-sm;
+    padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+    color: $text-dark;
+    transition: $transition-all;
+
+    &:hover {
+      background-color: rgba($primary, 0.05);
+      color: $primary;
+      box-shadow: $shadow-soft-xs;
+    }
+
+    &.active,
+    &:active {
+      background-color: rgba($primary, 0.1);
+      color: $primary;
+      box-shadow: $shadow-inset-xs;
+    }
+  }
+
+  .dropdown-divider {
+    border-color: rgba($neu-border, 0.3);
+  }
 }
-.btn-primary,
-.page-item,
-.page-item.active .page-link,
-.btn-square {
-  background-color: #2064d8;
-  border-color: #2064d8;
-  border-radius: 7px;
-  margin: 0 4px;
+
+// ============================================
+// MODALS - Neumorphic Override
+// ============================================
+
+.modal-content {
+  background-color: $neu-bg;
+  border: none !important;
+  border-radius: $modal-border-radius !important;
+  box-shadow: $modal-shadow !important;
 }
-.btn-square1 {
-  background-color: #2064d8;
-  border-color: #2064d8;
-  border-radius: 40px;
-  margin-top: 27px;
+
+.modal-header {
+  border-bottom: 1px solid rgba($neu-border, 0.3);
+  padding: $spacer-lg;
+
+  .modal-title {
+    font-weight: 700;
+    color: $text-dark;
+  }
+
+  .close {
+    @include neu-raised('xs');
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: $transition-all;
+
+    &:hover {
+      box-shadow: $shadow-soft-sm;
+    }
+  }
 }
-.btn-primary:disabled {
-  background-color: #21d8aa;
-  border-color: #21d8aa;
+
+.modal-body {
+  padding: $spacer-lg;
 }
-.btn-primary:hover,
-.btn-square:hover {
-  background-color: #21d8aa;
-  border-color: #21d8aa;
+
+.modal-footer {
+  border-top: 1px solid rgba($neu-border, 0.3);
+  padding: $spacer-lg;
 }
-.btn-square1:hover {
-  background-color: #21d8aa;
-  border-color: #21d8aa;
+
+.modal-backdrop {
+  background-color: rgba($text-dark, 0.5);
+  backdrop-filter: blur(4px);
 }
+
+// ============================================
+// NAVIGATION & TABS
+// ============================================
+
+.nav-tabs {
+  border-bottom: none;
+
+  .nav-link {
+    border: none !important;
+    border-radius: $border-radius;
+    padding: $nav-link-padding-y $nav-link-padding-x;
+    color: $text-muted;
+    font-weight: 600;
+    transition: $transition-all;
+    box-shadow: $shadow-soft-xs;
+    margin-right: $spacer-sm;
+
+    &:hover {
+      color: $primary;
+      box-shadow: $shadow-soft-sm;
+    }
+
+    &.active {
+      color: $primary;
+      background-color: $neu-bg;
+      box-shadow: $shadow-inset-sm;
+    }
+  }
+}
+
+.tab-content {
+  border: none;
+  padding-top: $spacer-lg;
+}
+
+// ============================================
+// PAGINATION
+// ============================================
+
+.pagination {
+  gap: $spacer-xs;
+
+  .page-item {
+    .page-link {
+      background-color: $neu-bg;
+      border: none;
+      border-radius: $border-radius-sm !important;
+      box-shadow: $shadow-soft-xs;
+      color: $text-muted;
+      padding: 0.5rem 0.75rem;
+      margin: 0;
+      transition: $transition-all;
+
+      &:hover {
+        color: $primary;
+        box-shadow: $shadow-soft-sm;
+      }
+    }
+
+    &.active .page-link {
+      background-color: $primary;
+      color: $text-white;
+      box-shadow: $shadow-soft-sm;
+    }
+
+    &.disabled .page-link {
+      opacity: 0.5;
+    }
+  }
+}
+
+// ============================================
+// BADGES
+// ============================================
+
+.badge {
+  font-weight: 600;
+  padding: $badge-padding-y $badge-padding-x;
+  border-radius: $badge-border-radius;
+}
+
 .badge-primary {
-  background-color: #2064d8;
+  background-color: rgba($primary, 0.15);
+  color: $primary;
 }
-.bank-account-screen .bank-account-table .my-link {
-  color: #2064d8;
-  text-decoration: underline;
+
+.badge-success {
+  background-color: rgba($success, 0.15);
+  color: $success;
 }
-.btn-secondary {
-  color: #000;
-  background-color: #c8ced3;
-  border-color: #c8ced3;
+
+.badge-danger {
+  background-color: rgba($danger, 0.15);
+  color: $danger;
 }
-.btn-secondary:hover {
-  color: #fff;
-  background-color: #2064d8;
-  border-color: #2064d8;
+
+.badge-warning {
+  background-color: rgba($warning, 0.15);
+  color: darken($warning, 10%);
 }
-.breadcrumb-item {
-  a {
-    color: #2064d8 !important;
+
+.badge-info {
+  background-color: rgba($info, 0.15);
+  color: $info;
+}
+
+// ============================================
+// ALERTS
+// ============================================
+
+.alert {
+  border: none;
+  border-radius: $alert-border-radius;
+  box-shadow: $alert-shadow;
+  padding: $spacer-md;
+}
+
+.alert-primary {
+  background-color: $neu-bg;
+  border-left: 4px solid $primary;
+  color: $text-dark;
+}
+
+.alert-success {
+  background-color: $neu-bg;
+  border-left: 4px solid $success;
+  color: $text-dark;
+}
+
+.alert-danger {
+  background-color: $neu-bg;
+  border-left: 4px solid $danger;
+  color: $text-dark;
+}
+
+.alert-warning {
+  background-color: $neu-bg;
+  border-left: 4px solid $warning;
+  color: $text-dark;
+}
+
+// ============================================
+// PROGRESS BARS
+// ============================================
+
+.progress {
+  height: $progress-height;
+  background-color: $progress-bg;
+  border-radius: $progress-border-radius;
+  box-shadow: $progress-shadow;
+  overflow: hidden;
+
+  .progress-bar {
+    background: linear-gradient(90deg, $primary, $primary-light);
+    border-radius: $progress-border-radius;
+    box-shadow: $shadow-soft-xs;
   }
 }
-.btn-brand {
-  i {
-    background-color: inherit;
+
+// ============================================
+// BREADCRUMBS
+// ============================================
+
+.breadcrumb {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+
+  .breadcrumb-item {
+    a {
+      color: $primary !important;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &.active {
+      color: $text-dark;
+      font-weight: 500;
+    }
+
+    + .breadcrumb-item::before {
+      color: $text-light;
+    }
   }
 }
-// .table {
-// 	.icon {
-// 		background-color: #2064d8;
-// 	}
-// }
+
+// ============================================
+// STATUS LABELS
+// ============================================
+
+.label-draft {
+  background-color: rgba($text-light, 0.2) !important;
+  color: $text-muted !important;
+  display: inline-block;
+  padding: 4px 12px;
+  font-weight: 600;
+  border-radius: $badge-border-radius;
+}
+
+.label-paid,
+.label-success {
+  background-color: rgba($success, 0.15) !important;
+  color: $success !important;
+  display: inline-block;
+  padding: 4px 12px;
+  font-weight: 600;
+  border-radius: $badge-border-radius;
+}
+
+.label-posted {
+  background-color: rgba($info, 0.15) !important;
+  color: $info !important;
+  display: inline-block;
+  padding: 4px 12px;
+  font-weight: 600;
+  border-radius: $badge-border-radius;
+}
+
+.label-sent {
+  background-color: rgba($success, 0.15) !important;
+  color: $success !important;
+  display: inline-block;
+  padding: 4px 12px;
+  font-weight: 600;
+  border-radius: $badge-border-radius;
+}
+
+.label-approved,
+.label-primary,
+.label-bank {
+  background-color: rgba($primary, 0.15) !important;
+  color: $primary !important;
+  display: inline-block;
+  padding: 4px 12px;
+  font-weight: 600;
+  border-radius: $badge-border-radius;
+}
+
+.label-closed {
+  background-color: rgba($text-light, 0.2) !important;
+  color: $text-muted !important;
+  display: inline-block;
+  padding: 4px 12px;
+  font-weight: 600;
+  border-radius: $badge-border-radius;
+}
+
+.label-info {
+  background-color: rgba($info, 0.15) !important;
+  color: $info !important;
+  display: inline-block;
+  padding: 4px 12px;
+  font-weight: 600;
+  border-radius: $badge-border-radius;
+}
+
+.label-danger,
+.label-overdue,
+.label-due {
+  background-color: rgba($danger, 0.15) !important;
+  color: $danger !important;
+  display: inline-block;
+  padding: 4px 12px;
+  font-weight: 600;
+  border-radius: $badge-border-radius;
+}
+
+.label-PartiallyPaid {
+  background-color: rgba($warning, 0.15) !important;
+  color: darken($warning, 10%) !important;
+  display: inline-block;
+  padding: 4px 12px;
+  font-weight: 600;
+  border-radius: $badge-border-radius;
+}
+
+.label-currency {
+  background-color: rgba($text-light, 0.2) !important;
+  color: $text-muted !important;
+  display: inline-block;
+  padding: 4px 12px;
+  font-weight: 600;
+  border-radius: $badge-border-radius;
+}
+
+// ============================================
+// TOASTIFY - Neumorphic Override
+// ============================================
+
+.Toastify__toast {
+  background-color: $neu-bg !important;
+  border-radius: $border-radius !important;
+  box-shadow: $shadow-soft !important;
+  padding: $spacer-md;
+}
+
+.Toastify__toast--error {
+  border-left: 4px solid $danger;
+
+  .Toastify__close-button {
+    color: $danger;
+  }
+
+  .Toastify__progress-bar {
+    background-color: $danger;
+  }
+}
+
+.Toastify__toast--success {
+  border-left: 4px solid $success;
+
+  .Toastify__close-button {
+    color: $success;
+  }
+
+  .Toastify__progress-bar {
+    background-color: $success;
+  }
+}
+
+.Toastify__toast--warning {
+  border-left: 4px solid $warning;
+
+  .Toastify__close-button {
+    color: $warning;
+  }
+
+  .Toastify__progress-bar {
+    background-color: $warning;
+  }
+}
+
+.Toastify__toast--info {
+  border-left: 4px solid $info;
+
+  .Toastify__close-button {
+    color: $info;
+  }
+
+  .Toastify__progress-bar {
+    background-color: $info;
+  }
+}
+
+.Toastify__toast-body {
+  color: $text-dark;
+  font-weight: 500;
+}
+
+// ============================================
+// SCROLLBAR - Neumorphic
+// ============================================
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba($text-light, 0.4);
+  border-radius: 4px;
+
+  &:hover {
+    background: rgba($text-light, 0.6);
+  }
+}
+
+// ============================================
+// UTILITY CLASSES
+// ============================================
+
+.text-primary {
+  color: $primary !important;
+}
+
+.bg-neu {
+  background-color: $neu-bg !important;
+}
+
+.shadow-neu {
+  box-shadow: $shadow-soft !important;
+}
+
+.shadow-neu-sm {
+  box-shadow: $shadow-soft-sm !important;
+}
+
+.shadow-neu-lg {
+  box-shadow: $shadow-soft-lg !important;
+}
+
+.shadow-neu-inset {
+  box-shadow: $shadow-inset !important;
+}
+
+.rounded-neu {
+  border-radius: $border-radius !important;
+}
+
+.rounded-neu-lg {
+  border-radius: $border-radius-lg !important;
+}
+
+.rounded-neu-xl {
+  border-radius: $border-radius-xl !important;
+}
+
+// ============================================
+// MISC OVERRIDES
+// ============================================
+
 .card-columns .card {
   margin-bottom: 1.5rem;
 }
-.btn-link {
-  color: #2064d8;
-}
-.tab-content {
-  border: none;
-}
-.nav-tabs .nav-link {
-  border: none;
-}
-.card .nav-link {
-  font-weight: 600;
-}
-// a {
-// 	color: #2064d8 !important;
-// }
-.app-footer .text-primary {
-  color: #2064d8 !important;
-}
-.btn-primary:focus,
-.btn-primary.focus {
-  background-color: #54e0c4 !important;
-  border-color: #54e0c4 !important;
-}
-.transactions-report-screen .card-header {
-  padding: 0.75rem 1.25rem !important;
-}
-.badge-info,
-.badge-success {
-  background-color: #2064d8;
-}
-.card-body th {
-  font-weight: 600 !important;
-}
-.card-body .btn-square {
-  border-radius: 40px !important;
-  box-shadow:
-    0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03),
-    0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03),
-    0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05),
-    0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03) !important;
-  padding-left: 20px !important;
-  padding-right: 20px !important;
-}
-.card-body .form-control:focus {
-  border: 1px solid #2064d8 !important;
-  box-shadow: none !important;
-}
-.textarea:focus {
-  border-color: #2064d8 !important;
-  outline: 1px solid #2064d8 !important;
-}
-.card-body .textarea:focus {
-  border-color: #2064d8 !important;
-  outline: 1px solid #2064d8 !important;
-  box-shadow: none !important;
-}
+
 .invoice-detail {
   font-weight: 600;
 }
-.label-draft {
-  background-color: #e8e8e8 !important;
-  color: #989898 !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
+
+.transactions-report-screen .card-header {
+  padding: 0.75rem 1.25rem !important;
 }
-.label-paid {
-  background-color: #e6f9e5 !important;
-  color: #0cbf00 !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
+
+.bank-account-screen .bank-account-table .my-link {
+  color: $primary;
+  text-decoration: underline;
 }
-.label-posted {
-  background-color: #e5f7ff !important;
-  color: #00b0ff !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
-}
-.label-sent {
-  background-color: #e8fbf6 !important;
-  color: #28d9ac !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
-}
-.label-approved {
-  background-color: #e8effb !important;
-  color: #2064d8 !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
-}
-.label-closed {
-  background-color: #f5f2fd !important;
-  color: #d1d1d1 !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
-}
-.label-success {
-  background-color: #e7faed !important;
-  color: #1bc852 !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
-}
-.label-primary {
-  background-color: #e8ebfc !important;
-  color: #18038d !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
-}
-.label-info {
-  background-color: #e8fbfd !important;
-  color: #11c5db !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
-}
-.label-danger {
-  background-color: #fff5f6 !important;
-  color: #f83245 !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
-}
-.label-bank {
-  background-color: #e8effb !important;
-  color: #2165d8 !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
-}
-.label-overdue {
-  background-color: #fce5e7 !important;
-  color: #e1021a !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
-}
-.label-due {
-  background-color: #fee5e5 !important;
-  color: #f10101 !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
-}
-.label-PartiallyPaid {
-  background-color: #fff2e7 !important;
-  color: #fe7c18 !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
-}
-.label-currency {
-  background-color: #f1f1f1 !important;
-  color: #727272 !important;
-  display: inline;
-  padding: 4px 10px;
-  font-weight: 600;
-}
-.Toastify__toast--error {
-  color: #f83245;
-  border: 1px solid #f83245;
-  background-color: #fff;
-  position: relative;
-}
-.Toastify__toast--success {
-  color: #2064d8;
-  border: 1px solid #2064d8;
-  background-color: #fff;
-  position: relative;
-}
-.Toastify__toast--error .Toastify__close-button {
-  color: #f83245;
-}
-.Toastify__toast--success .Toastify__close-button {
-  color: #2064d8;
-}
-.Toastify__toast--success .Toastify__progress-bar {
-  background-color: #2064d8;
-}
-.Toastify__toast--error .Toastify__progress-bar {
-  background-color: #f83245;
-}
-.Toastify__toast--error::before {
-  font-family: 'Font Awesome 5 Free';
-  font-weight: 900;
-  position: absolute;
-  content: '\f06a';
-  left: 8px;
-  width: 20px;
-  height: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-.Toastify__toast--success::before {
-  font-family: 'Font Awesome 5 Free';
-  font-weight: 900;
-  position: absolute;
-  content: '\f058';
-  left: 8px;
-  width: 20px;
-  height: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-.Toastify__toast-body {
-  padding-left: 20px;
+
+.app-footer .text-primary {
+  color: $primary !important;
 }

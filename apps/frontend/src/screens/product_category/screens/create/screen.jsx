@@ -24,6 +24,7 @@ import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import * as CreateProductCategoryActions from './actions';
 import * as ProductCategoryActions from '../../actions';
+import { Package, HelpCircle, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -198,7 +199,7 @@ const CreateProductCategory = ({
               <Card>
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="nav-icon fas fa-boxes" />
+                    <Package className="h-4 w-4" />
                     <span className="ml-2">{strings.NewProductCategory}</span>
                   </div>
                 </CardHeader>
@@ -210,10 +211,10 @@ const CreateProductCategory = ({
                           <Label htmlFor="productCategoryCode">
                             <span className="text-danger">* </span>
                             {strings.ProductCategoryCode}
-                            <i
+                            <HelpCircle
                               id="ProductcatcodeTooltip"
-                              className="fa fa-question-circle ml-1"
-                            ></i>
+                              className="h-4 w-4 ml-1 inline"
+                            />
                             <UncontrolledTooltip placement="right" target="ProductcatcodeTooltip">
                               Product Category Code - Unique identifier code of the product
                             </UncontrolledTooltip>
@@ -278,7 +279,7 @@ const CreateProductCategory = ({
                               setCreateMore(false);
                             }}
                           >
-                            <i className="fa fa-dot-circle-o"></i>{' '}
+                            <CircleDot className="h-4 w-4" />{' '}
                             {disabled ? 'Creating...' : strings.Create}
                           </Button>
 
@@ -292,7 +293,7 @@ const CreateProductCategory = ({
                               setCreateMore(true);
                             }}
                           >
-                            <i className="fa fa-refresh"></i>{' '}
+                            <RefreshCw className="h-4 w-4" />{' '}
                             {disabled ? 'Creating...' : strings.CreateandMore}
                           </Button>
 
@@ -304,7 +305,7 @@ const CreateProductCategory = ({
                               history.push('/admin/master/product-category');
                             }}
                           >
-                            <i className="fa fa-ban mr-1"></i>
+                            <Ban className="h-4 w-4" />
                             {strings.Cancel}
                           </Button>
                         </FormGroup>

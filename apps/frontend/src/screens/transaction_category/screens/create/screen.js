@@ -22,6 +22,7 @@ import { Loader } from 'components';
 import './style.scss';
 
 import * as TransactionActions from './actions';
+import { CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {};
@@ -405,10 +406,10 @@ class CreateTransactionCategory extends React.Component {
                         )}
                         <FormGroup className="text-right mt-5">
                           <Button type="submit" color="primary" className="btn-square mr-3">
-                            <i className="fa fa-dot-circle-o"></i> Create
+                            <CircleDot className="h-4 w-4" /> Create
                           </Button>
                           <Button type="submit" color="primary" className="btn-square mr-3">
-                            <i className="fa fa-refresh"></i> Create and More
+                            <RefreshCw className="h-4 w-4" /> Create and More
                           </Button>
                           <Button
                             type="submit"
@@ -418,7 +419,7 @@ class CreateTransactionCategory extends React.Component {
                               this.props.history.push('/admin/settings/transaction-category');
                             }}
                           >
-                            <i className="fa fa-ban"></i> Cancel
+                            <Ban className="h-4 w-4" /> Cancel
                           </Button>
                         </FormGroup>
                       </Form>

@@ -11,6 +11,7 @@ import { bindActionCreators } from 'redux';
 // import 'react-select/dist/react-select.css'
 import './style.scss';
 import { data } from '../Language/index';
+import { Palette } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {};
@@ -71,7 +72,7 @@ class Template extends React.Component {
               <Row>
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="nav-icon fas fa-palette" />
+                    <Palette className="h-4 w-4" />
                     <span className="ml-2 ">{strings.MailThemes}</span>
                   </div>
                 </Col>

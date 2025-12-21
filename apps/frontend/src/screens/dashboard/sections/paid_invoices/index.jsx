@@ -48,17 +48,17 @@ class PaidInvoices extends Component {
           borderCapStyle: 'round',
           borderDash: [],
           borderWidth: 4,
-          borderColor: '#4191ff',
+          borderColor: '#2064d8',
           borderDashOffset: 0.0,
           borderJoinStyle: 'round',
-          pointBorderColor: '#4191ff',
+          pointBorderColor: '#2064d8',
           pointBackgroundColor: '#ffffff',
           pointBorderWidth: 3,
           pointHoverRadius: 6,
           pointHoverBorderWidth: 3,
           pointRadius: 4,
           pointHoverBackgroundColor: '#ffffff',
-          pointHoverBorderColor: '#4191ff',
+          pointHoverBorderColor: '#2064d8',
           data: paidCustomerData.data || [],
           datalabels: {
             display: false,
@@ -144,7 +144,7 @@ class PaidInvoices extends Component {
             <div className="flex-wrapper title-bottom-border">
               <h1 className="mb-2 card-h1">{strings.SupplierCustomerPaidInvoices}</h1>
             </div>
-            <div className="d-block p-4">
+            <div className="chart-wrapper">
               <Line
                 data={this.state.invoice_graph_data}
                 height={300}

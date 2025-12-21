@@ -14,6 +14,7 @@ import { z } from 'zod';
 import { selectOptionsFactory } from 'utils';
 import { data } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
+import { XCircle, Plus, CircleDot, Ban, ArrowLeftCircle } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -643,7 +644,7 @@ const SalaryComponent = ({
                           removeComponent(item.salaryComponentId);
                         }}
                       >
-                        <i className="far fa-times-circle"></i>
+                        <XCircle className="h-4 w-4" />
                       </Button>
                     ) : (
                       ''
@@ -662,7 +663,7 @@ const SalaryComponent = ({
                   else setOpenSalaryComponentDeduction(true);
                 }}
               >
-                <i className="fa fa-plus"></i>{' '}
+                <Plus className="h-4 w-4" />{' '}
                 {componentType === 'Fixed' ? strings.AddEarnings : strings.AddDeduction}
               </Button>
             </td>
@@ -934,7 +935,7 @@ const SalaryComponent = ({
                         }
                       }}
                     >
-                      <i className="fa fa-dot-circle-o"></i>{' '}
+                      <CircleDot className="h-4 w-4" />{' '}
                       {disabled ? 'Updating...' : strings.Update}
                     </Button>
                     <Button
@@ -947,7 +948,7 @@ const SalaryComponent = ({
                         });
                       }}
                     >
-                      <i className="fa fa-ban"></i> {strings.Cancel}
+                      <Ban className="h-4 w-4" /> {strings.Cancel}
                     </Button>
                   </FormGroup>
                 </Row>
@@ -967,7 +968,7 @@ const SalaryComponent = ({
                         }
                       }}
                     >
-                      <i className="far fa-arrow-alt-circle-left mr-1"></i> {strings.back}
+                      <ArrowLeftCircle className="h-4 w-4" /> {strings.back}
                     </Button>
 
                     <Button
@@ -982,7 +983,7 @@ const SalaryComponent = ({
                         }
                       }}
                     >
-                      <i className="fa fa-dot-circle-o"></i> {strings.Save}
+                      <CircleDot className="h-4 w-4" /> {strings.Save}
                     </Button>
                   </div>
                 </Row>

@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { DataTable } from '@/components/ui/data-table';
+import { IdCard, CircleDot, Ban } from 'lucide-react';
 
 // Zod validation schema
 const supplierModalSchema = z.object({
@@ -84,7 +85,7 @@ const SupplierModal = props => {
             <Row>
               <Col lg={12}>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="nav-icon fas fa-id-card-alt" />
+                  <IdCard className="h-4 w-4" />
                   <span className="ml-2">Quantity</span>
                 </div>
               </Col>
@@ -106,7 +107,7 @@ const SupplierModal = props => {
           </ModalBody>
           <ModalFooter>
             <Button color="primary" type="submit" className="btn-square">
-              <i className="fa fa-dot-circle-o"></i> Save
+              <CircleDot className="h-4 w-4" /> Save
             </Button>
             &nbsp;
             <Button
@@ -116,7 +117,7 @@ const SupplierModal = props => {
                 closeMultiSupplierProductModal(false);
               }}
             >
-              <i className="fa fa-ban"></i> Cancel
+              <Ban className="h-4 w-4" /> Cancel
             </Button>
           </ModalFooter>
         </Form>

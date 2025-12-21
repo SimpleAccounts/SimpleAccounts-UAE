@@ -10,6 +10,7 @@ import DatePicker from 'react-datepicker';
 import * as accountBalanceData from '../../actions';
 import { selectOptionsFactory, selectStyles } from 'utils';
 import './style.scss';
+import { Search, RefreshCw, Download } from 'lucide-react';
 
 const AccountBalances = () => {
   const dispatch = useDispatch();
@@ -133,7 +134,7 @@ const AccountBalances = () => {
                   <FormGroup>
                     <ButtonGroup className="mr-3">
                       <Button color="primary" className="btn-square" onClick={() => {}}>
-                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                        <Download className="h-4 w-4 mr-1" />
                         Export to CSV
                       </Button>
                     </ButtonGroup>
@@ -187,10 +188,10 @@ const AccountBalances = () => {
                     className="btn-square mr-1"
                     onClick={getSelectedData}
                   >
-                    <i className="fa fa-search"></i>
+                    <Search className="h-4 w-4" />
                   </Button>
                   <Button type="button" color="primary" className="btn-square" onClick={clearAll}>
-                    <i className="fa fa-refresh"></i>
+                    <RefreshCw className="h-4 w-4" />
                   </Button>
                 </Col>
               </Row>

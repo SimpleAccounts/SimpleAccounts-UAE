@@ -31,6 +31,7 @@ import { CommonActions } from 'services/global';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { LayoutGrid, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -382,7 +383,7 @@ const InventoryEdit = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fas fa-object-group" />
+                        <LayoutGrid className="h-4 w-4" />
                         <span className="ml-2">{strings.UpdateInventory}</span>
                       </div>
                     </Col>
@@ -614,7 +615,7 @@ const InventoryEdit = ({
                                 className="btn-square mr-3"
                                 disabled={disabled}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Updating...' : strings.Update}
                               </Button>
                               <Button
@@ -624,7 +625,7 @@ const InventoryEdit = ({
                                   history.push('/admin/master/product');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

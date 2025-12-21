@@ -28,6 +28,7 @@ import { CommonActions } from 'services/global';
 import { WareHouseModal } from '../../sections';
 import { selectOptionsFactory, selectStyles } from 'utils';
 import config from '../../../../constants/config';
+import { Ban, CircleDot, HelpCircle, Package, RefreshCw } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -606,7 +607,7 @@ const CreateProduct = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fas fa-box" />
+                        <Package className="h-4 w-4" />
                         <span className="ml-2">{strings.CreateProduct}</span>
                       </div>
                     </Col>
@@ -621,7 +622,7 @@ const CreateProduct = ({
                             <FormGroup check inline className="mb-3">
                               <Label className="productlabel">
                                 {strings.ProductType}
-                                <i id="ProductTypetip" className="fa fa-question-circle ml-1"></i>
+                                <HelpCircle id="ProductTypetip" className="h-4 w-4 inline" />
                                 <UncontrolledTooltip placement="right" target="ProductTypetip">
                                   The product type cannot be changed after any document has been
                                   created using this product.
@@ -787,10 +788,7 @@ const CreateProduct = ({
                               <Label htmlFor="productCode">
                                 <span className="text-danger">* </span>
                                 {strings.ProductCode}
-                                <i
-                                  id="ProductCodeTooltip"
-                                  className="fa fa-question-circle ml-1"
-                                ></i>
+                                <HelpCircle id="ProductCodeTooltip" className="h-4 w-4 inline" />
                                 <UncontrolledTooltip placement="right" target="ProductCodeTooltip">
                                   Product Code - Unique identifier code for the product
                                 </UncontrolledTooltip>
@@ -958,7 +956,7 @@ const CreateProduct = ({
                                   checked={exciseTaxCheck}
                                 />
                                 {strings.excise_product}
-                                <i id="ExciseTooltip" className="fa fa-question-circle ml-1"></i>
+                                <HelpCircle id="ExciseTooltip" className="h-4 w-4 inline" />
                                 <UncontrolledTooltip placement="right" target="ExciseTooltip">
                                   Note: It is not possible to switch from Excise Goods to Non-Excise
                                   Goods or vice versa once any document is created using this
@@ -1074,7 +1072,7 @@ const CreateProduct = ({
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="salesUnitPrice">
                                     <span className="text-danger">* </span> {strings.SellingPrice}
-                                    <i id="SalesTooltip" className="fa fa-question-circle ml-1"></i>
+                                    <HelpCircle id="SalesTooltip" className="h-4 w-4 inline" />
                                     <UncontrolledTooltip placement="right" target="SalesTooltip">
                                       Selling price – Price at which your product is sold
                                     </UncontrolledTooltip>
@@ -1235,10 +1233,7 @@ const CreateProduct = ({
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="salesUnitPrice">
                                     <span className="text-danger">* </span> {strings.PurchasePrice}
-                                    <i
-                                      id="PurchaseTooltip"
-                                      className="fa fa-question-circle ml-1"
-                                    ></i>
+                                    <HelpCircle id="PurchaseTooltip" className="h-4 w-4 inline" />
                                     <UncontrolledTooltip placement="right" target="PurchaseTooltip">
                                       Purchase price – Amount of money you paid for the product
                                     </UncontrolledTooltip>
@@ -1387,10 +1382,7 @@ const CreateProduct = ({
                                       {errors.productPriceType.message}
                                     </div>
                                   )}
-                                  <i
-                                    id="EnventoryTooltip"
-                                    className="fa fa-question-circle ml-1"
-                                  ></i>
+                                  <HelpCircle id="EnventoryTooltip" className="h-4 w-4 inline" />
                                   <UncontrolledTooltip placement="right" target="EnventoryTooltip">
                                     Inventory cannot be enabled or disabled once a document has been
                                     created using this product.
@@ -1647,7 +1639,7 @@ const CreateProduct = ({
                                   }
                                 }}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Creating...' : strings.Create}
                               </Button>
                               {!(isParentComponentPresent && isParentComponentPresent === true) && (
@@ -1666,7 +1658,7 @@ const CreateProduct = ({
                                     }
                                   }}
                                 >
-                                  <i className="fa fa-refresh"></i>{' '}
+                                  <RefreshCw className="h-4 w-4" />{' '}
                                   {disabled ? 'Creating...' : strings.CreateandMore}
                                 </Button>
                               )}
@@ -1684,7 +1676,7 @@ const CreateProduct = ({
                                   }
                                 }}
                               >
-                                <i className="fa fa-ban mr-1"></i>
+                                <Ban className="h-4 w-4" />
                                 {strings.Cancel}
                               </Button>
                             </FormGroup>

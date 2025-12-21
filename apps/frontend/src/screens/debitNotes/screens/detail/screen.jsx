@@ -36,6 +36,7 @@ import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Trash2, CreditCard } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -236,7 +237,7 @@ const DetailDebitNote = () => {
               updateAmountHandler(newData);
             }}
           >
-            <i className="fas fa-trash"></i>
+            <Trash2 className="h-4 w-4" />
           </Button>
         ),
       },
@@ -338,7 +339,7 @@ const DetailDebitNote = () => {
         <Card>
           <CardHeader>
             <div className="h4 mb-0 d-flex align-items-center">
-              <i className="fa fa-credit-card" />
+              <CreditCard className="h-4 w-4" />
               <span className="ml-2">Update Debit Note</span>
             </div>
           </CardHeader>

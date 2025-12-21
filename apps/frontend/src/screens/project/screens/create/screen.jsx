@@ -27,6 +27,7 @@ import { CommonActions } from 'services/global';
 import { selectOptionsFactory, selectStyles } from 'utils';
 
 import './style.scss';
+import { Network, Plus, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -189,7 +190,7 @@ const CreateProject = ({
                 <Row>
                   <Col lg={12}>
                     <div className="h4 mb-0 d-flex align-items-center">
-                      <i className="nav-icon fas fa-project-diagram" />
+                      <Network className="h-4 w-4" />
                       <span className="ml-2">Create Project</span>
                     </div>
                   </Col>
@@ -266,7 +267,7 @@ const CreateProject = ({
                               onClick={showContactModal}
                               type="button"
                             >
-                              <i className="fa fa-plus"></i> Add a Contact
+                              <Plus className="h-4 w-4" /> Add a Contact
                             </Button>
                           </FormGroup>
                         </Col>
@@ -353,7 +354,7 @@ const CreateProject = ({
                               className="btn-square mr-3"
                               onClick={() => setCreateMore(false)}
                             >
-                              <i className="fa fa-dot-circle-o"></i> Create
+                              <CircleDot className="h-4 w-4" /> Create
                             </Button>
                             <Button
                               type="submit"
@@ -361,7 +362,7 @@ const CreateProject = ({
                               className="btn-square mr-3"
                               onClick={() => setCreateMore(true)}
                             >
-                              <i className="fa fa-refresh"></i> Create and More
+                              <RefreshCw className="h-4 w-4" /> Create and More
                             </Button>
                             <Button
                               color="secondary"
@@ -371,7 +372,7 @@ const CreateProject = ({
                               }}
                               type="button"
                             >
-                              <i className="fa fa-ban"></i> Cancel
+                              <Ban className="h-4 w-4" /> Cancel
                             </Button>
                           </FormGroup>
                         </Col>

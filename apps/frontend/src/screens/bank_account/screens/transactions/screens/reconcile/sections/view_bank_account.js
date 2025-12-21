@@ -9,6 +9,7 @@ import dayjs from '@/utils/date';
 import API_ROOT_URL from '../../../../../../../constants/config';
 import { data } from '../../../../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Landmark, Pencil } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {};
@@ -44,7 +45,7 @@ class ViewBankAccount extends React.Component {
           <Row>
             <Col lg={11}>
               <div className="h4 mb-0 d-flex align-items-center">
-                <i className="fas fa-university" />
+                <Landmark className="h-4 w-4" />
                 <span className="ml-2">
                   {strings.View + ' ' + strings.BankAccount + ' ' + strings.Details}{' '}
                   {
@@ -54,8 +55,8 @@ class ViewBankAccount extends React.Component {
               </div>
             </Col>
             <Col lg={1} style={{ textAlign: 'right' }}>
-              <i
-                className="fas fa-edit"
+              <Pencil
+                className="h-4 w-4 cursor-pointer"
                 onClick={() => {
                   this.props.editDetails();
                 }}

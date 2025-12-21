@@ -20,6 +20,7 @@ import { Loader } from 'components';
 import * as TransactionActions from './actions';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
+import { Plus } from 'lucide-react';
 
 const TransactionCategory = () => {
   const dispatch = useDispatch();
@@ -110,7 +111,7 @@ const TransactionCategory = () => {
                   <div className="d-flex justify-content-end">
                     <ButtonGroup className="toolbar" size="sm">
                       <Button color="success" className="btn-square">
-                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                        <Download className="h-4 w-4 mr-1" />
                         Export to CSV
                       </Button>
                       <Button
@@ -118,11 +119,11 @@ const TransactionCategory = () => {
                         className="btn-square"
                         onClick={() => navigate(`/admin/settings/transaction-category/create`)}
                       >
-                        <i className="fas fa-plus mr-1" />
+                        <Plus className="h-4 w-4" />
                         New Category
                       </Button>
                       <Button color="warning" className="btn-square">
-                        <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
+                        <Trash2 className="h-4 w-4 mr-1" />
                         Bulk Delete
                       </Button>
                     </ButtonGroup>

@@ -1,125 +1,549 @@
-.dashboard-screen {
-  // Common CSS
-  .nav-link {
-    padding: 0.4rem 0.6rem;
-  }
-  .animated {
-    position: relative;
-  }
-  .date-select {
-    button {
-      margin: 0 !important;
-      margin-right: 5px !important;
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-      color: #2064d8;
+// Dashboard Styles - Modern Neumorphic Design
+// ============================================
 
-      &:hover {
-        background-color: rgba(32, 100, 216, 0.1) !important;
-        border-radius: 0.5rem;
+// Variables (matching admin layout)
+$bg-color: #e8f0f8;
+$card-bg: #e8f0f8;
+$primary: #2563eb;
+$primary-light: #3b82f6;
+$secondary: #10b981;
+$accent: #f59e0b;
+$danger: #ef4444;
+$text-dark: #1e293b;
+$text-muted: #64748b;
+$text-light: #94a3b8;
+$white: #ffffff;
+$shadow-dark: rgba(163, 177, 198, 0.6);
+$shadow-light: rgba(255, 255, 255, 0.9);
+
+// Spacing
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 16px;
+$space-lg: 24px;
+$space-xl: 32px;
+
+// Border Radius
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 20px;
+
+// Neumorphic Shadows
+@mixin neu-raised {
+  background: $card-bg;
+  box-shadow:
+    6px 6px 14px $shadow-dark,
+    -6px -6px 14px $shadow-light;
+}
+
+@mixin neu-pressed {
+  background: $card-bg;
+  box-shadow:
+    inset 4px 4px 8px $shadow-dark,
+    inset -4px -4px 8px $shadow-light;
+}
+
+@mixin neu-flat {
+  background: $card-bg;
+  box-shadow:
+    3px 3px 8px $shadow-dark,
+    -3px -3px 8px $shadow-light;
+}
+
+// ============================================
+// DASHBOARD PAGE
+// ============================================
+.dashboard-page {
+  padding: 0;
+
+  // ============================================
+  // WELCOME CARD
+  // ============================================
+  .welcome-card {
+    @include neu-raised;
+    border-radius: $radius-xl;
+    padding: $space-xl;
+    margin-bottom: $space-lg;
+    background: linear-gradient(135deg, $card-bg 0%, darken($card-bg, 3%) 100%);
+
+    .welcome-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: $space-md;
+    }
+
+    .welcome-text {
+      .greeting {
+        font-size: 2rem;
+        font-weight: 700;
+        color: $text-dark;
+        margin: 0 0 $space-sm 0;
+        line-height: 1.2;
+      }
+
+      .date-display {
+        font-size: 1rem;
+        color: $text-muted;
+        margin: 0;
+        font-weight: 500;
+      }
+    }
+
+    .welcome-badge {
+      @include neu-flat;
+      display: flex;
+      align-items: center;
+      gap: $space-sm;
+      padding: $space-md $space-lg;
+      border-radius: $radius-md;
+
+      i {
+        font-size: 1.25rem;
+        color: $primary;
+      }
+
+      span {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $text-dark;
       }
     }
   }
-  .h1 {
-    font-size: 25px;
-    margin-right: 50px;
-    color: #2064d8;
-    font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
-  }
 
-  .card-footer,
-  .card-header {
-    padding: 10px 20px;
-    line-height: 1.7em;
-    font-weight: 700;
-    min-height: 50px;
-    color: #2064d8; // Neumorphic primary
-    background-color: transparent !important;
-    border-bottom: 1px solid rgba(163, 177, 198, 0.2);
+  // ============================================
+  // STATS ROW
+  // ============================================
+  .stats-row {
+    margin-bottom: $space-lg;
 
-    button {
-      margin: 0 !important;
+    > [class*="col-"] {
+      margin-bottom: $space-md;
     }
   }
 
-  .card-header-actions {
-    select {
-      background: #e0e5ec; // Neu bg
-      border: none;
-      box-shadow:
-        inset 2px 2px 5px rgba(163, 177, 198, 0.7),
-        inset -2px -2px 5px rgba(255, 255, 255, 0.8);
-      border-radius: 0.5rem;
-      padding: 2px 8px;
-    }
-  }
-
-  .card-body.tab-card {
-    padding: 15px;
-    background: transparent; // Let the card bg show
-  }
-
-  .card-columns .cash-card,
-  .card-columns .bank-card .invoice-card {
-    box-shadow:
-      9px 9px 16px rgb(163, 177, 198, 0.6),
-      -9px -9px 16px rgba(255, 255, 255, 0.5) !important;
-    border-radius: 1.5rem;
-    border: none;
-    background: #e0e5ec;
-  }
-
-  .flex-wrapper {
+  .stat-card {
+    @include neu-raised;
+    border-radius: $radius-lg;
+    padding: $space-lg;
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
+    align-items: center;
+    gap: $space-md;
+    height: 100%;
+    transition: transform 0.2s ease;
 
-  button,
-  .form-control {
-    // Rely on global Neumorphic styles, just adjust sizing if needed
-    font-size: 12px;
-  }
-
-  .data-info {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-
-    .data-item:not(:last-child) {
-      border-right: 1px solid rgba(163, 177, 198, 0.3); // Softer border
-      padding: 0px 1%;
-      margin-bottom: 20px;
+    &:hover {
+      transform: translateY(-2px);
     }
 
-    .data-item {
-      padding: 0 1%;
+    .stat-icon {
+      @include neu-pressed;
+      width: 56px;
+      height: 56px;
+      border-radius: $radius-md;
       display: flex;
-      margin-bottom: 20px;
-      width: max-content;
-      text-align: center;
       align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
 
       img {
-        margin-right: 20px;
-        height: 40px;
-        filter: drop-shadow(2px 2px 4px rgba(163, 177, 198, 0.4)); // Soft shadow for icons
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
       }
 
-      h3 {
-        margin: 0;
-        font-size: 20px;
-        color: #44476a; // Darker text for contrast
+      i {
+        font-size: 1.5rem;
+      }
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+      gap: $space-xs;
+
+      .stat-label {
+        font-size: 0.8125rem;
+        color: $text-muted;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
-      p {
-        font-size: 14px;
-        color: #8898aa;
-        margin: 0;
-        font-weight: 600;
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: $text-dark;
       }
+    }
+
+    // Color variants
+    &.stat-primary .stat-icon i {
+      color: $primary;
+    }
+
+    &.stat-success .stat-icon i {
+      color: $secondary;
+    }
+
+    &.stat-warning .stat-icon i {
+      color: $accent;
+    }
+
+    &.stat-info .stat-icon i {
+      color: #0ea5e9;
+    }
+
+    &.stat-danger .stat-icon i {
+      color: $danger;
+    }
+  }
+
+  // ============================================
+  // SECTION HEADERS
+  // ============================================
+  .section-header {
+    margin-bottom: $space-md;
+    margin-top: $space-lg;
+
+    &:first-of-type {
+      margin-top: 0;
+    }
+
+    .section-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: $text-muted;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: $space-sm;
+
+      i {
+        color: $primary;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  // ============================================
+  // CHART CARDS
+  // ============================================
+  .chart-card {
+    @include neu-raised;
+    border-radius: $radius-lg;
+    padding: $space-lg;
+    margin-bottom: $space-lg;
+
+    &.full-width {
+      width: 100%;
+    }
+
+    // Override card styles from sections
+    .card {
+      background: transparent !important;
+      box-shadow: none !important;
+      border: none !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+    }
+
+    .card-header {
+      background: transparent !important;
+      border: none !important;
+      padding: 0 0 $space-md 0 !important;
+
+      .card-h1,
+      .h1,
+      h1 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: $primary;
+        margin: 0;
+      }
+    }
+
+    .card-body {
+      background: transparent !important;
+      padding: 0 !important;
+    }
+
+    .card-footer {
+      background: transparent !important;
+      border: none !important;
+      padding: $space-md 0 0 0 !important;
+    }
+
+    // Chart wrapper
+    .chart-wrapper {
+      @include neu-pressed;
+      border-radius: $radius-md;
+      padding: $space-md;
+      margin-top: $space-md;
+
+      canvas {
+        max-height: 280px;
+      }
+    }
+
+    // Data info sections
+    .data-info {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: $space-md 0;
+      gap: $space-lg;
+
+      .data-item {
+        display: flex;
+        align-items: center;
+        gap: $space-md;
+        padding: $space-md;
+
+        img {
+          height: 40px;
+          width: 40px;
+          object-fit: contain;
+        }
+
+        h3,
+        h5 {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: $text-dark;
+          margin: 0;
+        }
+
+        p {
+          font-size: 0.75rem;
+          color: $text-muted;
+          margin: 0;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-weight: 600;
+        }
+      }
+    }
+
+    // Flex wrapper for header actions
+    .flex-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: $space-md;
+    }
+
+    // Select dropdowns
+    select,
+    .form-control,
+    .form-select {
+      background: $card-bg !important;
+      box-shadow: inset 4px 4px 8px $shadow-dark, inset -4px -4px 8px $shadow-light !important;
+      border: none !important;
+      border-radius: $radius-sm !important;
+      padding: $space-sm $space-md !important;
+      font-size: 0.8125rem !important;
+      color: $text-dark !important;
+      font-weight: 500;
+      cursor: pointer;
+      min-width: 140px;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
+      background-repeat: no-repeat !important;
+      background-position: right 12px center !important;
+      padding-right: 32px !important;
+
+      &:focus {
+        outline: none !important;
+        box-shadow:
+          inset 4px 4px 8px $shadow-dark,
+          inset -4px -4px 8px $shadow-light,
+          0 0 0 2px rgba($primary, 0.2) !important;
+      }
+
+      option {
+        background: $white;
+        color: $text-dark;
+      }
+    }
+
+    // Date select buttons
+    .date-select {
+      display: flex;
+      gap: $space-xs;
+
+      button {
+        @include neu-flat;
+        border: none;
+        padding: $space-sm $space-md;
+        border-radius: $radius-sm;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        color: $text-muted;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          color: $primary;
+        }
+
+        &.active {
+          @include neu-pressed;
+          color: $primary;
+          font-weight: 600;
+        }
+      }
+    }
+
+    // Bank icon & dropdown
+    .bankIcon {
+      height: 32px;
+      width: auto;
+    }
+  }
+
+  // ============================================
+  // CHARTS ROW
+  // ============================================
+  .charts-row {
+    > [class*="col-"] {
+      margin-bottom: $space-lg;
+    }
+
+    .chart-card {
+      height: 100%;
+      margin-bottom: 0;
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE STYLES
+// ============================================
+@media (max-width: 991px) {
+  .dashboard-page {
+    .welcome-card {
+      padding: $space-lg;
+
+      .welcome-text .greeting {
+        font-size: 1.5rem;
+      }
+
+      .welcome-badge {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .stat-card {
+      padding: $space-md;
+
+      .stat-icon {
+        width: 48px;
+        height: 48px;
+
+        i {
+          font-size: 1.25rem;
+        }
+      }
+
+      .stat-info .stat-value {
+        font-size: 1.25rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-page {
+    .welcome-card {
+      padding: $space-md;
+
+      .welcome-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .welcome-text .greeting {
+        font-size: 1.25rem;
+      }
+
+      .welcome-text .date-display {
+        font-size: 0.875rem;
+      }
+    }
+
+    .chart-card {
+      padding: $space-md;
+
+      .flex-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .data-info {
+        flex-direction: column;
+        align-items: center;
+
+        .data-item {
+          width: 100%;
+          justify-content: center;
+          border-bottom: 1px solid rgba($text-light, 0.2);
+          padding-bottom: $space-md;
+
+          &:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ============================================
+// UTILITY CLASSES FOR SECTION COMPONENTS
+// ============================================
+.dashboard-page {
+  // Title styling
+  .title-bottom-border {
+    border-bottom: 2px solid rgba($primary, 0.1);
+    padding-bottom: $space-md;
+    margin-bottom: $space-md;
+  }
+
+  // Card visibility
+  .card-visibility {
+    min-height: 200px;
+  }
+
+  // Bank type select
+  .bank-type-select {
+    min-width: 180px;
+  }
+
+  // Card header actions
+  .card-header-actions {
+    display: flex;
+    align-items: center;
+    gap: $space-sm;
+  }
+
+  // Legacy row margin fix
+  .row {
+    margin-left: -$space-sm;
+    margin-right: -$space-sm;
+
+    > [class*="col-"] {
+      padding-left: $space-sm;
+      padding-right: $space-sm;
     }
   }
 }

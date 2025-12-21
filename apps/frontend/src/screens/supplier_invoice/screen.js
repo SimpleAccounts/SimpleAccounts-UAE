@@ -34,6 +34,7 @@ import overWeekly from 'assets/images/invoice/week1.png';
 import overduemonthly from 'assets/images/invoice/month.png';
 import overdue from 'assets/images/invoice/due1.png';
 import { ServerDataTable } from '@/components/ui/server-data-table';
+import { ChevronUp, ChevronDown, Pencil, ArrowRightCircle, Copy, Plus, File, Landmark, Eye, FileText, Search, RefreshCw } from 'lucide-react';
 
 const toWords = new ToWords({
   localeCode: 'en-IN',
@@ -510,9 +511,9 @@ class SupplierInvoice extends React.Component {
             >
               <DropdownToggle size="sm" color="primary" className="btn-brand icon">
                 {isOpen ? (
-                  <i className="fas fa-chevron-up" />
+                  <ChevronUp className="h-4 w-4" />
                 ) : (
-                  <i className="fas fa-chevron-down" />
+                  <ChevronDown className="h-4 w-4" />
                 )}
               </DropdownToggle>
               <DropdownMenu right>
@@ -532,7 +533,7 @@ class SupplierInvoice extends React.Component {
                           );
                       }}
                     >
-                      <i className="fas fa-edit" /> {strings.Edit}
+                      <Pencil className="h-4 w-4" /> {strings.Edit}
                     </DropdownItem>
                   )}
                 {rowData.statusEnum !== 'Sent' &&
@@ -543,7 +544,7 @@ class SupplierInvoice extends React.Component {
                         this.postInvoice(rowData, true);
                       }}
                     >
-                      <i className="far fa-arrow-alt-circle-right"></i>
+                      <ArrowRightCircle className="h-4 w-4" />
                       {strings.Post}
                     </DropdownItem>
                   )}
@@ -554,7 +555,7 @@ class SupplierInvoice extends React.Component {
                     })
                   }
                 >
-                  <i className="fas fa-copy" /> {strings.CreateADuplicate}
+                  <Copy className="h-4 w-4" /> {strings.CreateADuplicate}
                 </DropdownItem>
                 {!rowData.cnCreatedOnPaidInvoice &&
                   rowData.statusEnum === 'Paid' &&
@@ -567,7 +568,7 @@ class SupplierInvoice extends React.Component {
                         });
                       }}
                     >
-                      <i className="fas fa-plus" /> {strings.Create + ' ' + strings.DebitNote}
+                      <Plus className="h-4 w-4" /> {strings.Create + ' ' + strings.DebitNote}
                     </DropdownItem>
                   )}
                 {rowData.statusEnum === 'Sent' && (
@@ -581,7 +582,7 @@ class SupplierInvoice extends React.Component {
                         );
                     }}
                   >
-                    <i className="fas fa-file" /> {strings.Draft}
+                    <File className="h-4 w-4" /> {strings.Draft}
                   </DropdownItem>
                 )}
                 {rowData.statusEnum !== 'Draft' &&
@@ -594,7 +595,7 @@ class SupplierInvoice extends React.Component {
                         });
                       }}
                     >
-                      <i className="fas fa-university" /> {strings.RecordPayment}
+                      <Landmark className="h-4 w-4" /> {strings.RecordPayment}
                     </DropdownItem>
                   )}
                 <DropdownItem
@@ -605,7 +606,7 @@ class SupplierInvoice extends React.Component {
                     })
                   }
                 >
-                  <i className="fas fa-eye" /> {strings.View}
+                  <Eye className="h-4 w-4" /> {strings.View}
                 </DropdownItem>
               </DropdownMenu>
             </ButtonDropdown>
@@ -666,7 +667,7 @@ class SupplierInvoice extends React.Component {
                 <Row>
                   <Col lg={12}>
                     <div className="h4 mb-0 d-flex align-items-center">
-                      <i className="fas fa-file-invoice" />
+                      <FileText className="h-4 w-4" />
                       <span className="ml-2">{strings.SupplierInvoices}</span>
                     </div>
                   </Col>
@@ -764,7 +765,7 @@ class SupplierInvoice extends React.Component {
                             className="btn-square mr-1"
                             onClick={this.handleSearch}
                           >
-                            <i className="fa fa-search"></i>
+                            <Search className="h-4 w-4" />
                           </Button>
                           <Button
                             type="button"
@@ -772,7 +773,7 @@ class SupplierInvoice extends React.Component {
                             className="btn-square"
                             onClick={this.clearAll}
                           >
-                            <i className="fa fa-refresh"></i>
+                            <RefreshCw className="h-4 w-4" />
                           </Button>
                         </Col>
                       </Row>
@@ -787,7 +788,7 @@ class SupplierInvoice extends React.Component {
                             this.props.history.push(`/admin/expense/supplier-invoice/create`)
                           }
                         >
-                          <i className="fas fa-plus mr-1" />
+                          <Plus className="h-4 w-4" />
                           {strings.AddNewInvoice}
                         </Button>
                       </div>

@@ -29,6 +29,7 @@ import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { BookUser, Upload, X, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -342,7 +343,7 @@ const RecordSupplierPayment = props => {
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fas fa-address-book" />
+                        <BookUser className="h-4 w-4" />
                         <span className="ml-2">{strings.PaymentForSupplierInvoice}</span>
                       </div>
                     </Col>
@@ -608,7 +609,7 @@ const RecordSupplierPayment = props => {
                                       }}
                                       className="btn-square mr-3"
                                     >
-                                      <i className="fa fa-upload"></i> {strings.upload}
+                                      <Upload className="h-4 w-4" /> {strings.upload}
                                     </Button>
                                     <input
                                       id="fileInput"
@@ -619,10 +620,10 @@ const RecordSupplierPayment = props => {
                                     />
                                     {fileName && (
                                       <div>
-                                        <i
-                                          className="fa fa-close"
+                                        <X
+                                          className="h-4 w-4 cursor-pointer"
                                           onClick={() => setFileName('')}
-                                        ></i>{' '}
+                                        />{' '}
                                         {fileName}
                                       </div>
                                     )}
@@ -673,7 +674,7 @@ const RecordSupplierPayment = props => {
                                       props.commonActions.fillManDatoryDetails();
                                   }}
                                 >
-                                  <i className="fa fa-dot-circle-o"></i>{' '}
+                                  <CircleDot className="h-4 w-4" />{' '}
                                   {disabled ? 'Recording...' : strings.RecordPayment}
                                 </Button>
                                 <Button
@@ -688,7 +689,7 @@ const RecordSupplierPayment = props => {
                                     } else props.history.push('/admin/expense/supplier-invoice');
                                   }}
                                 >
-                                  <i className="fa fa-ban"></i> {strings.Cancel}
+                                  <Ban className="h-4 w-4" /> {strings.Cancel}
                                 </Button>
                               </FormGroup>
                             </Col>

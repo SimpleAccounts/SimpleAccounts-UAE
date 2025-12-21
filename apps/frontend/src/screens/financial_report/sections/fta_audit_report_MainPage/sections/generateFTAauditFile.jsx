@@ -21,6 +21,7 @@ import DatePicker from 'react-datepicker';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { CommonActions } from 'services/global';
+import { UserCircle, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -131,7 +132,7 @@ const GenerateFTAreport = ({ openModal, closeModal, commonActions }) => {
         <Row>
           <Col lg={12}>
             <div className="h4 mb-0 d-flex align-items-center">
-              <i className="nav-icon fas fa-user-tie" />
+              <UserCircle className="h-4 w-4" />
               <span className="ml-2">Create FTA VAT Audit File</span>
             </div>
           </Col>
@@ -415,11 +416,11 @@ const GenerateFTAreport = ({ openModal, closeModal, commonActions }) => {
               }
             }}
           >
-            <i className="fa fa-dot-circle-o"></i> {disabled ? 'Saving...' : strings.Save}
+            <CircleDot className="h-4 w-4" /> {disabled ? 'Saving...' : strings.Save}
           </Button>
           &nbsp;
           <Button color="secondary" className="btn-square" onClick={handleClose}>
-            <i className="fa fa-ban"></i> {strings.Cancel}
+            <Ban className="h-4 w-4" /> {strings.Cancel}
           </Button>
         </ModalFooter>
       </Form>

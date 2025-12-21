@@ -39,7 +39,7 @@ import {
   DropdownMenuContent as ShadcnDropdownMenuContent,
   DropdownMenuItem as ShadcnDropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Eye, History, Landmark, Link, Plus, Trash2, Unlink } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -202,7 +202,7 @@ const VatReports = () => {
       <ShadcnDropdownMenu>
         <ShadcnDropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <i className="fas fa-chevron-down" />
+            <ChevronDown className="h-4 w-4" />
           </Button>
         </ShadcnDropdownMenuTrigger>
         <ShadcnDropdownMenuContent align="end">
@@ -218,7 +218,7 @@ const VatReports = () => {
               });
             }}
           >
-            <i className="fas fa-eye mr-2" /> View
+            <Eye className="h-4 w-4" /> View
           </ShadcnDropdownMenuItem>
 
           {row.status === 'UnFiled' ? (
@@ -228,7 +228,7 @@ const VatReports = () => {
                 setDeleteModal(true);
               }}
             >
-              <i className="fas fa-trash mr-2" /> Delete
+              <Trash2 className="h-4 w-4" /> Delete
             </ShadcnDropdownMenuItem>
           ) : (
             ''
@@ -258,7 +258,7 @@ const VatReports = () => {
               }}
             >
               {' '}
-              <i className="fas fa-university mr-2" /> Record Payment
+              <Landmark className="h-4 w-4" /> Record Payment
             </ShadcnDropdownMenuItem>
           ) : (
             ''
@@ -272,7 +272,7 @@ const VatReports = () => {
               }}
             >
               {' '}
-              <i className="fas fa-unlink mr-2" /> Mark It Unfiled
+              <Unlink className="h-4 w-4" /> Mark It Unfiled
             </ShadcnDropdownMenuItem>
           ) : (
             ''
@@ -287,7 +287,7 @@ const VatReports = () => {
               }}
             >
               {' '}
-              <i className="fas fa-link mr-2" /> File The Report
+              <Link className="h-4 w-4" /> File The Report
             </ShadcnDropdownMenuItem>
           ) : (
             ''
@@ -421,7 +421,7 @@ const VatReports = () => {
                         navigate('/admin/report/vatreports/vatpaymentrecordhistory');
                       }}
                     >
-                      <i className="fas fa-history"></i> VAT Payment Record
+                      <History className="h-4 w-4" /> VAT Payment Record
                     </Button>
 
                     <Button
@@ -432,7 +432,7 @@ const VatReports = () => {
                         setOpenModal(true);
                       }}
                     >
-                      <i className="fas fa-plus"></i> Generate VAT Report
+                      <Plus className="h-4 w-4" /> Generate VAT Report
                     </Button>
                   </FormGroup>
                 </div>

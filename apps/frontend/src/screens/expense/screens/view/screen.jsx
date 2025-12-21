@@ -13,6 +13,7 @@ import { ExpenseTemplate } from './sections/';
 import ActionButtons from 'components/view_actions_buttons';
 import { InvoiceViewJournalEntries } from 'components';
 import { StatusActionList } from 'utils';
+import { FileText, Printer, X } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -112,7 +113,7 @@ const ViewExpense = props => {
                   exportPDFWithComponent();
                 }}
               >
-                <i className="fa fa-file-pdf-o"></i>
+                <FileText className="h-4 w-4" />
               </Button>
               <ReactToPrint
                 trigger={() => (
@@ -121,7 +122,7 @@ const ViewExpense = props => {
                     className="ml-1 mb-1 mr-1 print-btn-cont btn-lg"
                     onClick={() => window.print()}
                   >
-                    <i className="fa fa-print"></i>
+                    <Printer className="h-4 w-4" />
                   </Button>
                 )}
                 content={() => componentRef.current}
@@ -154,7 +155,7 @@ const ViewExpense = props => {
                   }
                 }}
               >
-                <i className="fas fa-times"></i>
+                <X className="h-4 w-4" />
               </Button>
             </div>
             <div>

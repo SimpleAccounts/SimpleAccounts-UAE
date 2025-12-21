@@ -27,6 +27,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Ban, CircleDot, HelpCircle, RefreshCw, UserCircle } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -264,7 +265,7 @@ const CreateDesignation = ({
                 <Row>
                   <Col lg={12}>
                     <div className="h4 mb-0 d-flex align-items-center">
-                      <i className="nav-icon fas fa-user-tie" />
+                      <UserCircle className="h-4 w-4" />
                       <span className="ml-2">{strings.CreateDesignation}</span>
                     </div>
                   </Col>
@@ -338,10 +339,7 @@ const CreateDesignation = ({
                                 <Label htmlFor="designationType">
                                   <span className="text-danger">* </span>
                                   {strings.DesignationType}
-                                  <i
-                                    id="designationTypeTooltip"
-                                    className="fa fa-question-circle ml-1"
-                                  ></i>
+                                  <HelpCircle id="designationTypeTooltip" className="h-4 w-4 inline" />
                                   <UncontrolledTooltip
                                     placement="right"
                                     target="designationTypeTooltip"
@@ -405,7 +403,7 @@ const CreateDesignation = ({
                               disabled={disabled}
                               onClick={() => handleFormSubmit(false)}
                             >
-                              <i className="fa fa-dot-circle-o"></i> {strings.Create}
+                              <CircleDot className="h-4 w-4" /> {strings.Create}
                             </Button>
                             <Button
                               type="submit"
@@ -415,7 +413,7 @@ const CreateDesignation = ({
                               disabled={disabled}
                               onClick={() => handleFormSubmit(true)}
                             >
-                              <i className="fa fa-refresh"></i> {strings.CreateandMore}
+                              <RefreshCw className="h-4 w-4" /> {strings.CreateandMore}
                             </Button>
                             <Button
                               type="button"
@@ -427,7 +425,7 @@ const CreateDesignation = ({
                                 });
                               }}
                             >
-                              <i className="fa fa-ban"></i> {strings.Cancel}
+                              <Ban className="h-4 w-4" /> {strings.Cancel}
                             </Button>
                           </FormGroup>
                         </Col>

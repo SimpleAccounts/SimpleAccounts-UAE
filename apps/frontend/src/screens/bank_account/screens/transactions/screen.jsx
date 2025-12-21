@@ -13,7 +13,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Landmark, Pencil, Plus, Trash2, Upload } from 'lucide-react';
 import Select from 'react-select';
 import { selectOptionsFactory } from 'utils';
 import DatePicker from 'react-datepicker';
@@ -393,14 +393,14 @@ function BankTransactions() {
                       onRowSelect(row.original.id);
                     }}
                   >
-                    <i className="fas fa-edit mr-2" /> Not a duplicate
+                    <Pencil className="h-4 w-4" /> Not a duplicate
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
                       closeTransaction(row.original.id);
                     }}
                   >
-                    <i className="fa fa-trash mr-2" /> Delete
+                    <Trash2 className="h-4 w-4" /> Delete
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -425,7 +425,7 @@ function BankTransactions() {
             <div className="grid grid-cols-12 gap-4">
               <div>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="fas fa-university" />
+                  <Landmark className="h-4 w-4" />
                   <span className="ml-2">{strings.BankTransactions}</span>
                 </div>
               </div>
@@ -521,7 +521,7 @@ function BankTransactions() {
                             })
                           }
                         >
-                          <i className="fa glyphicon glyphicon-export fa-upload mr-1" />
+                          <Upload className="h-4 w-4 mr-1" />
                           {strings.ImportStatement}
                         </Button>
                         &nbsp; &nbsp; &nbsp;
@@ -540,7 +540,7 @@ function BankTransactions() {
                               })
                             }
                           >
-                            <i className="fas fa-edit mr-1" />
+                            <Pencil className="h-4 w-4" />
                             {strings.EditAccount}
                           </Button>
                         )}
@@ -557,7 +557,7 @@ function BankTransactions() {
                             })
                           }
                         >
-                          <i className="fas fa-edit mr-1" />
+                          <Pencil className="h-4 w-4" />
                           {strings.reconcile}
                         </Button>
                       </div>
@@ -593,7 +593,7 @@ function BankTransactions() {
                         })
                       }
                     >
-                      <i className="fas fa-plus mr-1" />
+                      <Plus className="h-4 w-4" />
                       {strings.AddnewTransaction}
                     </Button>
                   </div>

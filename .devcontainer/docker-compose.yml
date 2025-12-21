@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  devcontainer:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspaces/SimpleAccounts-UAE:cached
+      - devcontainer-vscode-extensions:/home/vscode/.vscode-server/extensions
+      - devcontainer-maven-cache:/home/vscode/.m2
+      - devcontainer-npm-cache:/home/vscode/.npm
+    command: sleep infinity
+    network_mode: service:db
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    environment:
+      POSTGRES_USER: simpleaccounts
+      POSTGRES_PASSWORD: simpleaccounts_dev
+      POSTGRES_DB: simpleaccounts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U simpleaccounts"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    network_mode: service:db
+
+volumes:
+  postgres-data:
+  redis-data:
+  devcontainer-vscode-extensions:
+  devcontainer-maven-cache:
+  devcontainer-npm-cache:

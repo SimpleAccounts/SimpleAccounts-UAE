@@ -33,7 +33,7 @@ import {
   DropdownMenuContent as ShadcnDropdownMenuContent,
   DropdownMenuItem as ShadcnDropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Eye, History, Landmark, Link, Plus, Settings, Trash2, Unlink } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -241,7 +241,7 @@ const CorporateTax = () => {
       <ShadcnDropdownMenu>
         <ShadcnDropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <i className="fas fa-chevron-down" />
+            <ChevronDown className="h-4 w-4" />
           </Button>
         </ShadcnDropdownMenuTrigger>
         <ShadcnDropdownMenuContent align="end">
@@ -257,7 +257,7 @@ const CorporateTax = () => {
               });
             }}
           >
-            <i className="fas fa-eye mr-2" /> View
+            <Eye className="h-4 w-4" /> View
           </ShadcnDropdownMenuItem>
 
           {row.status === 'UnFiled' ? (
@@ -267,7 +267,7 @@ const CorporateTax = () => {
                 setDeleteModal(true);
               }}
             >
-              <i className="fas fa-trash mr-2" /> Delete
+              <Trash2 className="h-4 w-4" /> Delete
             </ShadcnDropdownMenuItem>
           ) : (
             ''
@@ -289,7 +289,7 @@ const CorporateTax = () => {
               }}
             >
               {' '}
-              <i className="fas fa-university mr-2" /> Record Payment
+              <Landmark className="h-4 w-4" /> Record Payment
             </ShadcnDropdownMenuItem>
           ) : (
             ''
@@ -303,7 +303,7 @@ const CorporateTax = () => {
               }}
             >
               {' '}
-              <i className="fas fa-unlink mr-2" /> Mark It Unfiled
+              <Unlink className="h-4 w-4" /> Mark It Unfiled
             </ShadcnDropdownMenuItem>
           ) : (
             ''
@@ -323,7 +323,7 @@ const CorporateTax = () => {
               }}
             >
               {' '}
-              <i className="fas fa-link mr-2" /> File The Report
+              <Link className="h-4 w-4" /> File The Report
             </ShadcnDropdownMenuItem>
           ) : (
             ''
@@ -459,7 +459,7 @@ const CorporateTax = () => {
                         navigate('/admin/report/corporate-tax/payment-history');
                       }}
                     >
-                      <i className="fas fa-history"></i> {strings.CTPaymentHistory}
+                      <History className="h-4 w-4" /> {strings.CTPaymentHistory}
                     </Button>
 
                     <Button
@@ -497,7 +497,7 @@ const CorporateTax = () => {
                         setOpenCTReportModal(true);
                       }}
                     >
-                      <i className="fas fa-plus"></i> {strings.GenerateCTReport}
+                      <Plus className="h-4 w-4" /> {strings.GenerateCTReport}
                     </Button>
 
                     <Button
@@ -509,7 +509,7 @@ const CorporateTax = () => {
                         setOpenCTSettingModal(true);
                       }}
                     >
-                      <i className="fas fa-cog"></i> Corporate Tax Settings
+                      <Settings className="h-4 w-4" /> Corporate Tax Settings
                     </Button>
                   </FormGroup>
                 </div>

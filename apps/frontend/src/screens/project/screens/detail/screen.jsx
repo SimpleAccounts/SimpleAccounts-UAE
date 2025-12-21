@@ -29,6 +29,7 @@ import * as DetailProjectActions from './actions';
 import { selectOptionsFactory, selectStyles } from 'utils';
 
 import './style.scss';
+import { Network, Plus, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -260,7 +261,7 @@ const DetailProject = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-project-diagram" />
+                        <Network className="h-4 w-4" />
                         <span className="ml-2">Update Project</span>
                       </div>
                     </Col>
@@ -348,7 +349,7 @@ const DetailProject = ({
                                 className="btn-square"
                                 onClick={showContactModal}
                               >
-                                <i className="fa fa-plus"></i> Add a Contact
+                                <Plus className="h-4 w-4" /> Add a Contact
                               </Button>
                             </FormGroup>
                           </Col>
@@ -442,12 +443,12 @@ const DetailProject = ({
                                 onClick={deleteProject}
                                 type="button"
                               >
-                                <i className="fa fa-trash"></i> Delete
+                                <Trash2 className="h-4 w-4" /> Delete
                               </Button>
                             </FormGroup>
                             <FormGroup className="text-right">
                               <Button type="submit" color="primary" className="btn-square mr-3">
-                                <i className="fa fa-dot-circle-o"></i> Update
+                                <CircleDot className="h-4 w-4" /> Update
                               </Button>
                               <Button
                                 color="secondary"
@@ -457,7 +458,7 @@ const DetailProject = ({
                                 }}
                                 type="button"
                               >
-                                <i className="fa fa-ban"></i> Cancel
+                                <Ban className="h-4 w-4" /> Cancel
                               </Button>
                             </FormGroup>
                           </Col>

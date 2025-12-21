@@ -69,6 +69,7 @@
     "react-to-print": "^2.12.4",
     "react-toastify": "^11.0.5",
     "reactstrap": "^8.10.0",
+    "recharts": "^3.6.0",
     "redux": "^5.0.1",
     "redux-thunk": "^2.3.0",
     "sass": "^1.96.0",
@@ -91,6 +92,7 @@
     "msw": "^2.12.4",
     "mutationobserver-shim": "^0.3.3",
     "postcss": "^8.5.6",
+    "react-test-renderer": "^18.2.0",
     "redux-mock-store": "^1.5.5",
     "tailwindcss": "^3.4.19",
     "tailwindcss-animate": "^1.0.7",
@@ -98,8 +100,7 @@
     "typescript": "^5.4.5",
     "vite": "^5.4.21",
     "vitest": "^4.0.16",
-    "web-streams-polyfill": "^4.2.0",
-    "react-test-renderer": "^18.2.0"
+    "web-streams-polyfill": "^4.2.0"
   },
   "scripts": {
     "start": "NODE_OPTIONS=--max-old-space-size=4096 vite",

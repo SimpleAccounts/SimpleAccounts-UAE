@@ -20,6 +20,7 @@ import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
 import './style.scss';
 import { CommonActions } from 'services/global';
+import { Printer, FileText } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -369,7 +370,7 @@ class ViewFtaExciseAuditReport extends React.Component {
                             cursor: 'pointer',
                           }}
                         >
-                          <i className="fa fa-print"></i>
+                          <Printer className="h-4 w-4" />
                         </div>
                         {/* <div
 												className="mr-2 print-btn-cont"
@@ -380,7 +381,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 													cursor: 'pointer',
 													}}
 												>
-												<i className="fa fa-file-pdf-o"></i>
+												<FileText className="h-4 w-4" />
 												</div> */}
                         <div
                           className="mr-2 print-btn-cont"

@@ -30,6 +30,7 @@ import * as ContactActions from '../../actions';
 import * as CreateContactActions from './actions';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { Ban, CircleDot, HelpCircle, IdCard, RefreshCw } from 'lucide-react';
 
 const mapStateToProps = state => {
   const currencyList = state.common.currency_convert_list;
@@ -478,7 +479,7 @@ const CreateContact = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-id-card-alt" />
+                        <IdCard className="h-4 w-4" />
                         <span className="ml-2">{strings.CreateContact}</span>
                       </div>
                     </Col>
@@ -659,7 +660,7 @@ const CreateContact = ({
                               <Label htmlFor="contactType">
                                 <span className="text-danger">* </span>
                                 {strings.ContactType}
-                                <i id="Contacttyprtip" className="fa fa-question-circle ml-1"></i>
+                                <HelpCircle id="Contacttyprtip" className="h-4 w-4 inline" />
                                 <UncontrolledTooltip placement="right" target="Contacttyprtip">
                                   The contact type cannot be changed once a document has been
                                   created for this contact.
@@ -772,7 +773,7 @@ const CreateContact = ({
                               <Label htmlFor="currencyCode">
                                 <span className="text-danger">* </span>
                                 {strings.Currency}
-                                <i id="Currencytip" className="fa fa-question-circle ml-1"></i>
+                                <HelpCircle id="Currencytip" className="h-4 w-4 inline" />
                                 <UncontrolledTooltip placement="right" target="Currencytip">
                                   You cannot change the currency once a document is created for this
                                   contact.
@@ -909,7 +910,7 @@ const CreateContact = ({
                               <Label htmlFor="taxTreatmentId">
                                 <span className="text-danger">* </span>
                                 {strings.TaxTreatment}
-                                <i id="TaxTreatmenttip" className="fa fa-question-circle ml-1"></i>
+                                <HelpCircle id="TaxTreatmenttip" className="h-4 w-4 inline" />
                                 <UncontrolledTooltip placement="right" target="TaxTreatmenttip">
                                   Once any document has been created for this contact, you cannot
                                   change the Tax treatment.
@@ -1141,7 +1142,7 @@ const CreateContact = ({
                                   handleSubmit(onSubmit)();
                                 }}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Creating...' : strings.Create}
                               </Button>
                               {!(isParentComponentPresent && isParentComponentPresent === true) && (
@@ -1161,7 +1162,7 @@ const CreateContact = ({
                                     handleSubmit(onSubmit)();
                                   }}
                                 >
-                                  <i className="fa fa-refresh"></i>{' '}
+                                  <RefreshCw className="h-4 w-4" />{' '}
                                   {disabled ? 'Creating...' : strings.CreateandMore}
                                 </Button>
                               )}
@@ -1179,7 +1180,7 @@ const CreateContact = ({
                                   }
                                 }}
                               >
-                                <i className="fa fa-ban mr-1"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

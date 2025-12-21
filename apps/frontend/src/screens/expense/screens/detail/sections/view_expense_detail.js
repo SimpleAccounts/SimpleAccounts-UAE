@@ -7,6 +7,7 @@ import { Card, CardHeader, CardBody, Row, Col, FormGroup, Label, NavLink } from 
 // import './style.scss'
 import dayjs from '@/utils/date';
 import API_ROOT_URL from '../../../../../constants/config';
+import { Landmark, Pencil } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {};
@@ -24,7 +25,7 @@ class ViewExpenseDetails extends React.Component {
           <Row>
             <Col lg={11}>
               <div className="h4 mb-0 d-flex align-items-center">
-                <i className="fas fa-university" />
+                <Landmark className="h-4 w-4" />
                 <span className="ml-2">
                   View Expense Details{' '}
                   {
@@ -34,8 +35,8 @@ class ViewExpenseDetails extends React.Component {
               </div>
             </Col>
             <Col lg={1} style={{ textAlign: 'right' }}>
-              <i
-                className="fas fa-edit"
+              <Pencil
+                className="h-4 w-4 cursor-pointer"
                 onClick={() => {
                   this.props.editDetails();
                 }}

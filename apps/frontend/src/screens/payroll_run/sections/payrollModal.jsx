@@ -19,6 +19,7 @@ import { toast } from 'sonner';
 
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { CircleDot, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -247,7 +248,7 @@ function PayrollModal({
           </ModalBody>
           <ModalFooter>
             <Button type="submit" color="primary" className="btn-square mr-3">
-              <i className="fa fa-dot-circle-o"></i> {strings.Save}
+              <CircleDot className="h-4 w-4" /> {strings.Save}
             </Button>
             &nbsp;
             <Button
@@ -257,7 +258,7 @@ function PayrollModal({
                 closePayrollModal(false);
               }}
             >
-              <i className="fa fa-ban"></i> {strings.Cancel}
+              <Ban className="h-4 w-4" /> {strings.Cancel}
             </Button>
           </ModalFooter>
         </Form>

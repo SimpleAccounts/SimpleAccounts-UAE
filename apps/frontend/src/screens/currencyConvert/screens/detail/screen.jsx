@@ -25,6 +25,7 @@ import * as DetailCurrencyConvertAction from './actions';
 import * as CurrencyConvertActions from '../../actions';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Banknote, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -297,7 +298,7 @@ const DetailCurrencyConvert = ({
               <Card>
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="nav-icon fas fa-money" />
+                    <Banknote className="h-4 w-4" />
                     <span className="ml-2"> {strings.UpdateCurrencyConversion} </span>
                   </div>
                 </CardHeader>
@@ -494,7 +495,7 @@ const DetailCurrencyConvert = ({
                                   disabled={disabled1}
                                   onClick={deleteCurrencyConvert}
                                 >
-                                  <i className="fa fa-trash"></i>{' '}
+                                  <Trash2 className="h-4 w-4" />{' '}
                                   {disabled1 ? 'Deleting...' : strings.Delete}
                                 </Button>
                               </FormGroup>
@@ -514,7 +515,7 @@ const DetailCurrencyConvert = ({
                                     }
                                   }}
                                 >
-                                  <i className="fa fa-dot-circle-o"></i>{' '}
+                                  <CircleDot className="h-4 w-4" />{' '}
                                   {disabled ? 'Updating...' : strings.Update}
                                 </Button>
                               )}
@@ -526,7 +527,7 @@ const DetailCurrencyConvert = ({
                                   history.push('/admin/master/CurrencyConvert');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

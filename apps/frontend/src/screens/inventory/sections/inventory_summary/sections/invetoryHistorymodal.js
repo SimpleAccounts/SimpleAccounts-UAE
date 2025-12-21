@@ -20,6 +20,7 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import { Currency } from 'components';
 import { DataTable } from '@/components/ui/data-table';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
+import { History, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -153,7 +154,7 @@ const InventoryHistoryModal = ({
                         <Row>
                           <Col lg={12}>
                             <div className="h4 mb-0 d-flex align-items-center">
-                              <i className="fa fa-history fa-2x" />
+                              <History className="h-4 w-4" />
                               <span className="ml-2">
                                 {strings.InventoryHistory || 'Inventory History'}
                               </span>
@@ -173,7 +174,7 @@ const InventoryHistoryModal = ({
                                       className="btn-square"
                                       onClick={handleExportCSV}
                                     >
-                                      <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                                      <Download className="h-4 w-4 mr-1" />
                                       {strings.Export || 'Export'}
                                     </Button>
                                   </ButtonGroup>
@@ -246,7 +247,7 @@ const InventoryHistoryModal = ({
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" className="btn-square" onClick={() => closeModal(false)}>
-            <i className="fa fa-ban"></i> {strings.Cancel || 'Cancel'}
+            <Ban className="h-4 w-4" /> {strings.Cancel || 'Cancel'}
           </Button>
         </ModalFooter>
       </Modal>

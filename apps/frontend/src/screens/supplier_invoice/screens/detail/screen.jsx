@@ -50,6 +50,7 @@ import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Switch } from '@/components/ui/switch';
+import { FileText, Plus, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -933,7 +934,7 @@ const DetailSupplierInvoice = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fas fa-file-invoice" />
+                        <FileText className="h-4 w-4" />
                         <span className="ml-2">{strings.UpdateInvoice}</span>
                       </div>
                     </Col>
@@ -1160,7 +1161,7 @@ const DetailSupplierInvoice = ({
                               className="btn-square mr-3"
                               onClick={openProductModalHandler}
                             >
-                              <i className="fa fa-plus"></i> {strings.Addproduct}
+                              <Plus className="h-4 w-4" /> {strings.Addproduct}
                             </Button>
                           </Col>
 
@@ -1286,7 +1287,7 @@ const DetailSupplierInvoice = ({
                                 disabled={disabled1}
                                 onClick={deleteInvoice}
                               >
-                                <i className="fa fa-trash"></i>{' '}
+                                <Trash2 className="h-4 w-4" />{' '}
                                 {disabled1 ? 'Deleting...' : strings.Delete}
                               </Button>
                             </FormGroup>
@@ -1297,7 +1298,7 @@ const DetailSupplierInvoice = ({
                                 className="btn-square mr-3"
                                 disabled={disabled}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Updating...' : strings.Update}
                               </Button>
                               <Button
@@ -1308,7 +1309,7 @@ const DetailSupplierInvoice = ({
                                   history.push('/admin/expense/supplier-invoice');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

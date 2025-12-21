@@ -28,6 +28,7 @@ import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import FilterComponent3 from '../filterComponent3';
+import { Settings, Printer, FileText } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -221,7 +222,7 @@ class ProfitAndLossReport extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
+													<Settings className="h-4 w-4" />{strings.CustomizeReport}
 												</p>
 											</div> */}
                     <div className="d-flex">
@@ -288,7 +289,7 @@ class ProfitAndLossReport extends React.Component {
                           marginTop: '15px',
                         }}
                       >
-                        <i className="fa fa-print"></i>
+                        <Printer className="h-4 w-4" />
                       </div>
                       {/* <div
 												className="mr-2 print-btn-cont"
@@ -299,7 +300,7 @@ class ProfitAndLossReport extends React.Component {
 													cursor: 'pointer',
 													}}
 												>
-												<i className="fa fa-file-pdf-o"></i>
+												<FileText className="h-4 w-4" />
 											</div> */}
                       <div
                         className="mr-2 print-btn-cont"

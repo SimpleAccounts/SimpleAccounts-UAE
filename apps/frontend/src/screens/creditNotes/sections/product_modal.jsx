@@ -25,6 +25,7 @@ import { toast } from 'sonner';
 import { selectOptionsFactory } from 'utils';
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Ban, CircleDot, HelpCircle, IdCard } from 'lucide-react';
 
 const customStyles = {
   control: (base, state) => ({
@@ -337,7 +338,7 @@ const ProductModal = ({
             <Row>
               <Col lg={12}>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="nav-icon fas fa-id-card-alt" />
+                  <IdCard className="h-4 w-4" />
                   <span className="ml-2">{strings.CreateProduct}</span>
                 </div>
               </Col>
@@ -469,7 +470,7 @@ const ProductModal = ({
                   <Label htmlFor="productCode">
                     <span className="text-danger">* </span>
                     {strings.ProductCode}
-                    <i id="ProductCodeTooltip" className="fa fa-question-circle ml-1"></i>
+                    <HelpCircle id="ProductCodeTooltip" className="h-4 w-4 inline" />
                     <UncontrolledTooltip placement="right" target="ProductCodeTooltip">
                       Product Code - Unique identifier code for the product
                     </UncontrolledTooltip>
@@ -623,7 +624,7 @@ const ProductModal = ({
                 <FormGroup className="mb-3">
                   <Label htmlFor="salesUnitPrice">
                     <span className="text-danger">* </span> {strings.SellingPrice}
-                    <i id="SalesTooltip" className="fa fa-question-circle ml-1"></i>
+                    <HelpCircle id="SalesTooltip" className="h-4 w-4 inline" />
                     <UncontrolledTooltip placement="right" target="SalesTooltip">
                       Selling price – Price at which your product is sold
                     </UncontrolledTooltip>
@@ -740,7 +741,7 @@ const ProductModal = ({
                 <FormGroup className="mb-3">
                   <Label htmlFor="purchaseUnitPrice">
                     <span className="text-danger">* </span> {strings.PurchasePrice}
-                    <i id="PurchaseTooltip" className="fa fa-question-circle ml-1"></i>
+                    <HelpCircle id="PurchaseTooltip" className="h-4 w-4 inline" />
                     <UncontrolledTooltip placement="right" target="PurchaseTooltip">
                       Purchase price – Amount of money you paid for the product
                     </UncontrolledTooltip>
@@ -835,7 +836,7 @@ const ProductModal = ({
               className="btn-square mr-3"
               disabled={disabled || isSubmitting}
             >
-              <i className="fa fa-dot-circle-o"></i> {strings.Create}
+              <CircleDot className="h-4 w-4" /> {strings.Create}
             </Button>
             <Button
               color="secondary"
@@ -844,7 +845,7 @@ const ProductModal = ({
                 closeProductModal(false);
               }}
             >
-              <i className="fa fa-ban"></i> {strings.Cancel}
+              <Ban className="h-4 w-4" /> {strings.Cancel}
             </Button>
           </ModalFooter>
         </Form>

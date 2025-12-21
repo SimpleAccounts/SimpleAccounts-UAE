@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { data as languageData } from '../../../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { History } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -140,7 +141,7 @@ const CorporateTaxPaymentHistory = () => {
                         paddingLeft: '15px',
                       }}
                     >
-                      <i className="fa fa-history mr-2"></i> {strings.CorporateTaxPaymentHistory}
+                      <History className="h-4 w-4" /> {strings.CorporateTaxPaymentHistory}
                     </p>
                   </div>
                   <div className="d-flex">

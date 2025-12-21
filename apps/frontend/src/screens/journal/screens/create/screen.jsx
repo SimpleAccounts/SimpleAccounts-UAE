@@ -31,6 +31,7 @@ import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Trash2, Diamond, Plus } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -224,7 +225,7 @@ const CreateJournal = () => {
             disabled={data.length <= 2}
             onClick={e => deleteRow(e, row.original)}
           >
-            <i className="fas fa-trash"></i>
+            <Trash2 className="h-4 w-4" />
           </Button>
         ),
       },
@@ -377,7 +378,7 @@ const CreateJournal = () => {
         <Card>
           <CardHeader>
             <div className="h4 mb-0 d-flex align-items-center">
-              <i className="fa fa-diamond" />
+              <Diamond className="h-4 w-4" />
               <span className="ml-2">{strings.CreateJournal}</span>
             </div>
           </CardHeader>
@@ -422,7 +423,7 @@ const CreateJournal = () => {
               <Row className="mb-3">
                 <Col>
                   <Button color="primary" className="btn-square" onClick={addRow}>
-                    <i className="fa fa-plus"></i> {strings.Addmore}
+                    <Plus className="h-4 w-4" /> {strings.Addmore}
                   </Button>
                 </Col>
               </Row>

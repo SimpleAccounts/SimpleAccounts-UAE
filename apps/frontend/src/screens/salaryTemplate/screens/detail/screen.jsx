@@ -25,6 +25,7 @@ import * as SalarayTemplateDetailActions from './actions';
 import * as SalaryTemplateActions from './../../actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
+import { UserCircle, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const regExBoth = /[a-zA-Z0-9]+$/;
 
@@ -225,7 +226,7 @@ const DetailSalaryTemplate = props => {
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-user-tie" />
+                        <UserCircle className="h-4 w-4" />
                         <span className="ml-2">Update Salary Template</span>
                       </div>
                     </Col>
@@ -419,7 +420,7 @@ const DetailSalaryTemplate = props => {
                                 className="btn-square"
                                 onClick={deleteEmployee}
                               >
-                                <i className="fa fa-trash"></i> Delete
+                                <Trash2 className="h-4 w-4" /> Delete
                               </Button>
                             </FormGroup>
                             <FormGroup className="text-right">
@@ -430,7 +431,7 @@ const DetailSalaryTemplate = props => {
                                 disabled={disabled}
                                 onClick={handleUpdateClick}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Updating...' : 'Update'}
                               </Button>
                               <Button
@@ -441,7 +442,7 @@ const DetailSalaryTemplate = props => {
                                   props.history.push('/admin/payroll/salaryTemplate');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> Cancel
+                                <Ban className="h-4 w-4" /> Cancel
                               </Button>
                             </FormGroup>
                           </Col>

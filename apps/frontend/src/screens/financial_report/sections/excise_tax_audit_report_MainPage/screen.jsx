@@ -34,7 +34,7 @@ import {
   DropdownMenuContent as ShadcnDropdownMenuContent,
   DropdownMenuItem as ShadcnDropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Eye, Trash2 } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -141,7 +141,7 @@ const ExciseTaxAuditReport = () => {
       <ShadcnDropdownMenu>
         <ShadcnDropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <i className="fas fa-chevron-down" />
+            <ChevronDown className="h-4 w-4" />
           </Button>
         </ShadcnDropdownMenuTrigger>
         <ShadcnDropdownMenuContent align="end">
@@ -160,7 +160,7 @@ const ExciseTaxAuditReport = () => {
               });
             }}
           >
-            <i className="fas fa-eye mr-2" /> View
+            <Eye className="h-4 w-4" /> View
           </ShadcnDropdownMenuItem>
 
           <ShadcnDropdownMenuItem
@@ -168,7 +168,7 @@ const ExciseTaxAuditReport = () => {
               deleteReport(row.id);
             }}
           >
-            <i className="fas fa-trash mr-2" /> Delete
+            <Trash2 className="h-4 w-4" /> Delete
           </ShadcnDropdownMenuItem>
         </ShadcnDropdownMenuContent>
       </ShadcnDropdownMenu>

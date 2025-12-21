@@ -13,6 +13,7 @@ import LocalizedStrings from 'react-localization';
 import { DropdownLists } from 'utils';
 import { bindActionCreators } from 'redux';
 import { CommonActions } from 'services/global';
+import { CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   const contact_list = state.common.customer_list;
@@ -427,7 +428,7 @@ function FilterComponentForm({
                 style={{ marginTop: '15px' }}
                 onClick={handleSubmit(onSubmit)}
               >
-                <i className="fa fa-dot-circle-o"></i> {strings.RunReport}
+                <CircleDot className="h-4 w-4" /> {strings.RunReport}
               </Button>
               <Button
                 color="secondary"
@@ -435,7 +436,7 @@ function FilterComponentForm({
                 style={{ marginTop: '15px' }}
                 onClick={handleCancelClick}
               >
-                <i className="fa fa-ban pull"></i> {strings.Cancel}
+                <Ban className="h-4 w-4" /> {strings.Cancel}
               </Button>
             </FormGroup>
           </Col>

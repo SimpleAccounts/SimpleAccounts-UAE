@@ -28,6 +28,7 @@ import LocalizedStrings from 'react-localization';
 import { CommonActions } from 'services/global';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Users, Plus } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -145,7 +146,7 @@ const UsersRoles = () => {
           <Card>
             <CardHeader>
               <div className="h4 mb-0 d-flex align-items-center">
-                <i className="nav-icon fas fa-users" />
+                <Users className="h-4 w-4" />
                 <span className="ml-2">{strings.Role}</span>
               </div>
             </CardHeader>
@@ -160,7 +161,7 @@ const UsersRoles = () => {
                       className="btn-square pull-right"
                       onClick={() => navigate('/admin/settings/user-role/create')}
                     >
-                      <i className="fas fa-plus mr-1" />
+                      <Plus className="h-4 w-4" />
                       {strings.AddNewRole}
                     </Button>
                   )}

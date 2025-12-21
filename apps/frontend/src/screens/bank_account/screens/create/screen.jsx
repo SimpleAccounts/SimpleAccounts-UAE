@@ -26,6 +26,7 @@ import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Landmark, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -297,7 +298,7 @@ const CreateBankAccount = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fas fa-university" />
+                        <Landmark className="h-4 w-4" />
                         <span className="ml-2">{strings.CreateBankAccount}</span>
                       </div>
                     </Col>
@@ -732,7 +733,7 @@ const CreateBankAccount = ({
                                   }
                                 }}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Creating...' : strings.Create}
                               </Button>
                               <Button
@@ -749,7 +750,7 @@ const CreateBankAccount = ({
                                   handleSubmit(onSubmit)();
                                 }}
                               >
-                                <i className="fa fa-refresh"></i>
+                                <RefreshCw className="h-4 w-4" />
                                 {disabled ? ' Creating...' : strings.CreateandMore}
                               </Button>
                               <Button
@@ -761,7 +762,7 @@ const CreateBankAccount = ({
                                   history.push('/admin/banking/bank-account');
                                 }}
                               >
-                                <i className="fa fa-ban"></i> {strings.Cancel}
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>
                             </FormGroup>
                           </Col>

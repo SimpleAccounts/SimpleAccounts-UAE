@@ -7,6 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Loader } from 'components';
 
 import './style.scss';
+import { Bell } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {};
@@ -39,7 +40,7 @@ class Notification extends React.Component {
           <Card>
             <CardHeader>
               <div className="h4 mb-0 d-flex align-items-center">
-                <i className="nav-icon fas fa-bell" />
+                <Bell className="h-4 w-4" />
                 <span className="ml-2">Notifications</span>
               </div>
             </CardHeader>

@@ -48,6 +48,7 @@ import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import invoiceimage from 'assets/images/invoice/invoice.png';
+import { FileText, Plus, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   const contact_list = state.quotation.contact_list;
@@ -848,7 +849,7 @@ const CreateQuotation = ({
                   <Row>
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fas fa-file-invoice" />
+                        <FileText className="h-4 w-4" />
                         <span className="ml-2">{strings.CreateQuotation}</span>
                       </div>
                     </Col>
@@ -946,7 +947,7 @@ const CreateQuotation = ({
                                 className="btn-square mr-3 mb-3"
                                 onClick={openCustomerModalHandler}
                               >
-                                <i className="fa fa-plus"></i> {strings.AddACustomer}
+                                <Plus className="h-4 w-4" /> {strings.AddACustomer}
                               </Button>
                             </Col>
                           )}
@@ -1150,7 +1151,7 @@ const CreateQuotation = ({
                                 className="btn-square mr-3"
                                 onClick={openProductModalHandler}
                               >
-                                <i className="fa fa-plus"></i> {strings.Addproduct}
+                                <Plus className="h-4 w-4" /> {strings.Addproduct}
                               </Button>
                             )}
                           </Col>
@@ -1286,7 +1287,7 @@ const CreateQuotation = ({
                                   setCreateMore(false);
                                 }}
                               >
-                                <i className="fa fa-dot-circle-o"></i>{' '}
+                                <CircleDot className="h-4 w-4" />{' '}
                                 {disabled ? 'Creating...' : strings.Create}
                               </Button>
                               {!parentId && (
@@ -1311,7 +1312,7 @@ const CreateQuotation = ({
                                     setCreateMore(true);
                                   }}
                                 >
-                                  <i className="fa fa-refresh mr-1"></i>
+                                  <RefreshCw className="h-4 w-4" />
                                   {disabled ? 'Creating...' : strings.CreateandMore}
                                 </Button>
                               )}
@@ -1328,7 +1329,7 @@ const CreateQuotation = ({
                                   }
                                 }}
                               >
-                                <i className="fa fa-ban mr-1"></i>
+                                <Ban className="h-4 w-4" />
                                 {strings.Cancel}
                               </Button>
                             </FormGroup>

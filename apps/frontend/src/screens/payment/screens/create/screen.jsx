@@ -31,6 +31,7 @@ import LocalizedStrings from 'react-localization';
 import { LeavePage, Loader } from 'components';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
+import { Wallet } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
@@ -270,7 +271,7 @@ const CreatePayment = () => {
             <Card>
               <CardHeader>
                 <div className="h4 mb-0 d-flex align-items-center">
-                  <i className="fas fa-money-check" />
+                  <Wallet className="h-4 w-4" />
                   <span className="ml-2">{strings.CreatePurchaseReceipt} </span>
                 </div>
               </CardHeader>

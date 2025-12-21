@@ -10,6 +10,21 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import PropTypes from 'prop-types';
+import {
+  Menu,
+  Search,
+  ChevronDown,
+  User,
+  Settings,
+  UserCog,
+  Users,
+  Wallet,
+  Palette,
+  Info,
+  Upload,
+  HelpCircle,
+  LogOut,
+} from 'lucide-react';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import sygnet from 'assets/images/brand/sygnet.png';
@@ -64,7 +79,7 @@ class Header extends Component {
           className="d-lg-none navbar-toggler"
           onClick={this.props.onToggleSidebar}
         >
-          <i className="fa fa-bars header-sidebar-icon"></i>
+          <Menu className="h-5 w-5 text-muted-foreground" />
         </button>
         <NavLink
           className="navbar-brand p-2 ml-3"
@@ -90,28 +105,39 @@ class Header extends Component {
           className="d-md-down-none navbar-toggler"
           onClick={this.props.onToggleSidebarMinimize}
         >
-          <i className="fa fa-bars header-sidebar-icon"></i>
+          <Menu className="h-5 w-5 text-muted-foreground" />
         </button>
         <div className="ml-auto flex items-center">
+          {/* Global Search */}
+          <div className="header-search-container mr-3 d-none d-md-block">
+            <div className="input-group">
+              <span className="input-group-text bg-transparent border-0">
+                <Search className="h-4 w-4 text-muted-foreground" />
+              </span>
+              <input
+                type="text"
+                className="form-control bg-transparent border-0"
+                placeholder={strings.Search + '...'}
+                aria-label="Search"
+              />
+            </div>
+          </div>
+
           {/* Language Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="nav-link" style={{ border: 'none' }}>
-                <i
-                  className={
-                    language === 'en' ? 'flag-icon flag-icon-us' : 'flag-icon flag-icon-ae'
-                  }
-                  title="us"
-                  id="us"
-                ></i>
+                <span style={{ fontSize: '18px' }}>
+                  {language === 'en' ? '🇺🇸' : '🇦🇪'}
+                </span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => this.changeLanguage('en')}>
-                <i className="flag-icon flag-icon-us mr-2" /> English
+                <span className="mr-2">🇺🇸</span> English
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => this.changeLanguage('ar')}>
-                <i className="flag-icon flag-icon-ae mr-2" /> Arabic
+                <span className="mr-2">🇦🇪</span> Arabic
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -134,56 +160,56 @@ class Header extends Component {
                   alt=""
                   style={{ height: '35px', width: '35px' }}
                 />
-                <span className="hidden md:inline-block">
+                <span className="hidden md:inline-block flex items-center gap-1">
                   {strings.Hey} <i>{profile && profile.firstName + ' ' + profile.lastName}</i>
-                  <i className="fas fa-angle-down ml-2"></i>
+                  <ChevronDown className="h-4 w-4 ml-1" />
                 </span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => this.props.history.push('/admin/profile')}>
-                <i className="fas fa-user mr-2"></i> {strings.Profile}
+                <User className="h-4 w-4 mr-2" /> {strings.Profile}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => this.props.history.push('/admin/settings/general')}>
-                <i className="fas fa-envelope mr-2"></i> {strings.GeneralSettings}
+                <Settings className="h-4 w-4 mr-2" /> {strings.GeneralSettings}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => this.props.history.push('/admin/settings/user')}>
-                <i className="fas fa-user-tag mr-2"></i> {strings.User}
+                <UserCog className="h-4 w-4 mr-2" /> {strings.User}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => this.props.history.push('/admin/settings/user-role')}
               >
-                <i className="fas fa-users mr-2"></i> {strings.Role}
+                <Users className="h-4 w-4 mr-2" /> {strings.Role}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => this.props.history.push('/admin/settings/payrollsettings')}
               >
-                <i className="fas fa-money-check-alt mr-2"></i> {strings.PayrollSettings}
+                <Wallet className="h-4 w-4 mr-2" /> {strings.PayrollSettings}
               </DropdownMenuItem>
               {config.SETTING_THEME && (
                 <DropdownMenuItem
                   onClick={() => this.props.history.push('/admin/settings/template')}
                 >
-                  <i className="fas fa-palette mr-2"></i> {strings.MailThemes}
+                  <Palette className="h-4 w-4 mr-2" /> {strings.MailThemes}
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem
                 onClick={() => this.props.history.push('/admin/settings/notesSettings')}
               >
-                <i className="fas fa-info-circle mr-2"></i> {strings.Notes_Settings}
+                <Info className="h-4 w-4 mr-2" /> {strings.Notes_Settings}
               </DropdownMenuItem>
               {config.SETTING_IMPORT && (
                 <DropdownMenuItem onClick={() => this.props.history.push('/admin/settings/import')}>
-                  <i className="fas fa-palette mr-2"></i>
+                  <Upload className="h-4 w-4 mr-2" />
                   {strings.Import}
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem onClick={() => this.props.history.push('/admin/settings/help')}>
-                <i className="fas fa-info-circle mr-2"></i> {strings.Help}
+                <HelpCircle className="h-4 w-4 mr-2" /> {strings.Help}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => this.props.history.push('/logout')}>
-                <i className="fa fa-sign-out header-icon mr-2"></i> {strings.LogOut}
+                <LogOut className="h-4 w-4 mr-2" /> {strings.LogOut}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

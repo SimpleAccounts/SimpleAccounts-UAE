@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { ChevronUp, ChevronDown } from 'lucide-react';
 
 /**
  * MobileNav Component
@@ -48,7 +49,7 @@ function NavItem({ item, pathname }) {
             {item.icon && <i className={item.icon} />}
             <span>{item.name}</span>
           </div>
-          <i className={`fas fa-chevron-${isOpen ? 'up' : 'down'} text-xs`} />
+          {isOpen ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
         </button>
         {isOpen && (
           <div className="ml-4 space-y-1 border-l pl-4">

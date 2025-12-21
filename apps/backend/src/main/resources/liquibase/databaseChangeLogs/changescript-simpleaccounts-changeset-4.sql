@@ -528,3 +528,17 @@ INSERT INTO reports_column_configuration (id, report_name, column_names, created
 --changeset Ikrama Shaikh:74
 ALTER TABLE invoice ADD COLUMN generated_by_scan boolean NOT NULL DEFAULT false;
 ALTER TABLE contact ADD COLUMN update_contact boolean NOT NULL DEFAULT false;
+
+--changeset Claude:75
+-- Add missing Corporate Tax eligibility and SIF generation columns to company table
+ALTER TABLE company ADD COLUMN IF NOT EXISTS is_eligible_for_cp BOOLEAN DEFAULT false;
+ALTER TABLE company ADD COLUMN IF NOT EXISTS generate_sif BOOLEAN DEFAULT false;
+
+--changeset Claude:76
+-- Add missing activity_seq sequence
+CREATE SEQUENCE IF NOT EXISTS activity_seq START 10000 INCREMENT 1;
+
+--changeset Claude:77
+-- Add missing columns to configuration table
+ALTER TABLE configuration ADD COLUMN IF NOT EXISTS from_email_address VARCHAR(255);
+ALTER TABLE configuration ADD COLUMN IF NOT EXISTS logged_in_user_email BOOLEAN DEFAULT false;

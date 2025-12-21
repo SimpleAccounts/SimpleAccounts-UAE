@@ -9,6 +9,7 @@ import './style.scss';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { LayoutGrid, Plus, Search, RefreshCw } from 'lucide-react';
 
 const EmployeeFinancial = () => {
   const dispatch = useDispatch();
@@ -114,7 +115,7 @@ const EmployeeFinancial = () => {
               <Row>
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="fas fa-object-group" />
+                    <LayoutGrid className="h-4 w-4" />
                     <span className="ml-2">Financial</span>
                   </div>
                 </Col>
@@ -130,7 +131,7 @@ const EmployeeFinancial = () => {
                         className="btn-square"
                         onClick={() => navigate(`/admin/payroll/financial/create`)}
                       >
-                        <i className="fas fa-plus mr-1" />
+                        <Plus className="h-4 w-4" />
                         New Employment
                       </Button>
                     </ButtonGroup>
@@ -162,7 +163,7 @@ const EmployeeFinancial = () => {
                             className="btn-square mr-1"
                             onClick={handleSearch}
                           >
-                            <i className="fa fa-search"></i>
+                            <Search className="h-4 w-4" />
                           </Button>
                           <Button
                             type="button"
@@ -170,7 +171,7 @@ const EmployeeFinancial = () => {
                             className="btn-square"
                             onClick={clearAll}
                           >
-                            <i className="fa fa-refresh"></i>
+                            <RefreshCw className="h-4 w-4" />
                           </Button>
                         </Col>
                       </Row>

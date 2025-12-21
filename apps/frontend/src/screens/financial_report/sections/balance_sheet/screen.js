@@ -26,6 +26,7 @@ import { CommonActions } from 'services/global';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import FilterComponent3 from '../filterComponent3';
+import { Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -264,7 +265,7 @@ class BalanceSheet extends React.Component {
                       onClick={() => window.print()}
                       style={{ cursor: 'pointer' }}
                     >
-                      <i className="fa fa-print"></i>
+                      <Printer className="h-4 w-4" />
                     </div>
                     <div
                       className="mr-2 print-btn-cont"

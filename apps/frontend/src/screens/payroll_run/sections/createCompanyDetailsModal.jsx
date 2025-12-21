@@ -26,6 +26,7 @@ import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
 
 import '../style.scss';
+import { Ban, CircleDot, HelpCircle, UserCircle } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -111,7 +112,7 @@ function CreateCompanyDetails({ openModal, closeModal }) {
           <Row>
             <Col lg={12}>
               <div className="h4 mb-0 d-flex align-items-center">
-                <i className="nav-icon fas fa-user-tie" />
+                <UserCircle className="h-4 w-4" />
                 <span className="ml-2">{strings.company_details}</span>
               </div>
             </Col>
@@ -126,7 +127,7 @@ function CreateCompanyDetails({ openModal, closeModal }) {
                   <Label htmlFor="companyNumber">
                     <span className="text-danger">* </span>
                     {strings.company_num}
-                    <i id="cnoTooltip" className="fa fa-question-circle ml-1"></i>
+                    <HelpCircle id="cnoTooltip" className="h-4 w-4 inline" />
                     <UncontrolledTooltip placement="right" target="cnoTooltip">
                       Company Number is 13 digit Numeric
                     </UncontrolledTooltip>
@@ -162,7 +163,7 @@ function CreateCompanyDetails({ openModal, closeModal }) {
                   <Label htmlFor="companyBankCode">
                     <span className="text-danger">* </span>
                     {strings.com_code}
-                    <i id="cbcodeTooltip" className="fa fa-question-circle ml-1"></i>
+                    <HelpCircle id="cbcodeTooltip" className="h-4 w-4 inline" />
                     <UncontrolledTooltip placement="right" target="cbcodeTooltip">
                       Company Bank Code is 9 digit Numeric
                     </UncontrolledTooltip>
@@ -209,7 +210,7 @@ function CreateCompanyDetails({ openModal, closeModal }) {
                 }
               }}
             >
-              <i className="fa fa-dot-circle-o"></i> {isSubmitting ? 'Saving...' : strings.Save}
+              <CircleDot className="h-4 w-4" /> {isSubmitting ? 'Saving...' : strings.Save}
             </Button>
             &nbsp;
             <Button
@@ -219,7 +220,7 @@ function CreateCompanyDetails({ openModal, closeModal }) {
                 closeModal(false);
               }}
             >
-              <i className="fa fa-ban"></i> {strings.Cancel}
+              <Ban className="h-4 w-4" /> {strings.Cancel}
             </Button>
           </ModalFooter>
         </Form>

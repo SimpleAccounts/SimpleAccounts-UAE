@@ -17,6 +17,7 @@ import Select from 'react-select';
 import { selectOptionsFactory } from 'utils';
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { AreaChart } from 'lucide-react';
 
 let strings = new LocalizedStrings(data);
 
@@ -108,7 +109,7 @@ const OpeningBalanceModal = ({
       <div className="animated fadeIn">
         <Modal isOpen={showOpeningBalanceModal} className="modal-primary">
           <ModalHeader>
-            <i className="nav-icon fas fa-area-chart" /> {selectedRowData ? 'Update' : 'Add'}{' '}
+            <AreaChart className="h-4 w-4" /> {selectedRowData ? 'Update' : 'Add'}{' '}
             {strings.OpeningBalance}
           </ModalHeader>
           <ModalBody>

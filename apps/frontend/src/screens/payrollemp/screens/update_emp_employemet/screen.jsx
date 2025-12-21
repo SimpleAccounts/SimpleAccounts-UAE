@@ -25,6 +25,7 @@ import * as CreatePayrollEmployeeActions from '../create/actions';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import dayjs from '@/utils/date';
+import { Ban, CircleDot, HelpCircle, UserPlus } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -296,7 +297,7 @@ const UpdateEmployeeEmployment = ({
               <Card>
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="nav-icon fas fa-user-plus" />
+                    <UserPlus className="h-4 w-4" />
                     <span className="ml-2"> {strings.UpdateEmployementDetails}</span>
                   </div>
                 </CardHeader>
@@ -312,10 +313,7 @@ const UpdateEmployeeEmployment = ({
                                   <Label htmlFor="employeeCode">
                                     <span className="text-danger">* </span>
                                     {strings.EmployeeCode}
-                                    <i
-                                      id="employeeCodeTooltip"
-                                      className="fa fa-question-circle ml-1"
-                                    ></i>
+                                    <HelpCircle id="employeeCodeTooltip" className="h-4 w-4 inline" />
                                     <UncontrolledTooltip
                                       placement="right"
                                       target="employeeCodeTooltip"
@@ -359,10 +357,7 @@ const UpdateEmployeeEmployment = ({
                                   <Label htmlFor="labourCard">
                                     <span className="text-danger">* </span>
                                     {strings.LabourCardId}
-                                    <i
-                                      id="labourCardTooltip"
-                                      className="fa fa-question-circle ml-1"
-                                    ></i>
+                                    <HelpCircle id="labourCardTooltip" className="h-4 w-4 inline" />
                                     <UncontrolledTooltip
                                       placement="right"
                                       target="labourCardTooltip"
@@ -541,7 +536,7 @@ const UpdateEmployeeEmployment = ({
                                 }
                               }}
                             >
-                              <i className="fa fa-dot-circle-o"></i>{' '}
+                              <CircleDot className="h-4 w-4" />{' '}
                               {disabled ? 'Updating...' : strings.Update}
                             </Button>
                             <Button
@@ -553,7 +548,7 @@ const UpdateEmployeeEmployment = ({
                                 });
                               }}
                             >
-                              <i className="fa fa-ban"></i> {strings.Cancel}
+                              <Ban className="h-4 w-4" /> {strings.Cancel}
                             </Button>
                           </FormGroup>
                         </Row>
