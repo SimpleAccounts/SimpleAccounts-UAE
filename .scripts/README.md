@@ -22,11 +22,11 @@ bash .scripts/pre-pr-check.sh master
 2. ✅ ESLint errors and warnings
 3. ✅ Frontend unit tests
 4. ✅ Backend tests (if Java files changed)
-5. ⚠️  Common CodeQL issues (non-strict equality comparisons)
-6. ⚠️  Unused variables/imports
-7. ⚠️  Debug statements (console.log, debugger)
-8. ⚠️  TODO/FIXME comments
-9. ⚠️  Error handling patterns
+5. ⚠️ Common CodeQL issues (non-strict equality comparisons)
+6. ⚠️ Unused variables/imports
+7. ⚠️ Debug statements (console.log, debugger)
+8. ⚠️ TODO/FIXME comments
+9. ⚠️ Error handling patterns
 
 ### Exit codes
 
@@ -49,4 +49,3 @@ git checkout feature/my-feature
 npm run pre-pr-check
 # Fix any errors, then create PR
 ```
-

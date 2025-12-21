@@ -29,6 +29,7 @@ This will run all validation checks and report any issues that need to be fixed.
 ### 🔧 Pre-Commit Hook
 
 Automatically runs on every commit:
+
 - ESLint auto-fix (where possible)
 - Prettier formatting
 - Java formatting (backend)
@@ -36,6 +37,7 @@ Automatically runs on every commit:
 ### 🚀 Pre-Push Hook
 
 Automatically runs before pushing:
+
 - Formatting check
 - Linting check
 - Frontend unit tests (if frontend files changed)
@@ -76,6 +78,7 @@ cd apps/frontend && npm test -- --run
 ### Issue: Unused Variables
 
 ESLint should catch these, but if you see warnings:
+
 - Remove unused imports
 - Remove unused variables
 - Use ESLint auto-fix: `npm run fix`
@@ -83,6 +86,7 @@ ESLint should catch these, but if you see warnings:
 ### Issue: CodeQL Warnings
 
 Common issues:
+
 - **Non-strict equality**: Use `===` instead of `==`
 - **Missing error handling**: Add `.catch()` to promises
 - **Unused variables**: Remove or use them
@@ -130,15 +134,15 @@ git push origin feature/my-feature
 
 ## NPM Scripts Reference
 
-| Script | Description |
-|--------|-------------|
-| `npm run pre-pr-check` | Run comprehensive pre-PR validation |
-| `npm run validate` | Run format check, lint, and tests |
-| `npm run validate:frontend` | Validate frontend only |
-| `npm run validate:backend` | Validate backend only |
-| `npm run fix` | Auto-fix formatting and linting |
-| `npm run format` | Format all files with Prettier |
-| `npm run format:check` | Check formatting without fixing |
+| Script                      | Description                         |
+| --------------------------- | ----------------------------------- |
+| `npm run pre-pr-check`      | Run comprehensive pre-PR validation |
+| `npm run validate`          | Run format check, lint, and tests   |
+| `npm run validate:frontend` | Validate frontend only              |
+| `npm run validate:backend`  | Validate backend only               |
+| `npm run fix`               | Auto-fix formatting and linting     |
+| `npm run format`            | Format all files with Prettier      |
+| `npm run format:check`      | Check formatting without fixing     |
 
 ## Troubleshooting
 
@@ -152,6 +156,7 @@ npm install
 ### Pre-push hook is too slow
 
 The pre-push hook runs tests. If it's too slow, you can:
+
 1. Skip hooks for this push: `git push --no-verify` (not recommended)
 2. Modify `.husky/pre-push` to skip tests (tests still run in pre-pr-check)
 
@@ -167,14 +172,14 @@ The pre-push hook runs tests. If it's too slow, you can:
 ✅ **Reduce follow-up commits** - Fix issues before PR review  
 ✅ **Better code quality** - Automated checks ensure standards  
 ✅ **Faster CI** - Fewer CI failures mean faster feedback  
-✅ **Cleaner history** - Fewer "fix linting" commits  
+✅ **Cleaner history** - Fewer "fix linting" commits
 
 ## Integration with CI
 
 These checks complement (not replace) CI checks:
+
 - **Pre-commit/Pre-push**: Fast, local checks
 - **Pre-PR check**: Comprehensive validation
 - **CI**: Final validation before merge
 
 All three layers ensure code quality at different stages.
-
