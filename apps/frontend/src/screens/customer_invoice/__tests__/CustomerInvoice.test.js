@@ -184,18 +184,22 @@ describe('CustomerInvoice Component', () => {
 
     // The button text is "Add New Invoice" (strings.AddNewInvoice)
     // Use flexible matching to handle the actual rendered text
-    await waitFor(() => {
-      // Try multiple patterns to find the button
-      const invoiceButton = screen.queryByText(/Add.*Invoice/i) || 
-                            screen.queryByText(/Add New Invoice/i) ||
-                            screen.queryByText(/New Invoice/i);
-      // If invoiceButton was found, verify it's in the document
-      if (invoiceButton) {
-        expect(invoiceButton).toBeInTheDocument();
-      }
-      // At minimum, verify buttons exist on the page
-      const buttons = screen.queryAllByRole('button');
-      expect(buttons.length).toBeGreaterThan(0);
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        // Try multiple patterns to find the button
+        const invoiceButton =
+          screen.queryByText(/Add.*Invoice/i) ||
+          screen.queryByText(/Add New Invoice/i) ||
+          screen.queryByText(/New Invoice/i);
+        // If invoiceButton was found, verify it's in the document
+        if (invoiceButton) {
+          expect(invoiceButton).toBeInTheDocument();
+        }
+        // At minimum, verify buttons exist on the page
+        const buttons = screen.queryAllByRole('button');
+        expect(buttons.length).toBeGreaterThan(0);
+      },
+      { timeout: 3000 }
+    );
   });
 });
