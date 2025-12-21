@@ -18,19 +18,19 @@ const invoiceListDuration = new Trend('invoice_list_duration');
 export const options = {
   // Stages for ramp-up testing
   stages: [
-    { duration: '30s', target: 5 },   // Ramp up to 5 users
-    { duration: '1m', target: 10 },   // Stay at 10 users
-    { duration: '30s', target: 20 },  // Ramp up to 20 users
-    { duration: '1m', target: 20 },   // Stay at 20 users
-    { duration: '30s', target: 0 },   // Ramp down
+    { duration: '30s', target: 5 }, // Ramp up to 5 users
+    { duration: '1m', target: 10 }, // Stay at 10 users
+    { duration: '30s', target: 20 }, // Ramp up to 20 users
+    { duration: '1m', target: 20 }, // Stay at 20 users
+    { duration: '30s', target: 0 }, // Ramp down
   ],
 
   // Thresholds for pass/fail criteria
   thresholds: {
     http_req_duration: ['p(95)<2000', 'p(99)<5000'], // 95% < 2s, 99% < 5s
-    http_req_failed: ['rate<0.05'],                   // <5% error rate
-    auth_success_rate: ['rate>0.95'],                 // >95% auth success
-    invoice_list_duration: ['p(90)<1500'],            // 90% < 1.5s
+    http_req_failed: ['rate<0.05'], // <5% error rate
+    auth_success_rate: ['rate>0.95'], // >95% auth success
+    invoice_list_duration: ['p(90)<1500'], // 90% < 1.5s
   },
 };
 
@@ -58,8 +58,8 @@ function authenticate() {
   });
 
   const success = check(loginRes, {
-    'auth status is 200': (r) => r.status === 200,
-    'auth response has token': (r) => r.json('token') !== undefined,
+    'auth status is 200': r => r.status === 200,
+    'auth response has token': r => r.json('token') !== undefined,
   });
 
   authSuccessRate.add(success);
@@ -83,7 +83,7 @@ export default function (data) {
 
   const headers = {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${authToken}`,
+    Authorization: `Bearer ${authToken}`,
   };
 
   // Test groups
@@ -99,9 +99,9 @@ export default function (data) {
       invoiceListDuration.add(Date.now() - listStart);
 
       check(listRes, {
-        'list status is 200': (r) => r.status === 200,
-        'list returns array': (r) => Array.isArray(r.json()),
-        'list response time < 2s': (r) => r.timings.duration < 2000,
+        'list status is 200': r => r.status === 200,
+        'list returns array': r => Array.isArray(r.json()),
+        'list response time < 2s': r => r.timings.duration < 2000,
       });
 
       sleep(0.5);
@@ -131,8 +131,8 @@ export default function (data) {
         });
 
         const created = check(createRes, {
-          'create status is 200 or 201': (r) => r.status === 200 || r.status === 201,
-          'create returns id': (r) => r.json('id') !== undefined,
+          'create status is 200 or 201': r => r.status === 200 || r.status === 201,
+          'create returns id': r => r.json('id') !== undefined,
         });
 
         if (created) {
@@ -153,8 +153,8 @@ export default function (data) {
       });
 
       check(kpiRes, {
-        'kpi status is 200': (r) => r.status === 200,
-        'kpi response time < 3s': (r) => r.timings.duration < 3000,
+        'kpi status is 200': r => r.status === 200,
+        'kpi response time < 3s': r => r.timings.duration < 3000,
       });
 
       sleep(0.5);
@@ -172,8 +172,8 @@ export default function (data) {
         );
 
         check(reportRes, {
-          'report status is 200': (r) => r.status === 200,
-          'report response time < 5s': (r) => r.timings.duration < 5000,
+          'report status is 200': r => r.status === 200,
+          'report response time < 5s': r => r.timings.duration < 5000,
         });
 
         sleep(1);
@@ -194,7 +194,7 @@ export function teardown(data) {
 // Handle test summary
 export function handleSummary(data) {
   return {
-    'stdout': textSummary(data, { indent: ' ', enableColors: true }),
+    stdout: textSummary(data, { indent: ' ', enableColors: true }),
     'summary.json': JSON.stringify(data),
   };
 }

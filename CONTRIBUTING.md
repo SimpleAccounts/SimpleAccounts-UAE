@@ -77,7 +77,7 @@ While we welcome contributors from all backgrounds, the following qualifications
 
 ### Prerequisites
 
-- Node.js (check `.nvmrc` for version)
+- Node.js 20.x (check `apps/frontend/.nvmrc` for exact version)
 - npm
 - Java JDK 11+ (for backend)
 - Maven (for backend)

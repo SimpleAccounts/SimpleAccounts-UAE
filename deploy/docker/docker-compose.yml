@@ -4,13 +4,13 @@ services:
     image: postgres:16-alpine
     restart: always
     ports:
-      - "5432:5432"
+      - '5432:5432'
     environment:
       POSTGRES_DB: ${SIMPLEACCOUNTS_DB}
       POSTGRES_USER: ${SIMPLEACCOUNTS_DB_USER}
       POSTGRES_PASSWORD: ${SIMPLEACCOUNTS_DB_PASSWORD}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
       interval: 5s
       timeout: 5s
       retries: 20
@@ -28,7 +28,7 @@ services:
     image: simpleaccounts-backend:latest
     restart: always
     ports:
-      - "8080:8080"
+      - '8080:8080'
     depends_on:
       db:
         condition: service_healthy
@@ -50,7 +50,7 @@ services:
       SIMPLEACCOUNTS_DB_SSLMODE: ${SIMPLEACCOUNTS_DB_SSLMODE:-disable}
       SIMPLEACCOUNTS_DB_SSLROOTCERT: ${SIMPLEACCOUNTS_DB_SSLROOTCERT:-}
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - 'host.docker.internal:host-gateway'
     networks:
       - simpleaccounts-network
 
@@ -60,7 +60,7 @@ services:
     image: simpleaccounts-frontend:latest
     restart: always
     ports:
-      - "80:80"
+      - '80:80'
     environment:
       SIMPLEACCOUNTS_RELEASE: ${FRONTEND_RELEASE}
       SIMPLEACCOUNTS_HOST: ${FRONTEND_HOST_PUBLIC}

@@ -43,6 +43,7 @@ When deploying SimpleAccounts:
 ## Security Updates
 
 Security updates will be released as patch versions and announced through:
+
 - GitHub Security Advisories
 - Release notes
 

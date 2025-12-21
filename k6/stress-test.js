@@ -7,17 +7,17 @@ const errorRate = new Rate('errors');
 // Stress test - push system to breaking point
 export const options = {
   stages: [
-    { duration: '2m', target: 50 },   // Ramp up to 50 users
-    { duration: '5m', target: 50 },   // Stay at 50 users
-    { duration: '2m', target: 100 },  // Ramp up to 100 users
-    { duration: '5m', target: 100 },  // Stay at 100 users
-    { duration: '2m', target: 150 },  // Ramp up to 150 users
-    { duration: '5m', target: 150 },  // Stay at 150 users
-    { duration: '5m', target: 0 },    // Ramp down
+    { duration: '2m', target: 50 }, // Ramp up to 50 users
+    { duration: '5m', target: 50 }, // Stay at 50 users
+    { duration: '2m', target: 100 }, // Ramp up to 100 users
+    { duration: '5m', target: 100 }, // Stay at 100 users
+    { duration: '2m', target: 150 }, // Ramp up to 150 users
+    { duration: '5m', target: 150 }, // Stay at 150 users
+    { duration: '5m', target: 0 }, // Ramp down
   ],
   thresholds: {
     http_req_duration: ['p(95)<5000'], // 95% under 5s during stress
-    errors: ['rate<0.3'],              // Allow up to 30% errors during stress
+    errors: ['rate<0.3'], // Allow up to 30% errors during stress
   },
 };
 
@@ -26,29 +26,35 @@ const USERNAME = __ENV.K6_USERNAME || 'test@example.com';
 const PASSWORD = __ENV.K6_PASSWORD || 'testpassword';
 
 export function setup() {
-  const loginRes = http.post(`${BASE_URL}/login`, JSON.stringify({
-    username: USERNAME,
-    password: PASSWORD,
-  }), {
-    headers: { 'Content-Type': 'application/json' },
-  });
+  const loginRes = http.post(
+    `${BASE_URL}/login`,
+    JSON.stringify({
+      username: USERNAME,
+      password: PASSWORD,
+    }),
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
 
   const token = loginRes.json('token') || loginRes.headers['Authorization'];
   return { token };
 }
 
-export default function(data) {
-  const authHeaders = data.token ? {
-    'Authorization': `Bearer ${data.token}`,
-    'Content-Type': 'application/json',
-  } : {
-    'Content-Type': 'application/json',
-  };
+export default function (data) {
+  const authHeaders = data.token
+    ? {
+        Authorization: `Bearer ${data.token}`,
+        'Content-Type': 'application/json',
+      }
+    : {
+        'Content-Type': 'application/json',
+      };
 
   group('Health Check Under Stress', () => {
     const res = http.get(`${BASE_URL}/actuator/health`);
     check(res, {
-      'health check survives': (r) => r.status === 200,
+      'health check survives': r => r.status === 200,
     });
     errorRate.add(res.status !== 200);
   });
@@ -56,15 +62,19 @@ export default function(data) {
   sleep(0.5);
 
   group('Login Under Stress', () => {
-    const res = http.post(`${BASE_URL}/login`, JSON.stringify({
-      username: USERNAME,
-      password: PASSWORD,
-    }), {
-      headers: { 'Content-Type': 'application/json' },
-    });
+    const res = http.post(
+      `${BASE_URL}/login`,
+      JSON.stringify({
+        username: USERNAME,
+        password: PASSWORD,
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
 
     check(res, {
-      'login survives': (r) => r.status === 200 || r.status === 401 || r.status === 429,
+      'login survives': r => r.status === 200 || r.status === 401 || r.status === 429,
     });
     errorRate.add(res.status >= 500);
   });
@@ -85,7 +95,7 @@ export default function(data) {
       });
 
       check(res, {
-        'API survives stress': (r) => r.status < 500,
+        'API survives stress': r => r.status < 500,
       });
       errorRate.add(res.status >= 500);
     });
