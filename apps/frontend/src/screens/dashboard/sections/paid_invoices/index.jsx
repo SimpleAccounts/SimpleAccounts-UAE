@@ -187,7 +187,16 @@ const PaidInvoices = props => {
       <Card className="invoice-card card-margin">
         <CardBody className="tab-card">
           <div className="flex-wrapper title-bottom-border">
-            <h1 className="card-h1">
+            <h1
+              className="card-h1"
+              style={{
+                fontSize: '1.125rem',
+                fontWeight: 700,
+                color: '#1e6eff',
+                margin: 0,
+                textTransform: 'uppercase',
+              }}
+            >
               {strings.SupplierCustomerPaidInvoices || 'SUPPLIER & CUSTOMER PAID INVOICES'}
             </h1>
           </div>

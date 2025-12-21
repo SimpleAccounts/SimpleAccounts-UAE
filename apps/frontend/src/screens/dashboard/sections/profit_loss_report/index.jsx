@@ -162,7 +162,18 @@ const ProfitAndLossReport = props => {
       <Card className="cash-card card-margin">
         <CardBody className="tab-card">
           <div className="flex-wrapper title-bottom-border">
-            <h1 className="card-h1">{strings.ProfitLoss || 'PROFIT & LOSS'}</h1>
+            <h1
+              className="card-h1"
+              style={{
+                fontSize: '1.125rem',
+                fontWeight: 700,
+                color: '#1e6eff',
+                margin: 0,
+                textTransform: 'uppercase',
+              }}
+            >
+              {strings.ProfitLoss || 'PROFIT & LOSS'}
+            </h1>
             <div className="card-header-actions">
               <select
                 className="form-control card-select"
