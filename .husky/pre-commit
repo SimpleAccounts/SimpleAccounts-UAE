@@ -1,1 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run lint-staged (auto-fixes formatting and linting)
 npx lint-staged
+
+# Note: Tests are skipped in pre-commit for performance
+# Run 'npm run pre-pr-check' before creating PR to run full validation

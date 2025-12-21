@@ -48,6 +48,11 @@
     "lint": "npm run lint --workspaces --if-present",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "pre-pr-check": "bash .scripts/pre-pr-check.sh",
+    "validate": "npm run format:check && npm run lint && npm test",
+    "validate:frontend": "cd apps/frontend && npm exec eslint -- --ext .js,.jsx src/ && npm test -- --run",
+    "validate:backend": "cd apps/backend && ./mvnw test",
+    "fix": "npm run format && cd apps/frontend && npm exec eslint -- --ext .js,.jsx src/ --fix",
     "prepare": "husky"
   },
   "dependencies": {
