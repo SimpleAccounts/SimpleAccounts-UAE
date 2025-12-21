@@ -3,15 +3,12 @@ import { test, expect } from '@playwright/test';
 const RUN_SMOKE = process.env.RUN_E2E_SMOKE === 'true';
 const LOGIN_PATH = process.env.E2E_LOGIN_PATH || '/login';
 const POST_LOGIN_PATH = process.env.E2E_POST_LOGIN_PATH || '/admin';
-const EXPENSE_PATH =
-  process.env.E2E_EXPENSE_PATH || '/admin/expense/supplier-invoice';
+const EXPENSE_PATH = process.env.E2E_EXPENSE_PATH || '/admin/expense/supplier-invoice';
 
 const describeSmoke = RUN_SMOKE ? test.describe : test.describe.skip;
 
 describeSmoke('Expense workflow smoke journey', () => {
-  test('logs in and navigates to expense/supplier invoice list', async ({
-    page,
-  }) => {
+  test('logs in and navigates to expense/supplier invoice list', async ({ page }) => {
     test.setTimeout(240_000);
 
     const username = process.env.E2E_USERNAME;
@@ -19,7 +16,7 @@ describeSmoke('Expense workflow smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run the expense smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run the expense smoke test'
     );
 
     // Login
@@ -64,7 +61,7 @@ describeSmoke('Expense workflow smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run the expense form smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run the expense form smoke test'
     );
 
     // Login

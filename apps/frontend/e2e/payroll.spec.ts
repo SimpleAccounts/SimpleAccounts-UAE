@@ -56,8 +56,12 @@ test.describe('Payroll Dashboard', () => {
 
     // Look for overview or dashboard content
     const overviewExists = await Promise.race([
-      page.locator('[class*="overview"], [class*="dashboard"], [class*="payroll"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="overview"], [class*="dashboard"], [class*="payroll"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(overviewExists).toBeTruthy();
@@ -69,9 +73,17 @@ test.describe('Payroll Dashboard', () => {
 
     // Look for period information
     const periodExists = await Promise.race([
-      page.getByText(/period|month|cycle/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="period"], [id*="period"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/period|month|cycle/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="period"], [id*="period"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof periodExists).toBe('boolean');
@@ -83,9 +95,17 @@ test.describe('Payroll Dashboard', () => {
 
     // Look for payroll totals
     const totalExists = await Promise.race([
-      page.getByText(/total.*payroll|payroll.*total|total.*salary/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="total"], [class*="summary"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/total.*payroll|payroll.*total|total.*salary/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="total"], [class*="summary"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof totalExists).toBe('boolean');
@@ -97,9 +117,17 @@ test.describe('Payroll Dashboard', () => {
 
     // Look for run payroll button
     const runPayrollExists = await Promise.race([
-      page.getByRole('button', { name: /run.*payroll|process.*payroll/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /run.*payroll|process.*payroll/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /run.*payroll|process.*payroll/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /run.*payroll|process.*payroll/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(runPayrollExists).toBeTruthy();
@@ -120,7 +148,9 @@ test.describe('Payroll Run', () => {
     await page.waitForTimeout(2000);
 
     // Verify we're on the payroll run page
-    const isOnPayrollRun = page.url().includes('payroll') && (page.url().includes('run') || page.url().includes('process'));
+    const isOnPayrollRun =
+      page.url().includes('payroll') &&
+      (page.url().includes('run') || page.url().includes('process'));
     expect(isOnPayrollRun || page.url().includes('payroll')).toBeTruthy();
   });
 
@@ -130,9 +160,17 @@ test.describe('Payroll Run', () => {
 
     // Look for period selector
     const periodSelectorExists = await Promise.race([
-      page.locator('select[name*="period"], [id*="period"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('input[type="date"], [class*="date"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="period"], [id*="period"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('input[type="date"], [class*="date"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(periodSelectorExists).toBeTruthy();
@@ -144,8 +182,12 @@ test.describe('Payroll Run', () => {
 
     // Look for employee list
     const employeeListExists = await Promise.race([
-      page.locator('table, [class*="employee"], [class*="list"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, [class*="employee"], [class*="list"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof employeeListExists).toBe('boolean');
@@ -157,9 +199,17 @@ test.describe('Payroll Run', () => {
 
     // Look for salary information
     const salaryExists = await Promise.race([
-      page.getByText(/salary|wage|compensation|basic.*pay/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="salary"], [class*="wage"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/salary|wage|compensation|basic.*pay/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="salary"], [class*="wage"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof salaryExists).toBe('boolean');
@@ -171,9 +221,17 @@ test.describe('Payroll Run', () => {
 
     // Look for deductions/allowances
     const deductionsExists = await Promise.race([
-      page.getByText(/deduction|allowance|benefit/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="deduction"], [class*="allowance"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/deduction|allowance|benefit/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="deduction"], [class*="allowance"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof deductionsExists).toBe('boolean');
@@ -185,9 +243,17 @@ test.describe('Payroll Run', () => {
 
     // Look for net pay calculation
     const netPayExists = await Promise.race([
-      page.getByText(/net.*pay|take.*home|net.*salary/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="net-pay"], [id*="net"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/net.*pay|take.*home|net.*salary/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="net-pay"], [id*="net"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof netPayExists).toBe('boolean');
@@ -198,7 +264,11 @@ test.describe('Payroll Run', () => {
     await page.waitForTimeout(3000);
 
     // Look for checkboxes to select employees
-    const checkboxExists = await page.locator('input[type="checkbox"]').first().isVisible({ timeout: 5000 }).catch(() => false);
+    const checkboxExists = await page
+      .locator('input[type="checkbox"]')
+      .first()
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
 
     expect(typeof checkboxExists).toBe('boolean');
   });
@@ -209,8 +279,12 @@ test.describe('Payroll Run', () => {
 
     // Look for process button
     const processButtonExists = await Promise.race([
-      page.getByRole('button', { name: /process|run|execute|submit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /process|run|execute|submit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(processButtonExists).toBeTruthy();
@@ -222,9 +296,17 @@ test.describe('Payroll Run', () => {
 
     // Look for summary section
     const summaryExists = await Promise.race([
-      page.locator('[class*="summary"], [id*="summary"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/summary|total/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="summary"], [id*="summary"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/summary|total/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof summaryExists).toBe('boolean');
@@ -236,9 +318,17 @@ test.describe('Payroll Run', () => {
 
     // Look for preview functionality
     const previewExists = await Promise.race([
-      page.getByRole('button', { name: /preview|view.*payslip/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="preview"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /preview|view.*payslip/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="preview"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof previewExists).toBe('boolean');
@@ -269,8 +359,12 @@ test.describe('Salary Templates', () => {
 
     // Look for templates list
     const templatesExists = await Promise.race([
-      page.locator('table, [class*="template"], [class*="list"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, [class*="template"], [class*="list"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof templatesExists).toBe('boolean');
@@ -282,9 +376,17 @@ test.describe('Salary Templates', () => {
 
     // Look for create button
     const createButtonExists = await Promise.race([
-      page.getByRole('button', { name: /new|create|add.*template/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /new|create|add.*template/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /new|create|add.*template/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /new|create|add.*template/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(createButtonExists).toBeTruthy();
@@ -296,8 +398,12 @@ test.describe('Salary Templates', () => {
 
     // Look for form
     const formExists = await Promise.race([
-      page.locator('form, [class*="form"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('form, [class*="form"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(formExists).toBeTruthy();
@@ -309,9 +415,17 @@ test.describe('Salary Templates', () => {
 
     // Look for component addition
     const addComponentExists = await Promise.race([
-      page.getByRole('button', { name: /add.*component|add.*item/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="add-component"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /add.*component|add.*item/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="add-component"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof addComponentExists).toBe('boolean');
@@ -323,9 +437,17 @@ test.describe('Salary Templates', () => {
 
     // Look for component type selection
     const typeExists = await Promise.race([
-      page.locator('select[name*="type"], [id*="type"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/basic|allowance|deduction/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="type"], [id*="type"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/basic|allowance|deduction/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof typeExists).toBe('boolean');
@@ -337,9 +459,17 @@ test.describe('Salary Templates', () => {
 
     // Look for edit functionality
     const editExists = await Promise.race([
-      page.getByRole('button', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof editExists).toBe('boolean');
@@ -351,9 +481,17 @@ test.describe('Salary Templates', () => {
 
     // Look for delete functionality
     const deleteExists = await Promise.race([
-      page.getByRole('button', { name: /delete|remove/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="delete"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /delete|remove/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="delete"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof deleteExists).toBe('boolean');
@@ -364,8 +502,16 @@ test.describe('Salary Templates', () => {
     await page.waitForTimeout(3000);
 
     // Look for name and description fields
-    const nameExists = await page.locator('input[name*="name"], input[id*="name"]').first().isVisible({ timeout: 5000 }).catch(() => false);
-    const descriptionExists = await page.locator('textarea[name*="description"], input[name*="description"]').first().isVisible({ timeout: 5000 }).catch(() => false);
+    const nameExists = await page
+      .locator('input[name*="name"], input[id*="name"]')
+      .first()
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
+    const descriptionExists = await page
+      .locator('textarea[name*="description"], input[name*="description"]')
+      .first()
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
 
     expect(nameExists || descriptionExists).toBeTruthy();
   });
@@ -394,8 +540,12 @@ test.describe('Employee Payments', () => {
 
     // Look for employees list
     const employeesExists = await Promise.race([
-      page.locator('table, [class*="employee"], [class*="list"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, [class*="employee"], [class*="list"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(employeesExists).toBeTruthy();
@@ -406,7 +556,9 @@ test.describe('Employee Payments', () => {
     await page.waitForTimeout(3000);
 
     // Try to view first employee
-    const firstEmployee = page.locator('table tbody tr:first-child, [class*="employee-item"]:first-child').first();
+    const firstEmployee = page
+      .locator('table tbody tr:first-child, [class*="employee-item"]:first-child')
+      .first();
     const employeeExists = await firstEmployee.isVisible({ timeout: 5000 }).catch(() => false);
 
     if (employeeExists) {
@@ -415,8 +567,12 @@ test.describe('Employee Payments', () => {
 
       // Look for salary information
       const salaryExists = await Promise.race([
-        page.getByText(/salary|wage|compensation/i).first().isVisible({ timeout: 5000 }).then(() => true),
-        page.waitForTimeout(5000).then(() => false)
+        page
+          .getByText(/salary|wage|compensation/i)
+          .first()
+          .isVisible({ timeout: 5000 })
+          .then(() => true),
+        page.waitForTimeout(5000).then(() => false),
       ]);
 
       expect(typeof salaryExists).toBe('boolean');
@@ -431,9 +587,17 @@ test.describe('Employee Payments', () => {
 
     // Try to view payment history
     const historyExists = await Promise.race([
-      page.getByText(/payment.*history|salary.*history/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="history"], [class*="payment"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/payment.*history|salary.*history/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="history"], [class*="payment"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof historyExists).toBe('boolean');
@@ -445,9 +609,17 @@ test.describe('Employee Payments', () => {
 
     // Look for bank details fields
     const bankDetailsExists = await Promise.race([
-      page.locator('input[name*="bank"], input[name*="account"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/bank.*details|account.*number/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="bank"], input[name*="account"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/bank.*details|account.*number/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof bankDetailsExists).toBe('boolean');
@@ -459,9 +631,17 @@ test.describe('Employee Payments', () => {
 
     // Look for payslip generation
     const payslipExists = await Promise.race([
-      page.getByRole('button', { name: /payslip|generate.*slip/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="payslip"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /payslip|generate.*slip/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="payslip"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof payslipExists).toBe('boolean');
@@ -473,9 +653,17 @@ test.describe('Employee Payments', () => {
 
     // Look for download functionality
     const downloadExists = await Promise.race([
-      page.getByRole('button', { name: /download|pdf|export/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="download"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /download|pdf|export/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="download"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof downloadExists).toBe('boolean');

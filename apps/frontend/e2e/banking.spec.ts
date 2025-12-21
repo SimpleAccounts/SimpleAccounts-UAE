@@ -55,8 +55,12 @@ test.describe('Bank Accounts Management', () => {
 
     // Look for accounts list or table
     const accountsListExists = await Promise.race([
-      page.locator('table, .table, [class*="account"], [class*="list"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, .table, [class*="account"], [class*="list"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(accountsListExists).toBeTruthy();
@@ -68,9 +72,17 @@ test.describe('Bank Accounts Management', () => {
 
     // Look for add/new/create button
     const addButtonExists = await Promise.race([
-      page.getByRole('button', { name: /new|create|add.*account/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /new|create|add.*account/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /new|create|add.*account/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /new|create|add.*account/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(addButtonExists).toBeTruthy();
@@ -82,8 +94,12 @@ test.describe('Bank Accounts Management', () => {
 
     // Look for form fields
     const formExists = await Promise.race([
-      page.locator('form, [class*="form"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('form, [class*="form"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(formExists).toBeTruthy();
@@ -102,7 +118,11 @@ test.describe('Bank Accounts Management', () => {
 
     let foundFields = 0;
     for (const selector of commonFields) {
-      const fieldExists = await page.locator(selector).first().isVisible({ timeout: 3000 }).catch(() => false);
+      const fieldExists = await page
+        .locator(selector)
+        .first()
+        .isVisible({ timeout: 3000 })
+        .catch(() => false);
       if (fieldExists) foundFields++;
     }
 
@@ -116,9 +136,17 @@ test.describe('Bank Accounts Management', () => {
 
     // Look for balance-related information
     const balanceExists = await Promise.race([
-      page.getByText(/balance|amount|total/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="balance"], [id*="balance"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/balance|amount|total/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="balance"], [id*="balance"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof balanceExists).toBe('boolean');
@@ -129,7 +157,9 @@ test.describe('Bank Accounts Management', () => {
     await page.waitForTimeout(3000);
 
     // Try to find first account to view
-    const firstAccount = page.locator('table tbody tr:first-child, [class*="account-item"]:first-child').first();
+    const firstAccount = page
+      .locator('table tbody tr:first-child, [class*="account-item"]:first-child')
+      .first();
     const accountExists = await firstAccount.isVisible({ timeout: 5000 }).catch(() => false);
 
     if (accountExists) {
@@ -138,8 +168,12 @@ test.describe('Bank Accounts Management', () => {
 
       // Should show account details
       const detailsVisible = await Promise.race([
-        page.locator('[class*="detail"], [class*="view"], main').first().isVisible({ timeout: 5000 }).then(() => true),
-        page.waitForTimeout(5000).then(() => false)
+        page
+          .locator('[class*="detail"], [class*="view"], main')
+          .first()
+          .isVisible({ timeout: 5000 })
+          .then(() => true),
+        page.waitForTimeout(5000).then(() => false),
       ]);
 
       expect(detailsVisible).toBeTruthy();
@@ -154,10 +188,22 @@ test.describe('Bank Accounts Management', () => {
 
     // Look for edit functionality
     const editExists = await Promise.race([
-      page.getByRole('button', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="edit"], button[title*="Edit"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="edit"], button[title*="Edit"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof editExists).toBe('boolean');
@@ -169,9 +215,17 @@ test.describe('Bank Accounts Management', () => {
 
     // Look for deactivate/disable/delete functionality
     const deactivateExists = await Promise.race([
-      page.getByRole('button', { name: /deactivate|disable|delete|archive/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="deactivate"], [class*="disable"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /deactivate|disable|delete|archive/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="deactivate"], [class*="disable"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof deactivateExists).toBe('boolean');
@@ -183,9 +237,17 @@ test.describe('Bank Accounts Management', () => {
 
     // Look for account type dropdown or selection
     const typeExists = await Promise.race([
-      page.locator('select[name*="type"], input[name*="type"], [id*="type"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/account type|type/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="type"], input[name*="type"], [id*="type"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/account type|type/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof typeExists).toBe('boolean');
@@ -216,9 +278,17 @@ test.describe('Bank Reconciliation', () => {
 
     // Look for account selector
     const accountSelectorExists = await Promise.race([
-      page.locator('select[name*="account"], [class*="account-select"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/select.*account|choose.*account/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="account"], [class*="account-select"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/select.*account|choose.*account/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(accountSelectorExists).toBeTruthy();
@@ -230,9 +300,17 @@ test.describe('Bank Reconciliation', () => {
 
     // Look for date range inputs
     const dateRangeExists = await Promise.race([
-      page.locator('input[type="date"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="date"], [id*="date"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="date"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="date"], [id*="date"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(dateRangeExists).toBeTruthy();
@@ -244,9 +322,17 @@ test.describe('Bank Reconciliation', () => {
 
     // Look for balance fields
     const balanceFieldsExist = await Promise.race([
-      page.locator('input[name*="balance"], [id*="balance"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/opening.*balance|closing.*balance/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="balance"], [id*="balance"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/opening.*balance|closing.*balance/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof balanceFieldsExist).toBe('boolean');
@@ -258,8 +344,12 @@ test.describe('Bank Reconciliation', () => {
 
     // Look for transactions table or list
     const transactionsExists = await Promise.race([
-      page.locator('table, [class*="transaction"], [class*="list"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, [class*="transaction"], [class*="list"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof transactionsExists).toBe('boolean');
@@ -270,7 +360,11 @@ test.describe('Bank Reconciliation', () => {
     await page.waitForTimeout(3000);
 
     // Look for checkboxes for transaction selection
-    const checkboxExists = await page.locator('input[type="checkbox"]').first().isVisible({ timeout: 5000 }).catch(() => false);
+    const checkboxExists = await page
+      .locator('input[type="checkbox"]')
+      .first()
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
 
     expect(typeof checkboxExists).toBe('boolean');
   });
@@ -281,9 +375,17 @@ test.describe('Bank Reconciliation', () => {
 
     // Look for difference calculation display
     const differenceExists = await Promise.race([
-      page.getByText(/difference|variance|discrepancy/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="difference"], [id*="difference"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/difference|variance|discrepancy/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="difference"], [id*="difference"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof differenceExists).toBe('boolean');
@@ -295,8 +397,12 @@ test.describe('Bank Reconciliation', () => {
 
     // Look for save/complete button
     const saveButtonExists = await Promise.race([
-      page.getByRole('button', { name: /save|complete|finish|reconcile/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /save|complete|finish|reconcile/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof saveButtonExists).toBe('boolean');
@@ -308,9 +414,17 @@ test.describe('Bank Reconciliation', () => {
 
     // Look for history list or table
     const historyExists = await Promise.race([
-      page.locator('table, [class*="history"], [class*="list"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/history|past.*reconciliation/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, [class*="history"], [class*="list"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/history|past.*reconciliation/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof historyExists).toBe('boolean');
@@ -322,9 +436,17 @@ test.describe('Bank Reconciliation', () => {
 
     // Look for status filter
     const filterExists = await Promise.race([
-      page.locator('select[name*="status"], [class*="filter"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/filter|status/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="status"], [class*="filter"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/filter|status/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof filterExists).toBe('boolean');
@@ -355,8 +477,12 @@ test.describe('Bank Transactions', () => {
 
     // Look for transactions table or list
     const transactionsExists = await Promise.race([
-      page.locator('table, .table, [class*="transaction"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, .table, [class*="transaction"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(transactionsExists).toBeTruthy();
@@ -368,9 +494,17 @@ test.describe('Bank Transactions', () => {
 
     // Look for add button
     const addButtonExists = await Promise.race([
-      page.getByRole('button', { name: /new|create|add.*transaction/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /new|create|add.*transaction/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /new|create|add.*transaction/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /new|create|add.*transaction/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(addButtonExists).toBeTruthy();
@@ -382,9 +516,17 @@ test.describe('Bank Transactions', () => {
 
     // Look for transaction type (deposit, withdrawal, transfer)
     const typeExists = await Promise.race([
-      page.locator('select[name*="type"], input[name*="type"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/deposit|withdrawal|transfer/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="type"], input[name*="type"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/deposit|withdrawal|transfer/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof typeExists).toBe('boolean');
@@ -396,9 +538,17 @@ test.describe('Bank Transactions', () => {
 
     // Look for date filters
     const dateFilterExists = await Promise.race([
-      page.locator('input[type="date"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="date-picker"], [class*="daterange"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="date"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="date-picker"], [class*="daterange"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof dateFilterExists).toBe('boolean');
@@ -409,8 +559,16 @@ test.describe('Bank Transactions', () => {
     await page.waitForTimeout(3000);
 
     // Look for amount and description fields
-    const amountExists = await page.locator('input[name*="amount"], input[id*="amount"]').first().isVisible({ timeout: 5000 }).catch(() => false);
-    const descriptionExists = await page.locator('input[name*="description"], textarea[name*="description"]').first().isVisible({ timeout: 5000 }).catch(() => false);
+    const amountExists = await page
+      .locator('input[name*="amount"], input[id*="amount"]')
+      .first()
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
+    const descriptionExists = await page
+      .locator('input[name*="description"], textarea[name*="description"]')
+      .first()
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
 
     expect(amountExists || descriptionExists).toBeTruthy();
   });
@@ -421,9 +579,17 @@ test.describe('Bank Transactions', () => {
 
     // Look for category selection
     const categoryExists = await Promise.race([
-      page.locator('select[name*="category"], [id*="category"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/category|account/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="category"], [id*="category"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/category|account/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof categoryExists).toBe('boolean');
@@ -435,9 +601,17 @@ test.describe('Bank Transactions', () => {
 
     // Look for search input
     const searchExists = await Promise.race([
-      page.locator('input[type="search"], input[placeholder*="search" i]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByPlaceholder(/search/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="search"], input[placeholder*="search" i]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByPlaceholder(/search/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof searchExists).toBe('boolean');
@@ -448,8 +622,12 @@ test.describe('Bank Transactions', () => {
     await page.waitForTimeout(3000);
 
     // Try to click first transaction
-    const firstTransaction = page.locator('table tbody tr:first-child, [class*="transaction-item"]:first-child').first();
-    const transactionExists = await firstTransaction.isVisible({ timeout: 5000 }).catch(() => false);
+    const firstTransaction = page
+      .locator('table tbody tr:first-child, [class*="transaction-item"]:first-child')
+      .first();
+    const transactionExists = await firstTransaction
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
 
     if (transactionExists) {
       await firstTransaction.click();
@@ -468,9 +646,17 @@ test.describe('Bank Transactions', () => {
 
     // Look for export functionality
     const exportExists = await Promise.race([
-      page.getByRole('button', { name: /export|download|pdf|csv/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="export"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /export|download|pdf|csv/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="export"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof exportExists).toBe('boolean');

@@ -51,8 +51,12 @@ test.describe('Settings Dashboard', () => {
 
     // Look for settings sections
     const settingsExists = await Promise.race([
-      page.locator('[class*="settings"], [class*="menu"], nav').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="settings"], [class*="menu"], nav')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(settingsExists).toBeTruthy();
@@ -64,8 +68,12 @@ test.describe('Settings Dashboard', () => {
 
     // Look for common settings like company, users, roles
     const commonSettingsExist = await Promise.race([
-      page.getByText(/company|user|role|general/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/company|user|role|general/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(commonSettingsExist).toBeTruthy();
@@ -96,9 +104,17 @@ test.describe('Company Settings', () => {
 
     // Look for company name input
     const nameFieldExists = await Promise.race([
-      page.locator('input[name*="name"], input[id*="company"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/company.*name/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="name"], input[id*="company"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/company.*name/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(nameFieldExists).toBeTruthy();
@@ -110,9 +126,17 @@ test.describe('Company Settings', () => {
 
     // Look for address fields
     const addressExists = await Promise.race([
-      page.locator('input[name*="address"], textarea[name*="address"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/address/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="address"], textarea[name*="address"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/address/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof addressExists).toBe('boolean');
@@ -124,9 +148,19 @@ test.describe('Company Settings', () => {
 
     // Look for contact fields (phone, email)
     const contactExists = await Promise.race([
-      page.locator('input[name*="phone"], input[name*="email"], input[type="email"], input[type="tel"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/phone|email|contact/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator(
+          'input[name*="phone"], input[name*="email"], input[type="email"], input[type="tel"]'
+        )
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/phone|email|contact/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof contactExists).toBe('boolean');
@@ -138,9 +172,17 @@ test.describe('Company Settings', () => {
 
     // Look for tax/VAT registration number
     const taxRegExists = await Promise.race([
-      page.locator('input[name*="tax"], input[name*="vat"], input[name*="trn"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/tax.*registration|vat.*number|trn/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="tax"], input[name*="vat"], input[name*="trn"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/tax.*registration|vat.*number|trn/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof taxRegExists).toBe('boolean');
@@ -152,9 +194,17 @@ test.describe('Company Settings', () => {
 
     // Look for logo upload
     const logoUploadExists = await Promise.race([
-      page.locator('input[type="file"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/upload.*logo|company.*logo/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="file"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/upload.*logo|company.*logo/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof logoUploadExists).toBe('boolean');
@@ -166,9 +216,17 @@ test.describe('Company Settings', () => {
 
     // Look for fiscal year configuration
     const fiscalYearExists = await Promise.race([
-      page.locator('input[name*="fiscal"], select[name*="year"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/fiscal.*year|financial.*year/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="fiscal"], select[name*="year"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/fiscal.*year|financial.*year/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof fiscalYearExists).toBe('boolean');
@@ -180,9 +238,17 @@ test.describe('Company Settings', () => {
 
     // Look for currency selection
     const currencyExists = await Promise.race([
-      page.locator('select[name*="currency"], input[name*="currency"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/currency|aed/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="currency"], input[name*="currency"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/currency|aed/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof currencyExists).toBe('boolean');
@@ -194,8 +260,12 @@ test.describe('Company Settings', () => {
 
     // Look for save button
     const saveButtonExists = await Promise.race([
-      page.getByRole('button', { name: /save|update/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /save|update/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(saveButtonExists).toBeTruthy();
@@ -226,8 +296,12 @@ test.describe('User Management', () => {
 
     // Look for users list or table
     const usersListExists = await Promise.race([
-      page.locator('table, [class*="user"], [class*="list"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, [class*="user"], [class*="list"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(usersListExists).toBeTruthy();
@@ -239,9 +313,17 @@ test.describe('User Management', () => {
 
     // Look for add user button
     const addButtonExists = await Promise.race([
-      page.getByRole('button', { name: /new.*user|create.*user|add.*user|invite/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /new.*user|create.*user|add.*user/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /new.*user|create.*user|add.*user|invite/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /new.*user|create.*user|add.*user/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(addButtonExists).toBeTruthy();
@@ -253,8 +335,12 @@ test.describe('User Management', () => {
 
     // Look for user form fields
     const formExists = await Promise.race([
-      page.locator('form, input[name*="name"], input[type="email"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('form, input[name*="name"], input[type="email"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(formExists).toBeTruthy();
@@ -265,7 +351,11 @@ test.describe('User Management', () => {
     await page.waitForTimeout(3000);
 
     // Look for email field
-    const emailExists = await page.locator('input[type="email"], input[name*="email"]').first().isVisible({ timeout: 5000 }).catch(() => false);
+    const emailExists = await page
+      .locator('input[type="email"], input[name*="email"]')
+      .first()
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
 
     expect(emailExists).toBeTruthy();
   });
@@ -276,9 +366,17 @@ test.describe('User Management', () => {
 
     // Look for role selector
     const roleExists = await Promise.race([
-      page.locator('select[name*="role"], [id*="role"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/role|permission/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="role"], [id*="role"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/role|permission/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof roleExists).toBe('boolean');
@@ -290,9 +388,17 @@ test.describe('User Management', () => {
 
     // Look for user status
     const statusExists = await Promise.race([
-      page.getByText(/active|inactive|status/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="status"], [class*="badge"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/active|inactive|status/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="status"], [class*="badge"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof statusExists).toBe('boolean');
@@ -304,10 +410,22 @@ test.describe('User Management', () => {
 
     // Look for edit functionality
     const editExists = await Promise.race([
-      page.getByRole('button', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="edit"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="edit"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof editExists).toBe('boolean');
@@ -319,9 +437,17 @@ test.describe('User Management', () => {
 
     // Look for deactivate/disable functionality
     const deactivateExists = await Promise.race([
-      page.getByRole('button', { name: /deactivate|disable|suspend/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="deactivate"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /deactivate|disable|suspend/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="deactivate"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof deactivateExists).toBe('boolean');
@@ -333,9 +459,17 @@ test.describe('User Management', () => {
 
     // Look for last login info
     const lastLoginExists = await Promise.race([
-      page.getByText(/last.*login|last.*active/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="last-login"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/last.*login|last.*active/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="last-login"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof lastLoginExists).toBe('boolean');
@@ -356,7 +490,10 @@ test.describe('Roles and Permissions', () => {
     await page.waitForTimeout(2000);
 
     // Verify we're on roles page
-    const isOnRoles = page.url().includes('role') || page.url().includes('permission') || page.url().includes('setting');
+    const isOnRoles =
+      page.url().includes('role') ||
+      page.url().includes('permission') ||
+      page.url().includes('setting');
     expect(isOnRoles).toBeTruthy();
   });
 
@@ -366,9 +503,17 @@ test.describe('Roles and Permissions', () => {
 
     // Look for roles list
     const rolesListExists = await Promise.race([
-      page.locator('table, [class*="role"], [class*="list"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/admin|manager|user|accountant/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, [class*="role"], [class*="list"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/admin|manager|user|accountant/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof rolesListExists).toBe('boolean');
@@ -380,9 +525,17 @@ test.describe('Roles and Permissions', () => {
 
     // Look for create role button
     const createButtonExists = await Promise.race([
-      page.getByRole('button', { name: /new.*role|create.*role|add.*role/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /new.*role|create.*role/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /new.*role|create.*role|add.*role/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /new.*role|create.*role/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof createButtonExists).toBe('boolean');
@@ -394,8 +547,12 @@ test.describe('Roles and Permissions', () => {
 
     // Look for role name input
     const nameExists = await Promise.race([
-      page.locator('input[name*="name"], input[id*="name"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="name"], input[id*="name"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(nameExists).toBeTruthy();
@@ -407,9 +564,17 @@ test.describe('Roles and Permissions', () => {
 
     // Look for permissions checkboxes
     const permissionsExist = await Promise.race([
-      page.locator('input[type="checkbox"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/permission|access|create|read|update|delete/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="checkbox"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/permission|access|create|read|update|delete/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof permissionsExist).toBe('boolean');
@@ -421,9 +586,17 @@ test.describe('Roles and Permissions', () => {
 
     // Look for module sections (invoices, expenses, etc.)
     const modulesExist = await Promise.race([
-      page.getByText(/invoice|expense|customer|product|report/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="module"], [class*="section"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/invoice|expense|customer|product|report/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="module"], [class*="section"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof modulesExist).toBe('boolean');
@@ -435,8 +608,12 @@ test.describe('Roles and Permissions', () => {
 
     // Look for CRUD permission options
     const crudExists = await Promise.race([
-      page.getByText(/create|read|view|update|edit|delete/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/create|read|view|update|edit|delete/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof crudExists).toBe('boolean');
@@ -448,9 +625,17 @@ test.describe('Roles and Permissions', () => {
 
     // Look for edit functionality
     const editExists = await Promise.race([
-      page.getByRole('button', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof editExists).toBe('boolean');
@@ -462,9 +647,17 @@ test.describe('Roles and Permissions', () => {
 
     // Look for delete button (may be disabled for default roles)
     const deleteExists = await Promise.race([
-      page.locator('button[disabled], [class*="delete"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('button', { name: /delete/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('button[disabled], [class*="delete"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('button', { name: /delete/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof deleteExists).toBe('boolean');
@@ -476,9 +669,17 @@ test.describe('Roles and Permissions', () => {
 
     // Look for user count
     const userCountExists = await Promise.race([
-      page.getByText(/\d+.*user/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="count"], [class*="users"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByText(/\d+.*user/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="count"], [class*="users"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof userCountExists).toBe('boolean');
@@ -509,9 +710,17 @@ test.describe('General Settings', () => {
 
     // Look for date format options
     const dateFormatExists = await Promise.race([
-      page.locator('select[name*="date"], [id*="date-format"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/date.*format/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="date"], [id*="date-format"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/date.*format/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof dateFormatExists).toBe('boolean');
@@ -523,9 +732,17 @@ test.describe('General Settings', () => {
 
     // Look for timezone selector
     const timezoneExists = await Promise.race([
-      page.locator('select[name*="timezone"], [id*="timezone"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/time.*zone|timezone/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="timezone"], [id*="timezone"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/time.*zone|timezone/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof timezoneExists).toBe('boolean');
@@ -537,9 +754,17 @@ test.describe('General Settings', () => {
 
     // Look for language selector
     const languageExists = await Promise.race([
-      page.locator('select[name*="language"], [id*="language"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/language/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="language"], [id*="language"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/language/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof languageExists).toBe('boolean');
@@ -551,9 +776,17 @@ test.describe('General Settings', () => {
 
     // Look for number format options
     const numberFormatExists = await Promise.race([
-      page.locator('select[name*="number"], [id*="number-format"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/number.*format|decimal/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('select[name*="number"], [id*="number-format"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/number.*format|decimal/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof numberFormatExists).toBe('boolean');

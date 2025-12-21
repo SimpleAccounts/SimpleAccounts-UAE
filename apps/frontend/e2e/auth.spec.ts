@@ -80,8 +80,12 @@ test.describe('Authentication Flow', () => {
     // Wait for error message or toast notification
     // The error might appear in different ways
     const errorExists = await Promise.race([
-      page.waitForSelector('[class*="error"], [class*="alert"], .toast, [role="alert"]', { timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .waitForSelector('[class*="error"], [class*="alert"], .toast, [role="alert"]', {
+          timeout: 5000,
+        })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     // If no error element, at least verify we're still on login page
@@ -108,8 +112,12 @@ test.describe('Authentication Flow', () => {
 
     // Look for common profile indicators
     const profileExists = await Promise.race([
-      page.waitForSelector('[class*="user"], [class*="profile"], [class*="account"], header, nav', { timeout: 10000 }).then(() => true),
-      page.waitForTimeout(10000).then(() => false)
+      page
+        .waitForSelector('[class*="user"], [class*="profile"], [class*="account"], header, nav', {
+          timeout: 10000,
+        })
+        .then(() => true),
+      page.waitForTimeout(10000).then(() => false),
     ]);
 
     expect(profileExists).toBeTruthy();
@@ -130,10 +138,20 @@ test.describe('Authentication Flow', () => {
 
     // Look for logout button/link - could be in menu, dropdown, or direct link
     const logoutExists = await Promise.race([
-      page.getByRole('button', { name: /log out|logout|sign out/i }).isVisible().then(() => true),
-      page.getByRole('link', { name: /log out|logout|sign out/i }).isVisible().then(() => true),
-      page.locator('[class*="logout"], [id*="logout"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /log out|logout|sign out/i })
+        .isVisible()
+        .then(() => true),
+      page
+        .getByRole('link', { name: /log out|logout|sign out/i })
+        .isVisible()
+        .then(() => true),
+      page
+        .locator('[class*="logout"], [id*="logout"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(logoutExists).toBeTruthy();
@@ -151,7 +169,7 @@ test.describe('Authentication Flow', () => {
       page.getByRole('link', { name: /log out|logout|sign out/i }),
       page.locator('[class*="logout"]').first(),
       page.locator('[id*="logout"]').first(),
-      page.locator('a[href*="logout"]').first()
+      page.locator('a[href*="logout"]').first(),
     ];
 
     for (const selector of logoutSelectors) {
@@ -196,8 +214,12 @@ test.describe('Authentication Flow', () => {
 
     // Look for toggle button (eye icon, show/hide button)
     const toggleExists = await Promise.race([
-      page.locator('[class*="eye"], [class*="show"], [class*="toggle"]').first().isVisible({ timeout: 3000 }).then(() => true),
-      page.waitForTimeout(3000).then(() => false)
+      page
+        .locator('[class*="eye"], [class*="show"], [class*="toggle"]')
+        .first()
+        .isVisible({ timeout: 3000 })
+        .then(() => true),
+      page.waitForTimeout(3000).then(() => false),
     ]);
 
     // This is optional functionality, just verify it exists or doesn't
@@ -209,10 +231,21 @@ test.describe('Authentication Flow', () => {
 
     // Look for forgot password link
     const forgotPasswordExists = await Promise.race([
-      page.getByRole('link', { name: /forgot.*password|reset.*password/i }).isVisible({ timeout: 3000 }).then(() => true),
-      page.locator('[href*="forgot"], [href*="reset"]').first().isVisible({ timeout: 3000 }).then(() => true),
-      page.getByText(/forgot.*password|reset.*password/i).first().isVisible({ timeout: 3000 }).then(() => true),
-      page.waitForTimeout(3000).then(() => false)
+      page
+        .getByRole('link', { name: /forgot.*password|reset.*password/i })
+        .isVisible({ timeout: 3000 })
+        .then(() => true),
+      page
+        .locator('[href*="forgot"], [href*="reset"]')
+        .first()
+        .isVisible({ timeout: 3000 })
+        .then(() => true),
+      page
+        .getByText(/forgot.*password|reset.*password/i)
+        .first()
+        .isVisible({ timeout: 3000 })
+        .then(() => true),
+      page.waitForTimeout(3000).then(() => false),
     ]);
 
     // This is optional functionality, just verify it exists or doesn't
@@ -224,14 +257,22 @@ test.describe('Authentication Flow', () => {
 
     // Look for remember me checkbox
     const rememberMeExists = await Promise.race([
-      page.locator('input[type="checkbox"][name*="remember"], input[type="checkbox"][id*="remember"]').isVisible({ timeout: 2000 }).then(() => true),
-      page.getByLabel(/remember me/i).isVisible({ timeout: 2000 }).then(() => true),
-      page.waitForTimeout(2000).then(() => false)
+      page
+        .locator('input[type="checkbox"][name*="remember"], input[type="checkbox"][id*="remember"]')
+        .isVisible({ timeout: 2000 })
+        .then(() => true),
+      page
+        .getByLabel(/remember me/i)
+        .isVisible({ timeout: 2000 })
+        .then(() => true),
+      page.waitForTimeout(2000).then(() => false),
     ]);
 
     // If remember me exists, test it
     if (rememberMeExists) {
-      const rememberCheckbox = await page.locator('input[type="checkbox"][name*="remember"], input[type="checkbox"][id*="remember"]').first();
+      const rememberCheckbox = await page
+        .locator('input[type="checkbox"][name*="remember"], input[type="checkbox"][id*="remember"]')
+        .first();
 
       // Check initial state
       const isChecked = await rememberCheckbox.isChecked();
@@ -259,8 +300,12 @@ test.describe('Authentication Flow', () => {
     // Check if button is disabled or shows loading state
     const loadingStateExists = await Promise.race([
       loginButton.isDisabled().then(() => true),
-      page.locator('[class*="loading"], [class*="spinner"], .loader').first().isVisible({ timeout: 1000 }).then(() => true),
-      page.waitForTimeout(1000).then(() => false)
+      page
+        .locator('[class*="loading"], [class*="spinner"], .loader')
+        .first()
+        .isVisible({ timeout: 1000 })
+        .then(() => true),
+      page.waitForTimeout(1000).then(() => false),
     ]);
 
     // Just verify some loading mechanism exists
@@ -291,7 +336,9 @@ test.describe('Password Reset Flow', () => {
     await page.goto(LOGIN_PATH);
 
     // Try to find forgot password link
-    const forgotPasswordLink = page.getByRole('link', { name: /forgot.*password|reset.*password/i });
+    const forgotPasswordLink = page.getByRole('link', {
+      name: /forgot.*password|reset.*password/i,
+    });
     const linkExists = await forgotPasswordLink.isVisible({ timeout: 3000 }).catch(() => false);
 
     if (linkExists) {
@@ -299,7 +346,10 @@ test.describe('Password Reset Flow', () => {
       await page.waitForTimeout(1000);
 
       // Should navigate to reset password page
-      const urlChanged = !page.url().includes(LOGIN_PATH) || page.url().includes('forgot') || page.url().includes('reset');
+      const urlChanged =
+        !page.url().includes(LOGIN_PATH) ||
+        page.url().includes('forgot') ||
+        page.url().includes('reset');
       expect(urlChanged).toBeTruthy();
     } else {
       // If no forgot password link, skip this test
@@ -310,7 +360,9 @@ test.describe('Password Reset Flow', () => {
   test('should display email input for password reset', async ({ page }) => {
     await page.goto(LOGIN_PATH);
 
-    const forgotPasswordLink = page.getByRole('link', { name: /forgot.*password|reset.*password/i });
+    const forgotPasswordLink = page.getByRole('link', {
+      name: /forgot.*password|reset.*password/i,
+    });
     const linkExists = await forgotPasswordLink.isVisible({ timeout: 3000 }).catch(() => false);
 
     if (linkExists) {
@@ -319,8 +371,11 @@ test.describe('Password Reset Flow', () => {
 
       // Look for email input field
       const emailInputExists = await Promise.race([
-        page.locator('input[type="email"], input[name*="email"], input[id*="email"]').isVisible({ timeout: 3000 }).then(() => true),
-        page.waitForTimeout(3000).then(() => false)
+        page
+          .locator('input[type="email"], input[name*="email"], input[id*="email"]')
+          .isVisible({ timeout: 3000 })
+          .then(() => true),
+        page.waitForTimeout(3000).then(() => false),
       ]);
 
       expect(emailInputExists).toBeTruthy();

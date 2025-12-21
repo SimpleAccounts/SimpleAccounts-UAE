@@ -66,9 +66,17 @@ test.describe('Invoice List View', () => {
 
     // Look for create/new button
     const createButtonExists = await Promise.race([
-      page.getByRole('button', { name: /new|create|add/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /new|create|add/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /new|create|add/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /new|create|add/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(createButtonExists).toBeTruthy();
@@ -80,8 +88,12 @@ test.describe('Invoice List View', () => {
 
     // Look for table or list structure
     const tableExists = await Promise.race([
-      page.locator('table, .table, [class*="grid"], [class*="list"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table, .table, [class*="grid"], [class*="list"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(tableExists).toBeTruthy();
@@ -93,9 +105,17 @@ test.describe('Invoice List View', () => {
 
     // Look for search input or filter options
     const searchExists = await Promise.race([
-      page.locator('input[type="search"], input[placeholder*="search" i], input[name*="search"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByPlaceholder(/search|filter/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[type="search"], input[placeholder*="search" i], input[name*="search"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByPlaceholder(/search|filter/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     // Search functionality is common
@@ -108,9 +128,17 @@ test.describe('Invoice List View', () => {
 
     // Look for pagination controls
     const paginationExists = await Promise.race([
-      page.locator('[class*="pagination"], .pager, [aria-label*="pagination"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('navigation', { name: /pagination/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="pagination"], .pager, [aria-label*="pagination"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('navigation', { name: /pagination/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     // Pagination might not exist if there are few invoices
@@ -149,8 +177,12 @@ test.describe('Invoice Creation', () => {
 
     // Wait for form to appear
     const formExists = await Promise.race([
-      page.locator('form, .create-invoice-form, [class*="invoice-form"]').first().isVisible({ timeout: 30_000 }).then(() => true),
-      page.waitForTimeout(30_000).then(() => false)
+      page
+        .locator('form, .create-invoice-form, [class*="invoice-form"]')
+        .first()
+        .isVisible({ timeout: 30_000 })
+        .then(() => true),
+      page.waitForTimeout(30_000).then(() => false),
     ]);
 
     expect(formExists).toBeTruthy();
@@ -169,7 +201,11 @@ test.describe('Invoice Creation', () => {
 
     let foundFields = 0;
     for (const selector of commonFields) {
-      const fieldExists = await page.locator(selector).first().isVisible({ timeout: 3000 }).catch(() => false);
+      const fieldExists = await page
+        .locator(selector)
+        .first()
+        .isVisible({ timeout: 3000 })
+        .catch(() => false);
       if (fieldExists) foundFields++;
     }
 
@@ -183,8 +219,12 @@ test.describe('Invoice Creation', () => {
 
     // Look for line items, products, or items section
     const lineItemsExists = await Promise.race([
-      page.locator('[class*="line-item"], [class*="item"], table').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="line-item"], [class*="item"], table')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(lineItemsExists).toBeTruthy();
@@ -196,9 +236,17 @@ test.describe('Invoice Creation', () => {
 
     // Look for add item button
     const addItemButton = await Promise.race([
-      page.getByRole('button', { name: /add.*item|add.*line|add.*product/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="add-item"], [class*="add-line"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /add.*item|add.*line|add.*product/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="add-item"], [class*="add-line"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof addItemButton).toBe('boolean');
@@ -210,9 +258,17 @@ test.describe('Invoice Creation', () => {
 
     // Look for total fields
     const totalExists = await Promise.race([
-      page.locator('[class*="total"], input[name*="total"], [id*="total"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/total|subtotal|grand total/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('[class*="total"], input[name*="total"], [id*="total"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/total|subtotal|grand total/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(totalExists).toBeTruthy();
@@ -224,8 +280,12 @@ test.describe('Invoice Creation', () => {
 
     // Look for save/submit button
     const saveButtonExists = await Promise.race([
-      page.getByRole('button', { name: /save|submit|create/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /save|submit|create/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(saveButtonExists).toBeTruthy();
@@ -237,9 +297,17 @@ test.describe('Invoice Creation', () => {
 
     // Look for cancel/back button
     const cancelButtonExists = await Promise.race([
-      page.getByRole('button', { name: /cancel|back|close/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /cancel|back|close/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /cancel|back|close/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /cancel|back|close/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     expect(typeof cancelButtonExists).toBe('boolean');
@@ -268,9 +336,17 @@ test.describe('Invoice Creation', () => {
 
     // Look for tax-related fields
     const taxExists = await Promise.race([
-      page.locator('input[name*="tax"], select[name*="tax"], [id*="tax"], [class*="tax"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByText(/tax|vat|gst/i).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('input[name*="tax"], select[name*="tax"], [id*="tax"], [class*="tax"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByText(/tax|vat|gst/i)
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     // Tax fields are common in invoices
@@ -293,8 +369,12 @@ test.describe('Invoice Read/View', () => {
 
     // Try to click on first invoice if exists
     const firstInvoiceLink = await Promise.race([
-      page.locator('table tbody tr:first-child, .invoice-item:first-child').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .locator('table tbody tr:first-child, .invoice-item:first-child')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     // View functionality exists if there are invoices
@@ -315,8 +395,12 @@ test.describe('Invoice Read/View', () => {
 
       // Should show invoice details
       const detailsVisible = await Promise.race([
-        page.locator('[class*="invoice-detail"], [class*="view"], .invoice-info').first().isVisible({ timeout: 5000 }).then(() => true),
-        page.waitForTimeout(5000).then(() => false)
+        page
+          .locator('[class*="invoice-detail"], [class*="view"], .invoice-info')
+          .first()
+          .isVisible({ timeout: 5000 })
+          .then(() => true),
+        page.waitForTimeout(5000).then(() => false),
       ]);
 
       expect(detailsVisible).toBeTruthy();
@@ -331,9 +415,17 @@ test.describe('Invoice Read/View', () => {
 
     // Look for print or download buttons
     const actionExists = await Promise.race([
-      page.getByRole('button', { name: /print|download|pdf|export/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="print"], [class*="download"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /print|download|pdf|export/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="print"], [class*="download"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     // Print/download features are common
@@ -356,10 +448,22 @@ test.describe('Invoice Update/Edit', () => {
 
     // Look for edit button or link
     const editExists = await Promise.race([
-      page.getByRole('button', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.getByRole('link', { name: /edit/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="edit"], button[title*="Edit"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .getByRole('link', { name: /edit/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="edit"], button[title*="Edit"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     // Edit functionality is common
@@ -406,7 +510,9 @@ test.describe('Invoice Update/Edit', () => {
       await page.waitForTimeout(3000);
 
       // Form should have some pre-filled data
-      const inputsWithValues = await page.locator('input[value]:not([value=""]), select:has(option[selected])').count();
+      const inputsWithValues = await page
+        .locator('input[value]:not([value=""]), select:has(option[selected])')
+        .count();
 
       // Should have at least some fields populated
       expect(inputsWithValues).toBeGreaterThan(0);
@@ -427,8 +533,12 @@ test.describe('Invoice Update/Edit', () => {
       await page.waitForTimeout(3000);
 
       const updateButton = await Promise.race([
-        page.getByRole('button', { name: /update|save/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-        page.waitForTimeout(5000).then(() => false)
+        page
+          .getByRole('button', { name: /update|save/i })
+          .first()
+          .isVisible({ timeout: 5000 })
+          .then(() => true),
+        page.waitForTimeout(5000).then(() => false),
       ]);
 
       expect(updateButton).toBeTruthy();
@@ -453,9 +563,17 @@ test.describe('Invoice Delete', () => {
 
     // Look for delete button
     const deleteExists = await Promise.race([
-      page.getByRole('button', { name: /delete|remove/i }).first().isVisible({ timeout: 5000 }).then(() => true),
-      page.locator('[class*="delete"], button[title*="Delete"]').first().isVisible({ timeout: 5000 }).then(() => true),
-      page.waitForTimeout(5000).then(() => false)
+      page
+        .getByRole('button', { name: /delete|remove/i })
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page
+        .locator('[class*="delete"], button[title*="Delete"]')
+        .first()
+        .isVisible({ timeout: 5000 })
+        .then(() => true),
+      page.waitForTimeout(5000).then(() => false),
     ]);
 
     // Delete functionality is common
@@ -478,7 +596,11 @@ test.describe('Invoice Delete', () => {
       await page.waitForTimeout(1000);
 
       // If modal appears instead of browser dialog
-      const modalExists = await page.locator('.modal, [role="dialog"], [class*="confirm"]').first().isVisible({ timeout: 3000 }).catch(() => false);
+      const modalExists = await page
+        .locator('.modal, [role="dialog"], [class*="confirm"]')
+        .first()
+        .isVisible({ timeout: 3000 })
+        .catch(() => false);
 
       // Either dialog or modal should appear
       expect(typeof modalExists).toBe('boolean');

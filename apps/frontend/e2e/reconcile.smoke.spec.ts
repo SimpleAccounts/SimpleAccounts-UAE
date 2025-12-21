@@ -3,20 +3,16 @@ import { test, expect } from '@playwright/test';
 const RUN_SMOKE = process.env.RUN_E2E_SMOKE === 'true';
 const LOGIN_PATH = process.env.E2E_LOGIN_PATH || '/login';
 const POST_LOGIN_PATH = process.env.E2E_POST_LOGIN_PATH || '/admin';
-const BANK_ACCOUNTS_PATH =
-  process.env.E2E_BANK_ACCOUNTS_PATH || '/admin/banking/bank-account';
+const BANK_ACCOUNTS_PATH = process.env.E2E_BANK_ACCOUNTS_PATH || '/admin/banking/bank-account';
 const TRANSACTION_PATH =
   process.env.E2E_TRANSACTION_PATH || '/admin/banking/bank-account/transaction';
 const RECONCILE_PATH =
-  process.env.E2E_RECONCILE_PATH ||
-  '/admin/banking/bank-account/transaction/reconcile';
+  process.env.E2E_RECONCILE_PATH || '/admin/banking/bank-account/transaction/reconcile';
 
 const describeSmoke = RUN_SMOKE ? test.describe : test.describe.skip;
 
 describeSmoke('Bank reconciliation smoke journey', () => {
-  test('navigates to reconciliation form and submits closing balance', async ({
-    page,
-  }) => {
+  test('navigates to reconciliation form and submits closing balance', async ({ page }) => {
     test.setTimeout(240_000);
 
     const username = process.env.E2E_USERNAME;
@@ -24,7 +20,7 @@ describeSmoke('Bank reconciliation smoke journey', () => {
 
     test.skip(
       !username || !password,
-      'Set E2E_USERNAME and E2E_PASSWORD to run the reconciliation smoke test',
+      'Set E2E_USERNAME and E2E_PASSWORD to run the reconciliation smoke test'
     );
 
     // Login
@@ -50,12 +46,8 @@ describeSmoke('Bank reconciliation smoke journey', () => {
     // Navigate to bank accounts
     await page.goto(BANK_ACCOUNTS_PATH, { waitUntil: 'domcontentloaded' });
 
-    const accountLocator = page
-      .locator('.bank-account-screen .label-bank')
-      .first();
-    const accountCount = await page
-      .locator('.bank-account-screen .label-bank')
-      .count();
+    const accountLocator = page.locator('.bank-account-screen .label-bank').first();
+    const accountCount = await page.locator('.bank-account-screen .label-bank').count();
     test.skip(accountCount === 0, 'No bank accounts available to reconcile');
     await expect(accountLocator).toBeVisible({ timeout: 180_000 });
 
@@ -77,9 +69,7 @@ describeSmoke('Bank reconciliation smoke journey', () => {
     const balanceText = (await balanceLocator.textContent()) ?? '';
     const closingBalance = normalizeCurrency(balanceText);
 
-    const reconcileButton = page
-      .getByRole('button', { name: /reconcile/i })
-      .first();
+    const reconcileButton = page.getByRole('button', { name: /reconcile/i }).first();
     await expect(reconcileButton).toBeVisible({ timeout: 60_000 });
     await reconcileButton.click();
 
@@ -95,9 +85,7 @@ describeSmoke('Bank reconciliation smoke journey', () => {
     const today = formatDate(new Date());
     await page.fill('input#date', today);
 
-    const submitButton = page
-      .getByRole('button', { name: /reconcile/i })
-      .first();
+    const submitButton = page.getByRole('button', { name: /reconcile/i }).first();
     await submitButton.click();
 
     const toast = page.locator('.Toastify__toast-body').first();
@@ -133,8 +121,3 @@ function normalizePath(path: string): string {
   }
   return path.startsWith('/') ? path : `/${path}`;
 }
-
-
-
-
-

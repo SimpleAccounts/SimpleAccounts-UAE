@@ -221,7 +221,7 @@ test.describe('Visual Regression Tests', () => {
       await page.goto('/invoices');
 
       const actionBar = page.locator('[data-testid="action-bar"]');
-      if (await actionBar.count() > 0) {
+      if ((await actionBar.count()) > 0) {
         await expect(actionBar).toHaveScreenshot('action-buttons.png');
       }
     });
@@ -233,7 +233,7 @@ test.describe('Visual Regression Tests', () => {
       await page.click('[data-testid="delete-button"]');
       const modal = page.locator('[data-testid="confirmation-modal"]');
 
-      if (await modal.count() > 0) {
+      if ((await modal.count()) > 0) {
         await expect(modal).toHaveScreenshot('confirmation-modal.png');
       }
     });

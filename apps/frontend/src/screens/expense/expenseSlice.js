@@ -94,27 +94,37 @@ const expenseSlice = createSlice({
         state.expense_categories_list = action.payload || [];
       })
       .addCase(EXPENSE.PAY_MODE, (state, action) => {
-        let list1 = action.payload;
+        const list1 = action.payload;
         if (list1 && list1.length && list1.length > 0) {
-          list1 = list1.map((data, index) => {
-            if (index == 0) data.label = 'Petty Cash';
+          // Create a new array with modified objects instead of mutating the payload
+          const modifiedList = list1.map((data, index) => {
+            if (index === 0) {
+              return { ...data, label: 'Petty Cash' };
+            }
             return data;
           });
+          state.pay_mode_list = modifiedList;
+        } else {
+          state.pay_mode_list = [];
         }
-        state.pay_mode_list = list1 || [];
       })
       .addCase(EXPENSE.USER_LIST, (state, action) => {
-        let payload = action.payload;
+        const payload = action.payload;
         if (payload && payload[0] && payload[0].label) {
-          let obj = new Object({ label: 'Company Expense', value: 'Company Expense' });
-          payload.unshift(obj);
+          // Create a new array instead of mutating the payload
+          const obj = { label: 'Company Expense', value: 'Company Expense' };
+          state.user_list = [obj, ...payload];
+        } else {
+          state.user_list = payload || [];
         }
-        state.user_list = payload || [];
       })
       .addCase(EXPENSE.PAY_TO_LIST, (state, action) => {
-        let list = action.payload;
-        list.unshift({ value: 'Company Expense', label: 'Company Expense' });
-        state.pay_to_list = list || [];
+        const list = action.payload;
+        // Create a new array instead of mutating the payload
+        state.pay_to_list = [
+          { value: 'Company Expense', label: 'Company Expense' },
+          ...(list || []),
+        ];
       });
   },
 });

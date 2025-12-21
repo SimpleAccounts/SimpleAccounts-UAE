@@ -1,4 +1,5 @@
 // global html styles
+html,
 body,
 span,
 label,
@@ -7,8 +8,25 @@ h2,
 h3,
 h4,
 p,
-em {
-  font-family: Montserrat, serif;
+em,
+div,
+button,
+input,
+select,
+textarea {
+  font-family:
+    'Montserrat',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Roboto',
+    'Oxygen',
+    'Ubuntu',
+    'Cantarell',
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif !important;
 }
 
 .nav-link {
