@@ -1,8 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import * as ProductActions from '../../product/actions';
 import '../../product/screens/create/style.scss';
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
