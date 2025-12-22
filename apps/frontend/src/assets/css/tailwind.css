@@ -51,7 +51,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
   html,
   body {
@@ -70,7 +70,8 @@
       sans-serif !important;
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 }
 
@@ -108,12 +109,16 @@
 
   /* Smooth transitions for inputs */
   .input-transition {
-    @apply transition-all duration-200 ease-in-out;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
   }
 
   /* Focus ring animation */
   .focus-ring-animate {
-    @apply transition-shadow duration-200 ease-in-out;
+    transition-property: box-shadow;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
   }
 }
 
