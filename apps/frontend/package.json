@@ -46,7 +46,7 @@
     "next-themes": "^0.4.6",
     "papaparse": "^5.3.2",
     "prop-types": "^15.7.2",
-    "react": "^18.2.0",
+    "react": "^19.2.3",
     "react-autosuggest": "^9.4.3",
     "react-bootstrap-daterangepicker": "^8.0.0",
     "react-chartjs-2": "^5.3.1",
