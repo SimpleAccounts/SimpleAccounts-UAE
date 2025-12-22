@@ -29,7 +29,7 @@
 		<junit.platform.version>1.11.3</junit.platform.version>
 		<mockito.version>5.21.0</mockito.version>
 		<testcontainers.version>1.21.4</testcontainers.version>
-		<bytebuddy.version>1.14.18</bytebuddy.version>
+		<bytebuddy.version>1.18.3</bytebuddy.version>
 			<!-- SonarQube Configuration (Self-hosted) -->
 			<sonar.host.url>https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io</sonar.host.url>
 		</properties>
