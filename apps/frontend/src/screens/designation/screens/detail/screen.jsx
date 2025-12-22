@@ -16,7 +16,7 @@ import {
   Input,
   Label,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import { selectOptionsFactory, selectStyles } from 'utils';
 import { Loader, LeavePage, ConfirmDeleteModal } from 'components';

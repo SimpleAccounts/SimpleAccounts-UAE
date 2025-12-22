@@ -12,7 +12,7 @@ import {
   ButtonGroup,
   CardBody,
   Modal,
-} from 'reactstrap';
+} from 'components/migration';
 import dayjs from '@/utils/date';
 import { data } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Pie, Doughnut } from 'react-chartjs-2';
-import { Nav, NavItem, NavLink, TabContent, TabPane, Card, CardBody, Button } from 'reactstrap';
+import { Nav, NavItem, NavLink, TabContent, TabPane, Card, CardBody, Button } from 'components/migration';
 // import { DateRangePicker2 } from 'components'
 // import dayjs from '@/utils/date'
 import './style.scss';

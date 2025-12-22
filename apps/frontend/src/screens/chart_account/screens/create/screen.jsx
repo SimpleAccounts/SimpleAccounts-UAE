@@ -15,7 +15,7 @@ import {
   Label,
   Row,
   Col,
-} from 'reactstrap';
+} from 'components/migration';
 import { LeavePage, Loader } from 'components';
 import './style.scss';
 import { data } from '../../../Language/index';

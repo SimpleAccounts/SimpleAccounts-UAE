@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, FormGroup, Row, Col, Label, Alert } from 'reactstrap';
+import { Button, FormGroup, Row, Col, Label, Alert } from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { selectOptionsFactory } from 'utils';

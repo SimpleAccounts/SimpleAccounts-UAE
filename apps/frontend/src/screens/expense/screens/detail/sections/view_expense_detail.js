@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux'
 
-import { Card, CardHeader, CardBody, Row, Col, FormGroup, Label, NavLink } from 'reactstrap';
+import { Card, CardHeader, CardBody, Row, Col, FormGroup, Label, NavLink } from 'components/migration';
 
 // import './style.scss'
 import dayjs from '@/utils/date';

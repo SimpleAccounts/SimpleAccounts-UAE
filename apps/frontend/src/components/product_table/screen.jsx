@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Button, Row, Col, Input, UncontrolledTooltip } from 'reactstrap';
+import { Button, Row, Col, Input, UncontrolledTooltip } from 'components/migration';
 import Select from 'react-select';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Currency } from 'components';

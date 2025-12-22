@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Button, Row, Col, Modal, ModalBody, ModalFooter, CardBody, ModalHeader } from 'reactstrap';
+import { Button, Row, Col, Modal, ModalBody, ModalFooter, CardBody, ModalHeader } from 'components/migration';
 import { bindActionCreators } from 'redux';
 import { CommonActions } from 'services/global';
 import { data } from '../../../../Language/index';

@@ -9,7 +9,7 @@ import {
   CardHeader,
   ButtonGroup,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import dayjs from '@/utils/date';
 import { Loader } from 'components';
 import { DataTable } from '@/components/ui/data-table';

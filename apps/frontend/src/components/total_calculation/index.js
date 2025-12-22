@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Currency } from 'components';
-import { Row, Col } from 'reactstrap';
+import { Row, Col } from 'components/migration';
 const mapStateToProps = state => {
   return {
     isRegisteredVat: state.common.company_details.isRegisteredVat,

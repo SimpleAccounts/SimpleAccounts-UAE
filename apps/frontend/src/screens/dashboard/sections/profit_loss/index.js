@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Currency } from 'components';
-import { Nav, NavItem, NavLink, TabContent, TabPane, Card, CardBody } from 'reactstrap';
+import { Nav, NavItem, NavLink, TabContent, TabPane, Card, CardBody } from 'components/migration';
 import './style.scss';
 // Use import instead of require for Vite compatibility
 import minusIcon from 'assets/images/dashboard/minus.png';

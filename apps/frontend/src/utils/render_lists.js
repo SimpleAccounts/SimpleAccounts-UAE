@@ -36,6 +36,36 @@ function getMaxID(lineItems) {
   return maxID;
 }
 
+export const mapQuotationList = data => {
+  const state = {};
+  const initValue = {};
+  const lineItems = data.poQuatationLineItemRequestModelList;
+  initValue.customerId = data.customerId;
+  initValue.quotationNumber = data.quotationNumber;
+  initValue.receiptNumber = data.receiptNumber;
+  initValue.notes = data.notes;
+  initValue.footNote = data.footNote;
+  initValue.lineItemsString = lineItems;
+  initValue.currencyCode = data.currencyCode;
+  initValue.currencyIsoCode = data.currencyIsoCode;
+  initValue.currencyName = data.currencyName;
+  initValue.exchangeRate = data.exchangeRate;
+  initValue.taxTreatmentId = data.taxtreatment;
+  initValue.placeOfSupplyId = data.placeOfSupplyId;
+  initValue.discount = data.discount || 0;
+  initValue.discountPercentage = data.discountPercentage || 0;
+  initValue.discountType = data.discountType || '';
+  initValue.quotationdate = data.quotationdate ? new Date(data.quotationdate) : null;
+  initValue.quotaionExpiration = data.quotaionExpiration ? new Date(data.quotaionExpiration) : null;
+  state.taxTreatmentId = data.taxtreatment;
+  state.taxType = data.taxType;
+  state.discountEnabled = data.discount > 0;
+  state.data = lineItems;
+  state.idCount = getMaxID(lineItems) + 1;
+
+  return { initValue, state };
+};
+
 export const mapInvoiceListFromQuotation = data => {
   const state = {};
   const initValue = {};

@@ -14,7 +14,7 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
-} from 'reactstrap';
+} from 'components/migration';
 import { bindActionCreators } from 'redux';
 import { useDispatch } from 'react-redux';
 import { CommonActions } from 'services/global';

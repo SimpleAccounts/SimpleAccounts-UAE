@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Card, CardHeader, CardBody, Button, Row, Col, Form, FormGroup } from 'reactstrap';
+import { Card, CardHeader, CardBody, Button, Row, Col, Form, FormGroup } from 'components/migration';
 import * as CustomerInvoiceDetailActions from './actions';
 import * as CustomerInvoiceActions from '../../actions';
 import { Loader, LeavePage, Currency } from 'components';

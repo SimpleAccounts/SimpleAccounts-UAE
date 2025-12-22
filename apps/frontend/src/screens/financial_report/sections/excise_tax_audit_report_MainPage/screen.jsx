@@ -13,7 +13,7 @@ import {
   DropdownItem,
   ButtonDropdown,
   DropdownToggle,
-} from 'reactstrap';
+} from 'components/migration';
 import { AuthActions, CommonActions } from 'services/global';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';

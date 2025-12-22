@@ -16,7 +16,7 @@ import {
   Input,
   Label,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import { LeavePage, ConfirmDeleteModal, Loader } from 'components';
 import { CommonActions } from 'services/global';
 import * as SalaryComponentActions from '../../actions';

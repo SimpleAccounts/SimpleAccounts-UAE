@@ -14,7 +14,7 @@ import {
   FormGroup,
   Input,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 import { bindActionCreators } from 'redux';
 import Select from 'react-select';
 import { Switch } from '@/components/ui/switch';

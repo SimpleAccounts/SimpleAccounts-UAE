@@ -13,7 +13,7 @@ import {
   FormGroup,
   Label,
   Row,
-} from 'reactstrap';
+} from 'components/migration';
 import { api } from 'utils';
 import { toast } from 'sonner';
 import './style.scss';

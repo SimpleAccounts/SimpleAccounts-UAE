@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup, UncontrolledTooltip, Label, Col } from 'reactstrap';
+import { FormGroup, UncontrolledTooltip, Label, Col } from 'components/migration';
 import { connect } from 'react-redux';
 import Select from 'react-select';
 import { data } from 'screens/Language/index';

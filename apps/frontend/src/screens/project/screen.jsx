@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Card, CardHeader, CardBody, Button, Row, Col, ButtonGroup, Input } from 'reactstrap';
+import { Card, CardHeader, CardBody, Button, Row, Col, ButtonGroup, Input } from 'components/migration';
 import { Loader, ConfirmDeleteModal } from 'components';
 import * as ProjectActions from './actions';
 import { CommonActions } from 'services/global';

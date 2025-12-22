@@ -14,7 +14,7 @@ import {
   FormGroup,
   Label,
   Row,
-} from 'reactstrap';
+} from 'components/migration';
 import { withNavigation } from 'utils/withNavigation';
 import { api } from 'utils';
 import { Message } from 'components';

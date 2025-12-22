@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Card, CardHeader, CardBody, Button, Row, Col } from 'reactstrap';
+import { Card, CardHeader, CardBody, Button, Row, Col } from 'components/migration';
 import './style.scss';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';

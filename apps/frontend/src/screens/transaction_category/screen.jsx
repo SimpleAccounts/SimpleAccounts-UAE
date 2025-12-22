@@ -14,7 +14,7 @@ import {
   Input,
   ButtonGroup,
   Col,
-} from 'reactstrap';
+} from 'components/migration';
 import { toast } from 'sonner';
 import { Loader } from 'components';
 import * as TransactionActions from './actions';

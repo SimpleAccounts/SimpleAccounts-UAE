@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import logo from 'assets/images/brand/datainnLogo.png';
-import { Button, Row, Col, Modal, ModalBody, ModalFooter, CardBody, Table } from 'reactstrap';
+import { Button, Row, Col, Modal, ModalBody, ModalFooter, CardBody, Table } from 'components/migration';
 import { toast } from 'sonner';
 import { data } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';

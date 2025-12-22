@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Modal, ModalBody, ModalFooter, CardBody, ModalHeader } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalFooter, CardBody, ModalHeader } from 'components/migration';
 import dayjs from '@/utils/date';
 import { Loader } from 'components';
 import { DataTable } from '@/components/ui/data-table';

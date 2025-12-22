@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Card, CardHeader, CardBody, Button, Input, FormGroup, Label, Row, Col } from 'reactstrap';
+import { Card, CardHeader, CardBody, Button, Input, FormGroup, Label, Row, Col } from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import _ from 'lodash-es';

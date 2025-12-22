@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Row, Col } from 'reactstrap';
+import { Button, Row, Col } from 'components/migration';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import * as RequestForQuotationDetailsAction from '../detail/actions';
@@ -16,7 +16,7 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 
 import './style.scss';
 import { RFQTemplate } from './sections';
-import { Card, CardBody, Table } from 'reactstrap';
+import { Card, CardBody, Table } from 'components/migration';
 import dayjs from '@/utils/date';
 // import { StringStream } from 'codemirror'; // Removed: StringStream not available in CodeMirror 6
 import { data } from '../../../Language/index';
