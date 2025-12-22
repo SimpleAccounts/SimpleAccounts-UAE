@@ -27,7 +27,13 @@ cd apps/backend
 if [ -f "./mvnw" ]; then
     chmod +x ./mvnw
     # Create Maven wrapper distribution directory (older wrapper versions don't create it)
-    mkdir -p ~/.m2/wrapper/dists
+    # Use vscode user's home explicitly since script may run as root
+    MAVEN_USER_HOME="${MAVEN_USER_HOME:-/home/vscode}"
+    mkdir -p "$MAVEN_USER_HOME/.m2/wrapper/dists" 2>/dev/null || mkdir -p ~/.m2/wrapper/dists 2>/dev/null || true
+    # Ensure vscode owns the directory if we created it as root
+    if [ "$(id -u)" = "0" ] && [ -d "$MAVEN_USER_HOME/.m2" ]; then
+        chown -R vscode:vscode "$MAVEN_USER_HOME/.m2" 2>/dev/null || true
+    fi
     ./mvnw dependency:go-offline -B -q || true
 else
     mvn dependency:go-offline -B -q || true
