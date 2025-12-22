@@ -1,10 +1,17 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Card, CardHeader, CardBody, Button, Row, Col, ButtonGroup, Input } from 'components/migration';
-import { Loader, ConfirmDeleteModal } from 'components';
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Button,
+  Row,
+  Col,
+  ButtonGroup,
+  Input,
+} from 'components/migration';
+import { Loader } from 'components';
 import * as ProjectActions from './actions';
-import { CommonActions } from 'services/global';
 import { CSVLink } from '@/components/ui/csv-link';
 import './style.scss';
 import { DataTable } from '@/components/ui/data-table';
@@ -22,8 +29,8 @@ const Project = () => {
   }));
 
   const [loading, setLoading] = useState(true);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [dialog, setDialog] = useState(null);
+  const [selectedRows, _setSelectedRows] = useState([]);
+  const [dialog, _setDialog] = useState(null);
   const [filterData, setFilterData] = useState({
     projectName: '',
     vatRegistrationNumber: '',
@@ -39,11 +46,7 @@ const Project = () => {
   });
   const [sorting, setSorting] = useState([]);
 
-  useEffect(() => {
-    initializeData();
-  }, [pagination, sorting]);
-
-  const initializeData = () => {
+  const initializeData = useCallback(() => {
     setLoading(true);
     const paginationData = {
       pageNo: pagination.pageIndex,
@@ -65,7 +68,11 @@ const Project = () => {
         setLoading(false);
         toast.error(err && err.data ? err.data.message : 'Something Went Wrong');
       });
-  };
+  }, [dispatch, pagination, sorting, filterData]);
+
+  useEffect(() => {
+    initializeData();
+  }, [initializeData]);
 
   const goToDetail = row => {
     navigate(`/admin/master/project/detail`, { state: { id: row.projectId } });
