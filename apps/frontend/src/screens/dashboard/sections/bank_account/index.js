@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Currency } from 'components';
-import { Card, CardBody, Row, Col } from 'components/migration';
+import { Card, CardBody } from 'components/migration';
 import { Landmark, Wallet, Building2, Calendar } from 'lucide-react';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';

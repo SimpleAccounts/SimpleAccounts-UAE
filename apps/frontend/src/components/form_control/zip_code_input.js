@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup, Input, Label, Col } from 'components/migration';
+import { FormGroup, Input, Label } from 'components/migration';
 import { data } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
 
