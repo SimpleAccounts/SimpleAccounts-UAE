@@ -89,20 +89,25 @@ RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g npm@lates
 USER vscode
 
 # Pre-cache Maven dependencies
-# Copy pom.xml files (and parent poms if needed) to a temp directory
+# Copy pom.xml, Maven wrapper, and .mvn directory
 WORKDIR /tmp/backend
-COPY --chown=vscode:vscode apps/backend/pom.xml .
-# Run go-offline to download dependencies to ~/.m2/repository
-RUN mvn dependency:go-offline -B -q
+COPY --chown=vscode:vscode apps/backend/pom.xml apps/backend/mvnw ./
+COPY --chown=vscode:vscode apps/backend/.mvn .mvn
+# Download dependencies to ~/.m2/repository
+# Uses Maven wrapper since Maven is not pre-installed in the base image
+# Note: Uses dependency:resolve instead of go-offline to avoid HTTP repository blocking issues
+# Allow partial caching if some dependencies fail (|| true)
+RUN chmod +x mvnw && ./mvnw dependency:resolve -B -q || true
 
 # Pre-cache NPM dependencies
+# Note: Using npm install with fallback to allow partial caching if lockfiles are out of sync
 WORKDIR /tmp/root
 COPY --chown=vscode:vscode package.json package-lock.json ./
-RUN . /usr/local/share/nvm/nvm.sh && npm ci --ignore-scripts
+RUN . /usr/local/share/nvm/nvm.sh && (npm ci --ignore-scripts || npm install --ignore-scripts || true)
 
 WORKDIR /tmp/frontend
 COPY --chown=vscode:vscode apps/frontend/package.json apps/frontend/package-lock.json apps/frontend/.npmrc* ./
-RUN . /usr/local/share/nvm/nvm.sh && npm ci --legacy-peer-deps --ignore-scripts
+RUN . /usr/local/share/nvm/nvm.sh && (npm ci --legacy-peer-deps --ignore-scripts || npm install --legacy-peer-deps --ignore-scripts || true)
 
 # Clean up temp directories
 USER root
