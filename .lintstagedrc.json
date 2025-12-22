@@ -1,6 +1,6 @@
 {
   "apps/frontend/**/*.{js,jsx,ts,tsx}": [
-    "npm --prefix apps/frontend exec -- eslint --fix",
+    "npm --prefix apps/frontend exec -- eslint --fix --max-warnings=0",
     "prettier --write"
   ],
   "apps/frontend/**/*.{css,scss}": ["prettier --write"],
