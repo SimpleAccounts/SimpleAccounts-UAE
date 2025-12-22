@@ -2,7 +2,7 @@
   "name": "SimpleAccounts-UAE",
   "dockerComposeFile": "docker-compose.yml",
   "service": "devcontainer",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "workspaceFolder": "/workspaces/SimpleAccounts-UAE",
 
   // Docker CLI, GitHub CLI, and Git are pre-installed in the image
   // No features needed - everything is baked into the Dockerfile for faster startup

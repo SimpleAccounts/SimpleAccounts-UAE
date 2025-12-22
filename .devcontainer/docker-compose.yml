@@ -6,6 +6,7 @@ services:
     #   context: ..
     #   dockerfile: .devcontainer/Dockerfile
     volumes:
+      - ../:/workspaces/SimpleAccounts-UAE:cached
       - devcontainer-vscode-extensions:/home/vscode/.vscode-server/extensions
       - devcontainer-maven-cache:/home/vscode/.m2
       - devcontainer-npm-cache:/home/vscode/.npm
