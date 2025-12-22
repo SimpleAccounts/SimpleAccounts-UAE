@@ -26,11 +26,19 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
     && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list \
+    # Google Cloud CLI Setup
+    && curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" > /etc/apt/sources.list.d/google-cloud-sdk.list \
+    # Kubernetes CLI Setup
+    && curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /usr/share/keyrings/kubernetes-apt-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /" > /etc/apt/sources.list.d/kubernetes.list \
     && apt-get update \
     && apt-get -y install --no-install-recommends \
         docker-ce-cli \
         docker-compose-plugin \
         gh \
+        google-cloud-cli \
+        kubectl \
         postgresql-client \
         redis-tools \
         chromium \
@@ -79,8 +87,19 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
 
-# Install global npm packages
+# Install global npm packages and AI CLI tools
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g npm@latest" 2>&1
+
+# Install AI CLI tools (Claude, OpenAI, Gemini)
+# These are pre-installed but will be updated on container start via install-cli-tools.sh
+RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && \
+    npm install -g @anthropic-ai/claude-code 2>/dev/null || true && \
+    npm install -g openai 2>/dev/null || true && \
+    npm install -g @google/generative-ai-cli 2>/dev/null || npm install -g gemini-cli 2>/dev/null || true" 2>&1
+
+# Copy CLI tools update script
+COPY --chown=vscode:vscode .devcontainer/install-cli-tools.sh /usr/local/bin/install-cli-tools
+RUN chmod +x /usr/local/bin/install-cli-tools
 
 # ============================================ 
 # PRE-CACHE DEPENDENCIES
@@ -96,8 +115,9 @@ COPY --chown=vscode:vscode apps/backend/.mvn .mvn
 # Download dependencies to ~/.m2/repository
 # Uses Maven wrapper since Maven is not pre-installed in the base image
 # Note: Uses dependency:resolve instead of go-offline to avoid HTTP repository blocking issues
+# Create wrapper dist directory first (older wrapper versions don't create parent dirs)
 # Allow partial caching if some dependencies fail (|| true)
-RUN chmod +x mvnw && ./mvnw dependency:resolve -B -q || true
+RUN mkdir -p ~/.m2/wrapper/dists && chmod +x mvnw && ./mvnw dependency:resolve -B -q || true
 
 # Pre-cache NPM dependencies
 # Note: Using npm install with fallback to allow partial caching if lockfiles are out of sync

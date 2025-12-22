@@ -1,7 +1,8 @@
 services:
   devcontainer:
+    # Use prebuilt image (default for fast startup)
     image: ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest
-    # For local development/testing, uncomment below and comment out image:
+    # For local development/testing, comment out 'image:' above and uncomment below:
     # build:
     #   context: ..
     #   dockerfile: .devcontainer/Dockerfile
