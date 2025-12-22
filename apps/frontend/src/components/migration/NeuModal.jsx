@@ -65,7 +65,7 @@ const NeuModal = ({
   isOpen,
   toggle,
   size = 'md',
-  centered = true,
+  centered: _centered = true,
   className,
   ...props
 }) => {

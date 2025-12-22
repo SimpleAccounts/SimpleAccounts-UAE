@@ -1,11 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { selectCurrencyFactory, selectStyles } from 'utils';
-import { Card, CardHeader, CardBody, Button, Input, FormGroup, Label, Row, Col } from 'components/migration';
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Button,
+  Input,
+  FormGroup,
+  Label,
+  Row,
+  Col,
+} from 'components/migration';
 import Select from 'react-select';
 import { LeavePage, Loader } from 'components';
 import { AuthActions, CommonActions } from 'services/global';
@@ -97,7 +107,7 @@ const CreateCurrencyConvert = ({
     trigger,
   } = form;
 
-  const currencyCode = watch('currencyCode');
+  const _currencyCode = watch('currencyCode');
 
   useEffect(() => {
     authActions
@@ -116,11 +126,7 @@ const CreateCurrencyConvert = ({
       });
   }, [authActions, commonActions]);
 
-  useEffect(() => {
-    getCompanyCurrency();
-  }, []);
-
-  const getCompanyCurrency = () => {
+  const getCompanyCurrency = useCallback(() => {
     currencyConvertActions
       .getCompanyCurrency()
       .then(res => {
@@ -135,7 +141,11 @@ const CreateCurrencyConvert = ({
         );
         setLoading(false);
       });
-  };
+  }, [currencyConvertActions, commonActions]);
+
+  useEffect(() => {
+    getCompanyCurrency();
+  }, [getCompanyCurrency]);
 
   const validationCheck = useCallback(
     value => {

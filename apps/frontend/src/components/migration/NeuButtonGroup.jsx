@@ -17,7 +17,7 @@ const NEU_STYLES = {
 };
 
 const NeuButtonGroup = React.forwardRef(
-  ({ children, className, vertical = false, size, style, ...props }, ref) => (
+  ({ children, className, vertical = false, size: _size, style, ...props }, ref) => (
     <div
       ref={ref}
       role="group"

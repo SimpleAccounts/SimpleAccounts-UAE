@@ -59,7 +59,7 @@ const NeuInput = React.forwardRef(
       invalid = false,
       valid = false,
       plaintext = false,
-      addon = false,
+      addon: _addon = false,
       style,
       ...props
     },
@@ -147,11 +147,13 @@ const NeuFormGroup = React.forwardRef(
 );
 NeuFormGroup.displayName = 'NeuFormGroup';
 
-const NeuInputGroup = React.forwardRef(({ children, className, size, style, ...props }, ref) => (
-  <div ref={ref} className={cn('flex', className)} style={style} {...props}>
-    {children}
-  </div>
-));
+const NeuInputGroup = React.forwardRef(
+  ({ children, className, size: _size, style, ...props }, ref) => (
+    <div ref={ref} className={cn('flex', className)} style={style} {...props}>
+      {children}
+    </div>
+  )
+);
 NeuInputGroup.displayName = 'NeuInputGroup';
 
 const NeuInputGroupText = React.forwardRef(({ children, className, style, ...props }, ref) => (

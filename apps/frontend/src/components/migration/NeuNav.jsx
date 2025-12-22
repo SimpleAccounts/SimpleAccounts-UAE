@@ -32,16 +32,18 @@ const NEU_NAV_STYLES = {
   },
 };
 
-const NeuNav = React.forwardRef(({ children, className, tabs = false, pills = false, style, ...props }, ref) => (
-  <nav
-    ref={ref}
-    className={cn('flex flex-wrap', className)}
-    style={{ ...NEU_NAV_STYLES.nav, ...style }}
-    {...props}
-  >
-    {children}
-  </nav>
-));
+const NeuNav = React.forwardRef(
+  ({ children, className, tabs: _tabs = false, pills: _pills = false, style, ...props }, ref) => (
+    <nav
+      ref={ref}
+      className={cn('flex flex-wrap', className)}
+      style={{ ...NEU_NAV_STYLES.nav, ...style }}
+      {...props}
+    >
+      {children}
+    </nav>
+  )
+);
 NeuNav.displayName = 'NeuNav';
 
 const NeuNavItem = React.forwardRef(({ children, className, style, ...props }, ref) => (
@@ -52,7 +54,10 @@ const NeuNavItem = React.forwardRef(({ children, className, style, ...props }, r
 NeuNavItem.displayName = 'NeuNavItem';
 
 const NeuNavLink = React.forwardRef(
-  ({ children, className, active = false, disabled = false, href, onClick, style, ...props }, ref) => {
+  (
+    { children, className, active = false, disabled = false, href, onClick, style, ...props },
+    ref
+  ) => {
     const [isHovered, setIsHovered] = React.useState(false);
 
     const linkStyle = {
@@ -89,22 +94,31 @@ const NeuNavLink = React.forwardRef(
 );
 NeuNavLink.displayName = 'NeuNavLink';
 
-const NeuTabContent = React.forwardRef(({ children, className, activeTab, style, ...props }, ref) => (
-  <div ref={ref} className={className} style={{ ...NEU_NAV_STYLES.tabContent, ...style }} {...props}>
-    {React.Children.map(children, child => {
-      if (!React.isValidElement(child)) return null;
-      if (child.props.tabId === activeTab) return child;
-      return null;
-    })}
-  </div>
-));
+const NeuTabContent = React.forwardRef(
+  ({ children, className, activeTab, style, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={className}
+      style={{ ...NEU_NAV_STYLES.tabContent, ...style }}
+      {...props}
+    >
+      {React.Children.map(children, child => {
+        if (!React.isValidElement(child)) return null;
+        if (child.props.tabId === activeTab) return child;
+        return null;
+      })}
+    </div>
+  )
+);
 NeuTabContent.displayName = 'NeuTabContent';
 
-const NeuTabPane = React.forwardRef(({ children, className, tabId, style, ...props }, ref) => (
-  <div ref={ref} className={className} style={style} {...props}>
-    {children}
-  </div>
-));
+const NeuTabPane = React.forwardRef(
+  ({ children, className, tabId: _tabId, style, ...props }, ref) => (
+    <div ref={ref} className={className} style={style} {...props}>
+      {children}
+    </div>
+  )
+);
 NeuTabPane.displayName = 'NeuTabPane';
 
 export { NeuNav, NeuNavItem, NeuNavLink, NeuTabContent, NeuTabPane };

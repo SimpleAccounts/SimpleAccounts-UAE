@@ -2,7 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux'
 
-import { Card, CardHeader, CardBody, Row, Col, FormGroup, Label, NavLink } from 'components/migration';
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Row,
+  Col,
+  FormGroup,
+  Label,
+  NavLink,
+} from 'components/migration';
 
 // import './style.scss'
 import dayjs from '@/utils/date';
@@ -11,10 +20,10 @@ import { data } from '../../../../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Landmark, Pencil } from 'lucide-react';
 
-const mapStateToProps = state => {
+const mapStateToProps = _state => {
   return {};
 };
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = _dispatch => {
   return {};
 };
 let strings = new LocalizedStrings(data);

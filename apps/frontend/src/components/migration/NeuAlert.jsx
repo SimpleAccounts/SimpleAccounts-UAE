@@ -65,7 +65,7 @@ const NeuAlert = React.forwardRef(
       color = 'primary',
       isOpen = true,
       toggle,
-      fade = true,
+      fade: _fade = true,
       style,
       ...props
     },

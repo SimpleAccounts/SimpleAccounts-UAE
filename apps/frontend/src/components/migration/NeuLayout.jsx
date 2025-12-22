@@ -38,16 +38,18 @@ const NeuCol = React.forwardRef(
 NeuCol.displayName = 'NeuCol';
 
 // Container
-const NeuContainer = React.forwardRef(({ children, className, fluid = false, style, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(fluid ? 'container-fluid' : 'container', className)}
-    style={style}
-    {...props}
-  >
-    {children}
-  </div>
-));
+const NeuContainer = React.forwardRef(
+  ({ children, className, fluid = false, style, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(fluid ? 'container-fluid' : 'container', className)}
+      style={style}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+);
 NeuContainer.displayName = 'NeuContainer';
 
 export { NeuRow, NeuCol, NeuContainer };
