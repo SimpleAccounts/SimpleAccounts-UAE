@@ -7,7 +7,36 @@ FROM mcr.microsoft.com/devcontainers/java:21-bookworm
 ARG NODE_VERSION="20"
 RUN su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"
 
-# Install additional system dependencies
+# ============================================
+# INSTALL TOOLS (baked in for faster startup)
+# ============================================
+
+# Install Docker CLI and Docker Compose
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        gnupg \
+        lsb-release \
+    && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list \
+    && apt-get update \
+    && apt-get -y install --no-install-recommends docker-ce-cli docker-compose-plugin \
+    && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+
+# Install GitHub CLI
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list \
+    && apt-get update \
+    && apt-get -y install --no-install-recommends gh \
+    && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+
+# ============================================
+# INSTALL SYSTEM DEPENDENCIES
+# ============================================
+
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
         postgresql-client \
@@ -40,50 +69,8 @@ ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
 # Install global npm packages
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g npm@latest" 2>&1
 
-# ============================================
-# PRE-CACHE DEPENDENCIES FOR FASTER STARTUP
-# ============================================
-
-# Create cache directories
-RUN mkdir -p /home/vscode/.npm-cache /home/vscode/.m2-cache \
-    && chown -R vscode:vscode /home/vscode/.npm-cache /home/vscode/.m2-cache
-
-# --- NPM Dependencies ---
-# Copy package files for dependency caching
-COPY --chown=vscode:vscode package*.json /tmp/deps/
-COPY --chown=vscode:vscode apps/frontend/package*.json /tmp/deps/apps/frontend/
-
-# Install root npm dependencies
-RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && cd /tmp/deps && npm install" 2>&1
-
-# Install frontend npm dependencies
-RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && cd /tmp/deps/apps/frontend && npm install --legacy-peer-deps" 2>&1
-
-# --- Maven Dependencies ---
-# Copy pom.xml for Maven dependency caching
-COPY --chown=vscode:vscode apps/backend/pom.xml /tmp/deps/apps/backend/
-COPY --chown=vscode:vscode apps/backend/.mvn /tmp/deps/apps/backend/.mvn/
-COPY --chown=vscode:vscode apps/backend/mvnw /tmp/deps/apps/backend/
-
-# Download Maven dependencies
-RUN cd /tmp/deps/apps/backend \
-    && chmod +x mvnw \
-    && ./mvnw dependency:go-offline -B -q || true
-
-# Move cached dependencies to persistent locations
-RUN cp -r /tmp/deps/node_modules /home/vscode/.npm-cache/root-node_modules 2>/dev/null || true \
-    && cp -r /tmp/deps/apps/frontend/node_modules /home/vscode/.npm-cache/frontend-node_modules 2>/dev/null || true \
-    && chown -R vscode:vscode /home/vscode/.npm-cache /home/vscode/.m2
-
-# Cleanup temp files
-RUN rm -rf /tmp/deps
-
-# ============================================
-# END DEPENDENCY CACHING
-# ============================================
-
 # Set working directory
-WORKDIR /workspaces/SimpleAccounts-UAE
+WORKDIR /workspaces
 
 # Default command
 CMD ["sleep", "infinity"]
