@@ -5,15 +5,30 @@ set -e
 
 echo "🚀 Setting up SimpleAccounts-UAE development environment..."
 
-# Install root dependencies
-echo "📦 Installing root npm dependencies..."
-npm install
+# --- Use cached npm dependencies if available ---
+if [ -d "/home/vscode/.npm-cache/root-node_modules" ]; then
+    echo "📦 Restoring cached root npm dependencies..."
+    cp -r /home/vscode/.npm-cache/root-node_modules ./node_modules
+    # Quick install to sync any new packages
+    npm install --prefer-offline 2>/dev/null || npm install
+else
+    echo "📦 Installing root npm dependencies..."
+    npm install
+fi
 
-# Install frontend dependencies
-echo "📦 Installing frontend dependencies..."
-cd apps/frontend
-npm install --legacy-peer-deps
-cd ../..
+if [ -d "/home/vscode/.npm-cache/frontend-node_modules" ]; then
+    echo "📦 Restoring cached frontend npm dependencies..."
+    cp -r /home/vscode/.npm-cache/frontend-node_modules ./apps/frontend/node_modules
+    # Quick install to sync any new packages
+    cd apps/frontend
+    npm install --legacy-peer-deps --prefer-offline 2>/dev/null || npm install --legacy-peer-deps
+    cd ../..
+else
+    echo "📦 Installing frontend dependencies..."
+    cd apps/frontend
+    npm install --legacy-peer-deps
+    cd ../..
+fi
 
 # Install Playwright browsers (using system Chromium)
 echo "🎭 Setting up Playwright..."
@@ -21,8 +36,9 @@ cd apps/frontend
 npx playwright install-deps 2>/dev/null || true
 cd ../..
 
-# Download Maven dependencies (this can take a while on first run)
-echo "☕ Downloading Maven dependencies..."
+# Maven dependencies are cached in ~/.m2 which is a named volume
+# Just ensure any new dependencies are downloaded
+echo "☕ Syncing Maven dependencies..."
 cd apps/backend
 if [ -f "./mvnw" ]; then
     chmod +x ./mvnw
