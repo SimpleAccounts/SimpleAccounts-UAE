@@ -7,9 +7,9 @@ FROM mcr.microsoft.com/devcontainers/java:21-bookworm
 ARG NODE_VERSION="20"
 RUN su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"
 
-# ============================================
+# ============================================ 
 # INSTALL TOOLS (baked in for faster startup)
-# ============================================
+# ============================================ 
 
 # Install Docker CLI, Docker Compose, GitHub CLI, and System Dependencies
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
@@ -82,9 +82,9 @@ ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
 # Install global npm packages
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g npm@latest" 2>&1
 
-# ============================================
+# ============================================ 
 # PRE-CACHE DEPENDENCIES
-# ============================================
+# ============================================ 
 
 USER vscode
 
