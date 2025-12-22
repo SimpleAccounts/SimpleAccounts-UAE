@@ -51,7 +51,7 @@
     "react-bootstrap-daterangepicker": "^8.0.0",
     "react-chartjs-2": "^5.3.1",
     "react-checkbox-tree": "^1.6.0",
-    "react-datepicker": "^2.9.6",
+    "react-datepicker": "^9.1.0",
     "react-dates": "^20.2.3",
     "react-dom": "^18.2.0",
     "react-draft-wysiwyg": "^1.15.0",
