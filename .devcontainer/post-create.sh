@@ -7,18 +7,18 @@ echo "🚀 Setting up SimpleAccounts-UAE development environment..."
 
 # Install root dependencies
 echo "📦 Installing root npm dependencies..."
-npm install
+npm ci --prefer-offline
 
 # Install frontend dependencies
 echo "📦 Installing frontend dependencies..."
 cd apps/frontend
-npm install --legacy-peer-deps
+npm ci --legacy-peer-deps --prefer-offline
 cd ../..
 
 # Install Playwright browsers (using system Chromium)
 echo "🎭 Setting up Playwright..."
 cd apps/frontend
-npx playwright install-deps 2>/dev/null || true
+# npx playwright install-deps 2>/dev/null || true  <-- Dependencies now in Dockerfile
 cd ../..
 
 # Download Maven dependencies
