@@ -50,7 +50,6 @@
     "react-chartjs-2": "^5.3.1",
     "react-checkbox-tree": "^1.6.0",
     "react-datepicker": "^9.1.0",
-    "react-dates": "^20.2.3",
     "react-dom": "^19.2.3",
     "react-draft-wysiwyg": "^1.15.0",
     "react-hook-form": "^7.69.0",
