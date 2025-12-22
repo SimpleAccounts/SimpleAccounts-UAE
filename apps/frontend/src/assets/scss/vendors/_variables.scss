@@ -1,4 +1,5 @@
-// Override Boostrap variables
+// Override Bootstrap 5 variables
 @import '../variables';
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
 @import 'bootstrap/scss/mixins';
-@import '@coreui/coreui-pro/scss/variables';
