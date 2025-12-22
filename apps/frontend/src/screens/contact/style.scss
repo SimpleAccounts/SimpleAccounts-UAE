@@ -1,67 +1,134 @@
+// Contact Screen Styles - Neumorphic Design
+// ============================================
+
+$bg-color: #e8eef5;
+$primary: #1e6eff;
+$text-primary: #1e3a5f;
+$text-secondary: #3d5a80;
+$shadow-dark: #c4c9cf;
+$shadow-light: #ffffff;
+$space-sm: 8px;
+$space-md: 16px;
+$space-lg: 24px;
+$radius-sm: 8px;
+$radius-md: 12px;
+
+@mixin neu-raised-sm {
+  background: $bg-color;
+  box-shadow:
+    3px 3px 6px $shadow-dark,
+    -3px -3px 6px $shadow-light;
+}
+
+@mixin neu-pressed {
+  background: $bg-color;
+  box-shadow:
+    inset 3px 3px 6px $shadow-dark,
+    inset -3px -3px 6px $shadow-light;
+}
+
 .contact-screen {
-  .card-header {
-    color: #2064d8;
-  }
-  .btn-group {
-    .btn {
-      color: #ffffff !important;
-    }
-  }
-  .badge {
-    padding: 0.4em 0.6em;
-    font-size: 90%;
-  }
-  .product-table {
-    .my-link {
-      text-decoration: none;
-      cursor: pointer;
-    }
-  }
+  padding: 0;
+  background: $bg-color;
+  min-height: 100%;
 
-  .contact-info {
-    border: 1px solid #c3c1c1;
-    border-left: 2px solid #4dbd74;
+  .data-table {
+    background: transparent;
 
-    .contact-name {
-      text-align: center;
-      line-height: 78px;
-      width: 80px;
-      height: 80px;
-      color: white;
-      font-size: 32px;
-      background: #73818f;
+    .rounded-md {
+      border: none !important;
+      background: transparent;
     }
 
-    .info {
-      p {
-        margin-bottom: 5px !important;
+    table {
+      background: transparent;
+    }
+
+    thead tr {
+      background: rgba($primary, 0.05);
+
+      th {
+        color: $text-primary;
+        font-weight: 600;
+        font-size: 0.8125rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: $space-md $space-lg;
+        border-bottom: 1px solid rgba($shadow-dark, 0.3);
+
+        &:first-child {
+          border-top-left-radius: $radius-md;
+        }
+        &:last-child {
+          border-top-right-radius: $radius-md;
+        }
+      }
+    }
+
+    tbody tr {
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba($primary, 0.03);
+      }
+
+      td {
+        color: $text-secondary;
+        font-size: 0.875rem;
+        padding: $space-md $space-lg;
+        border-bottom: 1px solid rgba($shadow-dark, 0.15);
+        vertical-align: middle;
+      }
+
+      &:last-child td {
+        border-bottom: none;
+        &:first-child {
+          border-bottom-left-radius: $radius-md;
+        }
+        &:last-child {
+          border-bottom-right-radius: $radius-md;
+        }
       }
     }
   }
-}
-.table-header-bg {
-  background-color: #dfe9f7;
-}
-.VerifyTRN {
-  text-align: right;
-}
-.Ag-gridActionButtons {
-  // .dropdown-item {
-  //   padding: 0px !important;
-  // }
-  .card-body .btn-square {
-    border-radius: 0px !important;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-  }
-  .btn-sm,
-  .btn-group-sm > .btn {
-    padding: 0.05rem 0.5rem !important;
-  }
-  .deleteButton {
-    .btn-secondary:hover {
-      background-color: red !important;
-      border: white !important;
+
+  [class*='pagination'] {
+    margin-top: $space-lg;
+    padding-top: $space-md;
+    border-top: 1px solid rgba($shadow-dark, 0.2);
+
+    button {
+      @include neu-raised-sm;
+      border: none !important;
+      border-radius: $radius-sm !important;
+      padding: $space-sm !important;
+      min-width: 36px;
+      height: 36px;
+      color: $text-primary;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-1px);
+      }
+      &:disabled {
+        opacity: 0.4;
+        box-shadow: none;
+        background: rgba($shadow-dark, 0.1);
+      }
+    }
+
+    select {
+      @include neu-raised-sm;
+      border: none !important;
+      border-radius: $radius-sm !important;
+      padding: $space-sm $space-md !important;
+      color: $text-primary;
+      cursor: pointer;
+      min-width: 70px;
+      height: 36px;
     }
   }
 }

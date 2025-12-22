@@ -21,15 +21,15 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>21</java.version>
-		<aspectj.version>1.9.25</aspectj.version>
+		<aspectj.version>1.9.25.1</aspectj.version>
 		<frontend-maven-plugin.version>1.9.1</frontend-maven-plugin.version>
 		<node.version>v12.16.3</node.version>
 		<yarn.version>v1.22.4</yarn.version>
 		<junit.jupiter.version>5.11.3</junit.jupiter.version>
 		<junit.platform.version>1.11.3</junit.platform.version>
 		<mockito.version>5.21.0</mockito.version>
-		<testcontainers.version>1.20.4</testcontainers.version>
-		<bytebuddy.version>1.14.18</bytebuddy.version>
+		<testcontainers.version>1.21.4</testcontainers.version>
+		<bytebuddy.version>1.18.3</bytebuddy.version>
 			<!-- SonarQube Configuration (Self-hosted) -->
 			<sonar.host.url>https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io</sonar.host.url>
 		</properties>
@@ -51,7 +51,7 @@
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.29.2-GA</version>
+			<version>3.30.2-GA</version>
 		</dependency>
 
 		<dependency>
@@ -123,7 +123,7 @@
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
-			<version>0.12.6</version>
+			<version>0.13.0</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -422,7 +422,7 @@
 					<dependency>
 						<groupId>org.pitest</groupId>
 						<artifactId>pitest-junit5-plugin</artifactId>
-						<version>1.2.1</version>
+						<version>1.2.3</version>
 					</dependency>
 				</dependencies>
 				<configuration>
@@ -486,7 +486,7 @@
 				<dependency>
 					<groupId>io.gatling.highcharts</groupId>
 					<artifactId>gatling-charts-highcharts</artifactId>
-					<version>3.9.5</version>
+					<version>3.14.9</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>
@@ -501,7 +501,7 @@
 					<plugin>
 						<groupId>io.gatling</groupId>
 						<artifactId>gatling-maven-plugin</artifactId>
-						<version>4.20.13</version>
+						<version>4.20.14</version>
 						<configuration>
 							<simulationsFolder>src/perf/scala/simulations</simulationsFolder>
 							<resultsFolder>target/gatling</resultsFolder>

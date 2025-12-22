@@ -4,10 +4,6 @@ import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Search, RefreshCw, Package, Edit } from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableRowActions } from '@/components/ui/data-table-actions';
 
@@ -22,9 +18,37 @@ import './style.scss';
 
 const strings = new LocalizedStrings(data);
 
+// Neumorphic theme constants
+const theme = {
+  bg: '#e8eef5',
+  primary: '#1e6eff',
+  primaryDark: '#0052cc',
+  secondary: '#00c896',
+  warning: '#f59e0b',
+  danger: '#ff4d6a',
+  textPrimary: '#1e3a5f',
+  textSecondary: '#3d5a80',
+  textMuted: '#98afc2',
+  shadowDark: '#c4c9cf',
+  shadowLight: '#ffffff',
+};
+
+const shadows = {
+  raised: {
+    sm: `3px 3px 6px ${theme.shadowDark}, -3px -3px 6px ${theme.shadowLight}`,
+    md: `4px 4px 8px ${theme.shadowDark}, -4px -4px 8px ${theme.shadowLight}`,
+    lg: `6px 6px 12px ${theme.shadowDark}, -6px -6px 12px ${theme.shadowLight}`,
+    xs: `2px 2px 4px ${theme.shadowDark}, -2px -2px 4px ${theme.shadowLight}`,
+  },
+  pressed: {
+    sm: `inset 2px 2px 4px ${theme.shadowDark}, inset -2px -2px 4px ${theme.shadowLight}`,
+    md: `inset 3px 3px 6px ${theme.shadowDark}, inset -3px -3px 6px ${theme.shadowLight}`,
+  },
+};
+
 /**
  * Modern Product List Screen
- * Uses functional components, shadcn/ui, and TanStack Table
+ * Uses functional components with Neumorphic design
  */
 function Product() {
   const navigate = useNavigate();
@@ -135,22 +159,28 @@ function Product() {
       {
         accessorKey: 'productCode',
         header: strings.PRODUCTCODE,
-        cell: ({ row }) => <span className="font-medium">{row.original.productCode}</span>,
+        cell: ({ row }) => (
+          <span className="font-semibold" style={{ color: theme.textPrimary }}>
+            {row.original.productCode}
+          </span>
+        ),
       },
       {
         accessorKey: 'name',
         header: strings.PRODUCTNAME,
-        cell: ({ row }) => <span className="font-medium text-primary">{row.original.name}</span>,
+        cell: ({ row }) => (
+          <span className="font-medium" style={{ color: theme.primary }}>
+            {row.original.name}
+          </span>
+        ),
       },
       {
         accessorKey: 'productType',
         header: strings.ProductType,
         cell: ({ row }) => {
           const { productType, exciseTaxId } = row.original;
-          if (exciseTaxId) {
-            return `EXCISE ${productType}`;
-          }
-          return productType || '';
+          const displayType = exciseTaxId ? `EXCISE ${productType}` : productType || '';
+          return <span style={{ color: theme.textSecondary }}>{displayType}</span>;
         },
       },
       {
@@ -159,9 +189,15 @@ function Product() {
         cell: ({ row }) => {
           const isEnabled = row.original.isInventoryEnabled;
           return (
-            <Badge variant={isEnabled ? 'success' : 'destructive'}>
+            <span
+              className="px-2 py-1 rounded-lg text-xs font-medium"
+              style={{
+                background: isEnabled ? `${theme.secondary}15` : `${theme.danger}15`,
+                color: isEnabled ? theme.secondary : theme.danger,
+              }}
+            >
               {isEnabled ? 'Enabled' : 'Disabled'}
-            </Badge>
+            </span>
           );
         },
       },
@@ -169,7 +205,7 @@ function Product() {
         accessorKey: 'unitPrice',
         header: strings.UNITPRICE,
         cell: ({ row }) => (
-          <div className="text-right">
+          <div className="text-right" style={{ color: theme.textPrimary }}>
             <Currency value={row.original.unitPrice || 0} currencySymbol={getCurrencySymbol} />
           </div>
         ),
@@ -177,11 +213,16 @@ function Product() {
       {
         accessorKey: 'vatPercentage',
         header: `${strings.VAT} ${strings.Type}`,
+        cell: ({ row }) => (
+          <span style={{ color: theme.textSecondary }}>{row.original.vatPercentage}</span>
+        ),
       },
       {
         accessorKey: 'exciseTax',
         header: 'Excise Slab',
-        cell: ({ row }) => row.original.exciseTax || '-',
+        cell: ({ row }) => (
+          <span style={{ color: theme.textSecondary }}>{row.original.exciseTax || '-'}</span>
+        ),
       },
       {
         accessorKey: 'isActive',
@@ -189,9 +230,15 @@ function Product() {
         cell: ({ row }) => {
           const isActive = row.original.isActive;
           return (
-            <Badge variant={isActive ? 'success' : 'destructive'}>
+            <span
+              className="px-2 py-1 rounded-lg text-xs font-medium"
+              style={{
+                background: isActive ? `${theme.secondary}15` : `${theme.danger}15`,
+                color: isActive ? theme.secondary : theme.danger,
+              }}
+            >
               {isActive ? 'Active' : 'InActive'}
-            </Badge>
+            </span>
           );
         },
       },
@@ -240,69 +287,132 @@ function Product() {
   }
 
   return (
-    <div className="product-screen">
-      <div className="space-y-6">
-        {dialog}
+    <div className="product-screen" style={{ background: theme.bg, minHeight: '100%' }}>
+      {dialog}
 
-        <Card>
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Package className="h-6 w-6 text-primary" />
-                <CardTitle className="text-xl">{strings.Products}</CardTitle>
-              </div>
-              <Button
-                onClick={() => navigate('/admin/master/product/create')}
-                className="transition-all duration-200 hover:scale-[1.02]"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                {strings.AddnewProduct}
-              </Button>
+      {/* Page Header Card */}
+      <div
+        className="rounded-2xl p-6 mb-6"
+        style={{
+          background: theme.bg,
+          boxShadow: shadows.raised.lg,
+        }}
+      >
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          {/* Title Section */}
+          <div className="flex items-center gap-3">
+            <div
+              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              style={{
+                background: theme.bg,
+                boxShadow: shadows.raised.sm,
+              }}
+            >
+              <Package className="w-6 h-6" style={{ color: theme.primary }} />
             </div>
-          </CardHeader>
-          <CardContent>
-            {/* Filters */}
-            <div className="mb-6 p-4 bg-muted/30 rounded-lg">
-              <h5 className="text-sm font-semibold mb-3">{strings.Filter}:</h5>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Input
-                  value={filterData.productCode}
-                  placeholder={`${strings.Enter} ${strings.PRODUCTCODE}`}
-                  className="input-transition"
-                  onChange={e => handleFilterChange('productCode', e.target.value)}
-                />
-                <Input
-                  value={filterData.name}
-                  placeholder={`${strings.Enter} ${strings.Name}`}
-                  className="input-transition"
-                  onChange={e => handleFilterChange('name', e.target.value)}
-                />
-                <div className="flex gap-2">
-                  <Button onClick={handleSearch} variant="default" size="icon">
-                    <Search className="h-4 w-4" />
-                  </Button>
-                  <Button onClick={clearAll} variant="outline" size="icon">
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+            <div>
+              <h1 className="text-xl font-bold m-0" style={{ color: theme.textPrimary }}>
+                {strings.Products}
+              </h1>
+              <p className="text-sm m-0" style={{ color: theme.textMuted }}>
+                Manage your products
+              </p>
             </div>
+          </div>
 
-            {/* Data Table */}
-            <DataTable
-              columns={columns}
-              data={tableData}
-              manualPagination
-              pageCount={Math.ceil((product_list?.count || 0) / pagination.pageSize)}
-              onPaginationChange={setPagination}
-              pagination={pagination}
-              manualSorting
-              onSortingChange={setSorting}
-              sorting={sorting}
-              onRowClick={goToDetail}
+          {/* Actions Section */}
+          <button
+            onClick={() => navigate('/admin/master/product/create')}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-white transition-all duration-200 hover:-translate-y-0.5"
+            style={{
+              background: `linear-gradient(145deg, ${theme.primary}, ${theme.primaryDark})`,
+              boxShadow: shadows.raised.sm,
+            }}
+          >
+            <Plus className="w-4 h-4" />
+            {strings.AddnewProduct}
+          </button>
+        </div>
+      </div>
+
+      {/* Filters & Table Card */}
+      <div
+        className="rounded-2xl overflow-hidden"
+        style={{
+          background: theme.bg,
+          boxShadow: shadows.raised.lg,
+        }}
+      >
+        {/* Filters Section */}
+        <div className="p-6 border-b" style={{ borderColor: `${theme.shadowDark}40` }}>
+          <h5 className="text-sm font-semibold mb-4" style={{ color: theme.textPrimary }}>
+            {strings.Filter}:
+          </h5>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <input
+              value={filterData.productCode}
+              placeholder={`${strings.Enter} ${strings.PRODUCTCODE}`}
+              className="px-4 py-2 rounded-xl border-0 outline-none w-full"
+              style={{
+                background: theme.bg,
+                boxShadow: shadows.pressed.sm,
+                color: theme.textPrimary,
+              }}
+              onChange={e => handleFilterChange('productCode', e.target.value)}
             />
-          </CardContent>
-        </Card>
+            <input
+              value={filterData.name}
+              placeholder={`${strings.Enter} ${strings.Name}`}
+              className="px-4 py-2 rounded-xl border-0 outline-none w-full"
+              style={{
+                background: theme.bg,
+                boxShadow: shadows.pressed.sm,
+                color: theme.textPrimary,
+              }}
+              onChange={e => handleFilterChange('name', e.target.value)}
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={handleSearch}
+                className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5"
+                style={{
+                  background: `linear-gradient(145deg, ${theme.primary}, ${theme.primaryDark})`,
+                  boxShadow: shadows.raised.sm,
+                }}
+              >
+                <Search className="w-4 h-4 text-white" />
+              </button>
+              <button
+                onClick={clearAll}
+                className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5"
+                style={{
+                  background: theme.bg,
+                  boxShadow: shadows.raised.sm,
+                }}
+              >
+                <RefreshCw className="w-4 h-4" style={{ color: theme.textSecondary }} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Data Table */}
+        <div className="p-6">
+          <DataTable
+            columns={columns}
+            data={tableData}
+            manualPagination
+            pageCount={Math.ceil((product_list?.count || 0) / pagination.pageSize)}
+            onPaginationChange={setPagination}
+            pagination={pagination}
+            manualSorting
+            onSortingChange={setSorting}
+            sorting={sorting}
+            onRowClick={goToDetail}
+            neumorphicPagination
+            totalCount={product_list?.count || 0}
+          />
+        </div>
       </div>
     </div>
   );
