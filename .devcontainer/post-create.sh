@@ -7,12 +7,12 @@ echo "🚀 Setting up SimpleAccounts-UAE development environment..."
 
 # Install root dependencies
 echo "📦 Installing root npm dependencies..."
-npm ci --prefer-offline
+npm ci --prefer-offline || npm install
 
 # Install frontend dependencies
 echo "📦 Installing frontend dependencies..."
 cd apps/frontend
-npm ci --legacy-peer-deps --prefer-offline
+npm ci --legacy-peer-deps --prefer-offline || npm install --legacy-peer-deps
 cd ../..
 
 # Install Playwright browsers (using system Chromium)
