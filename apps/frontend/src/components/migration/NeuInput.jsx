@@ -72,8 +72,12 @@ const NeuInput = React.forwardRef(
       ...NEU_INPUT_STYLES.input,
       ...(type === 'select' ? NEU_INPUT_STYLES.select : {}),
       ...(isFocused ? NEU_INPUT_STYLES.inputFocus : {}),
-      ...(invalid ? { boxShadow: `${NEU_INPUT_STYLES.input.boxShadow}, 0 0 0 2px rgba(255, 77, 106, 0.3)` } : {}),
-      ...(valid ? { boxShadow: `${NEU_INPUT_STYLES.input.boxShadow}, 0 0 0 2px rgba(0, 200, 150, 0.3)` } : {}),
+      ...(invalid
+        ? { boxShadow: `${NEU_INPUT_STYLES.input.boxShadow}, 0 0 0 2px rgba(255, 77, 106, 0.3)` }
+        : {}),
+      ...(valid
+        ? { boxShadow: `${NEU_INPUT_STYLES.input.boxShadow}, 0 0 0 2px rgba(0, 200, 150, 0.3)` }
+        : {}),
       ...(plaintext ? { background: 'transparent', boxShadow: 'none' } : {}),
       ...style,
     };
@@ -98,7 +102,12 @@ const NeuInput = React.forwardRef(
     }
 
     if (type === 'textarea') {
-      return <textarea {...commonProps} style={{ ...inputStyle, minHeight: '100px', resize: 'vertical' }} />;
+      return (
+        <textarea
+          {...commonProps}
+          style={{ ...inputStyle, minHeight: '100px', resize: 'vertical' }}
+        />
+      );
     }
 
     return <input type={type} {...commonProps} />;
@@ -119,21 +128,23 @@ const NeuLabel = React.forwardRef(({ children, className, htmlFor, style, ...pro
 ));
 NeuLabel.displayName = 'NeuLabel';
 
-const NeuFormGroup = React.forwardRef(({ children, className, row = false, check = false, style, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      'mb-4',
-      row && 'flex flex-wrap items-center',
-      check && 'flex items-center gap-2',
-      className
-    )}
-    style={style}
-    {...props}
-  >
-    {children}
-  </div>
-));
+const NeuFormGroup = React.forwardRef(
+  ({ children, className, row = false, check = false, style, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        'mb-4',
+        row && 'flex flex-wrap items-center',
+        check && 'flex items-center gap-2',
+        className
+      )}
+      style={style}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+);
 NeuFormGroup.displayName = 'NeuFormGroup';
 
 const NeuInputGroup = React.forwardRef(({ children, className, size, style, ...props }, ref) => (
@@ -149,7 +160,8 @@ const NeuInputGroupText = React.forwardRef(({ children, className, style, ...pro
     className={cn('flex items-center px-3 text-sm', className)}
     style={{
       background: 'var(--neu-bg, #e8eef5)',
-      boxShadow: 'inset 1px 1px 2px var(--neu-shadow-dark, #c4c9cf), inset -1px -1px 2px var(--neu-shadow-light, #ffffff)',
+      boxShadow:
+        'inset 1px 1px 2px var(--neu-shadow-dark, #c4c9cf), inset -1px -1px 2px var(--neu-shadow-light, #ffffff)',
       color: 'var(--neu-text-muted, #98afc2)',
       ...style,
     }}

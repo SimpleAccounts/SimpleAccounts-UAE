@@ -60,13 +60,19 @@ const SIZE_CLASSES = {
   xl: 'max-w-4xl',
 };
 
-const NeuModal = ({ children, isOpen, toggle, size = 'md', centered = true, className, ...props }) => {
+const NeuModal = ({
+  children,
+  isOpen,
+  toggle,
+  size = 'md',
+  centered = true,
+  className,
+  ...props
+}) => {
   return (
     <DialogPrimitive.Root open={isOpen} onOpenChange={toggle}>
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay
-          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
-        />
+        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
         <DialogPrimitive.Content
           className={cn(
             'fixed left-[50%] top-[50%] z-50 w-full translate-x-[-50%] translate-y-[-50%] p-0 duration-200',

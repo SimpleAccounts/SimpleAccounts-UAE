@@ -84,16 +84,18 @@ const NeuCardFooter = React.forwardRef(({ children, className, style, ...props }
 ));
 NeuCardFooter.displayName = 'NeuCardFooter';
 
-const NeuCardTitle = React.forwardRef(({ children, className, tag: Tag = 'h5', style, ...props }, ref) => (
-  <Tag
-    ref={ref}
-    className={cn('mb-2 font-semibold', className)}
-    style={{ color: 'var(--neu-text-primary, #1e3a5f)', ...style }}
-    {...props}
-  >
-    {children}
-  </Tag>
-));
+const NeuCardTitle = React.forwardRef(
+  ({ children, className, tag: Tag = 'h5', style, ...props }, ref) => (
+    <Tag
+      ref={ref}
+      className={cn('mb-2 font-semibold', className)}
+      style={{ color: 'var(--neu-text-primary, #1e3a5f)', ...style }}
+      {...props}
+    >
+      {children}
+    </Tag>
+  )
+);
 NeuCardTitle.displayName = 'NeuCardTitle';
 
 const NeuCardText = React.forwardRef(({ children, className, style, ...props }, ref) => (

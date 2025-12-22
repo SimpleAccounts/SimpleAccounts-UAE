@@ -65,18 +65,7 @@ export { NeuModal, NeuModalHeader, NeuModalBody, NeuModalFooter } from './NeuMod
 export { NeuTable, NeuTh, NeuTd } from './NeuTable';
 
 // Input/Form
-export {
-  NeuInput,
-  NeuLabel,
-  NeuFormGroup,
-  NeuInputGroup,
-  NeuInputGroupText,
-} from './NeuInput';
+export { NeuInput, NeuLabel, NeuFormGroup, NeuInputGroup, NeuInputGroupText } from './NeuInput';
 
 // Dropdown
-export {
-  NeuDropdown,
-  NeuDropdownToggle,
-  NeuDropdownMenu,
-  NeuDropdownItem,
-} from './NeuDropdown';
+export { NeuDropdown, NeuDropdownToggle, NeuDropdownMenu, NeuDropdownItem } from './NeuDropdown';

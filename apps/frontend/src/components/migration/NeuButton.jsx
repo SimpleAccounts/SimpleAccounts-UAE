@@ -114,7 +114,11 @@ const NeuButton = React.forwardRef(
       <button
         ref={ref}
         type={type}
-        className={cn('font-medium inline-flex items-center justify-center gap-2', sizeClass, className)}
+        className={cn(
+          'font-medium inline-flex items-center justify-center gap-2',
+          sizeClass,
+          className
+        )}
         style={buttonStyle}
         disabled={disabled}
         onClick={onClick}
