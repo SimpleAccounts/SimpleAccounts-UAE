@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Button,
   Row,
@@ -16,7 +16,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
 import { IdCard, CircleDot, Ban } from 'lucide-react';
 
 // Zod validation schema
@@ -29,9 +28,7 @@ const emailSchema = z.object({
 });
 
 const EmailModal = props => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [contentState, setContentState] = useState({});
-  const [viewEditor, setViewEditor] = useState(false);
   const [message, setMessage] = useState('');
 
   const content = {
@@ -52,8 +49,7 @@ const EmailModal = props => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
-    reset,
+    formState: { errors: _errors },
   } = useForm({
     resolver: zodResolver(emailSchema),
     defaultValues: {
@@ -70,7 +66,7 @@ const EmailModal = props => {
     setMessage(newContentState.blocks[0].text);
   };
 
-  const onSubmit = formData => {
+  const onSubmit = _formData => {
     props.sendEmail(props.id);
   };
 
@@ -137,6 +133,22 @@ const EmailModal = props => {
                     wrapperClassName="wrapperClassName"
                     editorClassName="massage-editor"
                     onContentStateChange={onContentStateChange}
+                    toolbar={{
+                      options: [
+                        'inline',
+                        'blockType',
+                        'fontSize',
+                        'fontFamily',
+                        'list',
+                        'textAlign',
+                        'colorPicker',
+                        'link',
+                        'image',
+                        'emoji',
+                        'history',
+                      ],
+                      // Note: 'embedded' option excluded to mitigate XSS vulnerability (GHSA-fq5x-7292-2p5r)
+                    }}
                   />
                 </FormGroup>
               </Col>
