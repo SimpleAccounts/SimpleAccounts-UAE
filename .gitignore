@@ -43,6 +43,9 @@ lerna-debug.log*
 .env.test.local
 .env.production.local
 
+# Local Spring Boot config (created by devcontainer)
+**/application-local.properties
+
 # Testing
 coverage/
 .nyc_output/

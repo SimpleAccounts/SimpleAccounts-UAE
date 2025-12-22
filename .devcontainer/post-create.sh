@@ -26,6 +26,8 @@ echo "☕ Downloading Maven dependencies..."
 cd apps/backend
 if [ -f "./mvnw" ]; then
     chmod +x ./mvnw
+    # Create Maven wrapper distribution directory (older wrapper versions don't create it)
+    mkdir -p ~/.m2/wrapper/dists
     ./mvnw dependency:go-offline -B -q || true
 else
     mvn dependency:go-offline -B -q || true
