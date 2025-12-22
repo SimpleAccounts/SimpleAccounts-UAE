@@ -11,7 +11,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import { RFQTemplate } from './sections';
-import { Card, CardBody, Table } from 'components/migration';
+import { Card, Table } from 'components/migration';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
