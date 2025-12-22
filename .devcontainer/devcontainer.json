@@ -4,18 +4,8 @@
   "service": "devcontainer",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
-  // Features to add to the dev container
-  "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {
-      "moby": true,
-      "installDockerBuildx": true
-    },
-    "ghcr.io/devcontainers/features/git:1": {
-      "ppa": true,
-      "version": "latest"
-    },
-    "ghcr.io/devcontainers/features/github-cli:1": {}
-  },
+  // Docker CLI, GitHub CLI, and Git are pre-installed in the image
+  // No features needed - everything is baked into the Dockerfile for faster startup
 
   // Configure tool-specific properties
   "customizations": {
