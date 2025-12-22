@@ -7,65 +7,124 @@
  * Usage:
  *   // Replace reactstrap imports with migration imports
  *   // Before:
- *   import { Button, Card, CardBody, Modal } from 'reactstrap';
+ *   import { Button, Card, CardBody, Modal, Row, Col } from 'components/migration';
  *
  *   // After:
  *   import {
- *     NeuButton as Button,
- *     NeuCard as Card,
- *     NeuCardBody as CardBody,
- *     NeuModal as Modal
+ *     Button, Card, CardBody, Modal, Row, Col
  *   } from 'components/migration';
- *
- * Migration Guide:
- * ================
- *
- * 1. Button:
- *    reactstrap:  <Button color="primary" size="sm">Save</Button>
- *    migration:   <NeuButton color="primary" size="sm">Save</NeuButton>
- *
- * 2. Card:
- *    reactstrap:  <Card><CardBody>Content</CardBody></Card>
- *    migration:   <NeuCard><NeuCardBody>Content</NeuCardBody></NeuCard>
- *
- * 3. Modal:
- *    reactstrap:  <Modal isOpen={isOpen} toggle={toggle}>...</Modal>
- *    migration:   <NeuModal isOpen={isOpen} toggle={toggle}>...</NeuModal>
- *
- * 4. Table:
- *    reactstrap:  <Table striped hover>...</Table>
- *    migration:   <NeuTable striped hover>...</NeuTable>
- *
- * 5. Input/Form:
- *    reactstrap:  <FormGroup><Label>Name</Label><Input /></FormGroup>
- *    migration:   <NeuFormGroup><NeuLabel>Name</NeuLabel><NeuInput /></NeuFormGroup>
- *
- * 6. Dropdown:
- *    reactstrap:  <Dropdown isOpen={isOpen} toggle={toggle}>...</Dropdown>
- *    migration:   <NeuDropdown isOpen={isOpen} toggle={toggle}>...</NeuDropdown>
  */
 
 // Button
-export { NeuButton } from './NeuButton';
+export { NeuButton, NeuButton as Button } from './NeuButton';
+
+// ButtonGroup
+export { NeuButtonGroup, NeuButtonGroup as ButtonGroup } from './NeuButtonGroup';
 
 // Card
 export {
   NeuCard,
+  NeuCard as Card,
   NeuCardHeader,
+  NeuCardHeader as CardHeader,
   NeuCardBody,
+  NeuCardBody as CardBody,
   NeuCardFooter,
+  NeuCardFooter as CardFooter,
   NeuCardTitle,
+  NeuCardTitle as CardTitle,
   NeuCardText,
+  NeuCardText as CardText,
 } from './NeuCard';
 
+// For CardGroup - just a flex container
+export const CardGroup = ({ children, className, ...props }) => (
+  <div className={`flex flex-wrap gap-4 ${className || ''}`} {...props}>
+    {children}
+  </div>
+);
+
 // Modal
-export { NeuModal, NeuModalHeader, NeuModalBody, NeuModalFooter } from './NeuModal';
+export {
+  NeuModal,
+  NeuModal as Modal,
+  NeuModalHeader,
+  NeuModalHeader as ModalHeader,
+  NeuModalBody,
+  NeuModalBody as ModalBody,
+  NeuModalFooter,
+  NeuModalFooter as ModalFooter,
+} from './NeuModal';
 
 // Table
-export { NeuTable, NeuTh, NeuTd } from './NeuTable';
+export { NeuTable, NeuTable as Table, NeuTh, NeuTd } from './NeuTable';
 
 // Input/Form
-export { NeuInput, NeuLabel, NeuFormGroup, NeuInputGroup, NeuInputGroupText } from './NeuInput';
+export {
+  NeuInput,
+  NeuInput as Input,
+  NeuLabel,
+  NeuLabel as Label,
+  NeuFormGroup,
+  NeuFormGroup as FormGroup,
+  NeuInputGroup,
+  NeuInputGroup as InputGroup,
+  NeuInputGroupText,
+  NeuInputGroupText as InputGroupText,
+} from './NeuInput';
+
+// Form
+export { NeuForm, NeuForm as Form } from './NeuForm';
 
 // Dropdown
-export { NeuDropdown, NeuDropdownToggle, NeuDropdownMenu, NeuDropdownItem } from './NeuDropdown';
+export {
+  NeuDropdown,
+  NeuDropdown as Dropdown,
+  NeuDropdown as ButtonDropdown,
+  NeuDropdownToggle,
+  NeuDropdownToggle as DropdownToggle,
+  NeuDropdownMenu,
+  NeuDropdownMenu as DropdownMenu,
+  NeuDropdownItem,
+  NeuDropdownItem as DropdownItem,
+} from './NeuDropdown';
+
+// Layout (Row, Col, Container)
+export {
+  NeuRow,
+  NeuRow as Row,
+  NeuCol,
+  NeuCol as Col,
+  NeuContainer,
+  NeuContainer as Container,
+} from './NeuLayout';
+
+// Navigation/Tabs
+export {
+  NeuNav,
+  NeuNav as Nav,
+  NeuNavItem,
+  NeuNavItem as NavItem,
+  NeuNavLink,
+  NeuNavLink as NavLink,
+  NeuTabContent,
+  NeuTabContent as TabContent,
+  NeuTabPane,
+  NeuTabPane as TabPane,
+} from './NeuNav';
+
+// Badge
+export { NeuBadge, NeuBadge as Badge } from './NeuBadge';
+
+// Alert
+export { NeuAlert, NeuAlert as Alert } from './NeuAlert';
+
+// Tooltip
+export {
+  NeuTooltipProvider,
+  NeuTooltip,
+  NeuTooltipTrigger,
+  NeuTooltipContent,
+  NeuUncontrolledTooltip,
+  NeuUncontrolledTooltip as UncontrolledTooltip,
+} from './NeuTooltip';

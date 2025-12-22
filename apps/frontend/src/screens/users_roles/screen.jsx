@@ -16,7 +16,7 @@ import {
   Form,
   FormGroup,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import { Loader } from 'components';
 import { DataTable } from '@/components/ui/data-table';

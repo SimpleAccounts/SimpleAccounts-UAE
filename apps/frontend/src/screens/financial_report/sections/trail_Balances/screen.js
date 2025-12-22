@@ -12,7 +12,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 import dayjs from '@/utils/date';
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';

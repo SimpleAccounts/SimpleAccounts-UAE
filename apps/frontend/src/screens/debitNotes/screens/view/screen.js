@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Row, Col, Table, Card } from 'reactstrap';
+import { Button, Row, Col, Table, Card } from 'components/migration';
 import * as DebitNoteViewActions from './actions';
 import * as DebitNoteActions from '../../actions';
 import ReactToPrint from 'react-to-print';

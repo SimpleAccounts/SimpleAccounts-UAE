@@ -60,7 +60,7 @@ const NEU_DROPDOWN_STYLES = {
   },
 };
 
-const NeuDropdown = ({ children, isOpen, toggle, direction = 'down', ...props }) => {
+const NeuDropdown = ({ children, isOpen, toggle, direction: _direction = 'down', ...props }) => {
   return (
     <DropdownMenuPrimitive.Root open={isOpen} onOpenChange={toggle} {...props}>
       {children}
@@ -70,7 +70,7 @@ const NeuDropdown = ({ children, isOpen, toggle, direction = 'down', ...props })
 NeuDropdown.displayName = 'NeuDropdown';
 
 const NeuDropdownToggle = React.forwardRef(
-  ({ children, className, caret = false, color = 'secondary', style, ...props }, ref) => {
+  ({ children, className, caret = false, color: _color = 'secondary', style, ...props }, ref) => {
     const [isHovered, setIsHovered] = React.useState(false);
 
     return (

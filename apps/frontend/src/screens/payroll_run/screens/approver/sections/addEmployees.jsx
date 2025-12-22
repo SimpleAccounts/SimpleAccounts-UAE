@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
-import { Button, Row, Col, Modal, ModalBody, ModalFooter, CardBody, ModalHeader } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalFooter, CardBody, ModalHeader } from 'components/migration';
 import dayjs from '@/utils/date';
 import { CommonActions } from 'services/global';
 import { Loader } from 'components';

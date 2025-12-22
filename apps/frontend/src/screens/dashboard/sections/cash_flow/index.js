@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { Card, CardBody } from 'reactstrap';
+import { Card, CardBody } from 'components/migration';
 import { Currency } from 'components';
 import { ArrowUpCircle, ArrowDownCircle, Scale, Calendar } from 'lucide-react';
 import './style.scss';

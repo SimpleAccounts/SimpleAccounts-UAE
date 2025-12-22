@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState } from 'react';
 import {
   Button,
   Row,
@@ -11,7 +11,7 @@ import {
   CardHeader,
   ModalBody,
   ModalFooter,
-} from 'reactstrap';
+} from 'components/migration';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -67,7 +67,7 @@ const EmailModal = ({ openEmailModal, closeEmailModal, sendEmail, id }) => {
     }
   };
 
-  const onSubmit = data => {
+  const onSubmit = _data => {
     sendEmail(id);
   };
 
@@ -166,6 +166,22 @@ const EmailModal = ({ openEmailModal, closeEmailModal, sendEmail, id }) => {
                     wrapperClassName="wrapperClassName"
                     editorClassName="massage-editor"
                     onContentStateChange={onContentStateChange}
+                    toolbar={{
+                      options: [
+                        'inline',
+                        'blockType',
+                        'fontSize',
+                        'fontFamily',
+                        'list',
+                        'textAlign',
+                        'colorPicker',
+                        'link',
+                        'image',
+                        'emoji',
+                        'history',
+                      ],
+                      // Note: 'embedded' option excluded to mitigate XSS vulnerability (GHSA-fq5x-7292-2p5r)
+                    }}
                   />
                 </FormGroup>
               </Col>

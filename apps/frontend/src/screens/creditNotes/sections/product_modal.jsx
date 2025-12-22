@@ -14,7 +14,7 @@ import {
   ModalBody,
   ModalFooter,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import * as ProductActions from '../../product/actions';
 import { useForm, Controller } from 'react-hook-form';

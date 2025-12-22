@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'reactstrap';
+import { Modal } from 'components/migration';
 import { SalaryComponentScreen } from '../../salary_component/sections';
 import { toast } from 'sonner';
 import { data } from '../../Language/index';

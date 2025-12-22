@@ -11,7 +11,7 @@ import {
   Col,
   Label,
   Alert,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 
 import { selectOptionsFactory } from 'utils';

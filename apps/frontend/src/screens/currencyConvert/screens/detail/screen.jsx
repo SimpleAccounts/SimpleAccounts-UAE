@@ -16,7 +16,7 @@ import {
   Label,
   Row,
   Col,
-} from 'reactstrap';
+} from 'components/migration';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import Select from 'react-select';
 import { CommonActions, AuthActions } from 'services/global';

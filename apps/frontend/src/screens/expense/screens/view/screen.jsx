@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Row, Col } from 'reactstrap';
+import { Button, Row, Col } from 'components/migration';
 import * as ExpenseDetailsAction from '../detail/actions';
 import * as ExpenseActions from '../../actions';
 import ReactToPrint from 'react-to-print';

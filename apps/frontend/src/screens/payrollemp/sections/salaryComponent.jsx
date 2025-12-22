@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Input, Form, FormGroup, Label, Row, Col, Table } from 'reactstrap';
+import { Button, Input, Form, FormGroup, Label, Row, Col, Table } from 'components/migration';
 import { Loader, Currency } from 'components';
 import Select from 'react-select';
 import { CommonActions } from 'services/global';

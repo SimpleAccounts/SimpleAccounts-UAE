@@ -16,7 +16,7 @@ import {
   Input,
   Label,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import { LeavePage, Loader } from 'components';
 import './style.scss';

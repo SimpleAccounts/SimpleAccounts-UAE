@@ -16,7 +16,7 @@ import {
   Row,
   Col,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import { LeavePage, Loader } from 'components';
 import { CommonActions } from 'services/global';
 import './style.scss';

@@ -13,7 +13,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 
 import { DateRangePicker2 } from 'components';
 import dayjs from '@/utils/date';

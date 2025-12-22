@@ -13,7 +13,7 @@ import {
   ModalBody,
   ModalFooter,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Container, Row } from 'reactstrap';
+import { Container, Row } from 'components/migration';
 
 import { AuthActions, CommonActions } from 'services/global';
 import { toast } from 'sonner';

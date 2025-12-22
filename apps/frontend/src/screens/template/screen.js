@@ -1,7 +1,7 @@
 import React from 'react';
 import LocalizedStrings from 'react-localization';
 import { connect } from 'react-redux';
-import { Card, CardHeader, CardBody, Row, Col } from 'reactstrap';
+import { Card, CardHeader, CardBody, Row, Col } from 'components/migration';
 import { InvoiceTemplate } from 'components';
 import Theme1 from 'assets/images/invoice-template/Theme1.png';
 import Theme2 from 'assets/images/invoice-template/Theme2.png';

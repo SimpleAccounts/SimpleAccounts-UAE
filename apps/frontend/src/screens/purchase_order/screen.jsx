@@ -12,7 +12,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import { DataTable } from '@/components/ui/data-table';
 import { Loader, ConfirmDeleteModal } from 'components';

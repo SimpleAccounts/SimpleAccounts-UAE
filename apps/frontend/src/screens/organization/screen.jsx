@@ -15,7 +15,7 @@ import {
   Form,
   FormGroup,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 
 import ImageUploader from 'react-images-upload';
 import Select from 'react-select';

@@ -1,6 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Row, Col, Modal, ModalBody, ModalFooter, CardBody, ModalHeader } from 'reactstrap';
+import {
+  Button,
+  Row,
+  Col,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  CardBody,
+  ModalHeader,
+} from 'components/migration';
 import { bindActionCreators } from 'redux';
 import { CommonActions } from 'services/global';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions';
@@ -35,7 +44,7 @@ class DeleteModal extends React.Component {
     };
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(_nextProps, _prevState) {
     return null;
   }
 
@@ -63,7 +72,7 @@ class DeleteModal extends React.Component {
   render() {
     strings.setLanguage(this.state.language);
     const { openModal, closeModal, current_report_id } = this.props;
-    const { loading } = this.state;
+    const { loading: _loading } = this.state;
 
     const message1 = (
       <text>

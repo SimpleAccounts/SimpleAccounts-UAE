@@ -16,7 +16,7 @@ import {
   Input,
   Label,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import dayjs from '@/utils/date';
 import download from 'downloadjs';
 import { toast } from 'sonner';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Card, CardHeader, CardBody, Button, Row, Col, FormGroup } from 'reactstrap';
+import { Card, CardHeader, CardBody, Button, Row, Col, FormGroup } from 'components/migration';
 import * as ImportActions from '../../actions';
 import { CommonActions } from 'services/global';
 import './style.scss';

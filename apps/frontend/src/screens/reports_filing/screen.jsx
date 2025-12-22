@@ -10,7 +10,7 @@ import {
   FormGroup,
   Form,
   ButtonGroup,
-} from 'reactstrap';
+} from 'components/migration';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import { DateRangePicker2 } from 'components';
