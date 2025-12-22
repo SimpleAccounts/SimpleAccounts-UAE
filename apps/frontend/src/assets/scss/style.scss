@@ -9,11 +9,17 @@
 // Neumorphic Mixins
 @import 'mixins';
 
-// Import CoreUI styles with default layout
-@import '@coreui/coreui-pro/scss/coreui.scss';
+// Import Bootstrap 5 (replacing CoreUI Pro)
+@import 'bootstrap/scss/bootstrap';
 
-// Temp fix for reactstrap
-@import '@coreui/coreui-pro/scss/_dropdown-menu-right.scss';
+// Temp fix for reactstrap (migrated from CoreUI)
+.app-header {
+  .navbar-nav {
+    .dropdown-menu-right {
+      right: auto;
+    }
+  }
+}
 
 // Neumorphic Component Styles
 @import 'neumorphic-components';
