@@ -39,7 +39,7 @@
     "exceljs": "^4.4.0",
     "export-to-csv": "^1.4.0",
     "file-saver": "^2.0.2",
-    "framer-motion": "^10.18.0",
+    "framer-motion": "^12.23.26",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.561.0",
