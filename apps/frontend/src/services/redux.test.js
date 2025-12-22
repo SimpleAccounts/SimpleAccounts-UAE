@@ -6,7 +6,7 @@
  * Covers: redux 4.0.4 → 4.2.1, redux-thunk 2.3.0 → 2.4.2 upgrades
  */
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
-import thunk from 'redux-thunk';
+import { thunk, withExtraArgument } from 'redux-thunk';
 
 // Sample reducer for testing
 const initialState = {
@@ -225,7 +225,7 @@ describe('Redux State Management', () => {
 
     it('should pass extra argument to thunk', () => {
       const api = { fetch: jest.fn() };
-      const thunkWithExtra = thunk.withExtraArgument(api);
+      const thunkWithExtra = withExtraArgument(api);
 
       const storeWithExtra = createStore(testReducer, applyMiddleware(thunkWithExtra));
 

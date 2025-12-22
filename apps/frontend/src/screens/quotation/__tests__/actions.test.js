@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { thunk } from 'redux-thunk';
 import * as actions from '../actions';
 import { QUOTATION } from 'constants/types';
 import { authApi } from 'utils';
