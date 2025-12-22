@@ -18,6 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTablePagination } from './data-table-pagination';
+import { NeumorphicPagination } from './neumorphic-pagination';
 
 export function DataTable({
   columns,
@@ -37,6 +38,10 @@ export function DataTable({
   onRowSelectionChange: setControlledRowSelection,
   getRowId,
   onRowClick,
+  neumorphicPagination = false,
+  totalCount,
+  showPaginationTop = false,
+  showPaginationBottom = true,
 }) {
   const [sorting, setSorting] = useState(initialState.sorting || []);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -135,6 +140,8 @@ export function DataTable({
     },
   });
 
+  const PaginationComponent = neumorphicPagination ? NeumorphicPagination : DataTablePagination;
+
   return (
     <div className="space-y-4">
       {searchKey && (
@@ -155,27 +162,48 @@ export function DataTable({
           />
         </div>
       )}
-      <div className="rounded-md border">
+      {showPaginationTop && <PaginationComponent table={table} totalCount={totalCount} />}
+      <div className="rounded-xl overflow-hidden" style={{ border: 'none' }}>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
-              <TableRow key={headerGroup.id}>
+              <TableRow
+                key={headerGroup.id}
+                style={{
+                  background:
+                    'linear-gradient(145deg, rgba(30, 110, 255, 0.08), rgba(30, 110, 255, 0.04))',
+                  borderBottom: '1px solid rgba(30, 110, 255, 0.1)',
+                }}
+              >
                 {headerGroup.headers.map(header => (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    style={{
+                      color: '#1e3a5f',
+                      fontWeight: 600,
+                      fontSize: '13px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px',
+                      padding: '14px 16px',
+                    }}
+                  >
                     {header.isPlaceholder ? null : (
                       <div
                         className={
                           header.column.getCanSort()
-                            ? 'cursor-pointer select-none flex items-center'
+                            ? 'cursor-pointer select-none flex items-center gap-1'
                             : ''
                         }
                         onClick={header.column.getToggleSortingHandler()}
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
                         {{
-                          asc: ' ↑',
-                          desc: ' ↓',
-                        }[header.column.getIsSorted()] ?? null}
+                          asc: <span style={{ color: '#1e6eff' }}>↑</span>,
+                          desc: <span style={{ color: '#1e6eff' }}>↓</span>,
+                        }[header.column.getIsSorted()] ??
+                          (header.column.getCanSort() ? (
+                            <span style={{ color: '#98afc2', fontSize: '10px' }}>⇅</span>
+                          ) : null)}
                       </div>
                     )}
                   </TableHead>
@@ -215,7 +243,7 @@ export function DataTable({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      {showPaginationBottom && <PaginationComponent table={table} totalCount={totalCount} />}
     </div>
   );
 }
