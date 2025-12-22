@@ -1,22 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Plus, Coins, Download, Trash2 } from 'lucide-react';
+import { Plus, Coins, Download, Trash2, X } from 'lucide-react';
 import Select from 'react-select';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { DataTable } from '@/components/ui/data-table';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 
 import { Loader } from 'components';
 import { selectStyles } from 'utils';
@@ -25,9 +14,76 @@ import * as currenciesActions from './actions';
 
 import './style.scss';
 
+// Neumorphic theme constants
+const theme = {
+  bg: '#e8eef5',
+  primary: '#1e6eff',
+  primaryDark: '#0052cc',
+  secondary: '#00c896',
+  warning: '#f59e0b',
+  danger: '#ff4d6a',
+  textPrimary: '#1e3a5f',
+  textSecondary: '#3d5a80',
+  textMuted: '#98afc2',
+  shadowDark: '#c4c9cf',
+  shadowLight: '#ffffff',
+};
+
+const shadows = {
+  raised: {
+    sm: `3px 3px 6px ${theme.shadowDark}, -3px -3px 6px ${theme.shadowLight}`,
+    md: `4px 4px 8px ${theme.shadowDark}, -4px -4px 8px ${theme.shadowLight}`,
+    lg: `6px 6px 12px ${theme.shadowDark}, -6px -6px 12px ${theme.shadowLight}`,
+    xs: `2px 2px 4px ${theme.shadowDark}, -2px -2px 4px ${theme.shadowLight}`,
+  },
+  pressed: {
+    sm: `inset 2px 2px 4px ${theme.shadowDark}, inset -2px -2px 4px ${theme.shadowLight}`,
+    md: `inset 3px 3px 6px ${theme.shadowDark}, inset -3px -3px 6px ${theme.shadowLight}`,
+  },
+};
+
+// Custom select styles for neumorphic theme
+const neuSelectStyles = {
+  control: (provided, state) => ({
+    ...provided,
+    background: theme.bg,
+    boxShadow: shadows.pressed.sm,
+    border: 'none',
+    borderRadius: '12px',
+    padding: '2px 4px',
+    minHeight: '42px',
+    '&:hover': {
+      border: 'none',
+    },
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    background: state.isSelected ? `${theme.primary}15` : 'transparent',
+    color: state.isSelected ? theme.primary : theme.textSecondary,
+    '&:hover': {
+      background: `${theme.primary}10`,
+    },
+  }),
+  menu: provided => ({
+    ...provided,
+    background: theme.bg,
+    boxShadow: shadows.raised.lg,
+    borderRadius: '12px',
+    overflow: 'hidden',
+  }),
+  singleValue: provided => ({
+    ...provided,
+    color: theme.textPrimary,
+  }),
+  placeholder: provided => ({
+    ...provided,
+    color: theme.textMuted,
+  }),
+};
+
 /**
  * Modern Currency Screen
- * Uses functional components, shadcn/ui, and TanStack Table
+ * Uses functional components with Neumorphic design
  */
 function Currency() {
   const dispatch = useDispatch();
@@ -63,11 +119,18 @@ function Currency() {
       {
         accessorKey: 'name',
         header: 'Currency Name',
-        cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
+        cell: ({ row }) => (
+          <span className="font-semibold" style={{ color: theme.textPrimary }}>
+            {row.original.name}
+          </span>
+        ),
       },
       {
         accessorKey: 'symbol',
         header: 'Symbol',
+        cell: ({ row }) => (
+          <span style={{ color: theme.textSecondary }}>{row.original.symbol}</span>
+        ),
       },
     ],
     []
@@ -109,87 +172,192 @@ function Currency() {
   }
 
   return (
-    <div className="currency-screen">
-      <div className="space-y-6">
-        <Card>
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Coins className="h-6 w-6 text-primary" />
-                <CardTitle className="text-xl">Currencies</CardTitle>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline">
-                  <Download className="mr-2 h-4 w-4" />
-                  Export to CSV
-                </Button>
-                <Button onClick={() => setOpenModal(true)}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  New Currency
-                </Button>
-                <Button variant="destructive" disabled={selectedRows.length === 0}>
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Bulk Delete
-                </Button>
-              </div>
+    <div className="currency-screen" style={{ background: theme.bg, minHeight: '100%' }}>
+      {/* Page Header Card */}
+      <div
+        className="rounded-2xl p-6 mb-6"
+        style={{
+          background: theme.bg,
+          boxShadow: shadows.raised.lg,
+        }}
+      >
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          {/* Title Section */}
+          <div className="flex items-center gap-3">
+            <div
+              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              style={{
+                background: theme.bg,
+                boxShadow: shadows.raised.sm,
+              }}
+            >
+              <Coins className="w-6 h-6" style={{ color: theme.primary }} />
             </div>
-          </CardHeader>
-          <CardContent>
-            <DataTable columns={columns} data={tableData} onRowClick={handleRowClick} />
-          </CardContent>
-        </Card>
+            <div>
+              <h1 className="text-xl font-bold m-0" style={{ color: theme.textPrimary }}>
+                Currencies
+              </h1>
+              <p className="text-sm m-0" style={{ color: theme.textMuted }}>
+                Manage currency rates
+              </p>
+            </div>
+          </div>
 
-        {/* Currency Modal */}
-        <Dialog open={openModal} onOpenChange={setOpenModal}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create & Update Currency</DialogTitle>
-              <DialogDescription>Add or update currency information</DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
+          {/* Actions Section */}
+          <div className="flex gap-3 flex-wrap">
+            <button
+              className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:-translate-y-0.5"
+              style={{
+                background: theme.bg,
+                boxShadow: shadows.raised.sm,
+                color: theme.textSecondary,
+              }}
+            >
+              <Download className="w-4 h-4" style={{ color: theme.primary }} />
+              Export to CSV
+            </button>
+            <button
+              onClick={() => setOpenModal(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-white transition-all duration-200 hover:-translate-y-0.5"
+              style={{
+                background: `linear-gradient(145deg, ${theme.primary}, ${theme.primaryDark})`,
+                boxShadow: shadows.raised.sm,
+              }}
+            >
+              <Plus className="w-4 h-4" />
+              New Currency
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Data Table Card */}
+      <div
+        className="rounded-2xl overflow-hidden"
+        style={{
+          background: theme.bg,
+          boxShadow: shadows.raised.lg,
+        }}
+      >
+        <div className="p-6">
+          <DataTable
+            columns={columns}
+            data={tableData}
+            onRowClick={handleRowClick}
+            neumorphicPagination
+          />
+        </div>
+      </div>
+
+      {/* Currency Modal */}
+      {openModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          style={{ background: 'rgba(0, 0, 0, 0.5)' }}
+          onClick={() => setOpenModal(false)}
+        >
+          <div
+            className="rounded-2xl p-6 w-full max-w-md mx-4"
+            style={{
+              background: theme.bg,
+              boxShadow: shadows.raised.lg,
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-lg font-bold m-0" style={{ color: theme.textPrimary }}>
+                  Create & Update Currency
+                </h2>
+                <p className="text-sm m-0" style={{ color: theme.textMuted }}>
+                  Add or update currency information
+                </p>
+              </div>
+              <button
+                onClick={() => setOpenModal(false)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5"
+                style={{
+                  background: theme.bg,
+                  boxShadow: shadows.raised.xs,
+                }}
+              >
+                <X className="w-4 h-4" style={{ color: theme.textMuted }} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="currencyCode">Currency Code</Label>
+                <Label style={{ color: theme.textPrimary }}>Currency Code</Label>
                 <Select
-                  styles={selectStyles}
+                  styles={neuSelectStyles}
                   placeholder="Select Currency Code"
                   options={[]}
                   onChange={option => handleFormChange('currencyCode', option?.value || '')}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="currencyName">
-                  <span className="text-destructive">* </span>Currency Name
+                <Label style={{ color: theme.textPrimary }}>
+                  <span style={{ color: theme.danger }}>* </span>Currency Name
                 </Label>
-                <Input
-                  id="currencyName"
+                <input
                   placeholder="Enter Name"
                   value={formData.currencyName}
                   onChange={e => handleFormChange('currencyName', e.target.value)}
-                  className="input-transition"
+                  className="px-4 py-2 rounded-xl border-0 outline-none w-full"
+                  style={{
+                    background: theme.bg,
+                    boxShadow: shadows.pressed.sm,
+                    color: theme.textPrimary,
+                  }}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="currencySymbol">
-                  <span className="text-destructive">* </span>Symbol
+                <Label style={{ color: theme.textPrimary }}>
+                  <span style={{ color: theme.danger }}>* </span>Symbol
                 </Label>
-                <Input
-                  id="currencySymbol"
+                <input
                   placeholder="Enter Symbol"
                   value={formData.currencySymbol}
                   onChange={e => handleFormChange('currencySymbol', e.target.value)}
-                  className="input-transition"
+                  className="px-4 py-2 rounded-xl border-0 outline-none w-full"
+                  style={{
+                    background: theme.bg,
+                    boxShadow: shadows.pressed.sm,
+                    color: theme.textPrimary,
+                  }}
                 />
               </div>
             </div>
-            <DialogFooter>
-              <Button onClick={handleSave}>Save</Button>
-              <Button variant="secondary" onClick={() => setOpenModal(false)}>
+
+            {/* Modal Footer */}
+            <div className="flex gap-3 mt-6 justify-end">
+              <button
+                onClick={handleSave}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-white transition-all duration-200 hover:-translate-y-0.5"
+                style={{
+                  background: `linear-gradient(145deg, ${theme.primary}, ${theme.primaryDark})`,
+                  boxShadow: shadows.raised.sm,
+                }}
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setOpenModal(false)}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:-translate-y-0.5"
+                style={{
+                  background: theme.bg,
+                  boxShadow: shadows.raised.sm,
+                  color: theme.textSecondary,
+                }}
+              >
                 Cancel
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
