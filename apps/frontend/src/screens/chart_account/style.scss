@@ -1,49 +1,340 @@
+// Chart of Accounts Styles - Neumorphic Design
+// ============================================
+
+// Variables (matching neumorphic theme)
+$bg-color: #e8eef5;
+$card-bg: #e8eef5;
+$primary: #1e6eff;
+$primary-dark: #0052cc;
+$secondary: #00c896;
+$warning: #f59e0b;
+$danger: #ff4d6a;
+$text-primary: #1e3a5f;
+$text-secondary: #3d5a80;
+$text-muted: #98afc2;
+$shadow-dark: #c4c9cf;
+$shadow-light: #ffffff;
+
+// Spacing
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 16px;
+$space-lg: 24px;
+$space-xl: 32px;
+
+// Border Radius
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 20px;
+
+// Neumorphic Shadows
+@mixin neu-raised {
+  background: $card-bg;
+  box-shadow:
+    6px 6px 12px $shadow-dark,
+    -6px -6px 12px $shadow-light;
+}
+
+@mixin neu-raised-sm {
+  background: $card-bg;
+  box-shadow:
+    3px 3px 6px $shadow-dark,
+    -3px -3px 6px $shadow-light;
+}
+
+@mixin neu-pressed {
+  background: $card-bg;
+  box-shadow:
+    inset 3px 3px 6px $shadow-dark,
+    inset -3px -3px 6px $shadow-light;
+}
+
+// ============================================
+// CHART ACCOUNT SCREEN
+// ============================================
 .chart-account-screen {
-  .card-header {
-    color: #2064d8;
-  }
-  .btn-group {
-    .btn {
-      color: #ffffff !important;
+  padding: 0;
+  background: $bg-color;
+  min-height: 100%;
+
+  // ============================================
+  // DATA TABLE STYLING
+  // ============================================
+  .data-table {
+    background: transparent;
+
+    // Table wrapper
+    .rounded-md {
+      border: none !important;
+      background: transparent;
+    }
+
+    // Table element
+    table {
+      background: transparent;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    // Table header
+    thead {
+      tr {
+        background: rgba($primary, 0.05);
+
+        th {
+          color: $text-primary;
+          font-weight: 600;
+          font-size: 0.8125rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          padding: $space-md $space-lg;
+          border-bottom: 1px solid rgba($shadow-dark, 0.3);
+          white-space: nowrap;
+
+          &:first-child {
+            border-top-left-radius: $radius-md;
+          }
+
+          &:last-child {
+            border-top-right-radius: $radius-md;
+          }
+        }
+      }
+    }
+
+    // Table body
+    tbody {
+      tr {
+        transition: all 0.2s ease;
+        background: transparent;
+
+        &:hover {
+          background: rgba($primary, 0.03);
+        }
+
+        // Editable row cursor
+        &[data-editable='true'] {
+          cursor: pointer;
+        }
+
+        td {
+          color: $text-secondary;
+          font-size: 0.875rem;
+          padding: $space-md $space-lg;
+          border-bottom: 1px solid rgba($shadow-dark, 0.15);
+          vertical-align: middle;
+        }
+
+        &:last-child td {
+          border-bottom: none;
+
+          &:first-child {
+            border-bottom-left-radius: $radius-md;
+          }
+
+          &:last-child {
+            border-bottom-right-radius: $radius-md;
+          }
+        }
+      }
     }
   }
-  .badge {
-    padding: 0.4em 0.6em;
-    font-size: 90%;
-  }
-  .bank-account-table {
-    .my-link {
-      font-weight: bold;
-      color: #2064d8;
-      text-decoration: none;
+
+  // ============================================
+  // PAGINATION STYLING
+  // ============================================
+  .pagination-wrapper,
+  [class*='pagination'] {
+    margin-top: $space-lg;
+    padding-top: $space-md;
+    border-top: 1px solid rgba($shadow-dark, 0.2);
+
+    // Pagination buttons
+    button {
+      @include neu-raised-sm;
+      border: none !important;
+      border-radius: $radius-sm !important;
+      padding: $space-sm !important;
+      min-width: 36px;
+      height: 36px;
+      font-size: 0.8125rem;
+      color: $text-primary;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        box-shadow: none;
+        background: rgba($shadow-dark, 0.1);
+      }
+
+      &.active,
+      &[data-state='active'] {
+        background: linear-gradient(145deg, $primary, $primary-dark);
+        color: white;
+      }
+    }
+
+    // Page info text
+    .page-info,
+    [class*='text-sm'] {
+      color: $text-muted;
+      font-size: 0.8125rem;
+    }
+
+    // Select dropdown
+    select {
+      @include neu-raised-sm;
+      border: none !important;
+      border-radius: $radius-sm !important;
+      padding: $space-sm $space-md !important;
+      font-size: 0.8125rem;
+      color: $text-primary;
       cursor: pointer;
+      min-width: 70px;
+      height: 36px;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  // ============================================
+  // DATA TABLE ACTIONS DROPDOWN
+  // ============================================
+  [data-radix-popper-content-wrapper] {
+    .dropdown-menu-content,
+    [role='menu'] {
+      @include neu-raised;
+      border: none !important;
+      border-radius: $radius-md !important;
+      padding: $space-sm !important;
+      min-width: 160px;
+
+      [role='menuitem'] {
+        border-radius: $radius-sm;
+        padding: $space-sm $space-md;
+        font-size: 0.875rem;
+        color: $text-secondary;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: rgba($primary, 0.08);
+          color: $primary;
+        }
+
+        svg {
+          color: $primary;
+        }
+      }
+    }
+  }
+
+  // ============================================
+  // EMPTY STATE
+  // ============================================
+  .empty-state {
+    @include neu-pressed;
+    border-radius: $radius-lg;
+    padding: $space-xl * 2;
+    text-align: center;
+
+    .empty-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto $space-lg;
+      color: $text-muted;
+    }
+
+    .empty-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: $text-primary;
+      margin-bottom: $space-sm;
+    }
+
+    .empty-description {
+      font-size: 0.875rem;
+      color: $text-muted;
     }
   }
 }
 
-input[type='checkbox'][disabled] {
-  display: none;
-}
-.table-header-bg {
-  background-color: #dfe9f7;
-}
-.Ag-gridActionButtons {
-  // .dropdown-item {
-  //   padding: 0px !important;
-  // }
-  .card-body .btn-square {
-    border-radius: 0px !important;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-  }
-  .btn-sm,
-  .btn-group-sm > .btn {
-    padding: 0.05rem 0.5rem !important;
-  }
-  .deleteButton {
-    .btn-secondary:hover {
-      background-color: red !important;
-      border: white !important;
+// ============================================
+// PRINT STYLES
+// ============================================
+@media print {
+  .chart-account-screen {
+    background: white !important;
+    padding: 0 !important;
+
+    > div:first-child {
+      display: none !important; // Hide header on print
+    }
+
+    .rounded-2xl {
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+
+    table {
+      border: 1px solid #ddd;
+
+      th,
+      td {
+        border: 1px solid #ddd !important;
+        padding: 8px !important;
+      }
+    }
+
+    .pagination-wrapper,
+    [class*='pagination'] {
+      display: none !important;
     }
   }
+}
+
+// ============================================
+// RESPONSIVE STYLES
+// ============================================
+@media (max-width: 768px) {
+  .chart-account-screen {
+    .flex-wrap {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .gap-3 {
+      gap: $space-sm;
+    }
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+
+    // Table responsive
+    .data-table {
+      overflow-x: auto;
+
+      table {
+        min-width: 600px;
+      }
+    }
+  }
+}
+
+// Legacy styles cleanup (remove old non-neumorphic styles)
+input[type='checkbox'][disabled] {
+  display: none;
 }
