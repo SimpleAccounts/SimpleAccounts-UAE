@@ -60,7 +60,8 @@ export default mergeConfig(
     plugins: [jestToVitestPlugin],
     resolve: {
       alias: {
-        // Mock reactstrap for tests
+        // Merge with vite config aliases and add reactstrap mock for tests
+        ...(viteConfig.resolve?.alias || {}),
         reactstrap: path.resolve(__dirname, './src/__mocks__/reactstrap.js'),
       },
     },
