@@ -36,12 +36,16 @@ jest.mock('react-hook-form', () => {
       trigger: jest.fn(() => Promise.resolve(true)),
     })),
     useFormContext: jest.fn(() => mockFormContext),
-    Controller: ({ render }) =>
-      render({
-        field: { onChange: jest.fn(), value: '' },
-        fieldState: { error: null },
-        formState: { errors: {}, touchedFields: {} },
-      }),
+    Controller: ({ render, name }) => {
+      const mockField = { onChange: jest.fn(), value: '', name: name || '', onBlur: jest.fn(), ref: jest.fn() };
+      const mockFieldState = { error: null, invalid: false, isDirty: false, isTouched: false };
+      const mockFormState = { errors: {}, touchedFields: {} };
+      return render({
+        field: mockField,
+        fieldState: mockFieldState,
+        formState: mockFormState,
+      });
+    },
     FormProvider: ({ children }) => <>{children}</>,
   };
 });
