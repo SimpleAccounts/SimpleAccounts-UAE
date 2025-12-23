@@ -36,7 +36,12 @@ jest.mock('react-hook-form', () => {
       trigger: jest.fn(() => Promise.resolve(true)),
     })),
     useFormContext: jest.fn(() => mockFormContext),
-    Controller: ({ render }) => render({ field: { onChange: jest.fn(), value: '' } }),
+    Controller: ({ render }) =>
+      render({
+        field: { onChange: jest.fn(), value: '' },
+        fieldState: { error: null },
+        formState: { errors: {}, touchedFields: {} },
+      }),
     FormProvider: ({ children }) => <>{children}</>,
   };
 });
@@ -50,6 +55,21 @@ jest.mock('reactstrap', () => ({
   UncontrolledTooltip: () => null,
   Input: ({ ...props }) => <input {...props} />,
 }));
+
+// Mock react-router-dom useLocation
+jest.mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom');
+  return {
+    ...actual,
+    useLocation: jest.fn(() => ({
+      pathname: '/admin/contact/detail/1',
+      search: '',
+      hash: '',
+      state: { id: '1' },
+      key: 'default',
+    })),
+  };
+});
 
 // Import component AFTER mocks are set up
 import DetailContact from '../screen';
