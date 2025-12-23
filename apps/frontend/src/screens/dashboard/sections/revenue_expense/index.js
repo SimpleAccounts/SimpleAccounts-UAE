@@ -1,6 +1,15 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Pie, Doughnut } from 'react-chartjs-2';
-import { Nav, NavItem, NavLink, TabContent, TabPane, Card, CardBody, Button } from 'reactstrap';
+import {
+  Nav,
+  NavItem,
+  NavLink,
+  TabContent,
+  TabPane,
+  Card,
+  CardBody,
+  Button,
+} from 'components/migration';
 // import { DateRangePicker2 } from 'components'
 // import dayjs from '@/utils/date'
 import './style.scss';
@@ -59,7 +68,7 @@ class RevenueAndExpense extends Component {
       revenueValueArr = [],
       expenseLabelArr = [],
       expenseValueArr = [],
-      outstanding = 0;
+      _outstanding = 0;
     if (this.props.revenue_graph) {
       this.props.revenue_graph.map(item => {
         revenueLabelArr.push(item['name']);
@@ -75,7 +84,7 @@ class RevenueAndExpense extends Component {
       });
     }
     if (revenueValueArr && expenseValueArr) {
-      outstanding =
+      _outstanding =
         revenueValueArr.reduce((a, b) => a + b, 0) - expenseValueArr.reduce((a, b) => a + b, 0);
     }
     const pie1 = {

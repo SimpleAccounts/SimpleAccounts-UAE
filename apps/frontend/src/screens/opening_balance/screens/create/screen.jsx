@@ -1,10 +1,20 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Card, CardHeader, CardBody, Button, Input, FormGroup, Label, Row, Col } from 'reactstrap';
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Button,
+  Input,
+  FormGroup,
+  Label,
+  Row,
+  Col,
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import _ from 'lodash-es';
@@ -71,7 +81,7 @@ const CreateOpeningBalance = ({
   authActions,
   transaction_category_list,
   history,
-  location,
+  location: _location,
 }) => {
   const [loading, setLoading] = useState(false);
   const [createMore, setCreateMore] = useState(false);
@@ -80,7 +90,7 @@ const CreateOpeningBalance = ({
   const [disableLeavePage, setDisableLeavePage] = useState(false);
   const [openingbalancelist, setOpeningbalancelist] = useState('');
   const [isRegisteredVat, setIsRegisteredVat] = useState(false);
-  const [companyDetails, setCompanyDetails] = useState(null);
+  const [_companyDetails, setCompanyDetails] = useState(null);
 
   const regEx = /^[0-9]+$/;
 
@@ -102,13 +112,7 @@ const CreateOpeningBalance = ({
     trigger,
   } = form;
 
-  useEffect(() => {
-    authActions.getCurrencylist();
-    getOpeningBalanceList();
-    initializeData();
-  }, []);
-
-  const getOpeningBalanceList = () => {
+  const getOpeningBalanceList = useCallback(() => {
     createOpeningBalancesActions
       .getOpeningBalanceList()
       .then(res => {
@@ -122,7 +126,25 @@ const CreateOpeningBalance = ({
           err && err.data ? err.data.message : 'Something Went Wrong'
         );
       });
-  };
+  }, [createOpeningBalancesActions, commonActions]);
+
+  const initializeData = useCallback(() => {
+    openingBalanceActions.getTransactionCategoryList();
+    commonActions.getCompanyDetails().then(action => {
+      // Redux Toolkit thunks return action objects
+      if (action && action.type && action.type.includes('fulfilled')) {
+        const isRegisteredVatValue = action.payload.isRegisteredVat;
+        setIsRegisteredVat(isRegisteredVatValue);
+        setCompanyDetails(action.payload);
+      }
+    });
+  }, [openingBalanceActions, commonActions]);
+
+  useEffect(() => {
+    authActions.getCurrencylist();
+    getOpeningBalanceList();
+    initializeData();
+  }, [authActions, getOpeningBalanceList, initializeData]);
 
   const checkIfOpeningBalanceAlreadyExist = transactioncategorylist => {
     const openingbalancelistData = openingbalancelist.data;
@@ -144,27 +166,6 @@ const CreateOpeningBalance = ({
     } else {
       return transactioncategorylist;
     }
-  };
-
-  const initializeData = () => {
-    openingBalanceActions.getTransactionCategoryList();
-    commonActions.getCompanyDetails().then(action => {
-      // Redux Toolkit thunks return action objects
-      if (action && action.type && action.type.includes('fulfilled')) {
-        const isRegisteredVatValue = action.payload.isRegisteredVat;
-
-        history.replace({
-          pathname: location.pathname,
-          state: {
-            ...location.state,
-            isRegisteredVat: isRegisteredVatValue,
-          },
-        });
-
-        setCompanyDetails(action.payload);
-        setIsRegisteredVat(isRegisteredVatValue);
-      }
-    });
   };
 
   const onSubmit = data => {

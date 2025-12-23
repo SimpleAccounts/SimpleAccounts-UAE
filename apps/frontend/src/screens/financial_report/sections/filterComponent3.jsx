@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Row, Col, FormGroup, Label, Form } from 'reactstrap';
+import { Button, Row, Col, FormGroup, Label, Form } from 'components/migration';
 import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';

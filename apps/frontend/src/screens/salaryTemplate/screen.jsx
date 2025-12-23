@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Card, CardHeader, CardBody, Row, Col, Table, Button } from 'reactstrap';
+import { Card, CardHeader, CardBody, Row, Col, Table } from 'components/migration';
 import { Loader } from 'components';
 import * as SalaryTemplateActions from './actions';
 import { CommonActions } from 'services/global';

@@ -15,7 +15,7 @@ import {
   FormGroup,
   Label,
   Form,
-} from 'reactstrap';
+} from 'components/migration';
 import { useForm, Controller } from 'react-hook-form';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';

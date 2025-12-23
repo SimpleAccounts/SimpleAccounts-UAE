@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { Button, FormGroup, Form, ButtonGroup } from 'reactstrap';
+import { Button, FormGroup, Form, ButtonGroup } from 'components/migration';
 import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';

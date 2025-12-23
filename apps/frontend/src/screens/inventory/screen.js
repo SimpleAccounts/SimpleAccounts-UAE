@@ -11,7 +11,7 @@ import {
   Nav,
   NavItem,
   NavLink,
-} from 'reactstrap';
+} from 'components/migration';
 import { InventoryDashboard, InventorySummary } from './sections';
 // import 'react-select/dist/react-select.css'
 import './style.scss';

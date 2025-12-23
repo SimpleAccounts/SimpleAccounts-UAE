@@ -16,7 +16,7 @@ import {
   Input,
   Label,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { LeavePage, Loader, EmployeeModal } from 'components';
@@ -32,9 +32,6 @@ import './style.scss';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import dayjs from '@/utils/date';
-import 'react-dates/initialize';
-import { DateRangePicker } from 'react-dates';
-import 'react-dates/lib/css/_datepicker.css';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { Ban, CheckCheck, CircleDot, HelpCircle, Plus, Wallet } from 'lucide-react';
@@ -84,7 +81,6 @@ const CreatePayrollList = () => {
   const [apiSelector, setApiSelector] = useState('');
   const [submitButton, setSubmitButton] = useState(true);
   const [paidDays, setPaidDays] = useState(30);
-  const [focusedInput, setFocusedInput] = useState(null);
   const [currencyIsoCode, setCurrencyIsoCode] = useState('AED');
   const [disableLeavePage, setDisableLeavePage] = useState(false);
   const [isPayrollSubjectNameExist, setIsPayrollSubjectNameExist] = useState(false);
@@ -483,12 +479,11 @@ const CreatePayrollList = () => {
     [paidDays, currencyIsoCode]
   );
 
-  const handleDatesChange = ({ startDate, endDate }) => {
-    setValue('startDate', startDate);
-    setValue('endDate', endDate);
+  const handleDateRangeChange = dates => {
+    const [start, end] = dates;
+    setValue('startDate', start ? dayjs(start) : null);
+    setValue('endDate', end ? dayjs(end) : null);
   };
-
-  const handleFocusChange = focusedInput => setFocusedInput(focusedInput);
 
   return loading ? (
     <Loader loadingMsg={loadingMsg} />
@@ -605,16 +600,14 @@ const CreatePayrollList = () => {
                                     {strings.pay_period}
                                   </Label>
                                   <div className={errors.startDate ? 'startError' : ''}>
-                                    <DateRangePicker
-                                      displayFormat="DD-MM-YYYY"
-                                      endDate={endDate}
-                                      endDateId="endDate"
-                                      focusedInput={focusedInput}
-                                      isOutsideRange={() => null}
-                                      onDatesChange={handleDatesChange}
-                                      onFocusChange={handleFocusChange}
-                                      startDate={startDate}
-                                      startDateId="startDate"
+                                    <DatePicker
+                                      selectsRange
+                                      startDate={startDate ? startDate.toDate() : null}
+                                      endDate={endDate ? endDate.toDate() : null}
+                                      onChange={handleDateRangeChange}
+                                      dateFormat="dd-MM-yyyy"
+                                      className="form-control"
+                                      placeholderText="Select date range"
                                     />
                                   </div>
                                   {errors.startDate && (

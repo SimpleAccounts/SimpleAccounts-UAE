@@ -13,11 +13,11 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 import { Loader, ConfirmDeleteModal } from 'components';
 import { DataTable } from '@/components/ui/data-table';
 import * as PayrollEmployeeActions from './actions';
-import * as EmployeeActions from '../user/actions';
+import * as EmployeeActions from '../employee/actions';
 import { CommonActions } from 'services/global';
 import './style.scss';
 import dayjs from '@/utils/date';

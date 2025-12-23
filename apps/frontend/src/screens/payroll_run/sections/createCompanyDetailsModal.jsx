@@ -17,7 +17,7 @@ import {
   ModalFooter,
   UncontrolledTooltip,
   ModalHeader,
-} from 'reactstrap';
+} from 'components/migration';
 
 import { CommonActions } from 'services/global';
 import * as PayrollRun from '../actions';

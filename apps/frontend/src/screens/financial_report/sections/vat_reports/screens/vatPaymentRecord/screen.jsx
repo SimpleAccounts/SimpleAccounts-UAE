@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { Button, Col, Card, CardHeader, CardBody, Row } from 'reactstrap';
+import { Button, Col, Card, CardHeader, CardBody, Row } from 'components/migration';
 import { AuthActions, CommonActions } from 'services/global';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';

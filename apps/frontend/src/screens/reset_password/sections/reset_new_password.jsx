@@ -13,7 +13,7 @@ import {
   FormGroup,
   Label,
   Row,
-} from 'reactstrap';
+} from 'components/migration';
 import { api } from 'utils';
 import { Message } from 'components';
 import PasswordChecklist from 'react-password-checklist';

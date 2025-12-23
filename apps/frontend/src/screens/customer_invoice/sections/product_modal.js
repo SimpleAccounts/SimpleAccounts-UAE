@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Modal } from 'reactstrap';
+import { Modal } from 'components/migration';
 import * as ProductActions from '../../product/actions';
 import '../../product/screens/create/style.scss';
 import { toast } from 'sonner';

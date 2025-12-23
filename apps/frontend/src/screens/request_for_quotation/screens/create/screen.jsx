@@ -16,7 +16,7 @@ import {
   Input,
   Label,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import * as RequestForQuotationCreateAction from './actions';
@@ -205,7 +205,7 @@ const CreateRequestForQuotation = () => {
     dispatch(RequestForQuotationAction.getVatList()).then(res => {
       if (res.status === 200 && res.data) setVatList(res.data);
     });
-    dispatch(RequestForQuotationCreateAction.getRfqNo()).then(res => {
+    dispatch(RequestForQuotationCreateAction.getInvoiceNo()).then(res => {
       setValue('rfq_number', res.data.toString());
     });
     dispatch(RequestForQuotationAction.getSupplierList(1));

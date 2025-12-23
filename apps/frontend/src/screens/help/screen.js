@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import configData from '../../constants/config';
 
 // import { bindActionCreators } from 'redux'
-import { Card, CardBody, Col, Row, CardGroup } from 'reactstrap';
+import { Card, CardBody, Col, Row, CardGroup } from 'components/migration';
 import { data } from '../../screens//Language/index';
 import LocalizedStrings from 'react-localization';
 import './style.scss';

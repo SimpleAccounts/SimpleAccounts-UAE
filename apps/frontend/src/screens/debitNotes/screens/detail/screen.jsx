@@ -16,7 +16,7 @@ import {
   Input,
   Label,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import * as DebitNotesDetailActions from './actions';

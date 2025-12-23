@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup, UncontrolledTooltip, Label } from 'reactstrap';
+import { FormGroup, UncontrolledTooltip, Label } from 'components/migration';
 import { HelpCircle } from 'lucide-react';
 
 function RadioButton(props) {

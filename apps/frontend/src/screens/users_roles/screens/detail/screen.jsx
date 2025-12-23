@@ -15,7 +15,7 @@ import {
   Label,
   Row,
   Col,
-} from 'reactstrap';
+} from 'components/migration';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';

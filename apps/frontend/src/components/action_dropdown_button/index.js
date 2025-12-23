@@ -7,7 +7,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 import { bindActionCreators } from 'redux';
 import { data } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';

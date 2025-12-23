@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Card, CardBody, CardHeader, Col, Form, FormGroup, Label, Row } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Form, FormGroup, Label, Row } from 'components/migration';
 
 import { Switch } from '@/components/ui/switch';
 

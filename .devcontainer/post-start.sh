@@ -17,6 +17,13 @@ until redis-cli -h localhost ping > /dev/null 2>&1; do
 done
 echo "✅ Redis is ready"
 
+# Update CLI tools to latest versions (runs in background to not block startup)
+echo "🔧 Updating CLI tools in background..."
+if [ -f /usr/local/bin/install-cli-tools ]; then
+    nohup /usr/local/bin/install-cli-tools > /tmp/cli-tools-update.log 2>&1 &
+    echo "   (Check /tmp/cli-tools-update.log for details)"
+fi
+
 echo ""
 echo "🎉 Development environment is ready!"
 echo ""
@@ -30,3 +37,15 @@ echo ""
 echo "Redis connection:"
 echo "  Host: localhost"
 echo "  Port: 6379"
+echo ""
+echo "CLI Tools:"
+echo "  claude    - Anthropic Claude Code CLI"
+echo "  codex     - OpenAI Codex CLI"
+echo "  openai    - OpenAI CLI"
+echo "  gemini    - Google Gemini CLI"
+echo "  cursor    - Cursor CLI"
+echo "  cursor-agent - Cursor agent CLI shim"
+echo "  gh        - GitHub CLI"
+echo "  gcloud    - Google Cloud CLI"
+echo "  kubectl   - Kubernetes CLI"
+echo "  psql      - PostgreSQL Client"

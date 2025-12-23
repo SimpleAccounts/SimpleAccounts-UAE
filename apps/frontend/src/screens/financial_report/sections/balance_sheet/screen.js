@@ -12,7 +12,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 import dayjs from '@/utils/date';
 // import 'react-select/dist/react-select.css'
 import './style.scss';

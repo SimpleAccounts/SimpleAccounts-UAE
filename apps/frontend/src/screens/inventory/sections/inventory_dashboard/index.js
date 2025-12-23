@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Row, Card, CardBody, CardGroup } from 'reactstrap';
+import { Row, Card, CardBody, CardGroup } from 'components/migration';
 
 import dayjs from '@/utils/date';
 import * as FileSaver from 'file-saver';

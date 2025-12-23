@@ -15,7 +15,7 @@ import {
   FormGroup,
   Input,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import { CommonActions } from 'services/global';
 import * as SalaryTemplateActions from '../../actions';

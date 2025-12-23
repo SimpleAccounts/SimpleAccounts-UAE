@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Row, Col, Card, Table } from 'reactstrap';
+import { Button, Row, Col, Card, Table } from 'components/migration';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import ReactToPrint from 'react-to-print';

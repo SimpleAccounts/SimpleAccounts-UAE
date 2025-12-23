@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Col, Row, Card, CardBody, CardGroup } from 'reactstrap';
+import { Col, Row, Card, CardBody, CardGroup } from 'components/migration';
 import { Line, Bar } from 'react-chartjs-2';
 
 import * as DashboardActions from './actions';

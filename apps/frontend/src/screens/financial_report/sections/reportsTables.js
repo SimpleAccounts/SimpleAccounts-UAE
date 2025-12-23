@@ -17,7 +17,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 import { MoreVertical } from 'lucide-react';
 
 const mapStateToProps = state => {

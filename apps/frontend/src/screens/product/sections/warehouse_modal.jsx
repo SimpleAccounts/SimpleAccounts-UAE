@@ -14,7 +14,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from 'reactstrap';
+} from 'components/migration';
 import * as ProductActions from '../actions';
 
 // Zod validation schema

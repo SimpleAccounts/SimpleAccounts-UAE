@@ -15,7 +15,7 @@ import {
   FormGroup,
   Input,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 import { LeavePage } from 'components';
 import { CommonActions } from 'services/global';
 import * as EmployeeActions from '../../actions';

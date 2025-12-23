@@ -14,7 +14,7 @@ import {
   Modal,
   ModalBody,
   ModalHeader,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import { bindActionCreators } from 'redux';
 import { CommonActions } from 'services/global';

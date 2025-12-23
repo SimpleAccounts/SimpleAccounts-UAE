@@ -15,7 +15,7 @@ import {
   Label,
   Row,
   Col,
-} from 'reactstrap';
+} from 'components/migration';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
 import './style.scss';

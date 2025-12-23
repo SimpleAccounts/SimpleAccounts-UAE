@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Card, CardBody, Col, Row } from 'reactstrap';
+import { Card, CardBody, Col, Row } from 'components/migration';
 
 import './style.scss';
 

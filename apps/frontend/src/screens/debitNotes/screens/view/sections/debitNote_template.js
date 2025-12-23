@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardBody, Row, Col, Table } from 'reactstrap';
+import { Card, CardBody, Table } from 'components/migration';
 import dayjs from '@/utils/date';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';

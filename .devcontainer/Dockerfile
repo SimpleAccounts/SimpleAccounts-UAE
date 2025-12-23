@@ -7,9 +7,38 @@ FROM mcr.microsoft.com/devcontainers/java:21-bookworm
 ARG NODE_VERSION="20"
 RUN su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"
 
-# Install additional system dependencies
+# ============================================ 
+# INSTALL TOOLS (baked in for faster startup)
+# ============================================ 
+
+# Install Docker CLI, Docker Compose, GitHub CLI, and System Dependencies
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        gnupg \
+        lsb-release \
+    # Docker Setup
+    && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list \
+    # GitHub CLI Setup
+    && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list \
+    # Google Cloud CLI Setup
+    && curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" > /etc/apt/sources.list.d/google-cloud-sdk.list \
+    # Kubernetes CLI Setup
+    && curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /usr/share/keyrings/kubernetes-apt-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /" > /etc/apt/sources.list.d/kubernetes.list \
+    && apt-get update \
+    && apt-get -y install --no-install-recommends \
+        docker-ce-cli \
+        docker-compose-plugin \
+        gh \
+        google-cloud-cli \
+        kubectl \
         postgresql-client \
         redis-tools \
         chromium \
@@ -31,22 +60,95 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         libxfixes3 \
         libxrandr2 \
         xdg-utils \
+        # Playwright / WebKit / Firefox dependencies
+        gstreamer1.0-libav \
+        gstreamer1.0-plugins-bad \
+        gstreamer1.0-plugins-base \
+        gstreamer1.0-plugins-good \
+        hunspell-en-us \
+        libavcodec59 \
+        libavformat59 \
+        libavutil57 \
+        libenchant-2-2 \
+        libsecret-1-0 \
+        libhyphen0 \
+        libmanette-0.2-0 \
+        libgles2 \
+        libopus0 \
+        libwebpdemux2 \
+        libwoff1 \
+        libharfbuzz-icu0 \
+        libevdev2 \
+        libnotify4 \
+        libflite1 \
     && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 # Set Playwright to use system Chromium
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
 
-# Install global npm packages
+# Install global npm packages and AI CLI tools
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g npm@latest" 2>&1
 
-# Pre-cache Maven dependencies (optional - speeds up first build)
-# Uncomment if you want to pre-download Maven dependencies
-# COPY apps/backend/pom.xml /tmp/pom.xml
-# RUN cd /tmp && mvn dependency:go-offline -B
+# Install AI CLI tools (Claude, Codex, OpenAI, Gemini)
+# These are pre-installed but will be updated on container start via install-cli-tools.sh
+RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && \
+    npm install -g @anthropic-ai/claude-code 2>/dev/null || true && \
+    npm install -g @openai/codex 2>/dev/null || true && \
+    npm install -g openai 2>/dev/null || true && \
+    npm install -g @google/gemini-cli 2>/dev/null || true" 2>&1
 
-# Set working directory
-WORKDIR /workspaces/SimpleAccounts-UAE
+# Create symlinks in /usr/local/bin for npm global packages
+# This ensures CLI tools are in PATH regardless of NVM sourcing
+RUN NVM_BIN=$(su vscode -c "source /usr/local/share/nvm/nvm.sh && echo \$(npm prefix -g)/bin") && \
+    for tool in claude codex gemini openai; do \
+        if [ -x "$NVM_BIN/$tool" ]; then \
+            ln -sf "$NVM_BIN/$tool" /usr/local/bin/$tool; \
+        fi; \
+    done
+
+# Copy CLI tools update script
+COPY --chown=vscode:vscode .devcontainer/install-cli-tools.sh /usr/local/bin/install-cli-tools
+RUN chmod +x /usr/local/bin/install-cli-tools
+
+# Provide Cursor CLI shim in PATH (resolves actual binary at runtime)
+COPY --chown=vscode:vscode .devcontainer/cursor-cli.sh /usr/local/bin/cursor
+RUN chmod +x /usr/local/bin/cursor && ln -sf /usr/local/bin/cursor /usr/local/bin/cursor-agent
+
+# ============================================ 
+# PRE-CACHE DEPENDENCIES
+# ============================================ 
+
+USER vscode
+
+# Pre-cache Maven dependencies
+# Copy pom.xml, Maven wrapper, and .mvn directory
+WORKDIR /tmp/backend
+COPY --chown=vscode:vscode apps/backend/pom.xml apps/backend/mvnw ./
+COPY --chown=vscode:vscode apps/backend/.mvn .mvn
+# Download dependencies to ~/.m2/repository
+# Uses Maven wrapper since Maven is not pre-installed in the base image
+# Note: Uses dependency:resolve instead of go-offline to avoid HTTP repository blocking issues
+# Create wrapper dist directory first (older wrapper versions don't create parent dirs)
+# Allow partial caching if some dependencies fail (|| true)
+RUN mkdir -p ~/.m2/wrapper/dists && chmod +x mvnw && ./mvnw dependency:resolve -B -q || true
+
+# Pre-cache NPM dependencies
+# Note: Using npm install with fallback to allow partial caching if lockfiles are out of sync
+WORKDIR /tmp/root
+COPY --chown=vscode:vscode package.json package-lock.json ./
+RUN . /usr/local/share/nvm/nvm.sh && (npm ci --ignore-scripts || npm install --ignore-scripts || true)
+
+WORKDIR /tmp/frontend
+COPY --chown=vscode:vscode apps/frontend/package.json apps/frontend/package-lock.json apps/frontend/.npmrc* ./
+RUN . /usr/local/share/nvm/nvm.sh && (npm ci --legacy-peer-deps --ignore-scripts || npm install --legacy-peer-deps --ignore-scripts || true)
+
+# Clean up temp directories
+USER root
+RUN rm -rf /tmp/backend /tmp/root /tmp/frontend
+
+# Reset working directory
+WORKDIR /workspaces
 
 # Default command
 CMD ["sleep", "infinity"]

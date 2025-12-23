@@ -13,7 +13,7 @@ import {
   ModalBody,
   ModalFooter,
   Table,
-} from 'reactstrap';
+} from 'components/migration';
 
 import { toast } from 'sonner';
 

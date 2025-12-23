@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Label, FormGroup } from 'reactstrap';
+import { Row, Col, Label, FormGroup } from 'components/migration';
 import { Input } from '@/components/ui/input';
 const mapStateToProps = state => {
   return {

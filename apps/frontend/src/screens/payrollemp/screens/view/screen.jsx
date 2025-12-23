@@ -15,7 +15,7 @@ import {
   Button,
   UncontrolledTooltip,
   FormGroup,
-} from 'reactstrap';
+} from 'components/migration';
 import * as EmployeeViewActions from './actions';
 import { ConfirmDeleteModal, Currency } from 'components';
 import './style.scss';

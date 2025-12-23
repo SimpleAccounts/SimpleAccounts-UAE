@@ -12,7 +12,7 @@ import {
   ModalFooter,
   CardBody,
   ModalHeader,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import dayjs from '@/utils/date';

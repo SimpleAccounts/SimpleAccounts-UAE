@@ -39,9 +39,15 @@ lerna-debug.log*
 .env
 .env.local
 .mcp.env
+
+# DevContainer secrets
+.devcontainer/.env
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Local Spring Boot config (created by devcontainer)
+**/application-local.properties
 
 # Testing
 coverage/

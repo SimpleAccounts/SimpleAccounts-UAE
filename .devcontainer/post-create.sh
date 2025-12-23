@@ -5,38 +5,115 @@ set -e
 
 echo "🚀 Setting up SimpleAccounts-UAE development environment..."
 
-# Install root dependencies
-echo "📦 Installing root npm dependencies..."
-npm install
+# Determine the target user home directory
+# In devcontainer, we typically run as vscode user, but post-create may run as root
+TARGET_USER="vscode"
+TARGET_HOME="/home/vscode"
 
-# Install frontend dependencies
+# Function to fix ownership of a directory (uses sudo if needed)
+fix_ownership() {
+    local dir="$1"
+    if [ -d "$dir" ]; then
+        # Check if directory is owned by someone other than target user
+        local owner
+        owner=$(stat -c '%U' "$dir" 2>/dev/null || stat -f '%Su' "$dir" 2>/dev/null)
+        if [ "$owner" != "$TARGET_USER" ]; then
+            if [ "$(id -u)" = "0" ]; then
+                chown -R "$TARGET_USER:$TARGET_USER" "$dir" 2>/dev/null || true
+            else
+                sudo chown -R "$TARGET_USER:$TARGET_USER" "$dir" 2>/dev/null || true
+            fi
+        fi
+    fi
+}
+
+# Function to ensure directory exists with correct permissions
+ensure_dir() {
+    local dir="$1"
+    if [ ! -d "$dir" ]; then
+        mkdir -p "$dir" 2>/dev/null || sudo mkdir -p "$dir" 2>/dev/null || true
+    fi
+    fix_ownership "$dir"
+}
+
+# ============================================
+# Setup Maven directories BEFORE any maven commands
+# ============================================
+echo "📁 Setting up Maven directories..."
+
+# The .m2 directory is mounted as a volume - ensure it's writable
+ensure_dir "$TARGET_HOME/.m2"
+ensure_dir "$TARGET_HOME/.m2/repository"
+ensure_dir "$TARGET_HOME/.m2/wrapper"
+ensure_dir "$TARGET_HOME/.m2/wrapper/dists"
+
+# Also ensure npm cache directory is writable
+ensure_dir "$TARGET_HOME/.npm"
+
+# ============================================
+# Install npm dependencies
+# ============================================
+echo "📦 Installing root npm dependencies..."
+# Try npm ci first (faster, uses lock file exactly)
+# Fall back to npm install if lock file is out of sync
+if ! npm ci --prefer-offline 2>/dev/null; then
+    echo "  ⚠️  npm ci failed, falling back to npm install..."
+    npm install
+fi
+
 echo "📦 Installing frontend dependencies..."
 cd apps/frontend
-npm install --legacy-peer-deps
-cd ../..
-
-# Install Playwright browsers (using system Chromium)
-echo "🎭 Setting up Playwright..."
-cd apps/frontend
-npx playwright install-deps 2>/dev/null || true
-cd ../..
-
-# Download Maven dependencies (this can take a while on first run)
-echo "☕ Downloading Maven dependencies..."
-cd apps/backend
-if [ -f "./mvnw" ]; then
-    chmod +x ./mvnw
-    ./mvnw dependency:go-offline -B -q || true
-else
-    mvn dependency:go-offline -B -q || true
+if ! npm ci --legacy-peer-deps --prefer-offline 2>/dev/null; then
+    echo "  ⚠️  npm ci failed, falling back to npm install..."
+    npm install --legacy-peer-deps
 fi
 cd ../..
 
+# ============================================
+# Setup Playwright
+# ============================================
+echo "🎭 Setting up Playwright..."
+# Playwright browser deps are installed in Dockerfile
+# Just ensure the cache directory exists
+ensure_dir "$TARGET_HOME/.cache/ms-playwright"
+
+# ============================================
+# Download Maven dependencies
+# ============================================
+echo "☕ Downloading Maven dependencies..."
+cd apps/backend
+
+if [ -f "./mvnw" ]; then
+    chmod +x ./mvnw
+
+    # Set MAVEN_USER_HOME explicitly to ensure wrapper uses correct location
+    export MAVEN_USER_HOME="$TARGET_HOME"
+
+    # Use 'compile' instead of 'dependency:go-offline' because go-offline
+    # tries to resolve ALL transitive dependencies including deprecated ones
+    # from HTTP repositories that Maven 3.8.1+ blocks by default.
+    # Compile resolves only the dependencies actually needed for the build.
+    if ! ./mvnw compile -B -q \
+        -Dmaven.repo.local="$TARGET_HOME/.m2/repository" \
+        -DskipTests 2>/dev/null; then
+        echo "  ⚠️  Maven compile had issues (non-fatal)"
+    else
+        echo "  ✅ Maven dependencies downloaded successfully"
+    fi
+else
+    echo "  ⚠️  Maven wrapper not found, skipping dependency download"
+fi
+cd ../..
+
+# ============================================
 # Setup git hooks
+# ============================================
 echo "🪝 Setting up git hooks..."
 npm run prepare 2>/dev/null || true
 
-# Create local environment files if they don't exist
+# ============================================
+# Create local environment files
+# ============================================
 if [ ! -f "apps/frontend/.env.local" ]; then
     echo "📝 Creating frontend .env.local..."
     cat > apps/frontend/.env.local << 'EOF'
@@ -61,6 +138,5 @@ fi
 echo "✅ Development environment setup complete!"
 echo ""
 echo "Quick start commands:"
-echo "  Frontend: npm run frontend"
-echo "  Backend:  npm run backend:run"
-echo "  Tests:    npm test"
+echo "  Frontend: cd apps/frontend && npm run dev"
+echo "  Backend:  cd apps/backend && ./mvnw spring-boot:run"

@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 echo "🔍 Running pre-push checks..."
 
 # Run formatting check
@@ -29,7 +26,7 @@ if echo "$CHANGED_FILES" | grep -q "apps/frontend/.*\.\(js\|jsx\|ts\|tsx\)$"; th
   echo "🧪 Running frontend unit tests..."
   cd apps/frontend
   npm test -- --run --bail
-  
+
   if [ $? -ne 0 ]; then
     echo "❌ Tests failed. Push aborted."
     cd ../..
@@ -41,4 +38,3 @@ else
 fi
 
 echo "✅ Pre-push checks passed"
-
