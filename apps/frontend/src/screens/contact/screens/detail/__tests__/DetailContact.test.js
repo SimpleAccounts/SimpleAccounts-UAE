@@ -4,9 +4,10 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import * as thunkModule from 'redux-thunk';
+import { vi } from 'vitest';
 const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
 
-// Mock useLocation hook
+// Mock useLocation hook - must be defined before vi.mock
 const mockLocation = {
   pathname: '/admin/contact/detail/1',
   search: '',
@@ -15,11 +16,13 @@ const mockLocation = {
   key: 'default',
 };
 
-jest.mock('react-router-dom', () => {
-  const actual = jest.requireActual('react-router-dom');
+const mockUseLocation = vi.fn(() => mockLocation);
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
-    useLocation: jest.fn(() => mockLocation),
+    useLocation: mockUseLocation,
   };
 });
 
@@ -82,25 +85,6 @@ jest.mock('reactstrap', () => ({
   UncontrolledTooltip: () => null,
   Input: ({ ...props }) => <input {...props} />,
 }));
-
-// Mock react-router-dom - need to preserve actual BrowserRouter
-const mockUseLocation = jest.fn(() => ({
-  pathname: '/admin/contact/detail/1',
-  search: '',
-  hash: '',
-  state: { id: '1' },
-  key: 'default',
-}));
-
-jest.mock('react-router-dom', () => {
-  const actual = jest.requireActual('react-router-dom');
-  return {
-    ...actual,
-    useLocation: mockUseLocation,
-    useNavigate: jest.fn(() => jest.fn()),
-    useParams: jest.fn(() => ({ id: '1' })),
-  };
-});
 
 // Import component AFTER mocks are set up
 import DetailContact from '../screen';
