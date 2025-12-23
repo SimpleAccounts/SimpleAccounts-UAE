@@ -15,6 +15,8 @@ services:
       - devcontainer-maven-cache:/home/vscode/.m2
       - devcontainer-npm-cache:/home/vscode/.npm
       - devcontainer-claude-config:/home/vscode/.claude
+      - devcontainer-gemini-config:/home/vscode/.gemini
+      - devcontainer-codex-config:/home/vscode/.codex
     command: sleep infinity
     network_mode: service:db
     depends_on:
@@ -52,3 +54,5 @@ volumes:
   devcontainer-maven-cache:
   devcontainer-npm-cache:
   devcontainer-claude-config:
+  devcontainer-gemini-config:
+  devcontainer-codex-config:
