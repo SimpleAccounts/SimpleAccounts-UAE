@@ -102,6 +102,8 @@ export default defineConfig({
       app: path.resolve(__dirname, './src/app'),
       serviceWorker: path.resolve(__dirname, './src/serviceWorker'),
       polyfill: path.resolve(__dirname, './src/polyfill'),
+      // Mock reactstrap for tests (only used in test environment)
+      reactstrap: path.resolve(__dirname, './src/__mocks__/reactstrap.js'),
     },
     // Ensure proper resolution of CJS modules in ESM context
     // Deduplicate React to prevent multiple instances (fixes "Invalid hook call" errors)
