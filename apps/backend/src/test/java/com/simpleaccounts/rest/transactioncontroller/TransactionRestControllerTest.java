@@ -74,10 +74,16 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.cache.autoconfigure.CacheAutoConfiguration;
+import org.springframework.boot.http.converter.autoconfigure.HttpMessageConvertersAutoConfiguration;
+import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -86,6 +92,9 @@ import org.springframework.test.web.servlet.MockMvc;
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(TransactionRestController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@ImportAutoConfiguration({CacheAutoConfiguration.class, JacksonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class})
+@TestPropertySource(properties = {"spring.cache.type=simple"})
+@Import(TransactionRestControllerTest.TestConfig.class)
 @DisplayName("TransactionRestController Tests")
 class TransactionRestControllerTest {
 
@@ -95,99 +104,99 @@ class TransactionRestControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private JwtTokenUtil jwtTokenUtil;
-    @MockBean
+    @MockitoBean
     private TransactionRepository transactionRepository;
-    @MockBean
+    @MockitoBean
     private TransactionService transactionService;
-    @MockBean
+    @MockitoBean
     private DateFormatHelper dateFormatHelper;
-    @MockBean
+    @MockitoBean
     private BankAccountService bankAccountService;
-    @MockBean
+    @MockitoBean
     private ChartOfAccountService chartOfAccountService;
-    @MockBean
+    @MockitoBean
     private TransactionHelper transactionHelper;
-    @MockBean
+    @MockitoBean
     private ChartUtil chartUtil;
-    @MockBean
+    @MockitoBean
     private TransactionCategoryService transactionCategoryService;
-    @MockBean
+    @MockitoBean
     private ReconsilationRestHelper reconsilationRestHelper;
-    @MockBean
+    @MockitoBean
     private JournalService journalService;
-    @MockBean
+    @MockitoBean
     private ChartOfAccountCategoryService chartOfAccountCategoryService;
-    @MockBean
+    @MockitoBean
     private VatCategoryService vatCategoryService;
-    @MockBean
+    @MockitoBean
     private ContactService contactService;
-    @MockBean
+    @MockitoBean
     private TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
-    @MockBean
+    @MockitoBean
     private TransactionCategoryBalanceService transactionCategoryBalanceService;
-    @MockBean
+    @MockitoBean
     private TransactionStatusService transactionStatusService;
-    @MockBean
+    @MockitoBean
     private UserService userService;
-    @MockBean
+    @MockitoBean
     private InvoiceService invoiceService;
-    @MockBean
+    @MockitoBean
     private ReceiptService receiptService;
-    @MockBean
+    @MockitoBean
     private CustomerInvoiceReceiptService customerInvoiceReceiptService;
-    @MockBean
+    @MockitoBean
     private ReceiptRestHelper receiptRestHelper;
-    @MockBean
+    @MockitoBean
     private ExpenseService expenseService;
-    @MockBean
+    @MockitoBean
     private TransactionExpensesService transactionExpensesService;
-    @MockBean
+    @MockitoBean
     private TransactionExpensesPayrollService transactionExpensesPayrollService;
-    @MockBean
+    @MockitoBean
     private PaymentService paymentService;
-    @MockBean
+    @MockitoBean
     private SupplierInvoicePaymentService supplierInvoicePaymentService;
-    @MockBean
+    @MockitoBean
     private CurrencyService currencyService;
-    @MockBean
+    @MockitoBean
     private FileAttachmentService fileAttachmentService;
-    @MockBean
+    @MockitoBean
     private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
-    @MockBean
+    @MockitoBean
     private PayrollRepository payrollRepository;
-    @MockBean
+    @MockitoBean
     private DateFormatUtil dateFormatUtil;
-    @MockBean
+    @MockitoBean
     private FileHelper fileHelper;
-    @MockBean
+    @MockitoBean
     private InvoiceNumberUtil invoiceNumberUtil;
-    @MockBean
+    @MockitoBean
     private OSValidator osValidator;
-    @MockBean
+    @MockitoBean
     private VatPaymentRepository vatPaymentRepository;
-    @MockBean
+    @MockitoBean
     private VatRecordPaymentHistoryRepository vatRecordPaymentHistoryRepository;
-    @MockBean
+    @MockitoBean
     private VatReportFilingRepository vatReportFilingRepository;
-    @MockBean
+    @MockitoBean
     private JournalLineItemRepository journalLineItemRepository;
-    @MockBean
+    @MockitoBean
     private TransactionExplanationRepository transactionExplanationRepository;
-    @MockBean
+    @MockitoBean
     private TransactionExplanationLineItemRepository transactionExplanationLineItemRepository;
-    @MockBean
+    @MockitoBean
     private ContactTransactionCategoryService contactTransactionCategoryService;
-    @MockBean
+    @MockitoBean
     private CorporateTaxFilingRepository corporateTaxFilingRepository;
-    @MockBean
+    @MockitoBean
     private CorporateTaxPaymentRepository corporateTaxPaymentRepository;
-    @MockBean
+    @MockitoBean
     private CorporateTaxPaymentHistoryRepository corporateTaxPaymentHistoryRepository;
-    @MockBean
+    @MockitoBean
     private CreditNoteRepository creditNoteRepository;
-    @MockBean
+    @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
 
     @TestConfiguration
@@ -195,6 +204,13 @@ class TransactionRestControllerTest {
         @Bean
         String basePath() {
             return "/tmp";
+        }
+
+        @Bean
+        com.fasterxml.jackson.databind.ObjectMapper objectMapper() {
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+            return mapper;
         }
     }
 

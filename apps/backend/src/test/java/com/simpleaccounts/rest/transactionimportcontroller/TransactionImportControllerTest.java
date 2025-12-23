@@ -31,10 +31,16 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.cache.autoconfigure.CacheAutoConfiguration;
+import org.springframework.boot.http.converter.autoconfigure.HttpMessageConvertersAutoConfiguration;
+import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -43,6 +49,9 @@ import org.springframework.test.web.servlet.MockMvc;
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(TransactionImportController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@ImportAutoConfiguration({CacheAutoConfiguration.class, JacksonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class})
+@TestPropertySource(properties = {"spring.cache.type=simple"})
+@Import(TransactionImportControllerTest.TestConfig.class)
 @DisplayName("TransactionImportController Tests")
 class TransactionImportControllerTest {
 
@@ -52,29 +61,29 @@ class TransactionImportControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private CsvParser csvParser;
-    @MockBean
+    @MockitoBean
     private ExcelParser excelParser;
-    @MockBean
+    @MockitoBean
     private FileHelper fileHelper;
-    @MockBean
+    @MockitoBean
     private BankAccountService bankAccountService;
-    @MockBean
+    @MockitoBean
     private TransactionService transactionService;
-    @MockBean
+    @MockitoBean
     private UserService userServiceNew;
-    @MockBean
+    @MockitoBean
     private TransactionParsingSettingService transactionParsingSettingService;
-    @MockBean
+    @MockitoBean
     private TransactionParsingSettingRestHelper transactionParsingSettingRestHelper;
-    @MockBean
+    @MockitoBean
     private TransactionImportRestHelper transactionImportRestHelper;
-    @MockBean
+    @MockitoBean
     private JwtTokenUtil jwtTokenUtil;
-    @MockBean
+    @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
-    @MockBean
+    @MockitoBean
     private OSValidator osValidator;
 
     @TestConfiguration
@@ -82,6 +91,13 @@ class TransactionImportControllerTest {
         @Bean
         String basePath() {
             return "/tmp";
+        }
+
+        @Bean
+        com.fasterxml.jackson.databind.ObjectMapper objectMapper() {
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+            return mapper;
         }
     }
 

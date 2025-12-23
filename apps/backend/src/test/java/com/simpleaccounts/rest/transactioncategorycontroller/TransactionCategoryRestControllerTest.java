@@ -36,10 +36,15 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.cache.autoconfigure.CacheAutoConfiguration;
+import org.springframework.boot.http.converter.autoconfigure.HttpMessageConvertersAutoConfiguration;
+import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
@@ -50,7 +55,9 @@ import org.springframework.test.web.servlet.MockMvc;
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(TransactionCategoryRestController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@Import({MessageConfiguration.class, MessageUtil.class})
+@ImportAutoConfiguration({CacheAutoConfiguration.class, JacksonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class})
+@TestPropertySource(properties = {"spring.cache.type=none"})
+@Import({MessageConfiguration.class, MessageUtil.class, TransactionCategoryRestControllerTest.TestConfig.class})
 @DisplayName("TransactionCategoryRestController Tests")
 class TransactionCategoryRestControllerTest {
 
@@ -60,25 +67,25 @@ class TransactionCategoryRestControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private TransactionCategoryService transactionCategoryService;
-    @MockBean
+    @MockitoBean
     private ChartOfAccountService chartOfAccountService;
-    @MockBean
+    @MockitoBean
     private UserService userServiceNew;
-    @MockBean
+    @MockitoBean
     private CoacTransactionCategoryService coacTransactionCategoryService;
-    @MockBean
+    @MockitoBean
     private JwtTokenUtil jwtTokenUtil;
-    @MockBean
+    @MockitoBean
     private TranscationCategoryHelper transcationCategoryHelper;
-    @MockBean
+    @MockitoBean
     private TransactionService transactionService;
-    @MockBean
+    @MockitoBean
     private TransactionExpensesRepository transactionExpensesRepository;
-    @MockBean
+    @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
-    @MockBean
+    @MockitoBean
     private OSValidator osValidator;
 
     @TestConfiguration
@@ -86,6 +93,13 @@ class TransactionCategoryRestControllerTest {
         @Bean
         String basePath() {
             return "/tmp";
+        }
+
+        @Bean
+        com.fasterxml.jackson.databind.ObjectMapper objectMapper() {
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+            return mapper;
         }
     }
 
@@ -249,7 +263,7 @@ class TransactionCategoryRestControllerTest {
             mockMvc.perform(delete("/rest/transactioncategory/deleteTransactionCategory")
                             .param("id", "1"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.isErrorMessage").value(false));
+                    .andExpect(jsonPath("$.errorMessage").value(false));
 
             verify(transactionCategoryService).update(any(), anyInt());
         }
@@ -278,7 +292,7 @@ class TransactionCategoryRestControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.isErrorMessage").value(false));
+                    .andExpect(jsonPath("$.errorMessage").value(false));
 
             verify(transactionCategoryService).deleteByIds(any());
         }
@@ -303,7 +317,7 @@ class TransactionCategoryRestControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(bean)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.isErrorMessage").value(false));
+                    .andExpect(jsonPath("$.errorMessage").value(false));
 
             verify(transactionCategoryService).persist(any());
         }
@@ -329,7 +343,7 @@ class TransactionCategoryRestControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(bean)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.isErrorMessage").value(false));
+                    .andExpect(jsonPath("$.errorMessage").value(false));
 
             verify(transactionCategoryService).update(any());
         }
