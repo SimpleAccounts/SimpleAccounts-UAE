@@ -213,15 +213,7 @@ describe('DetailContact Component', () => {
   });
 
   it('should load contact data on mount', async () => {
-    renderComponent({
-      location: {
-        pathname: '/admin/contact/detail/1',
-        search: '',
-        hash: '',
-        state: { id: '1' },
-        key: 'default',
-      },
-    });
+    renderComponent();
 
     await waitFor(
       () => {
