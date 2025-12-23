@@ -577,7 +577,7 @@ const CreateContact = ({
                                 }}
                                 className={cn(
                                   'rounded-xl border-0',
-                                  fieldState.error && 'border-red-500',
+                                  fieldState?.error && 'border-red-500',
                                   shadows.pressed.sm
                                 )}
                                 style={{
@@ -586,7 +586,7 @@ const CreateContact = ({
                                 }}
                               />
                             </FormControl>
-                            {fieldState.error && (
+                            {fieldState?.error && (
                               <FormMessage>{fieldState.error.message}</FormMessage>
                             )}
                           </FormItem>
@@ -615,7 +615,7 @@ const CreateContact = ({
                                 }}
                                 className={cn(
                                   'rounded-xl border-0',
-                                  fieldState.error && 'border-red-500',
+                                  fieldState?.error && 'border-red-500',
                                   shadows.pressed.sm
                                 )}
                                 style={{
@@ -624,7 +624,7 @@ const CreateContact = ({
                                 }}
                               />
                             </FormControl>
-                            {fieldState.error && (
+                            {fieldState?.error && (
                               <FormMessage>{fieldState.error.message}</FormMessage>
                             )}
                           </FormItem>
@@ -656,7 +656,7 @@ const CreateContact = ({
                                 }}
                                 className={cn(
                                   'rounded-xl border-0',
-                                  fieldState.error && 'border-red-500',
+                                  fieldState?.error && 'border-red-500',
                                   shadows.pressed.sm
                                 )}
                                 style={{
@@ -665,7 +665,7 @@ const CreateContact = ({
                                 }}
                               />
                             </FormControl>
-                            {fieldState.error && (
+                            {fieldState?.error && (
                               <FormMessage>{fieldState.error.message}</FormMessage>
                             )}
                           </FormItem>
@@ -727,14 +727,14 @@ const CreateContact = ({
                                   control: (base, state) => ({
                                     ...selectStyles.control(base, state),
                                     borderRadius: '12px',
-                                    border: fieldState.error ? '1px solid #ef4444' : 'none',
+                                    border: fieldState?.error ? '1px solid #ef4444' : 'none',
                                     boxShadow: shadows.pressed.sm,
                                     backgroundColor: theme.bg,
                                   }),
                                 }}
                               />
                             </FormControl>
-                            {fieldState.error && (
+                            {fieldState?.error && (
                               <FormMessage>{fieldState.error.message}</FormMessage>
                             )}
                           </FormItem>
@@ -763,7 +763,7 @@ const CreateContact = ({
                                 }}
                                 className={cn(
                                   'rounded-xl border-0',
-                                  fieldState.error && 'border-red-500',
+                                  fieldState?.error && 'border-red-500',
                                   shadows.pressed.sm
                                 )}
                                 style={{
@@ -772,7 +772,7 @@ const CreateContact = ({
                                 }}
                               />
                             </FormControl>
-                            {fieldState.error && (
+                            {fieldState?.error && (
                               <FormMessage>{fieldState.error.message}</FormMessage>
                             )}
                           </FormItem>
@@ -802,7 +802,7 @@ const CreateContact = ({
                                 }}
                                 className={cn(
                                   'rounded-xl border-0',
-                                  fieldState.error && 'border-red-500',
+                                  fieldState?.error && 'border-red-500',
                                   shadows.pressed.sm
                                 )}
                                 style={{
@@ -811,7 +811,7 @@ const CreateContact = ({
                                 }}
                               />
                             </FormControl>
-                            {fieldState.error && (
+                            {fieldState?.error && (
                               <FormMessage>{fieldState.error.message}</FormMessage>
                             )}
                           </FormItem>
@@ -854,14 +854,14 @@ const CreateContact = ({
                                   control: (base, state) => ({
                                     ...selectStyles.control(base, state),
                                     borderRadius: '12px',
-                                    border: fieldState.error ? '1px solid #ef4444' : 'none',
+                                    border: fieldState?.error ? '1px solid #ef4444' : 'none',
                                     boxShadow: shadows.pressed.sm,
                                     backgroundColor: theme.bg,
                                   }),
                                 }}
                               />
                             </FormControl>
-                            {fieldState.error && (
+                            {fieldState?.error && (
                               <FormMessage>{fieldState.error.message}</FormMessage>
                             )}
                           </FormItem>
@@ -890,7 +890,7 @@ const CreateContact = ({
                                 }}
                                 className={cn(
                                   'rounded-xl border-0',
-                                  fieldState.error && 'border-red-500',
+                                  fieldState?.error && 'border-red-500',
                                   shadows.pressed.sm
                                 )}
                                 style={{
@@ -899,7 +899,7 @@ const CreateContact = ({
                                 }}
                               />
                             </FormControl>
-                            {fieldState.error && (
+                            {fieldState?.error && (
                               <FormMessage>{fieldState.error.message}</FormMessage>
                             )}
                           </FormItem>
@@ -929,7 +929,7 @@ const CreateContact = ({
                                 />
                               </div>
                             </FormControl>
-                            {fieldState.error && (
+                            {fieldState?.error && (
                               <FormMessage>{fieldState.error.message}</FormMessage>
                             )}
                           </FormItem>
@@ -958,7 +958,7 @@ const CreateContact = ({
                                 }}
                                 className={cn(
                                   'rounded-xl border-0',
-                                  fieldState.error && 'border-red-500',
+                                  fieldState?.error && 'border-red-500',
                                   shadows.pressed.sm
                                 )}
                                 style={{
@@ -967,7 +967,7 @@ const CreateContact = ({
                                 }}
                               />
                             </FormControl>
-                            {fieldState.error && (
+                            {fieldState?.error && (
                               <FormMessage>{fieldState.error.message}</FormMessage>
                             )}
                           </FormItem>
@@ -1047,14 +1047,14 @@ const CreateContact = ({
                                   control: (base, state) => ({
                                     ...selectStyles.control(base, state),
                                     borderRadius: '12px',
-                                    border: fieldState.error ? '1px solid #ef4444' : 'none',
+                                    border: fieldState?.error ? '1px solid #ef4444' : 'none',
                                     boxShadow: shadows.pressed.sm,
                                     backgroundColor: theme.bg,
                                   }),
                                 }}
                               />
                             </FormControl>
-                            {fieldState.error && (
+                            {fieldState?.error && (
                               <FormMessage>{fieldState.error.message}</FormMessage>
                             )}
                           </FormItem>

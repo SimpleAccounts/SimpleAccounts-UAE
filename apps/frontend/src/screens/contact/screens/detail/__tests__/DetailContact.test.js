@@ -58,9 +58,13 @@ jest.mock('reactstrap', () => ({
 
 // Mock react-router-dom useLocation
 jest.mock('react-router-dom', () => {
-  const actual = jest.requireActual('react-router-dom');
   return {
-    ...actual,
+    BrowserRouter: ({ children }) => <div>{children}</div>,
+    Routes: ({ children }) => <div>{children}</div>,
+    Route: ({ element }) => element,
+    Link: ({ to, children }) => <a href={to}>{children}</a>,
+    Navigate: () => null,
+    useNavigate: jest.fn(() => jest.fn()),
     useLocation: jest.fn(() => ({
       pathname: '/admin/contact/detail/1',
       search: '',
@@ -68,6 +72,7 @@ jest.mock('react-router-dom', () => {
       state: { id: '1' },
       key: 'default',
     })),
+    useParams: jest.fn(() => ({ id: '1' })),
   };
 });
 
