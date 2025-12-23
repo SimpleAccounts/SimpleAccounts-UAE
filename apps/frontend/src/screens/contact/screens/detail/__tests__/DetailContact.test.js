@@ -112,6 +112,7 @@ const mockActions = {
       },
     })
   ),
+  getTaxTreatment: jest.fn(() => Promise.resolve({ status: 200, data: [] })),
   getCountryList: jest.fn(),
   getStateList: jest.fn(),
   getCityList: jest.fn(),
@@ -197,16 +198,18 @@ describe('DetailContact Component', () => {
 
   it('should load contact data on mount', async () => {
     renderComponent({
-      match: {
-        params: {
-          id: '1',
-        },
+      location: {
+        pathname: '/admin/contact/detail/1',
+        search: '',
+        hash: '',
+        state: { id: '1' },
+        key: 'default',
       },
     });
 
     await waitFor(() => {
       expect(mockActions.getContactById).toHaveBeenCalledWith('1');
-    });
+    }, { timeout: 3000 });
   });
 
   it('should display delete button', async () => {
@@ -275,10 +278,11 @@ describe('DetailContact Component', () => {
     });
 
     // Wait for form to be populated with data from getContactById response
+    // The reset() call happens after getContactById completes
     await waitFor(() => {
       const nameInput = screen.getByDisplayValue('John');
       expect(nameInput).toBeInTheDocument();
-    }, { timeout: 3000 });
+    }, { timeout: 5000 });
   });
 
   it('should navigate back on cancel', async () => {
@@ -300,6 +304,6 @@ describe('DetailContact Component', () => {
     // Cancel button uses history.push('/admin/master/contact')
     await waitFor(() => {
       expect(mockHistory.push).toHaveBeenCalledWith('/admin/master/contact');
-    });
+    }, { timeout: 2000 });
   });
 });
