@@ -8,27 +8,21 @@ import { vi } from 'vitest';
 const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
 
 // Mock useLocation hook - define inline to avoid hoisting issues
-const mockLocation = {
-  pathname: '/admin/contact/detail/1',
-  search: '',
-  hash: '',
-  state: { id: '1' },
-  key: 'default',
-};
-
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
-    useLocation: vi.fn(() => mockLocation),
+    useLocation: vi.fn(() => ({
+      pathname: '/admin/contact/detail/1',
+      search: '',
+      hash: '',
+      state: { id: '1' },
+      key: 'default',
+    })),
     useNavigate: vi.fn(() => vi.fn()),
     useParams: vi.fn(() => ({ id: '1' })),
   };
 });
-
-// Get the mocked useLocation for resetting in tests
-const { useLocation } = await import('react-router-dom');
-const mockUseLocation = useLocation;
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
