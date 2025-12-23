@@ -6,6 +6,23 @@ import configureStore from 'redux-mock-store';
 import * as thunkModule from 'redux-thunk';
 const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
 
+// Mock useLocation hook
+const mockLocation = {
+  pathname: '/admin/contact/detail/1',
+  search: '',
+  hash: '',
+  state: { id: '1' },
+  key: 'default',
+};
+
+jest.mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom');
+  return {
+    ...actual,
+    useLocation: jest.fn(() => mockLocation),
+  };
+});
+
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
@@ -207,9 +224,12 @@ describe('DetailContact Component', () => {
       },
     });
 
-    await waitFor(() => {
-      expect(mockActions.getContactById).toHaveBeenCalledWith('1');
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(mockActions.getContactById).toHaveBeenCalledWith('1');
+      },
+      { timeout: 3000 }
+    );
   });
 
   it('should display delete button', async () => {
@@ -254,17 +274,22 @@ describe('DetailContact Component', () => {
     });
 
     // Wait for form to be populated (reset is called after getContactById)
-    await waitFor(() => {
-      const firstNameInput = screen.queryByDisplayValue('John');
-      expect(firstNameInput || screen.queryByPlaceholderText(/first name/i)).toBeTruthy();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        const firstNameInput = screen.queryByDisplayValue('John');
+        expect(firstNameInput || screen.queryByPlaceholderText(/first name/i)).toBeTruthy();
+      },
+      { timeout: 3000 }
+    );
 
     const updateButton = await screen.findByRole('button', { name: /update|save/i });
-    
+
     // Fill required fields if not already filled
-    const firstNameInput = screen.queryByDisplayValue('John') || screen.queryByPlaceholderText(/first name/i);
-    const lastNameInput = screen.queryByDisplayValue('Doe') || screen.queryByPlaceholderText(/last name/i);
-    
+    const firstNameInput =
+      screen.queryByDisplayValue('John') || screen.queryByPlaceholderText(/first name/i);
+    const lastNameInput =
+      screen.queryByDisplayValue('Doe') || screen.queryByPlaceholderText(/last name/i);
+
     if (firstNameInput && !firstNameInput.value) {
       fireEvent.change(firstNameInput, { target: { value: 'John' } });
     }
@@ -274,9 +299,12 @@ describe('DetailContact Component', () => {
 
     fireEvent.click(updateButton);
 
-    await waitFor(() => {
-      expect(mockActions.updateContact).toHaveBeenCalled();
-    }, { timeout: 5000 });
+    await waitFor(
+      () => {
+        expect(mockActions.updateContact).toHaveBeenCalled();
+      },
+      { timeout: 5000 }
+    );
   });
 
   it('should populate form with contact data', async () => {
@@ -289,10 +317,13 @@ describe('DetailContact Component', () => {
 
     // Wait for form to be populated with data from getContactById response
     // The reset() call happens after getContactById completes
-    await waitFor(() => {
-      const nameInput = screen.getByDisplayValue('John');
-      expect(nameInput).toBeInTheDocument();
-    }, { timeout: 5000 });
+    await waitFor(
+      () => {
+        const nameInput = screen.getByDisplayValue('John');
+        expect(nameInput).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
   });
 
   it('should navigate back on cancel', async () => {
@@ -312,8 +343,11 @@ describe('DetailContact Component', () => {
     fireEvent.click(cancelButton);
 
     // Cancel button uses history.push('/admin/master/contact')
-    await waitFor(() => {
-      expect(mockHistory.push).toHaveBeenCalledWith('/admin/master/contact');
-    }, { timeout: 2000 });
+    await waitFor(
+      () => {
+        expect(mockHistory.push).toHaveBeenCalledWith('/admin/master/contact');
+      },
+      { timeout: 2000 }
+    );
   });
 });
