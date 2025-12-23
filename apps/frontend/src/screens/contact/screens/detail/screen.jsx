@@ -16,12 +16,9 @@ import {
 } from '@/components/ui/form';
 // Note: Using reactstrap Input for unmigrated form fields - will migrate to shadcn/ui Input later
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
 import Select from 'react-select';
 // Temporarily keep Reactstrap imports for unmigrated components
-import { Row, Col, FormGroup, Label, UncontrolledTooltip, CardBody, Input } from 'reactstrap';
+import { Row, Col, FormGroup, Label, UncontrolledTooltip, Input } from 'reactstrap';
 import { selectOptionsFactory, InputValidation, DropdownLists, Lists, selectStyles } from 'utils';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import { toast } from 'sonner';
