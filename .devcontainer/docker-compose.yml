@@ -6,6 +6,9 @@ services:
     # build:
     #   context: ..
     #   dockerfile: .devcontainer/Dockerfile
+    env_file:
+      - path: .env
+        required: false
     volumes:
       - ../:/workspaces/SimpleAccounts-UAE:cached
       - devcontainer-vscode-extensions:/home/vscode/.vscode-server/extensions
