@@ -6,11 +6,25 @@ services:
     # build:
     #   context: ..
     #   dockerfile: .devcontainer/Dockerfile
+    env_file:
+      - path: .env
+        required: false
     volumes:
       - ../:/workspaces/SimpleAccounts-UAE:cached
       - devcontainer-vscode-extensions:/home/vscode/.vscode-server/extensions
       - devcontainer-maven-cache:/home/vscode/.m2
       - devcontainer-npm-cache:/home/vscode/.npm
+      - devcontainer-claude-config:/home/vscode/.claude
+      - devcontainer-gemini-config:/home/vscode/.gemini
+      - devcontainer-codex-config:/home/vscode/.codex
+      - devcontainer-gh-config:/home/vscode/.config/gh
+      - devcontainer-bash-history:/home/vscode/.bash_history
+      - devcontainer-gitconfig:/home/vscode/.gitconfig
+      - devcontainer-ssh:/home/vscode/.ssh
+      - devcontainer-docker:/home/vscode/.docker
+      - devcontainer-kube:/home/vscode/.kube
+      - devcontainer-aws:/home/vscode/.aws
+      - devcontainer-azure:/home/vscode/.azure
     command: sleep infinity
     network_mode: service:db
     depends_on:
@@ -47,3 +61,14 @@ volumes:
   devcontainer-vscode-extensions:
   devcontainer-maven-cache:
   devcontainer-npm-cache:
+  devcontainer-claude-config:
+  devcontainer-gemini-config:
+  devcontainer-codex-config:
+  devcontainer-gh-config:
+  devcontainer-bash-history:
+  devcontainer-gitconfig:
+  devcontainer-ssh:
+  devcontainer-docker:
+  devcontainer-kube:
+  devcontainer-aws:
+  devcontainer-azure:
