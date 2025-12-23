@@ -289,9 +289,17 @@ describe('DetailContact Component', () => {
 
     renderComponent({ history: mockHistory });
 
-    const cancelButton = await screen.findByRole('button', { name: /cancel/i });
+    // Wait for component to load
+    await waitFor(() => {
+      expect(screen.getByText(/update.*contact/i)).toBeInTheDocument();
+    });
+
+    const cancelButton = screen.getByRole('button', { name: /cancel/i });
     fireEvent.click(cancelButton);
 
-    expect(mockHistory.goBack).toHaveBeenCalled();
+    // Cancel button uses history.push('/admin/master/contact')
+    await waitFor(() => {
+      expect(mockHistory.push).toHaveBeenCalledWith('/admin/master/contact');
+    });
   });
 });
