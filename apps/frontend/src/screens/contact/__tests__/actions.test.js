@@ -72,7 +72,7 @@ describe('Contact Actions', () => {
       expect(authApi).toHaveBeenCalled();
       const callArgs = authApi.mock.calls[0][0];
       expect(callArgs.method).toBe('GET');
-      
+
       // URLSearchParams encodes: spaces as +, @ as %40, and parameters may be in any order
       const url = callArgs.url;
       expect(url).toMatch(/name=John\+Doe/);
