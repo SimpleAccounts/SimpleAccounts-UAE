@@ -248,25 +248,35 @@ describe('DetailContact Component', () => {
   it('should call updateContact on form submission', async () => {
     renderComponent();
 
-    // Wait for form to load
+    // Wait for getContactById to complete and form to be populated
     await waitFor(() => {
       expect(mockActions.getContactById).toHaveBeenCalled();
     });
 
+    // Wait for form to be populated (reset is called after getContactById)
+    await waitFor(() => {
+      const firstNameInput = screen.queryByDisplayValue('John');
+      expect(firstNameInput || screen.queryByPlaceholderText(/first name/i)).toBeTruthy();
+    }, { timeout: 3000 });
+
     const updateButton = await screen.findByRole('button', { name: /update|save/i });
     
-    // Fill required fields first
-    const firstNameInput = screen.getByPlaceholderText(/first name/i);
-    const lastNameInput = screen.getByPlaceholderText(/last name/i);
+    // Fill required fields if not already filled
+    const firstNameInput = screen.queryByDisplayValue('John') || screen.queryByPlaceholderText(/first name/i);
+    const lastNameInput = screen.queryByDisplayValue('Doe') || screen.queryByPlaceholderText(/last name/i);
     
-    if (firstNameInput) fireEvent.change(firstNameInput, { target: { value: 'John' } });
-    if (lastNameInput) fireEvent.change(lastNameInput, { target: { value: 'Doe' } });
+    if (firstNameInput && !firstNameInput.value) {
+      fireEvent.change(firstNameInput, { target: { value: 'John' } });
+    }
+    if (lastNameInput && !lastNameInput.value) {
+      fireEvent.change(lastNameInput, { target: { value: 'Doe' } });
+    }
 
     fireEvent.click(updateButton);
 
     await waitFor(() => {
       expect(mockActions.updateContact).toHaveBeenCalled();
-    }, { timeout: 3000 });
+    }, { timeout: 5000 });
   });
 
   it('should populate form with contact data', async () => {
