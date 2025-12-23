@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Button,
   Row,
@@ -15,7 +14,6 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Editor } from 'react-draft-wysiwyg';
 import { IdCard, CircleDot, Ban } from 'lucide-react';
 
 // Validation schema
@@ -28,24 +26,6 @@ const emailSchema = z.object({
 });
 
 const EmailModal = ({ openEmailModal, closeEmailModal, sendEmail, id }) => {
-  const [contentState, setContentState] = useState({});
-  const [message, setMessage] = useState('');
-
-  const content = {
-    entityMap: {},
-    blocks: [
-      {
-        key: '637gr',
-        text: message,
-        type: 'unstyled',
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [],
-        data: {},
-      },
-    ],
-  };
-
   const {
     control,
     handleSubmit,
@@ -60,11 +40,6 @@ const EmailModal = ({ openEmailModal, closeEmailModal, sendEmail, id }) => {
       invoiceMailingTo: '',
     },
   });
-
-  const onContentStateChange = newContentState => {
-    setContentState(newContentState);
-    setMessage(newContentState.blocks[0].text);
-  };
 
   const onSubmit = _data => {
     sendEmail(id);
@@ -123,30 +98,18 @@ const EmailModal = ({ openEmailModal, closeEmailModal, sendEmail, id }) => {
                   />
                 </FormGroup>
                 <FormGroup>
-                  <Label htmlFor="text-input">Content</Label>
-                  <Editor
-                    initialContentState={content}
-                    editorContent={contentState}
-                    toolbarClassName="editor-toolbar"
-                    wrapperClassName="wrapperClassName"
-                    editorClassName="massage-editor"
-                    onContentStateChange={onContentStateChange}
-                    toolbar={{
-                      options: [
-                        'inline',
-                        'blockType',
-                        'fontSize',
-                        'fontFamily',
-                        'list',
-                        'textAlign',
-                        'colorPicker',
-                        'link',
-                        'image',
-                        'emoji',
-                        'history',
-                      ],
-                      // Note: 'embedded' option excluded to mitigate XSS vulnerability (GHSA-fq5x-7292-2p5r)
-                    }}
+                  <Label htmlFor="invoiceMailingBody">Content</Label>
+                  <Controller
+                    name="invoiceMailingBody"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="textarea"
+                        id="invoiceMailingBody"
+                        placeholder="Write your message"
+                      />
+                    )}
                   />
                 </FormGroup>
               </Col>
