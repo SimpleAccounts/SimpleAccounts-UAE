@@ -39,6 +39,9 @@ lerna-debug.log*
 .env
 .env.local
 .mcp.env
+
+# Docker Compose override (for server-specific secrets)
+.devcontainer/docker-compose.override.yml
 .env.development.local
 .env.test.local
 .env.production.local

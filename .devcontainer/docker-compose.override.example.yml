@@ -1,0 +1,64 @@
+# Docker Compose Override Template for Server-Specific Secrets
+# ============================================================
+#
+# This file shows the structure for adding environment variables
+# that should NOT be committed to the repository.
+#
+# SETUP INSTRUCTIONS:
+# 1. Copy this file to docker-compose.override.yml
+# 2. Replace placeholder values with actual secrets
+# 3. Docker Compose will automatically merge this with docker-compose.yml
+#
+# On dev-server, run:
+#   cp docker-compose.override.example.yml docker-compose.override.yml
+#   # Then edit docker-compose.override.yml with actual values
+#
+# NOTE: docker-compose.override.yml is gitignored and will not be committed
+
+services:
+  devcontainer:
+    environment:
+      # ===================
+      # SonarQube (for MCP)
+      # ===================
+      - SONARQUBE_URL=https://your-sonarqube-server.com
+      - SONARQUBE_TOKEN=your-sonarqube-token-here
+
+      # ===================
+      # Backend Secrets
+      # ===================
+      - JWT_SECRET=your-jwt-secret-here
+
+      # ===================
+      # SMTP Configuration
+      # ===================
+      - SIMPLEACCOUNTS_SMTP_HOST=smtp.example.com
+      - SIMPLEACCOUNTS_SMTP_PORT=587
+      - SIMPLEACCOUNTS_SMTP_USER=your-smtp-username
+      - SIMPLEACCOUNTS_SMTP_PASS=your-smtp-password
+      - SIMPLEACCOUNTS_SMTP_AUTH=true
+      - SIMPLEACCOUNTS_SMTP_STARTTLS_ENABLE=true
+
+      # ===================
+      # External Services
+      # ===================
+      - SIMPLE_SERVICES_HOST=https://services.example.com
+      - SIMPLE_SERVICES_GET_SUBSCRIPTION_KEY=your-subscription-api-key
+
+      # ===================
+      # E2E Testing (optional)
+      # ===================
+      # - E2E_USERNAME=test@example.com
+      # - E2E_PASSWORD=your-test-password
+
+      # ===================
+      # Production DB Override (if connecting to external DB)
+      # ===================
+      # - SIMPLEACCOUNTS_DB_HOST=your-db-host.com
+      # - SIMPLEACCOUNTS_DB_PORT=5432
+      # - SIMPLEACCOUNTS_DB=simpleaccounts
+      # - SIMPLEACCOUNTS_DB_USER=your-db-user
+      # - SIMPLEACCOUNTS_DB_PASSWORD=your-db-password
+      # - SIMPLEACCOUNTS_DB_SSL=true
+      # - SIMPLEACCOUNTS_DB_SSLMODE=require
+      # - SIMPLEACCOUNTS_DB_SSLROOTCERT=/path/to/cert.pem
