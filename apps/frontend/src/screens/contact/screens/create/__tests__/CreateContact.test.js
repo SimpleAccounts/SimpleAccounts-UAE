@@ -10,16 +10,29 @@ import CreateContact from '../screen';
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
+// Mock reactstrap
+jest.mock('reactstrap', () => ({
+  Row: ({ children }) => <div className="row">{children}</div>,
+  Col: ({ children }) => <div className="col">{children}</div>,
+  FormGroup: ({ children }) => <div className="form-group">{children}</div>,
+  Label: ({ children, htmlFor }) => <label htmlFor={htmlFor}>{children}</label>,
+  UncontrolledTooltip: () => null,
+  Input: ({ ...props }) => <input {...props} />,
+}));
+
 // Mock React Hook Form components
 jest.mock('react-hook-form', () => ({
   useForm: jest.fn(() => ({
     register: jest.fn(),
     handleSubmit: jest.fn(fn => fn),
-    formState: { errors: {} },
-    watch: jest.fn(),
+    formState: { errors: {}, touchedFields: {} },
+    watch: jest.fn(() => ({ taxTreatmentId: null })),
     setValue: jest.fn(),
     reset: jest.fn(),
     control: {},
+    setError: jest.fn(),
+    clearErrors: jest.fn(),
+    trigger: jest.fn(() => Promise.resolve(true)),
   })),
   Controller: ({ render }) => render({ field: { onChange: jest.fn(), value: '' } }),
   FormProvider: ({ children }) => <>{children}</>,

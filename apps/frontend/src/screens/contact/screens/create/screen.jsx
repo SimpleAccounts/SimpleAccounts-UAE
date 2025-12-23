@@ -1061,7 +1061,7 @@ const CreateContact = ({
                         )}
                       />
                     </div>
-                    {watchedValues.taxTreatmentId && watchedValues.taxTreatmentId.value && (
+                    {watchedValues?.taxTreatmentId && watchedValues.taxTreatmentId.value && (
                       <div
                         className={cn(
                           'col-span-1 md:col-span-4',

@@ -25,6 +25,16 @@ jest.mock('react-hook-form', () => ({
   FormProvider: ({ children }) => <>{children}</>,
 }));
 
+// Mock reactstrap
+jest.mock('reactstrap', () => ({
+  Row: ({ children }) => <div className="row">{children}</div>,
+  Col: ({ children }) => <div className="col">{children}</div>,
+  FormGroup: ({ children }) => <div className="form-group">{children}</div>,
+  Label: ({ children, htmlFor }) => <label htmlFor={htmlFor}>{children}</label>,
+  UncontrolledTooltip: () => null,
+  Input: ({ ...props }) => <input {...props} />,
+}));
+
 // Mock Zod resolver
 jest.mock('@hookform/resolvers/zod', () => ({
   zodResolver: jest.fn(schema => ({
