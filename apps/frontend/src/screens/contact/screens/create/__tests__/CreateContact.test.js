@@ -24,12 +24,12 @@ jest.mock('react-hook-form', () => {
   const mockFormContext = {
     control: {},
     formState: { errors: {}, touchedFields: {} },
-    watch: vi.fn(() => ({ taxTreatmentId: null })),
-    setValue: vi.fn(),
-    reset: vi.fn(),
-    setError: vi.fn(),
-    clearErrors: vi.fn(),
-    trigger: vi.fn(() => Promise.resolve(true)),
+    watch: jest.fn(() => ({ taxTreatmentId: null })),
+    setValue: jest.fn(),
+    reset: jest.fn(),
+    setError: jest.fn(),
+    clearErrors: jest.fn(),
+    trigger: jest.fn(() => Promise.resolve(true)),
   };
 
   return {
@@ -57,6 +57,9 @@ jest.mock('@hookform/resolvers/zod', () => ({
     validate: jest.fn(),
   })),
 }));
+
+// Import component AFTER all mocks are set up
+import CreateContact from '../screen';
 
 // Mock actions
 const mockActions = {
