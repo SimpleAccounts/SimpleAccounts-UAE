@@ -1083,7 +1083,7 @@ const DetailContact = ({
                     </FormGroup>
                   </Col>
 
-                  {watchedValues.taxTreatmentId && watchedValues.taxTreatmentId && (
+                  {watchedValues.taxTreatmentId && (
                     <Col
                       md="4"
                       style={{

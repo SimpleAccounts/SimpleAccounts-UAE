@@ -103,7 +103,6 @@ test.describe('Create Minimal Contact for Testing', () => {
 
     // Fill in minimal required fields
     const timestamp = Date.now();
-    const contactName = `Minimal Test Supplier ${timestamp}`;
 
     // Contact Type: Supplier (value 1)
     await page.selectOption('select[name="contactType"]', '1');

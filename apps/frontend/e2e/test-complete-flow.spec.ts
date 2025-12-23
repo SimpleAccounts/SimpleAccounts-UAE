@@ -41,7 +41,7 @@ test.describe('Complete Flow Test', () => {
 
     if (!isLoginPage) {
       console.log('❌ Login page not found');
-      const screenshot = await page.screenshot({ fullPage: true });
+      await page.screenshot({ fullPage: true });
       console.log('Page content:', await page.content().then(c => c.substring(0, 500)));
       throw new Error('Login page elements not found');
     }

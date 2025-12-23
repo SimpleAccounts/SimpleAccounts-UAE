@@ -37,6 +37,11 @@ public class ContactHelper {
 	private final ContactTransactionCategoryService contactTransactionCategoryService;
 
 	public ContactListModel getModel(Contact contact) {
+		// Guard against null contact
+		if (contact == null) {
+			return null;
+		}
+		
 		try {
 			// Safely get contactTypeString
 			String contactTypeString = null;
@@ -295,7 +300,7 @@ public class ContactHelper {
 						}
 					} catch (Exception e) {
 						// Log and skip this contact if there's an error converting it
-						System.err.println("Error converting contact " + (contact != null ? contact.getContactId() : "null") + ": " + e.getMessage());
+						System.err.println("Error converting contact " + contact.getContactId() + ": " + e.getMessage());
 						e.printStackTrace();
 						// Continue with next contact
 					}
