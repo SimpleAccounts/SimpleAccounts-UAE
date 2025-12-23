@@ -105,6 +105,7 @@ class Help extends React.Component {
                               target="_blank"
                               href="https://www.simpleaccounts.io/faqs/"
                               style={{ color: '#2266d8', marginTop: '30px !important' }}
+                              rel="noreferrer"
                             >
                               {strings.GotoFAQ}
                             </a>

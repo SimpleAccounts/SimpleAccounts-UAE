@@ -14,4 +14,3 @@ spec:
   commonName: '*.app.simpleaccounts.io'
   dnsNames:
     - '*.app.simpleaccounts.io'
-

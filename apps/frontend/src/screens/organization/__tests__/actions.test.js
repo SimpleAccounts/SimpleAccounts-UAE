@@ -1,5 +1,6 @@
 import configureMockStore from 'redux-mock-store';
-import { thunk } from 'redux-thunk';
+import * as thunkModule from 'redux-thunk';
+const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
 import * as actions from '../actions';
 import { authApi, authFileUploadApi } from 'utils';
 import { ORGANIZATION } from 'constants/types';

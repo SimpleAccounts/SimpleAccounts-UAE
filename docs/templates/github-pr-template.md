@@ -10,17 +10,22 @@ Copy this template when creating a PR:
 
 ```markdown
 ## Summary
-<!-- Brief description of changes (2-3 bullet points) -->
--
+
+## <!-- Brief description of changes (2-3 bullet points) -->
+
 -
 -
 
 ## Related Issue
+
 <!-- Link to the related issue -->
+
 Closes #<issue_number>
 
 ## Type of Change
+
 <!-- Check all that apply -->
+
 - [ ] Bug fix (non-breaking change fixing an issue)
 - [ ] New feature (non-breaking change adding functionality)
 - [ ] Breaking change (fix or feature causing existing functionality to change)
@@ -34,13 +39,17 @@ Closes #<issue_number>
 ## MANDATORY: Proof of Successful Tests
 
 ### Backend Tests
+
 <!-- Paste screenshot of Maven test output showing all tests pass -->
 
 **Backend Test Results** (51 tests must pass):
 ```
+
 <!-- Paste test output here -->
+
 ./mvnw test output:
 Tests run: XX, Failures: 0, Errors: 0, Skipped: 0
+
 ```
 
 | Test Suite | Status | Screenshot |
@@ -52,10 +61,13 @@ Tests run: XX, Failures: 0, Errors: 0, Skipped: 0
 
 **Frontend Test Results** (151 tests must pass):
 ```
+
 <!-- Paste test output here -->
+
 npm test output:
 Test Suites: XX passed, XX total
 Tests: XXX passed, XXX total
+
 ```
 
 | Test Suite | Status | Screenshot |
@@ -215,18 +227,19 @@ In case of issues:
 
 ### Required Screenshots for ALL PRs:
 
-| Screenshot | Purpose | Required |
-|------------|---------|----------|
-| Backend Test Output | Prove 51 tests pass | **YES** |
-| Frontend Test Output | Prove 151 tests pass | **YES** |
-| Login Screen | Verify app works | **YES** |
-| Dashboard (after login) | Verify core functionality | **YES** |
-| Feature Before/After | Show changes made | For UI changes |
-| Console (no errors) | Verify no JS errors | For UI changes |
+| Screenshot              | Purpose                   | Required       |
+| ----------------------- | ------------------------- | -------------- |
+| Backend Test Output     | Prove 51 tests pass       | **YES**        |
+| Frontend Test Output    | Prove 151 tests pass      | **YES**        |
+| Login Screen            | Verify app works          | **YES**        |
+| Dashboard (after login) | Verify core functionality | **YES**        |
+| Feature Before/After    | Show changes made         | For UI changes |
+| Console (no errors)     | Verify no JS errors       | For UI changes |
 
 ### How to Take Screenshots:
 
 **Backend Tests:**
+
 ```bash
 cd apps/backend
 ./mvnw test 2>&1 | tee test-output.txt
@@ -234,6 +247,7 @@ cd apps/backend
 ```
 
 **Frontend Tests:**
+
 ```bash
 cd apps/frontend
 npm test -- --watchAll=false 2>&1 | tee test-output.txt
@@ -241,6 +255,7 @@ npm test -- --watchAll=false 2>&1 | tee test-output.txt
 ```
 
 **Application Screenshots:**
+
 1. Open browser DevTools (F12)
 2. Clear console
 3. Navigate to the screen
@@ -248,6 +263,7 @@ npm test -- --watchAll=false 2>&1 | tee test-output.txt
 5. Include browser console showing no errors
 
 ### Screenshot Naming Convention:
+
 ```
 pr-XXX-backend-tests.png
 pr-XXX-frontend-tests.png
@@ -293,5 +309,5 @@ Before submitting, verify:
 
 ---
 
-*Last Updated: December 2025*
-*Test Requirements: 51 backend + 151 frontend = 202 total tests*
+_Last Updated: December 2025_
+_Test Requirements: 51 backend + 151 frontend = 202 total tests_

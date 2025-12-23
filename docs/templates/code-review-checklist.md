@@ -16,6 +16,7 @@ Use this checklist when reviewing Pull Requests.
 ## 1. Code Quality
 
 ### General
+
 - [ ] Code is readable and self-documenting
 - [ ] Variable/function names are descriptive
 - [ ] No commented-out code (unless documented reason)
@@ -24,6 +25,7 @@ Use this checklist when reviewing Pull Requests.
 - [ ] SOLID principles followed where applicable
 
 ### Backend (Java)
+
 - [ ] Proper exception handling (no empty catch blocks)
 - [ ] Resources properly closed (try-with-resources)
 - [ ] Logging uses SLF4J logger, not System.out
@@ -32,18 +34,20 @@ Use this checklist when reviewing Pull Requests.
 - [ ] BigDecimal used for financial calculations (not float/double)
 
 ### Frontend (React)
+
 - [ ] Components are properly structured
 - [ ] State management is appropriate
 - [ ] No memory leaks (cleanup in useEffect)
 - [ ] PropTypes or TypeScript types defined
 - [ ] Error boundaries for fault tolerance
-- [ ] Accessibility attributes present (aria-*, alt, etc.)
+- [ ] Accessibility attributes present (aria-\*, alt, etc.)
 
 ---
 
 ## 2. Security
 
 ### Critical Security Checks
+
 - [ ] **No hardcoded credentials** (passwords, API keys, secrets)
 - [ ] **Input validation** implemented for all user inputs
 - [ ] **SQL injection** prevention (parameterized queries)
@@ -53,6 +57,7 @@ Use this checklist when reviewing Pull Requests.
 - [ ] **Authorization** checked (user has permission for action)
 
 ### Data Protection
+
 - [ ] Sensitive data not logged
 - [ ] PII handled according to regulations
 - [ ] File uploads validated (type, size, content)
@@ -63,6 +68,7 @@ Use this checklist when reviewing Pull Requests.
 ## 3. Testing
 
 ### Test Coverage
+
 - [ ] Unit tests added for new code
 - [ ] Existing tests updated if behavior changed
 - [ ] Edge cases covered
@@ -71,6 +77,7 @@ Use this checklist when reviewing Pull Requests.
 - [ ] All 151 frontend tests pass (screenshot required)
 
 ### Test Quality
+
 - [ ] Tests are independent (no order dependency)
 - [ ] Tests have clear assertions
 - [ ] Test names describe what is being tested
@@ -81,6 +88,7 @@ Use this checklist when reviewing Pull Requests.
 ## 4. Performance
 
 ### Backend
+
 - [ ] N+1 query problem avoided
 - [ ] Proper pagination for large datasets
 - [ ] Caching used where appropriate
@@ -88,6 +96,7 @@ Use this checklist when reviewing Pull Requests.
 - [ ] Transactions scoped appropriately
 
 ### Frontend
+
 - [ ] No unnecessary re-renders
 - [ ] Large lists virtualized
 - [ ] Images optimized
@@ -99,6 +108,7 @@ Use this checklist when reviewing Pull Requests.
 ## 5. Architecture & Design
 
 ### Backend
+
 - [ ] Service layer properly separated
 - [ ] Repository pattern followed
 - [ ] DTOs used for API communication
@@ -106,6 +116,7 @@ Use this checklist when reviewing Pull Requests.
 - [ ] Proper use of dependency injection
 
 ### Frontend
+
 - [ ] Component hierarchy makes sense
 - [ ] State lifted appropriately
 - [ ] Redux used correctly (actions, reducers)
@@ -171,6 +182,7 @@ Use this checklist when reviewing Pull Requests.
 ## Review Decision
 
 ### Approve if:
+
 - All critical checks pass
 - All mandatory screenshots present
 - Tests pass
@@ -178,6 +190,7 @@ Use this checklist when reviewing Pull Requests.
 - Code quality acceptable
 
 ### Request Changes if:
+
 - Missing screenshots
 - Tests failing
 - Security issues found
@@ -185,6 +198,7 @@ Use this checklist when reviewing Pull Requests.
 - Missing documentation
 
 ### Comments to Leave:
+
 - Be specific and actionable
 - Explain WHY something is an issue
 - Suggest alternatives when requesting changes
@@ -195,6 +209,7 @@ Use this checklist when reviewing Pull Requests.
 ## Review Comment Templates
 
 ### Security Issue
+
 ```
 🔒 **Security Concern**: [description]
 
@@ -204,6 +219,7 @@ This could lead to [vulnerability type].
 ```
 
 ### Code Quality
+
 ```
 💡 **Suggestion**: [description]
 
@@ -211,6 +227,7 @@ Consider [alternative approach] because [reason].
 ```
 
 ### Required Change
+
 ```
 ⚠️ **Required Change**: [description]
 
@@ -218,10 +235,11 @@ This needs to be fixed before merge because [reason].
 ```
 
 ### Praise
+
 ```
 ✨ Great implementation of [feature]! Clean and well-tested.
 ```
 
 ---
 
-*Last Updated: December 2025*
+_Last Updated: December 2025_

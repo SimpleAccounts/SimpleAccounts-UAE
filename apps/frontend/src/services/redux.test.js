@@ -6,7 +6,9 @@
  * Covers: redux 4.0.4 → 4.2.1, redux-thunk 2.3.0 → 2.4.2 upgrades
  */
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
-import { thunk, withExtraArgument } from 'redux-thunk';
+import * as thunkModule from 'redux-thunk';
+const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
+const { withExtraArgument } = thunkModule;
 
 // Sample reducer for testing
 const initialState = {
