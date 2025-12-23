@@ -61,6 +61,25 @@ fi
 GEMINI_VERSION=$(gemini --version 2>/dev/null || echo 'installed')
 log_success "Gemini CLI: $GEMINI_VERSION"
 
+# ============================================
+# Create/Update Symlinks in /usr/local/bin
+# ============================================
+
+log_info "Updating symlinks in /usr/local/bin..."
+NVM_BIN="$(npm prefix -g 2>/dev/null)/bin"
+if [ -n "$NVM_BIN" ] && [ -d "$NVM_BIN" ]; then
+    for tool in claude codex gemini openai; do
+        if [ -x "$NVM_BIN/$tool" ]; then
+            if command -v sudo &>/dev/null; then
+                sudo ln -sf "$NVM_BIN/$tool" /usr/local/bin/$tool 2>/dev/null || true
+            fi
+        fi
+    done
+    log_success "Symlinks updated"
+else
+    log_info "Could not determine npm bin location, skipping symlinks"
+fi
+
 # OpenAI CLI (Python-based, npm package is just the SDK)
 log_info "Checking OpenAI CLI..."
 if command -v pip3 &>/dev/null; then
