@@ -215,7 +215,7 @@ const DetailContact = ({
       })
       .catch(err => {
         setDisabled(false);
-        commonActions.tostifyAlert('error', err.data ? err.data.message : 'ERROR');
+        commonActions.tostifyAlert('error', err?.data?.message || err?.message || 'ERROR');
       });
 
     initializeData();
