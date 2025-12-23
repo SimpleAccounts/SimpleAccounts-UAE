@@ -90,16 +90,21 @@ ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
 # Install global npm packages and AI CLI tools
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g npm@latest" 2>&1
 
-# Install AI CLI tools (Claude, OpenAI, Gemini)
+# Install AI CLI tools (Claude, Codex, OpenAI, Gemini)
 # These are pre-installed but will be updated on container start via install-cli-tools.sh
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && \
     npm install -g @anthropic-ai/claude-code 2>/dev/null || true && \
+    npm install -g @openai/codex 2>/dev/null || true && \
     npm install -g openai 2>/dev/null || true && \
-    npm install -g @google/generative-ai-cli 2>/dev/null || npm install -g gemini-cli 2>/dev/null || true" 2>&1
+    npm install -g @google/gemini-cli 2>/dev/null || true" 2>&1
 
 # Copy CLI tools update script
 COPY --chown=vscode:vscode .devcontainer/install-cli-tools.sh /usr/local/bin/install-cli-tools
 RUN chmod +x /usr/local/bin/install-cli-tools
+
+# Provide Cursor CLI shim in PATH (resolves actual binary at runtime)
+COPY --chown=vscode:vscode .devcontainer/cursor-cli.sh /usr/local/bin/cursor
+RUN chmod +x /usr/local/bin/cursor && ln -sf /usr/local/bin/cursor /usr/local/bin/cursor-agent
 
 # ============================================ 
 # PRE-CACHE DEPENDENCIES
