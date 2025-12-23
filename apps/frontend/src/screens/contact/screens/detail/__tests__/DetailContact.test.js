@@ -5,7 +5,6 @@ import { BrowserRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import * as thunkModule from 'redux-thunk';
 const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
-import DetailContact from '../screen';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
