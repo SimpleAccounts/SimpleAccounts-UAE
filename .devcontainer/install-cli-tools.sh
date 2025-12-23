@@ -26,22 +26,40 @@ export NVM_DIR="${HOME}/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "/usr/local/share/nvm/nvm.sh" ] && \. "/usr/local/share/nvm/nvm.sh"
 
+# Use a clean npm config to avoid stale auth tokens blocking public installs
+npm_global() {
+    NPM_CONFIG_USERCONFIG=/dev/null npm "$@"
+}
+
 # Claude Code CLI (Anthropic)
 log_info "Checking Claude Code CLI..."
 if npm list -g @anthropic-ai/claude-code &>/dev/null; then
-    npm update -g @anthropic-ai/claude-code 2>/dev/null || true
+    npm_global update -g @anthropic-ai/claude-code 2>/dev/null || true
 else
-    npm install -g @anthropic-ai/claude-code 2>/dev/null || true
+    npm_global install -g @anthropic-ai/claude-code 2>/dev/null || true
 fi
 CLAUDE_VERSION=$(claude --version 2>/dev/null || echo 'installed')
 log_success "Claude Code CLI: $CLAUDE_VERSION"
 
-# Gemini CLI (Google) - Note: Official CLI may not be available yet
+# Codex CLI (OpenAI)
+log_info "Checking Codex CLI..."
+if npm list -g @openai/codex &>/dev/null; then
+    npm_global update -g @openai/codex 2>/dev/null || true
+else
+    npm_global install -g @openai/codex 2>/dev/null || true
+fi
+CODEX_VERSION=$(codex --version 2>/dev/null || echo 'installed')
+log_success "Codex CLI: $CODEX_VERSION"
+
+# Gemini CLI (Google)
 log_info "Checking Gemini CLI..."
-# Try multiple package names as the official package name may vary
-npm install -g @anthropic-ai/claude-code &>/dev/null || true  # This was a typo in original, keeping claude
-# Gemini doesn't have an official CLI yet, using placeholder
-log_success "Gemini CLI: (use 'gcloud ai' for Gemini API access)"
+if npm list -g @google/gemini-cli &>/dev/null; then
+    npm_global update -g @google/gemini-cli 2>/dev/null || true
+else
+    npm_global install -g @google/gemini-cli 2>/dev/null || true
+fi
+GEMINI_VERSION=$(gemini --version 2>/dev/null || echo 'installed')
+log_success "Gemini CLI: $GEMINI_VERSION"
 
 # OpenAI CLI (Python-based, npm package is just the SDK)
 log_info "Checking OpenAI CLI..."
@@ -49,9 +67,9 @@ if command -v pip3 &>/dev/null; then
     pip3 install --user --upgrade openai 2>/dev/null || true
 fi
 if npm list -g openai &>/dev/null; then
-    npm update -g openai 2>/dev/null || true
+    npm_global update -g openai 2>/dev/null || true
 else
-    npm install -g openai 2>/dev/null || true
+    npm_global install -g openai 2>/dev/null || true
 fi
 log_success "OpenAI SDK: installed (use 'openai migrate' for SDK commands)"
 
@@ -112,7 +130,30 @@ log_info "Checking Cursor..."
 if command -v cursor &>/dev/null; then
     log_success "Cursor: available"
 else
-    echo "   Cursor IDE CLI: not installed (install Cursor IDE for 'cursor' command)"
+    if [ -d "/home/vscode/.cursor-server" ] && command -v sudo &>/dev/null; then
+        log_info "Installing Cursor CLI shim..."
+        sudo tee /usr/local/bin/cursor >/dev/null <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+cursor_bin=""
+for candidate in /home/vscode/.cursor-server/bin/*/bin/remote-cli/cursor; do
+  if [ -x "${candidate}" ]; then
+    cursor_bin="${candidate}"
+    break
+  fi
+done
+if [ -z "${cursor_bin}" ]; then
+  echo "cursor CLI not found. Start Cursor IDE to install the server." >&2
+  exit 1
+fi
+exec "${cursor_bin}" "$@"
+EOF
+        sudo chmod +x /usr/local/bin/cursor
+        sudo ln -sf /usr/local/bin/cursor /usr/local/bin/cursor-agent
+        log_success "Cursor: available"
+    else
+        echo "   Cursor IDE CLI: not installed (install Cursor IDE for 'cursor' command)"
+    fi
 fi
 
 # ============================================
@@ -123,11 +164,15 @@ echo ""
 echo "🎉 CLI Tools Status:"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 printf "  %-14s %s\n" "claude:" "$(claude --version 2>/dev/null || echo 'not configured')"
+printf "  %-14s %s\n" "codex:" "$(codex --version 2>/dev/null || echo 'not available')"
+printf "  %-14s %s\n" "gemini:" "$(gemini --version 2>/dev/null || echo 'not available')"
 printf "  %-14s %s\n" "gh:" "$(gh --version 2>/dev/null | head -1 | sed 's/gh version //' || echo 'not available')"
 printf "  %-14s %s\n" "gcloud:" "$(gcloud --version 2>/dev/null | head -1 | sed 's/Google Cloud SDK //' || echo 'not available')"
 printf "  %-14s %s\n" "kubectl:" "$(kubectl version --client -o json 2>/dev/null | grep -o '"gitVersion": "[^"]*"' | sed 's/"gitVersion": "//' | sed 's/"//' || echo 'not available')"
 printf "  %-14s %s\n" "psql:" "$(psql --version 2>/dev/null | sed 's/psql (PostgreSQL) //' || echo 'not available')"
 printf "  %-14s %s\n" "openai:" "$(which openai &>/dev/null && echo 'installed' || echo 'not available')"
+printf "  %-14s %s\n" "cursor:" "$(command -v cursor &>/dev/null && echo 'available' || echo 'not available')"
+printf "  %-14s %s\n" "cursor-agent:" "$(command -v cursor-agent &>/dev/null && echo 'available' || echo 'not available')"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "Note: Run 'install-cli-tools' manually to update tools at any time."
