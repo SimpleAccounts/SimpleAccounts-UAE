@@ -1,4 +1,5 @@
 import { defineConfig, mergeConfig } from 'vitest/config';
+import path from 'path';
 import viteConfig from './vite.config.js';
 
 // Plugin to transform Jest APIs to Vitest APIs for backward compatibility
@@ -57,6 +58,12 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     plugins: [jestToVitestPlugin],
+    resolve: {
+      alias: {
+        // Mock reactstrap for tests
+        reactstrap: path.resolve(__dirname, './src/__mocks__/reactstrap.js'),
+      },
+    },
     test: {
       globals: true,
       environment: 'jsdom',
