@@ -83,22 +83,21 @@ jest.mock('reactstrap', () => ({
   Input: ({ ...props }) => <input {...props} />,
 }));
 
-// Mock react-router-dom useLocation
+// Mock react-router-dom - need to preserve actual BrowserRouter
+const mockUseLocation = jest.fn(() => ({
+  pathname: '/admin/contact/detail/1',
+  search: '',
+  hash: '',
+  state: { id: '1' },
+  key: 'default',
+}));
+
 jest.mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom');
   return {
-    BrowserRouter: ({ children }) => <div>{children}</div>,
-    Routes: ({ children }) => <div>{children}</div>,
-    Route: ({ element }) => element,
-    Link: ({ to, children }) => <a href={to}>{children}</a>,
-    Navigate: () => null,
+    ...actual,
+    useLocation: mockUseLocation,
     useNavigate: jest.fn(() => jest.fn()),
-    useLocation: jest.fn(() => ({
-      pathname: '/admin/contact/detail/1',
-      search: '',
-      hash: '',
-      state: { id: '1' },
-      key: 'default',
-    })),
     useParams: jest.fn(() => ({ id: '1' })),
   };
 });
