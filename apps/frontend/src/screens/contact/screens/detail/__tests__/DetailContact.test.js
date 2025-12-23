@@ -7,20 +7,27 @@ import * as thunkModule from 'redux-thunk';
 import { vi } from 'vitest';
 const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
 
-// Mock useLocation hook - define inline to avoid hoisting issues
+// Mock useLocation hook - use vi.hoisted to avoid hoisting issues
+const mockUseLocation = vi.hoisted(() =>
+  vi.fn(() => ({
+    pathname: '/admin/contact/detail/1',
+    search: '',
+    hash: '',
+    state: { id: '1' },
+    key: 'default',
+  }))
+);
+
+const mockUseNavigate = vi.hoisted(() => vi.fn(() => vi.fn()));
+const mockUseParams = vi.hoisted(() => vi.fn(() => ({ id: '1' })));
+
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
-    useLocation: vi.fn(() => ({
-      pathname: '/admin/contact/detail/1',
-      search: '',
-      hash: '',
-      state: { id: '1' },
-      key: 'default',
-    })),
-    useNavigate: vi.fn(() => vi.fn()),
-    useParams: vi.fn(() => ({ id: '1' })),
+    useLocation: mockUseLocation,
+    useNavigate: mockUseNavigate,
+    useParams: mockUseParams,
   };
 });
 
@@ -182,7 +189,15 @@ const renderComponent = (props = {}, initialState = {}) => {
 
 describe('DetailContact Component', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
+    // Reset useLocation mock to return default location
+    mockUseLocation.mockReturnValue({
+      pathname: '/admin/contact/detail/1',
+      search: '',
+      hash: '',
+      state: { id: '1' },
+      key: 'default',
+    });
   });
 
   it('should render detail contact form', async () => {
