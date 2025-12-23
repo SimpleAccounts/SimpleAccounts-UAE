@@ -11,6 +11,7 @@ services:
       - devcontainer-vscode-extensions:/home/vscode/.vscode-server/extensions
       - devcontainer-maven-cache:/home/vscode/.m2
       - devcontainer-npm-cache:/home/vscode/.npm
+      - devcontainer-claude-config:/home/vscode/.claude
     command: sleep infinity
     network_mode: service:db
     depends_on:
@@ -47,3 +48,4 @@ volumes:
   devcontainer-vscode-extensions:
   devcontainer-maven-cache:
   devcontainer-npm-cache:
+  devcontainer-claude-config:

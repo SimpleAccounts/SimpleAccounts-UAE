@@ -1,6 +1,6 @@
 {
   "name": "SimpleAccounts-UAE",
-  "dockerComposeFile": "docker-compose.yml",
+  "dockerComposeFile": ["docker-compose.yml", "docker-compose.override.yml"],
   "service": "devcontainer",
   "workspaceFolder": "/workspaces/SimpleAccounts-UAE",
 
