@@ -21,22 +21,36 @@ jest.mock('reactstrap', () => ({
 }));
 
 // Mock React Hook Form components
-jest.mock('react-hook-form', () => ({
-  useForm: jest.fn(() => ({
-    register: jest.fn(),
-    handleSubmit: jest.fn(fn => fn),
+jest.mock('react-hook-form', () => {
+  const mockFormContext = {
+    control: {},
     formState: { errors: {}, touchedFields: {} },
     watch: jest.fn(() => ({ taxTreatmentId: null })),
     setValue: jest.fn(),
     reset: jest.fn(),
-    control: {},
     setError: jest.fn(),
     clearErrors: jest.fn(),
     trigger: jest.fn(() => Promise.resolve(true)),
-  })),
-  Controller: ({ render }) => render({ field: { onChange: jest.fn(), value: '' } }),
-  FormProvider: ({ children }) => <>{children}</>,
-}));
+  };
+  
+  return {
+    useForm: jest.fn(() => ({
+      register: jest.fn(),
+      handleSubmit: jest.fn(fn => fn),
+      formState: { errors: {}, touchedFields: {} },
+      watch: jest.fn(() => ({ taxTreatmentId: null })),
+      setValue: jest.fn(),
+      reset: jest.fn(),
+      control: {},
+      setError: jest.fn(),
+      clearErrors: jest.fn(),
+      trigger: jest.fn(() => Promise.resolve(true)),
+    })),
+    useFormContext: jest.fn(() => mockFormContext),
+    Controller: ({ render }) => render({ field: { onChange: jest.fn(), value: '' } }),
+    FormProvider: ({ children }) => <>{children}</>,
+  };
+});
 
 // Mock Zod resolver
 jest.mock('@hookform/resolvers/zod', () => ({

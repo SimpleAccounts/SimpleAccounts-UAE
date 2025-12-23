@@ -11,19 +11,36 @@ const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
 // Mock React Hook Form components
-jest.mock('react-hook-form', () => ({
-  useForm: jest.fn(() => ({
-    register: jest.fn(),
-    handleSubmit: jest.fn(fn => fn),
-    formState: { errors: {} },
-    watch: jest.fn(),
+jest.mock('react-hook-form', () => {
+  const mockFormContext = {
+    control: {},
+    formState: { errors: {}, touchedFields: {} },
+    watch: jest.fn(() => ({})),
     setValue: jest.fn(),
     reset: jest.fn(),
-    control: {},
-  })),
-  Controller: ({ render }) => render({ field: { onChange: jest.fn(), value: '' } }),
-  FormProvider: ({ children }) => <>{children}</>,
-}));
+    setError: jest.fn(),
+    clearErrors: jest.fn(),
+    trigger: jest.fn(() => Promise.resolve(true)),
+  };
+  
+  return {
+    useForm: jest.fn(() => ({
+      register: jest.fn(),
+      handleSubmit: jest.fn(fn => fn),
+      formState: { errors: {}, touchedFields: {} },
+      watch: jest.fn(() => ({})),
+      setValue: jest.fn(),
+      reset: jest.fn(),
+      control: {},
+      setError: jest.fn(),
+      clearErrors: jest.fn(),
+      trigger: jest.fn(() => Promise.resolve(true)),
+    })),
+    useFormContext: jest.fn(() => mockFormContext),
+    Controller: ({ render }) => render({ field: { onChange: jest.fn(), value: '' } }),
+    FormProvider: ({ children }) => <>{children}</>,
+  };
+});
 
 // Mock reactstrap
 jest.mock('reactstrap', () => ({
