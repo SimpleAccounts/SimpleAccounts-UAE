@@ -21,7 +21,7 @@ jest.mock('react-hook-form', () => {
     clearErrors: jest.fn(),
     trigger: jest.fn(() => Promise.resolve(true)),
   };
-  
+
   return {
     useForm: jest.fn(() => ({
       register: jest.fn(),
