@@ -5,7 +5,6 @@ import { BrowserRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import * as thunkModule from 'redux-thunk';
 const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
-import CreateContact from '../screen';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -25,12 +24,12 @@ jest.mock('react-hook-form', () => {
   const mockFormContext = {
     control: {},
     formState: { errors: {}, touchedFields: {} },
-    watch: jest.fn(() => ({ taxTreatmentId: null })),
-    setValue: jest.fn(),
-    reset: jest.fn(),
-    setError: jest.fn(),
-    clearErrors: jest.fn(),
-    trigger: jest.fn(() => Promise.resolve(true)),
+    watch: vi.fn(() => ({ taxTreatmentId: null })),
+    setValue: vi.fn(),
+    reset: vi.fn(),
+    setError: vi.fn(),
+    clearErrors: vi.fn(),
+    trigger: vi.fn(() => Promise.resolve(true)),
   };
   
   return {
