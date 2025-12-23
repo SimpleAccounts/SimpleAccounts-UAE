@@ -94,6 +94,7 @@ const mockActions = {
 
 const mockCommonActions = {
   getUniversalCurrencyList: jest.fn(),
+  tostifyAlert: jest.fn(),
 };
 
 const defaultProps = {
