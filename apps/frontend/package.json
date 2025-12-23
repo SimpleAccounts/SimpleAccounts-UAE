@@ -59,7 +59,7 @@
     "react-password-checklist": "^1.1.1",
     "react-phone-input-2": "^2.14.0",
     "react-redux": "^7.1.1",
-    "react-router-dom": "^6.26.0",
+    "react-router-dom": "7.11.0",
     "react-router-navigation-prompt": "^1.9.6",
     "react-select": "^3.1.0",
     "react-to-print": "^3.2.0",
@@ -100,7 +100,7 @@
     "tailwindcss": "^4.1.18",
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5",
+    "typescript": "5.9.3",
     "vite": "^7.3.0",
     "vitest": "^4.0.16",
     "web-streams-polyfill": "^4.2.0"
