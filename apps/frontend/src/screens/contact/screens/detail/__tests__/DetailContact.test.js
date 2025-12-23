@@ -7,7 +7,7 @@ import * as thunkModule from 'redux-thunk';
 import { vi } from 'vitest';
 const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
 
-// Mock useLocation hook - must be defined before vi.mock
+// Mock useLocation hook - define inline to avoid hoisting issues
 const mockLocation = {
   pathname: '/admin/contact/detail/1',
   search: '',
@@ -16,15 +16,19 @@ const mockLocation = {
   key: 'default',
 };
 
-const mockUseLocation = vi.fn(() => mockLocation);
-
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
-    useLocation: mockUseLocation,
+    useLocation: vi.fn(() => mockLocation),
+    useNavigate: vi.fn(() => vi.fn()),
+    useParams: vi.fn(() => ({ id: '1' })),
   };
 });
+
+// Get the mocked useLocation for resetting in tests
+const { useLocation } = await import('react-router-dom');
+const mockUseLocation = useLocation;
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
