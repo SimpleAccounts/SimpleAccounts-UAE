@@ -17,6 +17,7 @@ services:
       - devcontainer-claude-config:/home/vscode/.claude
       - devcontainer-gemini-config:/home/vscode/.gemini
       - devcontainer-codex-config:/home/vscode/.codex
+      - devcontainer-gh-config:/home/vscode/.config/gh
     command: sleep infinity
     network_mode: service:db
     depends_on:
@@ -56,3 +57,4 @@ volumes:
   devcontainer-claude-config:
   devcontainer-gemini-config:
   devcontainer-codex-config:
+  devcontainer-gh-config:
