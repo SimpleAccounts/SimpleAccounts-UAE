@@ -51,6 +51,9 @@ jest.mock('reactstrap', () => ({
   Input: ({ ...props }) => <input {...props} />,
 }));
 
+// Import component AFTER mocks are set up
+import DetailContact from '../screen';
+
 // Mock Zod resolver
 jest.mock('@hookform/resolvers/zod', () => ({
   zodResolver: jest.fn(schema => ({
