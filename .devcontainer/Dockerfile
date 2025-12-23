@@ -98,6 +98,15 @@ RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && \
     npm install -g openai 2>/dev/null || true && \
     npm install -g @google/gemini-cli 2>/dev/null || true" 2>&1
 
+# Create symlinks in /usr/local/bin for npm global packages
+# This ensures CLI tools are in PATH regardless of NVM sourcing
+RUN NVM_BIN=$(su vscode -c "source /usr/local/share/nvm/nvm.sh && echo \$(npm prefix -g)/bin") && \
+    for tool in claude codex gemini openai; do \
+        if [ -x "$NVM_BIN/$tool" ]; then \
+            ln -sf "$NVM_BIN/$tool" /usr/local/bin/$tool; \
+        fi; \
+    done
+
 # Copy CLI tools update script
 COPY --chown=vscode:vscode .devcontainer/install-cli-tools.sh /usr/local/bin/install-cli-tools
 RUN chmod +x /usr/local/bin/install-cli-tools
