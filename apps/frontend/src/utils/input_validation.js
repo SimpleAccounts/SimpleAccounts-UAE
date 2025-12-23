@@ -38,7 +38,7 @@ export const postZipCodeError = (value, countryID) => {
 
 export const addressValidation = values => {
   const error = {};
-  if (values.fax && values.fax?.length !== 15) {
+  if (values?.fax && values.fax?.length !== 15) {
     error.fax = strings.PleaseEnter15DigitFax;
   }
   if (!values.address) {

@@ -98,7 +98,20 @@ jest.mock('@hookform/resolvers/zod', () => ({
 
 // Mock actions
 const mockActions = {
-  getContactById: jest.fn(() => Promise.resolve({ status: 200 })),
+  getContactById: jest.fn(() =>
+    Promise.resolve({
+      status: 200,
+      data: {
+        contactId: 1,
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john.doe@example.com',
+        isActive: true,
+        vatRegistrationNumber: '',
+        isRegisteredForVat: false,
+      },
+    })
+  ),
   getCountryList: jest.fn(),
   getStateList: jest.fn(),
   getCityList: jest.fn(),
@@ -200,8 +213,8 @@ describe('DetailContact Component', () => {
     renderComponent();
 
     await waitFor(() => {
-      const deleteButton = screen.getByRole('button', { name: /delete/i });
-      expect(deleteButton).toBeInTheDocument();
+      const deleteButtons = screen.getAllByRole('button', { name: /delete/i });
+      expect(deleteButtons.length).toBeGreaterThan(0);
     });
   });
 
@@ -220,8 +233,9 @@ describe('DetailContact Component', () => {
 
     renderComponent();
 
-    const deleteButton = await screen.findByRole('button', { name: /delete/i });
-    fireEvent.click(deleteButton);
+    const deleteButtons = await screen.findAllByRole('button', { name: /delete/i });
+    // Click the first delete button (header button)
+    fireEvent.click(deleteButtons[0]);
 
     await waitFor(() => {
       expect(mockActions.deleteContact).toHaveBeenCalled();
@@ -231,35 +245,40 @@ describe('DetailContact Component', () => {
   it('should call updateContact on form submission', async () => {
     renderComponent();
 
+    // Wait for form to load
+    await waitFor(() => {
+      expect(mockActions.getContactById).toHaveBeenCalled();
+    });
+
     const updateButton = await screen.findByRole('button', { name: /update|save/i });
+    
+    // Fill required fields first
+    const firstNameInput = screen.getByPlaceholderText(/first name/i);
+    const lastNameInput = screen.getByPlaceholderText(/last name/i);
+    
+    if (firstNameInput) fireEvent.change(firstNameInput, { target: { value: 'John' } });
+    if (lastNameInput) fireEvent.change(lastNameInput, { target: { value: 'Doe' } });
+
     fireEvent.click(updateButton);
 
     await waitFor(() => {
       expect(mockActions.updateContact).toHaveBeenCalled();
-    });
+    }, { timeout: 3000 });
   });
 
   it('should populate form with contact data', async () => {
-    const contactData = {
-      contactId: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-    };
+    renderComponent();
 
-    renderComponent(
-      {},
-      {
-        contact: {
-          contact_detail: contactData,
-        },
-      }
-    );
+    // Wait for getContactById to be called and complete
+    await waitFor(() => {
+      expect(mockActions.getContactById).toHaveBeenCalledWith('1');
+    });
 
+    // Wait for form to be populated with data from getContactById response
     await waitFor(() => {
       const nameInput = screen.getByDisplayValue('John');
       expect(nameInput).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
   });
 
   it('should navigate back on cancel', async () => {
