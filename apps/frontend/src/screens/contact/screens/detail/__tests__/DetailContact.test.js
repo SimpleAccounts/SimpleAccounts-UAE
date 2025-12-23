@@ -30,39 +30,39 @@ const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
 // Mock React Hook Form components
-jest.mock('react-hook-form', () => {
+vi.mock('react-hook-form', () => {
   const mockFormContext = {
     control: {},
     formState: { errors: {}, touchedFields: {} },
-    watch: jest.fn(() => ({})),
-    setValue: jest.fn(),
-    reset: jest.fn(),
-    setError: jest.fn(),
-    clearErrors: jest.fn(),
-    trigger: jest.fn(() => Promise.resolve(true)),
+    watch: vi.fn(() => ({})),
+    setValue: vi.fn(),
+    reset: vi.fn(),
+    setError: vi.fn(),
+    clearErrors: vi.fn(),
+    trigger: vi.fn(() => Promise.resolve(true)),
   };
 
   return {
-    useForm: jest.fn(() => ({
-      register: jest.fn(),
-      handleSubmit: jest.fn(fn => fn),
+    useForm: vi.fn(() => ({
+      register: vi.fn(),
+      handleSubmit: vi.fn(fn => fn),
       formState: { errors: {}, touchedFields: {} },
-      watch: jest.fn(() => ({})),
-      setValue: jest.fn(),
-      reset: jest.fn(),
+      watch: vi.fn(() => ({})),
+      setValue: vi.fn(),
+      reset: vi.fn(),
       control: {},
-      setError: jest.fn(),
-      clearErrors: jest.fn(),
-      trigger: jest.fn(() => Promise.resolve(true)),
+      setError: vi.fn(),
+      clearErrors: vi.fn(),
+      trigger: vi.fn(() => Promise.resolve(true)),
     })),
-    useFormContext: jest.fn(() => mockFormContext),
+    useFormContext: vi.fn(() => mockFormContext),
     Controller: ({ render, name }) => {
       const mockField = {
-        onChange: jest.fn(),
+        onChange: vi.fn(),
         value: '',
         name: name || '',
-        onBlur: jest.fn(),
-        ref: jest.fn(),
+        onBlur: vi.fn(),
+        ref: vi.fn(),
       };
       const mockFieldState = { error: null, invalid: false, isDirty: false, isTouched: false };
       const mockFormState = { errors: {}, touchedFields: {} };
@@ -77,7 +77,7 @@ jest.mock('react-hook-form', () => {
 });
 
 // Mock reactstrap
-jest.mock('reactstrap', () => ({
+vi.mock('reactstrap', () => ({
   Row: ({ children }) => <div className="row">{children}</div>,
   Col: ({ children }) => <div className="col">{children}</div>,
   FormGroup: ({ children }) => <div className="form-group">{children}</div>,
@@ -90,15 +90,15 @@ jest.mock('reactstrap', () => ({
 import DetailContact from '../screen';
 
 // Mock Zod resolver
-jest.mock('@hookform/resolvers/zod', () => ({
-  zodResolver: jest.fn(schema => ({
-    validate: jest.fn(),
+vi.mock('@hookform/resolvers/zod', () => ({
+  zodResolver: vi.fn(schema => ({
+    validate: vi.fn(),
   })),
 }));
 
 // Mock actions
 const mockActions = {
-  getContactById: jest.fn(() =>
+  getContactById: vi.fn(() =>
     Promise.resolve({
       status: 200,
       data: {
@@ -112,18 +112,18 @@ const mockActions = {
       },
     })
   ),
-  getTaxTreatment: jest.fn(() => Promise.resolve({ status: 200, data: [] })),
-  getCountryList: jest.fn(),
-  getStateList: jest.fn(),
-  getCityList: jest.fn(),
-  getContactTypeList: jest.fn(),
-  updateContact: jest.fn(() => Promise.resolve({ status: 200 })),
-  deleteContact: jest.fn(() => Promise.resolve({ status: 200 })),
+  getTaxTreatment: vi.fn(() => Promise.resolve({ status: 200, data: [] })),
+  getCountryList: vi.fn(),
+  getStateList: vi.fn(),
+  getCityList: vi.fn(),
+  getContactTypeList: vi.fn(),
+  updateContact: vi.fn(() => Promise.resolve({ status: 200 })),
+  deleteContact: vi.fn(() => Promise.resolve({ status: 200 })),
 };
 
 const mockCommonActions = {
-  getUniversalCurrencyList: jest.fn(),
-  tostifyAlert: jest.fn(),
+  getUniversalCurrencyList: vi.fn(),
+  tostifyAlert: vi.fn(),
 };
 
 const defaultProps = {
@@ -131,8 +131,8 @@ const defaultProps = {
   detailContactActions: mockActions,
   commonActions: mockCommonActions,
   history: {
-    push: jest.fn(),
-    goBack: jest.fn(),
+    push: vi.fn(),
+    goBack: vi.fn(),
   },
   location: {
     pathname: '/admin/contact/detail/1',
@@ -227,7 +227,7 @@ describe('DetailContact Component', () => {
 
   it('should call deleteContact on delete button click', async () => {
     // Mock window.confirm
-    window.confirm = jest.fn(() => true);
+    window.confirm = vi.fn(() => true);
 
     renderComponent();
 
@@ -303,8 +303,8 @@ describe('DetailContact Component', () => {
 
   it('should navigate back on cancel', async () => {
     const mockHistory = {
-      push: jest.fn(),
-      goBack: jest.fn(),
+      push: vi.fn(),
+      goBack: vi.fn(),
     };
 
     renderComponent({ history: mockHistory });
