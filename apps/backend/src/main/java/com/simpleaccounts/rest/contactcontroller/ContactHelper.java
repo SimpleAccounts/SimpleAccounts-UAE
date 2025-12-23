@@ -100,7 +100,8 @@ public class ContactHelper {
 			return model;
 		} catch (Exception e) {
 			// Log the exception and return a minimal model
-			System.err.println("Error in getModel for contact " + (contact != null ? contact.getContactId() : "null") + ": " + e.getMessage());
+			// Note: contact is guaranteed non-null here due to early return guard
+			System.err.println("Error in getModel for contact " + contact.getContactId() + ": " + e.getMessage());
 			System.err.println("Exception type: " + e.getClass().getName());
 			if (e.getCause() != null) {
 				System.err.println("Caused by: " + e.getCause().getMessage());
@@ -109,10 +110,10 @@ public class ContactHelper {
 			// Return minimal model with just ID and basic fields
 			try {
 				ContactListModel model = new ContactListModel();
-				model.setId(contact != null ? contact.getContactId() : null);
-				model.setFirstName(contact != null ? contact.getFirstName() : null);
-				model.setLastName(contact != null ? contact.getLastName() : null);
-				model.setEmail(contact != null ? contact.getEmail() : null);
+				model.setId(contact.getContactId());
+				model.setFirstName(contact.getFirstName());
+				model.setLastName(contact.getLastName());
+				model.setEmail(contact.getEmail());
 				return model;
 			} catch (Exception e2) {
 				System.err.println("Error creating minimal model: " + e2.getMessage());
