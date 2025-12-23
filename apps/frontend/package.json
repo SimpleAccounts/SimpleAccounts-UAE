@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@popperjs/core": "^2.11.8",
     "@progress/kendo-drawing": "^1.6.0",
     "@progress/kendo-react-pdf": "^3.11.0",
     "@radix-ui/react-alert-dialog": "^1.1.15",
