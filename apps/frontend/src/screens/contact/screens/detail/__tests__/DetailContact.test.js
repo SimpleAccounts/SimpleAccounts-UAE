@@ -120,6 +120,13 @@ const defaultProps = {
     push: jest.fn(),
     goBack: jest.fn(),
   },
+  location: {
+    pathname: '/admin/contact/detail/1',
+    search: '',
+    hash: '',
+    state: { id: '1' },
+    key: 'default',
+  },
   match: {
     params: {
       id: '1',

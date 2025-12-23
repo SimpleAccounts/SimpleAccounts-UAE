@@ -127,6 +127,16 @@ if (global.document) {
   });
 }
 
+// Mock ResizeObserver for Radix UI components
+global.ResizeObserver = class ResizeObserver {
+  constructor(cb) {
+    this.cb = cb;
+  }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
 // Mock react-router-navigation-prompt (incompatible with React Router v6)
 vi.mock('react-router-navigation-prompt', () => {
   return {
