@@ -258,11 +258,10 @@
 			<version>4.5.0-M2</version>
 		</dependency>
 		<!-- read excel -->
-		<!-- https://mvnrepository.com/artifact/org.liquibase/liquibase-core -->
+		<!-- Liquibase for database migrations - Spring Boot 4 requires the starter -->
 		<dependency>
-			<groupId>org.liquibase</groupId>
-			<artifactId>liquibase-core</artifactId>
-			<version>5.0.1</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-liquibase</artifactId>
 		</dependency>
 		<!-- iText 8.x for PDF generation (iText 7 successor) -->
 		<dependency>
