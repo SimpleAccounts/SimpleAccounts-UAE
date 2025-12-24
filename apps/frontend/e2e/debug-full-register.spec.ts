@@ -14,7 +14,13 @@ test('debug full registration with phone', async ({ page }) => {
   page.on('response', async res => {
     if (res.url().includes('/rest/')) {
       const body = await res.text().catch(() => '');
-      console.log('API Response:', res.status(), res.url().split('/rest/')[1], '->', body.substring(0, 200));
+      console.log(
+        'API Response:',
+        res.status(),
+        res.url().split('/rest/')[1],
+        '->',
+        body.substring(0, 200)
+      );
     }
   });
 
@@ -58,7 +64,10 @@ test('debug full registration with phone', async ({ page }) => {
   await page.screenshot({ path: 'step3-before-fill.png', fullPage: true });
 
   // Check if firstName is visible (uses name attribute, not id)
-  const firstNameVisible = await page.locator('input[name="firstName"]').isVisible().catch(() => false);
+  const firstNameVisible = await page
+    .locator('input[name="firstName"]')
+    .isVisible()
+    .catch(() => false);
   console.log('firstName visible:', firstNameVisible);
 
   if (firstNameVisible) {

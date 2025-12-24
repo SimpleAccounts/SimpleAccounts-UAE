@@ -58,11 +58,16 @@ async function selectReactSelectOption(page: Page, ariaLabel: string, optionInde
       console.log(`  ${ariaLabel} options available: ${optionCount}`);
 
       // Skip first option if it's a placeholder (like "Select Company Type")
-      const firstOptionText = await options.first().textContent().catch(() => '');
+      const firstOptionText = await options
+        .first()
+        .textContent()
+        .catch(() => '');
       const skipFirst = firstOptionText?.toLowerCase().includes('select') || false;
       const actualIndex = skipFirst ? optionIndex + 1 : optionIndex;
 
-      console.log(`  First option: "${firstOptionText}", skipFirst: ${skipFirst}, actualIndex: ${actualIndex}`);
+      console.log(
+        `  First option: "${firstOptionText}", skipFirst: ${skipFirst}, actualIndex: ${actualIndex}`
+      );
 
       if (optionCount > actualIndex) {
         await options.nth(actualIndex).click({ force: true });
@@ -109,11 +114,16 @@ async function selectReactSelectOption(page: Page, ariaLabel: string, optionInde
       console.log(`  ${ariaLabel} options available: ${optionCount}`);
 
       // Skip first option if it's a placeholder (like "Select Company Type")
-      const firstOptionText = await options.first().textContent().catch(() => '');
+      const firstOptionText = await options
+        .first()
+        .textContent()
+        .catch(() => '');
       const skipFirst = firstOptionText?.toLowerCase().includes('select') || false;
       const actualIndex = skipFirst ? optionIndex + 1 : optionIndex;
 
-      console.log(`  First option: "${firstOptionText}", skipFirst: ${skipFirst}, actualIndex: ${actualIndex}`);
+      console.log(
+        `  First option: "${firstOptionText}", skipFirst: ${skipFirst}, actualIndex: ${actualIndex}`
+      );
 
       if (optionCount > actualIndex) {
         await options.nth(actualIndex).click({ force: true });
