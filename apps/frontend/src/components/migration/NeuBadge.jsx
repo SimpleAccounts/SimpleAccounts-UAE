@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 const colorMap = {
   primary: {
-    background: 'var(--neu-primary, #1e6eff)',
+    background: 'var(--neu-primary, #2064d8)',
     color: '#ffffff',
   },
   secondary: {
@@ -15,7 +15,7 @@ const colorMap = {
     color: '#ffffff',
   },
   success: {
-    background: 'var(--neu-secondary, #00c896)',
+    background: 'var(--neu-secondary, #21d8aa)',
     color: '#ffffff',
   },
   danger: {

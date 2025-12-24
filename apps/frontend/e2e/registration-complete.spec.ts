@@ -24,8 +24,119 @@ async function clearDatabase() {
 
 // Helper to select an option from a react-select dropdown by aria-label
 async function selectReactSelectOption(page: Page, ariaLabel: string, optionIndex = 1) {
-  // The aria-label is on the hidden input, so we find it and go to its parent control
-  const selectInput = page.locator(`input[aria-label="${ariaLabel}"]`);
+  console.log(`selectReactSelectOption called for: ${ariaLabel}`);
+
+  // Wait for page to be fully loaded and react-select to render
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(2000);
+
+  // Try multiple selector strategies for react-select compatibility
+  let selectInput = page.locator(`input[aria-label="${ariaLabel}"]`);
+  let inputExists = await selectInput.count().catch(() => 0);
+  console.log(`  aria-label input count: ${inputExists}`);
+
+  // If aria-label input exists, use it directly
+  if (inputExists > 0) {
+    console.log(`  Found input with aria-label="${ariaLabel}"`);
+
+    // Try clicking the input directly to focus it, then use keyboard
+    await selectInput.first().click({ force: true });
+    await page.waitForTimeout(300);
+
+    // Use keyboard to open the dropdown
+    await page.keyboard.press('ArrowDown');
+    await page.waitForTimeout(500);
+
+    // Wait for menu and select option
+    const menu = page.locator('div[class*="menu"]').first();
+    const menuVisible = await menu.isVisible({ timeout: 5_000 }).catch(() => false);
+    console.log(`  Menu visible: ${menuVisible}`);
+
+    if (menuVisible) {
+      const options = menu.locator('div[class*="option"]');
+      const optionCount = await options.count();
+      console.log(`  ${ariaLabel} options available: ${optionCount}`);
+
+      // Skip first option if it's a placeholder (like "Select Company Type")
+      const firstOptionText = await options
+        .first()
+        .textContent()
+        .catch(() => '');
+      const skipFirst = firstOptionText?.toLowerCase().includes('select') || false;
+      const actualIndex = skipFirst ? optionIndex + 1 : optionIndex;
+
+      console.log(
+        `  First option: "${firstOptionText}", skipFirst: ${skipFirst}, actualIndex: ${actualIndex}`
+      );
+
+      if (optionCount > actualIndex) {
+        await options.nth(actualIndex).click({ force: true });
+      } else if (optionCount > (skipFirst ? 1 : 0)) {
+        await options.nth(skipFirst ? 1 : 0).click({ force: true });
+      }
+      await page.waitForTimeout(500);
+    } else {
+      // Fallback: just press Enter to select first option if menu didn't open visually
+      console.log(`  Menu not visible, using keyboard to select`);
+      await page.keyboard.press('Enter');
+      await page.waitForTimeout(500);
+    }
+    return;
+  }
+
+  // Fallback: try finding by placeholder text
+  console.log(`  Trying placeholder fallback...`);
+  const placeholderMap: Record<string, string> = {
+    'Select company type': 'Select Business Type',
+    'Select emirate': 'Select Emirate',
+  };
+  const placeholder = placeholderMap[ariaLabel] || ariaLabel;
+
+  // Find the react-select by its placeholder
+  const selectContainer = page.locator(
+    `div[class*="control"]:has(div[class*="placeholder"]:text-is("${placeholder}"))`
+  );
+  const containerCount = await selectContainer.count();
+  console.log(`  Placeholder container count: ${containerCount}`);
+
+  if (containerCount > 0) {
+    console.log(`  Found select by placeholder: ${placeholder}`);
+    await selectContainer.first().click({ force: true });
+    await page.waitForTimeout(500);
+
+    // Wait for menu and select option
+    const menu = page.locator('div[class*="menu"]').first();
+    const menuVisible = await menu.isVisible({ timeout: 3_000 }).catch(() => false);
+
+    if (menuVisible) {
+      const options = menu.locator('div[class*="option"]');
+      const optionCount = await options.count();
+      console.log(`  ${ariaLabel} options available: ${optionCount}`);
+
+      // Skip first option if it's a placeholder (like "Select Company Type")
+      const firstOptionText = await options
+        .first()
+        .textContent()
+        .catch(() => '');
+      const skipFirst = firstOptionText?.toLowerCase().includes('select') || false;
+      const actualIndex = skipFirst ? optionIndex + 1 : optionIndex;
+
+      console.log(
+        `  First option: "${firstOptionText}", skipFirst: ${skipFirst}, actualIndex: ${actualIndex}`
+      );
+
+      if (optionCount > actualIndex) {
+        await options.nth(actualIndex).click({ force: true });
+      } else if (optionCount > (skipFirst ? 1 : 0)) {
+        await options.nth(skipFirst ? 1 : 0).click({ force: true });
+      }
+      await page.waitForTimeout(500);
+    }
+    return;
+  }
+
+  // Last fallback: try to wait for the input
+  console.log(`  Final fallback - waiting for input...`);
   await selectInput.waitFor({ state: 'attached', timeout: 10_000 });
 
   // Navigate up to the react-select container (parent has class containing 'control')
@@ -264,8 +375,9 @@ async function navigateToRegister(page: Page) {
 test.describe('Registration Complete Flow', () => {
   test.beforeEach(async ({ page }) => {
     test.setTimeout(180_000); // 3 minutes per test
-    await clearDatabase();
-    await page.waitForTimeout(2000);
+    // Note: clearDatabase() removed as it clears seed data needed for dropdowns
+    // await clearDatabase();
+    await page.waitForTimeout(1000);
   });
 
   test('should successfully register a new company', async ({ page, browserName }) => {
