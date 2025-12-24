@@ -3,8 +3,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 // Neumorphic theme constants
 const theme = {
   bg: '#e8eef5',
-  primary: '#1e6eff',
-  primaryDark: '#0052cc',
+  primary: '#2064d8',
+  primaryDark: '#1a4fa8',
   textSecondary: '#3d5a80',
   textMuted: '#98afc2',
   shadowDark: '#c4c9cf',

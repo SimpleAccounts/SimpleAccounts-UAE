@@ -1,6 +1,77 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Tailwind v4 Theme Configuration */
+@theme {
+  /* Neumorphic Colors */
+  --color-neu-bg: #e8eef5;
+  --color-neu-bg-alt: #e0e5ec;
+  --color-neu-bg-dark: #2b2d33;
+  --color-neu-bg-dark-alt: #31343b;
+  --color-neu-border: #d1d9e6;
+  --color-neu-border-dark: #3d4049;
+  --color-neu-shadow-dark: #c4c9cf;
+  --color-neu-shadow-light: #ffffff;
+  --color-neu-shadow-dark-dm: #1e1f23;
+  --color-neu-shadow-light-dm: #383b43;
+  --color-neu-primary: #2064d8;
+  --color-neu-primary-dark: #1a4fa8;
+  --color-neu-secondary: #21d8aa;
+  --color-neu-warning: #f59e0b;
+  --color-neu-danger: #ff4d6a;
+
+  /* Neumorphic Text Colors */
+  --color-neu-text-primary: #1e3a5f;
+  --color-neu-text-secondary: #3d5a80;
+  --color-neu-text-muted: #98afc2;
+  --color-neu-text-dark: #1e3a5f;
+  --color-neu-text-light: #98afc2;
+
+  /* Neumorphic Shadows - Light Mode */
+  --shadow-neu-flat: 2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff;
+  --shadow-neu-raised-xs: 2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff;
+  --shadow-neu-raised-sm: 3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff;
+  --shadow-neu-raised: 6px 6px 12px #c4c9cf, -6px -6px 12px #ffffff;
+  --shadow-neu-raised-md: 8px 8px 16px #c4c9cf, -8px -8px 16px #ffffff;
+  --shadow-neu-raised-lg: 10px 10px 20px #c4c9cf, -10px -10px 20px #ffffff;
+  --shadow-neu-raised-xl: 15px 15px 30px #c4c9cf, -15px -15px 30px #ffffff;
+
+  /* Neumorphic Inset Shadows - Light Mode */
+  --shadow-neu-pressed-xs: inset 1px 1px 2px #c4c9cf, inset -1px -1px 2px #ffffff;
+  --shadow-neu-pressed-sm: inset 2px 2px 4px #c4c9cf, inset -2px -2px 4px #ffffff;
+  --shadow-neu-pressed: inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff;
+  --shadow-neu-pressed-md: inset 4px 4px 8px #c4c9cf, inset -4px -4px 8px #ffffff;
+  --shadow-neu-pressed-lg: inset 6px 6px 12px #c4c9cf, inset -6px -6px 12px #ffffff;
+
+  /* Neumorphic Shadows - Dark Mode */
+  --shadow-neu-raised-dark: 6px 6px 12px #1e1f23, -6px -6px 12px #383b43;
+  --shadow-neu-raised-sm-dark: 3px 3px 6px #1e1f23, -3px -3px 6px #383b43;
+  --shadow-neu-pressed-dark: inset 3px 3px 6px #1e1f23, inset -3px -3px 6px #383b43;
+  --shadow-neu-pressed-sm-dark: inset 2px 2px 4px #1e1f23, inset -2px -2px 4px #383b43;
+
+  /* Legacy Aliases for Compatibility */
+  --shadow-neu-out: 6px 6px 12px #c4c9cf, -6px -6px 12px #ffffff;
+  --shadow-neu-in: inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff;
+  --shadow-neu-out-dark: 6px 6px 12px #1e1f23, -6px -6px 12px #383b43;
+  --shadow-neu-in-dark: inset 3px 3px 6px #1e1f23, inset -3px -3px 6px #383b43;
+
+  /* Button Shadows */
+  --shadow-neu-btn: 3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff;
+  --shadow-neu-btn-hover: 5px 5px 10px #c4c9cf, -5px -5px 10px #ffffff;
+  --shadow-neu-btn-active: inset 2px 2px 5px #c4c9cf, inset -2px -2px 5px #ffffff;
+
+  /* Input Shadows */
+  --shadow-neu-input: inset 2px 2px 4px #c4c9cf, inset -2px -2px 4px #ffffff;
+  --shadow-neu-input-focus: inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff;
+
+  /* Border Radius */
+  --radius-neu-xs: 0.25rem;
+  --radius-neu-sm: 0.5rem;
+  --radius-neu: 0.75rem;
+  --radius-neu-md: 1rem;
+  --radius-neu-lg: 1.25rem;
+  --radius-neu-xl: 1.5rem;
+  --radius-neu-2xl: 2rem;
+}
 
 @layer base {
   :root {
@@ -10,7 +81,7 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 217 91% 60%;
+    --primary: 218 74% 49%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -22,7 +93,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 217 91% 60%;
+    --ring: 218 74% 49%;
     --radius: 0.5rem;
   }
 
@@ -33,7 +104,7 @@
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
+    --primary: 218 74% 49%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -45,7 +116,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 217 91% 60%;
+    --ring: 218 74% 49%;
   }
 }
 

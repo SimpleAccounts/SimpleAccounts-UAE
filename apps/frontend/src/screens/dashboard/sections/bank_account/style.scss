@@ -10,13 +10,13 @@
   height: 100%;
 
   .bank-type {
-    color: var(--neu-primary, #1e6eff) !important;
+    color: var(--neu-primary, #2064d8) !important;
     font-size: 18px;
   }
 
   h1 {
     font-size: 1.125rem;
-    color: var(--neu-primary, #1e6eff);
+    color: var(--neu-primary, #2064d8);
     font-weight: 700;
     margin: 0;
   }
@@ -165,7 +165,7 @@
 }
 
 .card-body .form-control1:focus {
-  border: 1px solid var(--neu-primary, #1e6eff) !important;
+  border: 1px solid var(--neu-primary, #2064d8) !important;
   box-shadow: none !important;
 }
 
