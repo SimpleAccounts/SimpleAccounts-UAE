@@ -1,5 +1,5 @@
 --liquibase formatted sql
-<!-- USER below line on top of script to execute your sql script <author : version>
+
 --changeset Zain Khan:3
 
 INSERT INTO bank_account_type (bank_account_type_code, created_by, created_date, default_flag, delete_flag, last_updated_by, last_update_date, name, order_sequence, version_number) VALUES
