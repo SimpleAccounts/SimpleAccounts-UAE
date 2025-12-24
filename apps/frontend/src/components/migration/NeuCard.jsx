@@ -24,7 +24,7 @@ const NEU_CARD_STYLES = {
   header: {
     background: 'transparent',
     borderBottom: '1px solid rgba(200, 210, 220, 0.3)',
-    color: 'var(--neu-primary, #1e6eff)',
+    color: 'var(--neu-primary, #2064d8)',
     fontWeight: 700,
   },
   body: {

@@ -7,10 +7,10 @@
   --neu-bg: #e8eef5;
   --neu-bg-alt: #e0e5ec;
 
-  /* Brand Colors */
-  --neu-primary: #1e6eff;
-  --neu-primary-dark: #0052cc;
-  --neu-secondary: #00c896;
+  /* Brand Colors - matching logo */
+  --neu-primary: #2064d8;
+  --neu-primary-dark: #1a4fa8;
+  --neu-secondary: #21d8aa;
   --neu-warning: #f59e0b;
   --neu-danger: #ff4d6a;
 
@@ -40,8 +40,8 @@
     inset 3px 3px 6px var(--neu-shadow-dark), inset -3px -3px 6px var(--neu-shadow-light);
 
   /* Gradients */
-  --neu-gradient-primary: linear-gradient(145deg, #1e6eff, #0052cc);
-  --neu-gradient-success: linear-gradient(145deg, #00c896, #00a67d);
+  --neu-gradient-primary: linear-gradient(145deg, #2064d8, #1a4fa8);
+  --neu-gradient-success: linear-gradient(145deg, #21d8aa, #1ab78e);
 }
 
 /* Dark Mode Variables */
