@@ -247,7 +247,7 @@ class Dashboard extends React.Component {
           data: [30, 40, 25, 50, 49, 21, 70, 51],
           fill: true,
           backgroundColor: 'rgba(32, 100, 216, 0.2)',
-          borderColor: '#2064d8',
+          borderColor: '#1e6eff',
           borderWidth: 2,
           tension: 0.4,
         },

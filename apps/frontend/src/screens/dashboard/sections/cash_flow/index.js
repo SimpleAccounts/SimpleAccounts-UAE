@@ -22,7 +22,7 @@ const cashBarOption = {
       backgroundColor: '#1e3a5f',
       titleColor: '#ffffff',
       bodyColor: '#ffffff',
-      borderColor: '#2064d8',
+      borderColor: '#1e6eff',
       borderWidth: 1,
       cornerRadius: 8,
       padding: 12,
@@ -151,7 +151,7 @@ class CashFlow extends Component {
                 style={{
                   fontSize: '1.125rem',
                   fontWeight: 700,
-                  color: '#2064d8',
+                  color: '#1e6eff',
                   margin: 0,
                   textTransform: 'uppercase',
                 }}
@@ -196,7 +196,7 @@ class CashFlow extends Component {
                     margin: '0 auto 10px',
                   }}
                 >
-                  <ArrowUpCircle size={20} style={{ color: 'var(--neu-secondary, #21d8aa)' }} />
+                  <ArrowUpCircle size={20} style={{ color: 'var(--neu-secondary, #00c896)' }} />
                 </div>
                 <p
                   style={{
@@ -212,7 +212,7 @@ class CashFlow extends Component {
                 <h5
                   style={{
                     margin: 0,
-                    color: 'var(--neu-secondary, #21d8aa)',
+                    color: 'var(--neu-secondary, #00c896)',
                     fontWeight: 700,
                     fontSize: '1rem',
                   }}
@@ -310,7 +310,7 @@ class CashFlow extends Component {
                     margin: '0 auto 10px',
                   }}
                 >
-                  <Scale size={20} style={{ color: 'var(--neu-primary, #2064d8)' }} />
+                  <Scale size={20} style={{ color: 'var(--neu-primary, #1e6eff)' }} />
                 </div>
                 <p
                   style={{
@@ -327,7 +327,7 @@ class CashFlow extends Component {
                   style={{
                     margin: 0,
                     color: isPositive
-                      ? 'var(--neu-secondary, #21d8aa)'
+                      ? 'var(--neu-secondary, #00c896)'
                       : 'var(--neu-danger, #ff4d6a)',
                     fontWeight: 700,
                     fontSize: '1rem',

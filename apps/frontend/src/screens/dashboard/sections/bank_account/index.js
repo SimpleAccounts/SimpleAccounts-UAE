@@ -63,7 +63,7 @@ const backOption = {
       backgroundColor: '#1e3a5f',
       titleColor: '#ffffff',
       bodyColor: '#ffffff',
-      borderColor: '#2064d8',
+      borderColor: '#1e6eff',
       borderWidth: 1,
       cornerRadius: 8,
       padding: 12,
@@ -154,13 +154,13 @@ class BankAccount extends Component {
             gradient.addColorStop(1, 'rgba(30, 110, 255, 0.02)');
             return gradient;
           },
-          borderColor: '#2064d8',
+          borderColor: '#1e6eff',
           borderWidth: 3,
-          pointBorderColor: '#2064d8',
+          pointBorderColor: '#1e6eff',
           pointBackgroundColor: '#ffffff',
           pointBorderWidth: 2,
           pointHoverRadius: 6,
-          pointHoverBackgroundColor: '#2064d8',
+          pointHoverBackgroundColor: '#1e6eff',
           pointHoverBorderColor: '#ffffff',
           pointHoverBorderWidth: 2,
           pointRadius: 4,
@@ -180,7 +180,7 @@ class BankAccount extends Component {
                 style={{
                   fontSize: '1.125rem',
                   fontWeight: 700,
-                  color: '#2064d8',
+                  color: '#1e6eff',
                   margin: 0,
                   textTransform: 'uppercase',
                 }}
@@ -218,7 +218,7 @@ class BankAccount extends Component {
                   flexShrink: 0,
                 }}
               >
-                <Landmark size={22} style={{ color: 'var(--neu-primary, #2064d8)' }} />
+                <Landmark size={22} style={{ color: 'var(--neu-primary, #1e6eff)' }} />
               </div>
               <select
                 className="form-control bank-type-select card-select"
@@ -272,7 +272,7 @@ class BankAccount extends Component {
                     margin: '0 auto 8px',
                   }}
                 >
-                  <Wallet size={18} style={{ color: 'var(--neu-primary, #2064d8)' }} />
+                  <Wallet size={18} style={{ color: 'var(--neu-primary, #1e6eff)' }} />
                 </div>
                 <p
                   style={{
@@ -323,7 +323,7 @@ class BankAccount extends Component {
                     margin: '0 auto 8px',
                   }}
                 >
-                  <Building2 size={18} style={{ color: 'var(--neu-secondary, #21d8aa)' }} />
+                  <Building2 size={18} style={{ color: 'var(--neu-secondary, #00c896)' }} />
                 </div>
                 <p
                   style={{

@@ -22,9 +22,9 @@ const strings = new LocalizedStrings(data);
 // Neumorphic theme constants
 const theme = {
   bg: '#e8eef5',
-  primary: '#2064d8',
-  primaryDark: '#1a4fa8',
-  secondary: '#21d8aa',
+  primary: '#1e6eff',
+  primaryDark: '#0052cc',
+  secondary: '#00c896',
   warning: '#f59e0b',
   danger: '#ff4d6a',
   textPrimary: '#1e3a5f',

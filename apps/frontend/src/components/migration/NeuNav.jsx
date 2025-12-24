@@ -23,7 +23,7 @@ const NEU_NAV_STYLES = {
     textDecoration: 'none',
   },
   navLinkActive: {
-    color: 'var(--neu-primary, #2064d8)',
+    color: 'var(--neu-primary, #1e6eff)',
     boxShadow:
       'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
   },
@@ -65,7 +65,7 @@ const NeuNavLink = React.forwardRef(
       ...(active ? NEU_NAV_STYLES.navLinkActive : {}),
       ...(isHovered && !active && !disabled
         ? {
-            color: 'var(--neu-primary, #2064d8)',
+            color: 'var(--neu-primary, #1e6eff)',
             boxShadow:
               '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
           }

@@ -104,7 +104,7 @@ class Dashboard extends React.Component {
                     '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
                 }}
               >
-                <LayoutDashboard size={18} style={{ color: 'var(--neu-primary, #2064d8)' }} />
+                <LayoutDashboard size={18} style={{ color: 'var(--neu-primary, #1e6eff)' }} />
               </div>
               <span>Dashboard Overview</span>
             </div>
@@ -123,7 +123,7 @@ class Dashboard extends React.Component {
                     '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
                 }}
               >
-                <FileText size={24} style={{ color: 'var(--neu-primary, #2064d8)' }} />
+                <FileText size={24} style={{ color: 'var(--neu-primary, #1e6eff)' }} />
               </div>
               <div className="stat-info">
                 <span className="stat-label">Total Invoices</span>
@@ -141,7 +141,7 @@ class Dashboard extends React.Component {
                     '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
                 }}
               >
-                <ArrowUpCircle size={24} style={{ color: 'var(--neu-secondary, #21d8aa)' }} />
+                <ArrowUpCircle size={24} style={{ color: 'var(--neu-secondary, #00c896)' }} />
               </div>
               <div className="stat-info">
                 <span className="stat-label">Income</span>
@@ -204,7 +204,7 @@ class Dashboard extends React.Component {
               marginRight: '12px',
             }}
           >
-            <TrendingUp size={20} style={{ color: 'var(--neu-secondary, #21d8aa)' }} />
+            <TrendingUp size={20} style={{ color: 'var(--neu-secondary, #00c896)' }} />
           </div>
           <h2 className="section-title">Key Performance Indicators</h2>
         </div>
@@ -230,7 +230,7 @@ class Dashboard extends React.Component {
               marginRight: '12px',
             }}
           >
-            <Landmark size={20} style={{ color: 'var(--neu-primary, #2064d8)' }} />
+            <Landmark size={20} style={{ color: 'var(--neu-primary, #1e6eff)' }} />
           </div>
           <h2 className="section-title">Financial Overview</h2>
         </div>

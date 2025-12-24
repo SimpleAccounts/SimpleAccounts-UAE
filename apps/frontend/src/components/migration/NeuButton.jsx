@@ -33,7 +33,7 @@ const NEU_STYLES = {
 // Color mappings from reactstrap to neumorphic
 const COLOR_VARIANTS = {
   primary: {
-    background: 'linear-gradient(145deg, var(--neu-primary, #2064d8), #1a4fa8)',
+    background: 'linear-gradient(145deg, var(--neu-primary, #1e6eff), #0052cc)',
     color: '#ffffff',
   },
   secondary: {
@@ -41,7 +41,7 @@ const COLOR_VARIANTS = {
     color: 'var(--neu-text-primary, #1e3a5f)',
   },
   success: {
-    background: 'linear-gradient(145deg, var(--neu-secondary, #21d8aa), #00a67d)',
+    background: 'linear-gradient(145deg, var(--neu-secondary, #00c896), #00a67d)',
     color: '#ffffff',
   },
   danger: {
@@ -58,7 +58,7 @@ const COLOR_VARIANTS = {
   },
   link: {
     background: 'transparent',
-    color: 'var(--neu-primary, #2064d8)',
+    color: 'var(--neu-primary, #1e6eff)',
     boxShadow: 'none',
   },
 };
@@ -99,8 +99,8 @@ const NeuButton = React.forwardRef(
       ...(outline
         ? {
             background: 'var(--neu-bg, #e8eef5)',
-            border: `2px solid ${color === 'primary' ? 'var(--neu-primary, #2064d8)' : colorStyle.background}`,
-            color: color === 'primary' ? 'var(--neu-primary, #2064d8)' : colorStyle.color,
+            border: `2px solid ${color === 'primary' ? 'var(--neu-primary, #1e6eff)' : colorStyle.background}`,
+            color: color === 'primary' ? 'var(--neu-primary, #1e6eff)' : colorStyle.color,
           }
         : colorStyle),
       ...(isHovered && !disabled && color !== 'link' ? NEU_STYLES.hover : {}),

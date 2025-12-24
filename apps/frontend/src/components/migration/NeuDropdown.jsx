@@ -37,7 +37,7 @@ const NEU_DROPDOWN_STYLES = {
   },
   itemHover: {
     background: 'rgba(30, 110, 255, 0.05)',
-    color: 'var(--neu-primary, #2064d8)',
+    color: 'var(--neu-primary, #1e6eff)',
     boxShadow:
       '2px 2px 4px var(--neu-shadow-dark, #c4c9cf), -2px -2px 4px var(--neu-shadow-light, #ffffff)',
   },

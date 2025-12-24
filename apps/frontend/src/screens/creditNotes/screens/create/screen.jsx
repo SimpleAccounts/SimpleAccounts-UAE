@@ -1130,7 +1130,7 @@ const CreateCreditNote = ({
                                       setTaxType(newTaxType);
                                       updateAmount(data);
                                     }}
-                                    onColor="#2064d8"
+                                    onColor="#1e6eff"
                                     onHandleColor="#2693e6"
                                     handleDiameter={25}
                                     uncheckedIcon={false}

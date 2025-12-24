@@ -1,6 +1,6 @@
 .transactions-report-screen {
   .card-header {
-    color: #2064d8;
+    color: #1e6eff;
     padding: 0.2rem !important;
   }
   .date-select {
@@ -55,8 +55,8 @@
     background: #acb5bc;
   }
   button.dropdown-toggle:hover {
-    background-color: #21d8aa;
-    border-color: #21d8aa;
+    background-color: #00c896;
+    border-color: #00c896;
   }
   .csv-btn {
     color: #23282c;
@@ -85,8 +85,8 @@
     }
   }
   .print-btn-cont:hover {
-    background-color: #21d8aa;
-    border-color: #21d8aa;
+    background-color: #00c896;
+    border-color: #00c896;
     i {
       color: #f5f5f5;
     }
@@ -151,7 +151,7 @@
   }
 }
 .table-header-color {
-  background-color: #2064d8 !important;
-  border-color: #2064d8 !important;
+  background-color: #1e6eff !important;
+  border-color: #1e6eff !important;
   color: #fff;
 }

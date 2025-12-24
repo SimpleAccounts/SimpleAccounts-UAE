@@ -291,7 +291,7 @@ class AdminLayout extends React.Component {
                     <NavLink
                       to={config.BASE_ROUTE}
                       className="flex items-center gap-1.5 text-sm transition-colors hover:opacity-80"
-                      style={{ color: 'var(--neu-primary, #2064d8)' }}
+                      style={{ color: 'var(--neu-primary, #1e6eff)' }}
                     >
                       <div
                         className="w-6 h-6 rounded-lg flex items-center justify-center"

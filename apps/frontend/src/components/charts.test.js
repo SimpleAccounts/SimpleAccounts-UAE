@@ -293,14 +293,14 @@ describe('Chart.js Components', () => {
           {
             label: 'Balance',
             data: [10000, 12000, 11000, 15000, 14000, 18000],
-            borderColor: '#2064d8',
+            borderColor: '#1e6eff',
             fill: false,
             tension: 0.1,
           },
         ],
       };
 
-      expect(bankData.datasets[0].borderColor).toBe('#2064d8');
+      expect(bankData.datasets[0].borderColor).toBe('#1e6eff');
       expect(bankData.datasets[0].fill).toBe(false);
     });
   });

@@ -31,10 +31,10 @@ Visit `/theme-reference` route in the app to see live examples of all neumorphic
 ### Color Palette
 
 ```scss
-// Primary Colors (matching SimpleAccounts logo)
-$neu-primary: #2064d8; // Primary blue - buttons, links, active states
-$neu-primary-dark: #1a4fa8; // Darker blue for gradients
-$neu-secondary: #21d8aa; // Teal/green - success, secondary accents
+// Primary Colors
+$neu-primary: #1e6eff; // Primary blue - buttons, links, active states
+$neu-primary-dark: #0052cc; // Darker blue for gradients
+$neu-secondary: #00c896; // Teal/green - success, secondary accents
 $neu-warning: #f59e0b; // Amber - selected/active borders
 $neu-danger: #ff4d6a; // Red - errors, logout, destructive actions
 
@@ -84,10 +84,10 @@ Always prefer CSS variables for consistency across the app:
 
 ```css
 :root {
-  /* Neumorphic Theme (matching SimpleAccounts logo) */
+  /* Neumorphic Theme */
   --neu-bg: #e8eef5;
-  --neu-primary: #2064d8;
-  --neu-secondary: #21d8aa;
+  --neu-primary: #1e6eff;
+  --neu-secondary: #00c896;
   --neu-warning: #f59e0b;
   --neu-danger: #ff4d6a;
 
@@ -179,7 +179,7 @@ className = 'border-2 border-amber-500'; // or use warning color
 <button
   className="px-4 py-2 rounded-xl font-medium text-white transition-all duration-200"
   style={{
-    background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
+    background: 'linear-gradient(145deg, #1e6eff, #0052cc)',
     boxShadow:
       '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
   }}
@@ -244,7 +244,7 @@ className = 'border-2 border-amber-500'; // or use warning color
       '2px 2px 4px var(--neu-shadow-dark, #c4c9cf), -2px -2px 4px var(--neu-shadow-light, #ffffff)',
   }}
 >
-  <IconComponent className="w-5 h-5" style={{ color: 'var(--neu-primary, #2064d8)' }} />
+  <IconComponent className="w-5 h-5" style={{ color: 'var(--neu-primary, #1e6eff)' }} />
 </div>
 ```
 
@@ -260,7 +260,7 @@ className = 'border-2 border-amber-500'; // or use warning color
         '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
     }}
   >
-    <SectionIcon className="w-5 h-5" style={{ color: 'var(--neu-primary, #2064d8)' }} />
+    <SectionIcon className="w-5 h-5" style={{ color: 'var(--neu-primary, #1e6eff)' }} />
   </div>
   <h2 style={{ color: 'var(--neu-text-primary, #1e3a5f)', fontWeight: 700 }}>Section Title</h2>
 </div>
@@ -299,16 +299,16 @@ className = 'border-2 border-amber-500'; // or use warning color
 ### Icons
 
 - Use **Lucide React** icons exclusively
-- Primary color (`var(--neu-primary, #2064d8)`) for active/interactive icons
+- Primary color (`var(--neu-primary, #1e6eff)`) for active/interactive icons
 - Muted color (`var(--neu-text-muted, #98afc2)`) for inactive icons
-- Secondary color (`var(--neu-secondary, #21d8aa)`) for success states
+- Secondary color (`var(--neu-secondary, #00c896)`) for success states
 - Danger color (`var(--neu-danger, #ff4d6a)`) for error/delete actions
 
 ### Gradients (for avatars, logo backgrounds)
 
 ```jsx
 style={{
-  background: 'linear-gradient(145deg, #2064d8, #1a4fa8)'
+  background: 'linear-gradient(145deg, #1e6eff, #0052cc)'
 }}
 ```
 

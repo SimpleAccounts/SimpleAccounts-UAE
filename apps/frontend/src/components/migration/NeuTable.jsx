@@ -28,7 +28,7 @@ const NEU_TABLE_STYLES = {
   },
   th: {
     background: 'rgba(30, 110, 255, 0.05)',
-    color: 'var(--neu-primary, #2064d8)',
+    color: 'var(--neu-primary, #1e6eff)',
     fontWeight: 600,
     borderBottom: '2px solid rgba(200, 210, 220, 0.3)',
   },

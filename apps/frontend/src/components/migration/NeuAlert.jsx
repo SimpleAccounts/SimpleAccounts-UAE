@@ -9,8 +9,8 @@ import { AlertCircle, CheckCircle, AlertTriangle, Info, X } from 'lucide-react';
 const colorMap = {
   primary: {
     background: 'rgba(30, 110, 255, 0.1)',
-    borderColor: 'var(--neu-primary, #2064d8)',
-    color: 'var(--neu-primary, #2064d8)',
+    borderColor: 'var(--neu-primary, #1e6eff)',
+    color: 'var(--neu-primary, #1e6eff)',
     Icon: Info,
   },
   secondary: {
@@ -21,8 +21,8 @@ const colorMap = {
   },
   success: {
     background: 'rgba(0, 200, 150, 0.1)',
-    borderColor: 'var(--neu-secondary, #21d8aa)',
-    color: 'var(--neu-secondary, #21d8aa)',
+    borderColor: 'var(--neu-secondary, #00c896)',
+    color: 'var(--neu-secondary, #00c896)',
     Icon: CheckCircle,
   },
   danger: {

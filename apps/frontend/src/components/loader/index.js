@@ -77,7 +77,7 @@ export default function Loader({ loadingMsg, NextloadingMsg }) {
           }}
         />
       </div>
-      <div className="text-center mt-5" style={{ color: '#2064d8' }}>
+      <div className="text-center mt-5" style={{ color: '#1e6eff' }}>
         <b>
           {loadingMsg ? loadingMsg : 'Loading...'}
           <br />

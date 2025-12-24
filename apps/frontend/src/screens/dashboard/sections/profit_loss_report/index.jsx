@@ -19,7 +19,7 @@ const chartOptions = {
       backgroundColor: '#1e3a5f',
       titleColor: '#ffffff',
       bodyColor: '#ffffff',
-      borderColor: '#2064d8',
+      borderColor: '#1e6eff',
       borderWidth: 1,
       cornerRadius: 8,
       padding: 12,
@@ -122,8 +122,8 @@ const ProfitAndLossReport = props => {
         {
           type: 'bar',
           label: 'Income',
-          backgroundColor: '#2064d8',
-          borderColor: '#2064d8',
+          backgroundColor: '#1e6eff',
+          borderColor: '#1e6eff',
           borderRadius: 4,
           data: data.income.incomeData || [],
           order: 2,
@@ -167,7 +167,7 @@ const ProfitAndLossReport = props => {
               style={{
                 fontSize: '1.125rem',
                 fontWeight: 700,
-                color: '#2064d8',
+                color: '#1e6eff',
                 margin: 0,
                 textTransform: 'uppercase',
               }}
