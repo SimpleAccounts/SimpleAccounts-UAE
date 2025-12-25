@@ -386,21 +386,23 @@ class Cashflow extends React.Component {
                                   {strings.Operating + ' ' + strings.Activities}
                                 </td>
                               </tr>
-                              {Object.keys(this.state.data['operatingIncome']).map(item => (
-                                <tr>
-                                  <td className="pt-0 pb-0">{item}</td>
-                                  <td className="pt-0 pb-0 text-right">
-                                    <Currency
-                                      value={this.state.data['operatingIncome'][`${item}`]}
-                                      currencySymbol={
-                                        universal_currency_list[0]
-                                          ? universal_currency_list[0].currencyIsoCode
-                                          : 'USD'
-                                      }
-                                    />
-                                  </td>
-                                </tr>
-                              ))}
+                              {Object.keys(this.state.data['operatingIncome']).map(
+                                (item, index) => (
+                                  <tr key={`operating-income-${index}`}>
+                                    <td className="pt-0 pb-0">{item}</td>
+                                    <td className="pt-0 pb-0 text-right">
+                                      <Currency
+                                        value={this.state.data['operatingIncome'][`${item}`]}
+                                        currencySymbol={
+                                          universal_currency_list[0]
+                                            ? universal_currency_list[0].currencyIsoCode
+                                            : 'USD'
+                                        }
+                                      />
+                                    </td>
+                                  </tr>
+                                )
+                              )}
 
                               <tr>
                                 <td className="pt-0 pb-0">{strings.NetIncome}</td>
@@ -472,21 +474,23 @@ class Cashflow extends React.Component {
                                   {strings.Investing + ' ' + strings.Activities}
                                 </td>
                               </tr>
-                              {Object.keys(this.state.data['investingActivities']).map(item => (
-                                <tr>
-                                  <td className="pt-0 pb-0">{item}</td>
-                                  <td className="pt-0 pb-0 text-right">
-                                    <Currency
-                                      value={this.state.data['investingActivities'][`${item}`]}
-                                      currencySymbol={
-                                        universal_currency_list[0]
-                                          ? universal_currency_list[0].currencyIsoCode
-                                          : 'USD'
-                                      }
-                                    />
-                                  </td>
-                                </tr>
-                              ))}
+                              {Object.keys(this.state.data['investingActivities']).map(
+                                (item, index) => (
+                                  <tr key={`investing-activities-${index}`}>
+                                    <td className="pt-0 pb-0">{item}</td>
+                                    <td className="pt-0 pb-0 text-right">
+                                      <Currency
+                                        value={this.state.data['investingActivities'][`${item}`]}
+                                        currencySymbol={
+                                          universal_currency_list[0]
+                                            ? universal_currency_list[0].currencyIsoCode
+                                            : 'USD'
+                                        }
+                                      />
+                                    </td>
+                                  </tr>
+                                )
+                              )}
                               <tr>
                                 <td></td>
                                 <td></td>
@@ -533,21 +537,23 @@ class Cashflow extends React.Component {
                                   {strings.Financing + ' ' + strings.Activities}
                                 </td>
                               </tr>
-                              {Object.keys(this.state.data['financingActivities']).map(item => (
-                                <tr>
-                                  <td className="pt-0 pb-0">{item}</td>
-                                  <td className="pt-0 pb-0 text-right">
-                                    <Currency
-                                      value={this.state.data['financingActivities'][`${item}`]}
-                                      currencySymbol={
-                                        universal_currency_list[0]
-                                          ? universal_currency_list[0].currencyIsoCode
-                                          : 'USD'
-                                      }
-                                    />
-                                  </td>
-                                </tr>
-                              ))}
+                              {Object.keys(this.state.data['financingActivities']).map(
+                                (item, index) => (
+                                  <tr key={`financing-activities-${index}`}>
+                                    <td className="pt-0 pb-0">{item}</td>
+                                    <td className="pt-0 pb-0 text-right">
+                                      <Currency
+                                        value={this.state.data['financingActivities'][`${item}`]}
+                                        currencySymbol={
+                                          universal_currency_list[0]
+                                            ? universal_currency_list[0].currencyIsoCode
+                                            : 'USD'
+                                        }
+                                      />
+                                    </td>
+                                  </tr>
+                                )
+                              )}
                               <tr>
                                 <td></td>
                                 <td></td>

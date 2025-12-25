@@ -33,7 +33,6 @@ class ProfitAndLoss extends Component {
       this.props.DashboardActions.getTaxes(range),
     ];
     return Promise.all(requests).catch(err => {
-      // eslint-disable-next-line no-console
       console.error('Failed to load profit & loss summary', err);
     });
   };

@@ -1059,6 +1059,7 @@ const CreateProduct = ({
                                       name="productPriceTypeOne"
                                       onChange={event => {
                                         if (income === true) {
+                                          // Income mode - SALES checkbox is locked
                                         } else {
                                           if (field.value.includes('SALES')) {
                                             const nextValue = field.value.filter(
@@ -1220,6 +1221,7 @@ const CreateProduct = ({
                                       name="productPriceTypetwo"
                                       onChange={event => {
                                         if (income === false) {
+                                          // Expense mode - PURCHASE checkbox is locked
                                         } else {
                                           if (field.value.includes('PURCHASE')) {
                                             const nextValue = field.value.filter(

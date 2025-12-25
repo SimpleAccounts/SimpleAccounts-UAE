@@ -88,7 +88,7 @@ export const ExampleForm = () => {
                     <Input type="email" placeholder="Enter your email" {...field} />
                     <FormMessage>{getFieldError(fieldState)}</FormMessage>
                     <FormDescription>
-                      We'll never share your email with anyone else.
+                      We&apos;ll never share your email with anyone else.
                     </FormDescription>
                   </FormItem>
                 )}

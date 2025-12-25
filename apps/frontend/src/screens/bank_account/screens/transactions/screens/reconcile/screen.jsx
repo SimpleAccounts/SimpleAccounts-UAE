@@ -292,7 +292,7 @@ function ReconcileTransaction() {
       <div className="animated fadeIn">
         {dialog}
         <div className="grid grid-cols-12 gap-4">
-          <div lg={12} className="mx-auto">
+          <div className="col-span-12 mx-auto">
             {loading ? (
               <Loader />
             ) : view ? (
@@ -309,7 +309,7 @@ function ReconcileTransaction() {
               <Card>
                 <CardHeader>
                   <div className="grid grid-cols-12 gap-4">
-                    <div lg={12}>
+                    <div className="col-span-12">
                       <div className="h4 mb-0 d-flex align-items-center">
                         <i className="icon-doc" />
                         <span className="ml-2">{strings.ReconcileTransaction} </span>
@@ -319,10 +319,10 @@ function ReconcileTransaction() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-12 gap-4">
-                    <div lg={12}>
+                    <div className="col-span-12">
                       <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="grid grid-cols-12 gap-4">
-                          <div lg={4}>
+                          <div className="col-span-12 lg:col-span-4">
                             <div className="mb-3">
                               <Label htmlFor="date">
                                 <span className="text-danger">* </span>
@@ -351,7 +351,7 @@ function ReconcileTransaction() {
                               )}
                             </div>
                           </div>
-                          <div lg={4}>
+                          <div className="col-span-12 lg:col-span-4">
                             <div className="mb-3">
                               <Label htmlFor="closingBalance">
                                 <span className="text-danger">* </span>
@@ -389,7 +389,7 @@ function ReconcileTransaction() {
                           </div>
                         </div>
                         <div className="grid grid-cols-12 gap-4">
-                          <div lg={12} className="mt-5">
+                          <div className="col-span-12 mt-5">
                             <div className="text-right">
                               <Button
                                 type="submit"

@@ -7,12 +7,14 @@ class Currency extends React.Component {
   }
   render() {
     const { value, currencySymbol } = this.props;
+    let currencyCode;
+    let currencySymbolMain;
     if (currencySymbol) {
-      var currencyCode = currencySymbol.slice(0, currencySymbol.length - 1);
-      var currencySymbolMain = currencySymbol;
+      currencyCode = currencySymbol.slice(0, currencySymbol.length - 1);
+      currencySymbolMain = currencySymbol;
     } else {
-      var currencyCode = 'AED';
-      var currencySymbolMain = 'AED';
+      currencyCode = 'AED';
+      currencySymbolMain = 'AED';
     }
 
     return new Intl.NumberFormat('en', {

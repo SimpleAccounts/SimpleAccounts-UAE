@@ -7,18 +7,14 @@ export const getAccountTypeList = () => {
       method: 'get',
       url: '/rest/bank/getaccounttype',
     };
-    try {
-      const res = await authApi(data);
-      if (res.status === 200) {
-        dispatch({
-          type: BANK_ACCOUNT.ACCOUNT_TYPE_LIST,
-          payload: {
-            data: res.data,
-          },
-        });
-      }
-    } catch (err) {
-      throw err;
+    const res = await authApi(data);
+    if (res.status === 200) {
+      dispatch({
+        type: BANK_ACCOUNT.ACCOUNT_TYPE_LIST,
+        payload: {
+          data: res.data,
+        },
+      });
     }
   };
 };

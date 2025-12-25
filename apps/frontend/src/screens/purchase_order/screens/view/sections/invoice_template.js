@@ -121,14 +121,11 @@ class RFQTemplate extends Component {
                 <div className="companyDetails">
                   <img
                     src={
-                      companyData && companyData.company && companyData.company.companyLogo
-                        ? 'data:image/jpg;base64,' + companyData.company.companyLogo
-                        : logo
-                    }
-                    src={
                       companyData && companyData.companyLogoByteArray
                         ? 'data:image/jpg;base64,' + companyData.companyLogoByteArray
-                        : logo
+                        : companyData && companyData.company && companyData.company.companyLogo
+                          ? 'data:image/jpg;base64,' + companyData.company.companyLogo
+                          : logo
                     }
                     className=""
                     alt=""

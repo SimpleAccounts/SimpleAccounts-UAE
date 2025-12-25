@@ -103,7 +103,7 @@ const ProfitAndLossReport = props => {
       })
       .catch(err => {
         // Surface error for debugging but avoid crashing the dashboard.
-        // eslint-disable-next-line no-console
+
         console.error('Failed to load profit/loss chart', err);
       });
   };

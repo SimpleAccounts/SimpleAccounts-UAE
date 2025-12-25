@@ -7,12 +7,6 @@ export const createJournal = obj => {
       url: '/rest/journal/save',
       data: obj,
     };
-    return authApi(data)
-      .then(res => {
-        return res;
-      })
-      .catch(err => {
-        throw err;
-      });
+    return authApi(data);
   };
 };

@@ -100,7 +100,10 @@ export const TailwindTest = () => {
             Dark Mode Support
           </h3>
           <p className="text-gray-600 dark:text-gray-300">
-            Add <code className="bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">class="dark"</code>{' '}
+            Add{' '}
+            <code className="bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">
+              class=&quot;dark&quot;
+            </code>{' '}
             to the HTML element to test dark mode.
           </p>
         </div>

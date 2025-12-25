@@ -15,10 +15,12 @@ export const updateAmount = (data, vat_list, taxType) => {
 
       //Exclusive case
 
+      let discount;
+      let vat_amount;
       if (taxType === false) {
         if (obj.discountType === 'PERCENTAGE') {
           net_value = (+unitprice - +(unitprice * obj.discount) / 100) * obj.quantity;
-          var discount = unitprice * obj.quantity - net_value;
+          discount = unitprice * obj.quantity - net_value;
           if (obj.exciseTaxId != 0) {
             if (obj.exciseTaxId === 1) {
               const value = +net_value / 2;
@@ -32,10 +34,10 @@ export const updateAmount = (data, vat_list, taxType) => {
           } else {
             obj.exciseAmount = 0;
           }
-          var vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
+          vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
         } else {
           net_value = unitprice * obj.quantity - obj.discount;
-          var discount = unitprice * obj.quantity - net_value;
+          discount = unitprice * obj.quantity - net_value;
           if (obj.exciseTaxId != 0) {
             if (obj.exciseTaxId === 1) {
               const value = +net_value / 2;
@@ -49,7 +51,7 @@ export const updateAmount = (data, vat_list, taxType) => {
           } else {
             obj.exciseAmount = 0;
           }
-          var vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
+          vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
         }
       }
       //Inclusive case
@@ -59,10 +61,10 @@ export const updateAmount = (data, vat_list, taxType) => {
           net_value = (+unitprice - +(unitprice * obj.discount) / 100) * obj.quantity;
 
           //discount amount
-          var discount = unitprice * obj.quantity - net_value;
+          discount = unitprice * obj.quantity - net_value;
 
           //vat amount
-          var vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
+          vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
 
           //net value after removing vat for inclusive
           net_value = net_value - vat_amount;
@@ -85,10 +87,10 @@ export const updateAmount = (data, vat_list, taxType) => {
           net_value = unitprice * obj.quantity - obj.discount;
 
           //discount amount
-          var discount = unitprice * obj.quantity - net_value;
+          discount = unitprice * obj.quantity - net_value;
 
           //vat amount
-          var vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
+          vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
 
           //net value after removing vat for inclusive
           net_value = net_value - vat_amount;

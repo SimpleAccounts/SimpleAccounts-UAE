@@ -53,7 +53,7 @@ const InvoiceNumberModel = props => {
 
   const regEx = /^[0-9]+$/;
   const regExBoth = /[a-zA-Z0-9 ]+$/;
-  const regExAlpha = /^[a-zA-Z0-9 -/\"]+$/;
+  const regExAlpha = /^[a-zA-Z0-9 -/"]+$/;
 
   const {
     control,

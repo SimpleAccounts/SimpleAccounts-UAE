@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { vi, describe, beforeEach, afterEach, it, expect } from 'vitest';
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
@@ -49,7 +49,7 @@ describe('SalaryTemplate Screen Component', () => {
 
     store = mockStore(initialState);
 
-    SalaryTemplateActions.getSalaryTemplateList = jest.fn(
+    vi.spyOn(SalaryTemplateActions, 'getSalaryTemplateList').mockImplementation(
       () => () =>
         Promise.resolve({
           status: 200,
@@ -92,7 +92,7 @@ describe('SalaryTemplate Screen Component', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the salary template screen without errors', async () => {

@@ -13,13 +13,11 @@
 // Solution: Check for Jest mock first, then use a function that avoids direct import.meta access
 function getMetaEnv() {
   // In Jest tests (mocked via globalThis.import) - check this first
-  // eslint-disable-next-line no-undef
+
   if (typeof globalThis !== 'undefined') {
-    // eslint-disable-next-line no-undef
     const globalImport = globalThis.import;
-    // eslint-disable-next-line no-undef
+
     if (globalImport && globalImport.meta && globalImport.meta.env) {
-      // eslint-disable-next-line no-undef
       return globalImport.meta.env;
     }
   }
@@ -46,7 +44,6 @@ function getMetaEnv() {
  * @returns {string} 'development' | 'production' | 'test'
  */
 export const getEnvMode = () => {
-  // eslint-disable-next-line no-undef
   return getMetaEnv().MODE || 'development';
 };
 
@@ -73,7 +70,6 @@ export const isDevelopment = () => {
  * @returns {string}
  */
 export const getBaseUrl = () => {
-  // eslint-disable-next-line no-undef
   return getMetaEnv().BASE_URL || '/';
 };
 
@@ -86,7 +82,7 @@ export const getBaseUrl = () => {
  */
 export const getEnvVar = (key, defaultValue = '') => {
   const fullKey = key.startsWith('VITE_') ? key : `VITE_${key}`;
-  // eslint-disable-next-line no-undef
+
   const env = getMetaEnv();
   return env[fullKey] || defaultValue;
 };
@@ -96,7 +92,6 @@ export const getEnvVar = (key, defaultValue = '') => {
  * @returns {Record<string, string>}
  */
 export const getAllEnvVars = () => {
-  // eslint-disable-next-line no-undef
   return getMetaEnv();
 };
 
@@ -104,7 +99,7 @@ export const getAllEnvVars = () => {
  * Environment variable accessor object
  * Provides a clean API for common environment variables
  */
-// eslint-disable-next-line no-undef
+
 const metaEnv = getMetaEnv();
 export const env = {
   // Mode
