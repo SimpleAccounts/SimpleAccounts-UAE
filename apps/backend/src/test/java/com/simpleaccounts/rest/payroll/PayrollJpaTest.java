@@ -5,7 +5,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.cache.autoconfigure.CacheAutoConfiguration;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -13,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @Retention(RetentionPolicy.RUNTIME)
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
+@ImportAutoConfiguration(CacheAutoConfiguration.class)
 @TestPropertySource(properties = {
         "spring.datasource.url=jdbc:h2:mem:payrolltest;MODE=PostgreSQL;DB_CLOSE_DELAY=-1",
         "spring.datasource.driverClassName=org.h2.Driver",
@@ -22,7 +25,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
         "spring.jpa.properties.hibernate.hbm2ddl.auto=none",
         "spring.liquibase.enabled=false",
         "spring.sql.init.mode=always",
-        "spring.sql.init.schema-locations=classpath:schema-payroll.sql"
+        "spring.sql.init.schema-locations=classpath:schema-payroll.sql",
+        "spring.cache.type=simple"
 })
 public @interface PayrollJpaTest {
 }

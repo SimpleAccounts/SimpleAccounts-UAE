@@ -198,8 +198,8 @@ export function DataTable({
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
                         {{
-                          asc: <span style={{ color: '#1e6eff' }}>↑</span>,
-                          desc: <span style={{ color: '#1e6eff' }}>↓</span>,
+                          asc: <span style={{ color: '#2064d8' }}>↑</span>,
+                          desc: <span style={{ color: '#2064d8' }}>↓</span>,
                         }[header.column.getIsSorted()] ??
                           (header.column.getCanSort() ? (
                             <span style={{ color: '#98afc2', fontSize: '10px' }}>⇅</span>

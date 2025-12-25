@@ -40,44 +40,60 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.cache.autoconfigure.CacheAutoConfiguration;
+import org.springframework.boot.http.converter.autoconfigure.HttpMessageConvertersAutoConfiguration;
+import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ReconsilationController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@ImportAutoConfiguration({CacheAutoConfiguration.class, JacksonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class})
+@TestPropertySource(properties = {"spring.cache.type=simple"})
+@Import(ReconsilationControllerTest.StaticResourceConfigMocks.class)
 class ReconsilationControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean private ReconcileStatusService reconcileStatusService;
-    @MockBean private BankAccountService bankAccountService;
-    @MockBean private TransactionCategoryService transactionCategoryService;
-    @MockBean private ReconsilationRestHelper reconsilationRestHelper;
-    @MockBean private InvoiceService invoiceService;
-    @MockBean private TranscationCategoryHelper transcationCategoryHelper;
-    @MockBean private ChartOfAccountCategoryService chartOfAccountCategoryService;
-    @MockBean private VatCategoryService vatCategoryService;
-    @MockBean private ContactService contactService;
-    @MockBean private UserService userServiceNew;
-    @MockBean private TransactionService transactionService;
-    @MockBean private TransactionCategoryClosingBalanceServiceImpl transactionCategoryClosingBalanceService;
-    @MockBean private TransactionExpensesRepository transactionExpensesRepository;
-    @MockBean private OSValidator osValidator;
-    @MockBean private CustomUserDetailsService customUserDetailsService;
-    @MockBean private JwtTokenUtil jwtTokenUtil;
+    @MockitoBean private ReconcileStatusService reconcileStatusService;
+    @MockitoBean private BankAccountService bankAccountService;
+    @MockitoBean private TransactionCategoryService transactionCategoryService;
+    @MockitoBean private ReconsilationRestHelper reconsilationRestHelper;
+    @MockitoBean private InvoiceService invoiceService;
+    @MockitoBean private TranscationCategoryHelper transcationCategoryHelper;
+    @MockitoBean private ChartOfAccountCategoryService chartOfAccountCategoryService;
+    @MockitoBean private VatCategoryService vatCategoryService;
+    @MockitoBean private ContactService contactService;
+    @MockitoBean private UserService userServiceNew;
+    @MockitoBean private TransactionService transactionService;
+    @MockitoBean private TransactionCategoryClosingBalanceServiceImpl transactionCategoryClosingBalanceService;
+    @MockitoBean private TransactionExpensesRepository transactionExpensesRepository;
+    @MockitoBean private OSValidator osValidator;
+    @MockitoBean private CustomUserDetailsService customUserDetailsService;
+    @MockitoBean private JwtTokenUtil jwtTokenUtil;
 
     @TestConfiguration
     static class StaticResourceConfigMocks {
         @Bean
         String basePath() {
             return "/tmp";
+        }
+
+        @Bean
+        com.fasterxml.jackson.databind.ObjectMapper objectMapper() {
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+            return mapper;
         }
     }
 

@@ -319,7 +319,7 @@ class ViewCustomerInvoice extends React.Component {
           <Card>
             <div style={{ display: this.state.creditNoteDataList.creditNoteId ? '' : 'none' }}>
               <Table>
-                <thead style={{ backgroundColor: '#2064d8', color: 'white' }}>
+                <thead style={{ backgroundColor: '#1e6eff', color: 'white' }}>
                   <tr>
                     <th className="center" style={{ padding: '0.5rem' }}>
                       #

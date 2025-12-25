@@ -95,7 +95,6 @@ public class TransactionExplanation {
     private FileAttachment fileAttachment;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "transactionExplanation")
-    @org.hibernate.annotations.ForeignKey(name = "none")
     private Collection<TransactionExplinationLineItem> explanationLineItems;
 
     @Column(name = "EXCHANGE_GAIN_OR_LOSS_AMOUNT")
