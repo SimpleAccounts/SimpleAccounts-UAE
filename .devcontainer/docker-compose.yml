@@ -25,8 +25,8 @@ services:
     #   context: ..
     #   dockerfile: .devcontainer/Dockerfile
     env_file:
-      - path: .env
-        required: false
+      - .env
+
     volumes:
       - ../:/workspaces/SimpleAccounts-UAE:cached
       - devcontainer-vscode-extensions:/home/vscode/.vscode-server/extensions
@@ -36,8 +36,8 @@ services:
       - devcontainer-gemini-config:/home/vscode/.gemini
       - devcontainer-codex-config:/home/vscode/.codex
       - devcontainer-gh-config:/home/vscode/.config/gh
-      - devcontainer-bash-history:/home/vscode/.bash_history
-      - devcontainer-gitconfig:/home/vscode/.gitconfig
+      - devcontainer-bash-history:/home/vscode/.bash_history_dir
+      - devcontainer-gitconfig:/home/vscode/.gitconfig_dir
       - devcontainer-ssh:/home/vscode/.ssh
       - devcontainer-docker:/home/vscode/.docker
       - devcontainer-kube:/home/vscode/.kube
