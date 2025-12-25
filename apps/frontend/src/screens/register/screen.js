@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -6,16 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import {
-  Eye,
-  EyeOff,
-  UserPlus,
-  Building2,
-  MapPin,
-  User,
-  CheckCircle2,
-  ArrowLeft,
-} from 'lucide-react';
+import { Eye, EyeOff, Building2, MapPin, User, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import PhoneInput from 'react-phone-input-2';
 import { upperFirst } from 'lodash-es';
@@ -30,7 +21,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { StepWizard, StepContent, StepNavigation } from '@/components/ui/step-wizard';
 import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
-import { LoadingOverlay, ButtonSpinner } from '@/components/ui/loading-spinner';
+import { LoadingOverlay } from '@/components/ui/loading-spinner';
 
 import { AuthActions, CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';

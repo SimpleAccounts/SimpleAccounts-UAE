@@ -1,6 +1,5 @@
 import { QUOTATION } from 'constants/types';
 import { authApi } from 'utils';
-import dayjs from '@/utils/date';
 
 export const getQuotationList = postObj => {
   let customerId = postObj.customerId ? postObj.customerId.value : '';

@@ -9,7 +9,6 @@ import * as PurchaseOrderDetailsAction from '../detail/actions';
 import ReactToPrint from 'react-to-print';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import { CommonActions } from 'services/global';
 
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
@@ -17,11 +16,11 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { RFQTemplate } from './sections';
 import * as RequestForQuotationViewAction from '../../../request_for_quotation/screens/view/actions';
-import { Card, CardBody, Table } from 'components/migration';
+import { Card, Table } from 'components/migration';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { Pencil, FileText, Printer } from 'lucide-react';
+import { FileText, Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

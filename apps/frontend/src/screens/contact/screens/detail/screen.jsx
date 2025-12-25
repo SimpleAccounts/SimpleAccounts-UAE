@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -20,7 +20,6 @@ import {
 import Select from 'react-select';
 import { selectOptionsFactory, InputValidation, DropdownLists, Lists, selectStyles } from 'utils';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
-import { toast } from 'sonner';
 import './style.scss';
 import { AddressComponent } from 'screens/contact/sections';
 import { CommonActions } from 'services/global';

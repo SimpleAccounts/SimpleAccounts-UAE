@@ -1,20 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Card,
-  CardBody,
-  Row,
-  Col,
-  Button,
-  CardHeader,
-  ButtonGroup,
-  UncontrolledTooltip,
-} from 'components/migration';
+import { Card, CardBody, Row, Col, Button, CardHeader } from 'components/migration';
 import dayjs from '@/utils/date';
 import { Loader } from 'components';
 import { DataTable } from '@/components/ui/data-table';
 import * as PayRollActions from './actions';
-import { CommonActions } from 'services/global';
 import { data as languageData } from '../Language/index';
 import LocalizedStrings from 'react-localization';
 import { toast } from 'sonner';

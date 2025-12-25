@@ -5,8 +5,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  Row,
-  Col,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
@@ -17,7 +15,6 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import { ExcelExport as XLSX } from 'utils';
 import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent2 from '../filterComponet2';
 import { ReportTables } from 'screens/financial_report/sections';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';

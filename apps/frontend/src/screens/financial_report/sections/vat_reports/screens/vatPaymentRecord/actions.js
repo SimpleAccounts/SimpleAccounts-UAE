@@ -1,5 +1,4 @@
-import { EMPLOYEEPAYROLL } from 'constants/types';
-import { authApi, authFileUploadApi } from 'utils';
+import { authFileUploadApi } from 'utils';
 
 export const getVatPaymentHistoryList = postObj => {
   let pageNo = postObj?.pageNo ? postObj.pageNo : '';

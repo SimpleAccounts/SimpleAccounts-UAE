@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Card, CardHeader, CardBody, Row, Col, Table } from 'components/migration';
 import { Loader } from 'components';
 import * as SalaryTemplateActions from './actions';
-import { CommonActions } from 'services/global';
 import './style.scss';
 import { toast } from 'sonner';
 import { LayoutGrid } from 'lucide-react';

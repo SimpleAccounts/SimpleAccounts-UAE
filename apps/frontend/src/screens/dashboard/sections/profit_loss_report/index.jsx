@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Card, CardBody } from 'components/migration';
 import { data } from '../../../Language/index';
@@ -103,7 +103,7 @@ const ProfitAndLossReport = props => {
       })
       .catch(err => {
         // Surface error for debugging but avoid crashing the dashboard.
-        // eslint-disable-next-line no-console
+
         console.error('Failed to load profit/loss chart', err);
       });
   };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -17,7 +17,6 @@ import {
   Label,
 } from 'components/migration';
 import Select from 'react-select';
-import DatePicker from 'react-datepicker';
 import * as CustomerInvoiceDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as CustomerInvoiceActions from '../../actions';
@@ -26,21 +25,11 @@ import { CustomerModal, ProductModal } from '../../sections';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
-import {
-  optionFactory,
-  selectCurrencyFactory,
-  selectOptionsFactory,
-  InputValidation,
-  DropdownLists,
-  Lists,
-  selectStyles,
-} from 'utils';
+import { selectOptionsFactory, InputValidation, Lists, selectStyles } from 'utils';
 import './style.scss';
-import { AddressComponent } from 'screens/contact/sections';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { Switch } from '@/components/ui/switch';
 import { FileText, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {

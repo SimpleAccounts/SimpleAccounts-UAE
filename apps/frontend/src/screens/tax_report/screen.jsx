@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { FileText, Briefcase, Download } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { FileText, Briefcase } from 'lucide-react';
 import Select from 'react-select';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';

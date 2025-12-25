@@ -1,5 +1,3 @@
-import React from 'react';
-
 /**
  * RouteLoading component - Loading indicator for lazy-loaded routes
  * This component is displayed while route components are being loaded

@@ -1,4 +1,3 @@
-import dayjs from '@/utils/date';
 import { data } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
 import { selectOptionsFactory, selectCurrencyFactory, selectOptionsFactoryClickable } from 'utils';

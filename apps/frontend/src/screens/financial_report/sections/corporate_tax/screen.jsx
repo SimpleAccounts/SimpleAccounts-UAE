@@ -1,24 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import {
-  Button,
-  Col,
-  FormGroup,
-  Card,
-  CardHeader,
-  CardBody,
-  Row,
-  DropdownMenu,
-  DropdownItem,
-  ButtonDropdown,
-  DropdownToggle,
-} from 'components/migration';
-import { AuthActions, CommonActions } from 'services/global';
+import { useState, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, Col, FormGroup, Card, CardHeader, CardBody, Row } from 'components/migration';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import * as CTReportAction from './actions';
-import { upperFirst } from 'lodash-es';
 import { CTReport, CTSettingModal, FileCtReportModal, DeleteModal } from './sections';
 import dayjs from '@/utils/date';
 import { ConfirmDeleteModal, Currency, Loader } from 'components';

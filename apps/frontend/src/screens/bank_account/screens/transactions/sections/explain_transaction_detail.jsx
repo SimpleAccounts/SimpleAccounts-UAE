@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,12 +17,9 @@ import {
 } from 'components/migration';
 import { bindActionCreators } from 'redux';
 import Select from 'react-select';
-import { Switch } from '@/components/ui/switch';
 import DatePicker from 'react-datepicker';
 import dayjs from 'dayjs';
-import { Ban, ChevronDown, ChevronUp, CircleDot } from 'lucide-react';
-import { Button as ShadcnButton } from 'components/ui/button';
-import { Checkbox } from 'components/ui/checkbox';
+import { Ban, CircleDot } from 'lucide-react';
 
 import * as TransactionsActions from 'screens/bank_account/screens/transactions/actions';
 import * as TransactionDetailActions from 'screens/bank_account/screens/transactions/screens/detail/actions';

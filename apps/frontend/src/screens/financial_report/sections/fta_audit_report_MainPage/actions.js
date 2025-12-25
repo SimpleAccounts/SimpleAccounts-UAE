@@ -1,4 +1,3 @@
-import { IMPORT } from 'constants/types';
 import { authApi, authFileUploadApi } from 'utils';
 
 export const generateReport = obj => {

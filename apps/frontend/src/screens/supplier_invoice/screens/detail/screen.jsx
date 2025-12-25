@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -17,7 +17,6 @@ import {
   Label,
 } from 'components/migration';
 import Select from 'react-select';
-import DatePicker from 'react-datepicker';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as SupplierInvoiceActions from '../../actions';
@@ -29,22 +28,13 @@ import {
   ConfirmDeleteModal,
   CurrencyExchangeRate,
   ProductTable,
-  ProductTableCalculation,
   InvoiceAdditionaNotesInformation,
   TotalCalculation,
   TermDateInput,
 } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
-import {
-  optionFactory,
-  selectCurrencyFactory,
-  selectOptionsFactory,
-  InputValidation,
-  DropdownLists,
-  Lists,
-  selectStyles,
-} from 'utils';
+import { selectOptionsFactory, DropdownLists, Lists, selectStyles } from 'utils';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';

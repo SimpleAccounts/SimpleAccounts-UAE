@@ -17,7 +17,6 @@ import {
 } from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import _ from 'lodash-es';
 import { Loader, LeavePage } from 'components';
 import dayjs from '@/utils/date';
 import { AuthActions, CommonActions } from 'services/global';

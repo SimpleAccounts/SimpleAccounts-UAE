@@ -17,7 +17,7 @@ import { Currency, InvoiceViewJournalEntries } from 'components';
 import dayjs from '@/utils/date';
 import ActionButtons from 'components/view_actions_buttons';
 import { StatusActionList } from 'utils';
-import { Pencil, FileText, Printer, X } from 'lucide-react';
+import { FileText, Printer, X } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Card, CardBody, Table, Input } from 'components/migration';
 import dayjs from '@/utils/date';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { string } from 'prop-types';
 // Use import instead of require for Vite compatibility
 import { ToWords } from 'to-words';
 // Use import instead of require for Vite compatibility

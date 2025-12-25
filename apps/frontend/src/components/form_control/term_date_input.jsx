@@ -1,5 +1,3 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';

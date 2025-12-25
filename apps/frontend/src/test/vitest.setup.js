@@ -11,12 +11,12 @@ import {
 import { server } from './msw/server';
 
 // Make jest globals available for backward compatibility
-// eslint-disable-next-line no-undef
+
 globalThis.jest = vi;
 
 // Set up globalThis.import.meta.env for env.js compatibility
 // env.js checks globalThis.import.meta.env first for Jest compatibility
-// eslint-disable-next-line no-undef
+
 globalThis.import = {
   meta: {
     env: {

@@ -3,7 +3,6 @@
  * Verifies Phase 2: Form Component Wrappers
  */
 
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { useForm } from 'react-hook-form';
 import { Form, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '../form';

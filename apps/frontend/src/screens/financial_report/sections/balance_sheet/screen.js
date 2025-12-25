@@ -20,7 +20,6 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import { ExcelExport as XLSX } from 'utils';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent from '../filterComponent';
 import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
 import { data } from '../../../Language/index';

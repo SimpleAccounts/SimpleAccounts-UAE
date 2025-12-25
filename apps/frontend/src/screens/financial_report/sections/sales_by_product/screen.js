@@ -5,9 +5,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  Row,
-  Col,
-  Table,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
@@ -24,7 +21,7 @@ import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import FilterComponent3 from '../filterComponent3';
-import { Printer, FileText } from 'lucide-react';
+import { Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

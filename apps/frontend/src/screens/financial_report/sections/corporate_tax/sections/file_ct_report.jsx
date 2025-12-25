@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
   Button,
@@ -6,7 +6,6 @@ import {
   Col,
   Form,
   FormGroup,
-  Input,
   Label,
   Modal,
   ModalBody,

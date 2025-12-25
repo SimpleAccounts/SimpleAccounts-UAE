@@ -1,13 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  Button,
-  ButtonGroup,
-  ButtonDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from 'components/migration';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'components/migration';
 import { bindActionCreators } from 'redux';
 import { data } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';

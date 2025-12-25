@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { motion } from 'framer-motion';
 // Use import instead of require for Vite compatibility
 // import loaderImage from 'assets/images/brand/loader-gif.gif';

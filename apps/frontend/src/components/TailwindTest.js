@@ -1,5 +1,3 @@
-import React from 'react';
-
 /**
  * Tailwind CSS Test Component
  *

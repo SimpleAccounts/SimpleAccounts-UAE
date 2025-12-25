@@ -1,17 +1,8 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
-import {
-  Upload,
-  Download,
-  ChevronRight,
-  ChevronLeft,
-  Lock,
-  Plus,
-  Trash2,
-  ArrowUpDown,
-} from 'lucide-react';
+import { Upload, Download, ChevronRight, ChevronLeft, Lock, Trash2 } from 'lucide-react';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';

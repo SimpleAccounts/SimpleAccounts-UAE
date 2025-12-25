@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -18,7 +17,6 @@ import {
 } from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { CommonActions } from 'services/global';
 import { selectOptionsFactory, selectStyles } from 'utils';
 import * as ReceiptActions from '../../actions';
 import * as ReceiptCreateActions from './actions';
@@ -28,7 +26,7 @@ import './style.scss';
 import dayjs from '@/utils/date';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { LeavePage, Loader } from 'components';
+import { Loader } from 'components';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -19,7 +19,6 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { Loader, ConfirmDeleteModal, SentInvoice } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
-import EmailModal from './sections/email_template';
 import * as CustomerInvoiceDetailActions from './screens/detail/actions';
 import * as CustomerInvoiceActions from './actions';
 import * as CreditNotesActions from '../creditNotes/screens/create/actions';
@@ -29,16 +28,10 @@ import { data } from '../Language/index';
 import LocalizedStrings from 'react-localization';
 import './style.scss';
 import { CreateCreditNoteModal } from './sections';
-import dayjs from '@/utils/date';
 import { upperCase } from 'lodash-es';
 import config from 'constants/config';
 import { ToWords } from 'to-words';
-import invoiceimage from 'assets/images/invoice/invoice.png';
-import overWeekly from 'assets/images/invoice/week1.png';
-import overduemonthly from 'assets/images/invoice/month.png';
-import overdue from 'assets/images/invoice/due1.png';
 import { ServerDataTable } from '@/components/ui/server-data-table';
-import { DataTableRowActions } from '@/components/ui/data-table-actions';
 import {
   ChevronUp,
   ChevronDown,
