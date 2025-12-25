@@ -14,11 +14,10 @@ import {
   FormMessage,
   FormControl,
 } from '@/components/ui/form';
-// Note: Using reactstrap Input for unmigrated form fields - will migrate to shadcn/ui Input later
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Select from 'react-select';
-// Temporarily keep Reactstrap imports for unmigrated components
-import { Row, Col, FormGroup, Label, UncontrolledTooltip, Input } from 'reactstrap';
+// Use migration shim for reactstrap components
+import { Row, Col, FormGroup, Label, UncontrolledTooltip, Input } from 'components/migration';
 import { selectOptionsFactory, InputValidation, DropdownLists, Lists, selectStyles } from 'utils';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import { toast } from 'sonner';
