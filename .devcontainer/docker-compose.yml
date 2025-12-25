@@ -25,24 +25,25 @@ services:
     #   context: ..
     #   dockerfile: .devcontainer/Dockerfile
     env_file:
-      - path: .env
-        required: false
+      - .env
     volumes:
       - ../:/workspaces/SimpleAccounts-UAE:cached
+      # Cache volumes (can be rebuilt, use Docker named volumes)
       - devcontainer-vscode-extensions:/home/vscode/.vscode-server/extensions
       - devcontainer-maven-cache:/home/vscode/.m2
       - devcontainer-npm-cache:/home/vscode/.npm
-      - devcontainer-claude-config:/home/vscode/.claude
-      - devcontainer-gemini-config:/home/vscode/.gemini
-      - devcontainer-codex-config:/home/vscode/.codex
-      - devcontainer-gh-config:/home/vscode/.config/gh
-      - devcontainer-bash-history:/home/vscode/.bash_history
-      - devcontainer-gitconfig:/home/vscode/.gitconfig
-      - devcontainer-ssh:/home/vscode/.ssh
-      - devcontainer-docker:/home/vscode/.docker
-      - devcontainer-kube:/home/vscode/.kube
-      - devcontainer-aws:/home/vscode/.aws
-      - devcontainer-azure:/home/vscode/.azure
+      # User config/credentials (persist in host home directory)
+      - ${HOME}/.devpod-mount/claude:/home/vscode/.claude
+      - ${HOME}/.devpod-mount/gemini:/home/vscode/.gemini
+      - ${HOME}/.devpod-mount/codex:/home/vscode/.codex
+      - ${HOME}/.devpod-mount/gh:/home/vscode/.config/gh
+      - ${HOME}/.devpod-mount/bash-history:/home/vscode/.bash_history_dir
+      - ${HOME}/.devpod-mount/gitconfig:/home/vscode/.gitconfig_dir
+      - ${HOME}/.devpod-mount/ssh:/home/vscode/.ssh
+      - ${HOME}/.devpod-mount/docker:/home/vscode/.docker
+      - ${HOME}/.devpod-mount/kube:/home/vscode/.kube
+      - ${HOME}/.devpod-mount/aws:/home/vscode/.aws
+      - ${HOME}/.devpod-mount/azure:/home/vscode/.azure
     command: sleep infinity
     # Share network namespace with db container for localhost access to all services
     network_mode: service:db
@@ -84,14 +85,3 @@ volumes:
   devcontainer-vscode-extensions:
   devcontainer-maven-cache:
   devcontainer-npm-cache:
-  devcontainer-claude-config:
-  devcontainer-gemini-config:
-  devcontainer-codex-config:
-  devcontainer-gh-config:
-  devcontainer-bash-history:
-  devcontainer-gitconfig:
-  devcontainer-ssh:
-  devcontainer-docker:
-  devcontainer-kube:
-  devcontainer-aws:
-  devcontainer-azure:

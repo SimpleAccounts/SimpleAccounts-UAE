@@ -3,6 +3,9 @@
 
 set -e
 
+# Temporarily unset NODE_OPTIONS to avoid issues during setup
+unset NODE_OPTIONS
+
 echo "🚀 Setting up SimpleAccounts-UAE development environment..."
 
 # Determine the target user home directory
