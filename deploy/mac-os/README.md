@@ -57,7 +57,7 @@ Here are detailed instructions to install Docker and Docker Compose on Mac OS:
 
 Docker and Docker Compose are now successfully installed on your macOS machine. You can proceed with using them as described in your project's README.md file or other relevant documentation.
 
->Note: Make sure to restart your computer after installing Docker and Docker Compose to ensure that all changes take effect properly.
+> Note: Make sure to restart your computer after installing Docker and Docker Compose to ensure that all changes take effect properly.
 
 To verify if Docker and Docker Compose are installed correctly, run the following commands:
 
