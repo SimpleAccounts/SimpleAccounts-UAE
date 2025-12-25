@@ -5,7 +5,9 @@ services:
   devcontainer:
     image: ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest
     env_file:
-      - .env
+      - path: .env
+        required: false
+
     volumes:
       - ../:/workspaces/SimpleAccounts-UAE:cached
       # Cache volumes (can be rebuilt, use Docker named volumes)
