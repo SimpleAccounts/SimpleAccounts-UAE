@@ -22,6 +22,7 @@ const Getbyid = ({
           responsedata.data?.map((i, inx) => {
             return (
               <ExplainTrasactionDetail
+                key={inx}
                 closeExplainTransactionModal={e => {
                   closeExplainTransactionModal(e);
                 }}

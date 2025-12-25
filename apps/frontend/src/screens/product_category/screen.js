@@ -329,7 +329,7 @@ class ProductCategory extends React.Component {
                   <Loader></Loader>
                 ) : (
                   <div className="grid grid-cols-12 gap-4">
-                    <div lg={12}>
+                    <div className="col-span-12">
                       <div className="d-flex justify-content-end">
                         <div className="inline-flex rounded-md" role="group">
                           {/* <Button

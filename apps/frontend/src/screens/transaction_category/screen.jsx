@@ -20,7 +20,7 @@ import { Loader } from 'components';
 import * as TransactionActions from './actions';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { Plus, Download, Trash2 } from 'lucide-react';
 
 const TransactionCategory = () => {
   const dispatch = useDispatch();

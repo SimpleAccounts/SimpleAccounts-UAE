@@ -11,12 +11,12 @@ import {
 import { server } from './msw/server';
 
 // Make jest globals available for backward compatibility
-// eslint-disable-next-line no-undef
+
 globalThis.jest = vi;
 
 // Set up globalThis.import.meta.env for env.js compatibility
 // env.js checks globalThis.import.meta.env first for Jest compatibility
-// eslint-disable-next-line no-undef
+
 globalThis.import = {
   meta: {
     env: {
@@ -126,6 +126,16 @@ if (global.document) {
     },
   });
 }
+
+// Mock ResizeObserver for Radix UI components
+global.ResizeObserver = class ResizeObserver {
+  constructor(cb) {
+    this.cb = cb;
+  }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
 
 // Mock react-router-navigation-prompt (incompatible with React Router v6)
 vi.mock('react-router-navigation-prompt', () => {

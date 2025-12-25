@@ -1,0 +1,28 @@
+# Backend HTML templates (have intentional syntax for email templates)
+apps/backend/src/main/resources/MailTemplates/**/*.html
+apps/backend/src/main/resources/MailTemplates/**/*.ftlh
+
+# Helm templates (contain template syntax)
+deploy/helm/**/*.yaml
+deploy/helm/**/*.yml
+
+# Build outputs
+**/dist/
+**/build/
+**/node_modules/
+
+# Generated files
+**/*.min.js
+**/*.min.css
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# Test results
+test-results/
+coverage/
+
+# Documentation (if not formatted)
+*.md
+

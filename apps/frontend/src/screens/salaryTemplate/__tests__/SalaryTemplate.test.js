@@ -1,10 +1,11 @@
-import { vi } from 'vitest';
+import { vi, describe, beforeEach, afterEach, it, expect } from 'vitest';
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
-import { thunk } from 'redux-thunk';
+import * as thunkModule from 'redux-thunk';
+const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
 import SalaryTemplate from '../screen';
 import * as SalaryTemplateActions from '../actions';
 
@@ -48,7 +49,7 @@ describe('SalaryTemplate Screen Component', () => {
 
     store = mockStore(initialState);
 
-    SalaryTemplateActions.getSalaryTemplateList = jest.fn(
+    vi.spyOn(SalaryTemplateActions, 'getSalaryTemplateList').mockImplementation(
       () => () =>
         Promise.resolve({
           status: 200,
@@ -91,7 +92,7 @@ describe('SalaryTemplate Screen Component', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the salary template screen without errors', async () => {

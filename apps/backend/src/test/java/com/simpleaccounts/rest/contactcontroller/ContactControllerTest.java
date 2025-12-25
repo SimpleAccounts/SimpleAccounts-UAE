@@ -125,7 +125,6 @@ class ContactControllerTest {
     when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
     when(userService.findByPK(1)).thenReturn(adminUser);
     when(contactService.getContactList(any(), any())).thenReturn(response);
-    when(contactHelper.getModelList(any())).thenReturn(Collections.emptyList());
 
     mockMvc
         .perform(get("/rest/contact/getContactList").param("contactType", "1"))
@@ -146,7 +145,6 @@ class ContactControllerTest {
     when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
     when(userService.findByPK(1)).thenReturn(user);
     when(contactService.getContactList(any(), any())).thenReturn(response);
-    when(contactHelper.getModelList(any())).thenReturn(Collections.emptyList());
 
     mockMvc
         .perform(get("/rest/contact/getContactList").param("contactType", "1"))

@@ -83,7 +83,9 @@
     "MAVEN_OPTS": "-Xmx2g -XX:+UseG1GC -XX:+UseStringDeduplication",
     "JAVA_TOOL_OPTIONS": "-XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0",
     // Node.js Memory Optimization
-    "NODE_OPTIONS": "--max-old-space-size=4096"
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "HISTFILE": "/home/vscode/.bash_history_dir/bash_history",
+    "GIT_CONFIG_GLOBAL": "/home/vscode/.gitconfig_dir/gitconfig"
   },
 
   // Run as non-root user

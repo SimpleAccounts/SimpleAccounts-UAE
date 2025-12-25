@@ -166,7 +166,8 @@ const FileTaxReturnModalForm = ({
         <Row className="mb-4">
           <Col>
             <h4>
-              Once report is filed, you won't be able to edit any transactions for this tax period.
+              Once report is filed, you won&apos;t be able to edit any transactions for this tax
+              period.
             </h4>
           </Col>
         </Row>

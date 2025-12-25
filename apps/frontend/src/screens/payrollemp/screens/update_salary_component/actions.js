@@ -7,12 +7,8 @@ export const getSalaryComponentByEmployeeId = _id => {
       url: `/rest/payroll/getSalaryComponentByEmployeeId?id=${_id}`,
     };
 
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    const res = await authApi(data);
+    return res;
   };
 };
 
@@ -24,12 +20,8 @@ export const updateEmployeeBank = obj => {
       data: obj,
     };
 
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    const res = await authApi(data);
+    return res;
   };
 };
 
@@ -39,11 +31,7 @@ export const deleteSalaryComponentRow = (id, componentId) => {
       method: 'DELETE',
       url: `/rest/payroll/deleteSalaryComponentRow?id=${id}&componentId=${componentId}`,
     };
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    const res = await authApi(data);
+    return res;
   };
 };

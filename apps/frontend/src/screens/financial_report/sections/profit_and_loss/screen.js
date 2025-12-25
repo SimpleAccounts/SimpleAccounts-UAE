@@ -433,32 +433,33 @@ class ProfitAndLossReport extends React.Component {
                                   {strings.Income}
                                 </td>
                               </tr>
-                              {Object.keys(this.state.data['nonOperatingIncome']).map(item =>
-                                this.state.data['nonOperatingIncome'][`${item}`] === 0 ? (
-                                  ''
-                                ) : (
-                                  <tr>
-                                    <td className="pt-0 pb-0">{item}</td>
-                                    <td className="pt-0 pb-0 text-right">
-                                      <Currency
-                                        value={
-                                          '-' + this.state.data['nonOperatingIncome'][`${item}`]
-                                        }
-                                        currencySymbol={
-                                          universal_currency_list[0]
-                                            ? universal_currency_list[0].currencyIsoCode
-                                            : 'USD'
-                                        }
-                                      />
-                                    </td>
-                                  </tr>
-                                )
+                              {Object.keys(this.state.data['nonOperatingIncome']).map(
+                                (item, index) =>
+                                  this.state.data['nonOperatingIncome'][`${item}`] === 0 ? (
+                                    ''
+                                  ) : (
+                                    <tr key={`non-operating-income-${index}`}>
+                                      <td className="pt-0 pb-0">{item}</td>
+                                      <td className="pt-0 pb-0 text-right">
+                                        <Currency
+                                          value={
+                                            '-' + this.state.data['nonOperatingIncome'][`${item}`]
+                                          }
+                                          currencySymbol={
+                                            universal_currency_list[0]
+                                              ? universal_currency_list[0].currencyIsoCode
+                                              : 'USD'
+                                          }
+                                        />
+                                      </td>
+                                    </tr>
+                                  )
                               )}
-                              {Object.keys(this.state.data['operatingIncome']).map(item =>
+                              {Object.keys(this.state.data['operatingIncome']).map((item, index) =>
                                 this.state.data['operatingIncome'][`${item}`] === 0 ? (
                                   ''
                                 ) : (
-                                  <tr>
+                                  <tr key={`operating-income-${index}`}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       <Currency
@@ -511,11 +512,11 @@ class ProfitAndLossReport extends React.Component {
                                   {strings.CostofGoodsSold}
                                 </td>
                               </tr>
-                              {Object.keys(this.state.data['costOfGoodsSold']).map(item =>
+                              {Object.keys(this.state.data['costOfGoodsSold']).map((item, index) =>
                                 this.state.data['costOfGoodsSold'][`${item}`] === 0 ? (
                                   ''
                                 ) : (
-                                  <tr>
+                                  <tr key={`cost-of-goods-sold-${index}`}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       <Currency
@@ -595,38 +596,39 @@ class ProfitAndLossReport extends React.Component {
                                   {strings.Operating + ' ' + strings.Expenses}
                                 </td>
                               </tr>
-                              {Object.keys(this.state.data['operatingExpense']).map(item =>
-                                this.state.data['operatingExpense'][`${item}`] === 0 ? (
-                                  ''
-                                ) : (
-                                  <tr>
-                                    <td className="pt-0 pb-0">{item}</td>
-                                    {/* <td className="pt-0 pb-0"></td> */}
-                                    <td className="pt-0 pb-0 text-right">
-                                      {item === 'Purchase Discount' ? (
-                                        <Currency
-                                          value={
-                                            '-' + this.state.data['operatingExpense'][`${item}`]
-                                          }
-                                          currencySymbol={
-                                            universal_currency_list[0]
-                                              ? universal_currency_list[0].currencyIsoCode
-                                              : 'USD'
-                                          }
-                                        />
-                                      ) : (
-                                        <Currency
-                                          value={this.state.data['operatingExpense'][`${item}`]}
-                                          currencySymbol={
-                                            universal_currency_list[0]
-                                              ? universal_currency_list[0].currencyIsoCode
-                                              : 'USD'
-                                          }
-                                        />
-                                      )}
-                                    </td>
-                                  </tr>
-                                )
+                              {Object.keys(this.state.data['operatingExpense']).map(
+                                (item, index) =>
+                                  this.state.data['operatingExpense'][`${item}`] === 0 ? (
+                                    ''
+                                  ) : (
+                                    <tr key={`operating-expense-${index}`}>
+                                      <td className="pt-0 pb-0">{item}</td>
+                                      {/* <td className="pt-0 pb-0"></td> */}
+                                      <td className="pt-0 pb-0 text-right">
+                                        {item === 'Purchase Discount' ? (
+                                          <Currency
+                                            value={
+                                              '-' + this.state.data['operatingExpense'][`${item}`]
+                                            }
+                                            currencySymbol={
+                                              universal_currency_list[0]
+                                                ? universal_currency_list[0].currencyIsoCode
+                                                : 'USD'
+                                            }
+                                          />
+                                        ) : (
+                                          <Currency
+                                            value={this.state.data['operatingExpense'][`${item}`]}
+                                            currencySymbol={
+                                              universal_currency_list[0]
+                                                ? universal_currency_list[0].currencyIsoCode
+                                                : 'USD'
+                                            }
+                                          />
+                                        )}
+                                      </td>
+                                    </tr>
+                                  )
                               )}
                               <tr>
                                 <td></td>
