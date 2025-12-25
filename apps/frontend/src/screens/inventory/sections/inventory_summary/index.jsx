@@ -18,7 +18,7 @@ import { DataTable } from '@/components/ui/data-table';
 import './style.scss';
 import { toast } from 'sonner';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
-import { History } from 'lucide-react';
+import { History, Download } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 

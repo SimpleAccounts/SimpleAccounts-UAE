@@ -387,7 +387,7 @@ class Cashflow extends React.Component {
                                 </td>
                               </tr>
                               {Object.keys(this.state.data['operatingIncome']).map(item => (
-                                <tr>
+                                <tr key={item}>
                                   <td className="pt-0 pb-0">{item}</td>
                                   <td className="pt-0 pb-0 text-right">
                                     <Currency
@@ -473,7 +473,7 @@ class Cashflow extends React.Component {
                                 </td>
                               </tr>
                               {Object.keys(this.state.data['investingActivities']).map(item => (
-                                <tr>
+                                <tr key={item}>
                                   <td className="pt-0 pb-0">{item}</td>
                                   <td className="pt-0 pb-0 text-right">
                                     <Currency
@@ -534,7 +534,7 @@ class Cashflow extends React.Component {
                                 </td>
                               </tr>
                               {Object.keys(this.state.data['financingActivities']).map(item => (
-                                <tr>
+                                <tr key={item}>
                                   <td className="pt-0 pb-0">{item}</td>
                                   <td className="pt-0 pb-0 text-right">
                                     <Currency

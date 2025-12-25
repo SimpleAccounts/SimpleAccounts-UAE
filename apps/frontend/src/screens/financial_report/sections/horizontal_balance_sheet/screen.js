@@ -476,7 +476,7 @@ class HorizontalBalanceSheet extends React.Component {
                                   </tr>
                                   {Object.keys(this.state.data['currentAssets']).map(item =>
                                     item === 'Petty Cash' ? (
-                                      <tr>
+                                      <tr key={item}>
                                         <td className="pt-0 pb-0">{item}</td>
 
                                         <td className="pt-0 pb-0 text-right" colSpan={2}>
@@ -545,7 +545,7 @@ class HorizontalBalanceSheet extends React.Component {
                                     <td colSpan={2}></td>
                                   </tr>
                                   {Object.keys(this.state.data['bank']).map(item => (
-                                    <tr>
+                                    <tr key={item}>
                                       <td className="pt-0 pb-0">{item}</td>
                                       <td className="pt-0 pb-0 text-right" colSpan={2}>
                                         {this.state.data['bank'] ? (
@@ -678,7 +678,7 @@ class HorizontalBalanceSheet extends React.Component {
                                   </tr>
                                   {Object.keys(this.state.data['currentAssets']).map(item =>
                                     item !== 'Petty Cash' ? (
-                                      <tr>
+                                      <tr key={item}>
                                         <td className="pt-0 pb-0">{item}</td>
 
                                         <td className="pt-0 pb-0 text-right" colSpan={2}>
@@ -744,7 +744,7 @@ class HorizontalBalanceSheet extends React.Component {
                                     </td>
                                   </tr>
                                   {Object.keys(this.state.data['otherCurrentAssets']).map(item => (
-                                    <tr>
+                                    <tr key={item}>
                                       <td className="pt-0 pb-0">{item}</td>
 
                                       <td className="pt-0 pb-0 text-right" colSpan={2}>
@@ -813,7 +813,7 @@ class HorizontalBalanceSheet extends React.Component {
                                     </td>
                                   </tr>
                                   {Object.keys(this.state.data['fixedAssets']).map(item => (
-                                    <tr>
+                                    <tr key={item}>
                                       <td className="pt-0 pb-0">{item}</td>
 
                                       <td className="pt-0 pb-0 text-right" colSpan={2}>
@@ -1025,7 +1025,7 @@ class HorizontalBalanceSheet extends React.Component {
                                     </td>
                                   </tr>
                                   {Object.keys(this.state.data['otherLiability']).map(item => (
-                                    <tr>
+                                    <tr key={item}>
                                       <td className="pt-0 pb-0">{item}</td>
 
                                       <td className="pt-0 pb-0 text-right">
@@ -1095,7 +1095,7 @@ class HorizontalBalanceSheet extends React.Component {
                                   </tr>
                                   {Object.keys(this.state.data['otherCurrentLiability']).map(
                                     item => (
-                                      <tr>
+                                      <tr key={item}>
                                         <td className="pt-0 pb-0">{item}</td>
 
                                         <td className="pt-0 pb-0 text-right" colSpan={2}>
@@ -1211,7 +1211,7 @@ class HorizontalBalanceSheet extends React.Component {
                                     </td>
                                   </tr>
                                   {Object.keys(this.state.data['equities']).map(item => (
-                                    <tr>
+                                    <tr key={item}>
                                       <td className="pt-0 pb-0">{item}</td>
                                       <td className="pt-0 pb-0 text-right" colSpan={2}>
                                         {this.state.data['equities'] ? (

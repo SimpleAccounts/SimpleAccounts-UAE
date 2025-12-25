@@ -446,20 +446,20 @@ function BankTransactions() {
             {dialog}
             {loading ? (
               <div className="grid grid-cols-12 gap-4">
-                <div lg={12}>
+                <div className="col-span-12">
                   <Loader />
                 </div>
               </div>
             ) : (
               <div className="grid grid-cols-12 gap-4">
-                <div lg={12}>
+                <div className="col-span-12">
                   <div className="mb-4 status-panel p-3">
                     <div className="grid grid-cols-12 gap-4">
-                      <div lg={3}>
+                      <div className="col-span-3">
                         <h5>{strings.AccountName}</h5>
                         <h3>{accounName}</h3>
                       </div>
-                      <div lg={3}>
+                      <div className="col-span-3">
                         <h5>{strings.CurrentBankBalance}</h5>
                         <h3>
                           {bankAccountCurrencyIsoCode} &nbsp;
@@ -474,7 +474,7 @@ function BankTransactions() {
                               })}
                         </h3>
                       </div>
-                      <div lg={3}>
+                      <div className="col-span-3">
                         <h5>{strings.LedgerBalance}</h5>
                         <h3>
                           {bankAccountCurrencyIsoCode} &nbsp;
@@ -489,7 +489,7 @@ function BankTransactions() {
                               })}
                         </h3>
                       </div>
-                      <div lg={3}>
+                      <div className="col-span-3">
                         <h5>{strings.OpeningBalance}</h5>
                         <h3>
                           {bankAccountCurrencyIsoCode} &nbsp;
@@ -565,8 +565,8 @@ function BankTransactions() {
                   </div>
                   <div className="py-3">
                     <div className="grid grid-cols-12 gap-4">
-                      <div lg={3} className="mb-1"></div>
-                      <div lg={2} className="pl-0 pr-0"></div>
+                      <div className="col-span-3 mb-1"></div>
+                      <div className="col-span-2 pl-0 pr-0"></div>
                     </div>
                   </div>
                   <div className="flex justify-between items-center mb-4">

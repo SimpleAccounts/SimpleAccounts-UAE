@@ -214,7 +214,6 @@ const CreatePayrollList = () => {
       if (response.status === 200) {
         employeePayPeriodlList = response.data;
         let date = startDate;
-        endDate = endDate;
         let month = dayjs(date).format('MMMM');
         dispatch(CreatePayrollActions.getAllPayrollEmployee(dayjs(date).format('DD/MM/YYYY'))).then(
           res => {

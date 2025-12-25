@@ -8,12 +8,7 @@ export const addMultipleEmployees = (payrollId, employeeListIds) => {
       url: `/rest/payroll/savePayrollEmployeeRelation ?payrollId=${payrollId}&employeeListIds=${employeeListIds}`,
       // data: obj
     };
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    return authApi(data);
   };
 };
 
@@ -23,13 +18,7 @@ export const getPayrollById = _id => {
       method: 'GET',
       url: `/rest/payroll/getPayroll?id=${_id}`,
     };
-
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    return authApi(data);
   };
 };
 export const getEmployeesForDropdown = () => {
@@ -38,18 +27,14 @@ export const getEmployeesForDropdown = () => {
       method: 'get',
       url: '/rest/employee/getEmployeesForDropdown',
     };
-    try {
-      const res = await authApi(data);
-      if (res.status === 200) {
-        dispatch({
-          type: EMPLOYEEPAYROLL.EMPLOYEE_LIST_DDROPDOWN,
-          payload: {
-            data: res.data,
-          },
-        });
-      }
-    } catch (err) {
-      throw err;
+    const res = await authApi(data);
+    if (res.status === 200) {
+      dispatch({
+        type: EMPLOYEEPAYROLL.EMPLOYEE_LIST_DDROPDOWN,
+        payload: {
+          data: res.data,
+        },
+      });
     }
   };
 };
@@ -60,18 +45,14 @@ export const getApproversForDropdown = () => {
       method: 'get',
       url: '/rest/payroll/getAproverUsers',
     };
-    try {
-      const res = await authApi(data);
-      if (res.status === 200) {
-        dispatch({
-          type: EMPLOYEEPAYROLL.APPROVER_DROPDOWN,
-          payload: {
-            data: res.data,
-          },
-        });
-      }
-    } catch (err) {
-      throw err;
+    const res = await authApi(data);
+    if (res.status === 200) {
+      dispatch({
+        type: EMPLOYEEPAYROLL.APPROVER_DROPDOWN,
+        payload: {
+          data: res.data,
+        },
+      });
     }
   };
 };
@@ -82,13 +63,7 @@ export const getAllPayrollEmployee = _id => {
       method: 'GET',
       url: `/rest/payroll/getAllPayrollEmployeeForApprover?payrollid=${_id}`,
     };
-
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    return authApi(data);
   };
 };
 export const removeEmployee = ids => {
@@ -97,13 +72,7 @@ export const removeEmployee = ids => {
       method: 'DELETE',
       url: `/rest/payroll/removeEmployee?payEmpListIds=${ids}`,
     };
-
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    return authApi(data);
   };
 };
 
@@ -114,12 +83,7 @@ export const generatePayroll = (payrollId, string, date) => {
       url: `/rest/payroll/generatePayroll?generatePayrollString=${string}&payrollId=${payrollId}&salaryDate=${date}`,
       // data: obj
     };
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    return authApi(data);
   };
 };
 export const approveAndRunPayroll = postObj => {
@@ -132,12 +96,7 @@ export const approveAndRunPayroll = postObj => {
       method: 'post',
       url: `/rest/payroll/approveRunPayroll?payrollId=${payrollId}&startDate=${startDate}&endDate=${endDate}&payrollEmployeesIdsListToSendMail=${payrollEmployeesIdsListToSendMail}`,
     };
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    return authApi(data);
   };
 };
 export const rejectPayroll = (payrollId, comment) => {
@@ -146,12 +105,7 @@ export const rejectPayroll = (payrollId, comment) => {
       method: 'post',
       url: `/rest/payroll/rejectPayroll?payrollId=${payrollId}&comment=${comment}`,
     };
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    return authApi(data);
   };
 };
 
@@ -162,12 +116,7 @@ export const generateSifFile = (payrollId, ids, time) => {
       url: `/rest/payroll/generteSifFile?payrollId=${payrollId}&id=${ids}&currentTime=${time}`,
       // data: obj
     };
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    return authApi(data);
   };
 };
 
@@ -178,11 +127,6 @@ export const voidPayroll = obj => {
       url: `/rest/payroll/voidJournalEntry`,
       data: obj,
     };
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    return authApi(data);
   };
 };

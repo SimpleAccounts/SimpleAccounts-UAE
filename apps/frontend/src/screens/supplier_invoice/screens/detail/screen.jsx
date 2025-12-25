@@ -568,31 +568,33 @@ const DetailSupplierInvoice = ({
       const vat = index !== '' && index >= 0 ? vatList[`${index}`].vat : 0;
 
       // Logic similar to create/customer invoice
+      let discount;
+      let vat_amount;
       if (taxType === false) {
         // Exclusive
         if (obj.discountType === 'PERCENTAGE') {
           net_value = (+unitprice - +(unitprice * obj.discount) / 100) * obj.quantity;
-          var discount = unitprice * obj.quantity - net_value;
+          discount = unitprice * obj.quantity - net_value;
           obj.exciseAmount = 0; // Simplified
-          var vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
+          vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
         } else {
           net_value = unitprice * obj.quantity - obj.discount;
-          var discount = unitprice * obj.quantity - net_value;
+          discount = unitprice * obj.quantity - net_value;
           obj.exciseAmount = 0; // Simplified
-          var vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
+          vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
         }
       } else {
         // Inclusive
         if (obj.discountType === 'PERCENTAGE') {
           net_value = (+unitprice - +(unitprice * obj.discount) / 100) * obj.quantity;
-          var discount = unitprice * obj.quantity - net_value;
-          var vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
+          discount = unitprice * obj.quantity - net_value;
+          vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
           net_value = net_value - vat_amount;
           obj.exciseAmount = 0; // Simplified
         } else {
           net_value = unitprice * obj.quantity - obj.discount;
-          var discount = unitprice * obj.quantity - net_value;
-          var vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
+          discount = unitprice * obj.quantity - net_value;
+          vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
           net_value = net_value - vat_amount;
           obj.exciseAmount = 0;
         }

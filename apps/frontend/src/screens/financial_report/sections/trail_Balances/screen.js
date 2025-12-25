@@ -733,7 +733,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -768,7 +768,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -799,7 +799,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -830,7 +830,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -878,7 +878,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -913,7 +913,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -961,7 +961,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -1009,7 +1009,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -1057,7 +1057,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===

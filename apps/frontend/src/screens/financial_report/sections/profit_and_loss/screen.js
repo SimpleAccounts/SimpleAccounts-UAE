@@ -437,7 +437,7 @@ class ProfitAndLossReport extends React.Component {
                                 this.state.data['nonOperatingIncome'][`${item}`] === 0 ? (
                                   ''
                                 ) : (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       <Currency
@@ -458,7 +458,7 @@ class ProfitAndLossReport extends React.Component {
                                 this.state.data['operatingIncome'][`${item}`] === 0 ? (
                                   ''
                                 ) : (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       <Currency
@@ -515,7 +515,7 @@ class ProfitAndLossReport extends React.Component {
                                 this.state.data['costOfGoodsSold'][`${item}`] === 0 ? (
                                   ''
                                 ) : (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       <Currency
@@ -599,7 +599,7 @@ class ProfitAndLossReport extends React.Component {
                                 this.state.data['operatingExpense'][`${item}`] === 0 ? (
                                   ''
                                 ) : (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     {/* <td className="pt-0 pb-0"></td> */}
                                     <td className="pt-0 pb-0 text-right">
