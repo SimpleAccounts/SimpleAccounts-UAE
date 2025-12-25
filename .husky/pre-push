@@ -25,7 +25,7 @@ CHANGED_FILES=$(git diff --name-only origin/develop 2>/dev/null || git diff --na
 if echo "$CHANGED_FILES" | grep -q "apps/frontend/.*\.\(js\|jsx\|ts\|tsx\)$"; then
   echo "🧪 Running frontend unit tests..."
   cd apps/frontend
-  npm test -- --run --bail
+  npm test -- --run --bail=1
 
   if [ $? -ne 0 ]; then
     echo "❌ Tests failed. Push aborted."
