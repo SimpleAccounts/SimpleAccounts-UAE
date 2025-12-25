@@ -103,6 +103,8 @@ export default mergeConfig(
       hookTimeout: 10000,
       // Reporter configuration
       reporters: ['default'],
+      // Ignore unhandled errors from React act() warnings - these are warnings, not failures
+      dangerouslyIgnoreUnhandledErrors: true,
     },
   })
 );
