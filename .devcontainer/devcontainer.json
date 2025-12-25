@@ -84,7 +84,6 @@
     "JAVA_TOOL_OPTIONS": "-XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0",
     // Node.js Memory Optimization
     "NODE_OPTIONS": "--max-old-space-size=4096",
-    // Persistent config file paths
     "HISTFILE": "/home/vscode/.bash_history_dir/bash_history",
     "GIT_CONFIG_GLOBAL": "/home/vscode/.gitconfig_dir/gitconfig"
   },
