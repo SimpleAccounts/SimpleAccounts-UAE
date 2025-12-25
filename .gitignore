@@ -15,6 +15,9 @@ target/
 .idea/
 *.iml
 .vscode/
+
+# Claude Code local settings
+.claude/
 *.swp
 *.swo
 *~
