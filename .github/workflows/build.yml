@@ -268,14 +268,10 @@ jobs:
       - name: Install Playwright Browsers
         working-directory: apps/frontend
         run: npx playwright install --with-deps chromium
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
 
       - name: Run E2E Environment Tests
         working-directory: apps/frontend
         run: npx playwright test environment.smoke.spec.ts --project=chromium
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
 
       - name: Upload E2E Results
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
