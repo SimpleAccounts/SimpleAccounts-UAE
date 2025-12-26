@@ -1,0 +1,373 @@
+# Multi-User Development Environment
+
+This setup allows multiple developers to work on the same dev-server with isolated environments and shareable URLs.
+
+## Quick Start
+
+```bash
+# One command to setup everything
+./setup-user.sh <your-username>
+
+# Example:
+./setup-user.sh alice
+```
+
+That's it! The script will:
+
+1. Start the Traefik proxy (if not running)
+2. Create your isolated environment (devcontainer + database + redis)
+3. Print your access URLs
+
+## Architecture
+
+```
+                              Dev Server
+┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│  ┌─────────────────┐                                         │
+│  │  Traefik Proxy  │ ← Port 80 (shared)                      │
+│  │   (dev-proxy)   │                                         │
+│  └────────┬────────┘                                         │
+│           │                                                  │
+│     ┌─────┴─────┬─────────────┐                              │
+│     │           │             │                              │
+│     ▼           ▼             ▼                              │
+│  ┌──────┐   ┌──────┐     ┌──────┐                            │
+│  │alice │   │ bob  │     │carol │  ← User Containers         │
+│  │:3000 │   │:3000 │     │:3000 │                            │
+│  │:8080 │   │:8080 │     │:8080 │                            │
+│  └──────┘   └──────┘     └──────┘                            │
+│      │           │             │                             │
+│  ┌──────┐   ┌──────┐     ┌──────┐                            │
+│  │ DB   │   │ DB   │     │ DB   │  ← Isolated Databases      │
+│  │Redis │   │Redis │     │Redis │                            │
+│  └──────┘   └──────┘     └──────┘                            │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+## Access URLs
+
+After running `./setup-user.sh alice`, you get two URL options:
+
+### Option A: nip.io (Recommended - No DNS Config!)
+
+| Service   | URL                                    |
+| --------- | -------------------------------------- |
+| Frontend  | `http://alice.192-168-1-100.nip.io`    |
+| Backend   | `http://alice-api.192-168-1-100.nip.io`|
+| Dashboard | `http://proxy.192-168-1-100.nip.io:8090` |
+
+**How nip.io works**: It's a free DNS service that resolves based on the IP in the domain name. No configuration needed!
+
+### Option B: Local Domain (Requires /etc/hosts)
+
+| Service  | URL                                      |
+| -------- | ---------------------------------------- |
+| Frontend | `http://alice.dev.simpleaccounts.local`  |
+| Backend  | `http://alice-api.dev.simpleaccounts.local` |
+
+Add to `/etc/hosts`:
+
+```
+192.168.1.100  alice.dev.simpleaccounts.local
+192.168.1.100  alice-api.dev.simpleaccounts.local
+```
+
+## User Management
+
+### Add New User
+
+```bash
+./setup-user.sh <username>
+```
+
+### List Active Users
+
+```bash
+docker ps --filter "name=dev-" --format "table {{.Names}}\t{{.Status}}"
+```
+
+### Stop User Environment
+
+```bash
+docker compose -f docker-compose.<username>.yml down
+```
+
+### Remove User Environment (with data)
+
+```bash
+docker compose -f docker-compose.<username>.yml down -v
+rm docker-compose.<username>.yml
+```
+
+### View User Logs
+
+```bash
+docker logs dev-<username>
+docker logs db-<username>
+```
+
+## Connecting VS Code
+
+### Method 1: Attach to Running Container
+
+1. Open VS Code
+2. Install "Dev Containers" extension
+3. `Cmd+Shift+P` > "Dev Containers: Attach to Running Container"
+4. Select `dev-<your-username>`
+
+### Method 2: SSH + Remote Extension
+
+```bash
+# SSH into container
+docker exec -it dev-<username> bash
+
+# Inside container, start code-server if needed
+code-server --bind-addr 0.0.0.0:8443
+```
+
+## Sharing URLs
+
+Users can share their development URLs with others:
+
+### Same Network
+
+Just share the URL:
+
+```
+http://alice.192-168-1-100.nip.io
+```
+
+### Different Network (External Access)
+
+Use ngrok or similar:
+
+```bash
+ngrok http alice.192-168-1-100.nip.io:80
+```
+
+## DNS Options
+
+### Option 1: nip.io (Zero Config)
+
+No setup needed! URLs like `alice.192-168-1-100.nip.io` automatically resolve.
+
+**Pros**: Works immediately, no configuration
+**Cons**: Requires internet for DNS lookup
+
+### Option 2: /etc/hosts (Manual)
+
+Edit `/etc/hosts` on each client machine:
+
+```bash
+# Mac/Linux
+sudo nano /etc/hosts
+
+# Add entries
+192.168.1.100  alice.dev.simpleaccounts.local
+192.168.1.100  alice-api.dev.simpleaccounts.local
+```
+
+**Pros**: Works offline
+**Cons**: Manual update on each machine
+
+### Option 3: dnsmasq (Automatic Wildcard)
+
+Install dnsmasq on the dev server:
+
+```bash
+# Install
+sudo apt install dnsmasq
+
+# Configure wildcard
+echo "address=/.dev.simpleaccounts.local/192.168.1.100" | sudo tee /etc/dnsmasq.d/dev-server.conf
+
+# Restart
+sudo systemctl restart dnsmasq
+```
+
+Then point client DNS to the dev server.
+
+**Pros**: Automatic for all subdomains
+**Cons**: Requires server configuration
+
+### Generate /etc/hosts Entries
+
+```bash
+./generate-hosts.sh 192.168.1.100
+
+# Output:
+# 192.168.1.100  proxy.dev.simpleaccounts.local
+# 192.168.1.100  alice.dev.simpleaccounts.local
+# 192.168.1.100  alice-api.dev.simpleaccounts.local
+```
+
+## Files
+
+| File                         | Purpose                              |
+| ---------------------------- | ------------------------------------ |
+| `docker-compose.proxy.yml`   | Traefik reverse proxy configuration  |
+| `docker-compose.user.yml`    | Template for user environments       |
+| `docker-compose.<user>.yml`  | Generated user-specific config       |
+| `setup-user.sh`              | User setup script                    |
+| `generate-hosts.sh`          | DNS helper for /etc/hosts            |
+
+## How It Works
+
+### Traefik Labels
+
+Each user container registers with Traefik using Docker labels:
+
+```yaml
+labels:
+  - 'traefik.enable=true'
+  - 'traefik.http.routers.alice-frontend.rule=Host(`alice.192-168-1-100.nip.io`)'
+  - 'traefik.http.services.alice-frontend.loadbalancer.server.port=3000'
+```
+
+Traefik automatically discovers containers and routes traffic based on hostname.
+
+### Network Isolation
+
+Each user has their own internal network:
+
+```yaml
+networks:
+  dev-proxy-network:  # Shared - for Traefik routing
+    external: true
+  alice-internal:     # Private - user's services only
+    name: alice-internal
+```
+
+### Volume Isolation
+
+Each user has isolated data volumes:
+
+```yaml
+volumes:
+  alice-postgres-data:   # User's database
+  alice-redis-data:      # User's cache
+  alice-maven-cache:     # User's Maven dependencies
+```
+
+## Troubleshooting
+
+### Container Won't Start
+
+```bash
+# Check logs
+docker logs dev-<username>
+
+# Check if proxy is running
+docker ps | grep dev-proxy
+
+# Restart proxy if needed
+docker compose -f docker-compose.proxy.yml restart
+```
+
+### URL Not Accessible
+
+```bash
+# Check Traefik routing
+curl http://localhost:8090/api/http/routers
+
+# Check container labels
+docker inspect dev-<username> | grep -A 20 "Labels"
+
+# View proxy logs
+docker logs dev-proxy
+```
+
+### Port 80 Already in Use
+
+```bash
+# Check what's using port 80
+sudo lsof -i :80
+
+# Stop conflicting service
+sudo systemctl stop nginx  # or apache2
+
+# Or change Traefik port in docker-compose.proxy.yml
+```
+
+### Database Connection Issues
+
+```bash
+# Check database is running
+docker ps | grep db-<username>
+
+# View database logs
+docker logs db-<username>
+
+# Connect manually
+docker exec -it db-<username> psql -U simpleaccounts -d simpleaccounts
+```
+
+### Reset User Environment
+
+```bash
+# Stop and remove containers + volumes
+docker compose -f docker-compose.<username>.yml down -v
+
+# Remove compose file
+rm docker-compose.<username>.yml
+
+# Setup fresh
+./setup-user.sh <username>
+```
+
+## Advanced Configuration
+
+### Custom Environment Variables
+
+Edit the generated `docker-compose.<username>.yml`:
+
+```yaml
+services:
+  devcontainer:
+    environment:
+      - MY_CUSTOM_VAR=value
+      - DEBUG=true
+```
+
+Then restart:
+
+```bash
+docker compose -f docker-compose.<username>.yml up -d
+```
+
+### Resource Limits
+
+Add resource constraints:
+
+```yaml
+services:
+  devcontainer:
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+```
+
+### HTTPS (Self-Signed)
+
+Traefik can be configured for HTTPS. Edit `docker-compose.proxy.yml`:
+
+```yaml
+command:
+  - '--entrypoints.websecure.address=:443'
+  - '--certificatesresolvers.myresolver.acme.tlschallenge=true'
+```
+
+## Comparison with Single-User Setup
+
+| Aspect           | Single-User                | Multi-User                    |
+| ---------------- | -------------------------- | ----------------------------- |
+| **Isolation**    | Shared volumes             | Isolated per user             |
+| **URLs**         | `localhost:3000`           | `alice.192-168-1-100.nip.io`  |
+| **Port Conflicts** | Yes, if multiple users   | No, Traefik handles routing   |
+| **Shareable**    | No (localhost only)        | Yes, anyone can access        |
+| **Setup**        | VS Code devcontainer       | `./setup-user.sh <name>`      |
+| **Best For**     | Local dev, solo work       | Team collaboration            |

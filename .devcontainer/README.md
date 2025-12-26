@@ -2,7 +2,43 @@
 
 This directory contains the development container configuration for SimpleAccounts UAE.
 
-## Architecture Overview
+## Quick Start
+
+### Single User (Local Development)
+
+```bash
+# Open in VS Code with Dev Containers extension
+code .
+# Then: Cmd+Shift+P > "Dev Containers: Reopen in Container"
+```
+
+### Multi-User (Shared Dev Server)
+
+```bash
+cd .devcontainer/proxy
+./setup-user.sh <your-username>
+
+# Then attach VS Code:
+# Cmd+Shift+P > "Dev Containers: Attach to Running Container"
+# Select: dev-<your-username>
+```
+
+---
+
+## Choose Your Setup
+
+| Setup | Best For | Access URLs |
+|-------|----------|-------------|
+| **Single User** | Local development, one developer | `localhost:3000`, `localhost:8080` |
+| **Multi-User** | Shared dev server, team collaboration | `alice.192-168-1-100.nip.io` |
+
+---
+
+## Single-User Setup (Default)
+
+Uses `.devcontainer/docker-compose.yml` and `devcontainer.json`.
+
+### Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -19,49 +55,105 @@ This directory contains the development container configuration for SimpleAccoun
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## Network Mode: Shared Namespace
-
-All services use `network_mode: service:db`, which means they share the PostgreSQL container's network namespace.
-
-### What This Means
-
-| Aspect          | Behavior                                               |
-| --------------- | ------------------------------------------------------ |
-| **Hostname**    | All containers share the hostname `simpleaccounts-dev` |
-| **IP Address**  | All containers share the same network interfaces       |
-| **Port Access** | Services communicate via `localhost`                   |
-
 ### Service Connectivity
 
 | Service    | Access From DevContainer |
 | ---------- | ------------------------ |
 | PostgreSQL | `localhost:5432`         |
 | Redis      | `localhost:6379`         |
+| Frontend   | `localhost:3000`         |
+| Backend    | `localhost:8080`         |
 
-### Why This Design?
+### Why Shared Network Namespace?
 
 1. **Simplicity**: No DNS resolution or service discovery needed
 2. **Localhost Access**: Applications connect to `localhost` just like local development
 3. **Consistency**: Same connection strings work locally and in the container
 4. **Performance**: No network overlay overhead
 
-### Trade-offs
+---
 
-| Benefit                      | Consideration                              |
-| ---------------------------- | ------------------------------------------ |
-| Simple `localhost` access    | All containers share one hostname          |
-| No DNS configuration         | Cannot run multiple instances of same port |
-| Familiar development pattern | Debugging network issues can be confusing  |
+## Multi-User Setup (Shared Server)
+
+Uses `.devcontainer/proxy/` with Traefik reverse proxy.
+
+### Architecture
+
+```
+                              Dev Server
+┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│  ┌─────────────────┐                                         │
+│  │  Traefik Proxy  │  ← Port 80 (shared)                     │
+│  │   (dev-proxy)   │                                         │
+│  └────────┬────────┘                                         │
+│           │                                                  │
+│     ┌─────┴─────┬─────────────┐                              │
+│     │           │             │                              │
+│     ▼           ▼             ▼                              │
+│  ┌──────┐   ┌──────┐     ┌──────┐                            │
+│  │alice │   │ bob  │     │carol │  ← Isolated containers     │
+│  │ :3000│   │ :3000│     │ :3000│                            │
+│  │ :8080│   │ :8080│     │ :8080│                            │
+│  └──┬───┘   └──┬───┘     └──┬───┘                            │
+│     │          │            │                                │
+│  ┌──┴───┐   ┌──┴───┐     ┌──┴───┐                            │
+│  │ DB   │   │ DB   │     │ DB   │  ← Isolated databases      │
+│  │Redis │   │Redis │     │Redis │                            │
+│  └──────┘   └──────┘     └──────┘                            │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Features
+
+- **Isolated environments**: Each user has their own DB, Redis, and container
+- **Shareable URLs**: Share `http://alice.192-168-1-100.nip.io` with teammates
+- **No port conflicts**: Traefik routes by hostname, not port
+- **Zero DNS config**: Uses nip.io for automatic DNS resolution
+
+### Usage
+
+```bash
+# Setup your environment (auto-starts proxy if needed)
+cd .devcontainer/proxy
+./setup-user.sh alice
+
+# Access URLs printed after setup:
+#   Frontend: http://alice.192-168-1-100.nip.io
+#   Backend:  http://alice-api.192-168-1-100.nip.io
+```
+
+### User Management
+
+```bash
+# Add new user
+./setup-user.sh bob
+
+# List active users
+docker ps --filter "name=dev-" --format "table {{.Names}}\t{{.Status}}"
+
+# Stop user environment
+docker compose -f docker-compose.alice.yml down
+
+# Remove user environment (with data)
+docker compose -f docker-compose.alice.yml down -v
+```
+
+See [proxy/README.md](proxy/README.md) for full documentation.
+
+---
 
 ## Files
 
 | File                          | Purpose                                                  |
 | ----------------------------- | -------------------------------------------------------- |
 | `devcontainer.json`           | VS Code devcontainer configuration                       |
-| `docker-compose.yml`          | Container orchestration and networking                   |
+| `docker-compose.yml`          | Single-user container orchestration                      |
 | `docker-compose.override.yml` | Local overrides (secrets, custom config) - not committed |
 | `Dockerfile`                  | Container image definition                               |
 | `init-db.sql`                 | PostgreSQL initialization script                         |
+| `proxy/`                      | Multi-user setup with Traefik proxy                      |
 
 ## Volumes
 
@@ -168,4 +260,16 @@ Credentials are stored in named volumes and should persist. Check volume exists:
 
 ```bash
 docker volume ls | grep devcontainer-claude-config
+```
+
+### Multi-user: URL not accessible
+
+Check Traefik is running and routing correctly:
+
+```bash
+# Check proxy is running
+docker ps | grep dev-proxy
+
+# Check your container is registered
+docker logs dev-proxy 2>&1 | grep <your-username>
 ```

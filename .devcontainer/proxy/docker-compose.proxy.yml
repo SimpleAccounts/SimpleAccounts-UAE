@@ -1,0 +1,62 @@
+# =============================================================================
+# Reverse Proxy for Multi-User Development Environment
+# =============================================================================
+# This proxy enables multiple developers to share their dev environments.
+#
+# Usage:
+#   1. Start the proxy (once on the dev-server):
+#      docker compose -f docker-compose.proxy.yml up -d
+#
+#   2. Each user runs: ./setup-user.sh <username>
+#
+# URL Options (choose one):
+#
+#   Option A - nip.io (NO DNS CONFIG NEEDED - Recommended):
+#     - Frontend: http://alice.{SERVER_IP}.nip.io
+#     - Backend:  http://alice-api.{SERVER_IP}.nip.io
+#     - Dashboard: http://proxy.{SERVER_IP}.nip.io
+#     Example: http://alice.192-168-1-100.nip.io
+#
+#   Option B - Local domain (requires /etc/hosts or DNS):
+#     - Frontend: http://alice.dev.simpleaccounts.local
+#     - Backend:  http://alice-api.dev.simpleaccounts.local
+#     - Dashboard: http://proxy.dev.simpleaccounts.local
+#
+# =============================================================================
+
+services:
+  traefik:
+    image: traefik:v3.0
+    container_name: dev-proxy
+    restart: unless-stopped
+    command:
+      # API and Dashboard
+      - '--api.dashboard=true'
+      - '--api.insecure=true'
+      # Docker provider
+      - '--providers.docker=true'
+      - '--providers.docker.exposedbydefault=false'
+      - '--providers.docker.network=dev-proxy-network'
+      # Entrypoints
+      - '--entrypoints.web.address=:80'
+      - '--entrypoints.websecure.address=:443'
+      # Logs
+      - '--log.level=INFO'
+      - '--accesslog=true'
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8090:8080' # Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - dev-proxy-network
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.dashboard.rule=Host(`proxy.dev.simpleaccounts.local`)'
+      - 'traefik.http.routers.dashboard.service=api@internal'
+
+networks:
+  dev-proxy-network:
+    name: dev-proxy-network
+    driver: bridge

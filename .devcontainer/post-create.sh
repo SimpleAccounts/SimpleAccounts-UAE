@@ -1,5 +1,7 @@
 #!/bin/bash
 # Post-create script - runs once when the container is created
+# Note: Directories are pre-created in the Docker image for faster startup
+# This script handles volume mounts which may override image directories
 
 set -e
 
@@ -8,50 +10,7 @@ unset NODE_OPTIONS
 
 echo "🚀 Setting up SimpleAccounts-UAE development environment..."
 
-# Determine the target user home directory
-# In devcontainer, we typically run as vscode user, but post-create may run as root
-TARGET_USER="vscode"
 TARGET_HOME="/home/vscode"
-
-# Function to fix ownership of a directory (uses sudo if needed)
-fix_ownership() {
-    local dir="$1"
-    if [ -d "$dir" ]; then
-        # Check if directory is owned by someone other than target user
-        local owner
-        owner=$(stat -c '%U' "$dir" 2>/dev/null || stat -f '%Su' "$dir" 2>/dev/null)
-        if [ "$owner" != "$TARGET_USER" ]; then
-            if [ "$(id -u)" = "0" ]; then
-                chown -R "$TARGET_USER:$TARGET_USER" "$dir" 2>/dev/null || true
-            else
-                sudo chown -R "$TARGET_USER:$TARGET_USER" "$dir" 2>/dev/null || true
-            fi
-        fi
-    fi
-}
-
-# Function to ensure directory exists with correct permissions
-ensure_dir() {
-    local dir="$1"
-    if [ ! -d "$dir" ]; then
-        mkdir -p "$dir" 2>/dev/null || sudo mkdir -p "$dir" 2>/dev/null || true
-    fi
-    fix_ownership "$dir"
-}
-
-# ============================================
-# Setup Maven directories BEFORE any maven commands
-# ============================================
-echo "📁 Setting up Maven directories..."
-
-# The .m2 directory is mounted as a volume - ensure it's writable
-ensure_dir "$TARGET_HOME/.m2"
-ensure_dir "$TARGET_HOME/.m2/repository"
-ensure_dir "$TARGET_HOME/.m2/wrapper"
-ensure_dir "$TARGET_HOME/.m2/wrapper/dists"
-
-# Also ensure npm cache directory is writable
-ensure_dir "$TARGET_HOME/.npm"
 
 # ============================================
 # Install npm dependencies
@@ -71,14 +30,6 @@ if ! npm ci --legacy-peer-deps --prefer-offline 2>/dev/null; then
     npm install --legacy-peer-deps
 fi
 cd ../..
-
-# ============================================
-# Setup Playwright
-# ============================================
-echo "🎭 Setting up Playwright..."
-# Playwright browser deps are installed in Dockerfile
-# Just ensure the cache directory exists
-ensure_dir "$TARGET_HOME/.cache/ms-playwright"
 
 # ============================================
 # Download Maven dependencies
