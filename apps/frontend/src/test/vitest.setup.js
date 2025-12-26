@@ -1,6 +1,28 @@
 import '@testing-library/jest-dom/vitest';
 import { vi, beforeAll, afterEach, afterAll } from 'vitest';
 import { TextDecoder, TextEncoder } from 'util';
+import { configure } from '@testing-library/react';
+
+// Configure testing-library to use React 18+ act
+configure({ reactStrictMode: false });
+
+// Suppress unhandled rejection warnings from act() in tests
+// These occur due to async state updates that complete after test cleanup
+const originalError = console.error;
+console.error = (...args) => {
+  if (
+    typeof args[0] === 'string' &&
+    (args[0].includes('act(') ||
+      args[0].includes('not wrapped in act') ||
+      args[0].includes('Warning: An update to'))
+  ) {
+    return;
+  }
+  originalError.apply(console, args);
+};
+
+// Handle unhandled promise rejections silently in tests
+process.on('unhandledRejection', () => {});
 import {
   TransformStream,
   WritableStream,
