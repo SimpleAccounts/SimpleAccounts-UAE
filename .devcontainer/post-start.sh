@@ -30,6 +30,17 @@ if [ -f /usr/local/bin/install-cli-tools ]; then
     echo "   (Check /tmp/cli-tools-update.log for details)"
 fi
 
+# Start code-server if installed and not running
+if command -v code-server &> /dev/null; then
+    if ! pgrep -x "code-server" > /dev/null; then
+        echo "🌐 Starting code-server (Web IDE)..."
+        nohup code-server --bind-addr 0.0.0.0:8443 --auth none /workspaces/SimpleAccounts-UAE > /tmp/code-server.log 2>&1 &
+        echo "✅ Code-server started on port 8443"
+    else
+        echo "✅ Code-server already running"
+    fi
+fi
+
 echo ""
 echo "🎉 Development environment is ready!"
 echo ""
@@ -43,6 +54,11 @@ echo ""
 echo "Redis connection:"
 echo "  Host: localhost"
 echo "  Port: 6379"
+echo ""
+echo "Web IDE (Code Server):"
+echo "  URL:  http://localhost:8443"
+echo "  Auth: None (local access only)"
+echo "  Log:  /tmp/code-server.log"
 echo ""
 echo "CLI Tools:"
 echo "  claude    - Anthropic Claude Code CLI"
