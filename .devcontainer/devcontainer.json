@@ -5,7 +5,14 @@
   "workspaceFolder": "/workspaces/SimpleAccounts-UAE",
 
   // Docker CLI, GitHub CLI, and Git are pre-installed in the image
-  // No features needed - everything is baked into the Dockerfile for faster startup
+  // Code-server enables browser-based IDE access
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/code-server:1": {
+      "port": 8443,
+      "connectionToken": "none",
+      "extensionsGallery": "coder"
+    }
+  },
 
   // Configure tool-specific properties
   "customizations": {
@@ -63,10 +70,11 @@
   },
 
   // Port forwarding
-  "forwardPorts": [3000, 8080, 5432, 6379],
+  "forwardPorts": [3000, 8080, 8443, 5432, 6379],
   "portsAttributes": {
     "3000": { "label": "Frontend (Vite)", "onAutoForward": "notify" },
     "8080": { "label": "Backend (Spring Boot)", "onAutoForward": "notify" },
+    "8443": { "label": "Code Server (Web IDE)", "onAutoForward": "notify" },
     "5432": { "label": "PostgreSQL", "onAutoForward": "silent" },
     "6379": { "label": "Redis", "onAutoForward": "silent" }
   },
