@@ -156,12 +156,16 @@ echo -e "${BLUE}[6/7] Setting up DevPod provider...${NC}"
 # Check if provider exists
 if devpod provider list 2>/dev/null | grep -q "$PROVIDER_NAME"; then
     echo -e "${GREEN}✓ Provider already exists${NC}"
+    # Ensure inactivity timeout is set for existing providers
+    devpod provider set-options "$PROVIDER_NAME" -o INACTIVITY_TIMEOUT=10m 2>/dev/null || true
+    echo -e "${GREEN}✓ Inactivity timeout set to 10m${NC}"
 else
     devpod provider add ssh \
         --name "$PROVIDER_NAME" \
         -o HOST="${SSH_HOST}" \
-        -o USE_BUILTIN_SSH=true
-    echo -e "${GREEN}✓ Provider added${NC}"
+        -o USE_BUILTIN_SSH=true \
+        -o INACTIVITY_TIMEOUT=10m
+    echo -e "${GREEN}✓ Provider added with 10m inactivity timeout${NC}"
 fi
 
 # Step 7: Create workspace

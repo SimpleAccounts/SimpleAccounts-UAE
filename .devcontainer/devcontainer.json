@@ -4,15 +4,7 @@
   "service": "devcontainer",
   "workspaceFolder": "/workspaces/SimpleAccounts-UAE",
 
-  // Docker CLI, GitHub CLI, and Git are pre-installed in the image
-  // Code-server enables browser-based IDE access
-  "features": {
-    "ghcr.io/devcontainers-contrib/features/code-server:1": {
-      "port": 8443,
-      "connectionToken": "none",
-      "extensionsGallery": "coder"
-    }
-  },
+  // Docker CLI, GitHub CLI, Git, and code-server are pre-installed in the image
 
   // Configure tool-specific properties
   "customizations": {
