@@ -55,7 +55,7 @@
     "react-images-upload": "^1.2.7",
     "react-localization": "^1.0.16",
     "react-multi-email": "^1.0.6",
-    "react-number-format": "^4.5.5",
+    "react-number-format": "^5.4.4",
     "react-password-checklist": "^1.1.1",
     "react-phone-input-2": "^2.14.0",
     "react-redux": "^9.2.0",
