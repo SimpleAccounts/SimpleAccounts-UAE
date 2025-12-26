@@ -31,7 +31,7 @@ services:
       - redis
 
   db:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     hostname: simpleaccounts-dev
     restart: unless-stopped
     volumes:
