@@ -1,0 +1,104 @@
+# =============================================================================
+# User-Specific Development Container Stack
+# =============================================================================
+# Copy this file and customize for each developer.
+#
+# Setup:
+#   1. Copy to: docker-compose.{username}.yml
+#   2. Update USER_NAME variable below
+#   3. Run: docker compose -f docker-compose.{username}.yml up -d
+#
+# Access URLs:
+#   - Frontend: http://{username}.dev.simpleaccounts.local
+#   - Backend:  http://{username}-api.dev.simpleaccounts.local
+#   - Database: localhost:{54XX} (unique per user)
+# =============================================================================
+
+# !! CHANGE THIS !!
+x-user: &user-name 'alice' # Change to your name (lowercase, no spaces)
+x-frontend-port: &frontend-port '3000'
+x-backend-port: &backend-port '8080'
+
+services:
+  devcontainer:
+    image: ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest
+    container_name: dev-${USER_NAME:-alice}
+
+    volumes:
+      - ../../:/workspaces/SimpleAccounts-UAE:cached
+      - ${USER_NAME:-alice}-vscode-extensions:/home/vscode/.vscode-server/extensions
+      - ${USER_NAME:-alice}-maven-cache:/home/vscode/.m2
+      - ${USER_NAME:-alice}-npm-cache:/home/vscode/.npm
+      - ${HOME}/.devpod-mount/claude:/home/vscode/.claude
+      - ${HOME}/.devpod-mount/gh:/home/vscode/.config/gh
+      - ${HOME}/.devpod-mount/gitconfig:/home/vscode/.gitconfig_dir
+      - ${HOME}/.devpod-mount/ssh:/home/vscode/.ssh
+
+    environment:
+      - USER_NAME=${USER_NAME:-alice}
+      - HISTFILE=/home/vscode/.bash_history_dir/bash_history
+      - GIT_CONFIG_GLOBAL=/home/vscode/.gitconfig_dir/gitconfig
+
+    command: sleep infinity
+
+    networks:
+      - dev-proxy-network
+      - user-internal
+
+    depends_on:
+      - db
+      - redis
+
+    labels:
+      # Frontend routing
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.${USER_NAME:-alice}-frontend.rule=Host(`${USER_NAME:-alice}.dev.simpleaccounts.local`)'
+      - 'traefik.http.routers.${USER_NAME:-alice}-frontend.entrypoints=web'
+      - 'traefik.http.services.${USER_NAME:-alice}-frontend.loadbalancer.server.port=3000'
+
+      # Backend API routing
+      - 'traefik.http.routers.${USER_NAME:-alice}-api.rule=Host(`${USER_NAME:-alice}-api.dev.simpleaccounts.local`)'
+      - 'traefik.http.routers.${USER_NAME:-alice}-api.entrypoints=web'
+      - 'traefik.http.services.${USER_NAME:-alice}-api.loadbalancer.server.port=8080'
+
+  db:
+    image: postgres:16-alpine
+    container_name: db-${USER_NAME:-alice}
+    restart: unless-stopped
+    volumes:
+      - ${USER_NAME:-alice}-postgres-data:/var/lib/postgresql/data
+      - ../init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    environment:
+      POSTGRES_USER: simpleaccounts
+      POSTGRES_PASSWORD: simpleaccounts_dev
+      POSTGRES_DB: simpleaccounts
+    networks:
+      - user-internal
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U simpleaccounts']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-${USER_NAME:-alice}
+    restart: unless-stopped
+    volumes:
+      - ${USER_NAME:-alice}-redis-data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - user-internal
+
+networks:
+  dev-proxy-network:
+    external: true
+  user-internal:
+    name: ${USER_NAME:-alice}-internal
+
+volumes:
+  alice-postgres-data:
+  alice-redis-data:
+  alice-vscode-extensions:
+  alice-maven-cache:
+  alice-npm-cache:
