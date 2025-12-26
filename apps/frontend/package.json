@@ -40,7 +40,7 @@
     "framer-motion": "^12.23.26",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.21",
-    "lucide-react": "^0.561.0",
+    "lucide-react": "^0.562.0",
     "next-themes": "^0.4.6",
     "papaparse": "^5.3.2",
     "prop-types": "^15.7.2",
