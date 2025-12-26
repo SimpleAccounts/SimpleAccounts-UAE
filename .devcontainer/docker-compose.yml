@@ -5,6 +5,7 @@ services:
   devcontainer:
     image: ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest
     # Note: Add .env file in .devcontainer/ for custom environment variables
+    init: true # Use tini as PID 1 to properly reap zombie processes
 
     volumes:
       - ../:/workspaces/SimpleAccounts-UAE:cached
