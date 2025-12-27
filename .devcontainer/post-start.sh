@@ -3,19 +3,36 @@
 
 echo "🔄 Starting SimpleAccounts-UAE development environment..."
 
-# Wait for PostgreSQL to be ready
+# Wait for PostgreSQL to be ready (with timeout)
 echo "⏳ Waiting for PostgreSQL..."
+TIMEOUT=60
+ELAPSED=0
 until pg_isready -h db -p 5432 -U simpleaccounts -q; do
     sleep 1
+    ELAPSED=$((ELAPSED + 1))
+    if [ $ELAPSED -ge $TIMEOUT ]; then
+        echo "⚠️  PostgreSQL not ready after ${TIMEOUT}s, continuing anyway..."
+        break
+    fi
 done
-echo "✅ PostgreSQL is ready"
+if [ $ELAPSED -lt $TIMEOUT ]; then
+    echo "✅ PostgreSQL is ready"
+fi
 
-# Wait for Redis to be ready
+# Wait for Redis to be ready (with timeout)
 echo "⏳ Waiting for Redis..."
+ELAPSED=0
 until redis-cli -h redis ping > /dev/null 2>&1; do
     sleep 1
+    ELAPSED=$((ELAPSED + 1))
+    if [ $ELAPSED -ge $TIMEOUT ]; then
+        echo "⚠️  Redis not ready after ${TIMEOUT}s, continuing anyway..."
+        break
+    fi
 done
-echo "✅ Redis is ready"
+if [ $ELAPSED -lt $TIMEOUT ]; then
+    echo "✅ Redis is ready"
+fi
 
 # Symlink Claude settings from persistent mount
 if [ -f /home/vscode/.claude/claude.json ] && [ ! -L /home/vscode/.claude.json ]; then
@@ -80,8 +97,8 @@ connect_to_traefik() {
         return 1
     fi
 
-    # Get the devcontainer name
-    DEV_USER="${DEV_USER:-$(whoami)}"
+    # Get the devcontainer name (DEV_USER is set from docker-compose environment)
+    DEV_USER="${DEV_USER:-devuser}"
     DEV_CONTAINER_NAME="dev-${DEV_USER}"
 
     # Check if devcontainer exists
