@@ -80,19 +80,27 @@ connect_to_traefik() {
         return 1
     fi
 
-    # Get container name
-    CONTAINER_NAME=$(hostname)
+    # Get the db container name (which owns the network namespace)
+    # Devcontainer uses network_mode: service:db, so we connect db container to Traefik
     DEV_USER="${DEV_USER:-$(whoami)}"
+    DB_CONTAINER_NAME="db-${DEV_USER}"
+
+    # Check if db container exists
+    if ! docker inspect "$DB_CONTAINER_NAME" > /dev/null 2>&1; then
+        echo "⚠️  DB container $DB_CONTAINER_NAME not found"
+        return 1
+    fi
 
     # Check if already connected
-    if docker network inspect dev-proxy-network | grep -q "$CONTAINER_NAME"; then
+    if docker network inspect dev-proxy-network | grep -q "$DB_CONTAINER_NAME"; then
         echo "✅ Already connected to Traefik network"
         return 0
     fi
 
-    # Connect container to Traefik network
+    # Connect db container to Traefik network
+    # (db container owns the network namespace shared by devcontainer and redis)
     echo "🔌 Connecting to Traefik network..."
-    if docker network connect dev-proxy-network "$CONTAINER_NAME" 2>/dev/null; then
+    if docker network connect dev-proxy-network "$DB_CONTAINER_NAME" 2>/dev/null; then
         echo "✅ Connected to Traefik network"
         return 0
     else

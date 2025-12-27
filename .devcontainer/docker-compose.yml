@@ -48,7 +48,25 @@ services:
       redis:
         condition: service_started
 
-    # Traefik labels - active when connected to dev-proxy-network
+  db:
+    image: postgres:18-alpine
+    container_name: db-${USER:-devuser}
+    hostname: db
+    restart: unless-stopped
+    volumes:
+      - ${USER:-devuser}-postgres-data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    environment:
+      POSTGRES_USER: simpleaccounts
+      POSTGRES_PASSWORD: simpleaccounts_dev
+      POSTGRES_DB: simpleaccounts
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U simpleaccounts']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # Traefik labels - on db container because devcontainer uses network_mode: service:db
+    # This means db owns the network namespace and exposes ports 3000, 8080, 8443
     labels:
       - 'traefik.enable=true'
       # Frontend routing (port 3000)
@@ -76,24 +94,6 @@ services:
       - 'traefik.http.routers.${USER:-devuser}-ide-local.rule=Host(`${USER:-devuser}-ide.dev.simpleaccounts.local`)'
       - 'traefik.http.routers.${USER:-devuser}-ide-local.entrypoints=web'
       - 'traefik.http.routers.${USER:-devuser}-ide-local.service=${USER:-devuser}-ide'
-
-  db:
-    image: postgres:18-alpine
-    container_name: db-${USER:-devuser}
-    hostname: db
-    restart: unless-stopped
-    volumes:
-      - ${USER:-devuser}-postgres-data:/var/lib/postgresql/data
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    environment:
-      POSTGRES_USER: simpleaccounts
-      POSTGRES_PASSWORD: simpleaccounts_dev
-      POSTGRES_DB: simpleaccounts
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U simpleaccounts']
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   redis:
     image: redis:7-alpine
