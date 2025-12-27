@@ -17,6 +17,7 @@ Each user environment includes:
 - **Zombie-free containers** - Uses `init: true` (tini) to prevent zombie process accumulation
 - **Isolated databases** - Each user has their own PostgreSQL instance
 - **Shareable URLs** - Access via `username.server-ip.nip.io`
+- **Auto-shutdown** - Idle containers are automatically stopped after 30 minutes of inactivity
 
 ## Quick Start
 
@@ -228,6 +229,7 @@ Then point client DNS to the dev server.
 | `docker-compose.<user>.yml`  | Generated user-specific config       |
 | `setup-user.sh`              | User setup script                    |
 | `generate-hosts.sh`          | DNS helper for /etc/hosts            |
+| `idle-shutdown.sh`           | Auto-shutdown idle containers        |
 
 ## How It Works
 
@@ -376,6 +378,62 @@ command:
   - '--entrypoints.websecure.address=:443'
   - '--certificatesresolvers.myresolver.acme.tlschallenge=true'
 ```
+
+## Auto-Shutdown (Idle Timeout)
+
+To conserve server resources, containers are automatically stopped after 30 minutes of inactivity.
+
+### What counts as activity?
+
+- Running development processes (node, java, npm, mvn, vite, webpack, etc.)
+- Recent file modifications in the workspace (within last 5 minutes)
+
+### How it works
+
+A cron job runs every 5 minutes and checks each container:
+
+```bash
+# Check runs every 5 minutes
+*/5 * * * * /home/mohsin/idle-shutdown.sh 30
+```
+
+### Manual commands
+
+```bash
+# Check status without stopping (dry-run)
+./idle-shutdown.sh --dry-run
+
+# Use custom timeout (60 minutes)
+./idle-shutdown.sh 60
+
+# View shutdown logs
+tail -f /var/log/idle-shutdown.log
+```
+
+### Restart after shutdown
+
+If your container was stopped due to inactivity, simply restart it:
+
+```bash
+cd .devcontainer/proxy
+docker compose -f docker-compose.<username>.yml start
+```
+
+Or run the full setup again:
+
+```bash
+./setup-user.sh <username>
+```
+
+### Disable auto-shutdown for a user
+
+To keep a container running indefinitely, add a marker file:
+
+```bash
+docker exec dev-<username> touch /tmp/.keep-alive
+```
+
+Then modify the idle-shutdown.sh script to check for this file.
 
 ## Comparison with DevPod Setup
 
