@@ -130,24 +130,30 @@ stop_container_stack() {
 
     log_warn "Stopping idle container stack for: $username"
 
-    # Find the compose file
-    local compose_file
+    # Find the DevPod workspace compose file
+    local compose_file=""
+    local workspace_dir=""
+
+    # Search for DevPod workspace directory
     for dir in /home/*/; do
-        if [[ -f "${dir}.devpod/agent/contexts/default/workspaces/simpleaccounts-uae/content/.devcontainer/proxy/docker-compose.${username}.yml" ]]; then
-            compose_file="${dir}.devpod/agent/contexts/default/workspaces/simpleaccounts-uae/content/.devcontainer/proxy/docker-compose.${username}.yml"
+        local devpod_workspace="${dir}.devpod/agent/contexts/default/workspaces/simpleaccounts-uae/content"
+        if [[ -d "$devpod_workspace" && -f "$devpod_workspace/.devcontainer/docker-compose.yml" ]]; then
+            workspace_dir="$devpod_workspace"
+            compose_file="$devpod_workspace/.devcontainer/docker-compose.yml"
             break
         fi
     done
 
     if [[ -n "$compose_file" && -f "$compose_file" ]]; then
         if [[ "$DRY_RUN" == "true" ]]; then
-            log_info "[DRY-RUN] Would run: docker compose -f $compose_file stop"
+            log_info "[DRY-RUN] Would run: docker compose -f $compose_file stop (from $workspace_dir)"
         else
-            docker compose -f "$compose_file" stop 2>/dev/null || true
+            # Run docker compose from the workspace directory to ensure correct context
+            (cd "$workspace_dir" && docker compose -f .devcontainer/docker-compose.yml stop 2>/dev/null) || true
             log_success "Stopped container stack for: $username"
         fi
     else
-        # Fallback: stop individual containers
+        # Fallback: stop individual containers directly
         if [[ "$DRY_RUN" == "true" ]]; then
             log_info "[DRY-RUN] Would stop: $container, db-$username, redis-$username"
         else

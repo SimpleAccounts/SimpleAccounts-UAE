@@ -42,15 +42,14 @@ Uses `.devcontainer/docker-compose.yml` and `devcontainer.json`.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Shared Network Namespace                  │
-│                   (hostname: simpleaccounts-dev)             │
+│                    Internal Docker Network                   │
+│                   (user-specific isolation)                  │
 │                                                              │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
 │  │ devcontainer │  │      db      │  │    redis     │       │
 │  │              │  │  (postgres)  │  │              │       │
-│  │ localhost:   │  │ localhost:   │  │ localhost:   │       │
-│  │   5432 ─────────► 5432        │  │   6379 ◄─────────────│
-│  │   6379 ◄────────────────────────────► 6379      │       │
+│  │   db:5432 ──────► :5432       │  │              │       │
+│  │   redis:6379 ───────────────────────► :6379     │       │
 │  └──────────────┘  └──────────────┘  └──────────────┘       │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -59,17 +58,17 @@ Uses `.devcontainer/docker-compose.yml` and `devcontainer.json`.
 
 | Service    | Access From DevContainer |
 | ---------- | ------------------------ |
-| PostgreSQL | `localhost:5432`         |
-| Redis      | `localhost:6379`         |
+| PostgreSQL | `db:5432`                |
+| Redis      | `redis:6379`             |
 | Frontend   | `localhost:3000`         |
 | Backend    | `localhost:8080`         |
 
-### Why Shared Network Namespace?
+### Why Internal Network?
 
-1. **Simplicity**: No DNS resolution or service discovery needed
-2. **Localhost Access**: Applications connect to `localhost` just like local development
-3. **Consistency**: Same connection strings work locally and in the container
-4. **Performance**: No network overlay overhead
+1. **Multi-user Isolation**: Each user gets their own network namespace
+2. **Traefik Compatible**: Devcontainer can join Traefik network for external routing
+3. **Simple Hostnames**: Services use predictable hostnames (`db`, `redis`)
+4. **Consistent**: Same connection strings work for single and multi-user setups
 
 ---
 
@@ -208,13 +207,6 @@ docker compose down
 docker compose up -d
 ```
 
-### Check Hostname
-
-```bash
-hostname
-# Output: simpleaccounts-dev
-```
-
 ### Verify Network Connectivity
 
 ```bash
@@ -243,21 +235,12 @@ docker compose ps
 docker compose logs db
 ```
 
-### Hostname shows random ID instead of simpleaccounts-dev
-
-The container needs to be rebuilt to pick up the hostname change:
-
-```bash
-docker compose down
-docker compose up -d
-```
-
 ### Credentials lost after rebuild
 
 Credentials are stored in named volumes and should persist. Check volume exists:
 
 ```bash
-docker volume ls | grep devcontainer-claude-config
+docker volume ls | grep "$(whoami)-"
 ```
 
 ### Multi-user: URL not accessible
