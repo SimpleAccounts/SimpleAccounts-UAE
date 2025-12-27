@@ -4,18 +4,31 @@ This setup allows multiple developers to work on the same dev-server with isolat
 
 ## Quick Start
 
+### Step 1: Install Traefik (One-time, on the dev server)
+
 ```bash
-# One command to setup everything
+# Install Traefik as a system service (runs on boot)
+sudo ./install-traefik-service.sh
+```
+
+This installs Traefik as a systemd service that:
+- Starts automatically on server boot
+- Runs continuously in the background
+- Routes traffic to all user dev containers
+
+### Step 2: Setup Your Environment
+
+```bash
 ./setup-user.sh <your-username>
 
 # Example:
 ./setup-user.sh alice
 ```
 
-That's it! The script will:
+The script will:
 
-1. Start the Traefik proxy (if not running)
-2. Create your isolated environment (devcontainer + database + redis)
+1. Create your isolated environment (devcontainer + database + redis)
+2. Register with Traefik for routing
 3. Print your access URLs
 
 ## Architecture
@@ -203,15 +216,42 @@ Then point client DNS to the dev server.
 # 192.168.1.100  alice-api.dev.simpleaccounts.local
 ```
 
+## Traefik Service Management
+
+Once installed via `install-traefik-service.sh`, manage Traefik with:
+
+```bash
+# Check status
+sudo systemctl status traefik-proxy
+
+# View logs
+journalctl -u traefik-proxy -f
+
+# Restart
+sudo systemctl restart traefik-proxy
+
+# Stop
+sudo systemctl stop traefik-proxy
+
+# Start
+sudo systemctl start traefik-proxy
+
+# Uninstall completely
+sudo ./uninstall-traefik-service.sh
+```
+
 ## Files
 
-| File                         | Purpose                              |
-| ---------------------------- | ------------------------------------ |
-| `docker-compose.proxy.yml`   | Traefik reverse proxy configuration  |
-| `docker-compose.user.yml`    | Template for user environments       |
-| `docker-compose.<user>.yml`  | Generated user-specific config       |
-| `setup-user.sh`              | User setup script                    |
-| `generate-hosts.sh`          | DNS helper for /etc/hosts            |
+| File                           | Purpose                              |
+| ------------------------------ | ------------------------------------ |
+| `docker-compose.proxy.yml`     | Traefik reverse proxy configuration  |
+| `docker-compose.user.yml`      | Template for user environments       |
+| `docker-compose.<user>.yml`    | Generated user-specific config       |
+| `setup-user.sh`                | User setup script                    |
+| `generate-hosts.sh`            | DNS helper for /etc/hosts            |
+| `install-traefik-service.sh`   | Install Traefik as systemd service   |
+| `uninstall-traefik-service.sh` | Remove Traefik systemd service       |
+| `traefik.service`              | Systemd unit file                    |
 
 ## How It Works
 

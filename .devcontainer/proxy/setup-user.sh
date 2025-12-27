@@ -78,15 +78,18 @@ NIP_IP=$(echo "$SERVER_IP" | tr '.' '-')
 
 print_success "Detected server IP: $SERVER_IP"
 
-# Check if proxy network exists
+# Check if proxy is running
 if ! docker network ls | grep -q "dev-proxy-network"; then
-    print_warning "Proxy network not found. Starting proxy first..."
-    docker compose -f "$SCRIPT_DIR/docker-compose.proxy.yml" up -d
-    sleep 3
-    print_success "Proxy started"
-else
-    print_success "Proxy network exists"
+    print_error "Traefik proxy is not running!"
+    echo ""
+    echo "Please install the Traefik proxy first:"
+    echo -e "  ${GREEN}sudo ./install-traefik-service.sh${NC}"
+    echo ""
+    echo "Or start it manually:"
+    echo -e "  ${GREEN}docker compose -f $SCRIPT_DIR/docker-compose.proxy.yml up -d${NC}"
+    exit 1
 fi
+print_success "Traefik proxy is running"
 
 # Create user-specific compose file
 USER_COMPOSE="$SCRIPT_DIR/docker-compose.$USERNAME.yml"
