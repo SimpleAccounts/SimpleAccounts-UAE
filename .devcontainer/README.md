@@ -156,13 +156,15 @@ See [proxy/README.md](proxy/README.md) for Traefik proxy documentation.
 
 ### Persistent Data (Named Volumes)
 
-Named Docker volumes (user-specific to avoid conflicts):
+Named Docker volumes (user-specific for isolation on shared hosts):
 
 - `${USER}-postgres-data` - PostgreSQL database files
 - `${USER}-redis-data` - Redis persistence
 - `${USER}-vscode-extensions` - VS Code extensions
 - `${USER}-maven-cache` - Maven dependencies (~/.m2)
 - `${USER}-npm-cache` - npm cache (~/.npm)
+
+> **Note**: Volume names include the username prefix via Docker Compose's `name:` property, ensuring isolation between users on shared Docker hosts.
 
 ### Credentials & Configuration (Host Bind Mounts)
 

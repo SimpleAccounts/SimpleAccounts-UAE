@@ -21,10 +21,10 @@ services:
 
     volumes:
       - ../:/workspaces/SimpleAccounts-UAE:cached
-      # Cache volumes (user-specific to avoid conflicts)
-      - ${USER:-devuser}-vscode-extensions:/home/vscode/.vscode-server/extensions
-      - ${USER:-devuser}-maven-cache:/home/vscode/.m2
-      - ${USER:-devuser}-npm-cache:/home/vscode/.npm
+      # Cache volumes (project-prefixed by Docker Compose)
+      - vscode-extensions:/home/vscode/.vscode-server/extensions
+      - maven-cache:/home/vscode/.m2
+      - npm-cache:/home/vscode/.npm
       # User config/credentials (persist in host home directory)
       - ${HOME}/.devpod-mount/code-server:/home/vscode/.config/code-server
       - ${HOME}/.devpod-mount/claude:/home/vscode/.claude
@@ -101,7 +101,7 @@ services:
     hostname: db
     restart: unless-stopped
     volumes:
-      - ${USER:-devuser}-postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
       - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
     environment:
       POSTGRES_USER: simpleaccounts
@@ -121,7 +121,7 @@ services:
     hostname: redis
     restart: unless-stopped
     volumes:
-      - ${USER:-devuser}-redis-data:/data
+      - redis-data:/data
     command: redis-server --appendonly yes
     networks:
       - internal
@@ -131,8 +131,13 @@ networks:
     name: ${USER:-devuser}-internal
 
 volumes:
-  ${USER:-devuser}-postgres-data:
-  ${USER:-devuser}-redis-data:
-  ${USER:-devuser}-vscode-extensions:
-  ${USER:-devuser}-maven-cache:
-  ${USER:-devuser}-npm-cache:
+  postgres-data:
+    name: ${USER:-devuser}-postgres-data
+  redis-data:
+    name: ${USER:-devuser}-redis-data
+  vscode-extensions:
+    name: ${USER:-devuser}-vscode-extensions
+  maven-cache:
+    name: ${USER:-devuser}-maven-cache
+  npm-cache:
+    name: ${USER:-devuser}-npm-cache
