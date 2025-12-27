@@ -6,7 +6,7 @@ Welcome to SimpleAccounts UAE development! Choose your setup based on your envir
 
 | Setup | Best For | Command |
 |-------|----------|---------|
-| **Multi-User (Recommended)** | Shared dev server, team collaboration | `./setup-user.sh <username>` |
+| **Multi-User (Recommended)** | Shared dev server, team collaboration | `devpod up ... --provider ssh` |
 | **Single User** | Local development, solo work | `devpod up simpleaccounts-uae` |
 
 ---
@@ -18,19 +18,17 @@ Best for teams sharing a development server. Each developer gets isolated contai
 ### Quick Start
 
 ```bash
-# SSH into the dev server
-ssh <your-username>@<dev-server-ip>
+# From your local machine, launch via DevPod
+devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
+  --provider ssh \
+  --provider-option HOST=<dev-server-ip>
 
-# Navigate to the project
-cd /path/to/SimpleAccounts-UAE/.devcontainer/proxy
-
-# Setup your environment (auto-starts proxy if needed)
-./setup-user.sh <your-username>
+# Container auto-connects to Traefik proxy for shareable URLs
 ```
 
 ### What You Get
 
-After running the setup script, you'll see:
+After the container starts, you'll see URLs printed:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -43,10 +41,15 @@ Option 1: nip.io URLs (No DNS config needed!)
 
 ### Connect VS Code
 
-1. Open VS Code
-2. Install "Dev Containers" extension
-3. `Cmd+Shift+P` > "Dev Containers: Attach to Running Container"
-4. Select `dev-<your-username>`
+DevPod automatically opens VS Code when the workspace is ready. Alternatively:
+
+```bash
+# Open in VS Code
+devpod up simpleaccounts-uae --ide vscode
+
+# Or use the Web IDE
+# http://<username>-ide.<server-ip>.nip.io
+```
 
 ### Share Your Environment
 
@@ -135,11 +138,11 @@ This will:
 
 | Task                  | Command                                             |
 | --------------------- | --------------------------------------------------- |
-| Setup environment     | `./setup-user.sh <username>`                        |
-| List active users     | `docker ps --filter "name=dev-"`                    |
-| Stop your environment | `docker compose -f docker-compose.<user>.yml down`  |
-| View your logs        | `docker logs dev-<username>`                        |
-| Attach VS Code        | Dev Containers: Attach to Running Container         |
+| Setup environment     | `devpod up ... --provider ssh --provider-option HOST=<server>` |
+| List active users     | `docker ps --filter "name=simpleaccounts"`          |
+| Stop your environment | `devpod stop simpleaccounts-uae`                    |
+| View your logs        | `devpod logs simpleaccounts-uae`                    |
+| Open VS Code          | `devpod up simpleaccounts-uae --ide vscode`         |
 
 ### Single-User (DevPod) Commands
 
@@ -180,7 +183,7 @@ claude
 docker ps | grep dev-proxy
 
 # Check your container is running
-docker ps | grep dev-<username>
+docker ps | grep simpleaccounts
 
 # View proxy logs
 docker logs dev-proxy
@@ -189,11 +192,11 @@ docker logs dev-proxy
 #### Container won't start
 
 ```bash
-# Check logs
-docker logs dev-<username>
+# Check DevPod logs
+devpod logs simpleaccounts-uae
 
-# Check compose file
-cat .devcontainer/proxy/docker-compose.<username>.yml
+# Check container logs directly
+docker logs $(docker ps -q --filter "name=simpleaccounts")
 ```
 
 ### Single-User (DevPod) Setup
@@ -279,8 +282,9 @@ sudo chown -R 1000:1000 /home/<username>/.devpod-mount/
 
 | Script                        | Location             | Purpose                          |
 | ----------------------------- | -------------------- | -------------------------------- |
-| `setup-user.sh`               | `.devcontainer/proxy/` | Multi-user environment setup     |
-| `generate-hosts.sh`           | `.devcontainer/proxy/` | Generate /etc/hosts entries      |
+| `install-traefik-service.sh`  | `.devcontainer/proxy/` | Install Traefik proxy (admin)    |
+| `post-create.sh`              | `.devcontainer/`     | Initial container setup          |
+| `post-start.sh`               | `.devcontainer/`     | Container startup (Traefik connect) |
 | `admin-add-user.sh`           | `scripts/`           | Admin adds new DevPod user       |
 | `user-quick-setup.sh`         | `scripts/`           | User one-click DevPod setup      |
 | `devpod-setup.sh`             | `scripts/`           | Full self-service DevPod setup   |

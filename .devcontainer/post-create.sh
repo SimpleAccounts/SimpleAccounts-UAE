@@ -79,12 +79,13 @@ fi
 if [ ! -f "apps/backend/src/main/resources/application-local.properties" ]; then
     echo "📝 Creating backend application-local.properties..."
     cat > apps/backend/src/main/resources/application-local.properties << 'EOF'
-# Local development configuration
-spring.datasource.url=jdbc:postgresql://localhost:5432/simpleaccounts
+# Local development configuration (devcontainer)
+# Uses internal network hostnames for database/redis
+spring.datasource.url=jdbc:postgresql://db:5432/simpleaccounts
 spring.datasource.username=simpleaccounts
 spring.datasource.password=simpleaccounts_dev
 spring.jpa.hibernate.ddl-auto=update
-spring.redis.host=localhost
+spring.redis.host=redis
 spring.redis.port=6379
 EOF
 fi
