@@ -125,10 +125,12 @@ After startup, you get shareable URLs (if Traefik is running):
 | --------- | ------------------------------------------ |
 | Frontend  | `http://<username>.<server-ip>.nip.io`     |
 | Backend   | `http://<username>-api.<server-ip>.nip.io` |
+| Web IDE   | `http://<username>-ide.<server-ip>.nip.io` |
 
 **Example for user `alice` on server `65.108.51.136`:**
 - Frontend: `http://alice.65-108-51-136.nip.io`
 - Backend: `http://alice-api.65-108-51-136.nip.io`
+- Web IDE: `http://alice-ide.65-108-51-136.nip.io`
 
 ### Admin: Install Traefik (one-time)
 

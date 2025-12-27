@@ -60,6 +60,11 @@ services:
       - 'traefik.http.routers.${USER:-devuser}-api.entrypoints=web'
       - 'traefik.http.routers.${USER:-devuser}-api.service=${USER:-devuser}-api'
       - 'traefik.http.services.${USER:-devuser}-api.loadbalancer.server.port=8080'
+      # Code-server / Web IDE routing (port 8443)
+      - 'traefik.http.routers.${USER:-devuser}-ide.rule=HostRegexp(`${USER:-devuser}-ide.{ip:[0-9-]+}.nip.io`)'
+      - 'traefik.http.routers.${USER:-devuser}-ide.entrypoints=web'
+      - 'traefik.http.routers.${USER:-devuser}-ide.service=${USER:-devuser}-ide'
+      - 'traefik.http.services.${USER:-devuser}-ide.loadbalancer.server.port=8443'
       # Local domain routing
       - 'traefik.http.routers.${USER:-devuser}-frontend-local.rule=Host(`${USER:-devuser}.dev.simpleaccounts.local`)'
       - 'traefik.http.routers.${USER:-devuser}-frontend-local.entrypoints=web'
@@ -67,6 +72,9 @@ services:
       - 'traefik.http.routers.${USER:-devuser}-api-local.rule=Host(`${USER:-devuser}-api.dev.simpleaccounts.local`)'
       - 'traefik.http.routers.${USER:-devuser}-api-local.entrypoints=web'
       - 'traefik.http.routers.${USER:-devuser}-api-local.service=${USER:-devuser}-api'
+      - 'traefik.http.routers.${USER:-devuser}-ide-local.rule=Host(`${USER:-devuser}-ide.dev.simpleaccounts.local`)'
+      - 'traefik.http.routers.${USER:-devuser}-ide-local.entrypoints=web'
+      - 'traefik.http.routers.${USER:-devuser}-ide-local.service=${USER:-devuser}-ide'
 
   db:
     image: postgres:18-alpine

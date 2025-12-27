@@ -130,6 +130,7 @@ if [ "$TRAEFIK_ENABLED" = true ]; then
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "  Frontend: http://${DEV_USER}.${NIP_IP}.nip.io"
     echo "  Backend:  http://${DEV_USER}-api.${NIP_IP}.nip.io"
+    echo "  Web IDE:  http://${DEV_USER}-ide.${NIP_IP}.nip.io"
     echo "  Dashboard: http://proxy.${NIP_IP}.nip.io:8090"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 else

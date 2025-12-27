@@ -122,16 +122,18 @@ DevPod will:
 
 After starting your environment, you get shareable URLs:
 
-| Service   | URL                                      |
-| --------- | ---------------------------------------- |
-| Frontend  | `http://<username>.<server-ip>.nip.io`   |
+| Service   | URL                                        |
+| --------- | ------------------------------------------ |
+| Frontend  | `http://<username>.<server-ip>.nip.io`     |
 | Backend   | `http://<username>-api.<server-ip>.nip.io` |
-| Dashboard | `http://proxy.<server-ip>.nip.io:8090`   |
+| Web IDE   | `http://<username>-ide.<server-ip>.nip.io` |
+| Dashboard | `http://proxy.<server-ip>.nip.io:8090`     |
 
 **Example for user `alice` on server `65.108.51.136`:**
 
 - Frontend: `http://alice.65-108-51-136.nip.io`
 - Backend: `http://alice-api.65-108-51-136.nip.io`
+- Web IDE: `http://alice-ide.65-108-51-136.nip.io`
 
 **How nip.io works**: It's a free DNS service that resolves based on the IP in the domain name. No configuration needed!
 
