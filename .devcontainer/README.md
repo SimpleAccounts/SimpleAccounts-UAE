@@ -220,11 +220,11 @@ hostname
 ### Verify Network Connectivity
 
 ```bash
-# PostgreSQL
-pg_isready -h localhost -p 5432
+# PostgreSQL (uses internal hostname 'db')
+pg_isready -h db -p 5432
 
-# Redis
-redis-cli ping
+# Redis (uses internal hostname 'redis')
+redis-cli -h redis ping
 ```
 
 ### View Container Logs
@@ -236,7 +236,7 @@ docker compose logs -f redis
 
 ## Troubleshooting
 
-### "Connection refused" to localhost:5432
+### "Connection refused" to db:5432
 
 The db container may not be ready. Check health:
 
