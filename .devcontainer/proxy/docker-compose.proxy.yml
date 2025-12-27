@@ -26,9 +26,11 @@
 
 services:
   traefik:
-    image: traefik:v3.0
+    image: traefik:v2.11
     container_name: dev-proxy
     restart: unless-stopped
+    environment:
+      - DOCKER_API_VERSION=1.44
     command:
       # API and Dashboard
       - '--api.dashboard=true'

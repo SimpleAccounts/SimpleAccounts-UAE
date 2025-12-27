@@ -41,33 +41,115 @@ if command -v code-server &> /dev/null; then
     fi
 fi
 
+# =============================================================================
+# Traefik Integration (Dev-Server only)
+# =============================================================================
+connect_to_traefik() {
+    # Check if Docker socket is available
+    if [ ! -S /var/run/docker.sock ]; then
+        return 1
+    fi
+
+    # Check if docker CLI is available
+    if ! command -v docker &> /dev/null; then
+        return 1
+    fi
+
+    # Check if dev-proxy-network exists
+    if ! docker network inspect dev-proxy-network > /dev/null 2>&1; then
+        return 1
+    fi
+
+    # Get container name
+    CONTAINER_NAME=$(hostname)
+    DEV_USER="${DEV_USER:-$(whoami)}"
+
+    # Check if already connected
+    if docker network inspect dev-proxy-network | grep -q "$CONTAINER_NAME"; then
+        echo "✅ Already connected to Traefik network"
+        return 0
+    fi
+
+    # Connect container to Traefik network
+    echo "🔌 Connecting to Traefik network..."
+    if docker network connect dev-proxy-network "$CONTAINER_NAME" 2>/dev/null; then
+        echo "✅ Connected to Traefik network"
+        return 0
+    else
+        echo "⚠️  Could not connect to Traefik network (may need permissions)"
+        return 1
+    fi
+}
+
+# Get server IP for nip.io URLs
+get_server_ip() {
+    # Try to get IP from hostname
+    if command -v hostname &> /dev/null; then
+        IP=$(hostname -I 2>/dev/null | awk '{print $1}')
+    fi
+
+    # Fallback: get from default route
+    if [ -z "$IP" ] && command -v ip &> /dev/null; then
+        IP=$(ip route get 1 2>/dev/null | awk '{print $7; exit}')
+    fi
+
+    echo "${IP:-localhost}"
+}
+
+# Try to connect to Traefik
+TRAEFIK_ENABLED=false
+if connect_to_traefik; then
+    TRAEFIK_ENABLED=true
+    SERVER_IP=$(get_server_ip)
+    NIP_IP=$(echo "$SERVER_IP" | tr '.' '-')
+    DEV_USER="${DEV_USER:-devuser}"
+fi
+
+# =============================================================================
+# Print Environment Info
+# =============================================================================
 echo ""
 echo "🎉 Development environment is ready!"
 echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "Database connection:"
-echo "  Host: localhost"
+echo "  Host: localhost (or 'db' from other containers)"
 echo "  Port: 5432"
 echo "  User: simpleaccounts"
 echo "  Pass: simpleaccounts_dev"
 echo "  DB:   simpleaccounts"
 echo ""
 echo "Redis connection:"
-echo "  Host: localhost"
+echo "  Host: localhost (or 'redis' from other containers)"
 echo "  Port: 6379"
-echo ""
-echo "Web IDE (Code Server):"
-echo "  URL:  http://localhost:8443"
-echo "  Auth: None (local access only)"
-echo "  Log:  /tmp/code-server.log"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+if [ "$TRAEFIK_ENABLED" = true ]; then
+    echo ""
+    echo "🌐 Shareable URLs (via Traefik):"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "  Frontend: http://${DEV_USER}.${NIP_IP}.nip.io"
+    echo "  Backend:  http://${DEV_USER}-api.${NIP_IP}.nip.io"
+    echo "  Dashboard: http://proxy.${NIP_IP}.nip.io:8090"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+else
+    echo ""
+    echo "📡 Local Development (use port forwarding):"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "  Frontend: http://localhost:3000"
+    echo "  Backend:  http://localhost:8080"
+    echo "  Web IDE:  http://localhost:8443"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "💡 To enable shareable URLs, install Traefik on the server:"
+    echo "   cd .devcontainer/proxy && sudo ./install-traefik-service.sh"
+fi
+
 echo ""
 echo "CLI Tools:"
 echo "  claude    - Anthropic Claude Code CLI"
 echo "  codex     - OpenAI Codex CLI"
-echo "  openai    - OpenAI CLI"
 echo "  gemini    - Google Gemini CLI"
-echo "  cursor    - Cursor CLI"
-echo "  cursor-agent - Cursor agent CLI shim"
 echo "  gh        - GitHub CLI"
-echo "  gcloud    - Google Cloud CLI"
-echo "  kubectl   - Kubernetes CLI"
 echo "  psql      - PostgreSQL Client"
+echo ""

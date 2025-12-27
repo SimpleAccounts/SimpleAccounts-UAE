@@ -1,18 +1,25 @@
 # =============================================================================
 # SimpleAccounts UAE - Development Container Stack
 # =============================================================================
+#
+# Works for both LOCAL and DEV-SERVER:
+#   - Local: Uses port forwarding via DevPod/VS Code
+#   - Dev-Server: Auto-connects to Traefik for shareable URLs
+#
+# =============================================================================
+
 services:
   devcontainer:
     image: ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest
-    # Note: Add .env file in .devcontainer/ for custom environment variables
+    container_name: dev-${USER:-devuser}
     init: true # Use tini as PID 1 to properly reap zombie processes
 
     volumes:
       - ../:/workspaces/SimpleAccounts-UAE:cached
-      # Cache volumes (can be rebuilt, use Docker named volumes)
-      - devcontainer-vscode-extensions:/home/vscode/.vscode-server/extensions
-      - devcontainer-maven-cache:/home/vscode/.m2
-      - devcontainer-npm-cache:/home/vscode/.npm
+      # Cache volumes (user-specific to avoid conflicts)
+      - ${USER:-devuser}-vscode-extensions:/home/vscode/.vscode-server/extensions
+      - ${USER:-devuser}-maven-cache:/home/vscode/.m2
+      - ${USER:-devuser}-npm-cache:/home/vscode/.npm
       # User config/credentials (persist in host home directory)
       - ${HOME}/.devpod-mount/claude:/home/vscode/.claude
       - ${HOME}/.devpod-mount/gemini:/home/vscode/.gemini
@@ -25,18 +32,49 @@ services:
       - ${HOME}/.devpod-mount/kube:/home/vscode/.kube
       - ${HOME}/.devpod-mount/aws:/home/vscode/.aws
       - ${HOME}/.devpod-mount/azure:/home/vscode/.azure
+      # Mount host docker socket for Traefik network connection
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+    environment:
+      - DEV_USER=${USER:-devuser}
+
     command: sleep infinity
     network_mode: service:db
+
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+    # Traefik labels - active when connected to dev-proxy-network
+    labels:
+      - 'traefik.enable=true'
+      # Frontend routing (port 3000)
+      - 'traefik.http.routers.${USER:-devuser}-frontend.rule=HostRegexp(`${USER:-devuser}.{ip:[0-9-]+}.nip.io`)'
+      - 'traefik.http.routers.${USER:-devuser}-frontend.entrypoints=web'
+      - 'traefik.http.routers.${USER:-devuser}-frontend.service=${USER:-devuser}-frontend'
+      - 'traefik.http.services.${USER:-devuser}-frontend.loadbalancer.server.port=3000'
+      # Backend API routing (port 8080)
+      - 'traefik.http.routers.${USER:-devuser}-api.rule=HostRegexp(`${USER:-devuser}-api.{ip:[0-9-]+}.nip.io`)'
+      - 'traefik.http.routers.${USER:-devuser}-api.entrypoints=web'
+      - 'traefik.http.routers.${USER:-devuser}-api.service=${USER:-devuser}-api'
+      - 'traefik.http.services.${USER:-devuser}-api.loadbalancer.server.port=8080'
+      # Local domain routing
+      - 'traefik.http.routers.${USER:-devuser}-frontend-local.rule=Host(`${USER:-devuser}.dev.simpleaccounts.local`)'
+      - 'traefik.http.routers.${USER:-devuser}-frontend-local.entrypoints=web'
+      - 'traefik.http.routers.${USER:-devuser}-frontend-local.service=${USER:-devuser}-frontend'
+      - 'traefik.http.routers.${USER:-devuser}-api-local.rule=Host(`${USER:-devuser}-api.dev.simpleaccounts.local`)'
+      - 'traefik.http.routers.${USER:-devuser}-api-local.entrypoints=web'
+      - 'traefik.http.routers.${USER:-devuser}-api-local.service=${USER:-devuser}-api'
 
   db:
     image: postgres:18-alpine
-    hostname: simpleaccounts-dev
+    container_name: db-${USER:-devuser}
+    hostname: db
     restart: unless-stopped
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - ${USER:-devuser}-postgres-data:/var/lib/postgresql/data
       - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
     environment:
       POSTGRES_USER: simpleaccounts
@@ -50,15 +88,17 @@ services:
 
   redis:
     image: redis:7-alpine
+    container_name: redis-${USER:-devuser}
+    hostname: redis
     restart: unless-stopped
     volumes:
-      - redis-data:/data
+      - ${USER:-devuser}-redis-data:/data
     command: redis-server --appendonly yes
     network_mode: service:db
 
 volumes:
-  postgres-data:
-  redis-data:
-  devcontainer-vscode-extensions:
-  devcontainer-maven-cache:
-  devcontainer-npm-cache:
+  ${USER:-devuser}-postgres-data:
+  ${USER:-devuser}-redis-data:
+  ${USER:-devuser}-vscode-extensions:
+  ${USER:-devuser}-maven-cache:
+  ${USER:-devuser}-npm-cache:
