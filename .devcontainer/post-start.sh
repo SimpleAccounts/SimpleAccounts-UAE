@@ -75,32 +75,30 @@ connect_to_traefik() {
         return 1
     fi
 
-    # Check if dev-proxy-network exists
+    # Check if dev-proxy-network exists (Traefik must be installed)
     if ! docker network inspect dev-proxy-network > /dev/null 2>&1; then
         return 1
     fi
 
-    # Get the db container name (which owns the network namespace)
-    # Devcontainer uses network_mode: service:db, so we connect db container to Traefik
+    # Get the devcontainer name
     DEV_USER="${DEV_USER:-$(whoami)}"
-    DB_CONTAINER_NAME="db-${DEV_USER}"
+    DEV_CONTAINER_NAME="dev-${DEV_USER}"
 
-    # Check if db container exists
-    if ! docker inspect "$DB_CONTAINER_NAME" > /dev/null 2>&1; then
-        echo "⚠️  DB container $DB_CONTAINER_NAME not found"
+    # Check if devcontainer exists
+    if ! docker inspect "$DEV_CONTAINER_NAME" > /dev/null 2>&1; then
+        echo "⚠️  Dev container $DEV_CONTAINER_NAME not found"
         return 1
     fi
 
     # Check if already connected
-    if docker network inspect dev-proxy-network | grep -q "$DB_CONTAINER_NAME"; then
+    if docker network inspect dev-proxy-network | grep -q "$DEV_CONTAINER_NAME"; then
         echo "✅ Already connected to Traefik network"
         return 0
     fi
 
-    # Connect db container to Traefik network
-    # (db container owns the network namespace shared by devcontainer and redis)
+    # Connect devcontainer to Traefik network for external routing
     echo "🔌 Connecting to Traefik network..."
-    if docker network connect dev-proxy-network "$DB_CONTAINER_NAME" 2>/dev/null; then
+    if docker network connect dev-proxy-network "$DEV_CONTAINER_NAME" 2>/dev/null; then
         echo "✅ Connected to Traefik network"
         return 0
     else
@@ -141,14 +139,15 @@ echo "🎉 Development environment is ready!"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "Database connection:"
-echo "  Host: localhost (or 'db' from other containers)"
+echo "  Host: db (internal network hostname)"
 echo "  Port: 5432"
 echo "  User: simpleaccounts"
 echo "  Pass: simpleaccounts_dev"
 echo "  DB:   simpleaccounts"
+echo "  URL:  jdbc:postgresql://db:5432/simpleaccounts"
 echo ""
 echo "Redis connection:"
-echo "  Host: localhost (or 'redis' from other containers)"
+echo "  Host: redis (internal network hostname)"
 echo "  Port: 6379"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 

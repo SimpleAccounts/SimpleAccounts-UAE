@@ -186,12 +186,23 @@ Backend runs at: http://localhost:8080 (or shareable URL on remote)
 
 ## Services
 
+**From your local machine (via port forwarding):**
+
 | Service               | URL/Port              | Credentials                                                                            |
 | --------------------- | --------------------- | -------------------------------------------------------------------------------------- |
 | Frontend (Vite)       | http://localhost:3000 | -                                                                                      |
 | Backend (Spring Boot) | http://localhost:8080 | -                                                                                      |
 | PostgreSQL            | localhost:5432        | User: `simpleaccounts`<br>Password: `simpleaccounts_dev`<br>Database: `simpleaccounts` |
 | Redis                 | localhost:6379        | -                                                                                      |
+
+**Inside the container (internal network):**
+
+| Service    | Hostname | Port |
+| ---------- | -------- | ---- |
+| PostgreSQL | `db`     | 5432 |
+| Redis      | `redis`  | 6379 |
+
+The application is pre-configured with environment variables to use the internal hostnames (`db`, `redis`).
 
 ## Common Commands
 
@@ -236,14 +247,14 @@ devpod up https://github.com/YOUR-USERNAME/SimpleAccounts-UAE --ide vscode
 ### Using psql (inside container)
 
 ```bash
-psql -h localhost -U simpleaccounts -d simpleaccounts
+psql -h db -U simpleaccounts -d simpleaccounts
 ```
 
 ### Using VS Code Extension
 
 The PostgreSQL extension is pre-installed. Connect with:
 
-- Host: `localhost`
+- Host: `db` (internal hostname)
 - Port: `5432`
 - User: `simpleaccounts`
 - Password: `simpleaccounts_dev`

@@ -6,6 +6,11 @@
 #   - Local: Uses port forwarding via DevPod/VS Code
 #   - Dev-Server: Auto-connects to Traefik for shareable URLs
 #
+# Network Architecture:
+#   - All services share an internal network for communication
+#   - Services communicate via hostnames: db:5432, redis:6379
+#   - Devcontainer connects to Traefik network for external routing
+#
 # =============================================================================
 
 services:
@@ -38,9 +43,22 @@ services:
 
     environment:
       - DEV_USER=${USER:-devuser}
+      # Database connection (uses hostname 'db' on internal network)
+      - SIMPLEACCOUNTS_DB_HOST=db
+      - SIMPLEACCOUNTS_DB_PORT=5432
+      - SIMPLEACCOUNTS_DB=simpleaccounts
+      - SIMPLEACCOUNTS_DB_USER=simpleaccounts
+      - SIMPLEACCOUNTS_DB_PASSWORD=simpleaccounts_dev
+      - SIMPLEACCOUNTS_DB_SSL=false
+      - SIMPLEACCOUNTS_DB_SSLMODE=disable
+      # Redis connection (uses hostname 'redis' on internal network)
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
 
     command: sleep infinity
-    network_mode: service:db
+
+    networks:
+      - internal
 
     depends_on:
       db:
@@ -48,25 +66,7 @@ services:
       redis:
         condition: service_started
 
-  db:
-    image: postgres:18-alpine
-    container_name: db-${USER:-devuser}
-    hostname: db
-    restart: unless-stopped
-    volumes:
-      - ${USER:-devuser}-postgres-data:/var/lib/postgresql/data
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    environment:
-      POSTGRES_USER: simpleaccounts
-      POSTGRES_PASSWORD: simpleaccounts_dev
-      POSTGRES_DB: simpleaccounts
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U simpleaccounts']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    # Traefik labels - on db container because devcontainer uses network_mode: service:db
-    # This means db owns the network namespace and exposes ports 3000, 8080, 8443
+    # Traefik labels for external routing (active when connected to dev-proxy-network)
     labels:
       - 'traefik.enable=true'
       # Frontend routing (port 3000)
@@ -95,6 +95,26 @@ services:
       - 'traefik.http.routers.${USER:-devuser}-ide-local.entrypoints=web'
       - 'traefik.http.routers.${USER:-devuser}-ide-local.service=${USER:-devuser}-ide'
 
+  db:
+    image: postgres:18-alpine
+    container_name: db-${USER:-devuser}
+    hostname: db
+    restart: unless-stopped
+    volumes:
+      - ${USER:-devuser}-postgres-data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    environment:
+      POSTGRES_USER: simpleaccounts
+      POSTGRES_PASSWORD: simpleaccounts_dev
+      POSTGRES_DB: simpleaccounts
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U simpleaccounts']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
   redis:
     image: redis:7-alpine
     container_name: redis-${USER:-devuser}
@@ -103,7 +123,12 @@ services:
     volumes:
       - ${USER:-devuser}-redis-data:/data
     command: redis-server --appendonly yes
-    network_mode: service:db
+    networks:
+      - internal
+
+networks:
+  internal:
+    name: ${USER:-devuser}-internal
 
 volumes:
   ${USER:-devuser}-postgres-data:

@@ -71,7 +71,7 @@ DevPod will:
                        Dev Server
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│  ┌─────────────────┐                                            │
+│  ┌─────────────────┐     dev-proxy-network (external routing)   │
 │  │  Traefik Proxy  │ ← Port 80 (shared)                         │
 │  │   (dev-proxy)   │                                            │
 │  └────────┬────────┘                                            │
@@ -79,22 +79,30 @@ DevPod will:
 │     ┌─────┴─────┬─────────────┐                                 │
 │     │           │             │                                 │
 │     ▼           ▼             ▼                                 │
-│  ┌──────┐   ┌──────┐     ┌──────┐                               │
-│  │alice │   │ bob  │     │carol │  ← User Containers            │
-│  │:3000 │   │:3000 │     │:3000 │    (via DevPod)               │
-│  │:8080 │   │:8080 │     │:8080 │                               │
-│  └──────┘   └──────┘     └──────┘                               │
-│      │           │             │                                │
-│  ┌──────┐   ┌──────┐     ┌──────┐                               │
-│  │ DB   │   │ DB   │     │ DB   │  ← Isolated Databases         │
-│  │Redis │   │Redis │     │Redis │                               │
-│  └──────┘   └──────┘     └──────┘                               │
+│  ┌──────────────────────────────────┐  alice-internal network   │
+│  │  dev-alice  ←→  db  ←→  redis   │  (internal communication) │
+│  │   :3000          :5432    :6379  │                           │
+│  │   :8080                          │                           │
+│  │   :8443                          │                           │
+│  └──────────────────────────────────┘                           │
 │                                                                 │
-│  /home/alice/...     /home/bob/...    /home/carol/...           │
-│  (own workspace)     (own workspace)  (own workspace)           │
+│  ┌──────────────────────────────────┐  bob-internal network     │
+│  │  dev-bob    ←→  db  ←→  redis   │                           │
+│  └──────────────────────────────────┘                           │
+│                                                                 │
+│  /home/alice/...              /home/bob/...                     │
+│  (own workspace)              (own workspace)                   │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+### Network Architecture
+
+Each user's environment has two networks:
+
+1. **Internal Network** (`<username>-internal`): Connects devcontainer, PostgreSQL, and Redis for internal communication using hostnames (`db:5432`, `redis:6379`)
+
+2. **Traefik Network** (`dev-proxy-network`): The devcontainer joins this network for external routing via shareable URLs
 
 ## How It Works
 
