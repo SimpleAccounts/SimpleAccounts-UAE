@@ -132,6 +132,24 @@ After startup, you get shareable URLs (if Traefik is running):
 - Backend: `http://alice-api.65-108-51-136.nip.io`
 - Web IDE: `http://alice-ide.65-108-51-136.nip.io`
 
+### Web IDE Password
+
+The Web IDE (code-server) is password protected. On first launch, a random password is generated and displayed in the terminal.
+
+**View your password:**
+```bash
+cat ~/.config/code-server/config.yaml
+```
+
+**Change your password:**
+```bash
+nano ~/.config/code-server/config.yaml
+# Edit the 'password:' line, save, then restart:
+pkill code-server && code-server /workspaces/SimpleAccounts-UAE &
+```
+
+Your password is stored in your home directory and persists across container restarts.
+
 ### Admin: Install Traefik (one-time)
 
 Before team members can get shareable URLs, an admin must install Traefik:

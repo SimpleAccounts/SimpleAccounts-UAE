@@ -21,6 +21,7 @@ services:
       - ${USER:-devuser}-maven-cache:/home/vscode/.m2
       - ${USER:-devuser}-npm-cache:/home/vscode/.npm
       # User config/credentials (persist in host home directory)
+      - ${HOME}/.devpod-mount/code-server:/home/vscode/.config/code-server
       - ${HOME}/.devpod-mount/claude:/home/vscode/.claude
       - ${HOME}/.devpod-mount/gemini:/home/vscode/.gemini
       - ${HOME}/.devpod-mount/codex:/home/vscode/.codex

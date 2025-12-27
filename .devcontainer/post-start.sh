@@ -32,10 +32,30 @@ fi
 
 # Start code-server if installed and not running
 if command -v code-server &> /dev/null; then
+    CODE_SERVER_CONFIG="$HOME/.config/code-server/config.yaml"
+    CODE_SERVER_CONFIG_DIR="$(dirname "$CODE_SERVER_CONFIG")"
+
+    # Create config directory if it doesn't exist
+    mkdir -p "$CODE_SERVER_CONFIG_DIR"
+
+    # Generate config with random password if it doesn't exist
+    if [ ! -f "$CODE_SERVER_CONFIG" ]; then
+        GENERATED_PASSWORD=$(openssl rand -base64 16 | tr -d '/+=' | head -c 16)
+        cat > "$CODE_SERVER_CONFIG" << CONFIGEOF
+bind-addr: 0.0.0.0:8443
+auth: password
+password: ${GENERATED_PASSWORD}
+cert: false
+CONFIGEOF
+        chmod 600 "$CODE_SERVER_CONFIG"
+        echo "🔐 Generated new code-server password (see below)"
+        export CODE_SERVER_NEW_PASSWORD="$GENERATED_PASSWORD"
+    fi
+
     if ! pgrep -x "code-server" > /dev/null; then
         echo "🌐 Starting code-server (Web IDE)..."
-        nohup code-server --bind-addr 0.0.0.0:8443 --auth none /workspaces/SimpleAccounts-UAE > /tmp/code-server.log 2>&1 &
-        echo "✅ Code-server started on port 8443"
+        nohup code-server /workspaces/SimpleAccounts-UAE > /tmp/code-server.log 2>&1 &
+        echo "✅ Code-server started on port 8443 (password protected)"
     else
         echo "✅ Code-server already running"
     fi
@@ -144,6 +164,23 @@ else
     echo ""
     echo "💡 To enable shareable URLs, install Traefik on the server:"
     echo "   cd .devcontainer/proxy && sudo ./install-traefik-service.sh"
+fi
+
+# Show code-server password info
+if [ -n "$CODE_SERVER_NEW_PASSWORD" ]; then
+    echo ""
+    echo "🔑 Web IDE Password (save this!):"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "  Password: ${CODE_SERVER_NEW_PASSWORD}"
+    echo ""
+    echo "  To change your password later:"
+    echo "    nano ~/.config/code-server/config.yaml"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+elif [ -f "$HOME/.config/code-server/config.yaml" ]; then
+    echo ""
+    echo "🔑 Web IDE: Password protected"
+    echo "   View password: cat ~/.config/code-server/config.yaml"
+    echo "   Change password: nano ~/.config/code-server/config.yaml"
 fi
 
 echo ""
