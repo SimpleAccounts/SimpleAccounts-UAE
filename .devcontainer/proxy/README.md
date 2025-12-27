@@ -137,6 +137,105 @@ After starting your environment, you get shareable URLs:
 
 **How nip.io works**: It's a free DNS service that resolves based on the IP in the domain name. No configuration needed!
 
+## Web IDE (Code-Server)
+
+Each developer has access to a browser-based VS Code IDE via code-server.
+
+### Features
+
+- Full VS Code experience in the browser
+- Password protected (unique per user)
+- Extensions sync with desktop VS Code
+- Works on any device with a browser
+
+### Password Management
+
+On first container startup, a random 16-character password is automatically generated.
+
+#### View Your Password
+
+```bash
+cat ~/.config/code-server/config.yaml
+```
+
+Output:
+```yaml
+bind-addr: 0.0.0.0:8443
+auth: password
+password: xK9mNp2QrS4tUv
+cert: false
+```
+
+#### Change Your Password
+
+```bash
+# Edit the config file
+nano ~/.config/code-server/config.yaml
+
+# Change the password line to your new password
+password: your-new-secure-password
+
+# Save and restart code-server
+pkill code-server
+nohup code-server /workspaces/SimpleAccounts-UAE > /tmp/code-server.log 2>&1 &
+```
+
+#### Reset Password
+
+If you forget your password, you can reset it:
+
+```bash
+# Delete config (will regenerate on next start)
+rm ~/.config/code-server/config.yaml
+
+# Restart container or run post-start script
+bash /workspaces/SimpleAccounts-UAE/.devcontainer/post-start.sh
+```
+
+### Password Storage
+
+| Location | Purpose |
+|----------|---------|
+| `~/.config/code-server/config.yaml` | Password and settings |
+| Mounted from | `$HOME/.devpod-mount/code-server/` on host |
+
+Password persists across container restarts because the config directory is mounted from the host.
+
+### Troubleshooting Code-Server
+
+#### Can't Access Web IDE
+
+```bash
+# Check if code-server is running
+pgrep -a code-server
+
+# Check logs
+cat /tmp/code-server.log
+
+# Restart code-server
+pkill code-server
+nohup code-server /workspaces/SimpleAccounts-UAE > /tmp/code-server.log 2>&1 &
+```
+
+#### Password Not Working
+
+```bash
+# View current password
+cat ~/.config/code-server/config.yaml | grep password
+
+# Make sure you're using the correct password (no extra spaces)
+```
+
+#### Extensions Not Loading
+
+```bash
+# Extensions are stored in a persistent volume
+# Check if volume is mounted
+ls ~/.vscode-server/extensions/
+
+# Reinstall extensions if needed via code-server UI
+```
+
 ## User Management
 
 ### Add New User (Admin)
