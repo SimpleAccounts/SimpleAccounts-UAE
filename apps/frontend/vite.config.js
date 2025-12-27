@@ -58,7 +58,6 @@ export default defineConfig({
       'dayjs', // Pre-bundle dayjs to avoid initialization issues
       'bootstrap', // Pre-bundle bootstrap to ensure jQuery is loaded first
       '@emotion/react', // Pre-bundle emotion to ensure React is available
-      '@emotion/styled', // Pre-bundle emotion styled
     ],
     // Exclude large dependencies from optimization to save memory
     exclude: [
