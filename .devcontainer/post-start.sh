@@ -5,14 +5,14 @@ echo "🔄 Starting SimpleAccounts-UAE development environment..."
 
 # Wait for PostgreSQL to be ready
 echo "⏳ Waiting for PostgreSQL..."
-until pg_isready -h localhost -p 5432 -U simpleaccounts -q; do
+until pg_isready -h db -p 5432 -U simpleaccounts -q; do
     sleep 1
 done
 echo "✅ PostgreSQL is ready"
 
 # Wait for Redis to be ready
 echo "⏳ Waiting for Redis..."
-until redis-cli -h localhost ping > /dev/null 2>&1; do
+until redis-cli -h redis ping > /dev/null 2>&1; do
     sleep 1
 done
 echo "✅ Redis is ready"
