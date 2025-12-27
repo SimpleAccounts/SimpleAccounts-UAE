@@ -1,0 +1,19 @@
+[Unit]
+Description=Traefik Reverse Proxy for Dev Containers
+Documentation=https://doc.traefik.io/traefik/
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/simpleaccounts-proxy
+ExecStartPre=/usr/bin/docker compose -f docker-compose.proxy.yml pull --quiet
+ExecStart=/usr/bin/docker compose -f docker-compose.proxy.yml up -d
+ExecStop=/usr/bin/docker compose -f docker-compose.proxy.yml down
+ExecReload=/usr/bin/docker compose -f docker-compose.proxy.yml up -d --force-recreate
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
