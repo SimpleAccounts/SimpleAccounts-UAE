@@ -170,7 +170,7 @@ Output:
 ```yaml
 bind-addr: 0.0.0.0:8443
 auth: password
-password: xK9mNp2QrS4tUv
+password: <your-generated-password>
 cert: false
 ```
 
