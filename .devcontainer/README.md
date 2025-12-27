@@ -154,30 +154,32 @@ See [proxy/README.md](proxy/README.md) for Traefik proxy documentation.
 
 ## Volumes
 
-### Persistent Data
+### Persistent Data (Named Volumes)
 
-- `postgres-data` - PostgreSQL database files
-- `redis-data` - Redis persistence
+Named Docker volumes (user-specific to avoid conflicts):
 
-### Developer Tool Caches (Survives Rebuilds)
+- `${USER}-postgres-data` - PostgreSQL database files
+- `${USER}-redis-data` - Redis persistence
+- `${USER}-vscode-extensions` - VS Code extensions
+- `${USER}-maven-cache` - Maven dependencies (~/.m2)
+- `${USER}-npm-cache` - npm cache (~/.npm)
 
-- `devcontainer-vscode-extensions` - VS Code extensions
-- `devcontainer-maven-cache` - Maven dependencies (~/.m2)
-- `devcontainer-npm-cache` - npm cache (~/.npm)
+### Credentials & Configuration (Host Bind Mounts)
 
-### Credentials & Configuration (Survives Rebuilds)
+Persisted to host directory `~/.devpod-mount/` for portability:
 
-- `devcontainer-claude-config` - Claude CLI credentials (~/.claude)
-- `devcontainer-gemini-config` - Gemini CLI config (~/.gemini)
-- `devcontainer-codex-config` - Codex CLI config (~/.codex)
-- `devcontainer-gh-config` - GitHub CLI auth (~/.config/gh)
-- `devcontainer-ssh` - SSH keys (~/.ssh)
-- `devcontainer-docker` - Docker config (~/.docker)
-- `devcontainer-kube` - Kubernetes config (~/.kube)
-- `devcontainer-aws` - AWS credentials (~/.aws)
-- `devcontainer-azure` - Azure credentials (~/.azure)
-- `devcontainer-gitconfig` - Git configuration (~/.gitconfig)
-- `devcontainer-bash-history` - Bash history
+- `~/.devpod-mount/claude` → ~/.claude (Claude CLI)
+- `~/.devpod-mount/gemini` → ~/.gemini (Gemini CLI)
+- `~/.devpod-mount/codex` → ~/.codex (Codex CLI)
+- `~/.devpod-mount/gh` → ~/.config/gh (GitHub CLI)
+- `~/.devpod-mount/ssh` → ~/.ssh (SSH keys)
+- `~/.devpod-mount/docker` → ~/.docker (Docker config)
+- `~/.devpod-mount/kube` → ~/.kube (Kubernetes config)
+- `~/.devpod-mount/aws` → ~/.aws (AWS credentials)
+- `~/.devpod-mount/azure` → ~/.azure (Azure credentials)
+- `~/.devpod-mount/gitconfig` → ~/.gitconfig_dir (Git config)
+- `~/.devpod-mount/bash-history` → ~/.bash_history_dir (Bash history)
+- `~/.devpod-mount/code-server` → ~/.config/code-server (Web IDE config)
 
 ## Local Overrides
 
