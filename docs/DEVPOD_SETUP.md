@@ -6,10 +6,22 @@ This guide explains how to set up your development environment using [DevPod](ht
 
 DevPod creates reproducible development environments using containers. Benefits:
 
-- **Zero configuration** - Everything is pre-configured (Java 21, Node 20, PostgreSQL, Redis)
+- **Zero configuration** - Everything is pre-configured (Java 21, Node 20, PostgreSQL 18, Redis 7)
 - **Fast setup** - Prebuilt images mean you're coding in under a minute
 - **Consistent** - Same environment for all developers
 - **IDE agnostic** - Works with VS Code, JetBrains IDEs, Cursor, or SSH
+- **Zombie-free** - Uses tini init system to prevent zombie processes
+
+## Choose Your Setup
+
+| Setup | Best For | Access Method |
+|-------|----------|---------------|
+| **DevPod (Single User)** | Local development, solo work | `localhost:3000` via port forwarding |
+| **Traefik Multi-User** | Team collaboration, shared server | `username.server-ip.nip.io` via reverse proxy |
+
+**Quick decision:**
+- Working alone or locally? → Use DevPod (this guide)
+- Sharing a dev server with teammates? → Use [Multi-User Setup](./../.devcontainer/proxy/README.md)
 
 ## Prerequisites
 
@@ -171,8 +183,8 @@ The dev container includes:
 | Node.js                   | 20          |
 | npm                       | Latest      |
 | Maven                     | Via wrapper |
-| PostgreSQL Client         | Latest      |
-| Redis CLI                 | Latest      |
+| PostgreSQL                | 18          |
+| Redis                     | 7           |
 | Git                       | Latest      |
 | GitHub CLI                | Latest      |
 | Docker-in-Docker          | Latest      |

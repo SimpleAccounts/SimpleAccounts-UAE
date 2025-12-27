@@ -2,6 +2,22 @@
 
 This setup allows multiple developers to work on the same dev-server with isolated environments and shareable URLs.
 
+## Stack
+
+Each user environment includes:
+
+| Component | Version | Description |
+|-----------|---------|-------------|
+| Devcontainer | Latest | Pre-configured development environment |
+| PostgreSQL | **18** | Database server |
+| Redis | 7 | Cache and session storage |
+| Traefik | 3.0 | Reverse proxy for URL routing |
+
+**Features:**
+- **Zombie-free containers** - Uses `init: true` (tini) to prevent zombie process accumulation
+- **Isolated databases** - Each user has their own PostgreSQL instance
+- **Shareable URLs** - Access via `username.server-ip.nip.io`
+
 ## Quick Start
 
 ```bash
@@ -361,13 +377,20 @@ command:
   - '--certificatesresolvers.myresolver.acme.tlschallenge=true'
 ```
 
-## Comparison with Single-User Setup
+## Comparison with DevPod Setup
 
-| Aspect           | Single-User                | Multi-User                    |
+| Aspect           | DevPod (Single-User)       | Traefik (Multi-User)          |
 | ---------------- | -------------------------- | ----------------------------- |
 | **Isolation**    | Shared volumes             | Isolated per user             |
 | **URLs**         | `localhost:3000`           | `alice.192-168-1-100.nip.io`  |
 | **Port Conflicts** | Yes, if multiple users   | No, Traefik handles routing   |
 | **Shareable**    | No (localhost only)        | Yes, anyone can access        |
-| **Setup**        | VS Code devcontainer       | `./setup-user.sh <name>`      |
+| **Setup**        | `devpod up ...`            | `./setup-user.sh <name>`      |
+| **IDE Support**  | VS Code, Cursor, JetBrains | VS Code (attach to container) |
 | **Best For**     | Local dev, solo work       | Team collaboration            |
+
+**When to use which:**
+- **DevPod**: You're working locally or need full IDE integration
+- **Traefik Multi-User**: Multiple developers sharing a remote server, need shareable URLs
+
+See [DevPod Setup Guide](../../docs/DEVPOD_SETUP.md) for single-user setup instructions.
