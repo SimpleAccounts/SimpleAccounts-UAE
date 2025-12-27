@@ -20,3 +20,5 @@ bb74a79b30c2704a39859182640f76ef6762b426:.reset-password-flow-documentation.md:g
 bb74a79b30c2704a39859182640f76ef6762b426:.reset-password-flow-documentation.md:generic-api-key:555
 bb74a79b30c2704a39859182640f76ef6762b426:.reset-password-flow-documentation.md:generic-api-key:559
 bb74a79b30c2704a39859182640f76ef6762b426:.reset-password-flow-documentation.md:generic-api-key:560
+# Code-server documentation - example password placeholder (not a real secret)
+04a9411655682abc75bc751e8f41cd88f3baab77:.devcontainer/proxy/README.md:generic-api-key:165
