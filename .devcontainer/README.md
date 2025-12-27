@@ -15,12 +15,12 @@ code .
 ### Multi-User (Shared Dev Server)
 
 ```bash
-cd .devcontainer/proxy
-./setup-user.sh <your-username>
+# Launch via DevPod (from your local machine)
+devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
+  --provider ssh \
+  --provider-option HOST=<dev-server>
 
-# Then attach VS Code:
-# Cmd+Shift+P > "Dev Containers: Attach to Running Container"
-# Select: dev-<your-username>
+# Container auto-connects to Traefik proxy for shareable URLs
 ```
 
 ---
@@ -115,32 +115,30 @@ Uses `.devcontainer/proxy/` with Traefik reverse proxy.
 ### Usage
 
 ```bash
-# Setup your environment (auto-starts proxy if needed)
-cd .devcontainer/proxy
-./setup-user.sh alice
+# Launch via DevPod (from your local machine)
+devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
+  --provider ssh \
+  --provider-option HOST=dev-server
 
-# Access URLs printed after setup:
-#   Frontend: http://alice.192-168-1-100.nip.io
-#   Backend:  http://alice-api.192-168-1-100.nip.io
+# Container auto-registers with Traefik. Access URLs shown at startup:
+#   Frontend: http://<username>.192-168-1-100.nip.io
+#   Backend:  http://<username>-api.192-168-1-100.nip.io
 ```
 
 ### User Management
 
 ```bash
-# Add new user
-./setup-user.sh bob
+# List active user containers
+docker ps --filter "name=simpleaccounts" --format "table {{.Names}}\t{{.Status}}"
 
-# List active users
-docker ps --filter "name=dev-" --format "table {{.Names}}\t{{.Status}}"
+# Stop user environment (via DevPod)
+devpod stop simpleaccounts-uae
 
-# Stop user environment
-docker compose -f docker-compose.alice.yml down
-
-# Remove user environment (with data)
-docker compose -f docker-compose.alice.yml down -v
+# Delete user environment (via DevPod)
+devpod delete simpleaccounts-uae
 ```
 
-See [proxy/README.md](proxy/README.md) for full documentation.
+See [proxy/README.md](proxy/README.md) for Traefik proxy documentation.
 
 ---
 
