@@ -132,7 +132,12 @@ networks:
 
 volumes:
   postgres-data:
+    name: ${USER:-devuser}-postgres-data
   redis-data:
+    name: ${USER:-devuser}-redis-data
   vscode-extensions:
+    name: ${USER:-devuser}-vscode-extensions
   maven-cache:
+    name: ${USER:-devuser}-maven-cache
   npm-cache:
+    name: ${USER:-devuser}-npm-cache
