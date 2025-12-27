@@ -279,6 +279,40 @@ devpod provider add ssh --option HOST=dev-server
 devpod up https://github.com/SimpleAccounts/SimpleAccounts-UAE --provider ssh --ide vscode
 ```
 
+## Container Naming Convention
+
+When multiple developers use the same remote server, container names can be confusing. By default, DevPod generates random names like `simpleacco-d415b` or `default-mu-f2154`.
+
+### Configure Username in Container Names
+
+To include your username in container names for easier identification:
+
+**Option 1: Set per-workspace (recommended)**
+
+```bash
+COMPOSE_PROJECT_NAME="${USER}-simpleaccounts" devpod up https://github.com/SimpleAccounts/SimpleAccounts-UAE --ide vscode
+```
+
+**Option 2: Set globally for SSH provider**
+
+```bash
+devpod provider set-options ssh DOCKER_COMPOSE_PROJECT_NAME='${USER}-simpleaccounts'
+```
+
+**Option 3: Create a shell alias**
+
+Add to your `~/.bashrc` or `~/.zshrc`:
+
+```bash
+alias devpod-sa='COMPOSE_PROJECT_NAME="${USER}-simpleaccounts" devpod up https://github.com/SimpleAccounts/SimpleAccounts-UAE'
+
+# Usage:
+devpod-sa --ide vscode
+devpod-sa --ide cursor
+```
+
+This will create containers named like `john-simpleaccounts-devcontainer-1` instead of `default-abc123-devcontainer-1`.
+
 ## Resources
 
 - [DevPod Documentation](https://devpod.sh/docs)
