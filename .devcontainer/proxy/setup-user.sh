@@ -123,6 +123,7 @@ services:
   devcontainer:
     image: ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest
     container_name: dev-$USERNAME
+    init: true  # Use tini as PID 1 to properly reap zombie processes
 
     volumes:
       - ../../:/workspaces/SimpleAccounts-UAE:cached
@@ -186,7 +187,7 @@ services:
       - "traefik.http.services.$USERNAME-api.loadbalancer.server.port=8080"
 
   db:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     container_name: db-$USERNAME
     restart: unless-stopped
     volumes:
