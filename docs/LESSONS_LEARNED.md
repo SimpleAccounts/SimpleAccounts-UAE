@@ -408,7 +408,7 @@ Vite 5+ has stricter security defaults that reject requests from unknown hosts. 
 
 **Solution:**
 
-Add `allowedHosts: true` to the Vite server configuration:
+Add `allowedHosts` with a restricted allowlist to the Vite server configuration:
 
 ```javascript
 // vite.config.js
@@ -416,27 +416,17 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true, // Listen on all interfaces
-    allowedHosts: true, // Allow all hosts (needed for external proxy access)
-    // Or specify explicit hosts:
-    // allowedHosts: ['localhost', '.nip.io', '.yourdomain.com'],
+    allowedHosts: ['localhost', '.nip.io', '.dev.simpleaccounts.local'], // Restrict to known hosts
   },
 });
 ```
 
-**Alternative Solutions:**
+**Security Note:** Avoid using `allowedHosts: true` as it disables Vite's host-header check, which mitigates DNS rebinding attacks. Always use a specific allowlist.
 
-1. **Specific hosts pattern:**
-   ```javascript
-   allowedHosts: ['localhost', '.nip.io', 'myapp.example.com'],
-   ```
-
-2. **Disable host check (less secure):**
-   ```javascript
-   server: {
-     host: true,
-     allowedHosts: true,
-   }
-   ```
+**Common patterns:**
+- `.nip.io` - for dynamic IP-based URLs (e.g., `user.65-108-51-136.nip.io`)
+- `.dev.simpleaccounts.local` - for local domain routing
+- `localhost` - for local development
 
 **Prevention:**
 

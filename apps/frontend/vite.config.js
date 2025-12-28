@@ -113,7 +113,7 @@ export default defineConfig({
     host: true, // Listen on all interfaces (0.0.0.0 and ::)
     open: false, // Don't auto-open browser
     strictPort: false, // Allow fallback to next available port if 3000 is taken
-    allowedHosts: true, // Allow all hosts (needed for external proxy access via Traefik)
+    allowedHosts: ['localhost', '.nip.io', '.dev.simpleaccounts.local'], // Restrict to known hosts for security
     // Reduce memory usage in dev
     fs: {
       // Limit file system access
