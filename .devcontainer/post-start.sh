@@ -71,7 +71,8 @@ CONFIGEOF
 
     if ! pgrep -x "code-server" > /dev/null; then
         echo "🌐 Starting code-server (Web IDE)..."
-        nohup code-server /workspaces/SimpleAccounts-UAE > /tmp/code-server.log 2>&1 &
+        # Unset VSCODE_IPC_HOOK_CLI to prevent code-server from connecting to existing VS Code/Cursor instance
+        (unset VSCODE_IPC_HOOK_CLI; nohup code-server /workspaces/SimpleAccounts-UAE > /tmp/code-server.log 2>&1 &)
         echo "✅ Code-server started on port 8443 (password protected)"
     else
         echo "✅ Code-server already running"
@@ -170,13 +171,15 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 
 if [ "$TRAEFIK_ENABLED" = true ]; then
     echo ""
-    echo "🌐 Shareable URLs (via Traefik):"
+    echo "🌐 Shareable URLs (via Traefik with HTTPS):"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  Frontend: http://${DEV_USER}.${NIP_IP}.nip.io"
-    echo "  Backend:  http://${DEV_USER}-api.${NIP_IP}.nip.io"
-    echo "  Web IDE:  http://${DEV_USER}-ide.${NIP_IP}.nip.io"
+    echo "  Frontend: https://${DEV_USER}.${NIP_IP}.nip.io"
+    echo "  Backend:  https://${DEV_USER}-api.${NIP_IP}.nip.io"
+    echo "  Web IDE:  https://${DEV_USER}-ide.${NIP_IP}.nip.io"
     echo "  Dashboard: http://proxy.${NIP_IP}.nip.io:8090"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "🔒 SSL certificates are automatically provisioned by Let's Encrypt"
 else
     echo ""
     echo "📡 Local Development (use port forwarding):"

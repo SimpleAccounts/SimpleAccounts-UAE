@@ -40,6 +40,13 @@ services:
       # Entrypoints
       - '--entrypoints.web.address=:80'
       - '--entrypoints.websecure.address=:443'
+      # NOTE: No blanket HTTP→HTTPS redirect here to preserve local domain HTTP access
+      # HTTPS redirect is handled per-router via middleware for nip.io domains only
+      # Let's Encrypt Certificate Resolver
+      - '--certificatesresolvers.letsencrypt.acme.httpchallenge=true'
+      - '--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web'
+      - '--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL:-admin@simpleaccounts.io}'
+      - '--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json'
       # Logs
       - '--log.level=INFO'
       - '--accesslog=true'
@@ -49,6 +56,7 @@ services:
       - '8090:8080' # Traefik dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt:/letsencrypt
     networks:
       - dev-proxy-network
     labels:
@@ -66,3 +74,7 @@ networks:
   dev-proxy-network:
     name: dev-proxy-network
     driver: bridge
+
+volumes:
+  letsencrypt:
+    name: traefik-letsencrypt
