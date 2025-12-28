@@ -402,7 +402,7 @@ Vite 5+ has stricter security defaults that reject requests from unknown hosts. 
 **Symptoms:**
 
 - `curl localhost:3000` works
-- `curl external-url.nip.io` returns 403
+- `curl external-url.dev.simpleaccounts.io` returns 403
 - No CORS errors (not a CORS issue)
 - Traefik shows service as UP
 
@@ -416,7 +416,7 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true, // Listen on all interfaces
-    allowedHosts: ['localhost', '.nip.io', '.dev.simpleaccounts.local'], // Restrict to known hosts
+    allowedHosts: ['localhost', '.nip.io', '.dev.simpleaccounts.local', '.dev.simpleaccounts.io'], // Restrict to known hosts
   },
 });
 ```
@@ -424,14 +424,15 @@ export default defineConfig({
 **Security Note:** Avoid using `allowedHosts: true` as it disables Vite's host-header check, which mitigates DNS rebinding attacks. Always use a specific allowlist.
 
 **Common patterns:**
-- `.nip.io` - for dynamic IP-based URLs (e.g., `user.65-108-51-136.nip.io`)
+- `.dev.simpleaccounts.io` - for production dev URLs with valid SSL (e.g., `alice.dev.simpleaccounts.io`)
+- `.nip.io` - for dynamic IP-based URLs (e.g., `user.65-108-51-136.nip.io`) - legacy
 - `.dev.simpleaccounts.local` - for local domain routing
 - `localhost` - for local development
 
 **Prevention:**
 
 1. When setting up proxy access, always configure `allowedHosts` in Vite
-2. Use wildcard patterns for dynamic subdomains (e.g., `.nip.io`)
+2. Use wildcard patterns for dynamic subdomains (e.g., `.dev.simpleaccounts.io`)
 3. Document the required Vite configuration for external access
 4. Test with the actual external URL during development setup
 

@@ -30,7 +30,7 @@ devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
 | Setup | Best For | Access URLs |
 |-------|----------|-------------|
 | **Single User** | Local development, one developer | `localhost:3000`, `localhost:8080` |
-| **Multi-User** | Shared dev server, team collaboration | `alice.192-168-1-100.nip.io` |
+| **Multi-User** | Shared dev server, team collaboration | `https://alice.dev.simpleaccounts.io` |
 
 ---
 
@@ -107,9 +107,9 @@ Uses `.devcontainer/proxy/` with Traefik reverse proxy.
 ### Features
 
 - **Isolated environments**: Each user has their own DB, Redis, and container
-- **Shareable URLs**: Share `http://alice.192-168-1-100.nip.io` with teammates
+- **Shareable URLs**: Share `https://alice.dev.simpleaccounts.io` with teammates
+- **Valid SSL Certificates**: Wildcard Let's Encrypt certificate via Cloudflare DNS
 - **No port conflicts**: Traefik routes by hostname, not port
-- **Zero DNS config**: Uses nip.io for automatic DNS resolution
 
 ### Usage
 
@@ -120,8 +120,9 @@ devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
   --provider-option HOST=dev-server
 
 # Container auto-registers with Traefik. Access URLs shown at startup:
-#   Frontend: http://<username>.192-168-1-100.nip.io
-#   Backend:  http://<username>-api.192-168-1-100.nip.io
+#   Frontend: https://<username>.dev.simpleaccounts.io
+#   Backend:  https://<username>-api.dev.simpleaccounts.io
+#   Web IDE:  https://<username>-ide.dev.simpleaccounts.io
 ```
 
 ### User Management
