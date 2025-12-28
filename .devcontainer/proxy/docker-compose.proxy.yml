@@ -41,9 +41,8 @@ services:
       # Entrypoints
       - '--entrypoints.web.address=:80'
       - '--entrypoints.websecure.address=:443'
-      # HTTP to HTTPS redirect for dev.simpleaccounts.io
-      - '--entrypoints.web.http.redirections.entryPoint.to=websecure'
-      - '--entrypoints.web.http.redirections.entryPoint.scheme=https'
+      # NOTE: No global HTTP→HTTPS redirect - local domains use HTTP only
+      # HTTPS is enforced by routers using websecure entrypoint
       # Let's Encrypt Certificate Resolver with Cloudflare DNS challenge
       - '--certificatesresolvers.letsencrypt.acme.dnschallenge=true'
       - '--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare'
