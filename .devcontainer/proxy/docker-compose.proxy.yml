@@ -40,10 +40,8 @@ services:
       # Entrypoints
       - '--entrypoints.web.address=:80'
       - '--entrypoints.websecure.address=:443'
-      # HTTP to HTTPS redirect
-      - '--entrypoints.web.http.redirections.entryPoint.to=websecure'
-      - '--entrypoints.web.http.redirections.entryPoint.scheme=https'
-      - '--entrypoints.web.http.redirections.entryPoint.permanent=true'
+      # NOTE: No blanket HTTP→HTTPS redirect here to preserve local domain HTTP access
+      # HTTPS redirect is handled per-router via middleware for nip.io domains only
       # Let's Encrypt Certificate Resolver
       - '--certificatesresolvers.letsencrypt.acme.httpchallenge=true'
       - '--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web'
